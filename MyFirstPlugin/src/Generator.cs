@@ -1,0 +1,88 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using RandomDataGenerator;
+using RandomDataGenerator.FieldOptions;
+using RandomDataGenerator.Randomizers;
+
+namespace MyFirstPlugin
+{
+    static internal class Generator
+    {
+        private static UInt32 pid = 100000;
+
+        public static string Seed { get; set; } = "";
+
+        public static Random Random { get; private set; } = new Random();
+
+        /// <summary>
+        /// Get's the nth element from an enumerable
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        public static T Pick<T>(IEnumerable<T> collection) =>
+            collection.ElementAt(Random.Next(collection.Count()));
+
+        /// <summary>
+        /// Gets a new persistent Id
+        /// </summary>
+        /// <returns></returns>
+        public static UInt32 GetPersistentId() => pid++;
+
+        /// <summary>
+        /// Regenerates the seed value and then reload the generators
+        /// </summary>
+        public static void RegenerateSeed()
+        {
+            var factory = RandomizerFactory.GetRandomizer(new FieldOptionsTextWords
+            {
+                Min = 3,
+                Max = 3
+            });
+
+            Seed = factory.Generate() ?? "";
+
+            Reload();
+        }
+
+        /// <summary>
+        /// Reload the generators
+        /// </summary>
+        public static void Reload()
+        {
+            Random = new Random(GetHashCode(Seed));
+
+            RandomizerFactory.GetRandomizer(new FieldOptionsFirstName
+            {
+                Seed = GetHashCode(Seed)
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        private static int GetHashCode(this string str)
+        {
+            unchecked
+            {
+                int hash1 = 5381;
+                int hash2 = hash1;
+
+                for (int i = 0; i < str.Length && str[i] != '\0'; i += 2)
+                {
+                    hash1 = ((hash1 << 5) + hash1) ^ str[i];
+                    if (i == str.Length - 1 || str[i + 1] == '\0')
+                        break;
+                    hash2 = ((hash2 << 5) + hash2) ^ str[i + 1];
+                }
+
+                return hash1 + (hash2 * 1566083941);
+            }
+        }
+    }
+}

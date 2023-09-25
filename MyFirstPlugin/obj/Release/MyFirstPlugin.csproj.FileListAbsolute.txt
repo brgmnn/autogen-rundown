@@ -1,0 +1,11 @@
+C:\Users\Daniel Bergmann\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\modding\BepInEx\plugins\MyFirstPlugin\MyFirstPlugin.deps.json
+C:\Users\Daniel Bergmann\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\modding\BepInEx\plugins\MyFirstPlugin\MyFirstPlugin.dll
+C:\Users\Daniel Bergmann\source\repos\MyFirstPlugin\MyFirstPlugin\obj\Release\MyFirstPlugin.csproj.AssemblyReference.cache
+C:\Users\Daniel Bergmann\source\repos\MyFirstPlugin\MyFirstPlugin\obj\Release\MyFirstPlugin.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Daniel Bergmann\source\repos\MyFirstPlugin\MyFirstPlugin\obj\Release\MyFirstPlugin.AssemblyInfoInputs.cache
+C:\Users\Daniel Bergmann\source\repos\MyFirstPlugin\MyFirstPlugin\obj\Release\MyFirstPlugin.AssemblyInfo.cs
+C:\Users\Daniel Bergmann\source\repos\MyFirstPlugin\MyFirstPlugin\obj\Release\MyFirstPlugin.csproj.CoreCompileInputs.cache
+C:\Users\Daniel Bergmann\source\repos\MyFirstPlugin\MyFirstPlugin\obj\Release\MyFirstPlugin.csproj.CopyComplete
+C:\Users\Daniel Bergmann\source\repos\MyFirstPlugin\MyFirstPlugin\obj\Release\MyFirstPlugin.dll
+C:\Users\Daniel Bergmann\source\repos\MyFirstPlugin\MyFirstPlugin\obj\Release\refint\MyFirstPlugin.dll
+C:\Users\Daniel Bergmann\source\repos\MyFirstPlugin\MyFirstPlugin\obj\Release\ref\MyFirstPlugin.dll
