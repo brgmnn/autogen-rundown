@@ -125,7 +125,7 @@ namespace MyFirstPlugin.DataBlocks
                 Name = $"RND Rundown {name}"
             };
 
-            rundown.StorytellingData["Title"] = $"<color=green>RND://</color>RUNDOWN #?\r\nTITLE: {name.ToUpper()}";
+            rundown.StorytellingData["Title"] = $"<color=green>RND://</color>RUNDOWN <color=orange>09/26</color>\r\nTITLE: {name.ToUpper()}";
 
             return rundown;
         }

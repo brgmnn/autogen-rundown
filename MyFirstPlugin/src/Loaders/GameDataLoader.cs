@@ -71,6 +71,14 @@ namespace MyFirstPlugin.Loaders
                     settings.Converters.Add(new Il2CppListConverter<JObject>());
                     settings.Converters.Add(new Il2CppListConverter<ExpeditionInTierData>());
                     settings.Converters.Add(new Il2CppListConverter<DimensionInExpeditionData>());
+                    settings.Converters.Add(new Il2CppListConverter<ExpeditionZoneData>());
+                    settings.Converters.Add(new Il2CppListConverter<WardenObjectiveEventData>());
+                    settings.Converters.Add(new Il2CppListConverter<LevelEventData>());
+                    settings.Converters.Add(new Il2CppListConverter<TerminalPlacementData>());
+                    settings.Converters.Add(new Il2CppListConverter<FunctionPlacementData>());
+                    settings.Converters.Add(new Il2CppListConverter<DumbwaiterPlacementData>());
+                    settings.Converters.Add(new Il2CppListConverter<StaticSpawnDataContainer>());
+                    settings.Converters.Add(new Il2CppListConverter<ZonePlacementData>());
                     settings.Converters.Add(new Il2CppListConverter<UInt32>());
 
                     using (var reader = new StreamReader(filePath, Encoding.UTF8))
@@ -80,9 +88,18 @@ namespace MyFirstPlugin.Loaders
                         switch (type)
                         {
                             case "RundownDataBlock":
-                                var block = JsonConvert.DeserializeObject<RundownDataBlock>(json, settings);
-                                RundownDataBlock.AddBlock(block);
-                                break;
+                                {
+                                    var block = JsonConvert.DeserializeObject<RundownDataBlock>(json, settings);
+                                    RundownDataBlock.AddBlock(block);
+                                    break;
+                                }
+
+                            case "LevelLayoutDataBlock":
+                                {
+                                    var block = JsonConvert.DeserializeObject<LevelLayoutDataBlock>(json, settings);
+                                    LevelLayoutDataBlock.AddBlock(block);
+                                    break;
+                                }
                         }
 
                         count++;

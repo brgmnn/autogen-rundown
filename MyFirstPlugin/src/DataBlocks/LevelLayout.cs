@@ -12,6 +12,11 @@ namespace MyFirstPlugin.DataBlocks
 
         public List<Zone> Zones { get; set; } = new List<Zone>();
 
+        public LevelLayout()
+        {
+            Type = "LevelLayoutDataBlock";
+        }
+
         public static LevelLayout Build(Level level)
         {
             var layout = new LevelLayout
