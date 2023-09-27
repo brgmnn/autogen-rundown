@@ -11,6 +11,21 @@ using UniverseLib;
 
 namespace MyFirstPlugin
 {
+    public interface IHotManager
+    {
+        public void OnHotReload(int id);
+    }
+
+    class HotGameDataManager : IHotManager
+    {
+        public void OnHotReload(int id)
+        {
+            //GameDataInit.ReInitialize(); // refresh game data
+            GameManager.SetRundown();
+            Plugin.Logger.LogInfo("Reinitialized GameData");
+        }
+    }
+
     public class HotReloader : MonoBehaviour
     {
         public HotReloader(IntPtr intPtr) : base(intPtr) { }
@@ -40,7 +55,7 @@ namespace MyFirstPlugin
             button = gameObject.GetComponent<CM_Item>();
             button.SetText(buttonLabel);
             button.m_spriteColorOrg = Color.white;
-            //AddOnReloadListener(new HotGameDataManager());
+            AddOnReloadListener(new HotGameDataManager());
             //AddOnReloadListener(new HotRundownManager());
             //AddOnReloadListener(new HotGearManager());
             button.add_OnBtnPressCallback(new Action<int>((_) =>
@@ -49,7 +64,6 @@ namespace MyFirstPlugin
             }));
         }
 
-        /*
         /// <summary>
         /// Adds callback to a button and manager to a dictionary if it doesn't exist already
         /// </summary>
@@ -73,7 +87,6 @@ namespace MyFirstPlugin
                 managers.Remove(manager);
             }
         }
-        */
 
         /// <summary>
         /// Create a HotReloader instance if it doesn't exist and assigns it to a singleton
@@ -94,8 +107,7 @@ namespace MyFirstPlugin
             Current = button.AddComponent<HotReloader>();
             button.SetActive(true);
 
-
-
+            //GameManager.SetRundown();
         }
 
 
@@ -103,6 +115,6 @@ namespace MyFirstPlugin
         private CM_Item button;
         private readonly string buttonLabel = "RUNDOWN CONFIG";
         //private readonly Vector3 buttonPosition = new(0, 0, 0);
-        //private readonly List<IHotManager> managers = new();
+        private readonly List<IHotManager> managers = new();
     }
 }

@@ -28,6 +28,7 @@ using Localization;
 
 using MyFirstPlugin.Json;
 using MyFirstPlugin.src.Json;
+using Globals;
 
 namespace MyFirstPlugin.Loaders
 {
@@ -46,14 +47,9 @@ namespace MyFirstPlugin.Loaders
         //    Plugin.Logger.LogInfo($"=== RundownDataBlock ARE WE LOADED???? {__result} ===");
         //}
 
-        public static void Patch()
+        public static void Load()
         {
-            //GameData.RundownDataBlock
-
-            //RundownDataBlock.AddBlock(JsonConvert.DeserializeObject<RundownDataBlock>(""));
-
             var dir = Path.Combine(Paths.PluginPath, "MyFirstPlugin", "Datablocks", Generator.Seed);
-            //var path = Path.Combine(dir, $"{Type}__{Filename}.json");
 
             if (Directory.Exists(dir))
             {
@@ -84,8 +80,6 @@ namespace MyFirstPlugin.Loaders
                     settings.Converters.Add(new Il2CppListConverter<DimensionInExpeditionData>());
                     settings.Converters.Add(new Il2CppListConverter<UInt32>());
 
-                    //Globals.Global.RundownIdToLoad = 1;
-
                     using (var reader = new StreamReader(filePath, Encoding.UTF8))
                     {
                         var json = reader.ReadToEnd();
@@ -94,6 +88,7 @@ namespace MyFirstPlugin.Loaders
                         {
                             case "RundownDataBlock":
                                 var block = JsonConvert.DeserializeObject<RundownDataBlock>(json, settings);
+                                RundownDataBlock.AddBlock(block);
                                 break;
                         }
 
@@ -104,8 +99,9 @@ namespace MyFirstPlugin.Loaders
                 Plugin.Logger.LogInfo($" - Added {count} partial data of ");
             }
 
+            Plugin.Logger.LogInfo("=== Rundown Loaded ===");
 
-            Plugin.Logger.LogInfo("Got it");
+            Global.RundownIdToLoad = 1;
         }
     }
 
@@ -122,6 +118,8 @@ namespace MyFirstPlugin.Loaders
 
         public static unsafe void Patch()
         {
+            return;
+
             _BasePathToDump = Path.Combine(Paths.PluginPath, "MyFirstPlugin", "Datablocks");
 
             var method = Il2CppAPI.GetIl2CppMethod<DBBase>(

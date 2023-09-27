@@ -71,15 +71,16 @@ public class Plugin : BasePlugin
         AssetAPI.OnImplReady += () =>
         {
             ClassInjector.RegisterTypeInIl2Cpp<HotReloader>();
-            //ClassInjector.RegisterTypeInIl2Cpp<PatchRundown>();
-            //ClassInjector.RegisterTypeInIl2Cpp<HarmonyGameDataLoader>();
 
             harmony.PatchAll(typeof(HotReloadInjector));
             harmony.PatchAll(typeof(PatchRundown));
             harmony.PatchAll(typeof(HarmonyGameDataLoader));
+            harmony.PatchAll(typeof(SetRundownInjector));
 
-            GameDataLoader.Patch();
-            HarmonyGameDataLoader.Patch();
+            //GameDataLoader.Patch();
+
+            // Load in the rundown data
+            HarmonyGameDataLoader.Load();
         };
     }
 }

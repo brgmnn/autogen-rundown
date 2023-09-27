@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace MyFirstPlugin.src.Json
 {
@@ -20,9 +19,12 @@ namespace MyFirstPlugin.src.Json
             {
                 var newList = serializer.Deserialize<List<T>>(reader);
 
-                foreach (var item in newList)
+                if (newList != null)
                 {
-                    list.Add(item);
+                    foreach (var item in newList)
+                    {
+                        list.Add(item);
+                    }
                 }
 
                 return list;
@@ -35,9 +37,12 @@ namespace MyFirstPlugin.src.Json
         {
             writer.WriteStartArray();
 
-            foreach (var v in value)
+            if (value != null)
             {
-                serializer.Serialize(writer, v);
+                foreach (var v in value)
+                {
+                    serializer.Serialize(writer, v);
+                }
             }
 
             writer.WriteEndArray();

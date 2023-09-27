@@ -37,13 +37,16 @@ namespace MyFirstPlugin
         /// </summary>
         public static void RegenerateSeed()
         {
-            var factory = RandomizerFactory.GetRandomizer(new FieldOptionsTextWords
-            {
-                Min = 3,
-                Max = 3
-            });
+            Seed = $"{Pick(GeneratorData.Words.SeedWords)}{Pick(GeneratorData.Words.SeedWords)}{Pick(GeneratorData.Words.SeedWords)}";
 
-            Seed = factory.Generate() ?? "";
+            Seed = "";
+
+            for (var i = 0; i < 3; i++)
+            {
+                var word = Pick(GeneratorData.Words.SeedWords);
+
+                Seed += word.Substring(0, 1).ToUpper() + word.Substring(1);
+            }
 
             Reload();
         }
