@@ -15,6 +15,7 @@
 		<OutputPath>$(BuildDirectory)</OutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 	<Target Name="PostBuild" BeforeTargets="PostBuildEvent">
 		<Delete Files="$(OutputPath)$(AssemblyName).deps.json" />
@@ -26,6 +27,7 @@
 		<Reference Include="$(BepInEx)\core\BepInEx.Unity.IL2CPP.dll" Private="false" />
 		<Reference Include="$(BepInEx)\core\Il2CppInterop.Common.dll" Private="false" />
 		<Reference Include="$(BepInEx)\core\Il2CppInterop.Runtime.dll" Private="false" />
+		<Reference Include="$(BepInEx)\core\MonoMod.RuntimeDetour.dll" Private="false" />
 		<Reference Include="$(BepInEx)\interop\*.dll" Private="false" />
 		<Compile Remove="Blocks\**" />
 		<EmbeddedResource Remove="Blocks\**" />

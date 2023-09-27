@@ -84,6 +84,37 @@ namespace MyFirstPlugin.DataBlocks
             ExternalExpTitle = 3901084012
         });
 
+        public void AddLevel(Level level)
+        {
+            switch (level.Tier)
+            {
+                case "A":
+                    TierA.Add(level);
+                    break;
+                case "B":
+                    TierB.Add(level);
+                    break;
+                case "C":
+                    TierC.Add(level);
+                    break;
+                case "D":
+                    TierD.Add(level);
+                    break;
+                case "E":
+                    TierE.Add(level);
+                    break;
+            }
+        }
+
+        public Rundown()
+        {
+            Type = "RundownDataBlock";
+        }
+
+        /// <summary>
+        /// Builds a new Rundown
+        /// </summary>
+        /// <returns></returns>
         static public Rundown Build()
         {
             var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
@@ -94,7 +125,7 @@ namespace MyFirstPlugin.DataBlocks
                 Name = $"RND Rundown {name}"
             };
 
-            rundown.StorytellingData["Title"] = $"<color=orange>ALT://</color>RUNDOWN #?\r\nTITLE: {name.ToUpper()}";
+            rundown.StorytellingData["Title"] = $"<color=green>RND://</color>RUNDOWN #?\r\nTITLE: {name.ToUpper()}";
 
             return rundown;
         }

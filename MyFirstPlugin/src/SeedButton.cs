@@ -12,7 +12,8 @@ namespace MyFirstPlugin
     {
         [HarmonyPostfix]
         [HarmonyPatch(typeof(CM_PageRundown_New), nameof(CM_PageRundown_New.OnEnable))]
-        public static void OnEnable() {
+        public static void OnEnable()
+        {
         }
     }
 }

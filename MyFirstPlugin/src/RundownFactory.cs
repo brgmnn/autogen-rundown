@@ -20,6 +20,20 @@ namespace MyFirstPlugin
 
             var rundown = Rundown.Build();
 
+            var level = Level.Build(
+                new BuildDirector 
+                { 
+                    Complexity = Complexity.Low, 
+                    Credits = 200 
+                },
+                new Level
+                {
+                    Tier = "A",
+                    Index = 1,
+                });
+
+            rundown.AddLevel(level);
+
             rundown.Save();
         }
     }

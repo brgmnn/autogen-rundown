@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using MyFirstPlugin.GeneratorData;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,10 +33,22 @@ namespace MyFirstPlugin.DataBlocks
         public string Tier { get; set; } = "A";
 
         /// <summary>
+        /// Level index (A1, A2, A3, etc)
+        /// </summary>
+        [JsonIgnore]
+        public int Index { get; set; } = 1;
+
+        /// <summary>
         /// Level depth in meters
         /// </summary>
         [JsonIgnore]
         public int Depth { get; set; } = 1;
+
+        /// <summary>
+        /// Which complex type to use
+        /// </summary>
+        [JsonIgnore]
+        public Complex Complex { get; set; } = Complex.Mining;
 
         /// <summary>
         /// Level description
@@ -73,20 +86,24 @@ namespace MyFirstPlugin.DataBlocks
             LightJobSeedOffset = 0
         });
 
-        public JObject Expedition = JObject.FromObject(new
+        public JObject Expedition
         {
-            ComplexResourceData = 1,
-            MLSLevelKit = 0,
-            LightSettings = 0,
-            FogSettings = 90,
-            EnemyPopulation = 1,
-            ExpeditionBalance = 1,
-            ScoutWaveSettings = 3,
-            ScoutWavePopulation = 1,
-            EnvironmentWetness = 0.0,
-            DustColor = new Color { Alpha = 1.0, Red = 0.5, Green = 0.5, Blue = 0.5 },
-            DustTurbulence = 1.0
-        });
+            get => new JObject
+            {
+                ["ComplexResourceData"] = (int)Complex,
+                ["MLSLevelKit"] = 0,
+                ["LightSettings"] = 0,
+                ["FogSettings"] = 90,
+                ["EnemyPopulation"] = 1,
+                ["ExpeditionBalance"] = 1,
+                ["ScoutWaveSettings"] = 3,
+                ["ScoutWavePopulation"] = 1,
+                ["EnvironmentWetness"] = 0.0,
+                ["DustColor"] = JObject.FromObject(
+                    new Color { Alpha = 1.0, Red = 0.5, Green = 0.5, Blue = 0.5 }),
+                ["DustTurbulence"] = 1.0
+            };
+        }
 
         public JObject VanityItemsDropData = new JObject
         {
@@ -96,7 +113,7 @@ namespace MyFirstPlugin.DataBlocks
         /// <summary>
         /// Match this to the persistent ID of the Level Layout
         /// </summary>
-        public int LevelLayoutData { get; set; } = 0;
+        public UInt32 LevelLayoutData { get; set; } = 0;
 
         #region Main Objective Data
         /// <summary>
@@ -113,7 +130,7 @@ namespace MyFirstPlugin.DataBlocks
 
         public bool SecondaryLayerEnabled { get; set; } = false;
 
-        public int SecondaryLayout = 0;
+        public UInt32 SecondaryLayout = 0;
 
         public JObject BuildSecondaryFrom = JObject.FromObject(new
         {
@@ -130,7 +147,7 @@ namespace MyFirstPlugin.DataBlocks
 
         public bool ThirdLayerEnabled { get; set; } = false;
 
-        public int ThirdLayout = 0;
+        public UInt32 ThirdLayout = 0;
 
         public JObject ThirdSecondaryFrom = JObject.FromObject(new
         {
@@ -171,5 +188,55 @@ namespace MyFirstPlugin.DataBlocks
             };
         }
         #endregion
+
+        /// <summary>
+        /// Generates a random depth for the level based on the Tier
+        /// </summary>
+        private void GenerateDepth()
+        {
+            switch (Tier)
+            {
+                case "A":
+                    Depth = Generator.Random.Next(420, 650);
+                    break;
+                case "B":
+                    Depth = Generator.Random.Next(600, 850);
+                    break;
+                case "C":
+                    Depth = Generator.Random.Next(800, 1000);
+                    break;
+                case "D":
+                    Depth = Generator.Random.Next(900, 1100);
+                    break;
+                case "E":
+                    Depth = Generator.Random.Next(950, 1500);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        static public Level Build(BuildDirector director, Level level)
+        {
+            var name = Generator.Pick(Words.NounsLevel);
+
+            level.Name = name;
+            level.GenerateDepth();
+
+            var mainLevelLayout = LevelLayout.Build(level);
+            mainLevelLayout.Save();
+            level.LevelLayoutData = mainLevelLayout.PersistentId;
+
+            return level;
+        }
+
+        static public Level Build(BuildDirector director)
+        {
+            var level = new Level();
+
+            return Build(director, level);
+        }
     }
 }

@@ -43,7 +43,8 @@ namespace MyFirstPlugin
             //AddOnReloadListener(new HotGameDataManager());
             //AddOnReloadListener(new HotRundownManager());
             //AddOnReloadListener(new HotGearManager());
-            button.add_OnBtnPressCallback(new Action<int>((_) => { 
+            button.add_OnBtnPressCallback(new Action<int>((_) =>
+            {
                 //MTFOHotReloadAPI.HotReloaded();
             }));
         }

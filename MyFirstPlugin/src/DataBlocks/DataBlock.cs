@@ -27,7 +27,10 @@ namespace MyFirstPlugin.DataBlocks
         public bool Enabled { get; set; } = true;
 
         [JsonIgnore]
-        public string? Filename { get => $"{PersistentId}__{Name}"; }
+        public string? Filename { get => $"{PersistentId}__{Name?.Replace(' ', '_')}"; }
+
+        [JsonIgnore]
+        public string Type { get; set; } = "None";
 
         /// <summary>
         /// Data block class constructor. Ensures a unique persistent ID is assigned
@@ -46,11 +49,18 @@ namespace MyFirstPlugin.DataBlocks
             JsonSerializer serializer = new JsonSerializer();
             serializer.Formatting = Formatting.Indented;
 
-            using (StreamWriter sw = new StreamWriter(Path.Combine(Paths.PluginPath, "MyFirstPlugin", "Datablocks", $"{Filename}.json")))
+            var dir = Path.Combine(Paths.PluginPath, "MyFirstPlugin", "Datablocks", Generator.Seed);
+            var path = Path.Combine(dir, $"{Type}__{Filename}.json");
+
+            // Ensure the directory exists
+            Directory.CreateDirectory(dir);
+
+            using (StreamWriter sw = new StreamWriter(path))
             using (JsonWriter writer = new JsonTextWriter(sw))
             {
                 serializer.Serialize(writer, this);
             }
         }
+
     }
 }
