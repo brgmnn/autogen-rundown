@@ -60,8 +60,17 @@ public class Plugin : BasePlugin
         // Plugin startup logic
         Log.LogInfo($"====== Plugin is loaded! ======");
 
-        Generator.RegenerateSeed();
-        RundownFactory.Build();
+        Generator.ReadSeed();
+
+        if (!RundownFactory.JsonDataExists())
+        {
+            if (Generator.Seed == "")
+            {
+                Generator.RegenerateSeed();
+            }
+
+            RundownFactory.Build();
+        }
 
         Log.LogInfo(Paths.PluginPath);
         Log.LogInfo($"== Seed \"{Generator.Seed}\"");
@@ -74,13 +83,11 @@ public class Plugin : BasePlugin
 
             harmony.PatchAll(typeof(HotReloadInjector));
             harmony.PatchAll(typeof(PatchRundown));
-            harmony.PatchAll(typeof(HarmonyGameDataLoader));
+            harmony.PatchAll(typeof(GameDataLoader));
             harmony.PatchAll(typeof(SetRundownInjector));
 
-            //GameDataLoader.Patch();
-
             // Load in the rundown data
-            HarmonyGameDataLoader.Load();
+            GameDataLoader.Load();
         };
     }
 }

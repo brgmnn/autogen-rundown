@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BepInEx;
+using Newtonsoft.Json;
+using PlayFab.Json;
 using RandomDataGenerator;
 using RandomDataGenerator.FieldOptions;
 using RandomDataGenerator.Randomizers;
@@ -48,6 +51,7 @@ namespace MyFirstPlugin
                 Seed += word.Substring(0, 1).ToUpper() + word.Substring(1);
             }
 
+            WriteSeed();
             Reload();
         }
 
@@ -62,6 +66,41 @@ namespace MyFirstPlugin
             {
                 Seed = GetHashCode(Seed)
             });
+        }
+
+        public static void ReadSeed()
+        {
+            var dir = Path.Combine(Paths.PluginPath, "MyFirstPlugin");
+            var path = Path.Combine(dir, "seed.txt");
+
+            // Ensure the directory exists
+            Directory.CreateDirectory(dir);
+            try
+            {
+                using (StreamReader sr = new StreamReader(path, Encoding.UTF8))
+                {
+                    Seed = (sr.ReadLine() ?? "").Trim();
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                Plugin.Logger.LogInfo("Seed config file not found.");
+            }
+        }
+
+        public static void WriteSeed()
+        {
+            var dir = Path.Combine(Paths.PluginPath, "MyFirstPlugin");
+            var path = Path.Combine(dir, "seed.txt");
+
+            // Ensure the directory exists
+            Directory.CreateDirectory(dir);
+
+            using (FileStream fs = File.Create(path))
+            using (StreamWriter sw = new StreamWriter(fs))
+            {
+                sw.WriteLine(Seed);
+            }
         }
 
         /// <summary>
