@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using static GameData.GD;
 
 namespace MyFirstPlugin.DataBlocks
 {
@@ -222,6 +220,97 @@ namespace MyFirstPlugin.DataBlocks
         }
 
         /// <summary>
+        /// Gets the right layer data given the objective being asked for
+        /// </summary>
+        /// <param name="variant"></param>
+        /// <returns></returns>
+        public ObjectiveLayerData GetObjectiveLayerData(ObjectiveVariant variant)
+        {
+            switch (variant)
+            {
+                case ObjectiveVariant.Main:
+                    return MainLayerData;
+                case ObjectiveVariant.Extreme:
+                    return SecondaryLayerData;
+                case ObjectiveVariant.Overload:
+                    return ThirdLayerData;
+                default:
+                    return MainLayerData;
+            }
+        }
+
+        public LevelLayout? GetLevelLayout(ObjectiveVariant variant)
+        {
+            switch (variant)
+            {
+                case ObjectiveVariant.Main:
+                    return Bins.LevelLayouts.Find(LevelLayoutData);
+                case ObjectiveVariant.Extreme:
+                    return Bins.LevelLayouts.Find(SecondaryLayout);
+                case ObjectiveVariant.Overload:
+                    return Bins.LevelLayouts.Find(ThirdLayout);
+                default:
+                    return Bins.LevelLayouts.Find(LevelLayoutData);
+            }
+        }
+
+        public enum DistributionStrategy 
+        {
+            /// <summary>
+            /// Randomly placed across all zones in random locations.
+            /// </summary>
+            Random, 
+
+            /// <summary>
+            /// All items in a single zone (randomly)
+            /// </summary>
+            SingleZone, 
+
+            /// <summary>
+            /// Evenly distributed across all zones
+            /// </summary>
+            EvenlyAcrossZones 
+        }
+
+        public void DistributeObjectiveItems(
+            WardenObjective objective,
+            ObjectiveVariant variant,
+            DistributionStrategy strategy)
+        {
+            var layerData = GetObjectiveLayerData(variant);
+            var layout = GetLevelLayout(variant);
+
+            objective.GatherRequiredCount = Generator.Random.Next(4, 8);
+            objective.GatherItemId = 128;
+            objective.GatherSpawnCount = Generator.Random.Next(
+                objective.GatherRequiredCount,
+                objective.GatherRequiredCount + 6);
+            objective.GatherMaxPerZone = Generator.Random.Next(3, 8);
+
+            switch (strategy)
+            {
+                case DistributionStrategy.SingleZone:
+                    var targetZone = Generator.Random.Next(0, layout.Zones.Count);
+
+                    layerData.ObjectiveData.ZonePlacementDatas.Add(
+                        new List<ZonePlacementData>()
+                        {
+                            new ZonePlacementData
+                            {
+                                LocalIndex = targetZone,
+                                Weights = ZonePlacementWeights.EvenlyDistributed
+                            }
+                        });
+
+                    break;
+                case DistributionStrategy.EvenlyAcrossZones:
+                    break;
+                case DistributionStrategy.Random:
+                    break;
+            }
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
@@ -246,8 +335,7 @@ namespace MyFirstPlugin.DataBlocks
             // Secondary (Extreme)
             // Tertiary (Overload)
 
-            Bins.wardenObjectives.AddBlock(mainObjective);
-            Bins.levelLayouts.AddBlock(mainLevelLayout);
+            Bins.WardenObjectives.AddBlock(mainObjective);
 
             return level;
         }

@@ -53,14 +53,14 @@ namespace MyFirstPlugin
 
             rundown.AddLevel(level);
 
-            Bins.rundowns.AddBlock(rundown);
+            Bins.Rundowns.AddBlock(rundown);
 
-            Bins.rundowns.AddBlock(new Rundown { PersistentId = 32, Name = "ALT Rundown 1.0" });
-            Bins.rundowns.AddBlock(new Rundown { PersistentId = 33, Name = "ALT Rundown 2.0" });
-            Bins.rundowns.AddBlock(new Rundown { PersistentId = 34, Name = "ALT Rundown 3.0" });
-            Bins.rundowns.AddBlock(new Rundown { PersistentId = 37, Name = "ALT Rundown 4.0" });
-            Bins.rundowns.AddBlock(new Rundown { PersistentId = 38, Name = "ALT Rundown 5.0" });
-            Bins.rundowns.AddBlock(new Rundown { PersistentId = 41, Name = "ALT Rundown 9.0" });
+            Bins.Rundowns.AddBlock(new Rundown { PersistentId = 32, Name = "ALT Rundown 1.0" });
+            Bins.Rundowns.AddBlock(new Rundown { PersistentId = 33, Name = "ALT Rundown 2.0" });
+            Bins.Rundowns.AddBlock(new Rundown { PersistentId = 34, Name = "ALT Rundown 3.0" });
+            Bins.Rundowns.AddBlock(new Rundown { PersistentId = 37, Name = "ALT Rundown 4.0" });
+            Bins.Rundowns.AddBlock(new Rundown { PersistentId = 38, Name = "ALT Rundown 5.0" });
+            Bins.Rundowns.AddBlock(new Rundown { PersistentId = 41, Name = "ALT Rundown 9.0" });
 
             Bins.Save();
         }

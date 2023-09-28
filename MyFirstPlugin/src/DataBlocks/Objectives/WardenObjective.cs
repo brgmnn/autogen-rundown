@@ -135,20 +135,7 @@ namespace MyFirstPlugin.DataBlocks
                 Type = objectiveType,
             };
 
-            ObjectiveLayerData dataLayer = new ObjectiveLayerData();
-
-            switch (variant)
-            {
-                case ObjectiveVariant.Main:
-                    dataLayer = level.MainLayerData;
-                    break;
-                case ObjectiveVariant.Extreme:
-                    dataLayer = level.SecondaryLayerData;
-                    break;
-                case ObjectiveVariant.Overload:
-                    dataLayer = level.ThirdLayerData;
-                    break;
-            }
+            ObjectiveLayerData dataLayer = level.GetObjectiveLayerData(variant);
 
             switch (objectiveType)
             {
@@ -165,6 +152,8 @@ namespace MyFirstPlugin.DataBlocks
                             objective.GatherRequiredCount, 
                             objective.GatherRequiredCount + 6);
                         objective.GatherMaxPerZone = Generator.Random.Next(3, 8);
+
+                        level.DistributeObjectiveItems(objective, variant, Level.DistributionStrategy.SingleZone);
                         break;
                     }
             }

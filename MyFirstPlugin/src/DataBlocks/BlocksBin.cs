@@ -6,18 +6,18 @@ namespace MyFirstPlugin.DataBlocks
 {
     internal static class Bins
     {
-        public static BlocksBin<Rundown> rundowns { get; private set; }
+        public static BlocksBin<Rundown> Rundowns { get; private set; }
             = new BlocksBin<Rundown>();
-        public static BlocksBin<LevelLayout> levelLayouts { get; private set; }
+        public static BlocksBin<LevelLayout> LevelLayouts { get; private set; }
             = new BlocksBin<LevelLayout>();
-        public static BlocksBin<WardenObjective> wardenObjectives { get; private set; }
+        public static BlocksBin<WardenObjective> WardenObjectives { get; private set; }
             = new BlocksBin<WardenObjective>();
 
         public static void Save()
         {
-            rundowns.Save("RundownDataBlock");
-            levelLayouts.Save("LevelLayoutDataBlock");
-            wardenObjectives.Save("WardenObjectiveDataBlock");
+            Rundowns.Save("RundownDataBlock");
+            LevelLayouts.Save("LevelLayoutDataBlock");
+            WardenObjectives.Save("WardenObjectiveDataBlock");
         }
     }
 
@@ -44,6 +44,13 @@ namespace MyFirstPlugin.DataBlocks
         }
 
         /// <summary>
+        /// Gets a block with a given Id, otherwise null.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public T? Find(UInt32 id) => Blocks.Find(b => b.PersistentId == id);
+
+        /// <summary>
         /// Saves the data block to disk, serializing as JSON
         /// </summary>
         /// <param name="path"></param>
@@ -62,11 +69,11 @@ namespace MyFirstPlugin.DataBlocks
             // Ensure the directory exists
             Directory.CreateDirectory(dir);
 
-            using (StreamWriter sw = new StreamWriter(path))
-            using (JsonWriter writer = new JsonTextWriter(sw))
-            {
-                serializer.Serialize(writer, this);
-            }
+            using StreamWriter stream = new StreamWriter(path);
+            using JsonWriter writer = new JsonTextWriter(stream);
+            
+            serializer.Serialize(writer, this);
+            stream.Flush();
         }
     }
 }

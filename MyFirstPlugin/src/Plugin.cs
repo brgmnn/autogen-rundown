@@ -63,9 +63,6 @@ public class Plugin : BasePlugin
 
         //var harmony = new Harmony("MyFirstPlugin");
 
-        // Load in the rundown data
-        //GameDataLoader.Load();
-
         AssetAPI.OnImplReady += () =>
         {
             //ClassInjector.RegisterTypeInIl2Cpp<HotReloader>();
