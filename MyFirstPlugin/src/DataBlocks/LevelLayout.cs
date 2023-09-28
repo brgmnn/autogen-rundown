@@ -1,21 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MyFirstPlugin.DataBlocks
+﻿namespace MyFirstPlugin.DataBlocks
 {
     internal class LevelLayout : DataBlock
     {
         public int ZoneAliasStart { get; set; }
 
         public List<Zone> Zones { get; set; } = new List<Zone>();
-
-        public LevelLayout()
-        {
-            Type = "LevelLayoutDataBlock";
-        }
 
         public static LevelLayout Build(Level level)
         {
@@ -33,8 +22,11 @@ namespace MyFirstPlugin.DataBlocks
                 {
                     LocalIndex = i,
                     SubComplex = SubComplex.All,
-                    Coverage = CoverageMinMax.Small
+                    Coverage = new CoverageMinMax { X = 50.0, Y = 50.0 }
                 };
+
+                zone.EnemySpawningInZone.Add(
+                    new EnemySpawningData());
 
                 layout.Zones.Add(zone);
             }

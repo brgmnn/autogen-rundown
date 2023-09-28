@@ -36,20 +36,25 @@ namespace MyFirstPlugin
         public static UInt32 GetPersistentId() => pid++;
 
         /// <summary>
+        /// Sets the seed (without saving) to the 
+        /// </summary>
+        public static void GenerateTimeSeed()
+        {
+            DateTime.Now.ToString("M_dd");
+        }
+
+        /// <summary>
         /// Regenerates the seed value and then reload the generators
         /// </summary>
         public static void RegenerateSeed()
         {
-            Seed = $"{Pick(GeneratorData.Words.SeedWords)}{Pick(GeneratorData.Words.SeedWords)}{Pick(GeneratorData.Words.SeedWords)}";
-
-            Seed = "";
-
-            for (var i = 0; i < 3; i++)
+            string GetWord()
             {
                 var word = Pick(GeneratorData.Words.SeedWords);
-
-                Seed += word.Substring(0, 1).ToUpper() + word.Substring(1);
+                return word.Substring(0, 1).ToUpper() + word.Substring(1);
             }
+
+            Seed = $"{GetWord()}_{GetWord()}_{GetWord()}";
 
             WriteSeed();
             Reload();

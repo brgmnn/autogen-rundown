@@ -10,9 +10,10 @@ using static GameData.GD;
 
 namespace MyFirstPlugin.DataBlocks
 {
-    internal class Level : DataBlock
+    internal class Level
     {
         #region Filler settings that won't change
+        public bool Enabled = true;
         public bool IsSinglePlayer = false;
         public bool SkipLobby = false;
         public bool PutIconAboveTier = false;
@@ -25,6 +26,12 @@ namespace MyFirstPlugin.DataBlocks
         public JArray DimensionDatas = new JArray();
         public int SoundEventOnWarpToReality = 0;
         #endregion
+
+        /// <summary>
+        /// Level name
+        /// </summary>
+        [JsonIgnore]
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// Level Tier, roughly difficulty
@@ -92,8 +99,8 @@ namespace MyFirstPlugin.DataBlocks
             {
                 ["ComplexResourceData"] = (int)Complex,
                 ["MLSLevelKit"] = 0,
-                ["LightSettings"] = 0,
-                ["FogSettings"] = 90,
+                ["LightSettings"] = 36,
+                ["FogSettings"] = 139,
                 ["EnemyPopulation"] = 1,
                 ["ExpeditionBalance"] = 1,
                 ["ScoutWaveSettings"] = 3,
@@ -225,18 +232,24 @@ namespace MyFirstPlugin.DataBlocks
             level.Name = name;
             level.GenerateDepth();
 
+            // Main level
             var mainLevelLayout = LevelLayout.Build(level);
-            mainLevelLayout.Save();
             level.LevelLayoutData = mainLevelLayout.PersistentId;
 
+            var mainObjective = WardenObjective.Build(
+                WardenObjectiveType.GatherSmallItems,
+                level,
+                ObjectiveVariant.Main);
+
+            level.MainLayerData.ObjectiveData.DataBlockId = mainObjective.PersistentId;
+
+            // Secondary (Extreme)
+            // Tertiary (Overload)
+
+            Bins.wardenObjectives.AddBlock(mainObjective);
+            Bins.levelLayouts.AddBlock(mainLevelLayout);
+
             return level;
-        }
-
-        static public Level Build(BuildDirector director)
-        {
-            var level = new Level();
-
-            return Build(director, level);
         }
     }
 }

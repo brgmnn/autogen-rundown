@@ -107,7 +107,6 @@ namespace MyFirstPlugin.DataBlocks
         public int AliasOverride = -1;
         public bool OverrideAliasPrefix = false;
         public int BuildFromLocalIndex = 0;
-        public List<JObject> EventsOnPortalWarp = new List<JObject>();
         #endregion
 
         #region Seed properties
@@ -143,6 +142,7 @@ namespace MyFirstPlugin.DataBlocks
         public Altitude AltitudeData { get; set; } = new Altitude();
 
         public List<JObject> EventsOnEnter { get; set; } = new List<JObject>();
+        public List<JObject> EventsOnPortalWarp { get; set; } = new List<JObject>();
         public List<JObject> EventsOnApproachDoor { get; set; } = new List<JObject>();
         public List<JObject> EventsOnUnlockDoor { get; set; } = new List<JObject>();
         public List<JObject> EventsOnOpenDoor { get; set; } = new List<JObject>();
@@ -190,6 +190,8 @@ namespace MyFirstPlugin.DataBlocks
         [JsonProperty("ActiveEnemyWave")]
         public BloodDoor BloodDoor { get; set; } = BloodDoor.None;
 
+        public List<EnemySpawningData> EnemySpawningInZone { get; set; } = new List<EnemySpawningData>();
+
         #region Respawn settings
         /// <summary>
         /// Whether the enemies respawn
@@ -228,15 +230,15 @@ namespace MyFirstPlugin.DataBlocks
         public JArray DumbwaiterPlacements { get; set; } = new JArray();
 
         #region Resources
-        public double HealthMulti { get; set; } = 0.0;
+        public double HealthMulti { get; set; } = 1.0;
 
         public Placement HealthPlacement { get; set; } = new Placement();
 
-        public double WeaponAmmoMulti { get; set; } = 0.0;
+        public double WeaponAmmoMulti { get; set; } = 1.0;
 
         public Placement WeaponAmmoPlacement { get; set; } = new Placement();
 
-        public double ToolAmmoMulti { get; set; } = 0.0;
+        public double ToolAmmoMulti { get; set; } = 1.0;
 
         public Placement ToolAmmoPlacement { get; set; } = new Placement();
 

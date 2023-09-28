@@ -29,9 +29,6 @@ namespace MyFirstPlugin.DataBlocks
         [JsonIgnore]
         public string? Filename { get => $"{PersistentId}__{Name?.Replace(' ', '_')}"; }
 
-        [JsonIgnore]
-        public string Type { get; set; } = "None";
-
         /// <summary>
         /// Data block class constructor. Ensures a unique persistent ID is assigned
         /// </summary>
@@ -49,8 +46,12 @@ namespace MyFirstPlugin.DataBlocks
             JsonSerializer serializer = new JsonSerializer();
             serializer.Formatting = Formatting.Indented;
 
-            var dir = Path.Combine(Paths.PluginPath, "MyFirstPlugin", "Datablocks", Generator.Seed);
-            var path = Path.Combine(dir, $"{Type}__{Filename}.json");
+            //var dir = Path.Combine(Paths.PluginPath, "MyFirstPlugin", "Datablocks", Generator.Seed);
+
+            var version = CellBuildData.GetRevision();
+
+            var dir = Path.Combine(Paths.BepInExRootPath, "GameData", $"{version}", "Custom");
+            var path = Path.Combine(dir, $"GameData__{Filename}.json");
 
             // Ensure the directory exists
             Directory.CreateDirectory(dir);
@@ -61,6 +62,5 @@ namespace MyFirstPlugin.DataBlocks
                 serializer.Serialize(writer, this);
             }
         }
-
     }
 }

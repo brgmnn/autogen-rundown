@@ -20,8 +20,9 @@ namespace MyFirstPlugin
     {
         public void OnHotReload(int id)
         {
-            //GameDataInit.ReInitialize(); // refresh game data
-            GameManager.SetRundown();
+            //GameManager.SetRundown();
+            //GameSetupDataBlock.
+
             Plugin.Logger.LogInfo("Reinitialized GameData");
         }
     }

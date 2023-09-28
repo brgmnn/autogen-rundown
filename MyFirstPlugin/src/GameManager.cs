@@ -2,18 +2,15 @@
 using Gear;
 using Globals;
 using LevelGeneration;
-//using MTFO.Ext.PartialData.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using UnityEngine;
 using MyFirstPlugin.DataBlockTypes;
-using MyFirstPlugin.JsonConverters;
 using CellMenu;
 using HarmonyLib;
 using Newtonsoft.Json;
+using GTFO.API;
 
 namespace MyFirstPlugin
 {
@@ -31,6 +28,7 @@ namespace MyFirstPlugin
 
         // CM_PageRundown_New.UpdateRundownExpeditionProgression
         [HarmonyPostfix]
+        [HarmonyWrapSafe]
         [HarmonyPatch(typeof(CM_PageRundown_New), nameof(CM_PageRundown_New.OnRundownProgressionFileUpdated))]
         public static void OnSelect(object[] __args)
         {
@@ -38,6 +36,36 @@ namespace MyFirstPlugin
             Plugin.Logger.LogMessage($"args: {JsonConvert.SerializeObject(__args)}");
 
             GameManager.SetRundown();
+        }
+
+        [HarmonyPostfix]
+        [HarmonyWrapSafe]
+        [HarmonyPatch(typeof(CM_PageRundown_New), nameof(CM_PageRundown_New.PlaceRundown))]
+        public static void PlaceRundownPostfix(object[] __args)
+        {
+            Plugin.Logger.LogMessage("=============== Place rundown, this must be it! ===============");
+            Plugin.Logger.LogMessage($"args: ");
+        }
+
+        [HarmonyPrefix]
+        [HarmonyWrapSafe]
+        [HarmonyPatch(typeof(CM_PageRundown_New), nameof(CM_PageRundown_New.PlaceRundown))]
+        public static void PlaceRundownPrefix(object[] __args)
+        {
+            Plugin.Logger.LogMessage("=============== Prefix Place Rundown ===============");
+            Plugin.Logger.LogMessage("=============== Replacing with Rundown 1");
+        }
+
+        [HarmonyPostfix]
+        [HarmonyWrapSafe]
+        [HarmonyPatch(typeof(CM_PageRundown_New), nameof(CM_PageRundown_New.Intro_RevealRundown))]
+        public static void RevealRundownPostfix(CM_PageRundown_New __instance)
+        {
+            Plugin.Logger.LogMessage("=============== Reveal Rundown ===============");
+
+            //__instance.m_currentRundownData = GameDataBlockBase<RundownDataBlock>.GetBlock(1);
+
+            GameManager.SetRundown(__instance);
         }
     }
 
@@ -48,7 +76,12 @@ namespace MyFirstPlugin
 
         public static void SetRundown()
         {
-            var rundownPage = MainMenuGuiLayer.Current.PageRundownNew;
+            SetRundown(MainMenuGuiLayer.Current.PageRundownNew);
+        }
+
+        public static void SetRundown(CM_PageRundown_New rundownPage)
+        {
+            //var rundownPage = MainMenuGuiLayer.Current.PageRundownNew;
             rundownPage.m_dataIsSetup = false;
 
             try
@@ -83,14 +116,13 @@ namespace MyFirstPlugin
             if (rundownPage.m_currentRundownData != null)
             {
                 rundownPage.PlaceRundown(rundownPage.m_currentRundownData);
-                rundownPage.m_dataIsSetup = true;
             }
             else
             {
-                Plugin.Logger.LogInfo("-- There's still rundown data there?");
+                Plugin.Logger.LogError("Could not load the custom rundown");
             }
 
-            rundownPage.Update();
+            rundownPage.m_dataIsSetup = true;
         }
 
         public static bool Initialize()

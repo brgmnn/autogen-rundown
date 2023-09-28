@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using Newtonsoft.Json.Linq;
 using MyFirstPlugin.GeneratorData;
-using Newtonsoft.Json.Linq;
 
 namespace MyFirstPlugin.DataBlocks
 {
@@ -106,26 +100,18 @@ namespace MyFirstPlugin.DataBlocks
             }
         }
 
-        public Rundown()
-        {
-            Type = "RundownDataBlock";
-        }
-
         /// <summary>
         /// Builds a new Rundown
         /// </summary>
         /// <returns></returns>
-        static public Rundown Build()
+        static public Rundown Build(Rundown rundown)
         {
             var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
 
-            var rundown = new Rundown()
-            {
-                PersistentId = 1,
-                Name = $"RND Rundown {name}"
-            };
+            rundown.Name = $"RND Rundown {name}";
 
-            rundown.StorytellingData["Title"] = $"<color=green>RND://</color>RUNDOWN <color=orange>09/26</color>\r\nTITLE: {name.ToUpper()}";
+            var rundownNumber = $"<color=orange>{Generator.Seed}</color>";
+            rundown.StorytellingData["Title"] = $"<color=green>RND://</color>RUNDOWN {rundownNumber}\r\nTITLE: {name.ToUpper()}";
 
             return rundown;
         }

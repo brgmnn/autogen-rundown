@@ -30,25 +30,10 @@ namespace MyFirstPlugin;
  * - Survive Warden Protocol
  * - Reactor Shutdown
  */
-class PatchRundown
-{
-    [HarmonyPatch(typeof(CM_PageRundown_New), nameof(CM_PageRundown_New.OnEnable))]
-    [HarmonyPostfix]
-    public static void MyPatch(CM_PageRundown_New __instance)
-    {
-        Plugin.Logger.LogInfo("=== DO WE GET HERE???? ===");
-
-        __instance.m_rundownIntelButton.OnBtnPressCallback = (Action<int>)((_) => 
-        {
-            Plugin.Logger.LogInfo("=== Hi from patch class ===");
-            Application.ForceCrash((int)ForcedCrashCategory.Abort); 
-        });
-    }
-}
-
 
 [BepInPlugin("MyFirstPlugin", "MyFirstPlugin", "1.0.0")]
 [BepInProcess("GTFO.exe")]
+[BepInDependency("dev.gtfomodding.gtfo-api", BepInDependency.DependencyFlags.HardDependency)]
 public class Plugin : BasePlugin
 {
     public static ManualLogSource Logger { get; private set; } = new ManualLogSource("MyFirstPlugin");
@@ -62,32 +47,32 @@ public class Plugin : BasePlugin
 
         Generator.ReadSeed();
 
-        if (!RundownFactory.JsonDataExists())
-        {
+        //if (!RundownFactory.JsonDataExists())
+        //{
             if (Generator.Seed == "")
             {
+                //Generator.GenerateTimeSeed();
                 Generator.RegenerateSeed();
             }
 
             RundownFactory.Build();
-        }
+        //}
 
         Log.LogInfo(Paths.PluginPath);
         Log.LogInfo($"== Seed \"{Generator.Seed}\"");
 
-        var harmony = new Harmony("MyFirstPlugin");
+        //var harmony = new Harmony("MyFirstPlugin");
+
+        // Load in the rundown data
+        //GameDataLoader.Load();
 
         AssetAPI.OnImplReady += () =>
         {
-            ClassInjector.RegisterTypeInIl2Cpp<HotReloader>();
+            //ClassInjector.RegisterTypeInIl2Cpp<HotReloader>();
 
-            harmony.PatchAll(typeof(HotReloadInjector));
-            harmony.PatchAll(typeof(PatchRundown));
-            harmony.PatchAll(typeof(GameDataLoader));
-            harmony.PatchAll(typeof(SetRundownInjector));
-
-            // Load in the rundown data
-            GameDataLoader.Load();
+            //harmony.PatchAll(typeof(HotReloadInjector));
+            //harmony.PatchAll(typeof(GameDataLoader));
+            //harmony.PatchAll(typeof(SetRundownInjector));
         };
     }
 }
