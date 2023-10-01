@@ -50,10 +50,12 @@ namespace MyFirstPlugin.DataBlocks
         public int Depth { get; set; } = 1;
 
         /// <summary>
-        /// Which complex type to use
+        /// Which complex type to use.
+        /// 
+        /// By default set to a random value from the available complexes
         /// </summary>
         [JsonIgnore]
-        public Complex Complex { get; set; } = Complex.Mining;
+        public Complex Complex { get; set; } = Generator.Pick(new List<Complex> { Complex.Mining, Complex.Tech, Complex.Service });
 
         /// <summary>
         /// Level description

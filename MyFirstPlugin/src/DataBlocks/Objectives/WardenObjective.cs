@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MyFirstPlugin.DataBlocks.Alarms;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using static MyFirstPlugin.DataBlocks.Level;
 
@@ -295,8 +296,6 @@ namespace MyFirstPlugin.DataBlocks
                             DistributionStrategy.EvenlyAcrossZones
                         });
 
-                        strategy = DistributionStrategy.EvenlyAcrossZones;
-
                         objective.Name = $"Gather_{name.Replace(" ", "_")}";
                         objective.MainObjective = description;
                         objective.FindLocationInfo = $"Look for {name}s in the complex";
@@ -323,6 +322,11 @@ namespace MyFirstPlugin.DataBlocks
 
                         objective.GatherMaxPerZone = objective.GatherSpawnCount / zoneSpawns + objective.GatherSpawnCount % zoneSpawns;
 
+                        break;
+                    }
+
+                case WardenObjectiveType.ClearPath:
+                    {
                         break;
                     }
             }
@@ -371,13 +375,17 @@ namespace MyFirstPlugin.DataBlocks
         public int GatherRequiredCount { get; set; } = 4;
 
         [JsonProperty("Gather_ItemId")]
-        public UInt32 GatherItemId { get; set; } = 128;
+        public uint GatherItemId { get; set; } = 128;
 
         [JsonProperty("Gather_SpawnCount")]
         public int GatherSpawnCount { get; set; } = 6;
 
         [JsonProperty("Gather_MaxPerZone")]
         public int GatherMaxPerZone { get; set; } = 3;
+        #endregion
+
+        #region Expedition exit
+        public uint ChainedPuzzleAtExit { get; set; } = ChainedPuzzle.ExitAlarm.PersistentId;
         #endregion
 
         #region Fields not yet implemented
@@ -401,7 +409,6 @@ namespace MyFirstPlugin.DataBlocks
         public double FogTransitionDurationOnGotoWin = 0.0;
         public int ChainedPuzzleToActive = 0;
         public int ChainedPuzzleMidObjective = 0;
-        public int ChainedPuzzleAtExit = 11;
         public double ChainedPuzzleAtExitScanSpeedMultiplier = 2.0;
         public JArray Retrieve_Items = new JArray();
         public JArray ReactorWaves = new JArray();

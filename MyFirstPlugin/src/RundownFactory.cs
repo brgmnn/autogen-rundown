@@ -33,25 +33,29 @@ namespace MyFirstPlugin
         {
             Generator.Reload();
 
-            var rundown = Rundown.Build(
-                new Rundown
-                {
-                    PersistentId = 31 // Rundown 7 replacement
-                });
+            // Rundown 7 replacement
+            var rundown = Rundown.Build(new Rundown { PersistentId = 31 });
 
-            var level = Level.Build(
-                new BuildDirector 
-                { 
-                    Complexity = Complexity.Low, 
-                    Credits = 200 
-                },
-                new Level
-                {
-                    Tier = "A",
-                    Index = 1,
-                });
+            // A levels
+            var levelA = Level.Build(
+                new BuildDirector { Complexity = Complexity.Low, Credits = 200 },
+                new Level { Tier = "A", Index = 1 });
 
-            rundown.AddLevel(level);
+            rundown.AddLevel(levelA);
+
+            // B levels
+            var levelB = Level.Build(
+                new BuildDirector { Complexity = Complexity.Low, Credits = 400 },
+                new Level { Tier = "B", Index = 1 });
+
+            rundown.AddLevel(levelB);
+
+            // C levels
+            var levelC = Level.Build(
+                new BuildDirector { Complexity = Complexity.Medium, Credits = 600 },
+                new Level { Tier = "C", Index = 1 });
+
+            rundown.AddLevel(levelC);
 
             Bins.Rundowns.AddBlock(rundown);
 

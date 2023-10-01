@@ -34,21 +34,27 @@ namespace MyFirstPlugin.DataBlocks
         }
 
         public static SubComplex GenSubComplex(Complex complex)
-        {
-            // TODO: Add variety
-            switch (complex)
+            => complex switch
             {
-                case Complex.Tech:
-                    return SubComplex.DataCenter;
-                case Complex.Service:
-                    return SubComplex.Floodways;
-                case Complex.Mining:
-                    return SubComplex.Refinery;
+                Complex.Mining => Generator.Pick(new List<SubComplex>
+                {
+                    SubComplex.DigSite,
+                    SubComplex.Refinery,
+                    SubComplex.Storage
+                }),
+                Complex.Tech => Generator.Pick(new List<SubComplex>
+                {
+                    SubComplex.DataCenter,
+                    SubComplex.Lab
+                }),
+                Complex.Service => Generator.Pick(new List<SubComplex>
+                {
+                    SubComplex.Floodways,
+                    SubComplex.Gardens
+                }),
 
-                default:
-                    return SubComplex.All;
-            }
-        }
+                _ => SubComplex.All
+            };
 
         public static int GenNumZones(Level level, Bulkhead variant)
         {
@@ -88,7 +94,7 @@ namespace MyFirstPlugin.DataBlocks
                 {
                     LocalIndex = i,
                     SubComplex = GenSubComplex(level.Complex),
-                    Coverage = new CoverageMinMax { X = 50.0, Y = 50.0 },
+                    Coverage = CoverageMinMax.GenCoverage(),
                     LightSetting = Lights.Light.RedToCyan_1,
                 };
 

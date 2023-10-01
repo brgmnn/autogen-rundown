@@ -18,6 +18,9 @@ namespace MyFirstPlugin.DataBlocks
 
         public static void Save()
         {
+            // Sometimes this one doesn't get set up properly
+            ChainedPuzzles.AddBlock(ChainedPuzzle.ExitAlarm);
+
             ChainedPuzzles.Save("ChainedPuzzleDataBlock");
             Rundowns.Save("RundownDataBlock");
             LevelLayouts.Save("LevelLayoutDataBlock");
@@ -37,14 +40,20 @@ namespace MyFirstPlugin.DataBlocks
         [JsonProperty("LastPersistentID")]
         public UInt32 LastPersistentId { get; set; } = 0;
 
+        private HashSet<UInt32> persistentIds = new HashSet<UInt32>();
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="block"></param>
         public void AddBlock(T block)
         {
-            Blocks.Add(block);
-            LastPersistentId = Math.Max(LastPersistentId, block.PersistentId);
+            if (!persistentIds.Contains(block.PersistentId))
+            {
+                Blocks.Add(block);
+                persistentIds.Add(block.PersistentId);
+                LastPersistentId = Math.Max(LastPersistentId, block.PersistentId);
+            }
         }
 
         /// <summary>

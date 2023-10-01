@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -9,8 +10,28 @@ using System.Threading.Tasks;
 
 namespace MyFirstPlugin.DataBlocks
 {
+    enum CoverageSize : int
+    {
+        Nano = 25,
+        Tiny = 35,
+        Small = 50,
+        Medium = 75,
+        Large = 125,
+        Huge = 200,
+    }
+
     internal class CoverageMinMax
     {
+        private static List<double> Sizes = new List<double>
+        {
+            (double)CoverageSize.Nano,
+            (double)CoverageSize.Tiny,
+            (double)CoverageSize.Small,
+            (double)CoverageSize.Medium,
+            (double)CoverageSize.Large,
+            (double)CoverageSize.Huge
+        };
+
         private Vector2 vec = new Vector2 { X = 0.0f, Y = 0.0f };
 
         #region Input values
@@ -55,9 +76,18 @@ namespace MyFirstPlugin.DataBlocks
 
         #endregion
 
-        public static CoverageMinMax Small = new CoverageMinMax { X = 3.0, Y = 3.0 };
-        public static CoverageMinMax Medium = new CoverageMinMax { X = 10.0, Y = 10.0 };
-        public static CoverageMinMax Large = new CoverageMinMax { X = 20.0, Y = 20.0 };
-        public static CoverageMinMax Huge = new CoverageMinMax { X = 32.0, Y = 32.0 };
+        public static CoverageMinMax Nano = new CoverageMinMax { X = (double)CoverageSize.Nano, Y = (double)CoverageSize.Nano };
+        public static CoverageMinMax Tiny = new CoverageMinMax { X = (double)CoverageSize.Tiny, Y = (double)CoverageSize.Tiny };
+        public static CoverageMinMax Small = new CoverageMinMax { X = (double)CoverageSize.Small, Y = (double)CoverageSize.Small };
+        public static CoverageMinMax Medium = new CoverageMinMax { X = (double)CoverageSize.Medium, Y = (double)CoverageSize.Medium };
+        public static CoverageMinMax Large = new CoverageMinMax { X = (double)CoverageSize.Large, Y = (double)CoverageSize.Large };
+        public static CoverageMinMax Huge = new CoverageMinMax { X = (double)CoverageSize.Huge, Y = (double)CoverageSize.Huge };
+
+        /// <summary>
+        /// Generates a randomly picked size
+        /// </summary>
+        /// <returns></returns>
+        public static CoverageMinMax GenCoverage()
+            => new CoverageMinMax { X = Generator.Pick(Sizes), Y = Generator.Pick(Sizes) };
     }
 }

@@ -12,8 +12,8 @@ namespace MyFirstPlugin.DataBlocks
     enum Complex
     {
         Mining = 1,
-        Tech = 2,
-        Service = 59
+        Tech = 3,
+        Service = 27
     }
 
     /// <summary>

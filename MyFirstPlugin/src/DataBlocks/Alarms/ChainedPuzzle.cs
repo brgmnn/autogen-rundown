@@ -176,8 +176,45 @@ namespace MyFirstPlugin.DataBlocks.Alarms
                     AlarmClass4,
                     AlarmClass4,
                 },
-                ("B") => new List<ChainedPuzzle> { AlarmClass2 },
-                ("C") => new List<ChainedPuzzle> { AlarmClass2 },
+                ("B") => new List<ChainedPuzzle> 
+                {
+                    None,
+                    None,
+                    TeamScan,
+                    TeamScan,
+                    TeamScan,
+                    AlarmClass2,
+                    AlarmClass2,
+                    AlarmClass2,
+                    AlarmClass2,
+                    AlarmClass2,
+                    AlarmClass3,
+                    AlarmClass3,
+                    AlarmClass3,
+                    AlarmClass3,
+                    AlarmClass3,
+                    AlarmClass4,
+                    AlarmClass4,
+                },
+                ("C") => new List<ChainedPuzzle>
+                {
+                    TeamScan,
+                    TeamScan,
+                    TeamScan,
+                    AlarmClass3,
+                    AlarmClass3,
+                    AlarmClass3,
+                    AlarmClass3,
+                    AlarmClass3,
+                    AlarmClass4,
+                    AlarmClass4,
+                    AlarmClass4,
+                    AlarmClass4,
+                    AlarmClass4,
+                    AlarmClass5,
+                    AlarmClass5,
+                    AlarmClass5,
+                },
                 ("D") => new List<ChainedPuzzle> { AlarmClass2 },
                 ("E") => new List<ChainedPuzzle> { AlarmClass2 },
 
@@ -286,6 +323,19 @@ namespace MyFirstPlugin.DataBlocks.Alarms
                 PuzzleComponent.AllLarge,
                 PuzzleComponent.AllLarge
             }
+        };
+
+        /******************** Exit Alarm Scans ********************/
+        public static ChainedPuzzle ExitAlarm = new ChainedPuzzle
+        {
+            PublicAlarmName = "Alarm",
+            TriggerAlarmOnActivate = false,
+            SurvivalWaveSettings = VanillaWaveSettings.Apex,
+            SurvivalWavePopulation = WavePopulation.Baseline,
+            UseRandomPositions = false,
+            WantedDistanceFromStartPos = 0.0,
+            WantedDistanceBetweenPuzzleComponents = 1.0,
+            Puzzle = new List<PuzzleComponent>() { new PuzzleComponent { PuzzleType = PuzzleType.ExpeditionExit } }
         };
     }
 }
