@@ -5,15 +5,17 @@
     /// </summary>
     enum PuzzleType : UInt32
     {
+        // Single red circles
         Large = 2,
-        Small = 3,
+        Small = 3, // Single small red circle
         
-        // Cluster
-        ClusterSmall = 4,
-        ClusterLarge = 5,
+        // Cluster: Multiple red circles
+        ClusterSmall = 4, // 4 small red circles
+        ClusterLarge = 5, // Multiple big red circles
         ClusterSix = 9,
 
         // Require All teammates (orange)
+        AllBig = 6,
         AllLarge = 8,
         AllLargeCluster = 15,
 
@@ -48,6 +50,7 @@
         public static PuzzleComponent ClusterLarge = new PuzzleComponent { PuzzleType = PuzzleType.ClusterLarge };
         public static PuzzleComponent ClusterSix = new PuzzleComponent { PuzzleType = PuzzleType.ClusterSix };
 
+        public static PuzzleComponent AllBig = new PuzzleComponent { PuzzleType = PuzzleType.AllBig };
         public static PuzzleComponent AllLarge = new PuzzleComponent { PuzzleType = PuzzleType.AllLarge };
         public static PuzzleComponent AllLargeCluster = new PuzzleComponent { PuzzleType = PuzzleType.AllLargeCluster };
 

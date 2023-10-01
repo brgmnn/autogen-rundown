@@ -160,9 +160,9 @@ namespace MyFirstPlugin.DataBlocks.Alarms
                 { 
                     None,
                     None,
-                    None,
-                    None,
-                    None,
+                    TeamScan,
+                    TeamScan,
+                    TeamScan,
                     AlarmClass2,
                     AlarmClass2,
                     AlarmClass2,
@@ -185,7 +185,6 @@ namespace MyFirstPlugin.DataBlocks.Alarms
             };
 
         /*************************************** Presets ***************************************/
-        /******************** Alarm Scans ********************/
         /// <summary>
         /// Special chain puzzle that has no puzzles to enter
         /// </summary>
@@ -194,6 +193,14 @@ namespace MyFirstPlugin.DataBlocks.Alarms
             PersistentId = 0
         };
 
+        /******************** Non-Alarm Scans ********************/
+        public static ChainedPuzzle TeamScan = new ChainedPuzzle
+        {
+            PublicAlarmName = "Scan",
+            Puzzle = new List<PuzzleComponent> { PuzzleComponent.AllBig },
+        };
+
+        /******************** Alarm Scans ********************/
         public static ChainedPuzzle AlarmClass2 = new ChainedPuzzle
         {
             PublicAlarmName = "Class II",
@@ -203,7 +210,7 @@ namespace MyFirstPlugin.DataBlocks.Alarms
             Puzzle = new List<PuzzleComponent>
             {
                 PuzzleComponent.AllLarge,
-                PuzzleComponent.ScanSmall
+                PuzzleComponent.ClusterSmall
             },
         };
 
@@ -216,8 +223,8 @@ namespace MyFirstPlugin.DataBlocks.Alarms
             Puzzle = new List<PuzzleComponent>
             {
                 PuzzleComponent.AllLarge,
-                PuzzleComponent.ScanSmall,
-                PuzzleComponent.ScanSmall
+                PuzzleComponent.ClusterSmall,
+                PuzzleComponent.ClusterSmall
             },
         };
 
@@ -230,8 +237,8 @@ namespace MyFirstPlugin.DataBlocks.Alarms
             Puzzle = new List<PuzzleComponent>
             {
                 PuzzleComponent.AllLarge,
-                PuzzleComponent.ScanSmall,
-                PuzzleComponent.ScanSmall,
+                PuzzleComponent.ClusterSmall,
+                PuzzleComponent.ClusterSmall,
                 PuzzleComponent.ScanLarge
             },
         };
@@ -245,9 +252,9 @@ namespace MyFirstPlugin.DataBlocks.Alarms
             Puzzle = new List<PuzzleComponent>
             {
                 PuzzleComponent.AllLarge,
-                PuzzleComponent.ScanSmall,
-                PuzzleComponent.ScanLarge,
-                PuzzleComponent.ScanSmall,
+                PuzzleComponent.ClusterSmall,
+                PuzzleComponent.ClusterLarge,
+                PuzzleComponent.ClusterSmall,
                 PuzzleComponent.ScanLarge
             },
         };
