@@ -1,11 +1,14 @@
 ﻿using BepInEx;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using MyFirstPlugin.DataBlocks.Alarms;
 
 namespace MyFirstPlugin.DataBlocks
 {
     internal static class Bins
     {
+        public static BlocksBin<ChainedPuzzle> ChainedPuzzles { get; private set; }
+            = new BlocksBin<ChainedPuzzle>();
         public static BlocksBin<Rundown> Rundowns { get; private set; }
             = new BlocksBin<Rundown>();
         public static BlocksBin<LevelLayout> LevelLayouts { get; private set; }
@@ -15,6 +18,7 @@ namespace MyFirstPlugin.DataBlocks
 
         public static void Save()
         {
+            ChainedPuzzles.Save("ChainedPuzzleDataBlock");
             Rundowns.Save("RundownDataBlock");
             LevelLayouts.Save("LevelLayoutDataBlock");
             WardenObjectives.Save("WardenObjectiveDataBlock");
@@ -58,8 +62,6 @@ namespace MyFirstPlugin.DataBlocks
         {
             JsonSerializer serializer = new JsonSerializer();
             serializer.Formatting = Formatting.Indented;
-
-            //var dir = Path.Combine(Paths.PluginPath, "MyFirstPlugin", "Datablocks", Generator.Seed);
 
             var version = CellBuildData.GetRevision();
 

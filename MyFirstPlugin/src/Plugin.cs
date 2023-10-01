@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Unity.IL2CPP;
-using UnityEngine;
-using GameData;
-using CellMenu;
-using HarmonyLib;
-using GTFO.API;
-using Il2CppInterop.Runtime.Injection;
-using Newtonsoft.Json;
 using BepInEx.Logging;
-using MyFirstPlugin.Loaders;
-using UnityEngine.Diagnostics;
 
 namespace MyFirstPlugin;
 
@@ -33,7 +22,8 @@ namespace MyFirstPlugin;
 
 [BepInPlugin("MyFirstPlugin", "MyFirstPlugin", "1.0.0")]
 [BepInProcess("GTFO.exe")]
-[BepInDependency("dev.gtfomodding.gtfo-api", BepInDependency.DependencyFlags.HardDependency)]
+//[BepInDependency("dev.gtfomodding.gtfo-api", BepInDependency.DependencyFlags.HardDependency)]
+[BepInDependency("Inas07-LocalProgression-1.1.5", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BasePlugin
 {
     public static ManualLogSource Logger { get; private set; } = new ManualLogSource("MyFirstPlugin");
@@ -63,13 +53,13 @@ public class Plugin : BasePlugin
 
         //var harmony = new Harmony("MyFirstPlugin");
 
-        AssetAPI.OnImplReady += () =>
-        {
+        //AssetAPI.OnImplReady += () =>
+        //{
             //ClassInjector.RegisterTypeInIl2Cpp<HotReloader>();
 
             //harmony.PatchAll(typeof(HotReloadInjector));
             //harmony.PatchAll(typeof(GameDataLoader));
             //harmony.PatchAll(typeof(SetRundownInjector));
-        };
+        //};
     }
 }

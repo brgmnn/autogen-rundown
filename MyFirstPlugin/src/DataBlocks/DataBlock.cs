@@ -18,7 +18,7 @@ namespace MyFirstPlugin.DataBlocks
         /// Optional name, useful mostly for debugging
         /// </summary>
         [JsonProperty("name")]
-        public string? Name { get; set; }
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// Whether the data block is read by the game or not. Disabled blocks are ignored

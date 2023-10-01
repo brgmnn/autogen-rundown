@@ -8,20 +8,22 @@ namespace MyFirstPlugin
 {
     enum Complexity
     {
-        Low, Medium, High
+        Low,
+        Medium, 
+        High
     }
 
     enum MissionSize
     { 
         Low, 
         Medium, 
-        High 
+        High
     }
 
     internal class BuildDirector
     {
         public int Credits { get; set; } = 0;
 
-        public Complexity Complexity { get; set; }
+        public Complexity Complexity { get; set; } = Complexity.Medium;
     }
 }

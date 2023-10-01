@@ -1,9 +1,13 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using static MyFirstPlugin.DataBlocks.Level;
 
 namespace MyFirstPlugin.DataBlocks
 {
-    enum ObjectiveVariant { Main, Extreme, Overload }
+    /// <summary>
+    /// Which objective bulkhead are we in.
+    /// </summary>
+    enum Bulkhead { Main, Extreme, Overload }
 
     enum WardenObjectiveType
     {
@@ -23,6 +27,24 @@ namespace MyFirstPlugin.DataBlocks
         CorruptedTerminalUplink = 13,
         Empty = 14,
         TimedTerminalSequence = 15
+    }
+
+    enum DistributionStrategy
+    {
+        /// <summary>
+        /// Randomly placed across all zones in random locations.
+        /// </summary>
+        Random,
+
+        /// <summary>
+        /// All items in a single zone (randomly)
+        /// </summary>
+        SingleZone,
+
+        /// <summary>
+        /// Evenly distributed across all zones
+        /// </summary>
+        EvenlyAcrossZones
     }
 
     internal class WardenObjective : DataBlock
@@ -124,11 +146,66 @@ namespace MyFirstPlugin.DataBlocks
             "persistentID": 8
         }
         */
-        
+
+        /// <summary>
+        /// Places objective items in the level as needed
+        /// </summary>
+        /// <param name="level"></param>
+        /// <param name="variant"></param>
+        /// <param name="strategy"></param>
+        public void DistributeObjectiveItems(
+            Level level,
+            Bulkhead variant, 
+            DistributionStrategy strategy)
+        {
+            var data = level.GetObjectiveLayerData(variant);
+            var layout = level.GetLevelLayout(variant);
+
+            switch (strategy)
+            {
+                case DistributionStrategy.SingleZone:
+                    // Pick a random zone that isn't the first zone unless there's only one
+                    var targetZone = Generator.Random.Next(
+                        Math.Min(1, layout.Zones.Count - 1),
+                        layout.Zones.Count);
+
+                    data.ObjectiveData.ZonePlacementDatas.Add(
+                        new List<ZonePlacementData>()
+                        {
+                            new ZonePlacementData
+                            {
+                                LocalIndex = targetZone,
+                                Weights = ZonePlacementWeights.EvenlyDistributed
+                            }
+                        });
+
+                    break;
+                case DistributionStrategy.EvenlyAcrossZones:
+                    // TODO
+                    break;
+                case DistributionStrategy.Random:
+                    // TODO
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Create a new list of objective types. The intention is to Draw() from this "pack" of objectives.
+        /// </summary>
+        /// <param name="tier"></param>
+        /// <returns></returns>
+        public static List<WardenObjectiveType> BuildObjectivePack(string tier)
+            => new List<WardenObjectiveType>
+            {
+                WardenObjectiveType.GatherSmallItems,
+                WardenObjectiveType.GatherSmallItems,
+                WardenObjectiveType.GatherSmallItems,
+            };
+
         public static WardenObjective Build(
             WardenObjectiveType objectiveType,
             Level level,
-            ObjectiveVariant variant = ObjectiveVariant.Main)
+            Bulkhead variant = Bulkhead.Main)
         {
             var objective = new WardenObjective
             {
@@ -153,7 +230,7 @@ namespace MyFirstPlugin.DataBlocks
                             objective.GatherRequiredCount + 6);
                         objective.GatherMaxPerZone = Generator.Random.Next(3, 8);
 
-                        level.DistributeObjectiveItems(objective, variant, Level.DistributionStrategy.SingleZone);
+                        objective.DistributeObjectiveItems(level, variant, DistributionStrategy.SingleZone);
                         break;
                     }
             }

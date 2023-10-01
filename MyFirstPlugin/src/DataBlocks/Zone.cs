@@ -137,7 +137,7 @@ namespace MyFirstPlugin.DataBlocks
         /// <summary>
         /// Which Light to select
         /// </summary>
-        public UInt32 LightSetting { get; set; } = 56;
+        public Lights.Light LightSetting { get; set; } = Lights.Light.AlmostWhite_1;
 
         public Altitude AltitudeData { get; set; } = new Altitude();
 
@@ -158,6 +158,9 @@ namespace MyFirstPlugin.DataBlocks
             ["ZonePlacementData"] = new JArray()
         };
 
+        /// <summary>
+        /// Which security scan to use to enter
+        /// </summary>
         public UInt32 ChainedPuzzleToEnter { get; set; } = 0;
         #endregion
 
@@ -223,8 +226,10 @@ namespace MyFirstPlugin.DataBlocks
         public bool ForceBigPickupsAllocation { get; set; } = false;
         public int ConsumableDistributionInZone { get; set; } = 62;
         public int BigPickupDistributionInZone { get; set; } = 0;
-        public JArray TerminalPlacements { get; set; } = new JArray();
-        public bool ForbidTerminalsInZone { get; set; } = true;
+        
+        public List<TerminalPlacement> TerminalPlacements { get; set; } = new List<TerminalPlacement>();
+        
+        public bool ForbidTerminalsInZone { get; set; } = false;
         public JArray PowerGeneratorPlacements { get; set; } = new JArray();
         public JArray DisinfectionStationPlacements { get; set; } = new JArray();
         public JArray DumbwaiterPlacements { get; set; } = new JArray();

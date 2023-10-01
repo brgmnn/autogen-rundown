@@ -224,89 +224,33 @@ namespace MyFirstPlugin.DataBlocks
         /// </summary>
         /// <param name="variant"></param>
         /// <returns></returns>
-        public ObjectiveLayerData GetObjectiveLayerData(ObjectiveVariant variant)
+        public ObjectiveLayerData GetObjectiveLayerData(Bulkhead variant)
         {
             switch (variant)
             {
-                case ObjectiveVariant.Main:
+                case Bulkhead.Main:
                     return MainLayerData;
-                case ObjectiveVariant.Extreme:
+                case Bulkhead.Extreme:
                     return SecondaryLayerData;
-                case ObjectiveVariant.Overload:
+                case Bulkhead.Overload:
                     return ThirdLayerData;
                 default:
                     return MainLayerData;
             }
         }
 
-        public LevelLayout? GetLevelLayout(ObjectiveVariant variant)
+        public LevelLayout? GetLevelLayout(Bulkhead variant)
         {
             switch (variant)
             {
-                case ObjectiveVariant.Main:
+                case Bulkhead.Main:
                     return Bins.LevelLayouts.Find(LevelLayoutData);
-                case ObjectiveVariant.Extreme:
+                case Bulkhead.Extreme:
                     return Bins.LevelLayouts.Find(SecondaryLayout);
-                case ObjectiveVariant.Overload:
+                case Bulkhead.Overload:
                     return Bins.LevelLayouts.Find(ThirdLayout);
                 default:
                     return Bins.LevelLayouts.Find(LevelLayoutData);
-            }
-        }
-
-        public enum DistributionStrategy 
-        {
-            /// <summary>
-            /// Randomly placed across all zones in random locations.
-            /// </summary>
-            Random, 
-
-            /// <summary>
-            /// All items in a single zone (randomly)
-            /// </summary>
-            SingleZone, 
-
-            /// <summary>
-            /// Evenly distributed across all zones
-            /// </summary>
-            EvenlyAcrossZones 
-        }
-
-        public void DistributeObjectiveItems(
-            WardenObjective objective,
-            ObjectiveVariant variant,
-            DistributionStrategy strategy)
-        {
-            var layerData = GetObjectiveLayerData(variant);
-            var layout = GetLevelLayout(variant);
-
-            objective.GatherRequiredCount = Generator.Random.Next(4, 8);
-            objective.GatherItemId = 128;
-            objective.GatherSpawnCount = Generator.Random.Next(
-                objective.GatherRequiredCount,
-                objective.GatherRequiredCount + 6);
-            objective.GatherMaxPerZone = Generator.Random.Next(3, 8);
-
-            switch (strategy)
-            {
-                case DistributionStrategy.SingleZone:
-                    var targetZone = Generator.Random.Next(0, layout.Zones.Count);
-
-                    layerData.ObjectiveData.ZonePlacementDatas.Add(
-                        new List<ZonePlacementData>()
-                        {
-                            new ZonePlacementData
-                            {
-                                LocalIndex = targetZone,
-                                Weights = ZonePlacementWeights.EvenlyDistributed
-                            }
-                        });
-
-                    break;
-                case DistributionStrategy.EvenlyAcrossZones:
-                    break;
-                case DistributionStrategy.Random:
-                    break;
             }
         }
 
@@ -321,14 +265,14 @@ namespace MyFirstPlugin.DataBlocks
             level.Name = name;
             level.GenerateDepth();
 
-            // Main level
-            var mainLevelLayout = LevelLayout.Build(level);
+            // ============ Main level ============
+            var mainLevelLayout = LevelLayout.Build(level, Bulkhead.Main);
             level.LevelLayoutData = mainLevelLayout.PersistentId;
 
             var mainObjective = WardenObjective.Build(
                 WardenObjectiveType.GatherSmallItems,
                 level,
-                ObjectiveVariant.Main);
+                Bulkhead.Main);
 
             level.MainLayerData.ObjectiveData.DataBlockId = mainObjective.PersistentId;
 

@@ -9,6 +9,36 @@ using RandomDataGenerator.Randomizers;
 
 namespace MyFirstPlugin
 {
+    static internal class Text
+    {
+        /// <summary>
+        /// Converts an integer to its roman numerals
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="UnreachableException"></exception>
+        public static string ToRoman(int number)
+        {
+            if ((number < 0) || (number > 3999)) throw new ArgumentOutOfRangeException(nameof(number), "insert value between 1 and 3999");
+            if (number < 1) return string.Empty;
+            if (number >= 1000) return "M" + ToRoman(number - 1000);
+            if (number >= 900) return "CM" + ToRoman(number - 900);
+            if (number >= 500) return "D" + ToRoman(number - 500);
+            if (number >= 400) return "CD" + ToRoman(number - 400);
+            if (number >= 100) return "C" + ToRoman(number - 100);
+            if (number >= 90) return "XC" + ToRoman(number - 90);
+            if (number >= 50) return "L" + ToRoman(number - 50);
+            if (number >= 40) return "XL" + ToRoman(number - 40);
+            if (number >= 10) return "X" + ToRoman(number - 10);
+            if (number >= 9) return "IX" + ToRoman(number - 9);
+            if (number >= 5) return "V" + ToRoman(number - 5);
+            if (number >= 4) return "IV" + ToRoman(number - 4);
+            if (number >= 1) return "I" + ToRoman(number - 1);
+            return "";
+        }
+    }
+
     static internal class Generator
     {
         private static UInt32 pid = 100000;
@@ -25,6 +55,19 @@ namespace MyFirstPlugin
         /// <returns></returns>
         public static T Pick<T>(IEnumerable<T> collection) =>
             collection.ElementAt(Random.Next(collection.Count()));
+
+        /// <summary>
+        /// Pick()'s an item from a collection and then removes it so it may not be subsequently drawn
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        public static T Draw<T>(ICollection<T> collection)
+        {
+            var item = Pick<T>(collection);
+            collection.Remove(item);
+            return item;
+        }
 
         /// <summary>
         /// Gets a new persistent Id

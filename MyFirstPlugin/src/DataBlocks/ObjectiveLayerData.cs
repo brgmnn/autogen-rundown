@@ -29,7 +29,7 @@ namespace MyFirstPlugin.DataBlocks
         // We don't set artifacts
         public JObject ArtifactData = new JObject
         {
-            ["ArtifactAmountMulti"] = 0.0,
+            ["ArtifactAmountMulti"] = 1.0,
             ["ArtifactLayerDistributionDataID"] = 0,
             ["ArtifactZoneDistributions"] = new JArray()
         };
