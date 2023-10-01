@@ -29,6 +29,24 @@ namespace MyFirstPlugin.DataBlocks
         TimedTerminalSequence = 15
     }
 
+    enum WardenObjectiveItem : UInt32
+    {
+        PersonnelId = 128,
+        PartialDecoder = 129,
+
+        Harddrive = 147,
+        Glp_1 = 149,
+        Glp_2 = 169,
+        Osip = 150,
+        PlantSample = 153,
+        MemoryStick = 171,
+
+        DataCube = 165,
+        DataCubes = 179,
+        DataCubeBackup = 178,
+        DataCubeTampered = 168
+    }
+
     enum DistributionStrategy
     {
         /// <summary>
@@ -164,28 +182,63 @@ namespace MyFirstPlugin.DataBlocks
             switch (strategy)
             {
                 case DistributionStrategy.SingleZone:
-                    // Pick a random zone that isn't the first zone unless there's only one
-                    var targetZone = Generator.Random.Next(
-                        Math.Min(1, layout.Zones.Count - 1),
-                        layout.Zones.Count);
+                    {
+                        // Pick a random zone that isn't the first zone unless there's only one
+                        var targetZone = Generator.Random.Next(
+                            Math.Min(1, layout.Zones.Count - 1),
+                            layout.Zones.Count);
 
-                    data.ObjectiveData.ZonePlacementDatas.Add(
-                        new List<ZonePlacementData>()
-                        {
+                        data.ObjectiveData.ZonePlacementDatas.Add(
+                            new List<ZonePlacementData>()
+                            {
                             new ZonePlacementData
                             {
                                 LocalIndex = targetZone,
                                 Weights = ZonePlacementWeights.EvenlyDistributed
                             }
-                        });
+                            });
 
-                    break;
+                        break;
+                    }
+                    
                 case DistributionStrategy.EvenlyAcrossZones:
-                    // TODO
-                    break;
+                    {
+                        var placement = new List<ZonePlacementData>();
+
+                        foreach (var zone in layout.Zones)
+                        {
+                            placement.Add(new ZonePlacementData
+                            {
+                                LocalIndex = zone.LocalIndex,
+                                Weights = ZonePlacementWeights.EvenlyDistributed
+                            });
+                        }
+
+                        data.ObjectiveData.ZonePlacementDatas.Add(placement);
+
+                        break;
+                    }
+
                 case DistributionStrategy.Random:
-                    // TODO
-                    break;
+                    {
+                        var placement = new List<ZonePlacementData>();
+
+                        foreach (var zone in layout.Zones)
+                        {
+                            if (Generator.Flip())
+                                continue;
+
+                            placement.Add(new ZonePlacementData
+                            {
+                                LocalIndex = zone.LocalIndex,
+                                Weights = ZonePlacementWeights.GenRandom()
+                            });
+                        }
+
+                        data.ObjectiveData.ZonePlacementDatas.Add(placement);
+
+                        break;
+                    }
             }
         }
 
@@ -200,6 +253,22 @@ namespace MyFirstPlugin.DataBlocks
                 WardenObjectiveType.GatherSmallItems,
                 WardenObjectiveType.GatherSmallItems,
                 WardenObjectiveType.GatherSmallItems,
+            };
+
+        public static List<(WardenObjectiveItem, string, string)> BuildSmallPickupPack(string tier)
+            => new List<(WardenObjectiveItem, string, string)>
+            {
+                (WardenObjectiveItem.PersonnelId, "Personnel ID", "Gather [COUNT_REQUIRED] Personnel IDs and return the data to be processed."),
+                (WardenObjectiveItem.PartialDecoder, "Partial Decoder", "Gather [COUNT_REQUIRED] Partial Decoders and return the data to be processed."),
+                (WardenObjectiveItem.Harddrive, "Hard drive", "Gather [COUNT_REQUIRED] Hard Drives and return the drives for data archival."),
+                (WardenObjectiveItem.Glp_1, "GLP-1 canister", "Gather [COUNT_REQUIRED] GLP-1 canisters and return the canisters for genome sequencing."),
+                (WardenObjectiveItem.Glp_2, "GLP-2 canister", "Gather [COUNT_REQUIRED] GLP-2 canisters and return the canisters for genome sequencing."),
+                (WardenObjectiveItem.Osip, "OSIP vial", "Gather [COUNT_REQUIRED] OSIP vials and return the vials for chemical analysis."),
+                (WardenObjectiveItem.PlantSample, "Plant sample", "Gather [COUNT_REQUIRED] Plant samples and return the samples for analysis."),
+                (WardenObjectiveItem.MemoryStick, "Memory stick", "Gather [COUNT_REQUIRED] Memory sticks and return the memory sticks for analysis."),
+                (WardenObjectiveItem.DataCube, "Data cube", "Gather [COUNT_REQUIRED] Data cubes and return the cubes for data extraction."),
+                (WardenObjectiveItem.DataCubeBackup, "Backup data cube", "Gather [COUNT_REQUIRED] Backup Data cubes and return the cubes for data archival."),
+                (WardenObjectiveItem.DataCubeTampered, "Tampered data cube", "Gather [COUNT_REQUIRED] Data cubes and return the cubes for inspection.")
             };
 
         public static WardenObjective Build(
@@ -218,19 +287,42 @@ namespace MyFirstPlugin.DataBlocks
             {
                 case WardenObjectiveType.GatherSmallItems:
                     {
-                        objective.Name = "Gather_Personnel_IDs";
-                        objective.MainObjective = "Gather [COUNT_REQUIRED] Personnel IDs and return the data to be processed. DO IT NOW";
-                        objective.FindLocationInfo = "Look for personnel IDs in the complex";
+                        var (itemId, name, description) = Generator.Pick(BuildSmallPickupPack(level.Tier));
+                        var strategy = Generator.Pick(new List<DistributionStrategy> 
+                        { 
+                            DistributionStrategy.Random,
+                            DistributionStrategy.SingleZone,
+                            DistributionStrategy.EvenlyAcrossZones
+                        });
+
+                        strategy = DistributionStrategy.EvenlyAcrossZones;
+
+                        objective.Name = $"Gather_{name.Replace(" ", "_")}";
+                        objective.MainObjective = description;
+                        objective.FindLocationInfo = $"Look for {name}s in the complex";
                         objective.FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
 
-                        objective.GatherRequiredCount = Generator.Random.Next(4, 8);
-                        objective.GatherItemId = 128;
+                        objective.GatherRequiredCount = level.Tier switch
+                        {
+                            "A" => Generator.Random.Next(4, 8),
+                            "B" => Generator.Random.Next(6, 10),
+                            "C" => Generator.Random.Next(7, 12),
+                            "D" => Generator.Random.Next(8, 13),
+                            "E" => Generator.Random.Next(12, 20),
+                            _ => 1,
+                        };
+
+                        objective.GatherItemId = (UInt32)itemId;
                         objective.GatherSpawnCount = Generator.Random.Next(
                             objective.GatherRequiredCount, 
                             objective.GatherRequiredCount + 6);
-                        objective.GatherMaxPerZone = Generator.Random.Next(3, 8);
 
-                        objective.DistributeObjectiveItems(level, variant, DistributionStrategy.SingleZone);
+                        objective.DistributeObjectiveItems(level, variant, strategy);
+
+                        var zoneSpawns = dataLayer.ObjectiveData.ZonePlacementDatas[0].Count;
+
+                        objective.GatherMaxPerZone = objective.GatherSpawnCount / zoneSpawns + objective.GatherSpawnCount % zoneSpawns;
+
                         break;
                     }
             }
@@ -279,7 +371,7 @@ namespace MyFirstPlugin.DataBlocks
         public int GatherRequiredCount { get; set; } = 4;
 
         [JsonProperty("Gather_ItemId")]
-        public int GatherItemId { get; set; } = 128;
+        public UInt32 GatherItemId { get; set; } = 128;
 
         [JsonProperty("Gather_SpawnCount")]
         public int GatherSpawnCount { get; set; } = 6;

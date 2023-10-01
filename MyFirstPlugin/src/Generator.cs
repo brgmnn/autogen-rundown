@@ -48,6 +48,14 @@ namespace MyFirstPlugin
         public static Random Random { get; private set; } = new Random();
 
         /// <summary>
+        /// Coin flip with a true/false outcome. Optional chance param
+        /// </summary>
+        /// <param name="chance"></param>
+        /// <returns></returns>
+        public static bool Flip(double chance = 0.5)
+            => Random.NextDouble() < chance;
+
+        /// <summary>
         /// Get's the nth element from an enumerable
         /// </summary>
         /// <typeparam name="T"></typeparam>
