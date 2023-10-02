@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "E79pcjunk92lsMixXccfRJkc7e68Y9flpq/nayj4Bc8aWo+B3SQdve1AFc0neQhMfXg8vOzulUqzYQwZnTs65w==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Daniel Bergmann\\source\\repos\\AutogenRundown\\AutogenRundown\\AutogenRundown.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Daniel Bergmann\\.nuget\\packages\\fare\\2.2.0\\fare.2.2.0.nupkg.sha512",
+    "C:\\Users\\Daniel Bergmann\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\Daniel Bergmann\\.nuget\\packages\\rainbowblood.universelib.il2cpp\\2.0.0\\rainbowblood.universelib.il2cpp.2.0.0.nupkg.sha512",
+    "C:\\Users\\Daniel Bergmann\\.nuget\\packages\\randomdatagenerator.net\\1.0.17\\randomdatagenerator.net.1.0.17.nupkg.sha512",
+    "C:\\Users\\Daniel Bergmann\\.nuget\\packages\\stef.validation\\0.1.0\\stef.validation.0.1.0.nupkg.sha512"
+  ],
+  "logs": []
+}
