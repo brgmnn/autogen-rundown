@@ -1,7 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using static AutogenRundown.DataBlocks.Level;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -68,104 +67,6 @@ namespace AutogenRundown.DataBlocks
 
     internal class WardenObjective : DataBlock
     {
-        /*
-        {
-            "Type": 3,
-            "Header": "Gather Personnel IDs",
-            "MainObjective": "Gather [COUNT_REQUIRED] Personnel IDs and return the data to be processed.",
-            "WardenObjectiveSpecialUpdateType": 0,
-            "GenericItemFromStart": 0,
-            "DoNotMarkPickupItemsAsWardenObjectives": false,
-            "OverrideNoRequiredItemsForExit": false,
-            "FindLocationInfo": "Look for personnel IDs in the complex",
-            "FindLocationInfoHelp": "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]",
-            "GoToZone": 0,
-            "GoToZoneHelp": 0,
-            "InZoneFindItem": 0,
-            "InZoneFindItemHelp": 0,
-            "SolveItem": 0,
-            "SolveItemHelp": 0,
-            "GoToWinCondition_Elevator": "Return to the point of entrance in [EXTRACTION_ZONE]",
-            "GoToWinConditionHelp_Elevator": 0,
-            "GoToWinCondition_CustomGeo": "Go to the forward exit point in [EXTRACTION_ZONE]",
-            "GoToWinConditionHelp_CustomGeo": 0,
-            "GoToWinCondition_ToMainLayer": "Go back to the main objective and complete the expedition.",
-            "GoToWinConditionHelp_ToMainLayer": 0,
-            "ShowHelpDelay": 180.0,
-            "WavesOnElevatorLand": [],
-            "EventsOnElevatorLand": [],
-            "WaveOnElevatorWardenIntel": 0,
-            "FogTransitionDataOnElevatorLand": 0,
-            "FogTransitionDurationOnElevatorLand": 0.0,
-            "OnActivateOnSolveItem": false,
-            "WavesOnActivate": [],
-            "EventsOnActivate": [],
-            "StopAllWavesBeforeGotoWin": false,
-            "WavesOnGotoWin": [],
-            "WaveOnGotoWinTrigger": 0,
-            "EventsOnGotoWin": [],
-            "EventsOnGotoWinTrigger": 0,
-            "FogTransitionDataOnGotoWin": 0,
-            "FogTransitionDurationOnGotoWin": 0.0,
-            "ChainedPuzzleToActive": 0,
-            "ChainedPuzzleMidObjective": 0,
-            "ChainedPuzzleAtExit": 11,
-            "ChainedPuzzleAtExitScanSpeedMultiplier": 2.0,
-            "Gather_RequiredCount": 4,
-            "Gather_ItemId": 128,
-            "Gather_SpawnCount": 6,
-            "Gather_MaxPerZone": 3,
-            "Retrieve_Items": [],
-            "ReactorWaves": [],
-            "LightsOnFromBeginning": false,
-            "LightsOnDuringIntro": false,
-            "LightsOnWhenStartupComplete": false,
-            "DoNotSolveObjectiveOnReactorComplete": false,
-            "SpecialTerminalCommand": "",
-            "SpecialTerminalCommandDesc": "",
-            "PostCommandOutput": [],
-            "SpecialCommandRule": 0,
-            "PowerCellsToDistribute": 0,
-            "Uplink_NumberOfVerificationRounds": 0,
-            "Uplink_NumberOfTerminals": 1,
-            "Uplink_WaveSpawnType": 1,
-            "CentralPowerGenClustser_NumberOfGenerators": 0,
-            "CentralPowerGenClustser_NumberOfPowerCells": 4,
-            "CentralPowerGenClustser_FogDataSteps": [],
-            "ActivateHSU_ItemFromStart": 0,
-            "ActivateHSU_ItemAfterActivation": 0,
-            "ActivateHSU_BringItemInElevator": true,
-            "ActivateHSU_MarkItemInElevatorAsWardenObjective": false,
-            "ActivateHSU_StopEnemyWavesOnActivation": false,
-            "ActivateHSU_ObjectiveCompleteAfterInsertion": false,
-            "ActivateHSU_RequireItemAfterActivationInExitScan": false,
-            "ActivateHSU_Events": [],
-            "Survival_TimeToActivate": 0.0,
-            "Survival_TimeToSurvive": 0.0,
-            "Survival_TimerTitle": 0,
-            "Survival_TimerToActivateTitle": 0,
-            "GatherTerminal_SpawnCount": 0,
-            "GatherTerminal_RequiredCount": 0,
-            "GatherTerminal_Command": "",
-            "GatherTerminal_CommandHelp": "",
-            "GatherTerminal_DownloadingText": "",
-            "GatherTerminal_DownloadCompleteText": "",
-            "GatherTerminal_DownloadTime": -1.0,
-            "TimedTerminalSequence_NumberOfRounds": 3,
-            "TimedTerminalSequence_NumberOfTerminals": 1,
-            "TimedTerminalSequence_TimePerRound": 90.0,
-            "TimedTerminalSequence_TimeForConfirmation": 10.0,
-            "TimedTerminalSequence_UseFilterForSourceTerminalPicking": false,
-            "TimedTerminalSequence_SourceTerminalWorldEventObjectFilter": "",
-            "TimedTerminalSequence_EventsOnSequenceStart": [],
-            "TimedTerminalSequence_EventsOnSequenceDone": [],
-            "TimedTerminalSequence_EventsOnSequenceFail": [],
-            "name": "Gather_Personnel_IDs",
-            "internalEnabled": true,
-            "persistentID": 8
-        }
-        */
-
         /// <summary>
         /// Places objective items in the level as needed
         /// </summary>
@@ -284,6 +185,10 @@ namespace AutogenRundown.DataBlocks
 
             ObjectiveLayerData dataLayer = level.GetObjectiveLayerData(variant);
 
+            objective.GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
+            objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+            objective.GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+
             switch (objectiveType)
             {
                 case WardenObjectiveType.GatherSmallItems:
@@ -327,13 +232,24 @@ namespace AutogenRundown.DataBlocks
 
                 case WardenObjectiveType.ClearPath:
                     {
+                        objective.Name = "Clear_path";
+                        objective.MainObjective = "Clear a path to the exit point in [EXTRACTION_ZONE]";
+                        objective.GoToWinCondition_Elevator = "Go to the forward exit point in [EXTRACTION_ZONE]";
+                        objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+
+                        objective.EventsOnGotoWin.Add(new JObject
+                        {
+                            ["WaveSettings"] = (int)VanillaWaveSettings.Apex,
+                            ["WavePopulation"] = (int)WavePopulation.Baseline,
+                            ["AreaDistance"] = 2,
+                            ["SpawnDelay"] = 0.0,
+                            ["TriggerAlarm"] = true,
+                            ["IntelMessage"] = 0
+                        });
+
                         break;
                     }
             }
-
-            objective.GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
-            objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
-            objective.GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
             dataLayer.ObjectiveData.DataBlockId = objective.PersistentId;
 
@@ -382,6 +298,9 @@ namespace AutogenRundown.DataBlocks
 
         [JsonProperty("Gather_MaxPerZone")]
         public int GatherMaxPerZone { get; set; } = 3;
+        #endregion
+
+        #region Type=4: Clear a path
         #endregion
 
         #region Expedition exit

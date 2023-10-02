@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutogenRundown.DataBlocks;
 
 namespace AutogenRundown
 {
@@ -20,10 +16,17 @@ namespace AutogenRundown
         High
     }
 
+    /// <summary>
+    /// Director for building what each level (bulkhead) should be
+    /// </summary>
     internal class BuildDirector
     {
         public int Credits { get; set; } = 0;
 
         public Complexity Complexity { get; set; } = Complexity.Medium;
+
+        public Bulkhead Bulkhead { get; set; } = Bulkhead.Main;
+
+        public WardenObjectiveType Objective { get; set; } = WardenObjectiveType.GatherSmallItems;
     }
 }

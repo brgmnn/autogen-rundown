@@ -103,10 +103,30 @@ namespace AutogenRundown.DataBlocks
     /// </summary>
     internal class Zone : DataBlock
     {
+        public void GenExitGeomorph(Complex complex)
+        {
+            switch (complex)
+            {
+                case Complex.Mining:
+                    CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_exit_01.prefab";
+                    SubComplex = SubComplex.Refinery;
+                    break;
+
+                case Complex.Tech:
+                    CustomGeomorph = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_32x32_lab_exit_01.prefab";
+                    SubComplex = SubComplex.Lab;
+                    break;
+
+                case Complex.Service:
+                    CustomGeomorph = "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_floodways_exit_01.prefab";
+                    SubComplex = SubComplex.Floodways;
+                    break;
+            };
+        }
+
         #region Unused by us properties
         public int AliasOverride = -1;
         public bool OverrideAliasPrefix = false;
-        public int BuildFromLocalIndex = 0;
         #endregion
 
         #region Seed properties
@@ -121,9 +141,14 @@ namespace AutogenRundown.DataBlocks
         public int LocalIndex { get; set; } = 0;
 
         /// <summary>
+        /// Which zone to build this zone from
+        /// </summary>
+        public int BuildFromLocalIndex { get; set; } = 0;
+
+        /// <summary>
         /// Which tileset to use
         /// </summary>
-        public SubComplex SubComplex { get; set; }
+        public SubComplex SubComplex { get; set; } = SubComplex.All;
 
         [JsonProperty("CoverageMinMax")]
         public CoverageMinMax Coverage { get; set; } = CoverageMinMax.Medium;
@@ -133,6 +158,11 @@ namespace AutogenRundown.DataBlocks
         public ZoneBuildExpansion StartExpansion { get; set; } = ZoneBuildExpansion.Random;
 
         public ZoneExpansion ZoneExpansion { get; set; } = ZoneExpansion.Random;
+
+        /// <summary>
+        /// If we specify a custom geomorph it goes here
+        /// </summary>
+        public string? CustomGeomorph { get; set; } = null;
 
         /// <summary>
         /// Which Light to select
@@ -253,5 +283,39 @@ namespace AutogenRundown.DataBlocks
         #endregion
     
         public JArray StaticSpawnDataContainers { get; set; } = new JArray();
+
+        public Zone()
+        {
+            // Always ensure a terminal is placed in the zone
+            TerminalPlacements.Add(new TerminalPlacement());
+
+            /*StartPosition = Generator.Pick(new List<ZoneEntranceBuildFrom>
+            {
+                ZoneEntranceBuildFrom.Random,
+                ZoneEntranceBuildFrom.Start,
+                ZoneEntranceBuildFrom.AverageCenter,
+                ZoneEntranceBuildFrom.Furthest,
+                ZoneEntranceBuildFrom.BetweenStartAndFurthest
+            });
+            ZoneExpansion = Generator.Pick(new List<ZoneExpansion>
+            {
+                ZoneExpansion.Random,
+                ZoneExpansion.Collapsed,
+                ZoneExpansion.Expansional,
+                //ZoneExpansion.Forward,
+                //ZoneExpansion.Backward,
+                //ZoneExpansion.Right,
+                //ZoneExpansion.Left,
+                ZoneExpansion.DirectionalRandom
+            });*/
+            /*StartExpansion = Generator.Pick(new List<ZoneBuildExpansion>
+            {
+                ZoneBuildExpansion.Random,
+                ZoneBuildExpansion.Forward,
+                ZoneBuildExpansion.Backward,
+                ZoneBuildExpansion.Right,
+                ZoneBuildExpansion.Left
+            });*/
+        }
     }
 }

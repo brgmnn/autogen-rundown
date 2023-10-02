@@ -1,5 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.ZoneData;
+using System.Security.AccessControl;
+using UnityEngine.TestTools;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -76,7 +78,7 @@ namespace AutogenRundown.DataBlocks
             };
         }
 
-        public static LevelLayout Build(Level level, Bulkhead variant)
+        public static LevelLayout Build(Level level, BuildDirector director)
         {
             var layout = new LevelLayout
             {
@@ -84,35 +86,93 @@ namespace AutogenRundown.DataBlocks
                 ZoneAliasStart = GenZoneAliasStart(level.Tier)
             };
 
-            int numZones = GenNumZones(level, variant);
-
+            var objectiveLayerData = level.GetObjectiveLayerData(director.Bulkhead);
             var puzzlePack = ChainedPuzzle.BuildPack(level.Tier);
 
-            for (int i = 0; i < numZones; i++)
+            int numZones = GenNumZones(level, director.Bulkhead);
+
+            switch (director.Objective)
             {
-                var zone = new Zone
-                {
-                    LocalIndex = i,
-                    SubComplex = GenSubComplex(level.Complex),
-                    Coverage = CoverageMinMax.GenCoverage(),
-                    LightSetting = Lights.Light.RedToCyan_1,
-                };
+                case WardenObjectiveType.ClearPath:
+                    {
+                        for (int i = 0; i < numZones; i++)
+                        {
+                            var subcomplex = GenSubComplex(level.Complex);
 
-                zone.EnemySpawningInZone.Add(new EnemySpawningData());
-                zone.TerminalPlacements.Add(new TerminalPlacement());
+                            var zone = new Zone
+                            {
+                                LocalIndex = i,
+                                Coverage = CoverageMinMax.GenCoverage(),
+                                LightSetting = Lights.Light.RedToCyan_1,
 
-                layout.Zones.Add(zone);
+                                // Chain zones together
+                                BuildFromLocalIndex = i == 0 ? 0 : i - 1,
+                                ZoneExpansion = ZoneExpansion.Forward
+                            };
 
-                if (i == 0)
-                    continue;
+                            zone.EnemySpawningInZone.Add(new EnemySpawningData());
 
-                // Grab a random puzzle from the puzzle pack
-                var puzzle = Generator.Draw(puzzlePack);
+                            if (i == numZones - 1)
+                            {
+                                // The final zone is the extraction zone
+                                zone.Coverage = new CoverageMinMax { X = 50, Y = 50 };
+                                zone.SubComplex = subcomplex;
+                                zone.GenExitGeomorph(level.Complex);
+                            }
 
-                zone.ChainedPuzzleToEnter = puzzle.PersistentId;
+                            layout.Zones.Add(zone);
 
-                if (puzzle.PersistentId != 0)
-                    Bins.ChainedPuzzles.AddBlock(puzzle);
+                            if (i == 0)
+                                continue;
+
+                            // Grab a random puzzle from the puzzle pack
+                            var puzzle = Generator.Draw(puzzlePack);
+
+                            zone.ChainedPuzzleToEnter = puzzle.PersistentId;
+
+                            if (puzzle.PersistentId != 0)
+                                Bins.ChainedPuzzles.AddBlock(puzzle);
+
+                            if (Generator.Flip(0.2))
+                                zone.BloodDoor = BloodDoor.Easy;
+                        }
+
+                        break;
+                    }
+
+                case WardenObjectiveType.GatherSmallItems:
+                default:
+                    {
+                        for (int i = 0; i < numZones; i++)
+                        {
+                            var zone = new Zone
+                            {
+                                LocalIndex = i,
+                                Coverage = CoverageMinMax.GenCoverage(),
+                                LightSetting = Lights.Light.RedToCyan_1,
+                            };
+
+                            zone.EnemySpawningInZone.Add(new EnemySpawningData());
+
+                            layout.Zones.Add(zone);
+
+                            if (i == 0)
+                                continue;
+
+                            // Grab a random puzzle from the puzzle pack
+                            var puzzle = Generator.Draw(puzzlePack);
+
+                            zone.ChainedPuzzleToEnter = puzzle.PersistentId;
+
+                            if (puzzle.PersistentId != 0)
+                                Bins.ChainedPuzzles.AddBlock(puzzle);
+
+                            if (Generator.Flip(0.2))
+                                zone.BloodDoor = BloodDoor.Easy;
+                        }
+
+                        break;
+                    }
             }
 
             Bins.LevelLayouts.AddBlock(layout);

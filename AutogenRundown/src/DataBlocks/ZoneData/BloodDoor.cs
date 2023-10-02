@@ -19,5 +19,13 @@ namespace AutogenRundown.DataBlocks.ZoneData
         public int EnemyGroupsInArea { get; set; } = 0;
 
         static public BloodDoor None = new BloodDoor { Enabled = false };
+
+        static public BloodDoor Easy = new BloodDoor
+        {
+            Enabled = true,
+            EnemyGroupInfrontOfDoor = 76,
+            EnemyGroupInArea = 76,
+            EnemyGroupsInArea = 1
+        };
     }
 }

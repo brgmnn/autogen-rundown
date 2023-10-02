@@ -268,13 +268,19 @@ namespace AutogenRundown.DataBlocks
             level.GenerateDepth();
 
             // ============ Main level ============
-            var mainLevelLayout = LevelLayout.Build(level, Bulkhead.Main);
+            //WardenObjectiveType.GatherSmallItems,
+            var objectiveType = WardenObjectiveType.ClearPath;
+
+            var mainDirector = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Main,
+                Objective = WardenObjectiveType.ClearPath
+            };
+
+            var mainLevelLayout = LevelLayout.Build(level, mainDirector);
             level.LevelLayoutData = mainLevelLayout.PersistentId;
 
-            var mainObjective = WardenObjective.Build(
-                WardenObjectiveType.GatherSmallItems,
-                level,
-                Bulkhead.Main);
+            var mainObjective = WardenObjective.Build(objectiveType, level, Bulkhead.Main);
 
             level.MainLayerData.ObjectiveData.DataBlockId = mainObjective.PersistentId;
 
