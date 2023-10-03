@@ -108,6 +108,8 @@ namespace AutogenRundown.DataBlocks
             Light.RedToYellow_1
         };
 
+        public static Light NoLight { get; private set; } = Light.Totally_black;
+
         /// <summary>
         /// Picks a random light
         /// </summary>

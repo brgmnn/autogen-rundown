@@ -325,6 +325,17 @@ namespace AutogenRundown.DataBlocks.Alarms
             }
         };
 
+        /******************** Error Alarms ********************/
+        public static ChainedPuzzle AlarmError_Baseline = new ChainedPuzzle
+        {
+            PublicAlarmName = "Class ://ERROR! Alarm",
+            TriggerAlarmOnActivate = true,
+            DisableSurvivalWaveOnComplete = false,
+            SurvivalWaveSettings = VanillaWaveSettings.Trickle_352_SSpB,
+            SurvivalWavePopulation = WavePopulation.Baseline,
+            Puzzle = new List<PuzzleComponent>() { PuzzleComponent.AllLarge }
+        };
+
         /******************** Exit Alarm Scans ********************/
         public static ChainedPuzzle ExitAlarm = new ChainedPuzzle
         {

@@ -22,6 +22,9 @@ namespace AutogenRundown.DataBlocks.Alarms
         // Scout Waves
         Scout_sspm = 3,
 
+        // Error alarms
+        Trickle_352_SSpB = 32,
+
         // Exit Trickles
         ExitTrickle_38S_Original = 5,
         ExitTrickle_18S = 11,

@@ -25,6 +25,8 @@ namespace AutogenRundown
 
         public Complexity Complexity { get; set; } = Complexity.Medium;
 
+        public string Tier { get; set; } = "A";
+
         public Bulkhead Bulkhead { get; set; } = Bulkhead.Main;
 
         public WardenObjectiveType Objective { get; set; } = WardenObjectiveType.GatherSmallItems;

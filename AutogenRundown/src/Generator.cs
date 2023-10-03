@@ -60,9 +60,9 @@ namespace AutogenRundown
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="collection"></param>
-        /// <returns></returns>
-        public static T Pick<T>(IEnumerable<T> collection) =>
-            collection.ElementAt(Random.Next(collection.Count()));
+        /// <returns>Returns null if no element can be picked (empty collection)</returns>
+        public static T? Pick<T>(IEnumerable<T> collection) =>
+            collection.Count() > 0 ? collection.ElementAt(Random.Next(collection.Count())) : default(T);
 
         /// <summary>
         /// Pick()'s an item from a collection and then removes it so it may not be subsequently drawn

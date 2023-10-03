@@ -1,15 +1,83 @@
-﻿using AutogenRundown.DataBlocks.Alarms;
+﻿using Newtonsoft.Json;
+using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.ZoneData;
-using System.Security.AccessControl;
-using UnityEngine.TestTools;
 
 namespace AutogenRundown.DataBlocks
 {
     internal class LevelLayout : DataBlock
     {
+        #region hidden data
+        [JsonIgnore]
+        private BuildDirector director;
+        #endregion
+
         public int ZoneAliasStart { get; set; }
 
         public List<Zone> Zones { get; set; } = new List<Zone>();
+
+        public LevelLayout(BuildDirector director)
+        {
+            this.director = director;
+        }
+
+        /// <summary>
+        /// Rolls for whether we should add an error alarm
+        /// </summary>
+        /// <param name="factor">
+        /// Adjustment factor for whether an alarm should be rolled
+        /// </param>
+        public void RollErrorAlarm()
+        {
+            // Rolls for alarms to add. Each successful roll adds an error alarm and rolls again
+            // with reduced chance of adding another alarm.
+            int Roll(double chance)
+            {
+                if (Generator.Flip(chance))
+                    return 1 + Roll(chance - 0.4);
+
+                return 0;
+            }
+
+            var alarmCount = director.Tier switch
+            {
+                "A" => 0,
+                "B" => 0,
+                "C" => Roll(0.1),
+                "D" => Roll(0.3),
+                
+                // E-tier has a 85% chance of having one error alarm. 38% chance of having two error alarms,
+                // and a 2% chance of having three error alarms.
+                "E" => Roll(0.85),
+                _ => 0
+            };
+
+            alarmCount = 1;
+
+            for (int i = 0; i < alarmCount; i++)
+            {
+                var puzzle = ChainedPuzzle.AlarmError_Baseline;
+
+                var candidates = Zones.Where(z => z.LocalIndex != 0 && z.ChainedPuzzleToEnter == 0);
+
+                if (candidates.Count() == 0)
+                    candidates = Zones.Where(z => z.LocalIndex != 0);
+
+                // Pick from all zones without alarms already that aren't the first zone
+                var zone = Generator.Pick(candidates);
+
+                if (zone == null)
+                {
+                    // Something's gone wrong if this is the case and there were no zones to pick from.
+                    return;
+                }
+
+                Plugin.Logger.LogInfo($"Picked zone {zone.LocalIndex}");
+
+                zone.ChainedPuzzleToEnter = puzzle.PersistentId;
+
+                Bins.ChainedPuzzles.AddBlock(puzzle);
+            }
+        }
 
         /// <summary>
         /// Generates a Zone Alias start. In general the deeper the level the higher the zone numbers
@@ -58,6 +126,12 @@ namespace AutogenRundown.DataBlocks
                 _ => SubComplex.All
             };
 
+        /// <summary>
+        /// Generates the number of zones
+        /// </summary>
+        /// <param name="level"></param>
+        /// <param name="variant"></param>
+        /// <returns></returns>
         public static int GenNumZones(Level level, Bulkhead variant)
         {
             return (level.Tier, variant) switch
@@ -80,7 +154,7 @@ namespace AutogenRundown.DataBlocks
 
         public static LevelLayout Build(Level level, BuildDirector director)
         {
-            var layout = new LevelLayout
+            var layout = new LevelLayout(director)
             {
                 Name = $"{level.Tier}{level.Index} {level.Name}",
                 ZoneAliasStart = GenZoneAliasStart(level.Tier)
@@ -174,6 +248,8 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
             }
+
+            layout.RollErrorAlarm();
 
             Bins.LevelLayouts.AddBlock(layout);
 
