@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using BepInEx.Logging;
+using BepInEx.Configuration;
 
 namespace AutogenRundown;
 
@@ -19,21 +20,30 @@ public class Plugin : BasePlugin
         // Plugin startup logic
         Log.LogInfo($"====== Plugin is loaded! ======");
 
-        Generator.ReadSeed();
+
+        var seedCfg = Config.Bind(
+            new ConfigDefinition("AutogenRundown", "Seed"),
+            "",
+            new ConfigDescription("Specify a seed to override rundown generation"));
+        var seed = seedCfg.BoxedValue.ToString() ?? "";
+
+
+        Generator.ReadOrSetSeed(seed);
+        RundownFactory.Build();
 
         //if (!RundownFactory.JsonDataExists())
         //{
-            if (Generator.Seed == "")
-            {
-                //Generator.GenerateTimeSeed();
-                Generator.RegenerateSeed();
-            }
+        //if (Generator.Seed == "")
+        //{
+        //    //Generator.GenerateTimeSeed();
+        //    Generator.RegenerateSeed();
+        //}
 
-            RundownFactory.Build();
+        //RundownFactory.Build();
         //}
 
         Log.LogInfo(Paths.PluginPath);
-        Log.LogInfo($"== Seed \"{Generator.Seed}\"");
+        Log.LogInfo($"== Seed \"{Generator.Seed}\", Config Seed: \"{seed}\"");
 
         //var harmony = new Harmony("AutogenRundown");
 

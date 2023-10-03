@@ -110,7 +110,7 @@ namespace AutogenRundown.DataBlocks
 
             rundown.Name = $"RND Rundown {name}";
 
-            var rundownNumber = $"<color=orange>{Generator.Seed}</color>";
+            var rundownNumber = $"{Generator.DisplaySeed}";
             rundown.StorytellingData["Title"] = $"<color=green>RND://</color>RUNDOWN {rundownNumber}\r\nTITLE: {name.ToUpper()}";
 
             return rundown;

@@ -38,6 +38,7 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="rainbowblood.UniverseLib.IL2CPP" Version="2.0.0" />
 		<PackageReference Include="RandomDataGenerator.Net" Version="1.0.17" />
+		<PackageReference Include="Tomlyn" Version="0.16.2" />
 		
 		<!-- Plugins -->
 		<Reference Include="$(Plugins)\GTFO-API.dll" Private="false" />

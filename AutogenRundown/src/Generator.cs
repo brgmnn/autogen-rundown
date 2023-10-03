@@ -43,6 +43,8 @@ namespace AutogenRundown
     {
         private static UInt32 pid = 100000;
 
+        public static string DisplaySeed { get; set; } = "";
+
         public static string Seed { get; set; } = "";
 
         public static Random Random { get; private set; } = new Random();
@@ -88,7 +90,16 @@ namespace AutogenRundown
         /// </summary>
         public static void GenerateTimeSeed()
         {
-            DateTime.Now.ToString("M_dd");
+            DateTime utcNow = DateTime.UtcNow;
+
+            TimeZoneInfo tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            DateTime pst = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
+
+            var now = pst.ToString("yyyy_MM_dd");
+            var display = pst.ToString("MM/dd");
+
+            Seed = now;
+            DisplaySeed = $"<color=orange>{display}</color>";
         }
 
         /// <summary>
@@ -103,6 +114,7 @@ namespace AutogenRundown
             }
 
             Seed = $"{GetWord()}_{GetWord()}_{GetWord()}";
+            DisplaySeed = Seed;
 
             WriteSeed();
             Reload();
@@ -121,9 +133,17 @@ namespace AutogenRundown
             });
         }
 
-        public static void ReadSeed()
+        public static void ReadOrSetSeed(string seed = "")
         {
-            var dir = Path.Combine(Paths.PluginPath, "MyFirstPlugin");
+            if (seed != "")
+            {
+                Seed = seed;
+                return;
+            }
+
+            GenerateTimeSeed();
+
+            /*var dir = Path.Combine(Paths.PluginPath, "MyFirstPlugin");
             var path = Path.Combine(dir, "seed.txt");
 
             // Ensure the directory exists
@@ -138,7 +158,7 @@ namespace AutogenRundown
             catch (FileNotFoundException)
             {
                 Plugin.Logger.LogInfo("Seed config file not found.");
-            }
+            }*/
         }
 
         public static void WriteSeed()
