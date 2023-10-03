@@ -282,7 +282,7 @@ namespace AutogenRundown.DataBlocks.Alarms
 
         public static ChainedPuzzle AlarmClass5 = new ChainedPuzzle
         {
-            PublicAlarmName = "Class IV",
+            PublicAlarmName = "Class V",
             TriggerAlarmOnActivate = true,
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
             SurvivalWavePopulation = WavePopulation.Baseline,
@@ -331,6 +331,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             PublicAlarmName = "Class ://ERROR! Alarm",
             TriggerAlarmOnActivate = true,
             DisableSurvivalWaveOnComplete = false,
+            AlarmSoundStart = 2200133294,
+            AlarmSoundStop = 1190355274,
             SurvivalWaveSettings = VanillaWaveSettings.Trickle_352_SSpB,
             SurvivalWavePopulation = WavePopulation.Baseline,
             Puzzle = new List<PuzzleComponent>() { PuzzleComponent.AllLarge }

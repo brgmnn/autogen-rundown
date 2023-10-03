@@ -71,11 +71,18 @@ namespace AutogenRundown.DataBlocks
                     return;
                 }
 
-                Plugin.Logger.LogInfo($"Picked zone {zone.LocalIndex}");
-
                 zone.ChainedPuzzleToEnter = puzzle.PersistentId;
 
                 Bins.ChainedPuzzles.AddBlock(puzzle);
+            }
+
+            // Give a chance to allow disabling the error alarm(s). Higher chance the more error alarms spawned.
+            if (Generator.Flip(0.2 * alarmCount) || true)
+            {
+                var zone = Generator.Pick(Zones.Where(z => z.LocalIndex != 0));
+
+                if (zone != null)
+                    zone.TurnOffAlarmOnTerminal = true;
             }
         }
 
