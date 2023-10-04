@@ -254,13 +254,7 @@ namespace AutogenRundown.DataBlocks
 
                         var zoneSpawns = dataLayer.ObjectiveData.ZonePlacementDatas[0].Count;
 
-                        try {
-                            objective.GatherMaxPerZone = objective.GatherSpawnCount / zoneSpawns + objective.GatherSpawnCount % zoneSpawns;
-                        } catch (Exception error)
-                        {
-                            Plugin.Logger.LogError($"What's wrong: level={level.Name}, zoneSpawns={zoneSpawns}, strategy={strategy}, gatherSpawnCount={objective.GatherSpawnCount}");
-                        }
-                        
+                        objective.GatherMaxPerZone = objective.GatherSpawnCount / zoneSpawns + objective.GatherSpawnCount % zoneSpawns;
 
                         break;
                     }
