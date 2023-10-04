@@ -198,7 +198,7 @@ namespace AutogenRundown.DataBlocks
                                 // The final zone is the extraction zone
                                 zone.Coverage = new CoverageMinMax { X = 50, Y = 50 };
                                 zone.SubComplex = subcomplex;
-                                zone.GenExitGeomorph(level.Complex);
+                                //zone.GenExitGeomorph(level.Complex);
                             }
 
                             layout.Zones.Add(zone);

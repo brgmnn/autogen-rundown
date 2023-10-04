@@ -125,16 +125,29 @@ namespace AutogenRundown.DataBlocks
                     {
                         var placement = new List<ZonePlacementData>();
 
-                        foreach (var zone in layout.Zones)
+                        void Place(Zone zone)
                         {
-                            if (Generator.Flip())
-                                continue;
-
                             placement.Add(new ZonePlacementData
                             {
                                 LocalIndex = zone.LocalIndex,
                                 Weights = ZonePlacementWeights.GenRandom()
                             });
+                        }
+
+                        foreach (var zone in layout.Zones)
+                        {
+                            if (Generator.Flip())
+                                continue;
+
+                            Place(zone);
+                        }
+
+                        // If none of the zones were picked, force pick one of the zones. Otherwise
+                        // no items will be placed
+                        if (placement.Count == 0)
+                        {
+                            var zone = layout.Zones[Generator.Random.Next(1, layout.Zones.Count)];
+                            Place(zone);
                         }
 
                         data.ObjectiveData.ZonePlacementDatas.Add(placement);
@@ -157,6 +170,22 @@ namespace AutogenRundown.DataBlocks
                 WardenObjectiveType.GatherSmallItems,
             };
 
+        public static string GenLevelDescription(WardenObjectiveType type, WardenObjectiveItem item = WardenObjectiveItem.PersonnelId)
+            => type switch
+            {
+                WardenObjectiveType.ClearPath => Generator.Pick(new List<string>
+                    {
+                        "Unknown hostile lifeform readings in subjacent quadrant. Expendable prisoners sent to survey threat severity."
+                    }) ?? "",
+                WardenObjectiveType.GatherSmallItems => item switch
+                {
+                    WardenObjectiveItem.Glp_1 => "Conduit genetic code compromised. Prisoners to collect DNA sample from HSU facility.",
+                    WardenObjectiveItem.Glp_2 => "Conduit genetic code compromised. Prisoners to collect DNA sample from HSU facility.",
+                    _ => "Prisoners to collect items from storage facility. High asset fatality rate expected."
+                },
+                _ => "",
+            };
+
         public static List<(WardenObjectiveItem, string, string)> BuildSmallPickupPack(string tier)
             => new List<(WardenObjectiveItem, string, string)>
             {
@@ -173,23 +202,20 @@ namespace AutogenRundown.DataBlocks
                 (WardenObjectiveItem.DataCubeTampered, "Tampered data cube", "Gather [COUNT_REQUIRED] Data cubes and return the cubes for inspection.")
             };
 
-        public static WardenObjective Build(
-            WardenObjectiveType objectiveType,
-            Level level,
-            Bulkhead variant = Bulkhead.Main)
+        public static WardenObjective Build(BuildDirector director, Level level)
         {
             var objective = new WardenObjective
             {
-                Type = objectiveType,
+                Type = director.Objective,
             };
 
-            ObjectiveLayerData dataLayer = level.GetObjectiveLayerData(variant);
+            ObjectiveLayerData dataLayer = level.GetObjectiveLayerData(director.Bulkhead);
 
             objective.GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
             objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
             objective.GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
-            switch (objectiveType)
+            switch (director.Objective)
             {
                 case WardenObjectiveType.GatherSmallItems:
                     {
@@ -206,6 +232,9 @@ namespace AutogenRundown.DataBlocks
                         objective.FindLocationInfo = $"Look for {name}s in the complex";
                         objective.FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
 
+                        if (director.Bulkhead == Bulkhead.Main)
+                            level.Description = GenLevelDescription(director.Objective, itemId);
+
                         objective.GatherRequiredCount = level.Tier switch
                         {
                             "A" => Generator.Random.Next(4, 8),
@@ -221,11 +250,17 @@ namespace AutogenRundown.DataBlocks
                             objective.GatherRequiredCount, 
                             objective.GatherRequiredCount + 6);
 
-                        objective.DistributeObjectiveItems(level, variant, strategy);
+                        objective.DistributeObjectiveItems(level, director.Bulkhead, strategy);
 
                         var zoneSpawns = dataLayer.ObjectiveData.ZonePlacementDatas[0].Count;
 
-                        objective.GatherMaxPerZone = objective.GatherSpawnCount / zoneSpawns + objective.GatherSpawnCount % zoneSpawns;
+                        try {
+                            objective.GatherMaxPerZone = objective.GatherSpawnCount / zoneSpawns + objective.GatherSpawnCount % zoneSpawns;
+                        } catch (Exception error)
+                        {
+                            Plugin.Logger.LogError($"What's wrong: level={level.Name}, zoneSpawns={zoneSpawns}, strategy={strategy}, gatherSpawnCount={objective.GatherSpawnCount}");
+                        }
+                        
 
                         break;
                     }
@@ -236,6 +271,9 @@ namespace AutogenRundown.DataBlocks
                         objective.MainObjective = "Clear a path to the exit point in [EXTRACTION_ZONE]";
                         objective.GoToWinCondition_Elevator = "Go to the forward exit point in [EXTRACTION_ZONE]";
                         objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+
+                        if (director.Bulkhead == Bulkhead.Main)
+                            level.Description = GenLevelDescription(director.Objective);
 
                         objective.EventsOnGotoWin.Add(new JObject
                         {

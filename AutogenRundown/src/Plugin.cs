@@ -18,8 +18,7 @@ public class Plugin : BasePlugin
         Logger = Log;
 
         // Plugin startup logic
-        Log.LogInfo($"====== Plugin is loaded! ======");
-
+        Log.LogInfo("Startup...");
 
         var seedCfg = Config.Bind(
             new ConfigDefinition("AutogenRundown", "Seed"),
@@ -27,33 +26,9 @@ public class Plugin : BasePlugin
             new ConfigDescription("Specify a seed to override rundown generation"));
         var seed = seedCfg.BoxedValue.ToString() ?? "";
 
-
         Generator.ReadOrSetSeed(seed);
         RundownFactory.Build();
 
-        //if (!RundownFactory.JsonDataExists())
-        //{
-        //if (Generator.Seed == "")
-        //{
-        //    //Generator.GenerateTimeSeed();
-        //    Generator.RegenerateSeed();
-        //}
-
-        //RundownFactory.Build();
-        //}
-
-        Log.LogInfo(Paths.PluginPath);
-        Log.LogInfo($"== Seed \"{Generator.Seed}\", Config Seed: \"{seed}\"");
-
-        //var harmony = new Harmony("AutogenRundown");
-
-        //AssetAPI.OnImplReady += () =>
-        //{
-            //ClassInjector.RegisterTypeInIl2Cpp<HotReloader>();
-
-            //harmony.PatchAll(typeof(HotReloadInjector));
-            //harmony.PatchAll(typeof(GameDataLoader));
-            //harmony.PatchAll(typeof(SetRundownInjector));
-        //};
+        Log.LogInfo($"Rundown generated, with seed=\"{Generator.Seed}\"");
     }
 }

@@ -142,23 +142,6 @@ namespace AutogenRundown
             }
 
             GenerateTimeSeed();
-
-            /*var dir = Path.Combine(Paths.PluginPath, "MyFirstPlugin");
-            var path = Path.Combine(dir, "seed.txt");
-
-            // Ensure the directory exists
-            Directory.CreateDirectory(dir);
-            try
-            {
-                using (StreamReader sr = new StreamReader(path, Encoding.UTF8))
-                {
-                    Seed = (sr.ReadLine() ?? "").Trim();
-                }
-            }
-            catch (FileNotFoundException)
-            {
-                Plugin.Logger.LogInfo("Seed config file not found.");
-            }*/
         }
 
         public static void WriteSeed()

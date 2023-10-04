@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using BepInEx;
 using AutogenRundown.DataBlocks;
-
+using AutogenRundown.GeneratorData;
 
 namespace AutogenRundown
 {
@@ -36,26 +36,85 @@ namespace AutogenRundown
             // Rundown 7 replacement
             var rundown = Rundown.Build(new Rundown { PersistentId = 31 });
 
-            // A levels
-            var levelA = Level.Build(
-                new BuildDirector { Complexity = Complexity.Low, Credits = 200 },
-                new Level { Tier = "A", Index = 1 });
+            var levelNames = new List<string>(Words.NounsLevel);
 
+            var bMax = Generator.Random.Next(2, 4);
+            var cMax = Generator.Random.Next(2, 4);
+            var dMax = Generator.Random.Next(1, 3);
+            var eMax = Generator.Random.Next(0, 1);
+
+            //var bMax = 4;
+            //var cMax = 3;
+            //var dMax = 3;
+            //var eMax = 1;
+
+
+            // A levels, always generate atleast 1
+            var levelA = Level.Build(
+                new Level 
+                { 
+                    Tier = "A", 
+                    Name = Generator.Draw(levelNames),
+                    Index = 1 
+                });
             rundown.AddLevel(levelA);
 
-            // B levels
-            var levelB = Level.Build(
-                new BuildDirector { Complexity = Complexity.Low, Credits = 400 },
-                new Level { Tier = "B", Index = 1 });
 
-            rundown.AddLevel(levelB);
+            // B levels
+            for (int i = 0; i < bMax; i++)
+            {
+                var level = Level.Build(
+                    new Level 
+                    { 
+                        Tier = "B",
+                        Name = Generator.Draw(levelNames),
+                        Index = i + 1 
+                    });
+                rundown.AddLevel(level);
+            }
+
 
             // C levels
-            var levelC = Level.Build(
-                new BuildDirector { Complexity = Complexity.Medium, Credits = 600 },
-                new Level { Tier = "C", Index = 1 });
+            for (int i = 0; i < cMax; i++)
+            {
+                var level = Level.Build(
+                    new Level 
+                    { 
+                        Tier = "C",
+                        Name = Generator.Draw(levelNames),
+                        Index = i + 1 
+                    });
+                rundown.AddLevel(level);
+            }
 
-            rundown.AddLevel(levelC);
+
+            // D levels
+            for (int i = 0; i < dMax; i++)
+            {
+                var level = Level.Build(
+                    new Level 
+                    { 
+                        Tier = "D",
+                        Name = Generator.Draw(levelNames),
+                        Index = i + 1 
+                    });
+                rundown.AddLevel(level);
+            }
+
+
+            // E levels
+            for (int i = 0; i < eMax; i++)
+            {
+                var level = Level.Build(
+                    new Level 
+                    { 
+                        Tier = "E",
+                        Name = Generator.Draw(levelNames),
+                        Index = i + 1 
+                    });
+                rundown.AddLevel(level);
+            }
+
 
             Bins.Rundowns.AddBlock(rundown);
 

@@ -1,10 +1,6 @@
-﻿using AutogenRundown.GeneratorData;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
+using AutogenRundown.GeneratorData;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -52,16 +48,25 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// Which complex type to use.
         /// 
-        /// By default set to a random value from the available complexes
+        /// By default set to a random value from the available complexes. Weight more towards
+        /// mining and tech.
         /// </summary>
         [JsonIgnore]
-        public Complex Complex { get; set; } = Generator.Pick(new List<Complex> { Complex.Mining, Complex.Tech, Complex.Service });
+        public Complex Complex { get; set; } = Generator.Pick(
+            new List<Complex> 
+            { 
+                Complex.Mining,
+                Complex.Mining,
+                Complex.Tech,
+                Complex.Tech,
+                Complex.Service 
+            });
 
         /// <summary>
         /// Level description
         /// </summary>
         [JsonIgnore]
-        public string Description { get; set; } = "Conduit genetic code compromised. Prisoners to collect DNA sample from HSU facility.";
+        public string Description { get; set; } = "";
 
         public JObject Descriptive
         {
@@ -87,7 +92,7 @@ namespace AutogenRundown.DataBlocks
 
         public JObject Seeds = JObject.FromObject(new
         {
-            BuildSeed = 1996,
+            BuildSeed = Generator.Random.Next(2000),
             FunctionMarkerOffset = 1,
             StandardMarkerOffset = 0,
             LightJobSeedOffset = 0
@@ -260,27 +265,28 @@ namespace AutogenRundown.DataBlocks
         /// 
         /// </summary>
         /// <returns></returns>
-        static public Level Build(BuildDirector director, Level level)
+        static public Level Build(Level level)
         {
-            var name = Generator.Pick(Words.NounsLevel);
+            if (level.Name == "")
+            {
+                level.Name = Generator.Pick(Words.NounsLevel) ?? "";
+            }
 
-            level.Name = name;
             level.GenerateDepth();
 
             // ============ Main level ============
-            //WardenObjectiveType.GatherSmallItems,
-            var objectiveType = WardenObjectiveType.ClearPath;
-
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
-                Objective = WardenObjectiveType.ClearPath
+                Complexity = Complexity.Low,
+                Credits = 200
             };
+            mainDirector.GenObjective();
 
             var mainLevelLayout = LevelLayout.Build(level, mainDirector);
             level.LevelLayoutData = mainLevelLayout.PersistentId;
 
-            var mainObjective = WardenObjective.Build(objectiveType, level, Bulkhead.Main);
+            var mainObjective = WardenObjective.Build(mainDirector, level);
 
             level.MainLayerData.ObjectiveData.DataBlockId = mainObjective.PersistentId;
 

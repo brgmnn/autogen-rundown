@@ -215,8 +215,47 @@ namespace AutogenRundown.DataBlocks.Alarms
                     AlarmClass5,
                     AlarmClass5,
                 },
-                ("D") => new List<ChainedPuzzle> { AlarmClass2 },
-                ("E") => new List<ChainedPuzzle> { AlarmClass2 },
+                ("D") => new List<ChainedPuzzle>
+                {
+                    TeamScan,
+                    TeamScan,
+                    TeamScan,
+                    AlarmClass3,
+                    AlarmClass3,
+                    AlarmClass3,
+                    AlarmClass3,
+                    AlarmClass3,
+                    AlarmClass4,
+                    AlarmClass4,
+                    AlarmClass4,
+                    AlarmClass4,
+                    AlarmClass4,
+                    AlarmClass5,
+                    AlarmClass5,
+                    AlarmClass5,
+                },
+                ("E") => new List<ChainedPuzzle>
+                {
+                    TeamScan,
+                    TeamScan,
+                    TeamScan,
+                    AlarmClass4,
+                    AlarmClass4,
+                    AlarmClass4,
+                    AlarmClass4,
+                    AlarmClass4,
+                    AlarmClass5,
+                    AlarmClass5,
+                    AlarmClass5,
+                    AlarmClass3_Surge,
+                    AlarmClass3_Surge,
+                    AlarmClass3_Surge,
+                    AlarmClass3_Surge,
+                    AlarmClass4_Surge,
+                    AlarmClass4_Surge,
+                    AlarmClass4_Surge,
+                    AlarmClass4_Surge,
+                },
 
                 (_) => new List<ChainedPuzzle>(),
             };
@@ -302,6 +341,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             TriggerAlarmOnActivate = true,
             SurvivalWaveSettings = VanillaWaveSettings.Surge,
             SurvivalWavePopulation = WavePopulation.Baseline,
+            WantedDistanceFromStartPos = 10.0,
+            WantedDistanceBetweenPuzzleComponents = 20.0,
             Puzzle = new List<PuzzleComponent>()
             {
                 PuzzleComponent.AllLarge,
@@ -316,6 +357,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             TriggerAlarmOnActivate = true,
             SurvivalWaveSettings = VanillaWaveSettings.Surge,
             SurvivalWavePopulation = WavePopulation.Baseline,
+            WantedDistanceFromStartPos = 10.0,
+            WantedDistanceBetweenPuzzleComponents = 20.0,
             Puzzle = new List<PuzzleComponent>()
             {
                 PuzzleComponent.AllLarge,
