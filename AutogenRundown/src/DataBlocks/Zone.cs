@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutogenRundown.DataBlocks.ZoneData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -123,6 +124,13 @@ namespace AutogenRundown.DataBlocks
             };
         }
 
+        public class WeightedDifficulty : Generator.ISelectable
+        {
+            public double Weight { get; set; }
+
+            public List<EnemyRoleDifficulty> Difficulties { get; set; } = new List<EnemyRoleDifficulty>();
+        }
+
         /// <summary>
         /// Generate enemies for the zone
         /// </summary>
@@ -131,14 +139,38 @@ namespace AutogenRundown.DataBlocks
         {
             var points = director.EnemyPointPool.ElementAt(LocalIndex);
 
-            // Simple case, just dump all the points into one group.
-            EnemySpawningInZone.Add(
-                new EnemySpawningData()
-                {
-                    GroupType = EnemyGroupType.Hibernate,
-                    Difficulty = EnemyRoleDifficulty.Easy,
-                    Points = points,
-                });
+            switch (director.Tier)
+            {
+                // Easiest tier, we want the enemies to be relatively easy
+                case "A":
+                    {
+                        var selected = Generator.Select(
+                            new List<WeightedDifficulty>
+                            {
+                                new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Easy } },
+                                new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Medium } },
+                                new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Hard } }
+                            });
+
+                        foreach (var difficulty in selected.Difficulties)
+                        {
+                            EnemySpawningInZone.Add(
+                                new EnemySpawningData()
+                                {
+                                    GroupType = EnemyGroupType.Hibernate,
+                                    Difficulty = difficulty,
+                                    Points = points / selected.Difficulties.Count,
+                                });
+                        }
+
+                        break;
+                    }
+
+                default:
+                    break;
+            }
+
+
         }
 
         #region Unused by us properties

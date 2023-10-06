@@ -1,5 +1,4 @@
 ﻿using AutogenRundown.DataBlocks;
-using static UnityEngine.Rendering.PostProcessing.BloomRenderer;
 
 namespace AutogenRundown
 {
@@ -40,7 +39,7 @@ namespace AutogenRundown
             WardenObjectiveType.GatherSmallItems,
         };
 
-        public int Credits { get; set; } = 0;
+        public int Points { get; set; } = 0;
 
         public Complexity Complexity { get; set; } = Complexity.Medium;
 
@@ -89,11 +88,9 @@ namespace AutogenRundown
                 (_, _) => 1
             };
 
-            ZoneCount = 1;
-
             // Assign a random number of points to each zone
             EnemyPointPool = Enumerable.Range(0, ZoneCount)
-                .Select(_ => 100)
+                .Select(_ => Points / ZoneCount)
                 .ToList();
         }
     }

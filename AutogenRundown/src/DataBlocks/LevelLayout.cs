@@ -173,8 +173,6 @@ namespace AutogenRundown.DataBlocks
             var objectiveLayerData = level.GetObjectiveLayerData(director.Bulkhead);
             var puzzlePack = ChainedPuzzle.BuildPack(level.Tier);
 
-            //int numZones = GenNumZones(level, director.Bulkhead);
-
             switch (director.Objective)
             {
                 case WardenObjectiveType.ClearPath:

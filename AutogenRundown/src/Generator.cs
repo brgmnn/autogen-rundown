@@ -79,6 +79,35 @@ namespace AutogenRundown
             return item;
         }
 
+        public interface ISelectable
+        {
+            public double Weight { get; set; }
+        }
+
+        /// <summary>
+        /// Randomly selects from a collection of items weighted by their individual properties Weight.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        public static T Select<T>(ICollection<T> collection) where T : ISelectable
+        {
+            var totalWeight = collection.Sum(x => x.Weight);
+            var randomWeight = Random.NextDouble() * totalWeight;
+
+            double weightSum = 0;
+
+            foreach (var item in collection)
+            {
+                weightSum += item.Weight;
+
+                if (randomWeight <= weightSum)
+                    return item;
+            }
+
+            return collection.Last();
+        }
+
         /// <summary>
         /// Gets a new persistent Id
         /// </summary>

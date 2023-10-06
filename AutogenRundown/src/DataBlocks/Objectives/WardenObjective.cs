@@ -86,18 +86,19 @@ namespace AutogenRundown.DataBlocks
                 case DistributionStrategy.SingleZone:
                     {
                         // Pick a random zone that isn't the first zone unless there's only one
-                        var targetZone = Generator.Random.Next(
-                            Math.Min(1, layout.Zones.Count - 1),
-                            layout.Zones.Count);
+                        var targetZone = Math.Clamp(
+                            Generator.Random.Next(1, layout.Zones.Count),
+                            0,
+                            layout.Zones.Count - 1);
 
                         data.ObjectiveData.ZonePlacementDatas.Add(
                             new List<ZonePlacementData>()
                             {
-                            new ZonePlacementData
-                            {
-                                LocalIndex = targetZone,
-                                Weights = ZonePlacementWeights.EvenlyDistributed
-                            }
+                                new ZonePlacementData
+                                {
+                                    LocalIndex = targetZone,
+                                    Weights = ZonePlacementWeights.EvenlyDistributed
+                                }
                             });
 
                         break;
@@ -146,7 +147,12 @@ namespace AutogenRundown.DataBlocks
                         // no items will be placed
                         if (placement.Count == 0)
                         {
-                            var zone = layout.Zones[Generator.Random.Next(1, layout.Zones.Count)];
+                            var index = Math.Clamp(
+                                Generator.Random.Next(1, layout.Zones.Count),
+                                0,
+                                layout.Zones.Count - 1);
+
+                            var zone = layout.Zones[index];
                             Place(zone);
                         }
 

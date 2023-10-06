@@ -279,7 +279,7 @@ namespace AutogenRundown.DataBlocks
             {
                 Bulkhead = Bulkhead.Main,
                 Complexity = Complexity.Low,
-                Credits = 200
+                Points = 600
             };
             mainDirector.GenObjective();
 
