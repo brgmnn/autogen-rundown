@@ -6,7 +6,6 @@ using CellMenu;
 using GameData;
 using Gear;
 using Globals;
-using GTFO.API;
 using HarmonyLib;
 using LevelGeneration;
 using Newtonsoft.Json;

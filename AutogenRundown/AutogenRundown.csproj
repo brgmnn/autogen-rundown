@@ -36,8 +36,5 @@
 
 		<!-- NuGet Packages -->
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		
-		<!-- Plugins -->
-		<Reference Include="$(Plugins)\GTFO-API.dll" Private="false" />
 	</ItemGroup>
 </Project>
