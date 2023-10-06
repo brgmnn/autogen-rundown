@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks;
+using static UnityEngine.Rendering.PostProcessing.BloomRenderer;
 
 namespace AutogenRundown
 {
@@ -49,6 +50,15 @@ namespace AutogenRundown
 
         public WardenObjectiveType Objective { get; set; } = WardenObjectiveType.GatherSmallItems;
 
+        #region Zones
+        public int ZoneCount { get; set; } = 0;
+
+        /// <summary>
+        /// Pool of points to draw from for spawning enemies
+        /// </summary>
+        public List<int> EnemyPointPool { get; set; } = new List<int>();
+        #endregion
+
         public void GenObjective()
         {
             Objective = Bulkhead switch
@@ -58,6 +68,33 @@ namespace AutogenRundown
                 Bulkhead.Overload => Generator.Pick(mainObjectives),
                 _ => Generator.Pick(mainObjectives),
             };
+        }
+
+        public void GenZones()
+        {
+            ZoneCount = (Tier, Bulkhead) switch
+            {
+                ("A", Bulkhead.Main) => Generator.Random.Next(3, 6),
+                ("B", Bulkhead.Main) => Generator.Random.Next(4, 8),
+                ("C", Bulkhead.Main) => Generator.Random.Next(4, 9),
+                ("D", Bulkhead.Main) => Generator.Random.Next(5, 11),
+                ("E", Bulkhead.Main) => Generator.Random.Next(6, 14),
+
+                ("A", _) => Generator.Random.Next(1, 5),
+                ("B", _) => Generator.Random.Next(1, 7),
+                ("C", _) => Generator.Random.Next(2, 8),
+                ("D", _) => Generator.Random.Next(3, 10),
+                ("E", _) => Generator.Random.Next(3, 12),
+
+                (_, _) => 1
+            };
+
+            ZoneCount = 1;
+
+            // Assign a random number of points to each zone
+            EnemyPointPool = Enumerable.Range(0, ZoneCount)
+                .Select(_ => 100)
+                .ToList();
         }
     }
 }

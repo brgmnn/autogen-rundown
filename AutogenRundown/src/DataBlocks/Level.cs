@@ -287,7 +287,6 @@ namespace AutogenRundown.DataBlocks
             level.LevelLayoutData = mainLevelLayout.PersistentId;
 
             var mainObjective = WardenObjective.Build(mainDirector, level);
-
             level.MainLayerData.ObjectiveData.DataBlockId = mainObjective.PersistentId;
 
             // Secondary (Extreme)

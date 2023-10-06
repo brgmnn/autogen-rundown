@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.ZoneData;
+using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -167,16 +168,18 @@ namespace AutogenRundown.DataBlocks
                 ZoneAliasStart = GenZoneAliasStart(level.Tier)
             };
 
+            director.GenZones();
+
             var objectiveLayerData = level.GetObjectiveLayerData(director.Bulkhead);
             var puzzlePack = ChainedPuzzle.BuildPack(level.Tier);
 
-            int numZones = GenNumZones(level, director.Bulkhead);
+            //int numZones = GenNumZones(level, director.Bulkhead);
 
             switch (director.Objective)
             {
                 case WardenObjectiveType.ClearPath:
                     {
-                        for (int i = 0; i < numZones; i++)
+                        for (int i = 0; i < director.ZoneCount; i++)
                         {
                             var subcomplex = GenSubComplex(level.Complex);
 
@@ -191,9 +194,9 @@ namespace AutogenRundown.DataBlocks
                                 ZoneExpansion = ZoneExpansion.Forward
                             };
 
-                            zone.EnemySpawningInZone.Add(new EnemySpawningData());
+                            zone.GenEnemies(director);
 
-                            if (i == numZones - 1)
+                            if (i == director.ZoneCount - 1)
                             {
                                 // The final zone is the extraction zone
                                 zone.Coverage = new CoverageMinMax { X = 50, Y = 50 };
@@ -224,7 +227,7 @@ namespace AutogenRundown.DataBlocks
                 case WardenObjectiveType.GatherSmallItems:
                 default:
                     {
-                        for (int i = 0; i < numZones; i++)
+                        for (int i = 0; i < director.ZoneCount; i++)
                         {
                             var zone = new Zone
                             {
@@ -233,7 +236,7 @@ namespace AutogenRundown.DataBlocks
                                 LightSetting = Lights.Light.RedToCyan_1,
                             };
 
-                            zone.EnemySpawningInZone.Add(new EnemySpawningData());
+                            zone.GenEnemies(director);
 
                             layout.Zones.Add(zone);
 

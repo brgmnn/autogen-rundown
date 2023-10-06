@@ -3,27 +3,91 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutogenRundown.DataBlocks.Enemies;
+using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks
 {
     /// <summary>
     /// Hibernate is asleep, Hunter is for blood doors. There are others but they are broken
     /// </summary>
-    enum EnemyGroupType
+    enum EnemyGroupType : uint
     {
+        /// <summary>
+        /// Most spawned enemies should be hibernate
+        /// </summary>
         Hibernate = 0,
+        
+        /// <summary>
+        /// Usually for bosses that should be sneaked past.
+        /// </summary>
+        PureSneak = 1,
+
+        /// <summary>
+        /// Seems to be mostly Chargers
+        /// </summary>
+        Detect = 2,
+
+        /// <summary>
+        /// Scouts only
+        /// </summary>
+        Scout = 3,
+        Awake = 5,
+
+        /// <summary>
+        /// Use only for blood doors
+        /// </summary>
         Hunter = 6,
     }
 
-    enum EnemyRoleDifficulty
+    enum EnemyRoleDifficulty : uint
     {
+        /// <summary>
+        /// - Strikers (Hibernate)
+        /// - Shooter (Hibernate)
+        /// - Baby
+        /// </summary>
         Easy = 0,
+
+        /// <summary>
+        /// - Strikers Hibernate
+        /// - Shooter Hibernate
+        /// </summary>
         Medium = 1,
+
+        /// <summary>
+        /// - Strikers Hibernate
+        /// - Shooter Hibernate
+        /// - Mother
+        /// </summary>
         Hard = 2,
+
+        /// <summary>
+        /// - Mother
+        /// - Big Mother
+        /// </summary>
         MiniBoss = 3,
+
+        /// <summary>
+        /// - Big Mother
+        /// </summary>
         Boss = 4,
-        MegaBoss = 5,
+        
+        /// <summary>
+        /// - Tank
+        /// </summary>
+        Tank = 5,
+        
+        /// <summary>
+        /// - Shadow
+        /// - Pouncer
+        /// </summary>
         Biss = 6,
+
+        /// <summary>
+        /// - Baby
+        /// - Pouncer
+        /// </summary>
         Buss = 7
     }
 
@@ -35,10 +99,45 @@ namespace AutogenRundown.DataBlocks
     }
 
     /// <summary>
-    /// https://gtfo-modding.gitbook.io/wiki/reference/nested-types/enemyspawningdata
+    /// Not needed unless we generate our own pop blocks
     /// </summary>
-    internal class EnemySpawningData
+    enum EnemyRoleDistribution
     {
+        None = 0,
+        ForceOne = 1,
+        Rel25 = 2,
+        Rel50 = 3,
+        Rel75 = 4,
+        Rel100 = 5,
+        Rel15 = 6,
+        Rel10 = 7,
+        Rel05 = 8
+    }
+
+    /// <summary>
+    /// https://gtfo-modding.gitbook.io/wiki/reference/nested-types/enemyspawningdata
+    /// 
+    /// With RelValue scoring system:
+    ///     1. Randomly select EnemyGroup matching GroupType and Difficulty.
+    ///     2. Deduct EnemyGroup.MaxScore from the current Distribution score.
+    ///         * Note that this must be for Distribution * POPULATION_PER_ZONE.
+    ///         * PopScore = Distribution * POPULATION_PER_ZONE.
+    ///     3. For each role, match an EnemyPopulation using EnemyGroup.Role and 
+    ///        EnemyGroup.Difficulty. Selection is random (using weights).
+    ///     4. Spawn selected enemies from EnemyPopulation, count = MaxScore / Cost
+    ///     5. Repeat: until PopScore <= 3
+    /// 
+    /// Score base spawning system:
+    ///     number of enemies = EnemyGroup.MaxScore * Role.Distribution / EnemyPopulation.Cost
+    ///
+    /// </summary>
+    internal record class EnemySpawningData
+    {
+        /// <summary>
+        /// Find this in the expedition balance block, EnemyPopulationPerZone.
+        /// </summary>
+        public static int POPULATION_PER_ZONE = 25;
+
         /// <summary>
         /// What state the enemies are in
         /// </summary>
@@ -52,6 +151,39 @@ namespace AutogenRundown.DataBlocks
 
         public EnemyZoneDistribution Distribution { get; set; } = EnemyZoneDistribution.RelValue;
 
-        public double DistributionValue { get; set; } = 1.0;
+        /// <summary>
+        /// Works with our points system
+        /// </summary>
+        [JsonIgnore]
+        public int Points { get; set; } = 25;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public double DistributionValue
+        {
+            get => (double)Points / POPULATION_PER_ZONE;
+        }
+
+        /// <summary>
+        /// Regular scout
+        /// </summary>
+        public static EnemySpawningData Scout = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Scout,
+            Difficulty = EnemyRoleDifficulty.Easy
+        };
+
+        public static EnemySpawningData ScoutCharger = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Scout,
+            Difficulty = EnemyRoleDifficulty.MiniBoss
+        };
+
+        public static EnemySpawningData ScoutShadow = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Scout,
+            Difficulty = EnemyRoleDifficulty.Boss
+        };
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AutogenRundown.DataBlocks.Alarms
+﻿namespace AutogenRundown.DataBlocks.Alarms
 {
     internal enum VanillaWaveSettings : UInt32
     {

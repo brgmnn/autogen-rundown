@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using AutogenRundown.DataBlocks.ZoneData;
 
 namespace AutogenRundown.DataBlocks
@@ -124,6 +123,24 @@ namespace AutogenRundown.DataBlocks
             };
         }
 
+        /// <summary>
+        /// Generate enemies for the zone
+        /// </summary>
+        /// <param name="director"></param>
+        public void GenEnemies(BuildDirector director)
+        {
+            var points = director.EnemyPointPool.ElementAt(LocalIndex);
+
+            // Simple case, just dump all the points into one group.
+            EnemySpawningInZone.Add(
+                new EnemySpawningData()
+                {
+                    GroupType = EnemyGroupType.Hibernate,
+                    Difficulty = EnemyRoleDifficulty.Easy,
+                    Points = points,
+                });
+        }
+
         #region Unused by us properties
         public int AliasOverride = -1;
         public bool OverrideAliasPrefix = false;
@@ -217,6 +234,7 @@ namespace AutogenRundown.DataBlocks
 
         public JArray EventsOnTerminalDeactivateAlarm = new JArray();
 
+        #region Enemies
         /// <summary>
         /// 
         /// </summary>
@@ -224,6 +242,7 @@ namespace AutogenRundown.DataBlocks
         public BloodDoor BloodDoor { get; set; } = BloodDoor.None;
 
         public List<EnemySpawningData> EnemySpawningInZone { get; set; } = new List<EnemySpawningData>();
+        #endregion
 
         #region Respawn settings
         /// <summary>
@@ -288,34 +307,6 @@ namespace AutogenRundown.DataBlocks
         {
             // Always ensure a terminal is placed in the zone
             TerminalPlacements.Add(new TerminalPlacement());
-
-            /*StartPosition = Generator.Pick(new List<ZoneEntranceBuildFrom>
-            {
-                ZoneEntranceBuildFrom.Random,
-                ZoneEntranceBuildFrom.Start,
-                ZoneEntranceBuildFrom.AverageCenter,
-                ZoneEntranceBuildFrom.Furthest,
-                ZoneEntranceBuildFrom.BetweenStartAndFurthest
-            });
-            ZoneExpansion = Generator.Pick(new List<ZoneExpansion>
-            {
-                ZoneExpansion.Random,
-                ZoneExpansion.Collapsed,
-                ZoneExpansion.Expansional,
-                //ZoneExpansion.Forward,
-                //ZoneExpansion.Backward,
-                //ZoneExpansion.Right,
-                //ZoneExpansion.Left,
-                ZoneExpansion.DirectionalRandom
-            });*/
-            /*StartExpansion = Generator.Pick(new List<ZoneBuildExpansion>
-            {
-                ZoneBuildExpansion.Random,
-                ZoneBuildExpansion.Forward,
-                ZoneBuildExpansion.Backward,
-                ZoneBuildExpansion.Right,
-                ZoneBuildExpansion.Left
-            });*/
         }
     }
 }

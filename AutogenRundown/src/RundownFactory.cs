@@ -59,7 +59,7 @@ namespace AutogenRundown
                 });
             rundown.AddLevel(levelA);
 
-
+            /*
             // B levels
             for (int i = 0; i < bMax; i++)
             {
@@ -114,7 +114,7 @@ namespace AutogenRundown
                     });
                 rundown.AddLevel(level);
             }
-
+            */
 
             Bins.Rundowns.AddBlock(rundown);
 
