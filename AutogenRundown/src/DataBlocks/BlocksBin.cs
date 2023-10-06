@@ -1,7 +1,7 @@
-﻿using BepInEx;
+﻿using AutogenRundown.DataBlocks.Alarms;
+using BepInEx;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using AutogenRundown.DataBlocks.Alarms;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -82,7 +82,7 @@ namespace AutogenRundown.DataBlocks
 
             using StreamWriter stream = new StreamWriter(path);
             using JsonWriter writer = new JsonTextWriter(stream);
-            
+
             serializer.Serialize(writer, this);
             stream.Flush();
         }

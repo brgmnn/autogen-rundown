@@ -17,7 +17,7 @@ namespace AutogenRundown.DataBlocks
         /// Most spawned enemies should be hibernate
         /// </summary>
         Hibernate = 0,
-        
+
         /// <summary>
         /// Usually for bosses that should be sneaked past.
         /// </summary>
@@ -72,12 +72,12 @@ namespace AutogenRundown.DataBlocks
         /// - Big Mother
         /// </summary>
         Boss = 4,
-        
+
         /// <summary>
         /// - Tank
         /// </summary>
         Tank = 5,
-        
+
         /// <summary>
         /// - Shadow
         /// - Pouncer

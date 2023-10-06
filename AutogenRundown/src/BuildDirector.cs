@@ -6,14 +6,14 @@ namespace AutogenRundown
     enum Complexity
     {
         Low,
-        Medium, 
+        Medium,
         High
     }
 
     enum MissionSize
-    { 
-        Low, 
-        Medium, 
+    {
+        Low,
+        Medium,
         High
     }
 

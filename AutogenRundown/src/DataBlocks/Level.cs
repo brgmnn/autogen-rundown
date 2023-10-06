@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using AutogenRundown.GeneratorData;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using AutogenRundown.GeneratorData;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -53,13 +53,13 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         [JsonIgnore]
         public Complex Complex { get; set; } = Generator.Pick(
-            new List<Complex> 
-            { 
+            new List<Complex>
+            {
                 Complex.Mining,
                 Complex.Mining,
                 Complex.Tech,
                 Complex.Tech,
-                Complex.Service 
+                Complex.Service
             });
 
         /// <summary>

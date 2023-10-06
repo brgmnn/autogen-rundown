@@ -1,12 +1,11 @@
-﻿using BepInEx;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Text;
-using GameData;
-
+﻿using System.Text;
 using AutogenRundown.Json;
 using AutogenRundown.src.Json;
+using BepInEx;
+using GameData;
 using Globals;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.Loaders
 {

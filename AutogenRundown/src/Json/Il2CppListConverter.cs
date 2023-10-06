@@ -7,10 +7,10 @@ namespace AutogenRundown.src.Json
     internal class Il2CppListConverter<T> : JsonConverter<Il2CppCollections.List<T>>
     {
         public override Il2CppCollections.List<T>? ReadJson(
-            JsonReader reader, 
-            Type objectType, 
-            Il2CppCollections.List<T>? existingValue, 
-            bool hasExistingValue, 
+            JsonReader reader,
+            Type objectType,
+            Il2CppCollections.List<T>? existingValue,
+            bool hasExistingValue,
             JsonSerializer serializer)
         {
             var list = new Il2CppCollections.List<T>();

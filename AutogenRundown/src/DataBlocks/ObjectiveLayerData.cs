@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -17,7 +17,7 @@ namespace AutogenRundown.DataBlocks
         public List<BulkheadDoorPlacementData> BulkheadDoorControllerPlacements { get; set; }
             = new List<BulkheadDoorPlacementData>();
 
-        public List<List<ZonePlacementData>> BulkheadKeyPlacements { get; set; } 
+        public List<List<ZonePlacementData>> BulkheadKeyPlacements { get; set; }
             = new List<List<ZonePlacementData>>();
 
         public WardenObjectiveLayerData ObjectiveData { get; set; }

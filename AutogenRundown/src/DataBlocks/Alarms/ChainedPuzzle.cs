@@ -156,8 +156,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static List<ChainedPuzzle> BuildPack(string tier)
             => (tier) switch
             {
-                ("A") => new List<ChainedPuzzle> 
-                { 
+                ("A") => new List<ChainedPuzzle>
+                {
                     None,
                     None,
                     TeamScan,
@@ -176,7 +176,7 @@ namespace AutogenRundown.DataBlocks.Alarms
                     AlarmClass4,
                     AlarmClass4,
                 },
-                ("B") => new List<ChainedPuzzle> 
+                ("B") => new List<ChainedPuzzle>
                 {
                     None,
                     None,

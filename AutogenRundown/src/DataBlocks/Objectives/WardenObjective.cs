@@ -75,7 +75,7 @@ namespace AutogenRundown.DataBlocks
         /// <param name="strategy"></param>
         public void DistributeObjectiveItems(
             Level level,
-            Bulkhead variant, 
+            Bulkhead variant,
             DistributionStrategy strategy)
         {
             var data = level.GetObjectiveLayerData(variant);
@@ -102,7 +102,7 @@ namespace AutogenRundown.DataBlocks
 
                         break;
                     }
-                    
+
                 case DistributionStrategy.EvenlyAcrossZones:
                     {
                         var placement = new List<ZonePlacementData>();
@@ -220,8 +220,8 @@ namespace AutogenRundown.DataBlocks
                 case WardenObjectiveType.GatherSmallItems:
                     {
                         var (itemId, name, description) = Generator.Pick(BuildSmallPickupPack(level.Tier));
-                        var strategy = Generator.Pick(new List<DistributionStrategy> 
-                        { 
+                        var strategy = Generator.Pick(new List<DistributionStrategy>
+                        {
                             DistributionStrategy.Random,
                             DistributionStrategy.SingleZone,
                             DistributionStrategy.EvenlyAcrossZones
@@ -247,7 +247,7 @@ namespace AutogenRundown.DataBlocks
 
                         objective.GatherItemId = (UInt32)itemId;
                         objective.GatherSpawnCount = Generator.Random.Next(
-                            objective.GatherRequiredCount, 
+                            objective.GatherRequiredCount,
                             objective.GatherRequiredCount + 6);
 
                         objective.DistributeObjectiveItems(level, director.Bulkhead, strategy);

@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutogenRundown.DataBlocks.ZoneData;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -60,12 +60,12 @@ namespace AutogenRundown.DataBlocks
     enum DistributionAmount
     {
         None = 0,
-        
+
         /// <summary>
         /// Count = 2
         /// </summary>
         Pair = 1,
-        
+
         /// <summary>
         /// Count = 5
         /// </summary>
@@ -275,9 +275,9 @@ namespace AutogenRundown.DataBlocks
         public bool ForceBigPickupsAllocation { get; set; } = false;
         public int ConsumableDistributionInZone { get; set; } = 62;
         public int BigPickupDistributionInZone { get; set; } = 0;
-        
+
         public List<TerminalPlacement> TerminalPlacements { get; set; } = new List<TerminalPlacement>();
-        
+
         public bool ForbidTerminalsInZone { get; set; } = false;
         public JArray PowerGeneratorPlacements { get; set; } = new JArray();
         public JArray DisinfectionStationPlacements { get; set; } = new JArray();
@@ -300,7 +300,7 @@ namespace AutogenRundown.DataBlocks
 
         public Placement DisinfectionPlacement { get; set; } = new Placement();
         #endregion
-    
+
         public JArray StaticSpawnDataContainers { get; set; } = new JArray();
 
         public Zone()

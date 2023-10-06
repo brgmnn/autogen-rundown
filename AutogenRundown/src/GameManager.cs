@@ -1,16 +1,16 @@
-﻿using GameData;
-using Gear;
-using Globals;
-using LevelGeneration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using AutogenRundown.DataBlockTypes;
 using CellMenu;
-using HarmonyLib;
-using Newtonsoft.Json;
+using GameData;
+using Gear;
+using Globals;
 using GTFO.API;
+using HarmonyLib;
+using LevelGeneration;
+using Newtonsoft.Json;
+using UnityEngine;
 
 namespace AutogenRundown
 {
@@ -225,37 +225,37 @@ namespace AutogenRundown
                     });
                     break;
 
-                /*case "fogsettings":
-                    blockTypeCache.RegisterOnChangeEvent(() =>
-                    {
-                        if (!Builder.CurrentFloor.IsBuilt)
+                    /*case "fogsettings":
+                        blockTypeCache.RegisterOnChangeEvent(() =>
                         {
-                            return;
-                        }
-
-                        var state = EnvironmentStateManager.Current.m_stateReplicator.State;
-                        EnvironmentStateManager.Current.UpdateFogSettingsForState(state);
-                    });
-                    break;
-
-                case "lightsettings":
-                    blockTypeCache.RegisterOnChangeEvent(() =>
-                    {
-                        if (!Builder.CurrentFloor.IsBuilt)
-                        {
-                            return;
-                        }
-
-                        foreach (var zone in Builder.CurrentFloor.allZones)
-                        {
-                            foreach (var node in zone.m_courseNodes)
+                            if (!Builder.CurrentFloor.IsBuilt)
                             {
-                                LG_BuildZoneLightsJob.ApplyLightSettings(0, node.m_lightsInNode, zone.m_lightSettings, false);
+                                return;
                             }
-                        }
-                    });
-                    break;
-                */
+
+                            var state = EnvironmentStateManager.Current.m_stateReplicator.State;
+                            EnvironmentStateManager.Current.UpdateFogSettingsForState(state);
+                        });
+                        break;
+
+                    case "lightsettings":
+                        blockTypeCache.RegisterOnChangeEvent(() =>
+                        {
+                            if (!Builder.CurrentFloor.IsBuilt)
+                            {
+                                return;
+                            }
+
+                            foreach (var zone in Builder.CurrentFloor.allZones)
+                            {
+                                foreach (var node in zone.m_courseNodes)
+                                {
+                                    LG_BuildZoneLightsJob.ApplyLightSettings(0, node.m_lightsInNode, zone.m_lightSettings, false);
+                                }
+                            }
+                        });
+                        break;
+                    */
             }
         }
 

@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -52,7 +52,7 @@ namespace AutogenRundown.DataBlocks
         #region Computed values
 
         [JsonProperty("normalized")]
-        public JObject Normalized 
+        public JObject Normalized
         {
             get
             {

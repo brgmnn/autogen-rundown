@@ -1,7 +1,7 @@
-﻿using Localization;
-using System;
+﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Localization;
 using UnityEngine;
 
 namespace AutogenRundown.JsonConverters
@@ -16,13 +16,13 @@ namespace AutogenRundown.JsonConverters
             {
                 case JsonTokenType.String:
                     var strValue = reader.GetString();
-                    
+
                     return new LocalizedText
                     {
                         Id = 0,
                         UntranslatedText = strValue
                     };
-                    
+
 
                 case JsonTokenType.Number:
                     return new LocalizedText()

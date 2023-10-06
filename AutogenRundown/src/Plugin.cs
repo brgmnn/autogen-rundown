@@ -1,7 +1,7 @@
 ﻿using BepInEx;
-using BepInEx.Unity.IL2CPP;
-using BepInEx.Logging;
 using BepInEx.Configuration;
+using BepInEx.Logging;
+using BepInEx.Unity.IL2CPP;
 
 namespace AutogenRundown;
 

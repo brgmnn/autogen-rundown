@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using AutogenRundown.DataBlocks.Alarms;
+﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.ZoneData;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
@@ -45,7 +45,7 @@ namespace AutogenRundown.DataBlocks
                 "B" => 0,
                 "C" => Roll(0.1),
                 "D" => Roll(0.3),
-                
+
                 // E-tier has a 85% chance of having one error alarm. 38% chance of having two error alarms,
                 // and a 2% chance of having three error alarms.
                 "E" => Roll(0.85),

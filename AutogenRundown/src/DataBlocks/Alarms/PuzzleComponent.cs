@@ -8,7 +8,7 @@
         // Single red circles
         Large = 2,
         Small = 3, // Single small red circle
-        
+
         // Cluster: Multiple red circles
         ClusterSmall = 4, // 4 small red circles
         ClusterLarge = 5, // Multiple big red circles

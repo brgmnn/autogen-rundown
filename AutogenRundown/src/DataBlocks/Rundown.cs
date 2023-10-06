@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
-using AutogenRundown.GeneratorData;
+﻿using AutogenRundown.GeneratorData;
+using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
-using BepInEx;
 using AutogenRundown.DataBlocks;
 using AutogenRundown.GeneratorData;
+using BepInEx;
 
 namespace AutogenRundown
 {
@@ -51,11 +51,11 @@ namespace AutogenRundown
 
             // A levels, always generate atleast 1
             var levelA = Level.Build(
-                new Level 
-                { 
-                    Tier = "A", 
+                new Level
+                {
+                    Tier = "A",
                     Name = Generator.Draw(levelNames),
-                    Index = 1 
+                    Index = 1
                 });
             rundown.AddLevel(levelA);
 
