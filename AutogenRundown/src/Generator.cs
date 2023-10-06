@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using BepInEx;
-using RandomDataGenerator;
-using RandomDataGenerator.FieldOptions;
-using RandomDataGenerator.Randomizers;
+﻿using BepInEx;
 
 namespace AutogenRundown
 {
@@ -156,11 +149,6 @@ namespace AutogenRundown
         public static void Reload()
         {
             Random = new Random(GetHashCode(Seed));
-
-            RandomizerFactory.GetRandomizer(new FieldOptionsFirstName
-            {
-                Seed = GetHashCode(Seed)
-            });
         }
 
         public static void ReadOrSetSeed(string seed = "")

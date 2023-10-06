@@ -1,13 +1,5 @@
-﻿//using MTFO.API;
-//using MTFO.Utilities;
-using System;
-using System.Collections.Generic;
-using BepInEx;
-using CellMenu;
-using GameData;
+﻿using CellMenu;
 using UnityEngine;
-using UnityEngine.UI;
-using UniverseLib;
 
 namespace AutogenRundown
 {
