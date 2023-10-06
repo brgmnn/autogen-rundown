@@ -30,7 +30,7 @@
     * [ ] Timed Terminal Sequence
 * Enemies
     * [x] Basic hybernation
-    * [ ]
+    * [ ] Event based activation
     * Types of enemies present
         * [x] Strikers / Shooters
         * [x] Giants
@@ -42,7 +42,8 @@
         * [ ] Tanks
         * [ ] Pouncers (Snatchers)
 * Alarms
-    * [x] Basic alarms 
+    * [x] Basic alarms
+    * [x] Blood doors
     * [x] Error alarms
     * [ ] S-Class alarms
     * [ ] Surge alarms
