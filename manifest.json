@@ -1,0 +1,11 @@
+{
+  "name": "Autogen Rundown",
+  "version_number": "0.1.0",
+  "website_url": "https://github.com/thunderstore-io",
+  "description": "",
+  "dependencies": [
+    "BepInEx-BepInExPack_GTFO-3.2.1",
+    "dakkhuza-MTFO-4.5.1",
+    "Inas07-LocalProgression-1.1.5"
+  ]
+}

@@ -22,7 +22,7 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
-        /// Rolls for whether we should add an error alarm
+        /// Rolls for whether we should add an error alarm to this level layout.
         /// </summary>
         /// <param name="factor">
         /// Adjustment factor for whether an alarm should be rolled
@@ -41,6 +41,7 @@ namespace AutogenRundown.DataBlocks
 
             var alarmCount = director.Tier switch
             {
+                // No error alarms for A/B
                 "A" => 0,
                 "B" => 0,
                 "C" => Roll(0.1),
@@ -52,14 +53,23 @@ namespace AutogenRundown.DataBlocks
                 _ => 0
             };
 
-            alarmCount = 1;
+            // No need to process further if we have no error alarm
+            if (alarmCount < 1)
+                return;
 
             for (int i = 0; i < alarmCount; i++)
             {
                 var puzzle = ChainedPuzzle.AlarmError_Baseline;
 
-                var candidates = Zones.Where(z => z.LocalIndex != 0 && z.ChainedPuzzleToEnter == 0);
+                // First try and find a zone in the middle without an alarm already.
+                var candidates = Zones.Where(z => z.LocalIndex != 0 && z.ChainedPuzzleToEnter == 0 && z.LocalIndex != Zones.Count - 1);
 
+                // If no candidates, search for any zone in the middle (we will overwrite the alarm)
+                if (candidates.Count() == 0)
+                    candidates = Zones.Where(z => z.LocalIndex != 0 && z.LocalIndex != Zones.Count - 1);
+
+                // If there's still no candidates, include the last zone. Note this probably never
+                // gets called as all levels have at least 3 zones.
                 if (candidates.Count() == 0)
                     candidates = Zones.Where(z => z.LocalIndex != 0);
 
@@ -75,15 +85,12 @@ namespace AutogenRundown.DataBlocks
                 zone.ChainedPuzzleToEnter = puzzle.PersistentId;
 
                 Bins.ChainedPuzzles.AddBlock(puzzle);
-            }
 
-            // Give a chance to allow disabling the error alarm(s). Higher chance the more error alarms spawned.
-            if (Generator.Flip(0.2 * alarmCount) || true)
-            {
-                var zone = Generator.Pick(Zones.Where(z => z.LocalIndex != 0));
-
-                if (zone != null)
+                // Give a flat chance of being able to turn off the alarm.
+                if (Generator.Flip(0.2))
+                {
                     zone.TurnOffAlarmOnTerminal = true;
+                }
             }
         }
 

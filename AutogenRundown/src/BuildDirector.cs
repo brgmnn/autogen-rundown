@@ -74,7 +74,7 @@ namespace AutogenRundown
             Points = (Tier, Bulkhead) switch
             {
                 ("A", Bulkhead.Main) => 400,
-                ("B", Bulkhead.Main) => 600,
+                ("B", Bulkhead.Main) => 500,
                 ("C", Bulkhead.Main) => 800,
                 ("D", Bulkhead.Main) => 800,
                 ("E", Bulkhead.Main) => 800,
