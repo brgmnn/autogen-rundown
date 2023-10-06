@@ -1,4 +1,6 @@
-# Autogen Rundown
+# Autogen Rundown 🎲
+
+Automatic Rundown generation, using procedural seed based generation.
 
 ## Features progress
 
