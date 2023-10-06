@@ -147,6 +147,29 @@ namespace AutogenRundown.DataBlocks
                         var selected = Generator.Select(
                             new List<WeightedDifficulty>
                             {
+                                new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy } },
+                                new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Medium } },
+                            });
+
+                        foreach (var difficulty in selected.Difficulties)
+                        {
+                            EnemySpawningInZone.Add(
+                                new EnemySpawningData()
+                                {
+                                    GroupType = EnemyGroupType.Hibernate,
+                                    Difficulty = difficulty,
+                                    Points = points / selected.Difficulties.Count,
+                                });
+                        }
+
+                        break;
+                    }
+
+                case "B":
+                    {
+                        var selected = Generator.Select(
+                            new List<WeightedDifficulty>
+                            {
                                 new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Easy } },
                                 new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Medium } },
                                 new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Hard } }

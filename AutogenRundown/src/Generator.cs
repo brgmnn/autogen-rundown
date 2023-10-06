@@ -93,7 +93,8 @@ namespace AutogenRundown
         public static T Select<T>(ICollection<T> collection) where T : ISelectable
         {
             var totalWeight = collection.Sum(x => x.Weight);
-            var randomWeight = Random.NextDouble() * totalWeight;
+            var rand = Random.NextDouble();
+            var randomWeight = rand * totalWeight;
 
             double weightSum = 0;
 

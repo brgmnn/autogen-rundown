@@ -59,21 +59,21 @@ namespace AutogenRundown
                 });
             rundown.AddLevel(levelA);
 
-            /*
+
             // B levels
             for (int i = 0; i < bMax; i++)
             {
                 var level = Level.Build(
-                    new Level 
-                    { 
+                    new Level
+                    {
                         Tier = "B",
                         Name = Generator.Draw(levelNames),
-                        Index = i + 1 
+                        Index = i + 1
                     });
                 rundown.AddLevel(level);
             }
 
-
+            /*
             // C levels
             for (int i = 0; i < cMax; i++)
             {

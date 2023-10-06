@@ -69,6 +69,20 @@ namespace AutogenRundown
             };
         }
 
+        public void GenPoints()
+        {
+            Points = (Tier, Bulkhead) switch
+            {
+                ("A", Bulkhead.Main) => 400,
+                ("B", Bulkhead.Main) => 600,
+                ("C", Bulkhead.Main) => 800,
+                ("D", Bulkhead.Main) => 800,
+                ("E", Bulkhead.Main) => 800,
+
+                (_, _) => 600,
+            };
+        }
+
         public void GenZones()
         {
             ZoneCount = (Tier, Bulkhead) switch

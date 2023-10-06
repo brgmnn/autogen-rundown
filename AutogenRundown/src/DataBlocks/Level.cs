@@ -279,8 +279,9 @@ namespace AutogenRundown.DataBlocks
             {
                 Bulkhead = Bulkhead.Main,
                 Complexity = Complexity.Low,
-                Points = 600
+                Tier = level.Tier
             };
+            mainDirector.GenPoints();
             mainDirector.GenObjective();
 
             var mainLevelLayout = LevelLayout.Build(level, mainDirector);
