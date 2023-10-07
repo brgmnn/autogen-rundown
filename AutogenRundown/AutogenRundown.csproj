@@ -11,20 +11,20 @@
     <RootNamespace>$(SolutionName)</RootNamespace>
 
     <BepInEx_Test>$(AppData)\r2modmanPlus-local\GTFO\profiles\$(Profile)\BepInEx</BepInEx_Test>
-    
-    <Deps>$(SolutionDir)\deps</Deps>    
+
+    <Deps>$(SolutionDir)\deps</Deps>
     <BepInEx>$(Deps)\BepInEx-BepInExPack_GTFO-3.2.1\BepInExPack_GTFO\BepInEx</BepInEx>
 
     <Plugins>$(BepInEx)\plugins</Plugins>
     <BuildDirectory>$(BepInEx)\plugins\$(SolutionName)\</BuildDirectory>
 
-    
+
     <OutputPath>$(SolutionDir)\build</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <!-- Older mod usage -->
     <!--<Reference Include="$(BepInEx)\core\0Harmony.dll" Private="false" />-->
@@ -51,12 +51,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
-  <Target Name="PostBuild" BeforeTargets="PostBuildEvent">
-    <Message Text="Does this work?" />
-    <Delete Files="$(OutputPath)$(AssemblyName).deps.json" />
-  </Target>
-
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="echo &quot;hi&quot;" />
+    <Delete Files="$(OutputPath)$(AssemblyName).deps.json" />
   </Target>
 </Project>
