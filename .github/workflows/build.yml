@@ -44,8 +44,9 @@ jobs:
     - name: Unzip thunderstore dependencies
       run: for z in deps/*.zip; do unzip "$z" -d "${z%.zip}"; done
 
-    # - name: Restore dependencies
-    #   run: dotnet restore
+    # Build the mod.
+    - name: Restore dependencies
+      run: dotnet restore
     # - name: Build
     #   run: dotnet build --no-restore
     # - name: Test
