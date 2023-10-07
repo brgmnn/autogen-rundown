@@ -41,13 +41,8 @@ jobs:
         script: |
           const script = require("${{ github.workspace }}/.github/actions/thunderstore-download.js");
           script({ github, context, core, glob, io, exec, fetch, require });
-
-    - run: |
-        for z in deps/*.zip;
-          do unzip "$z" -d "${z%.zip}";
-        done
-    - run: ls -lah deps
-
+    - name: Unzip thunderstore dependencies
+      run: for z in deps/*.zip; do unzip "$z" -d "${z%.zip}"; done
 
     # - name: Restore dependencies
     #   run: dotnet restore
