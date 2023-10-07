@@ -2,3 +2,5 @@
 /AutogenRundown/obj
 /build
 /deps
+
+.DS_Store

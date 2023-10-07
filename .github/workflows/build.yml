@@ -49,7 +49,11 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+    - name: Zip the mod
+      run: |
+        cd build
+        zip -r ${{ github.workspace}}/AutogenRundown.zip *
     - name: View the build
-      run: ls -lah build
+      run: ls -lah
     # - name: Test
     #   run: dotnet test --no-build --verbosity normal
