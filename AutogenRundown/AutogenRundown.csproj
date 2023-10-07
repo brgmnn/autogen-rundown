@@ -17,24 +17,30 @@
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
+  
 	<Target Name="PostBuild" BeforeTargets="PostBuildEvent">
 		<Delete Files="$(OutputPath)$(AssemblyName).deps.json" />
 	</Target>
-	<ItemGroup>
+	
+  <ItemGroup>
 		<!-- BepInEx -->
-		<Reference Include="$(BepInEx)\core\0Harmony.dll" Private="false" />
+		<!--<Reference Include="$(BepInEx)\core\0Harmony.dll" Private="false" />-->
 		<Reference Include="$(BepInEx)\core\BepInEx.Core.dll" Private="false" />
 		<Reference Include="$(BepInEx)\core\BepInEx.Unity.IL2CPP.dll" Private="false" />
-		<Reference Include="$(BepInEx)\core\Il2CppInterop.Common.dll" Private="false" />
-		<Reference Include="$(BepInEx)\core\Il2CppInterop.Runtime.dll" Private="false" />
-		<Reference Include="$(BepInEx)\core\MonoMod.RuntimeDetour.dll" Private="false" />
+    <!--<Reference Include="$(BepInEx)\core\Il2CppInterop.Common.dll" Private="false" />-->
+    <!--<Reference Include="$(BepInEx)\core\Il2CppInterop.Runtime.dll" Private="false" />-->
+    <!--<Reference Include="$(BepInEx)\core\MonoMod.RuntimeDetour.dll" Private="false" />-->
 		<Reference Include="$(BepInEx)\interop\*.dll" Private="false" />
-		<Compile Remove="Blocks\**" />
+		
+    <Compile Remove="Blocks\**" />
 		<EmbeddedResource Remove="Blocks\**" />
 		<None Remove="Blocks\**" />
 		<Reference Remove="$(BepInEx)\interop\netstandard.dll" />
 
 		<!-- NuGet Packages -->
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-	</ItemGroup>
+    <PackageReference Include="HarmonyX" Version="2.10.2" />
+    <PackageReference Include="Il2CppInterop.Common" Version="1.4.5" />
+    <PackageReference Include="Il2CppInterop.Runtime" Version="1.4.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
 </Project>
