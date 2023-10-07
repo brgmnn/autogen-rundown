@@ -13,11 +13,10 @@
     <BepInEx_Test>$(AppData)\r2modmanPlus-local\GTFO\profiles\$(Profile)\BepInEx</BepInEx_Test>
 
     <Deps>$(SolutionDir)\deps</Deps>
-    <BepInEx>$(Deps)\BepInEx-BepInExPack_GTFO-3.2.1\BepInExPack_GTFO\BepInEx</BepInEx>
+    <BepInEx>$(Deps)\BepInEx-BepInExPack_GTFO\BepInExPack_GTFO\BepInEx</BepInEx>
 
     <Plugins>$(BepInEx)\plugins</Plugins>
     <BuildDirectory>$(BepInEx)\plugins\$(SolutionName)\</BuildDirectory>
-
 
     <OutputPath>$(SolutionDir)\build</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -50,10 +49,10 @@
     <PackageReference Include="Il2CppInterop.Runtime" Version="1.4.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
-  
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="echo &quot;hi&quot;" />
-    
+
     <Delete Files="$(OutputPath)$(AssemblyName).deps.json" />
 
     <Copy SourceFiles="$(SolutionDir)\manifest.json" DestinationFolder="$(OutputPath)" />
