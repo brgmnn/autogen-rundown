@@ -24,11 +24,20 @@ jobs:
         dotnet-version: 6.0.x
     # - uses: microsoft/setup-msbuild@v1.1
 
+    - id: deps
+      name: List mod dependencies
+      run: echo "deps=$(jq .dependencies ${{ github.workspace }}/manifest.json)" >> "$GITHUB_ENV"
+    # - uses: actions/cache@v3
+    #   id: thunderstore-cache
+    #   with:
+    #     path: deps
+    #     key: ${{ runner.os }}-thunderstore-${{ }}
     - uses: actions/github-script@v6
       with:
         script: |
           const script = require("${{ github.workspace }}/.github/actions/thunderstore-download.js");
           script({ github, context, core, glob, io, exec, fetch, require });
+    - run: echo $deps
 
     # - name: Restore dependencies
     #   run: dotnet restore
