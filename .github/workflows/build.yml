@@ -43,7 +43,7 @@ jobs:
           script({ github, context, core, glob, io, exec, fetch, require });
 
     - run: |
-        for z in *.zip;
+        for z in deps/*.zip;
           do unzip "$z" -d "${z%.zip}";
         done
     - run: ls -lah deps
