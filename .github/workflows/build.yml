@@ -26,7 +26,7 @@ jobs:
     # Get AutogenRundown mod version
     - name: Get version
       id: version
-      run: echo "version=$(jq .version_number manifest.json)" >> "$GITHUB_ENV"
+      run: echo "version=$(jq .version_number manifest.json)" >> "$GITHUB_OUTPUT"
 
     # Download all manifest dependencies from Thunderstore.
     - id: deps
