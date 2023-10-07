@@ -50,9 +50,14 @@
     <PackageReference Include="Il2CppInterop.Runtime" Version="1.4.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
-
+  
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="echo &quot;hi&quot;" />
+    
     <Delete Files="$(OutputPath)$(AssemblyName).deps.json" />
+
+    <Copy SourceFiles="$(SolutionDir)\manifest.json" DestinationFolder="$(OutputPath)" />
+    <Copy SourceFiles="$(SolutionDir)\icon.png" DestinationFolder="$(OutputPath)" />
+    <Copy SourceFiles="$(SolutionDir)\README.md" DestinationFolder="$(OutputPath)" />
   </Target>
 </Project>
