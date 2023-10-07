@@ -10,19 +10,23 @@
     <AssemblyName>$(SolutionName)</AssemblyName>
     <RootNamespace>$(SolutionName)</RootNamespace>
 
-    <ThunderstoreDeps>$(SolutionDir)\deps</ThunderstoreDeps>
+    <BepInEx_Test>$(AppData)\r2modmanPlus-local\GTFO\profiles\$(Profile)\BepInEx</BepInEx_Test>
     
-    <BepInEx>$(AppData)\r2modmanPlus-local\GTFO\profiles\$(Profile)\BepInEx</BepInEx>
+    <Deps>$(SolutionDir)\deps</Deps>    
+    <BepInEx>$(Deps)\BepInEx-BepInExPack_GTFO-3.2.1\BepInExPack_GTFO\BepInEx</BepInEx>
+
     <Plugins>$(BepInEx)\plugins</Plugins>
     <BuildDirectory>$(BepInEx)\plugins\$(SolutionName)\</BuildDirectory>
-    <OutputPath>$(BuildDirectory)</OutputPath>
+
+    
+    <OutputPath>$(SolutionDir)\build</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   
   <ItemGroup>
-    <!-- BepInEx -->
+    <!-- Older mod usage -->
     <!--<Reference Include="$(BepInEx)\core\0Harmony.dll" Private="false" />-->
     <!--<Reference Include="$(BepInEx)\core\BepInEx.Core.dll" Private="false" />-->
     <!--<Reference Include="$(BepInEx)\core\BepInEx.Unity.IL2CPP.dll" Private="false" />-->
@@ -31,8 +35,9 @@
     <!--<Reference Include="$(BepInEx)\core\MonoMod.RuntimeDetour.dll" Private="false" />-->
     <!--<Reference Include="$(BepInEx)\interop\*.dll" Private="false" />-->
 
-    <Reference Include="$(ThunderstoreDeps)\BepInEx-BepInExPack_GTFO\BepInExPack_GTFO\BepInEx\core\BepInEx.Core.dll" Private="false" />
-    <Reference Include="$(ThunderstoreDeps)\BepInEx-BepInExPack_GTFO\BepInExPack_GTFO\BepInEx\core\BepInEx.Unity.IL2CPP.dll" Private="false" />
+    <!-- BepInEx -->
+    <Reference Include="$(BepInEx)\core\BepInEx.Core.dll" Private="false" />
+    <Reference Include="$(BepInEx)\core\BepInEx.Unity.IL2CPP.dll" Private="false" />
 
     <Compile Remove="Blocks\**" />
     <EmbeddedResource Remove="Blocks\**" />
@@ -49,5 +54,9 @@
   <Target Name="PostBuild" BeforeTargets="PostBuildEvent">
     <Message Text="Does this work?" />
     <Delete Files="$(OutputPath)$(AssemblyName).deps.json" />
+  </Target>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="echo &quot;hi&quot;" />
   </Target>
 </Project>
