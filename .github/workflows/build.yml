@@ -27,15 +27,15 @@ jobs:
     - id: deps
       name: List mod dependencies
       run: jq .dependencies ${{ github.workspace }}/manifest.json > .deps.json
-    # - uses: actions/cache@v3
-    #   id: thunderstore-cache
-    #   name: Cache thunderstore dependencies
-    #   with:
-    #     path: deps
-    #     key: ${{ runner.os }}-thunderstore-${{ hashFiles('.deps.json') }}
+    - uses: actions/cache@v3
+      id: thunderstore-cache
+      name: Cache thunderstore dependencies
+      with:
+        path: deps
+        key: ${{ runner.os }}-thunderstore-${{ hashFiles('.deps.json') }}
     - uses: actions/github-script@v6
       name: Download thunderstore dependencies
-      # if: steps.thunderstore-cache.outputs.cache-hit != 'true'
+      if: steps.thunderstore-cache.outputs.cache-hit != 'true'
       with:
         script: |
           const script = require("${{ github.workspace }}/.github/actions/thunderstore-download.js");
