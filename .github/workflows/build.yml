@@ -22,7 +22,11 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    # - uses: microsoft/setup-msbuild@v1.1
+
+    # Get AutogenRundown mod version
+    - name: Get version
+      id: version
+      run: echo "version=$(jq .version_number manifest.json)" >> "$GITHUB_ENV"
 
     # Download all manifest dependencies from Thunderstore.
     - id: deps
@@ -49,11 +53,14 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+
+    # Package the mod.
     - name: Zip the mod
       run: |
         cd build
         zip -r ${{ github.workspace}}/AutogenRundown.zip *
     - name: View the build
       run: ls -lah
+    - run: echo ${{ steps.version.outputs.version }}
     # - name: Test
     #   run: dotnet test --no-build --verbosity normal
