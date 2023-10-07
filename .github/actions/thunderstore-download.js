@@ -12,7 +12,7 @@ const run = async ({ github, context, core, io, fetch }) => {
   io.mkdirP("./deps");
 
   for await (const dependency of dependencies) {
-    console.log(`-> Fetching: ${dependency}`);
+    console.log(`   -> Fetching: ${dependency}`);
 
     const response = await fetch(
       `https://gcdn.thunderstore.io/live/repository/packages/${dependency}.zip`
