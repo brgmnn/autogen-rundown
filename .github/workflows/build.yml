@@ -24,6 +24,7 @@ jobs:
         dotnet-version: 6.0.x
     # - uses: microsoft/setup-msbuild@v1.1
 
+    # Download all manifest dependencies from Thunderstore.
     - id: deps
       name: List mod dependencies
       run: jq .dependencies ${{ github.workspace }}/manifest.json > .deps.json
@@ -41,9 +42,9 @@ jobs:
           const script = require("${{ github.workspace }}/.github/actions/thunderstore-download.js");
           script({ github, context, core, glob, io, exec, fetch, require });
 
-    - run: |
-        ls -lah ${{ github.workspace }}/
-        ls -lah ${{ github.workspace }}/deps/
+    - run: unzip -o deps/*.zip -d deps
+    - run: ls -lah deps
+
 
     # - name: Restore dependencies
     #   run: dotnet restore
