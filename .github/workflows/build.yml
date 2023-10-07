@@ -57,7 +57,7 @@ jobs:
     # Package the mod.
     - uses: actions/upload-artifact@v3
       with:
-        name: AutogenRundown_${{ steps.version.outputs.version }}.zip
+        name: AutogenRundown_${{ steps.version.outputs.version }}
         path: ${{ github.workspace }}/build/*
     # - name: Zip the mod
     #   run: |
