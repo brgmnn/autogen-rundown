@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const run = async ({ github, context, core, fetch }) => {
+const run = async ({ github, context, core, io, fetch }) => {
   console.log("Downloading Thunderstore package...");
 
   const manifest = JSON.parse(fs.readFileSync("manifest.json", "utf8"));
@@ -37,7 +37,7 @@ const run = async ({ github, context, core, fetch }) => {
   //   await sleep(1000);
   // }
 
-  // io.mkdirP("./deps");
+  io.mkdirP("./deps");
 
   for await (const dependency of dependencies) {
     const response = await fetch(
