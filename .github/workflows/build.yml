@@ -55,12 +55,16 @@ jobs:
       run: dotnet build --no-restore
 
     # Package the mod.
-    - name: Zip the mod
-      run: |
-        cd build
-        zip -r ${{ github.workspace}}/AutogenRundown.zip *
-    - name: View the build
-      run: ls -lah
-    - run: echo ${{ steps.version.outputs.version }}
+    - uses: actions/upload-artifact@v3
+      with:
+        name: AutogenRundown_${{ steps.version.outputs.version }}.zip
+        path: ${{ github.workspace }}/build/*
+    # - name: Zip the mod
+    #   run: |
+    #     cd build
+    #     zip -r ${{ github.workspace}}/AutogenRundown.zip *
+    # - name: View the build
+    #   run: ls -lah
+    # - run: echo ${{ steps.version.outputs.version }}
     # - name: Test
     #   run: dotnet test --no-build --verbosity normal
