@@ -42,7 +42,10 @@ jobs:
           const script = require("${{ github.workspace }}/.github/actions/thunderstore-download.js");
           script({ github, context, core, glob, io, exec, fetch, require });
 
-    - run: unzip -o deps/*.zip -d deps
+    - run: |
+        for z in *.zip;
+          do unzip "$z" -d "${z%.zip}";
+        done
     - run: ls -lah deps
 
 
