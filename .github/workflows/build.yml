@@ -46,7 +46,13 @@ jobs:
           const script = require("${{ github.workspace }}/.github/actions/thunderstore-download.js");
           script({ github, context, core, glob, io, exec, fetch, require });
     - name: Unzip thunderstore dependencies
-      run: for z in deps/*.zip; do unzip "$z" -d "${z%.zip}"; done
+      run: |
+        echo ":: Extracting dependencies";
+        for z in deps/*.zip; do
+          echo "::group::   -> $z";
+          unzip "$z" -d "${z%.zip}";
+          echo "::endgroup::";
+        done
 
     # Build the mod.
     - name: Restore dependencies
