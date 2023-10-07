@@ -26,7 +26,7 @@ jobs:
 
     - id: deps
       name: List mod dependencies
-      run: echo "deps=$(jq .dependencies ${{ github.workspace }}/manifest.json)" >> "$GITHUB_OUTPUT"
+      run: jq .dependencies ${{ github.workspace }}/manifest.json > deps.json
     # - uses: actions/cache@v3
     #   id: thunderstore-cache
     #   with:
@@ -37,7 +37,7 @@ jobs:
         script: |
           const script = require("${{ github.workspace }}/.github/actions/thunderstore-download.js");
           script({ github, context, core, glob, io, exec, fetch, require });
-    - run: echo ${{ steps.deps.outputs.deps }}
+    - run: echo ${{ hashFiles('deps.json') }}
 
     # - name: Restore dependencies
     #   run: dotnet restore
