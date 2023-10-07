@@ -49,9 +49,10 @@ namespace AutogenRundown.DataBlocks
 
             //var dir = Path.Combine(Paths.PluginPath, "AutogenRundown", "Datablocks", Generator.Seed);
 
-            var version = CellBuildData.GetRevision();
+            // Replace with Plugin.GameRevision to avoid interop dependency
+            //var version = CellBuildData.GetRevision();
 
-            var dir = Path.Combine(Paths.BepInExRootPath, "GameData", $"{version}", "Custom");
+            var dir = Path.Combine(Paths.BepInExRootPath, "GameData", Plugin.GameRevision, "Custom");
             var path = Path.Combine(dir, $"GameData__{Filename}.json");
 
             // Ensure the directory exists

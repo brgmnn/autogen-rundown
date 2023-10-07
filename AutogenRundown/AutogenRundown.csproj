@@ -1,46 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<!-- Use the following property to set your preferred r2modman profile -->
-		<Profile>modding</Profile>
+  <PropertyGroup>
+    <!-- Use the following property to set your preferred r2modman profile -->
+    <Profile>modding</Profile>
 
-		<TargetFramework>net6.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<DebugType>None</DebugType>
-		<AssemblyName>$(SolutionName)</AssemblyName>
-		<RootNamespace>$(SolutionName)</RootNamespace>
-		<BepInEx>$(AppData)\r2modmanPlus-local\GTFO\profiles\$(Profile)\BepInEx</BepInEx>
-		<Plugins>$(BepInEx)\plugins</Plugins>
-		<BuildDirectory>$(BepInEx)\plugins\$(SolutionName)\</BuildDirectory>
-		<OutputPath>$(BuildDirectory)</OutputPath>
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <DebugType>None</DebugType>
+    <AssemblyName>$(SolutionName)</AssemblyName>
+    <RootNamespace>$(SolutionName)</RootNamespace>
+
+    <ThunderstoreDeps>$(SolutionDir)\deps</ThunderstoreDeps>
+    
+    <BepInEx>$(AppData)\r2modmanPlus-local\GTFO\profiles\$(Profile)\BepInEx</BepInEx>
+    <Plugins>$(BepInEx)\plugins</Plugins>
+    <BuildDirectory>$(BepInEx)\plugins\$(SolutionName)\</BuildDirectory>
+    <OutputPath>$(BuildDirectory)</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
   
-	<Target Name="PostBuild" BeforeTargets="PostBuildEvent">
-		<Delete Files="$(OutputPath)$(AssemblyName).deps.json" />
-	</Target>
-	
   <ItemGroup>
-		<!-- BepInEx -->
-		<!--<Reference Include="$(BepInEx)\core\0Harmony.dll" Private="false" />-->
-		<Reference Include="$(BepInEx)\core\BepInEx.Core.dll" Private="false" />
-		<Reference Include="$(BepInEx)\core\BepInEx.Unity.IL2CPP.dll" Private="false" />
+    <!-- BepInEx -->
+    <!--<Reference Include="$(BepInEx)\core\0Harmony.dll" Private="false" />-->
+    <!--<Reference Include="$(BepInEx)\core\BepInEx.Core.dll" Private="false" />-->
+    <!--<Reference Include="$(BepInEx)\core\BepInEx.Unity.IL2CPP.dll" Private="false" />-->
     <!--<Reference Include="$(BepInEx)\core\Il2CppInterop.Common.dll" Private="false" />-->
     <!--<Reference Include="$(BepInEx)\core\Il2CppInterop.Runtime.dll" Private="false" />-->
     <!--<Reference Include="$(BepInEx)\core\MonoMod.RuntimeDetour.dll" Private="false" />-->
-		<Reference Include="$(BepInEx)\interop\*.dll" Private="false" />
-		
-    <Compile Remove="Blocks\**" />
-		<EmbeddedResource Remove="Blocks\**" />
-		<None Remove="Blocks\**" />
-		<Reference Remove="$(BepInEx)\interop\netstandard.dll" />
+    <!--<Reference Include="$(BepInEx)\interop\*.dll" Private="false" />-->
 
-		<!-- NuGet Packages -->
+    <Reference Include="$(ThunderstoreDeps)\BepInEx-BepInExPack_GTFO\BepInExPack_GTFO\BepInEx\core\BepInEx.Core.dll" Private="false" />
+    <Reference Include="$(ThunderstoreDeps)\BepInEx-BepInExPack_GTFO\BepInExPack_GTFO\BepInEx\core\BepInEx.Unity.IL2CPP.dll" Private="false" />
+
+    <Compile Remove="Blocks\**" />
+    <EmbeddedResource Remove="Blocks\**" />
+    <None Remove="Blocks\**" />
+    <Reference Remove="$(BepInEx)\interop\netstandard.dll" />
+
+    <!-- NuGet Packages -->
     <PackageReference Include="HarmonyX" Version="2.10.2" />
     <PackageReference Include="Il2CppInterop.Common" Version="1.4.5" />
     <PackageReference Include="Il2CppInterop.Runtime" Version="1.4.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
+
+  <Target Name="PostBuild" BeforeTargets="PostBuildEvent">
+    <Message Text="Does this work?" />
+    <Delete Files="$(OutputPath)$(AssemblyName).deps.json" />
+  </Target>
 </Project>

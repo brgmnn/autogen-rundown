@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutogenRundown.DataBlocks.ZoneData;
+﻿using AutogenRundown.DataBlocks.ZoneData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace AutogenRundown.DataBlocks
 {

@@ -11,6 +11,8 @@ namespace AutogenRundown;
 [BepInDependency("Inas07-LocalProgression-1.1.5", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BasePlugin
 {
+    public static string GameRevision { get; private set; } = "33871";
+
     public static ManualLogSource Logger { get; private set; } = new ManualLogSource("MyFirstPlugin");
 
     public override void Load()
