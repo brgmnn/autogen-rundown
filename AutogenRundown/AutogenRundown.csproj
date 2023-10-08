@@ -1,8 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <!-- Use the following property to set your preferred r2modman profile -->
-    <Profile>modding</Profile>
-
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -12,7 +9,6 @@
 
     <Deps>$(SolutionDir)\deps</Deps>
     <BepInEx>$(Deps)\BepInEx-BepInExPack_GTFO\BepInExPack_GTFO\BepInEx</BepInEx>
-
     <OutputPath>$(SolutionDir)\build</OutputPath>
 
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -21,7 +17,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="$(Debug) != 'false'">
-    <BepInEx_Debug>$(AppData)\r2modmanPlus-local\GTFO\profiles\$(Profile)\BepInEx</BepInEx_Debug>
+    <BepInEx_Debug>$(AppData)\r2modmanPlus-local\GTFO\profiles\modding\BepInEx</BepInEx_Debug>
     <OutputPath_Debug>$(BepInEx_Debug)\plugins\$(SolutionName)\</OutputPath_Debug>
   </PropertyGroup>
 
@@ -55,7 +51,7 @@
     <Exec Command="echo &quot;hi&quot;" />
 
     <Delete Files="$(OutputPath)$(AssemblyName).deps.json" />
-  
+
     <Copy SourceFiles="$(SolutionDir)\manifest.json" DestinationFolder="$(OutputPath)" />
     <Copy SourceFiles="$(SolutionDir)\icon.png" DestinationFolder="$(OutputPath)" />
     <Copy SourceFiles="$(SolutionDir)\README.md" DestinationFolder="$(OutputPath)" />
@@ -63,7 +59,7 @@
     <ItemGroup>
       <DebugCopyItems Include="$(OutputPath)\**\*.*" />
     </ItemGroup>
-    
+
     <Copy Condition="$(Debug) != 'false'" SourceFiles="@(DebugCopyItems)" DestinationFolder="$(OutputPath_Debug)" />
   </Target>
 </Project>
