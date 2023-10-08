@@ -36,7 +36,7 @@ jobs:
       id: thunderstore-cache
       name: Cache thunderstore dependencies
       with:
-        path: deps
+        path: deps/*.zip
         key: ${{ runner.os }}-thunderstore-${{ hashFiles('.deps.json') }}
     - uses: actions/github-script@v6
       name: Download thunderstore dependencies
