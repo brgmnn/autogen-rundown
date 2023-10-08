@@ -10,18 +10,19 @@
     <AssemblyName>$(SolutionName)</AssemblyName>
     <RootNamespace>$(SolutionName)</RootNamespace>
 
-    <BepInEx_Test>$(AppData)\r2modmanPlus-local\GTFO\profiles\$(Profile)\BepInEx</BepInEx_Test>
-
     <Deps>$(SolutionDir)\deps</Deps>
     <BepInEx>$(Deps)\BepInEx-BepInExPack_GTFO\BepInExPack_GTFO\BepInEx</BepInEx>
 
-    <Plugins>$(BepInEx)\plugins</Plugins>
-    <BuildDirectory>$(BepInEx)\plugins\$(SolutionName)\</BuildDirectory>
-
     <OutputPath>$(SolutionDir)\build</OutputPath>
+
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(Debug) != 'false'">
+    <BepInEx_Debug>$(AppData)\r2modmanPlus-local\GTFO\profiles\$(Profile)\BepInEx</BepInEx_Debug>
+    <OutputPath_Debug>$(BepInEx_Debug)\plugins\$(SolutionName)\</OutputPath_Debug>
   </PropertyGroup>
 
   <ItemGroup>
@@ -54,9 +55,15 @@
     <Exec Command="echo &quot;hi&quot;" />
 
     <Delete Files="$(OutputPath)$(AssemblyName).deps.json" />
-
+  
     <Copy SourceFiles="$(SolutionDir)\manifest.json" DestinationFolder="$(OutputPath)" />
     <Copy SourceFiles="$(SolutionDir)\icon.png" DestinationFolder="$(OutputPath)" />
     <Copy SourceFiles="$(SolutionDir)\README.md" DestinationFolder="$(OutputPath)" />
+
+    <ItemGroup>
+      <DebugCopyItems Include="$(OutputPath)\**\*.*" />
+    </ItemGroup>
+    
+    <Copy Condition="$(Debug) != 'false'" SourceFiles="@(DebugCopyItems)" DestinationFolder="$(OutputPath_Debug)" />
   </Target>
 </Project>

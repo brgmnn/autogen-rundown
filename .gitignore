@@ -3,4 +3,5 @@
 /build
 /deps
 
+/*.zip
 .DS_Store
