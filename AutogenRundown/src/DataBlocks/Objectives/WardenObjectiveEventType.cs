@@ -1,0 +1,32 @@
+﻿namespace AutogenRundown.DataBlocks.Objectives
+{
+    internal enum WardenObjectiveEventType : uint
+    {
+        None = 0,
+        OpenSecurityDoor = 1,
+        UnlockSecurityDoor = 2,
+        AllLightsOff = 3,
+        AllLightsOn = 4,
+        PlaySound = 5,
+        SetFogSettings = 6,
+        DimensionFlashTeam = 7,
+        DimensionWarpTeam = 8,
+        SpawnEnemyWave = 9,
+        StopEnemyWaves = 10,
+        UpdateCustomSubObjective = 11,
+        ForceCompleteObjective = 12,
+        LightsInZone = 13,
+        LightsInZoneToggle = 14,
+        AnimationTrigger = 15,
+        SpawnEnemyOnPoint = 16,
+        SetNavMarker = 17,
+        StepProgressionObjective = 18,
+        SetWorldEventCondition = 19,
+        LockSecurityDoor = 20,
+        SetTerminalCommand = 21,
+        ActivateChainedPuzzle = 22,
+        LightOnWorldEventObjective = 23,
+
+        EventBreak = 999
+    }
+}

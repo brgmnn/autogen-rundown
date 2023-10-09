@@ -67,13 +67,15 @@ namespace AutogenRundown
                 Bulkhead.Overload => Generator.Pick(mainObjectives),
                 _ => Generator.Pick(mainObjectives),
             };
+
+            Objective = WardenObjectiveType.HsuFindSample;
         }
 
         public void GenPoints()
         {
             Points = (Tier, Bulkhead) switch
             {
-                ("A", Bulkhead.Main) => 400,
+                ("A", Bulkhead.Main) => 400, // Adjust points down a bit
                 ("B", Bulkhead.Main) => 500,
                 ("C", Bulkhead.Main) => 800,
                 ("D", Bulkhead.Main) => 800,
@@ -91,13 +93,13 @@ namespace AutogenRundown
                 ("B", Bulkhead.Main) => Generator.Random.Next(4, 8),
                 ("C", Bulkhead.Main) => Generator.Random.Next(4, 9),
                 ("D", Bulkhead.Main) => Generator.Random.Next(5, 11),
-                ("E", Bulkhead.Main) => Generator.Random.Next(6, 14),
+                ("E", Bulkhead.Main) => Generator.Random.Next(6, 14), // TODO: this is too much
 
                 ("A", _) => Generator.Random.Next(1, 5),
                 ("B", _) => Generator.Random.Next(1, 7),
                 ("C", _) => Generator.Random.Next(2, 8),
                 ("D", _) => Generator.Random.Next(3, 10),
-                ("E", _) => Generator.Random.Next(3, 12),
+                ("E", _) => Generator.Random.Next(3, 12), // TODO: this is also too much
 
                 (_, _) => 1
             };

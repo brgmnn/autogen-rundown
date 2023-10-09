@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Objectives;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -33,6 +34,8 @@ namespace AutogenRundown.DataBlocks
     {
         PersonnelId = 128,
         PartialDecoder = 129,
+
+        HSU = 137,
 
         Harddrive = 147,
         Glp_1 = 149,
@@ -216,13 +219,54 @@ namespace AutogenRundown.DataBlocks
             };
 
             ObjectiveLayerData dataLayer = level.GetObjectiveLayerData(director.Bulkhead);
+            LevelLayout layout = level.GetLevelLayout(director.Bulkhead);
 
             objective.GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
             objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
-            objective.GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+            objective.GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition";
 
             switch (director.Objective)
             {
+                case WardenObjectiveType.HsuFindSample:
+                    {
+                        objective.MainObjective = "Find <color=orange>[ITEM_SERIAL]</color> somewhere inside HSU Storage Zone";
+
+                        objective.ActivateHSU_BringItemInElevator = true;
+                        objective.GatherItemId = (uint)WardenObjectiveItem.HSU;
+                        objective.ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
+
+                        // Place HSU's within the objective zone
+                        var count = layout.Zones.Count;
+                        var zoneIndex = Generator.Random.Next((count - 1) / 2, count - 1);
+
+                        dataLayer.ObjectiveData.ZonePlacementDatas.Add(
+                            new List<ZonePlacementData>()
+                            {
+                                new ZonePlacementData
+                                {
+                                    LocalIndex = zoneIndex,
+                                    Weights = ZonePlacementWeights.NotAtStart
+                                }
+                            });
+
+                        var zone = layout.Zones[zoneIndex];
+                        zone.HSUsInZone = DistributionAmount.Many;
+                        zone.HSUClustersInZone = 1;
+
+                        // Add enemies on Goto Win
+                        // TODO: do we want this for all bulkheads?
+                        objective.WavesOnGotoWin.Add(
+                            new Enemies.GenericWave
+                            {
+                                WaveSettings = (uint)VanillaWaveSettings.ExitTrickle_38S_Original,
+                                WavePopulation = (uint)WavePopulation.Baseline,
+                                SpawnDelay = 4.0,
+                                TriggerAlarm = true,
+                            });
+
+                        break;
+                    }
+
                 case WardenObjectiveType.GatherSmallItems:
                     {
                         var (itemId, name, description) = Generator.Pick(BuildSmallPickupPack(level.Tier));
@@ -233,7 +277,7 @@ namespace AutogenRundown.DataBlocks
                             DistributionStrategy.EvenlyAcrossZones
                         });
 
-                        objective.Name = $"Gather_{name.Replace(" ", "_")}";
+                        // objective.Name = $"Gather_{name.Replace(" ", "_")}";
                         objective.MainObjective = description;
                         objective.FindLocationInfo = $"Look for {name}s in the complex";
                         objective.FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
@@ -251,7 +295,7 @@ namespace AutogenRundown.DataBlocks
                             _ => 1,
                         };
 
-                        objective.GatherItemId = (UInt32)itemId;
+                        objective.GatherItemId = (uint)itemId;
                         objective.GatherSpawnCount = Generator.Random.Next(
                             objective.GatherRequiredCount,
                             objective.GatherRequiredCount + 6);
@@ -267,7 +311,7 @@ namespace AutogenRundown.DataBlocks
 
                 case WardenObjectiveType.ClearPath:
                     {
-                        objective.Name = "Clear_path";
+                        // objective.Name = "Clear_path";
                         objective.MainObjective = "Clear a path to the exit point in [EXTRACTION_ZONE]";
                         objective.GoToWinCondition_Elevator = "Go to the forward exit point in [EXTRACTION_ZONE]";
                         objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
@@ -324,18 +368,36 @@ namespace AutogenRundown.DataBlocks
 
         public double ShowHelpDelay { get; set; } = 180.0;
 
+        #region Events
+        public List<WardenObjectiveEvent> EventsOnActivate { get; set; } = new List<WardenObjectiveEvent>();
+
+        public List<Enemies.GenericWave> WavesOnGotoWin = new List<Enemies.GenericWave>();
+        #endregion
+
+        #region Type=0: Find HSU sample
+        public bool ActivateHSU_BringItemInElevator { get; set; } = true;
+
+        public int ActivateHSU_ItemFromStart = 0;
+        public int ActivateHSU_ItemAfterActivation = 0;
+        public bool ActivateHSU_MarkItemInElevatorAsWardenObjective = false;
+        public bool ActivateHSU_StopEnemyWavesOnActivation = false;
+        public bool ActivateHSU_ObjectiveCompleteAfterInsertion = false;
+        public bool ActivateHSU_RequireItemAfterActivationInExitScan = false;
+        public JArray ActivateHSU_Events = new JArray();
+        #endregion
+
         #region Type=3: Gather small items
         [JsonProperty("Gather_RequiredCount")]
-        public int GatherRequiredCount { get; set; } = 4;
+        public int GatherRequiredCount { get; set; } = 0;
 
         [JsonProperty("Gather_ItemId")]
-        public uint GatherItemId { get; set; } = 128;
+        public uint GatherItemId { get; set; } = 0;
 
         [JsonProperty("Gather_SpawnCount")]
-        public int GatherSpawnCount { get; set; } = 6;
+        public int GatherSpawnCount { get; set; } = 0;
 
         [JsonProperty("Gather_MaxPerZone")]
-        public int GatherMaxPerZone { get; set; } = 3;
+        public int GatherMaxPerZone { get; set; } = 0;
         #endregion
 
         #region Type=4: Clear a path
@@ -356,15 +418,13 @@ namespace AutogenRundown.DataBlocks
         public double FogTransitionDurationOnElevatorLand = 0.0;
         public bool OnActivateOnSolveItem = false;
         public JArray WavesOnActivate = new JArray();
-        public JArray EventsOnActivate = new JArray();
         public bool StopAllWavesBeforeGotoWin = false;
-        public JArray WavesOnGotoWin = new JArray();
         public int WaveOnGotoWinTrigger = 0;
         public JArray EventsOnGotoWin = new JArray();
         public int EventsOnGotoWinTrigger = 0;
         public int FogTransitionDataOnGotoWin = 0;
         public double FogTransitionDurationOnGotoWin = 0.0;
-        public int ChainedPuzzleToActive = 0;
+        public uint ChainedPuzzleToActive = 0;
         public int ChainedPuzzleMidObjective = 0;
         public double ChainedPuzzleAtExitScanSpeedMultiplier = 2.0;
         public JArray Retrieve_Items = new JArray();
@@ -383,14 +443,6 @@ namespace AutogenRundown.DataBlocks
         public int CentralPowerGenClustser_NumberOfGenerators = 0;
         public int CentralPowerGenClustser_NumberOfPowerCells = 4;
         public JArray CentralPowerGenClustser_FogDataSteps = new JArray();
-        public int ActivateHSU_ItemFromStart = 0;
-        public int ActivateHSU_ItemAfterActivation = 0;
-        public bool ActivateHSU_BringItemInElevator = true;
-        public bool ActivateHSU_MarkItemInElevatorAsWardenObjective = false;
-        public bool ActivateHSU_StopEnemyWavesOnActivation = false;
-        public bool ActivateHSU_ObjectiveCompleteAfterInsertion = false;
-        public bool ActivateHSU_RequireItemAfterActivationInExitScan = false;
-        public JArray ActivateHSU_Events = new JArray();
         public double Survival_TimeToActivate = 0.0;
         public double Survival_TimeToSurvive = 0.0;
         public int GatherTerminal_SpawnCount = 0;
