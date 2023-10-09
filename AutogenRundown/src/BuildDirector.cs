@@ -67,8 +67,6 @@ namespace AutogenRundown
                 Bulkhead.Overload => Generator.Pick(mainObjectives),
                 _ => Generator.Pick(mainObjectives),
             };
-
-            Objective = WardenObjectiveType.HsuFindSample;
         }
 
         public void GenPoints()
