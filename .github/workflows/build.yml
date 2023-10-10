@@ -117,5 +117,18 @@ jobs:
           name: AutogenRundown_${{ steps.version.outputs.version }}
           path: ${{ github.workspace }}/autogen
 
+      - name: Build package
+        run: |
+          mkdir build
+
+          # BepInEx
+          mv deps/BepInEx-BepInExPack_GTFO/BepInExPack_GTFO build/AutogenRundown_GTFO
+
+          # Dependency Mods
+          deps/dakkhuza-MTFO build/AutogenRundown_GTFO/BepInEx/plugins/
+          deps/Inas07-LocalProgression build/AutogenRundown_GTFO/BepInEx/plugins/
+
+          # AutogenRundown
+          mv autogen build/AutogenRundown_GTFO/BepInEx/plugins/the_tavern-AutogenRundown
       - run: |
-          ls -lah
+          ls -R build
