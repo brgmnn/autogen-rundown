@@ -5,7 +5,7 @@ using BepInEx.Unity.IL2CPP;
 
 namespace AutogenRundown;
 
-[BepInPlugin("AutogenRundown", "AutogenRundown", "0.2.1")]
+[BepInPlugin("AutogenRundown", "AutogenRundown", "0.3.0")]
 [BepInProcess("GTFO.exe")]
 [BepInDependency("dev.gtfomodding.gtfo-api", BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("Inas07-LocalProgression-1.1.5", BepInDependency.DependencyFlags.SoftDependency)]
