@@ -11,23 +11,24 @@ Go to the Autogen Rundown Thunderstore mod page (https://gtfo.thunderstore.io/pa
 ### Manual Installation 📦
 Download the latest version of the mods manual install zip from the [releases page](https://github.com/brgmnn/autogen-rundown/releases/latest).
 
-> [!NOTE]
-> You may wish to make a backup of your game GTFO folder before making any changes to it
+> [!IMPORTANT]
+> Backup your GTFO game folder before copying any mod files in so you can easily restore it
 
-1. Extract the archive into a folder. *Do not extract into the game folder*.
-2. Move the contents of `AutogenRundown_GTFO` into `<Steam Location>\steamapps\common\GTFO`.
+1. Back up your GTFO game folder (`<Steam Location>\steamapps\common\GTFO`)
+    * Right click on GTFO in steam, select "properties", select "Installed Files"
+    * Click "Browse..." at the top
+    * Windows File Explorer will open inside the GTFO game folder. Navigate up one level and copy/paste the folder. Name it appropriately for your backup (eg. `GTFO_backup`).
+1. Extract the `Autogen_manual_install_<Version>.zip` archive into a folder. *Do not extract into the game folder*.
+2. Move the contents of `AutogenRundown_GTFO` into the GTFO game folder: `<Steam Location>\steamapps\common\GTFO`.
 3. Run the game.
 
 If done correctly, you should see a console appearing when the game launches.
 
 #### Uninstalling the mod
 
-To uninstall the mod, run "Verify integrity of game files" from the steam installed files menu for GTFO.
+To uninstall the mod, open `<Steam Location>\steamapps\common` and delete the GTFO game folder `GTFO`. Then rename your backup GTFO game folder (eg. `GTFO_backup`) to `GTFO`.
 
-Alternatively if you backed up your GTFO folder before making any changes, you can restore the original GTFO folder.
-
-> [!NOTE]
-> You can easily switch between modded and vanilla by switching GTFO game folders
+If you did not make a backup of the game: delete the GTFO game folder and run "Verify integrity of game files" from the Steam "Installed Files" properties menu. This will redownload the GTFO game folder.
 
 #### Updating to the latest mod version
 
