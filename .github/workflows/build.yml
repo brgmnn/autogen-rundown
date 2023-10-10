@@ -70,5 +70,51 @@ jobs:
       with:
         name: AutogenRundown_${{ steps.version.outputs.version }}
         path: ${{ github.workspace }}/build/*
-    - name: View the build
-      run: ls -lah build/
+
+
+  # Generates a Zip file that can be installed manually without a mod manager
+  manual_package:
+    name: Package manual install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Get AutogenRundown mod version
+      - name: Get version
+        id: version
+        run: echo "version=$(jq -r .version_number manifest.json)" >> "$GITHUB_OUTPUT"
+
+      # Download all manifest dependencies from Thunderstore.
+      - id: deps
+        name: List mod dependencies
+        run: jq .dependencies ${{ github.workspace }}/manifest.json > .deps.json
+      - uses: actions/cache@v3
+        id: thunderstore-cache
+        name: Cache thunderstore dependencies
+        with:
+          path: deps/*.zip
+          key: ${{ runner.os }}-thunderstore-${{ hashFiles('.deps.json') }}
+      - uses: actions/github-script@v6
+        name: Download thunderstore dependencies
+        if: steps.thunderstore-cache.outputs.cache-hit != 'true'
+        with:
+          script: |
+            const script = require("${{ github.workspace }}/.github/actions/thunderstore-download.js");
+            script({ github, context, core, glob, io, exec, fetch, require });
+      - name: Unzip thunderstore dependencies
+        run: |
+          echo ":: Extracting dependencies";
+          for z in deps/*.zip; do
+            echo "::group::  -> $z";
+            unzip "$z" -d "${z%.zip}";
+            echo "::endgroup::";
+          done
+
+      # Download AutogenRundown build
+      - uses: actions/download-artifact@v2
+        with:
+          name: AutogenRundown_*
+          path: ${{ github.workspace }}/autogen
+
+      - run: |
+          ls -lah
