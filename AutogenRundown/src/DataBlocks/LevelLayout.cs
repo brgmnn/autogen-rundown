@@ -276,32 +276,6 @@ namespace AutogenRundown.DataBlocks
                 _ => SubComplex.All
             };
 
-        /// <summary>
-        /// Generates the number of zones
-        /// </summary>
-        /// <param name="level"></param>
-        /// <param name="variant"></param>
-        /// <returns></returns>
-        public static int GenNumZones(Level level, Bulkhead variant)
-        {
-            return (level.Tier, variant) switch
-            {
-                ("A", Bulkhead.Main) => Generator.Random.Next(3, 6),
-                ("B", Bulkhead.Main) => Generator.Random.Next(4, 8),
-                ("C", Bulkhead.Main) => Generator.Random.Next(4, 9),
-                ("D", Bulkhead.Main) => Generator.Random.Next(5, 11),
-                ("E", Bulkhead.Main) => Generator.Random.Next(6, 14),
-
-                ("A", _) => Generator.Random.Next(1, 5),
-                ("B", _) => Generator.Random.Next(1, 7),
-                ("C", _) => Generator.Random.Next(2, 8),
-                ("D", _) => Generator.Random.Next(3, 10),
-                ("E", _) => Generator.Random.Next(3, 12),
-
-                (_, _) => 1
-            };
-        }
-
         public static LevelLayout Build(Level level, BuildDirector director)
         {
             var layout = new LevelLayout(director)

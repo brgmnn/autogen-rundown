@@ -38,7 +38,8 @@ namespace AutogenRundown
 
             var levelNames = new List<string>(Words.NounsLevel);
 
-            var bMax = Generator.Random.Next(2, 4);
+            var aMax = Generator.Random.Next(1, 2);
+            var bMax = Generator.Random.Next(3, 4);
             var cMax = Generator.Random.Next(2, 4);
             var dMax = Generator.Random.Next(1, 3);
             var eMax = Generator.Random.Next(0, 1);
@@ -50,14 +51,17 @@ namespace AutogenRundown
 
 
             // A levels, always generate atleast 1
-            var levelA = Level.Build(
-                new Level
-                {
-                    Tier = "A",
-                    Name = Generator.Draw(levelNames),
-                    Index = 1
-                });
-            rundown.AddLevel(levelA);
+            for (int i = 0; i < aMax; i++)
+            {
+                var level = Level.Build(
+                    new Level
+                    {
+                        Tier = "A",
+                        Name = Generator.Draw(levelNames),
+                        Index = i + 1
+                    });
+                rundown.AddLevel(level);
+            }
 
 
             // B levels

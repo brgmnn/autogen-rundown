@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Alarms;
+﻿using System.Security.AccessControl;
+using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Objectives;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -211,6 +212,12 @@ namespace AutogenRundown.DataBlocks
                 (WardenObjectiveItem.DataCubeTampered, "Tampered data cube", "Gather [COUNT_REQUIRED] Data cubes and return the cubes for inspection.")
             };
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="director"></param>
+        /// <param name="level"></param>
+        /// <returns></returns>
         public static WardenObjective Build(BuildDirector director, Level level)
         {
             var objective = new WardenObjective
@@ -324,23 +331,20 @@ namespace AutogenRundown.DataBlocks
 
                 case WardenObjectiveType.ClearPath:
                     {
-                        // objective.Name = "Clear_path";
-                        objective.MainObjective = "Clear a path to the exit point in [EXTRACTION_ZONE]";
-                        objective.GoToWinCondition_Elevator = "Go to the forward exit point in [EXTRACTION_ZONE]";
-                        objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+                        // TODO: For some reason "[EXTRACTION_ZONE]" is not registering the exit zone correctly.
+                        // For now we manually find the exit zone number.
+                        var exitIndex = layout.ZoneAliasStart + layout.Zones.Find(
+                            z => z.CustomGeomorph != null && z.CustomGeomorph.Contains("exit_01"))?.LocalIndex;
+                        var exitZone = $"<color=orange>ZONE {exitIndex}</color>";
+
+                        objective.MainObjective = $"Clear a path to the exit point in {exitZone}";
+                        objective.GoToWinCondition_Elevator = "";
+                        objective.GoToWinCondition_CustomGeo = $"Go to the forward exit point in {exitZone}";
+
+                        objective.ChainedPuzzleAtExitScanSpeedMultiplier = 0.18;
 
                         if (director.Bulkhead == Bulkhead.Main)
                             level.Description = GenLevelDescription(director.Objective);
-
-                        objective.EventsOnGotoWin.Add(new JObject
-                        {
-                            ["WaveSettings"] = (int)VanillaWaveSettings.Apex,
-                            ["WavePopulation"] = (int)WavePopulation.Baseline,
-                            ["AreaDistance"] = 2,
-                            ["SpawnDelay"] = 0.0,
-                            ["TriggerAlarm"] = true,
-                            ["IntelMessage"] = 0
-                        });
 
                         break;
                     }
@@ -401,7 +405,7 @@ namespace AutogenRundown.DataBlocks
 
         #region Type=3: Gather small items
         [JsonProperty("Gather_RequiredCount")]
-        public int GatherRequiredCount { get; set; } = 0;
+        public int GatherRequiredCount { get; set; } = -1;
 
         [JsonProperty("Gather_ItemId")]
         public uint GatherItemId { get; set; } = 0;
