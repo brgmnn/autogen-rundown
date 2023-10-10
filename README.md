@@ -20,16 +20,16 @@ Download the latest version of the mods manual install zip from the [releases pa
 
 If done correctly, you should see a console appearing when the game launches.
 
-#### Uninstalling
+#### Uninstalling the mod
 
 To uninstall the mod, run "Verify integrity of game files" from the steam installed files menu for GTFO.
 
 Alternatively if you backed up your GTFO folder before making any changes, you can restore the original GTFO folder.
 
-> [!NOTE]
-> You can easily switch between modded and vanilla by simply switching folders then
+> [!TIP]
+> You can easily switch between modded and vanilla by simply switching GTFO game folders
 
-#### Updating to the latest Mod version
+#### Updating to the latest mod version
 
 Follow the installation instructions again, check yes to overwrite all files.
 
