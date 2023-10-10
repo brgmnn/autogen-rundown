@@ -183,11 +183,6 @@ namespace AutogenRundown.DataBlocks.Alarms
                     TeamScan,
                     TeamScan,
                     TeamScan,
-                    AlarmClass2,
-                    AlarmClass2,
-                    AlarmClass2,
-                    AlarmClass2,
-                    AlarmClass2,
                     AlarmClass3,
                     AlarmClass3,
                     AlarmClass3,
@@ -195,6 +190,9 @@ namespace AutogenRundown.DataBlocks.Alarms
                     AlarmClass3,
                     AlarmClass4,
                     AlarmClass4,
+                    AlarmClass4,
+                    AlarmClass4,
+                    AlarmClass5,
                 },
                 ("C") => new List<ChainedPuzzle>
                 {

@@ -108,5 +108,34 @@ namespace AutogenRundown
                 .Select(_ => Points / ZoneCount)
                 .ToList();
         }
+
+        /// <summary>
+        /// Randomly generate a point value for hibernating enemies in each zone.
+        /// </summary>
+        /// <param name="zone"></param>
+        /// <returns></returns>
+        public int GetPoints(Zone zone)
+        {
+            // Adjust points by a factor of the zone's coverage size. This helps keep large zones
+            // from feeling too empty and small zones from feeling too packed.
+            // Magnitude =  ~32 for a 20 x 25 size zone, which is relatively small.
+            //             ~175 for a 125 x 125 room
+            //             ~200 for a 200 x 25 room
+            //
+            // The sqrt of the magnitude is used to scale the points down a bit for larger zones
+            // without penalizing small zones. The final 12.5 is an empirical adjustment value.
+            var factor = Math.Sqrt(zone.Coverage.Magnitude) / 12.5;
+
+            return (int)(factor * (Tier switch
+            {
+                "A" => Generator.Random.Next(50, 80),
+                "B" => Generator.Random.Next(60, 90),
+                "C" => Generator.Random.Next(70, 100),
+                "D" => Generator.Random.Next(80, 110),
+                "E" => Generator.Random.Next(80, 120),
+
+                _ => Generator.Random.Next(50, 100),
+            }));
+        }
     }
 }

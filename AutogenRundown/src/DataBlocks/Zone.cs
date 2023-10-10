@@ -131,7 +131,8 @@ namespace AutogenRundown.DataBlocks
         /// <param name="director"></param>
         public void GenEnemies(BuildDirector director)
         {
-            var points = director.EnemyPointPool.ElementAt(LocalIndex);
+            //var points = director.EnemyPointPool.ElementAt(LocalIndex);
+            var points = director.GetPoints(this);
 
             switch (director.Tier)
             {
