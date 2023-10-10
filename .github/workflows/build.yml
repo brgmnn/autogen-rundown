@@ -75,6 +75,7 @@ jobs:
   # Generates a Zip file that can be installed manually without a mod manager
   manual_package:
     name: Package manual install
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
