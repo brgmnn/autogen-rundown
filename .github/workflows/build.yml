@@ -130,5 +130,12 @@ jobs:
 
           # AutogenRundown
           mv autogen build/AutogenRundown_GTFO/BepInEx/plugins/the_tavern-AutogenRundown
-      - run: |
-          ls -R build
+
+          # Manual install docs
+          cp docs/MANUAL_INSTALL_README.txt build/README.txt
+
+      # Package the manual install mod
+      - uses: actions/upload-artifact@v3
+        with:
+          name: AutogenRundown_manual_install_${{ steps.version.outputs.version }}
+          path: ${{ github.workspace }}/build/*

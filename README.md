@@ -4,11 +4,23 @@ Automatic Rundown generation, using procedural seed based generation.
 
 ## Installation
 
+<details>
+<summary>
+
 ### With Mod Manager
+</summary>
+
 Go to the Autogen Rundown Thunderstore mod page (https://gtfo.thunderstore.io/package/the_tavern/AutogenRundown/) and install via your mod manager.
+</details>
 
 ### Manual Installation
 Download the latest version of the mods manual install zip: [AutogenRundown_manual_install.zip](https://github.com/brgmnn/autogen-rundown/releases/download/latest/AutogenRundown_0.2.1.zip)
+
+1. Extract the archive into a folder.
+2. Move the contents of `AutogenRundown_GTFO` into `<Steam Location>\steamapps\common\GTFO`.
+3. Run the game.
+
+If done correctly, you should see a console appearing when the game launches.
 
 ## Features progress
 
@@ -25,7 +37,7 @@ Download the latest version of the mods manual install zip: [AutogenRundown_manu
 * Objectives
     * [x] Clear Path — *Navigate through the zones to a separate extraction elevator*
     * [x] Gather Small Items — *IDs, GLPs etc.*
-    * [ ] HSU Find Sample
+    * [x] HSU Find Sample
     * [ ] Reactor Startup
     * [ ] Reactor Shutdown
     * [ ] Input Special Terminal Command
@@ -40,11 +52,11 @@ Download the latest version of the mods manual install zip: [AutogenRundown_manu
     * [ ] Timed Terminal Sequence
 * Enemies
     * [x] Basic hybernation
-    * [ ] Event based activation
+    * [x] Event based activation
     * Types of enemies present
         * [x] Strikers / Shooters
         * [x] Giants
-        * [ ] Scouts
+        * [x] Scouts
         * [ ] Chargers
         * [ ] Shadows
         * [ ] Hybrids
