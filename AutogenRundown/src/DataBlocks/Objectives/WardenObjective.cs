@@ -250,8 +250,21 @@ namespace AutogenRundown.DataBlocks
                             });
 
                         var zone = layout.Zones[zoneIndex];
-                        zone.HSUsInZone = DistributionAmount.Many;
-                        zone.HSUClustersInZone = 1;
+                        zone.HSUsInZone = level.Tier switch
+                        {
+                            "B" => DistributionAmount.SomeMore,
+                            "C" => DistributionAmount.Many,
+                            "D" => DistributionAmount.Alot,
+                            "E" => DistributionAmount.Tons,
+                            _ => DistributionAmount.Some
+                        };
+                        zone.HSUClustersInZone = level.Tier switch
+                        {
+                            "C" => 2,
+                            "D" => 3,
+                            "E" => 3,
+                            _ => 1
+                        };
 
                         // Add enemies on Goto Win
                         // TODO: do we want this for all bulkheads?

@@ -1,7 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.ZoneData;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -22,11 +21,27 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
+        /// Roll for blood doors
+        /// </summary>
+        public void RollBloodDoors()
+        {
+            var count = 0;
+            var (max, chance) = director.Tier switch
+            {
+                "A" => (0, 0.0),
+                "B" => (2, 0.3),
+                "C" => (4, 0.2),
+                _ => (-1, 0.2)
+            };
+
+            foreach (var zone in Zones)
+                if (Generator.Flip(chance) && (count++ < max || max == -1))
+                    zone.BloodDoor = BloodDoor.Easy;
+        }
+
+        /// <summary>
         /// Rolls for whether we should add an error alarm to this level layout.
         /// </summary>
-        /// <param name="factor">
-        /// Adjustment factor for whether an alarm should be rolled
-        /// </param>
         public void RollErrorAlarm()
         {
             // Rolls for alarms to add. Each successful roll adds an error alarm and rolls again
@@ -90,6 +105,126 @@ namespace AutogenRundown.DataBlocks
                 if (Generator.Flip(0.2))
                 {
                     zone.TurnOffAlarmOnTerminal = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Roll for adding scout patrols to each zone
+        /// </summary>
+        public void RollScouts()
+        {
+            // All scouts cost 5pts each
+            var (chance, max, scoutPacks) = director.Tier switch
+            {
+                "A" => (0.2, 2, new List<EnemySpawningData>
+                    {
+                        EnemySpawningData.Scout with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.Scout with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.Scout with { Points = 10 },
+                    }),
+                "B" => (0.2, 3, new List<EnemySpawningData>
+                    {
+                        EnemySpawningData.Scout with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.Scout with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 15 },
+                    }),
+                "C" => (0.2, 5, new List<EnemySpawningData>
+                    {
+                        EnemySpawningData.Scout with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.Scout with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.Scout with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 15 },
+                        EnemySpawningData.Scout with { Points = 15 },
+                        EnemySpawningData.Scout with { Points = 20 },
+
+                        // Chargers
+                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
+                    }),
+                "D" => (0.3, -1, new List<EnemySpawningData>
+                    {
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 15 },
+                        EnemySpawningData.Scout with { Points = 15 },
+                        EnemySpawningData.Scout with { Points = 20 },
+                        EnemySpawningData.Scout with { Points = 20 },
+                        EnemySpawningData.Scout with { Points = 25 },
+                        EnemySpawningData.Scout with { Points = 25 },
+                        EnemySpawningData.Scout with { Points = 30 },
+                        EnemySpawningData.Scout with { Points = 30 },
+
+                        // Chargers
+                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 15 },
+                        EnemySpawningData.Scout with { Points = 15 },
+
+                        // Shadows
+                        EnemySpawningData.ScoutShadow with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.ScoutShadow with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 15 },
+                        EnemySpawningData.Scout with { Points = 15 },
+                    }),
+                "E" => (0.3, -1, new List<EnemySpawningData>
+                    {
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 15 },
+                        EnemySpawningData.Scout with { Points = 15 },
+                        EnemySpawningData.Scout with { Points = 20 },
+                        EnemySpawningData.Scout with { Points = 20 },
+                        EnemySpawningData.Scout with { Points = 30 },
+                        EnemySpawningData.Scout with { Points = 30 },
+
+                        // Chargers
+                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 15 },
+                        EnemySpawningData.Scout with { Points = 15 },
+                        EnemySpawningData.Scout with { Points = 20 },
+                        EnemySpawningData.Scout with { Points = 30 },
+
+                        // Shadows
+                        EnemySpawningData.ScoutShadow with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.ScoutShadow with { Distribution = EnemyZoneDistribution.ForceOne },
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 15 },
+                        EnemySpawningData.Scout with { Points = 15 },
+                        EnemySpawningData.Scout with { Points = 20 },
+                        EnemySpawningData.Scout with { Points = 30 },
+                    }),
+
+                _ => (0.0, 0, new List<EnemySpawningData>())
+            };
+
+            var count = 0;
+
+            foreach (var zone in Zones)
+            {
+                if (Generator.Flip(chance) && (count++ < max || max == -1))
+                {
+                    var scout = Generator.Draw(scoutPacks);
+
+                    if (scout == null)
+                        return;
+
+                    zone.EnemySpawningInZone.Add(scout);
                 }
             }
         }
@@ -221,9 +356,6 @@ namespace AutogenRundown.DataBlocks
 
                             if (puzzle.PersistentId != 0)
                                 Bins.ChainedPuzzles.AddBlock(puzzle);
-
-                            if (Generator.Flip(0.2))
-                                zone.BloodDoor = BloodDoor.Easy;
                         }
 
                         break;
@@ -255,16 +387,15 @@ namespace AutogenRundown.DataBlocks
 
                             if (puzzle.PersistentId != 0)
                                 Bins.ChainedPuzzles.AddBlock(puzzle);
-
-                            if (Generator.Flip(0.2))
-                                zone.BloodDoor = BloodDoor.Easy;
                         }
 
                         break;
                     }
             }
 
+            layout.RollBloodDoors();
             layout.RollErrorAlarm();
+            layout.RollScouts();
 
             Bins.LevelLayouts.AddBlock(layout);
 

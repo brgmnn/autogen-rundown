@@ -37,6 +37,7 @@ namespace AutogenRundown
         private static WardenObjectiveType[] nonMainObjectives = new WardenObjectiveType[]
         {
             WardenObjectiveType.GatherSmallItems,
+            WardenObjectiveType.HsuActivateSmall,
         };
 
         public int Points { get; set; } = 0;
