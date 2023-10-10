@@ -26,7 +26,7 @@ To uninstall the mod, run "Verify integrity of game files" from the steam instal
 
 Alternatively if you backed up your GTFO folder before making any changes, you can restore the original GTFO folder.
 
-> [!TIP]
+> [!NOTE]
 > You can easily switch between modded and vanilla by simply switching GTFO game folders
 
 #### Updating to the latest mod version
