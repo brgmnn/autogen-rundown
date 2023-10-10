@@ -2,9 +2,13 @@
 
 Automatic Rundown generation, using procedural seed based generation.
 
-## Usage
+## Installation
 
-Go to the Autogen Rundown Thunderstore mod page (https://gtfo.thunderstore.io/package/the_tavern/AutogenRundown/) and install either via your mod manager or manually by downloading the zip archive.
+### With Mod Manager
+Go to the Autogen Rundown Thunderstore mod page (https://gtfo.thunderstore.io/package/the_tavern/AutogenRundown/) and install via your mod manager.
+
+### Manual Installation
+Download the latest version of the mods manual install zip: (AutogenRundown_manual_install.zip)[/releases/latest/download/AutogenRundown_0.2.1.zip]
 
 ## Features progress
 
