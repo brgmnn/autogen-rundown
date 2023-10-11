@@ -92,8 +92,8 @@ namespace AutogenRundown.DataBlocks
         private static List<double> NormalSizes = new List<double>
         {
             10.0,
-            15.0, 15.0,
-            20.0, 20.0, 20.0, 20.0,
+            15.0,
+            20.0, 20.0, 20.0,
             25.0, 25.0, 25.0, 25.0, 25.0, 25.0,
             30.0, 30.0, 30.0, 30.0, 30.0, 30.0,
             35.0, 35.0, 35.0, 35.0, 35.0,
