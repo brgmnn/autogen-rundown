@@ -56,8 +56,8 @@ namespace AutogenRundown
         /// <typeparam name="T"></typeparam>
         /// <param name="collection"></param>
         /// <returns>Returns null if no element can be picked (empty collection)</returns>
-        public static T? Pick<T>(IEnumerable<T> collection) =>
-            collection.Count() > 0 ? collection.ElementAt(Random.Next(collection.Count())) : default(T);
+        public static T? Pick<T>(IEnumerable<T> collection)
+            => collection.Count() > 0 ? collection.ElementAt(Random.Next(collection.Count())) : default(T);
 
         /// <summary>
         /// Pick()'s an item from a collection and then removes it so it may not be subsequently drawn
@@ -71,6 +71,16 @@ namespace AutogenRundown
             collection.Remove(item);
             return item;
         }
+
+        /// <summary>
+        /// Shuffles a collection of items into a random order, using the Generator's Random
+        /// instance.
+        /// </summary>
+        /// <typeparam name="T">Individual element type</typeparam>
+        /// <param name="collection">A collection of T's</param>
+        /// <returns>The collection in a random order</returns>
+        public static List<T> Shuffle<T>(ICollection<T> collection)
+            => collection.OrderBy(_ => Random.Next()).ToList();
 
         public interface ISelectable
         {
