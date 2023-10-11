@@ -314,7 +314,7 @@ namespace AutogenRundown.DataBlocks
                             if (i == director.ZoneCount - 1)
                             {
                                 // The final zone is the extraction zone
-                                zone.Coverage = new CoverageMinMax { X = 50, Y = 50 };
+                                zone.Coverage = new CoverageMinMax { Min = 50, Max = 50 };
                                 zone.SubComplex = subcomplex;
                                 zone.GenExitGeomorph(level.Complex);
                             }

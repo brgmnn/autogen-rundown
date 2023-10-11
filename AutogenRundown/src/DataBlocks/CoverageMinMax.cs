@@ -30,16 +30,16 @@ namespace AutogenRundown.DataBlocks
 
         #region Input values
         /// <summary>
-        /// Width value
+        /// Minimum size
         /// </summary>
         [JsonProperty("x")]
-        public double X { get => vec.X; set => vec.X = (float)value; }
+        public double Min { get => vec.X; set => vec.X = (float)value; }
 
         /// <summary>
-        /// Height value
+        /// Maximum size
         /// </summary>
         [JsonProperty("y")]
-        public double Y { get => vec.Y; set => vec.Y = (float)value; }
+        public double Max { get => vec.Y; set => vec.Y = (float)value; }
 
         #endregion
 
@@ -70,19 +70,19 @@ namespace AutogenRundown.DataBlocks
 
         #endregion
 
-        public static CoverageMinMax Nano = new CoverageMinMax { X = (double)CoverageSize.Nano, Y = (double)CoverageSize.Nano };
-        public static CoverageMinMax Tiny = new CoverageMinMax { X = (double)CoverageSize.Tiny, Y = (double)CoverageSize.Tiny };
-        public static CoverageMinMax Small = new CoverageMinMax { X = (double)CoverageSize.Small, Y = (double)CoverageSize.Small };
-        public static CoverageMinMax Medium = new CoverageMinMax { X = (double)CoverageSize.Medium, Y = (double)CoverageSize.Medium };
-        public static CoverageMinMax Large = new CoverageMinMax { X = (double)CoverageSize.Large, Y = (double)CoverageSize.Large };
-        public static CoverageMinMax Huge = new CoverageMinMax { X = (double)CoverageSize.Huge, Y = (double)CoverageSize.Huge };
+        public static CoverageMinMax Nano = new CoverageMinMax { Min = (double)CoverageSize.Nano, Max = (double)CoverageSize.Nano };
+        public static CoverageMinMax Tiny = new CoverageMinMax { Min = (double)CoverageSize.Tiny, Max = (double)CoverageSize.Tiny };
+        public static CoverageMinMax Small = new CoverageMinMax { Min = (double)CoverageSize.Small, Max = (double)CoverageSize.Small };
+        public static CoverageMinMax Medium = new CoverageMinMax { Min = (double)CoverageSize.Medium, Max = (double)CoverageSize.Medium };
+        public static CoverageMinMax Large = new CoverageMinMax { Min = (double)CoverageSize.Large, Max = (double)CoverageSize.Large };
+        public static CoverageMinMax Huge = new CoverageMinMax { Min = (double)CoverageSize.Huge, Max = (double)CoverageSize.Huge };
 
         /// <summary>
         /// Generates a randomly picked size
         /// </summary>
         /// <returns></returns>
         public static CoverageMinMax GenCoverage()
-            => new CoverageMinMax { X = Generator.Pick(Sizes), Y = Generator.Pick(Sizes) };
+            => new CoverageMinMax { Min = Generator.Pick(Sizes), Max = Generator.Pick(Sizes) };
 
 
         #region Normal size generation
@@ -93,23 +93,27 @@ namespace AutogenRundown.DataBlocks
         {
             10.0,
             15.0,
-            20.0, 20.0, 20.0,
-            25.0, 25.0, 25.0, 25.0, 25.0, 25.0,
-            30.0, 30.0, 30.0, 30.0, 30.0, 30.0,
-            35.0, 35.0, 35.0, 35.0, 35.0,
+            20.0, 20.0,
+            25.0, 25.0, 
+            30.0, 30.0, 
+            35.0, 35.0,
             40.0, 40.0,
             45.0, 45.0,
             50.0
         };
 
         /// <summary>
-        /// Randomly selects two sizes from the NormalSizes list for X and Y size. The Normal
+        /// Randomly selects two sizes from the NormalSizes list for Min and Max size. The Normal
         /// sizes list follows a somewhat normal distribution around the 25-30 size, which seems
         /// typical for the game.
         /// </summary>
         /// <returns></returns>
         public static CoverageMinMax GenNormalSize()
-            => new CoverageMinMax { X = Generator.Pick(NormalSizes), Y = Generator.Pick(NormalSizes) };
+        {
+            var size = Generator.Pick(NormalSizes);
+
+            return new CoverageMinMax { Min = size, Max = size };
+        }
         #endregion
     }
 }

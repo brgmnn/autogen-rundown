@@ -296,18 +296,27 @@ namespace AutogenRundown.DataBlocks
                     {
                         // TODO: For some reason "[EXTRACTION_ZONE]" is not registering the exit zone correctly.
                         // For now we manually find the exit zone number.
-                        var exitIndex = layout.ZoneAliasStart + layout.Zones.Find(
-                            z => z.CustomGeomorph != null && z.CustomGeomorph.Contains("exit_01"))?.LocalIndex;
-                        var exitZone = $"<color=orange>ZONE {exitIndex}</color>";
+                        var exitZone = layout.Zones.Find(z => z.CustomGeomorph != null && z.CustomGeomorph.Contains("exit_01"));
+                        var exitIndex = layout.ZoneAliasStart + exitZone?.LocalIndex;
+                        var exitZoneString = $"<color=orange>ZONE {exitIndex}</color>";
 
-                        objective.MainObjective = $"Clear a path to the exit point in {exitZone}";
+                        objective.MainObjective = $"Clear a path to the exit point in {exitZoneString}";
                         objective.GoToWinCondition_Elevator = "";
-                        objective.GoToWinCondition_CustomGeo = $"Go to the forward exit point in {exitZone}";
+                        objective.GoToWinCondition_CustomGeo = $"Go to the forward exit point in {exitZoneString}";
 
                         objective.ChainedPuzzleAtExitScanSpeedMultiplier = 0.18;
 
-                        if (director.Bulkhead == Bulkhead.Main)
-                            level.Description = GenLevelDescription(director.Objective);
+                        level.Description = GenLevelDescription(director.Objective);
+
+                        // Ensure there's a nice spicy hoard at the end
+                        exitZone?.EnemySpawningInZone.Add(
+                            // These will be predominately strikers / shooters
+                            new EnemySpawningData()
+                            {
+                                GroupType = EnemyGroupType.Hibernate,
+                                Difficulty = EnemyRoleDifficulty.Easy,
+                                Points = 75, // 25pts is 1.0 distribution, this is quite a lot
+                            });
 
                         break;
                     }
