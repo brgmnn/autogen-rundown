@@ -199,6 +199,12 @@ namespace AutogenRundown.DataBlocks
         public static List<(WardenObjectiveItem, string, string)> BuildSmallPickupPack(string tier)
             => new List<(WardenObjectiveItem, string, string)>
             {
+                // Currently disabled items.
+                //  * MemoryStick: The model is quite small and hard to see especially in boxes.
+                //    Removed until some other pickup spot can be used
+
+                //(WardenObjectiveItem.MemoryStick, "Memory stick", "Gather [COUNT_REQUIRED] Memory sticks and return the memory sticks for analysis."),
+
                 (WardenObjectiveItem.PersonnelId, "Personnel ID", "Gather [COUNT_REQUIRED] Personnel IDs and return the data to be processed."),
                 (WardenObjectiveItem.PartialDecoder, "Partial Decoder", "Gather [COUNT_REQUIRED] Partial Decoders and return the data to be processed."),
                 (WardenObjectiveItem.Harddrive, "Hard drive", "Gather [COUNT_REQUIRED] Hard Drives and return the drives for data archival."),
@@ -206,7 +212,6 @@ namespace AutogenRundown.DataBlocks
                 (WardenObjectiveItem.Glp_2, "GLP-2 canister", "Gather [COUNT_REQUIRED] GLP-2 canisters and return the canisters for genome sequencing."),
                 (WardenObjectiveItem.Osip, "OSIP vial", "Gather [COUNT_REQUIRED] OSIP vials and return the vials for chemical analysis."),
                 (WardenObjectiveItem.PlantSample, "Plant sample", "Gather [COUNT_REQUIRED] Plant samples and return the samples for analysis."),
-                (WardenObjectiveItem.MemoryStick, "Memory stick", "Gather [COUNT_REQUIRED] Memory sticks and return the memory sticks for analysis."),
                 (WardenObjectiveItem.DataCube, "Data cube", "Gather [COUNT_REQUIRED] Data cubes and return the cubes for data extraction."),
                 (WardenObjectiveItem.DataCubeBackup, "Backup data cube", "Gather [COUNT_REQUIRED] Backup Data cubes and return the cubes for data archival."),
                 (WardenObjectiveItem.DataCubeTampered, "Tampered data cube", "Gather [COUNT_REQUIRED] Data cubes and return the cubes for inspection.")
@@ -297,7 +302,6 @@ namespace AutogenRundown.DataBlocks
                             DistributionStrategy.EvenlyAcrossZones
                         });
 
-                        // objective.Name = $"Gather_{name.Replace(" ", "_")}";
                         objective.MainObjective = description;
                         objective.FindLocationInfo = $"Look for {name}s in the complex";
                         objective.FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
