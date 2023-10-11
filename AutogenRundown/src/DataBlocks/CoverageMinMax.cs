@@ -83,5 +83,33 @@ namespace AutogenRundown.DataBlocks
         /// <returns></returns>
         public static CoverageMinMax GenCoverage()
             => new CoverageMinMax { X = Generator.Pick(Sizes), Y = Generator.Pick(Sizes) };
+
+
+        #region Normal size generation
+        /// <summary>
+        ///
+        /// </summary>
+        private static List<double> NormalSizes = new List<double>
+        {
+            10.0,
+            15.0, 15.0,
+            20.0, 20.0, 20.0, 20.0,
+            25.0, 25.0, 25.0, 25.0, 25.0, 25.0,
+            30.0, 30.0, 30.0, 30.0, 30.0, 30.0,
+            35.0, 35.0, 35.0, 35.0, 35.0,
+            40.0, 40.0,
+            45.0, 45.0,
+            50.0
+        };
+
+        /// <summary>
+        /// Randomly selects two sizes from the NormalSizes list for X and Y size. The Normal
+        /// sizes list follows a somewhat normal distribution around the 25-30 size, which seems
+        /// typical for the game.
+        /// </summary>
+        /// <returns></returns>
+        public static CoverageMinMax GenNormalSize()
+            => new CoverageMinMax { X = Generator.Pick(NormalSizes), Y = Generator.Pick(NormalSizes) };
+        #endregion
     }
 }

@@ -301,7 +301,7 @@ namespace AutogenRundown.DataBlocks
                             var zone = new Zone
                             {
                                 LocalIndex = i,
-                                Coverage = CoverageMinMax.GenCoverage(),
+                                Coverage = CoverageMinMax.GenNormalSize(),
                                 LightSetting = Lights.Light.RedToCyan_1,
 
                                 // Chain zones together
@@ -344,7 +344,7 @@ namespace AutogenRundown.DataBlocks
                             var zone = new Zone
                             {
                                 LocalIndex = i,
-                                Coverage = CoverageMinMax.GenCoverage(),
+                                Coverage = CoverageMinMax.GenNormalSize(),
                                 LightSetting = Lights.Light.RedToCyan_1,
                             };
 
