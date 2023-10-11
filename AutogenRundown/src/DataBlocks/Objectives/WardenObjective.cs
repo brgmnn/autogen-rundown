@@ -1,8 +1,7 @@
-﻿using System.Security.AccessControl;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Objectives;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -10,46 +9,6 @@ namespace AutogenRundown.DataBlocks
     /// Which objective bulkhead are we in.
     /// </summary>
     enum Bulkhead { Main, Extreme, Overload }
-
-    enum WardenObjectiveType
-    {
-        HsuFindSample = 0,
-        ReactorStartup = 1,
-        ReactorShutdown = 2,
-        GatherSmallItems = 3,
-        ClearPath = 4,
-        SpecialTerminalCommand = 5,
-        RetrieveBigItems = 6,
-        PowerCellDistribution = 7,
-        TerminalUplink = 8,
-        CentralGeneratorCluster = 9,
-        HsuActivateSmall = 10,
-        Survival = 11,
-        GatherTerminal = 12,
-        CorruptedTerminalUplink = 13,
-        Empty = 14,
-        TimedTerminalSequence = 15
-    }
-
-    enum WardenObjectiveItem : UInt32
-    {
-        PersonnelId = 128,
-        PartialDecoder = 129,
-
-        HSU = 137,
-
-        Harddrive = 147,
-        Glp_1 = 149,
-        Glp_2 = 169,
-        Osip = 150,
-        PlantSample = 153,
-        MemoryStick = 171,
-
-        DataCube = 165,
-        DataCubes = 179,
-        DataCubeBackup = 178,
-        DataCubeTampered = 168
-    }
 
     enum DistributionStrategy
     {

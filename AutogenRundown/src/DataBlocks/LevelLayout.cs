@@ -1,6 +1,7 @@
-﻿using AutogenRundown.DataBlocks.Alarms;
+﻿using Newtonsoft.Json;
+using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
-using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks
 {
