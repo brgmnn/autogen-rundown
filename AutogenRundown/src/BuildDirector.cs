@@ -117,25 +117,23 @@ namespace AutogenRundown
         /// <returns></returns>
         public int GetPoints(Zone zone)
         {
-            // Adjust points by a factor of the zone's coverage size. This helps keep large zones
-            // from feeling too empty and small zones from feeling too packed.
-            // Magnitude =  ~32 for a 20 x 25 size zone, which is relatively small.
-            //             ~175 for a 125 x 125 room
-            //             ~200 for a 200 x 25 room
+            // Adjust points by a factor of the zone's coverage size. Average the min/max values
+            // to get the mean zone size and divide by 25.0 to set a room size of 25 as the
+            // baseline.
             //
-            // The sqrt of the magnitude is used to scale the points down a bit for larger zones
-            // without penalizing small zones. The final 12.5 is an empirical adjustment value.
-            var factor = Math.Sqrt(zone.Coverage.Magnitude) / 12.5;
+            // Larger zones get more points.
+            var factor = ((zone.Coverage.Min + zone.Coverage.Max) / 2) / 25.0;
 
+            // Baseline points will be around 25pts / zone for the baseline size.
             return (int)(factor * (Tier switch
             {
-                "A" => Generator.Random.Next(50, 80),
-                "B" => Generator.Random.Next(60, 90),
-                "C" => Generator.Random.Next(70, 100),
-                "D" => Generator.Random.Next(80, 110),
-                "E" => Generator.Random.Next(80, 120),
+                "A" => Generator.Random.Next(20, 30),
+                "B" => Generator.Random.Next(25, 30),
+                "C" => Generator.Random.Next(25, 35),
+                "D" => Generator.Random.Next(25, 40),
+                "E" => Generator.Random.Next(25, 45), // TODO: is this sane?
 
-                _ => Generator.Random.Next(50, 100),
+                _ => Generator.Random.Next(25, 30),
             }));
         }
     }
