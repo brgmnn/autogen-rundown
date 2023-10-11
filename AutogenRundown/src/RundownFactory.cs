@@ -77,7 +77,6 @@ namespace AutogenRundown
                 rundown.AddLevel(level);
             }
 
-            /*
             // C levels
             for (int i = 0; i < cMax; i++)
             {
@@ -91,7 +90,7 @@ namespace AutogenRundown
                 rundown.AddLevel(level);
             }
 
-
+            /*
             // D levels
             for (int i = 0; i < dMax; i++)
             {
