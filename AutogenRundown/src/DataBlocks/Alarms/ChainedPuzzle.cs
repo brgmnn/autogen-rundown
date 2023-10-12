@@ -391,5 +391,18 @@ namespace AutogenRundown.DataBlocks.Alarms
             WantedDistanceBetweenPuzzleComponents = 1.0,
             Puzzle = new List<PuzzleComponent>() { new PuzzleComponent { PuzzleType = PuzzleType.ExpeditionExit } }
         };
+
+        public static new void SaveStatic()
+        {
+            Bins.ChainedPuzzles.AddBlock(TeamScan);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass2);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass3);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass4);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass5);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass3_Surge);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass4_Surge);
+            Bins.ChainedPuzzles.AddBlock(AlarmError_Baseline);
+            Bins.ChainedPuzzles.AddBlock(ExitAlarm);
+        }
     }
 }

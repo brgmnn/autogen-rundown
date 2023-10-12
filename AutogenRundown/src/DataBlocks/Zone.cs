@@ -118,6 +118,42 @@ namespace AutogenRundown.DataBlocks
             };
         }
 
+        /// <summary>
+        /// Creates a reactor geomorph in the zone for use with reactor objectives.
+        /// See: https://docs.google.com/document/d/1iSYUASlQSaP6l7PD3HszsXSAxJ-wb8MAVwYxb9xW92c/
+        ///
+        /// Note: Reactors can only be used in Mining/Tech complexes
+        /// </summary>
+        /// <param name="complex"></param>
+        public void GenReactorGeomorph(Complex complex)
+        {
+            switch (complex)
+            {
+                case Complex.Mining:
+                    {
+                        // reactor_open_HA_01 does not work for reactor shutdown
+                        //               "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_open_HA_01.prefab"
+                        //               "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_HA_02.prefab"
+                        CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_HA_02.prefab";
+                        SubComplex = SubComplex.Refinery;
+
+                        Coverage = new CoverageMinMax { Min = 30.0, Max = 40.0 };
+                        SubSeed = 1;
+                        ForbidTerminalsInZone = true;
+                        break;
+                    }
+
+                case Complex.Tech:
+                    {
+                        //               "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_01.prefab"
+                        //               "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_02.prefab"
+                        CustomGeomorph = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_01.prefab";
+                        SubComplex = SubComplex.Lab;
+                        break;
+                    }
+            };
+        }
+
         public class WeightedDifficulty : Generator.ISelectable
         {
             public double Weight { get; set; }
@@ -230,6 +266,8 @@ namespace AutogenRundown.DataBlocks
         /// If we specify a custom geomorph it goes here
         /// </summary>
         public string? CustomGeomorph { get; set; } = null;
+
+        public bool IgnoreRandomGeomorphRotation { get; set; } = false;
 
         /// <summary>
         /// Which Light to select

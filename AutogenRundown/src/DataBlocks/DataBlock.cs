@@ -61,5 +61,8 @@ namespace AutogenRundown.DataBlocks
                 serializer.Serialize(writer, this);
             }
         }
+
+        public static void SaveStatic()
+        { }
     }
 }

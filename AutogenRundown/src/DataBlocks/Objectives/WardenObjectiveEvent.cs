@@ -1,10 +1,13 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using AutogenRundown.DataBlocks.Enemies;
 
 namespace AutogenRundown.DataBlocks.Objectives
 {
     internal class WardenObjectiveEvent
     {
+        public static WardenObjectiveEvent LightsOff = new WardenObjectiveEvent { Type = WardenObjectiveEventType.AllLightsOff };
+
         public WardenObjectiveEventType Type { get; set; } = WardenObjectiveEventType.None;
 
         public JObject Condition = new JObject
@@ -43,7 +46,7 @@ namespace AutogenRundown.DataBlocks.Objectives
         #endregion
 
         #region Enemy settings
-        public JArray EnemyWaveData { get; set; } = new JArray();
+        public GenericWave EnemyWaveData { get; set; } = new GenericWave();
 
         [JsonProperty("EnemyID")]
         public uint EnemyId { get; set; } = 0;

@@ -57,9 +57,9 @@ namespace AutogenRundown.DataBlocks
             {
                 Complex.Mining,
                 Complex.Mining,
-                Complex.Tech,
-                Complex.Tech,
-                Complex.Service
+                //Complex.Tech,
+                //Complex.Tech,
+                //Complex.Service
             });
 
         /// <summary>
@@ -278,6 +278,7 @@ namespace AutogenRundown.DataBlocks
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
+                Complex = level.Complex,
                 Complexity = Complexity.Low,
                 Tier = level.Tier
             };
@@ -289,6 +290,7 @@ namespace AutogenRundown.DataBlocks
 
             var mainObjective = WardenObjective.Build(mainDirector, level);
             level.MainLayerData.ObjectiveData.DataBlockId = mainObjective.PersistentId;
+            //level.MainLayerData.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
 
             // Secondary (Extreme)
             // Tertiary (Overload)

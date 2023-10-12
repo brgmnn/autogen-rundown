@@ -292,6 +292,92 @@ namespace AutogenRundown.DataBlocks
 
             switch (director.Objective)
             {
+                case WardenObjectiveType.ReactorShutdown:
+                    {
+                        for (int i = 0; i < director.ZoneCount - 1; i++)
+                        {
+                            var zone = new Zone
+                            {
+                                LocalIndex = i,
+                                BuildFromLocalIndex = i == 0 ? 0 : i - 1,
+                                Coverage = CoverageMinMax.GenNormalSize(),
+                                LightSetting = Lights.GenRandomLight(),
+                            };
+
+                            zone.GenEnemies(director);
+
+                            layout.Zones.Add(zone);
+
+                            if (i == 0)
+                                continue;
+
+                            // Grab a random puzzle from the puzzle pack
+                            var puzzle = Generator.Draw(puzzlePack);
+
+                            zone.ChainedPuzzleToEnter = puzzle.PersistentId;
+
+                            if (puzzle.PersistentId != 0)
+                                Bins.ChainedPuzzles.AddBlock(puzzle);
+                        }
+
+                        // * Start expansion should be the same direction
+                        // * StartPosition_IndexWeight should be 0?
+
+                        // "StartPosition": 2,
+                        // "StartPosition_IndexWeight": 0.0,
+                        // "StartExpansion": 3,
+                        // "ZoneExpansion": 5,
+                        var corridor = new Zone
+                        {
+                            LocalIndex = director.ZoneCount - 1,
+                            BuildFromLocalIndex = 0,
+                            LightSetting = Lights.GenRandomLight(),
+                            Coverage = new CoverageMinMax { Min = 10, Max = 20 },
+                            CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_I_HA_05.prefab",
+                            SubComplex = SubComplex.Refinery,
+
+                            StartPosition = ZoneEntranceBuildFrom.Furthest,
+                            StartExpansion = ZoneBuildExpansion.Right,
+                            ZoneExpansion = ZoneExpansion.Right,
+                            IgnoreRandomGeomorphRotation = false
+                        };
+
+                        // "StartPosition": 3,
+                        // "StartPosition_IndexWeight": 0.0,
+                        // "StartExpansion": 3,
+                        // "ZoneExpansion": 5,
+                        var reactor = new Zone
+                        {
+                            LocalIndex = director.ZoneCount,
+                            BuildFromLocalIndex = corridor.LocalIndex,
+                            LightSetting = Lights.GenRandomLight(),
+                            Coverage = new CoverageMinMax { Min = 30.0, Max = 40.0 },
+
+                            StartPosition = ZoneEntranceBuildFrom.Furthest,
+                            StartExpansion = ZoneBuildExpansion.Right,
+                            ZoneExpansion = ZoneExpansion.Right,
+                            IgnoreRandomGeomorphRotation = true
+                        };
+                        reactor.GenReactorGeomorph(director.Complex);
+                        reactor.TerminalPlacements = new List<TerminalPlacement>();
+
+                        //zone.GenEnemies(director);
+
+                        layout.Zones.Add(corridor);
+                        layout.Zones.Add(reactor);
+
+
+                        // Grab a random puzzle from the puzzle pack
+                        //var puzzle = Generator.Draw(puzzlePack);
+
+                        //zone.ChainedPuzzleToEnter = puzzle.PersistentId;
+
+                        //if (puzzle.PersistentId != 0)
+                        //    Bins.ChainedPuzzles.AddBlock(puzzle);
+
+                        break;
+                    }
+
                 case WardenObjectiveType.ClearPath:
                     {
                         for (int i = 0; i < director.ZoneCount; i++)
@@ -336,6 +422,7 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                case WardenObjectiveType.HsuFindSample:
                 case WardenObjectiveType.GatherSmallItems:
                 default:
                     {

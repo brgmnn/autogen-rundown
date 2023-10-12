@@ -18,8 +18,10 @@ namespace AutogenRundown.DataBlocks
 
         public static void Save()
         {
-            // Sometimes this one doesn't get set up properly
-            ChainedPuzzles.AddBlock(ChainedPuzzle.ExitAlarm);
+            ChainedPuzzle.SaveStatic();
+            Rundown.SaveStatic();
+            LevelLayout.SaveStatic();
+            WardenObjective.SaveStatic();
 
             ChainedPuzzles.Save("ChainedPuzzleDataBlock");
             Rundowns.Save("RundownDataBlock");

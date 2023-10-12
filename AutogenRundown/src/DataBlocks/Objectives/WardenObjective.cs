@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Objectives.Reactor;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -177,7 +178,7 @@ namespace AutogenRundown.DataBlocks
             };
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="director"></param>
         /// <param name="level"></param>
@@ -247,6 +248,57 @@ namespace AutogenRundown.DataBlocks
                                 SpawnDelay = 4.0,
                                 TriggerAlarm = true,
                             });
+
+                        break;
+                    }
+
+                case WardenObjectiveType.ReactorShutdown:
+                    {
+                        objective.MainObjective = "Find the main reactor and shut it down";
+                        objective.FindLocationInfo = "Gather information about the location of the Reactor";
+                        objective.GoToZone = "Navigate to [ITEM_ZONE] and initiate the shutdown process";
+                        objective.SolveItem = "Make sure the Reactor is fully shut down before leaving";
+                        objective.GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
+                        objective.GoToWinConditionHelp_ToMainLayer = "Go back to the main objective and complete the expedition.";
+
+                        //"LightsOnFromBeginning": true,
+                        //"LightsOnDuringIntro": false,
+                        //"LightsOnWhenStartupComplete": false,
+
+                        objective.LightsOnFromBeginning = true;
+                        objective.LightsOnDuringIntro = true;
+                        objective.LightsOnWhenStartupComplete = false;
+
+                        objective.ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
+                        objective.ChainedPuzzleMidObjective = ChainedPuzzle.AlarmClass2.PersistentId;
+
+                        objective.ReactorWaves = new List<ReactorWave>
+                        {
+                            new ReactorWave
+                            {
+                                Warmup = 90.0,
+                                WarmupFail = 20.0,
+                                Wave = 60.0,
+                                Verify = 0.0,
+                                VerifyFail = 45.0
+                            },
+                            new ReactorWave
+                            {
+                                Warmup = 90.0,
+                                WarmupFail = 20.0,
+                                Wave = 60.0,
+                                Verify = 0.0,
+                                VerifyFail = 45.0
+                            },
+                            new ReactorWave
+                            {
+                                Warmup = 90.0,
+                                WarmupFail = 20.0,
+                                Wave = 60.0,
+                                Verify = 0.0,
+                                VerifyFail = 45.0
+                            }
+                        };
 
                         break;
                     }
@@ -353,14 +405,21 @@ namespace AutogenRundown.DataBlocks
         public string GatherTerminal_CommandHelp { get; set; } = "";
         public string GatherTerminal_DownloadingText { get; set; } = "";
         public string GatherTerminal_DownloadCompleteText { get; set; } = "";
-        #endregion
-
         public double ShowHelpDelay { get; set; } = 180.0;
+        #endregion
 
         #region Events
         public List<WardenObjectiveEvent> EventsOnActivate { get; set; } = new List<WardenObjectiveEvent>();
 
-        public List<Enemies.GenericWave> WavesOnGotoWin = new List<Enemies.GenericWave>();
+        public List<WardenObjectiveEvent> EventsOnElevatorLand { get; set; } = new List<WardenObjectiveEvent>();
+
+        public List<Enemies.GenericWave> WavesOnGotoWin { get; set; } = new List<Enemies.GenericWave>();
+        #endregion
+
+        #region Type=?: Chained puzzles
+        public uint ChainedPuzzleToActive { get; set; } = 0;
+
+        public uint ChainedPuzzleMidObjective { get; set; } = 0;
         #endregion
 
         #region Type=0: Find HSU sample
@@ -373,6 +432,10 @@ namespace AutogenRundown.DataBlocks
         public bool ActivateHSU_ObjectiveCompleteAfterInsertion = false;
         public bool ActivateHSU_RequireItemAfterActivationInExitScan = false;
         public JArray ActivateHSU_Events = new JArray();
+        #endregion
+
+        #region Type=1 & 2: Reactor startup/shutdown
+        public List<ReactorWave> ReactorWaves { get; set; } = new List<ReactorWave>();
         #endregion
 
         #region Type=3: Gather small items
@@ -402,7 +465,6 @@ namespace AutogenRundown.DataBlocks
         public bool DoNotMarkPickupItemsAsWardenObjectives = false;
         public bool OverrideNoRequiredItemsForExit = false;
         public JArray WavesOnElevatorLand = new JArray();
-        public JArray EventsOnElevatorLand = new JArray();
         public int FogTransitionDataOnElevatorLand = 0;
         public double FogTransitionDurationOnElevatorLand = 0.0;
         public bool OnActivateOnSolveItem = false;
@@ -413,11 +475,8 @@ namespace AutogenRundown.DataBlocks
         public int EventsOnGotoWinTrigger = 0;
         public int FogTransitionDataOnGotoWin = 0;
         public double FogTransitionDurationOnGotoWin = 0.0;
-        public uint ChainedPuzzleToActive = 0;
-        public int ChainedPuzzleMidObjective = 0;
         public double ChainedPuzzleAtExitScanSpeedMultiplier = 2.0;
         public JArray Retrieve_Items = new JArray();
-        public JArray ReactorWaves = new JArray();
         public bool LightsOnFromBeginning = false;
         public bool LightsOnDuringIntro = false;
         public bool LightsOnWhenStartupComplete = false;

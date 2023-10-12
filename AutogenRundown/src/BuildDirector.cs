@@ -22,25 +22,6 @@ namespace AutogenRundown
     /// </summary>
     internal class BuildDirector
     {
-        /// <summary>
-        /// Main objective types
-        /// </summary>
-        private static WardenObjectiveType[] mainObjectives = new WardenObjectiveType[]
-        {
-            WardenObjectiveType.ClearPath,
-            WardenObjectiveType.GatherSmallItems,
-        };
-
-        /// <summary>
-        /// Extreme / Overload objective types. Some objectives for main aren't as appropriate for
-        /// non-main objectives. Examples are ClearPath.
-        /// </summary>
-        private static WardenObjectiveType[] nonMainObjectives = new WardenObjectiveType[]
-        {
-            WardenObjectiveType.GatherSmallItems,
-            WardenObjectiveType.HsuActivateSmall,
-        };
-
         public int Points { get; set; } = 0;
 
         public Complexity Complexity { get; set; } = Complexity.Medium;
@@ -48,6 +29,8 @@ namespace AutogenRundown
         public string Tier { get; set; } = "A";
 
         public Bulkhead Bulkhead { get; set; } = Bulkhead.Main;
+
+        public Complex Complex { get; set; }
 
         public WardenObjectiveType Objective { get; set; } = WardenObjectiveType.GatherSmallItems;
 
@@ -60,15 +43,35 @@ namespace AutogenRundown
         public List<int> EnemyPointPool { get; set; } = new List<int>();
         #endregion
 
+        /// <summary>
+        /// Generates an appropriate objective for this bulkhead level.
+        ///
+        /// Not all objectives can be selected based on certain criteria. For instance Service
+        /// complex has no Reactor geomorph and so cannot have any Reactor objective. ClearPath
+        /// only makes sense for Main bulkheads as players must extract to complete the objective.
+        /// </summary>
         public void GenObjective()
         {
-            Objective = Bulkhead switch
+            var objectives = new List<WardenObjectiveType>
             {
-                Bulkhead.Main => Generator.Pick(mainObjectives),
-                Bulkhead.Extreme => Generator.Pick(mainObjectives),
-                Bulkhead.Overload => Generator.Pick(mainObjectives),
-                _ => Generator.Pick(mainObjectives),
+                WardenObjectiveType.ReactorShutdown,
+                WardenObjectiveType.GatherSmallItems,
+                WardenObjectiveType.ClearPath,
+                WardenObjectiveType.HsuActivateSmall,
             };
+
+            if (Bulkhead != Bulkhead.Main)
+            {
+                objectives.Remove(WardenObjectiveType.ClearPath);
+            }
+
+            if (Complex != Complex.Mining || Complex != Complex.Tech)
+            {
+                objectives.Remove(WardenObjectiveType.ReactorShutdown);
+            }
+
+            //Objective = Generator.Pick(objectives);
+            Objective = WardenObjectiveType.ReactorShutdown; // TODO: DEBUG
         }
 
         public void GenPoints()
