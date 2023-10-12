@@ -47,12 +47,9 @@ namespace AutogenRundown.DataBlocks
             JsonSerializer serializer = new JsonSerializer();
             serializer.Formatting = Formatting.Indented;
 
-            //var dir = Path.Combine(Paths.PluginPath, "AutogenRundown", "Datablocks", Generator.Seed);
+            var revision = CellBuildData.GetRevision();
 
-            // Replace with Plugin.GameRevision to avoid interop dependency
-            //var version = CellBuildData.GetRevision();
-
-            var dir = Path.Combine(Paths.BepInExRootPath, "GameData", Plugin.GameRevision, "Custom");
+            var dir = Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}", "Custom");
             var path = Path.Combine(dir, $"GameData__{Filename}.json");
 
             // Ensure the directory exists

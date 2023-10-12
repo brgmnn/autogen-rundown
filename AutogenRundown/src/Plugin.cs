@@ -2,16 +2,17 @@
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
+using HarmonyLib;
 
 namespace AutogenRundown;
 
-[BepInPlugin("AutogenRundown", "AutogenRundown", "0.3.0")]
+[BepInPlugin("AutogenRundown", "AutogenRundown", Version)]
 [BepInProcess("GTFO.exe")]
 [BepInDependency("dev.gtfomodding.gtfo-api", BepInDependency.DependencyFlags.HardDependency)]
 [BepInDependency("Inas07-LocalProgression-1.1.5", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BasePlugin
 {
-    public static string GameRevision { get; private set; } = "33871";
+    public const string Version = "0.3.0";
 
     public static ManualLogSource Logger { get; private set; } = new ManualLogSource("MyFirstPlugin");
 
@@ -47,5 +48,12 @@ public class Plugin : BasePlugin
         {
             Log.LogInfo($"Rundown not generated, Seed=\"{Generator.Seed}\"");
         }
+
+        //PlayFabManager.add_OnTitleDataUpdated((Action)Setup);
+        PlayFabManager.add_OnTitleDataUpdated((Action)Patches.RundownNames.OnTitleDataUpdated);
+
+        // Apply patches
+        var harmony = new Harmony("AutogenRundown");
+        harmony.PatchAll();
     }
 }

@@ -8,6 +8,7 @@
     <RootNamespace>$(SolutionName)</RootNamespace>
 
     <Deps>$(SolutionDir)\deps</Deps>
+    <Interop>$(SolutionDir)\AutogenRundown\interop</Interop>
     <BepInEx>$(Deps)\BepInEx-BepInExPack_GTFO\BepInExPack_GTFO\BepInEx</BepInEx>
     <OutputPath>$(SolutionDir)\build</OutputPath>
 
@@ -29,16 +30,20 @@
     <!--<Reference Include="$(BepInEx)\core\Il2CppInterop.Common.dll" Private="false" />-->
     <!--<Reference Include="$(BepInEx)\core\Il2CppInterop.Runtime.dll" Private="false" />-->
     <!--<Reference Include="$(BepInEx)\core\MonoMod.RuntimeDetour.dll" Private="false" />-->
-    <!--<Reference Include="$(BepInEx)\interop\*.dll" Private="false" />-->
+    <!--<Reference Include="$(BepInEx_Debug)\interop\*.dll" Private="false" />-->
 
     <!-- BepInEx -->
     <Reference Include="$(BepInEx)\core\BepInEx.Core.dll" Private="false" />
     <Reference Include="$(BepInEx)\core\BepInEx.Unity.IL2CPP.dll" Private="false" />
 
+    <!-- Interop -->
+    <Reference Include="$(Interop)\*.dll" Private="false" />
+    <Reference Remove="$(Interop)\netstandard.dll" />
+    <Reference Remove="$(Interop)\Newtonsoft.Json.dll" />
+
     <Compile Remove="Blocks\**" />
     <EmbeddedResource Remove="Blocks\**" />
     <None Remove="Blocks\**" />
-    <Reference Remove="$(BepInEx)\interop\netstandard.dll" />
 
     <!-- NuGet Packages -->
     <PackageReference Include="HarmonyX" Version="2.10.2" />

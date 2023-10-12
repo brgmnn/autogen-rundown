@@ -1,10 +1,25 @@
-﻿using AutogenRundown.GeneratorData;
+﻿using AutogenRundown.DataBlocks;
+using AutogenRundown.GeneratorData;
 using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
     internal class Rundown : DataBlock
     {
+        //Bins.Rundowns.AddBlock(new Rundown { PersistentId = 32, Name = "ALT Rundown 1.0" });
+        //Bins.Rundowns.AddBlock(new Rundown { PersistentId = 33, Name = "ALT Rundown 2.0" });
+        //Bins.Rundowns.AddBlock(new Rundown { PersistentId = 34, Name = "ALT Rundown 3.0" });
+        //Bins.Rundowns.AddBlock(new Rundown { PersistentId = 37, Name = "ALT Rundown 4.0" });
+        //Bins.Rundowns.AddBlock(new Rundown { PersistentId = 38, Name = "ALT Rundown 5.0" });
+        //Bins.Rundowns.AddBlock(new Rundown { PersistentId = 41, Name = "ALT Rundown 9.0" });
+
+        public static uint R1 = 32;
+        public static uint R2 = 33;
+        public static uint R3 = 34;
+        public static uint R4 = 37;
+        public static uint R5 = 38;
+        public static uint R7 = 31;
+
         public List<Level> TierA { get; set; } = new List<Level>();
         public List<Level> TierB { get; set; } = new List<Level>();
         public List<Level> TierC { get; set; } = new List<Level>();
@@ -78,6 +93,8 @@ namespace AutogenRundown.DataBlocks
             ExternalExpTitle = 3901084012
         });
 
+        public string DisplaySeed { get; set; } = "";
+
         public void AddLevel(Level level)
         {
             switch (level.Tier)
@@ -109,6 +126,7 @@ namespace AutogenRundown.DataBlocks
             var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
 
             rundown.Name = $"RND Rundown {name}";
+            rundown.DisplaySeed = Generator.DisplaySeed;
 
             var rundownNumber = $"{Generator.DisplaySeed}";
             rundown.StorytellingData["Title"] = $"<color=green>RND://</color>RUNDOWN {rundownNumber}\r\nTITLE: {name.ToUpper()}";

@@ -38,9 +38,9 @@ namespace AutogenRundown.DataBlocks
         public List<T> Blocks { get; set; } = new List<T> { };
 
         [JsonProperty("LastPersistentID")]
-        public UInt32 LastPersistentId { get; set; } = 0;
+        public uint LastPersistentId { get; set; } = 0;
 
-        private HashSet<UInt32> persistentIds = new HashSet<UInt32>();
+        private HashSet<uint> persistentIds = new HashSet<uint>();
 
         /// <summary>
         /// 
@@ -61,7 +61,7 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public T? Find(UInt32 id) => Blocks.Find(b => b.PersistentId == id);
+        public T? Find(uint id) => Blocks.Find(b => b.PersistentId == id);
 
         /// <summary>
         /// Saves the data block to disk, serializing as JSON
@@ -73,9 +73,9 @@ namespace AutogenRundown.DataBlocks
             serializer.Formatting = Formatting.Indented;
 
             // Replace with Plugin.GameRevision to avoid interop dependency
-            //var version = CellBuildData.GetRevision();
+            var revision = CellBuildData.GetRevision();
 
-            var dir = Path.Combine(Paths.BepInExRootPath, "GameData", Plugin.GameRevision);
+            var dir = Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}");
             var path = Path.Combine(dir, $"GameData_{name}_bin.json");
 
             // Ensure the directory exists
