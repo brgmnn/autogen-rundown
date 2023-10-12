@@ -136,10 +136,8 @@ namespace AutogenRundown.DataBlocks
                         //               "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_HA_02.prefab"
                         CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_HA_02.prefab";
                         SubComplex = SubComplex.Refinery;
-
-                        //Coverage = new CoverageMinMax { Min = 30.0, Max = 40.0 };
-                        SubSeed = 1;
-                        //ForbidTerminalsInZone = true;
+                        IgnoreRandomGeomorphRotation = true;
+                        Coverage = new CoverageMinMax { Min = 40.0, Max = 40.0 };
                         break;
                     }
 
@@ -149,9 +147,37 @@ namespace AutogenRundown.DataBlocks
                         //               "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_02.prefab"
                         CustomGeomorph = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_01.prefab";
                         SubComplex = SubComplex.Lab;
+                        IgnoreRandomGeomorphRotation = true;
+                        Coverage = new CoverageMinMax { Min = 40.0, Max = 40.0 };
                         break;
                     }
             };
+        }
+
+        /// <summary>
+        /// Picks an appropriate geomorph for the corridor to a reactor
+        /// </summary>
+        /// <param name="complex"></param>
+        public void GenReactorCorridorGeomorph(Complex complex)
+        {
+            switch (complex)
+            {
+                case Complex.Mining:
+                    {
+                        CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_I_HA_05.prefab";
+                        SubComplex = SubComplex.Refinery;
+                        Coverage = new CoverageMinMax { Min = 35.0, Max = 40.0 };
+                        break;
+                    }
+
+                case Complex.Tech:
+                    {
+                        CustomGeomorph = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_I_HA_03_v2.prefab";
+                        SubComplex = SubComplex.Lab;
+                        Coverage = new CoverageMinMax { Min = 30.0, Max = 40.0 };
+                        break;
+                    }
+            }
         }
 
         public class WeightedDifficulty : Generator.ISelectable

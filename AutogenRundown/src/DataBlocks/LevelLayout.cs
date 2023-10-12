@@ -321,8 +321,6 @@ namespace AutogenRundown.DataBlocks
                                 Bins.ChainedPuzzles.AddBlock(puzzle);
                         }
 
-                        // * Start expansion should be the same direction
-                        // * StartPosition_IndexWeight should be 0?
 
                         // Pick a random direction to expand the reactor
                         var (startExpansion, zoneExpansion) = Generator.Pick(
@@ -336,40 +334,27 @@ namespace AutogenRundown.DataBlocks
                         // Use the same light for both corridor and reactor
                         var light = Lights.GenReactorLight();
 
-                        // "StartPosition": 2,
-                        // "StartPosition_IndexWeight": 0.0,
-                        // "StartExpansion": 3,
-                        // "ZoneExpansion": 5,
+                        // Always generate a corridor of some kind (currently fixed) for the reactor zones.
                         var corridor = new Zone
                         {
                             LocalIndex = director.ZoneCount,
                             BuildFromLocalIndex = director.ZoneCount - 1,
                             LightSettings = light,
-                            Coverage = new CoverageMinMax { Min = 40, Max = 40 },
-                            CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_I_HA_05.prefab",
-                            SubComplex = SubComplex.Refinery,
-
                             StartPosition = ZoneEntranceBuildFrom.Furthest,
                             StartExpansion = startExpansion,
-                            ZoneExpansion = zoneExpansion,
-                            IgnoreRandomGeomorphRotation = false
+                            ZoneExpansion = zoneExpansion
                         };
+                        corridor.GenReactorCorridorGeomorph(director.Complex);
 
-                        // "StartPosition": 3,
-                        // "StartPosition_IndexWeight": 0.0,
-                        // "StartExpansion": 3,
-                        // "ZoneExpansion": 5,
+                        // Create the reactor zone
                         var reactor = new Zone
                         {
                             LocalIndex = director.ZoneCount + 1,
                             BuildFromLocalIndex = corridor.LocalIndex,
                             LightSettings = light,
-                            Coverage = new CoverageMinMax { Min = 40.0, Max = 40.0 },
-
                             StartPosition = ZoneEntranceBuildFrom.Furthest,
                             StartExpansion = startExpansion,
                             ZoneExpansion = zoneExpansion,
-                            IgnoreRandomGeomorphRotation = true,
                             ForbidTerminalsInZone = true
                         };
                         reactor.GenReactorGeomorph(director.Complex);
@@ -378,15 +363,19 @@ namespace AutogenRundown.DataBlocks
                         layout.Zones.Add(corridor);
                         layout.Zones.Add(reactor);
 
-                        //zone.GenEnemies(director);
+                        // Assign enemies
+                        corridor.GenEnemies(director);
+                        reactor.GenEnemies(director);
 
-                        // Grab a random puzzle from the puzzle pack
-                        //var puzzle = Generator.Draw(puzzlePack);
+                        // Assign door puzzles
+                        var corridorPuzzle = Generator.Draw(puzzlePack);
+                        corridor.ChainedPuzzleToEnter = corridorPuzzle.PersistentId;
 
-                        //zone.ChainedPuzzleToEnter = puzzle.PersistentId;
+                        var reactorPuzzle = Generator.Draw(puzzlePack);
+                        reactor.ChainedPuzzleToEnter = reactorPuzzle.PersistentId;
 
-                        //if (puzzle.PersistentId != 0)
-                        //    Bins.ChainedPuzzles.AddBlock(puzzle);
+                        Bins.ChainedPuzzles.AddBlock(corridorPuzzle);
+                        Bins.ChainedPuzzles.AddBlock(reactorPuzzle);
 
                         break;
                     }

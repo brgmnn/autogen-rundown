@@ -1,6 +1,7 @@
-﻿using AutogenRundown.GeneratorData;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using AutogenRundown.GeneratorData;
+using AutogenRundown.DataBlocks.Objectives;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -290,7 +291,11 @@ namespace AutogenRundown.DataBlocks
 
             var mainObjective = WardenObjective.Build(mainDirector, level);
             level.MainLayerData.ObjectiveData.DataBlockId = mainObjective.PersistentId;
-            //level.MainLayerData.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
+
+            if (mainDirector.Objective == WardenObjectiveType.ClearPath)
+            {
+                level.MainLayerData.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
+            }
 
             // Secondary (Extreme)
             // Tertiary (Overload)
