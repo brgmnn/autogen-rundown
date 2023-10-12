@@ -70,8 +70,7 @@ namespace AutogenRundown
                 objectives.Remove(WardenObjectiveType.ReactorShutdown);
             }
 
-            //Objective = Generator.Pick(objectives);
-            Objective = WardenObjectiveType.ReactorShutdown; // TODO: DEBUG
+            Objective = Generator.Pick(objectives);
         }
 
         public void GenPoints()

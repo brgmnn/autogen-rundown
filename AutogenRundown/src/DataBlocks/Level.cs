@@ -58,10 +58,19 @@ namespace AutogenRundown.DataBlocks
             {
                 Complex.Mining,
                 Complex.Mining,
-                //Complex.Tech,
-                //Complex.Tech,
-                //Complex.Service
+                Complex.Tech,
+                Complex.Tech,
+                Complex.Service
             });
+
+        [JsonIgnore]
+        public BuildDirector MainDirector { get; set; }
+
+        [JsonIgnore]
+        public BuildDirector SecondaryDirector { get; set; }
+
+        [JsonIgnore]
+        public BuildDirector OverloadDirector { get; set; }
 
         /// <summary>
         /// Level description
@@ -276,23 +285,26 @@ namespace AutogenRundown.DataBlocks
             level.GenerateDepth();
 
             // ============ Main level ============
-            var mainDirector = new BuildDirector
+            if (level.MainDirector == null)
             {
-                Bulkhead = Bulkhead.Main,
-                Complex = level.Complex,
-                Complexity = Complexity.Low,
-                Tier = level.Tier
-            };
-            mainDirector.GenPoints();
-            mainDirector.GenObjective();
+                level.MainDirector = new BuildDirector
+                {
+                    Bulkhead = Bulkhead.Main,
+                    Complex = level.Complex,
+                    Complexity = Complexity.Low,
+                    Tier = level.Tier
+                };
+                level.MainDirector.GenPoints();
+                level.MainDirector.GenObjective();
+            }
 
-            var mainLevelLayout = LevelLayout.Build(level, mainDirector);
+            var mainLevelLayout = LevelLayout.Build(level, level.MainDirector);
             level.LevelLayoutData = mainLevelLayout.PersistentId;
 
-            var mainObjective = WardenObjective.Build(mainDirector, level);
+            var mainObjective = WardenObjective.Build(level.MainDirector, level);
             level.MainLayerData.ObjectiveData.DataBlockId = mainObjective.PersistentId;
 
-            if (mainDirector.Objective == WardenObjectiveType.ClearPath)
+            if (level.MainDirector.Objective == WardenObjectiveType.ClearPath)
             {
                 level.MainLayerData.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
             }
