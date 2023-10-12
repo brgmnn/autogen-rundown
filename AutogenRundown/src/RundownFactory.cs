@@ -4,9 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AutogenRundown.DataBlocks;
-using AutogenRundown.GeneratorData;
 using BepInEx;
+using AutogenRundown.DataBlocks;
+using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.GeneratorData;
 
 namespace AutogenRundown
 {
@@ -89,6 +90,29 @@ namespace AutogenRundown
                     });
                 rundown.AddLevel(level);
             }
+
+            #region Test Levels
+            var mainDirector = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Main,
+                Complex = Complex.Mining,
+                Complexity = Complexity.Low,
+                Tier = "C",
+                Objective = WardenObjectiveType.ReactorShutdown,
+            };
+            mainDirector.GenPoints();
+
+            var testLevel = Level.Build(
+                new Level
+                {
+                    Tier = "C",
+                    Name = "Reactor Shutdown",
+                    Index = cMax + 1,
+                    MainDirector = mainDirector,
+                    IsTest = true
+                });
+            rundown.AddLevel(testLevel);
+            #endregion
 
             /*
             // D levels

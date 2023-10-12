@@ -78,17 +78,23 @@ namespace AutogenRundown.DataBlocks
         [JsonIgnore]
         public string Description { get; set; } = "";
 
+        /// <summary>
+        /// Flags the level as a test level
+        /// </summary>
+        [JsonIgnore]
+        public bool IsTest { get; set; } = false;
+
         public JObject Descriptive
         {
             get => new JObject
             {
-                ["Prefix"] = Tier,
+                ["Prefix"] = IsTest ? "TEST" : Tier,
                 ["PublicName"] = Name,
                 ["IsExtraExpedition"] = false,
-                ["SkipExpNumberInName"] = false,
+                ["SkipExpNumberInName"] = IsTest,
                 ["UseCustomMatchmakingTier"] = false,
                 ["CustomMatchmakingTier"] = 1,
-                ["ProgressionVisualStyle"] = 0,
+                ["ProgressionVisualStyle"] = IsTest ? 1 : 0,
                 ["ExpeditionDepth"] = Depth,
                 ["EstimatedDuration"] = 930,
 
