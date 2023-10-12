@@ -107,6 +107,7 @@ namespace AutogenRundown
                 {
                     Tier = "C",
                     Name = "Reactor Shutdown",
+                    Complex = Complex.Mining,
                     Index = cMax + 1,
                     MainDirector = mainDirector,
                     IsTest = true

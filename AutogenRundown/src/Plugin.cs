@@ -49,7 +49,6 @@ public class Plugin : BasePlugin
             Log.LogInfo($"Rundown not generated, Seed=\"{Generator.Seed}\"");
         }
 
-        //PlayFabManager.add_OnTitleDataUpdated((Action)Setup);
         PlayFabManager.add_OnTitleDataUpdated((Action)Patches.RundownNames.OnTitleDataUpdated);
 
         // Apply patches
