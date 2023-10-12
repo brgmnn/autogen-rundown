@@ -294,14 +294,15 @@ namespace AutogenRundown.DataBlocks
             {
                 case WardenObjectiveType.ReactorShutdown:
                     {
-                        for (int i = 0; i < director.ZoneCount - 1; i++)
+                        // Create the initial zones
+                        for (int i = 0; i < director.ZoneCount; i++)
                         {
                             var zone = new Zone
                             {
                                 LocalIndex = i,
                                 BuildFromLocalIndex = i == 0 ? 0 : i - 1,
                                 Coverage = CoverageMinMax.GenNormalSize(),
-                                LightSetting = Lights.GenRandomLight(),
+                                LightSettings = Lights.GenRandomLight(),
                             };
 
                             zone.GenEnemies(director);
@@ -323,22 +324,34 @@ namespace AutogenRundown.DataBlocks
                         // * Start expansion should be the same direction
                         // * StartPosition_IndexWeight should be 0?
 
+                        // Pick a random direction to expand the reactor
+                        var (startExpansion, zoneExpansion) = Generator.Pick(
+                            new List<(ZoneBuildExpansion, ZoneExpansion)>
+                            {
+                                (ZoneBuildExpansion.Left, ZoneExpansion.Left),
+                                (ZoneBuildExpansion.Right, ZoneExpansion.Right),
+                                (ZoneBuildExpansion.Forward, ZoneExpansion.Forward),
+                                (ZoneBuildExpansion.Backward, ZoneExpansion.Backward)
+                            });
+                        // Use the same light for both corridor and reactor
+                        var light = Lights.GenReactorLight();
+
                         // "StartPosition": 2,
                         // "StartPosition_IndexWeight": 0.0,
                         // "StartExpansion": 3,
                         // "ZoneExpansion": 5,
                         var corridor = new Zone
                         {
-                            LocalIndex = director.ZoneCount - 1,
-                            BuildFromLocalIndex = 0,
-                            LightSetting = Lights.GenRandomLight(),
-                            Coverage = new CoverageMinMax { Min = 10, Max = 20 },
+                            LocalIndex = director.ZoneCount,
+                            BuildFromLocalIndex = director.ZoneCount - 1,
+                            LightSettings = light,
+                            Coverage = new CoverageMinMax { Min = 40, Max = 40 },
                             CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_I_HA_05.prefab",
                             SubComplex = SubComplex.Refinery,
 
                             StartPosition = ZoneEntranceBuildFrom.Furthest,
-                            StartExpansion = ZoneBuildExpansion.Right,
-                            ZoneExpansion = ZoneExpansion.Right,
+                            StartExpansion = startExpansion,
+                            ZoneExpansion = zoneExpansion,
                             IgnoreRandomGeomorphRotation = false
                         };
 
@@ -348,24 +361,24 @@ namespace AutogenRundown.DataBlocks
                         // "ZoneExpansion": 5,
                         var reactor = new Zone
                         {
-                            LocalIndex = director.ZoneCount,
+                            LocalIndex = director.ZoneCount + 1,
                             BuildFromLocalIndex = corridor.LocalIndex,
-                            LightSetting = Lights.GenRandomLight(),
-                            Coverage = new CoverageMinMax { Min = 30.0, Max = 40.0 },
+                            LightSettings = light,
+                            Coverage = new CoverageMinMax { Min = 40.0, Max = 40.0 },
 
                             StartPosition = ZoneEntranceBuildFrom.Furthest,
-                            StartExpansion = ZoneBuildExpansion.Right,
-                            ZoneExpansion = ZoneExpansion.Right,
-                            IgnoreRandomGeomorphRotation = true
+                            StartExpansion = startExpansion,
+                            ZoneExpansion = zoneExpansion,
+                            IgnoreRandomGeomorphRotation = true,
+                            ForbidTerminalsInZone = true
                         };
                         reactor.GenReactorGeomorph(director.Complex);
                         reactor.TerminalPlacements = new List<TerminalPlacement>();
 
-                        //zone.GenEnemies(director);
-
                         layout.Zones.Add(corridor);
                         layout.Zones.Add(reactor);
 
+                        //zone.GenEnemies(director);
 
                         // Grab a random puzzle from the puzzle pack
                         //var puzzle = Generator.Draw(puzzlePack);
@@ -388,7 +401,7 @@ namespace AutogenRundown.DataBlocks
                             {
                                 LocalIndex = i,
                                 Coverage = CoverageMinMax.GenNormalSize(),
-                                LightSetting = Lights.GenRandomLight(),
+                                LightSettings = Lights.GenRandomLight(),
 
                                 // Chain zones together
                                 BuildFromLocalIndex = i == 0 ? 0 : i - 1,
@@ -432,7 +445,7 @@ namespace AutogenRundown.DataBlocks
                             {
                                 LocalIndex = i,
                                 Coverage = CoverageMinMax.GenNormalSize(),
-                                LightSetting = Lights.GenRandomLight(),
+                                LightSettings = Lights.GenRandomLight(),
                             };
 
                             zone.GenEnemies(director);

@@ -137,9 +137,9 @@ namespace AutogenRundown.DataBlocks
                         CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_HA_02.prefab";
                         SubComplex = SubComplex.Refinery;
 
-                        Coverage = new CoverageMinMax { Min = 30.0, Max = 40.0 };
+                        //Coverage = new CoverageMinMax { Min = 30.0, Max = 40.0 };
                         SubSeed = 1;
-                        ForbidTerminalsInZone = true;
+                        //ForbidTerminalsInZone = true;
                         break;
                     }
 
@@ -272,7 +272,7 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// Which Light to select
         /// </summary>
-        public Lights.Light LightSetting { get; set; } = Lights.Light.AlmostWhite_1;
+        public Lights.Light LightSettings { get; set; } = Lights.Light.AlmostWhite_1;
 
         public Altitude AltitudeData { get; set; } = new Altitude();
 

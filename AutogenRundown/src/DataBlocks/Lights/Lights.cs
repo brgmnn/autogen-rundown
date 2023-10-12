@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AutogenRundown.DataBlocks
+﻿namespace AutogenRundown.DataBlocks
 {
     public static class Lights
     {
@@ -101,6 +94,9 @@ namespace AutogenRundown.DataBlocks
             YellowToOrange_1 = 28
         }
 
+        /// <summary>
+        /// Mostly lights for normal geomorphs in random level gen
+        /// </summary>
         public static List<Light> BasicLights { get; private set; } = new List<Light>
         {
             //Light.RedToCyan_1,
@@ -197,6 +193,17 @@ namespace AutogenRundown.DataBlocks
             Light.YellowToOrange_1
         };
 
+        public static List<Light> ReactorLights = new List<Light>
+        {
+            Light.Reactor_blue_to_red_all_on_1_R2D2,
+            Light.Reactor_blue_to_red_all_on_1,
+            Light.Reactor_blue_to_White_all_on_1,
+            Light.Reactor_blue_to_White_R2E1,
+            Light.Reactor_blue_to_White_R5D1,
+            Light.Reactor_green_all_on_1_R5C1_ALT,
+            Light.Reactor_green_all_on_1,
+        };
+
         public static Light NoLight { get; private set; } = Light.Totally_black;
 
         /// <summary>
@@ -204,5 +211,7 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         /// <returns></returns>
         public static Light GenRandomLight() => Generator.Pick(BasicLights);
+
+        public static Light GenReactorLight() => Generator.Pick(ReactorLights);
     }
 }
