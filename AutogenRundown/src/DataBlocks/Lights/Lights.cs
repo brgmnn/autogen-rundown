@@ -9,7 +9,7 @@ namespace AutogenRundown.DataBlocks
 {
     public static class Lights
     {
-        public enum Light : UInt32
+        public enum Light : uint
         {
             AlmostWhite_1 = 56,
             AlmostWhite_1_R5C3 = 99,
@@ -103,9 +103,98 @@ namespace AutogenRundown.DataBlocks
 
         public static List<Light> BasicLights { get; private set; } = new List<Light>
         {
+            //Light.RedToCyan_1,
+            //Light.RedToWhite_1,
+            //Light.RedToYellow_1,
+
+            //Light.AlmostWhite_1_R5C3,
+            Light.AlmostWhite_1,
+            Light.BlueGreenBrown,
+            Light.BlueToGreen_1,
+            Light.BlueToOrange_1,
+            Light.BlueToPink_1,
+            Light.BlueToRed_1,
+            Light.camo_green_R4E1,
+            Light.camo_green,
+            Light.ColdWhite_all_on_1,
+            Light.CyanBrownToYellow_1,
+            Light.CyanToBlue_1,
+            //Light.CyanToPurple_1_R5D1_z3,
+            Light.CyanToPurple_1,
+            Light.CyanToYellow_1,
+            Light.DarkBlue_1,
+            //Light.DarkBlueToPurple_1_R5C2_L1,
+            Light.DarkBlueToPurple_1,
+            Light.DarkGreenToOrange_1,
+            Light.DarkGreenToRed_1,
+            Light.DarkGrey_1,
+            Light.DarkGreyToOrange,
+            Light.DarktealToYellow,
+            Light.GreenToRed_1,
+            Light.HeavyRedToCyan_1,
+            //Light.HSU_Prep_R7D1,
+            //Light.Mainframe_R7D2,
+            //Light.Monochrome_Blue_Flickering,
+            //Light.Monochrome_Blue,
+            //Light.monochrome_copy_R1C2,
+            //Light.Monochrome_Cyan,
+            //Light.Monochrome_Green_R4C2,
+            //Light.Monochrome_Green,
+            //Light.Monochrome_iceblue,
+            //Light.Monochrome_Orange_Flickering,
+            //Light.Monochrome_Orange,
+            //Light.Monochrome_Red_R1D1_z9,
+            //Light.Monochrome_Red_R7D1,
+            //Light.Monochrome_Red_True,
+            //Light.Monochrome_Red,
+            //Light.Monochrome_Yellow,
+            //Light.Monochrome_YellowToGreen,
+            //Light.monochrome,
+            //Light.New_Copy_Copy_1,
+            //Light.New,
+            Light.OrangeToBlue_1,
+            Light.OrangeToBlue,
+            Light.OrangeToBluishGrey,
+            Light.OrangeToBrown_1,
+            Light.OrangeToYellow_1,
+            //Light.PeachToGreen_R5C1_ALT,
+            Light.PeachToGreen,
+            //Light.Pitch_black_1,
+            //Light.PurpleToBlue_1_R3B2,
+            Light.PurpleToBlue_1,
+            Light.PurpleToBrown,
+            //Light.PurpleToOrange_1_R2D1,
+            //Light.PurpleToOrange_1_R5B2,
+            Light.PurpleToOrange_1,
+            Light.PurpleToPink_1,
+            //Light.PurpleToRed_1_R5D1_z2,
+            Light.PurpleToRed_1,
+            //Light.Reactor_blue_to_red_all_on_1_R2D2,
+            //Light.Reactor_blue_to_red_all_on_1,
+            //Light.Reactor_blue_to_White_all_on_1,
+            //Light.Reactor_blue_to_White_R2E1,
+            //Light.Reactor_blue_to_White_R5D1,
+            //Light.Reactor_green_all_on_1_R5C1_ALT,
+            //Light.Reactor_green_all_on_1,
             Light.RedToCyan_1,
+            Light.RedToWhite_1_Flickering,
+            //Light.RedToWhite_1_R5A2_L1,
             Light.RedToWhite_1,
-            Light.RedToYellow_1
+            Light.RedToYellow_1,
+            Light.RustyRedToBrown_1,
+            //Light.TGA_1_INTRO_CyanToBlue,
+            //Light.TGA_2_COCOONS_CyanToBlue,
+            //Light.TGA_3_ARTIFACT_YellowToCyan,
+            //Light.TGA_4_IMMORTAL_GreenToRed,
+            //Light.TGA_5_HSU_BlueToRed_R3A1,
+            //Light.TGA_5_HSU_BlueToRed,
+            //Light.Totally_black,
+            //Light.Tutorial_StealthSpotlight,
+            Light.WashedOutRed_1,
+            //Light.White_To_Blue_all_on_1_ALL_ON_FOR_REAL,
+            Light.White_To_Blue_all_on_1,
+            Light.YellowToCyan_1,
+            Light.YellowToOrange_1
         };
 
         public static Light NoLight { get; private set; } = Light.Totally_black;
@@ -114,11 +203,6 @@ namespace AutogenRundown.DataBlocks
         /// Picks a random light
         /// </summary>
         /// <returns></returns>
-        public static Light GenRandomLight()
-        {
-            var lights = Enum.GetValues(typeof(Light)).OfType<Light>();
-
-            return lights.ElementAt(Generator.Random.Next(lights.Count()));
-        }
+        public static Light GenRandomLight() => Generator.Pick(BasicLights);
     }
 }

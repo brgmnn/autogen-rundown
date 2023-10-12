@@ -302,7 +302,7 @@ namespace AutogenRundown.DataBlocks
                             {
                                 LocalIndex = i,
                                 Coverage = CoverageMinMax.GenNormalSize(),
-                                LightSetting = Lights.Light.RedToCyan_1,
+                                LightSetting = Lights.GenRandomLight(),
 
                                 // Chain zones together
                                 BuildFromLocalIndex = i == 0 ? 0 : i - 1,
@@ -345,7 +345,7 @@ namespace AutogenRundown.DataBlocks
                             {
                                 LocalIndex = i,
                                 Coverage = CoverageMinMax.GenNormalSize(),
-                                LightSetting = Lights.Light.RedToCyan_1,
+                                LightSetting = Lights.GenRandomLight(),
                             };
 
                             zone.GenEnemies(director);
