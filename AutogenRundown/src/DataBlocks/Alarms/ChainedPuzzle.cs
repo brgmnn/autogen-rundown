@@ -202,7 +202,7 @@ namespace AutogenRundown.DataBlocks.Alarms
                 case "C":
                     {
                         // Now we get spicy
-                        var alarms = new List<ChainedPuzzle>
+                        return new List<ChainedPuzzle>
                         {
                             // Class 8 alarm
                             new ChainedPuzzle
@@ -252,8 +252,6 @@ namespace AutogenRundown.DataBlocks.Alarms
                                 }
                             }
                         };
-
-                        return alarms;
                     }
 
                 default:
@@ -280,6 +278,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         };
 
         /******************** Alarm Scans ********************/
+        #region Alarms: Apex
         public static ChainedPuzzle AlarmClass2 = new ChainedPuzzle
         {
             PublicAlarmName = "Class II",
@@ -334,6 +333,61 @@ namespace AutogenRundown.DataBlocks.Alarms
             },
         };
 
+        public static ChainedPuzzle AlarmClass6 = new ChainedPuzzle
+        {
+            PublicAlarmName = "Class VI",
+            SurvivalWaveSettings = VanillaWaveSettings.Apex,
+            SurvivalWavePopulation = WavePopulation.Baseline,
+            WantedDistanceBetweenPuzzleComponents = 15.0,
+            Puzzle = new List<PuzzleComponent>
+            {
+                PuzzleComponent.AllLarge,
+                PuzzleComponent.ClusterSmall,
+                PuzzleComponent.ClusterSmall,
+                PuzzleComponent.ClusterLarge,
+                PuzzleComponent.ClusterSmall,
+                PuzzleComponent.ScanLarge
+            },
+        };
+
+        public static ChainedPuzzle AlarmClass7 = new ChainedPuzzle
+        {
+            PublicAlarmName = "Class VII",
+            SurvivalWaveSettings = VanillaWaveSettings.Apex,
+            SurvivalWavePopulation = WavePopulation.Baseline,
+            WantedDistanceBetweenPuzzleComponents = 15.0,
+            Puzzle = new List<PuzzleComponent>
+            {
+                PuzzleComponent.AllLarge,
+                PuzzleComponent.ClusterSmall,
+                PuzzleComponent.ClusterSmall,
+                PuzzleComponent.ClusterLarge,
+                PuzzleComponent.ClusterSmall,
+                PuzzleComponent.ClusterSmall,
+                PuzzleComponent.ScanLarge
+            },
+        };
+
+        public static ChainedPuzzle AlarmClass8 = new ChainedPuzzle
+        {
+            PublicAlarmName = "Class VIII",
+            SurvivalWaveSettings = VanillaWaveSettings.Apex,
+            SurvivalWavePopulation = WavePopulation.Baseline,
+            WantedDistanceBetweenPuzzleComponents = 15.0,
+            Puzzle = new List<PuzzleComponent>
+            {
+                PuzzleComponent.AllLarge,
+                PuzzleComponent.ClusterSmall,
+                PuzzleComponent.ClusterSmall,
+                PuzzleComponent.ClusterLarge,
+                PuzzleComponent.ClusterSmall,
+                PuzzleComponent.ClusterSmall,
+                PuzzleComponent.ScanLarge
+            },
+        };
+        #endregion
+
+        #region Alarms: Surge
         public static ChainedPuzzle AlarmClass3_Surge = new ChainedPuzzle
         {
             PublicAlarmName = "Class III Surge",
@@ -364,8 +418,9 @@ namespace AutogenRundown.DataBlocks.Alarms
                 PuzzleComponent.AllLarge
             }
         };
+        #endregion
 
-        /******************** Sustain Alarms ********************/
+        #region Alarms: Sustained
         public static ChainedPuzzle AlarmClass1_Sustained = new ChainedPuzzle
         {
             PublicAlarmName = "Class S I Alarm",
@@ -378,8 +433,9 @@ namespace AutogenRundown.DataBlocks.Alarms
                 PuzzleComponent.Sustained
             }
         };
+        #endregion
 
-        /******************** Error Alarms ********************/
+        #region Alarms: Error alarms
         public static ChainedPuzzle AlarmError_Baseline = new ChainedPuzzle
         {
             PublicAlarmName = "Class ://ERROR! Alarm",
@@ -390,6 +446,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWavePopulation = WavePopulation.Baseline,
             Puzzle = new List<PuzzleComponent>() { PuzzleComponent.AllLarge }
         };
+        #endregion
 
         /******************** Exit Alarm Scans ********************/
         public static ChainedPuzzle ExitAlarm = new ChainedPuzzle
@@ -411,6 +468,9 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.ChainedPuzzles.AddBlock(AlarmClass3);
             Bins.ChainedPuzzles.AddBlock(AlarmClass4);
             Bins.ChainedPuzzles.AddBlock(AlarmClass5);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass6);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass7);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass8);
             Bins.ChainedPuzzles.AddBlock(AlarmClass3_Surge);
             Bins.ChainedPuzzles.AddBlock(AlarmClass4_Surge);
             Bins.ChainedPuzzles.AddBlock(AlarmClass1_Sustained);
