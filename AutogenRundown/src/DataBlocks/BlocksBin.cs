@@ -1,7 +1,7 @@
-﻿using AutogenRundown.DataBlocks.Alarms;
-using BepInEx;
+﻿using BepInEx;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using AutogenRundown.DataBlocks.Alarms;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -15,6 +15,8 @@ namespace AutogenRundown.DataBlocks
             = new BlocksBin<LevelLayout>();
         public static BlocksBin<WardenObjective> WardenObjectives { get; private set; }
             = new BlocksBin<WardenObjective>();
+        public static BlocksBin<WaveSettings> WaveSettings { get; private set; }
+            = new BlocksBin<WaveSettings>();
 
         public static void Save()
         {
@@ -22,11 +24,13 @@ namespace AutogenRundown.DataBlocks
             Rundown.SaveStatic();
             LevelLayout.SaveStatic();
             WardenObjective.SaveStatic();
+            Alarms.WaveSettings.SaveStatic();
 
             ChainedPuzzles.Save("ChainedPuzzleDataBlock");
             Rundowns.Save("RundownDataBlock");
             LevelLayouts.Save("LevelLayoutDataBlock");
             WardenObjectives.Save("WardenObjectiveDataBlock");
+            //WaveSettings.Save("SurvivalWaveSettingsDataBlock");
         }
     }
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BepInEx;
+﻿using BepInEx;
 using AutogenRundown.DataBlocks;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.GeneratorData;
@@ -35,7 +29,7 @@ namespace AutogenRundown
             Generator.Reload();
 
             // Rundown 7 replacement
-            var rundown = Rundown.Build(new Rundown { PersistentId = 31 });
+            var rundown = Rundown.Build(new Rundown { PersistentId = Rundown.R7 });
 
             var levelNames = new List<string>(Words.NounsLevel);
 
@@ -44,11 +38,6 @@ namespace AutogenRundown
             var cMax = Generator.Random.Next(2, 4);
             var dMax = Generator.Random.Next(1, 3);
             var eMax = Generator.Random.Next(0, 1);
-
-            //var bMax = 4;
-            //var cMax = 3;
-            //var dMax = 3;
-            //var eMax = 1;
 
 
             // A levels, always generate atleast 1
@@ -146,12 +135,12 @@ namespace AutogenRundown
 
             Bins.Rundowns.AddBlock(rundown);
 
-            Bins.Rundowns.AddBlock(new Rundown { PersistentId = 32, Name = "ALT Rundown 1.0" });
-            Bins.Rundowns.AddBlock(new Rundown { PersistentId = 33, Name = "ALT Rundown 2.0" });
-            Bins.Rundowns.AddBlock(new Rundown { PersistentId = 34, Name = "ALT Rundown 3.0" });
-            Bins.Rundowns.AddBlock(new Rundown { PersistentId = 37, Name = "ALT Rundown 4.0" });
-            Bins.Rundowns.AddBlock(new Rundown { PersistentId = 38, Name = "ALT Rundown 5.0" });
-            Bins.Rundowns.AddBlock(new Rundown { PersistentId = 41, Name = "ALT Rundown 9.0" });
+            Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R1, Name = "ALT Rundown 1.0" });
+            Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R2, Name = "ALT Rundown 2.0" });
+            Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R3, Name = "ALT Rundown 3.0" });
+            Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R4, Name = "ALT Rundown 4.0" });
+            Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R5, Name = "ALT Rundown 5.0" });
+            Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R6, Name = "ALT Rundown 6.0" });
 
             Bins.Save();
         }

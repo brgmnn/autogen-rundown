@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.ZoneData;
+﻿using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.ZoneData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -95,8 +96,9 @@ namespace AutogenRundown.DataBlocks
     /// <summary>
     /// 
     /// </summary>
-    internal class Zone : DataBlock
+    internal record class Zone : DataBlock
     {
+        #region Custom geomorph settings
         public void GenExitGeomorph(Complex complex)
         {
             switch (complex)
@@ -164,9 +166,11 @@ namespace AutogenRundown.DataBlocks
             {
                 case Complex.Mining:
                     {
-                        CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_I_HA_05.prefab";
-                        SubComplex = SubComplex.Refinery;
-                        Coverage = new CoverageMinMax { Min = 35.0, Max = 40.0 };
+                        var (subcomplex, geomorph) = Generator.Pick(Zones.Geomorphs.Mining_I_Tile);
+                        CustomGeomorph = geomorph;
+                        SubComplex = subcomplex;
+
+                        Coverage = new CoverageMinMax { Min = 35.0, Max = 50.0 };
                         break;
                     }
 
@@ -180,6 +184,9 @@ namespace AutogenRundown.DataBlocks
             }
         }
 
+        #endregion
+
+        #region Enemies
         public class WeightedDifficulty : Generator.ISelectable
         {
             public double Weight { get; set; }
@@ -193,7 +200,6 @@ namespace AutogenRundown.DataBlocks
         /// <param name="director"></param>
         public void GenEnemies(BuildDirector director)
         {
-            //var points = director.EnemyPointPool.ElementAt(LocalIndex);
             var points = director.GetPoints(this);
 
             switch (director.Tier)
@@ -246,12 +252,39 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                case "C":
+                    {
+                        var selected = Generator.Select(
+                            new List<WeightedDifficulty>
+                            {
+                                new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Medium } },
+                                new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Hard } },
+                                new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Medium } },
+                                new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Medium, EnemyRoleDifficulty.Hard } },
+                                new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Hard } },
+                            });
+
+                        foreach (var difficulty in selected.Difficulties)
+                        {
+                            EnemySpawningInZone.Add(
+                                new EnemySpawningData()
+                                {
+                                    GroupType = EnemyGroupType.Hibernate,
+                                    Difficulty = difficulty,
+                                    Points = points / selected.Difficulties.Count,
+                                });
+                        }
+
+                        break;
+                    }
+
                 default:
                     break;
             }
 
 
         }
+        #endregion
 
         #region Unused by us properties
         public int AliasOverride = -1;
@@ -304,7 +337,7 @@ namespace AutogenRundown.DataBlocks
 
         public List<JObject> EventsOnEnter { get; set; } = new List<JObject>();
         public List<JObject> EventsOnPortalWarp { get; set; } = new List<JObject>();
-        public List<JObject> EventsOnApproachDoor { get; set; } = new List<JObject>();
+        public List<WardenObjectiveEvent> EventsOnApproachDoor { get; set; } = new List<WardenObjectiveEvent>();
         public List<JObject> EventsOnUnlockDoor { get; set; } = new List<JObject>();
         public List<JObject> EventsOnOpenDoor { get; set; } = new List<JObject>();
         public List<JObject> EventsOnDoorScanStart { get; set; } = new List<JObject>();

@@ -6,13 +6,13 @@ namespace AutogenRundown.DataBlocks
     /// <summary>
     /// Base datablock type that all other data blocks inherit from
     /// </summary>
-    internal class DataBlock
+    internal record class DataBlock
     {
         /// <summary>
         /// All persistent Ids must be unique
         /// </summary>
         [JsonProperty("persistentID")]
-        public UInt32 PersistentId { get; set; }
+        public uint PersistentId { get; set; }
 
         /// <summary>
         /// Optional name, useful mostly for debugging

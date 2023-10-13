@@ -3,78 +3,9 @@
 namespace AutogenRundown.DataBlocks.Alarms
 {
     /// <summary>
-    /// Persistent IDs for Survival Wave Populations
-    /// </summary>
-    enum WavePopulation : UInt32
-    {
-        None = 0,
-
-        // Regular enemy pops
-        Baseline = 1,
-        Shooters = 3,
-        BigStrikers = 4,
-        Chargers = 5, // Called Bullrush
-        Shadows = 7,
-        Strikers = 18,
-
-        // Shadows
-        Shadows_BigsOnly = 38,
-
-        BaselineHybrid = 8,
-        BaselineHybrid_M_NoShooter = 11,
-        Baseline_Sp_Shadows = 29,
-
-        ModifiedSpHybrid = 9,
-        ModifiedSpStrikerBig = 21,
-
-        // Chargers [x] Confirmed
-        Bullrush_mix = 17,
-        Bullrush_mix2 = 19,
-        Bullrush_mix3 = 24,
-        Bullrush_mix4 = 13,
-        Bullrush_mix5 = 14,
-        Bullrush_mix6 = 36,
-        Bullrush_mix7 = 40,
-        BullrushBigs = 15,
-        Baseline_M_Bullrush = 23, // M = maybe? medium?
-        Bullrush_Only = 47,
-
-        // Bigs
-        BigsAndBosses = 22,
-        BigsAndBosses_M_Hybrid = 25,
-        BigsAndHybrid = 28,
-        BigsAndBosses_v2 = 33,
-
-        // Mother?
-        BaselineBirther_MB = 12,
-        Birther = 31,
-
-        // Tank
-        Tank = 16,
-
-        // Grabber, Pouncer
-        Pouncer = 56,
-        WavePouncer = 39,
-        WavePouncerCombo = 45,
-
-        BigsAndBosses_S_Hybrid = 20, // S = small?
-
-        // Reactor
-        ReactorBaseline = 6,
-        ReactorBaselineHybrid = 10,
-        ReactorBaseline_S_Child = 44,
-
-        // Flyers
-        Flyers = 35,
-        FlyersBig = 37,
-        Boss_Flyer = 26,
-        Modified_S_Flyer = 27
-    }
-
-    /// <summary>
     /// https://gtfo-modding.gitbook.io/wiki/reference/datablocks/main/chainedpuzzle
     /// </summary>
-    internal class ChainedPuzzle : DataBlock
+    internal record class ChainedPuzzle : DataBlock
     {
         /// <summary>
         /// The Alarm name. For example, Class S Surge Alarm
@@ -87,7 +18,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// don't specify the enemy wave for the puzzle via the following fields. In that case, 
         /// there will still be alarm sound but no enemy waves.
         /// </summary>
-        public bool TriggerAlarmOnActivate { get; set; } = false;
+        public bool TriggerAlarmOnActivate { get; set; } = true;
 
         /// <summary>
         /// Determine how the wave spawns. You set this field to make the wave either a relatively
@@ -147,6 +78,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         public UInt32 AlarmSoundStop = 42633153u;
         #endregion
 
+        #region Pack builders
         /// <summary>
         /// Chained puzzle pack builders. Generates a pack of alarms that can be Pick()ed from
         /// for building levels.
@@ -156,7 +88,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static List<ChainedPuzzle> BuildPack(string tier)
             => (tier) switch
             {
-                ("A") => new List<ChainedPuzzle>
+                "A" => new List<ChainedPuzzle>
                 {
                     None,
                     None,
@@ -176,7 +108,7 @@ namespace AutogenRundown.DataBlocks.Alarms
                     AlarmClass4,
                     AlarmClass4,
                 },
-                ("B") => new List<ChainedPuzzle>
+                "B" => new List<ChainedPuzzle>
                 {
                     None,
                     None,
@@ -194,7 +126,7 @@ namespace AutogenRundown.DataBlocks.Alarms
                     AlarmClass4,
                     AlarmClass5,
                 },
-                ("C") => new List<ChainedPuzzle>
+                "C" => new List<ChainedPuzzle>
                 {
                     TeamScan,
                     TeamScan,
@@ -213,7 +145,7 @@ namespace AutogenRundown.DataBlocks.Alarms
                     AlarmClass5,
                     AlarmClass5,
                 },
-                ("D") => new List<ChainedPuzzle>
+                "D" => new List<ChainedPuzzle>
                 {
                     TeamScan,
                     TeamScan,
@@ -232,7 +164,7 @@ namespace AutogenRundown.DataBlocks.Alarms
                     AlarmClass5,
                     AlarmClass5,
                 },
-                ("E") => new List<ChainedPuzzle>
+                "E" => new List<ChainedPuzzle>
                 {
                     TeamScan,
                     TeamScan,
@@ -254,9 +186,81 @@ namespace AutogenRundown.DataBlocks.Alarms
                     AlarmClass4_Surge,
                     AlarmClass4_Surge,
                 },
-
-                (_) => new List<ChainedPuzzle>(),
+                _ => new List<ChainedPuzzle>(),
             };
+
+        public static List<ChainedPuzzle> BuildReactorShutdownPack(string tier)
+        {
+            switch (tier)
+            {
+                case "A":
+                    return new List<ChainedPuzzle> { AlarmClass2, AlarmClass3, AlarmClass3 };
+
+                case "B":
+                    return new List<ChainedPuzzle> { AlarmClass3, AlarmClass4, AlarmClass4, AlarmClass5, AlarmClass5 };
+
+                case "C":
+                    {
+                        // Now we get spicy
+                        var alarms = new List<ChainedPuzzle>
+                        {
+                            // Class 8 alarm
+                            new ChainedPuzzle
+                            {
+                                PublicAlarmName = "Class VIII",
+                                SurvivalWaveSettings = VanillaWaveSettings.ApexIncreased,
+                                SurvivalWavePopulation = WavePopulation.ReactorBaselineHybrid,
+                                Puzzle = new List<PuzzleComponent>
+                                {
+                                    PuzzleComponent.AllLarge,
+                                    PuzzleComponent.ClusterSmall,
+                                    PuzzleComponent.ClusterSmall,
+                                    PuzzleComponent.ScanLarge,
+                                    PuzzleComponent.ClusterSmall,
+                                    PuzzleComponent.ClusterLarge,
+                                    PuzzleComponent.ClusterSmall,
+                                    PuzzleComponent.AllLarge,
+                                }
+                            },
+
+                            // Class 4 surge alarm
+                            new ChainedPuzzle
+                            {
+                                PublicAlarmName = "Class IV",
+                                SurvivalWaveSettings = VanillaWaveSettings.Surge,
+                                SurvivalWavePopulation = WavePopulation.Baseline,
+                                Puzzle = new List<PuzzleComponent>
+                                {
+                                    PuzzleComponent.AllLarge,
+                                    PuzzleComponent.ClusterSmall,
+                                    PuzzleComponent.ClusterSmall,
+                                    PuzzleComponent.ScanLarge
+                                },
+                            },
+
+                            // S-class Hybrids
+                            new ChainedPuzzle
+                            {
+                                PublicAlarmName = AlarmClass1_Sustained.PublicAlarmName,
+                                SurvivalWaveSettings = VanillaWaveSettings.ApexIncreased,
+                                SurvivalWavePopulation = WavePopulation.ReactorBaselineHybrid,
+                                WantedDistanceFromStartPos = 6.0,
+                                WantedDistanceBetweenPuzzleComponents = 2.0,
+                                Puzzle = new List<PuzzleComponent>()
+                                {
+                                    PuzzleComponent.Sustained
+                                }
+                            }
+                        };
+
+                        return alarms;
+                    }
+
+                default:
+                    return new List<ChainedPuzzle>() { AlarmClass2 };
+            }
+        }
+        #endregion
 
         /*************************************** Presets ***************************************/
         /// <summary>
@@ -271,6 +275,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle TeamScan = new ChainedPuzzle
         {
             PublicAlarmName = "Scan",
+            TriggerAlarmOnActivate = false,
             Puzzle = new List<PuzzleComponent> { PuzzleComponent.AllBig },
         };
 
@@ -278,7 +283,6 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass2 = new ChainedPuzzle
         {
             PublicAlarmName = "Class II",
-            TriggerAlarmOnActivate = true,
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
             SurvivalWavePopulation = WavePopulation.Baseline,
             Puzzle = new List<PuzzleComponent>
@@ -291,7 +295,6 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass3 = new ChainedPuzzle
         {
             PublicAlarmName = "Class III",
-            TriggerAlarmOnActivate = true,
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
             SurvivalWavePopulation = WavePopulation.Baseline,
             Puzzle = new List<PuzzleComponent>
@@ -305,7 +308,6 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass4 = new ChainedPuzzle
         {
             PublicAlarmName = "Class IV",
-            TriggerAlarmOnActivate = true,
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
             SurvivalWavePopulation = WavePopulation.Baseline,
             Puzzle = new List<PuzzleComponent>
@@ -320,7 +322,6 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass5 = new ChainedPuzzle
         {
             PublicAlarmName = "Class V",
-            TriggerAlarmOnActivate = true,
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
             SurvivalWavePopulation = WavePopulation.Baseline,
             Puzzle = new List<PuzzleComponent>
@@ -336,7 +337,6 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass3_Surge = new ChainedPuzzle
         {
             PublicAlarmName = "Class III Surge",
-            TriggerAlarmOnActivate = true,
             SurvivalWaveSettings = VanillaWaveSettings.Surge,
             SurvivalWavePopulation = WavePopulation.Baseline,
             WantedDistanceFromStartPos = 10.0,
@@ -352,7 +352,6 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass4_Surge = new ChainedPuzzle
         {
             PublicAlarmName = "Class IV Surge",
-            TriggerAlarmOnActivate = true,
             SurvivalWaveSettings = VanillaWaveSettings.Surge,
             SurvivalWavePopulation = WavePopulation.Baseline,
             WantedDistanceFromStartPos = 10.0,
@@ -366,11 +365,24 @@ namespace AutogenRundown.DataBlocks.Alarms
             }
         };
 
+        /******************** Sustain Alarms ********************/
+        public static ChainedPuzzle AlarmClass1_Sustained = new ChainedPuzzle
+        {
+            PublicAlarmName = "Class S I Alarm",
+            SurvivalWaveSettings = VanillaWaveSettings.ApexIncreased,
+            SurvivalWavePopulation = WavePopulation.ReactorBaseline,
+            WantedDistanceFromStartPos = 6.0,
+            WantedDistanceBetweenPuzzleComponents = 2.0,
+            Puzzle = new List<PuzzleComponent>()
+            {
+                PuzzleComponent.Sustained
+            }
+        };
+
         /******************** Error Alarms ********************/
         public static ChainedPuzzle AlarmError_Baseline = new ChainedPuzzle
         {
             PublicAlarmName = "Class ://ERROR! Alarm",
-            TriggerAlarmOnActivate = true,
             DisableSurvivalWaveOnComplete = false,
             AlarmSoundStart = 2200133294,
             AlarmSoundStop = 1190355274,
@@ -401,6 +413,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.ChainedPuzzles.AddBlock(AlarmClass5);
             Bins.ChainedPuzzles.AddBlock(AlarmClass3_Surge);
             Bins.ChainedPuzzles.AddBlock(AlarmClass4_Surge);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass1_Sustained);
             Bins.ChainedPuzzles.AddBlock(AlarmError_Baseline);
             Bins.ChainedPuzzles.AddBlock(ExitAlarm);
         }

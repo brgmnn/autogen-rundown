@@ -2,6 +2,8 @@
 
 namespace AutogenRundown
 {
+    using PID = UInt32;
+
     static internal class Text
     {
         /// <summary>
@@ -34,7 +36,7 @@ namespace AutogenRundown
 
     static internal class Generator
     {
-        private static UInt32 pid = 100000;
+        private static PID pid = 100000;
 
         public static string DisplaySeed { get; set; } = "";
 
@@ -116,7 +118,7 @@ namespace AutogenRundown
         /// Gets a new persistent Id
         /// </summary>
         /// <returns></returns>
-        public static UInt32 GetPersistentId() => pid++;
+        public static uint GetPersistentId() => pid++;
 
         /// <summary>
         /// Sets the seed (without saving) to the 

@@ -5,7 +5,7 @@ using AutogenRundown.DataBlocks.ZoneData;
 
 namespace AutogenRundown.DataBlocks
 {
-    internal class LevelLayout : DataBlock
+    internal record class LevelLayout : DataBlock
     {
         #region hidden data
         [JsonIgnore]

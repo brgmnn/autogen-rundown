@@ -6,8 +6,6 @@ namespace AutogenRundown.DataBlocks.Objectives
 {
     internal class WardenObjectiveEvent
     {
-        public static WardenObjectiveEvent LightsOff = new WardenObjectiveEvent { Type = WardenObjectiveEventType.AllLightsOff };
-
         public WardenObjectiveEventType Type { get; set; } = WardenObjectiveEventType.None;
 
         public JObject Condition = new JObject
@@ -39,6 +37,11 @@ namespace AutogenRundown.DataBlocks.Objectives
 
         public string CustomSubObjective { get; set; } = "";
 
+        #region Sound settings
+        [JsonProperty("SoundID")]
+        public Sound SoundId { get; set; } = Sound.None;
+        #endregion
+
         #region Fog settings
         public uint FogSetting { get; set; } = 0;
 
@@ -66,7 +69,6 @@ namespace AutogenRundown.DataBlocks.Objectives
         #region Not implemented yet
         public int Layer { get; set; } = 0;
         public int DimensionIndex = 0;
-        public uint SoundID = 0;
         public uint SoundSubtitle = 0;
         public uint DialogueID = 0;
         #endregion

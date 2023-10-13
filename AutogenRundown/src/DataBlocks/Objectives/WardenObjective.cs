@@ -29,7 +29,7 @@ namespace AutogenRundown.DataBlocks
         EvenlyAcrossZones
     }
 
-    internal class WardenObjective : DataBlock
+    internal record class WardenObjective : DataBlock
     {
         /// <summary>
         /// Places objective items in the level as needed
@@ -261,17 +261,18 @@ namespace AutogenRundown.DataBlocks
                         objective.GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
                         objective.GoToWinConditionHelp_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
-                        //"LightsOnFromBeginning": true,
-                        //"LightsOnDuringIntro": false,
-                        //"LightsOnWhenStartupComplete": false,
-
                         objective.LightsOnFromBeginning = true;
                         objective.LightsOnDuringIntro = true;
-                        objective.LightsOnWhenStartupComplete = false;
+                        objective.LightsOnWhenStartupComplete = true;
 
                         objective.ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
-                        objective.ChainedPuzzleMidObjective = ChainedPuzzle.AlarmClass2.PersistentId;
 
+                        var midScan = Generator.Pick(ChainedPuzzle.BuildReactorShutdownPack(director.Tier));
+                        Bins.ChainedPuzzles.AddBlock(midScan);
+                        objective.ChainedPuzzleMidObjective = midScan.PersistentId;
+
+                        // Seems we set these as empty?
+                        // TODO: can we remove these?
                         objective.ReactorWaves = new List<ReactorWave>
                         {
                             new ReactorWave
