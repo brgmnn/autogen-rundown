@@ -83,6 +83,18 @@ namespace AutogenRundown
                 ("D", Bulkhead.Main) => 800,
                 ("E", Bulkhead.Main) => 800,
 
+                ("A", Bulkhead.Extreme) => 400, // Adjust points down a bit
+                ("B", Bulkhead.Extreme) => 500,
+                ("C", Bulkhead.Extreme) => 800,
+                ("D", Bulkhead.Extreme) => 800,
+                ("E", Bulkhead.Extreme) => 800,
+
+                ("A", Bulkhead.Overload) => 400, // Adjust points down a bit
+                ("B", Bulkhead.Overload) => 500,
+                ("C", Bulkhead.Overload) => 800,
+                ("D", Bulkhead.Overload) => 800,
+                ("E", Bulkhead.Overload) => 800,
+
                 (_, _) => 600,
             };
         }
@@ -97,8 +109,8 @@ namespace AutogenRundown
                 ("D", Bulkhead.Main) => Generator.Random.Next(5, 10), // TODO: playtest
                 ("E", Bulkhead.Main) => Generator.Random.Next(6, 11), // TODO: playtest
 
-                ("A", _) => Generator.Random.Next(1, 5),
-                ("B", _) => Generator.Random.Next(1, 7),
+                ("A", _) => Generator.Random.Next(2, 5),
+                ("B", _) => Generator.Random.Next(2, 7),
                 ("C", _) => Generator.Random.Next(2, 8),
                 ("D", _) => Generator.Random.Next(3, 10),
                 ("E", _) => Generator.Random.Next(3, 12), // TODO: this is also too much

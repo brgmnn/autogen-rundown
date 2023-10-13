@@ -39,12 +39,14 @@ Follow the installation instructions again, check yes to overwrite all files.
 * Levels
   * [x] A Tier
   * [x] B Tier
-  * [ ] C Tier
+  * [x] C Tier
   * [ ] D Tier
   * [ ] E Tier
   * Additional objectives
-    * [ ] Secondary
-    * [ ] Overload
+    * [x] Secondary
+    * [x] Overload
+    * [ ] Simple Bulkhead key placement
+    * [ ] Chained Bulkhead key placement
   * Lights
     * [x] Random lights selection
     * [x] Reactor specific lights
@@ -52,6 +54,7 @@ Follow the installation instructions again, check yes to overwrite all files.
     * [ ] Custom lights(?)
   * Zones
     * [ ] More custom geomorphs
+    * [ ] Specialized bulkhead geomorphs and layouts
   * [ ] Dimensions
 * Objectives
   * [x] Clear Path — *Navigate through the zones to a separate extraction elevator*

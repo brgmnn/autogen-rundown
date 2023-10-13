@@ -25,7 +25,7 @@
                 {
                     Type = WardenObjectiveEventType.PlaySound,
                     Trigger = WardenObjectiveEventTrigger.OnStart,
-                    SoundId = (uint)Sound.LightsOff,
+                    SoundId = Sound.LightsOff,
                     WardenIntel = message,
                     Delay = delay
                 });

@@ -315,10 +315,75 @@ namespace AutogenRundown.DataBlocks
                 level.MainLayerData.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
             }
 
-            // Secondary (Extreme)
-            // Tertiary (Overload)
-
             Bins.WardenObjectives.AddBlock(mainObjective);
+
+            // Secondary (Extreme)
+            if (level.IsTest)
+            {
+                if (level.SecondaryDirector == null)
+                {
+                    level.SecondaryDirector = new BuildDirector
+                    {
+                        Bulkhead = Bulkhead.Extreme,
+                        Complex = level.Complex,
+                        Complexity = Complexity.Low,
+                        Tier = level.Tier
+                    };
+                    level.SecondaryDirector.GenPoints();
+                    level.SecondaryDirector.GenObjective();
+                }
+
+                var extremeLevelLayout = LevelLayout.Build(level, level.SecondaryDirector);
+                level.SecondaryLayout = extremeLevelLayout.PersistentId;
+
+                var extremeObjective = WardenObjective.Build(level.SecondaryDirector, level);
+                level.SecondaryLayerData.ObjectiveData.DataBlockId = extremeObjective.PersistentId;
+
+                level.SecondaryLayerEnabled = true;
+
+                level.ThirdSecondaryFrom = JObject.FromObject(new
+                {
+                    LayerType = 0,
+                    Zone = 2
+                });
+                level.SecondaryLayerData.ZonesWithBulkheadEntrance.Add(2);
+
+                Bins.WardenObjectives.AddBlock(extremeObjective);
+            }
+
+            // Tertiary (Overload)
+            if (level.IsTest)
+            {
+                if (level.OverloadDirector == null)
+                {
+                    level.OverloadDirector = new BuildDirector
+                    {
+                        Bulkhead = Bulkhead.Overload,
+                        Complex = level.Complex,
+                        Complexity = Complexity.Low,
+                        Tier = level.Tier
+                    };
+                    level.OverloadDirector.GenPoints();
+                    level.OverloadDirector.GenObjective();
+                }
+
+                var overloadLevelLayout = LevelLayout.Build(level, level.OverloadDirector);
+                level.ThirdLayout = overloadLevelLayout.PersistentId;
+
+                var overloadObjective = WardenObjective.Build(level.OverloadDirector, level);
+                level.ThirdLayerData.ObjectiveData.DataBlockId = overloadObjective.PersistentId;
+
+                level.ThirdLayerEnabled = true;
+
+                level.ThirdSecondaryFrom = JObject.FromObject(new
+                {
+                    LayerType = 0,
+                    Zone = 4
+                });
+                level.ThirdLayerData.ZonesWithBulkheadEntrance.Add(4);
+
+                Bins.WardenObjectives.AddBlock(overloadObjective);
+            }
 
             return level;
         }
