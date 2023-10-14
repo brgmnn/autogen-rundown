@@ -91,6 +91,16 @@ namespace AutogenRundown
             };
             mainDirector.GenPoints();
 
+            var secondaryDirector = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Extreme,
+                Complex = Complex.Mining,
+                Complexity = Complexity.Low,
+                Tier = "C",
+                Objective = WardenObjectiveType.SpecialTerminalCommand,
+            };
+            secondaryDirector.GenPoints();
+
             var testLevel = Level.Build(
                 new Level
                 {
@@ -99,6 +109,7 @@ namespace AutogenRundown
                     Complex = Complex.Mining,
                     Index = cMax + 1,
                     MainDirector = mainDirector,
+                    SecondaryDirector = secondaryDirector,
                     IsTest = true
                 });
             rundown.AddLevel(testLevel);

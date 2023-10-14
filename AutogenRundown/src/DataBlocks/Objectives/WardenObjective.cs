@@ -127,19 +127,6 @@ namespace AutogenRundown.DataBlocks
             }
         }
 
-        /// <summary>
-        /// Create a new list of objective types. The intention is to Draw() from this "pack" of objectives.
-        /// </summary>
-        /// <param name="tier"></param>
-        /// <returns></returns>
-        public static List<WardenObjectiveType> BuildObjectivePack(string tier)
-            => new List<WardenObjectiveType>
-            {
-                WardenObjectiveType.GatherSmallItems,
-                WardenObjectiveType.GatherSmallItems,
-                WardenObjectiveType.GatherSmallItems,
-            };
-
         public static string GenLevelDescription(WardenObjectiveType type, WardenObjectiveItem item = WardenObjectiveItem.PersonnelId)
             => type switch
             {
@@ -373,6 +360,34 @@ namespace AutogenRundown.DataBlocks
 
                         break;
                     }
+
+                case WardenObjectiveType.SpecialTerminalCommand:
+                    {
+                        objective.MainObjective = "Find Computer terminal [ITEM_SERIAL] and input the backdoor command [SPECIAL_COMMAND]";
+                        objective.FindLocationInfo = "Gather information about the location of [ITEM_SERIAL]";
+                        objective.FindLocationInfoHelp = "Access more data in the terminal maintenance system";
+                        objective.GoToZone = "Navigate to [ITEM_ZONE] and find [ITEM_SERIAL]";
+                        objective.GoToZoneHelp = "Use information in the environment to find [ITEM_ZONE]";
+                        objective.InZoneFindItem = "Find [ITEM_SERIAL] somewhere inside [ITEM_ZONE]";
+                        objective.InZoneFindItemHelp = "Use maintenance terminal command PING to find [ITEM_SERIAL]";
+                        objective.SolveItem = "Proceed to input the backdoor command [SPECIAL_COMMAND] in [ITEM_SERIAL]";
+
+                        objective.GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
+                        objective.GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
+                        objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+                        objective.GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
+                        objective.GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+
+                        objective.SpecialTerminalCommand = "REROUTE_POWER";
+                        objective.SpecialTerminalCommandDesc = "Reroute power coupling to sector that has been powered down.";
+
+                        EventBuilder.AddLightsOff(objective.EventsOnActivate, 9.0);
+
+                        objective.ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
+                        objective.ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
+
+                        break;
+                    }
             }
 
             dataLayer.ObjectiveData.DataBlockId = objective.PersistentId;
@@ -400,7 +415,6 @@ namespace AutogenRundown.DataBlocks
         public string GoToWinCondition_ToMainLayer { get; set; } = "";
         public string GoToWinConditionHelp_ToMainLayer { get; set; } = "";
         public string WaveOnElevatorWardenIntel { get; set; } = "";
-        public string SpecialTerminalCommandDesc { get; set; } = "";
         public string Survival_TimerTitle { get; set; } = "";
         public string Survival_TimerToActivateTitle { get; set; } = "";
         public string GatherTerminal_CommandHelp { get; set; } = "";
@@ -456,6 +470,18 @@ namespace AutogenRundown.DataBlocks
         #region Type=4: Clear a path
         #endregion
 
+        #region Type=5: Special terminal command
+        /// <summary>
+        /// The Special terminal command players have to enter
+        /// </summary>
+        public string SpecialTerminalCommand { get; set; } = "";
+
+        /// <summary>
+        /// Description displayed in the terminal COMMANDs listing
+        /// </summary>
+        public string SpecialTerminalCommandDesc { get; set; } = "";
+        #endregion
+
         #region Expedition exit
         public uint ChainedPuzzleAtExit { get; set; } = ChainedPuzzle.ExitAlarm.PersistentId;
         #endregion
@@ -482,7 +508,6 @@ namespace AutogenRundown.DataBlocks
         public bool LightsOnDuringIntro = false;
         public bool LightsOnWhenStartupComplete = false;
         public bool DoNotSolveObjectiveOnReactorComplete = false;
-        public string SpecialTerminalCommand = "";
         public JArray PostCommandOutput = new JArray();
         public int SpecialCommandRule = 0;
         public int PowerCellsToDistribute = 0;
