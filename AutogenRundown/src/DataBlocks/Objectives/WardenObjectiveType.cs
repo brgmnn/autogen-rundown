@@ -16,7 +16,7 @@
         PowerCellDistribution = 7,
         TerminalUplink = 8,
         CentralGeneratorCluster = 9,
-        HsuActivateSmall = 10,
+        //HsuActivateSmall = 10,
         Survival = 11,
         GatherTerminal = 12,
         CorruptedTerminalUplink = 13,

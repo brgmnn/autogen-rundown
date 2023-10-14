@@ -115,6 +115,32 @@ namespace AutogenRundown
         }
 
         /// <summary>
+        /// Randomly selects from a collection of tuples of (weight, item)'s with the weight being
+        /// their relative chance of being selected.
+        /// </summary>
+        /// <typeparam name="T">Item type</typeparam>
+        /// <param name="collection">Collection to select from</param>
+        /// <returns>Randomly selected item</returns>
+        public static T Select<T>(ICollection<(double, T)> collection)
+        {
+            var totalWeight = collection.Sum((x) => x.Item1);
+            var rand = Random.NextDouble();
+            var randomWeight = rand * totalWeight;
+
+            double weightSum = 0;
+
+            foreach (var (weight, item) in collection)
+            {
+                weightSum += weight;
+
+                if (randomWeight <= weightSum)
+                    return item;
+            }
+
+            return collection.Last().Item2;
+        }
+
+        /// <summary>
         /// Gets a new persistent Id
         /// </summary>
         /// <returns></returns>

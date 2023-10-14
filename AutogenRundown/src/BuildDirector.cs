@@ -58,10 +58,10 @@ namespace AutogenRundown
                 WardenObjectiveType.GatherSmallItems,
                 WardenObjectiveType.ClearPath,
                 WardenObjectiveType.SpecialTerminalCommand,
-                WardenObjectiveType.HsuActivateSmall,
+                WardenObjectiveType.HsuFindSample,
             };
 
-            if (Bulkhead != Bulkhead.Main)
+            if (!Bulkhead.HasFlag(Bulkhead.Main))
             {
                 objectives.Remove(WardenObjectiveType.ClearPath);
             }

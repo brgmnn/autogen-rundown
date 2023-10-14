@@ -7,11 +7,6 @@ using AutogenRundown.DataBlocks.Objectives.Reactor;
 
 namespace AutogenRundown.DataBlocks
 {
-    /// <summary>
-    /// Which objective bulkhead are we in.
-    /// </summary>
-    enum Bulkhead { Main, Extreme, Overload }
-
     enum DistributionStrategy
     {
         /// <summary>
@@ -228,7 +223,9 @@ namespace AutogenRundown.DataBlocks
 
                         // Add enemies on Goto Win
                         // TODO: do we want this for all bulkheads?
-                        objective.WavesOnGotoWin.Add(GenericWave.ExitTrickle);
+
+                        if (director.Bulkhead.HasFlag(Bulkhead.Main) || director.Tier != "A")
+                            objective.WavesOnGotoWin.Add(GenericWave.ExitTrickle);
 
                         break;
                     }
@@ -299,7 +296,7 @@ namespace AutogenRundown.DataBlocks
                         objective.FindLocationInfo = $"Look for {name}s in the complex";
                         objective.FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
 
-                        if (director.Bulkhead == Bulkhead.Main)
+                        if (director.Bulkhead.HasFlag(Bulkhead.Main))
                             level.Description = GenLevelDescription(director.Objective, itemId);
 
                         objective.GatherRequiredCount = level.Tier switch
@@ -387,10 +384,8 @@ namespace AutogenRundown.DataBlocks
                         objective.ChainedPuzzleAtExitScanSpeedMultiplier = 0.15 + (Generator.Random.NextDouble() * 0.1);
 
                         // Add exit wave if this is the main bulkhead
-                        if (director.Bulkhead == Bulkhead.Main)
-                        {
+                        if (director.Bulkhead.HasFlag(Bulkhead.Main))
                             objective.WavesOnGotoWin.Add(GenericWave.ExitTrickle);
-                        }
 
                         var count = layout.Zones.Count;
                         var zoneIndex = layout.ClampToZones(

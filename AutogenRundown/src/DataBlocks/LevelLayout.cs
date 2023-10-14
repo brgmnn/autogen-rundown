@@ -471,11 +471,15 @@ namespace AutogenRundown.DataBlocks
                     {
                         for (int i = 0; i < director.ZoneCount; i++)
                         {
+                            // We roughly want to chain zones together. 80% chance we build off the
+                            // previous zone, 20% chance we build off the zone before that.
+                            var buildFrom = Math.Max(0, i - (Generator.Flip(0.8) ? 1 : 2));
                             var zone = new Zone
                             {
                                 LocalIndex = i,
                                 Coverage = CoverageMinMax.GenNormalSize(),
                                 LightSettings = Lights.GenRandomLight(),
+                                BuildFromLocalIndex = buildFrom
                             };
 
                             zone.GenEnemies(director);

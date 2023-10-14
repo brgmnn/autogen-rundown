@@ -290,6 +290,19 @@ namespace AutogenRundown.DataBlocks
 
             level.GenerateDepth();
 
+            // Randomly select which bulkheads to use
+            var selectedBulkheads = Generator.Select(new List<(double, Bulkhead)>
+            {
+                (0.25, Bulkhead.Main),
+                (0.4, Bulkhead.Main | Bulkhead.Extreme),
+                (0.1, Bulkhead.Main | Bulkhead.Overload),
+                (0.25, Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload)
+            });
+            var bulkheadPlacements = Generator.Select(new List<(double, string)>
+            {
+                (1.0, "random")
+            });
+
             // ============ Main level ============
             if (level.MainDirector == null)
             {
@@ -318,7 +331,7 @@ namespace AutogenRundown.DataBlocks
             Bins.WardenObjectives.AddBlock(mainObjective);
 
             // Secondary (Extreme)
-            if (level.IsTest)
+            if (selectedBulkheads.HasFlag(Bulkhead.Extreme))
             {
                 if (level.SecondaryDirector == null)
                 {
@@ -341,18 +354,19 @@ namespace AutogenRundown.DataBlocks
 
                 level.SecondaryLayerEnabled = true;
 
-                level.ThirdSecondaryFrom = JObject.FromObject(new
+                var entranceZone = mainLevelLayout.ClampToZones(Generator.Random.Next(mainLevelLayout.Zones.Count - 1));
+                level.BuildSecondaryFrom = JObject.FromObject(new
                 {
                     LayerType = 0,
-                    Zone = 2
+                    Zone = entranceZone
                 });
-                level.SecondaryLayerData.ZonesWithBulkheadEntrance.Add(2);
+                level.SecondaryLayerData.ZonesWithBulkheadEntrance.Add(entranceZone);
 
                 Bins.WardenObjectives.AddBlock(extremeObjective);
             }
 
             // Tertiary (Overload)
-            if (level.IsTest)
+            if (selectedBulkheads.HasFlag(Bulkhead.Overload))
             {
                 if (level.OverloadDirector == null)
                 {
@@ -375,12 +389,13 @@ namespace AutogenRundown.DataBlocks
 
                 level.ThirdLayerEnabled = true;
 
+                var entranceZone = mainLevelLayout.ClampToZones(Generator.Random.Next(mainLevelLayout.Zones.Count - 1));
                 level.ThirdSecondaryFrom = JObject.FromObject(new
                 {
                     LayerType = 0,
-                    Zone = 4
+                    Zone = entranceZone
                 });
-                level.ThirdLayerData.ZonesWithBulkheadEntrance.Add(4);
+                level.ThirdLayerData.ZonesWithBulkheadEntrance.Add(entranceZone);
 
                 Bins.WardenObjectives.AddBlock(overloadObjective);
             }
