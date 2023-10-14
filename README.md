@@ -45,7 +45,7 @@ Follow the installation instructions again, check yes to overwrite all files.
   * Additional objectives
     * [x] Secondary
     * [x] Overload
-    * [ ] Simple Bulkhead key placement
+    * [x] Simple Bulkhead key placement
     * [ ] Chained Bulkhead key placement
   * Lights
     * [x] Random lights selection
