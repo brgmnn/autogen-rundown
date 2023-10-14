@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
 
@@ -227,14 +228,7 @@ namespace AutogenRundown.DataBlocks
 
                         // Add enemies on Goto Win
                         // TODO: do we want this for all bulkheads?
-                        objective.WavesOnGotoWin.Add(
-                            new Enemies.GenericWave
-                            {
-                                WaveSettings = (uint)VanillaWaveSettings.ExitTrickle_38S_Original,
-                                WavePopulation = (uint)WavePopulation.Baseline,
-                                SpawnDelay = 4.0,
-                                TriggerAlarm = true,
-                            });
+                        objective.WavesOnGotoWin.Add(GenericWave.ExitTrickle);
 
                         break;
                     }
@@ -361,6 +355,10 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                /**
+                 * TODO: It would be nice to add special commands other than just lights off that do other modifiers.
+                 *       Such as fog, error alarm, etc.
+                 */
                 case WardenObjectiveType.SpecialTerminalCommand:
                     {
                         objective.MainObjective = "Find Computer terminal [ITEM_SERIAL] and input the backdoor command [SPECIAL_COMMAND]";
@@ -378,16 +376,25 @@ namespace AutogenRundown.DataBlocks
                         objective.GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
                         objective.GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
+                        // Special Command: Lights Off
                         objective.SpecialTerminalCommand = "REROUTE_POWER";
                         objective.SpecialTerminalCommandDesc = "Reroute power coupling to sector that has been powered down.";
-
                         EventBuilder.AddLightsOff(objective.EventsOnActivate, 9.0);
 
+                        // Add scans
                         objective.ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
                         objective.ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
+                        objective.ChainedPuzzleAtExitScanSpeedMultiplier = 0.15 + (Generator.Random.NextDouble() * 0.1);
+
+                        // Add exit wave if this is the main bulkhead
+                        if (director.Bulkhead == Bulkhead.Main)
+                        {
+                            objective.WavesOnGotoWin.Add(GenericWave.ExitTrickle);
+                        }
 
                         var count = layout.Zones.Count;
-                        var zoneIndex = Generator.Random.Next((count - 1) / 2, count - 1);
+                        var zoneIndex = layout.ClampToZones(
+                            Generator.Random.Next(Math.Max(1, count - 2), count - 1));
 
                         dataLayer.ObjectiveData.ZonePlacementDatas.Add(
                             new List<ZonePlacementData>()

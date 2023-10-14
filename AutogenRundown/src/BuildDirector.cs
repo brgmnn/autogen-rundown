@@ -57,6 +57,7 @@ namespace AutogenRundown
                 WardenObjectiveType.ReactorShutdown,
                 WardenObjectiveType.GatherSmallItems,
                 WardenObjectiveType.ClearPath,
+                WardenObjectiveType.SpecialTerminalCommand,
                 WardenObjectiveType.HsuActivateSmall,
             };
 

@@ -22,6 +22,13 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
+        /// Ensures that the value is within the range of the number of zones in this level layout.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public int ClampToZones(int value) => Math.Clamp(value, 0, Zones.Count - 1);
+
+        /// <summary>
         /// Roll for blood doors
         /// </summary>
         public void RollBloodDoors()

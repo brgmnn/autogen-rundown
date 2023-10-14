@@ -62,7 +62,7 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] HSU Find Sample
   * [ ] Reactor Startup
   * [x] Reactor Shutdown
-  * [ ] Input Special Terminal Command
+  * [x] Input Special Terminal Command
   * [ ] Retrieve Big Items — *Fog Turbine etc.*
   * [ ] Power Cell Distribution — *Distributing cells to individual generators*
   * [ ] Terminal Uplink

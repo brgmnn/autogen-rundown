@@ -1,7 +1,20 @@
-﻿namespace AutogenRundown.DataBlocks.Enemies
+﻿using AutogenRundown.DataBlocks.Alarms;
+
+namespace AutogenRundown.DataBlocks.Enemies
 {
     internal class GenericWave
     {
+        /// <summary>
+        /// Exit trickle alarm for running to extraction at the end of the level.
+        /// </summary>
+        public static GenericWave ExitTrickle = new GenericWave
+            {
+                WaveSettings = (uint)VanillaWaveSettings.ExitTrickle_38S_Original,
+                WavePopulation = (uint)Alarms.WavePopulation.Baseline,
+                SpawnDelay = 4.0,
+                TriggerAlarm = true,
+            };
+
         public uint WaveSettings { get; set; } = 0;
 
         public uint WavePopulation { get; set; } = 0;
