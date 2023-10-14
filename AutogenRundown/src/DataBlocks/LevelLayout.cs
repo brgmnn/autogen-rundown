@@ -424,6 +424,40 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                case WardenObjectiveType.SpecialTerminalCommand:
+                    {
+                        for (int i = 0; i < director.ZoneCount; i++)
+                        {
+                            // We roughly want to chain zones together. 80% chance we build off the
+                            // previous zone, 20% chance we build off the zone before that.
+                            var buildFrom = Math.Max(0, i - (Generator.Flip(0.8) ? 1 : 2));
+                            var zone = new Zone
+                            {
+                                LocalIndex = i,
+                                Coverage = CoverageMinMax.GenNormalSize(),
+                                LightSettings = Lights.GenRandomLight(),
+                                BuildFromLocalIndex = buildFrom
+                            };
+
+                            zone.GenEnemies(director);
+
+                            layout.Zones.Add(zone);
+
+                            if (i == 0)
+                                continue;
+
+                            // Grab a random puzzle from the puzzle pack
+                            var puzzle = Generator.Draw(puzzlePack);
+
+                            zone.ChainedPuzzleToEnter = puzzle.PersistentId;
+
+                            if (puzzle.PersistentId != 0)
+                                Bins.ChainedPuzzles.AddBlock(puzzle);
+                        }
+
+                        break;
+                    }
+
                 case WardenObjectiveType.HsuFindSample:
                 case WardenObjectiveType.GatherSmallItems:
                 default:

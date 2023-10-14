@@ -386,6 +386,19 @@ namespace AutogenRundown.DataBlocks
                         objective.ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
                         objective.ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
 
+                        var count = layout.Zones.Count;
+                        var zoneIndex = Generator.Random.Next((count - 1) / 2, count - 1);
+
+                        dataLayer.ObjectiveData.ZonePlacementDatas.Add(
+                            new List<ZonePlacementData>()
+                            {
+                                new ZonePlacementData
+                                {
+                                    LocalIndex = zoneIndex,
+                                    Weights = ZonePlacementWeights.NotAtStart
+                                }
+                            });
+
                         break;
                     }
             }
