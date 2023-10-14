@@ -161,6 +161,24 @@ namespace AutogenRundown.DataBlocks
             };
 
         /// <summary>
+        /// Calculates what multiplier should be used to give an exit scan time of "seconds"
+        /// seconds. It seems the default exit time is 20 seconds.
+        /// </summary>
+        /// <param name="seconds">How many seconds the exit scan should take</param>
+        /// <returns>The ChainedPuzzleAtExitScanSpeedMultiplier value to set</returns>
+        public static double CalculateExitScanSpeedMultiplier(double seconds) => 20.0 / seconds;
+
+        /// <summary>
+        /// Randomly picks an exit time speed between min and max seconds inclusive. Returns a
+        /// double that should be used to set ChainedPuzzleAtExitScanSpeedMultiplier
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static double GenExitScanTime(int min, int max)
+            => CalculateExitScanSpeedMultiplier(Generator.Random.Next(min, max + 1));
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="director"></param>
@@ -179,6 +197,18 @@ namespace AutogenRundown.DataBlocks
             objective.GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
             objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
             objective.GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition";
+
+            // Set the exit scan speed multiplier. Generally we want easier levels to be faster.
+            // For some objectives this will be overridden.
+            objective.ChainedPuzzleAtExitScanSpeedMultiplier = director.Tier switch
+            {
+                "A" => GenExitScanTime(20, 30),
+                "B" => GenExitScanTime(30, 45),
+                "C" => GenExitScanTime(45, 80),
+                "D" => GenExitScanTime(90, 120),
+                "E" => GenExitScanTime(120, 150),
+                _ => 1.0,
+            };
 
             switch (director.Objective)
             {
@@ -335,8 +365,6 @@ namespace AutogenRundown.DataBlocks
                         objective.GoToWinCondition_Elevator = "";
                         objective.GoToWinCondition_CustomGeo = $"Go to the forward exit point in {exitZoneString}";
 
-                        objective.ChainedPuzzleAtExitScanSpeedMultiplier = 0.18;
-
                         level.Description = GenLevelDescription(director.Objective);
 
                         // Ensure there's a nice spicy hoard at the end
@@ -381,7 +409,6 @@ namespace AutogenRundown.DataBlocks
                         // Add scans
                         objective.ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
                         objective.ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
-                        objective.ChainedPuzzleAtExitScanSpeedMultiplier = 0.15 + (Generator.Random.NextDouble() * 0.1);
 
                         // Add exit wave if this is the main bulkhead
                         if (director.Bulkhead.HasFlag(Bulkhead.Main))
@@ -498,7 +525,16 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Expedition exit
+        /// <summary>
+        /// What exit scan to use at the exit
+        /// </summary>
         public uint ChainedPuzzleAtExit { get; set; } = ChainedPuzzle.ExitAlarm.PersistentId;
+
+        /// <summary>
+        /// Multiplier to use for the exit scan speed. This is calculated from the exit scan time
+        /// which by default is 20 seconds
+        /// </summary>
+        public double ChainedPuzzleAtExitScanSpeedMultiplier { get; set; } = 1.0;
         #endregion
 
         #region Fields not yet implemented
@@ -517,7 +553,6 @@ namespace AutogenRundown.DataBlocks
         public int EventsOnGotoWinTrigger = 0;
         public int FogTransitionDataOnGotoWin = 0;
         public double FogTransitionDurationOnGotoWin = 0.0;
-        public double ChainedPuzzleAtExitScanSpeedMultiplier = 2.0;
         public JArray Retrieve_Items = new JArray();
         public bool LightsOnFromBeginning = false;
         public bool LightsOnDuringIntro = false;
