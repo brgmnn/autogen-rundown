@@ -10,7 +10,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// <summary>
         /// The Alarm name. For example, Class S Surge Alarm
         /// </summary>
-        public string PublicAlarmName { get; set; } = "";
+        public string PublicAlarmName { get; set; } = "Alarm";
 
         /// <summary>
         /// Whether to trigger alarm when the puzzle starts. Typically set to false for scans
@@ -461,6 +461,47 @@ namespace AutogenRundown.DataBlocks.Alarms
             Puzzle = new List<PuzzleComponent>() { new PuzzleComponent { PuzzleType = PuzzleType.ExpeditionExit } }
         };
 
+        #region Bulkhead DC scans
+        public static ChainedPuzzle BulkheadSelect_Main = new ChainedPuzzle
+        {
+            PersistentId = 59,
+            TriggerAlarmOnActivate = false,
+            WantedDistanceFromStartPos = 0.0,
+            WantedDistanceBetweenPuzzleComponents = 0.0,
+            OnlyShowHUDWhenPlayerIsClose = false,
+            Puzzle = new List<PuzzleComponent>()
+            {
+                PuzzleComponent.BulkheadMain
+            }
+        };
+
+        public static ChainedPuzzle BulkheadSelect_Secondary = new ChainedPuzzle
+        {
+            PersistentId = 60,
+            TriggerAlarmOnActivate = false,
+            WantedDistanceFromStartPos = 0.0,
+            WantedDistanceBetweenPuzzleComponents = 0.0,
+            OnlyShowHUDWhenPlayerIsClose = false,
+            Puzzle = new List<PuzzleComponent>()
+            {
+                PuzzleComponent.BulkheadSecondary
+            }
+        };
+
+        public static ChainedPuzzle BulkheadSelect_Overload = new ChainedPuzzle
+        {
+            PersistentId = 61,
+            TriggerAlarmOnActivate = false,
+            WantedDistanceFromStartPos = 0.0,
+            WantedDistanceBetweenPuzzleComponents = 0.0,
+            OnlyShowHUDWhenPlayerIsClose = false,
+            Puzzle = new List<PuzzleComponent>()
+            {
+                PuzzleComponent.BulkheadOverload
+            }
+        };
+        #endregion
+
         public static new void SaveStatic()
         {
             Bins.ChainedPuzzles.AddBlock(TeamScan);
@@ -476,6 +517,9 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.ChainedPuzzles.AddBlock(AlarmClass1_Sustained);
             Bins.ChainedPuzzles.AddBlock(AlarmError_Baseline);
             Bins.ChainedPuzzles.AddBlock(ExitAlarm);
+            Bins.ChainedPuzzles.AddBlock(BulkheadSelect_Main);
+            Bins.ChainedPuzzles.AddBlock(BulkheadSelect_Secondary);
+            Bins.ChainedPuzzles.AddBlock(BulkheadSelect_Overload);
         }
     }
 }

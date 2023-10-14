@@ -43,6 +43,10 @@
     {
         public PuzzleType PuzzleType { get; set; } = 0;
 
+        public static PuzzleComponent BulkheadMain = new PuzzleComponent { PuzzleType = PuzzleType.BulkheadMain };
+        public static PuzzleComponent BulkheadSecondary = new PuzzleComponent { PuzzleType = PuzzleType.BulkheadSecondary };
+        public static PuzzleComponent BulkheadOverload = new PuzzleComponent { PuzzleType = PuzzleType.BulkheadOverload };
+
         public static PuzzleComponent ScanSmall = new PuzzleComponent { PuzzleType = PuzzleType.Small };
         public static PuzzleComponent ScanLarge = new PuzzleComponent { PuzzleType = PuzzleType.Large };
 
