@@ -1,23 +1,59 @@
 ﻿namespace AutogenRundown.DataBlocks.Alarms
 {
     /// <summary>
-    /// Scan types
+    /// Scan types. Scan sizes go from:
+    ///
+    /// Small -> Big -> Large
     /// </summary>
     enum PuzzleType : UInt32
     {
-        // Single red circles
+        // Single red circles (blue when non-alarm)
+        #region Individual scans
+        /// <summary>
+        /// Single large circle: red when alarmed, blue (stealth) otherwise.
+        /// </summary>
         Large = 2,
-        Small = 3, // Single small red circle
 
-        // Cluster: Multiple red circles
-        ClusterSmall = 4, // 4 small red circles
-        ClusterLarge = 5, // Multiple big red circles
-        ClusterSix = 9,
+        /// <summary>
+        /// Single small circle: red when alarmed, blue (stealth) otherwise.
+        /// Usually not used much.
+        /// </summary>
+        Small = 3,
+        #endregion
 
+        #region Cluster: Multiple individual circles
+        /// <summary>
+        /// 8 small clusters, blue when non-alarm orange otherwise.
+        /// </summary>
+        Cluster = 9,
+
+        /// <summary>
+        /// 4 small circles, work like PuzzleType.Small
+        /// </summary>
+        ClusterSmall = 4,
+
+        /// <summary>
+        /// 2 large PuzzleType.Large circles
+        /// </summary>
+        ClusterLarge = 5,
+        #endregion
+
+        #region Full team scans (orange)
         // Require All teammates (orange)
         AllBig = 6,
+        AllBig_GreenActive = 29, // Same as 27, 28
+
+        /// <summary>
+        /// Large orange team scan, blue when scanning with no alarm.
+        /// </summary>
         AllLarge = 8,
-        AllLargeCluster = 15,
+        AllBig_BlueActive = 25, // Like AllBig, but blue when scanning. Name: SecurityScan_Big_RequireAll_R6A1_Narrative
+
+        AllLarge_Slow = 20, // Name: SecurityScan_D10_RequireAll
+        #endregion
+
+        // Stealth scans
+        StealthBig_Cluster = 15,
 
         // S-Class scans
         SustainedSmall = 14,
@@ -52,11 +88,14 @@
 
         public static PuzzleComponent ClusterSmall = new PuzzleComponent { PuzzleType = PuzzleType.ClusterSmall };
         public static PuzzleComponent ClusterLarge = new PuzzleComponent { PuzzleType = PuzzleType.ClusterLarge };
-        public static PuzzleComponent ClusterSix = new PuzzleComponent { PuzzleType = PuzzleType.ClusterSix };
+        public static PuzzleComponent Cluster = new PuzzleComponent { PuzzleType = PuzzleType.Cluster };
 
         public static PuzzleComponent AllBig = new PuzzleComponent { PuzzleType = PuzzleType.AllBig };
+        public static PuzzleComponent AllBig_GreenActive = new PuzzleComponent { PuzzleType = PuzzleType.AllBig_GreenActive };
         public static PuzzleComponent AllLarge = new PuzzleComponent { PuzzleType = PuzzleType.AllLarge };
-        public static PuzzleComponent AllLargeCluster = new PuzzleComponent { PuzzleType = PuzzleType.AllLargeCluster };
+        public static PuzzleComponent AllLarge_Slow = new PuzzleComponent { PuzzleType = PuzzleType.AllLarge_Slow };
+
+        public static PuzzleComponent StealthBig_Cluster = new PuzzleComponent { PuzzleType = PuzzleType.StealthBig_Cluster };
 
         public static PuzzleComponent Sustained = new PuzzleComponent { PuzzleType = PuzzleType.Sustained };
         public static PuzzleComponent SustainedSmall = new PuzzleComponent { PuzzleType = PuzzleType.SustainedSmall };

@@ -2,7 +2,7 @@
 
 namespace AutogenRundown.DataBlocks.Alarms
 {
-    internal enum VanillaWaveSettings : UInt32
+    internal enum VanillaWaveSettings : uint
     {
         None = 0,
 
@@ -15,6 +15,9 @@ namespace AutogenRundown.DataBlocks.Alarms
 
         // Surge alarms
         Surge = 21,
+
+        // Diminished
+        ApexDiminished_ssp = 57,
 
         // Scout Waves
         Scout_sspm = 3,
@@ -101,7 +104,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// List of enemy types in filter.
         /// </summary>
         [JsonProperty("m_populationFilter")]
-        public List<uint> PopulationFilter { get; set; } = new List<uint>();
+        public List<Enemies.EnemyType> PopulationFilter { get; set; } = new List<Enemies.EnemyType>();
 
         /// <summary>
         /// Whether to spawn only, or spawn all but the types included in population filter.

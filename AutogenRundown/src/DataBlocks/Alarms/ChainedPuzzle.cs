@@ -78,6 +78,15 @@ namespace AutogenRundown.DataBlocks.Alarms
         public UInt32 AlarmSoundStop = 42633153u;
         #endregion
 
+        /// <summary>
+        /// Resaves the datablock with a new persistent Id. Very useful for modifying the alarm
+        /// </summary>
+        public void Persist()
+        {
+            PersistentId = Generator.GetPersistentId();
+            Bins.ChainedPuzzles.AddBlock(this);
+        }
+
         #region Pack builders
         /// <summary>
         /// Chained puzzle pack builders. Generates a pack of alarms that can be Pick()ed from
@@ -110,40 +119,20 @@ namespace AutogenRundown.DataBlocks.Alarms
                 },
                 "B" => new List<ChainedPuzzle>
                 {
-                    None,
-                    None,
-                    TeamScan,
-                    TeamScan,
-                    TeamScan,
-                    AlarmClass3,
-                    AlarmClass3,
-                    AlarmClass3,
-                    AlarmClass3,
-                    AlarmClass3,
-                    AlarmClass4,
-                    AlarmClass4,
-                    AlarmClass4,
-                    AlarmClass4,
-                    AlarmClass5,
+                    None, None,
+                    TeamScan, TeamScan, TeamScan,
+                    AlarmClass3, AlarmClass3, AlarmClass3, AlarmClass3, AlarmClass3,
+                    AlarmClass4, AlarmClass4, AlarmClass4, AlarmClass4, AlarmClass5,
                 },
                 "C" => new List<ChainedPuzzle>
                 {
-                    TeamScan,
-                    TeamScan,
-                    TeamScan,
-                    AlarmClass3,
-                    AlarmClass3,
-                    AlarmClass3,
-                    AlarmClass3,
-                    AlarmClass3,
-                    AlarmClass4,
-                    AlarmClass4,
-                    AlarmClass4,
-                    AlarmClass4,
-                    AlarmClass4,
-                    AlarmClass5,
-                    AlarmClass5,
-                    AlarmClass5,
+                    None, 
+                    TeamScan, TeamScan,
+                    AlarmClass3, AlarmClass3, AlarmClass3,
+                    AlarmClass4, AlarmClass4, AlarmClass4, AlarmClass4, AlarmClass4,
+                    AlarmClass5, AlarmClass5, AlarmClass5,
+
+                    AlarmClass1_Sustained,
                 },
                 "D" => new List<ChainedPuzzle>
                 {
@@ -277,6 +266,32 @@ namespace AutogenRundown.DataBlocks.Alarms
             Puzzle = new List<PuzzleComponent> { PuzzleComponent.AllBig },
         };
 
+        /// <summary>
+        /// Team scan utilizing the AllLarge_Slow scan type. This scan takes a _long_ time to
+        /// complete, about 2 minutes to fully complete.
+        /// </summary>
+        public static ChainedPuzzle TeamScan_Slow = new ChainedPuzzle
+        {
+            PublicAlarmName = "Scan_Blue",
+            TriggerAlarmOnActivate = false,
+            Puzzle = new List<PuzzleComponent> { PuzzleComponent.AllLarge_Slow },
+        };
+
+        #region Stealth scans
+        public static ChainedPuzzle StealthScan2 = new ChainedPuzzle
+        {
+            PublicAlarmName = "Stealth Scan",
+            TriggerAlarmOnActivate = false,
+            WantedDistanceFromStartPos = 0.0,
+            WantedDistanceBetweenPuzzleComponents = 30.0,
+            Puzzle = new List<PuzzleComponent>
+            {
+                PuzzleComponent.ScanLarge,
+                PuzzleComponent.ClusterSmall
+            },
+        };
+        #endregion
+
         /******************** Alarm Scans ********************/
         #region Alarms: Apex
         public static ChainedPuzzle AlarmClass2 = new ChainedPuzzle
@@ -286,7 +301,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWavePopulation = WavePopulation.Baseline,
             Puzzle = new List<PuzzleComponent>
             {
-                PuzzleComponent.AllLarge,
+                PuzzleComponent.AllBig,
                 PuzzleComponent.ClusterSmall
             },
         };
@@ -298,7 +313,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWavePopulation = WavePopulation.Baseline,
             Puzzle = new List<PuzzleComponent>
             {
-                PuzzleComponent.AllLarge,
+                PuzzleComponent.AllBig,
                 PuzzleComponent.ClusterSmall,
                 PuzzleComponent.ClusterSmall
             },
@@ -311,7 +326,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWavePopulation = WavePopulation.Baseline,
             Puzzle = new List<PuzzleComponent>
             {
-                PuzzleComponent.AllLarge,
+                PuzzleComponent.AllBig,
                 PuzzleComponent.ClusterSmall,
                 PuzzleComponent.ClusterSmall,
                 PuzzleComponent.ScanLarge
@@ -325,7 +340,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWavePopulation = WavePopulation.Baseline,
             Puzzle = new List<PuzzleComponent>
             {
-                PuzzleComponent.AllLarge,
+                PuzzleComponent.AllBig,
                 PuzzleComponent.ClusterSmall,
                 PuzzleComponent.ClusterLarge,
                 PuzzleComponent.ClusterSmall,
@@ -341,7 +356,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             WantedDistanceBetweenPuzzleComponents = 15.0,
             Puzzle = new List<PuzzleComponent>
             {
-                PuzzleComponent.AllLarge,
+                PuzzleComponent.AllBig,
                 PuzzleComponent.ClusterSmall,
                 PuzzleComponent.ClusterSmall,
                 PuzzleComponent.ClusterLarge,
@@ -358,7 +373,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             WantedDistanceBetweenPuzzleComponents = 15.0,
             Puzzle = new List<PuzzleComponent>
             {
-                PuzzleComponent.AllLarge,
+                PuzzleComponent.AllBig,
                 PuzzleComponent.ClusterSmall,
                 PuzzleComponent.ClusterSmall,
                 PuzzleComponent.ClusterLarge,
@@ -376,7 +391,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             WantedDistanceBetweenPuzzleComponents = 15.0,
             Puzzle = new List<PuzzleComponent>
             {
-                PuzzleComponent.AllLarge,
+                PuzzleComponent.AllBig,
                 PuzzleComponent.ClusterSmall,
                 PuzzleComponent.ClusterSmall,
                 PuzzleComponent.ClusterLarge,
@@ -385,6 +400,68 @@ namespace AutogenRundown.DataBlocks.Alarms
                 PuzzleComponent.ScanLarge
             },
         };
+        #endregion
+
+        #region Alarms: Cluster
+        public static ChainedPuzzle AlarmClass2_Cluster = new ChainedPuzzle
+        {
+            PublicAlarmName = "Class II Cluster",
+            SurvivalWaveSettings = VanillaWaveSettings.Apex,
+            SurvivalWavePopulation = WavePopulation.Baseline,
+            WantedDistanceBetweenPuzzleComponents = 5.0,
+            Puzzle = new List<PuzzleComponent>
+            {
+                PuzzleComponent.AllBig,
+                PuzzleComponent.Cluster
+            },
+        };
+
+        public static ChainedPuzzle AlarmClass3_Cluster = new ChainedPuzzle
+        {
+            PublicAlarmName = "Class III Cluster",
+            SurvivalWaveSettings = VanillaWaveSettings.Apex,
+            SurvivalWavePopulation = WavePopulation.Baseline,
+            WantedDistanceBetweenPuzzleComponents = 5.0,
+            Puzzle = new List<PuzzleComponent>
+            {
+                PuzzleComponent.AllBig,
+                PuzzleComponent.Cluster,
+                PuzzleComponent.Cluster
+            },
+        };
+
+        public static ChainedPuzzle AlarmClass4_Cluster = new ChainedPuzzle
+        {
+            PublicAlarmName = "Class IV Cluster",
+            SurvivalWaveSettings = VanillaWaveSettings.Apex,
+            SurvivalWavePopulation = WavePopulation.Baseline,
+            WantedDistanceBetweenPuzzleComponents = 5.0,
+            Puzzle = new List<PuzzleComponent>
+            {
+                PuzzleComponent.AllBig,
+                PuzzleComponent.Cluster,
+                PuzzleComponent.Cluster,
+                PuzzleComponent.Cluster,
+            },
+        };
+
+        public static ChainedPuzzle AlarmClass5_Cluster = new ChainedPuzzle
+        {
+            PublicAlarmName = "Class V Cluster",
+            SurvivalWaveSettings = VanillaWaveSettings.Apex,
+            SurvivalWavePopulation = WavePopulation.Baseline,
+            WantedDistanceBetweenPuzzleComponents = 5.0,
+            Puzzle = new List<PuzzleComponent>
+            {
+                PuzzleComponent.AllBig,
+                PuzzleComponent.Cluster,
+                PuzzleComponent.Cluster,
+                PuzzleComponent.Cluster,
+            },
+        };
+        #endregion
+
+        #region Alarms: Mixed
         #endregion
 
         #region Alarms: Surge
