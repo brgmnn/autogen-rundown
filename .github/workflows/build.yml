@@ -128,6 +128,9 @@ jobs:
           mv deps/dakkhuza-MTFO build/AutogenRundown_GTFO/BepInEx/plugins/
           mv deps/Inas07-LocalProgression build/AutogenRundown_GTFO/BepInEx/plugins/
 
+          # Custom config
+          cp manual-install/BepInEx.cfg build/AutogenRundown_GTFO/BepInEx/config/
+
           # AutogenRundown
           mv autogen build/AutogenRundown_GTFO/BepInEx/plugins/the_tavern-AutogenRundown
 
