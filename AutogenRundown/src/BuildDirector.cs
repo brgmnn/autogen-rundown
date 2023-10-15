@@ -111,8 +111,8 @@ namespace AutogenRundown
                 ("E", Bulkhead.Main) => Generator.Random.Next(6, 11), // TODO: playtest
 
                 ("A", _) => Generator.Random.Next(2, 5),
-                ("B", _) => Generator.Random.Next(2, 7),
-                ("C", _) => Generator.Random.Next(2, 8),
+                ("B", _) => Generator.Random.Next(2, 6),
+                ("C", _) => Generator.Random.Next(2, 7),
                 ("D", _) => Generator.Random.Next(3, 10),
                 ("E", _) => Generator.Random.Next(3, 12), // TODO: this is also too much
 
