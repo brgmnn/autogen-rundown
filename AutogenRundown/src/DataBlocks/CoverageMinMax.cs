@@ -115,5 +115,15 @@ namespace AutogenRundown.DataBlocks
             return new CoverageMinMax { Min = size, Max = size };
         }
         #endregion
+
+        public static CoverageMinMax GenStartZoneSize()
+        {
+            var size = Generator.Pick(new List<double> { 25.0, 30.0, 35.0, 50.0 });
+
+            return new CoverageMinMax { Min = size, Max = size + 20.0 };
+        }
+
+        public static CoverageMinMax GenSize(int zoneIndex)
+            => zoneIndex == 0 ? GenStartZoneSize() : GenNormalSize();
     }
 }

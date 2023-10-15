@@ -4,7 +4,7 @@
     /// Which objective bulkhead are we in.
     /// </summary>
     [Flags]
-    enum Bulkhead
+    public enum Bulkhead
     {
         None = 0,
 

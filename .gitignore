@@ -3,5 +3,8 @@
 /build
 /deps
 
+**/bin
+**/obj
+
 /*.zip
 .DS_Store

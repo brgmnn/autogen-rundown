@@ -2,7 +2,7 @@
 {
     internal class BulkheadDoorPlacementData
     {
-        public int LocalZoneIndex { get; set; } = 0;
+        public int ZoneIndex { get; set; } = 0;
 
         public ZonePlacementWeights PlacementWeights { get; set; } = new ZonePlacementWeights();
 

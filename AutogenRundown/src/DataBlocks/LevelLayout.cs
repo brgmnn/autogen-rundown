@@ -2,6 +2,7 @@
 using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
+using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -297,6 +298,9 @@ namespace AutogenRundown.DataBlocks
             var objectiveLayerData = level.GetObjectiveLayerData(director.Bulkhead);
             var puzzlePack = ChainedPuzzle.BuildPack(level.Tier);
 
+            if (director.Bulkhead.HasFlag(Bulkhead.Main))
+                level.Planner.Connect(new ZoneNode(Bulkhead.Main, 0));
+
             switch (director.Objective)
             {
                 case WardenObjectiveType.ReactorShutdown:
@@ -304,13 +308,17 @@ namespace AutogenRundown.DataBlocks
                         // Create the initial zones
                         for (int i = 0; i < director.ZoneCount; i++)
                         {
+                            var buildFrom = i == 0 ? 0 : i - 1;
                             var zone = new Zone
                             {
                                 LocalIndex = i,
-                                BuildFromLocalIndex = i == 0 ? 0 : i - 1,
-                                Coverage = CoverageMinMax.GenNormalSize(),
+                                BuildFromLocalIndex = buildFrom,
+                                Coverage = CoverageMinMax.GenSize(i),
                                 LightSettings = Lights.GenRandomLight(),
                             };
+                            level.Planner.Connect(
+                                new ZoneNode(director.Bulkhead, buildFrom),
+                                new ZoneNode(director.Bulkhead, i));
 
                             zone.GenEnemies(director);
 
@@ -393,16 +401,20 @@ namespace AutogenRundown.DataBlocks
                         {
                             var subcomplex = GenSubComplex(level.Complex);
 
+                            var buildFrom = i == 0 ? 0 : i - 1;
                             var zone = new Zone
                             {
                                 LocalIndex = i,
-                                Coverage = CoverageMinMax.GenNormalSize(),
+                                Coverage = CoverageMinMax.GenSize(i),
                                 LightSettings = Lights.GenRandomLight(),
 
                                 // Chain zones together
-                                BuildFromLocalIndex = i == 0 ? 0 : i - 1,
+                                BuildFromLocalIndex = buildFrom,
                                 ZoneExpansion = ZoneExpansion.Forward
                             };
+                            level.Planner.Connect(
+                                new ZoneNode(director.Bulkhead, buildFrom),
+                                new ZoneNode(director.Bulkhead, i));
 
                             zone.GenEnemies(director);
 
@@ -437,14 +449,18 @@ namespace AutogenRundown.DataBlocks
                         {
                             // We roughly want to chain zones together. 80% chance we build off the
                             // previous zone, 20% chance we build off the zone before that.
-                            var buildFrom = Math.Max(0, i - (Generator.Flip(0.8) ? 1 : 2));
+                            //var buildFrom = Math.Max(0, i - (Generator.Flip(0.8) ? 1 : 2));
+                            var buildFrom = i == 0 ? 0 : i - 1;
                             var zone = new Zone
                             {
                                 LocalIndex = i,
-                                Coverage = CoverageMinMax.GenNormalSize(),
+                                Coverage = CoverageMinMax.GenSize(i),
                                 LightSettings = Lights.GenRandomLight(),
                                 BuildFromLocalIndex = buildFrom
                             };
+                            level.Planner.Connect(
+                                new ZoneNode(director.Bulkhead, buildFrom),
+                                new ZoneNode(director.Bulkhead, i));
 
                             zone.GenEnemies(director);
 
@@ -473,14 +489,20 @@ namespace AutogenRundown.DataBlocks
                         {
                             // We roughly want to chain zones together. 80% chance we build off the
                             // previous zone, 20% chance we build off the zone before that.
-                            var buildFrom = Math.Max(0, i - (Generator.Flip(0.8) ? 1 : 2));
+                            //var buildFrom = Math.Max(0, i - (Generator.Flip(0.8) ? 1 : 2));
+                            var buildFrom = i == 0 ? 0 : i - 1;
+
                             var zone = new Zone
                             {
                                 LocalIndex = i,
-                                Coverage = CoverageMinMax.GenNormalSize(),
+                                Coverage = CoverageMinMax.GenSize(i),
                                 LightSettings = Lights.GenRandomLight(),
                                 BuildFromLocalIndex = buildFrom
                             };
+
+                            level.Planner.Connect(
+                                new ZoneNode(director.Bulkhead, buildFrom),
+                                new ZoneNode(director.Bulkhead, i));
 
                             zone.GenEnemies(director);
 
