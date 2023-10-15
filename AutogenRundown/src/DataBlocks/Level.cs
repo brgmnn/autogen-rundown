@@ -72,13 +72,13 @@ namespace AutogenRundown.DataBlocks
             });
 
         [JsonIgnore]
-        public BuildDirector MainDirector { get; set; }
+        public BuildDirector? MainDirector { get; set; }
 
         [JsonIgnore]
-        public BuildDirector SecondaryDirector { get; set; }
+        public BuildDirector? SecondaryDirector { get; set; }
 
         [JsonIgnore]
-        public BuildDirector OverloadDirector { get; set; }
+        public BuildDirector? OverloadDirector { get; set; }
 
         [JsonIgnore]
         public LayoutPlanner Planner { get; set; } = new LayoutPlanner();
@@ -488,14 +488,6 @@ namespace AutogenRundown.DataBlocks
                 };
                 level.Planner.Connect(entranceZone, new ZoneNode(Bulkhead.Overload, 0));
 
-                var found = level.MainLayerData.BulkheadDoorControllerPlacements
-                        .Where(placement => placement.ZoneIndex == entranceZone.ZoneNumber);
-
-                if (found.Count() > 0)
-                {
-                    Plugin.Logger.LogInfo($"Level={level.Tier}{level.Index} - Found: {found.ElementAt(0)}");
-                }
-
                 if (level.MainLayerData.BulkheadDoorControllerPlacements
                         .Where(placement => placement.ZoneIndex == entranceZone.ZoneNumber)
                         .Count() == 0)
@@ -546,11 +538,16 @@ namespace AutogenRundown.DataBlocks
             #region Adjust coverage sizes
             var entrances = level.Planner.GetBulkheadEntranceZones();
 
-            Plugin.Logger.LogInfo($"Level={level.Tier}{level.Index} - How many entrances?, {entrances.Count}");
-
             foreach (var node in entrances)
             {
                 var zone = level.GetLevelLayout(node.Bulkhead)?.Zones[node.ZoneNumber];
+
+                if (zone == null)
+                {
+                    Plugin.Logger.LogWarning($"Level={level.Tier}{level.Index} - Cannot resize " +
+                        $"bulkhead entrance zone. Zone_{node.ZoneNumber} could not be found.");
+                    continue;
+                }
 
                 // TODO: rebalance enemies
                 // TODO: skip this if it's a custom geomorph

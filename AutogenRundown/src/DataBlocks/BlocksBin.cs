@@ -52,8 +52,11 @@ namespace AutogenRundown.DataBlocks
         /// 
         /// </summary>
         /// <param name="block"></param>
-        public void AddBlock(T block)
+        public void AddBlock(T? block)
         {
+            if (block is null)
+                return;
+
             // Only add blocks that haven't been seen and aren't persistentId = 0 which signifies
             // an empty block.
             if (!persistentIds.Contains(block.PersistentId) && block.PersistentId != 0)

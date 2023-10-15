@@ -1,4 +1,6 @@
-﻿namespace AutogenRundown.DataBlocks
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace AutogenRundown.DataBlocks
 {
     internal class ZonePlacementWeights
     {
@@ -18,7 +20,7 @@
                 NotAtStart,
                 NotAtMiddle,
                 NotAtEnd
-            });
+            })!;
 
         public static ZonePlacementWeights None
             = new ZonePlacementWeights { Start = 0.0, Middle = 0.0, End = 0.0 };

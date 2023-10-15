@@ -31,15 +31,21 @@ namespace AutogenRundown.DataBlocks
         /// Places objective items in the level as needed
         /// </summary>
         /// <param name="level"></param>
-        /// <param name="variant"></param>
+        /// <param name="bulkhead"></param>
         /// <param name="strategy"></param>
         public void DistributeObjectiveItems(
             Level level,
-            Bulkhead variant,
+            Bulkhead bulkhead,
             DistributionStrategy strategy)
         {
-            var data = level.GetObjectiveLayerData(variant);
-            var layout = level.GetLevelLayout(variant);
+            var data = level.GetObjectiveLayerData(bulkhead);
+            var layout = level.GetLevelLayout(bulkhead);
+
+            if (layout == null)
+            {
+                Plugin.Logger.LogError($"Missing level layout: {level.Tier}{level.Index}, Bulkhead={bulkhead}");
+                return;
+            }
 
             switch (strategy)
             {
@@ -186,13 +192,28 @@ namespace AutogenRundown.DataBlocks
         /// <returns></returns>
         public static WardenObjective Build(BuildDirector director, Level level)
         {
+            var dataLayer = level.GetObjectiveLayerData(director.Bulkhead);
+
+            if (dataLayer is null)
+            {
+                Plugin.Logger.LogError($"WardenObjective.Build(): Missing level data layer: " +
+                    $"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead}");
+                throw new Exception("Missing level data layer");
+            }
+
+            var layout = level.GetLevelLayout(director.Bulkhead);
+
+            if (layout is null)
+            {
+                Plugin.Logger.LogError($"WardenObjective.Build(): Missing level layout: " +
+                    $"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead}");
+                throw new Exception("Missing level layout");
+            }
+
             var objective = new WardenObjective
             {
                 Type = director.Objective,
             };
-
-            ObjectiveLayerData dataLayer = level.GetObjectiveLayerData(director.Bulkhead);
-            LevelLayout layout = level.GetLevelLayout(director.Bulkhead);
 
             objective.GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
             objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
@@ -276,8 +297,8 @@ namespace AutogenRundown.DataBlocks
                         objective.ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
 
                         var midScan = Generator.Pick(ChainedPuzzle.BuildReactorShutdownPack(director.Tier));
+                        objective.ChainedPuzzleMidObjective = midScan?.PersistentId ?? ChainedPuzzle.AlarmClass5.PersistentId;
                         Bins.ChainedPuzzles.AddBlock(midScan);
-                        objective.ChainedPuzzleMidObjective = midScan.PersistentId;
 
                         // Seems we set these as empty?
                         // TODO: can we remove these?

@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿using System.Diagnostics.CodeAnalysis;
+using BepInEx;
 
 namespace AutogenRundown
 {
@@ -59,7 +60,7 @@ namespace AutogenRundown
         /// <param name="collection"></param>
         /// <returns>Returns null if no element can be picked (empty collection)</returns>
         public static T? Pick<T>(IEnumerable<T> collection)
-            => collection.Count() > 0 ? collection.ElementAt(Random.Next(collection.Count())) : default(T);
+            => collection.Count() > 0 ? collection.ElementAt(Random.Next(collection.Count())) : default;
 
         /// <summary>
         /// Pick()'s an item from a collection and then removes it so it may not be subsequently drawn
@@ -67,10 +68,13 @@ namespace AutogenRundown
         /// <typeparam name="T"></typeparam>
         /// <param name="collection"></param>
         /// <returns></returns>
-        public static T Draw<T>(ICollection<T> collection)
+        public static T? Draw<T>(ICollection<T> collection)
         {
-            var item = Pick<T>(collection);
-            collection.Remove(item);
+            var item = Pick(collection);
+
+            if (item is not null)
+                collection.Remove(item);
+
             return item;
         }
 
