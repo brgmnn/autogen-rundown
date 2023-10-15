@@ -24,6 +24,8 @@ Download the latest version of the mods manual install zip from the [releases pa
 
 If done correctly, after the game launches you should see a watermark in the bottom right corner of the game identifying the mod version and current seed.
 
+![GTFO Watermark](docs/watermark.jpg)
+
 #### Uninstalling the mod
 
 To uninstall the mod, open `<Steam Location>\steamapps\common` and delete the GTFO game folder `GTFO`. Then rename your backup GTFO game folder (eg. `GTFO_backup`) to `GTFO`.
