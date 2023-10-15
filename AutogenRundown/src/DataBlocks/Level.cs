@@ -359,11 +359,7 @@ namespace AutogenRundown.DataBlocks
                 level.MainLayerData.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
             }
 
-            //var mainBulkheadZone = mainLevelLayout.ClampToZones(
-            //    Generator.Random.Next(1, mainLevelLayout.Zones.Count / 2));
-
             var openZones = level.Planner.GetOpenZones(Bulkhead.Main);
-
             var min = selectedBulkheads switch
             {
                 Bulkhead.Main => 1,
@@ -378,9 +374,6 @@ namespace AutogenRundown.DataBlocks
             {
                 index++;
             }
-
-            // a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-            // a.TakeLast(10 - 4) => [4, 5, 6, 7, 8, 9]
 
             var mainBulkheadZone = Generator.Pick(openZones.TakeLast(openZones.Count - index));
 

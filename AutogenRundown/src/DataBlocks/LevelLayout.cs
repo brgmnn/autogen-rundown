@@ -43,8 +43,9 @@ namespace AutogenRundown.DataBlocks
                 _ => (-1, 0.2)
             };
 
+            // Do not add blood doors to Zone 0, these are always either the elevator or bulkhead doors.
             foreach (var zone in Zones)
-                if (Generator.Flip(chance) && (count++ < max || max == -1))
+                if (zone.LocalIndex > 0 && Generator.Flip(chance) && (count++ < max || max == -1))
                     zone.BloodDoor = BloodDoor.Easy;
         }
 
