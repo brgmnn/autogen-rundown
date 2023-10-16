@@ -16,6 +16,12 @@ namespace AutogenRundown.DataBlocks.Zones
     {
         private Dictionary<ZoneNode, List<ZoneNode>> graph = new Dictionary<ZoneNode, List<ZoneNode>>();
 
+        /// <summary>
+        /// Connects two zones unidirectionally. If the second zone is not specified then the
+        /// first zone is just added as an open zone.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
         public void Connect(ZoneNode from, ZoneNode? to = null)
         {
             if (graph.ContainsKey(from))
@@ -29,6 +35,11 @@ namespace AutogenRundown.DataBlocks.Zones
             if (to != null && !graph.ContainsKey((ZoneNode)to))
                 graph.Add((ZoneNode)to, new List<ZoneNode>());
         }
+
+        public List<ZoneNode> GetZones(Bulkhead bulkhead)
+            => graph.Where(node => (node.Key.Bulkhead & bulkhead) != 0)
+                .Select(node => node.Key)
+                .ToList();
 
         /// <summary>
         /// Find all zones that are leaf nodes, or dead ends. I.e. they only have one connection

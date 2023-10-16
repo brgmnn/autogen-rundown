@@ -514,17 +514,17 @@ namespace AutogenRundown.DataBlocks
                 });
 
             if (selectedBulkheads.HasFlag(Bulkhead.Extreme))
-                level.MainLayerData.BulkheadKeyPlacements.Add(
+                level.SecondaryLayerData.BulkheadKeyPlacements.Add(
                     new List<ZonePlacementData>
                     {
                         new ZonePlacementData { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
                     });
 
             if (selectedBulkheads.HasFlag(Bulkhead.Overload))
-                level.MainLayerData.BulkheadKeyPlacements.Add(
+                level.ThirdLayerData.BulkheadKeyPlacements.Add(
                     new List<ZonePlacementData>
                     {
-                            new ZonePlacementData { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+                        new ZonePlacementData { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
                     });
             #endregion
 
