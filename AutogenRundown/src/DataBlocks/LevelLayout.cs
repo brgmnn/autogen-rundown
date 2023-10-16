@@ -3,6 +3,7 @@ using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.DataBlocks.Enemies;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -35,18 +36,89 @@ namespace AutogenRundown.DataBlocks
         public void RollBloodDoors()
         {
             var count = 0;
-            var (max, chance) = director.Tier switch
+            var (max, chance, inAreaChance) = director.Tier switch
             {
-                "A" => (0, 0.0),
-                "B" => (2, 0.3),
-                "C" => (4, 0.2),
-                _ => (-1, 0.2)
+                // No blood doors for A
+                "A" => (0, 0.0, 0.0),
+                "B" => (2, 0.3, 0.3),
+                "C" => (4, 0.2, 0.5),
+                _ => (-1, 0.2, 0.7)
+            };
+
+            // Ensure that there are at least as many groups as 2x the max number of blood doors
+            // that can spawn. For unlimited cap tiers (D and E) this is 2x the number of zones.
+            // Door pack is used to select enemies that spawn behind the door.
+            var doorPack = director.Tier switch
+            {
+                "B" => new List<VanillaEnemyGroup>
+                {
+                    VanillaEnemyGroup.BloodDoor_Easy,
+                    VanillaEnemyGroup.BloodDoor_Easy,
+                    VanillaEnemyGroup.BloodDoor_Medium
+                },
+
+                "C" => new List<VanillaEnemyGroup>
+                {
+                    VanillaEnemyGroup.BloodDoor_Easy,
+                    VanillaEnemyGroup.BloodDoor_Medium,
+                    VanillaEnemyGroup.BloodDoor_Medium,
+                    VanillaEnemyGroup.BloodDoor_Bigs,
+                    VanillaEnemyGroup.BloodDoor_Hybrids_Easy,
+                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
+                },
+
+                "D" => new List<VanillaEnemyGroup>
+                { },
+
+                "E" => new List<VanillaEnemyGroup>
+                { },
+
+                _ => new List<VanillaEnemyGroup>()
+            };
+
+            // Area pack picks enemies to spawn further back, if we successfully roll to add them.
+            var areaPack = director.Tier switch
+            {
+                "B" => new List<VanillaEnemyGroup>
+                {
+                    VanillaEnemyGroup.BloodDoor_Easy,
+                    VanillaEnemyGroup.BloodDoor_Medium
+                },
+
+                "C" => new List<VanillaEnemyGroup>
+                {
+                    VanillaEnemyGroup.BloodDoor_Easy,
+                    VanillaEnemyGroup.BloodDoor_Medium,
+                    VanillaEnemyGroup.BloodDoor_Medium,
+                    VanillaEnemyGroup.BloodDoor_Bigs,
+                    VanillaEnemyGroup.BloodDoor_Chargers_Easy,
+                    VanillaEnemyGroup.BloodDoor_Hybrids_Easy,
+                    VanillaEnemyGroup.BloodDoor_Shadows_Easy,
+                    VanillaEnemyGroup.BloodDoor_Pouncers
+                },
+
+                "D" => new List<VanillaEnemyGroup>
+                { },
+
+                "E" => new List<VanillaEnemyGroup>
+                { },
+
+                _ => new List<VanillaEnemyGroup>()
             };
 
             // Do not add blood doors to Zone 0, these are always either the elevator or bulkhead doors.
             foreach (var zone in Zones)
                 if (zone.LocalIndex > 0 && Generator.Flip(chance) && (count++ < max || max == -1))
-                    zone.BloodDoor = BloodDoor.Easy;
+                {
+                    var withArea = Generator.Flip(inAreaChance);
+
+                    zone.BloodDoor = new BloodDoor
+                    {
+                        EnemyGroupInfrontOfDoor = (uint)Generator.Draw(doorPack),
+                        EnemyGroupInArea = withArea ? (uint)Generator.Draw(areaPack) : 0,
+                        EnemyGroupsInArea = withArea ? 1 : 0,
+                    };
+                }
         }
 
         /// <summary>

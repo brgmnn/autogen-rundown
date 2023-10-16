@@ -52,12 +52,29 @@ namespace AutogenRundown.DataBlocks.Zones
                 .OrderBy(zone => zone.ZoneNumber)
                 .ToList();
 
+        /// <summary>
+        /// Returns all ZoneNodes which have connections to other bulkhead zones.
+        /// </summary>
+        /// <returns></returns>
         public List<ZoneNode> GetBulkheadEntranceZones()
             => graph.Where(node => node.Value.Where(to => !to.Bulkhead.HasFlag(node.Key.Bulkhead)).Count() > 0)
                 .Select(node => node.Key)
                 .OrderBy(zone => zone.ZoneNumber)
                 .ToList();
 
+        /// <summary>
+        /// Returns true/false whether the given node is a bulkhead entrance.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public bool IsBulkheadEntrance(ZoneNode node)
+            => graph[node].Where(to => !to.Bulkhead.HasFlag(node.Bulkhead)).Count() > 0;
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
         public int CountOpenSlots(IEnumerable<ZoneNode> nodes)
             => nodes.Sum(node => Math.Max(0, node.MaxConnections - graph[node].Count));
     }

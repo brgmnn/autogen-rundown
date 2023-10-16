@@ -252,13 +252,13 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                // C-tier is the normal difficulty benchmark.
                 case "C":
                     {
                         var selected = Generator.Select(
                             new List<WeightedDifficulty>
                             {
                                 new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Medium } },
-                                new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Hard } },
                                 new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Medium } },
                                 new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Medium, EnemyRoleDifficulty.Hard } },
                                 new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Hard } },
