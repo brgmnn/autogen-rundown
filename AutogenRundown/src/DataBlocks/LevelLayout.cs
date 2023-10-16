@@ -394,19 +394,9 @@ namespace AutogenRundown.DataBlocks
                                 new ZoneNode(director.Bulkhead, i));
 
                             zone.GenEnemies(director);
+                            zone.RollAlarms(puzzlePack);
 
                             layout.Zones.Add(zone);
-
-                            if (i == 0)
-                                continue;
-
-                            // Grab a random puzzle from the puzzle pack
-                            var puzzle = Generator.Draw(puzzlePack);
-
-                            zone.ChainedPuzzleToEnter = puzzle.PersistentId;
-
-                            if (puzzle.PersistentId != 0)
-                                Bins.ChainedPuzzles.AddBlock(puzzle);
                         }
 
 
@@ -456,14 +446,8 @@ namespace AutogenRundown.DataBlocks
                         reactor.GenEnemies(director);
 
                         // Assign door puzzles
-                        var corridorPuzzle = Generator.Draw(puzzlePack);
-                        corridor.ChainedPuzzleToEnter = corridorPuzzle.PersistentId;
-
-                        var reactorPuzzle = Generator.Draw(puzzlePack);
-                        reactor.ChainedPuzzleToEnter = reactorPuzzle.PersistentId;
-
-                        Bins.ChainedPuzzles.AddBlock(corridorPuzzle);
-                        Bins.ChainedPuzzles.AddBlock(reactorPuzzle);
+                        corridor.RollAlarms(puzzlePack);
+                        reactor.RollAlarms(puzzlePack);
 
                         break;
                     }
@@ -490,6 +474,7 @@ namespace AutogenRundown.DataBlocks
                                 new ZoneNode(director.Bulkhead, i));
 
                             zone.GenEnemies(director);
+                            zone.RollAlarms(puzzlePack);
 
                             if (i == director.ZoneCount - 1)
                             {
@@ -500,17 +485,6 @@ namespace AutogenRundown.DataBlocks
                             }
 
                             layout.Zones.Add(zone);
-
-                            if (i == 0)
-                                continue;
-
-                            // Grab a random puzzle from the puzzle pack
-                            var puzzle = Generator.Draw(puzzlePack);
-
-                            zone.ChainedPuzzleToEnter = puzzle.PersistentId;
-
-                            if (puzzle.PersistentId != 0)
-                                Bins.ChainedPuzzles.AddBlock(puzzle);
                         }
 
                         break;
@@ -536,19 +510,9 @@ namespace AutogenRundown.DataBlocks
                                 new ZoneNode(director.Bulkhead, i));
 
                             zone.GenEnemies(director);
+                            zone.RollAlarms(puzzlePack);
 
                             layout.Zones.Add(zone);
-
-                            if (i == 0)
-                                continue;
-
-                            // Grab a random puzzle from the puzzle pack
-                            var puzzle = Generator.Draw(puzzlePack);
-
-                            zone.ChainedPuzzleToEnter = puzzle.PersistentId;
-
-                            if (puzzle.PersistentId != 0)
-                                Bins.ChainedPuzzles.AddBlock(puzzle);
                         }
 
                         break;
@@ -578,19 +542,9 @@ namespace AutogenRundown.DataBlocks
                                 new ZoneNode(director.Bulkhead, i));
 
                             zone.GenEnemies(director);
+                            zone.RollAlarms(puzzlePack);
 
                             layout.Zones.Add(zone);
-
-                            if (i == 0)
-                                continue;
-
-                            // Grab a random puzzle from the puzzle pack
-                            var puzzle = Generator.Draw(puzzlePack);
-
-                            zone.ChainedPuzzleToEnter = puzzle.PersistentId;
-
-                            if (puzzle.PersistentId != 0)
-                                Bins.ChainedPuzzles.AddBlock(puzzle);
                         }
 
                         break;

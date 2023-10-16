@@ -120,19 +120,24 @@ namespace AutogenRundown.DataBlocks.Alarms
                 "B" => new List<ChainedPuzzle>
                 {
                     None, None,
-                    TeamScan, TeamScan, TeamScan,
-                    AlarmClass3, AlarmClass3, AlarmClass3, AlarmClass3, AlarmClass3,
-                    AlarmClass4, AlarmClass4, AlarmClass4, AlarmClass4, AlarmClass5,
+                    TeamScan, TeamScan,
+                    AlarmClass3, AlarmClass3, AlarmClass3,
+                    AlarmClass4, AlarmClass4, AlarmClass4,
+                    AlarmClass5,
+
+                    AlarmClass1_Sustained,
                 },
                 "C" => new List<ChainedPuzzle>
                 {
                     None, 
                     TeamScan, TeamScan,
-                    AlarmClass3, AlarmClass3, AlarmClass3,
-                    AlarmClass4, AlarmClass4, AlarmClass4, AlarmClass4, AlarmClass4,
+                    AlarmClass3, AlarmClass3,
+                    AlarmClass4, AlarmClass4, 
                     AlarmClass5, AlarmClass5, AlarmClass5,
 
-                    AlarmClass1_Sustained,
+                    AlarmClass3_Surge,
+
+                    AlarmClass1_Sustained, AlarmClass1_Sustained,
                 },
                 "D" => new List<ChainedPuzzle>
                 {

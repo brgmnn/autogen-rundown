@@ -1,7 +1,8 @@
-﻿using AutogenRundown.DataBlocks.Objectives;
-using AutogenRundown.DataBlocks.ZoneData;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.ZoneData;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -283,6 +284,22 @@ namespace AutogenRundown.DataBlocks
             }
 
 
+        }
+        #endregion
+
+        #region Alarms
+        public void RollAlarms(ICollection<ChainedPuzzle> puzzlePack)
+        {
+            if (LocalIndex == 0)
+                return;
+
+            // Grab a random puzzle from the puzzle pack
+            var puzzle = Generator.Draw(puzzlePack);
+
+            ChainedPuzzleToEnter = puzzle.PersistentId;
+
+            if (puzzle.PersistentId != 0)
+                Bins.ChainedPuzzles.AddBlock(puzzle);
         }
         #endregion
 
