@@ -16,6 +16,9 @@ namespace AutogenRundown.DataBlocks.Zones
     {
         private Dictionary<ZoneNode, List<ZoneNode>> graph = new Dictionary<ZoneNode, List<ZoneNode>>();
 
+        private IEnumerable<KeyValuePair<ZoneNode, List<ZoneNode>>> GetSubgraph(Bulkhead bulkhead = Bulkhead.All)
+            => graph.Where(node => (node.Key.Bulkhead & bulkhead) != 0);
+
         /// <summary>
         /// Connects two zones unidirectionally. If the second zone is not specified then the
         /// first zone is just added as an open zone.
@@ -36,10 +39,13 @@ namespace AutogenRundown.DataBlocks.Zones
                 graph.Add((ZoneNode)to, new List<ZoneNode>());
         }
 
-        public List<ZoneNode> GetZones(Bulkhead bulkhead)
-            => graph.Where(node => (node.Key.Bulkhead & bulkhead) != 0)
-                .Select(node => node.Key)
-                .ToList();
+        /// <summary>
+        /// Gets all zones associated with the given bulkhead
+        /// </summary>
+        /// <param name="bulkhead"></param>
+        /// <returns></returns>
+        public List<ZoneNode> GetZones(Bulkhead bulkhead = Bulkhead.All)
+            => GetSubgraph().Select(node => node.Key).ToList();
 
         /// <summary>
         /// Find all zones that are leaf nodes, or dead ends. I.e. they only have one connection
@@ -82,7 +88,9 @@ namespace AutogenRundown.DataBlocks.Zones
             => graph[node].Where(to => !to.Bulkhead.HasFlag(node.Bulkhead)).Count() > 0;
 
         /// <summary>
-        ///
+        /// Counts the number of open slots across all the zones given. Useful for ensuring we
+        /// place key doors like the main bulkhead far enough forward that we can still connect
+        /// other zones to the previous area.
         /// </summary>
         /// <param name="nodes"></param>
         /// <returns></returns>
