@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutogenRundown.DataBlocks.Objectives;
+﻿using AutogenRundown.DataBlocks.Objectives;
 
 namespace AutogenRundown.DataBlocks.Zones
 {
@@ -19,6 +14,15 @@ namespace AutogenRundown.DataBlocks.Zones
         private IEnumerable<KeyValuePair<ZoneNode, List<ZoneNode>>> GetSubgraph(Bulkhead bulkhead = Bulkhead.All)
             => graph.Where(node => (node.Key.Bulkhead & bulkhead) != 0);
 
+        public override string ToString()
+        {
+            string ValueToString(List<ZoneNode> nodes)
+                => string.Join(", ", nodes.Select(node => node.ToString()));
+
+            var debug = string.Join("\n", graph.Select(n => $"  {n.Key} => [{ValueToString(n.Value)}]"));
+            return $"Graph:\n{debug}";
+        }
+
         /// <summary>
         /// Connects two zones unidirectionally. If the second zone is not specified then the
         /// first zone is just added as an open zone.
@@ -27,16 +31,18 @@ namespace AutogenRundown.DataBlocks.Zones
         /// <param name="to"></param>
         public void Connect(ZoneNode from, ZoneNode? to = null)
         {
-            if (graph.ContainsKey(from))
-                if (to != null)
+            if (to != null)
+            {
+                if (graph.ContainsKey(from))
                     graph[from].Add((ZoneNode)to);
-            else
-                graph.Add(from, to != null ?
-                    new List<ZoneNode> { (ZoneNode)to } :
-                    new List<ZoneNode>());
+                else
+                    graph.Add(from, new List<ZoneNode> { (ZoneNode)to });
 
-            if (to != null && !graph.ContainsKey((ZoneNode)to))
-                graph.Add((ZoneNode)to, new List<ZoneNode>());
+                if (!graph.ContainsKey((ZoneNode)to))
+                    graph.Add((ZoneNode)to, new List<ZoneNode>());
+            }
+            else if (!graph.ContainsKey(from))
+                graph.Add(from, new List<ZoneNode>());
         }
 
         /// <summary>
@@ -45,7 +51,17 @@ namespace AutogenRundown.DataBlocks.Zones
         /// <param name="bulkhead"></param>
         /// <returns></returns>
         public List<ZoneNode> GetZones(Bulkhead bulkhead = Bulkhead.All)
-            => GetSubgraph().Select(node => node.Key).ToList();
+            => GetSubgraph(bulkhead).Select(node => node.Key).ToList();
+
+        public List<ZoneNode> GetConnections(ZoneNode node)
+        {
+            List<ZoneNode> connections;
+
+            if (graph.TryGetValue(node, out connections!))
+                return connections;
+
+            return new List<ZoneNode>();
+        }
 
         /// <summary>
         /// Find all zones that are leaf nodes, or dead ends. I.e. they only have one connection

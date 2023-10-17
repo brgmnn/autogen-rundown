@@ -24,21 +24,22 @@ namespace AutogenRundownTests.DataBlocks.Zones
     [TestClass]
     public class LayoutPlanner_Tests
     {
+        #region Connect()
         [TestMethod]
-        public void TestMethod1()
+        public void Test_Connect_AddsANewZoneNode()
         {
-            // Arrange
             var planner = new LayoutPlanner();
 
-            // Act
-            planner.Connect(
-                new ZoneNode(Bulkhead.Main, 0),
-                new ZoneNode(Bulkhead.Main, 1));
+            planner.Connect(new ZoneNode(Bulkhead.Main, 0));
 
-            // Assert
-            var leaves = planner.GetLeafZones();
+            var zones = planner.GetZones();
+
+            Assert.AreEqual(1, zones.Count);
+            Assert.AreEqual(new ZoneNode(Bulkhead.Main, 0), zones[0]);
         }
+        #endregion
 
+        #region GetBulkheadEntranceZones()
         [TestMethod]
         public void Test_GetBulkheadEntranceZones()
         {
@@ -70,6 +71,68 @@ namespace AutogenRundownTests.DataBlocks.Zones
             Assert.AreEqual(
                 new ZoneNode(Bulkhead.Main, 2),
                 entrances[0]);
+        }
+        #endregion
+
+        #region GetZones()
+        [TestMethod]
+        public void Test_GetZones_OnlyReturnsZonesForABulkhead()
+        {
+            var planner = new LayoutPlanner();
+
+            // Add main zones
+            planner.Connect(
+                new ZoneNode(Bulkhead.Main, 0),
+                new ZoneNode(Bulkhead.Main, 1));
+            planner.Connect(
+                new ZoneNode(Bulkhead.Main, 1),
+                new ZoneNode(Bulkhead.Main, 2));
+            
+            // Add extreme zones
+            planner.Connect(
+                new ZoneNode(Bulkhead.Main, 2),
+                new ZoneNode(Bulkhead.Extreme, 0));
+            planner.Connect(
+                new ZoneNode(Bulkhead.Extreme, 0),
+                new ZoneNode(Bulkhead.Extreme, 1));
+
+            // Add some more main zones
+            planner.Connect(
+                new ZoneNode(Bulkhead.Main, 2),
+                new ZoneNode(Bulkhead.Main, 3));
+
+            var entrances = planner.GetZones(Bulkhead.Extreme);
+
+            // Assert
+            Assert.AreEqual(2, entrances.Count);
+            Assert.AreEqual(new ZoneNode(Bulkhead.Extreme, 0), entrances[0]);
+            Assert.AreEqual(new ZoneNode(Bulkhead.Extreme, 1), entrances[1]);
+        }
+        #endregion
+
+        [TestMethod]
+        public void Test_GetOpenZones_OnlyReturnsZonesThatCanAttachMoreZones()
+        {
+            var planner = new LayoutPlanner();
+
+            // Add main zones
+            planner.Connect(new ZoneNode(Bulkhead.Main, 0), new ZoneNode(Bulkhead.Main, 1));
+            planner.Connect(new ZoneNode(Bulkhead.Main, 1), new ZoneNode(Bulkhead.Main, 2));
+
+            // Add extreme zones
+            planner.Connect(new ZoneNode(Bulkhead.Main, 2), new ZoneNode(Bulkhead.Extreme, 0));
+            planner.Connect(new ZoneNode(Bulkhead.Extreme, 0), new ZoneNode(Bulkhead.Extreme, 1));
+
+            // Add some more main zones
+            planner.Connect(new ZoneNode(Bulkhead.Main, 2), new ZoneNode(Bulkhead.Main, 3));
+
+            var open = planner.GetOpenZones(Bulkhead.Main);
+
+            // Assert
+            Assert.AreEqual(3, open.Count);
+            Assert.AreEqual(new ZoneNode(Bulkhead.Main, 0), open[0]);
+            Assert.AreEqual(new ZoneNode(Bulkhead.Main, 1), open[1]);
+            Assert.AreEqual(new ZoneNode(Bulkhead.Main, 3), open[2]);
         }
     }
 }
