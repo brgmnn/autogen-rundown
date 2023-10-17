@@ -16,6 +16,9 @@ namespace AutogenRundown.DataBlocks.Alarms
         // Surge alarms
         Surge = 21,
 
+        // Mixed alarms
+        Modified_SpHybrid = 9,
+
         // Diminished
         ApexDiminished_ssp = 57,
 
