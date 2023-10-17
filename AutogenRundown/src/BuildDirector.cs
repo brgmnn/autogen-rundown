@@ -104,17 +104,17 @@ namespace AutogenRundown
         {
             ZoneCount = (Tier, Bulkhead) switch
             {
-                ("A", Bulkhead.Main) => Generator.Random.Next(4, 6),
-                ("B", Bulkhead.Main) => Generator.Random.Next(4, 8),
-                ("C", Bulkhead.Main) => Generator.Random.Next(5, 9),
-                ("D", Bulkhead.Main) => Generator.Random.Next(5, 10), // TODO: playtest
-                ("E", Bulkhead.Main) => Generator.Random.Next(6, 11), // TODO: playtest
+                ("A", Bulkhead.Main) => Generator.Random.Next(4, 5),
+                ("B", Bulkhead.Main) => Generator.Random.Next(4, 6),
+                ("C", Bulkhead.Main) => Generator.Random.Next(5, 7),
+                ("D", Bulkhead.Main) => Generator.Random.Next(5, 7),
+                ("E", Bulkhead.Main) => Generator.Random.Next(6, 8),
 
-                ("A", _) => Generator.Random.Next(2, 5),
-                ("B", _) => Generator.Random.Next(2, 6),
-                ("C", _) => Generator.Random.Next(2, 7),
-                ("D", _) => Generator.Random.Next(3, 10),
-                ("E", _) => Generator.Random.Next(3, 12), // TODO: this is also too much
+                ("A", _) => Generator.Random.Next(2, 3),
+                ("B", _) => Generator.Random.Next(2, 3),
+                ("C", _) => Generator.Random.Next(2, 4),
+                ("D", _) => Generator.Random.Next(3, 5),
+                ("E", _) => Generator.Random.Next(3, 5),
 
                 (_, _) => 1
             };
