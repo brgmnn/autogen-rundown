@@ -130,6 +130,29 @@ namespace AutogenRundown.DataBlocks
     /// Score base spawning system:
     ///     number of enemies = EnemyGroup.MaxScore * Role.Distribution / EnemyPopulation.Cost
     ///
+    /// Enemy Points:
+    ///     * Striker: 1
+    ///     * Shooter: 1
+    ///     
+    ///     * Giant Striker: 4
+    ///     * Giant Shooter: 4
+    ///     * Hybrid: 4 (3pts in Difficulty 6)
+    ///     
+    ///     * Shadow: 1
+    ///     * Shadow Giant: 4
+    ///
+    ///     * Scout: 5
+    ///     * Charger Scout: 5
+    ///     * Shadow Scout: 5
+    ///
+    ///     * Baby: 1
+    ///     
+    ///     * Tank: 10
+    ///     * Mother: 10
+    ///     * P-Mother: 10
+    ///
+    ///     * Flyer: 1
+    ///     * Boss Flyer: 10
     /// </summary>
     internal record class EnemySpawningData
     {

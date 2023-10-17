@@ -136,19 +136,21 @@ namespace AutogenRundown
             // to get the mean zone size and divide by 25.0 to set a room size of 25 as the
             // baseline.
             //
-            // Larger zones get more points.
-            var factor = ((zone.Coverage.Min + zone.Coverage.Max) / 2) / 25.0;
+            // 20-35 minmax for 1.3 dist => 32.5pts
+            //
+            // Larger zones get more points. The denominator determins the 1.0 benchmark.
+            var factor = ((zone.Coverage.Min + zone.Coverage.Max) / 2) / 30.0;
 
             // Baseline points will be around 25pts / zone for the baseline size.
             return (int)(factor * (Tier switch
             {
-                "A" => Generator.Random.Next(20, 30),
-                "B" => Generator.Random.Next(25, 30),
-                "C" => Generator.Random.Next(25, 35),
-                "D" => Generator.Random.Next(25, 40),
-                "E" => Generator.Random.Next(25, 45), // TODO: is this sane?
+                "A" => Generator.Random.Next(15, 25),
+                "B" => Generator.Random.Next(20, 25),
+                "C" => Generator.Random.Next(20, 30),
+                "D" => Generator.Random.Next(25, 30),
+                "E" => Generator.Random.Next(25, 35), // TODO: is this sane?
 
-                _ => Generator.Random.Next(25, 30),
+                _ => 25,
             }));
         }
     }

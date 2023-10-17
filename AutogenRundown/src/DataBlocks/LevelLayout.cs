@@ -4,6 +4,7 @@ using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.DataBlocks.Enemies;
+using static AutogenRundown.DataBlocks.Zone;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -122,6 +123,132 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
+        /// Roll enemies for each zone.
+        /// </summary>
+        public void RollEnemies(BuildDirector director)
+        {
+            var enemyDistribution = director.Tier switch
+            {
+                "A" => new List<WeightedDifficulty>
+                    {
+                        new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Easy } },
+                        new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Medium } },
+                    },
+
+                "B" => new List<WeightedDifficulty>
+                    {
+                        new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Easy } },
+                        new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Medium } },
+                        new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Hard } }
+                    },
+
+                "C" => new List<WeightedDifficulty>
+                    {
+                        new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Medium } },
+                        new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Medium, EnemyRoleDifficulty.Hard } },
+                        new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Hard } },
+                    },
+
+                _ => new List<WeightedDifficulty>()
+            };
+
+            // All scouts cost 5pts each
+            var (chance, max, scoutPack) = director.Tier switch
+            {
+                "A" => (0.2, 2, new List<EnemySpawningData>
+                    {
+                        EnemySpawningData.Scout with { Points = 5 },
+                        EnemySpawningData.Scout with { Points = 5 },
+                    }),
+                "B" => (0.2, 3, new List<EnemySpawningData>
+                    {
+                        EnemySpawningData.Scout with { Points = 5 },
+                        EnemySpawningData.Scout with { Points = 5 },
+                        EnemySpawningData.Scout with { Points = 5 },
+                        EnemySpawningData.Scout with { Points = 10 },
+                    }),
+                "C" => (0.2, 5, new List<EnemySpawningData>
+                    {
+                        EnemySpawningData.Scout with { Points = 5 },
+                        EnemySpawningData.Scout with { Points = 5 },
+                        EnemySpawningData.Scout with { Points = 5 },
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 15 },
+
+                        // Chargers
+                        EnemySpawningData.ScoutCharger with { Points = 5 },
+                        EnemySpawningData.ScoutCharger with { Points = 5 },
+                    }),
+
+                // TODO: Balance for D
+                "D" => (0.3, -1, new List<EnemySpawningData>
+                    {
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 10 },
+                    }),
+                "E" => (0.3, -1, new List<EnemySpawningData>
+                    {
+                        EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 10 },
+                    }),
+
+                _ => (0.0, 0, new List<EnemySpawningData>())
+            };
+
+            var scoutCount = 0;
+
+            foreach (var zone in Zones)
+            {
+                var points = director.GetPoints(zone);
+
+                // Reduce the chance of scouts spawning in the zone if there's a blood door to enter.
+                var scoutRollModifier = zone.BloodDoor.Enabled ? 0.5 : 1.0;
+
+                // Roll for adding scouts
+                if (Generator.Flip(chance * scoutRollModifier) && (scoutCount++ < max || max == -1))
+                {
+                    var scout = Generator.Draw(scoutPack);
+
+                    // Add scouts with force one, this is to guarantee we get exactly the right
+                    // number of scouts.
+                    if (scout != null)
+                    {
+                        points = scout.Points;
+
+                        for (int i = 0; i < scout.Points / 5; i++)
+                            zone.EnemySpawningInZone.Add(
+                                scout with { Distribution = EnemyZoneDistribution.ForceOne, Points = 25 });
+                    }
+                }
+
+                // If we have run out of points, skip adding enemies.
+                if (points < 3)
+                    continue;
+
+                var selected = Generator.Select(enemyDistribution);
+
+                foreach (var difficulty in selected.Difficulties)
+                {
+                    var enemyPoints = points / selected.Difficulties.Count;
+
+                    // If we have a blood door, reduce the number of enemies that spawn in the zone
+                    // by 1/3rd.
+                    if (zone.BloodDoor.Enabled)
+                        enemyPoints = (int)(enemyPoints * 0.66);
+
+                    zone.EnemySpawningInZone.Add(
+                        new EnemySpawningData
+                        {
+                            GroupType = EnemyGroupType.Hibernate,
+                            Difficulty = difficulty,
+                            Points = enemyPoints
+                        });
+                }
+            }
+        }
+
+        /// <summary>
         /// Rolls for whether we should add an error alarm to this level layout.
         /// </summary>
         public void RollErrorAlarm()
@@ -192,7 +319,8 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
-        /// Roll for adding scout patrols to each zone
+        /// Roll for adding scout patrols to each zone. Seems the base game tends to use force
+        /// one to guarantee the right number of spawns.
         /// </summary>
         public void RollScouts()
         {
@@ -228,6 +356,8 @@ namespace AutogenRundown.DataBlocks
                         EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
                         EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
                     }),
+
+                // TODO: Balance for D
                 "D" => (0.3, -1, new List<EnemySpawningData>
                     {
                         EnemySpawningData.Scout with { Points = 10 },
@@ -393,7 +523,7 @@ namespace AutogenRundown.DataBlocks
                                 new ZoneNode(director.Bulkhead, buildFrom),
                                 new ZoneNode(director.Bulkhead, i));
 
-                            zone.GenEnemies(director);
+                            //zone.GenEnemies(director);
                             zone.RollAlarms(puzzlePack);
 
                             layout.Zones.Add(zone);
@@ -442,8 +572,8 @@ namespace AutogenRundown.DataBlocks
                         layout.Zones.Add(reactor);
 
                         // Assign enemies
-                        corridor.GenEnemies(director);
-                        reactor.GenEnemies(director);
+                        //corridor.GenEnemies(director);
+                        //reactor.GenEnemies(director);
 
                         // Assign door puzzles
                         corridor.RollAlarms(puzzlePack);
@@ -473,7 +603,7 @@ namespace AutogenRundown.DataBlocks
                                 new ZoneNode(director.Bulkhead, buildFrom),
                                 new ZoneNode(director.Bulkhead, i));
 
-                            zone.GenEnemies(director);
+                            //zone.GenEnemies(director);
                             zone.RollAlarms(puzzlePack);
 
                             if (i == director.ZoneCount - 1)
@@ -509,7 +639,7 @@ namespace AutogenRundown.DataBlocks
                                 new ZoneNode(director.Bulkhead, buildFrom),
                                 new ZoneNode(director.Bulkhead, i));
 
-                            zone.GenEnemies(director);
+                            //zone.GenEnemies(director);
                             zone.RollAlarms(puzzlePack);
 
                             layout.Zones.Add(zone);
@@ -541,7 +671,7 @@ namespace AutogenRundown.DataBlocks
                                 new ZoneNode(director.Bulkhead, buildFrom),
                                 new ZoneNode(director.Bulkhead, i));
 
-                            zone.GenEnemies(director);
+                            //zone.GenEnemies(director);
                             zone.RollAlarms(puzzlePack);
 
                             layout.Zones.Add(zone);
@@ -552,8 +682,9 @@ namespace AutogenRundown.DataBlocks
             }
 
             layout.RollBloodDoors();
+            layout.RollEnemies(director);
             layout.RollErrorAlarm();
-            layout.RollScouts();
+            //layout.RollScouts();
 
             Bins.LevelLayouts.AddBlock(layout);
 
