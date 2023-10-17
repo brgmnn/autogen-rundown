@@ -5,7 +5,22 @@ namespace AutogenRundown.DataBlocks.Zones
     public record struct ZoneNode(
         Bulkhead Bulkhead,
         int ZoneNumber,
-        int MaxConnections = 2);
+        int MaxConnections = 2)
+    {
+        /// <summary>
+        /// Two zones are equal if they are in the same bulkhead and have the same zone number.
+        /// All other properties are extra and we want to consider them equal with them.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public readonly bool Equals(ZoneNode other)
+        {
+            return Bulkhead == other.Bulkhead && ZoneNumber == other.ZoneNumber;
+        }
+
+        public static string ListToString(IEnumerable<ZoneNode> nodes)
+            => string.Join(", ", nodes.Select(node => node.ToString()));
+    }
 
     public class LayoutPlanner
     {
@@ -16,10 +31,7 @@ namespace AutogenRundown.DataBlocks.Zones
 
         public override string ToString()
         {
-            string ValueToString(List<ZoneNode> nodes)
-                => string.Join(", ", nodes.Select(node => node.ToString()));
-
-            var debug = string.Join("\n", graph.Select(n => $"  {n.Key} => [{ValueToString(n.Value)}]"));
+            var debug = string.Join("\n", graph.Select(n => $"  {n.Key} => [{ZoneNode.ListToString(n.Value)}]"));
             return $"Graph:\n{debug}";
         }
 
@@ -31,7 +43,7 @@ namespace AutogenRundown.DataBlocks.Zones
         /// <param name="to"></param>
         public void Connect(ZoneNode from, ZoneNode? to = null)
         {
-            if (to != null)
+            if (to != null && from != to)
             {
                 if (graph.ContainsKey(from))
                     graph[from].Add((ZoneNode)to);
@@ -53,6 +65,11 @@ namespace AutogenRundown.DataBlocks.Zones
         public List<ZoneNode> GetZones(Bulkhead bulkhead = Bulkhead.All)
             => GetSubgraph(bulkhead).Select(node => node.Key).ToList();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         public List<ZoneNode> GetConnections(ZoneNode node)
         {
             List<ZoneNode> connections;
@@ -111,6 +128,6 @@ namespace AutogenRundown.DataBlocks.Zones
         /// <param name="nodes"></param>
         /// <returns></returns>
         public int CountOpenSlots(IEnumerable<ZoneNode> nodes)
-            => nodes.Sum(node => Math.Max(0, node.MaxConnections - graph[node].Count));
+            => nodes.Sum(node => Math.Max(0, node.MaxConnections - graph[node].Count()));
     }
 }

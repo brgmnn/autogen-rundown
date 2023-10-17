@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using AutogenRundown.DataBlocks.Objectives;
+﻿using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundownTests.DataBlocks.Zones
@@ -18,6 +12,14 @@ namespace AutogenRundownTests.DataBlocks.Zones
             Assert.AreEqual(
                 new ZoneNode(Bulkhead.Main, 0),
                 new ZoneNode(Bulkhead.Main, 0));
+        }
+
+        [TestMethod]
+        public void Test_Equals_TwoZonesAreEqualWithMax()
+        {
+            Assert.AreEqual(
+                new ZoneNode(Bulkhead.Main, 1, 2),
+                new ZoneNode(Bulkhead.Main, 1, 3));
         }
     }
 
@@ -36,6 +38,22 @@ namespace AutogenRundownTests.DataBlocks.Zones
 
             Assert.AreEqual(1, zones.Count);
             Assert.AreEqual(new ZoneNode(Bulkhead.Main, 0), zones[0]);
+        }
+
+        //[TestMethod]
+        public void Test_Connect_DoesNotAddAZoneToItself()
+        {
+            var planner = new LayoutPlanner();
+
+            planner.Connect(new ZoneNode(Bulkhead.Main, 0), new ZoneNode(Bulkhead.Main, 0));
+
+            var zones = planner.GetZones();
+            var connections = planner.GetConnections(new ZoneNode(Bulkhead.Main, 0));
+
+            Assert.AreEqual(1, zones.Count);
+            Assert.AreEqual(new ZoneNode(Bulkhead.Main, 0), zones[0]);
+
+            Assert.AreEqual(0, connections.Count);
         }
         #endregion
 
@@ -110,6 +128,7 @@ namespace AutogenRundownTests.DataBlocks.Zones
         }
         #endregion
 
+        #region GetOpenZones()
         [TestMethod]
         public void Test_GetOpenZones_OnlyReturnsZonesThatCanAttachMoreZones()
         {
@@ -134,5 +153,108 @@ namespace AutogenRundownTests.DataBlocks.Zones
             Assert.AreEqual(new ZoneNode(Bulkhead.Main, 1), open[1]);
             Assert.AreEqual(new ZoneNode(Bulkhead.Main, 3), open[2]);
         }
+        #endregion
+
+        #region CountOpenSlots()
+        [TestMethod]
+        public void Test_CountOpenSlots_CountsCorrectlyForDenseZones()
+        {
+            var planner = new LayoutPlanner();
+
+            var zone0 = new ZoneNode(Bulkhead.Main, 0);
+            var zone1 = new ZoneNode(Bulkhead.Main, 1);
+            var zone2 = new ZoneNode(Bulkhead.Main, 2);
+            var zone3 = new ZoneNode(Bulkhead.Main, 3);
+            var zone4 = new ZoneNode(Bulkhead.Main, 4);
+
+            // Add main zones
+            planner.Connect(zone0, zone1);
+            planner.Connect(zone1, zone2);
+            planner.Connect(zone1, zone3);
+            planner.Connect(zone2, zone4);
+            planner.Connect(new ZoneNode(Bulkhead.Main, 1), new ZoneNode(Bulkhead.Main, 2));
+            planner.Connect(new ZoneNode(Bulkhead.Main, 1), new ZoneNode(Bulkhead.Main, 3));
+            planner.Connect(new ZoneNode(Bulkhead.Main, 2), new ZoneNode(Bulkhead.Main, 4));
+
+            var openSlots = planner.CountOpenSlots(new List<ZoneNode> { zone0, zone1 });
+
+            Assert.AreEqual(1, openSlots);
+        }
+
+        [TestMethod]
+        public void Test_CountOpenSlots_CountsCorrectlyForManyZones()
+        {
+            var planner = new LayoutPlanner();
+
+            var zone0 = new ZoneNode(Bulkhead.Main, 0);
+            var zone1 = new ZoneNode(Bulkhead.Main, 1);
+            var zone2 = new ZoneNode(Bulkhead.Main, 2);
+            var zone3 = new ZoneNode(Bulkhead.Main, 3);
+            var zone4 = new ZoneNode(Bulkhead.Main, 4);
+
+            // Add main zones
+            planner.Connect(zone0, zone1);
+            planner.Connect(zone1, zone2);
+            planner.Connect(zone1, zone3);
+            planner.Connect(zone2, zone4);
+            planner.Connect(new ZoneNode(Bulkhead.Main, 1), new ZoneNode(Bulkhead.Main, 2));
+            planner.Connect(new ZoneNode(Bulkhead.Main, 1), new ZoneNode(Bulkhead.Main, 3));
+            planner.Connect(new ZoneNode(Bulkhead.Main, 2), new ZoneNode(Bulkhead.Main, 4));
+
+            var openSlots = planner.CountOpenSlots(new List<ZoneNode> { zone0, zone1, zone3, zone4 });
+
+            Assert.AreEqual(5, openSlots);
+        }
+
+        [TestMethod]
+        public void Test_CountOpenSlots_CountsCorrectlyForVariableMaxConnections()
+        {
+            var planner = new LayoutPlanner();
+
+            var zone0 = new ZoneNode(Bulkhead.Main, 0);
+            var zone1 = new ZoneNode(Bulkhead.Main, 1, 3);
+            var zone2 = new ZoneNode(Bulkhead.Main, 2);
+            var zone3 = new ZoneNode(Bulkhead.Main, 3);
+            var zone4 = new ZoneNode(Bulkhead.Main, 4);
+
+            // Add main zones
+            planner.Connect(zone0, zone1);
+            planner.Connect(zone1, zone2);
+            planner.Connect(zone1, zone3);
+            planner.Connect(zone2, zone4);
+            planner.Connect(new ZoneNode(Bulkhead.Main, 1), new ZoneNode(Bulkhead.Main, 2));
+            planner.Connect(new ZoneNode(Bulkhead.Main, 1), new ZoneNode(Bulkhead.Main, 3));
+            planner.Connect(new ZoneNode(Bulkhead.Main, 2), new ZoneNode(Bulkhead.Main, 4));
+
+            var openSlots = planner.CountOpenSlots(new List<ZoneNode> { zone0, zone1 });
+
+            Assert.AreEqual(2, openSlots);
+        }
+
+        [TestMethod]
+        public void Test_CountOpenSlots_CountsCorrectlyForAnEmptyList()
+        {
+            var planner = new LayoutPlanner();
+
+            var zone0 = new ZoneNode(Bulkhead.Main, 0);
+            var zone1 = new ZoneNode(Bulkhead.Main, 1, 3);
+            var zone2 = new ZoneNode(Bulkhead.Main, 2);
+            var zone3 = new ZoneNode(Bulkhead.Main, 3);
+            var zone4 = new ZoneNode(Bulkhead.Main, 4);
+
+            // Add main zones
+            planner.Connect(zone0, zone1);
+            planner.Connect(zone1, zone2);
+            planner.Connect(zone1, zone3);
+            planner.Connect(zone2, zone4);
+            planner.Connect(new ZoneNode(Bulkhead.Main, 1), new ZoneNode(Bulkhead.Main, 2));
+            planner.Connect(new ZoneNode(Bulkhead.Main, 1), new ZoneNode(Bulkhead.Main, 3));
+            planner.Connect(new ZoneNode(Bulkhead.Main, 2), new ZoneNode(Bulkhead.Main, 4));
+
+            var openSlots = planner.CountOpenSlots(new List<ZoneNode>());
+
+            Assert.AreEqual(0, openSlots);
+        }
+        #endregion
     }
 }

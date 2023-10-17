@@ -369,7 +369,9 @@ namespace AutogenRundown.DataBlocks
                 _ => 1
             };
 
-            var index = 0;
+            // Main bulkhead zone cannot spawn in zone 0. Otherwise we would have zero zones to
+            // place other bulkheads
+            var index = 1;
             while (level.Planner.CountOpenSlots(openZones.Take(index)) < min)
             {
                 index++;
@@ -409,7 +411,6 @@ namespace AutogenRundown.DataBlocks
 
                 level.SecondaryLayerEnabled = true;
 
-                //var entranceZone = mainLevelLayout.ClampToZones(Generator.Random.Next(mainBulkheadZone));
                 var entranceZone = level.Planner.GetOpenZones(Bulkhead.Main)
                     .Where(zone => zone.ZoneNumber < mainBulkheadZone.ZoneNumber)
                     .OrderBy(zone => zone.ZoneNumber)
