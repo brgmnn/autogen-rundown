@@ -87,7 +87,7 @@ namespace AutogenRundown
                 Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "C",
-                Objective = WardenObjectiveType.ReactorShutdown,
+                Objective = WardenObjectiveType.TerminalUplink,
             };
             mainDirector.GenPoints();
 
@@ -95,7 +95,7 @@ namespace AutogenRundown
                 new Level
                 {
                     Tier = "C",
-                    Name = "Reactor Shutdown",
+                    Name = "Terminal Uplink",
                     Complex = Complex.Mining,
                     MainDirector = mainDirector,
                     Index = cMax + 1,

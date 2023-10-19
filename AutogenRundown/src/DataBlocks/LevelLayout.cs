@@ -319,129 +319,6 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
-        /// Roll for adding scout patrols to each zone. Seems the base game tends to use force
-        /// one to guarantee the right number of spawns.
-        /// </summary>
-        public void RollScouts()
-        {
-            // All scouts cost 5pts each
-            var (chance, max, scoutPacks) = director.Tier switch
-            {
-                "A" => (0.2, 2, new List<EnemySpawningData>
-                    {
-                        EnemySpawningData.Scout with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.Scout with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.Scout with { Points = 10 },
-                    }),
-                "B" => (0.2, 3, new List<EnemySpawningData>
-                    {
-                        EnemySpawningData.Scout with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.Scout with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.Scout with { Points = 10 },
-                        EnemySpawningData.Scout with { Points = 10 },
-                        EnemySpawningData.Scout with { Points = 15 },
-                    }),
-                "C" => (0.2, 5, new List<EnemySpawningData>
-                    {
-                        EnemySpawningData.Scout with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.Scout with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.Scout with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.Scout with { Points = 10 },
-                        EnemySpawningData.Scout with { Points = 10 },
-                        EnemySpawningData.Scout with { Points = 15 },
-                        EnemySpawningData.Scout with { Points = 15 },
-                        EnemySpawningData.Scout with { Points = 20 },
-
-                        // Chargers
-                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
-                    }),
-
-                // TODO: Balance for D
-                "D" => (0.3, -1, new List<EnemySpawningData>
-                    {
-                        EnemySpawningData.Scout with { Points = 10 },
-                        EnemySpawningData.Scout with { Points = 10 },
-                        EnemySpawningData.Scout with { Points = 15 },
-                        EnemySpawningData.Scout with { Points = 15 },
-                        EnemySpawningData.Scout with { Points = 20 },
-                        EnemySpawningData.Scout with { Points = 20 },
-                        EnemySpawningData.Scout with { Points = 25 },
-                        EnemySpawningData.Scout with { Points = 25 },
-                        EnemySpawningData.Scout with { Points = 30 },
-                        EnemySpawningData.Scout with { Points = 30 },
-
-                        // Chargers
-                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.Scout with { Points = 10 },
-                        EnemySpawningData.Scout with { Points = 10 },
-                        EnemySpawningData.Scout with { Points = 15 },
-                        EnemySpawningData.Scout with { Points = 15 },
-
-                        // Shadows
-                        EnemySpawningData.ScoutShadow with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.ScoutShadow with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.Scout with { Points = 10 },
-                        EnemySpawningData.Scout with { Points = 10 },
-                        EnemySpawningData.Scout with { Points = 15 },
-                        EnemySpawningData.Scout with { Points = 15 },
-                    }),
-                "E" => (0.3, -1, new List<EnemySpawningData>
-                    {
-                        EnemySpawningData.Scout with { Points = 10 },
-                        EnemySpawningData.Scout with { Points = 10 },
-                        EnemySpawningData.Scout with { Points = 15 },
-                        EnemySpawningData.Scout with { Points = 15 },
-                        EnemySpawningData.Scout with { Points = 20 },
-                        EnemySpawningData.Scout with { Points = 20 },
-                        EnemySpawningData.Scout with { Points = 30 },
-                        EnemySpawningData.Scout with { Points = 30 },
-
-                        // Chargers
-                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.ScoutCharger with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.Scout with { Points = 10 },
-                        EnemySpawningData.Scout with { Points = 10 },
-                        EnemySpawningData.Scout with { Points = 15 },
-                        EnemySpawningData.Scout with { Points = 15 },
-                        EnemySpawningData.Scout with { Points = 20 },
-                        EnemySpawningData.Scout with { Points = 30 },
-
-                        // Shadows
-                        EnemySpawningData.ScoutShadow with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.ScoutShadow with { Distribution = EnemyZoneDistribution.ForceOne },
-                        EnemySpawningData.Scout with { Points = 10 },
-                        EnemySpawningData.Scout with { Points = 10 },
-                        EnemySpawningData.Scout with { Points = 15 },
-                        EnemySpawningData.Scout with { Points = 15 },
-                        EnemySpawningData.Scout with { Points = 20 },
-                        EnemySpawningData.Scout with { Points = 30 },
-                    }),
-
-                _ => (0.0, 0, new List<EnemySpawningData>())
-            };
-
-            var count = 0;
-
-            foreach (var zone in Zones)
-            {
-                if (Generator.Flip(chance) && (count++ < max || max == -1))
-                {
-                    var scout = Generator.Draw(scoutPacks);
-
-                    if (scout == null)
-                        return;
-
-                    zone.EnemySpawningInZone.Add(scout);
-                }
-            }
-        }
-
-        /// <summary>
         /// Generates a Zone Alias start. In general the deeper the level the higher the zone numbers
         /// </summary>
         /// <param name="tier"></param>
@@ -529,7 +406,6 @@ namespace AutogenRundown.DataBlocks
                             layout.Zones.Add(zone);
                         }
 
-
                         // Pick a random direction to expand the reactor
                         var (startExpansion, zoneExpansion) = Generator.Pick(
                             new List<(ZoneBuildExpansion, ZoneExpansion)>
@@ -570,10 +446,6 @@ namespace AutogenRundown.DataBlocks
 
                         layout.Zones.Add(corridor);
                         layout.Zones.Add(reactor);
-
-                        // Assign enemies
-                        //corridor.GenEnemies(director);
-                        //reactor.GenEnemies(director);
 
                         // Assign door puzzles
                         corridor.RollAlarms(puzzlePack);
@@ -684,7 +556,6 @@ namespace AutogenRundown.DataBlocks
             layout.RollBloodDoors();
             layout.RollEnemies(director);
             layout.RollErrorAlarm();
-            //layout.RollScouts();
 
             Bins.LevelLayouts.AddBlock(layout);
 

@@ -84,6 +84,12 @@ namespace AutogenRundown.DataBlocks
         public LayoutPlanner Planner { get; set; } = new LayoutPlanner();
 
         /// <summary>
+        /// Which zone the main bulkhead door gates. Often we want objectives to be spawned here or later.
+        /// </summary>
+        [JsonIgnore]
+        public int MainBulkheadZone { get; set; } = 0;
+
+        /// <summary>
         /// Level description
         /// </summary>
         [JsonIgnore]
@@ -378,6 +384,7 @@ namespace AutogenRundown.DataBlocks
             }
 
             var mainBulkheadZone = Generator.Pick(openZones.TakeLast(openZones.Count - index));
+            level.MainBulkheadZone = mainBulkheadZone.ZoneNumber;
 
             Plugin.Logger.LogInfo($"Level={level.Tier}{level.Index} - Main Bulkhead Zone = {mainBulkheadZone.ZoneNumber}");
 

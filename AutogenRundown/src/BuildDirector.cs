@@ -54,11 +54,12 @@ namespace AutogenRundown
         {
             var objectives = new List<WardenObjectiveType>
             {
+                WardenObjectiveType.HsuFindSample,
                 WardenObjectiveType.ReactorShutdown,
                 WardenObjectiveType.GatherSmallItems,
                 WardenObjectiveType.ClearPath,
                 WardenObjectiveType.SpecialTerminalCommand,
-                WardenObjectiveType.HsuFindSample,
+                WardenObjectiveType.TerminalUplink
             };
 
             if (!Bulkhead.HasFlag(Bulkhead.Main))

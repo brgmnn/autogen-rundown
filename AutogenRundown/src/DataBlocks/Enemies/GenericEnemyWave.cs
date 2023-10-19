@@ -8,12 +8,30 @@ namespace AutogenRundown.DataBlocks.Enemies
         /// Exit trickle alarm for running to extraction at the end of the level.
         /// </summary>
         public static GenericWave ExitTrickle = new GenericWave
-            {
-                WaveSettings = (uint)VanillaWaveSettings.ExitTrickle_38S_Original,
-                WavePopulation = (uint)Alarms.WavePopulation.Baseline,
-                SpawnDelay = 4.0,
-                TriggerAlarm = true,
-            };
+        {
+            WaveSettings = (uint)VanillaWaveSettings.ExitTrickle_38S_Original,
+            WavePopulation = (uint)Alarms.WavePopulation.Baseline,
+            SpawnDelay = 4.0,
+            TriggerAlarm = true,
+        };
+
+        #region Uplink Waves
+        public static GenericWave Uplink_Easy = new GenericWave
+        {
+            WaveSettings = (uint)VanillaWaveSettings.Apex,
+            WavePopulation = (uint)Alarms.WavePopulation.Baseline,
+            SpawnDelay = 2.0,
+            TriggerAlarm = true,
+        };
+
+        public static GenericWave Uplink_Medium = new GenericWave
+        {
+            WaveSettings = (uint)VanillaWaveSettings.ApexIncreased,
+            WavePopulation = (uint)Alarms.WavePopulation.Baseline,
+            SpawnDelay = 2.0,
+            TriggerAlarm = true
+        };
+        #endregion
 
         public uint WaveSettings { get; set; } = 0;
 

@@ -281,6 +281,10 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                /**
+                 * Reactor shutdown will result in the lights being off for the remainder of the
+                 * level. Factor that as a difficulty modifier.
+                 * */
                 case WardenObjectiveType.ReactorShutdown:
                     {
                         objective.MainObjective = "Find the main reactor and shut it down";
@@ -292,7 +296,7 @@ namespace AutogenRundown.DataBlocks
 
                         objective.LightsOnFromBeginning = true;
                         objective.LightsOnDuringIntro = true;
-                        objective.LightsOnWhenStartupComplete = true;
+                        objective.LightsOnWhenStartupComplete = false;
 
                         objective.ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
 
@@ -374,6 +378,10 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                /** 
+                 * Fairly straight forward objective, get to the end zone. Some additional enemies
+                 * at the end make this a more interesting experience.
+                 * */
                 case WardenObjectiveType.ClearPath:
                     {
                         // TODO: For some reason "[EXTRACTION_ZONE]" is not registering the exit zone correctly.
@@ -451,6 +459,88 @@ namespace AutogenRundown.DataBlocks
 
                         break;
                     }
+
+                /**
+                 * Sets up a terminal uplink objective. Randomizes the number of terminals, number
+                 * of uplink words, etc.
+                 */
+                case WardenObjectiveType.TerminalUplink:
+                    {
+                        objective.MainObjective = "Find the <u>Uplink Terminals</u> [ALL_ITEMS] and establish an external uplink from each terminal";
+                        objective.FindLocationInfo = "Gather information about the location of [ALL_ITEMS]";
+                        objective.FindLocationInfoHelp = "Access more data in the terminal maintenance system";
+                        objective.SolveItem = "Use [ITEM_SERIAL] to create an uplink to [UPLINK_ADDRESS]";
+                        objective.SolveItemHelp = "Use the UPLINK_CONNECT command to establish the connection";
+
+                        objective.GoToWinCondition_Elevator = "Neural Imprinting Protocols retrieved. Return to the point of entrance in [EXTRACTION_ZONE]";
+                        objective.GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
+                        objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+                        objective.GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
+                        objective.GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+
+                        objective.Uplink_NumberOfTerminals = (level.Tier, director.Bulkhead) switch
+                        {
+                            ("A", _) => 1,
+
+                            ("B", _) => Generator.Random.Next(1, 2),
+
+                            ("C", Bulkhead.Main) => Generator.Random.Next(1, 3),
+                            ("C", _) => Generator.Random.Next(1, 2),
+
+                            ("D", Bulkhead.Main) => Generator.Random.Next(1, 3),
+                            ("D", _) => Generator.Random.Next(1, 3),
+
+                            ("E", Bulkhead.Main) => Generator.Random.Next(2, 4),
+                            ("E", _) => Generator.Random.Next(1, 3),
+
+                            (_, _) => 1
+                        };
+                        objective.Uplink_NumberOfVerificationRounds = (level.Tier, objective.Uplink_NumberOfTerminals) switch
+                        {
+                            ("A", _) => 3,
+
+                            ("B", _) => Generator.Random.Next(3, 4),
+
+                            ("C", 1) => Generator.Random.Next(4, 6),
+                            ("C", 2) => Generator.Random.Next(4, 5),
+                            ("C", 3) => Generator.Random.Next(3, 4),
+
+                            ("D", 1) => Generator.Random.Next(5, 6),
+                            ("D", 2) => Generator.Random.Next(4, 6),
+                            ("D", 3) => 4,
+
+                            ("E", 1) => Generator.Random.Next(6, 10),
+                            ("E", 2) => Generator.Random.Next(5, 6),
+                            ("E", 3) => 5,
+                            ("E", 4) => 5,
+
+                            (_, _) => 1,
+                        };
+                        objective.Uplink_WaveSpawnType = SurvivalWaveSpawnType.InSuppliedCourseNodeZone;
+
+                        var wave = level.Tier switch
+                        {
+                            "A" => GenericWave.Uplink_Easy,
+                            "B" => GenericWave.Uplink_Easy,
+                            _ => GenericWave.Uplink_Medium,
+                        };
+
+                        objective.WavesOnActivate.Add(wave);
+
+                        var placements = new List<ZonePlacementData>();
+                        for (var i = 1; i <= objective.Uplink_NumberOfTerminals; i++)
+                        {
+                            placements.Add(new ZonePlacementData
+                            {
+                                LocalIndex = layout.Zones.Count() - i,
+                                Weights = ZonePlacementWeights.NotAtStart
+                            });
+                        }
+
+                        dataLayer.ObjectiveData.ZonePlacementDatas.Add(placements);
+
+                        break;
+                    }
             }
 
             dataLayer.ObjectiveData.DataBlockId = objective.PersistentId;
@@ -464,7 +554,7 @@ namespace AutogenRundown.DataBlocks
         public string Header { get; set; } = "";
         public string MainObjective { get; set; } = "";
         public string FindLocationInfo { get; set; } = "";
-        public string FindLocationInfoHelp { get; set; } = "";
+        public string FindLocationInfoHelp { get; set; } = "Access more data in the terminal maintenance system";
         public string GoToZone { get; set; } = "";
         public string GoToZoneHelp { get; set; } = "";
         public string InZoneFindItem { get; set; } = "";
@@ -491,7 +581,15 @@ namespace AutogenRundown.DataBlocks
 
         public List<WardenObjectiveEvent> EventsOnElevatorLand { get; set; } = new List<WardenObjectiveEvent>();
 
-        public List<Enemies.GenericWave> WavesOnGotoWin { get; set; } = new List<Enemies.GenericWave>();
+        /// <summary>
+        /// Waves to spawn on returning to win. This seems to only be for the main objective.
+        /// </summary>
+        public List<GenericWave> WavesOnGotoWin { get; set; } = new List<GenericWave>();
+
+        /// <summary>
+        /// Enemy waves to spawn on activating the objective.
+        /// </summary>
+        public List<GenericWave> WavesOnActivate { get; set; } = new List<GenericWave>();
         #endregion
 
         #region Type=?: Chained puzzles
@@ -545,6 +643,43 @@ namespace AutogenRundown.DataBlocks
         public string SpecialTerminalCommandDesc { get; set; } = "";
         #endregion
 
+        #region Type=8: Uplink terminal
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Uplink_NumberOfVerificationRounds { get; set; } = 0;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Uplink_NumberOfTerminals { get; set; } = 1;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public SurvivalWaveSpawnType Uplink_WaveSpawnType { get; set; } = SurvivalWaveSpawnType.InSuppliedCourseNodeZone;
+        #endregion
+
+        #region Type=15: Timed terminal sequence
+        public int TimedTerminalSequence_NumberOfRounds { get; set; } = 3;
+
+        public int TimedTerminalSequence_NumberOfTerminals = 1;
+
+        public double TimedTerminalSequence_TimePerRound = 90.0;
+
+        public double TimedTerminalSequence_TimeForConfirmation = 10.0;
+
+        public bool TimedTerminalSequence_UseFilterForSourceTerminalPicking = false;
+
+        public string TimedTerminalSequence_SourceTerminalWorldEventObjectFilter = "";
+
+        public JArray TimedTerminalSequence_EventsOnSequenceStart = new JArray();
+
+        public JArray TimedTerminalSequence_EventsOnSequenceDone = new JArray();
+
+        public JArray TimedTerminalSequence_EventsOnSequenceFail = new JArray();
+        #endregion
+
         #region Expedition exit
         /// <summary>
         /// What exit scan to use at the exit
@@ -567,7 +702,6 @@ namespace AutogenRundown.DataBlocks
         public int FogTransitionDataOnElevatorLand = 0;
         public double FogTransitionDurationOnElevatorLand = 0.0;
         public bool OnActivateOnSolveItem = false;
-        public JArray WavesOnActivate = new JArray();
         public bool StopAllWavesBeforeGotoWin = false;
         public int WaveOnGotoWinTrigger = 0;
         public JArray EventsOnGotoWin = new JArray();
@@ -582,9 +716,6 @@ namespace AutogenRundown.DataBlocks
         public JArray PostCommandOutput = new JArray();
         public int SpecialCommandRule = 0;
         public int PowerCellsToDistribute = 0;
-        public int Uplink_NumberOfVerificationRounds = 0;
-        public int Uplink_NumberOfTerminals = 1;
-        public int Uplink_WaveSpawnType = 1;
         public int CentralPowerGenClustser_NumberOfGenerators = 0;
         public int CentralPowerGenClustser_NumberOfPowerCells = 4;
         public JArray CentralPowerGenClustser_FogDataSteps = new JArray();
@@ -594,15 +725,6 @@ namespace AutogenRundown.DataBlocks
         public int GatherTerminal_RequiredCount = 0;
         public string GatherTerminal_Command = "";
         public double GatherTerminal_DownloadTime = -1.0;
-        public int TimedTerminalSequence_NumberOfRounds = 3;
-        public int TimedTerminalSequence_NumberOfTerminals = 1;
-        public double TimedTerminalSequence_TimePerRound = 90.0;
-        public double TimedTerminalSequence_TimeForConfirmation = 10.0;
-        public bool TimedTerminalSequence_UseFilterForSourceTerminalPicking = false;
-        public string TimedTerminalSequence_SourceTerminalWorldEventObjectFilter = "";
-        public JArray TimedTerminalSequence_EventsOnSequenceStart = new JArray();
-        public JArray TimedTerminalSequence_EventsOnSequenceDone = new JArray();
-        public JArray TimedTerminalSequence_EventsOnSequenceFail = new JArray();
         #endregion
     }
 }
