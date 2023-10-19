@@ -357,7 +357,7 @@ namespace AutogenRundown.DataBlocks
         public List<WardenObjectiveEvent> EventsOnApproachDoor { get; set; } = new List<WardenObjectiveEvent>();
         public List<JObject> EventsOnUnlockDoor { get; set; } = new List<JObject>();
         public List<JObject> EventsOnOpenDoor { get; set; } = new List<JObject>();
-        public List<JObject> EventsOnDoorScanStart { get; set; } = new List<JObject>();
+        public List<WardenObjectiveEvent> EventsOnDoorScanStart { get; set; } = new List<WardenObjectiveEvent>();
         public List<JObject> EventsOnDoorScanDone { get; set; } = new List<JObject>();
 
         #region Puzzle settings

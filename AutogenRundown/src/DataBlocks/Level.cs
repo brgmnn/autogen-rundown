@@ -95,6 +95,9 @@ namespace AutogenRundown.DataBlocks
         [JsonIgnore]
         public string Description { get; set; } = "";
 
+        [JsonIgnore]
+        public Fog FogSettings { get; set; } = Fog.Default;
+
         /// <summary>
         /// Flags the level as a test level
         /// </summary>
@@ -138,7 +141,8 @@ namespace AutogenRundown.DataBlocks
                 ["ComplexResourceData"] = (int)Complex,
                 ["MLSLevelKit"] = 0,
                 ["LightSettings"] = 36,
-                ["FogSettings"] = 139,
+                //["FogSettings"] = 139,
+                ["FogSettings"] = FogSettings.PersistentId,
                 ["EnemyPopulation"] = 1,
                 ["ExpeditionBalance"] = 1,
                 ["ScoutWaveSettings"] = 3,

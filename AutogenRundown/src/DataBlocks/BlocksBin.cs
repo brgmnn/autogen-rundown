@@ -9,6 +9,8 @@ namespace AutogenRundown.DataBlocks
     {
         public static BlocksBin<ChainedPuzzle> ChainedPuzzles { get; private set; }
             = new BlocksBin<ChainedPuzzle>();
+        public static BlocksBin<Fog> Fogs { get; private set; }
+            = new BlocksBin<Fog>();
         public static BlocksBin<Rundown> Rundowns { get; private set; }
             = new BlocksBin<Rundown>();
         public static BlocksBin<LevelLayout> LevelLayouts { get; private set; }
@@ -21,12 +23,14 @@ namespace AutogenRundown.DataBlocks
         public static void Save()
         {
             ChainedPuzzle.SaveStatic();
+            Fog.SaveStatic();
             Rundown.SaveStatic();
             LevelLayout.SaveStatic();
             WardenObjective.SaveStatic();
             Alarms.WaveSettings.SaveStatic();
 
             ChainedPuzzles.Save("ChainedPuzzleDataBlock");
+            Fogs.Save("FogSettingsDataBlock");
             Rundowns.Save("RundownDataBlock");
             LevelLayouts.Save("LevelLayoutDataBlock");
             WardenObjectives.Save("WardenObjectiveDataBlock");

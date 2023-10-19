@@ -45,7 +45,7 @@ namespace AutogenRundown.DataBlocks.Objectives
         #region Fog settings
         public uint FogSetting { get; set; } = 0;
 
-        public double FogTransitionDuration { get; set; } = 0.0;
+        public double FogTransitionDuration { get; set; } = 2.0;
         #endregion
 
         #region Enemy settings
