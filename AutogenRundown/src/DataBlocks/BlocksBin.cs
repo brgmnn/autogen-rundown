@@ -35,25 +35,26 @@ namespace AutogenRundown.DataBlocks
         {
             var pop = new EnemyPopulationRole
             {
-                Role = (uint)EnemyRole.Tank,
-                Difficulty = 1337,
-                Enemy = Enemy.Tank,
-                Cost = 10.0,
+                Role = (uint)EnemyRole.Melee,
+                Difficulty = 10007,
+                Enemy = Enemy.ShadowGiant,
+                Cost = 4.0,
             };
 
             EnemyPopulation.Roles.Add(pop);
 
             var group = new EnemyGroup
             {
+                PersistentId = 90,
                 Type = EnemyGroupType.Hibernate,
-                Difficulty = 1337,
+                Difficulty = 10007,
                 MaxScore = 10.0,
                 Roles = new List<EnemyGroupRole>
                 {
                     new EnemyGroupRole
                     {
-                        Role = EnemyRole.Tank,
-                        Distribution = EnemyRoleDistribution.ForceOne,
+                        Role = EnemyRole.Melee,
+                        Distribution = EnemyRoleDistribution.Rel100,
                     }
                 }
             };

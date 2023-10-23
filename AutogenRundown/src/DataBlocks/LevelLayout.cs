@@ -564,8 +564,9 @@ namespace AutogenRundown.DataBlocks
                 new EnemySpawningData()
                 {
                     GroupType = EnemyGroupType.Hibernate,
-                    Difficulty = EnemyRoleDifficulty.Boss,
-                    Distribution = EnemyZoneDistribution.ForceOne,
+                    Difficulty = (EnemyRoleDifficulty)10007,
+                    Distribution = EnemyZoneDistribution.RelValue,
+                    Points = 12,
                 });
 
             Bins.LevelLayouts.AddBlock(layout);
