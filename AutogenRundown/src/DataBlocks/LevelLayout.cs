@@ -369,7 +369,7 @@ namespace AutogenRundown.DataBlocks
         {
             var layout = new LevelLayout(director)
             {
-                Name = $"{level.Tier}{level.Index} {level.Name}",
+                Name = $"{level.Tier}{level.Index} {level.Name} {director.Bulkhead}",
                 ZoneAliasStart = GenZoneAliasStart(level.Tier)
             };
 

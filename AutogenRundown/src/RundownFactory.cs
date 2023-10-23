@@ -27,6 +27,7 @@ namespace AutogenRundown
         static public void Build()
         {
             Generator.Reload();
+            Bins.Setup();
 
             // Rundown 7 replacement
             var rundown = Rundown.Build(new Rundown { PersistentId = Rundown.R7 });

@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Enemies;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -9,30 +10,39 @@ namespace AutogenRundown.DataBlocks
     {
         public static BlocksBin<ChainedPuzzle> ChainedPuzzles { get; private set; }
             = new BlocksBin<ChainedPuzzle>();
+        public static BlocksBin<EnemyPopulation> EnemyPopulations { get; private set; }
+            = new BlocksBin<EnemyPopulation>();
         public static BlocksBin<Fog> Fogs { get; private set; }
             = new BlocksBin<Fog>();
-        public static BlocksBin<Rundown> Rundowns { get; private set; }
-            = new BlocksBin<Rundown>();
         public static BlocksBin<LevelLayout> LevelLayouts { get; private set; }
             = new BlocksBin<LevelLayout>();
+        public static BlocksBin<Rundown> Rundowns { get; private set; }
+            = new BlocksBin<Rundown>();
         public static BlocksBin<WardenObjective> WardenObjectives { get; private set; }
             = new BlocksBin<WardenObjective>();
         public static BlocksBin<WaveSettings> WaveSettings { get; private set; }
             = new BlocksBin<WaveSettings>();
 
+        public static void Setup()
+        {
+            EnemyPopulation.Setup();
+        }
+
         public static void Save()
         {
             ChainedPuzzle.SaveStatic();
+            EnemyPopulation.SaveStatic();
             Fog.SaveStatic();
-            Rundown.SaveStatic();
             LevelLayout.SaveStatic();
+            Rundown.SaveStatic();
             WardenObjective.SaveStatic();
             Alarms.WaveSettings.SaveStatic();
 
             ChainedPuzzles.Save("ChainedPuzzleDataBlock");
+            EnemyPopulations.Save("EnemyPopulationDataBlock");
             Fogs.Save("FogSettingsDataBlock");
-            Rundowns.Save("RundownDataBlock");
             LevelLayouts.Save("LevelLayoutDataBlock");
+            Rundowns.Save("RundownDataBlock");
             WardenObjectives.Save("WardenObjectiveDataBlock");
             //WaveSettings.Save("SurvivalWaveSettingsDataBlock");
         }

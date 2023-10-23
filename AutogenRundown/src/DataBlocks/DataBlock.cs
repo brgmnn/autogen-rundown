@@ -6,7 +6,7 @@ namespace AutogenRundown.DataBlocks
     /// <summary>
     /// Base datablock type that all other data blocks inherit from
     /// </summary>
-    internal record class DataBlock
+    public record class DataBlock
     {
         /// <summary>
         /// All persistent Ids must be unique
@@ -61,6 +61,9 @@ namespace AutogenRundown.DataBlocks
                 serializer.Serialize(writer, this);
             }
         }
+
+        public static void Setup()
+        { }
 
         public static void SaveStatic()
         { }
