@@ -9,16 +9,11 @@
         /// </summary>
         LightsOff = 1479064690,
 
-        PouncerChirp = 3503733109,
+        PouncerSpawnGrowl = 3503733109,
 
         /// <summary>
         /// Generator / Heavy fan noise
         /// </summary>
-        DistantHeavyFan = 2591647810,
-
-        /// <summary>
-        /// Maybe not?
-        /// </summary>
-        DistantHeavyFan2 = 3979151246
+        KdsDeepVentilationProcedure = 2591647810,
     }
 }

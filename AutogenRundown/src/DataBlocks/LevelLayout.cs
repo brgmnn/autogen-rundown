@@ -553,8 +553,6 @@ namespace AutogenRundown.DataBlocks
                     }
             }
 
-            //EventBuilder.AddFillFog(layout.Zones[1].EventsOnDoorScanStart);
-
             layout.RollBloodDoors();
             layout.RollEnemies(director);
             layout.RollErrorAlarm();

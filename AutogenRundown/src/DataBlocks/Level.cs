@@ -96,7 +96,7 @@ namespace AutogenRundown.DataBlocks
         public string Description { get; set; } = "";
 
         [JsonIgnore]
-        public Fog FogSettings { get; set; } = Fog.Default;
+        public Fog FogSettings { get; set; } = Fog.DefaultFog;
 
         /// <summary>
         /// Flags the level as a test level

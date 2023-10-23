@@ -44,7 +44,7 @@ namespace AutogenRundown.DataBlocks
           "internalEnabled": true,
           "persistentID": 139
         }*/
-        public static Fog Default = new Fog
+        public static Fog DefaultFog = new Fog
         {
             FogColor = new Color { Red = 0.5235849, Green = 0.682390034, Blue = 1.0, Alpha = 0.0 },
             FogDensity = 0.0004,
@@ -59,10 +59,17 @@ namespace AutogenRundown.DataBlocks
 
         public static Fog FullFog = new Fog { DensityHeightAltitude = 1.0 };
 
+        public static Fog FullFog_Infectious = FullFog with
+        {
+            PersistentId = Generator.GetPersistentId(),
+            Infection = 0.03
+        };
+
         public static new void SaveStatic()
         {
-            Bins.Fogs.AddBlock(Default);
+            Bins.Fogs.AddBlock(DefaultFog);
             Bins.Fogs.AddBlock(FullFog);
+            Bins.Fogs.AddBlock(FullFog_Infectious);
         }
 
         /// <summary>
