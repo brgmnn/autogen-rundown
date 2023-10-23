@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BepInEx.Logging;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.Enemies
@@ -12,16 +6,16 @@ namespace AutogenRundown.DataBlocks.Enemies
     public record class EnemyPopulation : DataBlock
     {
         [JsonIgnore]
-        public static List<EnemyRole> Roles = new List<EnemyRole>(); 
+        public static List<EnemyPopulationRole> Roles = new List<EnemyPopulationRole>(); 
 
         public static new void Setup()
         {
-            JArray array = JArray.Parse(EnemyRole.VanillaData);
-            var vanillaGroups = array.ToObject<List<EnemyRole>>();
+            JArray array = JArray.Parse(EnemyPopulationRole.VanillaData);
+            var vanillaRoles = array.ToObject<List<EnemyPopulationRole>>();
 
-            foreach (var group in vanillaGroups)
+            foreach (var popRole in vanillaRoles)
             {
-                Roles.Add(group);
+                Roles.Add(popRole);
             }
         }
 
@@ -35,6 +29,6 @@ namespace AutogenRundown.DataBlocks.Enemies
             });
         }
 
-        public List<EnemyRole> RoleDatas { get; set; } = new List<EnemyRole> { };
+        public List<EnemyPopulationRole> RoleDatas { get; set; } = new List<EnemyPopulationRole> { };
     }
 }

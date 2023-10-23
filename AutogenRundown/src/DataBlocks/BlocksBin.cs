@@ -10,6 +10,8 @@ namespace AutogenRundown.DataBlocks
     {
         public static BlocksBin<ChainedPuzzle> ChainedPuzzles { get; private set; }
             = new BlocksBin<ChainedPuzzle>();
+        public static BlocksBin<EnemyGroup> EnemyGroups { get; private set; }
+            = new BlocksBin<EnemyGroup>();
         public static BlocksBin<EnemyPopulation> EnemyPopulations { get; private set; }
             = new BlocksBin<EnemyPopulation>();
         public static BlocksBin<Fog> Fogs { get; private set; }
@@ -25,12 +27,41 @@ namespace AutogenRundown.DataBlocks
 
         public static void Setup()
         {
+            EnemyGroup.Setup();
             EnemyPopulation.Setup();
         }
 
         public static void Save()
         {
+            var pop = new EnemyPopulationRole
+            {
+                Role = (uint)EnemyRole.Tank,
+                Difficulty = 1337,
+                Enemy = Enemy.Tank,
+                Cost = 10.0,
+            };
+
+            EnemyPopulation.Roles.Add(pop);
+
+            var group = new EnemyGroup
+            {
+                Type = EnemyGroupType.Hibernate,
+                Difficulty = 1337,
+                MaxScore = 10.0,
+                Roles = new List<EnemyGroupRole>
+                {
+                    new EnemyGroupRole
+                    {
+                        Role = EnemyRole.Tank,
+                        Distribution = EnemyRoleDistribution.ForceOne,
+                    }
+                }
+            };
+
+            Bins.EnemyGroups.AddBlock(group);
+
             ChainedPuzzle.SaveStatic();
+            EnemyGroup.SaveStatic();
             EnemyPopulation.SaveStatic();
             Fog.SaveStatic();
             LevelLayout.SaveStatic();
@@ -39,6 +70,7 @@ namespace AutogenRundown.DataBlocks
             Alarms.WaveSettings.SaveStatic();
 
             ChainedPuzzles.Save("ChainedPuzzleDataBlock");
+            EnemyGroups.Save("EnemyGroupDataBlock");
             EnemyPopulations.Save("EnemyPopulationDataBlock");
             Fogs.Save("FogSettingsDataBlock");
             LevelLayouts.Save("LevelLayoutDataBlock");

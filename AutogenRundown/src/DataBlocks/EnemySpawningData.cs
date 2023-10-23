@@ -8,38 +8,6 @@ using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks
 {
-    /// <summary>
-    /// Hibernate is asleep, Hunter is for blood doors. There are others but they are broken
-    /// </summary>
-    enum EnemyGroupType : uint
-    {
-        /// <summary>
-        /// Most spawned enemies should be hibernate
-        /// </summary>
-        Hibernate = 0,
-
-        /// <summary>
-        /// Usually for bosses that should be sneaked past.
-        /// </summary>
-        PureSneak = 1,
-
-        /// <summary>
-        /// Seems to be mostly Chargers
-        /// </summary>
-        Detect = 2,
-
-        /// <summary>
-        /// Scouts only
-        /// </summary>
-        Scout = 3,
-        Awake = 5,
-
-        /// <summary>
-        /// Use only for blood doors
-        /// </summary>
-        Hunter = 6,
-    }
-
     enum EnemyRoleDifficulty : uint
     {
         /// <summary>
@@ -96,22 +64,6 @@ namespace AutogenRundown.DataBlocks
         None = 0,
         ForceOne = 1,
         RelValue = 2
-    }
-
-    /// <summary>
-    /// Not needed unless we generate our own pop blocks
-    /// </summary>
-    enum EnemyRoleDistribution
-    {
-        None = 0,
-        ForceOne = 1,
-        Rel25 = 2,
-        Rel50 = 3,
-        Rel75 = 4,
-        Rel100 = 5,
-        Rel15 = 6,
-        Rel10 = 7,
-        Rel05 = 8
     }
 
     /// <summary>

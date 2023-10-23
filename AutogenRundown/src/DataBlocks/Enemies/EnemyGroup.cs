@@ -1,4 +1,6 @@
-﻿namespace AutogenRundown.DataBlocks.Enemies
+﻿using Newtonsoft.Json.Linq;
+
+namespace AutogenRundown.DataBlocks.Enemies
 {
     public enum VanillaEnemyGroup : uint
     {
@@ -22,7 +24,1319 @@
         BloodDoor_Pouncers = 75,
     }
 
-    internal class EnemyGroup
+    public record class EnemyGroupRole
     {
+        public EnemyRole Role { get; set; }
+
+        public EnemyRoleDistribution Distribution { get; set; } = EnemyRoleDistribution.Rel100;
+    }
+
+    public record class EnemyGroup : DataBlock
+    {
+        public EnemyGroupType Type { get; set; } = EnemyGroupType.Hibernate;
+
+        public uint Difficulty { get; set; } = 0;
+
+        /// <summary>
+        /// Technically this is the following enum:
+        /// https://gtfo-modding.gitbook.io/wiki/reference/enum-types#espawnplacementtype
+        /// </summary>
+        public uint SpawnPlacementType { get; set; } = 0;
+
+        public double MaxScore { get; set; } = 1.0;
+
+        /// <summary>
+        /// Looks like this is almost always 3.0 except for some bosses
+        /// </summary>
+        public double ScoreInAreaPaddingMulti { get; set; } = 3.0;
+
+        public double RelativeWeight { get; set; } = 1.0;
+
+        public List<EnemyGroupRole> Roles { get; set; } = new List<EnemyGroupRole>();
+
+        public static new void Setup()
+        {
+            JArray array = JArray.Parse(VanillaData);
+            var groups = array.ToObject<List<EnemyGroup>>();
+
+            foreach (var group in groups)
+            {
+                Bins.EnemyGroups.AddBlock(group);
+            }
+        }
+
+        public static new void SaveStatic()
+        { }
+
+        public const string VanillaData = @"[
+        {
+          ""Type"": 0,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 5.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 4
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 2
+            }
+          ],
+          ""name"": ""Hibernate Easy Mix"",
+          ""internalEnabled"": true,
+          ""persistentID"": 1
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 4.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 0.5,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 3
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 3
+            }
+          ],
+          ""name"": ""Hibernate Easy Small Mix A"",
+          ""internalEnabled"": true,
+          ""persistentID"": 8
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 4.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 0.5,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 4
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 2
+            }
+          ],
+          ""name"": ""Hibernate Easy Small Mix B"",
+          ""internalEnabled"": true,
+          ""persistentID"": 9
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 3.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 0.75,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 4
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 2
+            }
+          ],
+          ""name"": ""Hibernate Easy Tiny Mix A"",
+          ""internalEnabled"": true,
+          ""persistentID"": 12
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 3.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 0.75,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 3
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 3
+            }
+          ],
+          ""name"": ""Hibernate Easy Tiny Mix B"",
+          ""internalEnabled"": true,
+          ""persistentID"": 11
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 2.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 2.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hibernate Easy Tiny Melee"",
+          ""internalEnabled"": true,
+          ""persistentID"": 10
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 1,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 5.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 4
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 2
+            }
+          ],
+          ""name"": ""Hibernate Medium Mix B"",
+          ""internalEnabled"": true,
+          ""persistentID"": 16
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 1,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 3.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.5,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 3
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 3
+            }
+          ],
+          ""name"": ""Hibernate Medium Small Mix A"",
+          ""internalEnabled"": true,
+          ""persistentID"": 13
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 1,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 4.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.5,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 4
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 2
+            }
+          ],
+          ""name"": ""Hibernate Medium Small Mix B"",
+          ""internalEnabled"": true,
+          ""persistentID"": 55
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 1,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 2.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.5,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 4
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 2
+            }
+          ],
+          ""name"": ""Hibernate Medium Tiny Mix A"",
+          ""internalEnabled"": true,
+          ""persistentID"": 14
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 1,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 2.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.5,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 3
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 3
+            }
+          ],
+          ""name"": ""Hibernate Medium Tiny Mix B"",
+          ""internalEnabled"": true,
+          ""persistentID"": 15
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 2,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 6.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 1,
+              ""Distribution"": 2
+            },
+            {
+              ""Role"": 5,
+              ""Distribution"": 1
+            },
+            {
+              ""Role"": 0,
+              ""Distribution"": 4
+            }
+          ],
+          ""name"": ""Hibernate Hard Large Mix Scout"",
+          ""internalEnabled"": true,
+          ""persistentID"": 19
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 2,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 6.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 1,
+              ""Distribution"": 2
+            },
+            {
+              ""Role"": 0,
+              ""Distribution"": 4
+            }
+          ],
+          ""name"": ""Hibernate Hard Large Mix"",
+          ""internalEnabled"": true,
+          ""persistentID"": 57
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 2,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 5.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.2,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 4
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 2
+            },
+            {
+              ""Role"": 5,
+              ""Distribution"": 1
+            }
+          ],
+          ""name"": ""Hibernate Hard Mix Scout"",
+          ""internalEnabled"": true,
+          ""persistentID"": 17
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 2,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 4.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 2.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 4
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 2
+            }
+          ],
+          ""name"": ""Hibernate Hard Small Mix A"",
+          ""internalEnabled"": true,
+          ""persistentID"": 58
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 2,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 3.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 2.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 4
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 2
+            },
+            {
+              ""Role"": 5,
+              ""Distribution"": 1
+            }
+          ],
+          ""name"": ""Hibernate Hard Small Mix Scout"",
+          ""internalEnabled"": true,
+          ""persistentID"": 18
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 2,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 2.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 5.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 4
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 2
+            }
+          ],
+          ""name"": ""Hibernate Hard Small Mix B"",
+          ""internalEnabled"": true,
+          ""persistentID"": 59
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 6,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 6.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hibernate Biss Large Melee Shadows"",
+          ""internalEnabled"": true,
+          ""persistentID"": 7
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 6,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 5.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hibernate Biss Melee Shadows"",
+          ""internalEnabled"": true,
+          ""persistentID"": 60
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 6,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 3.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 3.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hibernate Biss Small Melee Shadows"",
+          ""internalEnabled"": true,
+          ""persistentID"": 61
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 6,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 2.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 4.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hibernate Biss Tiny Melee Shadows"",
+          ""internalEnabled"": true,
+          ""persistentID"": 62
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 7,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 8.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 2.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hibernate Buss Melee Big Shadows"",
+          ""internalEnabled"": true,
+          ""persistentID"": 63
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 7,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 4.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 3.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hibernate Buss Small Melee Big Shadows"",
+          ""internalEnabled"": true,
+          ""persistentID"": 64
+        },
+        {
+          ""Type"": 1,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 6.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 4,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Pure Sneak Easy"",
+          ""internalEnabled"": true,
+          ""persistentID"": 20
+        },
+        {
+          ""Type"": 1,
+          ""Difficulty"": 1,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 6.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 4,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Pure Sneak Medium"",
+          ""internalEnabled"": true,
+          ""persistentID"": 21
+        },
+        {
+          ""Type"": 1,
+          ""Difficulty"": 2,
+          ""SpawnPlacementType"": 2,
+          ""MaxScore"": 10.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 4,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Pure Sneak Hard Birther Align_1"",
+          ""internalEnabled"": true,
+          ""persistentID"": 22
+        },
+        {
+          ""Type"": 1,
+          ""Difficulty"": 6,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 3.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 4,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Pure Sneak Biss Hybrids"",
+          ""internalEnabled"": true,
+          ""persistentID"": 50
+        },
+        {
+          ""Type"": 1,
+          ""Difficulty"": 7,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 6.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 8,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Pure Sneak Buss Large BirtherChild"",
+          ""internalEnabled"": true,
+          ""persistentID"": 52
+        },
+        {
+          ""Type"": 1,
+          ""Difficulty"": 7,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 4.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 2.0,
+          ""Roles"": [
+            {
+              ""Role"": 8,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Pure Sneak Buss BirtherChild"",
+          ""internalEnabled"": true,
+          ""persistentID"": 65
+        },
+        {
+          ""Type"": 1,
+          ""Difficulty"": 7,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 2.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 3.0,
+          ""Roles"": [
+            {
+              ""Role"": 8,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Pure Sneak Buss Small BirtherChild"",
+          ""internalEnabled"": true,
+          ""persistentID"": 66
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 3,
+          ""SpawnPlacementType"": 1,
+          ""MaxScore"": 10.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 9,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hibernate Miniboss Minibos Birther Align_0"",
+          ""internalEnabled"": true,
+          ""persistentID"": 40
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 5,
+          ""SpawnPlacementType"": 1,
+          ""MaxScore"": 10.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 9,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hibernate Miniboss Megaboss Tank Align_0"",
+          ""internalEnabled"": true,
+          ""persistentID"": 44
+        },
+        {
+          ""Type"": 0,
+          ""Difficulty"": 4,
+          ""SpawnPlacementType"": 2,
+          ""MaxScore"": 10.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 4,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hibernate Boss Boss BirtherBoss Align_1"",
+          ""internalEnabled"": true,
+          ""persistentID"": 41
+        },
+        {
+          ""Type"": 1,
+          ""Difficulty"": 3,
+          ""SpawnPlacementType"": 2,
+          ""MaxScore"": 10.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 4,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hibernate Pure Sneak Miniboss BirtherBoss Align_1"",
+          ""internalEnabled"": true,
+          ""persistentID"": 71
+        },
+        {
+          ""Type"": 1,
+          ""Difficulty"": 4,
+          ""SpawnPlacementType"": 1,
+          ""MaxScore"": 10.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 4,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Pure Sneak Boss Boss Squidward Align_0"",
+          ""internalEnabled"": true,
+          ""persistentID"": 69
+        },
+        {
+          ""Type"": 1,
+          ""Difficulty"": 5,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 10.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 4,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Pure Sneak Megaboss Tank"",
+          ""internalEnabled"": true,
+          ""persistentID"": 70
+        },
+        {
+          ""Type"": 3,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 6.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 5,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Pure Detect Easy Scout"",
+          ""internalEnabled"": true,
+          ""persistentID"": 26
+        },
+        {
+          ""Type"": 3,
+          ""Difficulty"": 1,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 6.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 5,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Pure Detect Medium Scout"",
+          ""internalEnabled"": true,
+          ""persistentID"": 27
+        },
+        {
+          ""Type"": 3,
+          ""Difficulty"": 2,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 6.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 5,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Pure Detect Hard Scout"",
+          ""internalEnabled"": true,
+          ""persistentID"": 28
+        },
+        {
+          ""Type"": 3,
+          ""Difficulty"": 4,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 6.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 5,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Pure Detect Boss Shadow Scout"",
+          ""internalEnabled"": true,
+          ""persistentID"": 45
+        },
+        {
+          ""Type"": 3,
+          ""Difficulty"": 3,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 6.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 5,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Pure Detect MiniBoss Bullrush Scout"",
+          ""internalEnabled"": true,
+          ""persistentID"": 54
+        },
+        {
+          ""Type"": 2,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 6.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 3,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Detect Lurker Bullrush Striker"",
+          ""internalEnabled"": true,
+          ""persistentID"": 23
+        },
+        {
+          ""Type"": 2,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 2.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 3.0,
+          ""Roles"": [
+            {
+              ""Role"": 3,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Detect Lurker Small Bullrush Striker"",
+          ""internalEnabled"": true,
+          ""persistentID"": 67
+        },
+        {
+          ""Type"": 2,
+          ""Difficulty"": 1,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 4.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 3,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Detect Lurker Medium Bullrush Striker"",
+          ""internalEnabled"": true,
+          ""persistentID"": 43
+        },
+        {
+          ""Type"": 2,
+          ""Difficulty"": 2,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 4.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 3,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Detect Lurker Hard Small Bullrush Bigs"",
+          ""internalEnabled"": true,
+          ""persistentID"": 34
+        },
+        {
+          ""Type"": 2,
+          ""Difficulty"": 2,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 8.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 3,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Detect Lurker Hard Large Bullrush Bigs"",
+          ""internalEnabled"": true,
+          ""persistentID"": 73
+        },
+        {
+          ""Type"": 2,
+          ""Difficulty"": 7,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 4.0,
+          ""ScoreInAreaPaddingMulti"": 3.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 3,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Cluster Shooter"",
+          ""internalEnabled"": true,
+          ""persistentID"": 81
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 10.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 4
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 2
+            }
+          ],
+          ""name"": ""Hunter Easy Infront strikers shooters"",
+          ""internalEnabled"": true,
+          ""persistentID"": 30
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 15.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 4
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 2
+            }
+          ],
+          ""name"": ""Hunter Medium Inback strikers shooters"",
+          ""internalEnabled"": true,
+          ""persistentID"": 76
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 2,
+          ""SpawnPlacementType"": 1,
+          ""MaxScore"": 10.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 7,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hunter Boss Birther"",
+          ""internalEnabled"": true,
+          ""persistentID"": 36
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 2,
+          ""SpawnPlacementType"": 1,
+          ""MaxScore"": 5.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 7,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hunter Boss Birther Only One"",
+          ""internalEnabled"": true,
+          ""persistentID"": 49
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 5,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 10.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hunter Boss Tank"",
+          ""internalEnabled"": true,
+          ""persistentID"": 46
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 5,
+          ""SpawnPlacementType"": 2,
+          ""MaxScore"": 10.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hunter Boss Tank_R4C3_L3"",
+          ""internalEnabled"": true,
+          ""persistentID"": 79
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 7,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 12.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 7,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hunter Bigs"",
+          ""internalEnabled"": true,
+          ""persistentID"": 74
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 3,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 10.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 7,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hunter Miniboss BirtherBoss"",
+          ""internalEnabled"": true,
+          ""persistentID"": 47
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 12.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 7,
+              ""Distribution"": 4
+            },
+            {
+              ""Role"": 0,
+              ""Distribution"": 6
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 7
+            }
+          ],
+          ""name"": ""Hunter Easy Inback StrikersShootersHybrids"",
+          ""internalEnabled"": true,
+          ""persistentID"": 31
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 8.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 7,
+              ""Distribution"": 1
+            },
+            {
+              ""Role"": 0,
+              ""Distribution"": 4
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 7
+            }
+          ],
+          ""name"": ""Hunter Easy Inback StrikersShootersHybrids V2"",
+          ""internalEnabled"": true,
+          ""persistentID"": 51
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 1,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 16.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 7,
+              ""Distribution"": 4
+            },
+            {
+              ""Role"": 7,
+              ""Distribution"": 7
+            },
+            {
+              ""Role"": 1,
+              ""Distribution"": 8
+            },
+            {
+              ""Role"": 0,
+              ""Distribution"": 7
+            }
+          ],
+          ""name"": ""Hunter Medium Inback StrikersShootersHybrids"",
+          ""internalEnabled"": true,
+          ""persistentID"": 33
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 8.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 3,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hunter Easy Bullrush"",
+          ""internalEnabled"": true,
+          ""persistentID"": 32
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 6,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 4.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hunter Easy Shadows R2E1"",
+          ""internalEnabled"": true,
+          ""persistentID"": 77
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 20.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 3,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hunter Easy Large Bullrush"",
+          ""internalEnabled"": true,
+          ""persistentID"": 72
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 6,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 13.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Hunter Medium Biss Melee Shadows"",
+          ""internalEnabled"": true,
+          ""persistentID"": 35
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 6,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 5.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 0,
+              ""Distribution"": 4
+            }
+          ],
+          ""name"": ""Hunter Medium Melee Shadows R2C1"",
+          ""internalEnabled"": true,
+          ""persistentID"": 78
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 30.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 8,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Birther Boss Children"",
+          ""internalEnabled"": true,
+          ""persistentID"": 38
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 20.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 8,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Birther Children"",
+          ""internalEnabled"": true,
+          ""persistentID"": 37
+        },
+        {
+          ""Type"": 4,
+          ""Difficulty"": 0,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 10.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 6,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""PatrolTest"",
+          ""internalEnabled"": true,
+          ""persistentID"": 29
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 6,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 2.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 8,
+              ""Distribution"": 5
+            }
+          ],
+          ""name"": ""Squid Boss Children"",
+          ""internalEnabled"": true,
+          ""persistentID"": 68
+        },
+        {
+          ""Type"": 6,
+          ""Difficulty"": 6,
+          ""SpawnPlacementType"": 0,
+          ""MaxScore"": 1.0,
+          ""ScoreInAreaPaddingMulti"": 1.0,
+          ""RelativeWeight"": 1.0,
+          ""Roles"": [
+            {
+              ""Role"": 7,
+              ""Distribution"": 1
+            }
+          ],
+          ""name"": ""Hunter Biss Pouncer"",
+          ""internalEnabled"": true,
+          ""persistentID"": 75
+        }
+      ]";
     }
 }

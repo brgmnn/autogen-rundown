@@ -557,6 +557,17 @@ namespace AutogenRundown.DataBlocks
             layout.RollEnemies(director);
             layout.RollErrorAlarm();
 
+            //[Message: Unity] GameData: GameData.EnemyGroupDataBlock does not contain a block with ID: 34594
+            //[Error: Unity] NullReferenceException: Object reference not set to an instance of an object.
+
+            layout.Zones[0].EnemySpawningInZone.Add(
+                new EnemySpawningData()
+                {
+                    GroupType = EnemyGroupType.Hibernate,
+                    Difficulty = EnemyRoleDifficulty.Boss,
+                    Distribution = EnemyZoneDistribution.ForceOne,
+                });
+
             Bins.LevelLayouts.AddBlock(layout);
 
             return layout;
