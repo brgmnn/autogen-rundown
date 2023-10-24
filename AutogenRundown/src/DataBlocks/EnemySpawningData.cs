@@ -121,7 +121,7 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// What difficulty of enemies to match in the enemy population data block
         /// </summary>
-        public EnemyRoleDifficulty Difficulty { get; set; } = EnemyRoleDifficulty.Easy;
+        public uint Difficulty { get; set; } = (uint)EnemyRoleDifficulty.Easy;
 
 
         public EnemyZoneDistribution Distribution { get; set; } = EnemyZoneDistribution.RelValue;
@@ -146,19 +146,19 @@ namespace AutogenRundown.DataBlocks
         public static EnemySpawningData Scout = new EnemySpawningData
         {
             GroupType = EnemyGroupType.Scout,
-            Difficulty = EnemyRoleDifficulty.Easy
+            Difficulty = (uint)EnemyRoleDifficulty.Easy
         };
 
         public static EnemySpawningData ScoutCharger = new EnemySpawningData
         {
             GroupType = EnemyGroupType.Scout,
-            Difficulty = EnemyRoleDifficulty.MiniBoss
+            Difficulty = (uint)EnemyRoleDifficulty.MiniBoss
         };
 
         public static EnemySpawningData ScoutShadow = new EnemySpawningData
         {
             GroupType = EnemyGroupType.Scout,
-            Difficulty = EnemyRoleDifficulty.Boss
+            Difficulty = (uint)EnemyRoleDifficulty.Boss
         };
     }
 }

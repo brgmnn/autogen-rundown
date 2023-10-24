@@ -222,7 +222,7 @@ namespace AutogenRundown.DataBlocks
                                 new EnemySpawningData()
                                 {
                                     GroupType = EnemyGroupType.Hibernate,
-                                    Difficulty = difficulty,
+                                    Difficulty = (uint)difficulty,
                                     Points = points / selected.Difficulties.Count,
                                 });
                         }
@@ -246,7 +246,7 @@ namespace AutogenRundown.DataBlocks
                                 new EnemySpawningData()
                                 {
                                     GroupType = EnemyGroupType.Hibernate,
-                                    Difficulty = difficulty,
+                                    Difficulty = (uint)difficulty,
                                     Points = points / selected.Difficulties.Count,
                                 });
                         }
@@ -272,7 +272,7 @@ namespace AutogenRundown.DataBlocks
                                 new EnemySpawningData()
                                 {
                                     GroupType = EnemyGroupType.Hibernate,
-                                    Difficulty = difficulty,
+                                    Difficulty = (uint)difficulty,
                                     Points = points / selected.Difficulties.Count,
                                 });
                         }

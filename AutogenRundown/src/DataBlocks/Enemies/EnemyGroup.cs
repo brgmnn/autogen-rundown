@@ -70,7 +70,62 @@ namespace AutogenRundown.DataBlocks.Enemies
         }
 
         public static new void SaveStatic()
-        { }
+        {
+            // Assign groups for hibernating enemy spawns. EnemyRole and Enemy will select the
+            // enemy to pick from, the double specifies the max score for that group. Multiple
+            // entries will be randomly picked between.
+            var hibernatingGroups = new List<(EnemyRole, Enemy, double)>
+            {
+                (EnemyRole.Melee, Enemy.Striker, 4.0),
+                (EnemyRole.Melee, Enemy.Striker, 6.0),
+                (EnemyRole.Melee, Enemy.Striker, 10.0),
+
+                (EnemyRole.Ranged, Enemy.Shooter, 4.0),
+                (EnemyRole.Ranged, Enemy.Shooter, 6.0),
+                (EnemyRole.Ranged, Enemy.Shooter, 10.0),
+
+                (EnemyRole.Lurker, Enemy.Charger, 4.0),
+                (EnemyRole.Lurker, Enemy.Charger, 8.0),
+                (EnemyRole.Lurker, Enemy.Charger, 10.0),
+
+                (EnemyRole.Melee, Enemy.Shadow, 4.0),
+                (EnemyRole.Melee, Enemy.Shadow, 6.0),
+                (EnemyRole.Melee, Enemy.Shadow, 10.0),
+
+                // Giants always spawn in pairs
+                (EnemyRole.Melee,  Enemy.StrikerGiant, 8.0),
+                (EnemyRole.Ranged, Enemy.ShooterGiant, 8.0),
+                (EnemyRole.Lurker, Enemy.ChargerGiant, 8.0),
+                (EnemyRole.Melee,  Enemy.ShadowGiant,  8.0),
+
+                (EnemyRole.PureSneak, Enemy.Hybrid, 6.0),
+                (EnemyRole.PureSneak, Enemy.Hybrid, 9.0),
+
+                // Bosses, these need to be individually spawned given their difficulty
+                (EnemyRole.PureSneak, Enemy.Tank,    10.0),
+                (EnemyRole.PureSneak, Enemy.Mother,  10.0),
+                (EnemyRole.PureSneak, Enemy.PMother, 10.0),
+            };
+
+            foreach (var (role, enemy, maxScore) in hibernatingGroups)
+            {
+                Bins.EnemyGroups.AddBlock(
+                    new EnemyGroup
+                    {
+                        Type = EnemyGroupType.Hibernate,
+                        Difficulty = (uint)enemy,
+                        MaxScore = maxScore,
+                        Roles = new List<EnemyGroupRole>
+                        {
+                            new EnemyGroupRole
+                            {
+                                Role = role,
+                                Distribution = EnemyRoleDistribution.Rel100,
+                            }
+                        }
+                    });
+            }
+        }
 
         public const string VanillaData = @"[
         {

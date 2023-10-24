@@ -241,7 +241,7 @@ namespace AutogenRundown.DataBlocks
                         new EnemySpawningData
                         {
                             GroupType = EnemyGroupType.Hibernate,
-                            Difficulty = difficulty,
+                            Difficulty = (uint)difficulty,
                             Points = enemyPoints
                         });
                 }
@@ -557,17 +557,20 @@ namespace AutogenRundown.DataBlocks
             layout.RollEnemies(director);
             layout.RollErrorAlarm();
 
-            //[Message: Unity] GameData: GameData.EnemyGroupDataBlock does not contain a block with ID: 34594
-            //[Error: Unity] NullReferenceException: Object reference not set to an instance of an object.
-
+            /*
             layout.Zones[0].EnemySpawningInZone.Add(
                 new EnemySpawningData()
                 {
-                    GroupType = EnemyGroupType.Hibernate,
-                    Difficulty = (EnemyRoleDifficulty)10007,
-                    Distribution = EnemyZoneDistribution.RelValue,
-                    Points = 8,
+                    Difficulty = (uint)Enemy.ShadowGiant,
+                    Points = 12,
                 });
+            layout.Zones[0].EnemySpawningInZone.Add(
+                new EnemySpawningData()
+                {
+                    Difficulty = (uint)Enemy.Tank,
+                    Points = 10
+                });
+            */
 
             Bins.LevelLayouts.AddBlock(layout);
 

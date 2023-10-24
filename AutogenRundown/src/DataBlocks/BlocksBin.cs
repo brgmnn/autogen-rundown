@@ -39,33 +39,6 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public static void Save()
         {
-            var pop = new EnemyPopulationRole
-            {
-                Role = (uint)EnemyRole.Melee,
-                Difficulty = 10007,
-                Enemy = Enemy.ShadowGiant,
-                Cost = 4.0,
-            };
-
-            EnemyPopulation.Roles.Add(pop);
-
-            var group = new EnemyGroup
-            {
-                Type = EnemyGroupType.Hibernate,
-                Difficulty = 10007,
-                MaxScore = 4.0,
-                Roles = new List<EnemyGroupRole>
-                {
-                    new EnemyGroupRole
-                    {
-                        Role = EnemyRole.Melee,
-                        Distribution = EnemyRoleDistribution.Rel100,
-                    }
-                }
-            };
-
-            Bins.EnemyGroups.AddBlock(group);
-
             ChainedPuzzle.SaveStatic();
             EnemyGroup.SaveStatic();
             EnemyPopulation.SaveStatic();

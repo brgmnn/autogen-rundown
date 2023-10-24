@@ -405,7 +405,7 @@ namespace AutogenRundown.DataBlocks
                             new EnemySpawningData()
                             {
                                 GroupType = EnemyGroupType.Hibernate,
-                                Difficulty = EnemyRoleDifficulty.Easy,
+                                Difficulty = (uint)EnemyRoleDifficulty.Easy,
                                 Points = 75, // 25pts is 1.0 distribution, this is quite a lot
                             });
 
