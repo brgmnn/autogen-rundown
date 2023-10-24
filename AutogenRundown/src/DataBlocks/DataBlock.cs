@@ -32,9 +32,9 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// Data block class constructor. Ensures a unique persistent ID is assigned
         /// </summary>
-        public DataBlock()
+        public DataBlock(uint? id = null)
         {
-            PersistentId = Generator.GetPersistentId();
+            PersistentId = id ?? Generator.GetPersistentId();
             Name = PersistentId.ToString();
         }
 

@@ -35,9 +35,18 @@ namespace AutogenRundown
         }
     }
 
+    public enum PidOffsets
+    {
+        None,
+        Normal,
+        EnemyGroup,
+    }
+
     static internal class Generator
     {
         private static PID pid = 100000;
+
+        private static PID enemyGroupPid = 80;
 
         public static string DisplaySeed { get; set; } = "";
 
@@ -148,7 +157,13 @@ namespace AutogenRundown
         /// Gets a new persistent Id
         /// </summary>
         /// <returns></returns>
-        public static uint GetPersistentId() => pid++;
+        public static uint GetPersistentId(PidOffsets offset = PidOffsets.Normal)
+            => offset switch
+            {
+                PidOffsets.None => 0,
+                PidOffsets.Normal => pid++,
+                PidOffsets.EnemyGroup => enemyGroupPid++ 
+            };
 
         /// <summary>
         /// Sets the seed (without saving) to the 

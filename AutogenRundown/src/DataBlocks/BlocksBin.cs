@@ -25,12 +25,18 @@ namespace AutogenRundown.DataBlocks
         public static BlocksBin<WaveSettings> WaveSettings { get; private set; }
             = new BlocksBin<WaveSettings>();
 
+        /// <summary>
+        /// Primarily used to load and set up vanilla data within custom data blocks.
+        /// </summary>
         public static void Setup()
         {
             EnemyGroup.Setup();
             EnemyPopulation.Setup();
         }
 
+        /// <summary>
+        /// Saves all data blocks to disk. Also any static data blocks are ususally written here.
+        /// </summary>
         public static void Save()
         {
             var pop = new EnemyPopulationRole
@@ -45,10 +51,9 @@ namespace AutogenRundown.DataBlocks
 
             var group = new EnemyGroup
             {
-                PersistentId = 90,
                 Type = EnemyGroupType.Hibernate,
                 Difficulty = 10007,
-                MaxScore = 10.0,
+                MaxScore = 4.0,
                 Roles = new List<EnemyGroupRole>
                 {
                     new EnemyGroupRole

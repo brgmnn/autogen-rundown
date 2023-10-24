@@ -54,10 +54,14 @@ namespace AutogenRundown.DataBlocks.Enemies
 
         public List<EnemyGroupRole> Roles { get; set; } = new List<EnemyGroupRole>();
 
+        public EnemyGroup(PidOffsets offsets = PidOffsets.EnemyGroup)
+            : base(Generator.GetPersistentId(offsets))
+        { }
+
         public static new void Setup()
         {
             JArray array = JArray.Parse(VanillaData);
-            var groups = array.ToObject<List<EnemyGroup>>();
+            var groups = array.ToObject<List<GameDataEnemyGroup>>();
 
             foreach (var group in groups)
             {
@@ -1338,5 +1342,15 @@ namespace AutogenRundown.DataBlocks.Enemies
           ""persistentID"": 75
         }
       ]";
+    }
+
+    public record class GameDataEnemyGroup : EnemyGroup
+    {
+        /// <summary>
+        /// We explicitly want to not have PIDs set when loading data, they come with their own
+        /// Pids. This stops the Pid counter getting incremented when loading vanilla data.
+        /// </summary>
+        public GameDataEnemyGroup() : base(PidOffsets.None)
+        { }
     }
 }

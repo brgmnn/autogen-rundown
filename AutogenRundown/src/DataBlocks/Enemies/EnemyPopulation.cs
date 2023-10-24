@@ -21,6 +21,8 @@ namespace AutogenRundown.DataBlocks.Enemies
 
         public static new void SaveStatic()
         {
+
+
             Bins.EnemyPopulations.AddBlock(new EnemyPopulation
             {
                 Name = "DefaultPop_AutogenRundown",

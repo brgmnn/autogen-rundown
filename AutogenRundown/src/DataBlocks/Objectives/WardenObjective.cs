@@ -233,6 +233,9 @@ namespace AutogenRundown.DataBlocks
 
             switch (director.Objective)
             {
+                /**
+                 * Collect the HSU from within a storage zone 
+                 */
                 case WardenObjectiveType.HsuFindSample:
                     {
                         objective.MainObjective = "Find <color=orange>[ITEM_SERIAL]</color> somewhere inside HSU Storage Zone";
