@@ -67,7 +67,7 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] Input Special Terminal Command
   * [ ] Retrieve Big Items — *Fog Turbine etc.*
   * [ ] Power Cell Distribution — *Distributing cells to individual generators*
-  * [ ] Terminal Uplink
+  * [x] Terminal Uplink
   * [ ] Central Generator Cluster — *Fetching cells for a central generator cluster*
   * [ ] HSU Activate Small
   * [ ] Survival
@@ -81,20 +81,23 @@ Follow the installation instructions again, check yes to overwrite all files.
     * [x] Strikers / Shooters
     * [x] Giants
     * [x] Scouts
-    * [ ] Chargers
+    * [x] Chargers
     * [ ] Shadows
     * [ ] Hybrids
     * [ ] Mothers
     * [ ] Tanks
     * [ ] Pouncers (Snatchers)
+  * Custom enemy spawning
+    * [ ] Balanced default spawns (in progress)
+    * [x] Charger only zones
 * Alarms
   * [x] Basic alarms
   * [x] Blood doors
   * [x] Error alarms
-  * [ ] S-Class alarms
-  * [ ] Surge alarms
+  * [x] S-Class alarms
+  * [x] Surge alarms
   * [ ] High class alarms (> Class V)
 * Challenges
   * [ ] Fog
   * [ ] Infectious fog
-  * [ ] Darkness / Lights change
+  * [x] Darkness / Lights change
