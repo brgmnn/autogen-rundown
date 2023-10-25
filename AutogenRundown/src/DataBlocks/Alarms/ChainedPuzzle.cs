@@ -589,7 +589,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             PublicAlarmName = "Class S I Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.ApexIncreased,
             SurvivalWavePopulation = VanillaWavePopulation.ReactorBaseline,
-            WantedDistanceFromStartPos = 6.0,
+            WantedDistanceFromStartPos = 12.0,
             WantedDistanceBetweenPuzzleComponents = 2.0,
             Puzzle = new List<PuzzleComponent>()
             {
