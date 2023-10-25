@@ -125,6 +125,119 @@ namespace AutogenRundown.DataBlocks.Enemies
                         }
                     });
             }
+
+            // Assign groups for hibernating enemy spawns. EnemyRole and Enemy will select the
+            // enemy to pick from, the double specifies the max score for that group. Multiple
+            // entries will be randomly picked between.
+            var difficultyGroups = new List<(AutogenDifficulty, EnemyRoleDistribution, EnemyRole, double)>
+            {
+                (AutogenDifficulty.TierA, EnemyRoleDistribution.Rel100, EnemyRole.Melee, 4.0),
+            };
+
+            #region AutoDiff, common groups
+            // Assign common groups to all Autogen Difficulties. Often for the base enemies of
+            // strikers / shooters we always want to be able to roll these spawns on levels if
+            // just filling with enemies.
+            var baseDifficulties = new List<AutogenDifficulty>
+            {
+                AutogenDifficulty.TierA,
+                AutogenDifficulty.TierB,
+                AutogenDifficulty.TierC
+            };
+
+            foreach (var difficulty in baseDifficulties)
+            {
+                // Smaller standard mixes
+                Bins.EnemyGroups.AddBlock(
+                    new EnemyGroup
+                    {
+                        Type = EnemyGroupType.Hibernate,
+                        Difficulty = (uint)difficulty,
+                        MaxScore = 5,
+                        Roles = new List<EnemyGroupRole>
+                        {
+                            new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel75 },
+                            new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
+                        }
+                    });
+                Bins.EnemyGroups.AddBlock(
+                    new EnemyGroup
+                    {
+                        Type = EnemyGroupType.Hibernate,
+                        Difficulty = (uint)AutogenDifficulty.TierA,
+                        MaxScore = 5,
+                        Roles = new List<EnemyGroupRole>
+                        {
+                            new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel50 },
+                            new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
+                        }
+                    });
+
+                // Larger mixes
+                Bins.EnemyGroups.AddBlock(
+                    new EnemyGroup
+                    {
+                        Type = EnemyGroupType.Hibernate,
+                        Difficulty = (uint)difficulty,
+                        MaxScore = 10,
+                        Roles = new List<EnemyGroupRole>
+                        {
+                            new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel75 },
+                            new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
+                        }
+                    });
+                Bins.EnemyGroups.AddBlock(
+                    new EnemyGroup
+                    {
+                        Type = EnemyGroupType.Hibernate,
+                        Difficulty = (uint)difficulty,
+                        MaxScore = 8,
+                        Roles = new List<EnemyGroupRole>
+                        {
+                            new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel50 },
+                            new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
+                        }
+                    });
+            }
+            #endregion
+
+            #region AutoDiff, Tier C
+            Bins.EnemyGroups.AddBlock(
+                new EnemyGroup
+                {
+                    Type = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)AutogenDifficulty.TierC,
+                    MaxScore = 6,
+                    Roles = new List<EnemyGroupRole>
+                    {
+                        new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 },
+                        new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
+                    }
+                });
+            Bins.EnemyGroups.AddBlock(
+                new EnemyGroup
+                {
+                    Type = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)AutogenDifficulty.TierC,
+                    MaxScore = 12,
+                    Roles = new List<EnemyGroupRole>
+                    {
+                        new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 },
+                        new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
+                    }
+                });
+            Bins.EnemyGroups.AddBlock(
+                new EnemyGroup
+                {
+                    Type = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)AutogenDifficulty.TierC,
+                    MaxScore = 6,
+                    Roles = new List<EnemyGroupRole>
+                    {
+                        new EnemyGroupRole { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 },
+                    }
+                });
+            #endregion
         }
 
         public const string VanillaData = @"[

@@ -83,6 +83,9 @@ namespace AutogenRundown.DataBlocks
         [JsonIgnore]
         public LayoutPlanner Planner { get; set; } = new LayoutPlanner();
 
+        [JsonIgnore]
+        public LevelSettings Settings { get; set; } = new LevelSettings();
+
         /// <summary>
         /// Which zone the main bulkhead door gates. Often we want objectives to be spawned here or later.
         /// </summary>
@@ -309,6 +312,8 @@ namespace AutogenRundown.DataBlocks
                 level.Name = Generator.Pick(Words.NounsLevel) ?? "";
             }
 
+            var logLevelId = $"Level={level.Tier}{level.Index}";
+
             level.GenerateDepth();
 
             // Randomly select which bulkheads to use
@@ -319,6 +324,9 @@ namespace AutogenRundown.DataBlocks
                 (0.1, Bulkhead.Main | Bulkhead.Overload),
                 (0.25, Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload)
             });
+
+            Plugin.Logger.LogDebug($"{logLevelId} - Modifiers: {level.Settings.Modifiers}");
+
             var bulkheadPlacements = Generator.Select(new List<(double, string)>
             {
                 (1.0, "random")

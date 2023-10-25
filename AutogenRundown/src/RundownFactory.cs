@@ -2,6 +2,7 @@
 using AutogenRundown.DataBlocks;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.GeneratorData;
+using AutogenRundown.DataBlocks.Levels;
 
 namespace AutogenRundown
 {
@@ -92,6 +93,9 @@ namespace AutogenRundown
             };
             mainDirector.GenPoints();
 
+            var settings = new LevelSettings("C");
+            settings.Modifiers.Add(LevelModifiers.ManyChargers);
+
             var testLevel = Level.Build(
                 new Level
                 {
@@ -99,6 +103,7 @@ namespace AutogenRundown
                     Name = "Terminal Uplink",
                     Complex = Complex.Mining,
                     MainDirector = mainDirector,
+                    Settings = settings,
                     Index = cMax + 1,
                     IsTest = true
                 });

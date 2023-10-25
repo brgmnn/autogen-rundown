@@ -21,53 +21,155 @@ namespace AutogenRundown.DataBlocks.Enemies
 
         public static new void SaveStatic()
         {
+            #region Individual enemy populations
             // Easier mapping of enemy role, enemy, and point cost. This should map to vanilla.
-            var fixedEnemies = new List<(EnemyRole, Enemy, double)>
+            var fixedEnemies = new List<EnemyInfo>
             {
-                (EnemyRole.Melee,  Enemy.Striker,      1.0),
-                (EnemyRole.Melee,  Enemy.StrikerGiant, 4.0),
-                (EnemyRole.Ranged, Enemy.Shooter,      1.0),
-                (EnemyRole.Ranged, Enemy.ShooterGiant, 4.0),
-
-                (EnemyRole.Lurker, Enemy.Charger,      2.0),
-                (EnemyRole.Lurker, Enemy.ChargerGiant, 4.0),
-
-                (EnemyRole.Melee,  Enemy.Shadow,       4.0),
-                (EnemyRole.Melee,  Enemy.ShadowGiant,  4.0),
-
-                (EnemyRole.PureSneak, Enemy.Hybrid,    3.0),
-                (EnemyRole.Hunter,    Enemy.Hybrid,    4.0),
-
-                (EnemyRole.PureSneak, Enemy.Mother,    10.0),
-                (EnemyRole.Hunter,    Enemy.Mother,    10.0),
-                (EnemyRole.MiniBoss,  Enemy.Mother,    10.0),
-                (EnemyRole.PureSneak, Enemy.PMother,   10.0),
-                (EnemyRole.Hunter,    Enemy.PMother,   10.0),
-                (EnemyRole.Boss,      Enemy.PMother,   10.0),
-
-                (EnemyRole.BirtherChild, Enemy.Baby,   1.0),
-
-                (EnemyRole.PureSneak, Enemy.Tank,      10.0),
-                (EnemyRole.Hunter,    Enemy.Tank,      10.0),
-                (EnemyRole.MiniBoss,  Enemy.Tank,      10.0),
-
-                (EnemyRole.Hunter,    Enemy.Pouncer,   1.0), // Weirdly Pouncer only is valued at 1pt
+                EnemyInfo.Striker,
+                EnemyInfo.StrikerGiant,
+                EnemyInfo.Shooter,
+                EnemyInfo.ShooterGiant,
+                EnemyInfo.Charger,
+                EnemyInfo.ChargerGiant,
+                EnemyInfo.Shadow,
+                EnemyInfo.ShadowGiant,
+                EnemyInfo.Hybrid,
+                EnemyInfo.Hybrid_Hunter,
+                EnemyInfo.Mother,
+                EnemyInfo.Mother_Hunter,
+                EnemyInfo.Mother_MiniBoss,
+                EnemyInfo.PMother,
+                EnemyInfo.PMother_Hunter,
+                EnemyInfo.PMother_MiniBoss,
+                EnemyInfo.BirtherChild,
+                EnemyInfo.Tank,
+                EnemyInfo.Tank_Hunter,
+                EnemyInfo.Tank_MiniBoss,
+                EnemyInfo.Pouncer,
             };
 
-            foreach (var (role, enemy, cost) in fixedEnemies)
+            foreach (var info in fixedEnemies)
             {
                 // Add enemies into their own difficulty slots. This lets us short circuit the
                 // random group selection process and have more control over spawning specific
                 // groups of enemies.
                 Roles.Add(new EnemyPopulationRole
                 {
-                    Role = (uint)role,
-                    Difficulty = (uint)enemy,
-                    Enemy = enemy,
-                    Cost = cost,
+                    Role = (uint)info.Role,
+                    Difficulty = (uint)info.Enemy,
+                    Enemy = info.Enemy,
+                    Cost = info.Points,
+                });
+            }
+            #endregion
+
+            #region Level Tier populations
+            // ================  Tier A  ================
+            var enemiesTierA = new List<(EnemyInfo, double)>
+            {
+                (EnemyInfo.Striker, 1.0),
+                (EnemyInfo.Shooter, 1.0),
+                (EnemyInfo.StrikerGiant, 0.5),
+                (EnemyInfo.ShooterGiant, 0.5)
+            };
+
+            foreach (var (info, weight) in enemiesTierA)
+            {
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)info.Role,
+                    Difficulty = (uint)AutogenDifficulty.TierA,
+                    Enemy = info.Enemy,
+                    Cost = info.Points,
+                    Weight = weight
                 });
             }
 
+            // ================  Tier B  ================
+            var enemiesTierB = new List<(EnemyInfo, double)>
+            {
+                (EnemyInfo.Striker, 1.0),
+                (EnemyInfo.Shooter, 1.0),
+                (EnemyInfo.StrikerGiant, 0.75),
+                (EnemyInfo.ShooterGiant, 0.5)
+            };
+
+            foreach (var (info, weight) in enemiesTierB)
+            {
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)info.Role,
+                    Difficulty = (uint)AutogenDifficulty.TierB,
+                    Enemy = info.Enemy,
+                    Cost = info.Points,
+                    Weight = weight
+                });
+            }
+
+            // ================  Tier C  ================
+            var enemiesTierC = new List<(EnemyInfo, double)>
+            {
+                (EnemyInfo.Striker, 1.0),
+                (EnemyInfo.Shooter, 1.0),
+                (EnemyInfo.StrikerGiant, 0.75),
+                (EnemyInfo.ShooterGiant, 0.5),
+                (EnemyInfo.Charger, 1.0),
+            };
+
+            foreach (var (info, weight) in enemiesTierC)
+            {
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)info.Role,
+                    Difficulty = (uint)AutogenDifficulty.TierC,
+                    Enemy = info.Enemy,
+                    Cost = info.Points,
+                    Weight = weight
+                });
+            }
+
+            // ================  Tier D  ================
+            var enemiesTierD = new List<(EnemyInfo, double)>
+            {
+                (EnemyInfo.Striker, 1.0),
+                (EnemyInfo.Shooter, 1.0),
+                (EnemyInfo.StrikerGiant, 0.75),
+                (EnemyInfo.ShooterGiant, 0.5)
+            };
+
+            foreach (var (info, weight) in enemiesTierD)
+            {
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)info.Role,
+                    Difficulty = (uint)AutogenDifficulty.TierD,
+                    Enemy = info.Enemy,
+                    Cost = info.Points,
+                    Weight = weight
+                });
+            }
+
+            // ================  Tier E  ================
+            var enemiesTierE = new List<(EnemyInfo, double)>
+            {
+                (EnemyInfo.Striker, 1.0),
+                (EnemyInfo.Shooter, 1.0),
+                (EnemyInfo.StrikerGiant, 0.75),
+                (EnemyInfo.ShooterGiant, 0.5)
+            };
+
+            foreach (var (info, weight) in enemiesTierE)
+            {
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)info.Role,
+                    Difficulty = (uint)AutogenDifficulty.TierE,
+                    Enemy = info.Enemy,
+                    Cost = info.Points,
+                    Weight = weight
+                });
+            }
+            #endregion
 
             Bins.EnemyPopulations.AddBlock(new EnemyPopulation
             {

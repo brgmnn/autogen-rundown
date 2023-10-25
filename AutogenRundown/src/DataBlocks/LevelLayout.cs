@@ -1,27 +1,40 @@
 ﻿using Newtonsoft.Json;
 using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
-using AutogenRundown.DataBlocks.Enemies;
 using static AutogenRundown.DataBlocks.Zone;
+using System.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
+    internal record class Hibernating : Generator.ISelectable
+    {
+        public double Weight { get; set; } = 1.0;
+
+        public uint Enemy { get; set; }
+    }
+
     internal record class LevelLayout : DataBlock
     {
         #region hidden data
         [JsonIgnore]
         private BuildDirector director;
+
+        [JsonIgnore]
+        private LevelSettings settings;
         #endregion
 
         public int ZoneAliasStart { get; set; }
 
         public List<Zone> Zones { get; set; } = new List<Zone>();
 
-        public LevelLayout(BuildDirector director)
+        public LevelLayout(BuildDirector director, LevelSettings settings)
         {
             this.director = director;
+            this.settings = settings;
         }
 
         /// <summary>
@@ -127,7 +140,7 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public void RollEnemies(BuildDirector director)
         {
-            var enemyDistribution = director.Tier switch
+            var enemyDistributionOld = director.Tier switch
             {
                 "A" => new List<WeightedDifficulty>
                     {
@@ -150,6 +163,19 @@ namespace AutogenRundown.DataBlocks
                     },
 
                 _ => new List<WeightedDifficulty>()
+            };
+
+            var enemyDistribution = director.Tier switch
+            {
+                "A" => new List<Hibernating>
+                    {
+                        // In most cases we will leave enemies to the custom difficulty
+                        new Hibernating { Weight = 3.0, Enemy = (uint)AutogenDifficulty.TierA },
+                        new Hibernating { Weight = 0.6, Enemy = (uint)Enemy.StrikerGiant },
+                        new Hibernating { Weight = 0.4, Enemy = (uint)Enemy.ShooterGiant }
+                    },
+
+                _ => new List<Hibernating>() { new Hibernating { Enemy = (uint)Enemy.Striker } }
             };
 
             // All scouts cost 5pts each
@@ -226,7 +252,83 @@ namespace AutogenRundown.DataBlocks
                 if (points < 3)
                     continue;
 
-                var selected = Generator.Select(enemyDistribution);
+
+                // If we have a blood door, reduce the number of enemies that spawn in the zone
+                // by 1/3rd.
+                if (zone.BloodDoor.Enabled)
+                    points = (int)(points * 0.66);
+
+
+                #region Charger roll check
+                var chargerChance = 0.0;
+
+                if (settings.Modifiers.Contains(LevelModifiers.Chargers))
+                    chargerChance = 0.15;
+
+                if (settings.Modifiers.Contains(LevelModifiers.ManyChargers))
+                    chargerChance = 0.5;
+
+                // Roll for a Charger room
+                if (!settings.Modifiers.Contains(LevelModifiers.NoChargers) &&
+                    (settings.Modifiers.Contains(LevelModifiers.OnlyChargers) || Generator.Flip(chargerChance)))
+                {
+                    Plugin.Logger.LogDebug($"Zone {zone.LocalIndex} rolled: Chargers, {points}pts");
+                    zone.EnemySpawningInZone.Add(
+                        new EnemySpawningData
+                        {
+                            GroupType = EnemyGroupType.Hibernate,
+                            Difficulty = (uint)Enemy.Charger,
+                            Points = points
+                        });
+                    continue;
+                }
+                #endregion
+
+                Plugin.Logger.LogDebug($"Zone has {points}pts for enemies");
+
+                // By default we will just let the spawning data allocate out groups.
+                zone.EnemySpawningInZone.Add(
+                    new EnemySpawningData
+                    {
+                        GroupType = EnemyGroupType.Hibernate,
+                        Difficulty = director.Tier switch
+                        {
+                            "A" => (uint)AutogenDifficulty.TierA,
+                            "B" => (uint)AutogenDifficulty.TierB,
+                            "C" => (uint)AutogenDifficulty.TierC,
+                            "D" => (uint)AutogenDifficulty.TierD,
+                            "E" => (uint)AutogenDifficulty.TierE,
+                            _ => (uint)AutogenDifficulty.TierC
+                        },
+                        Points = points
+                    });
+
+                /*while (points > 0)
+                {
+                    var groupPoints = points switch
+                    {
+                        > 40 => 20,
+                        > 24 => 12,
+                        > 16 => 10,
+                        > 8 => 4,
+                        _ => points + 1
+                    };
+
+                    var selectedEnemy = Generator.Select(enemyDistribution);
+                    points -= groupPoints;
+
+                    Plugin.Logger.LogDebug($"  Spawning {groupPoints}pts on enemy -> {selectedEnemy.Enemy}");
+
+                    zone.EnemySpawningInZone.Add(
+                        new EnemySpawningData
+                        {
+                            GroupType = EnemyGroupType.Hibernate,
+                            Difficulty = (uint)selectedEnemy.Enemy,
+                            Points = groupPoints
+                        });
+                }*/
+
+                /*var selected = Generator.Select(enemyDistributionOld);
 
                 foreach (var difficulty in selected.Difficulties)
                 {
@@ -244,7 +346,7 @@ namespace AutogenRundown.DataBlocks
                             Difficulty = (uint)difficulty,
                             Points = enemyPoints
                         });
-                }
+                }*/
             }
         }
 
@@ -367,7 +469,7 @@ namespace AutogenRundown.DataBlocks
 
         public static LevelLayout Build(Level level, BuildDirector director)
         {
-            var layout = new LevelLayout(director)
+            var layout = new LevelLayout(director, level.Settings)
             {
                 Name = $"{level.Tier}{level.Index} {level.Name} {director.Bulkhead}",
                 ZoneAliasStart = GenZoneAliasStart(level.Tier)
