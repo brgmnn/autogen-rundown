@@ -10,7 +10,7 @@ namespace AutogenRundown.DataBlocks.Enemies
         public static GenericWave ExitTrickle = new GenericWave
         {
             WaveSettings = (uint)VanillaWaveSettings.ExitTrickle_38S_Original,
-            WavePopulation = (uint)Alarms.WavePopulation.Baseline,
+            WavePopulation = (uint)Alarms.VanillaWavePopulation.Baseline,
             SpawnDelay = 4.0,
             TriggerAlarm = true,
         };
@@ -19,7 +19,7 @@ namespace AutogenRundown.DataBlocks.Enemies
         public static GenericWave Uplink_Easy = new GenericWave
         {
             WaveSettings = (uint)VanillaWaveSettings.Apex,
-            WavePopulation = (uint)Alarms.WavePopulation.Baseline,
+            WavePopulation = (uint)Alarms.VanillaWavePopulation.Baseline,
             SpawnDelay = 2.0,
             TriggerAlarm = true,
         };
@@ -27,9 +27,35 @@ namespace AutogenRundown.DataBlocks.Enemies
         public static GenericWave Uplink_Medium = new GenericWave
         {
             WaveSettings = (uint)VanillaWaveSettings.ApexIncreased,
-            WavePopulation = (uint)Alarms.WavePopulation.Baseline,
+            WavePopulation = (uint)Alarms.VanillaWavePopulation.Baseline,
             SpawnDelay = 2.0,
             TriggerAlarm = true
+        };
+        #endregion
+
+        #region Single enemy waves
+        public static GenericWave SingleMother = new GenericWave
+        {
+            WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
+            WavePopulation = Alarms.WavePopulation.SingleEnemy_Mother.PersistentId,
+        };
+
+        public static GenericWave SinglePMother = new GenericWave
+        {
+            WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
+            WavePopulation = Alarms.WavePopulation.SingleEnemy_PMother.PersistentId,
+        };
+
+        public static GenericWave SingleTank = new GenericWave
+        {
+            WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
+            WavePopulation = Alarms.WavePopulation.SingleEnemy_Tank.PersistentId,
+        };
+
+        public static GenericWave SinglePouncer = new GenericWave
+        {
+            WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
+            WavePopulation = Alarms.WavePopulation.SingleEnemy_Pouncer.PersistentId,
         };
         #endregion
 

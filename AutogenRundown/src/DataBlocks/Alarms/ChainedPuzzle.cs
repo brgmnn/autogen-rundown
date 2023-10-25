@@ -32,7 +32,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// <summary>
         /// Determine what type(s) of enemy would spawn.
         /// </summary>
-        public WavePopulation SurvivalWavePopulation { get; set; } = 0;
+        public VanillaWavePopulation SurvivalWavePopulation { get; set; } = 0;
 
         /// <summary>
         /// Specify whether to stop the wave after Chained Puzzle Completion. Typically set to 
@@ -203,7 +203,7 @@ namespace AutogenRundown.DataBlocks.Alarms
                             {
                                 PublicAlarmName = "Class VIII",
                                 SurvivalWaveSettings = VanillaWaveSettings.ApexIncreased,
-                                SurvivalWavePopulation = WavePopulation.ReactorBaselineHybrid,
+                                SurvivalWavePopulation = VanillaWavePopulation.ReactorBaselineHybrid,
                                 Puzzle = new List<PuzzleComponent>
                                 {
                                     PuzzleComponent.AllLarge,
@@ -222,7 +222,7 @@ namespace AutogenRundown.DataBlocks.Alarms
                             {
                                 PublicAlarmName = AlarmClass1_Sustained.PublicAlarmName,
                                 SurvivalWaveSettings = VanillaWaveSettings.ApexIncreased,
-                                SurvivalWavePopulation = WavePopulation.ReactorBaselineHybrid,
+                                SurvivalWavePopulation = VanillaWavePopulation.ReactorBaselineHybrid,
                                 WantedDistanceFromStartPos = 6.0,
                                 WantedDistanceBetweenPuzzleComponents = 2.0,
                                 Puzzle = new List<PuzzleComponent>()
@@ -317,7 +317,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class II Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = WavePopulation.Baseline,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
             Puzzle = new List<PuzzleComponent>
             {
                 PuzzleComponent.AllBig,
@@ -329,7 +329,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class III Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = WavePopulation.Baseline,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
             Puzzle = new List<PuzzleComponent>
             {
                 PuzzleComponent.AllBig,
@@ -342,7 +342,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class IV Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = WavePopulation.Baseline,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
             Puzzle = new List<PuzzleComponent>
             {
                 PuzzleComponent.AllBig,
@@ -356,7 +356,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class V Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = WavePopulation.Baseline,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
             Puzzle = new List<PuzzleComponent>
             {
                 PuzzleComponent.AllBig,
@@ -371,7 +371,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class VI Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = WavePopulation.Baseline,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
             WantedDistanceBetweenPuzzleComponents = 15.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -388,7 +388,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class VII Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = WavePopulation.Baseline,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
             WantedDistanceBetweenPuzzleComponents = 15.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -406,7 +406,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class VIII Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = WavePopulation.Baseline,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
             WantedDistanceBetweenPuzzleComponents = 15.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -426,7 +426,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class II Cluster Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = WavePopulation.Baseline,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
             WantedDistanceBetweenPuzzleComponents = 5.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -439,7 +439,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class III Cluster Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = WavePopulation.Baseline,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
             WantedDistanceBetweenPuzzleComponents = 5.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -453,7 +453,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class IV Cluster Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = WavePopulation.Baseline,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
             WantedDistanceBetweenPuzzleComponents = 5.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -468,7 +468,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class V Cluster Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = WavePopulation.Baseline,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
             WantedDistanceBetweenPuzzleComponents = 5.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -485,7 +485,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class V M Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Modified_SpHybrid,
-            SurvivalWavePopulation = WavePopulation.ModifiedSpHybrid,
+            SurvivalWavePopulation = VanillaWavePopulation.ModifiedSpHybrid,
             WantedDistanceBetweenPuzzleComponents = 20.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -501,7 +501,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class VI M Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Modified_SpHybrid,
-            SurvivalWavePopulation = WavePopulation.ModifiedSpHybrid,
+            SurvivalWavePopulation = VanillaWavePopulation.ModifiedSpHybrid,
             WantedDistanceBetweenPuzzleComponents = 20.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -518,7 +518,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class VII M Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Modified_SpHybrid,
-            SurvivalWavePopulation = WavePopulation.ModifiedSpHybrid,
+            SurvivalWavePopulation = VanillaWavePopulation.ModifiedSpHybrid,
             WantedDistanceBetweenPuzzleComponents = 20.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -538,7 +538,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class II Surge Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Surge,
-            SurvivalWavePopulation = WavePopulation.Baseline,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
             WantedDistanceFromStartPos = 10.0,
             WantedDistanceBetweenPuzzleComponents = 20.0,
             Puzzle = new List<PuzzleComponent>()
@@ -552,7 +552,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class III Surge Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Surge,
-            SurvivalWavePopulation = WavePopulation.Baseline,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
             WantedDistanceFromStartPos = 10.0,
             WantedDistanceBetweenPuzzleComponents = 20.0,
             Puzzle = new List<PuzzleComponent>()
@@ -570,7 +570,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class IV Surge Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.Surge,
-            SurvivalWavePopulation = WavePopulation.Baseline,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
             WantedDistanceFromStartPos = 10.0,
             WantedDistanceBetweenPuzzleComponents = 20.0,
             Puzzle = new List<PuzzleComponent>()
@@ -588,7 +588,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class S I Alarm",
             SurvivalWaveSettings = VanillaWaveSettings.ApexIncreased,
-            SurvivalWavePopulation = WavePopulation.ReactorBaseline,
+            SurvivalWavePopulation = VanillaWavePopulation.ReactorBaseline,
             WantedDistanceFromStartPos = 6.0,
             WantedDistanceBetweenPuzzleComponents = 2.0,
             Puzzle = new List<PuzzleComponent>()
@@ -606,7 +606,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             AlarmSoundStart = 2200133294,
             AlarmSoundStop = 1190355274,
             SurvivalWaveSettings = VanillaWaveSettings.Trickle_352_SSpB,
-            SurvivalWavePopulation = WavePopulation.Baseline,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
             Puzzle = new List<PuzzleComponent>() { PuzzleComponent.AllLarge }
         };
         #endregion
@@ -617,7 +617,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             PublicAlarmName = "Alarm",
             TriggerAlarmOnActivate = false,
             SurvivalWaveSettings = VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = WavePopulation.Baseline,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
             UseRandomPositions = false,
             WantedDistanceFromStartPos = 0.0,
             WantedDistanceBetweenPuzzleComponents = 1.0,

@@ -557,21 +557,6 @@ namespace AutogenRundown.DataBlocks
             layout.RollEnemies(director);
             layout.RollErrorAlarm();
 
-            /*
-            layout.Zones[0].EnemySpawningInZone.Add(
-                new EnemySpawningData()
-                {
-                    Difficulty = (uint)Enemy.ShadowGiant,
-                    Points = 12,
-                });
-            layout.Zones[0].EnemySpawningInZone.Add(
-                new EnemySpawningData()
-                {
-                    Difficulty = (uint)Enemy.Tank,
-                    Points = 10
-                });
-            */
-
             Bins.LevelLayouts.AddBlock(layout);
 
             return layout;

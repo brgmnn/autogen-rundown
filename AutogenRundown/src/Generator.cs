@@ -39,7 +39,10 @@ namespace AutogenRundown
     {
         None,
         Normal,
+
         EnemyGroup,
+        WavePopulation,
+        WaveSettings
     }
 
     static internal class Generator
@@ -47,6 +50,8 @@ namespace AutogenRundown
         private static PID pid = 100000;
 
         private static PID enemyGroupPid = 80;
+        private static PID wavePopulationPid = 100;
+        private static PID waveSettingsPid = 400;
 
         public static string DisplaySeed { get; set; } = "";
 
@@ -162,7 +167,10 @@ namespace AutogenRundown
             {
                 PidOffsets.None => 0,
                 PidOffsets.Normal => pid++,
-                PidOffsets.EnemyGroup => enemyGroupPid++ 
+
+                PidOffsets.EnemyGroup => enemyGroupPid++,
+                PidOffsets.WavePopulation => wavePopulationPid++,
+                PidOffsets.WaveSettings => waveSettingsPid++
             };
 
         /// <summary>

@@ -6,34 +6,39 @@ namespace AutogenRundown.DataBlocks.Objectives
     internal class EventBuilder
     {
         #region Enemies
+        /// <summary>
+        /// Spawns a generic enemy wave with text and noise. Can be used for almost any wave, but
+        /// is great for spawning single boss enemies.
+        /// </summary>
+        /// <param name="events"></param>
+        /// <param name="wave"></param>
+        /// <param name="delay"></param>
+        /// <param name="message"></param>
         public static void AddSpawnEnemies(
             ICollection<WardenObjectiveEvent> events,
+            GenericWave wave,
             double delay = 2.0,
-            string message = ":://WARNING - BIOMASS SIGNATURE DETECTED")
+            string message = ":://WARNING - BIOMASS SIGNATURE")
         {
             events.Add(
                 new WardenObjectiveEvent
                 {
                     Type = WardenObjectiveEventType.SpawnEnemyWave,
-                    Delay = delay,
-                    EnemyWaveData = new GenericWave
-                    {
-                        WaveSettings = 54,
-                        WavePopulation = 39,
-                    }
+                    Delay = delay + 3.0,
+                    EnemyWaveData = wave
                 });
             events.Add(
                 new WardenObjectiveEvent
                 {
                     Type = WardenObjectiveEventType.PlaySound,
-                    SoundId = Sound.PouncerSpawnGrowl,
-                    Delay = delay
+                    SoundId = Sound.TankRoar,
+                    Delay = delay + 3.0
                 });
             events.Add(
                 new WardenObjectiveEvent
                 {
                     Type = WardenObjectiveEventType.None,
-                    Delay = delay + 1.0,
+                    Delay = delay,
                     WardenIntel = message
                 });
         }

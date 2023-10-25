@@ -9,11 +9,17 @@
         /// </summary>
         LightsOff = 1479064690,
 
-        PouncerSpawnGrowl = 3503733109,
-
         /// <summary>
         /// Generator / Heavy fan noise
         /// </summary>
         KdsDeepVentilationProcedure = 2591647810,
+
+        SheetMetalLand = 157965313,
+        DistantFanBlade = 166915794,
+
+        #region Enemies
+        PouncerSpawnGrowl = 3503733109,
+        TankRoar = 106273434,
+        #endregion
     }
 }

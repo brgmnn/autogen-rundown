@@ -22,6 +22,8 @@ namespace AutogenRundown.DataBlocks
             = new BlocksBin<Rundown>();
         public static BlocksBin<WardenObjective> WardenObjectives { get; private set; }
             = new BlocksBin<WardenObjective>();
+        public static BlocksBin<WavePopulation> WavePopulations { get; private set; }
+            = new BlocksBin<WavePopulation>();
         public static BlocksBin<WaveSettings> WaveSettings { get; private set; }
             = new BlocksBin<WaveSettings>();
 
@@ -32,6 +34,8 @@ namespace AutogenRundown.DataBlocks
         {
             EnemyGroup.Setup();
             EnemyPopulation.Setup();
+            WavePopulation.Setup();
+            Alarms.WaveSettings.Setup();
         }
 
         /// <summary>
@@ -46,6 +50,7 @@ namespace AutogenRundown.DataBlocks
             LevelLayout.SaveStatic();
             Rundown.SaveStatic();
             WardenObjective.SaveStatic();
+            WavePopulation.SaveStatic();
             Alarms.WaveSettings.SaveStatic();
 
             ChainedPuzzles.Save("ChainedPuzzleDataBlock");
@@ -55,7 +60,8 @@ namespace AutogenRundown.DataBlocks
             LevelLayouts.Save("LevelLayoutDataBlock");
             Rundowns.Save("RundownDataBlock");
             WardenObjectives.Save("WardenObjectiveDataBlock");
-            //WaveSettings.Save("SurvivalWaveSettingsDataBlock");
+            WavePopulations.Save("SurvivalWavePopulationDataBlock");
+            WaveSettings.Save("SurvivalWaveSettingsDataBlock");
         }
     }
 
