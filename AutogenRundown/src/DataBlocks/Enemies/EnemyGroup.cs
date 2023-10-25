@@ -126,14 +126,6 @@ namespace AutogenRundown.DataBlocks.Enemies
                     });
             }
 
-            // Assign groups for hibernating enemy spawns. EnemyRole and Enemy will select the
-            // enemy to pick from, the double specifies the max score for that group. Multiple
-            // entries will be randomly picked between.
-            var difficultyGroups = new List<(AutogenDifficulty, EnemyRoleDistribution, EnemyRole, double)>
-            {
-                (AutogenDifficulty.TierA, EnemyRoleDistribution.Rel100, EnemyRole.Melee, 4.0),
-            };
-
             #region AutoDiff, common groups
             // Assign common groups to all Autogen Difficulties. Often for the base enemies of
             // strikers / shooters we always want to be able to roll these spawns on levels if
