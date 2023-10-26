@@ -59,6 +59,15 @@ namespace AutogenRundown
 
         public static Random Random { get; private set; } = new Random();
 
+        public static double NextDouble()
+            => Random.NextDouble();
+
+        public static double NextDouble(double min, double max)
+            => Random.NextDouble() * (max - min) + min;
+
+        public static double NextDouble(double max)
+            => Random.NextDouble() * max;
+
         /// <summary>
         /// Coin flip with a true/false outcome. Optional chance param
         /// </summary>
