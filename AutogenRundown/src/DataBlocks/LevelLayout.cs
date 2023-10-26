@@ -83,7 +83,19 @@ namespace AutogenRundown.DataBlocks
                 },
 
                 "D" => new List<VanillaEnemyGroup>
-                { },
+                {
+                    VanillaEnemyGroup.BloodDoor_Medium,
+                    VanillaEnemyGroup.BloodDoor_Medium,
+                    VanillaEnemyGroup.BloodDoor_Medium,
+                    VanillaEnemyGroup.BloodDoor_Bigs,
+                    VanillaEnemyGroup.BloodDoor_Bigs,
+                    VanillaEnemyGroup.BloodDoor_Chargers_Easy,
+                    VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy,
+                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
+                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
+                    VanillaEnemyGroup.BloodDoor_Shadows_Easy,
+                    VanillaEnemyGroup.BloodDoor_BossMother
+                },
 
                 "E" => new List<VanillaEnemyGroup>
                 { },
@@ -113,7 +125,20 @@ namespace AutogenRundown.DataBlocks
                 },
 
                 "D" => new List<VanillaEnemyGroup>
-                { },
+                {
+                    VanillaEnemyGroup.BloodDoor_Medium,
+                    VanillaEnemyGroup.BloodDoor_Medium,
+                    VanillaEnemyGroup.BloodDoor_Medium,
+                    VanillaEnemyGroup.BloodDoor_Bigs,
+                    VanillaEnemyGroup.BloodDoor_Bigs,
+                    VanillaEnemyGroup.BloodDoor_Chargers_Easy,
+                    VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy,
+                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
+                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
+                    VanillaEnemyGroup.BloodDoor_Shadows_Easy,
+                    VanillaEnemyGroup.BloodDoor_BossMother,
+                    VanillaEnemyGroup.BloodDoor_Pouncers
+                },
 
                 "E" => new List<VanillaEnemyGroup>
                 { },
@@ -141,7 +166,7 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public void RollEnemies(BuildDirector director)
         {
-            var enemyDistributionOld = director.Tier switch
+            /*var enemyDistributionOld = director.Tier switch
             {
                 "A" => new List<WeightedDifficulty>
                     {
@@ -177,7 +202,7 @@ namespace AutogenRundown.DataBlocks
                     },
 
                 _ => new List<Hibernating>() { new Hibernating { Enemy = (uint)Enemy.Striker } }
-            };
+            };*/
 
             // All scouts cost 5pts each
             var (chance, max, scoutPack) = director.Tier switch
@@ -208,12 +233,28 @@ namespace AutogenRundown.DataBlocks
                         EnemySpawningData.ScoutCharger with { Points = 5 },
                     }),
 
-                // TODO: Balance for D
                 "D" => (0.3, -1, new List<EnemySpawningData>
                     {
+                        EnemySpawningData.Scout with { Points = 5 },
+                        EnemySpawningData.Scout with { Points = 5 },
+                        EnemySpawningData.Scout with { Points = 5 },
                         EnemySpawningData.Scout with { Points = 10 },
                         EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 15 },
+
+                        // Chargers
+                        EnemySpawningData.ScoutCharger with { Points = 5 },
+                        EnemySpawningData.ScoutCharger with { Points = 5 },
+                        EnemySpawningData.ScoutCharger with { Points = 5 },
+                        EnemySpawningData.ScoutCharger with { Points = 10 },
+
+                        // Shadows
+                        EnemySpawningData.ScoutShadow with { Points = 5 },
+                        EnemySpawningData.ScoutShadow with { Points = 5 },
+                        EnemySpawningData.ScoutShadow with { Points = 5 },
+                        EnemySpawningData.ScoutShadow with { Points = 10 },
                     }),
+
                 "E" => (0.3, -1, new List<EnemySpawningData>
                     {
                         EnemySpawningData.Scout with { Points = 10 },

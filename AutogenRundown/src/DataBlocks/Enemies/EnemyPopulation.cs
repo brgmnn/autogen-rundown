@@ -133,8 +133,11 @@ namespace AutogenRundown.DataBlocks.Enemies
             {
                 (EnemyInfo.Striker, 1.0),
                 (EnemyInfo.Shooter, 1.0),
-                (EnemyInfo.StrikerGiant, 0.75),
-                (EnemyInfo.ShooterGiant, 0.5)
+                (EnemyInfo.StrikerGiant, 1.0),
+                (EnemyInfo.ShooterGiant, 0.5),
+                (EnemyInfo.Charger, 1.0),
+                (EnemyInfo.ChargerGiant, 0.4),
+                (EnemyInfo.Shadow, 1.0),
             };
 
             foreach (var (info, weight) in enemiesTierD)

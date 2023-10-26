@@ -134,7 +134,8 @@ namespace AutogenRundown.DataBlocks.Enemies
             {
                 AutogenDifficulty.TierA,
                 AutogenDifficulty.TierB,
-                AutogenDifficulty.TierC
+                AutogenDifficulty.TierC,
+                AutogenDifficulty.TierD,
             };
 
             foreach (var difficulty in baseDifficulties)
@@ -223,6 +224,44 @@ namespace AutogenRundown.DataBlocks.Enemies
                 {
                     Type = EnemyGroupType.Hibernate,
                     Difficulty = (uint)AutogenDifficulty.TierC,
+                    MaxScore = 6,
+                    Roles = new List<EnemyGroupRole>
+                    {
+                        new EnemyGroupRole { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 },
+                    }
+                });
+            #endregion
+
+            #region AutoDiff, Tier D
+            Bins.EnemyGroups.AddBlock(
+                new EnemyGroup
+                {
+                    Type = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)AutogenDifficulty.TierD,
+                    MaxScore = 6,
+                    Roles = new List<EnemyGroupRole>
+                    {
+                        new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 },
+                        new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
+                    }
+                });
+            Bins.EnemyGroups.AddBlock(
+                new EnemyGroup
+                {
+                    Type = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)AutogenDifficulty.TierD,
+                    MaxScore = 12,
+                    Roles = new List<EnemyGroupRole>
+                    {
+                        new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 },
+                        new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
+                    }
+                });
+            Bins.EnemyGroups.AddBlock(
+                new EnemyGroup
+                {
+                    Type = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)AutogenDifficulty.TierD,
                     MaxScore = 6,
                     Roles = new List<EnemyGroupRole>
                     {

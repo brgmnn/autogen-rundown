@@ -141,22 +141,22 @@ namespace AutogenRundown.DataBlocks.Alarms
                 },
                 "D" => new List<ChainedPuzzle>
                 {
-                    TeamScan,
-                    TeamScan,
-                    TeamScan,
+                    None,
+                    TeamScan, TeamScan,
                     AlarmClass3,
-                    AlarmClass3,
-                    AlarmClass3,
-                    AlarmClass3,
-                    AlarmClass3,
-                    AlarmClass4,
-                    AlarmClass4,
-                    AlarmClass4,
-                    AlarmClass4,
-                    AlarmClass4,
-                    AlarmClass5,
-                    AlarmClass5,
-                    AlarmClass5,
+                    AlarmClass4, AlarmClass4,
+
+                    AlarmClass5, AlarmClass5, AlarmClass5,
+                    AlarmClass5_Cluster,
+                    AlarmClass5_Mixed,
+
+                    AlarmClass6_Mixed,
+                    AlarmClass7_Mixed,
+
+                    AlarmClass3_Surge, AlarmClass3_Surge,
+                    AlarmClass4_Surge,
+
+                    AlarmClass1_Sustained, AlarmClass1_Sustained, AlarmClass1_Sustained,
                 },
                 "E" => new List<ChainedPuzzle>
                 {

@@ -38,8 +38,8 @@ namespace AutogenRundown
             var aMax = Generator.Random.Next(1, 2);
             var bMax = Generator.Random.Next(3, 4);
             var cMax = Generator.Random.Next(2, 4);
-            var dMax = Generator.Random.Next(1, 3);
-            var eMax = Generator.Random.Next(0, 1);
+            var dMax = Generator.Random.Next(1, 4);
+            var eMax = Generator.Random.Next(1, 2);
 
 
             // A levels, always generate atleast 1
@@ -82,7 +82,7 @@ namespace AutogenRundown
                 rundown.AddLevel(level);
             }
 
-            #region Test Levels
+            #region Test C Levels
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
@@ -110,7 +110,6 @@ namespace AutogenRundown
             rundown.AddLevel(testLevel);
             #endregion
 
-            /*
             // D levels
             for (int i = 0; i < dMax; i++)
             {
@@ -124,7 +123,35 @@ namespace AutogenRundown
                 rundown.AddLevel(level);
             }
 
+            #region Test D Levels
+            var mainDirectorD = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Main,
+                Complex = Complex.Mining,
+                Complexity = Complexity.Low,
+                Tier = "D",
+                Objective = WardenObjectiveType.ReactorShutdown,
+            };
+            mainDirectorD.GenPoints();
 
+            var settingsD = new LevelSettings("C");
+            settingsD.Modifiers.Add(LevelModifiers.ManyShadows);
+
+            var testLevelD = Level.Build(
+                new Level
+                {
+                    Tier = "D",
+                    Name = "Reactor Shutdown",
+                    Complex = Complex.Mining,
+                    MainDirector = mainDirectorD,
+                    Settings = settingsD,
+                    Index = dMax + 1,
+                    IsTest = true
+                });
+            rundown.AddLevel(testLevelD);
+            #endregion
+
+            /*
             // E levels
             for (int i = 0; i < eMax; i++)
             {
