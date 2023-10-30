@@ -32,6 +32,8 @@ namespace AutogenRundown
 
         public Complex Complex { get; set; }
 
+        public LevelSettings Settings { get; set; } = new LevelSettings();
+
         public WardenObjectiveType Objective { get; set; } = WardenObjectiveType.GatherSmallItems;
 
         #region Zones
@@ -149,7 +151,7 @@ namespace AutogenRundown
                 "B" => Generator.Random.Next(20, 25),
                 "C" => Generator.Random.Next(20, 30),
                 "D" => Generator.Random.Next(25, 30),
-                "E" => Generator.Random.Next(25, 35), // TODO: is this sane?
+                "E" => Generator.Random.Next(30, 35), // TODO: is this sane?
 
                 _ => 25,
             }));

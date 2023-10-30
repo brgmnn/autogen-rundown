@@ -360,6 +360,7 @@ namespace AutogenRundown.DataBlocks
                     Bulkhead = Bulkhead.Main,
                     Complex = level.Complex,
                     Complexity = Complexity.Low,
+                    Settings = level.Settings,
                     Tier = level.Tier
                 };
                 level.MainDirector.GenPoints();
@@ -422,6 +423,7 @@ namespace AutogenRundown.DataBlocks
                         Bulkhead = Bulkhead.Extreme,
                         Complex = level.Complex,
                         Complexity = Complexity.Low,
+                        Settings = level.Settings,
                         Tier = level.Tier
                     };
                     level.SecondaryDirector.GenPoints();
@@ -479,6 +481,7 @@ namespace AutogenRundown.DataBlocks
                         Bulkhead = Bulkhead.Overload,
                         Complex = level.Complex,
                         Complexity = Complexity.Low,
+                        Settings = level.Settings,
                         Tier = level.Tier
                     };
                     level.OverloadDirector.GenPoints();
