@@ -39,7 +39,8 @@ namespace AutogenRundown
             var bMax = Generator.Random.Next(3, 4);
             var cMax = Generator.Random.Next(2, 4);
             var dMax = Generator.Random.Next(1, 4);
-            var eMax = Generator.Random.Next(1, 2);
+            //var eMax = Generator.Random.Next(1, 2);
+            var eMax = 1;
 
 
             // A levels, always generate atleast 1
@@ -110,6 +111,7 @@ namespace AutogenRundown
             rundown.AddLevel(testLevel);
             #endregion
 
+            #region D-Tier Levels
             // D levels
             for (int i = 0; i < dMax; i++)
             {
@@ -123,7 +125,6 @@ namespace AutogenRundown
                 rundown.AddLevel(level);
             }
 
-            #region Test D Levels
             var mainDirectorD = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
@@ -151,7 +152,7 @@ namespace AutogenRundown
             rundown.AddLevel(testLevelD);
             #endregion
 
-            /*
+            #region E-Tier Levels
             // E levels
             for (int i = 0; i < eMax; i++)
             {
@@ -164,7 +165,34 @@ namespace AutogenRundown
                     });
                 rundown.AddLevel(level);
             }
-            */
+
+            var mainDirectorE = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Main,
+                Complex = Complex.Mining,
+                Complexity = Complexity.Low,
+                Tier = "E",
+                Objective = WardenObjectiveType.HsuFindSample,
+            };
+            mainDirector.GenPoints();
+
+            var settingsE = new LevelSettings("E");
+            settingsE.Modifiers.Add(LevelModifiers.ManyChargers);
+            settingsE.Modifiers.Add(LevelModifiers.ManyShadows);
+
+            var testLevelE = Level.Build(
+                new Level
+                {
+                    Tier = "E",
+                    Name = "Find HSU",
+                    Complex = Complex.Tech,
+                    MainDirector = mainDirectorE,
+                    Settings = settingsE,
+                    Index = cMax + 1,
+                    IsTest = true
+                });
+            rundown.AddLevel(testLevelE);
+            #endregion
 
             Bins.Rundowns.AddBlock(rundown);
 

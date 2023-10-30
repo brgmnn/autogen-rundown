@@ -5,8 +5,6 @@ using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
-using static AutogenRundown.DataBlocks.Zone;
-using System.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -98,7 +96,19 @@ namespace AutogenRundown.DataBlocks
                 },
 
                 "E" => new List<VanillaEnemyGroup>
-                { },
+                {
+                    VanillaEnemyGroup.BloodDoor_Medium,
+                    VanillaEnemyGroup.BloodDoor_Medium,
+                    VanillaEnemyGroup.BloodDoor_Bigs,
+                    VanillaEnemyGroup.BloodDoor_Bigs,
+                    VanillaEnemyGroup.BloodDoor_Chargers_Easy,
+                    VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy,
+                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
+                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
+                    VanillaEnemyGroup.BloodDoor_Shadows_Easy,
+                    VanillaEnemyGroup.BloodDoor_BossMother,
+                    VanillaEnemyGroup.BloodDoor_BossMother
+                },
 
                 _ => new List<VanillaEnemyGroup>()
             };
@@ -141,7 +151,20 @@ namespace AutogenRundown.DataBlocks
                 },
 
                 "E" => new List<VanillaEnemyGroup>
-                { },
+                {
+                    VanillaEnemyGroup.BloodDoor_Medium,
+                    VanillaEnemyGroup.BloodDoor_Medium,
+                    VanillaEnemyGroup.BloodDoor_Medium,
+                    VanillaEnemyGroup.BloodDoor_Bigs,
+                    VanillaEnemyGroup.BloodDoor_Bigs,
+                    VanillaEnemyGroup.BloodDoor_Chargers_Easy,
+                    VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy,
+                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
+                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
+                    VanillaEnemyGroup.BloodDoor_Shadows_Easy,
+                    VanillaEnemyGroup.BloodDoor_BossMother,
+                    VanillaEnemyGroup.BloodDoor_Pouncers
+                },
 
                 _ => new List<VanillaEnemyGroup>()
             };
@@ -257,8 +280,24 @@ namespace AutogenRundown.DataBlocks
 
                 "E" => (0.3, -1, new List<EnemySpawningData>
                     {
+                        EnemySpawningData.Scout with { Points = 5 },
+                        EnemySpawningData.Scout with { Points = 5 },
+                        EnemySpawningData.Scout with { Points = 5 },
                         EnemySpawningData.Scout with { Points = 10 },
                         EnemySpawningData.Scout with { Points = 10 },
+                        EnemySpawningData.Scout with { Points = 15 },
+
+                        // Chargers
+                        EnemySpawningData.ScoutCharger with { Points = 5 },
+                        EnemySpawningData.ScoutCharger with { Points = 5 },
+                        EnemySpawningData.ScoutCharger with { Points = 5 },
+                        EnemySpawningData.ScoutCharger with { Points = 10 },
+
+                        // Shadows
+                        EnemySpawningData.ScoutShadow with { Points = 5 },
+                        EnemySpawningData.ScoutShadow with { Points = 5 },
+                        EnemySpawningData.ScoutShadow with { Points = 5 },
+                        EnemySpawningData.ScoutShadow with { Points = 10 },
                     }),
 
                 _ => (0.0, 0, new List<EnemySpawningData>())

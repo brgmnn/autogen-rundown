@@ -340,6 +340,10 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                /**
+                 * Gather small items from around the level. This is a fairly simple objective
+                 * that can be completed in a variety of ways.
+                 * */
                 case WardenObjectiveType.GatherSmallItems:
                     {
                         var (itemId, name, description) = Generator.Pick(BuildSmallPickupPack(level.Tier));
@@ -363,7 +367,7 @@ namespace AutogenRundown.DataBlocks
                             "B" => Generator.Random.Next(6, 10),
                             "C" => Generator.Random.Next(7, 12),
                             "D" => Generator.Random.Next(8, 13),
-                            "E" => Generator.Random.Next(12, 20),
+                            "E" => Generator.Random.Next(9, 16),
                             _ => 1,
                         };
 
