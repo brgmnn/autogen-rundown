@@ -18,8 +18,8 @@ namespace AutogenRundownTests.DataBlocks.Zones
         public void Test_Equals_TwoZonesAreEqualWithMax()
         {
             Assert.AreEqual(
-                new ZoneNode(Bulkhead.Main, 1, 2),
-                new ZoneNode(Bulkhead.Main, 1, 3));
+                new ZoneNode(Bulkhead.Main, 1, "primary", 2),
+                new ZoneNode(Bulkhead.Main, 1, "primary", 3));
         }
     }
 
@@ -212,7 +212,7 @@ namespace AutogenRundownTests.DataBlocks.Zones
             var planner = new LayoutPlanner();
 
             var zone0 = new ZoneNode(Bulkhead.Main, 0);
-            var zone1 = new ZoneNode(Bulkhead.Main, 1, 3);
+            var zone1 = new ZoneNode(Bulkhead.Main, 1, "primary", 3);
             var zone2 = new ZoneNode(Bulkhead.Main, 2);
             var zone3 = new ZoneNode(Bulkhead.Main, 3);
             var zone4 = new ZoneNode(Bulkhead.Main, 4);
@@ -237,7 +237,7 @@ namespace AutogenRundownTests.DataBlocks.Zones
             var planner = new LayoutPlanner();
 
             var zone0 = new ZoneNode(Bulkhead.Main, 0);
-            var zone1 = new ZoneNode(Bulkhead.Main, 1, 3);
+            var zone1 = new ZoneNode(Bulkhead.Main, 1, "primary", 3);
             var zone2 = new ZoneNode(Bulkhead.Main, 2);
             var zone3 = new ZoneNode(Bulkhead.Main, 3);
             var zone4 = new ZoneNode(Bulkhead.Main, 4);

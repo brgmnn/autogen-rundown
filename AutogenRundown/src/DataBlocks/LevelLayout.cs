@@ -644,19 +644,21 @@ namespace AutogenRundown.DataBlocks
                         // Create the initial zones
                         for (int i = 0; i < director.ZoneCount; i++)
                         {
-                            var buildFrom = i == 0 ? 0 : i - 1;
+                            var fromZone = level.Planner.GetLastZone(director.Bulkhead);
+
                             var zone = new Zone
                             {
                                 LocalIndex = i,
-                                BuildFromLocalIndex = buildFrom,
+                                BuildFromLocalIndex = fromZone?.ZoneNumber ?? 0,
                                 Coverage = CoverageMinMax.GenSize(i),
                                 LightSettings = Lights.GenRandomLight(),
                             };
-                            level.Planner.Connect(
-                                new ZoneNode(director.Bulkhead, buildFrom),
-                                new ZoneNode(director.Bulkhead, i));
 
-                            //zone.GenEnemies(director);
+                            if (fromZone != null)
+                            {
+                                level.Planner.Connect((ZoneNode)fromZone, new ZoneNode(director.Bulkhead, i));
+                            }
+
                             zone.RollAlarms(puzzlePack);
 
                             layout.Zones.Add(zone);
@@ -714,25 +716,24 @@ namespace AutogenRundown.DataBlocks
                     {
                         for (int i = 0; i < director.ZoneCount; i++)
                         {
-                            var subcomplex = GenSubComplex(level.Complex);
+                            var fromZone = level.Planner.GetLastZone(director.Bulkhead);
 
-                            var buildFrom = i == 0 ? 0 : i - 1;
                             var zone = new Zone
                             {
                                 LocalIndex = i,
+                                BuildFromLocalIndex = fromZone?.ZoneNumber ?? 0,
                                 Coverage = CoverageMinMax.GenSize(i),
                                 LightSettings = Lights.GenRandomLight(),
-
-                                // Chain zones together
-                                BuildFromLocalIndex = buildFrom,
-                                ZoneExpansion = ZoneExpansion.Forward
                             };
-                            level.Planner.Connect(
-                                new ZoneNode(director.Bulkhead, buildFrom),
-                                new ZoneNode(director.Bulkhead, i));
 
-                            //zone.GenEnemies(director);
+                            if (fromZone != null)
+                            {
+                                level.Planner.Connect((ZoneNode)fromZone, new ZoneNode(director.Bulkhead, i));
+                            }
+
                             zone.RollAlarms(puzzlePack);
+
+                            var subcomplex = GenSubComplex(level.Complex);
 
                             if (i == director.ZoneCount - 1)
                             {
@@ -749,57 +750,27 @@ namespace AutogenRundown.DataBlocks
                     }
 
                 case WardenObjectiveType.SpecialTerminalCommand:
-                    {
-                        for (int i = 0; i < director.ZoneCount; i++)
-                        {
-                            // We roughly want to chain zones together. 80% chance we build off the
-                            // previous zone, 20% chance we build off the zone before that.
-                            //var buildFrom = Math.Max(0, i - (Generator.Flip(0.8) ? 1 : 2));
-                            var buildFrom = i == 0 ? 0 : i - 1;
-                            var zone = new Zone
-                            {
-                                LocalIndex = i,
-                                Coverage = CoverageMinMax.GenSize(i),
-                                LightSettings = Lights.GenRandomLight(),
-                                BuildFromLocalIndex = buildFrom
-                            };
-                            level.Planner.Connect(
-                                new ZoneNode(director.Bulkhead, buildFrom),
-                                new ZoneNode(director.Bulkhead, i));
-
-                            //zone.GenEnemies(director);
-                            zone.RollAlarms(puzzlePack);
-
-                            layout.Zones.Add(zone);
-                        }
-
-                        break;
-                    }
-
                 case WardenObjectiveType.HsuFindSample:
                 case WardenObjectiveType.GatherSmallItems:
                 default:
                     {
                         for (int i = 0; i < director.ZoneCount; i++)
                         {
-                            // We roughly want to chain zones together. 80% chance we build off the
-                            // previous zone, 20% chance we build off the zone before that.
-                            //var buildFrom = Math.Max(0, i - (Generator.Flip(0.8) ? 1 : 2));
-                            var buildFrom = i == 0 ? 0 : i - 1;
+                            var fromZone = level.Planner.GetLastZone(director.Bulkhead);
 
                             var zone = new Zone
                             {
                                 LocalIndex = i,
+                                BuildFromLocalIndex = fromZone?.ZoneNumber ?? 0,
                                 Coverage = CoverageMinMax.GenSize(i),
                                 LightSettings = Lights.GenRandomLight(),
-                                BuildFromLocalIndex = buildFrom
                             };
 
-                            level.Planner.Connect(
-                                new ZoneNode(director.Bulkhead, buildFrom),
-                                new ZoneNode(director.Bulkhead, i));
+                            if (fromZone != null)
+                            {
+                                level.Planner.Connect((ZoneNode)fromZone, new ZoneNode(director.Bulkhead, i));
+                            }
 
-                            //zone.GenEnemies(director);
                             zone.RollAlarms(puzzlePack);
 
                             layout.Zones.Add(zone);

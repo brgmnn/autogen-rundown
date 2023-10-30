@@ -5,6 +5,7 @@ namespace AutogenRundown.DataBlocks.Zones
     public record struct ZoneNode(
         Bulkhead Bulkhead,
         int ZoneNumber,
+        string Branch = "primary",
         int MaxConnections = 2)
     {
         /// <summary>
@@ -22,6 +23,12 @@ namespace AutogenRundown.DataBlocks.Zones
             => string.Join(", ", nodes.Select(node => node.ToString()));
     }
 
+    /// <summary>
+    /// Building the zone layout requires some planning. The game can fail to generate a level if
+    /// there's too much crowding in a particular space. For instance attempting to build too many
+    /// zones off one zone will crash on load. The planner is to help plan out where to place
+    /// zones.
+    /// </summary>
     public class LayoutPlanner
     {
         private Dictionary<ZoneNode, List<ZoneNode>> graph = new Dictionary<ZoneNode, List<ZoneNode>>();
@@ -85,8 +92,10 @@ namespace AutogenRundown.DataBlocks.Zones
         /// from their previous zone.
         /// </summary>
         /// <returns></returns>
-        public List<ZoneNode> GetLeafZones()
+        public List<ZoneNode> GetLeafZones(Bulkhead bulkhead = Bulkhead.All, string branch = "primary")
             => graph.Where(node => node.Value.Count == 0)
+                .Where(node => (node.Key.Bulkhead & bulkhead) != 0)
+                .Where(node => node.Key.Branch == branch)
                 .Select(node => node.Key)
                 .ToList();
 
@@ -94,13 +103,30 @@ namespace AutogenRundown.DataBlocks.Zones
         /// Find all zones that could have another zone attached to them
         /// </summary>
         /// <returns></returns>
-        public List<ZoneNode> GetOpenZones(Bulkhead bulkhead = Bulkhead.All)
+        public List<ZoneNode> GetOpenZones(Bulkhead bulkhead = Bulkhead.All, string branch = "primary")
             => graph
                 .Where(node => (node.Key.Bulkhead & bulkhead) != 0)
                 .Where(node => node.Value.Count < node.Key.MaxConnections)
+                .Where(node => node.Key.Branch == branch)
                 .Select(node => node.Key)
                 .OrderBy(zone => zone.ZoneNumber)
                 .ToList();
+
+        /// <summary>
+        /// Gets the last zone in a branch. Very useful for building the branch chain upwards.
+        /// </summary>
+        /// <param name="bulkhead"></param>
+        /// <param name="branchId"></param>
+        /// <returns></returns>
+        public ZoneNode? GetLastZone(Bulkhead bulkhead = Bulkhead.Main, string branch = "primary")
+        {
+            var openZones = GetOpenZones(bulkhead, branch);
+
+            if (openZones.Count == 0)
+                return null;
+
+            return openZones.Last();
+        }
 
         /// <summary>
         /// Returns all ZoneNodes which have connections to other bulkhead zones.
