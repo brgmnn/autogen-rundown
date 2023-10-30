@@ -172,9 +172,9 @@ namespace AutogenRundown
                 Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "E",
-                Objective = WardenObjectiveType.HsuFindSample,
+                Objective = WardenObjectiveType.SpecialTerminalCommand,
             };
-            mainDirector.GenPoints();
+            mainDirectorE.GenPoints();
 
             var settingsE = new LevelSettings("E");
             settingsE.Modifiers.Add(LevelModifiers.ManyChargers);
@@ -184,11 +184,11 @@ namespace AutogenRundown
                 new Level
                 {
                     Tier = "E",
-                    Name = "Find HSU",
+                    Name = "Terminal Command",
                     Complex = Complex.Tech,
                     MainDirector = mainDirectorE,
                     Settings = settingsE,
-                    Index = cMax + 1,
+                    Index = eMax + 1,
                     IsTest = true
                 });
             rundown.AddLevel(testLevelE);

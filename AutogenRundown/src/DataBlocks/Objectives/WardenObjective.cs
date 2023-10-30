@@ -227,7 +227,7 @@ namespace AutogenRundown.DataBlocks
                 "B" => GenExitScanTime(30, 45),
                 "C" => GenExitScanTime(45, 80),
                 "D" => GenExitScanTime(90, 120),
-                "E" => GenExitScanTime(120, 150),
+                "E" => GenExitScanTime(100, 140),
                 _ => 1.0,
             };
 
@@ -246,7 +246,7 @@ namespace AutogenRundown.DataBlocks
 
                         // Place HSU's within the objective zone
                         var count = layout.Zones.Count;
-                        var zoneIndex = Generator.Random.Next((count - 1) / 2, count - 1);
+                        var zoneIndex = count - 1;
 
                         dataLayer.ObjectiveData.ZonePlacementDatas.Add(
                             new List<ZonePlacementData>()
@@ -267,6 +267,15 @@ namespace AutogenRundown.DataBlocks
                             "E" => DistributionAmount.Tons,
                             _ => DistributionAmount.Some
                         };
+                        zone.Coverage = level.Tier switch
+                        {
+                            "A" => new CoverageMinMax { Min = 20, Max = 25 },
+                            "B" => new CoverageMinMax { Min = 25, Max = 30 },
+                            "C" => new CoverageMinMax { Min = 30, Max = 50 },
+                            "D" => new CoverageMinMax { Min = 50, Max = 75 },
+                            "E" => new CoverageMinMax { Min = 75, Max = 100 },
+                            _ => zone.Coverage
+                        };
                         zone.HSUClustersInZone = level.Tier switch
                         {
                             "C" => 2,
@@ -277,7 +286,6 @@ namespace AutogenRundown.DataBlocks
 
                         // Add enemies on Goto Win
                         // TODO: do we want this for all bulkheads?
-
                         if (director.Bulkhead.HasFlag(Bulkhead.Main) || director.Tier != "A")
                             objective.WavesOnGotoWin.Add(GenericWave.ExitTrickle);
 
@@ -451,8 +459,7 @@ namespace AutogenRundown.DataBlocks
                             objective.WavesOnGotoWin.Add(GenericWave.ExitTrickle);
 
                         var count = layout.Zones.Count;
-                        var zoneIndex = layout.ClampToZones(
-                            Generator.Random.Next(Math.Max(1, count - 2), count - 1));
+                        var zoneIndex = count - 1;
 
                         dataLayer.ObjectiveData.ZonePlacementDatas.Add(
                             new List<ZonePlacementData>()

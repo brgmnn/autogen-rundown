@@ -57,6 +57,11 @@ Follow the installation instructions again, check yes to overwrite all files.
   * Zones
     * [ ] More custom geomorphs
     * [ ] Specialized bulkhead geomorphs and layouts
+  * Challenges
+    * [ ] Key to unlock doors
+    * [ ] Cell to power generator to unlock doors
+    * [ ] Fog
+    * [ ] Infectious fog
   * [ ] Dimensions
 * Objectives
   * [x] Clear Path — *Navigate through the zones to a separate extraction elevator*
@@ -97,7 +102,3 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] S-Class alarms
   * [x] Surge alarms
   * [ ] High class alarms (> Class V)
-* Challenges
-  * [ ] Fog
-  * [ ] Infectious fog
-  * [x] Darkness / Lights change
