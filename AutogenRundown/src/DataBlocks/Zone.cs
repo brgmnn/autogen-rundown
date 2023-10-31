@@ -4,6 +4,7 @@ using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
+using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -362,13 +363,7 @@ namespace AutogenRundown.DataBlocks
         public List<WardenObjectiveEvent> EventsOnDoorScanDone { get; set; } = new List<WardenObjectiveEvent>();
 
         #region Puzzle settings
-        public JObject ProgressionPuzzleToEnter { get; set; } = new JObject()
-        {
-            ["PuzzleType"] = 0,
-            ["CustomText"] = 972,
-            ["PlacementCount"] = 1,
-            ["ZonePlacementData"] = new JArray()
-        };
+        public ProgressionPuzzle ProgressionPuzzleToEnter { get; set; } = new ProgressionPuzzle();
 
         /// <summary>
         /// Which security scan to use to enter

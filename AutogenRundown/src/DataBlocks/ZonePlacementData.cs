@@ -1,6 +1,6 @@
 ﻿namespace AutogenRundown.DataBlocks
 {
-    internal class ZonePlacementData
+    public class ZonePlacementData
     {
         public int DimensionIndex { get; set; } = 0;
 

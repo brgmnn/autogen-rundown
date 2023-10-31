@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Objectives;
+using static UnityEngine.Rendering.PostProcessing.BloomRenderer;
 
 namespace AutogenRundown.DataBlocks.Zones
 {
@@ -33,14 +34,18 @@ namespace AutogenRundown.DataBlocks.Zones
     {
         private Dictionary<ZoneNode, List<ZoneNode>> graph = new Dictionary<ZoneNode, List<ZoneNode>>();
 
-        private IEnumerable<KeyValuePair<ZoneNode, List<ZoneNode>>> GetSubgraph(Bulkhead bulkhead = Bulkhead.All)
-            => graph.Where(node => (node.Key.Bulkhead & bulkhead) != 0);
+        private IEnumerable<KeyValuePair<ZoneNode, List<ZoneNode>>> GetSubgraph(
+                Bulkhead bulkhead = Bulkhead.All,
+                string branch = "primary")
+            => graph.Where(node => (node.Key.Bulkhead & bulkhead) != 0 && node.Key.Branch == branch);
 
         public override string ToString()
         {
             var debug = string.Join("\n", graph.Select(n => $"  {n.Key} => [{ZoneNode.ListToString(n.Value)}]"));
             return $"Graph:\n{debug}";
         }
+
+        private int index = 0;
 
         /// <summary>
         /// Connects two zones unidirectionally. If the second zone is not specified then the
@@ -64,25 +69,27 @@ namespace AutogenRundown.DataBlocks.Zones
                 graph.Add(from, new List<ZoneNode>());
         }
 
+        public int NextIndex() => index++;
+
         /// <summary>
         /// Gets all zones associated with the given bulkhead
         /// </summary>
         /// <param name="bulkhead"></param>
         /// <returns></returns>
-        public List<ZoneNode> GetZones(Bulkhead bulkhead = Bulkhead.All)
-            => GetSubgraph(bulkhead).Select(node => node.Key).ToList();
+        public List<ZoneNode> GetZones(Bulkhead bulkhead = Bulkhead.All, string branch = "primary")
+            => GetSubgraph(bulkhead, branch).Select(node => node.Key).ToList();
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public List<ZoneNode> GetConnections(ZoneNode node)
+        public List<ZoneNode> GetConnections(ZoneNode node, string branch = "primary")
         {
             List<ZoneNode> connections;
 
             if (graph.TryGetValue(node, out connections!))
-                return connections;
+                return connections.Where(node => node.Branch == branch).ToList();
 
             return new List<ZoneNode>();
         }
@@ -126,6 +133,34 @@ namespace AutogenRundown.DataBlocks.Zones
                 return null;
 
             return openZones.Last();
+        }
+
+        /// <summary>
+        /// Returns the list of zones starting from 0 that have "totalOpenSlots" number of open
+        /// slots across all of them. Useful for ensuring we place key doors like the main,
+        /// extreme, overload bulkhead doors far enough forward that we can still connect other
+        /// doors to them.
+        /// </summary>
+        /// <param name="totalOpenSlots"></param>
+        /// <param name="bulkhead"></param>
+        /// <param name="branch"></param>
+        /// <returns></returns>
+        public IEnumerable<ZoneNode> GetZonesWithTotalOpen(
+            int fromIndex,
+            int totalOpenSlots,
+            Bulkhead bulkhead = Bulkhead.Main,
+            string branch = "primary")
+        {
+            var openZones = GetOpenZones(bulkhead, branch);
+
+            var index = fromIndex;
+            while (CountOpenSlots(openZones.Take(index)) < totalOpenSlots)
+            {
+
+                index++;
+            }
+
+            return openZones.Take(index);
         }
 
         /// <summary>

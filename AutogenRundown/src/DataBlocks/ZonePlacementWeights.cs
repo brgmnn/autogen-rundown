@@ -2,7 +2,7 @@
 
 namespace AutogenRundown.DataBlocks
 {
-    internal class ZonePlacementWeights
+    public class ZonePlacementWeights
     {
         public double Start { get; set; } = 0.0;
 

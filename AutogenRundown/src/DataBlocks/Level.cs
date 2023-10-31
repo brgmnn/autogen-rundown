@@ -378,25 +378,28 @@ namespace AutogenRundown.DataBlocks
                 level.MainLayerData.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
             }
 
+            // When finding places to place bulkheads, we don't need a new space for Main as it's
+            // part of the level.
             var openZones = level.Planner.GetOpenZones(Bulkhead.Main);
             var min = selectedBulkheads switch
             {
-                Bulkhead.Main => 1,
-                Bulkhead.Main | Bulkhead.Extreme => 2,
-                Bulkhead.Main | Bulkhead.Overload => 2,
-                Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => 3,
+                Bulkhead.Main => 0,
+                Bulkhead.Main | Bulkhead.Extreme => 1,
+                Bulkhead.Main | Bulkhead.Overload => 1,
+                Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => 2,
                 _ => 1
             };
 
             // Main bulkhead zone cannot spawn in zone 0. Otherwise we would have zero zones to
             // place other bulkheads
-            var index = 1;
-            while (level.Planner.CountOpenSlots(openZones.Take(index)) < min)
-            {
-                index++;
-            }
+            var startingZones = level.Planner.GetZonesWithTotalOpen(1, min, Bulkhead.Main);
+            var mainBulkheadZones = openZones.Where(zone => zone.ZoneNumber > startingZones.Last().ZoneNumber).ToList();
 
-            var mainBulkheadZone = Generator.Pick(openZones.TakeLast(openZones.Count - index));
+            Plugin.Logger.LogDebug($"Open Zones: {ZoneNode.ListToString(openZones)}\n\n");
+            Plugin.Logger.LogDebug($"Starting Zones: {ZoneNode.ListToString(startingZones)}\n\n");
+            Plugin.Logger.LogDebug($"Main Bulkhead Zones: {ZoneNode.ListToString(mainBulkheadZones)}\n\n");
+
+            var mainBulkheadZone = Generator.Pick(mainBulkheadZones);
             level.MainBulkheadZone = mainBulkheadZone.ZoneNumber;
 
             Plugin.Logger.LogInfo($"Level={level.Tier}{level.Index} - Main Bulkhead Zone = {mainBulkheadZone.ZoneNumber}");

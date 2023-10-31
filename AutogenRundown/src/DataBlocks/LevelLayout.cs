@@ -5,6 +5,8 @@ using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
+using static DefaultCharacterLayouts;
+using static UnityEngine.Rendering.PostProcessing.BloomRenderer;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -575,6 +577,86 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
+        /// Add a door that requires a key to be used.
+        /// </summary>
+        public void RollKeyedDoors(BuildDirector director, LayoutPlanner planner, ICollection<ChainedPuzzle> puzzlePack)
+        {
+            var openZones = planner.GetZonesWithTotalOpen(0, 2, director.Bulkhead, "primary");
+
+            var branchFrom = Generator.Pick(openZones);
+
+            Plugin.Logger.LogDebug($"Open Zones and Branch from: {ZoneNode.ListToString(openZones)};\n    {branchFrom}");
+
+            var connections = planner.GetConnections(branchFrom, "primary");
+            Plugin.Logger.LogDebug($"conn sir? {connections}");
+
+            var lockedZone = Generator.Pick(connections);
+
+            Plugin.Logger.LogDebug($"Locked Zone? {lockedZone}");
+
+            var trunk = Zones[branchFrom.ZoneNumber];
+
+            // Add the branch zones
+            var branch = "key1";
+            var branchLength = director.Tier switch
+            {
+                "A" => 1,
+                "B" => 1,
+                "C" => Generator.Select(new List<WeightedValue<int>>
+                {
+                    new WeightedValue<int> { Value = 1, Weight = 0.66 },
+                    new WeightedValue<int> { Value = 2, Weight = 0.33 },
+                }).Value,
+                "D" => Generator.Select(new List<WeightedValue<int>>
+                {
+                    new WeightedValue<int> { Value = 1, Weight = 0.66 },
+                    new WeightedValue<int> { Value = 2, Weight = 0.33 },
+                }).Value,
+                "E" => Generator.Select(new List<WeightedValue<int>>
+                {
+                    new WeightedValue<int> { Value = 1, Weight = 0.66 },
+                    new WeightedValue<int> { Value = 2, Weight = 0.33 },
+                }).Value,
+                _ => 1
+            };
+
+            for (int i = 0; i < branchLength; i++)
+            {
+                var fromZone = planner.GetLastZone(director.Bulkhead, branch) ??
+                    new ZoneNode(director.Bulkhead, trunk.LocalIndex, "primary");
+
+                var zone = new Zone
+                {
+                    LocalIndex = planner.NextIndex(),
+                    BuildFromLocalIndex = fromZone.ZoneNumber,
+                    Coverage = CoverageMinMax.GenSize(i),
+                    LightSettings = Lights.GenRandomLight(),
+                };
+                planner.Connect(fromZone, new ZoneNode(director.Bulkhead, zone.LocalIndex, branch));
+
+                Plugin.Logger.LogDebug($"Adding zones: {fromZone} -> {new ZoneNode(director.Bulkhead, zone.LocalIndex, branch)}");
+
+                zone.RollAlarms(puzzlePack);
+
+                Zones.Add(zone);
+            }
+
+            var locked = Zones.Find(z => z.LocalIndex == lockedZone.ZoneNumber);
+
+            locked.ProgressionPuzzleToEnter = new ProgressionPuzzle
+            {
+                PuzzleType = ProgressionPuzzleType.Keycard,
+                ZonePlacementData = new List<ZonePlacementData>
+                {
+                    new ZonePlacementData
+                    {
+                        LocalIndex = planner.GetZones(director.Bulkhead, branch).Last().ZoneNumber,
+                    }
+                }
+            };
+        }
+
+        /// <summary>
         /// Generates a Zone Alias start. In general the deeper the level the higher the zone numbers
         /// </summary>
         /// <param name="tier"></param>
@@ -648,7 +730,7 @@ namespace AutogenRundown.DataBlocks
 
                             var zone = new Zone
                             {
-                                LocalIndex = i,
+                                LocalIndex = level.Planner.NextIndex(),
                                 BuildFromLocalIndex = fromZone?.ZoneNumber ?? 0,
                                 Coverage = CoverageMinMax.GenSize(i),
                                 LightSettings = Lights.GenRandomLight(),
@@ -720,7 +802,7 @@ namespace AutogenRundown.DataBlocks
 
                             var zone = new Zone
                             {
-                                LocalIndex = i,
+                                LocalIndex = level.Planner.NextIndex(),
                                 BuildFromLocalIndex = fromZone?.ZoneNumber ?? 0,
                                 Coverage = CoverageMinMax.GenSize(i),
                                 LightSettings = Lights.GenRandomLight(),
@@ -760,7 +842,7 @@ namespace AutogenRundown.DataBlocks
 
                             var zone = new Zone
                             {
-                                LocalIndex = i,
+                                LocalIndex = level.Planner.NextIndex(),
                                 BuildFromLocalIndex = fromZone?.ZoneNumber ?? 0,
                                 Coverage = CoverageMinMax.GenSize(i),
                                 LightSettings = Lights.GenRandomLight(),
@@ -779,6 +861,9 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
             }
+
+            if (director.Bulkhead.HasFlag(Bulkhead.Main))
+                layout.RollKeyedDoors(director, level.Planner, puzzlePack);
 
             layout.RollBloodDoors();
             layout.RollEnemies(director);
