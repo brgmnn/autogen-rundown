@@ -395,10 +395,6 @@ namespace AutogenRundown.DataBlocks
             var startingZones = level.Planner.GetZonesWithTotalOpen(1, min, Bulkhead.Main);
             var mainBulkheadZones = openZones.Where(zone => zone.ZoneNumber > startingZones.Last().ZoneNumber).ToList();
 
-            Plugin.Logger.LogDebug($"Open Zones: {ZoneNode.ListToString(openZones)}\n\n");
-            Plugin.Logger.LogDebug($"Starting Zones: {ZoneNode.ListToString(startingZones)}\n\n");
-            Plugin.Logger.LogDebug($"Main Bulkhead Zones: {ZoneNode.ListToString(mainBulkheadZones)}\n\n");
-
             var mainBulkheadZone = Generator.Pick(mainBulkheadZones);
             level.MainBulkheadZone = mainBulkheadZone.ZoneNumber;
 

@@ -581,19 +581,14 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public void RollKeyedDoors(BuildDirector director, LayoutPlanner planner, ICollection<ChainedPuzzle> puzzlePack)
         {
+            // Chance not to add any keyed doors
+            if (Generator.Flip(0.6))
+                return;
+
             var openZones = planner.GetZonesWithTotalOpen(0, 2, director.Bulkhead, "primary");
-
             var branchFrom = Generator.Pick(openZones);
-
-            Plugin.Logger.LogDebug($"Open Zones and Branch from: {ZoneNode.ListToString(openZones)};\n    {branchFrom}");
-
             var connections = planner.GetConnections(branchFrom, "primary");
-            Plugin.Logger.LogDebug($"conn sir? {connections}");
-
             var lockedZone = Generator.Pick(connections);
-
-            Plugin.Logger.LogDebug($"Locked Zone? {lockedZone}");
-
             var trunk = Zones[branchFrom.ZoneNumber];
 
             // Add the branch zones
