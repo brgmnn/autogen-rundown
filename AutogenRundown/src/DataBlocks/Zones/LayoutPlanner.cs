@@ -45,7 +45,9 @@ namespace AutogenRundown.DataBlocks.Zones
             return $"Graph:\n{debug}";
         }
 
-        private int index = 0;
+        private int indexMain = 0;
+        private int indexExtreme = 0;
+        private int indexOverload = 0;
 
         /// <summary>
         /// Connects two zones unidirectionally. If the second zone is not specified then the
@@ -69,7 +71,12 @@ namespace AutogenRundown.DataBlocks.Zones
                 graph.Add(from, new List<ZoneNode>());
         }
 
-        public int NextIndex() => index++;
+        public int NextIndex(Bulkhead bulkhead) => bulkhead switch
+        {
+            Bulkhead.Main => indexMain++,
+            Bulkhead.Extreme => indexExtreme++,
+            Bulkhead.Overload => indexOverload++
+        };
 
         /// <summary>
         /// Gets all zones associated with the given bulkhead

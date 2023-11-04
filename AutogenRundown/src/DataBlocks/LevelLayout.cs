@@ -622,7 +622,7 @@ namespace AutogenRundown.DataBlocks
 
                 var zone = new Zone
                 {
-                    LocalIndex = planner.NextIndex(),
+                    LocalIndex = planner.NextIndex(director.Bulkhead),
                     BuildFromLocalIndex = fromZone.ZoneNumber,
                     Coverage = CoverageMinMax.GenSize(i),
                     LightSettings = Lights.GenRandomLight(),
@@ -725,7 +725,7 @@ namespace AutogenRundown.DataBlocks
 
                             var zone = new Zone
                             {
-                                LocalIndex = level.Planner.NextIndex(),
+                                LocalIndex = level.Planner.NextIndex(director.Bulkhead),
                                 BuildFromLocalIndex = fromZone?.ZoneNumber ?? 0,
                                 Coverage = CoverageMinMax.GenSize(i),
                                 LightSettings = Lights.GenRandomLight(),
@@ -797,7 +797,7 @@ namespace AutogenRundown.DataBlocks
 
                             var zone = new Zone
                             {
-                                LocalIndex = level.Planner.NextIndex(),
+                                LocalIndex = level.Planner.NextIndex(director.Bulkhead),
                                 BuildFromLocalIndex = fromZone?.ZoneNumber ?? 0,
                                 Coverage = CoverageMinMax.GenSize(i),
                                 LightSettings = Lights.GenRandomLight(),
@@ -837,7 +837,7 @@ namespace AutogenRundown.DataBlocks
 
                             var zone = new Zone
                             {
-                                LocalIndex = level.Planner.NextIndex(),
+                                LocalIndex = level.Planner.NextIndex(director.Bulkhead),
                                 BuildFromLocalIndex = fromZone?.ZoneNumber ?? 0,
                                 Coverage = CoverageMinMax.GenSize(i),
                                 LightSettings = Lights.GenRandomLight(),

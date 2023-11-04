@@ -397,6 +397,8 @@ namespace AutogenRundown.DataBlocks
                 /** 
                  * Fairly straight forward objective, get to the end zone. Some additional enemies
                  * at the end make this a more interesting experience.
+                 * 
+                 * This objective can only be for Main given it ends the level on completion
                  * */
                 case WardenObjectiveType.ClearPath:
                     {
