@@ -542,11 +542,14 @@ namespace AutogenRundown.DataBlocks
                         objective.WavesOnActivate.Add(wave);
 
                         var placements = new List<ZonePlacementData>();
-                        for (var i = 1; i <= objective.Uplink_NumberOfTerminals; i++)
+                        var zones = level.Planner.GetZones(director.Bulkhead)
+                                                 .TakeLast(objective.Uplink_NumberOfTerminals);
+
+                        foreach (var zone in zones)
                         {
                             placements.Add(new ZonePlacementData
                             {
-                                LocalIndex = layout.Zones.Count() - i,
+                                LocalIndex = zone.ZoneNumber,
                                 Weights = ZonePlacementWeights.NotAtStart
                             });
                         }
