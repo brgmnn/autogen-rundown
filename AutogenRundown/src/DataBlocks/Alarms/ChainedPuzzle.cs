@@ -129,10 +129,10 @@ namespace AutogenRundown.DataBlocks.Alarms
                 },
                 "C" => new List<ChainedPuzzle>
                 {
-                    None, 
+                    None,
                     TeamScan, TeamScan,
                     AlarmClass3, AlarmClass3,
-                    AlarmClass4, AlarmClass4, 
+                    AlarmClass4, AlarmClass4,
                     AlarmClass5, AlarmClass5, AlarmClass5,
 
                     AlarmClass3_Surge,

@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using AutogenRundown.GeneratorData;
-using AutogenRundown.DataBlocks.Objectives;
+﻿using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.GeneratorData;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine.Experimental.AI;
 
 namespace AutogenRundown.DataBlocks

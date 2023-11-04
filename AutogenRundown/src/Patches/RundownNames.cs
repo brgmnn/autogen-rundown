@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using AutogenRundown.DataBlocks;
+﻿using AutogenRundown.DataBlocks;
+using UnityEngine;
 
 namespace AutogenRundown.Patches
 {

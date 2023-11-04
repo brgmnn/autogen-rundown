@@ -1,8 +1,8 @@
-﻿using BepInEx;
+﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Enemies;
+using BepInEx;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using AutogenRundown.DataBlocks.Alarms;
-using AutogenRundown.DataBlocks.Enemies;
 
 namespace AutogenRundown.DataBlocks
 {

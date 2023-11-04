@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using AutogenRundown.DataBlocks.Enemies;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using AutogenRundown.DataBlocks.Enemies;
 
 namespace AutogenRundown.DataBlocks.Objectives
 {

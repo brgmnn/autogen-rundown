@@ -6,7 +6,7 @@ namespace AutogenRundown.DataBlocks.Enemies
     public record class EnemyPopulation : DataBlock
     {
         [JsonIgnore]
-        public static List<EnemyPopulationRole> Roles = new List<EnemyPopulationRole>(); 
+        public static List<EnemyPopulationRole> Roles = new List<EnemyPopulationRole>();
 
         public static new void Setup()
         {

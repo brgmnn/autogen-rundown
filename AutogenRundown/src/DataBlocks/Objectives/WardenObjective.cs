@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using AutogenRundown.DataBlocks.Alarms;
+﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
+using AutogenRundown.DataBlocks.Zones;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -245,8 +246,8 @@ namespace AutogenRundown.DataBlocks
                         objective.ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
 
                         // Place HSU's within the objective zone
-                        var count = layout.Zones.Count;
-                        var zoneIndex = count - 1;
+                        var zn = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead)!;
+                        var zoneIndex = zn.ZoneNumber;
 
                         dataLayer.ObjectiveData.ZonePlacementDatas.Add(
                             new List<ZonePlacementData>()
@@ -458,8 +459,8 @@ namespace AutogenRundown.DataBlocks
                         if (director.Bulkhead.HasFlag(Bulkhead.Main))
                             objective.WavesOnGotoWin.Add(GenericWave.ExitTrickle);
 
-                        var count = layout.Zones.Count;
-                        var zoneIndex = count - 1;
+                        var zn = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead)!;
+                        var zoneIndex = zn.ZoneNumber;
 
                         dataLayer.ObjectiveData.ZonePlacementDatas.Add(
                             new List<ZonePlacementData>()
@@ -523,7 +524,7 @@ namespace AutogenRundown.DataBlocks
                             ("D", 2) => Generator.Random.Next(4, 6),
                             ("D", 3) => 4,
 
-                            ("E", 1) => Generator.Random.Next(6, 10),
+                            ("E", 1) => Generator.Random.Next(8, 12),
                             ("E", 2) => Generator.Random.Next(5, 6),
                             ("E", 3) => 5,
                             ("E", 4) => 5,
@@ -554,6 +555,7 @@ namespace AutogenRundown.DataBlocks
                             });
                         }
 
+                        // TODO: Seems it picks randomly from the inner list? Let's split it a bit
                         dataLayer.ObjectiveData.ZonePlacementDatas.Add(placements);
 
                         break;

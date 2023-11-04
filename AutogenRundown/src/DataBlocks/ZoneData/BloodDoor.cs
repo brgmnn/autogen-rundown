@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using AutogenRundown.DataBlocks.Enemies;
+﻿using AutogenRundown.DataBlocks.Enemies;
+using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks.ZoneData
 {

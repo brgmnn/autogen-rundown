@@ -1,8 +1,8 @@
-﻿using BepInEx;
-using AutogenRundown.DataBlocks;
+﻿using AutogenRundown.DataBlocks;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.GeneratorData;
-using AutogenRundown.DataBlocks.Levels;
+using BepInEx;
 
 namespace AutogenRundown
 {
@@ -74,11 +74,11 @@ namespace AutogenRundown
             for (int i = 0; i < cMax; i++)
             {
                 var level = Level.Build(
-                    new Level 
-                    { 
+                    new Level
+                    {
                         Tier = "C",
                         Name = Generator.Draw(levelNames),
-                        Index = i + 1 
+                        Index = i + 1
                     });
                 rundown.AddLevel(level);
             }
@@ -116,11 +116,11 @@ namespace AutogenRundown
             for (int i = 0; i < dMax; i++)
             {
                 var level = Level.Build(
-                    new Level 
-                    { 
+                    new Level
+                    {
                         Tier = "D",
                         Name = Generator.Draw(levelNames),
-                        Index = i + 1 
+                        Index = i + 1
                     });
                 rundown.AddLevel(level);
             }
@@ -157,11 +157,11 @@ namespace AutogenRundown
             for (int i = 0; i < eMax; i++)
             {
                 var level = Level.Build(
-                    new Level 
-                    { 
+                    new Level
+                    {
                         Tier = "E",
                         Name = Generator.Draw(levelNames),
-                        Index = i + 1 
+                        Index = i + 1
                     });
                 rundown.AddLevel(level);
             }
@@ -172,7 +172,7 @@ namespace AutogenRundown
                 Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "E",
-                Objective = WardenObjectiveType.SpecialTerminalCommand,
+                Objective = WardenObjectiveType.TerminalUplink,
             };
             mainDirectorE.GenPoints();
 

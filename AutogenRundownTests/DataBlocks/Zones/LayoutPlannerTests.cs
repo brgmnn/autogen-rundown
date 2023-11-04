@@ -105,7 +105,7 @@ namespace AutogenRundownTests.DataBlocks.Zones
             planner.Connect(
                 new ZoneNode(Bulkhead.Main, 1),
                 new ZoneNode(Bulkhead.Main, 2));
-            
+
             // Add extreme zones
             planner.Connect(
                 new ZoneNode(Bulkhead.Main, 2),
