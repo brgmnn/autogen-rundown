@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
-    enum DistributionStrategy
+    public enum DistributionStrategy
     {
         /// <summary>
         /// Randomly placed across all zones in random locations.
@@ -26,7 +26,7 @@ namespace AutogenRundown.DataBlocks
         EvenlyAcrossZones
     }
 
-    internal record class WardenObjective : DataBlock
+    public record class WardenObjective : DataBlock
     {
         /// <summary>
         /// Places objective items in the level as needed
@@ -235,7 +235,7 @@ namespace AutogenRundown.DataBlocks
             switch (director.Objective)
             {
                 /**
-                 * Collect the HSU from within a storage zone 
+                 * Collect the HSU from within a storage zone
                  */
                 case WardenObjectiveType.HsuFindSample:
                     {
@@ -394,10 +394,10 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
-                /** 
+                /**
                  * Fairly straight forward objective, get to the end zone. Some additional enemies
                  * at the end make this a more interesting experience.
-                 * 
+                 *
                  * This objective can only be for Main given it ends the level on completion
                  * */
                 case WardenObjectiveType.ClearPath:
@@ -564,7 +564,10 @@ namespace AutogenRundown.DataBlocks
                     }
 
                 /**
-                 * Central generator cluster is quite finickey
+                 * Central generator cluster.
+                 *
+                 * Discord says getting the generator cluster to spawn can be tricky and require
+                 * re-rolls with the zone seed. Still waiting on seeing if this is a problem.
                  */
                 case WardenObjectiveType.CentralGeneratorCluster:
                     {
@@ -577,7 +580,7 @@ namespace AutogenRundown.DataBlocks
                         objective.GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
                         objective.GoToWinCondition_ToMainLayer = "Malfunction in air purification system. Make your way for the forward emergency exit.";
 
-                        //"ChainedPuzzleMidObjective": 63,
+                        objective.ChainedPuzzleMidObjective = ChainedPuzzle.AlarmClass1.PersistentId;
                         //"ChainedPuzzleAtExit": 11,
 
                         objective.PowerCellsToDistribute = 3;
@@ -690,17 +693,17 @@ namespace AutogenRundown.DataBlocks
 
         #region Type=8: Uplink terminal
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int Uplink_NumberOfVerificationRounds { get; set; } = 0;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int Uplink_NumberOfTerminals { get; set; } = 1;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public SurvivalWaveSpawnType Uplink_WaveSpawnType { get; set; } = SurvivalWaveSpawnType.InSuppliedCourseNodeZone;
         #endregion

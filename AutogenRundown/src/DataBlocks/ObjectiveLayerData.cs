@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
-    internal class ObjectiveLayerData
+    public class ObjectiveLayerData
     {
         /// <summary>
         /// Local zone index where the bulkhead entrace will be

@@ -3,7 +3,7 @@
     /// <summary>
     /// Objective items
     /// </summary>
-    internal enum WardenObjectiveItem : uint
+    public enum WardenObjectiveItem : uint
     {
         PersonnelId = 128,
         PartialDecoder = 129,
@@ -18,7 +18,6 @@
         Osip = 150,
         PlantSample = 153,
         MemoryStick = 171,
-
         DataCube = 165,
         DataCubes = 179,
         DataCubeBackup = 178,

@@ -1,6 +1,6 @@
 ﻿namespace AutogenRundown.DataBlocks.Enemies
 {
-    internal record class EnemyInfo
+    public record class EnemyInfo
     {
         public EnemyRole Role { get; set; }
 

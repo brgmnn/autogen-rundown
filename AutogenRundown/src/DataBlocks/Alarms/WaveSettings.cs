@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.Alarms
 {
-    internal enum VanillaWaveSettings : uint
+    public enum VanillaWaveSettings : uint
     {
         None = 0,
 
@@ -46,9 +46,9 @@ namespace AutogenRundown.DataBlocks.Alarms
     /// Provides the settings for alarms, scout waves and similar types of waves (all referred to
     /// as "alarm" in sections below).
     ///
-    /// 
+    ///
     /// # Regarding population points and soft cap.
-    /// 
+    ///
     /// By default the game has some hardcoded values set that are used for score settings - cost
     /// of an enemy and soft cap.
     ///
@@ -61,7 +61,7 @@ namespace AutogenRundown.DataBlocks.Alarms
     /// points are available. The enemy type here is determined in EnemyDataBlock.
     ///
     /// The enemy type for wave population point cost is determined by wave settings.
-    /// 
+    ///
     /// https://gtfo-modding.gitbook.io/wiki/reference/datablocks/main/survivalwavesettings
     /// </summary>
     public record class WaveSettings : DataBlock

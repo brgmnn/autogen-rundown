@@ -1,6 +1,6 @@
 ﻿namespace AutogenRundown
 {
-    internal class WeightedValue<T> : Generator.ISelectable
+    public class WeightedValue<T> : Generator.ISelectable
     {
         public double Weight { get; set; } = 1.0;
 

@@ -10,14 +10,14 @@ using static UnityEngine.Rendering.PostProcessing.BloomRenderer;
 
 namespace AutogenRundown.DataBlocks
 {
-    internal record class Hibernating : Generator.ISelectable
+    public record class Hibernating : Generator.ISelectable
     {
         public double Weight { get; set; } = 1.0;
 
         public uint Enemy { get; set; }
     }
 
-    internal record class LevelLayout : DataBlock
+    public record class LevelLayout : DataBlock
     {
         #region hidden data
         [JsonIgnore]
@@ -43,6 +43,17 @@ namespace AutogenRundown.DataBlocks
         /// <param name="value"></param>
         /// <returns></returns>
         public int ClampToZones(int value) => Math.Clamp(value, 0, Zones.Count - 1);
+
+        /// <summary>
+        /// Roll for door alarms
+        /// </summary>
+        public void RollAlarms(List<ChainedPuzzle> puzzlePack)
+        {
+            foreach (var zone in Zones)
+            {
+                zone.RollAlarms(puzzlePack);
+            }
+        }
 
         /// <summary>
         /// Roll for blood doors
@@ -736,8 +747,6 @@ namespace AutogenRundown.DataBlocks
                                 level.Planner.Connect((ZoneNode)fromZone, new ZoneNode(director.Bulkhead, i));
                             }
 
-                            zone.RollAlarms(puzzlePack);
-
                             layout.Zones.Add(zone);
                         }
 
@@ -782,10 +791,6 @@ namespace AutogenRundown.DataBlocks
                         layout.Zones.Add(corridor);
                         layout.Zones.Add(reactor);
 
-                        // Assign door puzzles
-                        corridor.RollAlarms(puzzlePack);
-                        reactor.RollAlarms(puzzlePack);
-
                         break;
                     }
 
@@ -807,8 +812,6 @@ namespace AutogenRundown.DataBlocks
                             {
                                 level.Planner.Connect((ZoneNode)fromZone, new ZoneNode(director.Bulkhead, i));
                             }
-
-                            zone.RollAlarms(puzzlePack);
 
                             var subcomplex = GenSubComplex(level.Complex);
 
@@ -865,8 +868,6 @@ namespace AutogenRundown.DataBlocks
                                 zone.BigPickupDistributionInZone = pickup.PersistentId;
                             }
 
-                            zone.RollAlarms(puzzlePack);
-
                             layout.Zones.Add(zone);
                         }
 
@@ -895,14 +896,14 @@ namespace AutogenRundown.DataBlocks
                                 level.Planner.Connect((ZoneNode)fromZone, new ZoneNode(director.Bulkhead, i));
                             }
 
-                            zone.RollAlarms(puzzlePack);
-
                             layout.Zones.Add(zone);
                         }
 
                         break;
                     }
             }
+
+            layout.RollAlarms(puzzlePack);
 
             //if (director.Bulkhead.HasFlag(Bulkhead.Main))
             //    layout.RollKeyedDoors(director, level.Planner, puzzlePack);

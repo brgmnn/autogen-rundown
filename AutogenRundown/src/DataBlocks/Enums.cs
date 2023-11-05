@@ -9,7 +9,7 @@ namespace AutogenRundown.DataBlocks
     /// <summary>
     /// Which group of tiles this data will generate for
     /// </summary>
-    enum Complex
+    public enum Complex
     {
         Mining = 1,
         Tech = 3,
@@ -19,7 +19,7 @@ namespace AutogenRundown.DataBlocks
     /// <summary>
     /// Complex types
     /// </summary>
-    enum SubComplex
+    public enum SubComplex
     {
         // ComplexResourceData.Mining
         DigSite = 0,

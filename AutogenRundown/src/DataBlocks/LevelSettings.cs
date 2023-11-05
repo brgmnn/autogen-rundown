@@ -48,7 +48,7 @@ namespace AutogenRundown.DataBlocks
         public override string ToString() => $"[{string.Join(", ", this)}]";
     }
 
-    internal class LevelSettings
+    public class LevelSettings
     {
         public string Tier { get; set; } = "A";
 

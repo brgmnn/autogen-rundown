@@ -4,7 +4,7 @@
     /// Base game objective types. Some of these seem to be quite similar and some it's not clear
     /// what they would be for such as Empty.
     /// </summary>
-    internal enum WardenObjectiveType
+    public enum WardenObjectiveType
     {
         HsuFindSample = 0,
         ReactorShutdown = 2,

@@ -3,14 +3,14 @@ using AutogenRundown.DataBlocks.Objectives;
 
 namespace AutogenRundown
 {
-    enum Complexity
+    public enum Complexity
     {
         Low,
         Medium,
         High
     }
 
-    enum MissionSize
+    public enum MissionSize
     {
         Low,
         Medium,
@@ -20,7 +20,7 @@ namespace AutogenRundown
     /// <summary>
     /// Director for building what each level (bulkhead) should be
     /// </summary>
-    internal class BuildDirector
+    public class BuildDirector
     {
         public int Points { get; set; } = 0;
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace AutogenRundown.DataBlocks.Objectives
 {
     // Find strings with: \[\w+_\w+\]
-    internal class Lore
+    public class Lore
     {
         public static string AllItems = "[ALL_ITEMS]";
 

@@ -2,7 +2,7 @@
 
 namespace AutogenRundown.DataBlocks.ZoneData
 {
-    internal class TerminalPlacement
+    public class TerminalPlacement
     {
         /*{
           "PlacementWeights": {

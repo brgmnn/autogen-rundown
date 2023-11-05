@@ -13,7 +13,7 @@ namespace AutogenRundown.DataBlocks
         public int Zone { get; set; } = 0;
     }
 
-    internal class Level
+    public class Level
     {
         #region Filler settings that won't change
         public bool Enabled = true;
@@ -56,7 +56,7 @@ namespace AutogenRundown.DataBlocks
 
         /// <summary>
         /// Which complex type to use.
-        /// 
+        ///
         /// By default set to a random value from the available complexes. Weight more towards
         /// mining and tech.
         /// </summary>
@@ -302,7 +302,7 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         static public Level Build(Level level)
@@ -335,14 +335,14 @@ namespace AutogenRundown.DataBlocks
 
             /**
              * Options for bulkhead keys and bulkhead DCs:
-             * 
+             *
              *  * All unlocked: main, extreme, overload
              *    Each bulkhead is unlocked, no keys required
-             *    
+             *
              *  * Chained: main -> extreme -> overload -> END
              *    Each bulkhead is locked behind the previous one with one key in each.
              *    Main has extreme DC, extreme has overload DC.
-             *    
+             *
              *  * Choice: main -> overload -> END
              *                 -> extreme -> overload -> END
              *    Main has extreme/overload DC, extreme has extra key for overload DC.

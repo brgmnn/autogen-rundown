@@ -1,8 +1,6 @@
 ﻿namespace AutogenRundown.DataBlocks
 {
-
-
-    internal record class BigPickupDistribution : DataBlock
+    public record class BigPickupDistribution : DataBlock
     {
         public uint SpawnsPerZone { get; set; } = 0;
 

@@ -1,6 +1,6 @@
 ﻿namespace AutogenRundown.DataBlocks.Objectives
 {
-    internal enum WardenObjectiveEventTrigger
+    public enum WardenObjectiveEventTrigger
     {
         None = 0,
         OnStart = 1,

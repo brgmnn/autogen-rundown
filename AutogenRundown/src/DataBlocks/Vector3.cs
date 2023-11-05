@@ -2,7 +2,7 @@
 
 namespace AutogenRundown.DataBlocks
 {
-    internal class Vector3
+    public class Vector3
     {
         private System.Numerics.Vector3 vec = new System.Numerics.Vector3 { X = 0.0f, Y = 0.0f, Z = 0.0f };
 

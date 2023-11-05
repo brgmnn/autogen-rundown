@@ -10,11 +10,11 @@ namespace AutogenRundown.DataBlocks
 {
     /// <summary>
     /// eZoneBuildFromExpansionType
-    /// 
+    ///
     /// Direction is global and forward is looking from the drop elevator
     /// https://gtfo-modding.gitbook.io/wiki/reference/enum-types#ezonebuildfromexpansiontype
     /// </summary>
-    enum ZoneBuildExpansion
+    public enum ZoneBuildExpansion
     {
         Random = 0,
         Forward = 1,
@@ -26,7 +26,7 @@ namespace AutogenRundown.DataBlocks
     /// <summary>
     /// https://gtfo-modding.gitbook.io/wiki/reference/enum-types#ezoneexpansiontype
     /// </summary>
-    enum ZoneExpansion
+    public enum ZoneExpansion
     {
         Random = 0,
         Collapsed = 1,
@@ -43,7 +43,7 @@ namespace AutogenRundown.DataBlocks
     /// Note that a valid gate may not generate around the set source position/area.
     /// https://gtfo-modding.gitbook.io/wiki/reference/enum-types#ezonebuildfromtype
     /// </summary>
-    enum ZoneEntranceBuildFrom
+    public enum ZoneEntranceBuildFrom
     {
         Random = 0,
         Start = 1,
@@ -56,7 +56,7 @@ namespace AutogenRundown.DataBlocks
     /// <summary>
     /// https://gtfo-modding.gitbook.io/wiki/reference/enum-types#ezonedistributionamount
     /// </summary>
-    enum DistributionAmount
+    public enum DistributionAmount
     {
         None = 0,
 
@@ -97,9 +97,9 @@ namespace AutogenRundown.DataBlocks
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
-    internal record class Zone : DataBlock
+    public record class Zone : DataBlock
     {
         #region Custom geomorph settings
         public void GenExitGeomorph(Complex complex)
@@ -163,7 +163,7 @@ namespace AutogenRundown.DataBlocks
         /// Picks an appropriate geomorph for the corridor to a reactor
         /// </summary>
         /// <param name="complex"></param>
-        public void GenReactorCorridorGeomorph(Complex complex)
+        internal void GenReactorCorridorGeomorph(Complex complex)
         {
             switch (complex)
             {
@@ -187,7 +187,7 @@ namespace AutogenRundown.DataBlocks
             }
         }
 
-        public void GenGeneratorClusterGeomorph(Complex complex)
+        internal void GenGeneratorClusterGeomorph(Complex complex)
         {
             switch (complex)
             {
@@ -236,7 +236,7 @@ namespace AutogenRundown.DataBlocks
         /// Generate enemies for the zone
         /// </summary>
         /// <param name="director"></param>
-        public void GenEnemies(BuildDirector director)
+        internal void GenEnemies(BuildDirector director)
         {
             var points = director.GetPoints(this);
 
@@ -325,7 +325,7 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Alarms
-        public void RollAlarms(ICollection<ChainedPuzzle> puzzlePack)
+        internal void RollAlarms(ICollection<ChainedPuzzle> puzzlePack)
         {
             if (LocalIndex == 0)
                 return;
@@ -364,16 +364,16 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// Which tileset to use
         /// </summary>
-        public SubComplex SubComplex { get; set; } = SubComplex.All;
+        internal SubComplex SubComplex { get; set; } = SubComplex.All;
 
         [JsonProperty("CoverageMinMax")]
-        public CoverageMinMax Coverage { get; set; } = CoverageMinMax.Medium;
+        internal CoverageMinMax Coverage { get; set; } = CoverageMinMax.Medium;
 
-        public ZoneEntranceBuildFrom StartPosition { get; set; } = ZoneEntranceBuildFrom.Random;
+        internal ZoneEntranceBuildFrom StartPosition { get; set; } = ZoneEntranceBuildFrom.Random;
 
-        public ZoneBuildExpansion StartExpansion { get; set; } = ZoneBuildExpansion.Random;
+        internal ZoneBuildExpansion StartExpansion { get; set; } = ZoneBuildExpansion.Random;
 
-        public ZoneExpansion ZoneExpansion { get; set; } = ZoneExpansion.Random;
+        internal ZoneExpansion ZoneExpansion { get; set; } = ZoneExpansion.Random;
 
         /// <summary>
         /// If we specify a custom geomorph it goes here
@@ -385,17 +385,17 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// Which Light to select
         /// </summary>
-        public Lights.Light LightSettings { get; set; } = Lights.Light.AlmostWhite_1;
+        internal Lights.Light LightSettings { get; set; } = Lights.Light.AlmostWhite_1;
 
-        public Altitude AltitudeData { get; set; } = new Altitude();
+        internal Altitude AltitudeData { get; set; } = new Altitude();
 
         public List<JObject> EventsOnEnter { get; set; } = new List<JObject>();
         public List<JObject> EventsOnPortalWarp { get; set; } = new List<JObject>();
-        public List<WardenObjectiveEvent> EventsOnApproachDoor { get; set; } = new List<WardenObjectiveEvent>();
-        public List<WardenObjectiveEvent> EventsOnUnlockDoor { get; set; } = new List<WardenObjectiveEvent>();
-        public List<WardenObjectiveEvent> EventsOnOpenDoor { get; set; } = new List<WardenObjectiveEvent>();
-        public List<WardenObjectiveEvent> EventsOnDoorScanStart { get; set; } = new List<WardenObjectiveEvent>();
-        public List<WardenObjectiveEvent> EventsOnDoorScanDone { get; set; } = new List<WardenObjectiveEvent>();
+        internal List<WardenObjectiveEvent> EventsOnApproachDoor { get; set; } = new List<WardenObjectiveEvent>();
+        internal List<WardenObjectiveEvent> EventsOnUnlockDoor { get; set; } = new List<WardenObjectiveEvent>();
+        internal List<WardenObjectiveEvent> EventsOnOpenDoor { get; set; } = new List<WardenObjectiveEvent>();
+        internal List<WardenObjectiveEvent> EventsOnDoorScanStart { get; set; } = new List<WardenObjectiveEvent>();
+        internal List<WardenObjectiveEvent> EventsOnDoorScanDone { get; set; } = new List<WardenObjectiveEvent>();
 
         #region Puzzle settings
         public ProgressionPuzzle ProgressionPuzzleToEnter { get; set; } = new ProgressionPuzzle();
@@ -431,12 +431,12 @@ namespace AutogenRundown.DataBlocks
 
         #region Enemies
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [JsonProperty("ActiveEnemyWave")]
-        public BloodDoor BloodDoor { get; set; } = BloodDoor.None;
+        internal BloodDoor BloodDoor { get; set; } = BloodDoor.None;
 
-        public List<EnemySpawningData> EnemySpawningInZone { get; set; } = new List<EnemySpawningData>();
+        internal List<EnemySpawningData> EnemySpawningInZone { get; set; } = new List<EnemySpawningData>();
         #endregion
 
         #region Respawn settings
@@ -461,10 +461,10 @@ namespace AutogenRundown.DataBlocks
         public int CorpseClustersInZone { get; set; } = 0;
         public int ResourceContainerClustersInZone { get; set; } = 0;
         public int GeneratorClustersInZone { get; set; } = 0;
-        public DistributionAmount CorpsesInZone { get; set; } = DistributionAmount.None;
-        public DistributionAmount GroundSpawnersInZone { get; set; } = DistributionAmount.Some;
-        public DistributionAmount HSUsInZone { get; set; } = DistributionAmount.None;
-        public DistributionAmount DeconUnitsInZone { get; set; } = DistributionAmount.None;
+        internal DistributionAmount CorpsesInZone { get; set; } = DistributionAmount.None;
+        internal DistributionAmount GroundSpawnersInZone { get; set; } = DistributionAmount.Some;
+        internal DistributionAmount HSUsInZone { get; set; } = DistributionAmount.None;
+        internal DistributionAmount DeconUnitsInZone { get; set; } = DistributionAmount.None;
         public bool AllowSmallPickupsAllocation { get; set; } = true;
         public bool AllowResourceContainerAllocation { get; set; } = true;
         public bool ForceBigPickupsAllocation { get; set; } = false;

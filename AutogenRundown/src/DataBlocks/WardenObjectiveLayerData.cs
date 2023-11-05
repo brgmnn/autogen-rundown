@@ -1,12 +1,12 @@
 ﻿namespace AutogenRundown.DataBlocks
 {
-    enum WardenObjectiveWinCondition
+    public enum WardenObjectiveWinCondition
     {
         GoToElevator = 0,
         GoToExitGeo = 1,
     }
 
-    internal class WardenObjectiveLayerData
+    public class WardenObjectiveLayerData
     {
         public UInt32 DataBlockId { get; set; }
 

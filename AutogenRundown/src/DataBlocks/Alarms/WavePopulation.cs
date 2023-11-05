@@ -8,29 +8,29 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// <summary>
         /// EnemyDataBlock PersistentID of eEnemyType for this population
         /// </summary>
-        public Enemy WaveRoleWeakling { get; set; }
+        internal Enemy WaveRoleWeakling { get; set; }
 
         /// <summary>
         /// EnemyDataBlock PersistentID of eEnemyType for this population
         /// </summary>
-        public Enemy WaveRoleStandard { get; set; }
+        internal Enemy WaveRoleStandard { get; set; }
 
         /// <summary>
         /// EnemyDataBlock PersistentID of eEnemyType for this population
         /// </summary>
-        public Enemy WaveRoleSpecial { get; set; }
+        internal Enemy WaveRoleSpecial { get; set; }
 
         /// <summary>
         /// EnemyDataBlock PersistentID of eEnemyType for this population
         /// </summary>
-        public Enemy WaveRoleMiniBoss { get; set; }
+        internal Enemy WaveRoleMiniBoss { get; set; }
 
         /// <summary>
         /// EnemyDataBlock PersistentID of eEnemyType for this population
         /// </summary>
-        public Enemy WaveRoleBoss { get; set; }
+        internal Enemy WaveRoleBoss { get; set; }
 
-        public WavePopulation(PidOffsets offsets = PidOffsets.WavePopulation)
+        internal WavePopulation(PidOffsets offsets = PidOffsets.WavePopulation)
             : base(Generator.GetPersistentId(offsets))
         { }
 

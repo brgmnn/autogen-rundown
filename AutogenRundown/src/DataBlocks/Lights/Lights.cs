@@ -1,6 +1,6 @@
 ﻿namespace AutogenRundown.DataBlocks
 {
-    public static class Lights
+    internal static class Lights
     {
         public enum Light : uint
         {

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks
 {
-    internal class BigPickupSpawnData
+    public class BigPickupSpawnData
     {
         [JsonProperty("itemID")]
         public WardenObjectiveItem Item { get; set; } = 0;

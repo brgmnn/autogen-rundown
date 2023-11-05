@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
-    enum CoverageSize : int
+    public enum CoverageSize : int
     {
         Nano = 25,
         Tiny = 35,
@@ -14,7 +14,7 @@ namespace AutogenRundown.DataBlocks
         Huge = 200,
     }
 
-    internal class CoverageMinMax
+    public class CoverageMinMax
     {
         private static List<double> Sizes = new List<double>
         {

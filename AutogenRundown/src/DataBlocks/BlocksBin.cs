@@ -69,7 +69,7 @@ namespace AutogenRundown.DataBlocks
         }
     }
 
-    internal class BlocksBin<T> where T : DataBlock
+    public class BlocksBin<T> where T : DataBlock
     {
         /// <summary>
         /// Not sure what this is for yet
@@ -84,7 +84,7 @@ namespace AutogenRundown.DataBlocks
         private HashSet<uint> persistentIds = new HashSet<uint>();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="block"></param>
         public void AddBlock(T? block)

@@ -5,7 +5,7 @@
     ///
     /// Small -> Big -> Large
     /// </summary>
-    enum PuzzleType : UInt32
+    public enum PuzzleType : UInt32
     {
         // Single red circles (blue when non-alarm)
         #region Individual scans
@@ -75,7 +75,7 @@
         BulkheadOverload = 12,
     }
 
-    internal class PuzzleComponent
+    public class PuzzleComponent
     {
         public PuzzleType PuzzleType { get; set; } = 0;
 

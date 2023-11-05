@@ -3,7 +3,7 @@
     /// <summary>
     /// https://gtfo-modding.gitbook.io/wiki/reference/enum-types#ewantedzoneheighs
     /// </summary>
-    enum Height
+    public enum Height
     {
         LowMidHigh = 0,
         OnlyLow = 1,
@@ -17,7 +17,7 @@
         Unchanged = 9
     }
 
-    internal class Altitude
+    public class Altitude
     {
         public Height AllowedZoneAltitude { get; set; } = Height.OnlyMid;
 

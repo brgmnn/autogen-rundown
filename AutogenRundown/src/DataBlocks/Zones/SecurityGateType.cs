@@ -1,6 +1,6 @@
 ﻿namespace AutogenRundown.DataBlocks.Zones
 {
-    internal enum SecurityGateType : uint
+    public enum SecurityGateType : uint
     {
         Security = 0,
         Apex = 1

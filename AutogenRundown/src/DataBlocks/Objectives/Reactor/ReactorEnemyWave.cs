@@ -1,12 +1,12 @@
 ﻿namespace AutogenRundown.DataBlocks.Objectives.Reactor
 {
-    enum ReactorWaveSpawnType
+    public enum ReactorWaveSpawnType
     {
         ClosestToReactor = 0,
         InElevatorZone = 1,
     }
 
-    internal class ReactorEnemyWave
+    public class ReactorEnemyWave
     {
         public uint WaveSettings { get; set; } = 0;
 

@@ -6,7 +6,7 @@ using BepInEx;
 
 namespace AutogenRundown
 {
-    static internal class RundownFactory
+    static public class RundownFactory
     {
         /// <summary>
         /// Checks if the Json Data directory already exists

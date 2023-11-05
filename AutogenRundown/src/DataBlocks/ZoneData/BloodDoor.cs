@@ -24,7 +24,7 @@ namespace AutogenRundown.DataBlocks.ZoneData
     BloodDoor_Pouncers = 75,
     */
 
-    internal class BloodDoor
+    public class BloodDoor
     {
         [JsonProperty("HasActiveEnemyWave")]
         public bool Enabled { get; set; } = true;

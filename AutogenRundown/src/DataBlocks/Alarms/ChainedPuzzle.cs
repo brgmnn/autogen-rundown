@@ -5,7 +5,7 @@ namespace AutogenRundown.DataBlocks.Alarms
     /// <summary>
     /// https://gtfo-modding.gitbook.io/wiki/reference/datablocks/main/chainedpuzzle
     /// </summary>
-    internal record class ChainedPuzzle : DataBlock
+    public record class ChainedPuzzle : DataBlock
     {
         /// <summary>
         /// The Alarm name. For example, Class S Surge Alarm
@@ -14,8 +14,8 @@ namespace AutogenRundown.DataBlocks.Alarms
 
         /// <summary>
         /// Whether to trigger alarm when the puzzle starts. Typically set to false for scans
-        /// without an alarm and enemy wave. However, you can set this field to true even if you 
-        /// don't specify the enemy wave for the puzzle via the following fields. In that case, 
+        /// without an alarm and enemy wave. However, you can set this field to true even if you
+        /// don't specify the enemy wave for the puzzle via the following fields. In that case,
         /// there will still be alarm sound but no enemy waves.
         /// </summary>
         public bool TriggerAlarmOnActivate { get; set; } = true;
@@ -23,8 +23,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// <summary>
         /// Determine how the wave spawns. You set this field to make the wave either a relatively
         /// regular, surge, diminished, or ://ERROR! alarm wave.
-        /// 
-        /// You may take those wave settings already available in the vanilla datablocks into good 
+        ///
+        /// You may take those wave settings already available in the vanilla datablocks into good
         /// use.
         /// </summary>
         public VanillaWaveSettings SurvivalWaveSettings { get; set; } = 0;
@@ -35,26 +35,26 @@ namespace AutogenRundown.DataBlocks.Alarms
         public VanillaWavePopulation SurvivalWavePopulation { get; set; } = 0;
 
         /// <summary>
-        /// Specify whether to stop the wave after Chained Puzzle Completion. Typically set to 
+        /// Specify whether to stop the wave after Chained Puzzle Completion. Typically set to
         /// false for ://ERROR! alarm.
         /// </summary>
         public bool DisableSurvivalWaveOnComplete { get; set; } = true;
 
         /// <summary>
         /// Whether to use random position for each scan. Usually set to true.
-        /// 
+        ///
         /// By setting this field to false, the scan position for each puzzle would be relatively
         /// static, i.e. it's not static all the time.
         /// </summary>
         public bool UseRandomPositions { get; set; } = true;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public double WantedDistanceFromStartPos { get; set; } = 0.0;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public double WantedDistanceBetweenPuzzleComponents { get; set; } = 5.0;
 
@@ -65,9 +65,9 @@ namespace AutogenRundown.DataBlocks.Alarms
         public List<PuzzleComponent> Puzzle { get; set; } = new List<PuzzleComponent>();
 
         /// <summary>
-        /// If set to true, the HUD won't show up if you are a certain distance (seems to be 25m) 
+        /// If set to true, the HUD won't show up if you are a certain distance (seems to be 25m)
         /// away from the scan.
-        /// 
+        ///
         /// Typically set to false for regular scan, and true for extraction scan.
         /// </summary>
         public bool OnlyShowHUDWhenPlayerIsClose { get; set; } = true;
@@ -312,6 +312,17 @@ namespace AutogenRundown.DataBlocks.Alarms
 
         /******************** Alarm Scans ********************/
         #region Alarms: Apex
+        public static ChainedPuzzle AlarmClass1 = new ChainedPuzzle
+        {
+            PublicAlarmName = "Class I Alarm",
+            SurvivalWaveSettings = VanillaWaveSettings.Apex,
+            SurvivalWavePopulation = VanillaWavePopulation.Baseline,
+            Puzzle = new List<PuzzleComponent>
+            {
+                PuzzleComponent.AllBig
+            },
+        };
+
         public static ChainedPuzzle AlarmClass2 = new ChainedPuzzle
         {
             PublicAlarmName = "Class II Alarm",
@@ -667,6 +678,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static new void SaveStatic()
         {
             Bins.ChainedPuzzles.AddBlock(TeamScan);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass1);
             Bins.ChainedPuzzles.AddBlock(AlarmClass2);
             Bins.ChainedPuzzles.AddBlock(AlarmClass3);
             Bins.ChainedPuzzles.AddBlock(AlarmClass4);
@@ -679,6 +691,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.ChainedPuzzles.AddBlock(AlarmClass1_Sustained);
             Bins.ChainedPuzzles.AddBlock(AlarmError_Baseline);
             Bins.ChainedPuzzles.AddBlock(ExitAlarm);
+
             Bins.ChainedPuzzles.AddBlock(BulkheadSelect_Main);
             Bins.ChainedPuzzles.AddBlock(BulkheadSelect_Secondary);
             Bins.ChainedPuzzles.AddBlock(BulkheadSelect_Overload);

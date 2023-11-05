@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
-    internal record class Color
+    public record class Color
     {
         static public Color MenuVisuals = new Color
         {

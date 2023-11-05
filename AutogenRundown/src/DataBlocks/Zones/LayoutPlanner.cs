@@ -31,7 +31,13 @@ namespace AutogenRundown.DataBlocks.Zones
     /// </summary>
     public class LayoutPlanner
     {
+        private int indexMain = 0;
+        private int indexExtreme = 0;
+        private int indexOverload = 0;
+
         private Dictionary<ZoneNode, List<ZoneNode>> graph = new Dictionary<ZoneNode, List<ZoneNode>>();
+
+        private Dictionary<ZoneNode, Zone> blocks = new Dictionary<ZoneNode, Zone>();
 
         private IEnumerable<KeyValuePair<ZoneNode, List<ZoneNode>>> GetSubgraph(
                 Bulkhead bulkhead = Bulkhead.All,
@@ -43,10 +49,6 @@ namespace AutogenRundown.DataBlocks.Zones
             var debug = string.Join("\n", graph.Select(n => $"  {n.Key} => [{ZoneNode.ListToString(n.Value)}]"));
             return $"Graph:\n{debug}";
         }
-
-        private int indexMain = 0;
-        private int indexExtreme = 0;
-        private int indexOverload = 0;
 
         /// <summary>
         /// Connects two zones unidirectionally. If the second zone is not specified then the
@@ -70,11 +72,37 @@ namespace AutogenRundown.DataBlocks.Zones
                 graph.Add(from, new List<ZoneNode>());
         }
 
+        /// <summary>
+        /// Get's the underlying zone for a given node.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public Zone? GetZone(ZoneNode node)
+        {
+            if (blocks.TryGetValue(node, out var zone))
+                return zone;
+
+            return null;
+        }
+
+        /*public ZoneNode GetNode(Zone zone)
+        {
+            blocks.ContainsValue(zone);
+        }*/
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bulkhead"></param>
+        /// <returns></returns>
         public int NextIndex(Bulkhead bulkhead) => bulkhead switch
         {
             Bulkhead.Main => indexMain++,
             Bulkhead.Extreme => indexExtreme++,
-            Bulkhead.Overload => indexOverload++
+            Bulkhead.Overload => indexOverload++,
+
+            // Starting area is part of main.
+            Bulkhead.StartingArea => indexMain++,
         };
 
         /// <summary>
