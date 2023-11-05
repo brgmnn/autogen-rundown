@@ -3,10 +3,12 @@
     /// <summary>
     /// Objective items
     /// </summary>
-    internal enum WardenObjectiveItem : UInt32
+    internal enum WardenObjectiveItem : uint
     {
         PersonnelId = 128,
         PartialDecoder = 129,
+
+        PowerCell = 131,
 
         HSU = 137,
 

@@ -12,11 +12,11 @@
         ClearPath = 4,
         SpecialTerminalCommand = 5,
         TerminalUplink = 8,
+        CentralGeneratorCluster = 9,
 
         ReactorStartup = 1,
         RetrieveBigItems = 6,
         PowerCellDistribution = 7,
-        CentralGeneratorCluster = 9,
         //HsuActivateSmall = 10,
         Survival = 11,
         GatherTerminal = 12,

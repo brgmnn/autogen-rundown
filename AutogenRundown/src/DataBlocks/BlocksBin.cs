@@ -8,6 +8,8 @@ namespace AutogenRundown.DataBlocks
 {
     internal static class Bins
     {
+        public static BlocksBin<BigPickupDistribution> BigPickupDistributions { get; private set; }
+            = new BlocksBin<BigPickupDistribution>();
         public static BlocksBin<ChainedPuzzle> ChainedPuzzles { get; private set; }
             = new BlocksBin<ChainedPuzzle>();
         public static BlocksBin<EnemyGroup> EnemyGroups { get; private set; }
@@ -43,6 +45,7 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public static void Save()
         {
+            BigPickupDistribution.SaveStatic();
             ChainedPuzzle.SaveStatic();
             EnemyGroup.SaveStatic();
             EnemyPopulation.SaveStatic();
@@ -53,6 +56,7 @@ namespace AutogenRundown.DataBlocks
             WavePopulation.SaveStatic();
             Alarms.WaveSettings.SaveStatic();
 
+            BigPickupDistributions.Save("BigPickupDistributionDataBlock");
             ChainedPuzzles.Save("ChainedPuzzleDataBlock");
             EnemyGroups.Save("EnemyGroupDataBlock");
             EnemyPopulations.Save("EnemyPopulationDataBlock");

@@ -187,6 +187,41 @@ namespace AutogenRundown.DataBlocks
             }
         }
 
+        public void GenGeneratorClusterGeomorph(Complex complex)
+        {
+            switch (complex)
+            {
+                case Complex.Mining:
+                    {
+                        //CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_07.prefab";
+                        //SubComplex = SubComplex.Refinery;
+
+                        var (sub, geo) = Generator.Pick(new List<(SubComplex, string)>
+                        {
+                            (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_07.prefab"),
+                            (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab"),
+                            (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_02.prefab"),
+                        });
+
+                        CustomGeomorph = geo;
+                        SubComplex = sub;
+                        Coverage = new CoverageMinMax { Min = 40.0, Max = 40.0 };
+                        GeneratorClustersInZone = 1;
+
+                        // Unclear how much these matter but re-rolling for the generator seems common
+                        SubSeed = 24;
+                        MarkerSubSeed = 3;
+                        LightsSubSeed = 1;
+
+                        break;
+                    }
+
+                case Complex.Tech:
+                    {
+                        break;
+                    }
+            }
+        }
         #endregion
 
         #region Enemies
@@ -434,7 +469,7 @@ namespace AutogenRundown.DataBlocks
         public bool AllowResourceContainerAllocation { get; set; } = true;
         public bool ForceBigPickupsAllocation { get; set; } = false;
         public int ConsumableDistributionInZone { get; set; } = 62;
-        public int BigPickupDistributionInZone { get; set; } = 0;
+        public uint BigPickupDistributionInZone { get; set; } = 0;
 
         public List<TerminalPlacement> TerminalPlacements { get; set; } = new List<TerminalPlacement>();
 

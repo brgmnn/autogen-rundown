@@ -826,6 +826,53 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                case WardenObjectiveType.CentralGeneratorCluster:
+                    {
+                        for (int i = 0; i < director.ZoneCount; i++)
+                        {
+                            var fromZone = level.Planner.GetLastZone(director.Bulkhead);
+
+                            var zone = new Zone
+                            {
+                                LocalIndex = level.Planner.NextIndex(director.Bulkhead),
+                                BuildFromLocalIndex = fromZone?.ZoneNumber ?? 0,
+                                Coverage = CoverageMinMax.GenSize(i),
+                                LightSettings = Lights.GenRandomLight(),
+                            };
+
+                            if (fromZone != null)
+                            {
+                                level.Planner.Connect((ZoneNode)fromZone, new ZoneNode(director.Bulkhead, i));
+                            }
+
+                            if (director.Bulkhead.HasFlag(Bulkhead.Main) && i == 3 || !director.Bulkhead.HasFlag(Bulkhead.Main) && i == 0)
+                            {
+                                zone.GenGeneratorClusterGeomorph(director.Complex);
+                            }
+                            else if (i == director.ZoneCount - 1)
+                            {
+                                var pickup = new BigPickupDistribution
+                                {
+                                    SpawnsPerZone = 2,
+                                    SpawnData = new List<BigPickupSpawnData>
+                                    {
+                                        new BigPickupSpawnData { Item = WardenObjectiveItem.PowerCell },
+                                        new BigPickupSpawnData { Item = WardenObjectiveItem.PowerCell }
+                                    }
+                                };
+                                Bins.BigPickupDistributions.AddBlock(pickup);
+
+                                zone.BigPickupDistributionInZone = pickup.PersistentId;
+                            }
+
+                            zone.RollAlarms(puzzlePack);
+
+                            layout.Zones.Add(zone);
+                        }
+
+                        break;
+                    }
+
                 case WardenObjectiveType.SpecialTerminalCommand:
                 case WardenObjectiveType.HsuFindSample:
                 case WardenObjectiveType.GatherSmallItems:
@@ -857,8 +904,8 @@ namespace AutogenRundown.DataBlocks
                     }
             }
 
-            if (director.Bulkhead.HasFlag(Bulkhead.Main))
-                layout.RollKeyedDoors(director, level.Planner, puzzlePack);
+            //if (director.Bulkhead.HasFlag(Bulkhead.Main))
+            //    layout.RollKeyedDoors(director, level.Planner, puzzlePack);
 
             layout.RollBloodDoors();
             layout.RollEnemies(director);

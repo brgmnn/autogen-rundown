@@ -35,12 +35,16 @@ namespace AutogenRundown
 
             var levelNames = new List<string>(Words.NounsLevel);
 
-            var aMax = Generator.Random.Next(1, 2);
-            var bMax = Generator.Random.Next(3, 4);
-            var cMax = Generator.Random.Next(2, 4);
-            var dMax = Generator.Random.Next(1, 4);
+            //var aMax = Generator.Random.Next(1, 2);
+            //var bMax = Generator.Random.Next(3, 4);
+            //var cMax = Generator.Random.Next(2, 4);
+            //var dMax = Generator.Random.Next(1, 4);
             //var eMax = Generator.Random.Next(1, 2);
-            var eMax = 1;
+            var aMax = 0;
+            var bMax = 0;
+            var cMax = 0;
+            var dMax = 0;
+            var eMax = 0;
 
 
             // A levels, always generate atleast 1
@@ -90,7 +94,7 @@ namespace AutogenRundown
                 Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "C",
-                Objective = WardenObjectiveType.TerminalUplink,
+                Objective = WardenObjectiveType.CentralGeneratorCluster,
             };
             mainDirector.GenPoints();
 
@@ -101,7 +105,7 @@ namespace AutogenRundown
                 new Level
                 {
                     Tier = "C",
-                    Name = "Terminal Uplink",
+                    Name = "Central Generator Cluster",
                     Complex = Complex.Mining,
                     MainDirector = mainDirector,
                     Settings = settings,

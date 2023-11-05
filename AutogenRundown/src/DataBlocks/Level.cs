@@ -324,6 +324,7 @@ namespace AutogenRundown.DataBlocks
                 (0.1, Bulkhead.Main | Bulkhead.Overload),
                 (0.25, Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload)
             });
+            selectedBulkheads = Bulkhead.Main;
 
             Plugin.Logger.LogDebug($"{logLevelId} - Modifiers: {level.Settings.Modifiers}");
 

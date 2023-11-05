@@ -69,9 +69,11 @@ namespace AutogenRundown
                 objectives.Remove(WardenObjectiveType.ClearPath);
             }
 
+            // Only Mining and Tech complexes have geomorphs for these objectives
             if (Complex != Complex.Mining || Complex != Complex.Tech)
             {
                 objectives.Remove(WardenObjectiveType.ReactorShutdown);
+                objectives.Remove(WardenObjectiveType.CentralGeneratorCluster);
             }
 
             Objective = Generator.Pick(objectives);

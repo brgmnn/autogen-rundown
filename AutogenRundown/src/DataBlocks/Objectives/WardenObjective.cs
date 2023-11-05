@@ -562,6 +562,30 @@ namespace AutogenRundown.DataBlocks
 
                         break;
                     }
+
+                /**
+                 * Central generator cluster is quite finickey
+                 */
+                case WardenObjectiveType.CentralGeneratorCluster:
+                    {
+                        objective.MainObjective = "Find [COUNT_REQUIRED] Power Cells and bring them to the Central Generator Cluster in [ITEM_ZONE]";
+                        objective.FindLocationInfo = "Locate the Power Cells and use them to power up the Generator Cluster";
+                        objective.FindLocationInfoHelp = "Generators Online: [COUNT_CURRENT] / [COUNT_REQUIRED]";
+                        objective.GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
+                        objective.GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
+                        objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+                        objective.GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
+                        objective.GoToWinCondition_ToMainLayer = "Malfunction in air purification system. Make your way for the forward emergency exit.";
+
+                        //"ChainedPuzzleMidObjective": 63,
+                        //"ChainedPuzzleAtExit": 11,
+
+                        objective.PowerCellsToDistribute = 3;
+                        objective.CentralPowerGenClustser_NumberOfGenerators = 2;
+                        objective.CentralPowerGenClustser_NumberOfPowerCells = 2;
+
+                        break;
+                    }
             }
 
             dataLayer.ObjectiveData.DataBlockId = objective.PersistentId;
@@ -681,6 +705,16 @@ namespace AutogenRundown.DataBlocks
         public SurvivalWaveSpawnType Uplink_WaveSpawnType { get; set; } = SurvivalWaveSpawnType.InSuppliedCourseNodeZone;
         #endregion
 
+        #region Type=9: Central generator cluster
+        public int PowerCellsToDistribute { get; set; } = 0;
+
+        public int CentralPowerGenClustser_NumberOfGenerators { get; set; } = 0;
+
+        public int CentralPowerGenClustser_NumberOfPowerCells { get; set; } = 4;
+
+        public JArray CentralPowerGenClustser_FogDataSteps = new JArray();
+        #endregion
+
         #region Type=15: Timed terminal sequence
         public int TimedTerminalSequence_NumberOfRounds { get; set; } = 3;
 
@@ -736,10 +770,6 @@ namespace AutogenRundown.DataBlocks
         public bool DoNotSolveObjectiveOnReactorComplete = false;
         public JArray PostCommandOutput = new JArray();
         public int SpecialCommandRule = 0;
-        public int PowerCellsToDistribute = 0;
-        public int CentralPowerGenClustser_NumberOfGenerators = 0;
-        public int CentralPowerGenClustser_NumberOfPowerCells = 4;
-        public JArray CentralPowerGenClustser_FogDataSteps = new JArray();
         public double Survival_TimeToActivate = 0.0;
         public double Survival_TimeToSurvive = 0.0;
         public int GatherTerminal_SpawnCount = 0;
