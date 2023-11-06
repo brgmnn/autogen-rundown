@@ -94,9 +94,7 @@ namespace AutogenRundown
                 Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "C",
-                Objective = WardenObjectiveType.CentralGeneratorCluster,
-                //Objective = WardenObjectiveType.ReactorShutdown, // looks ok
-                //Objective = WardenObjectiveType.ClearPath, // looks ok
+                Objective = WardenObjectiveType.CentralGeneratorCluster, // oh no
             };
             mainDirector.GenPoints();
 
