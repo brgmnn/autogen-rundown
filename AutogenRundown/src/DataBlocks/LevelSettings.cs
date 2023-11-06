@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Levels;
+using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks
@@ -51,6 +52,8 @@ namespace AutogenRundown.DataBlocks
     public class LevelSettings
     {
         public string Tier { get; set; } = "A";
+
+        public Bulkhead Bulkheads { get; set; } = Bulkhead.Main;
 
         public ModifiersSet Modifiers { get; set; } = new ModifiersSet();
 

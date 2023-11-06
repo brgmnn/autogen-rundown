@@ -15,6 +15,22 @@ namespace AutogenRundownTests.DataBlocks.Zones
         }
 
         [TestMethod]
+        public void Test_TwoZoneNodesAreEqual_WithUnionBulkhead()
+        {
+            Assert.AreEqual(
+                new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, 0),
+                new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, 0));
+        }
+
+        [TestMethod]
+        public void Test_TwoZoneNodesAreNotEqual()
+        {
+            Assert.AreNotEqual(
+                new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, 0),
+                new ZoneNode(Bulkhead.Main, 0));
+        }
+
+        [TestMethod]
         public void Test_Equals_TwoZonesAreEqualWithMax()
         {
             Assert.AreEqual(

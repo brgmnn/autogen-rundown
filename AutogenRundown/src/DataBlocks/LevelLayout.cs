@@ -202,44 +202,6 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public void RollEnemies(BuildDirector director)
         {
-            /*var enemyDistributionOld = director.Tier switch
-            {
-                "A" => new List<WeightedDifficulty>
-                    {
-                        new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Easy } },
-                        new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Medium } },
-                    },
-
-                "B" => new List<WeightedDifficulty>
-                    {
-                        new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Easy } },
-                        new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Medium } },
-                        new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Hard } }
-                    },
-
-                "C" => new List<WeightedDifficulty>
-                    {
-                        new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Medium } },
-                        new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Medium, EnemyRoleDifficulty.Hard } },
-                        new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Hard } },
-                    },
-
-                _ => new List<WeightedDifficulty>()
-            };
-
-            var enemyDistribution = director.Tier switch
-            {
-                "A" => new List<Hibernating>
-                    {
-                        // In most cases we will leave enemies to the custom difficulty
-                        new Hibernating { Weight = 3.0, Enemy = (uint)AutogenDifficulty.TierA },
-                        new Hibernating { Weight = 0.6, Enemy = (uint)Enemy.StrikerGiant },
-                        new Hibernating { Weight = 0.4, Enemy = (uint)Enemy.ShooterGiant }
-                    },
-
-                _ => new List<Hibernating>() { new Hibernating { Enemy = (uint)Enemy.Striker } }
-            };*/
-
             // All scouts cost 5pts each
             var (chance, max, scoutPack) = director.Tier switch
             {
@@ -469,51 +431,6 @@ namespace AutogenRundown.DataBlocks
                         },
                         Points = points
                     });
-
-                /*while (points > 0)
-                {
-                    var groupPoints = points switch
-                    {
-                        > 40 => 20,
-                        > 24 => 12,
-                        > 16 => 10,
-                        > 8 => 4,
-                        _ => points + 1
-                    };
-
-                    var selectedEnemy = Generator.Select(enemyDistribution);
-                    points -= groupPoints;
-
-                    Plugin.Logger.LogDebug($"  Spawning {groupPoints}pts on enemy -> {selectedEnemy.Enemy}");
-
-                    zone.EnemySpawningInZone.Add(
-                        new EnemySpawningData
-                        {
-                            GroupType = EnemyGroupType.Hibernate,
-                            Difficulty = (uint)selectedEnemy.Enemy,
-                            Points = groupPoints
-                        });
-                }*/
-
-                /*var selected = Generator.Select(enemyDistributionOld);
-
-                foreach (var difficulty in selected.Difficulties)
-                {
-                    var enemyPoints = points / selected.Difficulties.Count;
-
-                    // If we have a blood door, reduce the number of enemies that spawn in the zone
-                    // by 1/3rd.
-                    if (zone.BloodDoor.Enabled)
-                        enemyPoints = (int)(enemyPoints * 0.66);
-
-                    zone.EnemySpawningInZone.Add(
-                        new EnemySpawningData
-                        {
-                            GroupType = EnemyGroupType.Hibernate,
-                            Difficulty = (uint)difficulty,
-                            Points = enemyPoints
-                        });
-                }*/
             }
         }
 
@@ -709,6 +626,155 @@ namespace AutogenRundown.DataBlocks
                 _ => SubComplex.All
             };
 
+        /// <summary>
+        /// Connects the first bulkhead zone to a zone in this layout
+        /// </summary>
+        /// <param name="level"></param>
+        /// <param name="bulkhead"></param>
+        /// <param name="from"></param>
+        public static void InitializeBulkheadArea(
+            Level level,
+            Bulkhead bulkhead,
+            ZoneNode from,
+            Zone? zone = null)
+        {
+            var bulkheadZone = new ZoneNode(bulkhead, level.Planner.NextIndex(bulkhead));
+            level.Planner.Connect(from, bulkheadZone);
+
+            level.Planner.AddZone(
+                bulkheadZone,
+                zone ?? new Zone
+                {
+                    Coverage = CoverageMinMax.GenNormalSize(),
+                    LightSettings = Lights.GenRandomLight(),
+                });
+
+            // Determine the correct from layer type. This is an int corresponding to the from
+            // zone bulkhead type
+            var layerType = from.Bulkhead switch
+            {
+                Bulkhead.Extreme => 1,
+                Bulkhead.Overload => 2,
+                _ => 0,
+            };
+
+            // Mark the correct zones as bulkhead zone for main, as well as setting the right build
+            // from parameter.
+            if (bulkhead.HasFlag(Bulkhead.Extreme))
+            {
+                level.BuildSecondaryFrom = new BuildFrom { LayerType = layerType, Zone = from.ZoneNumber };
+                Plugin.Logger.LogInfo($"Level={level.Tier}{level.Index} - Extreme Bulkhead Entrance = {from}");
+            }
+            else if (bulkhead.HasFlag(Bulkhead.Overload))
+            {
+                level.BuildThirdFrom = new BuildFrom { LayerType = layerType, Zone = from.ZoneNumber };
+                Plugin.Logger.LogInfo($"Level={level.Tier}{level.Index} - Overload Bulkhead Entrance = {from}");
+            }
+            else
+            {
+                level.MainBulkheadZone = bulkheadZone.ZoneNumber;
+                level.MainLayerData.ZonesWithBulkheadEntrance.Add(bulkheadZone.ZoneNumber);
+                Plugin.Logger.LogInfo($"Level={level.Tier}{level.Index} - Main Bulkhead Entrance = {from}");
+            }
+        }
+
+        /// <summary>
+        /// Applicable for Main bulkhead, build the main level.
+        /// </summary>
+        /// <param name="level"></param>
+        /// <param name="director"></param>
+        public static void BuildStartingArea(Level level, BuildDirector director)
+        {
+            // Return early if we should not be building this.
+            if (!director.Bulkhead.HasFlag(Bulkhead.Main))
+                return;
+
+            // Add the first zone.
+            var elevatorDrop = new ZoneNode(
+                Bulkhead.Main | Bulkhead.StartingArea,
+                level.Planner.NextIndex(Bulkhead.Main));
+
+            level.Planner.Connect(elevatorDrop);
+            level.Planner.AddZone(
+                elevatorDrop,
+                new Zone
+                {
+                    Coverage = CoverageMinMax.GenStartZoneSize(),
+                    LightSettings = Lights.GenRandomLight(),
+                });
+
+            var minimumZones = level.Settings.Bulkheads switch
+            {
+                Bulkhead.Main => 0,
+                Bulkhead.Main | Bulkhead.Extreme => 1,
+                Bulkhead.Main | Bulkhead.Overload => 1,
+                Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => 2,
+                _ => 1
+            };
+
+            var toPlace = level.Settings.Bulkheads switch
+            {
+                Bulkhead.Main => new List<Bulkhead>{ Bulkhead.Main },
+                Bulkhead.Main | Bulkhead.Extreme => new List<Bulkhead>
+                {
+                    Bulkhead.Main,
+                    Bulkhead.Extreme
+                },
+                Bulkhead.Main | Bulkhead.Overload => new List<Bulkhead>
+                {
+                    Bulkhead.Main,
+                    Bulkhead.Overload
+                },
+                Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => new List<Bulkhead>
+                {
+                    Bulkhead.Main,
+                    Bulkhead.Extreme,
+                    Bulkhead.Overload
+                },
+
+                _ => new List<Bulkhead>()
+            };
+
+            var prev = elevatorDrop;
+            for (int i = 0; i < minimumZones; i++)
+            {
+                var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
+                var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
+
+                level.Planner.Connect(prev, next);
+                level.Planner.AddZone(
+                    next,
+                    new Zone
+                    {
+                        Coverage = CoverageMinMax.GenNormalSize(),
+                        LightSettings = Lights.GenRandomLight(),
+                    });
+
+                // Always place a bulkhead DC in these zones.
+                level.MainLayerData.BulkheadDoorControllerPlacements.Add(
+                    new BulkheadDoorPlacementData()
+                    {
+                        ZoneIndex = zoneIndex,
+                        PlacementWeights = ZonePlacementWeights.NotAtStart
+                    });
+
+                // Place the first zones of the connecting bulkhead zones, so we can build from
+                // them later.
+                InitializeBulkheadArea(level, Generator.Draw(toPlace), next);
+
+                prev = next;
+            }
+
+            // The final area also needs to be placed
+            InitializeBulkheadArea(level, Generator.Draw(toPlace), prev);
+        }
+
+        /// <summary>
+        /// Builds the main level
+        /// </summary>
+        /// <param name="level"></param>
+        /// <param name="director"></param>
+        /// <returns></returns>
         public static LevelLayout Build(Level level, BuildDirector director)
         {
             var layout = new LevelLayout(director, level.Settings)
@@ -722,32 +788,33 @@ namespace AutogenRundown.DataBlocks
             var objectiveLayerData = level.GetObjectiveLayerData(director.Bulkhead);
             var puzzlePack = ChainedPuzzle.BuildPack(level.Tier);
 
-            if (director.Bulkhead.HasFlag(Bulkhead.Main))
-                level.Planner.Connect(new ZoneNode(Bulkhead.Main, 0));
+            BuildStartingArea(level, director);
 
             switch (director.Objective)
             {
                 case WardenObjectiveType.ReactorShutdown:
                     {
-                        // Create the initial zones
-                        for (int i = 0; i < director.ZoneCount; i++)
+                        // Create some initial zones
+                        var prev = level.Planner.GetExactZones(director.Bulkhead).First();
+
+                        // Don't create quite all the initial zones
+                        var preludeZoneCount = Generator.Random.Next(0, director.ZoneCount);
+
+                        for (int i = 0; i < preludeZoneCount; i++)
                         {
-                            var fromZone = level.Planner.GetLastZone(director.Bulkhead);
+                            var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
+                            var next = new ZoneNode(director.Bulkhead, zoneIndex);
 
-                            var zone = new Zone
-                            {
-                                LocalIndex = level.Planner.NextIndex(director.Bulkhead),
-                                BuildFromLocalIndex = fromZone?.ZoneNumber ?? 0,
-                                Coverage = CoverageMinMax.GenSize(i),
-                                LightSettings = Lights.GenRandomLight(),
-                            };
+                            level.Planner.Connect(prev, next);
+                            level.Planner.AddZone(
+                                next,
+                                new Zone
+                                {
+                                    Coverage = CoverageMinMax.GenNormalSize(),
+                                    LightSettings = Lights.GenRandomLight(),
+                                });
 
-                            if (fromZone != null)
-                            {
-                                level.Planner.Connect((ZoneNode)fromZone, new ZoneNode(director.Bulkhead, i));
-                            }
-
-                            layout.Zones.Add(zone);
+                            prev = next;
                         }
 
                         // Pick a random direction to expand the reactor
@@ -763,10 +830,9 @@ namespace AutogenRundown.DataBlocks
                         var light = Lights.GenReactorLight();
 
                         // Always generate a corridor of some kind (currently fixed) for the reactor zones.
+                        var corridorNode = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead));
                         var corridor = new Zone
                         {
-                            LocalIndex = director.ZoneCount,
-                            BuildFromLocalIndex = director.ZoneCount - 1,
                             LightSettings = light,
                             StartPosition = ZoneEntranceBuildFrom.Furthest,
                             StartExpansion = startExpansion,
@@ -774,11 +840,13 @@ namespace AutogenRundown.DataBlocks
                         };
                         corridor.GenReactorCorridorGeomorph(director.Complex);
 
+                        level.Planner.Connect(prev, corridorNode);
+                        level.Planner.AddZone(corridorNode, corridor);
+
                         // Create the reactor zone
+                        var reactorNode = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead));
                         var reactor = new Zone
                         {
-                            LocalIndex = director.ZoneCount + 1,
-                            BuildFromLocalIndex = corridor.LocalIndex,
                             LightSettings = light,
                             StartPosition = ZoneEntranceBuildFrom.Furthest,
                             StartExpansion = startExpansion,
@@ -788,88 +856,88 @@ namespace AutogenRundown.DataBlocks
                         reactor.GenReactorGeomorph(director.Complex);
                         reactor.TerminalPlacements = new List<TerminalPlacement>();
 
-                        layout.Zones.Add(corridor);
-                        layout.Zones.Add(reactor);
+                        level.Planner.Connect(corridorNode, reactorNode);
+                        level.Planner.AddZone(reactorNode, reactor);
 
                         break;
                     }
 
                 case WardenObjectiveType.ClearPath:
                     {
-                        for (int i = 0; i < director.ZoneCount; i++)
+                        var prev = level.Planner.GetExactZones(director.Bulkhead).First();
+
+                        for (int i = 1; i < director.ZoneCount; i++)
                         {
-                            var fromZone = level.Planner.GetLastZone(director.Bulkhead);
+                            var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
+                            var next = new ZoneNode(director.Bulkhead, zoneIndex);
 
-                            var zone = new Zone
-                            {
-                                LocalIndex = level.Planner.NextIndex(director.Bulkhead),
-                                BuildFromLocalIndex = fromZone?.ZoneNumber ?? 0,
-                                Coverage = CoverageMinMax.GenSize(i),
-                                LightSettings = Lights.GenRandomLight(),
-                            };
+                            level.Planner.Connect(prev, next);
+                            level.Planner.AddZone(
+                                next,
+                                new Zone
+                                {
+                                    Coverage = CoverageMinMax.GenNormalSize(),
+                                    LightSettings = Lights.GenRandomLight(),
+                                });
 
-                            if (fromZone != null)
-                            {
-                                level.Planner.Connect((ZoneNode)fromZone, new ZoneNode(director.Bulkhead, i));
-                            }
-
-                            var subcomplex = GenSubComplex(level.Complex);
-
-                            if (i == director.ZoneCount - 1)
-                            {
-                                // The final zone is the extraction zone
-                                zone.Coverage = new CoverageMinMax { Min = 50, Max = 50 };
-                                zone.SubComplex = subcomplex;
-                                zone.GenExitGeomorph(level.Complex);
-                            }
-
-                            layout.Zones.Add(zone);
+                            prev = next;
                         }
+
+                        var last = prev;
+                        var lastZone = (Zone)level.Planner.GetZone(last)!;
+
+                        var subcomplex = GenSubComplex(level.Complex);
+
+                        // The final zone is the extraction zone
+                        lastZone.Coverage = new CoverageMinMax { Min = 50, Max = 50 };
+                        lastZone.SubComplex = subcomplex;
+                        lastZone.GenExitGeomorph(level.Complex);
 
                         break;
                     }
 
                 case WardenObjectiveType.CentralGeneratorCluster:
                     {
-                        for (int i = 0; i < director.ZoneCount; i++)
+                        var prev = level.Planner.GetExactZones(director.Bulkhead).First();
+
+                        // Place the generator cluster in the first zone
+                        var firstZone = level.Planner.GetZone(prev)!;
+                        firstZone.GenGeneratorClusterGeomorph(director.Complex);
+
+                        // Place out some cell zones
+                        for (int i = 1; i < director.ZoneCount; i++)
                         {
-                            var fromZone = level.Planner.GetLastZone(director.Bulkhead);
+                            var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
+                            var next = new ZoneNode(director.Bulkhead, zoneIndex);
 
-                            var zone = new Zone
-                            {
-                                LocalIndex = level.Planner.NextIndex(director.Bulkhead),
-                                BuildFromLocalIndex = fromZone?.ZoneNumber ?? 0,
-                                Coverage = CoverageMinMax.GenSize(i),
-                                LightSettings = Lights.GenRandomLight(),
-                            };
-
-                            if (fromZone != null)
-                            {
-                                level.Planner.Connect((ZoneNode)fromZone, new ZoneNode(director.Bulkhead, i));
-                            }
-
-                            if (director.Bulkhead.HasFlag(Bulkhead.Main) && i == 3 || !director.Bulkhead.HasFlag(Bulkhead.Main) && i == 0)
-                            {
-                                zone.GenGeneratorClusterGeomorph(director.Complex);
-                            }
-                            else if (i == director.ZoneCount - 1)
-                            {
-                                var pickup = new BigPickupDistribution
+                            level.Planner.Connect(prev, next);
+                            level.Planner.AddZone(
+                                next,
+                                new Zone
                                 {
-                                    SpawnsPerZone = 2,
-                                    SpawnData = new List<BigPickupSpawnData>
+                                    Coverage = CoverageMinMax.GenNormalSize(),
+                                    LightSettings = Lights.GenRandomLight(),
+                                });
+
+                            prev = next;
+                        }
+
+                        // Distribute cells
+                        var pickup = new BigPickupDistribution
+                        {
+                            SpawnsPerZone = 2,
+                            SpawnData = new List<BigPickupSpawnData>
                                     {
                                         new BigPickupSpawnData { Item = WardenObjectiveItem.PowerCell },
                                         new BigPickupSpawnData { Item = WardenObjectiveItem.PowerCell }
                                     }
-                                };
-                                Bins.BigPickupDistributions.AddBlock(pickup);
+                        };
+                        Bins.BigPickupDistributions.AddBlock(pickup);
 
-                                zone.BigPickupDistributionInZone = pickup.PersistentId;
-                            }
+                        var last = prev;
+                        var lastZone = (Zone)level.Planner.GetZone(last)!;
 
-                            layout.Zones.Add(zone);
-                        }
+                        lastZone.BigPickupDistributionInZone = pickup.PersistentId;
 
                         break;
                     }
@@ -879,35 +947,42 @@ namespace AutogenRundown.DataBlocks
                 case WardenObjectiveType.GatherSmallItems:
                 default:
                     {
-                        for (int i = 0; i < director.ZoneCount; i++)
+                        var prev = level.Planner.GetExactZones(director.Bulkhead).First();
+
+                        for (int i = 1; i < director.ZoneCount; i++)
                         {
-                            var fromZone = level.Planner.GetLastZone(director.Bulkhead);
+                            var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
+                            var next = new ZoneNode(director.Bulkhead, zoneIndex);
 
-                            var zone = new Zone
-                            {
-                                LocalIndex = level.Planner.NextIndex(director.Bulkhead),
-                                BuildFromLocalIndex = fromZone?.ZoneNumber ?? 0,
-                                Coverage = CoverageMinMax.GenSize(i),
-                                LightSettings = Lights.GenRandomLight(),
-                            };
+                            level.Planner.Connect(prev, next);
+                            level.Planner.AddZone(
+                                next,
+                                new Zone
+                                {
+                                    Coverage = CoverageMinMax.GenNormalSize(),
+                                    LightSettings = Lights.GenRandomLight(),
+                                });
 
-                            if (fromZone != null)
-                            {
-                                level.Planner.Connect((ZoneNode)fromZone, new ZoneNode(director.Bulkhead, i));
-                            }
-
-                            layout.Zones.Add(zone);
+                            prev = next;
                         }
 
                         break;
                     }
             }
 
-            layout.RollAlarms(puzzlePack);
+            // Write the zones
+            foreach (var node in level.Planner.GetZones(director.Bulkhead, null))
+            {
+                var zone = level.Planner.GetZone(node);
+
+                if (zone != null)
+                    layout.Zones.Add(zone);
+            }
 
             //if (director.Bulkhead.HasFlag(Bulkhead.Main))
             //    layout.RollKeyedDoors(director, level.Planner, puzzlePack);
 
+            layout.RollAlarms(puzzlePack);
             layout.RollBloodDoors();
             layout.RollEnemies(director);
             layout.RollErrorAlarm();

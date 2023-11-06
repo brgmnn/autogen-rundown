@@ -94,7 +94,9 @@ namespace AutogenRundown
                 Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "C",
-                Objective = WardenObjectiveType.CentralGeneratorCluster,
+                //Objective = WardenObjectiveType.CentralGeneratorCluster,
+                //Objective = WardenObjectiveType.ReactorShutdown, // TODO: this working?
+                Objective = WardenObjectiveType.ClearPath,
             };
             mainDirector.GenPoints();
 
@@ -129,7 +131,7 @@ namespace AutogenRundown
                 rundown.AddLevel(level);
             }
 
-            var mainDirectorD = new BuildDirector
+            /*var mainDirectorD = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = Complex.Mining,
@@ -153,7 +155,7 @@ namespace AutogenRundown
                     Index = dMax + 1,
                     IsTest = true
                 });
-            rundown.AddLevel(testLevelD);
+            rundown.AddLevel(testLevelD);*/
             #endregion
 
             #region E-Tier Levels
@@ -170,7 +172,7 @@ namespace AutogenRundown
                 rundown.AddLevel(level);
             }
 
-            var mainDirectorE = new BuildDirector
+            /*var mainDirectorE = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = Complex.Mining,
@@ -195,7 +197,7 @@ namespace AutogenRundown
                     Index = eMax + 1,
                     IsTest = true
                 });
-            rundown.AddLevel(testLevelE);
+            rundown.AddLevel(testLevelE);*/
             #endregion
 
             Bins.Rundowns.AddBlock(rundown);

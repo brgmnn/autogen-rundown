@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
-    internal static class Bins
+    public static class Bins
     {
         public static BlocksBin<BigPickupDistribution> BigPickupDistributions { get; private set; }
             = new BlocksBin<BigPickupDistribution>();

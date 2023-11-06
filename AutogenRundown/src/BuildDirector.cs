@@ -61,7 +61,8 @@ namespace AutogenRundown
                 WardenObjectiveType.GatherSmallItems,
                 WardenObjectiveType.ClearPath,
                 WardenObjectiveType.SpecialTerminalCommand,
-                WardenObjectiveType.TerminalUplink
+                WardenObjectiveType.TerminalUplink,
+                WardenObjectiveType.CentralGeneratorCluster
             };
 
             if (!Bulkhead.HasFlag(Bulkhead.Main))
@@ -105,6 +106,13 @@ namespace AutogenRundown
             };
         }
 
+        /// <summary>
+        /// Number of zones only corresponds to that bulkhead. IT does not include the starting
+        /// area. This doesn't matter for Extreme/Overload but it does matter for Main, which is
+        /// all loaded into a single level layout.
+        ///
+        /// Max seems to be 20 zones for one layout.
+        /// </summary>
         public void GenZones()
         {
             ZoneCount = (Tier, Bulkhead) switch

@@ -163,7 +163,7 @@ namespace AutogenRundown.DataBlocks
         /// Picks an appropriate geomorph for the corridor to a reactor
         /// </summary>
         /// <param name="complex"></param>
-        internal void GenReactorCorridorGeomorph(Complex complex)
+        public void GenReactorCorridorGeomorph(Complex complex)
         {
             switch (complex)
             {
@@ -187,7 +187,7 @@ namespace AutogenRundown.DataBlocks
             }
         }
 
-        internal void GenGeneratorClusterGeomorph(Complex complex)
+        public void GenGeneratorClusterGeomorph(Complex complex)
         {
             switch (complex)
             {
@@ -236,7 +236,7 @@ namespace AutogenRundown.DataBlocks
         /// Generate enemies for the zone
         /// </summary>
         /// <param name="director"></param>
-        internal void GenEnemies(BuildDirector director)
+        public void GenEnemies(BuildDirector director)
         {
             var points = director.GetPoints(this);
 
@@ -325,7 +325,7 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Alarms
-        internal void RollAlarms(ICollection<ChainedPuzzle> puzzlePack)
+        public void RollAlarms(ICollection<ChainedPuzzle> puzzlePack)
         {
             if (LocalIndex == 0)
                 return;
@@ -364,16 +364,16 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// Which tileset to use
         /// </summary>
-        internal SubComplex SubComplex { get; set; } = SubComplex.All;
+        public SubComplex SubComplex { get; set; } = SubComplex.All;
 
         [JsonProperty("CoverageMinMax")]
-        internal CoverageMinMax Coverage { get; set; } = CoverageMinMax.Medium;
+        public CoverageMinMax Coverage { get; set; } = CoverageMinMax.Medium;
 
-        internal ZoneEntranceBuildFrom StartPosition { get; set; } = ZoneEntranceBuildFrom.Random;
+        public ZoneEntranceBuildFrom StartPosition { get; set; } = ZoneEntranceBuildFrom.Random;
 
-        internal ZoneBuildExpansion StartExpansion { get; set; } = ZoneBuildExpansion.Random;
+        public ZoneBuildExpansion StartExpansion { get; set; } = ZoneBuildExpansion.Random;
 
-        internal ZoneExpansion ZoneExpansion { get; set; } = ZoneExpansion.Random;
+        public ZoneExpansion ZoneExpansion { get; set; } = ZoneExpansion.Random;
 
         /// <summary>
         /// If we specify a custom geomorph it goes here
@@ -385,17 +385,17 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// Which Light to select
         /// </summary>
-        internal Lights.Light LightSettings { get; set; } = Lights.Light.AlmostWhite_1;
+        public Lights.Light LightSettings { get; set; } = Lights.Light.AlmostWhite_1;
 
-        internal Altitude AltitudeData { get; set; } = new Altitude();
+        public Altitude AltitudeData { get; set; } = new Altitude();
 
         public List<JObject> EventsOnEnter { get; set; } = new List<JObject>();
         public List<JObject> EventsOnPortalWarp { get; set; } = new List<JObject>();
-        internal List<WardenObjectiveEvent> EventsOnApproachDoor { get; set; } = new List<WardenObjectiveEvent>();
-        internal List<WardenObjectiveEvent> EventsOnUnlockDoor { get; set; } = new List<WardenObjectiveEvent>();
-        internal List<WardenObjectiveEvent> EventsOnOpenDoor { get; set; } = new List<WardenObjectiveEvent>();
-        internal List<WardenObjectiveEvent> EventsOnDoorScanStart { get; set; } = new List<WardenObjectiveEvent>();
-        internal List<WardenObjectiveEvent> EventsOnDoorScanDone { get; set; } = new List<WardenObjectiveEvent>();
+        public List<WardenObjectiveEvent> EventsOnApproachDoor { get; set; } = new List<WardenObjectiveEvent>();
+        public List<WardenObjectiveEvent> EventsOnUnlockDoor { get; set; } = new List<WardenObjectiveEvent>();
+        public List<WardenObjectiveEvent> EventsOnOpenDoor { get; set; } = new List<WardenObjectiveEvent>();
+        public List<WardenObjectiveEvent> EventsOnDoorScanStart { get; set; } = new List<WardenObjectiveEvent>();
+        public List<WardenObjectiveEvent> EventsOnDoorScanDone { get; set; } = new List<WardenObjectiveEvent>();
 
         #region Puzzle settings
         public ProgressionPuzzle ProgressionPuzzleToEnter { get; set; } = new ProgressionPuzzle();
@@ -434,9 +434,9 @@ namespace AutogenRundown.DataBlocks
         ///
         /// </summary>
         [JsonProperty("ActiveEnemyWave")]
-        internal BloodDoor BloodDoor { get; set; } = BloodDoor.None;
+        public BloodDoor BloodDoor { get; set; } = BloodDoor.None;
 
-        internal List<EnemySpawningData> EnemySpawningInZone { get; set; } = new List<EnemySpawningData>();
+        public List<EnemySpawningData> EnemySpawningInZone { get; set; } = new List<EnemySpawningData>();
         #endregion
 
         #region Respawn settings
@@ -461,10 +461,10 @@ namespace AutogenRundown.DataBlocks
         public int CorpseClustersInZone { get; set; } = 0;
         public int ResourceContainerClustersInZone { get; set; } = 0;
         public int GeneratorClustersInZone { get; set; } = 0;
-        internal DistributionAmount CorpsesInZone { get; set; } = DistributionAmount.None;
-        internal DistributionAmount GroundSpawnersInZone { get; set; } = DistributionAmount.Some;
-        internal DistributionAmount HSUsInZone { get; set; } = DistributionAmount.None;
-        internal DistributionAmount DeconUnitsInZone { get; set; } = DistributionAmount.None;
+        public DistributionAmount CorpsesInZone { get; set; } = DistributionAmount.None;
+        public DistributionAmount GroundSpawnersInZone { get; set; } = DistributionAmount.Some;
+        public DistributionAmount HSUsInZone { get; set; } = DistributionAmount.None;
+        public DistributionAmount DeconUnitsInZone { get; set; } = DistributionAmount.None;
         public bool AllowSmallPickupsAllocation { get; set; } = true;
         public bool AllowResourceContainerAllocation { get; set; } = true;
         public bool ForceBigPickupsAllocation { get; set; } = false;

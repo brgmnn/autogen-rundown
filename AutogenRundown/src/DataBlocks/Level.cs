@@ -324,14 +324,12 @@ namespace AutogenRundown.DataBlocks
                 (0.1, Bulkhead.Main | Bulkhead.Overload),
                 (0.25, Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload)
             });
-            selectedBulkheads = Bulkhead.Main;
+            selectedBulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload;
+
+            // Assign bulkheads
+            level.Settings.Bulkheads = selectedBulkheads;
 
             Plugin.Logger.LogDebug($"{logLevelId} - Modifiers: {level.Settings.Modifiers}");
-
-            var bulkheadPlacements = Generator.Select(new List<(double, string)>
-            {
-                (1.0, "random")
-            });
 
             /**
              * Options for bulkhead keys and bulkhead DCs:
@@ -379,36 +377,6 @@ namespace AutogenRundown.DataBlocks
                 level.MainLayerData.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
             }
 
-            // When finding places to place bulkheads, we don't need a new space for Main as it's
-            // part of the level.
-            var openZones = level.Planner.GetOpenZones(Bulkhead.Main);
-            var min = selectedBulkheads switch
-            {
-                Bulkhead.Main => 0,
-                Bulkhead.Main | Bulkhead.Extreme => 1,
-                Bulkhead.Main | Bulkhead.Overload => 1,
-                Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => 2,
-                _ => 1
-            };
-
-            // Main bulkhead zone cannot spawn in zone 0. Otherwise we would have zero zones to
-            // place other bulkheads
-            var startingZones = level.Planner.GetZonesWithTotalOpen(1, min, Bulkhead.Main);
-            var mainBulkheadZones = openZones.Where(zone => zone.ZoneNumber > startingZones.Last().ZoneNumber).ToList();
-
-            var mainBulkheadZone = Generator.Pick(mainBulkheadZones);
-            level.MainBulkheadZone = mainBulkheadZone.ZoneNumber;
-
-            Plugin.Logger.LogInfo($"Level={level.Tier}{level.Index} - Main Bulkhead Zone = {mainBulkheadZone.ZoneNumber}");
-
-            level.MainLayerData.ZonesWithBulkheadEntrance.Add(mainBulkheadZone.ZoneNumber);
-            level.MainLayerData.BulkheadDoorControllerPlacements.Add(
-                new BulkheadDoorPlacementData()
-                {
-                    ZoneIndex = mainBulkheadZone.ZoneNumber - 1,
-                    PlacementWeights = ZonePlacementWeights.None,
-                });
-
             Bins.WardenObjectives.AddBlock(mainObjective);
             #endregion
 
@@ -431,33 +399,6 @@ namespace AutogenRundown.DataBlocks
                 }
 
                 level.SecondaryLayerEnabled = true;
-
-                var entranceZone = level.Planner.GetOpenZones(Bulkhead.Main)
-                    .Where(zone => zone.ZoneNumber < mainBulkheadZone.ZoneNumber)
-                    .OrderBy(zone => zone.ZoneNumber)
-                    .Last();
-
-                Plugin.Logger.LogInfo($"Level={level.Tier}{level.Index} - Extreme entrance Zone = {entranceZone.ZoneNumber}");
-
-                level.BuildSecondaryFrom = new BuildFrom
-                {
-                    LayerType = 0,
-                    Zone = entranceZone.ZoneNumber
-                };
-                level.Planner.Connect(entranceZone, new ZoneNode(Bulkhead.Extreme, 0));
-
-                if (level.MainLayerData.BulkheadDoorControllerPlacements
-                        .Where(placement => placement.ZoneIndex == entranceZone.ZoneNumber)
-                        .Count() == 0)
-                {
-                    Plugin.Logger.LogInfo($"Level={level.Tier}{level.Index} - Extreme Bulkhead DC added, Zone = {entranceZone.ZoneNumber}");
-                    level.MainLayerData.BulkheadDoorControllerPlacements.Add(
-                        new BulkheadDoorPlacementData()
-                        {
-                            ZoneIndex = entranceZone.ZoneNumber,
-                            PlacementWeights = ZonePlacementWeights.None,
-                        });
-                }
 
                 // Actually create the layout
                 var extremeLevelLayout = LevelLayout.Build(level, level.SecondaryDirector);
@@ -490,33 +431,6 @@ namespace AutogenRundown.DataBlocks
 
                 level.ThirdLayerEnabled = true;
 
-                var entranceZone = level.Planner.GetOpenZones(Bulkhead.Main)
-                    .Where(zone => zone.ZoneNumber < mainBulkheadZone.ZoneNumber)
-                    .OrderBy(zone => zone.ZoneNumber)
-                    .Last();
-
-                Plugin.Logger.LogInfo($"Level={level.Tier}{level.Index} - Overload entrance Zone = {entranceZone.ZoneNumber}");
-
-                level.BuildThirdFrom = new BuildFrom
-                {
-                    LayerType = 0,
-                    Zone = entranceZone.ZoneNumber
-                };
-                level.Planner.Connect(entranceZone, new ZoneNode(Bulkhead.Overload, 0));
-
-                if (level.MainLayerData.BulkheadDoorControllerPlacements
-                        .Where(placement => placement.ZoneIndex == entranceZone.ZoneNumber)
-                        .Count() == 0)
-                {
-                    level.MainLayerData.BulkheadDoorControllerPlacements.Add(
-                        new BulkheadDoorPlacementData()
-                        {
-                            ZoneIndex = entranceZone.ZoneNumber,
-                            PlacementWeights = ZonePlacementWeights.None,
-                        });
-                    Plugin.Logger.LogDebug($"Level={level.Tier}{level.Index} - Overload Bulkhead DC added, Zone={entranceZone.ZoneNumber}");
-                }
-
                 // Actually create the layout
                 var overloadLevelLayout = LevelLayout.Build(level, level.OverloadDirector);
                 level.ThirdLayout = overloadLevelLayout.PersistentId;
@@ -528,8 +442,7 @@ namespace AutogenRundown.DataBlocks
             }
             #endregion
 
-            // Place bulkhead DCs
-            #region Bulkhead DCs and Keys
+            #region Bulkhead Keys
             level.MainLayerData.BulkheadKeyPlacements.Add(
                 new List<ZonePlacementData>
                 {
@@ -570,6 +483,8 @@ namespace AutogenRundown.DataBlocks
                 zone.Coverage = new CoverageMinMax { Min = 80.0, Max = 80.0 };
             }
             #endregion
+
+            Plugin.Logger.LogDebug($"Level={level.Tier}{level.Index} level plan: {level.Planner}");
 
             return level;
         }
