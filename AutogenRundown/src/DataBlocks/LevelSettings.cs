@@ -55,6 +55,9 @@ namespace AutogenRundown.DataBlocks
 
         public Bulkhead Bulkheads { get; set; } = Bulkhead.Main;
 
+        public Dictionary<Bulkhead, ZoneBuildExpansion> Directions { get; private set; }
+            = new Dictionary<Bulkhead, ZoneBuildExpansion>();
+
         public ModifiersSet Modifiers { get; set; } = new ModifiersSet();
 
         public LevelSettings(string? tier = null)

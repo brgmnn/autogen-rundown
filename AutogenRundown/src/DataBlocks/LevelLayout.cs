@@ -658,6 +658,21 @@ namespace AutogenRundown.DataBlocks
                 _ => 0,
             };
 
+            // Ensure a Bulkhead DC is placed in the from zone.
+            var layerData = level.GetObjectiveLayerData(from.Bulkhead);
+
+            if (layerData.BulkheadDoorControllerPlacements
+                .Where(dc => dc.ZoneIndex == from.ZoneNumber)
+                .Count() == 0)
+            {
+                layerData.BulkheadDoorControllerPlacements.Add(
+                    new BulkheadDoorPlacementData()
+                    {
+                        ZoneIndex = from.ZoneNumber,
+                        PlacementWeights = ZonePlacementWeights.NotAtStart
+                    });
+            }
+
             // Mark the correct zones as bulkhead zone for main, as well as setting the right build
             // from parameter.
             if (bulkhead.HasFlag(Bulkhead.Extreme))
@@ -748,14 +763,6 @@ namespace AutogenRundown.DataBlocks
                     {
                         Coverage = CoverageMinMax.GenNormalSize(),
                         LightSettings = Lights.GenRandomLight(),
-                    });
-
-                // Always place a bulkhead DC in these zones.
-                level.MainLayerData.BulkheadDoorControllerPlacements.Add(
-                    new BulkheadDoorPlacementData()
-                    {
-                        ZoneIndex = zoneIndex,
-                        PlacementWeights = ZonePlacementWeights.NotAtStart
                     });
 
                 // Place the first zones of the connecting bulkhead zones, so we can build from
