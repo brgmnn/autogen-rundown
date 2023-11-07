@@ -62,7 +62,11 @@ namespace AutogenRundown
                 WardenObjectiveType.ClearPath,
                 WardenObjectiveType.SpecialTerminalCommand,
                 WardenObjectiveType.TerminalUplink,
-                WardenObjectiveType.CentralGeneratorCluster
+
+                // TODO: Would love to enable this, but central generator cluster spawning is just
+                // too broken. Probably we wait for either a fix from 10Chambers or we have to
+                // investigate modding the game to spawn it.
+                //WardenObjectiveType.CentralGeneratorCluster
             };
 
             if (!Bulkhead.HasFlag(Bulkhead.Main))

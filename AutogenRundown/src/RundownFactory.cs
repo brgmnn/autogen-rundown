@@ -47,7 +47,7 @@ namespace AutogenRundown
             var eMax = 0;
 
 
-            // A levels, always generate atleast 1
+            // A levels
             for (int i = 0; i < aMax; i++)
             {
                 var level = Level.Build(

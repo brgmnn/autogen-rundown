@@ -187,20 +187,26 @@ namespace AutogenRundown.DataBlocks
             }
         }
 
+        /// <summary>
+        /// It seems this is fairly broken. The reliability of getting the generator cluster does not seem good.
+        /// </summary>
+        /// <param name="complex"></param>
         public void GenGeneratorClusterGeomorph(Complex complex)
         {
             switch (complex)
             {
                 case Complex.Mining:
                     {
-                        //CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_07.prefab";
-                        //SubComplex = SubComplex.Refinery;
-
                         var (sub, geo) = Generator.Pick(new List<(SubComplex, string)>
                         {
+                            // Succss rolls:   1
+                            // Failure rolls:  1
+                            //
+                            // Bad zone spawn, tiny room: 2 -- (zone was tiny, seemed to really badly spawn. Bad spawn direction?)
                             (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_07.prefab"),
-                            (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab"),
-                            (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_02.prefab"),
+
+                            //(SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab"),
+                            //(SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_02.prefab"),
                         });
 
                         CustomGeomorph = geo;
@@ -218,6 +224,28 @@ namespace AutogenRundown.DataBlocks
 
                 case Complex.Tech:
                     {
+                        var (sub, geo) = Generator.Pick(new List<(SubComplex, string)>
+                        {
+                            // Succss rolls:  2
+                            // Failure rolls: 4
+                            (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_02.prefab"),
+                            //(SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_02_V2.prefab"),
+
+                            //(SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_02_R5C2.prefab")
+                            //                  Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_02.prefab
+
+                        });
+
+                        CustomGeomorph = geo;
+                        SubComplex = sub;
+                        Coverage = new CoverageMinMax { Min = 40.0, Max = 40.0 };
+                        GeneratorClustersInZone = 1;
+
+                        // Unclear how much these matter but re-rolling for the generator seems common
+                        SubSeed = 24;
+                        MarkerSubSeed = 1;
+                        LightsSubSeed = 1;
+
                         break;
                     }
             }
