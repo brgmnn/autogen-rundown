@@ -61,6 +61,7 @@ namespace AutogenRundown
                 WardenObjectiveType.GatherSmallItems,
                 WardenObjectiveType.ClearPath,
                 WardenObjectiveType.SpecialTerminalCommand,
+                WardenObjectiveType.PowerCellDistribution,
                 WardenObjectiveType.TerminalUplink,
 
                 // TODO: Would love to enable this, but central generator cluster spawning is just
@@ -69,9 +70,11 @@ namespace AutogenRundown
                 //WardenObjectiveType.CentralGeneratorCluster
             };
 
+            // These objectives are incompatible with non-Main bulkheads.
             if (!Bulkhead.HasFlag(Bulkhead.Main))
             {
                 objectives.Remove(WardenObjectiveType.ClearPath);
+                objectives.Remove(WardenObjectiveType.PowerCellDistribution);
             }
 
             // Only Mining and Tech complexes have geomorphs for these objectives

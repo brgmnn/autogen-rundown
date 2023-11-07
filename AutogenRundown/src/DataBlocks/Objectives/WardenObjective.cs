@@ -478,6 +478,29 @@ namespace AutogenRundown.DataBlocks
                     }
 
                 /**
+                 * Drop in with power cells and distribute them to generators in various zones.
+                 * 
+                 * The power cells set with PowerCellsToDistribute are dropped in with you
+                 * automatically.
+                 * */
+                case WardenObjectiveType.PowerCellDistribution:
+                    {
+                        objective.MainObjective = "Distribute Power Cells from the elevator cargo container to [ALL_ITEMS]";
+                        objective.FindLocationInfo = "Locate the Generators and bring the Power Cells to them";
+                        objective.FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
+                        objective.GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
+                        objective.GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
+                        objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+                        objective.GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
+                        objective.GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+
+                        // TODO: scaling difficulty
+                        objective.PowerCellsToDistribute = 2;
+
+                        break;
+                    }
+
+                /**
                  * Sets up a terminal uplink objective. Randomizes the number of terminals, number
                  * of uplink words, etc.
                  */
@@ -565,6 +588,8 @@ namespace AutogenRundown.DataBlocks
 
                 /**
                  * Central generator cluster.
+                 * TODO: Broken! Currently spawning the geomorph doesn't reliably get a generator
+                 *       cluster to appear.
                  *
                  * Discord says getting the generator cluster to spawn can be tricky and require
                  * re-rolls with the zone seed. Still waiting on seeing if this is a problem.
@@ -689,6 +714,9 @@ namespace AutogenRundown.DataBlocks
         /// Description displayed in the terminal COMMANDs listing
         /// </summary>
         public string SpecialTerminalCommandDesc { get; set; } = "";
+        #endregion
+
+        #region Type=7: Power cell distribution
         #endregion
 
         #region Type=8: Uplink terminal

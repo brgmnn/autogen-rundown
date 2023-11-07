@@ -903,6 +903,13 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                /*case WardenObjectiveType.PowerCellDistribution:
+                    {
+
+
+                        break;
+                    }*/
+
                 case WardenObjectiveType.CentralGeneratorCluster:
                     {
                         var prev = level.Planner.GetExactZones(director.Bulkhead).First();

@@ -89,14 +89,14 @@ namespace AutogenRundown
             }
 
             #region Test C Levels
-            #if false
+            #if true
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "C",
-                Objective = WardenObjectiveType.TerminalUplink,
+                Objective = WardenObjectiveType.PowerCellDistribution,
             };
             mainDirector.GenPoints();
 

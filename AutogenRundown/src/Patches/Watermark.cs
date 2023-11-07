@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using LevelGeneration;
 
 namespace AutogenRundown.Patches
 {

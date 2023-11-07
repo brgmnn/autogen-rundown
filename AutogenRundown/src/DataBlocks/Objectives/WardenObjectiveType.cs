@@ -6,17 +6,19 @@
     /// </summary>
     public enum WardenObjectiveType
     {
+        // Implemented
         HsuFindSample = 0,
         ReactorShutdown = 2,
         GatherSmallItems = 3,
         ClearPath = 4,
         SpecialTerminalCommand = 5,
+        PowerCellDistribution = 7,
         TerminalUplink = 8,
         CentralGeneratorCluster = 9,
 
+        // Not yet implemented
         ReactorStartup = 1,
         RetrieveBigItems = 6,
-        PowerCellDistribution = 7,
         //HsuActivateSmall = 10,
         Survival = 11,
         GatherTerminal = 12,
