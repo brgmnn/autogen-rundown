@@ -35,19 +35,19 @@ namespace AutogenRundown
 
             var levelNames = new List<string>(Words.NounsLevel);
 
-            //var aMax = Generator.Random.Next(1, 2);
-            //var bMax = Generator.Random.Next(3, 4);
-            //var cMax = Generator.Random.Next(2, 4);
-            //var dMax = Generator.Random.Next(1, 4);
-            //var eMax = Generator.Random.Next(1, 2);
-            var aMax = 0;
+            var aMax = Generator.Random.Next(1, 2);
+            var bMax = Generator.Random.Next(3, 4);
+            var cMax = Generator.Random.Next(2, 4);
+            var dMax = Generator.Random.Next(1, 4);
+            var eMax = Generator.Random.Next(1, 2);
+            /*var aMax = 0;
             var bMax = 0;
             var cMax = 0;
             var dMax = 0;
-            var eMax = 0;
+            var eMax = 0;*/
 
 
-            // A levels
+            #region A-Tier Levels
             for (int i = 0; i < aMax; i++)
             {
                 var level = Level.Build(
@@ -59,9 +59,9 @@ namespace AutogenRundown
                     });
                 rundown.AddLevel(level);
             }
+            #endregion
 
-
-            // B levels
+            #region B-Tier Levels
             for (int i = 0; i < bMax; i++)
             {
                 var level = Level.Build(
@@ -73,8 +73,9 @@ namespace AutogenRundown
                     });
                 rundown.AddLevel(level);
             }
+            #endregion
 
-            // C levels
+            #region C-Tier Levels
             for (int i = 0; i < cMax; i++)
             {
                 var level = Level.Build(
@@ -88,13 +89,14 @@ namespace AutogenRundown
             }
 
             #region Test C Levels
+            #if true
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "C",
-                Objective = WardenObjectiveType.CentralGeneratorCluster, // oh no
+                Objective = WardenObjectiveType.TerminalUplink,
             };
             mainDirector.GenPoints();
 
@@ -113,6 +115,8 @@ namespace AutogenRundown
                     IsTest = true
                 });
             rundown.AddLevel(testLevel);
+            #endif
+            #endregion
             #endregion
 
             #region D-Tier Levels
@@ -129,7 +133,9 @@ namespace AutogenRundown
                 rundown.AddLevel(level);
             }
 
-            /*var mainDirectorD = new BuildDirector
+            #region Test D Levels
+            #if false
+            var mainDirectorD = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = Complex.Mining,
@@ -153,7 +159,9 @@ namespace AutogenRundown
                     Index = dMax + 1,
                     IsTest = true
                 });
-            rundown.AddLevel(testLevelD);*/
+            rundown.AddLevel(testLevelD);
+            #endif
+            #endregion
             #endregion
 
             #region E-Tier Levels
@@ -170,7 +178,9 @@ namespace AutogenRundown
                 rundown.AddLevel(level);
             }
 
-            /*var mainDirectorE = new BuildDirector
+            #region Test E Levels
+            #if false
+            var mainDirectorE = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = Complex.Mining,
@@ -195,7 +205,9 @@ namespace AutogenRundown
                     Index = eMax + 1,
                     IsTest = true
                 });
-            rundown.AddLevel(testLevelE);*/
+            rundown.AddLevel(testLevelE);
+            #endif
+            #endregion
             #endregion
 
             Bins.Rundowns.AddBlock(rundown);
