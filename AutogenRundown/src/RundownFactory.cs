@@ -89,7 +89,7 @@ namespace AutogenRundown
             }
 
             #region Test C Levels
-            #if true
+            #if false
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
@@ -107,7 +107,7 @@ namespace AutogenRundown
                 new Level
                 {
                     Tier = "C",
-                    Name = "Central Generator Cluster",
+                    Name = "Debug Level",
                     Complex = Complex.Mining,
                     MainDirector = mainDirector,
                     Settings = settings,
