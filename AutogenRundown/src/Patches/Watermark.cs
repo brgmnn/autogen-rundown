@@ -3,7 +3,7 @@
 namespace AutogenRundown.Patches
 {
     [HarmonyPatch(typeof(PUI_Watermark), nameof(PUI_Watermark.UpdateWatermark))]
-    internal class Watermark
+    public class Watermark
     {
         [HarmonyAfter(new string[] { "com.dak.MTFO" })]
         public static void Postfix(PUI_Watermark __instance)

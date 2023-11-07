@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace AutogenRundown.Patches
 {
-    internal class RundownNames
+    public class RundownNames
     {
         public static void OnTitleDataUpdated()
         {

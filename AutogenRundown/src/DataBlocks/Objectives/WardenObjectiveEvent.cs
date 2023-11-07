@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.Objectives
 {
-    internal class WardenObjectiveEvent
+    public class WardenObjectiveEvent
     {
         public WardenObjectiveEventType Type { get; set; } = WardenObjectiveEventType.None;
 

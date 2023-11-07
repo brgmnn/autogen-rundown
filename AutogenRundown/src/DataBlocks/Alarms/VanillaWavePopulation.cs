@@ -3,7 +3,7 @@
     /// <summary>
     /// Persistent IDs for Survival Wave Populations
     /// </summary>
-    enum VanillaWavePopulation : uint
+    public enum VanillaWavePopulation : uint
     {
         None = 0,
 

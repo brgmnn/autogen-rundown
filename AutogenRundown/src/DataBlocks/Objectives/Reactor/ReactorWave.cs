@@ -1,6 +1,6 @@
 ﻿namespace AutogenRundown.DataBlocks.Objectives.Reactor
 {
-    internal class ReactorWave
+    public class ReactorWave
     {
         public double Warmup { get; set; } = 90.0;
 

@@ -3,10 +3,12 @@
     /// <summary>
     /// Objective items
     /// </summary>
-    internal enum WardenObjectiveItem : UInt32
+    public enum WardenObjectiveItem : uint
     {
         PersonnelId = 128,
         PartialDecoder = 129,
+
+        PowerCell = 131,
 
         HSU = 137,
 
@@ -16,7 +18,6 @@
         Osip = 150,
         PlantSample = 153,
         MemoryStick = 171,
-
         DataCube = 165,
         DataCubes = 179,
         DataCubeBackup = 178,

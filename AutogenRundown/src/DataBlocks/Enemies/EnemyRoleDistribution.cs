@@ -1,7 +1,7 @@
 ﻿namespace AutogenRundown.DataBlocks.Enemies
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public enum EnemyRoleDistribution : uint
     {

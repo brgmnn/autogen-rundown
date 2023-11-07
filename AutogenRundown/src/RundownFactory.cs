@@ -6,7 +6,7 @@ using BepInEx;
 
 namespace AutogenRundown
 {
-    static internal class RundownFactory
+    static public class RundownFactory
     {
         /// <summary>
         /// Checks if the Json Data directory already exists
@@ -39,11 +39,15 @@ namespace AutogenRundown
             var bMax = Generator.Random.Next(3, 4);
             var cMax = Generator.Random.Next(2, 4);
             var dMax = Generator.Random.Next(1, 4);
-            //var eMax = Generator.Random.Next(1, 2);
-            var eMax = 1;
+            var eMax = Generator.Random.Next(1, 2);
+            /*var aMax = 0;
+            var bMax = 0;
+            var cMax = 0;
+            var dMax = 0;
+            var eMax = 0;*/
 
 
-            // A levels, always generate atleast 1
+            #region A-Tier Levels
             for (int i = 0; i < aMax; i++)
             {
                 var level = Level.Build(
@@ -55,9 +59,9 @@ namespace AutogenRundown
                     });
                 rundown.AddLevel(level);
             }
+            #endregion
 
-
-            // B levels
+            #region B-Tier Levels
             for (int i = 0; i < bMax; i++)
             {
                 var level = Level.Build(
@@ -69,8 +73,9 @@ namespace AutogenRundown
                     });
                 rundown.AddLevel(level);
             }
+            #endregion
 
-            // C levels
+            #region C-Tier Levels
             for (int i = 0; i < cMax; i++)
             {
                 var level = Level.Build(
@@ -84,6 +89,7 @@ namespace AutogenRundown
             }
 
             #region Test C Levels
+            #if false
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
@@ -101,7 +107,7 @@ namespace AutogenRundown
                 new Level
                 {
                     Tier = "C",
-                    Name = "Terminal Uplink",
+                    Name = "Debug Level",
                     Complex = Complex.Mining,
                     MainDirector = mainDirector,
                     Settings = settings,
@@ -109,6 +115,8 @@ namespace AutogenRundown
                     IsTest = true
                 });
             rundown.AddLevel(testLevel);
+            #endif
+            #endregion
             #endregion
 
             #region D-Tier Levels
@@ -125,6 +133,8 @@ namespace AutogenRundown
                 rundown.AddLevel(level);
             }
 
+            #region Test D Levels
+            #if false
             var mainDirectorD = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
@@ -150,6 +160,8 @@ namespace AutogenRundown
                     IsTest = true
                 });
             rundown.AddLevel(testLevelD);
+            #endif
+            #endregion
             #endregion
 
             #region E-Tier Levels
@@ -166,6 +178,8 @@ namespace AutogenRundown
                 rundown.AddLevel(level);
             }
 
+            #region Test E Levels
+            #if false
             var mainDirectorE = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
@@ -192,6 +206,8 @@ namespace AutogenRundown
                     IsTest = true
                 });
             rundown.AddLevel(testLevelE);
+            #endif
+            #endregion
             #endregion
 
             Bins.Rundowns.AddBlock(rundown);

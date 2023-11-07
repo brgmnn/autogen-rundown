@@ -1,6 +1,6 @@
 ﻿namespace AutogenRundown.DataBlocks
 {
-    internal class ReqToReachTier
+    public class ReqToReachTier
     {
         public int MainSectors { get; set; } = 0;
         public int SecondarySectors { get; set; } = 0;

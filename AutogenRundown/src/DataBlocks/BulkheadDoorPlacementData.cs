@@ -1,6 +1,6 @@
 ﻿namespace AutogenRundown.DataBlocks
 {
-    internal class BulkheadDoorPlacementData
+    public class BulkheadDoorPlacementData
     {
         public int ZoneIndex { get; set; } = 0;
 

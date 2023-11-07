@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutogenRundown.DataBlocks.Enemies;
+﻿using AutogenRundown.DataBlocks.Enemies;
 using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks
 {
-    enum EnemyRoleDifficulty : uint
+    public enum EnemyRoleDifficulty : uint
     {
         /// <summary>
         /// - Strikers (Hibernate)
@@ -59,7 +54,7 @@ namespace AutogenRundown.DataBlocks
         Buss = 7
     }
 
-    enum EnemyZoneDistribution
+    public enum EnemyZoneDistribution
     {
         None = 0,
         ForceOne = 1,
@@ -68,28 +63,28 @@ namespace AutogenRundown.DataBlocks
 
     /// <summary>
     /// https://gtfo-modding.gitbook.io/wiki/reference/nested-types/enemyspawningdata
-    /// 
+    ///
     /// With RelValue scoring system:
     ///     1. Randomly select EnemyGroup matching GroupType and Difficulty.
     ///     2. Deduct EnemyGroup.MaxScore from the current Distribution score.
     ///         * Note that this must be for Distribution * POPULATION_PER_ZONE.
     ///         * PopScore = Distribution * POPULATION_PER_ZONE.
-    ///     3. For each role, match an EnemyPopulation using EnemyGroup.Role and 
+    ///     3. For each role, match an EnemyPopulation using EnemyGroup.Role and
     ///        EnemyGroup.Difficulty. Selection is random (using weights).
     ///     4. Spawn selected enemies from EnemyPopulation, count = MaxScore / Cost
     ///     5. Repeat: until PopScore <= 3
-    /// 
+    ///
     /// Score base spawning system:
     ///     number of enemies = EnemyGroup.MaxScore * Role.Distribution / EnemyPopulation.Cost
     ///
     /// Enemy Points:
     ///     * Striker: 1
     ///     * Shooter: 1
-    ///     
+    ///
     ///     * Giant Striker: 4
     ///     * Giant Shooter: 4
     ///     * Hybrid: 4 (3pts in Difficulty 6)
-    ///     
+    ///
     ///     * Shadow: 1
     ///     * Shadow Giant: 4
     ///
@@ -98,7 +93,7 @@ namespace AutogenRundown.DataBlocks
     ///     * Shadow Scout: 5
     ///
     ///     * Baby: 1
-    ///     
+    ///
     ///     * Tank: 10
     ///     * Mother: 10
     ///     * P-Mother: 10
@@ -106,7 +101,7 @@ namespace AutogenRundown.DataBlocks
     ///     * Flyer: 1
     ///     * Boss Flyer: 10
     /// </summary>
-    internal record class EnemySpawningData
+    public record class EnemySpawningData
     {
         /// <summary>
         /// Find this in the expedition balance block, EnemyPopulationPerZone.
@@ -133,7 +128,7 @@ namespace AutogenRundown.DataBlocks
         public int Points { get; set; } = 25;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public double DistributionValue
         {

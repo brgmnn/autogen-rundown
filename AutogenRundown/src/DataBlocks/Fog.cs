@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AutogenRundown.DataBlocks
 {
-    internal record class Fog : DataBlock
+    public record class Fog : DataBlock
     {
         public static Fog None = new Fog { PersistentId = 0 };
 
@@ -113,7 +113,7 @@ namespace AutogenRundown.DataBlocks
 
         /// <summary>
         /// Seems to be the size of the noise particles. Higher values can make them look
-        /// visibly separated, kind of like dust clouds. 
+        /// visibly separated, kind of like dust clouds.
         /// </summary>
         public double DensityNoiseScale { get; set; } = 0.045;
 

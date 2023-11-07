@@ -1,6 +1,6 @@
 ﻿namespace AutogenRundown.GeneratorData
 {
-    static internal class Words
+    static public class Words
     {
         /// <summary>
         /// 200 grim dark adjectives

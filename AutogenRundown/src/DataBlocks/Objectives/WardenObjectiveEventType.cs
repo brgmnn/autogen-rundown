@@ -1,6 +1,6 @@
 ﻿namespace AutogenRundown.DataBlocks.Objectives
 {
-    internal enum WardenObjectiveEventType : uint
+    public enum WardenObjectiveEventType : uint
     {
         None = 0,
         OpenSecurityDoor = 1,

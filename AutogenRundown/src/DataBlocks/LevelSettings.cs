@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Levels;
+using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks
@@ -48,9 +49,14 @@ namespace AutogenRundown.DataBlocks
         public override string ToString() => $"[{string.Join(", ", this)}]";
     }
 
-    internal class LevelSettings
+    public class LevelSettings
     {
         public string Tier { get; set; } = "A";
+
+        public Bulkhead Bulkheads { get; set; } = Bulkhead.Main;
+
+        public Dictionary<Bulkhead, ZoneBuildExpansion> Directions { get; private set; }
+            = new Dictionary<Bulkhead, ZoneBuildExpansion>();
 
         public ModifiersSet Modifiers { get; set; } = new ModifiersSet();
 

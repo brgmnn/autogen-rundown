@@ -1,5 +1,4 @@
 ﻿using AutogenRundown.DataBlocks.Objectives;
-using static UnityEngine.Rendering.PostProcessing.BloomRenderer;
 
 namespace AutogenRundown.DataBlocks.Zones
 {
@@ -20,8 +19,8 @@ namespace AutogenRundown.DataBlocks.Zones
             return Bulkhead == other.Bulkhead && ZoneNumber == other.ZoneNumber;
         }
 
-        public static string ListToString(IEnumerable<ZoneNode> nodes)
-            => string.Join(", ", nodes.Select(node => node.ToString()));
+        public static string ListToString(IEnumerable<ZoneNode> nodes, string separator = ", ")
+            => string.Join(separator, nodes.Select(node => node.ToString()));
     }
 
     /// <summary>
@@ -32,22 +31,24 @@ namespace AutogenRundown.DataBlocks.Zones
     /// </summary>
     public class LayoutPlanner
     {
-        private Dictionary<ZoneNode, List<ZoneNode>> graph = new Dictionary<ZoneNode, List<ZoneNode>>();
-
-        private IEnumerable<KeyValuePair<ZoneNode, List<ZoneNode>>> GetSubgraph(
-                Bulkhead bulkhead = Bulkhead.All,
-                string branch = "primary")
-            => graph.Where(node => (node.Key.Bulkhead & bulkhead) != 0 && node.Key.Branch == branch);
-
-        public override string ToString()
-        {
-            var debug = string.Join("\n", graph.Select(n => $"  {n.Key} => [{ZoneNode.ListToString(n.Value)}]"));
-            return $"Graph:\n{debug}";
-        }
-
         private int indexMain = 0;
         private int indexExtreme = 0;
         private int indexOverload = 0;
+
+        private Dictionary<ZoneNode, List<ZoneNode>> graph = new Dictionary<ZoneNode, List<ZoneNode>>();
+
+        private Dictionary<ZoneNode, Zone> blocks = new Dictionary<ZoneNode, Zone>();
+
+        private IEnumerable<KeyValuePair<ZoneNode, List<ZoneNode>>> GetSubgraph(
+                Bulkhead bulkhead = Bulkhead.All,
+                string? branch = "primary")
+            => graph.Where(node => (node.Key.Bulkhead & bulkhead) != 0 && (branch == null || node.Key.Branch == branch));
+
+        public override string ToString()
+        {
+            var debug = string.Join("\n", graph.Select(n => $"  {n.Key} => [{ZoneNode.ListToString(n.Value, ",\n    ")}]"));
+            return $"Graph:\n{debug}";
+        }
 
         /// <summary>
         /// Connects two zones unidirectionally. If the second zone is not specified then the
@@ -71,11 +72,49 @@ namespace AutogenRundown.DataBlocks.Zones
                 graph.Add(from, new List<ZoneNode>());
         }
 
+        /// <summary>
+        /// Handles assigning the right local index and build from index.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="zone"></param>
+        public void AddZone(ZoneNode node, Zone zone)
+        {
+            blocks.Add(
+                node,
+                zone with
+                {
+                    LocalIndex = node.ZoneNumber,
+                    BuildFromLocalIndex = GetBuildFrom(node)?.ZoneNumber ?? 0,
+                });
+        }
+
+        /// <summary>
+        /// Get's the underlying zone for a given node.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public Zone? GetZone(ZoneNode node)
+        {
+            if (blocks.TryGetValue(node, out var zone))
+                return zone;
+
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bulkhead"></param>
+        /// <returns></returns>
         public int NextIndex(Bulkhead bulkhead) => bulkhead switch
         {
             Bulkhead.Main => indexMain++,
             Bulkhead.Extreme => indexExtreme++,
-            Bulkhead.Overload => indexOverload++
+            Bulkhead.Overload => indexOverload++,
+
+            // Starting area is part of main.
+            Bulkhead.StartingArea => indexMain++,
+            Bulkhead.StartingArea | Bulkhead.Main => indexMain++,
         };
 
         /// <summary>
@@ -83,22 +122,52 @@ namespace AutogenRundown.DataBlocks.Zones
         /// </summary>
         /// <param name="bulkhead"></param>
         /// <returns></returns>
-        public List<ZoneNode> GetZones(Bulkhead bulkhead = Bulkhead.All, string branch = "primary")
-            => GetSubgraph(bulkhead, branch).Select(node => node.Key).ToList();
+        public List<ZoneNode> GetZones(Bulkhead bulkhead = Bulkhead.All, string? branch = "primary")
+            => GetSubgraph(bulkhead, branch)
+                .Select(node => node.Key)
+                .OrderBy(zone => zone.ZoneNumber)
+                .ToList();
+
+        /// <summary>
+        /// Gets all zones associated with the given bulkhead. Exlusively only return nodes
+        /// exactly matching the given bulkhead.
+        /// </summary>
+        /// <param name="bulkhead"></param>
+        /// <returns></returns>
+        public List<ZoneNode> GetExactZones(Bulkhead bulkhead, string? branch = "primary")
+            => GetSubgraph(bulkhead, branch)
+                .Select(node => node.Key)
+                .Where(node => node.Bulkhead == bulkhead)
+                .OrderBy(zone => zone.ZoneNumber)
+                .ToList();
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public List<ZoneNode> GetConnections(ZoneNode node, string branch = "primary")
+        public List<ZoneNode> GetConnections(ZoneNode node, string? branch = "primary")
         {
             List<ZoneNode> connections;
 
             if (graph.TryGetValue(node, out connections!))
-                return connections.Where(node => node.Branch == branch).ToList();
+                return connections.Where(node => branch == null || node.Branch == branch).ToList();
 
             return new List<ZoneNode>();
+        }
+
+        /// <summary>
+        /// Finds the zone that a given node should be built from.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public ZoneNode? GetBuildFrom(ZoneNode node)
+        {
+            foreach (var (from, to) in graph)
+                if (to.Contains(node))
+                    return from;
+
+            return null;
         }
 
         /// <summary>
@@ -106,10 +175,10 @@ namespace AutogenRundown.DataBlocks.Zones
         /// from their previous zone.
         /// </summary>
         /// <returns></returns>
-        public List<ZoneNode> GetLeafZones(Bulkhead bulkhead = Bulkhead.All, string branch = "primary")
+        public List<ZoneNode> GetLeafZones(Bulkhead bulkhead = Bulkhead.All, string? branch = "primary")
             => graph.Where(node => node.Value.Count == 0)
                 .Where(node => (node.Key.Bulkhead & bulkhead) != 0)
-                .Where(node => node.Key.Branch == branch)
+                .Where(node => branch == null || node.Key.Branch == branch)
                 .Select(node => node.Key)
                 .ToList();
 
@@ -117,11 +186,11 @@ namespace AutogenRundown.DataBlocks.Zones
         /// Find all zones that could have another zone attached to them
         /// </summary>
         /// <returns></returns>
-        public List<ZoneNode> GetOpenZones(Bulkhead bulkhead = Bulkhead.All, string branch = "primary")
+        public List<ZoneNode> GetOpenZones(Bulkhead bulkhead = Bulkhead.All, string? branch = "primary")
             => graph
                 .Where(node => (node.Key.Bulkhead & bulkhead) != 0)
                 .Where(node => node.Value.Count < node.Key.MaxConnections)
-                .Where(node => node.Key.Branch == branch)
+                .Where(node => branch == null || node.Key.Branch == branch)
                 .Select(node => node.Key)
                 .OrderBy(zone => zone.ZoneNumber)
                 .ToList();
@@ -132,7 +201,7 @@ namespace AutogenRundown.DataBlocks.Zones
         /// <param name="bulkhead"></param>
         /// <param name="branchId"></param>
         /// <returns></returns>
-        public ZoneNode? GetLastZone(Bulkhead bulkhead = Bulkhead.Main, string branch = "primary")
+        public ZoneNode? GetLastZone(Bulkhead bulkhead = Bulkhead.Main, string? branch = "primary")
         {
             var openZones = GetOpenZones(bulkhead, branch);
 
@@ -156,7 +225,7 @@ namespace AutogenRundown.DataBlocks.Zones
             int fromIndex,
             int totalOpenSlots,
             Bulkhead bulkhead = Bulkhead.Main,
-            string branch = "primary")
+            string? branch = "primary")
         {
             var openZones = GetOpenZones(bulkhead, branch);
 

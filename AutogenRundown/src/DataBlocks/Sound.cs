@@ -1,6 +1,6 @@
 ﻿namespace AutogenRundown.DataBlocks
 {
-    internal enum Sound : uint
+    public enum Sound : uint
     {
         None = 0,
 

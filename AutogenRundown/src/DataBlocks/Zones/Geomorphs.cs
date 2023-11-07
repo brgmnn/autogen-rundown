@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AutogenRundown.DataBlocks.Zones
 {
-    internal class Geomorphs
+    public class Geomorphs
     {
         public static List<(SubComplex, string)> Mining_I_Tile = new List<(SubComplex, string)>
         {
@@ -16,7 +16,7 @@ namespace AutogenRundown.DataBlocks.Zones
 
         /*public static (SubComplex, string) GenGeomorph(Complex complex)
         {
-            return 
+            return
         }*/
     }
 }

@@ -6,8 +6,10 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
-    internal static class Bins
+    public static class Bins
     {
+        public static BlocksBin<BigPickupDistribution> BigPickupDistributions { get; private set; }
+            = new BlocksBin<BigPickupDistribution>();
         public static BlocksBin<ChainedPuzzle> ChainedPuzzles { get; private set; }
             = new BlocksBin<ChainedPuzzle>();
         public static BlocksBin<EnemyGroup> EnemyGroups { get; private set; }
@@ -43,6 +45,7 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public static void Save()
         {
+            BigPickupDistribution.SaveStatic();
             ChainedPuzzle.SaveStatic();
             EnemyGroup.SaveStatic();
             EnemyPopulation.SaveStatic();
@@ -53,6 +56,7 @@ namespace AutogenRundown.DataBlocks
             WavePopulation.SaveStatic();
             Alarms.WaveSettings.SaveStatic();
 
+            BigPickupDistributions.Save("BigPickupDistributionDataBlock");
             ChainedPuzzles.Save("ChainedPuzzleDataBlock");
             EnemyGroups.Save("EnemyGroupDataBlock");
             EnemyPopulations.Save("EnemyPopulationDataBlock");
@@ -65,7 +69,7 @@ namespace AutogenRundown.DataBlocks
         }
     }
 
-    internal class BlocksBin<T> where T : DataBlock
+    public class BlocksBin<T> where T : DataBlock
     {
         /// <summary>
         /// Not sure what this is for yet
@@ -80,7 +84,7 @@ namespace AutogenRundown.DataBlocks
         private HashSet<uint> persistentIds = new HashSet<uint>();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="block"></param>
         public void AddBlock(T? block)

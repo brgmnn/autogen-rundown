@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
-    internal record class Rundown : DataBlock
+    public record class Rundown : DataBlock
     {
         public static uint R1 = 32;
         public static uint R2 = 33;

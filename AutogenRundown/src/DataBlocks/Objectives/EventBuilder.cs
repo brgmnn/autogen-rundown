@@ -3,7 +3,7 @@ using AutogenRundown.DataBlocks.Enemies;
 
 namespace AutogenRundown.DataBlocks.Objectives
 {
-    internal class EventBuilder
+    public class EventBuilder
     {
         #region Enemies
         /// <summary>

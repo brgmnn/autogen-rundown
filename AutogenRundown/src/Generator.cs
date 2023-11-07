@@ -5,7 +5,7 @@ namespace AutogenRundown
 {
     using PID = UInt32;
 
-    static internal class Text
+    static public class Text
     {
         /// <summary>
         /// Converts an integer to its roman numerals
@@ -45,7 +45,7 @@ namespace AutogenRundown
         WaveSettings
     }
 
-    static internal class Generator
+    static public class Generator
     {
         private static PID pid = 100000;
 
@@ -183,7 +183,7 @@ namespace AutogenRundown
             };
 
         /// <summary>
-        /// Sets the seed (without saving) to the 
+        /// Sets the seed (without saving) to the
         /// </summary>
         public static void GenerateTimeSeed()
         {
@@ -252,7 +252,7 @@ namespace AutogenRundown
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>

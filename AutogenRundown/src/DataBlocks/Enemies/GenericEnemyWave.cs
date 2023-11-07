@@ -2,7 +2,7 @@
 
 namespace AutogenRundown.DataBlocks.Enemies
 {
-    internal class GenericWave
+    public class GenericWave
     {
         /// <summary>
         /// Exit trickle alarm for running to extraction at the end of the level.
