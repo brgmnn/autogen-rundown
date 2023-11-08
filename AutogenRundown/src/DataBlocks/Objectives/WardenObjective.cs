@@ -210,7 +210,6 @@ namespace AutogenRundown.DataBlocks
                             "A" => Generator.Random.Next(1, 2),
                             "B" => Generator.Random.Next(1, 2),
                             "C" => Generator.Random.Next(2, 3),
-                            //"C" => 5,
                             "D" => Generator.Random.Next(3, 4),
                             "E" => Generator.Random.Next(3, 5),
                             _ => 2

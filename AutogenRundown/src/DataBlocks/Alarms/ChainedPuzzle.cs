@@ -150,42 +150,52 @@ namespace AutogenRundown.DataBlocks.Alarms
                 },
                 "D" => new List<ChainedPuzzle>
                 {
+                    // Easy scans
                     None,
                     TeamScan, TeamScan,
                     AlarmClass3,
                     AlarmClass4, AlarmClass4,
 
-                    AlarmClass5, AlarmClass5, AlarmClass5,
-                    AlarmClass5_Cluster,
-                    AlarmClass5_Mixed,
+                    // Moderately difficult scans
+                    AlarmClass5, AlarmClass5, AlarmClass5, AlarmClass5,
+                    AlarmClass5_Cluster, AlarmClass5_Cluster,
+                    AlarmClass5_Mixed, AlarmClass5_Mixed,
 
+                    // Challenging scans
                     AlarmClass6_Mixed,
                     AlarmClass7_Mixed,
 
-                    AlarmClass3_Surge, AlarmClass3_Surge,
-                    AlarmClass4_Surge,
+                    // Surge (very challenging)
+                    AlarmClass2_Surge,
+                    AlarmClass3_Surge,
 
+                    // Sustained
                     AlarmClass1_Sustained, AlarmClass1_Sustained, AlarmClass1_Sustained,
                 },
                 "E" => new List<ChainedPuzzle>
                 {
+                    // Easy
                     None,
                     TeamScan,
                     AlarmClass4, AlarmClass4,
 
+                    // Moderate
                     AlarmClass5, AlarmClass5, AlarmClass5,
-                    AlarmClass5_Cluster,
-                    AlarmClass5_Mixed,
+                    AlarmClass5_Cluster, AlarmClass5_Cluster,
+                    AlarmClass5_Mixed, AlarmClass5_Mixed,
 
-                    AlarmClass6, AlarmClass6,
-                    AlarmClass6_Mixed,
-
+                    // Difficult
+                    AlarmClass6, AlarmClass6, AlarmClass6,
+                    AlarmClass6_Mixed, AlarmClass6_Mixed,
                     AlarmClass7,
                     AlarmClass7_Mixed,
+                    AlarmClass8,
 
+                    // Pure pain scans, TODO: this might be too much
                     AlarmClass3_Surge, AlarmClass3_Surge,
-                    AlarmClass4_Surge,
+                    AlarmClass4_Surge, // !!! Is this possible?
 
+                    // Sustained
                     AlarmClass1_Sustained, AlarmClass1_Sustained, AlarmClass1_Sustained,
                 },
                 _ => new List<ChainedPuzzle>(),
