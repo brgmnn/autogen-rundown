@@ -42,8 +42,8 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] A Tier
   * [x] B Tier
   * [x] C Tier
-  * [ ] D Tier
-  * [ ] E Tier
+  * [x] D Tier
+  * [x] E Tier
   * Additional objectives
     * [x] Secondary
     * [x] Overload
@@ -55,10 +55,10 @@ Follow the installation instructions again, check yes to overwrite all files.
     * [ ] Fog specific lights
     * [ ] Custom lights(?)
   * Zones
-    * [ ] More custom geomorphs
+    * [x] More custom geomorphs
     * [ ] Specialized bulkhead geomorphs and layouts
   * Challenges
-    * [ ] Key to unlock doors
+    * [x] Key to unlock doors
     * [ ] Cell to power generator to unlock doors
     * [ ] Fog
     * [ ] Infectious fog
@@ -71,9 +71,9 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] Reactor Shutdown
   * [x] Input Special Terminal Command
   * [ ] Retrieve Big Items — *Fog Turbine etc.*
-  * [ ] Power Cell Distribution — *Distributing cells to individual generators*
+  * [x] Power Cell Distribution — *Distributing cells to individual generators*
   * [x] Terminal Uplink
-  * [ ] Central Generator Cluster — *Fetching cells for a central generator cluster*
+  * [x] ~~Central Generator Cluster~~ — *Fetching cells for a central generator cluster*
   * [ ] HSU Activate Small
   * [ ] Survival
   * [ ] Gather Terminal
@@ -87,7 +87,7 @@ Follow the installation instructions again, check yes to overwrite all files.
     * [x] Giants
     * [x] Scouts
     * [x] Chargers
-    * [ ] Shadows
+    * [x] Shadows
     * [ ] Hybrids
     * [ ] Mothers
     * [ ] Tanks
@@ -101,4 +101,4 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] Error alarms
   * [x] S-Class alarms
   * [x] Surge alarms
-  * [ ] High class alarms (> Class V)
+  * [x] High class alarms (> Class V)
