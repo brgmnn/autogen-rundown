@@ -101,13 +101,12 @@ namespace AutogenRundown
             mainDirector.GenPoints();
 
             var settings = new LevelSettings("C");
-            settings.Modifiers.Add(LevelModifiers.ManyChargers);
 
             var testLevel = Level.Build(
                 new Level
                 {
                     Tier = "C",
-                    Name = "Debug Level",
+                    Name = "Distribute Cells",
                     Complex = Complex.Mining,
                     MainDirector = mainDirector,
                     Settings = settings,
