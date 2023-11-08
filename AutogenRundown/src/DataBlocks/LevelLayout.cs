@@ -714,7 +714,7 @@ namespace AutogenRundown.DataBlocks
                 elevatorDrop,
                 new Zone
                 {
-                    Coverage = CoverageMinMax.GenStartZoneSize(),
+                    Coverage = new CoverageMinMax { Min = 25, Max = 35 },
                     LightSettings = Lights.GenRandomLight(),
                 });
 
@@ -778,11 +778,15 @@ namespace AutogenRundown.DataBlocks
 
         /// <summary>
         /// Builds the main level
+        ///
+        /// Objective is not a fully initialized objective, it is a pre-built objective with just
+        /// the basics needed for level generation
         /// </summary>
         /// <param name="level"></param>
         /// <param name="director"></param>
+        /// <param name="objective"></param>
         /// <returns></returns>
-        public static LevelLayout Build(Level level, BuildDirector director)
+        public static LevelLayout Build(Level level, BuildDirector director, WardenObjective objective)
         {
             var layout = new LevelLayout(director, level.Settings)
             {
@@ -908,9 +912,6 @@ namespace AutogenRundown.DataBlocks
                  * */
                 case WardenObjectiveType.PowerCellDistribution:
                     {
-                        // TODO: pass this in?
-                        var generatorCount = 2;
-
                         // Zone 1 is an entrance I-geo
                         var entrance = level.Planner.GetExactZones(director.Bulkhead).First();
 
@@ -929,10 +930,8 @@ namespace AutogenRundown.DataBlocks
                         level.Planner.Connect(entrance, hub);
                         level.Planner.AddZone(hub, zone);
 
-                        var zonePlacementData = new List<ZonePlacementData>();
-
-                        // Create branches for each generator
-                        for (int g = 0; g < Math.Min(generatorCount, 3); g++)
+                        // Create base branches for each generator
+                        for (int g = 0; g < Math.Min(objective.PowerCellsToDistribute, 3); g++)
                         {
                             var branch = $"generator_{g}";
                             var branchZoneCount = Generator.Random.Next(2, 3);
@@ -964,15 +963,65 @@ namespace AutogenRundown.DataBlocks
                                     PlacementWeights = ZonePlacementWeights.NotAtStart
                                 });
 
-                            zonePlacementData.Add(
-                                new ZonePlacementData
+                            // Assign the zone placement data for the objective text
+                            objectiveLayerData.ObjectiveData.ZonePlacementDatas.Add(
+                                new List<ZonePlacementData>
                                 {
-                                    LocalIndex = prev.ZoneNumber,
-                                    Weights = ZonePlacementWeights.NotAtStart
+                                    new ZonePlacementData
+                                    {
+                                        LocalIndex = prev.ZoneNumber,
+                                        Weights = ZonePlacementWeights.NotAtStart
+                                    }
                                 });
                         }
 
-                        objectiveLayerData.ObjectiveData.ZonePlacementDatas.Add(zonePlacementData);
+                        // Special case where we need one more zone.
+                        if (objective.PowerCellsToDistribute == 4)
+                        {
+                            var branch = "generator_3";
+
+                            var baseNode = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "generator_2")!;
+
+                            var branchZoneCount = Generator.Random.Next(2, 3);
+                            var prev = baseNode;
+
+                            // Generate the zones for this generators branch
+                            for (int i = 0; i < branchZoneCount; i++)
+                            {
+                                var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
+                                var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
+
+                                level.Planner.Connect(prev, next);
+                                level.Planner.AddZone(
+                                    next,
+                                    new Zone
+                                    {
+                                        Coverage = CoverageMinMax.GenNormalSize(),
+                                        LightSettings = Lights.GenRandomLight(),
+                                    });
+
+                                prev = next;
+                            }
+
+                            // Place the generator in the last zone of the branch
+                            var lastZone = level.Planner.GetZone(prev)!;
+                            lastZone.PowerGeneratorPlacements.Add(
+                                new FunctionPlacementData()
+                                {
+                                    PlacementWeights = ZonePlacementWeights.NotAtStart
+                                });
+
+                            // Assign the zone placement data for the objective text
+                            objectiveLayerData.ObjectiveData.ZonePlacementDatas.Add(
+                                new List<ZonePlacementData>
+                                {
+                                    new ZonePlacementData
+                                    {
+                                        LocalIndex = prev.ZoneNumber,
+                                        Weights = ZonePlacementWeights.NotAtStart
+                                    }
+                                });
+                        }
 
                         break;
                     }

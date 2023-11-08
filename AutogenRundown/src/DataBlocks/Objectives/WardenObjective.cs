@@ -186,12 +186,50 @@ namespace AutogenRundown.DataBlocks
             => CalculateExitScanSpeedMultiplier(Generator.Random.Next(min, max + 1));
 
         /// <summary>
+        /// Some settings from the objective are needed for level generation. However plenty of
+        /// layout information is needed for the objective. Objective building is split into two
+        /// phases. PreBuild() is called first to generate the objective and then Build() is called
+        /// after level layout has been done.
+        /// </summary>
+        /// <param name="director"></param>
+        /// <param name="level"></param>
+        /// <returns></returns>
+        public static WardenObjective PreBuild(BuildDirector director, Level level)
+        {
+            var objective = new WardenObjective
+            {
+                Type = director.Objective,
+            };
+
+            switch (objective.Type)
+            {
+                case WardenObjectiveType.PowerCellDistribution:
+                    {
+                        objective.PowerCellsToDistribute = director.Tier switch
+                        {
+                            "A" => Generator.Random.Next(1, 2),
+                            "B" => Generator.Random.Next(1, 2),
+                            //"C" => Generator.Random.Next(2, 3),
+                            "C" => 4,
+                            "D" => Generator.Random.Next(3, 4),
+                            "E" => Generator.Random.Next(3, 5),
+                            _ => 2
+                        };
+
+                        break;
+                    }
+            }
+
+            return objective;
+        }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="director"></param>
         /// <param name="level"></param>
         /// <returns></returns>
-        public static WardenObjective Build(BuildDirector director, Level level)
+        public void Build(BuildDirector director, Level level)
         {
             var dataLayer = level.GetObjectiveLayerData(director.Bulkhead);
 
@@ -211,18 +249,13 @@ namespace AutogenRundown.DataBlocks
                 throw new Exception("Missing level layout");
             }
 
-            var objective = new WardenObjective
-            {
-                Type = director.Objective,
-            };
-
-            objective.GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
-            objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
-            objective.GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition";
+            GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
+            GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+            GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition";
 
             // Set the exit scan speed multiplier. Generally we want easier levels to be faster.
             // For some objectives this will be overridden.
-            objective.ChainedPuzzleAtExitScanSpeedMultiplier = director.Tier switch
+            ChainedPuzzleAtExitScanSpeedMultiplier = director.Tier switch
             {
                 "A" => GenExitScanTime(20, 30),
                 "B" => GenExitScanTime(30, 45),
@@ -239,11 +272,11 @@ namespace AutogenRundown.DataBlocks
                  */
                 case WardenObjectiveType.HsuFindSample:
                     {
-                        objective.MainObjective = "Find <color=orange>[ITEM_SERIAL]</color> somewhere inside HSU Storage Zone";
+                        MainObjective = "Find <color=orange>[ITEM_SERIAL]</color> somewhere inside HSU Storage Zone";
 
-                        objective.ActivateHSU_BringItemInElevator = true;
-                        objective.GatherItemId = (uint)WardenObjectiveItem.HSU;
-                        objective.ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
+                        ActivateHSU_BringItemInElevator = true;
+                        GatherItemId = (uint)WardenObjectiveItem.HSU;
+                        ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
 
                         // Place HSU's within the objective zone
                         var zn = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead)!;
@@ -288,7 +321,7 @@ namespace AutogenRundown.DataBlocks
                         // Add enemies on Goto Win
                         // TODO: do we want this for all bulkheads?
                         if (director.Bulkhead.HasFlag(Bulkhead.Main) || director.Tier != "A")
-                            objective.WavesOnGotoWin.Add(GenericWave.ExitTrickle);
+                            WavesOnGotoWin.Add(GenericWave.ExitTrickle);
 
                         break;
                     }
@@ -299,26 +332,26 @@ namespace AutogenRundown.DataBlocks
                  * */
                 case WardenObjectiveType.ReactorShutdown:
                     {
-                        objective.MainObjective = "Find the main reactor and shut it down";
-                        objective.FindLocationInfo = "Gather information about the location of the Reactor";
-                        objective.GoToZone = "Navigate to [ITEM_ZONE] and initiate the shutdown process";
-                        objective.SolveItem = "Make sure the Reactor is fully shut down before leaving";
-                        objective.GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
-                        objective.GoToWinConditionHelp_ToMainLayer = "Go back to the main objective and complete the expedition.";
+                        MainObjective = "Find the main reactor and shut it down";
+                        FindLocationInfo = "Gather information about the location of the Reactor";
+                        GoToZone = "Navigate to [ITEM_ZONE] and initiate the shutdown process";
+                        SolveItem = "Make sure the Reactor is fully shut down before leaving";
+                        GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
+                        GoToWinConditionHelp_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
-                        objective.LightsOnFromBeginning = true;
-                        objective.LightsOnDuringIntro = true;
-                        objective.LightsOnWhenStartupComplete = false;
+                        LightsOnFromBeginning = true;
+                        LightsOnDuringIntro = true;
+                        LightsOnWhenStartupComplete = false;
 
-                        objective.ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
+                        ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
 
                         var midScan = Generator.Pick(ChainedPuzzle.BuildReactorShutdownPack(director.Tier));
-                        objective.ChainedPuzzleMidObjective = midScan?.PersistentId ?? ChainedPuzzle.AlarmClass5.PersistentId;
+                        ChainedPuzzleMidObjective = midScan?.PersistentId ?? ChainedPuzzle.AlarmClass5.PersistentId;
                         Bins.ChainedPuzzles.AddBlock(midScan);
 
                         // Seems we set these as empty?
                         // TODO: can we remove these?
-                        objective.ReactorWaves = new List<ReactorWave>
+                        ReactorWaves = new List<ReactorWave>
                         {
                             new ReactorWave
                             {
@@ -363,14 +396,14 @@ namespace AutogenRundown.DataBlocks
                             DistributionStrategy.EvenlyAcrossZones
                         });
 
-                        objective.MainObjective = description;
-                        objective.FindLocationInfo = $"Look for {name}s in the complex";
-                        objective.FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
+                        MainObjective = description;
+                        FindLocationInfo = $"Look for {name}s in the complex";
+                        FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
 
                         if (director.Bulkhead.HasFlag(Bulkhead.Main))
                             level.Description = GenLevelDescription(director.Objective, itemId);
 
-                        objective.GatherRequiredCount = level.Tier switch
+                        GatherRequiredCount = level.Tier switch
                         {
                             "A" => Generator.Random.Next(4, 8),
                             "B" => Generator.Random.Next(6, 10),
@@ -380,16 +413,16 @@ namespace AutogenRundown.DataBlocks
                             _ => 1,
                         };
 
-                        objective.GatherItemId = (uint)itemId;
-                        objective.GatherSpawnCount = Generator.Random.Next(
-                            objective.GatherRequiredCount,
-                            objective.GatherRequiredCount + 6);
+                        GatherItemId = (uint)itemId;
+                        GatherSpawnCount = Generator.Random.Next(
+                            GatherRequiredCount,
+                            GatherRequiredCount + 6);
 
-                        objective.DistributeObjectiveItems(level, director.Bulkhead, strategy);
+                        DistributeObjectiveItems(level, director.Bulkhead, strategy);
 
                         var zoneSpawns = dataLayer.ObjectiveData.ZonePlacementDatas[0].Count;
 
-                        objective.GatherMaxPerZone = objective.GatherSpawnCount / zoneSpawns + objective.GatherSpawnCount % zoneSpawns;
+                        GatherMaxPerZone = GatherSpawnCount / zoneSpawns + GatherSpawnCount % zoneSpawns;
 
                         break;
                     }
@@ -408,9 +441,9 @@ namespace AutogenRundown.DataBlocks
                         var exitIndex = layout.ZoneAliasStart + exitZone?.LocalIndex;
                         var exitZoneString = $"<color=orange>ZONE {exitIndex}</color>";
 
-                        objective.MainObjective = $"Clear a path to the exit point in {exitZoneString}";
-                        objective.GoToWinCondition_Elevator = "";
-                        objective.GoToWinCondition_CustomGeo = $"Go to the forward exit point in {exitZoneString}";
+                        MainObjective = $"Clear a path to the exit point in {exitZoneString}";
+                        GoToWinCondition_Elevator = "";
+                        GoToWinCondition_CustomGeo = $"Go to the forward exit point in {exitZoneString}";
 
                         level.Description = GenLevelDescription(director.Objective);
 
@@ -433,33 +466,33 @@ namespace AutogenRundown.DataBlocks
                  */
                 case WardenObjectiveType.SpecialTerminalCommand:
                     {
-                        objective.MainObjective = "Find Computer terminal [ITEM_SERIAL] and input the backdoor command [SPECIAL_COMMAND]";
-                        objective.FindLocationInfo = "Gather information about the location of [ITEM_SERIAL]";
-                        objective.FindLocationInfoHelp = "Access more data in the terminal maintenance system";
-                        objective.GoToZone = "Navigate to [ITEM_ZONE] and find [ITEM_SERIAL]";
-                        objective.GoToZoneHelp = "Use information in the environment to find [ITEM_ZONE]";
-                        objective.InZoneFindItem = "Find [ITEM_SERIAL] somewhere inside [ITEM_ZONE]";
-                        objective.InZoneFindItemHelp = "Use maintenance terminal command PING to find [ITEM_SERIAL]";
-                        objective.SolveItem = "Proceed to input the backdoor command [SPECIAL_COMMAND] in [ITEM_SERIAL]";
+                        MainObjective = "Find Computer terminal [ITEM_SERIAL] and input the backdoor command [SPECIAL_COMMAND]";
+                        FindLocationInfo = "Gather information about the location of [ITEM_SERIAL]";
+                        FindLocationInfoHelp = "Access more data in the terminal maintenance system";
+                        GoToZone = "Navigate to [ITEM_ZONE] and find [ITEM_SERIAL]";
+                        GoToZoneHelp = "Use information in the environment to find [ITEM_ZONE]";
+                        InZoneFindItem = "Find [ITEM_SERIAL] somewhere inside [ITEM_ZONE]";
+                        InZoneFindItemHelp = "Use maintenance terminal command PING to find [ITEM_SERIAL]";
+                        SolveItem = "Proceed to input the backdoor command [SPECIAL_COMMAND] in [ITEM_SERIAL]";
 
-                        objective.GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
-                        objective.GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
-                        objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
-                        objective.GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
-                        objective.GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+                        GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
+                        GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
+                        GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+                        GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
+                        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
                         // Special Command: Lights Off
-                        objective.SpecialTerminalCommand = "REROUTE_POWER";
-                        objective.SpecialTerminalCommandDesc = "Reroute power coupling to sector that has been powered down.";
-                        EventBuilder.AddLightsOff(objective.EventsOnActivate, 9.0);
+                        SpecialTerminalCommand = "REROUTE_POWER";
+                        SpecialTerminalCommandDesc = "Reroute power coupling to sector that has been powered down.";
+                        EventBuilder.AddLightsOff(EventsOnActivate, 9.0);
 
                         // Add scans
-                        objective.ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
-                        objective.ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
+                        ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
+                        ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
 
                         // Add exit wave if this is the main bulkhead
                         if (director.Bulkhead.HasFlag(Bulkhead.Main))
-                            objective.WavesOnGotoWin.Add(GenericWave.ExitTrickle);
+                            WavesOnGotoWin.Add(GenericWave.ExitTrickle);
 
                         var zn = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead)!;
                         var zoneIndex = zn.ZoneNumber;
@@ -485,17 +518,14 @@ namespace AutogenRundown.DataBlocks
                  * */
                 case WardenObjectiveType.PowerCellDistribution:
                     {
-                        objective.MainObjective = "Distribute Power Cells from the elevator cargo container to [ALL_ITEMS]";
-                        objective.FindLocationInfo = "Locate the Generators and bring the Power Cells to them";
-                        objective.FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
-                        objective.GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
-                        objective.GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
-                        objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
-                        objective.GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
-                        objective.GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
-
-                        // TODO: scaling difficulty
-                        objective.PowerCellsToDistribute = 2;
+                        MainObjective = "Distribute Power Cells from the elevator cargo container to [ALL_ITEMS]";
+                        FindLocationInfo = "Locate the Generators and bring the Power Cells to them";
+                        FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
+                        GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
+                        GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
+                        GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+                        GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
+                        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
                         break;
                     }
@@ -506,19 +536,19 @@ namespace AutogenRundown.DataBlocks
                  */
                 case WardenObjectiveType.TerminalUplink:
                     {
-                        objective.MainObjective = "Find the <u>Uplink Terminals</u> [ALL_ITEMS] and establish an external uplink from each terminal";
-                        objective.FindLocationInfo = "Gather information about the location of [ALL_ITEMS]";
-                        objective.FindLocationInfoHelp = "Access more data in the terminal maintenance system";
-                        objective.SolveItem = "Use [ITEM_SERIAL] to create an uplink to [UPLINK_ADDRESS]";
-                        objective.SolveItemHelp = "Use the UPLINK_CONNECT command to establish the connection";
+                        MainObjective = "Find the <u>Uplink Terminals</u> [ALL_ITEMS] and establish an external uplink from each terminal";
+                        FindLocationInfo = "Gather information about the location of [ALL_ITEMS]";
+                        FindLocationInfoHelp = "Access more data in the terminal maintenance system";
+                        SolveItem = "Use [ITEM_SERIAL] to create an uplink to [UPLINK_ADDRESS]";
+                        SolveItemHelp = "Use the UPLINK_CONNECT command to establish the connection";
 
-                        objective.GoToWinCondition_Elevator = "Neural Imprinting Protocols retrieved. Return to the point of entrance in [EXTRACTION_ZONE]";
-                        objective.GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
-                        objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
-                        objective.GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
-                        objective.GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+                        GoToWinCondition_Elevator = "Neural Imprinting Protocols retrieved. Return to the point of entrance in [EXTRACTION_ZONE]";
+                        GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
+                        GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+                        GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
+                        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
-                        objective.Uplink_NumberOfTerminals = (level.Tier, director.Bulkhead) switch
+                        Uplink_NumberOfTerminals = (level.Tier, director.Bulkhead) switch
                         {
                             ("A", _) => 1,
 
@@ -535,7 +565,7 @@ namespace AutogenRundown.DataBlocks
 
                             (_, _) => 1
                         };
-                        objective.Uplink_NumberOfVerificationRounds = (level.Tier, objective.Uplink_NumberOfTerminals) switch
+                        Uplink_NumberOfVerificationRounds = (level.Tier, Uplink_NumberOfTerminals) switch
                         {
                             ("A", _) => 3,
 
@@ -556,7 +586,7 @@ namespace AutogenRundown.DataBlocks
 
                             (_, _) => 1,
                         };
-                        objective.Uplink_WaveSpawnType = SurvivalWaveSpawnType.InSuppliedCourseNodeZone;
+                        Uplink_WaveSpawnType = SurvivalWaveSpawnType.InSuppliedCourseNodeZone;
 
                         var wave = level.Tier switch
                         {
@@ -565,11 +595,11 @@ namespace AutogenRundown.DataBlocks
                             _ => GenericWave.Uplink_Medium,
                         };
 
-                        objective.WavesOnActivate.Add(wave);
+                        WavesOnActivate.Add(wave);
 
                         var placements = new List<ZonePlacementData>();
                         var zones = level.Planner.GetZones(director.Bulkhead)
-                                                 .TakeLast(objective.Uplink_NumberOfTerminals);
+                                                 .TakeLast(Uplink_NumberOfTerminals);
 
                         foreach (var zone in zones)
                         {
@@ -596,29 +626,27 @@ namespace AutogenRundown.DataBlocks
                  */
                 case WardenObjectiveType.CentralGeneratorCluster:
                     {
-                        objective.MainObjective = "Find [COUNT_REQUIRED] Power Cells and bring them to the Central Generator Cluster in [ITEM_ZONE]";
-                        objective.FindLocationInfo = "Locate the Power Cells and use them to power up the Generator Cluster";
-                        objective.FindLocationInfoHelp = "Generators Online: [COUNT_CURRENT] / [COUNT_REQUIRED]";
-                        objective.GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
-                        objective.GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
-                        objective.GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
-                        objective.GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
-                        objective.GoToWinCondition_ToMainLayer = "Malfunction in air purification system. Make your way for the forward emergency exit.";
+                        MainObjective = "Find [COUNT_REQUIRED] Power Cells and bring them to the Central Generator Cluster in [ITEM_ZONE]";
+                        FindLocationInfo = "Locate the Power Cells and use them to power up the Generator Cluster";
+                        FindLocationInfoHelp = "Generators Online: [COUNT_CURRENT] / [COUNT_REQUIRED]";
+                        GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
+                        GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
+                        GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+                        GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
+                        GoToWinCondition_ToMainLayer = "Malfunction in air purification system. Make your way for the forward emergency exit.";
 
-                        objective.ChainedPuzzleMidObjective = ChainedPuzzle.AlarmClass1.PersistentId;
+                        ChainedPuzzleMidObjective = ChainedPuzzle.AlarmClass1.PersistentId;
                         //"ChainedPuzzleAtExit": 11,
 
-                        objective.PowerCellsToDistribute = 3;
-                        objective.CentralPowerGenClustser_NumberOfGenerators = 2;
-                        objective.CentralPowerGenClustser_NumberOfPowerCells = 2;
+                        PowerCellsToDistribute = 3;
+                        CentralPowerGenClustser_NumberOfGenerators = 2;
+                        CentralPowerGenClustser_NumberOfPowerCells = 2;
 
                         break;
                     }
             }
 
-            dataLayer.ObjectiveData.DataBlockId = objective.PersistentId;
-
-            return objective;
+            dataLayer.ObjectiveData.DataBlockId = PersistentId;
         }
 
         public WardenObjectiveType Type { get; set; }

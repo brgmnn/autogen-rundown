@@ -379,10 +379,12 @@ namespace AutogenRundown.DataBlocks
                 level.MainDirector.GenObjective();
             }
 
-            var mainLevelLayout = LevelLayout.Build(level, level.MainDirector);
+            var mainObjective = WardenObjective.PreBuild(level.MainDirector, level);
+
+            var mainLevelLayout = LevelLayout.Build(level, level.MainDirector, mainObjective);
             level.LevelLayoutData = mainLevelLayout.PersistentId;
 
-            var mainObjective = WardenObjective.Build(level.MainDirector, level);
+            mainObjective.Build(level.MainDirector, level);
             level.MainLayerData.ObjectiveData.DataBlockId = mainObjective.PersistentId;
 
             if (level.MainDirector.Objective == WardenObjectiveType.ClearPath)
@@ -413,11 +415,13 @@ namespace AutogenRundown.DataBlocks
 
                 level.SecondaryLayerEnabled = true;
 
+                var extremeObjective = WardenObjective.PreBuild(level.SecondaryDirector, level);
+
                 // Actually create the layout
-                var extremeLevelLayout = LevelLayout.Build(level, level.SecondaryDirector);
+                var extremeLevelLayout = LevelLayout.Build(level, level.SecondaryDirector, extremeObjective);
                 level.SecondaryLayout = extremeLevelLayout.PersistentId;
 
-                var extremeObjective = WardenObjective.Build(level.SecondaryDirector, level);
+                extremeObjective.Build(level.SecondaryDirector, level);
                 level.SecondaryLayerData.ObjectiveData.DataBlockId = extremeObjective.PersistentId;
 
                 Bins.WardenObjectives.AddBlock(extremeObjective);
@@ -444,11 +448,13 @@ namespace AutogenRundown.DataBlocks
 
                 level.ThirdLayerEnabled = true;
 
+                var overloadObjective = WardenObjective.PreBuild(level.OverloadDirector, level);
+
                 // Actually create the layout
-                var overloadLevelLayout = LevelLayout.Build(level, level.OverloadDirector);
+                var overloadLevelLayout = LevelLayout.Build(level, level.OverloadDirector, overloadObjective);
                 level.ThirdLayout = overloadLevelLayout.PersistentId;
 
-                var overloadObjective = WardenObjective.Build(level.OverloadDirector, level);
+                overloadObjective.Build(level.OverloadDirector, level);
                 level.ThirdLayerData.ObjectiveData.DataBlockId = overloadObjective.PersistentId;
 
                 Bins.WardenObjectives.AddBlock(overloadObjective);
