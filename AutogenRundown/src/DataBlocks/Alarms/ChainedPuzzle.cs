@@ -130,12 +130,21 @@ namespace AutogenRundown.DataBlocks.Alarms
                 "C" => new List<ChainedPuzzle>
                 {
                     None,
-                    TeamScan, TeamScan,
-                    AlarmClass3, AlarmClass3,
-                    AlarmClass4, AlarmClass4,
-                    AlarmClass5, AlarmClass5, AlarmClass5,
 
-                    AlarmClass3_Surge,
+                    TeamScan, TeamScan,
+
+                    AlarmClass3, AlarmClass3,
+
+                    AlarmClass4, AlarmClass4, AlarmClass4, AlarmClass4,
+                    AlarmClass4_Cluster, AlarmClass4_Cluster,
+                    AlarmClass4_Mixed, AlarmClass4_Mixed,
+
+                    AlarmClass5, AlarmClass5, AlarmClass5,
+                    AlarmClass5_Cluster,
+                    AlarmClass5_Mixed,
+                    AlarmClass5_Mixed,
+
+                    AlarmClass2_Surge,
 
                     AlarmClass1_Sustained, AlarmClass1_Sustained,
                 },
@@ -491,6 +500,21 @@ namespace AutogenRundown.DataBlocks.Alarms
         #endregion
 
         #region Alarms: Mixed
+        public static ChainedPuzzle AlarmClass4_Mixed = new ChainedPuzzle
+        {
+            PublicAlarmName = "Class IV M Alarm",
+            SurvivalWaveSettings = VanillaWaveSettings.Modified_SpHybrid,
+            SurvivalWavePopulation = VanillaWavePopulation.ModifiedSpHybrid,
+            WantedDistanceBetweenPuzzleComponents = 20.0,
+            Puzzle = new List<PuzzleComponent>
+            {
+                PuzzleComponent.AllBig,
+                PuzzleComponent.ClusterLarge,
+                PuzzleComponent.ClusterLarge,
+                PuzzleComponent.SustainedSmall,
+            },
+        };
+
         public static ChainedPuzzle AlarmClass5_Mixed = new ChainedPuzzle
         {
             PublicAlarmName = "Class V M Alarm",
@@ -686,9 +710,23 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.ChainedPuzzles.AddBlock(AlarmClass6);
             Bins.ChainedPuzzles.AddBlock(AlarmClass7);
             Bins.ChainedPuzzles.AddBlock(AlarmClass8);
+
+            Bins.ChainedPuzzles.AddBlock(AlarmClass2_Cluster);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass3_Cluster);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass4_Cluster);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass5_Cluster);
+
+            Bins.ChainedPuzzles.AddBlock(AlarmClass4_Mixed);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass5_Mixed);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass6_Mixed);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass7_Mixed);
+
+            Bins.ChainedPuzzles.AddBlock(AlarmClass2_Surge);
             Bins.ChainedPuzzles.AddBlock(AlarmClass3_Surge);
             Bins.ChainedPuzzles.AddBlock(AlarmClass4_Surge);
+
             Bins.ChainedPuzzles.AddBlock(AlarmClass1_Sustained);
+
             Bins.ChainedPuzzles.AddBlock(AlarmError_Baseline);
             Bins.ChainedPuzzles.AddBlock(ExitAlarm);
 

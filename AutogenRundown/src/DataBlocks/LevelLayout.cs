@@ -5,8 +5,6 @@ using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 using Newtonsoft.Json;
-using static DefaultCharacterLayouts;
-using static UnityEngine.Rendering.PostProcessing.BloomRenderer;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -799,6 +797,8 @@ namespace AutogenRundown.DataBlocks
             var objectiveLayerData = level.GetObjectiveLayerData(director.Bulkhead);
             var puzzlePack = ChainedPuzzle.BuildPack(level.Tier);
 
+            Plugin.Logger.LogDebug($"Building layout ({layout.Name}), Objective = {objective.Type}");
+
             BuildStartingArea(level, director);
 
             switch (director.Objective)
@@ -930,58 +930,10 @@ namespace AutogenRundown.DataBlocks
                         level.Planner.Connect(entrance, hub);
                         level.Planner.AddZone(hub, zone);
 
-                        // Create base branches for each generator
-                        for (int g = 0; g < Math.Min(objective.PowerCellsToDistribute, 3); g++)
+                        // Builds a branch with a generator in it. Reused for a lot of places.
+                        void BuildGeneratorBranch(ZoneNode baseNode, string branch)
                         {
-                            var branch = $"generator_{g}";
-                            var branchZoneCount = Generator.Random.Next(2, 3);
-                            var prev = hub;
-
-                            // Generate the zones for this generators branch
-                            for (int i = 0; i < branchZoneCount; i++)
-                            {
-                                var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-                                var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
-
-                                level.Planner.Connect(prev, next);
-                                level.Planner.AddZone(
-                                    next,
-                                    new Zone
-                                    {
-                                        Coverage = CoverageMinMax.GenNormalSize(),
-                                        LightSettings = Lights.GenRandomLight(),
-                                    });
-
-                                prev = next;
-                            }
-
-                            // Place the generator in the last zone of the branch
-                            var lastZone = level.Planner.GetZone(prev)!;
-                            lastZone.PowerGeneratorPlacements.Add(
-                                new FunctionPlacementData()
-                                {
-                                    PlacementWeights = ZonePlacementWeights.NotAtStart
-                                });
-
-                            // Assign the zone placement data for the objective text
-                            objectiveLayerData.ObjectiveData.ZonePlacementDatas.Add(
-                                new List<ZonePlacementData>
-                                {
-                                    new ZonePlacementData
-                                    {
-                                        LocalIndex = prev.ZoneNumber,
-                                        Weights = ZonePlacementWeights.NotAtStart
-                                    }
-                                });
-                        }
-
-                        // Special case where we need one more zone.
-                        if (objective.PowerCellsToDistribute == 4)
-                        {
-                            var branch = "generator_3";
-
-                            var baseNode = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "generator_2")!;
-
+                            var objectiveLayerData = level.GetObjectiveLayerData(director.Bulkhead);
                             var branchZoneCount = Generator.Random.Next(2, 3);
                             var prev = baseNode;
 
@@ -1021,6 +973,40 @@ namespace AutogenRundown.DataBlocks
                                         Weights = ZonePlacementWeights.NotAtStart
                                     }
                                 });
+                        }
+
+                        // Create base branches for each generator
+                        for (int g = 0; g < Math.Min(objective.PowerCellsToDistribute, 3); g++)
+                        {
+                            BuildGeneratorBranch(hub, $"generator_{g}");
+                        }
+
+                        if (objective.PowerCellsToDistribute > 3)
+                        {
+                            var secondHubBase = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "generator_2")!;
+
+                            // Special case where we need one more zone. Just add another generator branch.
+                            if (objective.PowerCellsToDistribute == 4)
+                            {
+                                BuildGeneratorBranch(secondHubBase, "generator_3");
+                            }
+                            else if (objective.PowerCellsToDistribute == 5)
+                            {
+                                // Case where we want two more zones. Add a hub with two more cells
+                                var hub2 = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead));
+                                hub2.MaxConnections = 3;
+
+                                var zoneHub2 = new Zone { LightSettings = Lights.GenRandomLight() };
+                                zoneHub2.GenHubGeomorph(director.Complex);
+
+                                level.Planner.Connect(secondHubBase, hub2);
+                                level.Planner.AddZone(hub2, zoneHub2);
+
+                                for (int g = 3; g < 5; g++)
+                                {
+                                    BuildGeneratorBranch(hub2, $"generator_{g}");
+                                }
+                            }
                         }
 
                         break;
