@@ -14,7 +14,7 @@
         SpecialTerminalCommand = 5,
         PowerCellDistribution = 7,
         TerminalUplink = 8,
-        CentralGeneratorCluster = 9,
+        CentralGeneratorCluster = 9, // TODO: Generator cluster spawn is bugged
 
         // Not yet implemented
         ReactorStartup = 1,

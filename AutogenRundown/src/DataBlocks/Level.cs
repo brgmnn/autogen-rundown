@@ -286,6 +286,20 @@ namespace AutogenRundown.DataBlocks
             }
         }
 
+        public WardenObjective? GetObjective(Bulkhead variant)
+        {
+            return variant switch
+            {
+                Bulkhead.Main => Bins.WardenObjectives.Find(MainLayerData.ObjectiveData.DataBlockId),
+                Bulkhead.Extreme => Bins.WardenObjectives.Find(SecondaryLayerData.ObjectiveData.DataBlockId),
+                Bulkhead.Overload => Bins.WardenObjectives.Find(ThirdLayerData.ObjectiveData.DataBlockId),
+                Bulkhead.None => throw new NotImplementedException(),
+                Bulkhead.StartingArea => throw new NotImplementedException(),
+                Bulkhead.All => throw new NotImplementedException(),
+                _ => throw new NotImplementedException(),
+            };
+        }
+
         public LevelLayout? GetLevelLayout(Bulkhead variant)
         {
             switch (variant)

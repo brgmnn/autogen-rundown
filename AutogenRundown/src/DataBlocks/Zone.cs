@@ -102,6 +102,10 @@ namespace AutogenRundown.DataBlocks
     public record class Zone : DataBlock
     {
         #region Custom geomorph settings
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="complex"></param>
         public void GenExitGeomorph(Complex complex)
         {
             switch (complex)
@@ -121,6 +125,116 @@ namespace AutogenRundown.DataBlocks
                     SubComplex = SubComplex.Floodways;
                     break;
             };
+        }
+
+        /// <summary>
+        /// Randomly picks a custom hub geomorph for the zone. Hub geomorphs can connect to new
+        /// zones on all sides and can therefore be given a MaxConnections of 3 in the planner.
+        /// See: https://docs.google.com/document/d/1iSYUASlQSaP6l7PD3HszsXSAxJ-wb8MAVwYxb9xW92c/edit
+        /// </summary>
+        /// <param name="complex"></param>
+        public void GenHubGeomorph(Complex complex)
+        {
+            switch (complex)
+            {
+                case Complex.Mining:
+                    (this.SubComplex, this.CustomGeomorph, this.Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                    {
+                        (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 70 }),
+                        (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_02.prefab", new CoverageMinMax { Min = 15, Max = 20 }),
+                        (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_03.prefab", new CoverageMinMax { Min = 25, Max = 35 }),
+
+                        (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_01.prefab", new CoverageMinMax { Min = 25, Max = 35 }),
+                        (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_02.prefab", new CoverageMinMax { Min = 50, Max = 60 }),
+                        (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_03.prefab", new CoverageMinMax { Min = 20, Max = 40 }),
+                        (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04.prefab", new CoverageMinMax { Min = 30, Max = 45 }),
+                        (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_05.prefab", new CoverageMinMax { Min = 30, Max = 70 }),
+                        (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_06.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+
+                        (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 60 }),
+                        (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_02.prefab", new CoverageMinMax { Min = 40, Max = 60 }),
+                        (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_03.prefab", new CoverageMinMax { Min = 35, Max = 90 }),
+                        (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_04.prefab", new CoverageMinMax { Min = 20, Max = 50 }),
+                        (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_VS_01.prefab", new CoverageMinMax { Min = 25, Max = 35 })
+                    });
+                    break;
+
+                case Complex.Tech:
+                    (this.SubComplex, this.CustomGeomorph, this.Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                    {
+                        (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 60 }),
+                        (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_02.prefab", new CoverageMinMax { Min = 15, Max = 30 }),
+                        (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_data_center_hub_SF_01.prefab", new CoverageMinMax { Min = 35, Max = 55 }),
+                        (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_data_center_hub_JG_01.prefab", new CoverageMinMax { Min = 25, Max = 40 }),
+                        (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_node_transition_06_JG.prefab", new CoverageMinMax { Min = 32, Max = 45 }),
+
+                        (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_01_V2.prefab", new CoverageMinMax { Min = 25, Max = 40 }),
+                        (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_02.prefab", new CoverageMinMax { Min = 20, Max = 40 }),
+                        (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_02_V2.prefab", new CoverageMinMax { Min = 30, Max = 45 }),
+                        (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_03.prefab", new CoverageMinMax { Min = 30, Max = 50 }),
+                        (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_04_V3.prefab", new CoverageMinMax { Min = 25, Max = 35 }),
+                        (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_SF_02.prefab", new CoverageMinMax { Min = 30, Max = 45 }),
+                    });
+                    break;
+
+                case Complex.Service:
+                    (this.SubComplex, this.CustomGeomorph, this.Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                    {
+                        (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_01.prefab", new CoverageMinMax { Min = 50, Max = 75 }),
+                        (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_02.prefab", new CoverageMinMax { Min = 40, Max = 45 }),
+                        (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03.prefab", new CoverageMinMax { Min = 30, Max = 50 }),
+                        (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_SF_02.prefab", new CoverageMinMax { Min = 30, Max = 50 }),
+
+                        (SubComplex.Gardens, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_X_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    });
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Set's the zone to a random custom I geomorph. I geomorphs can only connect to two new
+        /// zones, one at either end and therefore should be given a MaxConnections of 1 in the
+        /// planner.
+        /// 
+        /// See: https://docs.google.com/document/d/1iSYUASlQSaP6l7PD3HszsXSAxJ-wb8MAVwYxb9xW92c/edit
+        /// 
+        /// TODO: Add remaining I geomorphs.
+        /// </summary>
+        /// <param name="complex"></param>
+        public void GenCorridorGeomorph(Complex complex)
+        {
+            switch (complex)
+            {
+                case Complex.Mining:
+                    (this.SubComplex, this.CustomGeomorph, this.Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                    {
+                        (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_I_HA_01.prefab", new CoverageMinMax { Min = 10, Max = 30 }),
+
+                        (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_I_HA_01_v2.prefab", new CoverageMinMax { Min = 10, Max = 20 }),
+
+                        (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_I_HA_01.prefab", new CoverageMinMax { Min = 10, Max = 20 }),
+                    });
+                    break;
+
+                case Complex.Tech:
+                    (this.SubComplex, this.CustomGeomorph, this.Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                    {
+                        (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_node_transition_02_JG.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
+                        (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_I_HA_01.prefab", new CoverageMinMax { Min = 15, Max = 30 }),
+                    });
+                    break;
+
+                case Complex.Service:
+                    (this.SubComplex, this.CustomGeomorph, this.Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                    {
+                        (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_I_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                        (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_I_HA_02.prefab", new CoverageMinMax { Min = 25, Max = 40 }),
+
+                        (SubComplex.Gardens, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_I_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
+                    });
+                    break;
+            }
         }
 
         /// <summary>
@@ -467,6 +581,15 @@ namespace AutogenRundown.DataBlocks
         public List<EnemySpawningData> EnemySpawningInZone { get; set; } = new List<EnemySpawningData>();
         #endregion
 
+        #region Objective settings
+        public int HSUClustersInZone { get; set; } = 0;
+
+        /// <summary>
+        /// Used for distribute cells as well as generator puzzles
+        /// </summary>
+        public List<FunctionPlacementData> PowerGeneratorPlacements { get; set; } = new List<FunctionPlacementData>();
+        #endregion
+
         #region Respawn settings
         /// <summary>
         /// Whether the enemies respawn
@@ -484,8 +607,6 @@ namespace AutogenRundown.DataBlocks
         public JArray EnemyRespawnExcludeList = new JArray();
         #endregion
 
-        public int HSUClustersInZone { get; set; } = 0;
-
         public int CorpseClustersInZone { get; set; } = 0;
         public int ResourceContainerClustersInZone { get; set; } = 0;
         public int GeneratorClustersInZone { get; set; } = 0;
@@ -502,7 +623,6 @@ namespace AutogenRundown.DataBlocks
         public List<TerminalPlacement> TerminalPlacements { get; set; } = new List<TerminalPlacement>();
 
         public bool ForbidTerminalsInZone { get; set; } = false;
-        public JArray PowerGeneratorPlacements { get; set; } = new JArray();
         public JArray DisinfectionStationPlacements { get; set; } = new JArray();
         public JArray DumbwaiterPlacements { get; set; } = new JArray();
 

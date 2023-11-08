@@ -903,12 +903,79 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
-                /*case WardenObjectiveType.PowerCellDistribution:
+                /**
+                 * When building the power cell distribution layout, here we are modelling a hub with offshoot zones.
+                 * */
+                case WardenObjectiveType.PowerCellDistribution:
                     {
+                        // TODO: pass this in?
+                        var generatorCount = 2;
 
+                        // Zone 1 is an entrance I-geo
+                        var entrance = level.Planner.GetExactZones(director.Bulkhead).First();
+
+                        var entranceZone = level.Planner.GetZone(entrance)!;
+                        entranceZone.GenCorridorGeomorph(director.Complex);
+                        entrance.MaxConnections = 1;
+
+                        // Zone 2 is a hub zone for branches where generators live
+                        var hubIndex = level.Planner.NextIndex(director.Bulkhead);
+                        var hub = new ZoneNode(director.Bulkhead, hubIndex);
+                        hub.MaxConnections = 3;
+
+                        var zone = new Zone { LightSettings = Lights.GenRandomLight() };
+                        zone.GenHubGeomorph(director.Complex);
+
+                        level.Planner.Connect(entrance, hub);
+                        level.Planner.AddZone(hub, zone);
+
+                        var zonePlacementData = new List<ZonePlacementData>();
+
+                        // Create branches for each generator
+                        for (int g = 0; g < Math.Min(generatorCount, 3); g++)
+                        {
+                            var branch = $"generator_{g}";
+                            var branchZoneCount = Generator.Random.Next(2, 3);
+                            var prev = hub;
+
+                            // Generate the zones for this generators branch
+                            for (int i = 0; i < branchZoneCount; i++)
+                            {
+                                var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
+                                var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
+
+                                level.Planner.Connect(prev, next);
+                                level.Planner.AddZone(
+                                    next,
+                                    new Zone
+                                    {
+                                        Coverage = CoverageMinMax.GenNormalSize(),
+                                        LightSettings = Lights.GenRandomLight(),
+                                    });
+
+                                prev = next;
+                            }
+
+                            // Place the generator in the last zone of the branch
+                            var lastZone = level.Planner.GetZone(prev)!;
+                            lastZone.PowerGeneratorPlacements.Add(
+                                new FunctionPlacementData()
+                                {
+                                    PlacementWeights = ZonePlacementWeights.NotAtStart
+                                });
+
+                            zonePlacementData.Add(
+                                new ZonePlacementData
+                                {
+                                    LocalIndex = prev.ZoneNumber,
+                                    Weights = ZonePlacementWeights.NotAtStart
+                                });
+                        }
+
+                        objectiveLayerData.ObjectiveData.ZonePlacementDatas.Add(zonePlacementData);
 
                         break;
-                    }*/
+                    }
 
                 case WardenObjectiveType.CentralGeneratorCluster:
                     {
