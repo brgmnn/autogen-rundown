@@ -416,7 +416,7 @@ namespace AutogenRundown.DataBlocks
                 }
                 #endregion
 
-                Plugin.Logger.LogDebug($"Zone has {points}pts for enemies");
+                Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} has {points}pts for enemies");
 
                 // By default we will just let the spawning data allocate out groups.
                 zone.EnemySpawningInZone.Add(
@@ -500,7 +500,7 @@ namespace AutogenRundown.DataBlocks
                 Bins.ChainedPuzzles.AddBlock(puzzle);
 
                 // Give a flat chance of being able to turn off the alarm.
-                if (Generator.Flip(0.2))
+                if (Generator.Flip(0.5))
                 {
                     zone.TurnOffAlarmOnTerminal = true;
 
@@ -525,6 +525,20 @@ namespace AutogenRundown.DataBlocks
                         });
 
                     var turnOffZone = planner.GetZone(turnOff)!;
+
+                    // Unlock the turn off zone door when the alarm door has opened.
+                    zone.EventsOnDoorScanDone.Add(
+                        new WardenObjectiveEvent
+                        {
+                            Type = WardenObjectiveEventType.UnlockSecurityDoor,
+                            LocalIndex = turnOff.ZoneNumber
+                        });
+
+                    turnOffZone.ProgressionPuzzleToEnter = new ProgressionPuzzle
+                    {
+                        PuzzleType = ProgressionPuzzleType.Locked,
+                        CustomText = "<color=red>://ERROR: Door in emergency lockdown, unable to operate.</color>"
+                    };
 
                     Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} error alarm can be disable in: Zone {turnOff.ZoneNumber}");
 
@@ -1130,8 +1144,8 @@ namespace AutogenRundown.DataBlocks
                     layout.Zones.Add(zone);
             }
 
-            //if (director.Bulkhead.HasFlag(Bulkhead.Main))
-            //    layout.RollKeyedDoors(director, level.Planner, puzzlePack);
+            if (director.Bulkhead.HasFlag(Bulkhead.Main))
+                layout.RollKeyedDoors(director, level.Planner, puzzlePack);
 
             layout.RollAlarms(puzzlePack);
             layout.RollBloodDoors();
