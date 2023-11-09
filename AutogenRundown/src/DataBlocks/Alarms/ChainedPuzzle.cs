@@ -513,7 +513,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass4_Mixed = new ChainedPuzzle
         {
             PublicAlarmName = "Class IV M Alarm",
-            SurvivalWaveSettings = VanillaWaveSettings.Modified_SpHybrid,
+            SurvivalWaveSettings = VanillaWaveSettings.ApexIncreased,
             SurvivalWavePopulation = VanillaWavePopulation.ModifiedSpHybrid,
             WantedDistanceBetweenPuzzleComponents = 20.0,
             Puzzle = new List<PuzzleComponent>
@@ -528,7 +528,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass5_Mixed = new ChainedPuzzle
         {
             PublicAlarmName = "Class V M Alarm",
-            SurvivalWaveSettings = VanillaWaveSettings.Modified_SpHybrid,
+            SurvivalWaveSettings = VanillaWaveSettings.ApexIncreased,
             SurvivalWavePopulation = VanillaWavePopulation.ModifiedSpHybrid,
             WantedDistanceBetweenPuzzleComponents = 20.0,
             Puzzle = new List<PuzzleComponent>
@@ -544,7 +544,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass6_Mixed = new ChainedPuzzle
         {
             PublicAlarmName = "Class VI M Alarm",
-            SurvivalWaveSettings = VanillaWaveSettings.Modified_SpHybrid,
+            SurvivalWaveSettings = VanillaWaveSettings.ApexIncreased,
             SurvivalWavePopulation = VanillaWavePopulation.ModifiedSpHybrid,
             WantedDistanceBetweenPuzzleComponents = 20.0,
             Puzzle = new List<PuzzleComponent>
@@ -561,7 +561,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass7_Mixed = new ChainedPuzzle
         {
             PublicAlarmName = "Class VII M Alarm",
-            SurvivalWaveSettings = VanillaWaveSettings.Modified_SpHybrid,
+            SurvivalWaveSettings = VanillaWaveSettings.ApexIncreased,
             SurvivalWavePopulation = VanillaWavePopulation.ModifiedSpHybrid,
             WantedDistanceBetweenPuzzleComponents = 20.0,
             Puzzle = new List<PuzzleComponent>
