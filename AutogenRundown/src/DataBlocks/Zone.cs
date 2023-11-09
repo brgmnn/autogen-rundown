@@ -573,17 +573,22 @@ namespace AutogenRundown.DataBlocks
 
         public bool UseStaticBioscanPointsInZone { get; set; } = false;
 
+        #region Error alarms
+        /// <summary>
+        /// Whether the alarm (typically an ://ERROR! Alarm) of this zone is turned off on a terminal.
+        /// </summary>
         public bool TurnOffAlarmOnTerminal { get; set; } = false;
 
-        public JObject TerminalPuzzleZone { get; set; } = new JObject
-        {
-            ["LocalIndex"] = 0,
-            ["SeedType"] = 1,
-            ["TerminalIndex"] = 0,
-            ["StaticSeed"] = 0
-        };
+        /// <summary>
+        /// Terminal data used when TurnOffAlarmOnTerminal is set to true.
+        /// </summary>
+        public TerminalZoneSelection TerminalPuzzleZone { get; set; } = new TerminalZoneSelection();
 
-        public JArray EventsOnTerminalDeactivateAlarm = new JArray();
+        /// <summary>
+        /// Events to trigger when disable alarm terminal command is called.
+        /// </summary>
+        public List<WardenObjectiveEvent> EventsOnTerminalDeactivateAlarm = new List<WardenObjectiveEvent>();
+        #endregion
 
         #region Enemies
         /// <summary>

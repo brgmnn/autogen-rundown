@@ -102,6 +102,14 @@ namespace AutogenRundown.DataBlocks.Zones
         }
 
         /// <summary>
+        /// Get's a zone node by it's index.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public ZoneNode GetZoneNode(int index)
+            => graph.Keys.Where(node => node.ZoneNumber == index).First();
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="bulkhead"></param>

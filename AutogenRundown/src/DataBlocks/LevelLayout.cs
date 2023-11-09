@@ -5,6 +5,7 @@ using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 using Newtonsoft.Json;
+using static UnityEngine.Rendering.PostProcessing.BloomRenderer;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -22,6 +23,9 @@ namespace AutogenRundown.DataBlocks
         private BuildDirector director;
 
         [JsonIgnore]
+        private LayoutPlanner planner;
+
+        [JsonIgnore]
         private LevelSettings settings;
         #endregion
 
@@ -29,9 +33,10 @@ namespace AutogenRundown.DataBlocks
 
         public List<Zone> Zones { get; set; } = new List<Zone>();
 
-        public LevelLayout(BuildDirector director, LevelSettings settings)
+        public LevelLayout(BuildDirector director, LevelSettings settings, LayoutPlanner planner)
         {
             this.director = director;
+            this.planner = planner;
             this.settings = settings;
         }
 
@@ -498,6 +503,36 @@ namespace AutogenRundown.DataBlocks
                 if (Generator.Flip(0.2))
                 {
                     zone.TurnOffAlarmOnTerminal = true;
+
+                    var node = planner.GetZoneNode(zone.LocalIndex);
+                    var branchOpenZones = planner.GetOpenZones(director.Bulkhead, node.Branch);
+
+                    // Fallback if there's no open zones in this branch. This will be _hard_.
+                    if (branchOpenZones.Count < 1)
+                        branchOpenZones = planner.GetOpenZones(director.Bulkhead);
+
+                    var baseNode = Generator.Pick(branchOpenZones);
+
+                    var turnOff = new ZoneNode(director.Bulkhead, planner.NextIndex(director.Bulkhead), $"error_off_{i}");
+
+                    planner.Connect(baseNode, turnOff);
+                    planner.AddZone(
+                        turnOff,
+                        new Zone
+                        {
+                            Coverage = new CoverageMinMax(Generator.NextDouble(40, 80)),
+                            LightSettings = Lights.GenRandomLight(),
+                        });
+
+                    var turnOffZone = planner.GetZone(turnOff)!;
+
+                    Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} error alarm can be disable in: Zone {turnOff.ZoneNumber}");
+
+                    // For now set the alarm to be in the next zone.
+                    zone.TerminalPuzzleZone.LocalIndex = turnOff.ZoneNumber;
+
+                    // TODO: remove when we move roll alarms to use planner entirely.
+                    Zones.Add(turnOffZone);
                 }
             }
         }
@@ -786,7 +821,7 @@ namespace AutogenRundown.DataBlocks
         /// <returns></returns>
         public static LevelLayout Build(Level level, BuildDirector director, WardenObjective objective)
         {
-            var layout = new LevelLayout(director, level.Settings)
+            var layout = new LevelLayout(director, level.Settings, level.Planner)
             {
                 Name = $"{level.Tier}{level.Index} {level.Name} {director.Bulkhead}",
                 ZoneAliasStart = GenZoneAliasStart(level.Tier)

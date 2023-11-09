@@ -70,6 +70,14 @@ namespace AutogenRundown.DataBlocks
 
         #endregion
 
+        public CoverageMinMax() { }
+
+        public CoverageMinMax(double value)
+        {
+            Min = value;
+            Max = value;
+        }
+
         public static CoverageMinMax Nano = new CoverageMinMax { Min = (double)CoverageSize.Nano, Max = (double)CoverageSize.Nano };
         public static CoverageMinMax Tiny = new CoverageMinMax { Min = (double)CoverageSize.Tiny, Max = (double)CoverageSize.Tiny };
         public static CoverageMinMax Small = new CoverageMinMax { Min = (double)CoverageSize.Small, Max = (double)CoverageSize.Small };
