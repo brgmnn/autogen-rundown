@@ -177,8 +177,8 @@ namespace AutogenRundown
                 "A" => Generator.Random.Next(15, 25),
                 "B" => Generator.Random.Next(20, 25),
                 "C" => Generator.Random.Next(20, 30),
-                "D" => Generator.Random.Next(25, 30),
-                "E" => Generator.Random.Next(30, 35), // TODO: is this sane?
+                "D" => Generator.Random.Next(30, 35),
+                "E" => Generator.Random.Next(35, 40),
 
                 _ => 25,
             }));
