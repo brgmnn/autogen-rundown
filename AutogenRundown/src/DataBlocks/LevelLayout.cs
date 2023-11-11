@@ -971,6 +971,103 @@ namespace AutogenRundown.DataBlocks
                     }
 
                 /**
+                 * Big items are often single, but we can spawn multiple big items (up to 4 for
+                 * E levels). Custom logic for interesting geo's should be added here.
+                 * */
+                case WardenObjectiveType.RetrieveBigItems:
+                    {
+                        // Zone 1 is normal
+                        var entrance = level.Planner.GetExactZones(director.Bulkhead).First();
+                        entrance.MaxConnections = 3;
+
+                        var entranceZone = level.Planner.GetZone(entrance)!;
+                        entranceZone.GenHubGeomorph(director.Complex);
+
+                        // Zone 2 is an I corridor
+                        var corridorIndex = level.Planner.NextIndex(director.Bulkhead);
+                        var corridor = new ZoneNode(director.Bulkhead, corridorIndex);
+                        corridor.MaxConnections = 1;
+
+                        var corridorZone = new Zone { LightSettings = Lights.GenRandomLight() };
+                        corridorZone.GenCorridorGeomorph(director.Complex);
+
+                        level.Planner.Connect(entrance, corridor);
+                        level.Planner.AddZone(corridor, corridorZone);
+
+                        // Zone 3 is a hub zone regarduless 
+                        var hubIndex = level.Planner.NextIndex(director.Bulkhead);
+                        var hub = new ZoneNode(director.Bulkhead, hubIndex);
+                        hub.MaxConnections = 3;
+
+                        var zone = new Zone { LightSettings = Lights.GenRandomLight() };
+                        zone.GenHubGeomorph(director.Complex);
+
+                        level.Planner.Connect(corridor, hub);
+                        level.Planner.AddZone(hub, zone);
+
+                        // Builds a branch for the pickup item in it.
+                        void BuildItemBranch(ZoneNode baseNode, string branch)
+                        {
+                            var objectiveLayerData = level.GetObjectiveLayerData(director.Bulkhead);
+                            var branchZoneCount = Generator.Random.Next(2, 3);
+                            var prev = baseNode;
+
+                            // Generate the zones for this branch
+                            for (int i = 0; i < branchZoneCount; i++)
+                            {
+                                var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
+                                var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
+
+                                level.Planner.Connect(prev, next);
+                                level.Planner.AddZone(
+                                    next,
+                                    new Zone
+                                    {
+                                        Coverage = CoverageMinMax.GenNormalSize(),
+                                        LightSettings = Lights.GenRandomLight(),
+                                    });
+
+                                prev = next;
+                            }
+
+                            // Assign the zone placement data for the objective text
+                            objectiveLayerData.ObjectiveData.ZonePlacementDatas.Add(
+                                new List<ZonePlacementData>
+                                {
+                                    new ZonePlacementData
+                                    {
+                                        LocalIndex = prev.ZoneNumber,
+                                        Weights = ZonePlacementWeights.NotAtStart
+                                    }
+                                });
+                        }
+
+                        // Create base branches for each generator
+                        for (int g = 0; g < Math.Min(objective.RetrieveItems.Count(), 3); g++)
+                            BuildItemBranch(hub, $"bigitem_{g}");
+
+                        if (objective.RetrieveItems.Count() > 3)
+                        {
+                            var secondHubBase = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "bigitem_2")!;
+
+                            // Case where we want two more zones. Add a hub with two more cells
+                            var hub2 = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead));
+                            hub2.MaxConnections = 3;
+
+                            var zoneHub2 = new Zone { LightSettings = Lights.GenRandomLight() };
+                            zoneHub2.GenHubGeomorph(director.Complex);
+
+                            level.Planner.Connect(secondHubBase, hub2);
+                            level.Planner.AddZone(hub2, zoneHub2);
+
+                            for (int g = 3; g < objective.RetrieveItems.Count(); g++)
+                                BuildItemBranch(hub2, $"bigitem_{g}");
+                        }
+
+                        break;
+                    }
+
+                /**
                  * When building the power cell distribution layout, here we are modelling a hub with offshoot zones.
                  * */
                 case WardenObjectiveType.PowerCellDistribution:

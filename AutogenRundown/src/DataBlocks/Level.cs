@@ -419,11 +419,12 @@ namespace AutogenRundown.DataBlocks
                     Settings = Settings,
                     Tier = Tier
                 };
+
+                Director[bulkhead].GenObjective(existing);
             }
 
             var director = Director[bulkhead];
             director.GenPoints();
-            director.GenObjective(existing);
 
             var objective = WardenObjective.PreBuild(director, this);
 
