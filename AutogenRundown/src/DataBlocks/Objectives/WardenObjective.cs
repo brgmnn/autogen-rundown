@@ -203,6 +203,53 @@ namespace AutogenRundown.DataBlocks
 
             switch (objective.Type)
             {
+                case WardenObjectiveType.RetrieveBigItems:
+                    {
+                        var choices = new List<(double, WardenObjectiveItem)>
+                        {
+                            (1.0, WardenObjectiveItem.DataSphere),
+                            (1.0, WardenObjectiveItem.CargoCrate),
+                            (1.0, WardenObjectiveItem.CargoCrateHighSecurity),
+                            (1.0, WardenObjectiveItem.CryoCase),
+                        };
+
+                        // These would be main objective items only
+                        if (director.Bulkhead.HasFlag(Bulkhead.Main))
+                        {
+                            choices.Add((1.0, WardenObjectiveItem.NeonateHsu));
+                            choices.Add((1.0, WardenObjectiveItem.MatterWaveProjector));
+                        }
+
+                        var item = Generator.Select(choices);
+
+                        /**
+                         * Some interesting options here for how many items we should spawn. We
+                         * want to reduce the number of items for non Main objectives and also 
+                         * want to increase the number of items for deeper levels.
+                         * */
+                        var count = (item, director.Tier, director.Bulkhead & Bulkhead.Objectives) switch
+                        {
+                            (WardenObjectiveItem.CryoCase, "A", Bulkhead.Main) => Generator.Random.Next(1, 2),
+                            (WardenObjectiveItem.CryoCase, "B", Bulkhead.Main) => Generator.Random.Next(1, 2),
+                            (WardenObjectiveItem.CryoCase, "C", Bulkhead.Main) => Generator.Random.Next(1, 2),
+                            (WardenObjectiveItem.CryoCase, "D", Bulkhead.Main) => Generator.Random.Next(2, 3),
+                            (WardenObjectiveItem.CryoCase, "E", Bulkhead.Main) => Generator.Random.Next(2, 4),
+                            (WardenObjectiveItem.CryoCase, "D", _) => Generator.Random.Next(1, 2),
+                            (WardenObjectiveItem.CryoCase, "E", _) => 2,
+
+                            (WardenObjectiveItem.CargoCrateHighSecurity, "D", Bulkhead.Main) => Generator.Random.Next(1, 2),
+                            (WardenObjectiveItem.CargoCrateHighSecurity, "E", Bulkhead.Main) => 2,
+
+                            (_, _, _) => 1
+
+                        };
+
+                        for (var i = 0; i < count; ++i)
+                            objective.RetrieveItems.Add(item);
+
+                        break;
+                    }
+
                 case WardenObjectiveType.PowerCellDistribution:
                     {
                         objective.PowerCellsToDistribute = director.Tier switch
@@ -491,7 +538,7 @@ namespace AutogenRundown.DataBlocks
 
                         // Add exit wave if this is the main bulkhead
                         if (director.Bulkhead.HasFlag(Bulkhead.Main))
-                            WavesOnGotoWin.Add(GenericWave.ExitTrickle);
+                            WavesOnGotoWin.Add(GenericWave.ExitTrickle); // TODO: not this, something else
 
                         var zn = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead)!;
                         var zoneIndex = zn.ZoneNumber;
@@ -510,8 +557,33 @@ namespace AutogenRundown.DataBlocks
                     }
 
                 /**
+                 * Retrieve an item from within the complex.
+                 * */
+                case WardenObjectiveType.RetrieveBigItems:
+                    {
+                        MainObjective = "Find [ALL_ITEMS] and bring it to the extraction scan in [EXTRACTION_ZONE]";
+                        FindLocationInfo = "Gather information about the location of [ALL_ITEMS]";
+                        FindLocationInfoHelp = "Access more data in the terminal maintenance system";
+
+                        // TODO: change the zone number
+                        GoToZone = "Navigate to <color=orange>ZONE 20</color> and find [ALL_ITEMS]";
+                        GoToZoneHelp = "Use information in the environment to find <color=orange>ZONE 20</color> ";
+                        InZoneFindItem = "Find [ALL_ITEMS] somewhere inside <color=orange>ZONE 20</color>";
+
+                        InZoneFindItemHelp = "Use maintenance terminal command PING to find [ALL_ITEMS]";
+                        // TODO: rename this
+                        SolveItem = "WARNING - Hisec Cargo misplaced - ENGAGING SECURITY PROTOCOLS";
+                        GoToWinCondition_Elevator = "Return the <b>hisec crate</b> to the extraction point in [EXTRACTION_ZONE]";
+                        GoToWinCondition_CustomGeo = "Return the <b>hisec crate</b> to the extraction point in [EXTRACTION_ZONE]";
+
+                        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+
+                        break;
+                    }
+
+                /**
                  * Drop in with power cells and distribute them to generators in various zones.
-                 * 
+                 *
                  * The power cells set with PowerCellsToDistribute are dropped in with you
                  * automatically.
                  * */
@@ -743,6 +815,14 @@ namespace AutogenRundown.DataBlocks
         public string SpecialTerminalCommandDesc { get; set; } = "";
         #endregion
 
+        #region Type=6: Retrieve big items
+        /// <summary>
+        /// Specifies which items are to be retrieved for this objective
+        /// </summary>
+        [JsonProperty("Retrieve_Items")]
+        public List<WardenObjectiveItem> RetrieveItems { get; set; } = new List<WardenObjectiveItem>();
+        #endregion
+
         #region Type=7: Power cell distribution
         #endregion
 
@@ -821,7 +901,6 @@ namespace AutogenRundown.DataBlocks
         public int EventsOnGotoWinTrigger = 0;
         public int FogTransitionDataOnGotoWin = 0;
         public double FogTransitionDurationOnGotoWin = 0.0;
-        public JArray Retrieve_Items = new JArray();
         public bool LightsOnFromBeginning = false;
         public bool LightsOnDuringIntro = false;
         public bool LightsOnWhenStartupComplete = false;

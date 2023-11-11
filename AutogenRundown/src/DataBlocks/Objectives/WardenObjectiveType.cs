@@ -14,13 +14,15 @@
         SpecialTerminalCommand = 5,
         PowerCellDistribution = 7,
         TerminalUplink = 8,
+
         CentralGeneratorCluster = 9, // TODO: Generator cluster spawn is bugged
 
         // Not yet implemented
         ReactorStartup = 1,
         RetrieveBigItems = 6,
-        //HsuActivateSmall = 10,
+        HsuActivateSmall = 10,
         Survival = 11,
+
         GatherTerminal = 12,
         CorruptedTerminalUplink = 13,
         Empty = 14,

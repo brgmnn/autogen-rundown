@@ -8,7 +8,19 @@
         PersonnelId = 128,
         PartialDecoder = 129,
 
+        #region Big items
         PowerCell = 131,
+
+        FogTurbine = 133,
+
+        // Objective big items
+        NeonateHsu = 137,
+        DataSphere = 151,
+        MatterWaveProjector = 166,
+        CargoCrate = 138,
+        CargoCrateHighSecurity = 154,
+        CryoCase = 148,
+        #endregion
 
         HSU = 137,
 

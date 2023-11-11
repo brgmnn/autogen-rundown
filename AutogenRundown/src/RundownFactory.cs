@@ -96,7 +96,7 @@ namespace AutogenRundown
                 Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "C",
-                Objective = WardenObjectiveType.PowerCellDistribution,
+                Objective = WardenObjectiveType.RetrieveBigItems,
             };
             mainDirector.GenPoints();
 
@@ -106,7 +106,7 @@ namespace AutogenRundown
                 new Level
                 {
                     Tier = "C",
-                    Name = "Distribute Cells",
+                    Name = "Retrieve Items",
                     Complex = Complex.Mining,
                     MainDirector = mainDirector,
                     Settings = settings,

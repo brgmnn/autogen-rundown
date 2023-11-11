@@ -19,6 +19,7 @@
         /// </summary>
         StartingArea = 0x08,
 
+        Objectives = Main | Extreme | Overload,
         All = Main | Extreme | Overload | StartingArea,
     }
 }
