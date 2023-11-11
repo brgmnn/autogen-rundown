@@ -61,6 +61,7 @@ namespace AutogenRundown
                 WardenObjectiveType.GatherSmallItems,
                 WardenObjectiveType.ClearPath,
                 WardenObjectiveType.SpecialTerminalCommand,
+                WardenObjectiveType.RetrieveBigItems,
                 WardenObjectiveType.PowerCellDistribution,
                 WardenObjectiveType.TerminalUplink,
 
@@ -78,6 +79,12 @@ namespace AutogenRundown
             {
                 objectives.Remove(WardenObjectiveType.ClearPath);
                 objectives.Remove(WardenObjectiveType.PowerCellDistribution);
+            }
+
+            // These objectives are really intended as side quests.
+            if (Bulkhead.HasFlag(Bulkhead.Main))
+            {
+                objectives.Remove(WardenObjectiveType.SpecialTerminalCommand);
             }
 
             // Only Mining and Tech complexes have geomorphs for these objectives
