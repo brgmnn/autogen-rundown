@@ -79,76 +79,86 @@ namespace AutogenRundown.DataBlocks
             switch (Tier)
             {
                 case "A":
-                    Modifiers.Add(LevelModifiers.NoChargers);
-                    Modifiers.Add(LevelModifiers.NoShadows);
-                    break;
+                    {
+                        Modifiers.Add(LevelModifiers.NoChargers);
+                        Modifiers.Add(LevelModifiers.NoShadows);
+                        break;
+                    }
 
                 case "B":
-                    Modifiers.Add(LevelModifiers.NoChargers);
-                    Modifiers.Add(LevelModifiers.NoShadows);
-                    break;
+                    {
+                        Modifiers.Add(LevelModifiers.NoChargers);
+                        Modifiers.Add(LevelModifiers.NoShadows);
+                        break;
+                    }
 
                 case "C":
-                    Modifiers.Add(LevelModifiers.NoShadows);
-                    Modifiers.Add(
-                        Generator.Select(new List<WeightedModifier>
-                        {
-                            new WeightedModifier { Modifier = LevelModifiers.NoChargers,   Weight = 0.4 },
-                            new WeightedModifier { Modifier = LevelModifiers.Chargers,     Weight = 0.5 },
-                            new WeightedModifier { Modifier = LevelModifiers.ManyChargers, Weight = 0.1 },
-                        }).Modifier);
-
-                    EnemyBossPack = Generator.Select(
-                        new List<(double, List<EnemySpawningData>)>
-                        {
-                            (0.8, new List<EnemySpawningData>()),
-                            (0.2, new List<EnemySpawningData>
+                    {
+                        Modifiers.Add(LevelModifiers.NoShadows);
+                        Modifiers.Add(
+                            Generator.Select(new List<WeightedModifier>
                             {
-                                EnemySpawningData.Mother with { Points = 10 }
-                            })
-                        });
-                    break;
+                                new WeightedModifier { Modifier = LevelModifiers.NoChargers,   Weight = 0.4 },
+                                new WeightedModifier { Modifier = LevelModifiers.Chargers,     Weight = 0.5 },
+                                new WeightedModifier { Modifier = LevelModifiers.ManyChargers, Weight = 0.1 },
+                            }).Modifier);
+
+                        EnemyBossPack = Generator.Select(
+                            new List<(double, List<EnemySpawningData>)>
+                            {
+                                //(0.8, new List<EnemySpawningData>()),
+                                (0.2, new List<EnemySpawningData>
+                                {
+                                    EnemySpawningData.Mother with { Points = 10 }
+                                })
+                            });
+                        break;
+                    }
 
                 case "D":
-                    EnemyBossPack = Generator.Select(
-                        new List<(double, List<EnemySpawningData>)>
-                        {
-                            (0.6, new List<EnemySpawningData>()),
-                            (0.2, new List<EnemySpawningData>
+                    {
+                        EnemyBossPack = Generator.Select(
+                            new List<(double, List<EnemySpawningData>)>
                             {
-                                EnemySpawningData.Mother with { Points = 10 }
-                            }),
-                            (0.2, new List<EnemySpawningData>
-                            {
-                                EnemySpawningData.Tank with { Points = 10 }
-                            })
-                        });
-                    break;
+                                //(0.6, new List<EnemySpawningData>()),
+                                (0.2, new List<EnemySpawningData>
+                                {
+                                    EnemySpawningData.Mother with { Points = 10 }
+                                }),
+                                (0.2, new List<EnemySpawningData>
+                                {
+                                    EnemySpawningData.Tank with { Points = 10 }
+                                })
+                            });
+                        break;
+                    }
 
                 case "E":
-                    EnemyBossPack = Generator.Select(
-                        new List<(double, List<EnemySpawningData>)>
-                        {
-                            (0.4, new List<EnemySpawningData>()),
-                            (0.2, new List<EnemySpawningData>
+                    {
+                        EnemyBossPack = Generator.Select(
+                            new List<(double, List<EnemySpawningData>)>
                             {
-                                EnemySpawningData.Mother with { Points = 10 }
-                            }),
-                            (0.2, new List<EnemySpawningData>
-                            {
-                                EnemySpawningData.Tank with { Points = 10 }
-                            }),
-                            (0.1, new List<EnemySpawningData>
-                            {
-                                EnemySpawningData.Mother with { Points = 20 }
-                            }),
-                            (0.1, new List<EnemySpawningData>
-                            {
-                                EnemySpawningData.Mother with { Points = 20 },
-                                EnemySpawningData.Tank with { Points = 10 }
-                            })
-                        });
-                    break;
+                                //(0.4, new List<EnemySpawningData>()),
+                                (0.2, new List<EnemySpawningData>
+                                {
+                                    EnemySpawningData.Mother with { Points = 10 }
+                                }),
+                                (0.2, new List<EnemySpawningData>
+                                {
+                                    EnemySpawningData.Tank with { Points = 10 }
+                                }),
+                                (0.1, new List<EnemySpawningData>
+                                {
+                                    EnemySpawningData.Mother with { Points = 20 }
+                                }),
+                                (0.1, new List<EnemySpawningData>
+                                {
+                                    EnemySpawningData.Mother with { Points = 20 },
+                                    EnemySpawningData.Tank with { Points = 10 }
+                                })
+                            });
+                        break;
+                    }
             }
         }
     }

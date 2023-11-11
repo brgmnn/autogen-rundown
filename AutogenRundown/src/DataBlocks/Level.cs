@@ -77,7 +77,7 @@ namespace AutogenRundown.DataBlocks
         public LayoutPlanner Planner { get; set; } = new LayoutPlanner();
 
         [JsonIgnore]
-        public LevelSettings Settings { get; set; } = new LevelSettings();
+        public LevelSettings Settings { get; set; }
         #endregion
 
         #region Build directors
@@ -453,6 +453,9 @@ namespace AutogenRundown.DataBlocks
             var logLevelId = $"Level={level.Tier}{level.Index}";
 
             level.GenerateDepth();
+
+            if (level.Settings == null)
+                level.Settings = new LevelSettings(level.Tier);
 
             // Randomly select which bulkheads to use
             var selectedBulkheads = Generator.Select(new List<(double, Bulkhead)>

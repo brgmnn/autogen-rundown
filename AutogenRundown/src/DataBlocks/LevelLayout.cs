@@ -283,7 +283,7 @@ namespace AutogenRundown.DataBlocks
             var bossChance = director.Tier switch
             {
                 "C" => 0.2,
-                "D" => 0.3,
+                "D" => 0.2,
                 "E" => 0.3,
                 _ => 0.0
             };
@@ -424,15 +424,13 @@ namespace AutogenRundown.DataBlocks
                 #endregion
 
 
-                var hasBoss = false;
                 if (Generator.Flip(bossChance) && settings.EnemyBossPack.Count() > 0)
                 {
                     zone.EnemySpawningInZone.Add(Generator.Draw(settings.EnemyBossPack));
-                    hasBoss = true;
+                    Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} rolled a boss!");
                 }
 
-
-                Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} has {points}pts for enemies {(hasBoss ? "(also rolled a boss!)" : "")}");
+                Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} has {points}pts for enemies");
 
                 // By default we will just let the spawning data allocate out groups.
                 zone.EnemySpawningInZone.Add(
