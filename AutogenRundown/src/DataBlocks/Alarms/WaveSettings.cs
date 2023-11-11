@@ -201,6 +201,9 @@ namespace AutogenRundown.DataBlocks.Alarms
             JArray array = JArray.Parse(GameDataWaveSettings.VanillaData);
             var settings = array.ToObject<List<GameDataWaveSettings>>();
 
+            if (settings == null)
+                throw new Exception("Failed to parse vanilla wave settings data");
+
             foreach (var setting in settings)
             {
                 Bins.WaveSettings.AddBlock(setting);

@@ -39,6 +39,9 @@ namespace AutogenRundown.DataBlocks.Alarms
             JArray array = JArray.Parse(GameDataWavePopulation.VanillaData);
             var waves = array.ToObject<List<GameDataWavePopulation>>();
 
+            if (waves == null)
+                throw new Exception("Failed to parse vanilla wave population data");
+
             foreach (var wave in waves)
             {
                 Bins.WavePopulations.AddBlock(wave);

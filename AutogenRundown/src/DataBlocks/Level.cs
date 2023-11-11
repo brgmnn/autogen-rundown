@@ -4,6 +4,7 @@ using AutogenRundown.GeneratorData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine.Experimental.AI;
+using static UnityEngine.Rendering.PostProcessing.BloomRenderer;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -30,6 +31,7 @@ namespace AutogenRundown.DataBlocks
         public int SoundEventOnWarpToReality = 0;
         #endregion
 
+        #region Internal settings for us
         /// <summary>
         /// Level name
         /// </summary>
@@ -72,22 +74,70 @@ namespace AutogenRundown.DataBlocks
             });
 
         [JsonIgnore]
-        public BuildDirector? MainDirector { get; set; }
-
-        [JsonIgnore]
-        public BuildDirector? SecondaryDirector { get; set; }
-
-        [JsonIgnore]
-        public BuildDirector? OverloadDirector { get; set; }
-
-        [JsonIgnore]
         public LayoutPlanner Planner { get; set; } = new LayoutPlanner();
 
         [JsonIgnore]
         public LevelSettings Settings { get; set; } = new LevelSettings();
+        #endregion
+
+        #region Build directors
+        [JsonIgnore]
+        /// <summary>
+        /// Allows easy access to the directors without having to switch
+        /// </summary>
+        public Dictionary<Bulkhead, BuildDirector> Director { get; private set; } = new Dictionary<Bulkhead, BuildDirector>();
+
+        [JsonIgnore]
+        public BuildDirector MainDirector
+        {
+            get => Director[Bulkhead.Main];
+            set => Director[Bulkhead.Main] = value;
+        }
+
+        [JsonIgnore]
+        public BuildDirector SecondaryDirector
+        {
+            get => Director[Bulkhead.Extreme];
+            set => Director[Bulkhead.Extreme] = value;
+        }
+
+        [JsonIgnore]
+        public BuildDirector OverloadDirector
+        {
+            get => Director[Bulkhead.Overload];
+            set => Director[Bulkhead.Overload] = value;
+        }
+        #endregion
+
+        #region Layout and layer data
+        [JsonIgnore]
+        /// <summary>
+        /// Allows easy access to the directors without having to switch
+        /// </summary>
+        public Dictionary<Bulkhead, ObjectiveLayerData> ObjectiveLayer { get; private set; }
+            = new Dictionary<Bulkhead, ObjectiveLayerData>
+            {
+                { Bulkhead.Main, new ObjectiveLayerData() },
+                { Bulkhead.Extreme, new ObjectiveLayerData() },
+                { Bulkhead.Overload, new ObjectiveLayerData() }
+            };
+
+        [JsonIgnore]
+        /// <summary>
+        /// Allows easy access to the directors without having to switch
+        /// </summary>
+        public Dictionary<Bulkhead, uint> LayoutRef { get; private set; }
+            = new Dictionary<Bulkhead, uint>
+            {
+                { Bulkhead.Main, 0 },
+                { Bulkhead.Extreme, 0 },
+                { Bulkhead.Overload, 0 }
+            };
+        #endregion
 
         /// <summary>
-        /// Which zone the main bulkhead door gates. Often we want objectives to be spawned here or later.
+        /// Which zone the main bulkhead door gates. Often we want objectives to be spawned here
+        /// or later.
         /// </summary>
         [JsonIgnore]
         public int MainBulkheadZone { get; set; } = 0;
@@ -157,32 +207,49 @@ namespace AutogenRundown.DataBlocks
             };
         }
 
-        public JObject VanityItemsDropData = new JObject
-        {
-            ["Groups"] = new JArray()
-        };
-
-        /// <summary>
-        /// Match this to the persistent ID of the Level Layout
-        /// </summary>
-        public UInt32 LevelLayoutData { get; set; } = 0;
+        public JObject VanityItemsDropData = new JObject { ["Groups"] = new JArray() };
 
         #region Main Objective Data
         /// <summary>
+        /// Match this to the persistent ID of the Level Layout
+        /// </summary>
+        public uint LevelLayoutData
+        {
+            get => LayoutRef[Bulkhead.Main];
+            set => LayoutRef[Bulkhead.Main] = value;
+        }
+
+        /// <summary>
         /// All levels must have a main objective
         /// </summary>
-        public ObjectiveLayerData MainLayerData { get; set; } = new ObjectiveLayerData();
+        public ObjectiveLayerData MainLayerData
+        {
+            get => ObjectiveLayer[Bulkhead.Main];
+            set => ObjectiveLayer[Bulkhead.Main] = value;
+        }
         #endregion
 
         #region Secondary (Extreme) Objective Data
         /// <summary>
         /// Secondary (Extreme) objectives data
         /// </summary>
-        public ObjectiveLayerData SecondaryLayerData { get; set; } = new ObjectiveLayerData();
+        public ObjectiveLayerData SecondaryLayerData
+        {
+            get => ObjectiveLayer[Bulkhead.Extreme];
+            set => ObjectiveLayer[Bulkhead.Extreme] = value;
+        }
 
-        public bool SecondaryLayerEnabled { get; set; } = false;
+        public bool SecondaryLayerEnabled
+        {
+            get => SecondaryLayout > 0;
+            private set { }
+        }
 
-        public UInt32 SecondaryLayout = 0;
+        public uint SecondaryLayout
+        {
+            get => LayoutRef[Bulkhead.Extreme];
+            set => LayoutRef[Bulkhead.Extreme] = value;
+        }
 
         public BuildFrom BuildSecondaryFrom = new BuildFrom
         {
@@ -195,11 +262,23 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// Third (Overload) objectives data
         /// </summary>
-        public ObjectiveLayerData ThirdLayerData { get; set; } = new ObjectiveLayerData();
+        public ObjectiveLayerData ThirdLayerData
+        {
+            get => ObjectiveLayer[Bulkhead.Overload];
+            set => ObjectiveLayer[Bulkhead.Overload] = value;
+        }
 
-        public bool ThirdLayerEnabled { get; set; } = false;
+        public bool ThirdLayerEnabled
+        {
+            get => ThirdLayout > 0;
+            private set { }
+        }
 
-        public UInt32 ThirdLayout = 0;
+        public uint ThirdLayout
+        {
+            get => LayoutRef[Bulkhead.Overload];
+            set => LayoutRef[Bulkhead.Overload] = value;
+        }
 
         public BuildFrom BuildThirdFrom = new BuildFrom
         {
@@ -316,15 +395,60 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
+        /// Builds a specific bulkhead layout
+        /// </summary>
+        /// <param name="bulkhead"></param>
+        public void BuildLayout(Bulkhead bulkhead)
+        {
+            var existing = new List<WardenObjectiveType>();
+
+            if (Director.ContainsKey(Bulkhead.Main))
+                existing.Add(Director[Bulkhead.Main].Objective);
+            if (Director.ContainsKey(Bulkhead.Extreme))
+                existing.Add(Director[Bulkhead.Extreme].Objective);
+            if (Director.ContainsKey(Bulkhead.Overload))
+                existing.Add(Director[Bulkhead.Overload].Objective);
+
+            if (!Director.ContainsKey(bulkhead))
+            {
+                Director[bulkhead] = new BuildDirector
+                {
+                    Bulkhead = bulkhead,
+                    Complex = Complex,
+                    Complexity = Complexity.Low,
+                    Settings = Settings,
+                    Tier = Tier
+                };
+            }
+
+            var director = Director[bulkhead];
+            director.GenPoints();
+            director.GenObjective(existing);
+
+            var objective = WardenObjective.PreBuild(director, this);
+
+            var layout = LevelLayout.Build(this, director, objective);
+            LayoutRef[bulkhead] = layout.PersistentId;
+
+            objective.Build(director, this);
+
+            var layerData = ObjectiveLayer[bulkhead];
+            layerData.ObjectiveData.DataBlockId = objective.PersistentId;
+
+            if (director.Objective == WardenObjectiveType.ClearPath)
+                layerData.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
+
+            Bins.WardenObjectives.AddBlock(objective);
+        }
+
+        /// <summary>
         ///
         /// </summary>
         /// <returns></returns>
         static public Level Build(Level level)
         {
             if (level.Name == "")
-            {
                 level.Name = Generator.Pick(Words.NounsLevel) ?? "";
-            }
 
             var logLevelId = $"Level={level.Tier}{level.Index}";
 
@@ -363,102 +487,14 @@ namespace AutogenRundown.DataBlocks
                 (1.0, "chained")
             });
 
-            // ============ Main level ============
-            #region Main
-            if (level.MainDirector == null)
-            {
-                level.MainDirector = new BuildDirector
-                {
-                    Bulkhead = Bulkhead.Main,
-                    Complex = level.Complex,
-                    Complexity = Complexity.Low,
-                    Settings = level.Settings,
-                    Tier = level.Tier
-                };
-                level.MainDirector.GenPoints();
-                level.MainDirector.GenObjective();
-            }
+            #region Layout generation
+            level.BuildLayout(Bulkhead.Main);
 
-            var mainObjective = WardenObjective.PreBuild(level.MainDirector, level);
-
-            var mainLevelLayout = LevelLayout.Build(level, level.MainDirector, mainObjective);
-            level.LevelLayoutData = mainLevelLayout.PersistentId;
-
-            mainObjective.Build(level.MainDirector, level);
-            level.MainLayerData.ObjectiveData.DataBlockId = mainObjective.PersistentId;
-
-            if (level.MainDirector.Objective == WardenObjectiveType.ClearPath)
-            {
-                level.MainLayerData.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
-            }
-
-            Bins.WardenObjectives.AddBlock(mainObjective);
-            #endregion
-
-            // Secondary (Extreme)
-            #region Secondary
             if (selectedBulkheads.HasFlag(Bulkhead.Extreme))
-            {
-                if (level.SecondaryDirector == null)
-                {
-                    level.SecondaryDirector = new BuildDirector
-                    {
-                        Bulkhead = Bulkhead.Extreme,
-                        Complex = level.Complex,
-                        Complexity = Complexity.Low,
-                        Settings = level.Settings,
-                        Tier = level.Tier
-                    };
-                    level.SecondaryDirector.GenPoints();
-                    level.SecondaryDirector.GenObjective();
-                }
+                level.BuildLayout(Bulkhead.Extreme);
 
-                level.SecondaryLayerEnabled = true;
-
-                var extremeObjective = WardenObjective.PreBuild(level.SecondaryDirector, level);
-
-                // Actually create the layout
-                var extremeLevelLayout = LevelLayout.Build(level, level.SecondaryDirector, extremeObjective);
-                level.SecondaryLayout = extremeLevelLayout.PersistentId;
-
-                extremeObjective.Build(level.SecondaryDirector, level);
-                level.SecondaryLayerData.ObjectiveData.DataBlockId = extremeObjective.PersistentId;
-
-                Bins.WardenObjectives.AddBlock(extremeObjective);
-            }
-            #endregion
-
-            // Tertiary (Overload)
-            #region Third
             if (selectedBulkheads.HasFlag(Bulkhead.Overload))
-            {
-                if (level.OverloadDirector == null)
-                {
-                    level.OverloadDirector = new BuildDirector
-                    {
-                        Bulkhead = Bulkhead.Overload,
-                        Complex = level.Complex,
-                        Complexity = Complexity.Low,
-                        Settings = level.Settings,
-                        Tier = level.Tier
-                    };
-                    level.OverloadDirector.GenPoints();
-                    level.OverloadDirector.GenObjective();
-                }
-
-                level.ThirdLayerEnabled = true;
-
-                var overloadObjective = WardenObjective.PreBuild(level.OverloadDirector, level);
-
-                // Actually create the layout
-                var overloadLevelLayout = LevelLayout.Build(level, level.OverloadDirector, overloadObjective);
-                level.ThirdLayout = overloadLevelLayout.PersistentId;
-
-                overloadObjective.Build(level.OverloadDirector, level);
-                level.ThirdLayerData.ObjectiveData.DataBlockId = overloadObjective.PersistentId;
-
-                Bins.WardenObjectives.AddBlock(overloadObjective);
-            }
+                level.BuildLayout(Bulkhead.Overload);
             #endregion
 
             #region Bulkhead Keys

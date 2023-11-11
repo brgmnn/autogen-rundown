@@ -52,7 +52,7 @@ namespace AutogenRundown
         /// complex has no Reactor geomorph and so cannot have any Reactor objective. ClearPath
         /// only makes sense for Main bulkheads as players must extract to complete the objective.
         /// </summary>
-        public void GenObjective()
+        public void GenObjective(IEnumerable<WardenObjectiveType> exclude)
         {
             var objectives = new List<WardenObjectiveType>
             {
@@ -69,6 +69,9 @@ namespace AutogenRundown
                 // investigate modding the game to spawn it.
                 //WardenObjectiveType.CentralGeneratorCluster
             };
+
+            // Remove any objectives that are in the exclude list.
+            objectives.RemoveAll(o => exclude.Contains(o));
 
             // These objectives are incompatible with non-Main bulkheads.
             if (!Bulkhead.HasFlag(Bulkhead.Main))

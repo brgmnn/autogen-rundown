@@ -63,6 +63,9 @@ namespace AutogenRundown.DataBlocks.Enemies
             JArray array = JArray.Parse(VanillaData);
             var groups = array.ToObject<List<GameDataEnemyGroup>>();
 
+            if (groups == null)
+                throw new Exception("Failed to parse vanilla enemy groups data");
+
             foreach (var group in groups)
             {
                 Bins.EnemyGroups.AddBlock(group);

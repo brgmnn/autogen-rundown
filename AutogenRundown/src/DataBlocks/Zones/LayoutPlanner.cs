@@ -19,6 +19,9 @@ namespace AutogenRundown.DataBlocks.Zones
             return Bulkhead == other.Bulkhead && ZoneNumber == other.ZoneNumber;
         }
 
+        public override int GetHashCode()
+            => Bulkhead.GetHashCode() ^ ZoneNumber.GetHashCode();
+
         public static string ListToString(IEnumerable<ZoneNode> nodes, string separator = ", ")
             => string.Join(separator, nodes.Select(node => node.ToString()));
     }

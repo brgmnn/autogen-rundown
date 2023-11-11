@@ -206,7 +206,7 @@ namespace AutogenRundown
         {
             string GetWord()
             {
-                var word = Pick(GeneratorData.Words.SeedWords);
+                var word = Pick(GeneratorData.Words.SeedWords)!;
                 return word.Substring(0, 1).ToUpper() + word.Substring(1);
             }
 

@@ -38,7 +38,7 @@ namespace AutogenRundown
             var aMax = Generator.Random.Next(1, 2);
             var bMax = Generator.Random.Next(3, 4);
             var cMax = Generator.Random.Next(2, 4);
-            var dMax = Generator.Random.Next(1, 4);
+            var dMax = Generator.Random.Next(2, 4);
             var eMax = Generator.Random.Next(1, 2);
             /*var aMax = 0;
             var bMax = 0;
@@ -54,7 +54,7 @@ namespace AutogenRundown
                     new Level
                     {
                         Tier = "A",
-                        Name = Generator.Draw(levelNames),
+                        Name = Generator.Draw(levelNames)!,
                         Index = i + 1
                     });
                 rundown.AddLevel(level);
@@ -68,7 +68,7 @@ namespace AutogenRundown
                     new Level
                     {
                         Tier = "B",
-                        Name = Generator.Draw(levelNames),
+                        Name = Generator.Draw(levelNames)!,
                         Index = i + 1
                     });
                 rundown.AddLevel(level);
@@ -82,7 +82,7 @@ namespace AutogenRundown
                     new Level
                     {
                         Tier = "C",
-                        Name = Generator.Draw(levelNames),
+                        Name = Generator.Draw(levelNames)!,
                         Index = i + 1
                     });
                 rundown.AddLevel(level);
@@ -126,7 +126,7 @@ namespace AutogenRundown
                     new Level
                     {
                         Tier = "D",
-                        Name = Generator.Draw(levelNames),
+                        Name = Generator.Draw(levelNames)!,
                         Index = i + 1
                     });
                 rundown.AddLevel(level);
@@ -171,7 +171,7 @@ namespace AutogenRundown
                     new Level
                     {
                         Tier = "E",
-                        Name = Generator.Draw(levelNames),
+                        Name = Generator.Draw(levelNames)!,
                         Index = i + 1
                     });
                 rundown.AddLevel(level);
