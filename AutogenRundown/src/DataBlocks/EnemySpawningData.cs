@@ -155,5 +155,25 @@ namespace AutogenRundown.DataBlocks
             GroupType = EnemyGroupType.Scout,
             Difficulty = (uint)EnemyRoleDifficulty.Boss
         };
+
+        #region Bosses
+        public static EnemySpawningData Mother = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Hibernate,
+            Difficulty = (uint)Enemy.Mother
+        };
+
+        public static EnemySpawningData PMother = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Hibernate,
+            Difficulty = (uint)Enemy.PMother
+        };
+
+        public static EnemySpawningData Tank = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Hibernate,
+            Difficulty = (uint)Enemy.Tank
+        };
+        #endregion
     }
 }
