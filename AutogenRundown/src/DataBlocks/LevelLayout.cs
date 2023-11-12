@@ -939,9 +939,18 @@ namespace AutogenRundown.DataBlocks
                         }
 
                         var last = prev;
-                        var lastZone = (Zone)level.Planner.GetZone(last)!;
+                        var lastZone = level.Planner.GetZone(last)!;
+
+                        var secondLast = (ZoneNode)level.Planner.GetBuildFrom(last)!;
+                        var secondLastZone = level.Planner.GetZone(secondLast)!;
 
                         var subcomplex = GenSubComplex(level.Complex);
+
+                        // Some adjustments to try and reduce the chance of the exit geo not
+                        // spawning due to being trapped by a small penultimate zone
+                        secondLastZone.ZoneExpansion = ZoneExpansion.Expansional;
+                        secondLastZone.Coverage = new CoverageMinMax { Min = 35, Max = 45 };  
+                        lastZone.StartPosition = ZoneEntranceBuildFrom.Furthest;
 
                         // The final zone is the extraction zone
                         lastZone.Coverage = new CoverageMinMax { Min = 50, Max = 50 };
