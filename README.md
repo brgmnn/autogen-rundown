@@ -70,11 +70,11 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [ ] Reactor Startup
   * [x] Reactor Shutdown
   * [x] Input Special Terminal Command
-  * [ ] Retrieve Big Items — *Fog Turbine etc.*
+  * [x] Retrieve Big Items — *Fog Turbine etc.*
   * [x] Power Cell Distribution — *Distributing cells to individual generators*
   * [x] Terminal Uplink
-  * [x] ~~Central Generator Cluster~~ — *Fetching cells for a central generator cluster*
-  * [ ] HSU Activate Small
+  * [x] ~~Central Generator Cluster~~ — *Fetching cells for a central generator cluster*. **Unreliable cluster spawns**
+  * [ ] HSU Activate Small - *Bring Neonate to depressurizer*
   * [ ] Survival
   * [ ] Gather Terminal
   * [ ] Corrupted Terminal Uplink
@@ -88,13 +88,14 @@ Follow the installation instructions again, check yes to overwrite all files.
     * [x] Scouts
     * [x] Chargers
     * [x] Shadows
-    * [ ] Hybrids
-    * [ ] Mothers
-    * [ ] Tanks
+    * [x] Hybrids
+    * [x] Mothers
+    * [x] Tanks
     * [ ] Pouncers (Snatchers)
   * Custom enemy spawning
     * [ ] Balanced default spawns (in progress)
     * [x] Charger only zones
+    * [x] Shadow only zones
 * Alarms
   * [x] Basic alarms
   * [x] Blood doors
