@@ -15,6 +15,8 @@
         Shadows,
         ManyShadows,
         OnlyShadows,
+
+        Hybrids,
         #endregion
     }
 }

@@ -64,13 +64,17 @@ namespace AutogenRundown.DataBlocks.Enemies
             #endregion
 
             #region Level Tier populations
-            // ================  Tier A  ================
+            #region Tier-A
+            /** ================  Tier A  ================
+             * A-Tier is the easiest tier. It should be the most common tier and not have difficult
+             * eneies. No Chargers / Shadows / Hybrids spawn here.
+             * */
             var enemiesTierA = new List<(EnemyInfo, double)>
             {
                 (EnemyInfo.Striker, 1.0),
                 (EnemyInfo.Shooter, 1.0),
                 (EnemyInfo.StrikerGiant, 0.5),
-                (EnemyInfo.ShooterGiant, 0.5)
+                (EnemyInfo.ShooterGiant, 0.25)
             };
 
             foreach (var (info, weight) in enemiesTierA)
@@ -84,14 +88,18 @@ namespace AutogenRundown.DataBlocks.Enemies
                     Weight = weight
                 });
             }
+            #endregion
 
-            // ================  Tier B  ================
+            #region Tier-B
+            /** ================  Tier B  ================
+             * A step up from A-Tier. Still no Chargers / Shadows / Hybrids spawn here.
+             * */
             var enemiesTierB = new List<(EnemyInfo, double)>
             {
                 (EnemyInfo.Striker, 1.0),
                 (EnemyInfo.Shooter, 1.0),
                 (EnemyInfo.StrikerGiant, 0.75),
-                (EnemyInfo.ShooterGiant, 0.5)
+                (EnemyInfo.ShooterGiant, 0.25)
             };
 
             foreach (var (info, weight) in enemiesTierB)
@@ -105,15 +113,18 @@ namespace AutogenRundown.DataBlocks.Enemies
                     Weight = weight
                 });
             }
+            #endregion
 
-            // ================  Tier C  ================
+            #region Tier-C
+            /** ================  Tier C  ================
+             * Standard difficulty. We can get regular chargers for this.
+             * */
             var enemiesTierC = new List<(EnemyInfo, double)>
             {
                 (EnemyInfo.Striker, 1.0),
                 (EnemyInfo.Shooter, 1.0),
                 (EnemyInfo.StrikerGiant, 0.75),
-                (EnemyInfo.ShooterGiant, 0.5),
-                (EnemyInfo.Charger, 1.0),
+                (EnemyInfo.ShooterGiant, 0.5)
             };
 
             foreach (var (info, weight) in enemiesTierC)
@@ -128,16 +139,27 @@ namespace AutogenRundown.DataBlocks.Enemies
                 });
             }
 
-            // ================  Tier D  ================
+            // Add charger to C. C will only spawn regular chargers so no need to add giant.
+            Roles.Add(new EnemyPopulationRole
+            {
+                Role = (uint)EnemyInfo.Charger.Role,
+                Difficulty = (uint)(AutogenDifficulty.TierC | AutogenDifficulty.Chargers),
+                Enemy = EnemyInfo.Charger.Enemy,
+                Cost = EnemyInfo.Charger.Points,
+                Weight = 1.0
+            });
+            #endregion
+
+            #region Tier-D
+            /** ================  Tier A  ================
+             * Difficult tier. We get all enemies except shadow giants on here.
+             * */
             var enemiesTierD = new List<(EnemyInfo, double)>
             {
                 (EnemyInfo.Striker, 1.0),
                 (EnemyInfo.Shooter, 1.0),
                 (EnemyInfo.StrikerGiant, 1.0),
-                (EnemyInfo.ShooterGiant, 0.5),
-                (EnemyInfo.Charger, 1.0),
-                (EnemyInfo.ChargerGiant, 0.4),
-                (EnemyInfo.Shadow, 1.0),
+                (EnemyInfo.ShooterGiant, 0.3),
             };
 
             foreach (var (info, weight) in enemiesTierD)
@@ -152,16 +174,69 @@ namespace AutogenRundown.DataBlocks.Enemies
                 });
             }
 
-            // ================  Tier E  ================
+            var chargersTierD = new List<(EnemyInfo, double)>
+            {
+                (EnemyInfo.Charger, 1.0),
+                (EnemyInfo.ChargerGiant, 0.4),
+            };
+
+            foreach (var (info, weight) in chargersTierD)
+            {
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)info.Role,
+                    Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Chargers),
+                    Enemy = info.Enemy,
+                    Cost = info.Points,
+                    Weight = weight
+                });
+            }
+
+            var shadowsTierD = new List<(EnemyInfo, double)>
+            {
+                (EnemyInfo.Shadow, 1.0),
+            };
+
+            foreach (var (info, weight) in shadowsTierD)
+            {
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)info.Role,
+                    Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Shadows),
+                    Enemy = info.Enemy,
+                    Cost = info.Points,
+                    Weight = weight
+                });
+            }
+
+            var hybridsTierD = new List<(EnemyInfo, double)>
+            {
+                (EnemyInfo.Hybrid, 1.0),
+            };
+
+            foreach (var (info, weight) in hybridsTierD)
+            {
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)info.Role,
+                    Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Hybrids),
+                    Enemy = info.Enemy,
+                    Cost = info.Points,
+                    Weight = weight
+                });
+            }
+            #endregion
+
+            #region Tier-E
+            /** ================  Tier E  ================
+             * The hardest tier. All enemies are available to be spawned
+             * */
             var enemiesTierE = new List<(EnemyInfo, double)>
             {
                 (EnemyInfo.Striker, 1.0),
                 (EnemyInfo.Shooter, 1.0),
                 (EnemyInfo.StrikerGiant, 1.0),
-                (EnemyInfo.ShooterGiant, 0.5),
-                (EnemyInfo.Charger, 1.0),
-                (EnemyInfo.ChargerGiant, 0.4),
-                (EnemyInfo.Shadow, 1.0),
+                (EnemyInfo.ShooterGiant, 0.3),
             };
 
             foreach (var (info, weight) in enemiesTierE)
@@ -175,6 +250,60 @@ namespace AutogenRundown.DataBlocks.Enemies
                     Weight = weight
                 });
             }
+
+            var chargersTierE = new List<(EnemyInfo, double)>
+            {
+                (EnemyInfo.Charger, 1.0),
+                (EnemyInfo.ChargerGiant, 0.4),
+            };
+
+            foreach (var (info, weight) in chargersTierE)
+            {
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)info.Role,
+                    Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Chargers),
+                    Enemy = info.Enemy,
+                    Cost = info.Points,
+                    Weight = weight
+                });
+            }
+
+            var shadowsTierE = new List<(EnemyInfo, double)>
+            {
+                (EnemyInfo.Shadow, 1.0),
+                (EnemyInfo.ShadowGiant, 0.4)
+            };
+
+            foreach (var (info, weight) in shadowsTierE)
+            {
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)info.Role,
+                    Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Shadows),
+                    Enemy = info.Enemy,
+                    Cost = info.Points,
+                    Weight = weight
+                });
+            }
+
+            var hybridsTierE = new List<(EnemyInfo, double)>
+            {
+                (EnemyInfo.Hybrid, 1.0),
+            };
+
+            foreach (var (info, weight) in hybridsTierE)
+            {
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)info.Role,
+                    Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Hybrids),
+                    Enemy = info.Enemy,
+                    Cost = info.Points,
+                    Weight = weight
+                });
+            }
+            #endregion
             #endregion
 
             Bins.EnemyPopulations.AddBlock(new EnemyPopulation

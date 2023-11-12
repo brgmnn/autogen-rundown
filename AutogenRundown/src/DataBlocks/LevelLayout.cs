@@ -329,13 +329,13 @@ namespace AutogenRundown.DataBlocks
                 var chargerChance = 0.0;
 
                 if (settings.Modifiers.Contains(LevelModifiers.Chargers))
-                    chargerChance = 0.15;
+                    chargerChance = 0.2;
 
                 if (settings.Modifiers.Contains(LevelModifiers.ManyChargers))
                     chargerChance = 0.5;
 
                 // Roll for a Charger room
-                if (!settings.Modifiers.Contains(LevelModifiers.NoChargers) &&
+                /*if (!settings.Modifiers.Contains(LevelModifiers.NoChargers) &&
                     (settings.Modifiers.Contains(LevelModifiers.OnlyChargers) || Generator.Flip(chargerChance)))
                 {
                     var chargerGiantRatio = director.Tier switch
@@ -371,7 +371,7 @@ namespace AutogenRundown.DataBlocks
                             });
                     }
                     continue;
-                }
+                }*/
                 #endregion
 
                 #region Shadows roll check
@@ -384,7 +384,7 @@ namespace AutogenRundown.DataBlocks
                     shadowChance = 0.5;
 
                 // Roll for a Shadow room
-                if (!settings.Modifiers.Contains(LevelModifiers.NoShadows) &&
+                /*if (!settings.Modifiers.Contains(LevelModifiers.NoShadows) &&
                     (settings.Modifiers.Contains(LevelModifiers.OnlyShadows) || Generator.Flip(shadowChance)))
                 {
                     var shadowGiantRatio = director.Tier switch
@@ -420,34 +420,93 @@ namespace AutogenRundown.DataBlocks
                             });
                     }
                     continue;
-                }
+                }*/
                 #endregion
 
+                #region Hybrid roll check
+                var hybridChance = 0.0;
 
+                if (settings.Modifiers.Contains(LevelModifiers.Hybrids))
+                    hybridChance = 0.15;
+                #endregion
+
+                // Boss settings
                 if (Generator.Flip(bossChance) && settings.EnemyBossPack.Count() > 0)
                 {
                     zone.EnemySpawningInZone.Add(Generator.Draw(settings.EnemyBossPack));
                     Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} rolled a boss!");
                 }
 
-                Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} has {points}pts for enemies");
+                var groupChoices = new List<(double, List<AutogenDifficulty>)>
+                {
+                    (1.0, new List<AutogenDifficulty> { AutogenDifficulty.Base }),
 
-                // By default we will just let the spawning data allocate out groups.
-                zone.EnemySpawningInZone.Add(
-                    new EnemySpawningData
+                    // Chargers
+                    (chargerChance, new List<AutogenDifficulty> { AutogenDifficulty.Chargers }),
+                    (chargerChance, new List<AutogenDifficulty>
                     {
-                        GroupType = EnemyGroupType.Hibernate,
-                        Difficulty = director.Tier switch
+                        AutogenDifficulty.Base,
+                        AutogenDifficulty.Chargers
+                    }),
+
+                    // Shadows
+                    (shadowChance, new List<AutogenDifficulty> { AutogenDifficulty.Shadows }),
+                    (shadowChance, new List<AutogenDifficulty>
+                    {
+                        AutogenDifficulty.Base,
+                        AutogenDifficulty.Shadows
+                    }),
+
+                    // Hybrid is always mixed
+                    (hybridChance, new List<AutogenDifficulty>
+                    {
+                        AutogenDifficulty.Base,
+                        AutogenDifficulty.Hybrids
+                    }),
+                };
+
+                if (chargerChance > 0 && shadowChance > 0)
+                    groupChoices.Add(
+                        (0.2, new List<AutogenDifficulty>
+                            {
+                                AutogenDifficulty.Base,
+                                AutogenDifficulty.Chargers,
+                                AutogenDifficulty.Shadows
+                            }));
+
+                if (chargerChance > 0 && shadowChance > 0 && hybridChance > 0)
+                    groupChoices.Add(
+                        (0.1, new List<AutogenDifficulty>
+                            {
+                                AutogenDifficulty.Base,
+                                AutogenDifficulty.Chargers,
+                                AutogenDifficulty.Shadows,
+                                AutogenDifficulty.Hybrids
+                            }));
+
+                var groups = Generator.Select(groupChoices);
+
+                Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} has {points}pts for enemies. Groups: {string.Join(", ", groups)}");
+
+                // By default we will just let the spawning data allocate out groups. If there
+                // are multiple groups we just spawn equal numbers of them and let the game
+                // divide that up into portions.
+                foreach (var group in groups)
+                    zone.EnemySpawningInZone.Add(
+                        new EnemySpawningData
                         {
-                            "A" => (uint)AutogenDifficulty.TierA,
-                            "B" => (uint)AutogenDifficulty.TierB,
-                            "C" => (uint)AutogenDifficulty.TierC,
-                            "D" => (uint)AutogenDifficulty.TierD,
-                            "E" => (uint)AutogenDifficulty.TierE,
-                            _ => (uint)AutogenDifficulty.TierC
-                        },
-                        Points = points
-                    });
+                            GroupType = EnemyGroupType.Hibernate,
+                            Difficulty = director.Tier switch
+                            {
+                                "A" => (uint)(AutogenDifficulty.TierA | group),
+                                "B" => (uint)(AutogenDifficulty.TierB | group),
+                                "C" => (uint)(AutogenDifficulty.TierC | group),
+                                "D" => (uint)(AutogenDifficulty.TierD | group),
+                                "E" => (uint)(AutogenDifficulty.TierE | group),
+                                _ => (uint)(AutogenDifficulty.TierC | group)
+                            },
+                            Points = points / groups.Count()
+                        });
             }
         }
 

@@ -104,6 +104,9 @@ namespace AutogenRundown.DataBlocks.Enemies
                 (EnemyRole.PureSneak, Enemy.Hybrid, 6.0),
                 (EnemyRole.PureSneak, Enemy.Hybrid, 9.0),
 
+                // Babies
+                (EnemyRole.BirtherChild, Enemy.Baby, 8.0),
+
                 // Bosses, these need to be individually spawned given their difficulty
                 (EnemyRole.PureSneak, Enemy.Tank,    10.0),
                 (EnemyRole.PureSneak, Enemy.Mother,  10.0),
@@ -195,6 +198,32 @@ namespace AutogenRundown.DataBlocks.Enemies
                             new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
                         }
                     });
+
+                // Very big mixes
+                Bins.EnemyGroups.AddBlock(
+                    new EnemyGroup
+                    {
+                        Type = EnemyGroupType.Hibernate,
+                        Difficulty = (uint)difficulty,
+                        MaxScore = 24,
+                        Roles = new List<EnemyGroupRole>
+                        {
+                            new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel75 },
+                            new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
+                        }
+                    });
+                Bins.EnemyGroups.AddBlock(
+                    new EnemyGroup
+                    {
+                        Type = EnemyGroupType.Hibernate,
+                        Difficulty = (uint)difficulty,
+                        MaxScore = 18,
+                        Roles = new List<EnemyGroupRole>
+                        {
+                            new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel50 },
+                            new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
+                        }
+                    });
             }
             #endregion
 
@@ -227,11 +256,11 @@ namespace AutogenRundown.DataBlocks.Enemies
                 new EnemyGroup
                 {
                     Type = EnemyGroupType.Hibernate,
-                    Difficulty = (uint)AutogenDifficulty.TierC,
+                    Difficulty = (uint)(AutogenDifficulty.TierC | AutogenDifficulty.Chargers),
                     MaxScore = 6,
                     Roles = new List<EnemyGroupRole>
                     {
-                        new EnemyGroupRole { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 },
+                        new EnemyGroupRole { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 }
                     }
                 });
             #endregion
@@ -261,15 +290,43 @@ namespace AutogenRundown.DataBlocks.Enemies
                         new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
                     }
                 });
+
+            // Chargers
             Bins.EnemyGroups.AddBlock(
                 new EnemyGroup
                 {
                     Type = EnemyGroupType.Hibernate,
-                    Difficulty = (uint)AutogenDifficulty.TierD,
+                    Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Chargers),
+                    MaxScore = 8,
+                    Roles = new List<EnemyGroupRole>
+                    {
+                        new EnemyGroupRole { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 }
+                    }
+                });
+
+            // Shadows
+            Bins.EnemyGroups.AddBlock(
+                new EnemyGroup
+                {
+                    Type = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Shadows),
+                    MaxScore = 8,
+                    Roles = new List<EnemyGroupRole>
+                    {
+                        new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
+                    }
+                });
+
+            //Hybrids
+            Bins.EnemyGroups.AddBlock(
+                new EnemyGroup
+                {
+                    Type = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Hybrids),
                     MaxScore = 6,
                     Roles = new List<EnemyGroupRole>
                     {
-                        new EnemyGroupRole { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 },
+                        new EnemyGroupRole { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
                     }
                 });
             #endregion
@@ -299,15 +356,43 @@ namespace AutogenRundown.DataBlocks.Enemies
                         new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
                     }
                 });
+
+            // Chargers
             Bins.EnemyGroups.AddBlock(
                 new EnemyGroup
                 {
                     Type = EnemyGroupType.Hibernate,
-                    Difficulty = (uint)AutogenDifficulty.TierE,
+                    Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Chargers),
+                    MaxScore = 8,
+                    Roles = new List<EnemyGroupRole>
+                    {
+                        new EnemyGroupRole { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 }
+                    }
+                });
+
+            // Shadows
+            Bins.EnemyGroups.AddBlock(
+                new EnemyGroup
+                {
+                    Type = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Shadows),
+                    MaxScore = 8,
+                    Roles = new List<EnemyGroupRole>
+                    {
+                        new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
+                    }
+                });
+
+            //Hybrids
+            Bins.EnemyGroups.AddBlock(
+                new EnemyGroup
+                {
+                    Type = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Hybrids),
                     MaxScore = 6,
                     Roles = new List<EnemyGroupRole>
                     {
-                        new EnemyGroupRole { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 },
+                        new EnemyGroupRole { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
                     }
                 });
             #endregion

@@ -16,7 +16,7 @@
         public static EnemyInfo Charger = new EnemyInfo { Role = EnemyRole.Lurker, Enemy = Enemy.Charger, Points = 2.0 };
         public static EnemyInfo ChargerGiant = new EnemyInfo { Role = EnemyRole.Lurker, Enemy = Enemy.ChargerGiant, Points = 4.0 };
 
-        public static EnemyInfo Shadow = new EnemyInfo { Role = EnemyRole.Melee, Enemy = Enemy.Shadow, Points = 4.0 };
+        public static EnemyInfo Shadow = new EnemyInfo { Role = EnemyRole.Melee, Enemy = Enemy.Shadow, Points = 1.0 };
         public static EnemyInfo ShadowGiant = new EnemyInfo { Role = EnemyRole.Melee, Enemy = Enemy.ShadowGiant, Points = 4.0 };
 
         public static EnemyInfo Hybrid = new EnemyInfo { Role = EnemyRole.PureSneak, Enemy = Enemy.Hybrid, Points = 3.0 };
