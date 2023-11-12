@@ -34,6 +34,12 @@ namespace AutogenRundown.DataBlocks.Alarms
             : base(Generator.GetPersistentId(offsets))
         { }
 
+        public WavePopulation Persist()
+        {
+            Bins.WavePopulations.AddBlock(this);
+            return this;
+        }
+
         public static new void Setup()
         {
             JArray array = JArray.Parse(GameDataWavePopulation.VanillaData);
@@ -50,20 +56,61 @@ namespace AutogenRundown.DataBlocks.Alarms
 
         public static new void SaveStatic()
         {
+            Bins.WavePopulations.AddBlock(Baseline);
+            Bins.WavePopulations.AddBlock(Baseline_Hybrid);
+
+            Bins.WavePopulations.AddBlock(OnlyChargers);
+            Bins.WavePopulations.AddBlock(OnlyShadows);
+
             Bins.WavePopulations.AddBlock(SingleEnemy_Mother);
             Bins.WavePopulations.AddBlock(SingleEnemy_PMother);
             Bins.WavePopulations.AddBlock(SingleEnemy_Tank);
             Bins.WavePopulations.AddBlock(SingleEnemy_Pouncer);
         }
 
-        #region Single enemies
+        #region Alarm waves
+        /// <summary>
+        /// Same as vanilla baseline
+        /// </summary>
+        public static WavePopulation Baseline = new WavePopulation
+        {
+            WaveRoleWeakling = Enemy.Shadow,
+            WaveRoleStandard = Enemy.Striker_Wave,
+            WaveRoleSpecial = Enemy.Shooter_Wave,
+            WaveRoleMiniBoss = Enemy.StrikerGiant_Wave,
+            WaveRoleBoss = Enemy.ShooterGiant
+        };
 
+        public static WavePopulation Baseline_Hybrid = new WavePopulation
+        {
+            WaveRoleWeakling = Enemy.Shadow,
+            WaveRoleStandard = Enemy.Striker_Wave,
+            WaveRoleSpecial = Enemy.Shooter_Wave,
+            WaveRoleMiniBoss = Enemy.StrikerGiant_Wave,
+            WaveRoleBoss = Enemy.Hybrid
+        };
+
+        public static WavePopulation OnlyChargers = new WavePopulation
+        {
+            WaveRoleWeakling = Enemy.Charger,
+            WaveRoleStandard = Enemy.Charger,
+            WaveRoleSpecial = Enemy.ChargerGiant,
+        };
+
+        public static WavePopulation OnlyShadows = new WavePopulation
+        {
+            WaveRoleWeakling = Enemy.Shadow,
+            WaveRoleStandard = Enemy.Shadow,
+            WaveRoleSpecial = Enemy.ShadowGiant,
+        };
+        #endregion
+
+        #region Single enemies
         public static WavePopulation SingleEnemy_Mother = new WavePopulation { WaveRoleMiniBoss = Enemy.Mother };
         public static WavePopulation SingleEnemy_PMother = new WavePopulation { WaveRoleMiniBoss = Enemy.PMother };
         public static WavePopulation SingleEnemy_Tank = new WavePopulation { WaveRoleMiniBoss = Enemy.Tank };
 
         public static WavePopulation SingleEnemy_Pouncer = new WavePopulation { WaveRoleMiniBoss = Enemy.Pouncer };
-
         #endregion
     }
 

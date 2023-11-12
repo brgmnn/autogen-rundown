@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using AutogenRundown.DataBlocks.Enemies;
 
 namespace AutogenRundown.DataBlocks.Alarms
 {
@@ -212,11 +213,36 @@ namespace AutogenRundown.DataBlocks.Alarms
 
         public static new void SaveStatic()
         {
+            Bins.WaveSettings.AddBlock(Baseline_Normal);
+
+            Bins.WaveSettings.AddBlock(OnlyStandard);
+
             Bins.WaveSettings.AddBlock(SingleMiniBoss);
         }
 
-        #region Single enemy spawns
+        #region Alarm waves
+        public static WaveSettings OnlyStandard = new WaveSettings
+        {
+            PopulationFilter = { Enemies.EnemyType.Standard },
+            FilterType = PopulationFilterType.Include  
+        };
 
+        public static WaveSettings Baseline_Normal = new WaveSettings
+        {
+            PopulationFilter = { Enemies.EnemyType.Weakling },
+            FilterType = PopulationFilterType.Exclude
+        };
+        #endregion
+
+        #region Charger waves
+        public static WaveSettings OnlyChargers = new WaveSettings
+        {
+            PopulationFilter = { Enemies.EnemyType.Standard },
+            FilterType = PopulationFilterType.Include
+        };
+        #endregion
+
+        #region Single enemy spawns
         public static WaveSettings SingleMiniBoss = new WaveSettings
         {
             PopulationFilter = { Enemies.EnemyType.MiniBoss },
@@ -232,7 +258,6 @@ namespace AutogenRundown.DataBlocks.Alarms
             WavePauseMin_atCost = 1,
             WavePauseMax_atCost = 25,
         };
-
         #endregion
     }
 
