@@ -333,45 +333,6 @@ namespace AutogenRundown.DataBlocks
 
                 if (settings.Modifiers.Contains(LevelModifiers.ManyChargers))
                     chargerChance = 0.5;
-
-                // Roll for a Charger room
-                /*if (!settings.Modifiers.Contains(LevelModifiers.NoChargers) &&
-                    (settings.Modifiers.Contains(LevelModifiers.OnlyChargers) || Generator.Flip(chargerChance)))
-                {
-                    var chargerGiantRatio = director.Tier switch
-                    {
-                        "D" => Generator.Flip(0.3) ? 0.25 : 0,
-                        "E" => Generator.Flip(0.5) ? 0.6 : 0,
-                        _ => 0.0
-                    };
-
-                    var chargerGiantPoints = (int)(points * chargerGiantRatio);
-                    var chargerPoints = points - chargerGiantPoints;
-
-                    Plugin.Logger.LogDebug($"Zone {zone.LocalIndex} rolled: Chargers {points}pts");
-
-                    zone.EnemySpawningInZone.Add(
-                        new EnemySpawningData
-                        {
-                            GroupType = EnemyGroupType.Hibernate,
-                            Difficulty = (uint)Enemy.Charger,
-                            Points = chargerPoints
-                        });
-
-                    if (chargerGiantPoints > 0)
-                    {
-                        Plugin.Logger.LogDebug($"Zone {zone.LocalIndex} rolled: Giant Chargers {points}pts");
-
-                        zone.EnemySpawningInZone.Add(
-                            new EnemySpawningData
-                            {
-                                GroupType = EnemyGroupType.Hibernate,
-                                Difficulty = (uint)Enemy.ChargerGiant,
-                                Points = chargerGiantPoints
-                            });
-                    }
-                    continue;
-                }*/
                 #endregion
 
                 #region Shadows roll check
@@ -382,45 +343,6 @@ namespace AutogenRundown.DataBlocks
 
                 if (settings.Modifiers.Contains(LevelModifiers.ManyShadows))
                     shadowChance = 0.5;
-
-                // Roll for a Shadow room
-                /*if (!settings.Modifiers.Contains(LevelModifiers.NoShadows) &&
-                    (settings.Modifiers.Contains(LevelModifiers.OnlyShadows) || Generator.Flip(shadowChance)))
-                {
-                    var shadowGiantRatio = director.Tier switch
-                    {
-                        "D" => Generator.Flip(0.2) ? 0.25 : 0,
-                        "E" => Generator.Flip(0.5) ? 0.6 : 0,
-                        _ => 0.0
-                    };
-
-                    var shadowGiantPoints = (int)(points * shadowGiantRatio);
-                    var shadowPoints = points - shadowGiantPoints;
-
-                    Plugin.Logger.LogDebug($"Zone {zone.LocalIndex} rolled: Shadows {shadowPoints}pts");
-
-                    zone.EnemySpawningInZone.Add(
-                        new EnemySpawningData
-                        {
-                            GroupType = EnemyGroupType.Hibernate,
-                            Difficulty = (uint)Enemy.Shadow,
-                            Points = shadowPoints
-                        });
-
-                    if (shadowGiantPoints > 0)
-                    {
-                        Plugin.Logger.LogDebug($"Zone {zone.LocalIndex} rolled: Shadow Giants {shadowGiantPoints}pts");
-
-                        zone.EnemySpawningInZone.Add(
-                            new EnemySpawningData
-                            {
-                                GroupType = EnemyGroupType.Hibernate,
-                                Difficulty = (uint)Enemy.ShadowGiant,
-                                Points = shadowGiantPoints
-                            });
-                    }
-                    continue;
-                }*/
                 #endregion
 
                 #region Hybrid roll check
