@@ -105,6 +105,7 @@ namespace AutogenRundown.DataBlocks.Enemies
                 (EnemyRole.PureSneak, Enemy.Hybrid, 9.0),
 
                 // Babies
+                (EnemyRole.BirtherChild, Enemy.Baby, 4.0),
                 (EnemyRole.BirtherChild, Enemy.Baby, 8.0),
 
                 // Bosses, these need to be individually spawned given their difficulty
