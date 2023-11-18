@@ -103,3 +103,8 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] S-Class alarms
   * [x] Surge alarms
   * [x] High class alarms (> Class V)
+* Glowsticks — *All colors available to spawn*
+  * [x] Green (normal)
+  * [x] Yellow
+  * [x] Halloween (orange)
+  * [x] Christmas (red)
