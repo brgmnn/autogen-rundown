@@ -194,7 +194,6 @@ namespace AutogenRundown.DataBlocks
                 ["ComplexResourceData"] = (int)Complex,
                 ["MLSLevelKit"] = 0,
                 ["LightSettings"] = 36,
-                //["FogSettings"] = 139,
                 ["FogSettings"] = FogSettings.PersistentId,
                 ["EnemyPopulation"] = 1,
                 ["ExpeditionBalance"] = 1,
@@ -469,6 +468,8 @@ namespace AutogenRundown.DataBlocks
 
             // Assign bulkheads
             level.Settings.Bulkheads = selectedBulkheads;
+
+            level.FogSettings = Fog.LowFog;
 
             Plugin.Logger.LogDebug($"{logLevelId} - Modifiers: {level.Settings.Modifiers}");
 

@@ -22,6 +22,10 @@ namespace AutogenRundown.DataBlocks
         {
             switch (modifier)
             {
+                case LevelModifiers.NoFog:
+                    Remove(LevelModifiers.FogIsInfectious);
+                    break;
+
                 case LevelModifiers.NoChargers:
                 case LevelModifiers.Chargers:
                 case LevelModifiers.ManyChargers:
@@ -174,6 +178,18 @@ namespace AutogenRundown.DataBlocks
                     {
                         Modifiers.Add(LevelModifiers.NoChargers);
                         Modifiers.Add(LevelModifiers.NoShadows);
+
+                        // Fog modifiers
+                        if (Generator.Flip(0.2))
+                            Modifiers.Add(LevelModifiers.FogIsInfectious);
+
+                        Modifiers.Add(
+                            Generator.Select(new List<WeightedModifier>
+                            {
+                                new WeightedModifier { Modifier = LevelModifiers.NoFog,    Weight = 0.85 },
+                                new WeightedModifier { Modifier = LevelModifiers.Fog,      Weight = 0.15 },
+                            }).Modifier);
+
                         break;
                     }
 
@@ -186,6 +202,16 @@ namespace AutogenRundown.DataBlocks
                                 new WeightedModifier { Modifier = LevelModifiers.NoChargers,   Weight = 0.4 },
                                 new WeightedModifier { Modifier = LevelModifiers.Chargers,     Weight = 0.5 },
                                 new WeightedModifier { Modifier = LevelModifiers.ManyChargers, Weight = 0.1 },
+                            }).Modifier);
+
+                        if (Generator.Flip(0.3))
+                            Modifiers.Add(LevelModifiers.FogIsInfectious);
+
+                        Modifiers.Add(
+                            Generator.Select(new List<WeightedModifier>
+                            {
+                                new WeightedModifier { Modifier = LevelModifiers.NoFog, Weight = 0.7 },
+                                new WeightedModifier { Modifier = LevelModifiers.Fog,   Weight = 0.3 },
                             }).Modifier);
 
                         EnemyBossPack = Generator.Select(
@@ -215,6 +241,17 @@ namespace AutogenRundown.DataBlocks
                                 new WeightedModifier { Modifier = LevelModifiers.NoChargers,   Weight = 0.4 },
                                 new WeightedModifier { Modifier = LevelModifiers.Chargers,     Weight = 0.5 },
                                 new WeightedModifier { Modifier = LevelModifiers.ManyChargers, Weight = 0.1 },
+                            }).Modifier);
+
+                        if (Generator.Flip(0.5))
+                            Modifiers.Add(LevelModifiers.FogIsInfectious);
+
+                        Modifiers.Add(
+                            Generator.Select(new List<WeightedModifier>
+                            {
+                                new WeightedModifier { Modifier = LevelModifiers.NoFog,    Weight = 0.6 },
+                                new WeightedModifier { Modifier = LevelModifiers.Fog,      Weight = 0.3 },
+                                new WeightedModifier { Modifier = LevelModifiers.HeavyFog, Weight = 0.1 },
                             }).Modifier);
 
                         EnemyBossPack = Generator.Select(
@@ -248,6 +285,17 @@ namespace AutogenRundown.DataBlocks
                                 new WeightedModifier { Modifier = LevelModifiers.NoChargers,   Weight = 0.3 },
                                 new WeightedModifier { Modifier = LevelModifiers.Chargers,     Weight = 0.6 },
                                 new WeightedModifier { Modifier = LevelModifiers.ManyChargers, Weight = 0.1 },
+                            }).Modifier);
+
+                        if (Generator.Flip(0.8))
+                            Modifiers.Add(LevelModifiers.FogIsInfectious);
+
+                        Modifiers.Add(
+                            Generator.Select(new List<WeightedModifier>
+                            {
+                                new WeightedModifier { Modifier = LevelModifiers.NoFog,    Weight = 0.35 },
+                                new WeightedModifier { Modifier = LevelModifiers.Fog,      Weight = 0.45 },
+                                new WeightedModifier { Modifier = LevelModifiers.HeavyFog, Weight = 0.2  },
                             }).Modifier);
 
                         EnemyBossPack = Generator.Select(

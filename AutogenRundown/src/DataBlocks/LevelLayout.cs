@@ -805,6 +805,7 @@ namespace AutogenRundown.DataBlocks
                     {
                         Coverage = CoverageMinMax.GenNormalSize(),
                         LightSettings = Lights.GenRandomLight(),
+                        Altitude = new Altitude { AllowedZoneAltitude = Height.OnlyLow }
                     });
 
                 // Place the first zones of the connecting bulkhead zones, so we can build from

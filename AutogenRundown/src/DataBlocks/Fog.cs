@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AutogenRundown.DataBlocks
+﻿namespace AutogenRundown.DataBlocks
 {
     public record class Fog : DataBlock
     {
+        public static double DENSITY_CLEAR = 0.00008;
+        public static double DENSITY_LOW   = 0.0007;
+        public static double DENSITY_MED   = 0.005;
+        public static double DENSITY_HIGH  = 0.015;
+        public static double DENSITY_FULL  = 0.045;
+
+        public static double HEIGHT_LOW  = -4.0;
+        public static double HEIGHT_MED  =  0.0;
+        public static double HEIGHT_HIGH =  4.0;
+
         public static Fog None = new Fog { PersistentId = 0 };
 
         /*{
@@ -57,17 +61,42 @@ namespace AutogenRundown.DataBlocks
             Infection = 0.0
         };
 
-        public static Fog FullFog = new Fog { DensityHeightAltitude = 1.0 };
+        #region Preset fogs
+        /// <summary>
+        /// Fully submerged low levels, mid/high are clear of fog (low density).
+        /// </summary>
+        public static Fog LowFog = new Fog
+        {
+            FogColor = new Color { Red = 0.4, Green = 0.68, Blue = 1.0, Alpha = 0.0 },
+            DensityHeightAltitude = HEIGHT_LOW,
+
+            DensityHeightMaxBoost = DENSITY_FULL,
+            FogDensity = DENSITY_LOW,
+        };
+
+        public static Fog MidFog = new Fog
+        {
+            FogColor = new Color { Red = 0.4, Green = 0.68, Blue = 1.0, Alpha = 0.0 },
+            DensityHeightAltitude = HEIGHT_MED,
+
+            DensityHeightMaxBoost = DENSITY_FULL,
+            FogDensity = DENSITY_LOW,
+        };
+
+        public static Fog FullFog = new Fog { DensityHeightAltitude = 4.0 };
 
         public static Fog FullFog_Infectious = FullFog with
         {
             PersistentId = Generator.GetPersistentId(),
             Infection = 0.03
         };
+        #endregion
 
         public static new void SaveStatic()
         {
             Bins.Fogs.AddBlock(DefaultFog);
+
+            Bins.Fogs.AddBlock(LowFog);
             Bins.Fogs.AddBlock(FullFog);
             Bins.Fogs.AddBlock(FullFog_Infectious);
         }

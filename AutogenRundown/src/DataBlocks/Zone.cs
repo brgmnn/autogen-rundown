@@ -543,7 +543,11 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public Lights.Light LightSettings { get; set; } = Lights.Light.AlmostWhite_1;
 
-        public Altitude AltitudeData { get; set; } = new Altitude();
+        /// <summary>
+        /// What allowed altitiudes the level can have
+        /// </summary>
+        [JsonProperty("AltitudeData")]
+        public Altitude Altitude { get; set; } = new Altitude();
 
         public List<JObject> EventsOnEnter { get; set; } = new List<JObject>();
         public List<JObject> EventsOnPortalWarp { get; set; } = new List<JObject>();
@@ -636,7 +640,6 @@ namespace AutogenRundown.DataBlocks
         public bool AllowSmallPickupsAllocation { get; set; } = true;
         public bool AllowResourceContainerAllocation { get; set; } = true;
         public bool ForceBigPickupsAllocation { get; set; } = false;
-        public int ConsumableDistributionInZone { get; set; } = 62;
         public uint BigPickupDistributionInZone { get; set; } = 0;
 
         public List<TerminalPlacement> TerminalPlacements { get; set; } = new List<TerminalPlacement>();
@@ -645,7 +648,13 @@ namespace AutogenRundown.DataBlocks
         public JArray DisinfectionStationPlacements { get; set; } = new JArray();
         public JArray DumbwaiterPlacements { get; set; } = new JArray();
 
-        #region Resources
+        #region Resources and items
+        /// <summary>
+        /// Consumables include glowsticks, c-foam grenades, other slot 5 consumable items.
+        /// </summary>
+        public uint ConsumableDistributionInZone { get; set; }
+            = ConsumableDistribution.Baseline.PersistentId;
+
         public double HealthMulti { get; set; } = 1.0;
 
         public Placement HealthPlacement { get; set; } = new Placement();

@@ -12,6 +12,8 @@ namespace AutogenRundown.DataBlocks
             = new BlocksBin<BigPickupDistribution>();
         public static BlocksBin<ChainedPuzzle> ChainedPuzzles { get; private set; }
             = new BlocksBin<ChainedPuzzle>();
+        public static BlocksBin<ConsumableDistribution> ConsumableDistributions { get; private set; }
+            = new BlocksBin<ConsumableDistribution>();
         public static BlocksBin<EnemyGroup> EnemyGroups { get; private set; }
             = new BlocksBin<EnemyGroup>();
         public static BlocksBin<EnemyPopulation> EnemyPopulations { get; private set; }
@@ -47,6 +49,7 @@ namespace AutogenRundown.DataBlocks
         {
             BigPickupDistribution.SaveStatic();
             ChainedPuzzle.SaveStatic();
+            ConsumableDistribution.SaveStatic();
             EnemyGroup.SaveStatic();
             EnemyPopulation.SaveStatic();
             Fog.SaveStatic();
@@ -56,16 +59,17 @@ namespace AutogenRundown.DataBlocks
             WavePopulation.SaveStatic();
             Alarms.WaveSettings.SaveStatic();
 
-            BigPickupDistributions.Save("BigPickupDistributionDataBlock");
-            ChainedPuzzles.Save("ChainedPuzzleDataBlock");
-            EnemyGroups.Save("EnemyGroupDataBlock");
-            EnemyPopulations.Save("EnemyPopulationDataBlock");
-            Fogs.Save("FogSettingsDataBlock");
-            LevelLayouts.Save("LevelLayoutDataBlock");
-            Rundowns.Save("RundownDataBlock");
-            WardenObjectives.Save("WardenObjectiveDataBlock");
-            WavePopulations.Save("SurvivalWavePopulationDataBlock");
-            WaveSettings.Save("SurvivalWaveSettingsDataBlock");
+            BigPickupDistributions.Save("BigPickupDistribution");
+            ChainedPuzzles.Save("ChainedPuzzle");
+            ConsumableDistributions.Save("ConsumableDistribution");
+            EnemyGroups.Save("EnemyGroup");
+            EnemyPopulations.Save("EnemyPopulation");
+            Fogs.Save("FogSettings");
+            LevelLayouts.Save("LevelLayout");
+            Rundowns.Save("Rundown");
+            WardenObjectives.Save("WardenObjective");
+            WavePopulations.Save("SurvivalWavePopulation");
+            WaveSettings.Save("SurvivalWaveSettings");
         }
     }
 
@@ -122,7 +126,7 @@ namespace AutogenRundown.DataBlocks
             var revision = CellBuildData.GetRevision();
 
             var dir = Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}");
-            var path = Path.Combine(dir, $"GameData_{name}_bin.json");
+            var path = Path.Combine(dir, $"GameData_{name}DataBlock_bin.json");
 
             // Ensure the directory exists
             Directory.CreateDirectory(dir);
