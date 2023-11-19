@@ -43,6 +43,4 @@ jobs:
         run: |
           tcli publish \
             --token ${{ secrets.THUNDERSTORE_TOKEN }} \
-            --package-name AutogenRundown \
-            --file AutogenRundown_${{ steps.latest.outputs.version }}.zip \
-            --package-version ${{ steps.latest.outputs.version }}
+            --file AutogenRundown_${{ steps.latest.outputs.version }}.zip
