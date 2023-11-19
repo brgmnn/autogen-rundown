@@ -972,6 +972,9 @@ namespace AutogenRundown.DataBlocks
                  * */
                 case WardenObjectiveType.RetrieveBigItems:
                     {
+                        var itemCount = objective.RetrieveItems.Count();
+                        var item = objective.RetrieveItems.First();
+
                         // Zone 1 is normal
                         var entrance = level.Planner.GetExactZones(director.Bulkhead).First();
                         entrance.MaxConnections = 3;
@@ -1005,10 +1008,10 @@ namespace AutogenRundown.DataBlocks
                         level.Planner.AddZone(hub, zone);
 
                         // Builds a branch for the pickup item in it.
-                        void BuildItemBranch(ZoneNode baseNode, string branch)
+                        void BuildItemBranch(ZoneNode baseNode, string branch, (int, int) minmax)
                         {
                             var objectiveLayerData = level.GetObjectiveLayerData(director.Bulkhead);
-                            var branchZoneCount = Generator.Random.Next(2, 3);
+                            var branchZoneCount = Generator.Random.Next(minmax.Item1, minmax.Item2);
                             var prev = baseNode;
 
                             // Generate the zones for this branch
@@ -1041,11 +1044,16 @@ namespace AutogenRundown.DataBlocks
                                 });
                         }
 
-                        // Create base branches for each generator
-                        for (int g = 0; g < Math.Min(objective.RetrieveItems.Count(), 3); g++)
-                            BuildItemBranch(hub, $"bigitem_{g}");
+                        // Create base branches for each item
+                        for (int g = 0; g < Math.Min(itemCount, 3); g++)
+                            BuildItemBranch(hub, $"bigitem_{g}", itemCount switch
+                            {
+                                1 => (5, 7),
+                                2 => (3, 5),
+                                _ => (2, 3)
+                            });
 
-                        if (objective.RetrieveItems.Count() > 3)
+                        if (itemCount > 3)
                         {
                             var secondHubBase = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "bigitem_2")!;
 
@@ -1061,7 +1069,7 @@ namespace AutogenRundown.DataBlocks
                             level.Planner.AddZone(hub2, zoneHub2);
 
                             for (int g = 3; g < objective.RetrieveItems.Count(); g++)
-                                BuildItemBranch(hub2, $"bigitem_{g}");
+                                BuildItemBranch(hub2, $"bigitem_{g}", (2, 3));
                         }
 
                         break;
