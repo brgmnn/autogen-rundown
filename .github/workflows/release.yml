@@ -15,6 +15,8 @@ jobs:
       GH_TOKEN: ${{ github.token }}
 
     steps:
+      - uses: actions/checkout@v4
+
       - name: Determine tag
         id: tag
         run: |
