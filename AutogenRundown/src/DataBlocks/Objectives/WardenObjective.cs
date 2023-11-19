@@ -581,6 +581,11 @@ namespace AutogenRundown.DataBlocks
 
                         GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
+                        var item = RetrieveItems.First();
+
+                        if (item == WardenObjectiveItem.MatterWaveProjector)
+                            WavesOnGotoWin.Add(GenericWave.ExitTrickle);
+
                         break;
                     }
 
