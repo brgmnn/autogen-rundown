@@ -2,11 +2,11 @@ name: Release (Thunderstore)
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release version number'
-        required: false
-        default: 'v0.0.0'
+    # inputs:
+    #   version:
+    #     description: 'Release version number'
+    #     required: false
+    #     default: 'v0.0.0'
 
 jobs:
   release:
@@ -19,20 +19,24 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Determine tag and version
-        id: tag
+        id: latest
         run: |
           raw="$(gh release view --json tagName --jq '.tagName')"
 
           echo "tag=$raw" >> "$GITHUB_OUTPUT"
           echo "version=$(echo $raw | sed 's/^v//')" >> "$GITHUB_OUTPUT"
 
-      # - name: Download release asset
-      #   run: gh release download ${{ steps.tag.outputs.tag }} -p AutogenRundown_0.13.0.zip
+      - name: Download release asset
+        run: |
+          gh release download \
+            ${{ steps.latest.outputs.tag }}
+            -p AutogenRundown_${{ steps.latest.outputs.version }}.zip
 
       - name: Debug
         run: |
-          echo "well? '${{ steps.tag.outputs.tag }}'"
-          echo "ver? '${{ steps.tag.outputs.version }}'"
+          echo "well? '${{ steps.latest.outputs.tag }}'"
+          echo "ver? '${{ steps.latest.outputs.version }}'"
+          ls -lah
 
 
       # - name: Upload mod to Thunderstore
