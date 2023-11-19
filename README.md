@@ -55,8 +55,15 @@ Follow the installation instructions again, check yes to overwrite all files.
     * [ ] Fog specific lights
     * [ ] Custom lights(?)
   * Zones
-    * [x] More custom geomorphs
+    * Custom Geomorphs
+      * [x] Hubs
+      * [x] I's (corridors)
+      * [ ] Warp portals
+    * Curated event layouts
+      * [ ] Class 10+ alarm room
+      * [ ] King of the hill room
     * [ ] Specialized bulkhead geomorphs and layouts
+    * [ ] Bulkheads behind bulkheads
   * Challenges
     * [x] Key to unlock doors
     * [ ] Cell to power generator to unlock doors
