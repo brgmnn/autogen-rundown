@@ -205,23 +205,25 @@ namespace AutogenRundown.DataBlocks
             {
                 case WardenObjectiveType.RetrieveBigItems:
                     {
-                        var choices = new List<(double, WardenObjectiveItem)>
-                        {
-                            (1.0, WardenObjectiveItem.DataSphere),
-                            (1.0, WardenObjectiveItem.CargoCrate),
-                            (1.0, WardenObjectiveItem.CargoCrateHighSecurity),
-                            (1.0, WardenObjectiveItem.CryoCase),
-                        };
+                        // Temporarily set main to always be matter wave projector
+                        var choices = director.Bulkhead.HasFlag(Bulkhead.Main) ?
+                            new List<(double, WardenObjectiveItem)>() :
+                            new List<(double, WardenObjectiveItem)>
+                            {
+                                (1.0, WardenObjectiveItem.DataSphere),
+                                (1.0, WardenObjectiveItem.CargoCrate),
+                                (1.0, WardenObjectiveItem.CargoCrateHighSecurity),
+                                (1.0, WardenObjectiveItem.CryoCase),
+                            };
 
                         // These would be main objective items only
                         if (director.Bulkhead.HasFlag(Bulkhead.Main))
                         {
-                            choices.Add((1.0, WardenObjectiveItem.NeonateHsu));
+                            //choices.Add((1.0, WardenObjectiveItem.NeonateHsu));
                             choices.Add((1.0, WardenObjectiveItem.MatterWaveProjector));
                         }
 
-                        //var item = Generator.Select(choices);
-                        var item = WardenObjectiveItem.MatterWaveProjector;
+                        var item = Generator.Select(choices);
 
                         /**
                          * Some interesting options here for how many items we should spawn. We
