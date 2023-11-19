@@ -101,6 +101,7 @@ namespace AutogenRundown
             mainDirector.GenPoints();
 
             var settings = new LevelSettings("C");
+            settings.Modifiers.Add(LevelModifiers.Fog);
 
             var testLevel = Level.Build(
                 new Level

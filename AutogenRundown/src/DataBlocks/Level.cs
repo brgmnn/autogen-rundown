@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Objectives;
+﻿using AutogenRundown.DataBlocks.Levels;
+using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.GeneratorData;
 using Newtonsoft.Json;
@@ -469,9 +470,15 @@ namespace AutogenRundown.DataBlocks
             // Assign bulkheads
             level.Settings.Bulkheads = selectedBulkheads;
 
-            level.FogSettings = Fog.LowFog;
+            // Set low fog if we have fog
+            if (level.Settings.Modifiers.Contains(LevelModifiers.Fog))
+                level.FogSettings = Fog.LowFog;
 
-            Plugin.Logger.LogDebug($"{logLevelId} - Modifiers: {level.Settings.Modifiers}");
+            // For heavy fog we can also roll low mid fog
+            if (level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
+                level.FogSettings = Generator.Flip(0.75) ? Fog.LowFog : Fog.LowMidFog;
+
+            Plugin.Logger.LogDebug($"{logLevelId} - Modifiers: {level.Settings.Modifiers}, Fog: {level.FogSettings.Name}");
 
             /**
              * Options for bulkhead keys and bulkhead DCs:

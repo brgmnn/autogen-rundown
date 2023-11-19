@@ -750,15 +750,20 @@ namespace AutogenRundown.DataBlocks
             var elevatorDrop = new ZoneNode(
                 Bulkhead.Main | Bulkhead.StartingArea,
                 level.Planner.NextIndex(Bulkhead.Main));
+            var elevatorDropZone = new Zone
+            {
+                Coverage = new CoverageMinMax { Min = 25, Max = 35 },
+                LightSettings = Lights.GenRandomLight(),
+            };
+
+            // Add fog repellers in the first zone if there's fog in the level.
+            if (level.Settings.Modifiers.Contains(LevelModifiers.Fog) ||
+                level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
+                elevatorDropZone.ConsumableDistributionInZone
+                    = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
 
             level.Planner.Connect(elevatorDrop);
-            level.Planner.AddZone(
-                elevatorDrop,
-                new Zone
-                {
-                    Coverage = new CoverageMinMax { Min = 25, Max = 35 },
-                    LightSettings = Lights.GenRandomLight(),
-                });
+            level.Planner.AddZone(elevatorDrop, elevatorDropZone);
 
             var minimumZones = level.Settings.Bulkheads switch
             {
@@ -797,16 +802,15 @@ namespace AutogenRundown.DataBlocks
             {
                 var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
                 var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
+                var nextZone = new Zone
+                {
+                    Coverage = CoverageMinMax.GenNormalSize(),
+                    LightSettings = Lights.GenRandomLight(),
+                };
+                nextZone.RollFog(level);
 
                 level.Planner.Connect(prev, next);
-                level.Planner.AddZone(
-                    next,
-                    new Zone
-                    {
-                        Coverage = CoverageMinMax.GenNormalSize(),
-                        LightSettings = Lights.GenRandomLight(),
-                        Altitude = new Altitude { AllowedZoneAltitude = Height.OnlyLow }
-                    });
+                level.Planner.AddZone(next, nextZone);
 
                 // Place the first zones of the connecting bulkhead zones, so we can build from
                 // them later.
@@ -926,15 +930,16 @@ namespace AutogenRundown.DataBlocks
                         {
                             var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
                             var next = new ZoneNode(director.Bulkhead, zoneIndex);
+                            var nextZone = new Zone
+                            {
+                                Coverage = CoverageMinMax.GenNormalSize(),
+                                LightSettings = Lights.GenRandomLight(),
+                            };
+
+                            nextZone.RollFog(level);
 
                             level.Planner.Connect(prev, next);
-                            level.Planner.AddZone(
-                                next,
-                                new Zone
-                                {
-                                    Coverage = CoverageMinMax.GenNormalSize(),
-                                    LightSettings = Lights.GenRandomLight(),
-                                });
+                            level.Planner.AddZone(next, nextZone);
 
                             prev = next;
                         }
@@ -973,6 +978,7 @@ namespace AutogenRundown.DataBlocks
 
                         var entranceZone = level.Planner.GetZone(entrance)!;
                         entranceZone.GenHubGeomorph(director.Complex);
+                        entranceZone.RollFog(level);
 
                         // Zone 2 is an I corridor
                         var corridorIndex = level.Planner.NextIndex(director.Bulkhead);
@@ -981,6 +987,7 @@ namespace AutogenRundown.DataBlocks
 
                         var corridorZone = new Zone { LightSettings = Lights.GenRandomLight() };
                         corridorZone.GenCorridorGeomorph(director.Complex);
+                        corridorZone.RollFog(level);
 
                         level.Planner.Connect(entrance, corridor);
                         level.Planner.AddZone(corridor, corridorZone);
@@ -992,6 +999,7 @@ namespace AutogenRundown.DataBlocks
 
                         var zone = new Zone { LightSettings = Lights.GenRandomLight() };
                         zone.GenHubGeomorph(director.Complex);
+                        zone.RollFog(level);
 
                         level.Planner.Connect(corridor, hub);
                         level.Planner.AddZone(hub, zone);
@@ -1008,15 +1016,15 @@ namespace AutogenRundown.DataBlocks
                             {
                                 var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
                                 var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
+                                var nextZone = new Zone
+                                {
+                                    Coverage = CoverageMinMax.GenNormalSize(),
+                                    LightSettings = Lights.GenRandomLight(),
+                                };
+                                nextZone.RollFog(level);
 
                                 level.Planner.Connect(prev, next);
-                                level.Planner.AddZone(
-                                    next,
-                                    new Zone
-                                    {
-                                        Coverage = CoverageMinMax.GenNormalSize(),
-                                        LightSettings = Lights.GenRandomLight(),
-                                    });
+                                level.Planner.AddZone(next, nextZone);
 
                                 prev = next;
                             }
@@ -1047,6 +1055,7 @@ namespace AutogenRundown.DataBlocks
 
                             var zoneHub2 = new Zone { LightSettings = Lights.GenRandomLight() };
                             zoneHub2.GenHubGeomorph(director.Complex);
+                            zoneHub2.RollFog(level);
 
                             level.Planner.Connect(secondHubBase, hub2);
                             level.Planner.AddZone(hub2, zoneHub2);
@@ -1068,6 +1077,7 @@ namespace AutogenRundown.DataBlocks
 
                         var entranceZone = level.Planner.GetZone(entrance)!;
                         entranceZone.GenCorridorGeomorph(director.Complex);
+                        entranceZone.RollFog(level);
                         entrance.MaxConnections = 1;
 
                         // Zone 2 is a hub zone for branches where generators live
@@ -1077,6 +1087,7 @@ namespace AutogenRundown.DataBlocks
 
                         var zone = new Zone { LightSettings = Lights.GenRandomLight() };
                         zone.GenHubGeomorph(director.Complex);
+                        zone.RollFog(level);
 
                         level.Planner.Connect(entrance, hub);
                         level.Planner.AddZone(hub, zone);
@@ -1093,15 +1104,15 @@ namespace AutogenRundown.DataBlocks
                             {
                                 var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
                                 var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
+                                var nextZone = new Zone
+                                {
+                                    Coverage = CoverageMinMax.GenNormalSize(),
+                                    LightSettings = Lights.GenRandomLight(),
+                                };
+                                nextZone.RollFog(level);
 
                                 level.Planner.Connect(prev, next);
-                                level.Planner.AddZone(
-                                    next,
-                                    new Zone
-                                    {
-                                        Coverage = CoverageMinMax.GenNormalSize(),
-                                        LightSettings = Lights.GenRandomLight(),
-                                    });
+                                level.Planner.AddZone(next, nextZone);
 
                                 prev = next;
                             }
@@ -1149,6 +1160,7 @@ namespace AutogenRundown.DataBlocks
 
                                 var zoneHub2 = new Zone { LightSettings = Lights.GenRandomLight() };
                                 zoneHub2.GenHubGeomorph(director.Complex);
+                                zoneHub2.RollFog(level);
 
                                 level.Planner.Connect(secondHubBase, hub2);
                                 level.Planner.AddZone(hub2, zoneHub2);
@@ -1215,20 +1227,22 @@ namespace AutogenRundown.DataBlocks
                 default:
                     {
                         var prev = level.Planner.GetExactZones(director.Bulkhead).First();
+                        var prevZone = level.Planner.GetZone(prev)!;
+                        prevZone.RollFog(level);
 
                         for (int i = 1; i < director.ZoneCount; i++)
                         {
                             var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
                             var next = new ZoneNode(director.Bulkhead, zoneIndex);
+                            var zone = new Zone
+                            {
+                                Coverage = CoverageMinMax.GenNormalSize(),
+                                LightSettings = Lights.GenRandomLight(),
+                            };
+                            zone.RollFog(level);
 
                             level.Planner.Connect(prev, next);
-                            level.Planner.AddZone(
-                                next,
-                                new Zone
-                                {
-                                    Coverage = CoverageMinMax.GenNormalSize(),
-                                    LightSettings = Lights.GenRandomLight(),
-                                });
+                            level.Planner.AddZone(next, zone);
 
                             prev = next;
                         }
@@ -1237,13 +1251,24 @@ namespace AutogenRundown.DataBlocks
                     }
             }
 
+            var numberOfFogZones = level.Planner.GetZones(director.Bulkhead, null)
+                .Select(node => level.Planner.GetZone(node))
+                .Where(zone => zone != null ? zone.InFog : false)
+                .Count();
+
+            Plugin.Logger.LogDebug($"{layout.Name} -- Number of in-fog zones: {numberOfFogZones}");
+
             // Write the zones
             foreach (var node in level.Planner.GetZones(director.Bulkhead, null))
             {
                 var zone = level.Planner.GetZone(node);
 
                 if (zone != null)
+                {
                     layout.Zones.Add(zone);
+
+                    Plugin.Logger.LogDebug($"{layout.Name} -- Zone_{zone.LocalIndex} written. InFog={zone.InFog}");
+                }
             }
 
             if (director.Bulkhead.HasFlag(Bulkhead.Main))

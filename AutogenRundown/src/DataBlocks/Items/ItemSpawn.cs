@@ -29,6 +29,9 @@ namespace AutogenRundown.DataBlocks.Items
                     },
                 };
 
+        /// <summary>
+        /// Persistent Id of the item to spawn.
+        /// </summary>
         [JsonProperty("itemID")]
         public Item Item { get; set; } = 0;
 

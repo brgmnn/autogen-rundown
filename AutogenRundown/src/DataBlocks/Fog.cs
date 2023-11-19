@@ -1,4 +1,6 @@
-﻿namespace AutogenRundown.DataBlocks
+﻿using Newtonsoft.Json;
+
+namespace AutogenRundown.DataBlocks
 {
     public record class Fog : DataBlock
     {
@@ -50,6 +52,7 @@
         }*/
         public static Fog DefaultFog = new Fog
         {
+            Name = "Fog_DefaultFog",
             FogColor = new Color { Red = 0.5235849, Green = 0.682390034, Blue = 1.0, Alpha = 0.0 },
             FogDensity = 0.0004,
             DensityNoiseDirection = new Vector3 { X = 1.0, Y = 1.0, Z = 1.0 },
@@ -67,26 +70,62 @@
         /// </summary>
         public static Fog LowFog = new Fog
         {
+            Name = "Fog_Low",
             FogColor = new Color { Red = 0.4, Green = 0.68, Blue = 1.0, Alpha = 0.0 },
             DensityHeightAltitude = HEIGHT_LOW,
-
             DensityHeightMaxBoost = DENSITY_FULL,
             FogDensity = DENSITY_LOW,
+
+            FogLevels = { Height.OnlyLow },
+            NoFogLevels =
+            {
+                Height.OnlyMid,
+                Height.OnlyHigh,
+                Height.MidHigh,
+            }
         };
 
-        public static Fog MidFog = new Fog
+        /// <summary>
+        /// Low and mid levels are submerged, high levels are clear of fog (low density).
+        /// </summary>
+        public static Fog LowMidFog = new Fog
         {
+            Name = "Fog_LowMid",
             FogColor = new Color { Red = 0.4, Green = 0.68, Blue = 1.0, Alpha = 0.0 },
             DensityHeightAltitude = HEIGHT_MED,
-
             DensityHeightMaxBoost = DENSITY_FULL,
             FogDensity = DENSITY_LOW,
+
+            FogLevels =
+            {
+                Height.OnlyLow,
+                Height.OnlyMid,
+                Height.LowMid
+            },
+            NoFogLevels = { Height.OnlyHigh }
         };
 
-        public static Fog FullFog = new Fog { DensityHeightAltitude = 4.0 };
+        public static Fog FullFog = new Fog
+        {
+            Name = "Fog_Full",
+            DensityHeightAltitude = 4.0,
+
+            FogLevels =
+            {
+                Height.LowMidHigh,
+                Height.OnlyLow,
+                Height.OnlyMid,
+                Height.OnlyHigh,
+                Height.LowMid,
+                Height.MidHigh,
+                Height.LowHigh
+            },
+            NoFogLevels = { }
+        };
 
         public static Fog FullFog_Infectious = FullFog with
         {
+            Name = "Fog_FullInfectious",
             PersistentId = Generator.GetPersistentId(),
             Infection = 0.03
         };
@@ -100,6 +139,29 @@
             Bins.Fogs.AddBlock(FullFog);
             Bins.Fogs.AddBlock(FullFog_Infectious);
         }
+
+        #region Internal properties not exposed in the data block
+        /// <summary>
+        /// 
+        /// </summary>
+        [JsonIgnore]
+        public List<Height> FogLevels { get; set; } = new List<Height>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [JsonIgnore]
+        public List<Height> NoFogLevels { get; set; } = new List<Height>
+        {
+            Height.LowMidHigh,
+            Height.OnlyLow,
+            Height.OnlyHigh,
+            Height.OnlyMid,
+            Height.LowMid,
+            Height.MidHigh,
+            Height.LowHigh,
+        };
+        #endregion
 
         /// <summary>
         /// Determine the color of the fog. This can affect the lighting of the entire level and

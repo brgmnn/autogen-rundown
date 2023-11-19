@@ -1,10 +1,12 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using static UnityEngine.Rendering.PostProcessing.BloomRenderer;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -494,6 +496,73 @@ namespace AutogenRundown.DataBlocks
             if (puzzle.PersistentId != 0)
                 Bins.ChainedPuzzles.AddBlock(puzzle);
         }
+        #endregion
+
+        #region Fog
+        /// <summary>
+        /// Set's the zone to be out of fog (based on the level settings).
+        /// </summary>
+        /// <param name="level"></param>
+        public void SetOutOfFog(Level level)
+        {
+            Height? altitude = Generator.Pick(level.FogSettings.NoFogLevels);
+
+            if (altitude != null)
+            {
+                Altitude = new Altitude { AllowedZoneAltitude = (Height)altitude };
+                InFog = false;
+            }
+        }
+
+        /// <summary>
+        /// Set's the zone to be in fog (based on the level settings).
+        /// </summary>
+        /// <param name="level"></param>
+        public void SetInFog(Level level)
+        {
+            Height? altitude = Generator.Pick(level.FogSettings.FogLevels);
+
+            if (altitude != null)
+            {
+                Altitude = new Altitude { AllowedZoneAltitude = (Height)altitude };
+                InFog = true;
+
+                // Always add fog repellers into the fog zone
+                ConsumableDistributionInZone = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
+            }
+        }
+
+        /// <summary>
+        /// Checks the level settings for fog and optionally sets the altitude
+        /// </summary>
+        public void RollFog(Level level)
+        {
+            // If we don't have fog enabled then return early.
+            if (level.Settings.Modifiers.Contains(LevelModifiers.NoFog))
+                return;
+
+            double chance;
+
+            if (level.Settings.Modifiers.Contains(LevelModifiers.Fog))
+                chance = 0.5;
+            else if (level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
+                chance = 0.75;
+            else
+                return;
+
+            if (Generator.Flip(chance))
+                SetInFog(level);
+            else
+                SetOutOfFog(level);
+        }
+        #endregion
+
+        #region Internal plugin properties
+        /// <summary>
+        /// Flags whether the zone is in fog or not.
+        /// </summary>
+        [JsonIgnore]
+        public bool InFog { get; set; } = false;
         #endregion
 
         #region Unused by us properties

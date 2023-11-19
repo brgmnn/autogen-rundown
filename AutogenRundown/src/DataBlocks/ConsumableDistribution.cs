@@ -39,9 +39,9 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public static ConsumableDistribution Baseline_FogRepellers = new ConsumableDistribution
         {
-            SpawnsPerZone = 7,
+            SpawnsPerZone = 8,
             SpawnData = Collections.Flatten(
-                ItemSpawn.GlowSticks(2.0),
+                ItemSpawn.GlowSticks(3.0),
                 new List<ItemSpawn> {
                     new ItemSpawn
                     {

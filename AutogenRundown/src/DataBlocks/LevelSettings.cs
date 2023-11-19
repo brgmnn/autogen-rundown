@@ -22,7 +22,14 @@ namespace AutogenRundown.DataBlocks
         {
             switch (modifier)
             {
+                case LevelModifiers.Fog:
+                case LevelModifiers.HeavyFog:
+                    Remove(LevelModifiers.NoFog);
+                    break;
+
                 case LevelModifiers.NoFog:
+                    Remove(LevelModifiers.Fog);
+                    Remove(LevelModifiers.HeavyFog);
                     Remove(LevelModifiers.FogIsInfectious);
                     break;
 
@@ -210,8 +217,8 @@ namespace AutogenRundown.DataBlocks
                         Modifiers.Add(
                             Generator.Select(new List<WeightedModifier>
                             {
-                                new WeightedModifier { Modifier = LevelModifiers.NoFog, Weight = 0.7 },
-                                new WeightedModifier { Modifier = LevelModifiers.Fog,   Weight = 0.3 },
+                                new WeightedModifier { Modifier = LevelModifiers.NoFog, Weight = 0.6 },
+                                new WeightedModifier { Modifier = LevelModifiers.Fog,   Weight = 0.4 },
                             }).Modifier);
 
                         EnemyBossPack = Generator.Select(
@@ -249,22 +256,30 @@ namespace AutogenRundown.DataBlocks
                         Modifiers.Add(
                             Generator.Select(new List<WeightedModifier>
                             {
-                                new WeightedModifier { Modifier = LevelModifiers.NoFog,    Weight = 0.6 },
-                                new WeightedModifier { Modifier = LevelModifiers.Fog,      Weight = 0.3 },
+                                new WeightedModifier { Modifier = LevelModifiers.NoFog,    Weight = 0.4 },
+                                new WeightedModifier { Modifier = LevelModifiers.Fog,      Weight = 0.5 },
                                 new WeightedModifier { Modifier = LevelModifiers.HeavyFog, Weight = 0.1 },
                             }).Modifier);
 
                         EnemyBossPack = Generator.Select(
                             new List<(double, List<EnemySpawningData>)>
                             {
-                                (0.6, new List<EnemySpawningData>()),
-                                (0.2, new List<EnemySpawningData>
+                                (1.0, new List<EnemySpawningData>()),
+                                (1.0, new List<EnemySpawningData>
                                 {
                                     EnemySpawningData.Mother with { Points = 10 }
                                 }),
-                                (0.2, new List<EnemySpawningData>
+                                (1.0, new List<EnemySpawningData>
+                                {
+                                    EnemySpawningData.Mother with { Points = 20 }
+                                }),
+                                (1.0, new List<EnemySpawningData>
                                 {
                                     EnemySpawningData.Tank with { Points = 10 }
+                                }),
+                                (1.0, new List<EnemySpawningData>
+                                {
+                                    EnemySpawningData.Tank with { Points = 20 }
                                 })
                             });
                         break;
@@ -293,9 +308,9 @@ namespace AutogenRundown.DataBlocks
                         Modifiers.Add(
                             Generator.Select(new List<WeightedModifier>
                             {
-                                new WeightedModifier { Modifier = LevelModifiers.NoFog,    Weight = 0.35 },
-                                new WeightedModifier { Modifier = LevelModifiers.Fog,      Weight = 0.45 },
-                                new WeightedModifier { Modifier = LevelModifiers.HeavyFog, Weight = 0.2  },
+                                new WeightedModifier { Modifier = LevelModifiers.NoFog,    Weight = 0.3 },
+                                new WeightedModifier { Modifier = LevelModifiers.Fog,      Weight = 0.5 },
+                                new WeightedModifier { Modifier = LevelModifiers.HeavyFog, Weight = 0.2 },
                             }).Modifier);
 
                         EnemyBossPack = Generator.Select(
