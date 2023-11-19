@@ -80,15 +80,17 @@ namespace AutogenRundown.DataBlocks.Zones
         /// </summary>
         /// <param name="node"></param>
         /// <param name="zone"></param>
-        public void AddZone(ZoneNode node, Zone zone)
+        public Zone AddZone(ZoneNode node, Zone zone)
         {
-            blocks.Add(
-                node,
-                zone with
-                {
-                    LocalIndex = node.ZoneNumber,
-                    BuildFromLocalIndex = GetBuildFrom(node)?.ZoneNumber ?? 0,
-                });
+            var updatedZone = zone with
+            {
+                LocalIndex = node.ZoneNumber,
+                BuildFromLocalIndex = GetBuildFrom(node)?.ZoneNumber ?? 0,
+            };
+
+            blocks.Add(node, updatedZone);
+
+            return updatedZone;
         }
 
         /// <summary>

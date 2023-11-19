@@ -1,11 +1,11 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Items;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 using Newtonsoft.Json;
-using static UnityEngine.Rendering.PostProcessing.BloomRenderer;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -16,7 +16,7 @@ namespace AutogenRundown.DataBlocks
         public uint Enemy { get; set; }
     }
 
-    public record class LevelLayout : DataBlock
+    public partial record class LevelLayout : DataBlock
     {
         #region hidden data
         [JsonIgnore]
@@ -798,11 +798,13 @@ namespace AutogenRundown.DataBlocks
             };
 
             var prev = elevatorDrop;
+            Zone nextZone = elevatorDropZone;
+
             for (int i = 0; i < minimumZones; i++)
             {
                 var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
                 var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
-                var nextZone = new Zone
+                nextZone = new Zone
                 {
                     Coverage = CoverageMinMax.GenNormalSize(),
                     LightSettings = Lights.GenRandomLight(),
@@ -810,7 +812,7 @@ namespace AutogenRundown.DataBlocks
                 nextZone.RollFog(level);
 
                 level.Planner.Connect(prev, next);
-                level.Planner.AddZone(next, nextZone);
+                nextZone = level.Planner.AddZone(next, nextZone);
 
                 // Place the first zones of the connecting bulkhead zones, so we can build from
                 // them later.
@@ -821,6 +823,11 @@ namespace AutogenRundown.DataBlocks
 
             // The final area also needs to be placed
             InitializeBulkheadArea(level, Generator.Draw(toPlace), prev);
+
+            // Add a fog turbine to the last start area if we have fog
+            if (level.Settings.Modifiers.Contains(LevelModifiers.Fog) ||
+                level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
+                nextZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
         }
 
         /// <summary>
@@ -1007,69 +1014,81 @@ namespace AutogenRundown.DataBlocks
                         level.Planner.Connect(corridor, hub);
                         level.Planner.AddZone(hub, zone);
 
-                        // Builds a branch for the pickup item in it.
-                        void BuildItemBranch(ZoneNode baseNode, string branch, (int, int) minmax)
+                        if (item == WardenObjectiveItem.MatterWaveProjector)
                         {
-                            var objectiveLayerData = level.GetObjectiveLayerData(director.Bulkhead);
-                            var branchZoneCount = Generator.Random.Next(minmax.Item1, minmax.Item2);
-                            var prev = baseNode;
-
-                            // Generate the zones for this branch
-                            for (int i = 0; i < branchZoneCount; i++)
+                            BuildLayout_MatterWaveProjector(
+                                level,
+                                director,
+                                objective,
+                                hub);
+                            break;
+                        }
+                        else
+                        {
+                            // Builds a branch for the pickup item in it.
+                            void BuildItemBranch(ZoneNode baseNode, string branch, (int, int) minmax)
                             {
-                                var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-                                var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
-                                var nextZone = new Zone
+                                var objectiveLayerData = level.GetObjectiveLayerData(director.Bulkhead);
+                                var branchZoneCount = Generator.Random.Next(minmax.Item1, minmax.Item2);
+                                var prev = baseNode;
+
+                                // Generate the zones for this branch
+                                for (int i = 0; i < branchZoneCount; i++)
                                 {
-                                    Coverage = CoverageMinMax.GenNormalSize(),
-                                    LightSettings = Lights.GenRandomLight(),
-                                };
-                                nextZone.RollFog(level);
+                                    var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
+                                    var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
+                                    var nextZone = new Zone
+                                    {
+                                        Coverage = CoverageMinMax.GenNormalSize(),
+                                        LightSettings = Lights.GenRandomLight(),
+                                    };
+                                    nextZone.RollFog(level);
 
-                                level.Planner.Connect(prev, next);
-                                level.Planner.AddZone(next, nextZone);
+                                    level.Planner.Connect(prev, next);
+                                    level.Planner.AddZone(next, nextZone);
 
-                                prev = next;
+                                    prev = next;
+                                }
+
+                                // Assign the zone placement data for the objective text
+                                objectiveLayerData.ObjectiveData.ZonePlacementDatas.Add(
+                                    new List<ZonePlacementData>
+                                    {
+                                        new ZonePlacementData
+                                        {
+                                            LocalIndex = prev.ZoneNumber,
+                                            Weights = ZonePlacementWeights.NotAtStart
+                                        }
+                                    });
                             }
 
-                            // Assign the zone placement data for the objective text
-                            objectiveLayerData.ObjectiveData.ZonePlacementDatas.Add(
-                                new List<ZonePlacementData>
+                            // Create base branches for each item
+                            for (int g = 0; g < Math.Min(itemCount, 3); g++)
+                                BuildItemBranch(hub, $"bigitem_{g}", itemCount switch
                                 {
-                                    new ZonePlacementData
-                                    {
-                                        LocalIndex = prev.ZoneNumber,
-                                        Weights = ZonePlacementWeights.NotAtStart
-                                    }
+                                    1 => (5, 7),
+                                    2 => (3, 5),
+                                    _ => (2, 3)
                                 });
-                        }
 
-                        // Create base branches for each item
-                        for (int g = 0; g < Math.Min(itemCount, 3); g++)
-                            BuildItemBranch(hub, $"bigitem_{g}", itemCount switch
+                            if (itemCount > 3)
                             {
-                                1 => (5, 7),
-                                2 => (3, 5),
-                                _ => (2, 3)
-                            });
+                                var secondHubBase = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "bigitem_2")!;
 
-                        if (itemCount > 3)
-                        {
-                            var secondHubBase = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "bigitem_2")!;
+                                // Case where we want two more zones. Add a hub with two more cells
+                                var hub2 = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead));
+                                hub2.MaxConnections = 3;
 
-                            // Case where we want two more zones. Add a hub with two more cells
-                            var hub2 = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead));
-                            hub2.MaxConnections = 3;
+                                var zoneHub2 = new Zone { LightSettings = Lights.GenRandomLight() };
+                                zoneHub2.GenHubGeomorph(director.Complex);
+                                zoneHub2.RollFog(level);
 
-                            var zoneHub2 = new Zone { LightSettings = Lights.GenRandomLight() };
-                            zoneHub2.GenHubGeomorph(director.Complex);
-                            zoneHub2.RollFog(level);
+                                level.Planner.Connect(secondHubBase, hub2);
+                                level.Planner.AddZone(hub2, zoneHub2);
 
-                            level.Planner.Connect(secondHubBase, hub2);
-                            level.Planner.AddZone(hub2, zoneHub2);
-
-                            for (int g = 3; g < objective.RetrieveItems.Count(); g++)
-                                BuildItemBranch(hub2, $"bigitem_{g}", (2, 3));
+                                for (int g = 3; g < objective.RetrieveItems.Count(); g++)
+                                    BuildItemBranch(hub2, $"bigitem_{g}", (2, 3));
+                            }
                         }
 
                         break;
@@ -1213,10 +1232,10 @@ namespace AutogenRundown.DataBlocks
                         var pickup = new BigPickupDistribution
                         {
                             SpawnsPerZone = 2,
-                            SpawnData = new List<BigPickupSpawnData>
+                            SpawnData = new List<ItemSpawn>
                                     {
-                                        new BigPickupSpawnData { Item = WardenObjectiveItem.PowerCell },
-                                        new BigPickupSpawnData { Item = WardenObjectiveItem.PowerCell }
+                                        new ItemSpawn { Item = Items.Item.PowerCell },
+                                        new ItemSpawn { Item = Items.Item.PowerCell }
                                     }
                         };
                         Bins.BigPickupDistributions.AddBlock(pickup);

@@ -254,6 +254,36 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
+        /// Places the matter wave projector pickup geomorph. DigSite has the actual geo from
+        /// vanilla, Tech uses the data sphere/neonate needle geo, and service uses the huge
+        /// pit geo.
+        /// </summary>
+        /// <param name="complex"></param>
+        public void GenMatterWaveProjectorGeomorph(Complex complex)
+        {
+            switch (complex)
+            {
+                case Complex.Mining:
+                    SubComplex = SubComplex.DigSite;
+                    CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_SF_02.prefab";
+                    Coverage = new CoverageMinMax { Min = 20, Max = 20 };
+                    break;
+
+                case Complex.Tech:
+                    SubComplex = SubComplex.Lab;
+                    CustomGeomorph = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_Lab_dead_end_room_02.prefab";
+                    Coverage = new CoverageMinMax { Min = 20, Max = 20 };
+                    break;
+
+                case Complex.Service:
+                    SubComplex = SubComplex.Floodways;
+                    CustomGeomorph = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_SF_01.prefab";
+                    Coverage = new CoverageMinMax { Min = 30, Max = 35 };
+                    break;
+            }
+        }
+
+        /// <summary>
         /// Creates a reactor geomorph in the zone for use with reactor objectives.
         /// See: https://docs.google.com/document/d/1iSYUASlQSaP6l7PD3HszsXSAxJ-wb8MAVwYxb9xW92c/
         ///

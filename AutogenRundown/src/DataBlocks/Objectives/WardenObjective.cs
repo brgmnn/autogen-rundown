@@ -220,7 +220,8 @@ namespace AutogenRundown.DataBlocks
                             choices.Add((1.0, WardenObjectiveItem.MatterWaveProjector));
                         }
 
-                        var item = Generator.Select(choices);
+                        //var item = Generator.Select(choices);
+                        var item = WardenObjectiveItem.MatterWaveProjector;
 
                         /**
                          * Some interesting options here for how many items we should spawn. We
@@ -567,8 +568,8 @@ namespace AutogenRundown.DataBlocks
 
                         // TODO: change the zone number
                         GoToZone = "Navigate to <color=orange>ZONE 20</color> and find [ALL_ITEMS]";
-                        GoToZoneHelp = "Use information in the environment to find <color=orange>ZONE 20</color> ";
-                        InZoneFindItem = "Find [ALL_ITEMS] somewhere inside <color=orange>ZONE 20</color>";
+                        GoToZoneHelp = "Use information in the environment to find <color=orange>ZONE 20</color>";
+                        InZoneFindItem = "Find [ALL_ITEMS] somewhere inside [ITEM_ZONE]";
 
                         InZoneFindItemHelp = "Use maintenance terminal command PING to find [ALL_ITEMS]";
                         // TODO: rename this

@@ -135,6 +135,53 @@ namespace AutogenRundown.DataBlocks
             get => (double)Points / POPULATION_PER_ZONE;
         }
 
+        #region Enemy Tiers
+        public static EnemySpawningData TierA = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Hibernate,
+            Difficulty = (uint)AutogenDifficulty.TierA
+        };
+
+        public static EnemySpawningData TierB = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Hibernate,
+            Difficulty = (uint)AutogenDifficulty.TierB
+        };
+
+        public static EnemySpawningData TierC = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Hibernate,
+            Difficulty = (uint)AutogenDifficulty.TierC
+        };
+
+        public static EnemySpawningData TierD = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Hibernate,
+            Difficulty = (uint)AutogenDifficulty.TierD
+        };
+
+        public static EnemySpawningData TierE = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Hibernate,
+            Difficulty = (uint)AutogenDifficulty.TierE
+        };
+        #endregion
+
+        #region Sleepers
+        public static EnemySpawningData Striker = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Hibernate,
+            Difficulty = (uint)Enemy.Striker
+        };
+
+        public static EnemySpawningData Shooter = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Hibernate,
+            Difficulty = (uint)Enemy.Shooter
+        };
+        #endregion
+
+        #region Scouts
         /// <summary>
         /// Regular scout
         /// </summary>
@@ -155,6 +202,7 @@ namespace AutogenRundown.DataBlocks
             GroupType = EnemyGroupType.Scout,
             Difficulty = (uint)EnemyRoleDifficulty.Boss
         };
+        #endregion
 
         #region Bosses
         public static EnemySpawningData Mother = new EnemySpawningData
@@ -167,6 +215,13 @@ namespace AutogenRundown.DataBlocks
         {
             GroupType = EnemyGroupType.Hibernate,
             Difficulty = (uint)Enemy.PMother
+        };
+
+        // Technically not a boss but spawns with the mothers usually
+        public static EnemySpawningData Baby = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Hibernate,
+            Difficulty = (uint)Enemy.Baby
         };
 
         public static EnemySpawningData Tank = new EnemySpawningData

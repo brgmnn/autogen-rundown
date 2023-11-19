@@ -7,6 +7,20 @@
     {
         None = 0,
 
+        #region Big pickups
+        PowerCell = 131,
+
+        FogTurbine = 133,
+
+        // Objective big items
+        NeonateHsu = 137,
+        DataSphere = 151,
+        MatterWaveProjector = 166,
+        CargoCrate = 138,
+        CargoCrateHighSecurity = 154,
+        CryoCase = 148,
+        #endregion
+
         #region Consumables
         LongRangeFlashlight = 30,
 
