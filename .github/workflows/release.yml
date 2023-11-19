@@ -1,0 +1,31 @@
+name: Release (Thunderstore)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version number'
+        required: false
+        default: 'v0.0.0'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Determine tag
+        id: tag
+        run: |
+          echo "tag=$(gh release view --json tagName --jq '.tagName')" >> "$GITHUB_OUTPUT"
+
+      - name: Debug
+        run: echo "well? '${{ steps.tag.outputs.tag }}'"
+
+      # - name: Download release asset
+      #   run: gh release download v0.13.0 -p AutogenRundown_0.13.0.zip
+
+      # - name: Upload mod to Thunderstore
+      #   uses: gtfo-mods/thunderstore-upload-action@v1
+      #   with:
+      #     api-key: ${{ secrets.THUNDERSTORE_API_KEY }}
+      #     mod-path: ./publish
