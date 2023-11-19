@@ -17,4 +17,5 @@ Inas07-LocalProgression = "1.1.5"
 [publish]
 repository = "https://thunderstore.io"
 communities = ["gtfo"]
-categories = ["rundown-mods", "rundowns"]
+# categories = ["rundown-mods", "rundowns"]
+categories = []
