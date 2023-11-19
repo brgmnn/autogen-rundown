@@ -39,18 +39,10 @@ jobs:
             ${{ steps.latest.outputs.tag }} \
             -p AutogenRundown_${{ steps.latest.outputs.version }}.zip
 
-      - name: Debug
-        run: |
-          ls -lah
-          tcli --help
-
-
       - name: Upload to Thunderstore
         run: |
-          echo hi
-
-      # - name: Upload mod to Thunderstore
-      #   uses: gtfo-mods/thunderstore-upload-action@v1
-      #   with:
-      #     api-key: ${{ secrets.THUNDERSTORE_API_KEY }}
-      #     mod-path: ./publish
+          tcli publish \
+            --token $THUNDERSTORE_TOKEN \
+            --package-name AutogenRundown \
+            --file AutogenRundown_${{ steps.latest.outputs.version }}.zip \
+            --package-version ${{ steps.latest.outputs.version }}

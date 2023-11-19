@@ -1,0 +1,4 @@
+[publish]
+repository = "https://thunderstore.io"
+communities = ["gtfo"]
+categories = ["rundown-mods", "rundowns"]
