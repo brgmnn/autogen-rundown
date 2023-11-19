@@ -2,11 +2,9 @@ name: Release (Thunderstore)
 
 on:
   workflow_dispatch:
-    # inputs:
-    #   version:
-    #     description: 'Release version number'
-    #     required: false
-    #     default: 'v0.0.0'
+
+env:
+  TCLI_VERSION: 0.2.1
 
 jobs:
   release:
@@ -17,12 +15,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Setup Thunderstore CLI
+        run: |
+          gh release download \
+            -R thunderstore-io/thunderstore-cli \
+            $TCLI_VERSION \
+            -p "*linux*"
+            -D /tmp/
+
+          tar -xzf /tmp/tcli-*-linux*.tar.gz -C /tmp/
+          mv /tmp/tcli-$TCLI_VERSION-linux-x64/tcli /usr/local/bin/tcli
 
       - name: Determine tag and version
         id: latest
         run: |
           raw="$(gh release view --json tagName --jq '.tagName')"
-
           echo "tag=$raw" >> "$GITHUB_OUTPUT"
           echo "version=$(echo $raw | sed 's/^v//')" >> "$GITHUB_OUTPUT"
 
@@ -34,10 +41,13 @@ jobs:
 
       - name: Debug
         run: |
-          echo "well? '${{ steps.latest.outputs.tag }}'"
-          echo "ver? '${{ steps.latest.outputs.version }}'"
           ls -lah
+          tcli --help
 
+
+      - name: Upload to Thunderstore
+        run: |
+          echo hi
 
       # - name: Upload mod to Thunderstore
       #   uses: gtfo-mods/thunderstore-upload-action@v1
