@@ -67,7 +67,7 @@ Follow the installation instructions again, check yes to overwrite all files.
   * Challenges
     * [x] Key to unlock doors
     * [ ] Cell to power generator to unlock doors
-    * [ ] Fog
+    * [x] Fog
     * [ ] Infectious fog
   * [ ] Dimensions
 * Objectives
