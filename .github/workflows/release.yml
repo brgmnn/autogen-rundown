@@ -9,24 +9,31 @@ on:
         default: 'v0.0.0'
 
 jobs:
-  build:
+  release:
+    name: Upload to Thunderstore
     runs-on: ubuntu-latest
-    # env:
-    #   GH_TOKEN: ${{ github.token }}
+    env:
+      GH_TOKEN: ${{ github.token }}
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Determine tag
+      - name: Determine tag and version
         id: tag
         run: |
-          echo "tag=$(gh release view --json tagName --jq '.tagName')" >> "$GITHUB_OUTPUT"
+          raw="$(gh release view --json tagName --jq '.tagName')"
 
-      - name: Debug
-        run: echo "well? '${{ steps.tag.outputs.tag }}'"
+          echo "tag=$raw" >> "$GITHUB_OUTPUT"
+          echo "version=$(echo $raw | sed 's/^v//')" >> "$GITHUB_OUTPUT"
 
       # - name: Download release asset
-      #   run: gh release download v0.13.0 -p AutogenRundown_0.13.0.zip
+      #   run: gh release download ${{ steps.tag.outputs.tag }} -p AutogenRundown_0.13.0.zip
+
+      - name: Debug
+        run: |
+          echo "well? '${{ steps.tag.outputs.tag }}'"
+          echo "ver? '${{ steps.tag.outputs.version }}'"
+
 
       # - name: Upload mod to Thunderstore
       #   uses: gtfo-mods/thunderstore-upload-action@v1
