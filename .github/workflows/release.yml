@@ -20,7 +20,7 @@ jobs:
           gh release download \
             -R thunderstore-io/thunderstore-cli \
             $TCLI_VERSION \
-            -p "*linux*"
+            -p "*linux*" \
             -D /tmp/
 
           tar -xzf /tmp/tcli-*-linux*.tar.gz -C /tmp/
