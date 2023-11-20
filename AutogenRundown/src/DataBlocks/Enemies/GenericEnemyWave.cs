@@ -10,9 +10,17 @@ namespace AutogenRundown.DataBlocks.Enemies
         public static GenericWave ExitTrickle = new GenericWave
         {
             WaveSettings = (uint)VanillaWaveSettings.ExitTrickle_38S_Original,
-            WavePopulation = (uint)Alarms.VanillaWavePopulation.Baseline,
+            WavePopulation = (uint)VanillaWavePopulation.Baseline,
             SpawnDelay = 4.0,
             TriggerAlarm = true,
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static GenericWave Exit_Surge = new GenericWave
+        {
+            WaveSettings = Alarms.WaveSettings.Exit_Baseline.PersistentId,
         };
 
         #region Uplink Waves

@@ -213,10 +213,15 @@ namespace AutogenRundown.DataBlocks.Alarms
 
         public static new void SaveStatic()
         {
+            // Alarms
             Bins.WaveSettings.AddBlock(Baseline_Normal);
-
             Bins.WaveSettings.AddBlock(OnlyStandard);
 
+            // Exit
+            Bins.WaveSettings.AddBlock(Exit_Baseline);
+            Bins.WaveSettings.AddBlock(Surge);
+
+            // Single enemy spawn
             Bins.WaveSettings.AddBlock(SingleMiniBoss);
         }
 
@@ -239,6 +244,42 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PopulationFilter = { Enemies.EnemyType.Standard },
             FilterType = PopulationFilterType.Include
+        };
+        #endregion
+
+        #region Exit waves
+        public static WaveSettings Exit_Baseline = new WaveSettings
+        {
+            PopulationFilter =
+            {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+            },
+            FilterType = PopulationFilterType.Include,
+            PauseBeforeStart = 4.0,
+            PauseBetweenGroups = 8.0,
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static WaveSettings Surge = new WaveSettings
+        {
+            PopulationFilter =
+            {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+            },
+            FilterType = PopulationFilterType.Include,
+
+            PauseBeforeStart = 5.0,
+            PauseBetweenGroups = 3.0,
+            PopulationPointsPerWaveStart = 10_000,
+            PopulationPointsPerWaveEnd = 10_000,
+            PopulationPointsMinPerGroup = 2,
+            PopulationPointsPerGroupStart = 4,
+            PopulationPointsPerGroupEnd = 7,
+            PopulationRampOverTime = 0,
         };
         #endregion
 
