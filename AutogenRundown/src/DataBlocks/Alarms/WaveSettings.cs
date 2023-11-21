@@ -221,6 +221,9 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WaveSettings.AddBlock(Exit_Baseline);
             Bins.WaveSettings.AddBlock(Surge);
 
+            // Reactor
+            Bins.WaveSettings.AddBlock(Reactor_Easy);
+
             // Single enemy spawn
             Bins.WaveSettings.AddBlock(SingleMiniBoss);
         }
@@ -280,6 +283,29 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationPointsPerGroupStart = 4,
             PopulationPointsPerGroupEnd = 7,
             PopulationRampOverTime = 0,
+        };
+        #endregion
+
+        #region Reactor Waves
+        /// <summary>
+        /// Can be a fairly gentle reactor wave depending on the population selected.
+        /// Only spawns standard and specials.
+        /// </summary>
+        public static WaveSettings Reactor_Easy = new WaveSettings
+        {
+            PopulationFilter =
+            {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+            },
+
+            PopulationPointsTotal = 25,
+            PopulationPointsPerWaveStart = 25,
+            PopulationPointsPerWaveEnd = 25,
+            PopulationPointsMinPerGroup = 5,
+            PopulationPointsPerGroupStart = 5,
+            PopulationPointsPerGroupEnd = 10,
+            PopulationRampOverTime = 50
         };
         #endregion
 

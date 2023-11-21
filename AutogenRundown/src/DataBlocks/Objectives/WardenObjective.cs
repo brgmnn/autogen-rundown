@@ -206,6 +206,22 @@ namespace AutogenRundown.DataBlocks
                 case WardenObjectiveType.ReactorStartup:
                     {
                         objective.ReactorStartupGetCodes = false;
+
+                        var waveCount = director.Tier switch
+                        {
+                            "A" => Generator.Random.Next(3, 4),
+                            "B" => Generator.Random.Next(4, 6),
+                            "C" => Generator.Random.Next(5, 7),
+                            "D" => Generator.Random.Next(8, 10),
+                            "E" => Generator.Random.Next(8, 12),
+                            _ => 1
+                        };
+
+                        // Initialize the reactor Waves with the correct number of waves, these
+                        // will be updated as we go.
+                        for (var i = 0; i < waveCount; ++i)
+                            objective.ReactorWaves.Add(new ReactorWave());
+
                         break;
                     }
 
@@ -383,6 +399,9 @@ namespace AutogenRundown.DataBlocks
 
                 /**
                  * Find and start up a reactor, fighting waves and optionally getting codes from zones.
+                 * 
+                 * Note that when spawning waves, waves with capped total points should be used to
+                 * ensure the waves end when the team has finished fighting all of the enemies.
                  * */
                 case WardenObjectiveType.ReactorStartup:
                     {
@@ -398,6 +417,27 @@ namespace AutogenRundown.DataBlocks
                         GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
                         GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
                         GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+
+                        ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
+
+                        // Setup reactor waves. We should not override these so that level layout
+                        // can assign codes to some of these waves.
+                        foreach (var wave in ReactorWaves)
+                        {
+                            wave.Warmup = 20.0;
+                            wave.WarmupFail = 30.0;
+                            wave.Verify = 30.0;
+                            wave.VerifyFail = 30;
+                            wave.Wave = 60.0;
+
+                            wave.EnemyWaves = new List<ReactorEnemyWave> {
+                                new ReactorEnemyWave
+                                {
+                                    WaveSettings = WaveSettings.Reactor_Easy.PersistentId,
+                                    WavePopulation = WavePopulation.Baseline.PersistentId,
+                                }
+                            };
+                        }
 
                         break;
                     }
