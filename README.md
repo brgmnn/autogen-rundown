@@ -78,7 +78,9 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] Clear Path — *Navigate through the zones to a separate extraction elevator*
   * [x] Gather Small Items — *IDs, GLPs etc.*
   * [x] HSU Find Sample
-  * [ ] Reactor Startup
+  * [x] Reactor Startup
+    * [ ] Fetch codes from terminals
+    * [ ] More enemy variety
   * [x] Reactor Shutdown
   * [x] Input Special Terminal Command
   * [x] Retrieve Big Items — *Fog Turbine etc.*
