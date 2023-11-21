@@ -376,6 +376,14 @@ namespace AutogenRundown.DataBlocks
                     }
 
                 /**
+                 * Find and start up a reactor, fighting waves and optionally getting codes from zones.
+                 * */
+                case WardenObjectiveType.ReactorStartup:
+                    {
+                        break;
+                    }
+
+                /**
                  * Reactor shutdown will result in the lights being off for the remainder of the
                  * level. Factor that as a difficulty modifier.
                  * */
@@ -603,6 +611,8 @@ namespace AutogenRundown.DataBlocks
                             GoToZone = $"Navigate to [ZONE_{zoneIndex}] and find [ALL_ITEMS]";
                             GoToZoneHelp = $"Use information in the environment to find [ZONE_{zoneIndex}]";
                             InZoneFindItem = $"Find [ALL_ITEMS] somewhere inside [ZONE_{zoneIndex}]";
+
+                            SolveItem = "WARNING - Matter Wave Projector misplaced - ENGAGING SECURITY PROTOCOLS";
                         }
 
                         break;
