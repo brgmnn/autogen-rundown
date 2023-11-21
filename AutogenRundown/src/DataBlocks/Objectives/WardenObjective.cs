@@ -203,6 +203,12 @@ namespace AutogenRundown.DataBlocks
 
             switch (objective.Type)
             {
+                case WardenObjectiveType.ReactorStartup:
+                    {
+                        objective.ReactorStartupGetCodes = false;
+                        break;
+                    }
+
                 case WardenObjectiveType.RetrieveBigItems:
                     {
                         // Temporarily set main to always be matter wave projector
@@ -227,7 +233,7 @@ namespace AutogenRundown.DataBlocks
 
                         /**
                          * Some interesting options here for how many items we should spawn. We
-                         * want to reduce the number of items for non Main objectives and also 
+                         * want to reduce the number of items for non Main objectives and also
                          * want to increase the number of items for deeper levels.
                          * */
                         var count = (item, director.Tier, director.Bulkhead & Bulkhead.Objectives) switch
@@ -380,6 +386,19 @@ namespace AutogenRundown.DataBlocks
                  * */
                 case WardenObjectiveType.ReactorStartup:
                     {
+                        MainObjective = "Find the main reactor for the floor and make sure it is back online.";
+                        FindLocationInfo = "Gather information about the location of the Reactor";
+                        FindLocationInfoHelp = "Access more data in the terminal maintenance system";
+                        GoToZone = "Navigate to [ITEM_ZONE] and start the Reactor";
+                        GoToZoneHelp = "Use information in the environment to find [ITEM_ZONE]";
+                        InZoneFindItem = "Find the reactor control panel and initiate the startup";
+                        SolveItem = "Make sure the Reactor is fully started before leaving";
+                        GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
+                        GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
+                        GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+                        GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
+                        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+
                         break;
                     }
 
@@ -756,6 +775,11 @@ namespace AutogenRundown.DataBlocks
 
             dataLayer.ObjectiveData.DataBlockId = PersistentId;
         }
+
+        #region Internal Fields
+        [JsonIgnore]
+        public bool ReactorStartupGetCodes { get; set; } = false;
+        #endregion
 
         #region General fields
         /// <summary>

@@ -462,7 +462,7 @@ namespace AutogenRundown.DataBlocks
                 (0.25, Bulkhead.Main),
                 (0.4, Bulkhead.Main | Bulkhead.Extreme),
                 (0.1, Bulkhead.Main | Bulkhead.Overload),
-                (10.25, Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload)
+                (0.25, Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload)
             });
 
             // Assign bulkheads

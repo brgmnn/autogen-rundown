@@ -1,5 +1,4 @@
-﻿using AutogenRundown.DataBlocks.Enemies;
-using AutogenRundown.DataBlocks.Zones;
+﻿using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks
 {

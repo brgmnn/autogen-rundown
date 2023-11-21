@@ -20,6 +20,9 @@ namespace AutogenRundown.DataBlocks
     {
         #region hidden data
         [JsonIgnore]
+        private Level level;
+
+        [JsonIgnore]
         private BuildDirector director;
 
         [JsonIgnore]
@@ -33,9 +36,10 @@ namespace AutogenRundown.DataBlocks
 
         public List<Zone> Zones { get; set; } = new List<Zone>();
 
-        public LevelLayout(BuildDirector director, LevelSettings settings, LayoutPlanner planner)
+        public LevelLayout(Level level, BuildDirector director, LevelSettings settings, LayoutPlanner planner)
         {
             this.director = director;
+            this.level = level;
             this.planner = planner;
             this.settings = settings;
         }
@@ -669,6 +673,41 @@ namespace AutogenRundown.DataBlocks
             };
 
         /// <summary>
+        /// Builds a branch, connecting zones and returning the last zone.
+        /// </summary>
+        /// <param name="baseNode"></param>
+        /// <param name="zoneCount"></param>
+        /// <param name="branch"></param>
+        /// <returns>The last zone node in the branch</returns>
+        ZoneNode BuildBranch(ZoneNode baseNode, int zoneCount, string branch = "primary")
+        {
+            var prev = baseNode;
+
+            if (zoneCount < 1)
+                return prev;
+
+            // Generate the zones for this branch
+            for (int i = 0; i < zoneCount; i++)
+            {
+                var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
+                var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
+                var nextZone = new Zone
+                {
+                    Coverage = CoverageMinMax.GenNormalSize(),
+                    LightSettings = Lights.GenRandomLight(),
+                };
+                nextZone.RollFog(level);
+
+                level.Planner.Connect(prev, next);
+                level.Planner.AddZone(next, nextZone);
+
+                prev = next;
+            }
+
+            return prev;
+        }
+
+        /// <summary>
         /// Builds the main level
         ///
         /// Objective is not a fully initialized objective, it is a pre-built objective with just
@@ -680,7 +719,7 @@ namespace AutogenRundown.DataBlocks
         /// <returns></returns>
         public static LevelLayout Build(Level level, BuildDirector director, WardenObjective objective)
         {
-            var layout = new LevelLayout(director, level.Settings, level.Planner)
+            var layout = new LevelLayout(level, director, level.Settings, level.Planner)
             {
                 Name = $"{level.Tier}{level.Index} {level.Name} {director.Bulkhead}",
                 ZoneAliasStart = GenZoneAliasStart(level.Tier)
@@ -697,6 +736,16 @@ namespace AutogenRundown.DataBlocks
 
             switch (director.Objective)
             {
+                case WardenObjectiveType.ReactorStartup:
+                    {
+                        var entrance = level.Planner.GetExactZones(director.Bulkhead).First();
+
+                        if (objective.ReactorStartupGetCodes == false)
+                            layout.BuildLayout_ReactorStartup_Simple(director, objective, entrance);
+
+                        break;
+                    }
+
                 case WardenObjectiveType.ReactorShutdown:
                     {
                         // Create some initial zones

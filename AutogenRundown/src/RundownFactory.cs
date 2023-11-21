@@ -96,7 +96,7 @@ namespace AutogenRundown
                 Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "C",
-                Objective = WardenObjectiveType.RetrieveBigItems,
+                Objective = WardenObjectiveType.ReactorStartup,
             };
             mainDirector.GenPoints();
 
@@ -107,7 +107,7 @@ namespace AutogenRundown
                 new Level
                 {
                     Tier = "C",
-                    Name = "Retrieve Items",
+                    Name = "Reactor Startup",
                     Complex = Complex.Mining,
                     MainDirector = mainDirector,
                     Settings = settings,
