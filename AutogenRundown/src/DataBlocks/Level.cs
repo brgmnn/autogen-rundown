@@ -77,6 +77,33 @@ namespace AutogenRundown.DataBlocks
 
         [JsonIgnore]
         public LevelSettings Settings { get; set; }
+
+        /// <summary>
+        /// What zone does Main start with
+        /// </summary>
+        [JsonIgnore]
+        public int ZoneAliasStart_Main { get; set; } = 0;
+
+        /// <summary>
+        /// What zone does Extreme start with
+        /// </summary>
+        [JsonIgnore]
+        public int ZoneAliasStart_Extreme { get; set; } = 0;
+
+        /// <summary>
+        /// What zone does Overload start with
+        /// </summary>
+        [JsonIgnore]
+        public int ZoneAliasStart_Overload { get; set; } = 0;
+
+        public int GetZoneAliasStart(Bulkhead bulkhead)
+            => bulkhead switch
+            {
+                Bulkhead.Main => ZoneAliasStart_Main,
+                Bulkhead.Extreme => ZoneAliasStart_Extreme,
+                Bulkhead.Overload => ZoneAliasStart_Overload,
+                _ => 0,
+            };
         #endregion
 
         #region Build directors
@@ -344,6 +371,60 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
+        /// Generates the zone alias start numbers, tries to ensure there will be no collisions.
+        /// </summary>
+        private void GenerateZoneAliasStarts()
+        {
+            var minmax = Tier switch
+            {
+                "B" => new List<(int, int)>
+                {
+                    ( 50, 170),  // 250 spread
+                    (200, 275),
+                    (300, 450),
+                },
+
+                "C" => new List<(int, int)>
+                {
+                    (200, 275), // 400 spread
+                    (300, 475),
+                    (500, 600),
+                },
+
+                "D" => new List<(int, int)>
+                {
+                    (300, 475), // 550 spread
+                    (500, 680),
+                    (700, 850),
+                },
+
+                "E" => new List<(int, int)>
+                {
+                    (450, 570), // 500 spread
+                    (600, 750),
+                    (790, 950),
+                },
+
+                // A-Tier: 195 spread
+                _ => new List<(int, int)>
+                {
+                    (  5, 70),
+                    ( 95, 135),
+                    (160, 200),
+                }
+            };
+
+            var (min, max) = Generator.Draw(minmax);
+            ZoneAliasStart_Main = Generator.Random.Next(min, max);
+
+            (min, max) = Generator.Draw(minmax);
+            ZoneAliasStart_Extreme = Generator.Random.Next(min, max);
+
+            (min, max) = Generator.Draw(minmax);
+            ZoneAliasStart_Overload = Generator.Random.Next(min, max);
+        }
+
+        /// <summary>
         /// Gets the right layer data given the objective being asked for
         /// </summary>
         /// <param name="variant"></param>
@@ -452,6 +533,7 @@ namespace AutogenRundown.DataBlocks
             var logLevelId = $"Level={level.Tier}{level.Index}";
 
             level.GenerateDepth();
+            level.GenerateZoneAliasStarts();
 
             if (level.Settings == null)
                 level.Settings = new LevelSettings(level.Tier);

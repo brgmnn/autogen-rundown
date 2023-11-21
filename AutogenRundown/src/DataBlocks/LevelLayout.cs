@@ -625,30 +625,6 @@ namespace AutogenRundown.DataBlocks
             };
         }
 
-        /// <summary>
-        /// Generates a Zone Alias start. In general the deeper the level the higher the zone numbers
-        /// </summary>
-        /// <param name="tier"></param>
-        /// <returns></returns>
-        public static int GenZoneAliasStart(string tier)
-        {
-            switch (tier)
-            {
-                case "B":
-                    return Generator.Random.Next(50, 400);
-                case "C":
-                    return Generator.Random.Next(200, 600);
-                case "D":
-                    return Generator.Random.Next(300, 850);
-                case "E":
-                    return Generator.Random.Next(450, 950);
-
-                case "A":
-                default:
-                    return Generator.Random.Next(5, 200);
-            }
-        }
-
         public static SubComplex GenSubComplex(Complex complex)
             => complex switch
             {
@@ -722,7 +698,7 @@ namespace AutogenRundown.DataBlocks
             var layout = new LevelLayout(level, director, level.Settings, level.Planner)
             {
                 Name = $"{level.Tier}{level.Index} {level.Name} {director.Bulkhead}",
-                ZoneAliasStart = GenZoneAliasStart(level.Tier)
+                ZoneAliasStart = level.GetZoneAliasStart(director.Bulkhead)
             };
 
             director.GenZones();
