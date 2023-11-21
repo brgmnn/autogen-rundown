@@ -57,6 +57,7 @@ namespace AutogenRundown
             var objectives = new List<WardenObjectiveType>
             {
                 WardenObjectiveType.HsuFindSample,
+                WardenObjectiveType.ReactorStartup,
                 WardenObjectiveType.ReactorShutdown,
                 WardenObjectiveType.GatherSmallItems,
                 WardenObjectiveType.ClearPath,
@@ -78,6 +79,8 @@ namespace AutogenRundown
             if (!Bulkhead.HasFlag(Bulkhead.Main))
             {
                 objectives.Remove(WardenObjectiveType.ClearPath);
+
+                // TODO: Apparently you can have this as a non-main. The cells spawn in first zone.
                 objectives.Remove(WardenObjectiveType.PowerCellDistribution);
             }
 
@@ -90,6 +93,7 @@ namespace AutogenRundown
             // Only Mining and Tech complexes have geomorphs for these objectives
             if (Complex != Complex.Mining || Complex != Complex.Tech)
             {
+                objectives.Remove(WardenObjectiveType.ReactorStartup);
                 objectives.Remove(WardenObjectiveType.ReactorShutdown);
                 objectives.Remove(WardenObjectiveType.CentralGeneratorCluster);
             }

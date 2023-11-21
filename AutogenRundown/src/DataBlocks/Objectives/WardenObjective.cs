@@ -430,6 +430,7 @@ namespace AutogenRundown.DataBlocks
                             wave.VerifyFail = 30;
                             wave.Wave = 60.0;
 
+                            // TODO: add more enemy wave variety.
                             wave.EnemyWaves = new List<ReactorEnemyWave> {
                                 new ReactorEnemyWave
                                 {
