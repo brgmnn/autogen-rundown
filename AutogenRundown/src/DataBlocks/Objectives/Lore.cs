@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AutogenRundown.DataBlocks.Objectives
+﻿namespace AutogenRundown.DataBlocks.Objectives
 {
     // Find strings with: \[\w+_\w+\]
     public class Lore

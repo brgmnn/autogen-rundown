@@ -1,14 +1,12 @@
-﻿using AutogenRundown.DataBlocks;
-using AutogenRundown.DataBlocks.Levels;
+﻿using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
-using UnityEngine.TestTools;
 
 namespace AutogenRundown.DataBlocks
 {
     public partial record class LevelLayout : DataBlock
     {
-        public const double StartArea_TripleBulkheadChance = 1.0;
+        public const double StartArea_TripleBulkheadChance = 0.2;
 
         /// <summary>
         /// Connects the first bulkhead zone to a zone in this layout
