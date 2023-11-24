@@ -266,6 +266,14 @@ namespace AutogenRundown.DataBlocks.Alarms
             PersistentId = 0
         };
 
+        /// <summary>
+        /// Special chain puzzle that indicates the zone should be skipped for processing.
+        /// </summary>
+        public static ChainedPuzzle SkipZone = new ChainedPuzzle
+        {
+            PersistentId = 0
+        };
+
         /******************** Non-Alarm Scans ********************/
         public static ChainedPuzzle TeamScan = new ChainedPuzzle
         {
@@ -638,7 +646,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             WantedDistanceBetweenPuzzleComponents = 2.0,
             Puzzle = new List<PuzzleComponent>()
             {
-                PuzzleComponent.Sustained
+                PuzzleComponent.SustainedMedium
             }
         };
         #endregion

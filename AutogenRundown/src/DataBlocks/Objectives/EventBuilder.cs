@@ -1,10 +1,85 @@
-﻿using AutogenRundown.DataBlocks.Alarms;
-using AutogenRundown.DataBlocks.Enemies;
+﻿using AutogenRundown.DataBlocks.Enemies;
 
 namespace AutogenRundown.DataBlocks.Objectives
 {
     public class EventBuilder
     {
+        #region Doors
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="events"></param>
+        /// <param name="zoneIndex"></param>
+        /// <param name="message"></param>
+        /// <param name="trigger"></param>
+        /// <param name="delay"></param>
+        public static void AddOpenDoor(
+            ICollection<WardenObjectiveEvent> events,
+            int zoneIndex,
+            string? message = null,
+            WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
+            double delay = 0.0)
+        {
+            events.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.OpenSecurityDoor,
+                    LocalIndex = zoneIndex,
+                    Delay = message != null ? delay + 1.0 : delay,
+                    Trigger = trigger,
+                });
+
+            if (message != null)
+            {
+                events.Add(
+                    new WardenObjectiveEvent
+                    {
+                        Type = WardenObjectiveEventType.None,
+                        Delay = delay,
+                        Trigger = trigger,
+                        WardenIntel = message
+                    });
+            }
+        }
+
+        /// <summary>
+        /// Adds events to unlock a door. This will also add a warden intel message to the event
+        /// if passed in.
+        /// </summary>
+        /// <param name="events"></param>
+        /// <param name="zoneIndex"></param>
+        /// <param name="message"></param>
+        /// <param name="delay"></param>
+        public static void AddUnlockDoor(
+            ICollection<WardenObjectiveEvent> events,
+            int zoneIndex,
+            string? message = null,
+            WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
+            double delay = 0.0)
+        {
+            events.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.UnlockSecurityDoor,
+                    LocalIndex = zoneIndex,
+                    Delay = message != null ? delay + 1.0 : delay,
+                    Trigger = trigger,
+                });
+
+            if (message != null)
+            {
+                events.Add(
+                    new WardenObjectiveEvent
+                    {
+                        Type = WardenObjectiveEventType.None,
+                        Delay = delay,
+                        Trigger = trigger,
+                        WardenIntel = message
+                    });
+            }
+        }
+        #endregion
+
         #region Enemies
         /// <summary>
         /// Spawns a generic enemy wave with text and noise. Can be used for almost any wave, but

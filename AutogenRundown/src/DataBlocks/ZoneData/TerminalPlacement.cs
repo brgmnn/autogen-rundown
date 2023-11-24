@@ -4,33 +4,6 @@ namespace AutogenRundown.DataBlocks.ZoneData
 {
     public class TerminalPlacement
     {
-        /*{
-          "PlacementWeights": {
-            "Start": 0.0,
-            "Middle": 0.0,
-            "End": 0.0
-          },
-          "AreaSeedOffset": 0,
-          "MarkerSeedOffset": 0,
-          "LocalLogFiles": [],
-          "UniqueCommands": [],
-          "StartingStateData": {
-            "StartingState": 0,
-            "UseCustomInfoText": false,
-            "CustomInfoText": 0,
-            "KeepShowingLocalLogCount": false,
-            "AudioEventEnter": 0,
-            "AudioEventExit": 0,
-            "PasswordProtected": false,
-            "PasswordHintText": "Password Required.",
-            "GeneratePassword": false,
-            "PasswordPartCount": 1,
-            "ShowPasswordLength": true,
-            "ShowPasswordPartPositions": false,
-            "TerminalZoneSelectionDatas": []
-            }
-        }*/
-
         public ZonePlacementWeights PlacementWeights { get; set; } = ZonePlacementWeights.EvenlyDistributed;
 
         #region Less used

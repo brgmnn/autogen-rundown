@@ -7,6 +7,12 @@
     /// </summary>
     public class ProgressionPuzzle
     {
+        public static ProgressionPuzzle Locked = new ProgressionPuzzle
+        {
+            PuzzleType = ProgressionPuzzleType.Locked,
+            CustomText = "<color=red>://ERROR: Door in emergency lockdown, unable to operate.</color>"
+        };
+
         /// <summary>
         /// The type of the puzzle.
         /// </summary>

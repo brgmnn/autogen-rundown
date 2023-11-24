@@ -1,11 +1,13 @@
-﻿namespace AutogenRundown.DataBlocks.Alarms
+﻿using Newtonsoft.Json;
+
+namespace AutogenRundown.DataBlocks.Alarms
 {
     /// <summary>
     /// Scan types. Scan sizes go from:
     ///
     /// Small -> Big -> Large
     /// </summary>
-    public enum PuzzleType : UInt32
+    public enum PuzzleType : uint
     {
         // Single red circles (blue when non-alarm)
         #region Individual scans
@@ -79,6 +81,14 @@
     {
         public PuzzleType PuzzleType { get; set; } = 0;
 
+        /// <summary>
+        /// Primarily used by Reactor startup, we use this to tag how long it would take to
+        /// complete this puzzle component. This is then used to calculate the total time
+        /// for reactor verify waves where the code is on a terminal behind doors with scans.
+        /// </summary>
+        [JsonIgnore]
+        public double Duration { get; set; } = 10;
+
         public static PuzzleComponent BulkheadMain = new PuzzleComponent { PuzzleType = PuzzleType.BulkheadMain };
         public static PuzzleComponent BulkheadSecondary = new PuzzleComponent { PuzzleType = PuzzleType.BulkheadSecondary };
         public static PuzzleComponent BulkheadOverload = new PuzzleComponent { PuzzleType = PuzzleType.BulkheadOverload };
@@ -86,8 +96,16 @@
         public static PuzzleComponent ScanSmall = new PuzzleComponent { PuzzleType = PuzzleType.Small };
         public static PuzzleComponent ScanLarge = new PuzzleComponent { PuzzleType = PuzzleType.Large };
 
-        public static PuzzleComponent ClusterSmall = new PuzzleComponent { PuzzleType = PuzzleType.ClusterSmall };
-        public static PuzzleComponent ClusterLarge = new PuzzleComponent { PuzzleType = PuzzleType.ClusterLarge };
+        public static PuzzleComponent ClusterSmall = new PuzzleComponent
+        {
+            PuzzleType = PuzzleType.ClusterSmall,
+            Duration = 12
+        };
+        public static PuzzleComponent ClusterLarge = new PuzzleComponent
+        {
+            PuzzleType = PuzzleType.ClusterLarge,
+            Duration = 15
+        };
         public static PuzzleComponent Cluster = new PuzzleComponent { PuzzleType = PuzzleType.Cluster };
 
         public static PuzzleComponent AllBig = new PuzzleComponent { PuzzleType = PuzzleType.AllBig };
@@ -97,11 +115,35 @@
 
         public static PuzzleComponent StealthBig_Cluster = new PuzzleComponent { PuzzleType = PuzzleType.StealthBig_Cluster };
 
-        public static PuzzleComponent Sustained = new PuzzleComponent { PuzzleType = PuzzleType.Sustained };
-        public static PuzzleComponent SustainedSmall = new PuzzleComponent { PuzzleType = PuzzleType.SustainedSmall };
-        public static PuzzleComponent SustainedMedium = new PuzzleComponent { PuzzleType = PuzzleType.SustainedMedium };
-        public static PuzzleComponent SustainedHuge = new PuzzleComponent { PuzzleType = PuzzleType.SustainedHuge };
-        public static PuzzleComponent SustainedMegaHuge = new PuzzleComponent { PuzzleType = PuzzleType.SustainedMegaHuge };
-        public static PuzzleComponent SustainedBig_Cluster = new PuzzleComponent { PuzzleType = PuzzleType.SustainedBig_Cluster };
+        public static PuzzleComponent Sustained = new PuzzleComponent
+        {
+            PuzzleType = PuzzleType.Sustained,
+            Duration = 145
+        };
+        public static PuzzleComponent SustainedSmall = new PuzzleComponent
+        {
+            PuzzleType = PuzzleType.SustainedSmall,
+            Duration = 12
+        };
+        public static PuzzleComponent SustainedMedium = new PuzzleComponent
+        {
+            PuzzleType = PuzzleType.SustainedMedium,
+            Duration = 100
+        };
+        public static PuzzleComponent SustainedHuge = new PuzzleComponent
+        {
+            PuzzleType = PuzzleType.SustainedHuge,
+            Duration = 120
+        };
+        public static PuzzleComponent SustainedMegaHuge = new PuzzleComponent
+        {
+            PuzzleType = PuzzleType.SustainedMegaHuge,
+            Duration = 300
+        };
+        public static PuzzleComponent SustainedBig_Cluster = new PuzzleComponent
+        {
+            PuzzleType = PuzzleType.SustainedBig_Cluster,
+            Duration = 36
+        };
     }
 }

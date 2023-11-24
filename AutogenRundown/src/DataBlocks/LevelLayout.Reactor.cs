@@ -1,4 +1,6 @@
-﻿using AutogenRundown.DataBlocks.ZoneData;
+﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks
@@ -68,7 +70,10 @@ namespace AutogenRundown.DataBlocks
         /// <param name="director"></param>
         /// <param name="objective"></param>
         /// <param name="start"></param>
-        public void BuildLayout_ReactorStartup_Simple(BuildDirector director, WardenObjective objective, ZoneNode start)
+        public void BuildLayout_ReactorStartup_Simple(
+            BuildDirector director,
+            WardenObjective objective,
+            ZoneNode start)
         {
             // Place some zones before the reactor
             var preludeCount = level.Tier switch
@@ -83,6 +88,100 @@ namespace AutogenRundown.DataBlocks
 
             var last = BuildBranch(start, preludeCount);
             var reactor = BuildReactor(last);
+        }
+
+        /// <summary>
+        /// Creates a fetch codes reactor layout. These are a lot more complex and require
+        /// branches with terminals to fetch codes from.
+        /// </summary>
+        public void BuildLayout_ReactorStartup_FetchCodes(
+            BuildDirector director,
+            WardenObjective objective,
+            ZoneNode start)
+        {
+            // Build the reactor immediately from the bulkhead first zone. Reactor will be the
+            // third zone.
+            var reactor = BuildReactor(start);
+
+            var waveCount = objective.ReactorWaves.Count();
+            var (fetchCount, branchMin, branchMax) = director.Tier switch
+            {
+                "A" => (1, 1, 1),
+                "B" => (2, 1, 2),
+                //"C" => (Generator.Random.Next(2, 4), 1, 3),
+                "C" => (4, 1, 3),
+                "D" => (Generator.Random.Next(2, 4), 2, 3),
+                "E" => (Generator.Random.Next(2, 4), 2, 4),
+
+                _ => (0, 1, 1)
+            };
+            var openChance = director.Tier switch
+            {
+                "A" => 1.0,
+                "B" => 0.5,
+                "C" => 0.4,
+                "D" => 0.3,
+                "E" => 0.2,
+                _ => 1.0
+            };
+
+            objective.ReactorStartup_FetchWaves = fetchCount;
+            var fetchWaves = objective.ReactorWaves
+                .TakeLast(fetchCount)
+                .ToList();
+
+            for (var b = 0; b < fetchCount; b++)
+            {
+                var branch = $"reactor_code_{b}";
+
+                var baseNode = b < 3 ? reactor : (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, $"reactor_code_{b - 3}")!;
+
+                var last = BuildBranch(baseNode, Generator.Random.Next(branchMin, branchMax), branch);
+                var branchNodes = level.Planner.GetZones(director.Bulkhead, branch);
+
+                var lastZone = level.Planner.GetZone(last);
+                var firstZone = level.Planner.GetZone(branchNodes.First());
+
+                // Add some extra terminals for confusion. All at the back.
+                lastZone.TerminalPlacements = new List<TerminalPlacement>();
+                var terminalCount = Generator.Random.Next(2, 3);
+
+                for (int i = 0; i < terminalCount; i++)
+                    lastZone.TerminalPlacements.Add(
+                        new TerminalPlacement
+                        {
+                            PlacementWeights = ZonePlacementWeights.AtEnd
+                        });
+
+                // Lock the entrance zone
+                firstZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
+
+                // Set this zone to have the code for the right fetch wave
+                var wave = fetchWaves[b];
+                wave.VerifyInOtherZone = true;
+                wave.ZoneForVerification = last.ZoneNumber;
+
+                // Add an event to open/unlock the door when the wave defense is over (OnMid trigger)
+                if (Generator.Flip(openChance))
+                {
+                    EventBuilder.AddOpenDoor(
+                        wave.Events,
+                        firstZone.LocalIndex,
+                        $"Door to [ZONE_{firstZone.LocalIndex}] opened by startup sequence",
+                        WardenObjectiveEventTrigger.OnMid,
+                        8.0);
+
+                    // Do not add an alarm to this zone as the door will be opened for the players.
+                    firstZone.Alarm = ChainedPuzzle.SkipZone;
+                }
+                else
+                    EventBuilder.AddUnlockDoor(
+                        wave.Events,
+                        firstZone.LocalIndex,
+                        $"Door to [ZONE_{firstZone.LocalIndex}] unlocked by startup sequence",
+                        WardenObjectiveEventTrigger.OnMid,
+                        8.0);
+            }
         }
     }
 }

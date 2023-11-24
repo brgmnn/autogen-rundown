@@ -2,6 +2,7 @@
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
+using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -205,7 +206,7 @@ namespace AutogenRundown.DataBlocks
             {
                 case WardenObjectiveType.ReactorStartup:
                     {
-                        objective.ReactorStartupGetCodes = false;
+                        objective.ReactorStartupGetCodes = true;
 
                         var waveCount = director.Tier switch
                         {
@@ -438,6 +439,58 @@ namespace AutogenRundown.DataBlocks
                                     WavePopulation = WavePopulation.Baseline.PersistentId,
                                 }
                             };
+                        }
+
+                        // Multipliers to adjust the verify time
+                        var (alarmMultiplier, coverageMultiplier, enemyMultiplier) = director.Tier switch
+                        {
+                            "A" => (1.4, 2.0, 2.0),
+                            "B" => (1.3, 1.7, 1.7),
+                            "C" => (1.2, 1.4, 1.4),
+                            "D" => (1.1, 1.2, 1.2),
+                            "E" => (1.0, 1.1, 1.1),
+
+                            _ => (1.0, 1.0, 1.0)
+                        };
+
+                        var fetchWaves = ReactorWaves.TakeLast(ReactorStartup_FetchWaves).ToList();
+
+                        // Adjust verify time for reactor waves that require fetching codes.
+                        for (var b = 0; b < fetchWaves.Count; b++)
+                        {
+                            var wave = fetchWaves[b];
+                            var branch = $"reactor_code_{b}";
+
+                            var branchNodes = level.Planner.GetZones(director.Bulkhead, branch);
+                            var branchZones = branchNodes.Select(node => level.Planner.GetZone(node))
+                                                         .Where(zone => zone != null)
+                                                         .OfType<Zone>()
+                                                         .ToList();
+
+                            // First add time based on the total area of the zones to be traversed
+                            var coverageSum = branchZones.Sum(zone => zone.Coverage.Max);
+
+                            // Second, add time based on the total enemy points across the zones
+                            var enemyPointsSum = branchZones.Sum(zone => zone.EnemySpawningInZone.Sum(spawn => spawn.Points));
+
+                            // Next, add time based on door alarms. Factor the scan time for each scan, time for the first scan
+                            // to appear, and time between each scan to reach that next scan.
+                            var alarmSum = branchZones.Sum(
+                                zone => 10 + zone.Alarm.Puzzle.Sum(component => component.Duration)
+                                           + zone.Alarm.WantedDistanceFromStartPos / 3
+                                           + (zone.Alarm.Puzzle.Count - 1) * zone.Alarm.WantedDistanceBetweenPuzzleComponents / 3);
+
+                            // Finally, add time based on blood doors. Flat +20s per blood door to be opened.
+                            var bloodSum = branchZones.Sum(zone => zone.BloodDoor != BloodDoor.None ? 20 : 0);
+
+                            wave.Verify += alarmSum * alarmMultiplier;
+                            wave.Verify += bloodSum;
+                            wave.Verify += coverageSum * coverageMultiplier;
+                            wave.Verify += enemyPointsSum * enemyMultiplier;
+
+                            Plugin.Logger.LogDebug($"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead} -- "
+                                + $"ReactorStartup: Fetch wave {b} has {wave.Verify}s time -- "
+                                + $"coverage: {coverageSum}, enemies: {enemyPointsSum}, alarms: {alarmSum}");
                         }
 
                         break;
@@ -820,6 +873,9 @@ namespace AutogenRundown.DataBlocks
         #region Internal Fields
         [JsonIgnore]
         public bool ReactorStartupGetCodes { get; set; } = false;
+
+        [JsonIgnore]
+        public int ReactorStartup_FetchWaves { get; set; } = 0;
         #endregion
 
         #region General fields

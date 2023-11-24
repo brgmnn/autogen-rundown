@@ -514,16 +514,15 @@ namespace AutogenRundown.DataBlocks
         #region Alarms
         public void RollAlarms(ICollection<ChainedPuzzle> puzzlePack)
         {
-            if (LocalIndex == 0)
+            if (LocalIndex == 0 || Alarm == ChainedPuzzle.SkipZone)
                 return;
 
             // Grab a random puzzle from the puzzle pack
             var puzzle = Generator.Draw(puzzlePack);
 
-            ChainedPuzzleToEnter = puzzle.PersistentId;
+            Alarm = puzzle;
 
-            if (puzzle.PersistentId != 0)
-                Bins.ChainedPuzzles.AddBlock(puzzle);
+            Bins.ChainedPuzzles.AddBlock(puzzle);
         }
         #endregion
 
@@ -659,9 +658,19 @@ namespace AutogenRundown.DataBlocks
         public ProgressionPuzzle ProgressionPuzzleToEnter { get; set; } = new ProgressionPuzzle();
 
         /// <summary>
+        /// Reference to the alarm we are using for the chained puzzle
+        /// </summary>
+        [JsonIgnore]
+        public ChainedPuzzle Alarm { get; set; } = ChainedPuzzle.None;
+
+        /// <summary>
         /// Which security scan to use to enter
         /// </summary>
-        public UInt32 ChainedPuzzleToEnter { get; set; } = 0;
+        public uint ChainedPuzzleToEnter
+        {
+            get => Alarm.PersistentId;
+            private set { }
+        }
         #endregion
 
         public bool IsCheckpointDoor { get; set; } = false;

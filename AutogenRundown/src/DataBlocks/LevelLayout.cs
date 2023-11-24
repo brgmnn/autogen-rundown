@@ -474,7 +474,7 @@ namespace AutogenRundown.DataBlocks
                 var puzzle = ChainedPuzzle.AlarmError_Baseline;
 
                 // First try and find a zone in the middle without an alarm already.
-                var candidates = Zones.Where(z => z.LocalIndex != 0 && z.ChainedPuzzleToEnter == 0 && z.LocalIndex != Zones.Count - 1);
+                var candidates = Zones.Where(z => z.LocalIndex != 0 && z.Alarm == ChainedPuzzle.None && z.LocalIndex != Zones.Count - 1);
 
                 // If no candidates, search for any zone in the middle (we will overwrite the alarm)
                 if (candidates.Count() == 0)
@@ -494,7 +494,8 @@ namespace AutogenRundown.DataBlocks
                     return;
                 }
 
-                zone.ChainedPuzzleToEnter = puzzle.PersistentId;
+                zone.Alarm = puzzle;
+                //zone.ChainedPuzzleToEnter = puzzle.PersistentId;
 
                 Bins.ChainedPuzzles.AddBlock(puzzle);
 
@@ -533,11 +534,7 @@ namespace AutogenRundown.DataBlocks
                             LocalIndex = turnOff.ZoneNumber
                         });
 
-                    turnOffZone.ProgressionPuzzleToEnter = new ProgressionPuzzle
-                    {
-                        PuzzleType = ProgressionPuzzleType.Locked,
-                        CustomText = "<color=red>://ERROR: Door in emergency lockdown, unable to operate.</color>"
-                    };
+                    turnOffZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
 
                     Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} error alarm can be disable in: Zone {turnOff.ZoneNumber}");
 
@@ -716,7 +713,9 @@ namespace AutogenRundown.DataBlocks
                     {
                         var entrance = level.Planner.GetExactZones(director.Bulkhead).First();
 
-                        if (objective.ReactorStartupGetCodes == false)
+                        if (objective.ReactorStartupGetCodes == true)
+                            layout.BuildLayout_ReactorStartup_FetchCodes(director, objective, entrance);
+                        else
                             layout.BuildLayout_ReactorStartup_Simple(director, objective, entrance);
 
                         break;
