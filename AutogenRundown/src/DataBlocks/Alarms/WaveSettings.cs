@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using AutogenRundown.DataBlocks.Enemies;
 
 namespace AutogenRundown.DataBlocks.Alarms
 {
@@ -223,6 +222,12 @@ namespace AutogenRundown.DataBlocks.Alarms
 
             // Reactor
             Bins.WaveSettings.AddBlock(Reactor_Easy);
+            Bins.WaveSettings.AddBlock(Reactor_Medium);
+            Bins.WaveSettings.AddBlock(Reactor_Hard);
+            Bins.WaveSettings.AddBlock(ReactorChargers_Easy);
+            Bins.WaveSettings.AddBlock(ReactorChargers_Hard);
+            Bins.WaveSettings.AddBlock(ReactorShadows_Easy);
+            Bins.WaveSettings.AddBlock(ReactorShadows_Hard);
 
             // Single enemy spawn
             Bins.WaveSettings.AddBlock(SingleMiniBoss);
@@ -299,6 +304,99 @@ namespace AutogenRundown.DataBlocks.Alarms
                 Enemies.EnemyType.Special,
             },
 
+            PopulationPointsTotal = 25,
+            PopulationPointsPerWaveStart = 25,
+            PopulationPointsPerWaveEnd = 25,
+            PopulationPointsMinPerGroup = 5,
+            PopulationPointsPerGroupStart = 5,
+            PopulationPointsPerGroupEnd = 10,
+            PopulationRampOverTime = 50
+        };
+
+        public static WaveSettings Reactor_Medium = new WaveSettings
+        {
+            PopulationFilter =
+            {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+                Enemies.EnemyType.MiniBoss
+            },
+
+            PopulationPointsTotal = 30,
+            PopulationPointsPerWaveStart = 25,
+            PopulationPointsPerWaveEnd = 25,
+            PopulationPointsMinPerGroup = 5,
+            PopulationPointsPerGroupStart = 5,
+            PopulationPointsPerGroupEnd = 10,
+            PopulationRampOverTime = 50
+        };
+
+        public static WaveSettings Reactor_Hard = new WaveSettings
+        {
+            PopulationFilter =
+            {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+                Enemies.EnemyType.MiniBoss,
+                Enemies.EnemyType.Boss  
+            },
+
+            PopulationPointsTotal = 40,
+            PopulationPointsPerWaveStart = 25,
+            PopulationPointsPerWaveEnd = 25,
+            PopulationPointsMinPerGroup = 5,
+            PopulationPointsPerGroupStart = 5,
+            PopulationPointsPerGroupEnd = 10,
+            PopulationRampOverTime = 50
+        };
+
+        public static WaveSettings ReactorChargers_Easy = new WaveSettings
+        {
+            PopulationFilter = { Enemies.EnemyType.Standard },
+            PopulationPointsTotal = 14,
+            PopulationPointsPerWaveStart = 14,
+            PopulationPointsPerWaveEnd = 14,
+            PopulationPointsMinPerGroup = 5,
+            PopulationPointsPerGroupStart = 5,
+            PopulationPointsPerGroupEnd = 10,
+            PopulationRampOverTime = 50
+        };
+
+        public static WaveSettings ReactorChargers_Hard = new WaveSettings
+        {
+            PopulationFilter =
+            {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.MiniBoss,
+            },
+            PopulationPointsTotal = 25,
+            PopulationPointsPerWaveStart = 25,
+            PopulationPointsPerWaveEnd = 25,
+            PopulationPointsMinPerGroup = 5,
+            PopulationPointsPerGroupStart = 5,
+            PopulationPointsPerGroupEnd = 10,
+            PopulationRampOverTime = 50
+        };
+
+        public static WaveSettings ReactorShadows_Easy = new WaveSettings
+        {
+            PopulationFilter = { Enemies.EnemyType.Standard },
+            PopulationPointsTotal = 20,
+            PopulationPointsPerWaveStart = 20,
+            PopulationPointsPerWaveEnd = 20,
+            PopulationPointsMinPerGroup = 5,
+            PopulationPointsPerGroupStart = 5,
+            PopulationPointsPerGroupEnd = 10,
+            PopulationRampOverTime = 50
+        };
+
+        public static WaveSettings ReactorShadows_Hard = new WaveSettings
+        {
+            PopulationFilter =
+            {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.MiniBoss,
+            },
             PopulationPointsTotal = 25,
             PopulationPointsPerWaveStart = 25,
             PopulationPointsPerWaveEnd = 25,

@@ -7,26 +7,31 @@ namespace AutogenRundown.DataBlocks.Alarms
     {
         /// <summary>
         /// EnemyDataBlock PersistentID of eEnemyType for this population
+        /// Cost: 0.75
         /// </summary>
         public Enemy WaveRoleWeakling { get; set; }
 
         /// <summary>
         /// EnemyDataBlock PersistentID of eEnemyType for this population
+        /// Cost: 1.0
         /// </summary>
         public Enemy WaveRoleStandard { get; set; }
 
         /// <summary>
         /// EnemyDataBlock PersistentID of eEnemyType for this population
+        /// Cost: 1.0
         /// </summary>
         public Enemy WaveRoleSpecial { get; set; }
 
         /// <summary>
         /// EnemyDataBlock PersistentID of eEnemyType for this population
+        /// Cost: 2.0
         /// </summary>
         public Enemy WaveRoleMiniBoss { get; set; }
 
         /// <summary>
         /// EnemyDataBlock PersistentID of eEnemyType for this population
+        /// Cost: 2.0
         /// </summary>
         public Enemy WaveRoleBoss { get; set; }
 
@@ -94,14 +99,14 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             WaveRoleWeakling = Enemy.Charger,
             WaveRoleStandard = Enemy.Charger,
-            WaveRoleSpecial = Enemy.ChargerGiant,
+            WaveRoleMiniBoss = Enemy.ChargerGiant,
         };
 
         public static WavePopulation OnlyShadows = new WavePopulation
         {
             WaveRoleWeakling = Enemy.Shadow,
             WaveRoleStandard = Enemy.Shadow,
-            WaveRoleSpecial = Enemy.ShadowGiant,
+            WaveRoleMiniBoss = Enemy.ShadowGiant,
         };
         #endregion
 

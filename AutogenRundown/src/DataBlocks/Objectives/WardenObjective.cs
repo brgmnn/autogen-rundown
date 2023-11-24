@@ -423,22 +423,197 @@ namespace AutogenRundown.DataBlocks
 
                         // Setup reactor waves. We should not override these so that level layout
                         // can assign codes to some of these waves.
-                        foreach (var wave in ReactorWaves)
+
+                        for (var w = 0; w < ReactorWaves.Count; w++)
                         {
+                            var wave = ReactorWaves[w];
                             wave.Warmup = 20.0;
                             wave.WarmupFail = 30.0;
                             wave.Verify = 30.0;
                             wave.VerifyFail = 30;
                             wave.Wave = 60.0;
 
-                            // TODO: add more enemy wave variety.
-                            wave.EnemyWaves = new List<ReactorEnemyWave> {
-                                new ReactorEnemyWave
-                                {
-                                    WaveSettings = WaveSettings.Reactor_Easy.PersistentId,
-                                    WavePopulation = WavePopulation.Baseline.PersistentId,
-                                }
-                            };
+                            // Set the reactor waves
+                            wave.EnemyWaves = (director.Tier, w) switch
+                            {
+                                // First wave is always a softball wave
+                                ("D", 0) => new() { ReactorEnemyWave.Baseline_Medium },
+                                ("E", 0) => new() { ReactorEnemyWave.Baseline_Medium },
+                                (_, 0) => new() { ReactorEnemyWave.Baseline_Easy },
+
+                                // A-Tier
+                                // Should be relatively easy so the rest of the waves are medium.
+                                ("A", >= 1) => new() { ReactorEnemyWave.Baseline_Medium },
+
+                                // B-Tier
+                                //
+                                ("B", >= 1 and < 4) => new() { ReactorEnemyWave.Baseline_Medium },
+                                ("B", >= 4) => new() { ReactorEnemyWave.Baseline_Hard },
+
+                                #region C-Tier
+                                ("C", >= 1 and < 3) => new() { ReactorEnemyWave.Baseline_Medium },
+                                ("C", >= 3 and < 6) => Generator.Select(
+                                    new List<(double, List<ReactorEnemyWave>)>
+                                    {
+                                        (2.0, new() { ReactorEnemyWave.Baseline_Hard }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyChargers_Hard
+                                        }),
+                                    }),
+                                ("C", >= 6) => Generator.Select(
+                                    new List<(double, List<ReactorEnemyWave>)>
+                                    {
+                                        (2.0, new() { ReactorEnemyWave.Baseline_Hard }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.SinglePouncer,
+                                            ReactorEnemyWave.Baseline_Easy
+                                        }),
+                                    }),
+                                #endregion
+
+                                #region D-Tier
+                                ("D", >= 1 and < 4) => Generator.Select(
+                                    new List<(double, List<ReactorEnemyWave>)>
+                                    {
+                                        (2.0, new() { ReactorEnemyWave.Baseline_Hard }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyChargers_Hard
+                                        }),
+                                    }),
+                                ("D", >= 4 and < 8) => Generator.Select(
+                                    new List<(double, List<ReactorEnemyWave>)>
+                                    {
+                                        (2.0, new() { ReactorEnemyWave.Baseline_Hard }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyChargers_Hard
+                                        }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyShadows_Hard
+                                        }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.Baseline_Medium,
+                                            ReactorEnemyWave.Baseline_Medium
+                                        }),
+                                    }),
+                                ("D", >= 8) => Generator.Select(
+                                    new List<(double, List<ReactorEnemyWave>)>
+                                    {
+                                        (6.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyChargers_Hard
+                                        }),
+                                        (3.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyShadows_Hard
+                                        }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.SingleMother,
+                                            ReactorEnemyWave.Baseline_Medium
+                                        }),
+                                    }),
+                                #endregion
+
+                                #region E-Tier
+                                ("E", >= 1 and < 4) => Generator.Select(
+                                    new List<(double, List<ReactorEnemyWave>)>
+                                    {
+                                        (2.0, new() { ReactorEnemyWave.Baseline_Hard }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyChargers_Hard
+                                        }),
+                                    }),
+                                ("E", >= 4 and < 8) => Generator.Select(
+                                    new List<(double, List<ReactorEnemyWave>)>
+                                    {
+                                        (2.0, new() { ReactorEnemyWave.Baseline_Hard }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyChargers_Hard
+                                        }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyShadows_Hard
+                                        }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.Baseline_Medium,
+                                            ReactorEnemyWave.Baseline_Medium
+                                        }),
+                                    }),
+                                ("E", >= 8 and < 10) => Generator.Select(
+                                    new List<(double, List<ReactorEnemyWave>)>
+                                    {
+                                        (6.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyChargers_Hard
+                                        }),
+                                        (3.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyShadows_Hard
+                                        }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.SingleTank,
+                                            ReactorEnemyWave.Baseline_Medium
+                                        }),
+                                    }),
+                                ("E", >= 10) => Generator.Select(
+                                    new List<(double, List<ReactorEnemyWave>)>
+                                    {
+                                        (6.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyChargers_Hard
+                                        }),
+                                        (3.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyShadows_Hard
+                                        }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.SingleMother,
+                                            ReactorEnemyWave.Baseline_Medium
+                                        }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.SingleTank,
+                                            ReactorEnemyWave.Baseline_Medium
+                                        }),
+                                    }),
+                                #endregion
+
+                                (_, _) => new() { ReactorEnemyWave.Baseline_Easy }
+                            }; ;
+
+
+                            wave.Wave = 30.0 + wave.EnemyWaves.Sum(w => w.Duration);
                         }
 
                         // Multipliers to adjust the verify time
