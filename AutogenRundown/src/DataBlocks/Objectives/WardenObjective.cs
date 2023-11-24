@@ -488,6 +488,9 @@ namespace AutogenRundown.DataBlocks
                             wave.Verify += coverageSum * coverageMultiplier;
                             wave.Verify += enemyPointsSum * enemyMultiplier;
 
+                            // Add some grace time for failures on large branches
+                            wave.VerifyFail = Math.Max(30, coverageSum);
+
                             Plugin.Logger.LogDebug($"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead} -- "
                                 + $"ReactorStartup: Fetch wave {b} has {wave.Verify}s time -- "
                                 + $"coverage: {coverageSum}, enemies: {enemyPointsSum}, alarms: {alarmSum}");

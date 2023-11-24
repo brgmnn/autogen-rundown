@@ -103,17 +103,33 @@ namespace AutogenRundown.DataBlocks
             // third zone.
             var reactor = BuildReactor(start);
 
-            var waveCount = objective.ReactorWaves.Count();
-            var (fetchCount, branchMin, branchMax) = director.Tier switch
+            var fetchCount = director.Tier switch
             {
-                "A" => (1, 1, 1),
-                "B" => (2, 1, 2),
-                //"C" => (Generator.Random.Next(2, 4), 1, 3),
-                "C" => (4, 1, 3),
-                "D" => (Generator.Random.Next(2, 4), 2, 3),
-                "E" => (Generator.Random.Next(2, 4), 2, 4),
+                "A" => 1,
+                "B" => 2,
+                "C" => Generator.Random.Next(3, 4),
+                "D" => Generator.Random.Next(3, 5),
+                "E" => Generator.Random.Next(4, 6),
+                _ => 1
+            };
+            var (branchMin, branchMax) = (director.Tier, fetchCount) switch
+            {
+                ("A", _) => (1, 1),
+                ("B", _) => (1, 2),
 
-                _ => (0, 1, 1)
+                ("C", 4) => (1, 2),
+                ("C", _) => (1, 3),
+
+                ("D", 5) => (1, 2),
+                ("D", 4) => (1, 3),
+                ("D", _) => (2, 3),
+
+                ("E", 6) => (1, 2),
+                ("E", 5) => (1, 3),
+                ("E", 4) => (2, 3),
+                ("E", _) => (1, 3),
+
+                (_, _) => (1, 1)
             };
             var openChance = director.Tier switch
             {
