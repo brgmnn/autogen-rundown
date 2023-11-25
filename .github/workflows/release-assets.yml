@@ -23,9 +23,9 @@ jobs:
           if [ -z "${{ github.event.inputs.version }}" ]; then
             echo "No version specified, using latest draft"
 
-            echo "version=$(gh release list | grep Draft | head -n 1 | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+            echo "release=$(gh release list | grep Draft | head -n 1 | awk '{print $1}')" >> "$GITHUB_OUTPUT"
           else
-            echo "version=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
+            echo "release=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Get build run
@@ -35,5 +35,5 @@ jobs:
 
       - name: Debug
         run: |
-          echo "${{ steps.get-version.outputs.version }}"
+          echo "${{ steps.get-version.outputs.release }}"
           echo "${{ steps.get-build.outputs.build_id }}"
