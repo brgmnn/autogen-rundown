@@ -327,8 +327,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationPointsPerWaveEnd = 25,
             PopulationPointsMinPerGroup = 5,
             PopulationPointsPerGroupStart = 5,
-            PopulationPointsPerGroupEnd = 10,
-            PopulationRampOverTime = 50
+            PopulationPointsPerGroupEnd = 15,
+            PopulationRampOverTime = 40
         };
 
         public static WaveSettings Reactor_Hard = new WaveSettings
@@ -346,8 +346,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationPointsPerWaveEnd = 25,
             PopulationPointsMinPerGroup = 5,
             PopulationPointsPerGroupStart = 5,
-            PopulationPointsPerGroupEnd = 10,
-            PopulationRampOverTime = 50
+            PopulationPointsPerGroupEnd = 20,
+            PopulationRampOverTime = 30
         };
 
         public static WaveSettings ReactorChargers_Easy = new WaveSettings
@@ -359,7 +359,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationPointsMinPerGroup = 5,
             PopulationPointsPerGroupStart = 5,
             PopulationPointsPerGroupEnd = 10,
-            PopulationRampOverTime = 50
+            PopulationRampOverTime = 40
         };
 
         public static WaveSettings ReactorChargers_Hard = new WaveSettings
@@ -374,8 +374,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationPointsPerWaveEnd = 25,
             PopulationPointsMinPerGroup = 5,
             PopulationPointsPerGroupStart = 5,
-            PopulationPointsPerGroupEnd = 10,
-            PopulationRampOverTime = 50
+            PopulationPointsPerGroupEnd = 15,
+            PopulationRampOverTime = 40
         };
 
         public static WaveSettings ReactorShadows_Easy = new WaveSettings
@@ -402,8 +402,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationPointsPerWaveEnd = 25,
             PopulationPointsMinPerGroup = 5,
             PopulationPointsPerGroupStart = 5,
-            PopulationPointsPerGroupEnd = 10,
-            PopulationRampOverTime = 50
+            PopulationPointsPerGroupEnd = 20,
+            PopulationRampOverTime = 30
         };
         #endregion
 

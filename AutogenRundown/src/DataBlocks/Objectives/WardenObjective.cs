@@ -431,7 +431,6 @@ namespace AutogenRundown.DataBlocks
                             wave.WarmupFail = 30.0;
                             wave.Verify = 30.0;
                             wave.VerifyFail = 30;
-                            wave.Wave = 60.0;
 
                             // Set the reactor waves
                             wave.EnemyWaves = (director.Tier, w) switch
@@ -452,25 +451,30 @@ namespace AutogenRundown.DataBlocks
 
                                 #region C-Tier
                                 ("C", >= 1 and < 3) => new() { ReactorEnemyWave.Baseline_Medium },
-                                ("C", >= 3 and < 6) => Generator.Select(
+                                ("C", >= 3 and < 5) => Generator.Select(
                                     new List<(double, List<ReactorEnemyWave>)>
                                     {
                                         (2.0, new() { ReactorEnemyWave.Baseline_Hard }),
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.OnlyChargers_Hard
+                                            ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 45 }
                                         }),
                                     }),
-                                ("C", >= 6) => Generator.Select(
+                                ("C", >= 5) => Generator.Select(
                                     new List<(double, List<ReactorEnemyWave>)>
                                     {
-                                        (2.0, new() { ReactorEnemyWave.Baseline_Hard }),
+                                        (1.0, new() { ReactorEnemyWave.Baseline_Hard }),
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.SinglePouncer,
-                                            ReactorEnemyWave.Baseline_Easy
+                                            ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 45 }
+                                        }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyChargers_Easy with { SpawnTime = 30 },
+                                            ReactorEnemyWave.SinglePouncer with { SpawnTime = 45 }
                                         }),
                                     }),
                                 #endregion
@@ -483,28 +487,28 @@ namespace AutogenRundown.DataBlocks
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.OnlyChargers_Hard
+                                            ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 35 }
                                         }),
                                     }),
                                 ("D", >= 4 and < 8) => Generator.Select(
                                     new List<(double, List<ReactorEnemyWave>)>
                                     {
-                                        (2.0, new() { ReactorEnemyWave.Baseline_Hard }),
+                                        (1.0, new() { ReactorEnemyWave.Baseline_Hard }),
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.OnlyChargers_Hard
+                                            ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 45 }
                                         }),
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.OnlyShadows_Hard
+                                            ReactorEnemyWave.OnlyShadows_Hard with { SpawnTime = 30 }
                                         }),
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.Baseline_Medium,
-                                            ReactorEnemyWave.Baseline_Medium
+                                            ReactorEnemyWave.Baseline_Medium with { SpawnTime = 45 },
+                                            ReactorEnemyWave.Baseline_Medium with { SpawnTime = 60 }
                                         }),
                                     }),
                                 ("D", >= 8) => Generator.Select(
@@ -513,18 +517,17 @@ namespace AutogenRundown.DataBlocks
                                         (6.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.OnlyChargers_Hard
+                                            ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 20 }
                                         }),
                                         (3.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.OnlyShadows_Hard
+                                            ReactorEnemyWave.OnlyShadows_Hard with { SpawnTime = 15 }
                                         }),
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.SingleMother,
-                                            ReactorEnemyWave.Baseline_Medium
+                                            ReactorEnemyWave.SingleMother with { SpawnTime = 60 },
                                         }),
                                     }),
                                 #endregion
@@ -537,28 +540,28 @@ namespace AutogenRundown.DataBlocks
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.OnlyChargers_Hard
+                                            ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 30 }
                                         }),
                                     }),
                                 ("E", >= 4 and < 8) => Generator.Select(
                                     new List<(double, List<ReactorEnemyWave>)>
                                     {
-                                        (2.0, new() { ReactorEnemyWave.Baseline_Hard }),
+                                        (1.0, new() { ReactorEnemyWave.Baseline_Hard }),
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.OnlyChargers_Hard
+                                            ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 30 }
                                         }),
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.OnlyShadows_Hard
+                                            ReactorEnemyWave.OnlyShadows_Hard with { SpawnTime = 25 }
                                         }),
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.Baseline_Medium,
-                                            ReactorEnemyWave.Baseline_Medium
+                                            ReactorEnemyWave.Baseline_Medium with { SpawnTime = 45 },
+                                            ReactorEnemyWave.Baseline_Medium with { SpawnTime = 75 }
                                         }),
                                     }),
                                 ("E", >= 8 and < 10) => Generator.Select(
@@ -567,18 +570,18 @@ namespace AutogenRundown.DataBlocks
                                         (6.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.OnlyChargers_Hard
+                                            ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 20 }
                                         }),
                                         (3.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.OnlyShadows_Hard
+                                            ReactorEnemyWave.OnlyShadows_Hard with { SpawnTime = 10 }
                                         }),
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.SingleTank,
-                                            ReactorEnemyWave.Baseline_Medium
+                                            ReactorEnemyWave.SingleTank with { SpawnTime = 70 },
+                                            ReactorEnemyWave.Baseline_Medium with { SpawnTime = 60 }
                                         }),
                                     }),
                                 ("E", >= 10) => Generator.Select(
@@ -587,33 +590,32 @@ namespace AutogenRundown.DataBlocks
                                         (6.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.OnlyChargers_Hard
+                                            ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 20 }
                                         }),
                                         (3.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.OnlyShadows_Hard
+                                            ReactorEnemyWave.OnlyShadows_Hard  with { SpawnTime = 10 }
                                         }),
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.SingleMother,
-                                            ReactorEnemyWave.Baseline_Medium
+                                            ReactorEnemyWave.SingleMother with { SpawnTime = 45 },
+                                            ReactorEnemyWave.Baseline_Medium with { SpawnTime = 90 }
                                         }),
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.SingleTank,
-                                            ReactorEnemyWave.Baseline_Medium
+                                            ReactorEnemyWave.SingleTank with { SpawnTime = 60 },
+                                            ReactorEnemyWave.Baseline_Medium with { SpawnTime = 75 }
                                         }),
                                     }),
                                 #endregion
 
                                 (_, _) => new() { ReactorEnemyWave.Baseline_Easy }
-                            }; ;
+                            };
 
-
-                            wave.Wave = 30.0 + wave.EnemyWaves.Sum(w => w.Duration);
+                            wave.RecalculateWaveSpawnTimes();
                         }
 
                         // Multipliers to adjust the verify time

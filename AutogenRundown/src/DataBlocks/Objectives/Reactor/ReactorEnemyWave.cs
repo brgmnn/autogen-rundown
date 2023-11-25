@@ -8,7 +8,7 @@ namespace AutogenRundown.DataBlocks.Objectives.Reactor
         InElevatorZone = 1,
     }
 
-    public class ReactorEnemyWave
+    public record class ReactorEnemyWave
     {
         #region Preset waves
         public static ReactorEnemyWave Baseline_Easy = new()
@@ -22,43 +22,46 @@ namespace AutogenRundown.DataBlocks.Objectives.Reactor
         {
             WaveSettings = Alarms.WaveSettings.Reactor_Medium.PersistentId,
             WavePopulation = Alarms.WavePopulation.Baseline.PersistentId,
-            Duration = 40
+            Duration = 60
         };
 
         public static ReactorEnemyWave Baseline_MediumMixed = new()
         {
             WaveSettings = Alarms.WaveSettings.Reactor_Medium.PersistentId,
             WavePopulation = Alarms.WavePopulation.Baseline.PersistentId,
-            Duration = 40
+            Duration = 60
         };
 
         public static ReactorEnemyWave Baseline_Hard = new()
         {
             WaveSettings = Alarms.WaveSettings.Reactor_Hard.PersistentId,
             WavePopulation = Alarms.WavePopulation.Baseline_Hybrid.PersistentId,
-            Duration = 50
+            Duration = 70
         };
 
         public static ReactorEnemyWave BaselineWithChargers_Hard = new()
         {
             WaveSettings = Alarms.WaveSettings.Reactor_Hard.PersistentId,
             WavePopulation = Alarms.WavePopulation.Baseline_Hybrid.PersistentId,
-            Duration = 50
+            Duration = 55
         };
+
+        #region Hybrid waves
+        #endregion
 
         #region Charger waves
         public static ReactorEnemyWave OnlyChargers_Easy = new()
         {
             WaveSettings = Alarms.WaveSettings.ReactorChargers_Easy.PersistentId,
             WavePopulation = Alarms.WavePopulation.OnlyChargers.PersistentId,
-            Duration = 20
+            Duration = 30
         };
 
         public static ReactorEnemyWave OnlyChargers_Hard = new()
         {
             WaveSettings = Alarms.WaveSettings.ReactorChargers_Hard.PersistentId,
             WavePopulation = Alarms.WavePopulation.OnlyChargers.PersistentId,
-            Duration = 30
+            Duration = 50
         };
         #endregion
 
@@ -67,14 +70,14 @@ namespace AutogenRundown.DataBlocks.Objectives.Reactor
         {
             WaveSettings = Alarms.WaveSettings.ReactorShadows_Easy.PersistentId,
             WavePopulation = Alarms.WavePopulation.OnlyShadows.PersistentId,
-            Duration = 20
+            Duration = 45
         };
 
         public static ReactorEnemyWave OnlyShadows_Hard = new()
         {
             WaveSettings = Alarms.WaveSettings.ReactorShadows_Hard.PersistentId,
             WavePopulation = Alarms.WavePopulation.OnlyShadows.PersistentId,
-            Duration = 30
+            Duration = 80
         };
         #endregion
 
@@ -83,21 +86,21 @@ namespace AutogenRundown.DataBlocks.Objectives.Reactor
         {
             WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
             WavePopulation = Alarms.WavePopulation.SingleEnemy_Mother.PersistentId,
-            Duration = 45
+            Duration = 90
         };
 
         public static ReactorEnemyWave SingleTank = new()
         {
             WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
             WavePopulation = Alarms.WavePopulation.SingleEnemy_Tank.PersistentId,
-            Duration = 45
+            Duration = 90
         };
 
         public static ReactorEnemyWave SinglePouncer = new()
         {
             WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
             WavePopulation = Alarms.WavePopulation.SingleEnemy_Pouncer.PersistentId,
-            Duration = 25
+            Duration = 30
         };
         #endregion
         #endregion
@@ -118,7 +121,17 @@ namespace AutogenRundown.DataBlocks.Objectives.Reactor
         /// </summary>
         public int AreaDistance { get; set; } = 2;
 
+        /// <summary>
+        /// When to spawn the wave relative to the reactor wave starting.
+        /// </summary>
         public double SpawnTimeRel { get; set; } = 0.0;
+
+        /// <summary>
+        /// Desired starting spawn time for the wave. This value is used to calculate SpawnTimeRel
+        /// after the full list of waves have been generated.
+        /// </summary>
+        [JsonIgnore]
+        public double SpawnTime { get; set; } = 0.0;
 
         public ReactorWaveSpawnType SpawnType { get; set; } = ReactorWaveSpawnType.ClosestToReactor;
     }
