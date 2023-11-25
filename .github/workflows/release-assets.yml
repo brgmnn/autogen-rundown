@@ -8,6 +8,8 @@ on:
         required: false
         default: ''
 
+# echo "release=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
+
 jobs:
   attach-assets:
     name: Attach assets to release
@@ -25,7 +27,7 @@ jobs:
 
             echo "release=$(gh release list | grep Draft | head -n 1 | awk '{print $1}')" >> "$GITHUB_OUTPUT"
           else
-            # echo "release=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
+            echo "Oh dear"
           fi
 
       - name: Get build run
