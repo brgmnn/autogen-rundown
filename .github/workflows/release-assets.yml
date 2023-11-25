@@ -18,6 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Determine version
+        id: get-version
         run: |
           if [ -z "${{ github.event.inputs.version }}" ]; then
             echo "No version specified, using latest draft"
@@ -29,9 +30,11 @@ jobs:
           fi
 
       - name: Get build run
+        id: get-build
         run: |
-          echo "build_run=$(gh run list --limit 1 --status completed --branch main | awk '{print $9}')" >> "$GITHUB_OUTPUT"
+          echo "build_id=$(gh run list --limit 1 --status completed --branch main | awk '{print $9}')" >> "$GITHUB_OUTPUT"
 
       - name: Debug
         run: |
-          echo $GITHUB_OUTPUT
+          echo "${{ steps.get-version.outputs.version }}"
+          echo "${{ steps.get-build.outputs.build_id }}"
