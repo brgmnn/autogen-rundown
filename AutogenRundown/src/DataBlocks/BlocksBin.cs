@@ -40,13 +40,7 @@ namespace AutogenRundown.DataBlocks
             EnemyPopulation.Setup();
             WavePopulation.Setup();
             Alarms.WaveSettings.Setup();
-        }
 
-        /// <summary>
-        /// Saves all data blocks to disk. Also any static data blocks are ususally written here.
-        /// </summary>
-        public static void Save()
-        {
             BigPickupDistribution.SaveStatic();
             ChainedPuzzle.SaveStatic();
             ConsumableDistribution.SaveStatic();
@@ -58,7 +52,13 @@ namespace AutogenRundown.DataBlocks
             WardenObjective.SaveStatic();
             WavePopulation.SaveStatic();
             Alarms.WaveSettings.SaveStatic();
+        }
 
+        /// <summary>
+        /// Saves all data blocks to disk. Also any static data blocks are ususally written here.
+        /// </summary>
+        public static void Save()
+        {
             BigPickupDistributions.Save("BigPickupDistribution");
             ChainedPuzzles.Save("ChainedPuzzle");
             ConsumableDistributions.Save("ConsumableDistribution");
