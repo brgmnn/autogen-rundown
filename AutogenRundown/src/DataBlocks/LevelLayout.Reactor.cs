@@ -30,7 +30,10 @@ namespace AutogenRundown.DataBlocks
             var light = Lights.GenReactorLight();
 
             // Always generate a corridor of some kind (currently fixed) for the reactor zones.
-            var corridorNode = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead));
+            var corridorNode = new ZoneNode(
+                director.Bulkhead,
+                level.Planner.NextIndex(director.Bulkhead),
+                "reactor_area");
             var corridor = new Zone
             {
                 LightSettings = light,
@@ -44,7 +47,10 @@ namespace AutogenRundown.DataBlocks
             level.Planner.AddZone(corridorNode, corridor);
 
             // Create the reactor zone
-            var reactorNode = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead));
+            var reactorNode = new ZoneNode(
+                director.Bulkhead,
+                level.Planner.NextIndex(director.Bulkhead),
+                "reactor_area");
             var reactor = new Zone
             {
                 LightSettings = light,

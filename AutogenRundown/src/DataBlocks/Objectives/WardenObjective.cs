@@ -424,6 +424,8 @@ namespace AutogenRundown.DataBlocks
                         // Setup reactor waves. We should not override these so that level layout
                         // can assign codes to some of these waves.
 
+                        var reactorWavePoints = 0;
+
                         for (var w = 0; w < ReactorWaves.Count; w++)
                         {
                             var wave = ReactorWaves[w];
@@ -616,7 +618,28 @@ namespace AutogenRundown.DataBlocks
                             };
 
                             wave.RecalculateWaveSpawnTimes();
+
+                            // Calculate how many points of enemies will be spawned in total.
+                            reactorWavePoints += wave.EnemyWaves.Sum(enemyWave
+                                => (int)Bins.WaveSettings.Find(enemyWave.WaveSettings).PopulationPointsTotal);
                         }
+
+                        // Spread resources to do the waves within the reactor area
+                        var zones = level.Planner.GetZones(director.Bulkhead, "reactor_area")
+                                                 .Select(node => level.Planner.GetZone(node))
+                                                 .OfType<Zone>()
+                                                 .ToList();
+                        var baseResourcesMulti = reactorWavePoints / (25.0 * zones.Count);
+
+                        foreach (var zone in zones)
+                        {
+                            zone.HealthMulti = baseResourcesMulti;
+                            zone.WeaponAmmoMulti = baseResourcesMulti;
+                            zone.ToolAmmoMulti = baseResourcesMulti;
+                        }
+
+                        Plugin.Logger.LogDebug($"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead} -- "
+                                + $"ReactorStartup: {ReactorWaves.Count} waves, {reactorWavePoints}pts of enemies, assigned {baseResourcesMulti} resources, {zones.Count} reactor area zones");
 
                         // Multipliers to adjust the verify time
                         var (alarmMultiplier, coverageMultiplier, enemyMultiplier) = director.Tier switch
