@@ -22,7 +22,15 @@ jobs:
       - name: Determine version
         id: get-version
         run: |
-          echo "release=$(gh release list | grep Draft | head -n 1 | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          if [ -z "${{ github.event.inputs.version }}" ]; then
+            echo "No version specified, using latest draft"
+
+            echo "Version: $(gh release list | grep Draft | head -n 1 | awk '{print $1}')"
+
+            echo "release=$(gh release list | grep Draft | head -n 1 | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          else
+            echo "Oh dear"
+          fi
 
       - name: Get build run
         id: get-build
