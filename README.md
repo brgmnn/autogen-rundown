@@ -79,8 +79,7 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] Gather Small Items — *IDs, GLPs etc.*
   * [x] HSU Find Sample
   * [x] Reactor Startup
-    * [ ] Fetch codes from terminals
-    * [ ] More enemy variety
+    * [x] Fetch codes from terminals
   * [x] Reactor Shutdown
   * [x] Input Special Terminal Command
   * [x] Retrieve Big Items — *Fog Turbine etc.*
