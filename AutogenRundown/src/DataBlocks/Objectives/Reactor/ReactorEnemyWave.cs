@@ -47,6 +47,12 @@ namespace AutogenRundown.DataBlocks.Objectives.Reactor
         };
 
         #region Hybrid waves
+        public static ReactorEnemyWave OnlyHybrids_Medium = new()
+        {
+            WaveSettings = Alarms.WaveSettings.ReactorHybrids_Medium.PersistentId,
+            WavePopulation = Alarms.WavePopulation.OnlyHybrids.PersistentId,
+            Duration = 50
+        };
         #endregion
 
         #region Charger waves

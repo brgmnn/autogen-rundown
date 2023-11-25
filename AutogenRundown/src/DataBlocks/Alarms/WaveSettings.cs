@@ -226,6 +226,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WaveSettings.AddBlock(Reactor_Hard);
             Bins.WaveSettings.AddBlock(ReactorChargers_Easy);
             Bins.WaveSettings.AddBlock(ReactorChargers_Hard);
+            Bins.WaveSettings.AddBlock(ReactorHybrids_Medium);
             Bins.WaveSettings.AddBlock(ReactorShadows_Easy);
             Bins.WaveSettings.AddBlock(ReactorShadows_Hard);
 
@@ -350,6 +351,19 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationRampOverTime = 30
         };
 
+        public static WaveSettings ReactorHybrids_Medium = new WaveSettings
+        {
+            PopulationFilter = { Enemies.EnemyType.Special },
+
+            PopulationPointsTotal = 28,
+            PopulationPointsPerWaveStart = 25,
+            PopulationPointsPerWaveEnd = 25,
+            PopulationPointsMinPerGroup = 8,
+            PopulationPointsPerGroupStart = 8,
+            PopulationPointsPerGroupEnd = 20,
+            PopulationRampOverTime = 50
+        };
+
         public static WaveSettings ReactorChargers_Easy = new WaveSettings
         {
             PopulationFilter = { Enemies.EnemyType.Standard },
@@ -372,7 +386,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationPointsTotal = 25,
             PopulationPointsPerWaveStart = 25,
             PopulationPointsPerWaveEnd = 25,
-            PopulationPointsMinPerGroup = 5,
+            PopulationPointsMinPerGroup = 4,
             PopulationPointsPerGroupStart = 5,
             PopulationPointsPerGroupEnd = 15,
             PopulationRampOverTime = 40

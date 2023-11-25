@@ -429,7 +429,7 @@ namespace AutogenRundown.DataBlocks
                         for (var w = 0; w < ReactorWaves.Count; w++)
                         {
                             var wave = ReactorWaves[w];
-                            wave.Warmup = 20.0;
+                            wave.Warmup = 30.0;
                             wave.WarmupFail = 30.0;
                             wave.Verify = 30.0;
                             wave.VerifyFail = 30;
@@ -456,7 +456,11 @@ namespace AutogenRundown.DataBlocks
                                 ("C", >= 3 and < 5) => Generator.Select(
                                     new List<(double, List<ReactorEnemyWave>)>
                                     {
-                                        (2.0, new() { ReactorEnemyWave.Baseline_Hard }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyHybrids_Medium with { SpawnTime = 20 }
+                                        }),
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
@@ -466,7 +470,6 @@ namespace AutogenRundown.DataBlocks
                                 ("C", >= 5) => Generator.Select(
                                     new List<(double, List<ReactorEnemyWave>)>
                                     {
-                                        (1.0, new() { ReactorEnemyWave.Baseline_Hard }),
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,

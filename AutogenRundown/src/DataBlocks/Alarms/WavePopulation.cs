@@ -65,6 +65,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WavePopulations.AddBlock(Baseline_Hybrid);
 
             Bins.WavePopulations.AddBlock(OnlyChargers);
+            Bins.WavePopulations.AddBlock(OnlyHybrids);
             Bins.WavePopulations.AddBlock(OnlyShadows);
 
             Bins.WavePopulations.AddBlock(SingleEnemy_Mother);
@@ -100,6 +101,11 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleWeakling = Enemy.Charger,
             WaveRoleStandard = Enemy.Charger,
             WaveRoleMiniBoss = Enemy.ChargerGiant,
+        };
+
+        public static WavePopulation OnlyHybrids = new WavePopulation
+        {
+            WaveRoleSpecial = Enemy.Hybrid
         };
 
         public static WavePopulation OnlyShadows = new WavePopulation
