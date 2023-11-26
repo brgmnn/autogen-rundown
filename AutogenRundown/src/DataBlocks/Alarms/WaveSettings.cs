@@ -305,7 +305,7 @@ namespace AutogenRundown.DataBlocks.Alarms
                 Enemies.EnemyType.Special,
             },
 
-            PopulationPointsTotal = 25,
+            PopulationPointsTotal = 40,
             PopulationPointsPerWaveStart = 25,
             PopulationPointsPerWaveEnd = 25,
             PopulationPointsMinPerGroup = 5,
@@ -323,7 +323,7 @@ namespace AutogenRundown.DataBlocks.Alarms
                 Enemies.EnemyType.MiniBoss
             },
 
-            PopulationPointsTotal = 30,
+            PopulationPointsTotal = 60,
             PopulationPointsPerWaveStart = 25,
             PopulationPointsPerWaveEnd = 25,
             PopulationPointsMinPerGroup = 5,
@@ -342,7 +342,7 @@ namespace AutogenRundown.DataBlocks.Alarms
                 Enemies.EnemyType.Boss  
             },
 
-            PopulationPointsTotal = 40,
+            PopulationPointsTotal = 80,
             PopulationPointsPerWaveStart = 25,
             PopulationPointsPerWaveEnd = 25,
             PopulationPointsMinPerGroup = 5,
