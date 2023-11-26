@@ -1,0 +1,43 @@
+name: Attach Assets
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'
+        required: false
+        default: ''
+
+# echo "release=${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
+
+jobs:
+  attach-assets:
+    name: Attach assets to release
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Determine version
+        id: get-version
+        run: |
+          if [ -z "${{ github.event.inputs.version }}" ]; then
+            echo "No version specified, using latest draft"
+
+            echo "Version: $(gh release list)"
+
+            echo "release=$(gh release list | grep Draft | head -n 1 | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          else
+            echo "Oh dear"
+          fi
+
+      - name: Get build run
+        id: get-build
+        run: |
+          echo "build_id=$(gh run list --limit 1 --status completed --branch main | awk '{print $9}')" >> "$GITHUB_OUTPUT"
+
+      - name: Debug
+        run: |
+          echo "${{ steps.get-version.outputs.release }}"
+          echo "${{ steps.get-build.outputs.build_id }}"
