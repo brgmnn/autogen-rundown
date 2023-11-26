@@ -432,7 +432,7 @@ namespace AutogenRundown.DataBlocks
                             wave.Warmup = 30.0;
                             wave.WarmupFail = 30.0;
                             wave.Verify = 30.0;
-                            wave.VerifyFail = 30;
+                            wave.VerifyFail = 30; // TODO: check how other levels do it?
 
                             // Set the reactor waves
                             wave.EnemyWaves = (director.Tier, w) switch
@@ -441,6 +441,8 @@ namespace AutogenRundown.DataBlocks
                                 ("D", 0) => new() { ReactorEnemyWave.Baseline_Medium },
                                 ("E", 0) => new() { ReactorEnemyWave.Baseline_Medium },
                                 (_, 0) => new() { ReactorEnemyWave.Baseline_Easy },
+
+                                // TODO: BaselineMedium / Easy are far too easy alone
 
                                 // A-Tier
                                 // Should be relatively easy so the rest of the waves are medium.
@@ -680,8 +682,8 @@ namespace AutogenRundown.DataBlocks
                             // to appear, and time between each scan to reach that next scan.
                             var alarmSum = branchZones.Sum(
                                 zone => 10 + zone.Alarm.Puzzle.Sum(component => component.Duration)
-                                           + zone.Alarm.WantedDistanceFromStartPos / 3
-                                           + (zone.Alarm.Puzzle.Count - 1) * zone.Alarm.WantedDistanceBetweenPuzzleComponents / 3);
+                                           + zone.Alarm.WantedDistanceFromStartPos
+                                           + (zone.Alarm.Puzzle.Count - 1) * zone.Alarm.WantedDistanceBetweenPuzzleComponents);
 
                             // Finally, add time based on blood doors. Flat +20s per blood door to be opened.
                             var bloodSum = branchZones.Sum(zone => zone.BloodDoor != BloodDoor.None ? 20 : 0);
@@ -692,7 +694,7 @@ namespace AutogenRundown.DataBlocks
                             wave.Verify += enemyPointsSum * enemyMultiplier;
 
                             // Add some grace time for failures on large branches
-                            wave.VerifyFail = Math.Max(30, coverageSum);
+                            wave.VerifyFail = Math.Max(30, wave.Verify / 2);
 
                             Plugin.Logger.LogDebug($"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead} -- "
                                 + $"ReactorStartup: Fetch wave {b} has {wave.Verify}s time -- "
