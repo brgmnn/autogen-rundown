@@ -1,11 +1,11 @@
 {
   "name": "AutogenRundown",
-  "version_number": "0.17.1",
+  "version_number": "0.18.0",
   "website_url": "https://github.com/brgmnn/autogen-rundown",
   "description": "",
   "dependencies": [
     "BepInEx-BepInExPack_GTFO-3.2.1",
-    "dakkhuza-MTFO-4.5.1",
-    "Inas07-LocalProgression-1.1.5"
+    "dakkhuza-MTFO-4.5.2",
+    "Inas07-LocalProgression-1.1.9"
   ]
 }

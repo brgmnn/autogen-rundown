@@ -12,7 +12,7 @@ namespace AutogenRundown;
 [BepInDependency("Inas07-LocalProgression-1.1.9", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BasePlugin
 {
-    public const string Version = "0.17.1";
+    public const string Version = "0.18.0";
 
     public static ManualLogSource Logger { get; private set; } = new ManualLogSource("MyFirstPlugin");
 
