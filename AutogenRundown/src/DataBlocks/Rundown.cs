@@ -5,6 +5,9 @@ namespace AutogenRundown.DataBlocks
 {
     public record class Rundown : DataBlock
     {
+        public static uint Tutorial = 39;
+        public static uint Geomorph = 27;
+
         public static uint R1 = 32;
         public static uint R2 = 33;
         public static uint R3 = 34;
@@ -12,6 +15,7 @@ namespace AutogenRundown.DataBlocks
         public static uint R5 = 38;
         public static uint R6 = 41;
         public static uint R7 = 31;
+        public static uint R8 = 35;
 
         public List<Level> TierA { get; set; } = new List<Level>();
         public List<Level> TierB { get; set; } = new List<Level>();

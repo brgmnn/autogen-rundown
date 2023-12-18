@@ -9,7 +9,7 @@ namespace AutogenRundown;
 [BepInPlugin("AutogenRundown", "AutogenRundown", Version)]
 [BepInProcess("GTFO.exe")]
 [BepInDependency("dev.gtfomodding.gtfo-api", BepInDependency.DependencyFlags.HardDependency)]
-[BepInDependency("Inas07-LocalProgression-1.1.5", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("Inas07-LocalProgression-1.1.9", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BasePlugin
 {
     public const string Version = "0.17.1";

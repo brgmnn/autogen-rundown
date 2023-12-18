@@ -146,6 +146,66 @@ namespace AutogenRundown.DataBlocks.Alarms
       ""persistentID"": 1
     },
     {
+      ""WaveRoleWeakling"": 52,
+      ""WaveRoleStandard"": 53,
+      ""WaveRoleSpecial"": 52,
+      ""WaveRoleMiniBoss"": 53,
+      ""WaveRoleBoss"": 53,
+      ""name"": ""Baseline_Corrupted"",
+      ""internalEnabled"": true,
+      ""persistentID"": 57
+    },
+    {
+      ""WaveRoleWeakling"": 13,
+      ""WaveRoleStandard"": 11,
+      ""WaveRoleSpecial"": 52,
+      ""WaveRoleMiniBoss"": 53,
+      ""WaveRoleBoss"": 53,
+      ""name"": ""Baseline_Corrupted_R8B1"",
+      ""internalEnabled"": true,
+      ""persistentID"": 72
+    },
+    {
+      ""WaveRoleWeakling"": 52,
+      ""WaveRoleStandard"": 53,
+      ""WaveRoleSpecial"": 52,
+      ""WaveRoleMiniBoss"": 46,
+      ""WaveRoleBoss"": 53,
+      ""name"": ""Baseline_Corrupted_MB-Pouncer"",
+      ""internalEnabled"": true,
+      ""persistentID"": 61
+    },
+    {
+      ""WaveRoleWeakling"": 13,
+      ""WaveRoleStandard"": 53,
+      ""WaveRoleSpecial"": 52,
+      ""WaveRoleMiniBoss"": 16,
+      ""WaveRoleBoss"": 53,
+      ""name"": ""Baseline_Corrupted_mix"",
+      ""internalEnabled"": true,
+      ""persistentID"": 66
+    },
+    {
+      ""WaveRoleWeakling"": 13,
+      ""WaveRoleStandard"": 53,
+      ""WaveRoleSpecial"": 52,
+      ""WaveRoleMiniBoss"": 33,
+      ""WaveRoleBoss"": 16,
+      ""name"": ""Baseline_Corrupted_mix_E2"",
+      ""internalEnabled"": true,
+      ""persistentID"": 75
+    },
+    {
+      ""WaveRoleWeakling"": 13,
+      ""WaveRoleStandard"": 30,
+      ""WaveRoleSpecial"": 53,
+      ""WaveRoleMiniBoss"": 52,
+      ""WaveRoleBoss"": 39,
+      ""name"": ""Baseline_Corrupted_Bullrush_Mix"",
+      ""internalEnabled"": true,
+      ""persistentID"": 76
+    },
+    {
       ""WaveRoleWeakling"": 13,
       ""WaveRoleStandard"": 11,
       ""WaveRoleSpecial"": 16,
@@ -184,6 +244,16 @@ namespace AutogenRundown.DataBlocks.Alarms
       ""name"": ""Baseline MB-Hybrid"",
       ""internalEnabled"": true,
       ""persistentID"": 8
+    },
+    {
+      ""WaveRoleWeakling"": 13,
+      ""WaveRoleStandard"": 11,
+      ""WaveRoleSpecial"": 30,
+      ""WaveRoleMiniBoss"": 16,
+      ""WaveRoleBoss"": 33,
+      ""name"": ""Baseline MB-Hybrid Gamescom Hard"",
+      ""internalEnabled"": true,
+      ""persistentID"": 65
     },
     {
       ""WaveRoleWeakling"": 21,
@@ -386,6 +456,16 @@ namespace AutogenRundown.DataBlocks.Alarms
       ""persistentID"": 31
     },
     {
+      ""WaveRoleWeakling"": 37,
+      ""WaveRoleStandard"": 37,
+      ""WaveRoleSpecial"": 37,
+      ""WaveRoleMiniBoss"": 37,
+      ""WaveRoleBoss"": 37,
+      ""name"": ""Birther_Boss"",
+      ""internalEnabled"": true,
+      ""persistentID"": 78
+    },
+    {
       ""WaveRoleWeakling"": 30,
       ""WaveRoleStandard"": 30,
       ""WaveRoleSpecial"": 30,
@@ -399,7 +479,7 @@ namespace AutogenRundown.DataBlocks.Alarms
       ""WaveRoleWeakling"": 30,
       ""WaveRoleStandard"": 30,
       ""WaveRoleSpecial"": 42,
-      ""WaveRoleMiniBoss"": 42,
+      ""WaveRoleMiniBoss"": 39,
       ""WaveRoleBoss"": 42,
       ""name"": ""BullrushAndFlyers"",
       ""internalEnabled"": true,
@@ -414,6 +494,26 @@ namespace AutogenRundown.DataBlocks.Alarms
       ""name"": ""Bullrush_Only"",
       ""internalEnabled"": true,
       ""persistentID"": 47
+    },
+    {
+      ""WaveRoleWeakling"": 30,
+      ""WaveRoleStandard"": 30,
+      ""WaveRoleSpecial"": 33,
+      ""WaveRoleMiniBoss"": 33,
+      ""WaveRoleBoss"": 33,
+      ""name"": ""Bullrush_mix_R8B3"",
+      ""internalEnabled"": true,
+      ""persistentID"": 60
+    },
+    {
+      ""WaveRoleWeakling"": 30,
+      ""WaveRoleStandard"": 13,
+      ""WaveRoleSpecial"": 42,
+      ""WaveRoleMiniBoss"": 33,
+      ""WaveRoleBoss"": 33,
+      ""name"": ""Bullrush_mix_R8B3_Uplink"",
+      ""internalEnabled"": true,
+      ""persistentID"": 62
     },
     {
       ""WaveRoleWeakling"": 39,
@@ -506,6 +606,16 @@ namespace AutogenRundown.DataBlocks.Alarms
       ""persistentID"": 28
     },
     {
+      ""WaveRoleWeakling"": 30,
+      ""WaveRoleStandard"": 30,
+      ""WaveRoleSpecial"": 39,
+      ""WaveRoleMiniBoss"": 21,
+      ""WaveRoleBoss"": 21,
+      ""name"": ""BullrushAndShadows"",
+      ""internalEnabled"": true,
+      ""persistentID"": 67
+    },
+    {
       ""WaveRoleWeakling"": 21,
       ""WaveRoleStandard"": 31,
       ""WaveRoleSpecial"": 11,
@@ -576,6 +686,26 @@ namespace AutogenRundown.DataBlocks.Alarms
       ""persistentID"": 3
     },
     {
+      ""WaveRoleWeakling"": 63,
+      ""WaveRoleStandard"": 63,
+      ""WaveRoleSpecial"": 52,
+      ""WaveRoleMiniBoss"": 53,
+      ""WaveRoleBoss"": 53,
+      ""name"": ""CursedChildren"",
+      ""internalEnabled"": true,
+      ""persistentID"": 71
+    },
+    {
+      ""WaveRoleWeakling"": 13,
+      ""WaveRoleStandard"": 11,
+      ""WaveRoleSpecial"": 53,
+      ""WaveRoleMiniBoss"": 52,
+      ""WaveRoleBoss"": 53,
+      ""name"": ""Mix R8B1 exit "",
+      ""internalEnabled"": true,
+      ""persistentID"": 58
+    },
+    {
       ""WaveRoleWeakling"": 21,
       ""WaveRoleStandard"": 21,
       ""WaveRoleSpecial"": 21,
@@ -584,6 +714,16 @@ namespace AutogenRundown.DataBlocks.Alarms
       ""name"": ""Shadows"",
       ""internalEnabled"": true,
       ""persistentID"": 7
+    },
+    {
+      ""WaveRoleWeakling"": 33,
+      ""WaveRoleStandard"": 33,
+      ""WaveRoleSpecial"": 33,
+      ""WaveRoleMiniBoss"": 33,
+      ""WaveRoleBoss"": 33,
+      ""name"": ""Only Rapid Shooters"",
+      ""internalEnabled"": true,
+      ""persistentID"": 73
     },
     {
       ""WaveRoleWeakling"": 21,
@@ -677,6 +817,16 @@ namespace AutogenRundown.DataBlocks.Alarms
     },
     {
       ""WaveRoleWeakling"": 13,
+      ""WaveRoleStandard"": 11,
+      ""WaveRoleSpecial"": 16,
+      ""WaveRoleMiniBoss"": 33,
+      ""WaveRoleBoss"": 46,
+      ""name"": ""Wave_Pouncer_Normals_Hybrids"",
+      ""internalEnabled"": true,
+      ""persistentID"": 70
+    },
+    {
+      ""WaveRoleWeakling"": 13,
       ""WaveRoleStandard"": 13,
       ""WaveRoleSpecial"": 13,
       ""WaveRoleMiniBoss"": 16,
@@ -696,6 +846,16 @@ namespace AutogenRundown.DataBlocks.Alarms
       ""persistentID"": 26
     },
     {
+      ""WaveRoleWeakling"": 42,
+      ""WaveRoleStandard"": 42,
+      ""WaveRoleSpecial"": 45,
+      ""WaveRoleMiniBoss"": 42,
+      ""WaveRoleBoss"": 42,
+      ""name"": ""Boss_FlyerSpawn_Complex"",
+      ""internalEnabled"": true,
+      ""persistentID"": 74
+    },
+    {
       ""WaveRoleWeakling"": 44,
       ""WaveRoleStandard"": 44,
       ""WaveRoleSpecial"": 44,
@@ -704,6 +864,47 @@ namespace AutogenRundown.DataBlocks.Alarms
       ""name"": ""Boss_Squid"",
       ""internalEnabled"": true,
       ""persistentID"": 34
-    }]";
+    },
+    {
+      ""WaveRoleWeakling"": 47,
+      ""WaveRoleStandard"": 47,
+      ""WaveRoleSpecial"": 47,
+      ""WaveRoleMiniBoss"": 47,
+      ""WaveRoleBoss"": 47,
+      ""name"": ""Frank The Tank"",
+      ""internalEnabled"": true,
+      ""persistentID"": 68
+    },
+    {
+      ""WaveRoleWeakling"": 58,
+      ""WaveRoleStandard"": 58,
+      ""WaveRoleSpecial"": 58,
+      ""WaveRoleMiniBoss"": 58,
+      ""WaveRoleBoss"": 58,
+      ""name"": ""Boss_Squid_Complex"",
+      ""internalEnabled"": true,
+      ""persistentID"": 63
+    },
+    {
+      ""WaveRoleWeakling"": 61,
+      ""WaveRoleStandard"": 61,
+      ""WaveRoleSpecial"": 61,
+      ""WaveRoleMiniBoss"": 61,
+      ""WaveRoleBoss"": 61,
+      ""name"": ""Boss_Squid_VS"",
+      ""internalEnabled"": true,
+      ""persistentID"": 64
+    },
+    {
+      ""WaveRoleWeakling"": 62,
+      ""WaveRoleStandard"": 62,
+      ""WaveRoleSpecial"": 62,
+      ""WaveRoleMiniBoss"": 62,
+      ""WaveRoleBoss"": 62,
+      ""name"": ""Striker_Big_Nightmare"",
+      ""internalEnabled"": true,
+      ""persistentID"": 77
+    }
+  ]";
     }
 }

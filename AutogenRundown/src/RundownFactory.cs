@@ -30,7 +30,7 @@ namespace AutogenRundown
             Generator.Reload();
             Bins.Setup();
 
-            // Rundown 7 replacement
+            // Rundown 8 replacement
             var rundown = Rundown.Build(new Rundown { PersistentId = Rundown.R7 });
 
             var levelNames = new List<string>(Words.NounsLevel);
@@ -218,6 +218,10 @@ namespace AutogenRundown
             Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R4, Name = "ALT Rundown 4.0" });
             Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R5, Name = "ALT Rundown 5.0" });
             Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R6, Name = "ALT Rundown 6.0" });
+            Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R7, Name = "Rundown 7.0" });
+            Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R8, Name = "Rundown 8.0" });
+            Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.Tutorial, Name = "Tutorial" });
+            Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.Geomorph, Name = "Geomorph" });
 
             Bins.Save();
         }
