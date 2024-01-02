@@ -42,6 +42,9 @@ Follow the installation instructions again, check yes to overwrite all files.
 
 ## Features progress
 
+> [!CAUTION]
+> Rundown 8 spoilers below!
+
 * Levels
   * [x] A Tier
   * [x] B Tier
@@ -63,6 +66,7 @@ Follow the installation instructions again, check yes to overwrite all files.
       * [x] Hubs
       * [x] I's (corridors)
       * [ ] Warp portals
+      * [ ] Rundown 8 Geomorphs
     * Curated event layouts
       * [ ] Class 10+ alarm room
       * [ ] King of the hill room
@@ -97,17 +101,30 @@ Follow the installation instructions again, check yes to overwrite all files.
   * Types of enemies present
     * [x] Strikers / Shooters
     * [x] Giants
-    * [x] Scouts
     * [x] Chargers
     * [x] Shadows
+    * [ ] Beserkers
     * [x] Hybrids
-    * [x] Mothers
-    * [x] Tanks
+    * [x] Scouts
+      * [x] Regular
+      * [ ] Zoomer
+      * [x] Shadow
+      * [x] Charger
+      * [ ] Beserker
+    * [-] Mothers
+      * [x] Mother
+      * [x] P-Mother
+      * [ ] Nightmare Mother
+    * [-] Tanks
+      * [x] Tank
+      * [ ] Immortal Tank
+      * [ ] Potato Tank
     * [ ] Pouncers (Snatchers)
   * Custom enemy spawning
     * [ ] Balanced default spawns (in progress)
     * [x] Charger only zones
     * [x] Shadow only zones
+    * [ ] Beserker only zones
 * Alarms
   * [x] Basic alarms
   * [x] Blood doors
