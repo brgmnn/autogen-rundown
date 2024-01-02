@@ -27,7 +27,12 @@
     <Reference Include="$(BepInEx)\core\BepInEx.Core.dll" Private="false" />
     <Reference Include="$(BepInEx)\core\BepInEx.Unity.IL2CPP.dll" Private="false" />
 
-    <!-- Interop -->
+    <!-- BepInEx Core-->
+    <Reference Include="$(BepInEx)\core\0Harmony.dll" Private="false" />
+    <Reference Include="$(BepInEx)\core\Il2CppInterop.Common.dll" Private="false" />
+    <Reference Include="$(BepInEx)\core\Il2CppInterop.Runtime.dll" Private="false" />
+
+    <!-- BepInEx Interop -->
     <Reference Include="$(Interop)\*.dll" Private="false" />
     <Reference Remove="$(Interop)\netstandard.dll" />
     <Reference Remove="$(Interop)\Newtonsoft.Json.dll" />
@@ -37,9 +42,6 @@
     <None Remove="Blocks\**" />
 
     <!-- NuGet Packages -->
-    <PackageReference Include="HarmonyX" Version="2.10.2" />
-    <PackageReference Include="Il2CppInterop.Common" Version="1.4.5" />
-    <PackageReference Include="Il2CppInterop.Runtime" Version="1.4.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 

@@ -1,8 +1,8 @@
 {
   "name": "AutogenRundown",
-  "version_number": "0.18.0",
+  "version_number": "0.18.1",
   "website_url": "https://github.com/brgmnn/autogen-rundown",
-  "description": "",
+  "description": "Rundown generation mod for GTFO. New rundowns generated daily.",
   "dependencies": [
     "BepInEx-BepInExPack_GTFO-3.2.1",
     "dakkhuza-MTFO-4.6.1",
