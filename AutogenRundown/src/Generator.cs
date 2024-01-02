@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using BepInEx;
+﻿using BepInEx;
 
 namespace AutogenRundown
 {
