@@ -13,6 +13,9 @@ namespace AutogenRundown.DataBlocks.Enemies
             JArray array = JArray.Parse(EnemyPopulationRole.VanillaData);
             var vanillaRoles = array.ToObject<List<EnemyPopulationRole>>();
 
+            if (vanillaRoles == null)
+                throw new JsonException("Failed to parse vanilla enemy population data");
+
             foreach (var popRole in vanillaRoles)
             {
                 Roles.Add(popRole);
