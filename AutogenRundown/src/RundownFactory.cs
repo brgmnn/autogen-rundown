@@ -96,7 +96,7 @@ namespace AutogenRundown
                 Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "C",
-                Objective = WardenObjectiveType.ReactorStartup,
+                Objective = WardenObjectiveType.HsuFindSample,
             };
             mainDirector.GenPoints();
 
