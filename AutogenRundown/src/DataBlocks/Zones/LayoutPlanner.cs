@@ -27,6 +27,43 @@ namespace AutogenRundown.DataBlocks.Zones
     }
 
     /// <summary>
+    /// Relative direction records are used to encode the global directions that will be used to
+    /// map to the relative directions. Good for easier, more portable code when writing zone
+    /// layouts.
+    /// </summary>
+    /// <param name="Forward"></param>
+    /// <param name="Left"></param>
+    /// <param name="Right"></param>
+    /// <param name="Backward"></param>
+    public record struct RelativeDirection(
+        ZoneExpansion Forward,
+        ZoneExpansion Left,
+        ZoneExpansion Right,
+        ZoneExpansion Backward)
+    {
+        public static RelativeDirection Global_Forward = new RelativeDirection(
+            ZoneExpansion.Forward,
+            ZoneExpansion.Left,
+            ZoneExpansion.Right,
+            ZoneExpansion.Backward);
+        public static RelativeDirection Global_Left = new RelativeDirection(
+            ZoneExpansion.Left,
+            ZoneExpansion.Backward,
+            ZoneExpansion.Forward,
+            ZoneExpansion.Right);
+        public static RelativeDirection Global_Right = new RelativeDirection(
+            ZoneExpansion.Right,
+            ZoneExpansion.Forward,
+            ZoneExpansion.Backward,
+            ZoneExpansion.Left);
+        public static RelativeDirection Global_Backward = new RelativeDirection(
+            ZoneExpansion.Backward,
+            ZoneExpansion.Right,
+            ZoneExpansion.Left,
+            ZoneExpansion.Forward);
+    }
+
+    /// <summary>
     /// Building the zone layout requires some planning. The game can fail to generate a level if
     /// there's too much crowding in a particular space. For instance attempting to build too many
     /// zones off one zone will crash on load. The planner is to help plan out where to place
@@ -279,5 +316,34 @@ namespace AutogenRundown.DataBlocks.Zones
         /// <returns></returns>
         public int CountOpenSlots(IEnumerable<ZoneNode> nodes)
             => nodes.Sum(node => Math.Max(0, node.MaxConnections - graph[node].Count()));
+
+        /// <summary>
+        /// This method traverses the tree of zones and attempts to set the properties:
+        /// ZoneEntranceBuildFrom, ZoneBuildExpansion, and ZoneExpansion, such that when generating
+        /// the level in the game there is minimal chance of a failed generation. Failed
+        /// generation errors appear in logs like this:
+        ///
+        ///     [Error  :     Unity] WARNING : Zone1 (Zone_1 - 544): Failed to find any good StartAreas in zone 0 (543) expansionType:Towards_Random m_buildFromZone.m_areas: 1 scoredCount:0 dim: Reality
+        ///
+        /// When these occur the game will hang whilst it continually attempts to find a place
+        /// to place the next zone, with no success.
+        ///
+        /// We can have the following zone Bulkhead types:
+        ///     * Main
+        ///     * Extreme
+        ///     * Overload
+        ///     * StartingArea (this is part of Main but before the Main bulkhead door)
+        ///
+        /// We want to ensure we lay each of these out well. We can also have side branches
+        /// generated for various things like generators, keys, error alarm turn off codes.
+        ///
+        /// Variables we can adjust for generation. "Forwards" direction is from the elevator:
+        ///
+        ///     * ZoneBuildExpansion -- Direction to expand towards
+        ///     * ZoneExpansion -- Direction to expand towards
+        ///     * ZoneEntranceBuildFrom -- Where in previous zone to make entrance to this zone
+        /// </summary>
+        public void PlanPlacements()
+        {}
     }
 }

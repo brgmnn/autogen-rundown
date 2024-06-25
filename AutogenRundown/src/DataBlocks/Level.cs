@@ -78,6 +78,15 @@ namespace AutogenRundown.DataBlocks
         [JsonIgnore]
         public LevelSettings Settings { get; set; }
 
+        [JsonIgnore]
+        public List<RelativeDirection> RelativeDirections { get; set; } = new List<RelativeDirection>
+            {
+                RelativeDirection.Global_Forward,
+                RelativeDirection.Global_Left,
+                RelativeDirection.Global_Right,
+                RelativeDirection.Global_Backward
+            };
+
         /// <summary>
         /// What zone does Main start with
         /// </summary>
@@ -507,7 +516,8 @@ namespace AutogenRundown.DataBlocks
 
             var objective = WardenObjective.PreBuild(director, this);
 
-            var layout = LevelLayout.Build(this, director, objective);
+            var direction = Generator.Draw(RelativeDirections);
+            var layout = LevelLayout.Build(this, director, objective, direction);
             LayoutRef[bulkhead] = layout.PersistentId;
 
             objective.Build(director, this);
@@ -515,6 +525,7 @@ namespace AutogenRundown.DataBlocks
             var layerData = ObjectiveLayer[bulkhead];
             layerData.ObjectiveData.DataBlockId = objective.PersistentId;
 
+            // TODO: can this be moved somewhere else?
             if (director.Objective == WardenObjectiveType.ClearPath)
                 layerData.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
 
@@ -576,7 +587,11 @@ namespace AutogenRundown.DataBlocks
              */
             var bulkheadKeys = Generator.Select(new List<(double, string)>
             {
-                (1.0, "chained")
+                (1.0, "chained"),
+
+                // TODO: implement these
+                // (1.0, "all"),
+                // (1.0, "choice"), // TODO: implement
             });
 
             #region Layout generation

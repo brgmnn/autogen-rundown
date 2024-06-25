@@ -651,7 +651,7 @@ namespace AutogenRundown.DataBlocks
                         {
                             "A" => (1.4, 2.0, 2.0),
                             "B" => (1.3, 1.7, 1.7),
-                            "C" => (1.2, 1.4, 1.4),
+                            "C" => (1.1, 1.3, 1.3), // Balance around this
                             "D" => (1.1, 1.2, 1.2),
                             "E" => (1.0, 1.1, 1.1),
 
@@ -841,6 +841,14 @@ namespace AutogenRundown.DataBlocks
                 /**
                  * TODO: It would be nice to add special commands other than just lights off that do other modifiers.
                  *       Such as fog, error alarm, etc.
+                 *       
+                 *       Ideas:
+                 *          1. Spawn boss
+                 *          2. Flood with fog
+                 *              a. Flood with fog slowly
+                 *              b. Instantly flood
+                 *          3. Trigger error alarm
+                 *          4. Trigger unit wave
                  */
                 case WardenObjectiveType.SpecialTerminalCommand:
                     {

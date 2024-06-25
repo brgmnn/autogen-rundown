@@ -26,6 +26,9 @@ namespace AutogenRundown.DataBlocks
         private BuildDirector director;
 
         [JsonIgnore]
+        private RelativeDirection direction;
+
+        [JsonIgnore]
         private LayoutPlanner planner;
 
         [JsonIgnore]
@@ -689,8 +692,13 @@ namespace AutogenRundown.DataBlocks
         /// <param name="level"></param>
         /// <param name="director"></param>
         /// <param name="objective"></param>
+        /// <param name="direction">What direction we should build this level layout for</param>
         /// <returns></returns>
-        public static LevelLayout Build(Level level, BuildDirector director, WardenObjective objective)
+        public static LevelLayout Build(
+            Level level,
+            BuildDirector director,
+            WardenObjective objective,
+            RelativeDirection direction)
         {
             var layout = new LevelLayout(level, director, level.Settings, level.Planner)
             {
@@ -1154,6 +1162,10 @@ namespace AutogenRundown.DataBlocks
 
                 if (zone != null)
                 {
+                    // Crude way to force the direction of zones for now
+                    if (node.Branch == "primary")
+                        zone.ZoneExpansion = direction.Forward;
+
                     layout.Zones.Add(zone);
 
                     Plugin.Logger.LogDebug($"{layout.Name} -- Zone_{zone.LocalIndex} written. InFog={zone.InFog}");

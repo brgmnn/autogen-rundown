@@ -12,6 +12,8 @@ namespace AutogenRundown.DataBlocks
     /// <summary>
     /// eZoneBuildFromExpansionType
     ///
+    /// What direction to try and place the entrance door for this zone
+    /// 
     /// Direction is global and forward is looking from the drop elevator
     /// https://gtfo-modding.gitbook.io/wiki/reference/enum-types#ezonebuildfromexpansiontype
     /// </summary>
@@ -25,6 +27,11 @@ namespace AutogenRundown.DataBlocks
     }
 
     /// <summary>
+    /// eZoneExpansionType
+    /// 
+    /// What direction to build the zone towards
+    /// 
+    /// Direction is global and forward is looking from the drop elevator
     /// https://gtfo-modding.gitbook.io/wiki/reference/enum-types#ezoneexpansiontype
     /// </summary>
     public enum ZoneExpansion
