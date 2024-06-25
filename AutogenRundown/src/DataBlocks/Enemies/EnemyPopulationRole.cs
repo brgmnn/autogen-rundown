@@ -18,6 +18,9 @@
 
         public double Weight { get; set; } = 1.0;
 
+        /// <summary>
+        /// File: GameData_EnemyPopulationDataBlock_bin.json
+        /// </summary>
         public const string VanillaData = @"[
         {
           ""Role"": 0,

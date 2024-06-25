@@ -686,6 +686,16 @@ namespace AutogenRundown.DataBlocks.Alarms
       ""persistentID"": 3
     },
     {
+      ""WaveRoleWeakling"": 34,
+      ""WaveRoleStandard"": 34,
+      ""WaveRoleSpecial"": 34,
+      ""WaveRoleMiniBoss"": 34,
+      ""WaveRoleBoss"": 34,
+      ""name"": ""Shooter_Infection"",
+      ""internalEnabled"": true,
+      ""persistentID"": 79
+    },
+    {
       ""WaveRoleWeakling"": 63,
       ""WaveRoleStandard"": 63,
       ""WaveRoleSpecial"": 52,
