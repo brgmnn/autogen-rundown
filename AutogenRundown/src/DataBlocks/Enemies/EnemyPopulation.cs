@@ -154,7 +154,7 @@ namespace AutogenRundown.DataBlocks.Enemies
             #endregion
 
             #region Tier-D
-            /** ================  Tier A  ================
+            /** ================  Tier D  ================
              * Difficult tier. We get all enemies except shadow giants on here.
              * */
             var enemiesTierD = new List<(EnemyInfo, double)>
