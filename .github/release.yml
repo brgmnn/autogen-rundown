@@ -1,0 +1,10 @@
+changelog:
+  categories:
+    - title: Added
+      labels: [new]
+    - title: Fixed
+      labels: [bug]
+    - title: Balanced
+      labels: [balance]
+    - title: Other
+      labels: "*"
