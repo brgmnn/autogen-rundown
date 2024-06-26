@@ -7,4 +7,4 @@ changelog:
     - title: Balanced
       labels: [balance]
     - title: Other
-      labels: "*"
+      labels: ["*"]
