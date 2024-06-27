@@ -550,81 +550,6 @@ namespace AutogenRundown.DataBlocks
             }
         }
 
-        /// <summary>
-        /// Add a door that requires a key to be used.
-        /// </summary>
-        public void RollKeyedDoors(BuildDirector director, LayoutPlanner planner, ICollection<ChainedPuzzle> puzzlePack)
-        {
-            // Chance not to add any keyed doors
-            if (Generator.Flip(0.6))
-                return;
-
-            var openZones = planner.GetZonesWithTotalOpen(0, 2, director.Bulkhead, "primary");
-            var branchFrom = Generator.Pick(openZones);
-            var connections = planner.GetConnections(branchFrom, "primary");
-            var lockedZone = Generator.Pick(connections);
-            var trunk = Zones[branchFrom.ZoneNumber];
-
-            // Add the branch zones
-            var branch = "key1";
-            var branchLength = director.Tier switch
-            {
-                "A" => 1,
-                "B" => 1,
-                "C" => Generator.Select(new List<WeightedValue<int>>
-                {
-                    new WeightedValue<int> { Value = 1, Weight = 0.66 },
-                    new WeightedValue<int> { Value = 2, Weight = 0.33 },
-                }).Value,
-                "D" => Generator.Select(new List<WeightedValue<int>>
-                {
-                    new WeightedValue<int> { Value = 1, Weight = 0.66 },
-                    new WeightedValue<int> { Value = 2, Weight = 0.33 },
-                }).Value,
-                "E" => Generator.Select(new List<WeightedValue<int>>
-                {
-                    new WeightedValue<int> { Value = 1, Weight = 0.66 },
-                    new WeightedValue<int> { Value = 2, Weight = 0.33 },
-                }).Value,
-                _ => 1
-            };
-
-            for (int i = 0; i < branchLength; i++)
-            {
-                var fromZone = planner.GetLastZone(director.Bulkhead, branch) ??
-                    new ZoneNode(director.Bulkhead, trunk.LocalIndex, "primary");
-
-                var zone = new Zone
-                {
-                    LocalIndex = planner.NextIndex(director.Bulkhead),
-                    BuildFromLocalIndex = fromZone.ZoneNumber,
-                    Coverage = CoverageMinMax.GenSize(i),
-                    LightSettings = Lights.GenRandomLight(),
-                };
-                planner.Connect(fromZone, new ZoneNode(director.Bulkhead, zone.LocalIndex, branch));
-
-                Plugin.Logger.LogDebug($"Adding zones: {fromZone} -> {new ZoneNode(director.Bulkhead, zone.LocalIndex, branch)}");
-
-                zone.RollAlarms(puzzlePack);
-
-                Zones.Add(zone);
-            }
-
-            var locked = Zones.Find(z => z.LocalIndex == lockedZone.ZoneNumber);
-
-            locked.ProgressionPuzzleToEnter = new ProgressionPuzzle
-            {
-                PuzzleType = ProgressionPuzzleType.Keycard,
-                ZonePlacementData = new List<ZonePlacementData>
-                {
-                    new ZonePlacementData
-                    {
-                        LocalIndex = planner.GetZones(director.Bulkhead, branch).Last().ZoneNumber,
-                    }
-                }
-            };
-        }
-
         public static SubComplex GenSubComplex(Complex complex)
             => complex switch
             {
@@ -799,6 +724,9 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                /**
+                 * Clear Path expeditions should generally be a lot of fun and tough to clear through
+                 * */
                 case WardenObjectiveType.ClearPath:
                     {
                         var prev = level.Planner.GetExactZones(director.Bulkhead).First();
@@ -1072,6 +1000,10 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                /**
+                 * --- DO NOT USE ---
+                 * This objective is completely bugged
+                 * */
                 case WardenObjectiveType.CentralGeneratorCluster:
                     {
                         var prev = level.Planner.GetExactZones(director.Bulkhead).First();
@@ -1118,6 +1050,10 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                /**
+                 * For level generation these objectives follow a more generic pattern of creating zones for those
+                 * areas without too much extra going in to it for now
+                 */
                 case WardenObjectiveType.SpecialTerminalCommand:
                 case WardenObjectiveType.HsuFindSample:
                 case WardenObjectiveType.GatherSmallItems:
@@ -1148,6 +1084,11 @@ namespace AutogenRundown.DataBlocks
                     }
             }
 
+            layout.RollKeyedDoors();
+
+            // Attempt to reduce the chance of generation locking where zones cannot be placed
+            level.Planner.PlanBulkheadPlacements(director.Bulkhead, direction);
+
             var numberOfFogZones = level.Planner.GetZones(director.Bulkhead, null)
                 .Select(node => level.Planner.GetZone(node))
                 .Where(zone => zone != null ? zone.InFog : false)
@@ -1172,9 +1113,7 @@ namespace AutogenRundown.DataBlocks
                 }
             }
 
-            if (director.Bulkhead.HasFlag(Bulkhead.Main))
-                layout.RollKeyedDoors(director, level.Planner, puzzlePack);
-
+            // TODO: most or all of these need to be moved
             layout.RollAlarms(puzzlePack);
             layout.RollBloodDoors();
             layout.RollEnemies(director);

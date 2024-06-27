@@ -63,6 +63,12 @@ namespace AutogenRundown.DataBlocks.Zones
             ZoneExpansion.Forward);
     }
 
+    public enum Direction
+    {
+        Left,
+        Right,
+    }
+
     /// <summary>
     /// Building the zone layout requires some planning. The game can fail to generate a level if
     /// there's too much crowding in a particular space. For instance attempting to build too many
@@ -246,6 +252,21 @@ namespace AutogenRundown.DataBlocks.Zones
                 .ToList();
 
         /// <summary>
+        /// Gets all the zones that have the max number of connections made
+        /// </summary>
+        /// <param name="bulkhead"></param>
+        /// <param name="branch"></param>
+        /// <returns></returns>
+        public List<ZoneNode> GetClosedZones(Bulkhead bulkhead = Bulkhead.All, string? branch = "primary")
+            => graph
+                .Where(node => (node.Key.Bulkhead & bulkhead) != 0)
+                .Where(node => node.Value.Count >= node.Key.MaxConnections)
+                .Where(node => branch == null || node.Key.Branch == branch)
+                .Select(node => node.Key)
+                .OrderBy(zone => zone.ZoneNumber)
+                .ToList();
+
+        /// <summary>
         /// Gets the last zone in a branch. Very useful for building the branch chain upwards.
         /// </summary>
         /// <param name="bulkhead"></param>
@@ -282,7 +303,6 @@ namespace AutogenRundown.DataBlocks.Zones
             var index = fromIndex;
             while (CountOpenSlots(openZones.Take(index)) < totalOpenSlots)
             {
-
                 index++;
             }
 
@@ -343,7 +363,29 @@ namespace AutogenRundown.DataBlocks.Zones
         ///     * ZoneExpansion -- Direction to expand towards
         ///     * ZoneEntranceBuildFrom -- Where in previous zone to make entrance to this zone
         /// </summary>
-        public void PlanPlacements()
+        public void PlanPlacements(Bulkhead bulkhead)
         {}
+
+        /// <summary>
+        /// Specific placement planning on a per bulkhead level
+        /// </summary>
+        /// <param name="bulkhead"></param>
+        public void PlanBulkheadPlacements(Bulkhead bulkhead, RelativeDirection direction)
+        {
+            // Adjust zone sizes to help reduce locked generation
+            var fullZones = GetClosedZones(bulkhead);
+
+            foreach (var node in fullZones)
+            {
+                var zone = GetZone(node);
+
+                if (zone != null && zone.CustomGeomorph != null)
+                {
+                    // Increase the size for this zone we think
+                    zone.Coverage.Min += 20.0;
+                    zone.Coverage.Max += 20.0;
+                }
+            }
+        }
     }
 }

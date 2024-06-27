@@ -18,6 +18,7 @@ namespace AutogenRundown.DataBlocks
         public ZoneNode BuildReactor(ZoneNode start)
         {
             // Pick a random direction to expand the reactor
+            // TODO: use the "direction" Relative Direction property
             var (startExpansion, zoneExpansion) = Generator.Pick(
                 new List<(ZoneBuildExpansion, ZoneExpansion)>
                 {

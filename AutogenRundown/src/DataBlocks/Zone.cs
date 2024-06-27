@@ -109,6 +109,93 @@ namespace AutogenRundown.DataBlocks
     /// </summary>
     public record class Zone : DataBlock
     {
+        #region Direction manipulation
+        /// <summary>
+        /// Sets this zones expansion and build directions to be a branching direction of the parent zone
+        ///
+        /// It's quite an annoying function as we must enumerate how each rotation works for a
+        /// given direction
+        /// </summary>
+        /// <param name="zone"></param>
+        public void SetExpansionAsBranchOfZone(Zone zone, Direction leftOrRight)
+        {
+            switch (zone.ZoneExpansion)
+            {
+                case ZoneExpansion.Forward:
+                    {
+                        if (leftOrRight == Direction.Left)
+                        {
+                            ZoneExpansion = ZoneExpansion.Left;
+                            StartExpansion = ZoneBuildExpansion.Left;
+
+                            // TODO: Better heuristic for what to do with this
+                            StartPosition = ZoneEntranceBuildFrom.BetweenStartAndFurthest;
+                        }
+                        else
+                        {
+                            ZoneExpansion = ZoneExpansion.Right;
+                            StartExpansion = ZoneBuildExpansion.Right;
+                            StartPosition = ZoneEntranceBuildFrom.BetweenStartAndFurthest;
+                        }
+
+                        break;
+                    }
+
+                case ZoneExpansion.Left:
+                    {
+                        if (leftOrRight == Direction.Left)
+                        {
+                            ZoneExpansion = ZoneExpansion.Backward;
+                            StartExpansion = ZoneBuildExpansion.Backward;
+                            StartPosition = ZoneEntranceBuildFrom.BetweenStartAndFurthest;
+                        }
+                        else
+                        {
+                            ZoneExpansion = ZoneExpansion.Forward;
+                            StartExpansion = ZoneBuildExpansion.Forward;
+                            StartPosition = ZoneEntranceBuildFrom.BetweenStartAndFurthest;
+                        }
+
+                        break;
+                    }
+
+                case ZoneExpansion.Right:
+                    {
+                        if (leftOrRight == Direction.Left)
+                        {
+                            ZoneExpansion = ZoneExpansion.Forward;
+                            StartExpansion = ZoneBuildExpansion.Forward;
+                            StartPosition = ZoneEntranceBuildFrom.BetweenStartAndFurthest;
+                        }
+                        else
+                        {
+                            ZoneExpansion = ZoneExpansion.Backward;
+                            StartExpansion = ZoneBuildExpansion.Backward;
+                            StartPosition = ZoneEntranceBuildFrom.BetweenStartAndFurthest;
+                        }
+
+                        break;
+                    }
+
+                case ZoneExpansion.Backward:
+                    {
+                        if (leftOrRight == Direction.Left)
+                        {
+                            ZoneExpansion = ZoneExpansion.Right;
+                            StartExpansion = ZoneBuildExpansion.Right;
+                        }
+                        else
+                        {
+                            ZoneExpansion = ZoneExpansion.Left;
+                            StartExpansion = ZoneBuildExpansion.Left;
+                        }
+
+                        break;
+                    }
+            }
+        }
+        #endregion
+
         #region Custom geomorph settings
         /// <summary>
         /// 
@@ -629,10 +716,19 @@ namespace AutogenRundown.DataBlocks
         [JsonProperty("CoverageMinMax")]
         public CoverageMinMax Coverage { get; set; } = CoverageMinMax.Medium;
 
+        /// <summary>
+        /// Where in the source zone to make the entrance for this zone
+        /// </summary>
         public ZoneEntranceBuildFrom StartPosition { get; set; } = ZoneEntranceBuildFrom.Random;
 
+        /// <summary>
+        /// What direction to try and place the door for this zone
+        /// </summary>
         public ZoneBuildExpansion StartExpansion { get; set; } = ZoneBuildExpansion.Random;
 
+        /// <summary>
+        /// What direction to build this zone towards
+        /// </summary>
         public ZoneExpansion ZoneExpansion { get; set; } = ZoneExpansion.Random;
 
         /// <summary>
