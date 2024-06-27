@@ -89,7 +89,7 @@ namespace AutogenRundown
             }
 
             #region Test C Levels
-            #if true
+            #if false
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
@@ -134,25 +134,25 @@ namespace AutogenRundown
             }
 
             #region Test D Levels
-            #if false
+            #if true
             var mainDirectorD = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "D",
-                Objective = WardenObjectiveType.ReactorShutdown,
+                Objective = WardenObjectiveType.ReactorStartup,
             };
             mainDirectorD.GenPoints();
 
-            var settingsD = new LevelSettings("C");
-            settingsD.Modifiers.Add(LevelModifiers.ManyShadows);
+            var settingsD = new LevelSettings("D");
+            // settingsD.Modifiers.Add(LevelModifiers.ManyShadows);
 
             var testLevelD = Level.Build(
                 new Level
                 {
                     Tier = "D",
-                    Name = "Reactor Shutdown",
+                    Name = "Reactor Startup",
                     Complex = Complex.Mining,
                     MainDirector = mainDirectorD,
                     Settings = settingsD,
