@@ -60,6 +60,12 @@ namespace AutogenRundown.DataBlocks.Enemies
             WavePopulation = Alarms.WavePopulation.SingleEnemy_Tank.PersistentId,
         };
 
+        public static GenericWave SingleTankPotato = new GenericWave
+        {
+            WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
+            WavePopulation = Alarms.WavePopulation.SingleEnemy_TankPotato.PersistentId,
+        };
+
         public static GenericWave SinglePouncer = new GenericWave
         {
             WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,

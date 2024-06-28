@@ -27,7 +27,7 @@ namespace AutogenRundown.DataBlocks
         EvenlyAcrossZones
     }
 
-    public record class WardenObjective : DataBlock
+    public partial record class WardenObjective : DataBlock
     {
         /// <summary>
         /// Places objective items in the level as needed
@@ -559,7 +559,7 @@ namespace AutogenRundown.DataBlocks
                                 #endregion
 
                                 #region D-Tier
-                                ("D", >= 1 and < 4) => Generator.Select(
+                                ("D", >= 1 and < 3) => Generator.Select(
                                     new List<(double, List<ReactorEnemyWave>)>
                                     {
                                         (2.0, new() { ReactorEnemyWave.Baseline_Hard }),
@@ -569,11 +569,24 @@ namespace AutogenRundown.DataBlocks
                                             ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 35 }
                                         }),
                                     }),
-                                ("D", >= 4 and < 8) => Generator.Select(
+                                ("D", >= 3 and < 5) => Generator.Select(
                                     new List<(double, List<ReactorEnemyWave>)>
                                     {
-                                        (1.0, new() { ReactorEnemyWave.Baseline_Hard }),
                                         (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyHybrids_Medium with { SpawnTime = 30 }
+                                        }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 35 }
+                                        }),
+                                    }),
+                                ("D", >= 5 and < 7) => Generator.Select(
+                                    new List<(double, List<ReactorEnemyWave>)>
+                                    {
+                                        (2.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
                                             ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 45 }
@@ -581,27 +594,38 @@ namespace AutogenRundown.DataBlocks
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.OnlyShadows_Hard with { SpawnTime = 30 }
+                                            ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 60 },
+                                            ReactorEnemyWave.OnlyHybrids_Medium with { SpawnTime = 45 }
                                         }),
-                                        (1.0, new()
+                                        (2.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.Baseline_Medium with { SpawnTime = 45 },
-                                            ReactorEnemyWave.Baseline_Medium with { SpawnTime = 60 }
+                                            ReactorEnemyWave.OnlyShadows_Hard with { SpawnTime = 30 }
+                                        }),
+                                        (2.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.Baseline_Medium with { SpawnTime = 45 }
                                         }),
                                     }),
-                                ("D", >= 8) => Generator.Select(
+                                ("D", >= 7) => Generator.Select(
                                     new List<(double, List<ReactorEnemyWave>)>
                                     {
-                                        (6.0, new()
+                                        (4.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
                                             ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 20 }
                                         }),
-                                        (3.0, new()
+                                        (4.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
                                             ReactorEnemyWave.OnlyShadows_Hard with { SpawnTime = 15 }
+                                        }),
+                                        (3.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.OnlyHybrids_Medium with { SpawnTime = 55 },
+                                            ReactorEnemyWave.SingleTankPotato with { SpawnTime = 20 }
                                         }),
                                         (1.0, new()
                                         {
@@ -706,7 +730,7 @@ namespace AutogenRundown.DataBlocks
                                                  .Select(node => level.Planner.GetZone(node))
                                                  .OfType<Zone>()
                                                  .ToList();
-                        var baseResourcesMulti = reactorWavePoints / (25.0 * zones.Count);
+                        var baseResourcesMulti = reactorWavePoints / (35.0 * zones.Count);
 
                         foreach (var zone in zones)
                         {
@@ -724,7 +748,7 @@ namespace AutogenRundown.DataBlocks
                             "A" => (1.4, 2.0, 2.0),
                             "B" => (1.3, 1.7, 1.7),
                             "C" => (1.1, 1.3, 1.3), // Balance around this
-                            "D" => (1.1, 1.2, 1.2),
+                            "D" => (1.2, 1.3, 1.3),
                             "E" => (1.0, 1.1, 1.1),
 
                             _ => (1.0, 1.0, 1.0)

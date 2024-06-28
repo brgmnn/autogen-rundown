@@ -71,6 +71,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WavePopulations.AddBlock(SingleEnemy_Mother);
             Bins.WavePopulations.AddBlock(SingleEnemy_PMother);
             Bins.WavePopulations.AddBlock(SingleEnemy_Tank);
+            Bins.WavePopulations.AddBlock(SingleEnemy_TankPotato);
             Bins.WavePopulations.AddBlock(SingleEnemy_Pouncer);
         }
 
@@ -116,12 +117,21 @@ namespace AutogenRundown.DataBlocks.Alarms
         };
         #endregion
 
-        #region Single enemies
-        public static WavePopulation SingleEnemy_Mother = new WavePopulation { WaveRoleMiniBoss = Enemy.Mother };
-        public static WavePopulation SingleEnemy_PMother = new WavePopulation { WaveRoleMiniBoss = Enemy.PMother };
-        public static WavePopulation SingleEnemy_Tank = new WavePopulation { WaveRoleMiniBoss = Enemy.Tank };
+        #region Specific enemies for custom waves
+        public static WavePopulation Special_StrikerGiants = new WavePopulation
+        {
+            WaveRoleSpecial = Enemy.StrikerGiant_Wave
+        };
+        #endregion
 
-        public static WavePopulation SingleEnemy_Pouncer = new WavePopulation { WaveRoleMiniBoss = Enemy.Pouncer };
+        #region Single enemies
+        public static WavePopulation SingleEnemy_Mother =     new WavePopulation { WaveRoleMiniBoss = Enemy.Mother };
+        public static WavePopulation SingleEnemy_PMother =    new WavePopulation { WaveRoleMiniBoss = Enemy.PMother };
+
+        public static WavePopulation SingleEnemy_Tank =       new WavePopulation { WaveRoleMiniBoss = Enemy.Tank };
+        public static WavePopulation SingleEnemy_TankPotato = new WavePopulation { WaveRoleMiniBoss = Enemy.TankPotato };
+
+        public static WavePopulation SingleEnemy_Pouncer =    new WavePopulation { WaveRoleMiniBoss = Enemy.Pouncer };
         #endregion
     }
 

@@ -230,6 +230,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WaveSettings.AddBlock(ReactorShadows_Easy);
             Bins.WaveSettings.AddBlock(ReactorShadows_Hard);
 
+            Bins.WaveSettings.AddBlock(ReactorPoints_Special_16pts);
+
             // Single enemy spawn
             Bins.WaveSettings.AddBlock(SingleMiniBoss);
         }
@@ -292,7 +294,9 @@ namespace AutogenRundown.DataBlocks.Alarms
         };
         #endregion
 
-        #region Reactor Waves
+        #region === Reactor Waves ===
+
+        #region Reactor Waves -- General Pop
         /// <summary>
         /// Can be a fairly gentle reactor wave depending on the population selected.
         /// Only spawns standard and specials.
@@ -305,13 +309,13 @@ namespace AutogenRundown.DataBlocks.Alarms
                 Enemies.EnemyType.Special,
             },
 
-            PopulationPointsTotal = 40,
+            PopulationPointsTotal = 30,
             PopulationPointsPerWaveStart = 25,
             PopulationPointsPerWaveEnd = 25,
             PopulationPointsMinPerGroup = 5,
             PopulationPointsPerGroupStart = 5,
             PopulationPointsPerGroupEnd = 10,
-            PopulationRampOverTime = 50
+            PopulationRampOverTime = 40
         };
 
         public static WaveSettings Reactor_Medium = new WaveSettings
@@ -323,7 +327,7 @@ namespace AutogenRundown.DataBlocks.Alarms
                 Enemies.EnemyType.MiniBoss
             },
 
-            PopulationPointsTotal = 60,
+            PopulationPointsTotal = 40,
             PopulationPointsPerWaveStart = 25,
             PopulationPointsPerWaveEnd = 25,
             PopulationPointsMinPerGroup = 5,
@@ -342,7 +346,7 @@ namespace AutogenRundown.DataBlocks.Alarms
                 Enemies.EnemyType.Boss  
             },
 
-            PopulationPointsTotal = 80,
+            PopulationPointsTotal = 50,
             PopulationPointsPerWaveStart = 25,
             PopulationPointsPerWaveEnd = 25,
             PopulationPointsMinPerGroup = 5,
@@ -350,7 +354,9 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationPointsPerGroupEnd = 20,
             PopulationRampOverTime = 30
         };
+        #endregion
 
+        #region Reactor Waves -- Hybrids
         public static WaveSettings ReactorHybrids_Medium = new WaveSettings
         {
             PopulationFilter = { Enemies.EnemyType.Special },
@@ -364,6 +370,36 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationRampOverTime = 50
         };
 
+        public static WaveSettings ReactorHybrids_Group = new WaveSettings
+        {
+            PopulationFilter = { Enemies.EnemyType.Special },
+
+            PopulationPointsTotal = 20,
+            PopulationPointsPerWaveStart = 20,
+            PopulationPointsPerWaveEnd = 20,
+            PopulationPointsMinPerGroup = 8,
+            PopulationPointsPerGroupStart = 8,
+            PopulationPointsPerGroupEnd = 20,
+            PopulationRampOverTime = 25
+        };
+        #endregion
+
+        #region Reactor Waves -- Points Groups
+        public static WaveSettings ReactorPoints_Special_16pts = new WaveSettings
+        {
+            PopulationFilter = { Enemies.EnemyType.Special },
+
+            PopulationPointsTotal = 16,
+            PopulationPointsPerWaveStart = 16,
+            PopulationPointsPerWaveEnd = 16,
+            PopulationPointsMinPerGroup = 16,
+            PopulationPointsPerGroupStart = 16,
+            PopulationPointsPerGroupEnd = 16,
+            PopulationRampOverTime = 10
+        };
+        #endregion
+
+        #region Reactor Waves -- Chargers
         public static WaveSettings ReactorChargers_Easy = new WaveSettings
         {
             PopulationFilter = { Enemies.EnemyType.Standard },
@@ -391,7 +427,9 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationPointsPerGroupEnd = 15,
             PopulationRampOverTime = 40
         };
+        #endregion
 
+        #region Reactor Waves -- Shadows
         public static WaveSettings ReactorShadows_Easy = new WaveSettings
         {
             PopulationFilter = { Enemies.EnemyType.Standard },
@@ -419,6 +457,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationPointsPerGroupEnd = 20,
             PopulationRampOverTime = 30
         };
+        #endregion
         #endregion
 
         #region Single enemy spawns

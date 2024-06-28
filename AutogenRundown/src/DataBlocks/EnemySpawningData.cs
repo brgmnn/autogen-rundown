@@ -88,6 +88,9 @@ namespace AutogenRundown.DataBlocks
     ///     * Shadow: 1
     ///     * Shadow Giant: 4
     ///
+    ///     * Nightmare Striker: 2
+    ///     * Nightmare Shooter: 2
+    /// 
     ///     * Scout: 5
     ///     * Charger Scout: 5
     ///     * Shadow Scout: 5
@@ -95,6 +98,7 @@ namespace AutogenRundown.DataBlocks
     ///     * Baby: 1
     ///
     ///     * Tank: 10
+    ///     * TankPotato: 8
     ///     * Mother: 10
     ///     * P-Mother: 10
     ///
@@ -228,6 +232,12 @@ namespace AutogenRundown.DataBlocks
         {
             GroupType = EnemyGroupType.Hibernate,
             Difficulty = (uint)Enemy.Tank
+        };
+
+        public static EnemySpawningData TankPotato = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Hibernate,
+            Difficulty = (uint)Enemy.TankPotato
         };
         #endregion
     }

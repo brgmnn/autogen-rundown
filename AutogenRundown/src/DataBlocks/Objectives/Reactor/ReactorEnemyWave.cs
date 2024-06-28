@@ -15,14 +15,14 @@ namespace AutogenRundown.DataBlocks.Objectives.Reactor
         {
             WaveSettings = Alarms.WaveSettings.Reactor_Easy.PersistentId,
             WavePopulation = Alarms.WavePopulation.Baseline.PersistentId,
-            Duration = 30
+            Duration = 40
         };
 
         public static ReactorEnemyWave Baseline_Medium = new()
         {
             WaveSettings = Alarms.WaveSettings.Reactor_Medium.PersistentId,
             WavePopulation = Alarms.WavePopulation.Baseline.PersistentId,
-            Duration = 60
+            Duration = 50
         };
 
         public static ReactorEnemyWave Baseline_MediumMixed = new()
@@ -36,7 +36,7 @@ namespace AutogenRundown.DataBlocks.Objectives.Reactor
         {
             WaveSettings = Alarms.WaveSettings.Reactor_Hard.PersistentId,
             WavePopulation = Alarms.WavePopulation.Baseline_Hybrid.PersistentId,
-            Duration = 70
+            Duration = 60
         };
 
         public static ReactorEnemyWave BaselineWithChargers_Hard = new()
@@ -45,6 +45,15 @@ namespace AutogenRundown.DataBlocks.Objectives.Reactor
             WavePopulation = Alarms.WavePopulation.Baseline_Hybrid.PersistentId,
             Duration = 55
         };
+
+        #region Giant waves
+        public static ReactorEnemyWave Giants_16pts = new()
+        {
+            WaveSettings = Alarms.WaveSettings.ReactorPoints_Special_16pts.PersistentId,
+            WavePopulation = Alarms.WavePopulation.Special_StrikerGiants.PersistentId,
+            Duration = 20
+        };
+        #endregion
 
         #region Hybrid waves
         public static ReactorEnemyWave OnlyHybrids_Medium = new()
@@ -100,6 +109,13 @@ namespace AutogenRundown.DataBlocks.Objectives.Reactor
             WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
             WavePopulation = Alarms.WavePopulation.SingleEnemy_Tank.PersistentId,
             Duration = 90
+        };
+
+        public static ReactorEnemyWave SingleTankPotato = new()
+        {
+            WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
+            WavePopulation = Alarms.WavePopulation.SingleEnemy_TankPotato.PersistentId,
+            Duration = 50
         };
 
         public static ReactorEnemyWave SinglePouncer = new()
