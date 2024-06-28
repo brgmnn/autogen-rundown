@@ -67,16 +67,7 @@ namespace AutogenRundown.DataBlocks.Objectives
                 });
 
             if (message != null)
-            {
-                events.Add(
-                    new WardenObjectiveEvent
-                    {
-                        Type = WardenObjectiveEventType.None,
-                        Delay = delay,
-                        Trigger = trigger,
-                        WardenIntel = message
-                    });
-            }
+                AddMessage(events, trigger, message, delay);
         }
         #endregion
 
@@ -273,6 +264,31 @@ namespace AutogenRundown.DataBlocks.Objectives
                     SoundId = Sound.LightsOff,
                     WardenIntel = message,
                     Delay = delay
+                });
+        }
+        #endregion
+
+        #region Messages
+        /// <summary>
+        /// Displays a warden intel message
+        /// </summary>
+        /// <param name="events"></param>
+        /// <param name="trigger"></param>
+        /// <param name="message"></param>
+        /// <param name="delay"></param>
+        public static void AddMessage(
+            ICollection<WardenObjectiveEvent> events,
+            WardenObjectiveEventTrigger trigger,
+            string message,
+            double delay = 0.0)
+        {
+            events.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.None,
+                    Delay = delay,
+                    Trigger = trigger,
+                    WardenIntel = message
                 });
         }
         #endregion

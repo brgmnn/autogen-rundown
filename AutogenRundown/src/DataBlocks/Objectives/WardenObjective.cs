@@ -131,13 +131,85 @@ namespace AutogenRundown.DataBlocks
             }
         }
 
+        /// <summary>
+        /// Returns a random casualty warning for lore strings
+        /// </summary>
+        /// <returns></returns>
+        public static string IntelCasualtyWarning()
+            => Generator.Pick(new List<string>
+            {
+                "Anticipate significant casualty rates.",
+                "High death rate estimated.",
+                "High resource loss expected.",
+                "High resource depletion anticipated.",
+                "Anticipated extreme casualty rate.",
+                "High risk, substantial losses expected.",
+                "Standard resource loss tolerance increased.",
+                "Elevated fatality risk confirmed.",
+                "Prisoner survival chances minimal.",
+                "Survival chances minimal.",
+                "Significant human cost projected.",
+                "Substantial prisoner depletion likely.",
+                "High prisoner attrition rate expected."
+            })!;
+
         public static string GenLevelDescription(WardenObjectiveType type, WardenObjectiveItem item = WardenObjectiveItem.PersonnelId)
             => type switch
             {
+                WardenObjectiveType.HsuFindSample => Generator.Pick(new List<string>
+                    {
+                        ""
+                    }) ?? "",
+                WardenObjectiveType.ReactorStartup => Generator.Pick(new List<string>
+                    {
+                        // Vanilla lore descriptions
+                        $"Bypass required in forward Security Zone. Prisoners sent to overload grid.",
+                        $"WARNING: Cold storage bulkhead filtration system offline. Grid reboot required. {IntelCasualtyWarning()}",
+                        "Power out in neighboring sector. Reactor to be brought online at any cost of prisoners.",
+                        $"Power grid manager reports system errors in primary reactor. Prisoners dispatched to execute quadrant generator reboot. {IntelCasualtyWarning()}",
+                        $"Essential systems offline. Prisoners to perform system reboot in central quadrant. {IntelCasualtyWarning()}",
+                        "Protocol requiring additional power. Prisoners dispatched to sector.",
+                        "Insufficient power supply for PGD decryption. Prisoners sent to activate quadrant reactor."
+
+                        // New lore descriptions
+                    })!,
+                WardenObjectiveType.ReactorShutdown => Generator.Pick(new List<string>
+                    {
+                        // Actual vanilla game lore descriptions
+                        $"A pathway out of section D has been located. Prisoners spent to gain access by powergrid shutdown. {IntelCasualtyWarning()}",
+                        $"Security protocol prohibiting sub-level exploration. Prisoners sent to install override executable in local reactor. {IntelCasualtyWarning()}",
+
+                        // New lore descriptions
+                        $"Pathway to the reactor core identified. Prisoners dispatched for core isolation procedures. {IntelCasualtyWarning()}",
+                        $"Restricted access to lower levels enforced. Prisoners tasked with initiating reactor shutdown sequence. {IntelCasualtyWarning()}",
+                        $"Entrance to sector B uncovered. Prisoners assigned to disable reactor's failsafe mechanisms. {IntelCasualtyWarning()}",
+                        $"Prohibited area entry point detected. Prisoners ordered to execute reactor deactivation. {IntelCasualtyWarning()}",
+                        $"Route to reactor room confirmed. Prisoners deployed for reactor power-down operation. {IntelCasualtyWarning()}",
+                        $"Access to sub-level reactor granted. Prisoners required to initiate core shutdown protocol. {IntelCasualtyWarning()}",
+                        $"Reactor access pathway secured. Prisoners sent to perform emergency shutdown. {IntelCasualtyWarning()}",
+                        $"Entrance to reactor chamber pinpointed. Prisoners instructed to disable reactor controls. {IntelCasualtyWarning()}",
+                        $"Sub-level reactor breach path clear. Prisoners dispatched to terminate reactor function. {IntelCasualtyWarning()}",
+                        $"Corridor to reactor sector E located. Prisoners commanded to execute reactor shutdown sequence. {IntelCasualtyWarning()}",
+                    })!,
+
                 WardenObjectiveType.ClearPath => Generator.Pick(new List<string>
                     {
                         "Unknown hostile lifeform readings in subjacent quadrant. Expendable prisoners sent to survey threat severity."
+                    })!,
+
+                /*WardenObjectiveType.SpecialTerminalCommand => Generator.Pick(new List<string>
+                    {
+                        ""
                     }) ?? "",
+                WardenObjectiveType.PowerCellDistribution => Generator.Pick(new List<string>
+                    {
+                        ""
+                    }) ?? "",
+                WardenObjectiveType.TerminalUplink => Generator.Pick(new List<string>
+                    {
+                        ""
+                    }) ?? "",*/
+
                 WardenObjectiveType.GatherSmallItems => item switch
                 {
                     WardenObjectiveItem.Glp_1 => "Conduit genetic code compromised. Prisoners to collect DNA sample from HSU facility.",

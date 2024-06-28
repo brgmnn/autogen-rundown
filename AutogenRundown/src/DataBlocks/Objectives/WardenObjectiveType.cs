@@ -8,6 +8,7 @@
     {
         // Implemented
         HsuFindSample = 0,
+        ReactorStartup = 1,
         ReactorShutdown = 2,
         GatherSmallItems = 3,
         ClearPath = 4,
@@ -18,7 +19,6 @@
         CentralGeneratorCluster = 9, // TODO: Generator cluster spawn is bugged
 
         // Not yet implemented
-        ReactorStartup = 1,
         RetrieveBigItems = 6,
         HsuActivateSmall = 10,
         Survival = 11,
