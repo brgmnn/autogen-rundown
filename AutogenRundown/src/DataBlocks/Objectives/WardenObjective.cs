@@ -747,7 +747,7 @@ namespace AutogenRundown.DataBlocks
                         {
                             "A" => (1.4, 2.0, 2.0),
                             "B" => (1.3, 1.7, 1.7),
-                            "C" => (1.1, 1.3, 1.3), // Balance around this
+                            "C" => (1.1, 1.25, 1.25), // Balance around this
                             "D" => (1.2, 1.3, 1.3),
                             "E" => (1.0, 1.1, 1.1),
 
