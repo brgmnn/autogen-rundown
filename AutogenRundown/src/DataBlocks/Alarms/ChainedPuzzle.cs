@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Objectives;
+using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks.Alarms
 {
@@ -7,6 +9,25 @@ namespace AutogenRundown.DataBlocks.Alarms
     /// </summary>
     public record class ChainedPuzzle : DataBlock
     {
+        #region Internal for Autogen
+        // These events get appended to the zone when the alarm is selected
+
+        [JsonIgnore]
+        public List<WardenObjectiveEvent> EventsOnApproachDoor { get; set; } = new List<WardenObjectiveEvent>();
+
+        [JsonIgnore]
+        public List<WardenObjectiveEvent> EventsOnUnlockDoor { get; set; } = new List<WardenObjectiveEvent>();
+
+        [JsonIgnore]
+        public List<WardenObjectiveEvent> EventsOnOpenDoor { get; set; } = new List<WardenObjectiveEvent>();
+
+        [JsonIgnore]
+        public List<WardenObjectiveEvent> EventsOnDoorScanStart { get; set; } = new List<WardenObjectiveEvent>();
+
+        [JsonIgnore]
+        public List<WardenObjectiveEvent> EventsOnDoorScanDone { get; set; } = new List<WardenObjectiveEvent>();
+        #endregion
+
         /// <summary>
         /// The Alarm name. For example, Class S Surge Alarm
         /// </summary>
@@ -153,7 +174,6 @@ namespace AutogenRundown.DataBlocks.Alarms
                     // Easy scans
                     None,
                     TeamScan, TeamScan,
-                    AlarmClass3,
                     AlarmClass4, AlarmClass4,
 
                     // Moderately difficult scans
@@ -171,6 +191,9 @@ namespace AutogenRundown.DataBlocks.Alarms
 
                     // Sustained
                     AlarmClass1_Sustained, AlarmClass1_Sustained, AlarmClass1_Sustained,
+
+                    // Surprise Alarms
+                    Secret_SpawnTank
                 },
                 "E" => new List<ChainedPuzzle>
                 {
@@ -663,6 +686,41 @@ namespace AutogenRundown.DataBlocks.Alarms
             Puzzle = new List<PuzzleComponent>() { PuzzleComponent.AllLarge }
         };
         #endregion
+
+        /******************** Autogen Special Alarms ********************/
+        public static ChainedPuzzle Secret_SpawnTank = new ChainedPuzzle
+        {
+            PersistentId = 0,
+            EventsOnOpenDoor = new List<WardenObjectiveEvent>
+            {
+                // TODO: This sound seems busted
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.PlaySound,
+                    Trigger = WardenObjectiveEventTrigger.OnStart,
+                    SoundId = Sound.SheetMetalLand,
+                    Delay = 1.0
+                },
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.SpawnEnemyWave,
+                    Delay = 3.0,
+                    EnemyWaveData = GenericWave.SingleTank
+                },
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.PlaySound,
+                    SoundId = Sound.TankRoar,
+                    Delay = 3.0
+                },
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.None,
+                    Delay = 2.0,
+                    WardenIntel = ":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr..."
+                },
+            }
+        };
 
         /******************** Exit Alarm Scans ********************/
         public static ChainedPuzzle ExitAlarm = new ChainedPuzzle

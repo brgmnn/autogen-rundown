@@ -80,7 +80,7 @@ namespace AutogenRundown.DataBlocks.Objectives
         /// <param name="wave"></param>
         /// <param name="delay"></param>
         /// <param name="message"></param>
-        public static void AddSpawnEnemies(
+        public static ICollection<WardenObjectiveEvent> AddSpawnEnemies(
             ICollection<WardenObjectiveEvent> events,
             GenericWave wave,
             double delay = 2.0,
@@ -107,6 +107,8 @@ namespace AutogenRundown.DataBlocks.Objectives
                     Delay = delay,
                     WardenIntel = message
                 });
+
+            return events;
         }
         #endregion
 
@@ -291,6 +293,31 @@ namespace AutogenRundown.DataBlocks.Objectives
                     WardenIntel = message
                 });
         }
+        #endregion
+
+        #region Sounds
+        /// <summary>
+        /// Displays a warden intel message
+        /// </summary>
+        /// <param name="events"></param>
+        /// <param name="trigger"></param>
+        /// <param name="message"></param>
+        /// <param name="delay"></param>
+        /*public static void AddSound(
+            ICollection<WardenObjectiveEvent> events,
+            WardenObjectiveEventTrigger trigger,
+            double delay = 0.0)
+        {
+            events.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.PlaySound,
+                    Trigger = WardenObjectiveEventTrigger.OnStart,
+                    SoundId = Sound.LightsOff,
+                    WardenIntel = message,
+                    Delay = delay
+                });
+        }*/
         #endregion
     }
 }

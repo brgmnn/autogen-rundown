@@ -1,5 +1,4 @@
 ﻿using AutogenRundown.DataBlocks;
-using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.GeneratorData;
 using BepInEx;

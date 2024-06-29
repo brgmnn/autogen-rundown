@@ -616,7 +616,16 @@ namespace AutogenRundown.DataBlocks
             // Grab a random puzzle from the puzzle pack
             var puzzle = Generator.Draw(puzzlePack);
 
+            if (puzzle == null)
+                return;
+
             Alarm = puzzle;
+
+            EventsOnApproachDoor.AddRange(puzzle.EventsOnApproachDoor);
+            EventsOnUnlockDoor.AddRange(puzzle.EventsOnUnlockDoor);
+            EventsOnOpenDoor.AddRange(puzzle.EventsOnOpenDoor);
+            EventsOnDoorScanStart.AddRange(puzzle.EventsOnDoorScanStart);
+            EventsOnDoorScanDone.AddRange(puzzle.EventsOnDoorScanDone);
 
             Bins.ChainedPuzzles.AddBlock(puzzle);
         }
