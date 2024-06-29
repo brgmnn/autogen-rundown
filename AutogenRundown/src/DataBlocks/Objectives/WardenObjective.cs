@@ -734,7 +734,8 @@ namespace AutogenRundown.DataBlocks
 
                         foreach (var zone in zones)
                         {
-                            zone.HealthMulti = baseResourcesMulti;
+                            // We don't give as much health
+                            zone.HealthMulti = baseResourcesMulti * 0.6;
                             zone.WeaponAmmoMulti = baseResourcesMulti;
                             zone.ToolAmmoMulti = baseResourcesMulti;
                         }
