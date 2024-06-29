@@ -92,7 +92,7 @@ namespace AutogenRundown.DataBlocks.Zones
 
         public override string ToString()
         {
-            var debug = string.Join("\n", graph.Select(n => $"  {n.Key} => [{ZoneNode.ListToString(n.Value, ",\n    ")}]"));
+            var debug = string.Join("\n", graph.Select(n => $"  {n.Key} ({GetZone(n.Key).ZoneExpansion}) => [{ZoneNode.ListToString(n.Value, ",\n    ")}]"));
             return $"Graph:\n{debug}";
         }
 
@@ -384,6 +384,24 @@ namespace AutogenRundown.DataBlocks.Zones
                     // Increase the size for this zone we think
                     zone.Coverage.Min += 20.0;
                     zone.Coverage.Max += 20.0;
+                }
+            }
+
+            // Next we attempt to go through and space the level a bit. We find all open zones
+            // with no custom geomorphs set and try to have them expand directionally so any
+            // future hubs get more space
+            var openZones = GetOpenZones(bulkhead, null);
+
+            foreach (var node in openZones)
+            {
+                var zone = GetZone(node);
+
+                if (zone != null && zone.CustomGeomorph == null)
+                {
+                    if (zone.ZoneExpansion == ZoneExpansion.Random)
+                    {
+                        zone.ZoneExpansion = ZoneExpansion.DirectionalRandom;
+                    }
                 }
             }
         }

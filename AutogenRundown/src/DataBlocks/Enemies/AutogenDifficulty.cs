@@ -4,10 +4,12 @@
     public enum AutogenDifficulty : uint
     {
         // Enemy variants
-        Base = 0x0000,
-        Chargers = 0x0001,
-        Shadows = 0x0002,
-        Hybrids = 0x0004,
+        Base       = 0x0000,
+        Chargers   = 0x0001,
+        Shadows    = 0x0002,
+        Hybrids    = 0x0004,
+        Flyers     = 0x0008,
+        Nightmares = 0x0010,
 
         // Tiers of difficulty
         TierA = 0x0100,

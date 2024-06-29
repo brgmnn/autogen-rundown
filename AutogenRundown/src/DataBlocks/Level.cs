@@ -4,6 +4,7 @@ using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.GeneratorData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using static UnityEngine.Rendering.PostProcessing.BloomRenderer;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -515,8 +516,30 @@ namespace AutogenRundown.DataBlocks
             director.GenPoints();
 
             var objective = WardenObjective.PreBuild(director, this);
+            var direction = RelativeDirection.Global_Forward;
 
-            var direction = Generator.Draw(RelativeDirections);
+            if (bulkhead == Bulkhead.Main)
+            {
+                direction = Generator.Draw(RelativeDirections);
+
+                // We also want to remove the reverse direction of what we have selected for Main.
+                // The rationale is we don't want Extreme/Overload to attempt to build backwards
+                // along the same direction as Main is heading, but instead to branch off.
+                var removeBackwards = direction.Forward switch
+                {
+                    ZoneExpansion.Forward => RelativeDirection.Global_Backward,
+                    ZoneExpansion.Left => RelativeDirection.Global_Right,
+                    ZoneExpansion.Right => RelativeDirection.Global_Left,
+                    ZoneExpansion.Backward => RelativeDirection.Global_Forward,
+                };
+
+                RelativeDirections.Remove(removeBackwards);
+            }
+            else if (bulkhead == Bulkhead.Extreme || bulkhead == Bulkhead.Overload)
+            {
+                direction = Generator.Draw(RelativeDirections);
+            }
+
             var layout = LevelLayout.Build(this, director, objective, direction);
             LayoutRef[bulkhead] = layout.PersistentId;
 

@@ -17,16 +17,16 @@ namespace AutogenRundown.DataBlocks
         /// <returns></returns>
         public ZoneNode BuildReactor(ZoneNode start)
         {
-            // Pick a random direction to expand the reactor
-            // TODO: use the "direction" Relative Direction property
-            var (startExpansion, zoneExpansion) = Generator.Pick(
-                new List<(ZoneBuildExpansion, ZoneExpansion)>
-                {
-                    (ZoneBuildExpansion.Left, ZoneExpansion.Left),
-                    (ZoneBuildExpansion.Right, ZoneExpansion.Right),
-                    (ZoneBuildExpansion.Forward, ZoneExpansion.Forward),
-                    (ZoneBuildExpansion.Backward, ZoneExpansion.Backward)
-                });
+            var zoneExpansion = direction.Forward;
+            var startExpansion = direction.Forward switch
+            {
+                ZoneExpansion.Forward  => ZoneBuildExpansion.Forward,
+                ZoneExpansion.Left     => ZoneBuildExpansion.Left,
+                ZoneExpansion.Right    => ZoneBuildExpansion.Right,
+                ZoneExpansion.Backward => ZoneBuildExpansion.Backward,
+                _ => ZoneBuildExpansion.Random
+            };
+
             // Use the same light for both corridor and reactor
             var light = Lights.GenReactorLight();
 

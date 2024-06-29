@@ -749,16 +749,13 @@ namespace AutogenRundown.DataBlocks
                         // scale factors don't need to be wildly different per tier.
                         var (alarmMultiplier, coverageMultiplier, enemyMultiplier) = director.Tier switch
                         {
-                            "A" => (1.4, 2.0, 2.0),
-                            "B" => (1.3, 1.7, 1.7),
-                            "C" => (1.1, 1.3, 1.3), // Balance around this
+                            "A" => (1.40, 1.60, 1.60),
+                            "B" => (1.20, 1.50, 1.50),
+                            "C" => (1.10, 1.30, 1.30),
+                            "D" => (1.20, 1.25, 1.25), // Play testing around D-tier
+                            "E" => (1.15, 1.20, 1.20),
 
-                            // Play testing around D-tier
-                            "D" => (1.2, 1.25, 1.25),
-
-                            "E" => (1.0, 1.1, 1.1),
-
-                            _ => (1.0, 1.0, 1.0)
+                            _ => (1.4, 1.4, 1.4)
                         };
 
                         var fetchWaves = ReactorWaves.TakeLast(ReactorStartup_FetchWaves).ToList();
