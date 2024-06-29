@@ -744,12 +744,18 @@ namespace AutogenRundown.DataBlocks
                                 + $"ReactorStartup: {ReactorWaves.Count} waves, {reactorWavePoints}pts of enemies, assigned {baseResourcesMulti} resources, {zones.Count} reactor area zones");
 
                         // Multipliers to adjust the verify time
+                        // In general this is quite sensitive and the calculations actually get
+                        // quite close to a good number for a fun and challenging time. So the
+                        // scale factors don't need to be wildly different per tier.
                         var (alarmMultiplier, coverageMultiplier, enemyMultiplier) = director.Tier switch
                         {
                             "A" => (1.4, 2.0, 2.0),
                             "B" => (1.3, 1.7, 1.7),
-                            "C" => (1.1, 1.25, 1.25), // Balance around this
-                            "D" => (1.2, 1.3, 1.3),
+                            "C" => (1.1, 1.3, 1.3), // Balance around this
+
+                            // Play testing around D-tier
+                            "D" => (1.2, 1.25, 1.25),
+
                             "E" => (1.0, 1.1, 1.1),
 
                             _ => (1.0, 1.0, 1.0)
