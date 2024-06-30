@@ -43,9 +43,9 @@ jobs:
             name="$(echo $artifact | jq -r '.name').zip"
             url=$(echo $artifact | jq -r '.archive_download_url')
 
-            gh api $url > $name
-
             echo "Downloading $name -> $url"
+
+            gh api $url > $name
           done
 
       - name: Debug
@@ -54,3 +54,4 @@ jobs:
           echo "${{ steps.get-version.outputs.release }}"
           echo "${{ steps.get-build.outputs.build_id }}"
           ls -ls
+          ls -ls _artifacts
