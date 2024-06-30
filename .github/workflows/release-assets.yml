@@ -34,7 +34,14 @@ jobs:
 
       - name: Download artifacts
         run: |
-          gh run download ${{ steps.get-build.outputs.build_id }} -n .NET
+          artifacts=$(gh api /repos/brgmnn/autogen-rundown/actions/runs/${{ steps.get-build.outputs.build_id }}/artifacts | jq -c '.artifacts[]')
+
+          for artifact in $artifacts; do
+            name=$(echo $artifact | jq -r '.name')
+            url=$(echo $artifact | jq -r '.archive_download_url')
+
+            echo "Downloading $name -> $url"
+          done
 
       - name: Debug
         run: |
