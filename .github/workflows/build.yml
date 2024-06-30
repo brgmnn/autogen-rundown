@@ -32,7 +32,7 @@ jobs:
     - id: deps
       name: List mod dependencies
       run: jq .dependencies ${{ github.workspace }}/manifest.json > .deps.json
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       id: thunderstore-cache
       name: Cache thunderstore dependencies
       with:
@@ -89,7 +89,7 @@ jobs:
       - id: deps
         name: List mod dependencies
         run: jq .dependencies ${{ github.workspace }}/manifest.json > .deps.json
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: thunderstore-cache
         name: Cache thunderstore dependencies
         with:
