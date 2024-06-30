@@ -66,7 +66,7 @@ jobs:
     #   run: dotnet test --no-build --verbosity normal
 
     # Package the mod.
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: AutogenRundown_${{ steps.version.outputs.version }}
         path: ${{ github.workspace }}/build/*
@@ -112,7 +112,7 @@ jobs:
           done
 
       # Download AutogenRundown build
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: AutogenRundown_${{ steps.version.outputs.version }}
           path: ${{ github.workspace }}/autogen
@@ -138,7 +138,7 @@ jobs:
           cp docs/MANUAL_INSTALL_README.txt build/README.txt
 
       # Package the manual install mod
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: AutogenRundown_manual_install_${{ steps.version.outputs.version }}
           path: ${{ github.workspace }}/build/*
