@@ -48,6 +48,10 @@ jobs:
             gh api $url > $name
           done
 
+      - name: Attach artifacts on release
+        run: |
+          gh release upload ${{ steps.get-version.outputs.release }} _artifacts/*.zip
+
       - name: Debug
         if: always()
         run: |
