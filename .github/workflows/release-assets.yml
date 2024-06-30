@@ -44,7 +44,8 @@ jobs:
           done
 
       - name: Debug
+        if: always()
         run: |
           echo "${{ steps.get-version.outputs.release }}"
-          echo "${{ steps.get-build.outputs.build_number }}"
+          echo "${{ steps.get-build.outputs.build_id }}"
           ls -ls
