@@ -32,7 +32,15 @@ jobs:
         run: |
           echo "build_number=$(gh run list -w .NET --limit 1 --status completed --branch main --json number -q '.[].number')" >> "$GITHUB_OUTPUT"
 
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: '*'
+          extract: false
+          run-id: ${{ steps.get-build.outputs.build_number }}
+
       - name: Debug
         run: |
           echo "${{ steps.get-version.outputs.release }}"
           echo "${{ steps.get-build.outputs.build_number }}"
+          ls -ls
