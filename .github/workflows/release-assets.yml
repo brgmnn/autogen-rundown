@@ -30,11 +30,11 @@ jobs:
       - name: Get build run
         id: get-build
         run: |
-          echo "build_number=$(gh run list -w .NET --limit 1 --status completed --branch main --json number -q '.[].number')" >> "$GITHUB_OUTPUT"
+          echo "build_id=$(gh run list -w .NET --limit 1 --status completed --branch main --json databaseId -q '.[].databaseId')" >> "$GITHUB_OUTPUT"
 
       - name: Download artifacts
         run: |
-          gh run download ${{ steps.get-build.outputs.build_number }} --workflow .NET
+          gh run download ${{ steps.get-build.outputs.build_id }} -n .NET
 
       - name: Debug
         run: |
