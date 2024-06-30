@@ -16,7 +16,7 @@ jobs:
       GH_TOKEN: ${{ github.token }}
 
     steps:
-      # - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: Determine version
         id: get-version
         run: |
