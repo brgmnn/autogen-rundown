@@ -121,7 +121,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// Chance for spawn direction to change between waves.
         /// </summary>
         [JsonProperty("m_chanceToRandomizeSpawnDirectionPerWave")]
-        public double ChanceToRandomizeSpawnDirectionPerWave { get; set; } = 0.6;
+        public double ChanceToRandomizeSpawnDirectionPerWave { get; set; } = 0.75;
 
         /// <summary>
         /// Change for spawn direction to change between groups.
@@ -213,8 +213,9 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static new void SaveStatic()
         {
             // Alarms
+            Bins.WaveSettings.AddBlock(Baseline_Easy);
             Bins.WaveSettings.AddBlock(Baseline_Normal);
-            Bins.WaveSettings.AddBlock(OnlyStandard);
+            Bins.WaveSettings.AddBlock(Baseline_Hard);
 
             // Exit
             Bins.WaveSettings.AddBlock(Exit_Baseline);
@@ -245,16 +246,42 @@ namespace AutogenRundown.DataBlocks.Alarms
         }
 
         #region Alarm waves
-        public static WaveSettings OnlyStandard = new WaveSettings
+        public static WaveSettings Baseline_Easy = new WaveSettings
         {
-            PopulationFilter = { Enemies.EnemyType.Standard },
-            FilterType = PopulationFilterType.Include  
+            PopulationFilter =
+            {
+                Enemies.EnemyType.Weakling,
+                Enemies.EnemyType.MiniBoss,
+                Enemies.EnemyType.Boss
+            },
+            FilterType = PopulationFilterType.Exclude,
+            PopulationPointsPerWaveStart = 15,
+            PopulationPointsPerWaveEnd = 25,
+            PopulationRampOverTime = 200,
         };
 
+        /// <summary>
+        /// Should be a good choice for many alarms. This is equivalent to Apex in the base game
+        /// </summary>
         public static WaveSettings Baseline_Normal = new WaveSettings
         {
-            PopulationFilter = { Enemies.EnemyType.Weakling },
-            FilterType = PopulationFilterType.Exclude
+            PopulationFilter = { Enemies.EnemyType.Weakling, Enemies.EnemyType.Boss },
+            FilterType = PopulationFilterType.Exclude,
+            PopulationPointsPerWaveStart = 17,
+            PopulationPointsPerWaveEnd = 25,
+            PopulationRampOverTime = 150
+        };
+
+        /// <summary>
+        /// Harder choice, all enemy types can be included here. Will ramp up much faster than the others
+        /// </summary>
+        public static WaveSettings Baseline_Hard = new WaveSettings
+        {
+            PopulationFilter = {},
+            FilterType = PopulationFilterType.Exclude,
+            PopulationPointsPerWaveStart = 18,
+            PopulationPointsPerWaveEnd = 28,
+            PopulationRampOverTime = 100
         };
         #endregion
 

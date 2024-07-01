@@ -31,6 +31,8 @@ namespace AutogenRundown.DataBlocks.Alarms
 
         /// <summary>
         /// EnemyDataBlock PersistentID of eEnemyType for this population
+        ///
+        /// Allegedly doesn't work
         /// Cost: 2.0
         /// </summary>
         public Enemy WaveRoleBoss { get; set; }
@@ -63,11 +65,17 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             Bins.WavePopulations.AddBlock(Baseline);
             Bins.WavePopulations.AddBlock(Baseline_Hybrid);
+            Bins.WavePopulations.AddBlock(Baseline_Chargers);
+            Bins.WavePopulations.AddBlock(Baseline_Nightmare);
 
             Bins.WavePopulations.AddBlock(OnlyChargers);
             Bins.WavePopulations.AddBlock(OnlyHybrids);
             Bins.WavePopulations.AddBlock(OnlyShadows);
 
+            // Shadows
+            Bins.WavePopulations.AddBlock(Shadows_WithHybrids);
+
+            // Single enemy
             Bins.WavePopulations.AddBlock(SingleEnemy_Mother);
             Bins.WavePopulations.AddBlock(SingleEnemy_PMother);
             Bins.WavePopulations.AddBlock(SingleEnemy_Tank);
@@ -76,6 +84,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         }
 
         #region Alarm waves
+        #region Baseline waves
         /// <summary>
         /// Same as vanilla baseline
         /// </summary>
@@ -93,9 +102,28 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleWeakling = Enemy.Shadow,
             WaveRoleStandard = Enemy.Striker_Wave,
             WaveRoleSpecial = Enemy.Shooter_Wave,
+            WaveRoleMiniBoss = Enemy.Hybrid,
+            WaveRoleBoss = Enemy.Hybrid
+        };
+
+        public static WavePopulation Baseline_Chargers = new WavePopulation
+        {
+            WaveRoleWeakling = Enemy.Shadow,
+            WaveRoleStandard = Enemy.Striker_Wave,
+            WaveRoleSpecial = Enemy.Charger,
             WaveRoleMiniBoss = Enemy.StrikerGiant_Wave,
             WaveRoleBoss = Enemy.Hybrid
         };
+
+        public static WavePopulation Baseline_Nightmare = new WavePopulation
+        {
+            WaveRoleWeakling = Enemy.Shadow,
+            WaveRoleStandard = Enemy.Striker_Wave,
+            WaveRoleSpecial = Enemy.NightmareStriker,
+            WaveRoleMiniBoss = Enemy.StrikerGiant_Wave,
+            WaveRoleBoss = Enemy.Hybrid
+        };
+        #endregion
 
         public static WavePopulation OnlyChargers = new WavePopulation
         {
@@ -114,6 +142,14 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleWeakling = Enemy.Shadow,
             WaveRoleStandard = Enemy.Shadow,
             WaveRoleMiniBoss = Enemy.ShadowGiant,
+        };
+
+        public static WavePopulation Shadows_WithHybrids = new WavePopulation
+        {
+            WaveRoleWeakling = Enemy.Shadow,
+            WaveRoleStandard = Enemy.Shadow,
+            WaveRoleSpecial = Enemy.ShadowGiant,
+            WaveRoleMiniBoss = Enemy.Hybrid
         };
         #endregion
 

@@ -378,7 +378,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PublicAlarmName = "Class III Alarm",
             SurvivalWaveSettings = (uint)VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.Baseline,
+            SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
             Puzzle = new List<PuzzleComponent>
             {
                 PuzzleComponent.AllBig,
