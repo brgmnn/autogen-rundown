@@ -575,6 +575,8 @@ namespace AutogenRundown.DataBlocks
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
+                                            // TODO: tone down hybrids
+                                            // TODO: maybe cap the types of waves that can spawn
                                             ReactorEnemyWave.OnlyHybrids_Medium with { SpawnTime = 30 }
                                         }),
                                         (1.0, new()
@@ -722,7 +724,7 @@ namespace AutogenRundown.DataBlocks
 
                             // Calculate how many points of enemies will be spawned in total.
                             reactorWavePoints += wave.EnemyWaves.Sum(enemyWave
-                                => (int)Bins.WaveSettings.Find(enemyWave.WaveSettings).PopulationPointsTotal);
+                                => (int)(Bins.WaveSettings.Find(enemyWave.WaveSettings)?.PopulationPointsTotal ?? 0));
                         }
 
                         // Spread resources to do the waves within the reactor area

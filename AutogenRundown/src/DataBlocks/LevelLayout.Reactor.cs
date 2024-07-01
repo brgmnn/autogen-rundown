@@ -167,8 +167,8 @@ namespace AutogenRundown.DataBlocks
                 var last = BuildBranch(baseNode, Generator.Random.Next(branchMin, branchMax), branch);
                 var branchNodes = level.Planner.GetZones(director.Bulkhead, branch);
 
-                var lastZone = level.Planner.GetZone(last);
-                var firstZone = level.Planner.GetZone(branchNodes.First());
+                var lastZone = level.Planner.GetZone(last)!;
+                var firstZone = level.Planner.GetZone(branchNodes.First())!;
 
                 // Add some extra terminals for confusion. All at the back.
                 lastZone.TerminalPlacements = new List<TerminalPlacement>();

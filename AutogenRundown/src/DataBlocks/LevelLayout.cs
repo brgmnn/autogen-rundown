@@ -362,8 +362,13 @@ namespace AutogenRundown.DataBlocks
                 // Boss settings
                 if (Generator.Flip(bossChance) && settings.EnemyBossPack.Count() > 0)
                 {
-                    zone.EnemySpawningInZone.Add(Generator.Draw(settings.EnemyBossPack));
-                    Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} rolled a boss!");
+                    var boss = Generator.Draw(settings.EnemyBossPack);
+
+                    if (boss != null)
+                    {
+                        zone.EnemySpawningInZone.Add(boss);
+                        Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} rolled a boss!");
+                    }
                 }
 
                 var groupChoices = new List<(double, List<AutogenDifficulty>)>

@@ -92,7 +92,7 @@ namespace AutogenRundown.DataBlocks.Zones
 
         public override string ToString()
         {
-            var debug = string.Join("\n", graph.Select(n => $"  {n.Key} ({GetZone(n.Key).ZoneExpansion}) => [{ZoneNode.ListToString(n.Value, ",\n    ")}]"));
+            var debug = string.Join("\n", graph.Select(n => $"  {n.Key} ({GetZone(n.Key)?.ZoneExpansion}) => [{ZoneNode.ListToString(n.Value, ",\n    ")}]"));
             return $"Graph:\n{debug}";
         }
 
