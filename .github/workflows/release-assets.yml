@@ -1,4 +1,4 @@
-name: Attach Assets
+name: Release (Github Artifacts)
 
 on:
   workflow_dispatch:
