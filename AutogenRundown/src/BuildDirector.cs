@@ -139,17 +139,71 @@ namespace AutogenRundown
         {
             ZoneCount = (Tier, Bulkhead) switch
             {
-                ("A", Bulkhead.Main) => Generator.Random.Next(4, 5),
-                ("B", Bulkhead.Main) => Generator.Random.Next(5, 6),
-                ("C", Bulkhead.Main) => Generator.Random.Next(6, 7),
-                ("D", Bulkhead.Main) => Generator.Random.Next(6, 7),
-                ("E", Bulkhead.Main) => Generator.Random.Next(7, 9),
+                ("A", Bulkhead.Main) => Generator.Select(new List<(double, int)>
+                    {
+                        (0.4, 1),
+                        (1.0, 2),
+                        (1.0, 3),
+                    }),
+                ("B", Bulkhead.Main) => Generator.Select(new List<(double, int)>
+                    {
+                        (0.4, 2),
+                        (1.0, 3),
+                        (1.0, 4),
+                        (0.2, 5),
+                    }),
+                ("C", Bulkhead.Main) => Generator.Select(new List<(double, int)>
+                    {
+                        (0.9, 3),
+                        (1.0, 4),
+                        (1.0, 5),
+                    }),
+                ("D", Bulkhead.Main) => Generator.Select(new List<(double, int)>
+                    {
+                        (0.6, 3),
+                        (0.9, 4),
+                        (1.0, 5),
+                        (0.3, 6),
+                    }),
+                ("E", Bulkhead.Main) => Generator.Select(new List<(double, int)>
+                    {
+                        (0.4, 3),
+                        (0.9, 4),
+                        (1.0, 5),
+                        (0.8, 6),
+                        (0.1, 7),
+                    }),
 
-                ("A", _) => Generator.Random.Next(2, 3),
-                ("B", _) => Generator.Random.Next(2, 3),
-                ("C", _) => Generator.Random.Next(2, 4),
-                ("D", _) => Generator.Random.Next(3, 5),
-                ("E", _) => Generator.Random.Next(3, 5),
+                ("A", _) => Generator.Select(new List<(double, int)>
+                    {
+                        (0.4, 1),
+                        (1.0, 2),
+                    }),
+                ("B", _) => Generator.Select(new List<(double, int)>
+                    {
+                        (0.4, 1),
+                        (1.0, 2),
+                        (1.0, 3),
+                    }),
+                ("C", _) => Generator.Select(new List<(double, int)>
+                    {
+                        (0.3, 1),
+                        (0.9, 2),
+                        (1.0, 3),
+                    }),
+                ("D", _) => Generator.Select(new List<(double, int)>
+                    {
+                        (0.6, 2),
+                        (0.9, 3),
+                        (1.0, 4),
+                    }),
+                ("E", _) => Generator.Select(new List<(double, int)>
+                    {
+                        (0.5, 2),
+                        (1.0, 3),
+                        (1.0, 4),
+                        (0.1, 5),
+                    }),
 
                 (_, _) => 1
             };
