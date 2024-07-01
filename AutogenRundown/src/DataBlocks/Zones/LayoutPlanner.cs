@@ -390,7 +390,8 @@ namespace AutogenRundown.DataBlocks.Zones
             // Next we attempt to go through and space the level a bit. We find all open zones
             // with no custom geomorphs set and try to have them expand directionally so any
             // future hubs get more space
-            var openZones = GetOpenZones(bulkhead, null);
+            // TODO: does this actually help?
+            /*var openZones = GetOpenZones(bulkhead, null);
 
             foreach (var node in openZones)
             {
@@ -403,7 +404,7 @@ namespace AutogenRundown.DataBlocks.Zones
                         zone.ZoneExpansion = ZoneExpansion.DirectionalRandom;
                     }
                 }
-            }
+            }*/
         }
     }
 }

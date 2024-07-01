@@ -782,11 +782,12 @@ namespace AutogenRundown.DataBlocks
 
                         // Zone 1 is normal
                         var entrance = level.Planner.GetExactZones(director.Bulkhead).First();
-                        entrance.MaxConnections = 3;
+                        entrance.MaxConnections = 2;
 
                         var entranceZone = level.Planner.GetZone(entrance)!;
-                        entranceZone.GenHubGeomorph(director.Complex);
+                        //entranceZone.GenHubGeomorph(director.Complex);
                         entranceZone.RollFog(level);
+                        entranceZone.Coverage = new CoverageMinMax { Min = 50, Max = 60 };
 
                         // Zone 2 is an I corridor
                         var corridorIndex = level.Planner.NextIndex(director.Bulkhead);
@@ -794,7 +795,7 @@ namespace AutogenRundown.DataBlocks
                         corridor.MaxConnections = 1;
 
                         var corridorZone = new Zone { LightSettings = Lights.GenRandomLight() };
-                        corridorZone.GenCorridorGeomorph(director.Complex);
+                        //corridorZone.GenCorridorGeomorph(director.Complex);
                         corridorZone.RollFog(level);
 
                         level.Planner.Connect(entrance, corridor);
