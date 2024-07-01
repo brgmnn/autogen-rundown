@@ -162,17 +162,25 @@ namespace AutogenRundown.DataBlocks.Alarms
                 "D" => new List<ChainedPuzzle>
                 {
                     // Easy scans
-                    None,
                     TeamScan, TeamScan,
-                    AlarmClass4, AlarmClass4,
+                    AlarmClass4,
+
+                    // Stealth and Surprise scans. Secret scans are grouped with their regular
+                    // counterpart
+                    StealthScan4, Secret_StealthScan4_WithChargers,
+                    None, Secret_SpawnTank,
 
                     // Moderately difficult scans
-                    AlarmClass5, AlarmClass5, AlarmClass5, AlarmClass5,
-                    AlarmClass5_Cluster, AlarmClass5_Cluster,
+                    AlarmClass5_Hard, AlarmClass5_Hybrids, AlarmClass5_Chargers, AlarmClass5_Hard,
+                    AlarmClass5_Cluster, AlarmClass5_Cluster_Nightmare,
                     AlarmClass5_Mixed, AlarmClass5_Mixed,
 
                     // Challenging scans
+                    AlarmClass6_Chargers,
+                    AlarmClass6_Nightmare,
                     AlarmClass6_Mixed,
+
+                    AlarmClass7_Chargers,
                     AlarmClass7_Mixed,
 
                     // Surge (very challenging)
@@ -181,10 +189,9 @@ namespace AutogenRundown.DataBlocks.Alarms
 
                     // Sustained
                     AlarmClass1_Sustained, AlarmClass1_Sustained, AlarmClass1_Sustained,
-
-                    // Surprise Alarms
-                    Secret_SpawnTank
                 },
+
+                // TODO: balance this
                 "E" => new List<ChainedPuzzle>
                 {
                     // Easy
@@ -617,8 +624,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass2_Cluster = new ChainedPuzzle
         {
             PublicAlarmName = "Class II Cluster Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.Baseline,
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline.PersistentId,
             WantedDistanceBetweenPuzzleComponents = 5.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -630,8 +637,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass3_Cluster = new ChainedPuzzle
         {
             PublicAlarmName = "Class III Cluster Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.Baseline,
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline.PersistentId,
             WantedDistanceBetweenPuzzleComponents = 5.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -644,8 +651,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass4_Cluster = new ChainedPuzzle
         {
             PublicAlarmName = "Class IV Cluster Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.Baseline,
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
             WantedDistanceBetweenPuzzleComponents = 5.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -659,12 +666,29 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass5_Cluster = new ChainedPuzzle
         {
             PublicAlarmName = "Class V Cluster Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.Baseline,
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
             WantedDistanceBetweenPuzzleComponents = 5.0,
             Puzzle = new List<PuzzleComponent>
             {
                 PuzzleComponent.AllBig,
+                PuzzleComponent.Cluster,
+                PuzzleComponent.Cluster,
+                PuzzleComponent.Cluster,
+                PuzzleComponent.Cluster,
+            },
+        };
+
+        public static ChainedPuzzle AlarmClass5_Cluster_Nightmare = new ChainedPuzzle
+        {
+            PublicAlarmName = "Class V Cluster Alarm",
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
+            WantedDistanceBetweenPuzzleComponents = 5.0,
+            Puzzle = new List<PuzzleComponent>
+            {
+                PuzzleComponent.AllBig,
+                PuzzleComponent.Cluster,
                 PuzzleComponent.Cluster,
                 PuzzleComponent.Cluster,
                 PuzzleComponent.Cluster,
@@ -676,8 +700,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass4_Mixed = new ChainedPuzzle
         {
             PublicAlarmName = "Class IV M Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.ApexIncreased,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.ModifiedSpHybrid,
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
             WantedDistanceBetweenPuzzleComponents = 20.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -691,8 +715,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass5_Mixed = new ChainedPuzzle
         {
             PublicAlarmName = "Class V M Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.ApexIncreased,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.ModifiedSpHybrid,
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
             WantedDistanceBetweenPuzzleComponents = 20.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -707,8 +731,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass6_Mixed = new ChainedPuzzle
         {
             PublicAlarmName = "Class VI M Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.ApexIncreased,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.ModifiedSpHybrid,
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
             WantedDistanceBetweenPuzzleComponents = 20.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -724,8 +748,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass7_Mixed = new ChainedPuzzle
         {
             PublicAlarmName = "Class VII M Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.ApexIncreased,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.ModifiedSpHybrid,
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
             WantedDistanceBetweenPuzzleComponents = 20.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -794,8 +818,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass1_Sustained = new ChainedPuzzle
         {
             PublicAlarmName = "Class S I Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.ApexIncreased,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.ReactorBaseline,
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
             WantedDistanceFromStartPos = 12.0,
             WantedDistanceBetweenPuzzleComponents = 2.0,
             Puzzle = new List<PuzzleComponent>()
@@ -957,6 +981,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static new void SaveStatic()
         {
             Bins.ChainedPuzzles.AddBlock(TeamScan);
+
+            #region Apex
             Bins.ChainedPuzzles.AddBlock(AlarmClass1);
             Bins.ChainedPuzzles.AddBlock(AlarmClass2);
             Bins.ChainedPuzzles.AddBlock(AlarmClass3);
@@ -990,11 +1016,13 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.ChainedPuzzles.AddBlock(AlarmClass6_Nightmare);
             Bins.ChainedPuzzles.AddBlock(AlarmClass7_Nightmare);
             Bins.ChainedPuzzles.AddBlock(AlarmClass8_Nightmare);
+            #endregion
 
             Bins.ChainedPuzzles.AddBlock(AlarmClass2_Cluster);
             Bins.ChainedPuzzles.AddBlock(AlarmClass3_Cluster);
             Bins.ChainedPuzzles.AddBlock(AlarmClass4_Cluster);
             Bins.ChainedPuzzles.AddBlock(AlarmClass5_Cluster);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass5_Cluster_Nightmare);
 
             Bins.ChainedPuzzles.AddBlock(AlarmClass4_Mixed);
             Bins.ChainedPuzzles.AddBlock(AlarmClass5_Mixed);
