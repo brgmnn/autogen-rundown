@@ -120,23 +120,11 @@ namespace AutogenRundown.DataBlocks.Alarms
             {
                 "A" => new List<ChainedPuzzle>
                 {
-                    None,
-                    None,
-                    TeamScan,
-                    TeamScan,
-                    TeamScan,
-                    AlarmClass2,
-                    AlarmClass2,
-                    AlarmClass2,
-                    AlarmClass2,
-                    AlarmClass2,
-                    AlarmClass3,
-                    AlarmClass3,
-                    AlarmClass3,
-                    AlarmClass3,
-                    AlarmClass3,
-                    AlarmClass4,
-                    AlarmClass4,
+                    None, None,
+                    TeamScan, TeamScan, TeamScan,
+                    AlarmClass2, AlarmClass2, AlarmClass2, AlarmClass2, AlarmClass2,
+                    AlarmClass3, AlarmClass3, AlarmClass3, AlarmClass3, AlarmClass3,
+                    AlarmClass4, AlarmClass4,
                 },
                 "B" => new List<ChainedPuzzle>
                 {
@@ -687,40 +675,87 @@ namespace AutogenRundown.DataBlocks.Alarms
         };
         #endregion
 
+        #region Alarms: Secret alarms
         /******************** Autogen Special Alarms ********************/
         public static ChainedPuzzle Secret_SpawnTank = new ChainedPuzzle
         {
             PersistentId = 0,
             EventsOnOpenDoor = new List<WardenObjectiveEvent>
             {
-                // TODO: This sound seems busted
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.PlaySound,
+                    Trigger = WardenObjectiveEventTrigger.OnStart,
+                    // TODO: this just doesn't seem to work
+                    SoundId = Sound.Environment_DoorUnstuck,
+                    Delay = 5.0
+                },
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.PlaySound,
+                    Trigger = WardenObjectiveEventTrigger.OnStart,
+                    SoundId = Sound.Enemies_DistantLowRoar,
+                    Delay = 8.0
+                },
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.SpawnEnemyWave,
+                    Delay = 9.0,
+                    EnemyWaveData = GenericWave.SingleTank
+                },
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.None,
+                    Delay = 7.0,
+                    WardenIntel = ":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr..."
+                },
+            }
+        };
+
+        public static ChainedPuzzle Secret_StealthScan4_WithChargers = new ChainedPuzzle
+        {
+            PublicAlarmName = "Class IV Scan",
+            TriggerAlarmOnActivate = false,
+            WantedDistanceFromStartPos = 0.0,
+            WantedDistanceBetweenPuzzleComponents = 35.0,
+            Puzzle = new List<PuzzleComponent>
+            {
+                PuzzleComponent.ScanLarge,
+                PuzzleComponent.ClusterSmall,
+                PuzzleComponent.Cluster,
+                PuzzleComponent.ClusterSmall
+            },
+
+            EventsOnDoorScanStart = new List<WardenObjectiveEvent>
+            {
                 new WardenObjectiveEvent
                 {
                     Type = WardenObjectiveEventType.PlaySound,
                     Trigger = WardenObjectiveEventTrigger.OnStart,
                     SoundId = Sound.SheetMetalLand,
-                    Delay = 1.0
+                    Delay = 15.0
                 },
                 new WardenObjectiveEvent
                 {
                     Type = WardenObjectiveEventType.SpawnEnemyWave,
-                    Delay = 3.0,
-                    EnemyWaveData = GenericWave.SingleTank
+                    Delay = 20.0,
+                    EnemyWaveData = GenericWave.GiantChargers_35pts
                 },
                 new WardenObjectiveEvent
                 {
                     Type = WardenObjectiveEventType.PlaySound,
                     SoundId = Sound.TankRoar,
-                    Delay = 3.0
+                    Delay = 20.0
                 },
                 new WardenObjectiveEvent
                 {
                     Type = WardenObjectiveEventType.None,
-                    Delay = 2.0,
+                    Delay = 20.0,
                     WardenIntel = ":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr..."
                 },
             }
         };
+        #endregion
 
         /******************** Exit Alarm Scans ********************/
         public static ChainedPuzzle ExitAlarm = new ChainedPuzzle

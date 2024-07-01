@@ -232,6 +232,14 @@ namespace AutogenRundown.DataBlocks.Alarms
 
             Bins.WaveSettings.AddBlock(ReactorPoints_Special_16pts);
 
+            // Single waves
+            Bins.WaveSettings.AddBlock(SingleWave_8pts);
+            Bins.WaveSettings.AddBlock(SingleWave_12pts);
+            Bins.WaveSettings.AddBlock(SingleWave_16pts);
+            Bins.WaveSettings.AddBlock(SingleWave_20pts);
+            Bins.WaveSettings.AddBlock(SingleWave_28pts);
+            Bins.WaveSettings.AddBlock(SingleWave_35pts);
+
             // Single enemy spawn
             Bins.WaveSettings.AddBlock(SingleMiniBoss);
         }
@@ -458,6 +466,80 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationRampOverTime = 30
         };
         #endregion
+        #endregion
+
+        #region Single wave spawns
+        public static WaveSettings SingleWave_8pts = new WaveSettings
+        {
+            PopulationFilter = {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+                Enemies.EnemyType.MiniBoss
+            },
+            FilterType = PopulationFilterType.Include,
+
+            PopulationPointsTotal = 8,
+        };
+
+        public static WaveSettings SingleWave_12pts = new WaveSettings
+        {
+            PopulationFilter = {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+                Enemies.EnemyType.MiniBoss
+            },
+            FilterType = PopulationFilterType.Include,
+
+            PopulationPointsTotal = 12,
+        };
+
+        public static WaveSettings SingleWave_16pts = new WaveSettings
+        {
+            PopulationFilter = {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+                Enemies.EnemyType.MiniBoss
+            },
+            FilterType = PopulationFilterType.Include,
+
+            PopulationPointsTotal = 16,
+        };
+
+        public static WaveSettings SingleWave_20pts = new WaveSettings
+        {
+            PopulationFilter = {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+                Enemies.EnemyType.MiniBoss
+            },
+            FilterType = PopulationFilterType.Include,
+
+            PopulationPointsTotal = 20,
+        };
+
+        public static WaveSettings SingleWave_28pts = new WaveSettings
+        {
+            PopulationFilter = {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+                Enemies.EnemyType.MiniBoss
+            },
+            FilterType = PopulationFilterType.Include,
+
+            PopulationPointsTotal = 28,
+        };
+
+        public static WaveSettings SingleWave_35pts = new WaveSettings
+        {
+            PopulationFilter = {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+                Enemies.EnemyType.MiniBoss
+            },
+            FilterType = PopulationFilterType.Include,
+
+            PopulationPointsTotal = 35,
+        };
         #endregion
 
         #region Single enemy spawns

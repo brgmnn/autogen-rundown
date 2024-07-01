@@ -41,6 +41,14 @@ namespace AutogenRundown.DataBlocks.Enemies
         };
         #endregion
 
+        #region Chargers
+        public static GenericWave GiantChargers_35pts = new GenericWave
+        {
+            WaveSettings = Alarms.WaveSettings.SingleWave_35pts.PersistentId,
+            WavePopulation = Alarms.WavePopulation.OnlyChargers.PersistentId
+        };
+        #endregion
+
         #region Single enemy waves
         public static GenericWave SingleMother = new GenericWave
         {
