@@ -35,14 +35,14 @@ namespace AutogenRundown.DataBlocks.Objectives.Reactor
         public static ReactorEnemyWave Baseline_Hard = new()
         {
             WaveSettings = Alarms.WaveSettings.Reactor_Hard.PersistentId,
-            WavePopulation = Alarms.WavePopulation.Baseline_Hybrid.PersistentId,
+            WavePopulation = Alarms.WavePopulation.Baseline_Hybrids.PersistentId,
             Duration = 60
         };
 
         public static ReactorEnemyWave BaselineWithChargers_Hard = new()
         {
             WaveSettings = Alarms.WaveSettings.Reactor_Hard.PersistentId,
-            WavePopulation = Alarms.WavePopulation.Baseline_Hybrid.PersistentId,
+            WavePopulation = Alarms.WavePopulation.Baseline_Hybrids.PersistentId,
             Duration = 55
         };
 

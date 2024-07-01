@@ -28,6 +28,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         public List<WardenObjectiveEvent> EventsOnDoorScanDone { get; set; } = new List<WardenObjectiveEvent>();
         #endregion
 
+        #region Properties
         /// <summary>
         /// The Alarm name. For example, Class S Surge Alarm
         /// </summary>
@@ -92,6 +93,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// Typically set to false for regular scan, and true for extraction scan.
         /// </summary>
         public bool OnlyShowHUDWhenPlayerIsClose { get; set; } = true;
+        #endregion
 
         #region Rarely set by us
         public int SurvivalWaveAreaDistance { get; set; } = 2;
@@ -354,8 +356,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass1 = new ChainedPuzzle
         {
             PublicAlarmName = "Class I Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.Baseline,
+            SurvivalWaveSettings = WaveSettings.Baseline_Easy.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline.PersistentId,
             Puzzle = new List<PuzzleComponent>
             {
                 PuzzleComponent.AllBig
@@ -365,8 +367,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass2 = new ChainedPuzzle
         {
             PublicAlarmName = "Class II Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.Baseline,
+            SurvivalWaveSettings = WaveSettings.Baseline_Easy.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline.PersistentId,
             Puzzle = new List<PuzzleComponent>
             {
                 PuzzleComponent.AllBig,
@@ -377,8 +379,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static ChainedPuzzle AlarmClass3 = new ChainedPuzzle
         {
             PublicAlarmName = "Class III Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
+            SurvivalWaveSettings = WaveSettings.Baseline_Normal.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline.PersistentId,
             Puzzle = new List<PuzzleComponent>
             {
                 PuzzleComponent.AllBig,
@@ -387,11 +389,17 @@ namespace AutogenRundown.DataBlocks.Alarms
             },
         };
 
+        public static ChainedPuzzle AlarmClass3_Hard = AlarmClass3 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
         public static ChainedPuzzle AlarmClass4 = new ChainedPuzzle
         {
             PublicAlarmName = "Class IV Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.Baseline,
+            SurvivalWaveSettings = WaveSettings.Baseline_Normal.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline.PersistentId,
             Puzzle = new List<PuzzleComponent>
             {
                 PuzzleComponent.AllBig,
@@ -399,13 +407,40 @@ namespace AutogenRundown.DataBlocks.Alarms
                 PuzzleComponent.ClusterSmall,
                 PuzzleComponent.ScanLarge
             },
+        };
+
+        public static ChainedPuzzle AlarmClass4_Hard = AlarmClass4 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
+        public static ChainedPuzzle AlarmClass4_Chargers = AlarmClass4 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
+        public static ChainedPuzzle AlarmClass4_Hybrids = AlarmClass4 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
+        public static ChainedPuzzle AlarmClass4_Nightmare = AlarmClass4 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
+            PersistentId = Generator.GetPersistentId()
         };
 
         public static ChainedPuzzle AlarmClass5 = new ChainedPuzzle
         {
             PublicAlarmName = "Class V Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.Baseline,
+            SurvivalWaveSettings = WaveSettings.Baseline_Normal.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline.PersistentId,
             Puzzle = new List<PuzzleComponent>
             {
                 PuzzleComponent.AllBig,
@@ -414,13 +449,40 @@ namespace AutogenRundown.DataBlocks.Alarms
                 PuzzleComponent.ClusterSmall,
                 PuzzleComponent.ScanLarge
             },
+        };
+
+        public static ChainedPuzzle AlarmClass5_Hard = AlarmClass5 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
+        public static ChainedPuzzle AlarmClass5_Chargers = AlarmClass5 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
+        public static ChainedPuzzle AlarmClass5_Hybrids = AlarmClass5 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
+        public static ChainedPuzzle AlarmClass5_Nightmare = AlarmClass5 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
+            PersistentId = Generator.GetPersistentId()
         };
 
         public static ChainedPuzzle AlarmClass6 = new ChainedPuzzle
         {
             PublicAlarmName = "Class VI Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.Baseline,
+            SurvivalWaveSettings = WaveSettings.Baseline_Normal.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline.PersistentId,
             WantedDistanceBetweenPuzzleComponents = 15.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -431,13 +493,40 @@ namespace AutogenRundown.DataBlocks.Alarms
                 PuzzleComponent.ClusterSmall,
                 PuzzleComponent.ScanLarge
             },
+        };
+
+        public static ChainedPuzzle AlarmClass6_Hard = AlarmClass6 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
+        public static ChainedPuzzle AlarmClass6_Chargers = AlarmClass6 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
+        public static ChainedPuzzle AlarmClass6_Hybrids = AlarmClass6 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
+        public static ChainedPuzzle AlarmClass6_Nightmare = AlarmClass6 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
+            PersistentId = Generator.GetPersistentId()
         };
 
         public static ChainedPuzzle AlarmClass7 = new ChainedPuzzle
         {
             PublicAlarmName = "Class VII Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.Baseline,
+            SurvivalWaveSettings = WaveSettings.Baseline_Normal.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline.PersistentId,
             WantedDistanceBetweenPuzzleComponents = 15.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -451,11 +540,38 @@ namespace AutogenRundown.DataBlocks.Alarms
             },
         };
 
+        public static ChainedPuzzle AlarmClass7_Hard = AlarmClass7 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
+        public static ChainedPuzzle AlarmClass7_Chargers = AlarmClass7 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
+        public static ChainedPuzzle AlarmClass7_Hybrids = AlarmClass7 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
+        public static ChainedPuzzle AlarmClass7_Nightmare = AlarmClass7 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
         public static ChainedPuzzle AlarmClass8 = new ChainedPuzzle
         {
             PublicAlarmName = "Class VIII Alarm",
-            SurvivalWaveSettings = (uint)VanillaWaveSettings.Apex,
-            SurvivalWavePopulation = (uint)VanillaWavePopulation.Baseline,
+            SurvivalWaveSettings = WaveSettings.Baseline_Normal.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline.PersistentId,
             WantedDistanceBetweenPuzzleComponents = 15.0,
             Puzzle = new List<PuzzleComponent>
             {
@@ -467,6 +583,33 @@ namespace AutogenRundown.DataBlocks.Alarms
                 PuzzleComponent.ClusterSmall,
                 PuzzleComponent.ScanLarge
             },
+        };
+
+        public static ChainedPuzzle AlarmClass8_Hard = AlarmClass8 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
+        public static ChainedPuzzle AlarmClass8_Chargers = AlarmClass8 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
+        public static ChainedPuzzle AlarmClass8_Hybrids = AlarmClass8 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
+            PersistentId = Generator.GetPersistentId()
+        };
+
+        public static ChainedPuzzle AlarmClass8_Nightmare = AlarmClass8 with
+        {
+            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
+            SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
+            PersistentId = Generator.GetPersistentId()
         };
         #endregion
 
@@ -822,6 +965,31 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.ChainedPuzzles.AddBlock(AlarmClass6);
             Bins.ChainedPuzzles.AddBlock(AlarmClass7);
             Bins.ChainedPuzzles.AddBlock(AlarmClass8);
+
+            Bins.ChainedPuzzles.AddBlock(AlarmClass3_Hard);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass4_Hard);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass5_Hard);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass6_Hard);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass7_Hard);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass8_Hard);
+
+            Bins.ChainedPuzzles.AddBlock(AlarmClass4_Chargers);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass5_Chargers);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass6_Chargers);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass7_Chargers);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass8_Chargers);
+
+            Bins.ChainedPuzzles.AddBlock(AlarmClass4_Hybrids);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass5_Hybrids);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass6_Hybrids);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass7_Hybrids);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass8_Hybrids);
+
+            Bins.ChainedPuzzles.AddBlock(AlarmClass4_Nightmare);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass5_Nightmare);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass6_Nightmare);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass7_Nightmare);
+            Bins.ChainedPuzzles.AddBlock(AlarmClass8_Nightmare);
 
             Bins.ChainedPuzzles.AddBlock(AlarmClass2_Cluster);
             Bins.ChainedPuzzles.AddBlock(AlarmClass3_Cluster);

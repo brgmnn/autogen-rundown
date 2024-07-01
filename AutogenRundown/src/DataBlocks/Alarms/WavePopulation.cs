@@ -64,7 +64,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static new void SaveStatic()
         {
             Bins.WavePopulations.AddBlock(Baseline);
-            Bins.WavePopulations.AddBlock(Baseline_Hybrid);
+            Bins.WavePopulations.AddBlock(Baseline_Hybrids);
             Bins.WavePopulations.AddBlock(Baseline_Chargers);
             Bins.WavePopulations.AddBlock(Baseline_Nightmare);
 
@@ -97,7 +97,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleBoss = Enemy.ShooterGiant
         };
 
-        public static WavePopulation Baseline_Hybrid = new WavePopulation
+        public static WavePopulation Baseline_Hybrids = new WavePopulation
         {
             WaveRoleWeakling = Enemy.Shadow,
             WaveRoleStandard = Enemy.Striker_Wave,

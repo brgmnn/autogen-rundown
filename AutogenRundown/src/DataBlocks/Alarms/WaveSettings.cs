@@ -307,7 +307,10 @@ namespace AutogenRundown.DataBlocks.Alarms
         };
 
         /// <summary>
-        /// 
+        /// Surge alarms are very difficult as they flood the map with enemies immediately.
+        /// Don't expect teams to be able to clear alarms beyond one or two scans if they have
+        /// to clear enemies. Further scans can be cleared if the geomorphs allow strategies such
+        /// as C-Foam holding of doors
         /// </summary>
         public static WaveSettings Surge = new WaveSettings
         {
