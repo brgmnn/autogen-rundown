@@ -167,6 +167,55 @@ namespace AutogenRundown
         }
 
         /// <summary>
+        /// Draws an element from a collection. The collection is a list of:
+        ///
+        ///     (relative weighting, item count, item)
+        ///
+        /// If an item is selected, it will decrement count. If it's the last item then
+        /// the element will be removed from the list. Relative weights are relative to the
+        /// other elements in the list.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        public static T DrawSelect<T>(ICollection<(double, int, T)> collection)
+        {
+            var totalWeight = collection.Sum((x) => x.Item1);
+            var rand = Random.NextDouble();
+            var randomWeight = rand * totalWeight;
+
+            double weightSum = 0;
+
+            //foreach (var (weight, count, item) in collection)
+            for (int i = 0; i < collection.Count; i++)
+            {
+                var entry = collection.ElementAt(i);
+                var (weight, count, item) = entry;
+                weightSum += weight;
+
+                if (randomWeight <= weightSum)
+                {
+                    if (count > 1)
+                        entry.Item2 = count - 1;
+                    else
+                        collection.Remove(entry);
+
+                    return item;
+                }
+            }
+
+            var entryLast = collection.Last();
+            var (_, countLast, itemLast) = entryLast;
+
+            if (countLast > 1)
+                entryLast.Item2 = countLast - 1;
+            else
+                collection.Remove(entryLast);
+
+            return itemLast;
+        }
+
+        /// <summary>
         /// Gets a new persistent Id
         /// </summary>
         /// <returns></returns>
