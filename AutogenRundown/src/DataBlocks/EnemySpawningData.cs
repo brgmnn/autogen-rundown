@@ -206,6 +206,18 @@ namespace AutogenRundown.DataBlocks
             GroupType = EnemyGroupType.Scout,
             Difficulty = (uint)EnemyRoleDifficulty.Boss
         };
+
+        public static EnemySpawningData ScoutNightmare = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Scout,
+            Difficulty = (uint)EnemyRoleDifficulty.Biss
+        };
+
+        public static EnemySpawningData ScoutZoomer = new EnemySpawningData
+        {
+            GroupType = EnemyGroupType.Scout,
+            Difficulty = (uint)EnemyRoleDifficulty.Tank
+        };
         #endregion
 
         #region Bosses
