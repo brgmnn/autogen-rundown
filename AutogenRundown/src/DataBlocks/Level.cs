@@ -355,6 +355,14 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         /// <summary>
+        /// Constructor, we initialize some defaults here
+        /// </summary>
+        public Level()
+        {
+            Settings ??= new LevelSettings(Tier);
+        }
+
+        /// <summary>
         /// Generates a random depth for the level based on the Tier
         /// </summary>
         private void GenerateDepth()
@@ -567,9 +575,6 @@ namespace AutogenRundown.DataBlocks
 
             level.GenerateDepth();
             level.GenerateZoneAliasStarts();
-
-            if (level.Settings == null)
-                level.Settings = new LevelSettings(level.Tier);
 
             // Randomly select which bulkheads to use
             var selectedBulkheads = Generator.Select(new List<(double, Bulkhead)>
