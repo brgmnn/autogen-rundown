@@ -1103,7 +1103,7 @@ namespace AutogenRundown.DataBlocks
                     }
             }
 
-            layout.RollKeyedDoors();
+            //layout.RollKeyedDoors();
 
             // Attempt to reduce the chance of generation locking where zones cannot be placed
             level.Planner.PlanBulkheadPlacements(director.Bulkhead, direction);
