@@ -399,7 +399,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             PopulationFilter = { Enemies.EnemyType.Special },
 
-            PopulationPointsTotal = 28,
+            PopulationPointsTotal = 16,
             PopulationPointsPerWaveStart = 25,
             PopulationPointsPerWaveEnd = 25,
             PopulationPointsMinPerGroup = 8,

@@ -604,10 +604,15 @@ namespace AutogenRundown.DataBlocks
                                             ReactorEnemyWave.Baseline_Hard,
                                             ReactorEnemyWave.OnlyShadows_Hard with { SpawnTime = 30 }
                                         }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.BaselineWithNightmare_Hard,
+                                            ReactorEnemyWave.SingleTankPotato with { SpawnTime = 20 }
+                                        }),
                                         (2.0, new()
                                         {
-                                            ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.Baseline_Medium with { SpawnTime = 45 }
+                                            ReactorEnemyWave.Baseline_Medium,
+                                            ReactorEnemyWave.BaselineWithChargers_Hard with { SpawnTime = 45 }
                                         }),
                                     }),
                                 ("D", >= 7) => Generator.Select(
@@ -633,6 +638,11 @@ namespace AutogenRundown.DataBlocks
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
                                             ReactorEnemyWave.SingleMother with { SpawnTime = 60 },
+                                        }),
+                                        (1.0, new()
+                                        {
+                                            ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.SingleTank with { SpawnTime = 60 },
                                         }),
                                     }),
                                 #endregion

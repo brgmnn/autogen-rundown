@@ -42,8 +42,15 @@ namespace AutogenRundown.DataBlocks.Objectives.Reactor
         public static ReactorEnemyWave BaselineWithChargers_Hard = new()
         {
             WaveSettings = Alarms.WaveSettings.Reactor_Hard.PersistentId,
-            WavePopulation = Alarms.WavePopulation.Baseline_Hybrids.PersistentId,
+            WavePopulation = Alarms.WavePopulation.Baseline_Chargers.PersistentId,
             Duration = 55
+        };
+
+        public static ReactorEnemyWave BaselineWithNightmare_Hard = new()
+        {
+            WaveSettings = Alarms.WaveSettings.Reactor_Hard.PersistentId,
+            WavePopulation = Alarms.WavePopulation.Baseline_Nightmare.PersistentId,
+            Duration = 60
         };
 
         #region Giant waves

@@ -112,7 +112,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleStandard = Enemy.Striker_Wave,
             WaveRoleSpecial = Enemy.Charger,
             WaveRoleMiniBoss = Enemy.StrikerGiant_Wave,
-            WaveRoleBoss = Enemy.Hybrid
+            WaveRoleBoss = Enemy.ChargerGiant
         };
 
         public static WavePopulation Baseline_Nightmare = new WavePopulation
@@ -121,7 +121,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleStandard = Enemy.Striker_Wave,
             WaveRoleSpecial = Enemy.NightmareStriker,
             WaveRoleMiniBoss = Enemy.StrikerGiant_Wave,
-            WaveRoleBoss = Enemy.Hybrid
+            WaveRoleBoss = Enemy.NightmareShooter
         };
         #endregion
 
