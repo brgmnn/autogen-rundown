@@ -170,6 +170,10 @@ namespace AutogenRundown.DataBlocks
                 var lastZone = level.Planner.GetZone(last)!;
                 var firstZone = level.Planner.GetZone(branchNodes.First())!;
 
+                // Set terminal zone size to be large. This is to help avoid soft locking the level
+                // when placing terminals
+                lastZone.Coverage = CoverageMinMax.Large;
+
                 // Add some extra terminals for confusion. All at the back.
                 lastZone.TerminalPlacements = new List<TerminalPlacement>();
                 var terminalCount = Generator.Random.Next(2, 3);

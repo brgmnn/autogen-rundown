@@ -10,8 +10,8 @@ namespace AutogenRundown.DataBlocks
         Tiny = 35,
         Small = 50,
         Medium = 75,
-        Large = 125,
-        Huge = 200,
+        Large = 100,
+        Huge = 125,
     }
 
     public class CoverageMinMax
