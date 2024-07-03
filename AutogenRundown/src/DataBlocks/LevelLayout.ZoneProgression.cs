@@ -11,6 +11,10 @@ namespace AutogenRundown.DataBlocks
         public void AddKeyedPuzzle(ZoneNode lockedNode)
         {
             var lockedZone = level.Planner.GetZone(lockedNode);
+
+            if (lockedZone == null)
+                return;
+
             var openZones = level.Planner
                 .GetOpenZones(director.Bulkhead, lockedNode.Branch)
                 .Where(node => node.ZoneNumber < lockedNode.ZoneNumber).ToList();

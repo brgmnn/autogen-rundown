@@ -78,12 +78,12 @@ namespace AutogenRundown.DataBlocks
             Max = value;
         }
 
-        public static CoverageMinMax Nano = new CoverageMinMax { Min = (double)CoverageSize.Nano, Max = (double)CoverageSize.Nano };
-        public static CoverageMinMax Tiny = new CoverageMinMax { Min = (double)CoverageSize.Tiny, Max = (double)CoverageSize.Tiny };
-        public static CoverageMinMax Small = new CoverageMinMax { Min = (double)CoverageSize.Small, Max = (double)CoverageSize.Small };
-        public static CoverageMinMax Medium = new CoverageMinMax { Min = (double)CoverageSize.Medium, Max = (double)CoverageSize.Medium };
-        public static CoverageMinMax Large = new CoverageMinMax { Min = (double)CoverageSize.Large, Max = (double)CoverageSize.Large };
-        public static CoverageMinMax Huge = new CoverageMinMax { Min = (double)CoverageSize.Huge, Max = (double)CoverageSize.Huge };
+        public static readonly CoverageMinMax Nano = new() { Min = (double)CoverageSize.Nano, Max = (double)CoverageSize.Nano };
+        public static readonly CoverageMinMax Tiny = new() { Min = (double)CoverageSize.Tiny, Max = (double)CoverageSize.Tiny };
+        public static readonly CoverageMinMax Small = new() { Min = (double)CoverageSize.Small, Max = (double)CoverageSize.Small };
+        public static readonly CoverageMinMax Medium = new() { Min = (double)CoverageSize.Medium, Max = (double)CoverageSize.Medium };
+        public static readonly CoverageMinMax Large = new() { Min = (double)CoverageSize.Large, Max = (double)CoverageSize.Large };
+        public static readonly CoverageMinMax Huge = new() { Min = (double)CoverageSize.Huge, Max = (double)CoverageSize.Huge };
 
         /// <summary>
         /// Generates a randomly picked size

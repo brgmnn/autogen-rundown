@@ -575,8 +575,6 @@ namespace AutogenRundown.DataBlocks
                                         (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            // TODO: tone down hybrids
-                                            // TODO: maybe cap the types of waves that can spawn
                                             ReactorEnemyWave.OnlyHybrids_Medium with { SpawnTime = 30 }
                                         }),
                                         (1.0, new()

@@ -646,7 +646,8 @@ namespace AutogenRundown.DataBlocks
             var layout = new LevelLayout(level, director, level.Settings, level.Planner)
             {
                 Name = $"{level.Tier}{level.Index} {level.Name} {director.Bulkhead}",
-                ZoneAliasStart = level.GetZoneAliasStart(director.Bulkhead)
+                ZoneAliasStart = level.GetZoneAliasStart(director.Bulkhead),
+                direction = direction
             };
 
             director.GenZones();
