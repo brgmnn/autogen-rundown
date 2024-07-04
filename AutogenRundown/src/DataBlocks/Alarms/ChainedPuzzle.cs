@@ -819,7 +819,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             WantedDistanceBetweenPuzzleComponents = 2.0,
             Puzzle = new List<PuzzleComponent>()
             {
-                PuzzleComponent.SustainedMedium
+                PuzzleComponent.Sustained
             }
         };
         #endregion

@@ -57,13 +57,30 @@ namespace AutogenRundown.DataBlocks.Alarms
         // Stealth scans
         StealthBig_Cluster = 15,
 
-        // S-Class scans
+        #region S-Class scans
+        /**
+         * S-Class scans
+         */
         SustainedSmall = 14,
+
+        /// <summary>
+        /// This looks like the canonical sustained scan used in many levels.
+        ///
+        /// 100s duration with 4 players
+        /// </summary>
         Sustained = 13,
+
+        /// <summary>
+        /// Solo: 100s duration
+        /// 4 players: 25s duration
+        ///
+        /// Seems to be scaled based on players
+        /// </summary>
         SustainedMedium = 32,
         SustainedHuge = 18,
         SustainedMegaHuge = 17,
         SustainedBig_Cluster = 16,
+        #endregion
 
         // Checkpoints
         Checkpoint = 19,
@@ -118,7 +135,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static PuzzleComponent Sustained = new PuzzleComponent
         {
             PuzzleType = PuzzleType.Sustained,
-            Duration = 145
+            Duration = 100
         };
         public static PuzzleComponent SustainedSmall = new PuzzleComponent
         {
@@ -128,7 +145,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static PuzzleComponent SustainedMedium = new PuzzleComponent
         {
             PuzzleType = PuzzleType.SustainedMedium,
-            Duration = 100
+            Duration = 25
         };
         public static PuzzleComponent SustainedHuge = new PuzzleComponent
         {
