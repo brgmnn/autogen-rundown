@@ -14,6 +14,8 @@ public class Plugin : BasePlugin
 {
     public const string Version = "0.24.0";
 
+    public const string Name = "the_tavern-AutogenRundown";
+
     public static ManualLogSource Logger { get; private set; } = new("AutogenRundown");
 
     public override void Load()

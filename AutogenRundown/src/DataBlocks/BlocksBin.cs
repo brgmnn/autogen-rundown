@@ -24,6 +24,8 @@ namespace AutogenRundown.DataBlocks
             = new BlocksBin<LevelLayout>();
         public static BlocksBin<Rundown> Rundowns { get; private set; }
             = new BlocksBin<Rundown>();
+        public static BlocksBin<Text> Texts { get; private set; }
+            = new BlocksBin<Text>();
         public static BlocksBin<WardenObjective> WardenObjectives { get; private set; }
             = new BlocksBin<WardenObjective>();
         public static BlocksBin<WavePopulation> WavePopulations { get; private set; }
@@ -36,6 +38,9 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public static void Setup()
         {
+            Text.Setup();
+            Text.SaveStatic();
+
             EnemyGroup.Setup();
             EnemyPopulation.Setup();
             WavePopulation.Setup();
@@ -67,6 +72,7 @@ namespace AutogenRundown.DataBlocks
             Fogs.Save("FogSettings");
             LevelLayouts.Save("LevelLayout");
             Rundowns.Save("Rundown");
+            Texts.Save("Text");
             WardenObjectives.Save("WardenObjective");
             WavePopulations.Save("SurvivalWavePopulation");
             WaveSettings.Save("SurvivalWaveSettings");
