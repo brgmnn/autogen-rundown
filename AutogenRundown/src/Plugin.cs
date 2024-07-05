@@ -8,13 +8,13 @@ namespace AutogenRundown;
 
 [BepInPlugin("AutogenRundown", "AutogenRundown", Version)]
 [BepInProcess("GTFO.exe")]
-[BepInDependency("dev.gtfomodding.gtfo-api", BepInDependency.DependencyFlags.HardDependency)]
+[BepInDependency("dev.gtfomodding.gtfo-api")]
 [BepInDependency("Inas07-LocalProgression-1.3.6", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BasePlugin
 {
     public const string Version = "0.24.0";
 
-    public static ManualLogSource Logger { get; private set; } = new ManualLogSource("MyFirstPlugin");
+    public static ManualLogSource Logger { get; private set; } = new("AutogenRundown");
 
     public override void Load()
     {

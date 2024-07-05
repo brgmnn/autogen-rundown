@@ -10,13 +10,6 @@ namespace AutogenRundown
         High
     }
 
-    public enum MissionSize
-    {
-        Low,
-        Medium,
-        High
-    }
-
     /// <summary>
     /// Director for building what each level (bulkhead) should be
     /// </summary>

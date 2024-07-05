@@ -7,19 +7,19 @@
     public enum WardenObjectiveType
     {
         // Implemented
-        HsuFindSample = 0,
-        ReactorStartup = 1,
-        ReactorShutdown = 2,
-        GatherSmallItems = 3,
-        ClearPath = 4,
-        SpecialTerminalCommand = 5,
-        PowerCellDistribution = 7,
-        TerminalUplink = 8,
+        HsuFindSample = 0,          // H
+        ReactorStartup = 1,         // R
+        ReactorShutdown = 2,        // S
+        GatherSmallItems = 3,       // G
+        ClearPath = 4,              // P
+        SpecialTerminalCommand = 5, // T
+        RetrieveBigItems = 6,       // B
+        PowerCellDistribution = 7,  // C
+        TerminalUplink = 8,         // U
 
         CentralGeneratorCluster = 9, // TODO: Generator cluster spawn is bugged
 
         // Not yet implemented
-        RetrieveBigItems = 6,
         HsuActivateSmall = 10,
         Survival = 11,
 
