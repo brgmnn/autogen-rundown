@@ -73,7 +73,7 @@ namespace AutogenRundown.DataBlocks
             });
 
         [JsonIgnore]
-        public LayoutPlanner Planner { get; set; } = new LayoutPlanner();
+        public LayoutPlanner Planner { get; set; } = new();
 
         [JsonIgnore]
         public LevelSettings Settings { get; set; }
@@ -181,7 +181,7 @@ namespace AutogenRundown.DataBlocks
         /// Level description
         /// </summary>
         [JsonIgnore]
-        public string Description { get; set; } = "";
+        public uint Description { get; set; } = 0;
 
         [JsonIgnore]
         public Fog FogSettings { get; set; } = Fog.DefaultFog;
@@ -192,11 +192,14 @@ namespace AutogenRundown.DataBlocks
         [JsonIgnore]
         public bool IsTest { get; set; } = false;
 
+        [JsonIgnore]
+        public string? Prefix { get; set; }
+
         public JObject Descriptive
         {
             get => new JObject
             {
-                ["Prefix"] = IsTest ? "TEST" : Tier,
+                ["Prefix"] = IsTest ? "TEST" : (Prefix ?? Tier),
                 ["PublicName"] = Name,
                 ["IsExtraExpedition"] = false,
                 ["SkipExpNumberInName"] = IsTest,
@@ -208,6 +211,7 @@ namespace AutogenRundown.DataBlocks
 
                 // Description shows up in menu
                 ["ExpeditionDescription"] = Description,
+                // ["ExpeditionDescription"] = 931,
 
                 // Warden intel displays during drop
                 ["RoleplayedWardenIntel"] = 1426

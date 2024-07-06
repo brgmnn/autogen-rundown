@@ -472,7 +472,7 @@ namespace AutogenRundown.DataBlocks
 
                 /**
                  * Find and start up a reactor, fighting waves and optionally getting codes from zones.
-                 * 
+                 *
                  * Note that when spawning waves, waves with capped total points should be used to
                  * ensure the waves end when the team has finished fighting all of the enemies.
                  * */
@@ -889,7 +889,7 @@ namespace AutogenRundown.DataBlocks
                         FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
 
                         if (director.Bulkhead.HasFlag(Bulkhead.Main))
-                            level.Description = GenLevelDescription(director.Objective, itemId);
+                            level.Description = new Text(GenLevelDescription(director.Objective, itemId)).PersistentId;
 
                         GatherRequiredCount = level.Tier switch
                         {
@@ -933,7 +933,7 @@ namespace AutogenRundown.DataBlocks
                         GoToWinCondition_Elevator = "";
                         GoToWinCondition_CustomGeo = $"Go to the forward exit point in {exitZoneString}";
 
-                        level.Description = GenLevelDescription(director.Objective);
+                        level.Description = new Text(GenLevelDescription(director.Objective)).PersistentId;
 
                         // Ensure there's a nice spicy hoard at the end
                         exitZone?.EnemySpawningInZone.Add(
@@ -951,7 +951,7 @@ namespace AutogenRundown.DataBlocks
                 /**
                  * TODO: It would be nice to add special commands other than just lights off that do other modifiers.
                  *       Such as fog, error alarm, etc.
-                 *       
+                 *
                  *       Ideas:
                  *          1. Spawn boss
                  *          2. Flood with fog

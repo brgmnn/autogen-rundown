@@ -1,26 +1,11 @@
 ﻿using AutogenRundown.DataBlocks;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.GeneratorData;
-using BepInEx;
 
 namespace AutogenRundown
 {
     static public class RundownFactory
     {
-        /// <summary>
-        /// Checks if the Json Data directory already exists
-        /// </summary>
-        /// <returns></returns>
-        static public bool JsonDataExists()
-        {
-            if (Generator.Seed == "")
-                return false;
-
-            var dir = Path.Combine(Paths.PluginPath, "MyFirstPlugin", "Datablocks", Generator.Seed);
-
-            return Directory.Exists(dir);
-        }
-
         /// <summary>
         /// Entrypoint to build a new rundown
         /// </summary>
@@ -132,8 +117,36 @@ namespace AutogenRundown
                 rundown.AddLevel(level);
             }
 
+            #region Reactor startup
+            {
+                var mainDirector = new BuildDirector()
+                {
+                    Bulkhead = Bulkhead.Main,
+                    Tier = "D",
+                    Objective = WardenObjectiveType.ReactorStartup
+                };
+                mainDirector.GenPoints();
+
+                var settings = new LevelSettings("D");
+
+                // $"<color=orange>Reactor Startup://</color>\n{
+                var level = Level.Build(
+                    new()
+                    {
+                        Tier = "D",
+                        Prefix = $"<color=orange>R</color><color=grey>:</color>D",
+                        Description = new DataBlocks.Text("Hello").PersistentId,
+                        MainDirector = mainDirector,
+                        Settings = settings,
+                        Index = dMax + 1
+                    });
+
+                rundown.AddLevel(level);
+            }
+            #endregion
+
             #region Test D Levels
-            #if true
+            #if false
             var mainDirectorD = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
