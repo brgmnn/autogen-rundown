@@ -7,7 +7,7 @@ namespace AutogenRundown.DataBlocks;
 public record LanguageData
 {
     public string Translation { get; set; } = "";
-    public const bool ShouldTranslate = true;
+    public bool ShouldTranslate => true;
 }
 
 public record Text : DataBlock
@@ -39,7 +39,7 @@ public record Text : DataBlock
         var path = Path.Combine(dir, $"GameData_TextDataBlock_bin.json");
         var data = JObject.Parse(File.ReadAllText(path));
 
-        if (data["Blocks"] == null)
+        if (data == null || data["Blocks"] == null)
             throw new Exception("Failed to get 'Blocks' property");
 
         var texts = data["Blocks"].ToObject<List<GameDataText>>();
@@ -51,23 +51,15 @@ public record Text : DataBlock
             Bins.Texts.AddBlock(text);
     }
 
-    #region Properties
-
-    [JsonIgnore]
+    /// <summary>
+    /// The actual text value that this text holds.
+    /// </summary>
+    [JsonProperty("English")]
     public string Value { get; set; } = "";
 
-    /*
-    "English": "Section processor requiring override. Sensors detecting unidentified biomass. Prisoners graded non-essential.",
-    */
-    #endregion
-
-    #region Derived properties
-    public string English => Value;
-    #endregion
-
     #region Fixed properties
-    public const string Description = "";
-    public const int CharacterMetaData = 2;
+    public string Description { get; set; } = "";
+    public int CharacterMetaData  { get; set; } = 2;
 
     public readonly LanguageData French = new();
     public readonly LanguageData Italian = new();
@@ -84,9 +76,9 @@ public record Text : DataBlock
     [JsonProperty("Chinese_Simplified")]
     public readonly LanguageData ChineseSimplified = new();
 
-    public const bool SkipLocalization = true;
-    public const bool MachineTranslation = false;
-    public const int ExportVersion = 2;
-    public const int ImportVersion = 0;
+    public bool SkipLocalization { get; set; } = true;
+    public bool MachineTranslation { get; set; } = false;
+    public int ExportVersion { get; set; } = 2;
+    public int ImportVersion { get; set; } = 0;
     #endregion
 }
