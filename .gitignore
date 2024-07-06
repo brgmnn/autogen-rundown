@@ -3,6 +3,10 @@
 /build
 /deps
 
+# Jetbrains
+/.idea
+*.DotSettings.user
+
 **/bin
 **/obj
 
