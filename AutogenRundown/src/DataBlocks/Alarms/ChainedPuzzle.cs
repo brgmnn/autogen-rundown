@@ -7,7 +7,7 @@ namespace AutogenRundown.DataBlocks.Alarms
     /// <summary>
     /// https://gtfo-modding.gitbook.io/wiki/reference/datablocks/main/chainedpuzzle
     /// </summary>
-    public record class ChainedPuzzle : DataBlock
+    public record ChainedPuzzle : DataBlock
     {
         #region Internal for Autogen
         // These events get appended to the zone when the alarm is selected
