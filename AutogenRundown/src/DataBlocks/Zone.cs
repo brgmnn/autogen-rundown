@@ -13,7 +13,7 @@ namespace AutogenRundown.DataBlocks
     /// eZoneBuildFromExpansionType
     ///
     /// What direction to try and place the entrance door for this zone
-    /// 
+    ///
     /// Direction is global and forward is looking from the drop elevator
     /// https://gtfo-modding.gitbook.io/wiki/reference/enum-types#ezonebuildfromexpansiontype
     /// </summary>
@@ -28,9 +28,9 @@ namespace AutogenRundown.DataBlocks
 
     /// <summary>
     /// eZoneExpansionType
-    /// 
+    ///
     /// What direction to build the zone towards
-    /// 
+    ///
     /// Direction is global and forward is looking from the drop elevator
     /// https://gtfo-modding.gitbook.io/wiki/reference/enum-types#ezoneexpansiontype
     /// </summary>
@@ -198,7 +198,7 @@ namespace AutogenRundown.DataBlocks
 
         #region Custom geomorph settings
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="complex"></param>
         public void GenExitGeomorph(Complex complex)
@@ -290,9 +290,9 @@ namespace AutogenRundown.DataBlocks
         /// Set's the zone to a random custom I geomorph. I geomorphs can only connect to two new
         /// zones, one at either end and therefore should be given a MaxConnections of 1 in the
         /// planner.
-        /// 
+        ///
         /// See: https://docs.google.com/document/d/1iSYUASlQSaP6l7PD3HszsXSAxJ-wb8MAVwYxb9xW92c/edit
-        /// 
+        ///
         /// TODO: Add remaining I geomorphs.
         /// </summary>
         /// <param name="complex"></param>
@@ -411,6 +411,15 @@ namespace AutogenRundown.DataBlocks
                         Coverage = new CoverageMinMax { Min = 40.0, Max = 40.0 };
                         break;
                     }
+
+                case Complex.Service:
+                {
+                    CustomGeomorph = "Assets/Prefabs/Geomorph/Service/geo_floodways_FA_reactor_01.prefab";
+                    SubComplex = SubComplex.Floodways;
+                    IgnoreRandomGeomorphRotation = true;
+                    Coverage = new CoverageMinMax { Min = 40.0, Max = 40.0 };
+                    break;
+                }
             };
         }
 
@@ -437,6 +446,12 @@ namespace AutogenRundown.DataBlocks
                         CustomGeomorph = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_I_HA_03_v2.prefab";
                         SubComplex = SubComplex.Lab;
                         Coverage = new CoverageMinMax { Min = 30.0, Max = 40.0 };
+                        break;
+                    }
+
+                case Complex.Service:
+                    {
+                        GenCorridorGeomorph(complex);
                         break;
                     }
             }

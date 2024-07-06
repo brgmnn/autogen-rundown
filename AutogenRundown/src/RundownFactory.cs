@@ -146,7 +146,8 @@ namespace AutogenRundown
                 {
                     Bulkhead = Bulkhead.Main,
                     Tier = "D",
-                    Objective = objective
+                    Objective = objective,
+                    Complex = Complex.Service
                 };
                 mainDirector.GenPoints();
 

@@ -10,5 +10,9 @@
 **/bin
 **/obj
 
+# GTFO GameData dump
+/GameData-Dump
+
+# MacOS and zip files
 /*.zip
 .DS_Store
