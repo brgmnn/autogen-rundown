@@ -143,23 +143,23 @@ namespace AutogenRundown.DataBlocks
                 for (int i = 0; i < 100; i++)
                     pack.Add(baseGroup);
 
-            var chargers = 0;
+            /*var chargers = 0;
 
             if (Modifiers.Contains(LevelModifiers.Chargers))
                 chargers = 20;
             else if (Modifiers.Contains(LevelModifiers.ManyChargers))
                 chargers = 60;
             else if (Modifiers.Contains(LevelModifiers.OnlyChargers))
-                chargers = 100;
+                chargers = 100;*/
 
-            var shadows = 0;
+            /*var shadows = 0;
 
             if (Modifiers.Contains(LevelModifiers.Shadows))
                 shadows = 20;
             else if (Modifiers.Contains(LevelModifiers.ManyShadows))
                 shadows = 60;
             else if (Modifiers.Contains(LevelModifiers.OnlyShadows))
-                shadows = 100;
+                shadows = 100;*/
 
             /*for (int i = 0; i < chargers; i++)
                 pack.Add(baseGroup with { EnemyType = EnemyType.Charger });
