@@ -277,7 +277,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// </summary>
         public static WaveSettings Baseline_Hard = new WaveSettings
         {
-            PopulationFilter = {},
+            PopulationFilter = { Enemies.EnemyType.Weakling },
             FilterType = PopulationFilterType.Exclude,
             PopulationPointsPerWaveStart = 18,
             PopulationPointsPerWaveEnd = 28,
