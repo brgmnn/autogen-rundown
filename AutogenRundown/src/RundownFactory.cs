@@ -4,12 +4,33 @@ using AutogenRundown.GeneratorData;
 
 namespace AutogenRundown
 {
-    static public class RundownFactory
+    public static class RundownFactory
     {
+        static string DescriptionHeader(WardenObjectiveType objectiveType)
+        {
+            var prefix = "<color=#444444>Objective Dispatch:</color> ";
+
+            return objectiveType switch
+            {
+                WardenObjectiveType.HsuFindSample => prefix + "<color=orange>HSU Extraction</color>\n",
+                WardenObjectiveType.ReactorStartup => prefix + "<color=orange>Reactor Startup</color>\n",
+                WardenObjectiveType.ReactorShutdown => prefix + "<color=orange>Reactor Shutdown</color>\n",
+                WardenObjectiveType.GatherSmallItems => prefix + "<color=orange>Gather Items</color>\n",
+                WardenObjectiveType.ClearPath => prefix + "<color=orange>Sector Survey</color>\n",
+                WardenObjectiveType.SpecialTerminalCommand => prefix + "<color=orange>Manual Terminal Override</color>\n",
+                WardenObjectiveType.RetrieveBigItems => prefix + "<color=orange>Package Extraction</color>\n",
+                WardenObjectiveType.PowerCellDistribution => prefix + "<color=orange>Power Cell Distribution</color>\n",
+                WardenObjectiveType.TerminalUplink => prefix + "<color=orange>Network Uplink</color>\n",
+
+                //WardenObjectiveType.Survival => prefix + "<color=orange>Distraction Protocol</color>\n",
+                _ => ""
+            };
+        }
+
         /// <summary>
         /// Entrypoint to build a new rundown
         /// </summary>
-        static public void Build()
+        public static void Build()
         {
             Generator.Reload();
             Bins.Setup();
@@ -118,24 +139,26 @@ namespace AutogenRundown
             }
 
             #region Reactor startup
+
             {
+                var objective = WardenObjectiveType.ReactorStartup;
                 var mainDirector = new BuildDirector()
                 {
                     Bulkhead = Bulkhead.Main,
                     Tier = "D",
-                    Objective = WardenObjectiveType.ReactorStartup
+                    Objective = objective
                 };
                 mainDirector.GenPoints();
 
                 var settings = new LevelSettings("D");
-
-                // $"<color=orange>Reactor Startup://</color>\n{
+                var description = new DataBlocks.Text(DescriptionHeader(objective) +
+                                                      DataBlocks.WardenObjective.GenLevelDescription(objective));
                 var level = Level.Build(
                     new()
                     {
                         Tier = "D",
-                        Prefix = $"<color=orange>R</color><color=grey>:</color>D",
-                        Description = new DataBlocks.Text("Hello").PersistentId,
+                        Prefix = $"<color=orange>R</color><color=#444444>:</color>D",
+                        Description = description.PersistentId,
                         MainDirector = mainDirector,
                         Settings = settings,
                         Index = dMax + 1
