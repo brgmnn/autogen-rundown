@@ -13,7 +13,10 @@ namespace AutogenRundown.DataBlocks
     {
         Mining = 1,
         Tech = 3,
-        Service = 27
+
+        // TODO: this seems to just be service, no gardens
+        //Service = 27
+        Service = 53,
     }
 
     /// <summary>

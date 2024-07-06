@@ -1,6 +1,9 @@
 ﻿using AutogenRundown.DataBlocks;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.GeneratorData;
+using BepInEx;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown
 {
@@ -27,6 +30,45 @@ namespace AutogenRundown
             };
         }
 
+        // TODO: Break this out into a separate class for custom geos
+        public static void WriteComplexResourceSet()
+        {
+            var name = "GameData_ComplexResourceSetDataBlock_bin.json";
+
+            var revision = CellBuildData.GetRevision();
+
+            var from = Path.Combine(Paths.PluginPath, Plugin.Name, "GameData", name);
+            var dest = Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}", name);
+
+            using (StreamReader rfile = File.OpenText(from))
+            using (JsonTextReader reader = new JsonTextReader(rfile))
+            {
+                JObject resourceSet = (JObject)JToken.ReadFrom(reader);
+
+                var blocks = (JArray)resourceSet["Blocks"];
+
+                var serviceBlock = blocks.OfType<JObject>()
+                    .First(block => (int)block["persistentID"] == (int)Complex.Service);
+
+                var serviceObjectiveGeos = (JArray)serviceBlock["CustomGeomorphs_Objective_1x1"];
+
+                serviceObjectiveGeos.Insert(0,
+                    new JObject
+                    {
+                        ["Prefab"] = "Assets/Prefabs/Geomorph/Service/geo_floodways_FA_reactor_01.prefab",
+                        ["SubComplex"] = 6,
+                        ["Shard"] = "S1"
+                    });
+
+                // write JSON directly to a file
+                using (StreamWriter wfile = File.CreateText(dest))
+                using (JsonTextWriter writer = new JsonTextWriter(wfile))
+                {
+                    resourceSet.WriteTo(writer);
+                }
+            }
+        }
+
         /// <summary>
         /// Entrypoint to build a new rundown
         /// </summary>
@@ -34,6 +76,8 @@ namespace AutogenRundown
         {
             Generator.Reload();
             Bins.Setup();
+
+            WriteComplexResourceSet();
 
             // Rundown 8 replacement
             var rundown = Rundown.Build(new Rundown { PersistentId = Rundown.R7 });
@@ -159,6 +203,7 @@ namespace AutogenRundown
                     {
                         Tier = "D",
                         Prefix = $"<color=orange>R</color><color=#444444>:</color>D",
+                        Complex = Complex.Service,
                         Description = description.PersistentId,
                         MainDirector = mainDirector,
                         Settings = settings,
