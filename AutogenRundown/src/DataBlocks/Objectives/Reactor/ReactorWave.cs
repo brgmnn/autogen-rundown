@@ -40,8 +40,8 @@
         /// </summary>
         public void RecalculateWaveSpawnTimes()
         {
-            // Give a 45 second additional buffer for stragglers.
-            Wave = 45 + EnemyWaves.Max(wave => wave.Duration + wave.SpawnTime);
+            // Give a 60 second additional buffer for stragglers.
+            Wave = 60 + EnemyWaves.Max(wave => wave.Duration + wave.SpawnTime);
 
             // Update each individual wave in the enemy waves to set the right SpawnTimeRel.
             foreach (var wave in EnemyWaves)
