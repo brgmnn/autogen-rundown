@@ -3,6 +3,23 @@
 ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fthunderstore.io%2Fapi%2Fexperimental%2Fpackage%2Fthe_tavern%2FAutogenRundown%2F&query=%24.latest.version_number&style=flat&label=Version&color=%2300aaff&cacheSeconds=86400)
 ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fthunderstore.io%2Fapi%2Fv1%2Fpackage-metrics%2Fthe_tavern%2FAutogenRundown%2F&query=%24.downloads&style=flat&label=Downloads&color=%23dda500&cacheSeconds=86400)
 
+<!--
+* Can we have boosters generate progression for us
+* Can we remove the 2 zones between getting to the reactor I-tile and entering the main bulkhead?
+* For higher tier levels enforce fetching codes
+*
+
+Seed: 2024_07_07
+* Can we change the reactor enemy waves to spawn from one direction?
+* Ask in GTFO discord why reactor waves are not spawning if you get too far away.
+    And what does ReactorWaveSpawnType do? https://gtfo-modding.gitbook.io/wiki/reference/enum-types#ereactorwavespawntype
+
+Seed: 2024_06_27
+* Check I-Geo, seems to not be spawning bridge. Maybe a geomorph is missing now?
+
+Seed: 2024_06_25
+* Level lockup: E1
+-->
 
 Automatic Rundown generation, using procedural seed based generation. A new rundown seed is generated each day. Play with friends with zero configuration.
 
