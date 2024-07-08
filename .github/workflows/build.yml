@@ -125,8 +125,14 @@ jobs:
           mv deps/BepInEx-BepInExPack_GTFO/BepInExPack_GTFO build/AutogenRundown_GTFO
 
           # Dependency Mods
+          # --- MTFO
           mv deps/dakkhuza-MTFO build/AutogenRundown_GTFO/BepInEx/plugins/
+          # --- LocalProgression
           mv deps/Inas07-LocalProgression build/AutogenRundown_GTFO/BepInEx/plugins/
+          # --- FlowGeos
+          mv deps/Flowaria-FlowGeos/plugins build/AutogenRundown_GTFO/BepInEx/plugins/Flowaria-FlowGeos
+          mv deps/Flowaria-FlowGeos/Assets build/AutogenRundown_GTFO/BepInEx/Assets
+          mv deps/Flowaria-FlowGeos/* build/AutogenRundown_GTFO/BepInEx/plugins/Flowaria-FlowGeos/
 
           # Custom config
           cp manual-install/BepInEx.cfg build/AutogenRundown_GTFO/BepInEx/config/
