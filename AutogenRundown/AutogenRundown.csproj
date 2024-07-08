@@ -58,7 +58,7 @@
       <DebugCopyItems Include="$(OutputPath)\**\*.*" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(GameDataItems)" DestinationFolder="$(OutputPath)\GameData" />
+    <Copy SourceFiles="@(GameDataItems)" DestinationFolder="$(OutputPath)" />
 
     <Copy Condition="$(Debug) != 'false' And $(OS) == 'Windows_NT'" SourceFiles="@(DebugCopyItems)" DestinationFolder="$(OutputPath_Debug)" />
   </Target>

@@ -37,7 +37,7 @@ namespace AutogenRundown
 
             var revision = CellBuildData.GetRevision();
 
-            var from = Path.Combine(Paths.PluginPath, Plugin.Name, "GameData", name);
+            var from = Path.Combine(Paths.PluginPath, Plugin.Name, name);
             var dest = Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}", name);
 
             using (StreamReader rfile = File.OpenText(from))

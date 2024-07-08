@@ -33,9 +33,9 @@ public record Text : DataBlock
         : base(Generator.GetPersistentId(offsets))
     { }
 
-    public static new void Setup()
+    public new static void Setup()
     {
-        var dir = Path.Combine(Paths.PluginPath, Plugin.Name, "GameData");
+        var dir = Path.Combine(Paths.PluginPath, Plugin.Name);
         var path = Path.Combine(dir, $"GameData_TextDataBlock_bin.json");
         var data = JObject.Parse(File.ReadAllText(path));
 

@@ -42,7 +42,7 @@ public class Plugin : BasePlugin
         // Reads or generates the seed
         Generator.ReadOrSetSeed(SeedConfig.Value);
 
-        if (RegenerateOnStartup.Value == true)
+        if (RegenerateOnStartup.Value)
         {
             RundownFactory.Build();
             Log.LogInfo($"Rundown generated, Seed=\"{Generator.Seed}\"");
