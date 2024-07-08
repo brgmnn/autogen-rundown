@@ -661,6 +661,9 @@ namespace AutogenRundown.DataBlocks
 
             switch (director.Objective)
             {
+                /**
+                 * Reactor startup has quite a complicated layout construction for the fetch codes version
+                 * */
                 case WardenObjectiveType.ReactorStartup:
                     {
                         var entrance = level.Planner.GetExactZones(director.Bulkhead).First();
@@ -673,6 +676,9 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                /**
+                 * 
+                 * */
                 case WardenObjectiveType.ReactorShutdown:
                     {
                         // Create some initial zones

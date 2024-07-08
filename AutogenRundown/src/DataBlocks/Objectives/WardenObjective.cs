@@ -888,7 +888,7 @@ namespace AutogenRundown.DataBlocks
                         FindLocationInfo = $"Look for {name}s in the complex";
                         FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
 
-                        if (director.Bulkhead.HasFlag(Bulkhead.Main))
+                        if (director.Bulkhead.HasFlag(Bulkhead.Main) && level.Description == 0)
                             level.Description = new Text(GenLevelDescription(director.Objective, itemId)).PersistentId;
 
                         GatherRequiredCount = level.Tier switch
@@ -933,7 +933,8 @@ namespace AutogenRundown.DataBlocks
                         GoToWinCondition_Elevator = "";
                         GoToWinCondition_CustomGeo = $"Go to the forward exit point in {exitZoneString}";
 
-                        level.Description = new Text(GenLevelDescription(director.Objective)).PersistentId;
+                        if (director.Bulkhead.HasFlag(Bulkhead.Main) && level.Description == 0)
+                            level.Description = new Text(GenLevelDescription(director.Objective)).PersistentId;
 
                         // Ensure there's a nice spicy hoard at the end
                         exitZone?.EnemySpawningInZone.Add(

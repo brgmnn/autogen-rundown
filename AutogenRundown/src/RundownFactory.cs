@@ -199,7 +199,6 @@ namespace AutogenRundown
             }
 
             #region Reactor startup
-
             {
                 var objective = WardenObjectiveType.ReactorStartup;
                 var mainDirector = new BuildDirector()
@@ -274,6 +273,35 @@ namespace AutogenRundown
                     });
                 rundown.AddLevel(level);
             }
+
+            #region Clear Path
+            {
+                var objective = WardenObjectiveType.ClearPath;
+                var mainDirector = new BuildDirector()
+                {
+                    Bulkhead = Bulkhead.Main,
+                    Tier = "E",
+                    Objective = objective
+                };
+                mainDirector.GenPoints();
+
+                var settings = new LevelSettings("E");
+                var description = new DataBlocks.Text(DescriptionHeader(objective) +
+                                                      DataBlocks.WardenObjective.GenLevelDescription(objective));
+                var level = Level.Build(
+                    new()
+                    {
+                        Tier = "E",
+                        Prefix = $"<color=orange>P</color><color=#444444>:</color>E",
+                        Description = description.PersistentId,
+                        MainDirector = mainDirector,
+                        Settings = settings,
+                        Index = eMax + 1
+                    });
+
+                rundown.AddLevel(level);
+            }
+            #endregion
 
             #region Test E Levels
             #if false
