@@ -106,14 +106,7 @@ namespace AutogenRundown.DataBlocks
             WardenObjective objective,
             ZoneNode start)
         {
-            // Add an extra zone just to try and stop failed spawns
-            var prelude = BuildBranch(start, 1);
-
-            // TODO: Build the reactor immediately from the bulkhead first zone. Reactor will be the
-            // third zone.
-            //
-            // This is a bit of a hack to try and stop failed spawns
-            var reactor = BuildReactor(prelude);
+            var reactor = BuildReactor(start);
 
             var fetchCount = director.Tier switch
             {
