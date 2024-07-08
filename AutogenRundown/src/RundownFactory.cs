@@ -38,7 +38,8 @@ namespace AutogenRundown
             var revision = CellBuildData.GetRevision();
 
             var from = Path.Combine(Paths.PluginPath, Plugin.Name, name);
-            var dest = Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}", name);
+            var destDir = Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}");
+            var dest = Path.Combine(destDir, name);
 
             using var sourceFile = File.OpenText(from);
             using var reader = new JsonTextReader(sourceFile);
@@ -72,11 +73,16 @@ namespace AutogenRundown
                     ["Shard"] = "S1"
                 });
 
+            // Ensure the directory exists
+            Directory.CreateDirectory(destDir);
+
             // write JSON directly to a file
             using var destFile = File.CreateText(dest);
             using var writer = new JsonTextWriter(destFile);
 
             resourceSet.WriteTo(writer);
+
+            Plugin.Logger.LogWarning($"We got here ok!!! {from} -> {dest}");
         }
 
         /// <summary>
