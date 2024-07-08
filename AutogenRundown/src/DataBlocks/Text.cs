@@ -39,10 +39,10 @@ public record Text : DataBlock
         var path = Path.Combine(dir, $"GameData_TextDataBlock_bin.json");
         var data = JObject.Parse(File.ReadAllText(path));
 
-        if (data == null || data["Blocks"] == null)
+        if (data?["Blocks"] == null)
             throw new Exception("Failed to get 'Blocks' property");
 
-        var texts = data["Blocks"].ToObject<List<GameDataText>>();
+        var texts = data["Blocks"]!.ToObject<List<GameDataText>>();
 
         if (texts == null)
             throw new Exception("Failed to parse GameDataText");

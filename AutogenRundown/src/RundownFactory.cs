@@ -31,42 +31,52 @@ namespace AutogenRundown
         }
 
         // TODO: Break this out into a separate class for custom geos
-        public static void WriteComplexResourceSet()
+        private static void WriteComplexResourceSet()
         {
-            var name = "GameData_ComplexResourceSetDataBlock_bin.json";
+            const string name = "GameData_ComplexResourceSetDataBlock_bin.json";
 
             var revision = CellBuildData.GetRevision();
 
             var from = Path.Combine(Paths.PluginPath, Plugin.Name, name);
             var dest = Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}", name);
 
-            using (StreamReader rfile = File.OpenText(from))
-            using (JsonTextReader reader = new JsonTextReader(rfile))
+            using var sourceFile = File.OpenText(from);
+            using var reader = new JsonTextReader(sourceFile);
+
+            var resourceSet = (JObject)JToken.ReadFrom(reader);
+
+            if (resourceSet["Blocks"] == null)
             {
-                JObject resourceSet = (JObject)JToken.ReadFrom(reader);
-
-                var blocks = (JArray)resourceSet["Blocks"];
-
-                var serviceBlock = blocks.OfType<JObject>()
-                    .First(block => (int)block["persistentID"] == (int)Complex.Service);
-
-                var serviceObjectiveGeos = (JArray)serviceBlock["CustomGeomorphs_Objective_1x1"];
-
-                serviceObjectiveGeos.Insert(0,
-                    new JObject
-                    {
-                        ["Prefab"] = "Assets/Prefabs/Geomorph/Service/geo_floodways_FA_reactor_01.prefab",
-                        ["SubComplex"] = 6,
-                        ["Shard"] = "S1"
-                    });
-
-                // write JSON directly to a file
-                using (StreamWriter wfile = File.CreateText(dest))
-                using (JsonTextWriter writer = new JsonTextWriter(wfile))
-                {
-                    resourceSet.WriteTo(writer);
-                }
+                Plugin.Logger.LogFatal("No complex resource set data blocks found");
+                return;
             }
+
+            var blocks = (JArray)resourceSet["Blocks"]!;
+
+            var serviceBlock = blocks.OfType<JObject>()
+                .First(block => (int?)block["persistentID"] == (int)Complex.Service);
+
+            if (serviceBlock?["CustomGeomorphs_Objective_1x1"] == null)
+            {
+                Plugin.Logger.LogFatal("No Complex.Service resource block found");
+                return;
+            }
+
+            var serviceObjectiveGeos = (JArray)serviceBlock["CustomGeomorphs_Objective_1x1"]!;
+
+            serviceObjectiveGeos.Insert(0,
+                new JObject
+                {
+                    ["Prefab"] = "Assets/Prefabs/Geomorph/Service/geo_floodways_FA_reactor_01.prefab",
+                    ["SubComplex"] = 6,
+                    ["Shard"] = "S1"
+                });
+
+            // write JSON directly to a file
+            using var destFile = File.CreateText(dest);
+            using var writer = new JsonTextWriter(destFile);
+
+            resourceSet.WriteTo(writer);
         }
 
         /// <summary>
