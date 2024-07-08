@@ -316,7 +316,7 @@ namespace AutogenRundown.DataBlocks.Zones
         /// </summary>
         /// <returns></returns>
         public List<ZoneNode> GetBulkheadEntranceZones()
-            => graph.Where(node => node.Value.Where(to => !to.Bulkhead.HasFlag(node.Key.Bulkhead)).Count() > 0)
+            => graph.Where(node => node.Value.Any(to => !to.Bulkhead.HasFlag(node.Key.Bulkhead)))
                 .Select(node => node.Key)
                 .OrderBy(zone => zone.ZoneNumber)
                 .ToList();
@@ -327,7 +327,7 @@ namespace AutogenRundown.DataBlocks.Zones
         /// <param name="node"></param>
         /// <returns></returns>
         public bool IsBulkheadEntrance(ZoneNode node)
-            => graph[node].Where(to => !to.Bulkhead.HasFlag(node.Bulkhead)).Count() > 0;
+            => graph[node].Any(to => !to.Bulkhead.HasFlag(node.Bulkhead));
 
         /// <summary>
         /// Counts the number of open slots across all the zones given. Useful for ensuring we
