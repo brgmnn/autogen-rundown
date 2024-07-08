@@ -171,6 +171,42 @@ namespace AutogenRundownTests.DataBlocks.Zones
         }
         #endregion
 
+        #region GetBulkheadEntranceZones()
+        [TestMethod]
+        public void Test_GetBulkheadEntranceZones_OnlyReturnsConnectingBulkheadZones()
+        {
+            var planner = new LayoutPlanner();
+
+            var startingZone = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, 0);
+
+            var mainZone1 = new ZoneNode(Bulkhead.Main, 1);
+            var mainZone2 = new ZoneNode(Bulkhead.Main, 2);
+
+            var extremeZone0 = new ZoneNode(Bulkhead.Extreme, 0);
+            var extremeZone1 = new ZoneNode(Bulkhead.Extreme, 1);
+
+            var overloadZone0 = new ZoneNode(Bulkhead.Overload, 0);
+            var overloadZone1 = new ZoneNode(Bulkhead.Overload, 1);
+
+            // Connect
+            planner.Connect(startingZone, mainZone1);
+            planner.Connect(startingZone, extremeZone0);
+
+            planner.Connect(mainZone1, mainZone2);
+            planner.Connect(extremeZone0, extremeZone1);
+
+            planner.Connect(extremeZone1, overloadZone0);
+            planner.Connect(overloadZone0, overloadZone1);
+
+            var bulkheadZones = planner.GetBulkheadEntranceZones();
+
+            // Assert
+            Assert.AreEqual(2, bulkheadZones.Count);
+            Assert.AreEqual(startingZone, bulkheadZones[0]);
+            Assert.AreEqual(extremeZone1, bulkheadZones[1]);
+        }
+        #endregion
+
         #region CountOpenSlots()
         [TestMethod]
         public void Test_CountOpenSlots_CountsCorrectlyForDenseZones()
@@ -238,9 +274,6 @@ namespace AutogenRundownTests.DataBlocks.Zones
             planner.Connect(zone1, zone2);
             planner.Connect(zone1, zone3);
             planner.Connect(zone2, zone4);
-            planner.Connect(new ZoneNode(Bulkhead.Main, 1), new ZoneNode(Bulkhead.Main, 2));
-            planner.Connect(new ZoneNode(Bulkhead.Main, 1), new ZoneNode(Bulkhead.Main, 3));
-            planner.Connect(new ZoneNode(Bulkhead.Main, 2), new ZoneNode(Bulkhead.Main, 4));
 
             var openSlots = planner.CountOpenSlots(new List<ZoneNode> { zone0, zone1 });
 

@@ -150,15 +150,15 @@ namespace AutogenRundown.DataBlocks.Zones
         }
 
         /// <summary>
-        /// Get's a zone node by it's index.
+        /// Gets a zone node by its index.
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
         public ZoneNode GetZoneNode(int index)
-            => graph.Keys.Where(node => node.ZoneNumber == index).First();
+            => graph.Keys.First(node => node.ZoneNumber == index);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="bulkhead"></param>
         /// <returns></returns>
@@ -171,6 +171,8 @@ namespace AutogenRundown.DataBlocks.Zones
             // Starting area is part of main.
             Bulkhead.StartingArea => indexMain++,
             Bulkhead.StartingArea | Bulkhead.Main => indexMain++,
+
+            _ => throw new ArgumentOutOfRangeException(nameof(bulkhead), bulkhead, null)
         };
 
         /// <summary>
@@ -198,7 +200,7 @@ namespace AutogenRundown.DataBlocks.Zones
                 .ToList();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
