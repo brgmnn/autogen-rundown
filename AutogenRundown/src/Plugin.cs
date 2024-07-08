@@ -13,7 +13,7 @@ namespace AutogenRundown;
 [BepInDependency("LocalProgression", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BasePlugin
 {
-    public const string Version = "0.24.1";
+    public const string Version = "0.24.2";
 
     public const string Name = "the_tavern-AutogenRundown";
 
