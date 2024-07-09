@@ -24,7 +24,4 @@ jobs:
         run: |
           git add CHANGELOG.md
           git commit -m "Update CHANGELOG.md"
-
-          git log
-
-          git show
+          git push origin main
