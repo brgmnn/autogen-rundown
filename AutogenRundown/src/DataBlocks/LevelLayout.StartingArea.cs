@@ -197,5 +197,39 @@ namespace AutogenRundown.DataBlocks
                 level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
                 nextZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
         }
+
+        /**
+         * Generates compact starting areas for 2x bulkhead entrances from the same zone.
+         */
+        /*static void BuildStartingArea_2xBulkheadHub(Level level, BuildDirector director)
+        {
+            var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
+            var hubsf = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
+
+            nextZone = new Zone
+            {
+                LightSettings = Lights.GenRandomLight(),
+                SubComplex = SubComplex.DigSite,
+                CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_SF_01.prefab",
+                Coverage = new CoverageMinMax { Min = 20, Max = 35 },
+            };
+            nextZone.SetOutOfFog(level);
+
+            switch (level.Complex)
+            {
+
+            }
+
+
+
+            level.Planner.Connect(prev, hubsf);
+            nextZone = level.Planner.AddZone(hubsf, nextZone);
+
+            // Place all three build from bulkhead zones from the hub sf tile. There should
+            // always be 3 to draw from.
+            InitializeBulkheadArea(level, Generator.Draw(toPlace), hubsf);
+            InitializeBulkheadArea(level, Generator.Draw(toPlace), hubsf);
+            InitializeBulkheadArea(level, Generator.Draw(toPlace), hubsf);
+        }*/
     }
 }
