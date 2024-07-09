@@ -36,8 +36,13 @@ namespace AutogenRundown.DataBlocks
                 level.Planner.NextIndex(director.Bulkhead),
                 "reactor_area");*/
             var corridorNode = start;
-            var corridor = planner.GetZone(corridorNode);
+            corridorNode.Branch = "reactor_area";
+            var corridor = planner.GetZone(corridorNode)!;
+
             corridor.LightSettings = light;
+            corridor.StartExpansion = startExpansion;
+            corridor.StartPosition = ZoneEntranceBuildFrom.Furthest;
+            corridor.ZoneExpansion = zoneExpansion;
 
             /*var corridor = new Zone
             {
