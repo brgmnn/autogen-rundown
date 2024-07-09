@@ -8,17 +8,17 @@ jobs:
     name: Generate CHANGELOG.md
     runs-on: ubuntu-latest
 
-  steps:
-    - uses: actions/checkout@v4
-    - name: Generate CHANGELOG.md
-      run: |
-        ./generate-changelog.sh
-    - name: Set Git Authors
-      run: |
-        git config user.email brgmnn@users.noreply.github.com
-        git config user.name "Daniel Bergmann"
-    - name: Commit CHANGELOG
-      run: |
-        git commit -m "Update CHANGELOG.md"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate CHANGELOG.md
+        run: |
+          ./generate-changelog.sh
+      - name: Set Git Authors
+        run: |
+          git config user.email brgmnn@users.noreply.github.com
+          git config user.name "Daniel Bergmann"
+      - name: Commit CHANGELOG
+        run: |
+          git commit -m "Update CHANGELOG.md"
 
-        git log
+          git log
