@@ -50,7 +50,8 @@
 
     <Copy SourceFiles="$(SolutionDir)\manifest.json" DestinationFolder="$(OutputPath)" />
     <Copy SourceFiles="$(SolutionDir)\icon.png" DestinationFolder="$(OutputPath)" />
-    <Copy SourceFiles="$(SolutionDir)\README.md" DestinationFolder="$(OutputPath)" />
+    <Copy SourceFiles="$(SolutionDir)\docs\README_THUNDERSTORE.md" DestinationFolder="$(OutputPath)" />
+    <Move SourceFiles="$(OutputPath)\README_THUNDERSTORE.md" DestinationFiles="$(OutputPath)\README.md" />
 
     <ItemGroup>
       <GameDataItems Include="$(SolutionDir)\GameData\*.json" />
