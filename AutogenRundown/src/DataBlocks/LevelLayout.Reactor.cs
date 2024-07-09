@@ -5,7 +5,7 @@ using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks
 {
-    public partial record class LevelLayout : DataBlock
+    public partial record LevelLayout : DataBlock
     {
         /// <summary>
         /// Builds a reactor from the input zone node, and returns the reactor zone node.
@@ -31,21 +31,25 @@ namespace AutogenRundown.DataBlocks
             var light = Lights.GenReactorLight();
 
             // Always generate a corridor of some kind (currently fixed) for the reactor zones.
-            var corridorNode = new ZoneNode(
+            /*var corridorNode = new ZoneNode(
                 director.Bulkhead,
                 level.Planner.NextIndex(director.Bulkhead),
-                "reactor_area");
-            var corridor = new Zone
+                "reactor_area");*/
+            var corridorNode = start;
+            var corridor = planner.GetZone(corridorNode);
+            corridor.LightSettings = light;
+
+            /*var corridor = new Zone
             {
                 LightSettings = light,
                 StartPosition = ZoneEntranceBuildFrom.Furthest,
                 StartExpansion = startExpansion,
                 ZoneExpansion = zoneExpansion
-            };
+            };*/
             corridor.GenReactorCorridorGeomorph(director.Complex);
 
-            level.Planner.Connect(start, corridorNode);
-            level.Planner.AddZone(corridorNode, corridor);
+            //level.Planner.Connect(start, corridorNode);
+            //level.Planner.AddZone(corridorNode, corridor);
 
             // Create the reactor zone
             var reactorNode = new ZoneNode(
