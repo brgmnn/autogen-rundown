@@ -26,3 +26,5 @@ jobs:
           git commit -m "Update CHANGELOG.md"
 
           git log
+
+          git show

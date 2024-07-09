@@ -3,22 +3,6 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
-## [v0.25.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.25.0) — June 25, 2024
-
-### New
-
-* Added fixed E-tier Clear Path objective level.
-
-### Changed
-
-* Reduced number of zones before reaching reactors in Startup/Shutdown missions. Reactor I-tile/corridor now spawns immediately after the bulkhead door instead of several preamble zones.
-* Increased reactor base wave duration back to 60s from 45s. All reactor waves should now have an extra 15s.
-* Fixed incorrect bundling of dependency plugins in manual install package.
-* Added custom README for Thunderstore listing and CHANGELOG file.
-
-**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.24.2...v0.25.0
-
-
 ## [v0.24.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.24.2) — June 25, 2024
 
 ## Changes
@@ -145,7 +129,7 @@ Test release for verifying automated workflows
   * Medium:
     * 60pts -> 40pts
     * Duration: 60s -> 50s
-  * Hard: 
+  * Hard:
     * Points: 80pts -> 50pts
     * Duration: 70s -> 60s
 * Reworked D-tier reactor waves for more variety
@@ -201,7 +185,7 @@ Test release for verifying automated workflows
 
 ## Fixed
 
-* Rundown 8 game updated! 🥳 
+* Rundown 8 game updated! 🥳
 
 
 ## [v0.17.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.17.1) — June 25, 2024
@@ -280,7 +264,7 @@ Test release for verifying automated workflows
 
 ## Added
 
-* Retrieve big item objective! Things like Cryo Crate, Neonate, Datasphere etc. #10 
+* Retrieve big item objective! Things like Cryo Crate, Neonate, Datasphere etc. #10
 * Reworked hibernating enemy spawns
   * Better mix of base enemies, charger only, shadow only, and mix of all groups.
 
