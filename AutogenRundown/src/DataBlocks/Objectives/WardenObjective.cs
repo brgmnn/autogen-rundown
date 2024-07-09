@@ -397,6 +397,10 @@ namespace AutogenRundown.DataBlocks
             GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
             GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition";
 
+            // Set the level description if there's no description provided already
+            if (director.Bulkhead.HasFlag(Bulkhead.Main) && level.Description == 0)
+                level.Description = new Text(GenLevelDescription(director.Objective)).PersistentId;
+
             // Set the exit scan speed multiplier. Generally we want easier levels to be faster.
             // For some objectives this will be overridden.
             ChainedPuzzleAtExitScanSpeedMultiplier = director.Tier switch
@@ -628,17 +632,20 @@ namespace AutogenRundown.DataBlocks
                                         }),
                                         (3.0, new()
                                         {
+                                            // Good :+1:
                                             ReactorEnemyWave.Baseline_Hard,
                                             ReactorEnemyWave.OnlyHybrids_Medium with { SpawnTime = 55 },
                                             ReactorEnemyWave.SingleTankPotato with { SpawnTime = 20 }
                                         }),
                                         (1.0, new()
                                         {
+                                            // TBD: is this good?
                                             ReactorEnemyWave.Baseline_Hard,
                                             ReactorEnemyWave.SingleMother with { SpawnTime = 60 },
                                         }),
                                         (1.0, new()
                                         {
+                                            // TBD: is this good?
                                             ReactorEnemyWave.Baseline_Hard,
                                             ReactorEnemyWave.SingleTank with { SpawnTime = 60 },
                                         }),
@@ -888,9 +895,6 @@ namespace AutogenRundown.DataBlocks
                         FindLocationInfo = $"Look for {name}s in the complex";
                         FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
 
-                        if (director.Bulkhead.HasFlag(Bulkhead.Main) && level.Description == 0)
-                            level.Description = new Text(GenLevelDescription(director.Objective, itemId)).PersistentId;
-
                         GatherRequiredCount = level.Tier switch
                         {
                             "A" => Generator.Random.Next(4, 8),
@@ -932,9 +936,6 @@ namespace AutogenRundown.DataBlocks
                         MainObjective = $"Clear a path to the exit point in {exitZoneString}";
                         GoToWinCondition_Elevator = "";
                         GoToWinCondition_CustomGeo = $"Go to the forward exit point in {exitZoneString}";
-
-                        if (director.Bulkhead.HasFlag(Bulkhead.Main) && level.Description == 0)
-                            level.Description = new Text(GenLevelDescription(director.Objective)).PersistentId;
 
                         // Ensure there's a nice spicy hoard at the end
                         exitZone?.EnemySpawningInZone.Add(
