@@ -19,6 +19,7 @@ jobs:
           git config user.name "Daniel Bergmann"
       - name: Commit CHANGELOG
         run: |
+          git add CHANGELOG.md
           git commit -m "Update CHANGELOG.md"
 
           git log
