@@ -3,13 +3,12 @@ name: Generate CHANGELOG.md
 on:
   workflow_dispatch:
 
-env:
-  GH_TOKEN: ${{ github.token }}
-
 jobs:
   changelog:
     name: Generate CHANGELOG.md
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.REPO_ADMIN_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
