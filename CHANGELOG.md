@@ -3,6 +3,19 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.26.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.26.0) — June 25, 2024
+
+### New
+
+* Starting Area of level can now roll compact hub zone layouts for 2x and 3x bulkheads. These starting areas will only have 1 zone in the elevator drop zone.
+
+### Changes
+
+* Add additional Warden Intel messages for HSU and Terminal Uplink main objectives.
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.25.0...v0.26.0
+
+
 ## [v0.25.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.25.0) — June 25, 2024
 
 ### New
