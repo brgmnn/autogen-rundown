@@ -21,7 +21,7 @@
 
         // Not yet implemented
         HsuActivateSmall = 10,
-        Survival = 11,
+        Survival = 11,              // X
 
         GatherTerminal = 12,
         CorruptedTerminalUplink = 13,

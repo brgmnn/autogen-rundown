@@ -6,8 +6,6 @@ namespace AutogenRundown.DataBlocks
 {
     public partial record class LevelLayout : DataBlock
     {
-        public const double StartArea_TripleBulkheadChance = 0.2;
-
         /// <summary>
         /// Connects the first bulkhead zone to a zone in this layout
         /// </summary>
@@ -113,51 +111,31 @@ namespace AutogenRundown.DataBlocks
             // What bulkheads this level has
             var bulkheads = level.Settings.Bulkheads;
 
-            var options = new List<(double, string)>
-            {
-                (1.0, "default")
-            };
+            // Options for starting areas
+            var options = new List<(double, string)> { (1.0, "default") };
 
             // 2 bulkhead objectives
-            if (!bulkheads.HasFlag(Bulkhead.All) && (bulkheads.HasFlag(Bulkhead.Extreme) || bulkheads.HasFlag(Bulkhead.Overload) ))
-            {
-                // options.Add((1.0, "2x_hub"));
-                // options = new List<(double, string)>
-                // {
-                //     (1.0, "2x_hub")
-                // };
-            }
+            if (bulkheads.HasFlag(Bulkhead.Extreme) ^ bulkheads.HasFlag(Bulkhead.Overload))
+                options.Add((1.0, "2x_bulkhead_hub"));
 
             // All 3 bulkhead objectives
-            if (bulkheads.HasFlag(Bulkhead.All))
-            {}
+            if (bulkheads.HasFlag(Bulkhead.PrisonerEfficiency))
+                options.Add((1.0, "3x_bulkhead_hub"));
 
             var strategy = Generator.Select(options);
+            Plugin.Logger.LogDebug($"StartingArea strategy = {strategy}");
+
             switch (strategy)
             {
-                case "2x_hub":
+                case "2x_bulkhead_hub":
                 {
-                    // Add the first zone.
-                    var elevatorDrop = new ZoneNode(
-                        Bulkhead.Main | Bulkhead.StartingArea,
-                        level.Planner.NextIndex(Bulkhead.Main));
-                    var elevatorDropZone = new Zone
-                    {
-                        Coverage = new CoverageMinMax { Min = 25, Max = 35 },
-                        LightSettings = Lights.GenRandomLight(),
-                    };
+                    BuildStartingArea_2xBulkheadHub(level, director);
+                    break;
+                }
 
-                    elevatorDropZone.GenHubGeomorph(level.Complex);
-
-                    level.Planner.Connect(elevatorDrop);
-                    level.Planner.AddZone(elevatorDrop, elevatorDropZone);
-
-                    // We need both doors in this zone
-                    InitializeBulkheadArea(level, Bulkhead.Main, elevatorDrop);
-                    InitializeBulkheadArea(level, bulkheads.HasFlag(Bulkhead.Extreme) ? Bulkhead.Extreme : Bulkhead.Overload, elevatorDrop);
-
-                    Plugin.Logger.LogInfo($"Ok this should be only 1 zone now: {level.Planner}");
-
+                case "3x_bulkhead_hub":
+                {
+                    BuildStartingArea_3xBulkheadHub(level, director);
                     break;
                 }
 
@@ -194,57 +172,30 @@ namespace AutogenRundown.DataBlocks
                     var prev = elevatorDrop;
                     Zone nextZone = elevatorDropZone;
 
-                    if (level.Settings.Bulkheads.HasFlag(Bulkhead.Main) &&
-                        level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme) &&
-                        level.Settings.Bulkheads.HasFlag(Bulkhead.Overload) &&
-                        Generator.Flip(StartArea_TripleBulkheadChance))
+                    for (int i = 0; i < minimumZones; i++)
                     {
                         var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
-                        var hubsf = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
+                        var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
                         nextZone = new Zone
                         {
+                            Coverage = CoverageMinMax.GenNormalSize(),
                             LightSettings = Lights.GenRandomLight(),
-                            SubComplex = SubComplex.DigSite,
-                            CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_SF_01.prefab",
-                            Coverage = new CoverageMinMax { Min = 20, Max = 35 },
                         };
-                        nextZone.SetOutOfFog(level);
+                        nextZone.RollFog(level);
 
-                        level.Planner.Connect(prev, hubsf);
-                        nextZone = level.Planner.AddZone(hubsf, nextZone);
+                        level.Planner.Connect(prev, next);
+                        nextZone = level.Planner.AddZone(next, nextZone);
 
-                        // Place all three build from bulkhead zones from the hub sf tile. There should
-                        // always be 3 to draw from.
-                        InitializeBulkheadArea(level, Generator.Draw(toPlace), hubsf);
-                        InitializeBulkheadArea(level, Generator.Draw(toPlace), hubsf);
-                        InitializeBulkheadArea(level, Generator.Draw(toPlace), hubsf);
+                        // Place the first zones of the connecting bulkhead zones, so we can build from
+                        // them later.
+                        InitializeBulkheadArea(level, Generator.Draw(toPlace), next);
+
+                        prev = next;
                     }
-                    else
-                    {
-                        for (int i = 0; i < minimumZones; i++)
-                        {
-                            var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
-                            var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
-                            nextZone = new Zone
-                            {
-                                Coverage = CoverageMinMax.GenNormalSize(),
-                                LightSettings = Lights.GenRandomLight(),
-                            };
-                            nextZone.RollFog(level);
 
-                            level.Planner.Connect(prev, next);
-                            nextZone = level.Planner.AddZone(next, nextZone);
+                    // The final area also needs to be placed
+                    InitializeBulkheadArea(level, Generator.Draw(toPlace), prev);
 
-                            // Place the first zones of the connecting bulkhead zones, so we can build from
-                            // them later.
-                            InitializeBulkheadArea(level, Generator.Draw(toPlace), next);
-
-                            prev = next;
-                        }
-
-                        // The final area also needs to be placed
-                        InitializeBulkheadArea(level, Generator.Draw(toPlace), prev);
-                    }
                     break;
                 }
             }
@@ -253,12 +204,8 @@ namespace AutogenRundown.DataBlocks
             if (level.Settings.Modifiers.Contains(LevelModifiers.Fog) ||
                 level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
             {
-                var lastNode = level.Planner.GetLastZone(Bulkhead.StartingArea);
-
-                if (lastNode == null)
-                    throw new Exception("Missing starting area zone");
-
-                var lastZone = level.Planner.GetZone((ZoneNode)lastNode)!;
+                var lastNode = level.Planner.GetZones(Bulkhead.StartingArea).Last();
+                var lastZone = level.Planner.GetZone(lastNode)!;
 
                 lastZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
             }
@@ -267,35 +214,86 @@ namespace AutogenRundown.DataBlocks
         /**
          * Generates compact starting areas for 2x bulkhead entrances from the same zone.
          */
-        /*static void BuildStartingArea_2xBulkheadHub(Level level, BuildDirector director)
+        static void BuildStartingArea_2xBulkheadHub(Level level, BuildDirector director)
         {
-            var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
-            var hubsf = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
-
-            nextZone = new Zone
+            // Add the first zone.
+            var elevatorDrop = new ZoneNode(
+                Bulkhead.Main | Bulkhead.StartingArea,
+                level.Planner.NextIndex(Bulkhead.Main));
+            var elevatorDropZone = new Zone
             {
+                Coverage = new CoverageMinMax { Min = 25, Max = 35 },
                 LightSettings = Lights.GenRandomLight(),
-                SubComplex = SubComplex.DigSite,
-                CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_SF_01.prefab",
-                Coverage = new CoverageMinMax { Min = 20, Max = 35 },
             };
-            nextZone.SetOutOfFog(level);
 
             switch (level.Complex)
             {
-
+                case Complex.Mining:
+                case Complex.Tech:
+                case Complex.Service:
+                    elevatorDropZone.GenHubGeomorph(level.Complex);
+                    break;
             }
 
+            level.Planner.Connect(elevatorDrop);
+            level.Planner.AddZone(elevatorDrop, elevatorDropZone);
 
+            var secondBulkhead = level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme) ?
+                Bulkhead.Extreme : Bulkhead.Overload;
 
-            level.Planner.Connect(prev, hubsf);
-            nextZone = level.Planner.AddZone(hubsf, nextZone);
+            // Place both bulkheads in the first zone
+            InitializeBulkheadArea(level, Bulkhead.Main, elevatorDrop);
+            InitializeBulkheadArea(level, secondBulkhead, elevatorDrop);
+        }
 
-            // Place all three build from bulkhead zones from the hub sf tile. There should
-            // always be 3 to draw from.
-            InitializeBulkheadArea(level, Generator.Draw(toPlace), hubsf);
-            InitializeBulkheadArea(level, Generator.Draw(toPlace), hubsf);
-            InitializeBulkheadArea(level, Generator.Draw(toPlace), hubsf);
-        }*/
+        /**
+         * Generates compact starting areas for 3x bulkhead entrances from the same zone.
+         */
+        static void BuildStartingArea_3xBulkheadHub(Level level, BuildDirector director)
+        {
+            // Add the first zone.
+            var elevatorDrop = new ZoneNode(
+                Bulkhead.Main | Bulkhead.StartingArea,
+                level.Planner.NextIndex(Bulkhead.Main));
+            var elevatorDropZone = new Zone
+            {
+                Coverage = new CoverageMinMax { Min = 25, Max = 35 },
+                LightSettings = Lights.GenRandomLight(),
+            };
+
+            switch (level.Complex)
+            {
+                case Complex.Mining:
+                {
+                    if (Generator.Flip(0.5))
+                    {
+                        elevatorDropZone.SubComplex = SubComplex.DigSite;
+                        elevatorDropZone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_SF_01.prefab";
+                        elevatorDropZone.Coverage = new CoverageMinMax { Min = 20, Max = 35 };
+
+                        elevatorDropZone.SetOutOfFog(level);
+                    }
+                    else
+                    {
+                        elevatorDropZone.GenHubGeomorph(level.Complex);
+                    }
+
+                    break;
+                }
+
+                case Complex.Tech:
+                case Complex.Service:
+                    elevatorDropZone.GenHubGeomorph(level.Complex);
+                    break;
+            }
+
+            level.Planner.Connect(elevatorDrop);
+            level.Planner.AddZone(elevatorDrop, elevatorDropZone);
+
+            // Place all bulkheads in the first zone
+            InitializeBulkheadArea(level, Bulkhead.Main, elevatorDrop);
+            InitializeBulkheadArea(level, Bulkhead.Extreme, elevatorDrop);
+            InitializeBulkheadArea(level, Bulkhead.Overload, elevatorDrop);
+        }
     }
 }

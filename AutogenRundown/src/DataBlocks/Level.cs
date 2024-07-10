@@ -600,7 +600,7 @@ namespace AutogenRundown.DataBlocks
             if (level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
                 level.FogSettings = Generator.Flip(0.75) ? Fog.LowFog : Fog.LowMidFog;
 
-            Plugin.Logger.LogDebug($"{logLevelId} - Modifiers: {level.Settings.Modifiers}, Fog: {level.FogSettings.Name}");
+            Plugin.Logger.LogDebug($"{logLevelId} ({level.Complex}) - Modifiers: {level.Settings.Modifiers}, Fog: {level.FogSettings.Name}");
 
             /**
              * Options for bulkhead keys and bulkhead DCs:

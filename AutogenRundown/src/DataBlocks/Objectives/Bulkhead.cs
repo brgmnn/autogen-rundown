@@ -14,6 +14,11 @@
         Overload = 0x04,
 
         /// <summary>
+        /// Flagged if all three objectives are set
+        /// </summary>
+        PrisonerEfficiency = Main | Extreme | Overload,
+
+        /// <summary>
         /// Starting area is part of Main in the data blocks but for our purpose it's the zones
         /// before any of the bulkheads, including the drop zone.
         /// </summary>
