@@ -86,34 +86,7 @@ namespace AutogenRundown.DataBlocks
             if (!director.Bulkhead.HasFlag(Bulkhead.Main))
                 return;
 
-            // Add the first zone.
-            var elevatorDrop = new ZoneNode(
-                Bulkhead.Main | Bulkhead.StartingArea,
-                level.Planner.NextIndex(Bulkhead.Main));
-            var elevatorDropZone = new Zone
-            {
-                Coverage = new CoverageMinMax { Min = 25, Max = 35 },
-                LightSettings = Lights.GenRandomLight(),
-            };
-
-            // Add fog repellers in the first zone if there's fog in the level.
-            if (level.Settings.Modifiers.Contains(LevelModifiers.Fog) ||
-                level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
-                elevatorDropZone.ConsumableDistributionInZone
-                    = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
-
-            level.Planner.Connect(elevatorDrop);
-            level.Planner.AddZone(elevatorDrop, elevatorDropZone);
-
-            var minimumZones = level.Settings.Bulkheads switch
-            {
-                Bulkhead.Main => 0,
-                Bulkhead.Main | Bulkhead.Extreme => 1,
-                Bulkhead.Main | Bulkhead.Overload => 1,
-                Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => 2,
-                _ => 1
-            };
-
+            // Bulkheads that need to be placed
             var toPlace = level.Settings.Bulkheads switch
             {
                 Bulkhead.Main => new List<Bulkhead> { Bulkhead.Main },
@@ -137,65 +110,158 @@ namespace AutogenRundown.DataBlocks
                 _ => new List<Bulkhead>()
             };
 
-            var prev = elevatorDrop;
-            Zone nextZone = elevatorDropZone;
+            // What bulkheads this level has
+            var bulkheads = level.Settings.Bulkheads;
 
-            if (level.Settings.Bulkheads.HasFlag(Bulkhead.Main) &&
-                level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme) &&
-                level.Settings.Bulkheads.HasFlag(Bulkhead.Overload) &&
-                Generator.Flip(StartArea_TripleBulkheadChance))
+            var options = new List<(double, string)>
             {
-                var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
-                var hubsf = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
-                nextZone = new Zone
-                {
-                    LightSettings = Lights.GenRandomLight(),
-                    SubComplex = SubComplex.DigSite,
-                    CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_SF_01.prefab",
-                    Coverage = new CoverageMinMax { Min = 20, Max = 35 },
-                };
-                nextZone.SetOutOfFog(level);
+                (1.0, "default")
+            };
 
-                level.Planner.Connect(prev, hubsf);
-                nextZone = level.Planner.AddZone(hubsf, nextZone);
-
-                // Place all three build from bulkhead zones from the hub sf tile. There should
-                // always be 3 to draw from.
-                InitializeBulkheadArea(level, Generator.Draw(toPlace), hubsf);
-                InitializeBulkheadArea(level, Generator.Draw(toPlace), hubsf);
-                InitializeBulkheadArea(level, Generator.Draw(toPlace), hubsf);
+            // 2 bulkhead objectives
+            if (!bulkheads.HasFlag(Bulkhead.All) && (bulkheads.HasFlag(Bulkhead.Extreme) || bulkheads.HasFlag(Bulkhead.Overload) ))
+            {
+                // options.Add((1.0, "2x_hub"));
+                // options = new List<(double, string)>
+                // {
+                //     (1.0, "2x_hub")
+                // };
             }
-            else
+
+            // All 3 bulkhead objectives
+            if (bulkheads.HasFlag(Bulkhead.All))
+            {}
+
+            var strategy = Generator.Select(options);
+            switch (strategy)
             {
-                for (int i = 0; i < minimumZones; i++)
+                case "2x_hub":
                 {
-                    var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
-                    var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
-                    nextZone = new Zone
+                    // Add the first zone.
+                    var elevatorDrop = new ZoneNode(
+                        Bulkhead.Main | Bulkhead.StartingArea,
+                        level.Planner.NextIndex(Bulkhead.Main));
+                    var elevatorDropZone = new Zone
                     {
-                        Coverage = CoverageMinMax.GenNormalSize(),
+                        Coverage = new CoverageMinMax { Min = 25, Max = 35 },
                         LightSettings = Lights.GenRandomLight(),
                     };
-                    nextZone.RollFog(level);
 
-                    level.Planner.Connect(prev, next);
-                    nextZone = level.Planner.AddZone(next, nextZone);
+                    elevatorDropZone.GenHubGeomorph(level.Complex);
 
-                    // Place the first zones of the connecting bulkhead zones, so we can build from
-                    // them later.
-                    InitializeBulkheadArea(level, Generator.Draw(toPlace), next);
+                    level.Planner.Connect(elevatorDrop);
+                    level.Planner.AddZone(elevatorDrop, elevatorDropZone);
 
-                    prev = next;
+                    // We need both doors in this zone
+                    InitializeBulkheadArea(level, Bulkhead.Main, elevatorDrop);
+                    InitializeBulkheadArea(level, bulkheads.HasFlag(Bulkhead.Extreme) ? Bulkhead.Extreme : Bulkhead.Overload, elevatorDrop);
+
+                    Plugin.Logger.LogInfo($"Ok this should be only 1 zone now: {level.Planner}");
+
+                    break;
                 }
 
-                // The final area also needs to be placed
-                InitializeBulkheadArea(level, Generator.Draw(toPlace), prev);
+                default:
+                {
+                    // Add the first zone.
+                    var elevatorDrop = new ZoneNode(
+                        Bulkhead.Main | Bulkhead.StartingArea,
+                        level.Planner.NextIndex(Bulkhead.Main));
+                    var elevatorDropZone = new Zone
+                    {
+                        Coverage = new CoverageMinMax { Min = 25, Max = 35 },
+                        LightSettings = Lights.GenRandomLight(),
+                    };
+
+                    // Add fog repellers in the first zone if there's fog in the level.
+                    if (level.Settings.Modifiers.Contains(LevelModifiers.Fog) ||
+                        level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
+                        elevatorDropZone.ConsumableDistributionInZone
+                            = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
+
+                    level.Planner.Connect(elevatorDrop);
+                    level.Planner.AddZone(elevatorDrop, elevatorDropZone);
+
+                    var minimumZones = level.Settings.Bulkheads switch
+                    {
+                        Bulkhead.Main => 0,
+                        Bulkhead.Main | Bulkhead.Extreme => 1,
+                        Bulkhead.Main | Bulkhead.Overload => 1,
+                        Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => 2,
+                        _ => 1
+                    };
+
+                    var prev = elevatorDrop;
+                    Zone nextZone = elevatorDropZone;
+
+                    if (level.Settings.Bulkheads.HasFlag(Bulkhead.Main) &&
+                        level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme) &&
+                        level.Settings.Bulkheads.HasFlag(Bulkhead.Overload) &&
+                        Generator.Flip(StartArea_TripleBulkheadChance))
+                    {
+                        var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
+                        var hubsf = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
+                        nextZone = new Zone
+                        {
+                            LightSettings = Lights.GenRandomLight(),
+                            SubComplex = SubComplex.DigSite,
+                            CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_SF_01.prefab",
+                            Coverage = new CoverageMinMax { Min = 20, Max = 35 },
+                        };
+                        nextZone.SetOutOfFog(level);
+
+                        level.Planner.Connect(prev, hubsf);
+                        nextZone = level.Planner.AddZone(hubsf, nextZone);
+
+                        // Place all three build from bulkhead zones from the hub sf tile. There should
+                        // always be 3 to draw from.
+                        InitializeBulkheadArea(level, Generator.Draw(toPlace), hubsf);
+                        InitializeBulkheadArea(level, Generator.Draw(toPlace), hubsf);
+                        InitializeBulkheadArea(level, Generator.Draw(toPlace), hubsf);
+                    }
+                    else
+                    {
+                        for (int i = 0; i < minimumZones; i++)
+                        {
+                            var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
+                            var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
+                            nextZone = new Zone
+                            {
+                                Coverage = CoverageMinMax.GenNormalSize(),
+                                LightSettings = Lights.GenRandomLight(),
+                            };
+                            nextZone.RollFog(level);
+
+                            level.Planner.Connect(prev, next);
+                            nextZone = level.Planner.AddZone(next, nextZone);
+
+                            // Place the first zones of the connecting bulkhead zones, so we can build from
+                            // them later.
+                            InitializeBulkheadArea(level, Generator.Draw(toPlace), next);
+
+                            prev = next;
+                        }
+
+                        // The final area also needs to be placed
+                        InitializeBulkheadArea(level, Generator.Draw(toPlace), prev);
+                    }
+                    break;
+                }
             }
 
             // Add a fog turbine to the last start area if we have fog
             if (level.Settings.Modifiers.Contains(LevelModifiers.Fog) ||
                 level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
-                nextZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
+            {
+                var lastNode = level.Planner.GetLastZone(Bulkhead.StartingArea);
+
+                if (lastNode == null)
+                    throw new Exception("Missing starting area zone");
+
+                var lastZone = level.Planner.GetZone((ZoneNode)lastNode)!;
+
+                lastZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
+            }
         }
 
         /**
