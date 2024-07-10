@@ -3,7 +3,7 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
-## [v0.26.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.26.0) — June 25, 2024
+## [v0.26.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.26.0) — July 10, 2024
 
 ### New
 
@@ -16,7 +16,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.25.0...v0.26.0
 
 
-## [v0.25.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.25.0) — June 25, 2024
+## [v0.25.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.25.0) — July 08, 2024
 
 ### New
 
@@ -32,7 +32,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.24.2...v0.25.0
 
 
-## [v0.24.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.24.2) — June 25, 2024
+## [v0.24.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.24.2) — July 07, 2024
 
 ### Changes
 
@@ -41,7 +41,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.24.1...v0.24.2
 
 
-## [v0.24.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.24.1) — June 25, 2024
+## [v0.24.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.24.1) — July 07, 2024
 
 ### Changes
 
@@ -50,7 +50,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.24.0...v0.24.1
 
 
-## [v0.24.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.24.0) — June 25, 2024
+## [v0.24.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.24.0) — July 06, 2024
 
 ### New
 
@@ -66,7 +66,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.23.2...v0.24.0
 
 
-## [v0.23.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.23.2) — June 25, 2024
+## [v0.23.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.23.2) — July 03, 2024
 
 ### Changes
 
@@ -76,7 +76,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.23.1...v0.23.2
 
 
-## [v0.23.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.23.1) — June 25, 2024
+## [v0.23.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.23.1) — July 02, 2024
 
 ### Changes
 
@@ -85,7 +85,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.23.0...v0.23.1
 
 
-## [v0.23.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.23.0) — June 25, 2024
+## [v0.23.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.23.0) — July 02, 2024
 
 ### Changes
 
@@ -100,7 +100,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.22.0...v0.23.0
 
 
-## [v0.22.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.22.0) — June 25, 2024
+## [v0.22.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.22.0) — June 30, 2024
 
 ### New
 
@@ -116,7 +116,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.21.0...v0.22.0
 
 
-## [v0.21.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.21.0) — June 25, 2024
+## [v0.21.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.21.0) — June 30, 2024
 
 ### Changes
 
@@ -126,7 +126,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.20.0...v0.21.0
 
 
-## [v0.21.0-beta](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.21.0-beta) — June 25, 2024
+## [v0.21.0-beta](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.21.0-beta) — June 30, 2024
 
 ### Changes
 
@@ -135,7 +135,7 @@ Test release for verifying automated workflows
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.20.0...v0.21.0-beta
 
 
-## [v0.20.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.20.0) — June 25, 2024
+## [v0.20.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.20.0) — June 27, 2024
 
 ### Changes
 
@@ -159,7 +159,7 @@ Test release for verifying automated workflows
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.19.0...v0.20.0
 
 
-## [v0.19.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.19.0) — June 25, 2024
+## [v0.19.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.19.0) — June 26, 2024
 
 ### Changes
 
@@ -181,7 +181,7 @@ Test release for verifying automated workflows
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.18.1...v0.18.2
 
 
-## [v0.18.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.18.1) — June 25, 2024
+## [v0.18.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.18.1) — January 01, 2024
 
 ### Changes
 
@@ -189,14 +189,14 @@ Test release for verifying automated workflows
   * The fix is to use the package from BepInEx instead of from NuGet.
 
 
-## [v0.18.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.18.0) — June 25, 2024
+## [v0.18.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.18.0) — January 01, 2024
 
 ### Changes
 
 * Rundown 8 game updated! 🥳 
 
 
-## [v0.17.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.17.1) — June 25, 2024
+## [v0.17.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.17.1) — November 25, 2023
 
 ### Changes
 
@@ -209,7 +209,7 @@ Test release for verifying automated workflows
   * Increased wave verify time granted from puzzle component travel distance.
 
 
-## [v0.17.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.17.0) — June 25, 2024
+## [v0.17.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.17.0) — November 24, 2023
 
 ### New
 
@@ -224,7 +224,7 @@ Test release for verifying automated workflows
 * Adjusted "Class S I Alarm" to use 100s sustained scan instead of 140s scan.
 
 
-## [v0.16.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.16.0) — June 25, 2024
+## [v0.16.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.16.0) — November 21, 2023
 
 ### New
 
@@ -238,7 +238,7 @@ Test release for verifying automated workflows
 * Zone numbers possibly colliding between Main/Secondary/Overload
 
 
-## [v0.15.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.15.0) — June 25, 2024
+## [v0.15.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.15.0) — November 19, 2023
 
 ### New
 
@@ -250,7 +250,7 @@ Test release for verifying automated workflows
 * Big pickup having a low number of zones for single or two items.
 
 
-## [v0.14.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.14.0) — June 25, 2024
+## [v0.14.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.14.0) — November 19, 2023
 
 ### New
 
@@ -265,7 +265,7 @@ Test release for verifying automated workflows
   * Added 2x mother and 2x tank rolls
 
 
-## [v0.13.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.13.0) — June 25, 2024
+## [v0.13.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.13.0) — November 12, 2023
 
 ### New
 
@@ -285,7 +285,7 @@ Test release for verifying automated workflows
   * Slightly reduced chance of giant shooter spawns
 
 
-## [v0.12.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.12.0) — June 25, 2024
+## [v0.12.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.12.0) — November 10, 2023
 
 ### New
 
@@ -296,7 +296,7 @@ Test release for verifying automated workflows
 * Fixed duplicate objectives in a single level, subsequent layouts cannot roll the same objective as previously generated layouts.
 
 
-## [v0.11.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.11.0) — June 25, 2024
+## [v0.11.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.11.0) — November 08, 2023
 
 ### New
 
@@ -307,7 +307,7 @@ Test release for verifying automated workflows
 * Fixed Mixed class alarms only spawning a few hybrids.
 
 
-## [v0.10.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.10.0) — June 25, 2024
+## [v0.10.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.10.0) — November 07, 2023
 
 ### New
 
@@ -327,7 +327,7 @@ Test release for verifying automated workflows
 * Generator Cluster objective added but **disabled**. Marker seed re-rolling isn't possible with generating levels via this mod, and only about 50% of rolls result in a generator cluster spawning.
 
 
-## [v0.9.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.9.0) — June 25, 2024
+## [v0.9.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.9.0) — November 03, 2023
 
 ### Changes
 
@@ -336,7 +336,7 @@ Test release for verifying automated workflows
 * Fixed uplink zone spawns
 
 
-## [v0.8.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.8.0) — June 25, 2024
+## [v0.8.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.8.0) — October 30, 2023
 
 ### New
 
@@ -356,7 +356,7 @@ Test release for verifying automated workflows
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.7.0...v0.8.0
 
 
-## [v0.7.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.7.0) — June 25, 2024
+## [v0.7.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.7.0) — October 24, 2023
 
 ### New
 
@@ -377,7 +377,7 @@ Test release for verifying automated workflows
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.6.0...v0.7.0
 
 
-## [v0.6.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.6.0) — June 25, 2024
+## [v0.6.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.6.0) — October 17, 2023
 
 ### Changes
 
@@ -391,7 +391,7 @@ Test release for verifying automated workflows
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.5.0...v0.6.0
 
 
-## [v0.5.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.5.0) — June 25, 2024
+## [v0.5.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.5.0) — October 15, 2023
 
 ### Changes
 
@@ -402,7 +402,7 @@ Test release for verifying automated workflows
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.4.0...v0.5.0
 
 
-## [v0.4.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.4.0) — June 25, 2024
+## [v0.4.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.4.0) — October 15, 2023
 
 ### New
 
@@ -428,7 +428,7 @@ Test release for verifying automated workflows
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.3.0...v0.4.0
 
 
-## [v0.3.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.3.0) — June 25, 2024
+## [v0.3.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.3.0) — October 10, 2023
 
 ### Changes
 
@@ -437,7 +437,7 @@ Add manual install builds and documentation
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.2.1...v0.3.0
 
 
-## [v0.2.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.2.1) — June 25, 2024
+## [v0.2.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.2.1) — October 09, 2023
 
 ### Changes
 
@@ -446,7 +446,7 @@ Add manual install builds and documentation
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.2.0...v0.2.1
 
 
-## [v0.2.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.2.0) — June 25, 2024
+## [v0.2.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.2.0) — October 09, 2023
 
 ### New
 
@@ -462,7 +462,7 @@ Add manual install builds and documentation
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.1.0...v0.2.0
 
 
-## [v0.1.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.1.0) — June 25, 2024
+## [v0.1.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.1.0) — October 06, 2023
 
 Initial release 🎉
 

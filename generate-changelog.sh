@@ -20,7 +20,7 @@ echo "$releases" | jq -c '.[]' | while read -r release; do
 
     cat <<-EOF >> CHANGELOG.md
 
-## [$name](https://github.com/brgmnn/autogen-rundown/releases/tag/$tag) — $(date -d "2024-06-26T06:12:44Z" +"%B %d, %Y")
+## [$name](https://github.com/brgmnn/autogen-rundown/releases/tag/$tag) — $(date -d "$publishedAt" +"%B %d, %Y")
 
 $(gh release view $tag --json body -q '.body' | tr -d '\r')
 
