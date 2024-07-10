@@ -158,7 +158,7 @@ namespace AutogenRundown.DataBlocks
             {
                 WardenObjectiveType.HsuFindSample => Generator.Pick(new List<string>
                     {
-                        ""
+                        "Security clearance for section <color=red>-REDACTED-</color> needed. DNA sample will suffice. PRisoners sent to locate Administrator in stasis unit."
                     }) ?? "",
                 WardenObjectiveType.ReactorStartup => Generator.Pick(new List<string>
                     {
@@ -204,11 +204,11 @@ namespace AutogenRundown.DataBlocks
                 WardenObjectiveType.PowerCellDistribution => Generator.Pick(new List<string>
                     {
                         ""
-                    }) ?? "",
+                    }) ?? "",*/
                 WardenObjectiveType.TerminalUplink => Generator.Pick(new List<string>
                     {
-                        ""
-                    }) ?? "",*/
+                        $"Network link required to obtain control over quadrant maintenance systems. Prisoners sent to establish terminal uplink. {IntelCasualtyWarning()}"
+                    }) ?? "",
 
                 WardenObjectiveType.GatherSmallItems => item switch
                 {
