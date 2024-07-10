@@ -3,9 +3,25 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.25.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.25.0) — June 25, 2024
+
+### New
+
+* Added fixed E-tier Clear Path objective level.
+
+### Changes
+
+* Reduced number of zones before reaching reactors in Startup/Shutdown missions. Reactor I-tile/corridor now spawns immediately after the bulkhead door instead of several preamble zones.
+* Increased reactor base wave duration back to 60s from 45s. All reactor waves should now have an extra 15s.
+* Fixed incorrect bundling of dependency plugins in manual install package.
+* Added custom README for Thunderstore listing and CHANGELOG file.
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.24.2...v0.25.0
+
+
 ## [v0.24.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.24.2) — June 25, 2024
 
-## Changes
+### Changes
 
 * Fixed fatal missing directory error on first time startup
 
@@ -14,7 +30,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 
 ## [v0.24.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.24.1) — June 25, 2024
 
-## Changes
+### Changes
 
 * Fixed folder structure issue causing crash on startup
 
@@ -23,11 +39,11 @@ See more at https://github.com/brgmnn/autogen-rundown
 
 ## [v0.24.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.24.0) — June 25, 2024
 
-## New
+### New
 
 * Added Reactor Geomorph for Service Complex. Reactor startup/shutdown missions previously could not be used in the Service complex (Floodways, Gardens) as there was no geomorph in those complex tilesets. This release adds a dependency on FlowGeos which provides a reactor geo for floodways.
 
-## Changes
+### Changes
 
 * Reactor Startup D-tier mission is now a fixed regular level, not just a test level
 * Fixed Service complex to use both Floodways and Gardens
@@ -39,7 +55,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 
 ## [v0.23.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.23.2) — June 25, 2024
 
-## Fixed
+### Changes
 
 * Fixed `Class S 1` alarms duration being too short. Duration is now 100s (was previously 25s)
 * Increased size of code fetch terminal zones to try and reduce chance of soft locks with bad terminal placements
@@ -49,7 +65,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 
 ## [v0.23.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.23.1) — June 25, 2024
 
-## Fix
+### Changes
 
 * Disable keyed zone rolls as there are still map generation hard locks happening with it
 
@@ -58,19 +74,13 @@ See more at https://github.com/brgmnn/autogen-rundown
 
 ## [v0.23.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.23.0) — June 25, 2024
 
-## Added
+### Changes
 
 * Added Zoomer and Nightmare scouts to rolls
 * Added Nightmare wave to reactor startup
 * Added Tank in baseline wave to reactor startup
 * Added additional Potato Tank rolls to reactor startup waves
-
-## Fixed
-
 * Fixed baseline charger / nightmare reactor waves using baseline hybrid wave populations
-
-## Balance
-
 * Reduced Reactor hybrids only wave from 28pts to 16pts
 * Reduced reactor wave fixed base time from 60s to 45s
 
@@ -79,21 +89,15 @@ See more at https://github.com/brgmnn/autogen-rundown
 
 ## [v0.22.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.22.0) — June 25, 2024
 
-## Added
+### New
 
 * Added some Nightmare enemies for several alarms
 
-## Fixed
+### Changes
 
 * Fixed `Class V Cluster` alarm only having 4 scans
-
-## Balanced
-
 * Rebalanced D-tier alarms
 * Reduced number of zones spawned for each area and weighted distribution of zone count selection
-
-## Other
-
 * Automated release artifacts upload
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.21.0...v0.22.0
@@ -101,7 +105,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 
 ## [v0.21.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.21.0) — June 25, 2024
 
-## Balance
+### Changes
 
 * Reduce health multiplier in Reactor Startup
 * Slightly reduce time factor for enemies/coverage in Reactor Startup fetch codes
@@ -111,7 +115,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 
 ## [v0.21.0-beta](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.21.0-beta) — June 25, 2024
 
-## Other
+### Changes
 
 Test release for verifying automated workflows
 
@@ -120,7 +124,7 @@ Test release for verifying automated workflows
 
 ## [v0.20.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.20.0) — June 25, 2024
 
-## Balance
+### Changes
 
 * Reduced difficulty of reactor base waves
   * Easy:
@@ -129,7 +133,7 @@ Test release for verifying automated workflows
   * Medium:
     * 60pts -> 40pts
     * Duration: 60s -> 50s
-  * Hard:
+  * Hard: 
     * Points: 80pts -> 50pts
     * Duration: 70s -> 60s
 * Reworked D-tier reactor waves for more variety
@@ -137,9 +141,6 @@ Test release for verifying automated workflows
 * Slightly increased time scale factor for D-tier in all metrics
 * Reduced resource multiplier for D-tier Reactor Startup
 * Increase reactor wave times by 15s
-
-## Other
-
 * Added more lore text for Reactor Startup and Reactor Shutdown objectives
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.19.0...v0.20.0
@@ -147,13 +148,10 @@ Test release for verifying automated workflows
 
 ## [v0.19.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.19.0) — June 25, 2024
 
-## Fixed
+### Changes
 
 * Reworked door key puzzle generation. Keys for locked doors should no longer spawn behind those doors. Fixes #9
 * Added additional zone direction hints to help with generation deadlocks
-
-## Other
-
 * Moved test level to D-tier
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.18.2...v0.19.0
@@ -161,12 +159,9 @@ Test release for verifying automated workflows
 
 ## [v0.18.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.18.2) — June 25, 2024
 
-## Fixed
+### Changes
 
 * Added direction hinting for bulkhead zone generations
-
-## Other
-
 * Updated required version of `Inas07-LocalProgression`
 * Updated vanilla data blocks for `WavePopulation` and `WaveSettings`.
 
@@ -175,7 +170,7 @@ Test release for verifying automated workflows
 
 ## [v0.18.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.18.1) — June 25, 2024
 
-## Fixed
+### Changes
 
 * Issue with mod being flagged by the automod in Thunderstore due to some NuGet packages which are already bundled by BepInEx.
   * The fix is to use the package from BepInEx instead of from NuGet.
@@ -183,14 +178,14 @@ Test release for verifying automated workflows
 
 ## [v0.18.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.18.0) — June 25, 2024
 
-## Fixed
+### Changes
 
-* Rundown 8 game updated! 🥳
+* Rundown 8 game updated! 🥳 
 
 
 ## [v0.17.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.17.1) — June 25, 2024
 
-## Balanced
+### Changes
 
 * Reactor Startup
   * Increased reactor enemy wave population points totals for Easy / Medium / hard.
@@ -203,31 +198,28 @@ Test release for verifying automated workflows
 
 ## [v0.17.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.17.0) — June 25, 2024
 
-## Added
+### New
 
 * Reactor Startup - Code fetching 💻
   * _Reactor startup objectives can now spawn with additional areas that must be access to fetch codes from terminals_
 * Set manual install BepInEx logging to disk to `All`
 
-## Fixed
+### Changes
 
 * Issue where some fixed data blocks were being saved last instead of first
 * Added workaround to reduce chance of failed level generation on Reactor Startup
-
-## Balanced
-
 * Adjusted "Class S I Alarm" to use 100s sustained scan instead of 140s scan.
 
 
 ## [v0.16.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.16.0) — June 25, 2024
 
-## Added
+### New
 
 * New objective! Reactor Startup
   * Currently with simple input codes (no code fetching yet)
 * Chance for triple bulkhead starting area to spawn in Digsite using `Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_SF_01.prefab`
 
-## Fixed
+### Changes
 
 * Matter Wave Projector objective having the wrong help text
 * Zone numbers possibly colliding between Main/Secondary/Overload
@@ -235,26 +227,26 @@ Test release for verifying automated workflows
 
 ## [v0.15.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.15.0) — June 25, 2024
 
-## Added
+### New
 
 * Big pickup item - Matter Wave Projector: Custom level layout generation
 * Fog turbine in starting area zones for fog levels
 
-## Fixed
+### Changes
 
 * Big pickup having a low number of zones for single or two items.
 
 
 ## [v0.14.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.14.0) — June 25, 2024
 
-## Added
+### New
 
 * Fog level modifiers!
   * B-Tier and below can now have fog covered zones
   * Fog zones and starting zone will get fog repellers on fog levels
 * All glowsticks can be found now: green, yellow, Halloween (orange), and Christmas (red)
 
-## Balance
+### Changes
 
 * Increased chance for bosses to roll in D-tier
   * Added 2x mother and 2x tank rolls
@@ -262,20 +254,17 @@ Test release for verifying automated workflows
 
 ## [v0.13.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.13.0) — June 25, 2024
 
-## Added
+### New
 
-* Retrieve big item objective! Things like Cryo Crate, Neonate, Datasphere etc. #10
+* Retrieve big item objective! Things like Cryo Crate, Neonate, Datasphere etc. #10 
 * Reworked hibernating enemy spawns
   * Better mix of base enemies, charger only, shadow only, and mix of all groups.
 
-## Fixed
+### Changes
 
 * Custom build directors having their objectives overridden by build layout
 * Fixed shadow's incorrect point value
 * Reduced chance of clear path exit geo being blocked from spawning
-
-## Balance Changes
-
 * Removed "Special Terminal Command" from Main objective pool.
 * Enemy balance:
   * D-Tier base zone points: 25-30pts to 30-35pts
@@ -285,29 +274,29 @@ Test release for verifying automated workflows
 
 ## [v0.12.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.12.0) — June 25, 2024
 
-## Added
+### New
 
 * Added v1 boss spawns (hibernation)
 
-## Fixed
+### Changes
 
 * Fixed duplicate objectives in a single level, subsequent layouts cannot roll the same objective as previously generated layouts.
 
 
 ## [v0.11.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.11.0) — June 25, 2024
 
-## Added
+### New
 
 * Added error alarm locked room for turning off the error alarm
 
-## Fixed
+### Changes
 
 * Fixed Mixed class alarms only spawning a few hybrids.
 
 
 ## [v0.10.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.10.0) — June 25, 2024
 
-## Added
+### New
 
 * Distribute Power Cells objective added!
   * 1 to 5 cells can be rolled (minimum 1 on A/B, only E can roll 5 cells to be placed).
@@ -316,21 +305,18 @@ Test release for verifying automated workflows
   * "I" (corridor) Custom Geomorphs
 * Reworked level generation to primarily use internal planner. In turn this improves the bulkhead placement.
 
-## Fixed
+### Changes
 
 * Zone Placement Weights not being weighted enough
 * Adjusted starting zone size to avoid boxed in zones
 * Fixed some chained puzzles not being loaded to the data blocks
 * Fixed chained puzzle packs sometimes running out for longer levels
-
-## Not Added
-
-* Generator Cluster objective added but disabled. Marker seed re-rolling isn't possible with generating levels via this mod, and only about 50% of rolls result in a generator cluster spawning.
+* Generator Cluster objective added but **disabled**. Marker seed re-rolling isn't possible with generating levels via this mod, and only about 50% of rolls result in a generator cluster spawning.
 
 
 ## [v0.9.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.9.0) — June 25, 2024
 
-## Fixed
+### Changes
 
 * Zone indexes for secondary / overload incorrectly not starting from 0 with the new planner
 * Fixed broken objectives from keycard branching zones
@@ -339,7 +325,7 @@ Test release for verifying automated workflows
 
 ## [v0.8.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.8.0) — June 25, 2024
 
-## New
+### New
 
 * Enable D-Tier!
 * Enable E-Tier!
@@ -347,14 +333,11 @@ Test release for verifying automated workflows
 * Added Shadows roll to enemy generation
 * Added Charger/Shadow giant chance rolls to respective specialty zone rolls
 
-## Fixed
+### Changes
 
 * HSU Sample Collect: Fixed an issue with zones being too small for the number of HSU's
 * HSU Sample Collect: Always place HSU's in final zone
 * Special Terminal Command: Always place Terminal in final zone
-
-## Balance Changes
-
 * Reduced chance for blood doors to spawn and lowered cap on B/C/D levels.
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.7.0...v0.8.0
@@ -362,7 +345,7 @@ Test release for verifying automated workflows
 
 ## [v0.7.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.7.0) — June 25, 2024
 
-## New
+### New
 
 * Add Terminal Uplink objective
 * Add fully custom enemy spawning
@@ -374,7 +357,7 @@ Test release for verifying automated workflows
 * Add Charger hibernation rolls
 * Add level modifier system with charger modifiers
 
-## Fixed
+### Changes
 
 * Increased S-Class I scan distance from door from 6.0 to 12.0
 
@@ -383,13 +366,10 @@ Test release for verifying automated workflows
 
 ## [v0.6.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.6.0) — June 25, 2024
 
-## Features
+### Changes
 
 * Reworked enemy points spawning system, scouts now included in points count for rolls
   * Scouts have 50% reduced chance of spawning in zones with a blood door entrance
-
-## Fixes
-
 * Slightly reduced max number of zones for all layouts
 * Removed surge alarm from reactor shutdown roll pool
 * Fixed scout spawns to manually spawn exact numbers of scouts
@@ -400,13 +380,10 @@ Test release for verifying automated workflows
 
 ## [v0.5.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.5.0) — June 25, 2024
 
-## Improvements
+### Changes
 
 * Reworked blood doors for more varied enemy spawns
 * Changed bulkhead keys to spawn one in each bulkhead area
-
-## Fixes
-
 * Fixed issue with incorrect scan for first alarm scans
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.4.0...v0.5.0
@@ -414,7 +391,7 @@ Test release for verifying automated workflows
 
 ## [v0.4.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.4.0) — June 25, 2024
 
-## New features
+### New
 
 * Added C-Tier
 * Secondary / Overload missions
@@ -427,7 +404,7 @@ Test release for verifying automated workflows
 * Added watermark for mod version and seed
 * Added scaling exit scan times
 
-## Improvements
+### Changes
 
 * Adjusted enemy spawning points
 * Adjusted room sizes down
@@ -440,6 +417,8 @@ Test release for verifying automated workflows
 
 ## [v0.3.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.3.0) — June 25, 2024
 
+### Changes
+
 Add manual install builds and documentation
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.2.1...v0.3.0
@@ -447,25 +426,35 @@ Add manual install builds and documentation
 
 ## [v0.2.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.2.1) — June 25, 2024
 
-Update README.
+### Changes
+
+* Update README.
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.2.0...v0.2.1
 
 
 ## [v0.2.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.2.0) — June 25, 2024
 
-Added:
+### New
 
 * HSU Sample collection
 * Scouts
+* Blood door and error alarm rolls
+
+### Changes
+
 * Balancing of enemies
 * Fixed exit zone for HSU
-* Blood door and error alarm rolls
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.1.0...v0.2.0
 
 
 ## [v0.1.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.1.0) — June 25, 2024
 
-Initial release, only support for A and B Tier.
+Initial release 🎉
+
+### New 
+
+* A Tier levels
+* B Tier levels
 
