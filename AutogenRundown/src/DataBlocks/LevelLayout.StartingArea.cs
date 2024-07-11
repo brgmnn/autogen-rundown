@@ -112,15 +112,19 @@ namespace AutogenRundown.DataBlocks
             var bulkheads = level.Settings.Bulkheads;
 
             // Options for starting areas
-            var options = new List<(double, string)> { (1.0, "default") };
+            // TODO: add default in always as an option after we test
+            //var options = new List<(double, string)> { (1.0, "default") };
+            var options = new List<(double, string)>();
 
             // 2 bulkhead objectives
             if (bulkheads.HasFlag(Bulkhead.Extreme) ^ bulkheads.HasFlag(Bulkhead.Overload))
                 options.Add((1.0, "2x_bulkhead_hub"));
-
             // All 3 bulkhead objectives
-            if (bulkheads.HasFlag(Bulkhead.PrisonerEfficiency))
+            else if (bulkheads.HasFlag(Bulkhead.PrisonerEfficiency))
                 options.Add((1.0, "3x_bulkhead_hub"));
+            // Any other option
+            else
+                options.Add((1.0, "default"));
 
             var strategy = Generator.Select(options);
             Plugin.Logger.LogDebug($"StartingArea strategy = {strategy}");
