@@ -310,8 +310,29 @@ namespace AutogenRundown.DataBlocks
 
             var scoutCount = 0;
 
-            foreach (var zone in Zones)
+            var zoneNodes = planner.GetZones(director.Bulkhead);
+
+            foreach (var node in zoneNodes)
             {
+                var zone = planner.GetZone(node);
+
+                if (zone == null)
+                {
+                    Plugin.Logger.LogWarning($"No zone found for ZoneNode: {node}");
+                    continue;
+                }
+
+                Plugin.Logger.LogDebug($"Tags = {node.Tags} for {node}");
+
+                // Skip adding any enemies to the reactor area
+                // TODO: we may want to add a chance for some enemies here
+                // TODO: tag api doesn't work properly
+                if (node.Branch == "reactor_area" /* node.Tags.Contains("reactor") */)
+                {
+                    Plugin.Logger.LogWarning("Skipping adding enemies in the reactor");
+                    continue;
+                }
+
                 var points = director.GetPoints(zone);
 
                 // Reduce the chance of scouts spawning in the zone if there's a blood door to enter.
@@ -343,7 +364,6 @@ namespace AutogenRundown.DataBlocks
                 // by 1/3rd.
                 if (zone.BloodDoor.Enabled)
                     points = (int)(points * 0.66);
-
 
                 #region Charger roll check
                 var chargerChance = 0.0;
@@ -677,7 +697,7 @@ namespace AutogenRundown.DataBlocks
                     }
 
                 /**
-                 * 
+                 *
                  * */
                 case WardenObjectiveType.ReactorShutdown:
                     {
@@ -785,7 +805,7 @@ namespace AutogenRundown.DataBlocks
                         // Some adjustments to try and reduce the chance of the exit geo not
                         // spawning due to being trapped by a small penultimate zone
                         secondLastZone.ZoneExpansion = ZoneExpansion.Expansional;
-                        secondLastZone.Coverage = new CoverageMinMax { Min = 35, Max = 45 };  
+                        secondLastZone.Coverage = new CoverageMinMax { Min = 35, Max = 45 };
                         lastZone.StartPosition = ZoneEntranceBuildFrom.Furthest;
 
                         // The final zone is the extraction zone
@@ -826,7 +846,7 @@ namespace AutogenRundown.DataBlocks
                         level.Planner.Connect(entrance, corridor);
                         level.Planner.AddZone(corridor, corridorZone);
 
-                        // Zone 3 is a hub zone regarduless 
+                        // Zone 3 is a hub zone regarduless
                         var hubIndex = level.Planner.NextIndex(director.Bulkhead);
                         var hub = new ZoneNode(director.Bulkhead, hubIndex);
                         hub.MaxConnections = 3;

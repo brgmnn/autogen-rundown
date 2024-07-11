@@ -31,10 +31,6 @@ namespace AutogenRundown.DataBlocks
             var light = Lights.GenReactorLight();
 
             // Always generate a corridor of some kind (currently fixed) for the reactor zones.
-            /*var corridorNode = new ZoneNode(
-                director.Bulkhead,
-                level.Planner.NextIndex(director.Bulkhead),
-                "reactor_area");*/
             var corridorNode = start;
             corridorNode.Branch = "reactor_area";
             var corridor = planner.GetZone(corridorNode)!;
@@ -44,23 +40,16 @@ namespace AutogenRundown.DataBlocks
             corridor.StartPosition = ZoneEntranceBuildFrom.Furthest;
             corridor.ZoneExpansion = zoneExpansion;
 
-            /*var corridor = new Zone
-            {
-                LightSettings = light,
-                StartPosition = ZoneEntranceBuildFrom.Furthest,
-                StartExpansion = startExpansion,
-                ZoneExpansion = zoneExpansion
-            };*/
             corridor.GenReactorCorridorGeomorph(director.Complex);
-
-            //level.Planner.Connect(start, corridorNode);
-            //level.Planner.AddZone(corridorNode, corridor);
 
             // Create the reactor zone
             var reactorNode = new ZoneNode(
                 director.Bulkhead,
                 level.Planner.NextIndex(director.Bulkhead),
                 "reactor_area");
+            // TODO: this doesn't seem to work
+            reactorNode.Tags.Add("reactor");
+
             var reactor = new Zone
             {
                 LightSettings = light,

@@ -8,6 +8,8 @@ namespace AutogenRundown.DataBlocks.Zones
         string Branch = "primary",
         int MaxConnections = 2)
     {
+        public Tags Tags { get; set; } = new();
+
         /// <summary>
         /// Two zones are equal if they are in the same bulkhead and have the same zone number.
         /// All other properties are extra and we want to consider them equal with them.
