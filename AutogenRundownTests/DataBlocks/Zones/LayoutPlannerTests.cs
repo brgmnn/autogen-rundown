@@ -142,6 +142,25 @@ namespace AutogenRundownTests.DataBlocks.Zones
             Assert.AreEqual(new ZoneNode(Bulkhead.Extreme, 0), entrances[0]);
             Assert.AreEqual(new ZoneNode(Bulkhead.Extreme, 1), entrances[1]);
         }
+
+        public void Test_GetZones_ReturnsAllZonesByDefault()
+        {
+            // Setup
+            var planner = new LayoutPlanner();
+
+            var startingArea = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, 0);
+            var main = new ZoneNode(Bulkhead.Main, 1);
+            var extreme = new ZoneNode(Bulkhead.Extreme, 0);
+            var overload = new ZoneNode(Bulkhead.Overload, 0);
+
+            planner.Connect(startingArea, main);
+            planner.Connect(startingArea, extreme);
+            planner.Connect(extreme, overload);
+
+            var nodes = planner.GetZones();
+
+            Assert.AreEqual(4, nodes.Count);
+        }
         #endregion
 
         #region GetOpenZones()
