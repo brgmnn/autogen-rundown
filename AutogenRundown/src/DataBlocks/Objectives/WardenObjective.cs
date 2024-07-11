@@ -608,6 +608,7 @@ namespace AutogenRundown.DataBlocks
                                         }),
                                         (1.0, new()
                                         {
+                                            // TODO: Too easy
                                             ReactorEnemyWave.BaselineWithNightmare_Hard,
                                             ReactorEnemyWave.SingleTankPotato with { SpawnTime = 20 }
                                         }),
