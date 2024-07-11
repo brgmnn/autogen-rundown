@@ -61,6 +61,9 @@ namespace AutogenRundown.DataBlocks
             reactor.GenReactorGeomorph(director.Complex);
             reactor.TerminalPlacements = new List<TerminalPlacement>();
 
+            // Add fog repellers in case of fog
+            reactor.ConsumableDistributionInZone = ConsumableDistribution.Reactor_FogRepellers.PersistentId;
+
             level.Planner.Connect(corridorNode, reactorNode);
             level.Planner.AddZone(reactorNode, reactor);
 

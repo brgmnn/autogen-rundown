@@ -144,6 +144,13 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleMiniBoss = Enemy.ShadowGiant,
         };
 
+        public static WavePopulation OnlyNightmares = new WavePopulation
+        {
+            WaveRoleStandard = Enemy.NightmareStriker,
+            WaveRoleSpecial = Enemy.NightmareShooter,
+            //WaveRoleMiniBoss = Enemy.ShooterGiant_Infected,
+        };
+
         public static WavePopulation Shadows_WithHybrids = new WavePopulation
         {
             WaveRoleWeakling = Enemy.Shadow,

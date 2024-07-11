@@ -109,6 +109,7 @@ namespace AutogenRundown.DataBlocks
         {
             Name = "Fog_Full",
             DensityHeightAltitude = 4.0,
+            DensityHeightRange = 10,
 
             FogLevels =
             {

@@ -514,7 +514,7 @@ namespace AutogenRundown.DataBlocks
                             wave.EnemyWaves = (director.Tier, w) switch
                             {
                                 // First wave is always a softball wave
-                                ("D", 0) => new() { ReactorEnemyWave.Baseline_Hard },
+                                ("D", 0) => new() { ReactorEnemyWave.Baseline_Medium },
                                 ("E", 0) => new() { ReactorEnemyWave.Baseline_Hard },
                                 (_, 0) => new() { ReactorEnemyWave.Baseline_Easy },
 
@@ -590,7 +590,7 @@ namespace AutogenRundown.DataBlocks
                                 ("D", >= 5 and < 7) => Generator.Select(
                                     new List<(double, List<ReactorEnemyWave>)>
                                     {
-                                        (2.0, new()
+                                        (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
                                             ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 45 }
@@ -601,7 +601,7 @@ namespace AutogenRundown.DataBlocks
                                             ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 60 },
                                             ReactorEnemyWave.OnlyHybrids_Medium with { SpawnTime = 45 }
                                         }),
-                                        (2.0, new()
+                                        (1.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
                                             ReactorEnemyWave.OnlyShadows_Hard with { SpawnTime = 30 }
@@ -613,7 +613,7 @@ namespace AutogenRundown.DataBlocks
                                         }),
                                         (2.0, new()
                                         {
-                                            ReactorEnemyWave.Baseline_Medium,
+                                            ReactorEnemyWave.BaselineWithNightmare_Hard,
                                             ReactorEnemyWave.BaselineWithChargers_Hard with { SpawnTime = 45 }
                                         }),
                                     }),
@@ -628,7 +628,8 @@ namespace AutogenRundown.DataBlocks
                                         (4.0, new()
                                         {
                                             ReactorEnemyWave.Baseline_Hard,
-                                            ReactorEnemyWave.OnlyShadows_Hard with { SpawnTime = 15 }
+                                            ReactorEnemyWave.BaselineWithNightmare_Hard with { SpawnTime = 45 },
+                                            ReactorEnemyWave.OnlyShadows_Hard with { SpawnTime = 60 }
                                         }),
                                         (3.0, new()
                                         {
@@ -645,8 +646,9 @@ namespace AutogenRundown.DataBlocks
                                         }),
                                         (1.0, new()
                                         {
-                                            // TBD: is this good?
+                                            // TBD: Added another baseline hard. Might be quite hard
                                             ReactorEnemyWave.Baseline_Hard,
+                                            ReactorEnemyWave.Baseline_Hard with { SpawnTime = 70 },
                                             ReactorEnemyWave.SingleTank with { SpawnTime = 60 },
                                         }),
                                     }),
@@ -741,8 +743,14 @@ namespace AutogenRundown.DataBlocks
                             // TODO: don't hard code this in every D-tier wave
                             if (director.Tier == "D" && (w == 0 || w == ReactorWaves.Count - 1))
                             {
-                                EventBuilder.AddFillFog(wave.Events, 7.0, wave.Wave - 10.0);
-                                EventBuilder.AddClearFog(wave.Events, 5.0, 20.0);
+                                EventBuilder.AddFillFog(
+                                    wave.Events,
+                                    wave.Warmup + 13.0,
+                                    wave.Warmup + wave.Wave - 15.0);
+                                EventBuilder.AddClearFog(
+                                    wave.Events,
+                                    wave.Warmup + wave.Wave + 12.0,
+                                    20.0);
                             }
 
                             // Calculate how many points of enemies will be spawned in total.

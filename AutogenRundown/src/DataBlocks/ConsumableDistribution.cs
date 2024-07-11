@@ -57,10 +57,31 @@ namespace AutogenRundown.DataBlocks
             )
         };
 
+        /// <summary>
+        /// Baseline with heavy weighting to fog repellers. Averages to 4 repellers, 2 glowsticks,
+        /// and 1 lock melter per zone.
+        /// </summary>
+        public static ConsumableDistribution Reactor_FogRepellers = new ConsumableDistribution
+        {
+            SpawnsPerZone = 10,
+            SpawnData = Collections.Flatten(
+                ItemSpawn.GlowSticks(2.0),
+                new List<ItemSpawn> {
+                    new ItemSpawn
+                    {
+                        Item = Items.Item.FogRepeller,
+                        Weight = 8.0
+                    }
+                }
+            )
+        };
+
         public static new void SaveStatic()
         {
             Bins.ConsumableDistributions.AddBlock(Baseline);
             Bins.ConsumableDistributions.AddBlock(Baseline_FogRepellers);
+
+            Bins.ConsumableDistributions.AddBlock(Reactor_FogRepellers);
         }
 
         public uint SpawnsPerZone { get; set; } = 5;
