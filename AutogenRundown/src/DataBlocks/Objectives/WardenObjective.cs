@@ -737,6 +737,14 @@ namespace AutogenRundown.DataBlocks
 
                             wave.RecalculateWaveSpawnTimes();
 
+                            // Add wave fog flood for funsies
+                            // TODO: don't hard code this in every D-tier wave
+                            if (director.Tier == "D" && (w == 0 || w == ReactorWaves.Count - 1))
+                            {
+                                EventBuilder.AddFillFog(wave.Events, 7.0, wave.Wave - 10.0);
+                                EventBuilder.AddClearFog(wave.Events, 5.0, 20.0);
+                            }
+
                             // Calculate how many points of enemies will be spawned in total.
                             reactorWavePoints += wave.EnemyWaves.Sum(enemyWave
                                 => (int)(Bins.WaveSettings.Find(enemyWave.WaveSettings)?.PopulationPointsTotal ?? 0));

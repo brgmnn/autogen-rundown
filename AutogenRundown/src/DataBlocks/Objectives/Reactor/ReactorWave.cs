@@ -6,6 +6,9 @@
 
         public double WarmupFail { get; set; } = 20.0;
 
+        /// <summary>
+        /// Duration of the wave in seconds
+        /// </summary>
         public double Wave { get; set; } = 60.0;
 
         /// <summary>
