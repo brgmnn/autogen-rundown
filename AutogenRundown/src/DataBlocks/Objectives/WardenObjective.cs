@@ -514,8 +514,8 @@ namespace AutogenRundown.DataBlocks
                             wave.EnemyWaves = (director.Tier, w) switch
                             {
                                 // First wave is always a softball wave
-                                ("D", 0) => new() { ReactorEnemyWave.Baseline_Medium },
-                                ("E", 0) => new() { ReactorEnemyWave.Baseline_Medium },
+                                ("D", 0) => new() { ReactorEnemyWave.Baseline_Hard },
+                                ("E", 0) => new() { ReactorEnemyWave.Baseline_Hard },
                                 (_, 0) => new() { ReactorEnemyWave.Baseline_Easy },
 
                                 // TODO: BaselineMedium / Easy are far too easy alone
