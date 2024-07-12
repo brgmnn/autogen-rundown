@@ -200,13 +200,16 @@ namespace AutogenRundown
 
             #region Reactor startup
             {
+                ///
+                /// Reactor startup mission. This will always spawn a reactor startup mission as
+                /// the main objective. Side objectives can still spawn.
+                ///
                 var objective = WardenObjectiveType.ReactorStartup;
                 var mainDirector = new BuildDirector()
                 {
                     Bulkhead = Bulkhead.Main,
                     Tier = "D",
-                    Objective = objective,
-                    Complex = Complex.Service
+                    Objective = objective
                 };
                 mainDirector.GenPoints();
 
@@ -218,7 +221,6 @@ namespace AutogenRundown
                     {
                         Tier = "D",
                         Prefix = $"<color=orange>R</color><color=#444444>:</color>D",
-                        Complex = Complex.Service,
                         Description = description.PersistentId,
                         MainDirector = mainDirector,
                         Settings = settings,
