@@ -1149,9 +1149,8 @@ namespace AutogenRundown.DataBlocks
                     layout.Zones.Add(zone);
 
                     Plugin.Logger.LogDebug(
-                        $@"{layout.Name} -- Zone_{zone.LocalIndex}:
-                            .. Lights = {zone.LightSettings}, InFog = {zone.InFog}
-                            .. Tags = {node.Tags}");
+                        $"{layout.Name} -- Zone_{zone.LocalIndex} ({node.Branch}) -- " +
+                        $"Lights={zone.LightSettings}, InFog={zone.InFog}, Tags={node.Tags}");
                 }
             }
 

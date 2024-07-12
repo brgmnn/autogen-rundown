@@ -27,6 +27,17 @@
         ActivateChainedPuzzle = 22,
         LightOnWorldEventObjective = 23,
 
+        // New R8 events (we think)
+        AddToTimer = 24,
+        ResetTimer = 25,
+        WinOnDeath = 26,
+        ForceInstantWin = 27,
+        DialogueOnClosest = 28,
+        GetAchievement = 29,
+        ClearDimension = 30,
+        StartRepeatingFog = 31,
+        StopSustainedEvent = 32,
+
         EventBreak = 999
     }
 }
