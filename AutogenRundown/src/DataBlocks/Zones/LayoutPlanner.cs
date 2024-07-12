@@ -8,6 +8,9 @@ namespace AutogenRundown.DataBlocks.Zones
         string Branch = "primary",
         int MaxConnections = 2)
     {
+        /// <summary>
+        /// Freeform tags field
+        /// </summary>
         public Tags Tags { get; set; } = new();
 
         /// <summary>
