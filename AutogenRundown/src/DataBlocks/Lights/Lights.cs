@@ -198,10 +198,16 @@
             Light.Reactor_blue_to_red_all_on_1_R2D2,
             Light.Reactor_blue_to_red_all_on_1,
             Light.Reactor_blue_to_White_all_on_1,
-            Light.Reactor_blue_to_White_R2E1,
             Light.Reactor_blue_to_White_R5D1,
             Light.Reactor_green_all_on_1_R5C1_ALT,
             Light.Reactor_green_all_on_1,
+
+            // TODO: This light _really_ sucks on the garden I-tile and floodways reactor:
+            //       Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_I_01.prefab
+            //       Assets/Prefabs/Geomorph/Service/geo_floodways_FA_reactor_01.prefab
+            //
+            // Maybe this has to be fixed for non-floodways?
+            Light.Reactor_blue_to_White_R2E1,
         };
 
         public static Light NoLight { get; private set; } = Light.Totally_black;
