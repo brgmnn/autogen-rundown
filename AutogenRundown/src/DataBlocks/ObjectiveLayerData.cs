@@ -30,7 +30,7 @@ namespace AutogenRundown.DataBlocks
         public JObject ArtifactData = new JObject
         {
             ["ArtifactAmountMulti"] = 1.0,
-            ["ArtifactLayerDistributionDataID"] = 0,
+            ["ArtifactLayerDistributionDataID"] = 1,
             ["ArtifactZoneDistributions"] = new JArray()
         };
     }

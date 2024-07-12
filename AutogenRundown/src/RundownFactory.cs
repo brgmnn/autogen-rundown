@@ -154,32 +154,34 @@ namespace AutogenRundown
             }
 
             #region Test C Levels
-            #if false
-            var mainDirector = new BuildDirector
+            #if true
             {
-                Bulkhead = Bulkhead.Main,
-                Complex = Complex.Mining,
-                Complexity = Complexity.Low,
-                Tier = "C",
-                Objective = WardenObjectiveType.HsuFindSample,
-            };
-            mainDirector.GenPoints();
-
-            var settings = new LevelSettings("C");
-            settings.Modifiers.Add(LevelModifiers.Fog);
-
-            var testLevel = Level.Build(
-                new Level
+                var mainDirector = new BuildDirector
                 {
-                    Tier = "C",
-                    Name = "Reactor Startup",
+                    Bulkhead = Bulkhead.Main,
                     Complex = Complex.Mining,
-                    MainDirector = mainDirector,
-                    Settings = settings,
-                    Index = cMax + 1,
-                    IsTest = true
-                });
-            rundown.AddLevel(testLevel);
+                    Complexity = Complexity.Low,
+                    Tier = "C",
+                    Objective = WardenObjectiveType.HsuFindSample,
+                };
+                mainDirector.GenPoints();
+
+                var settings = new LevelSettings("C");
+                //settings.Modifiers.Add(LevelModifiers.Fog);
+
+                var testLevel = Level.Build(
+                    new Level
+                    {
+                        Tier = "C",
+                        Name = "HSU find sample",
+                        Complex = Complex.Mining,
+                        MainDirector = mainDirector,
+                        Settings = settings,
+                        Index = cMax + 1,
+                        IsTest = true
+                    });
+                rundown.AddLevel(testLevel);
+            }
             #endif
             #endregion
             #endregion
