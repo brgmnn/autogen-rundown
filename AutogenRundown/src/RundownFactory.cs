@@ -154,7 +154,7 @@ namespace AutogenRundown
             }
 
             #region Test C Levels
-            #if true
+            #if false
             {
                 var mainDirector = new BuildDirector
                 {
