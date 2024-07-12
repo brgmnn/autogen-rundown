@@ -309,8 +309,7 @@ namespace AutogenRundown.DataBlocks
             };
 
             var scoutCount = 0;
-
-            var zoneNodes = planner.GetZones(director.Bulkhead);
+            var zoneNodes = planner.GetZones(director.Bulkhead, null);
 
             foreach (var node in zoneNodes)
             {
@@ -322,16 +321,10 @@ namespace AutogenRundown.DataBlocks
                     continue;
                 }
 
-                Plugin.Logger.LogDebug($"Tags = {node.Tags} for {node}");
-
                 // Skip adding any enemies to the reactor area
                 // TODO: we may want to add a chance for some enemies here
-                // TODO: tag api doesn't work properly
-                if (node.Branch == "reactor_area" /* node.Tags.Contains("reactor") */)
-                {
-                    Plugin.Logger.LogWarning("Skipping adding enemies in the reactor");
+                if (node.Tags.Contains("reactor"))
                     continue;
-                }
 
                 var points = director.GetPoints(zone);
 
@@ -1155,7 +1148,10 @@ namespace AutogenRundown.DataBlocks
 
                     layout.Zones.Add(zone);
 
-                    Plugin.Logger.LogDebug($"{layout.Name} -- Zone_{zone.LocalIndex} written. InFog={zone.InFog}");
+                    Plugin.Logger.LogDebug(
+                        $@"{layout.Name} -- Zone_{zone.LocalIndex}:
+                            .. Lights = {zone.LightSettings}, InFog = {zone.InFog}
+                            .. Tags = {node.Tags}");
                 }
             }
 
