@@ -7,10 +7,10 @@ namespace AutogenRundown.Patches
     [HarmonyPatch(typeof(ArtifactInventory), nameof(ArtifactInventory.GetArtifactCountAndBoosterValue))]
     public class Artifacts
     {
-        private const float Heat = 0.15f;
+        /*private const float Heat = 0.15f;
         private static float MutedBaseValue { get; set; } = 0.0f;
         private static float BoldBaseValue { get; set; } = 0.0f;
-        private static float AggressiveBaseValue { get; set; } = 0.0f;
+        private static float AggressiveBaseValue { get; set; } = 0.0f;*/
 
         /// <summary>
         /// Patches artifacts to always give 100% heat
@@ -23,6 +23,7 @@ namespace AutogenRundown.Patches
             ArtifactCategory category,
             bool prePickup = false)
         {
+            /*
             if (__result.ArtifactCount == 0)
             {
                 // Assign the base values when we can measure them.
@@ -45,21 +46,17 @@ namespace AutogenRundown.Patches
                 ArtifactCategory.Common =>   MutedBaseValue      + __result.ArtifactCount * Heat,
                 ArtifactCategory.Uncommon => BoldBaseValue       + __result.ArtifactCount * Heat,
                 ArtifactCategory.Rare =>     AggressiveBaseValue + __result.ArtifactCount * Heat
-            };
+            };*/
 
             Plugin.Logger.LogInfo(
                 $"BoosterImplants.ArtifactInventory.GetArtifactCountAndBoosterValue() called with: {category} -- " +
-                "{" + $"{__result.ArtifactCount}, {__result.BoosterValue}" + "}" +
-                $"prePickup = {prePickup}");
-            Plugin.Logger.LogInfo(
-                $"BoosterImplants.ArtifactInventory.GetArtifactCountAndBoosterValue() returning: {category} -- " +
-                "{" + $"{__result.ArtifactCount}, {boosterValue}" + "}");
+                "{" + $"{__result.ArtifactCount}, {__result.BoosterValue}" + "}");
 
-            __result = new ArtifactCountBoosterValuePair
+            /*__result = new ArtifactCountBoosterValuePair
             {
                 ArtifactCount = __result.ArtifactCount,
-                BoosterValue  = boosterValue
-            };
+                // BoosterValue  = boosterValue
+            };*/
         }
 
         // LOADING
@@ -72,6 +69,25 @@ namespace AutogenRundown.Patches
         //[Info: AutogenRundown] BoosterImplants.ArtifactInventory.GetArtifactCountAndBoosterValue() called with: Uncommon -- {0, 0.804}
         //[Info: AutogenRundown] BoosterImplants.ArtifactInventory.GetArtifactCountAndBoosterValue() called with: Rare -- {0, 0.029}
 
+
+        /*
+
+[Info   :AutogenRundown] BoosterImplants.ArtifactInventory.GetArtifactCountAndBoosterValue() called with: Common -- {1, 0.105}prePickup = False
+[Info   :AutogenRundown] BoosterImplants.ArtifactInventory.GetArtifactCountAndBoosterValue() returning: Common -- {1, 0.22500001}
+[Info   :AutogenRundown] BoosterImplants.ArtifactInventory.GetArtifactCountAndBoosterValue() called with: Uncommon -- {1, 0.834}prePickup = False
+[Info   :AutogenRundown] BoosterImplants.ArtifactInventory.GetArtifactCountAndBoosterValue() returning: Uncommon -- {1, 0.954}
+[Info   :AutogenRundown] BoosterImplants.ArtifactInventory.GetArtifactCountAndBoosterValue() called with: Rare -- {0, 0.029}prePickup = False
+[Info   :AutogenRundown] BoosterImplants.ArtifactInventory.GetArtifactCountAndBoosterValue() returning: Rare -- {0, 0.029}
+
+
+
+[Info   :AutogenRundown] BoosterImplants.ArtifactInventory.GetArtifactCountAndBoosterValue() called with: Common -- {1, 0.195}prePickup = False
+[Info   :AutogenRundown] BoosterImplants.ArtifactInventory.GetArtifactCountAndBoosterValue() returning: Common -- {1, 0.315}
+[Info   :AutogenRundown] BoosterImplants.ArtifactInventory.GetArtifactCountAndBoosterValue() called with: Uncommon -- {2, 0.954}prePickup = False
+[Info   :AutogenRundown] BoosterImplants.ArtifactInventory.GetArtifactCountAndBoosterValue() returning: Uncommon -- {2, 1.194}
+[Info   :AutogenRundown] BoosterImplants.ArtifactInventory.GetArtifactCountAndBoosterValue() called with: Rare -- {0, 0.029}prePickup = False
+[Info   :AutogenRundown] BoosterImplants.ArtifactInventory.GetArtifactCountAndBoosterValue() returning: Rare -- {0, 0.029}
+         */
 
         // TODO: Old working version
         /*public static void Postfix(ref int __result, ArtifactCategory category)
