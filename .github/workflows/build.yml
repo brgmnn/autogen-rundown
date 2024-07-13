@@ -62,8 +62,10 @@ jobs:
         dotnet build --no-restore \
           --configuration Release \
           --property:Debug=false
-    # - name: Test
-    #   run: dotnet test --no-build --verbosity normal
+
+    # Run the unit tests
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
 
     # Package the mod.
     - uses: actions/upload-artifact@v4
