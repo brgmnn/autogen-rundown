@@ -86,10 +86,6 @@ namespace AutogenRundown
             // Only Mining and Tech complexes have geomorphs for these objectives
             if (Complex != Complex.Mining || Complex != Complex.Tech)
             {
-                // Requires FlowGeos for Service Reactor Geomorph
-                //objectives.Remove(WardenObjectiveType.ReactorStartup);
-                //objectives.Remove(WardenObjectiveType.ReactorShutdown);
-
                 objectives.Remove(WardenObjectiveType.CentralGeneratorCluster);
             }
 
