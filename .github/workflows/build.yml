@@ -68,7 +68,7 @@ jobs:
       run: |
         dotnet test --no-build \
           --configuration Release \
-          --property:Debug=false
+          --property:Debug=false \
           --verbosity normal
 
     # Package the mod.
