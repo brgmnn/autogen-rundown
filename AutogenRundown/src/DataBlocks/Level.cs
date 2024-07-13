@@ -62,14 +62,12 @@ namespace AutogenRundown.DataBlocks
         /// mining and tech.
         /// </summary>
         [JsonIgnore]
-        public Complex Complex { get; set; } = Generator.Pick(
-            new List<Complex>
+        public Complex Complex { get; set; } = Generator.Select(
+            new List<(double, Complex)>
             {
-                Complex.Mining,
-                Complex.Mining,
-                Complex.Tech,
-                Complex.Tech,
-                Complex.Service
+                (1.0, Complex.Mining),
+                (1.0, Complex.Tech),
+                (0.7, Complex.Service)
             });
 
         [JsonIgnore]
