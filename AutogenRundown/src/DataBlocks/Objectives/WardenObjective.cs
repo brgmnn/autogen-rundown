@@ -889,29 +889,10 @@ namespace AutogenRundown.DataBlocks
                  * This objective can only be for Main given it ends the level on completion
                  * */
                 case WardenObjectiveType.ClearPath:
-                    {
-                        // TODO: For some reason "[EXTRACTION_ZONE]" is not registering the exit zone correctly.
-                        // For now we manually find the exit zone number.
-                        var exitZone = layout.Zones.Find(z => z.CustomGeomorph != null && z.CustomGeomorph.Contains("exit_01"));
-                        var exitIndex = layout.ZoneAliasStart + exitZone?.LocalIndex;
-                        var exitZoneString = $"<color=orange>ZONE {exitIndex}</color>";
-
-                        MainObjective = $"Clear a path to the exit point in {exitZoneString}";
-                        GoToWinCondition_Elevator = "";
-                        GoToWinCondition_CustomGeo = $"Go to the forward exit point in {exitZoneString}";
-
-                        // Ensure there's a nice spicy hoard at the end
-                        exitZone?.EnemySpawningInZone.Add(
-                            // These will be predominately strikers / shooters
-                            new EnemySpawningData()
-                            {
-                                GroupType = EnemyGroupType.Hibernate,
-                                Difficulty = (uint)EnemyRoleDifficulty.Easy,
-                                Points = 75, // 25pts is 1.0 distribution, this is quite a lot
-                            });
-
-                        break;
-                    }
+                {
+                    Build_ClearPath(director, level);
+                    break;
+                }
 
                 /**
                  * TODO: It would be nice to add special commands other than just lights off that do other modifiers.
