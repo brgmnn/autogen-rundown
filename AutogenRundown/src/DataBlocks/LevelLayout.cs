@@ -1097,30 +1097,19 @@ namespace AutogenRundown.DataBlocks
                 case WardenObjectiveType.HsuFindSample:
                 case WardenObjectiveType.GatherSmallItems:
                 default:
+                {
+                    var start = level.Planner.GetLastZone(director.Bulkhead);
+
+                    if (start == null)
                     {
-                        var prev = level.Planner.GetExactZones(director.Bulkhead).First();
-                        var prevZone = level.Planner.GetZone(prev)!;
-                        prevZone.RollFog(level);
-
-                        for (int i = 1; i < director.ZoneCount; i++)
-                        {
-                            var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-                            var next = new ZoneNode(director.Bulkhead, zoneIndex);
-                            var zone = new Zone
-                            {
-                                Coverage = CoverageMinMax.GenNormalSize(),
-                                LightSettings = Lights.GenRandomLight(),
-                            };
-                            zone.RollFog(level);
-
-                            level.Planner.Connect(prev, next);
-                            level.Planner.AddZone(next, zone);
-
-                            prev = next;
-                        }
-
-                        break;
+                        Plugin.Logger.LogError($"No node returned when calling Planner.GetLastZone({director.Bulkhead})");
+                        throw new Exception("No zone node returned");
                     }
+
+                    layout.BuildBranch((ZoneNode)start, director.ZoneCount, "find_items");
+
+                    break;
+                }
             }
 
             //layout.RollKeyedDoors();
@@ -1149,8 +1138,8 @@ namespace AutogenRundown.DataBlocks
                     layout.Zones.Add(zone);
 
                     Plugin.Logger.LogDebug(
-                        $"{layout.Name} -- Zone_{zone.LocalIndex} ({node.Branch}) -- " +
-                        $"Lights={zone.LightSettings}, InFog={zone.InFog}, Tags={node.Tags}");
+                        $"{layout.Name} -- Zone_{zone.LocalIndex} Z{layout.ZoneAliasStart + zone.LocalIndex} " +
+                        $"branch={node.Branch} -- Lights={zone.LightSettings}, InFog={zone.InFog}, Tags={node.Tags}");
                 }
             }
 
