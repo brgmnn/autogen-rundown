@@ -3,6 +3,40 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.28.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.28.1) — July 12, 2024
+
+### Changes
+
+* Fix `Complex` not being set in D-tier reactor startup mission. Reactor tile should spawn correctly now.
+* Adjust reactor startup code fetch terminal placements from `AtEnd` to `NotAtStart`. Terminals will now spawn in the middle/end of the zone instead of just at the end of the zone.
+* Update `GatherSmallItems`, `SpecialTerminalCommand`, and `HSUFindSample` to use layout Planner both for zone placement and objective item placement. This should fix issues with items spawning before the Main bulkhead door.
+* Slightly reduce chance of Prisoner Efficiency missions. This is temporary to help reduce chance of level generation lockup.
+
+
+## [v0.28.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.28.0) — July 11, 2024
+
+### New
+
+* Fixed artifact collection to work
+
+### Changes
+
+* Changed D-tier reactor level to use random complex
+* Fixed enemy spawning not happening in all zones
+
+
+## [v0.27.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.27.0) — July 10, 2024
+
+### New
+
+* Added compact starting area spawns for 2x and 3x bulkhead
+* Added a _surprise_ to Reactor Startup
+
+### Changes
+
+* Buffed some of the reactor D-tier enemy waves
+
+
 ## [v0.26.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.26.0) — July 10, 2024
 
 ### New
