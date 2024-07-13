@@ -8,9 +8,10 @@ namespace AutogenRundown;
 
 [BepInPlugin("AutogenRundown", "AutogenRundown", Version)]
 [BepInProcess("GTFO.exe")]
+[BepInDependency("com.dak.MTFO")]
 [BepInDependency("dev.gtfomodding.gtfo-api")]
 [BepInDependency("FlowGeos")]
-[BepInDependency("LocalProgression", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("Inas.LocalProgression", BepInDependency.DependencyFlags.SoftDependency)]
 public class Plugin : BasePlugin
 {
     public const string Version = "0.30.0";
