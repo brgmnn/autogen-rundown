@@ -49,85 +49,76 @@ namespace AutogenRundown.DataBlocks
                 return;
             }
 
+            var nodes = level.Planner.GetZones(bulkhead, "find_items");
+
             switch (strategy)
             {
+                ///
+                /// We want to place all the items into a single zone within the area.
+                ///
                 case DistributionStrategy.SingleZone:
-                    {
-                        // Pick a random zone that isn't the first zone unless there's only one
-                        var targetZone = Math.Clamp(
-                            Generator.Random.Next(1, layout.Zones.Count),
-                            0,
-                            layout.Zones.Count - 1);
+                {
+                    var node = Generator.Pick(nodes);
 
-                        data.ObjectiveData.ZonePlacementDatas.Add(
-                            new List<ZonePlacementData>()
-                            {
-                                new ZonePlacementData
-                                {
-                                    LocalIndex = targetZone,
-                                    Weights = ZonePlacementWeights.EvenlyDistributed
-                                }
-                            });
-
-                        break;
-                    }
-
-                case DistributionStrategy.EvenlyAcrossZones:
-                    {
-                        var placement = new List<ZonePlacementData>();
-
-                        foreach (var zone in layout.Zones)
+                    data.ObjectiveData.ZonePlacementDatas.Add(
+                        new List<ZonePlacementData>()
                         {
-                            placement.Add(new ZonePlacementData
+                            new()
                             {
-                                LocalIndex = zone.LocalIndex,
+                                LocalIndex = node.ZoneNumber,
                                 Weights = ZonePlacementWeights.EvenlyDistributed
-                            });
-                        }
+                            }
+                        });
 
-                        data.ObjectiveData.ZonePlacementDatas.Add(placement);
+                    break;
+                }
 
-                        break;
-                    }
+                ///
+                /// We want to distribute the items evenly across all the zones. This will only
+                /// appear different for GatherSmallItems objectives. The HSU and Terminal command
+                /// objectives this will appear just the same as SingleZone strategy.
+                ///
+                case DistributionStrategy.EvenlyAcrossZones:
+                {
+                    var placement = new List<ZonePlacementData>();
 
+                    foreach (var node in nodes)
+                        placement.Add(new()
+                        {
+                            LocalIndex = node.ZoneNumber,
+                            Weights = ZonePlacementWeights.EvenlyDistributed
+                        });
+
+                    data.ObjectiveData.ZonePlacementDatas.Add(placement);
+
+                    break;
+                }
+
+                ///
+                /// Place the elements evenly in some random subset of the placement zones.
+                ///
+                /// TODO: check if this actually distributes to say 2 zones.
+                ///
                 case DistributionStrategy.Random:
+                {
+                    var placement = new List<ZonePlacementData>();
+                    var toDraw = Generator.Random.Next(1, nodes.Count);
+
+                    for (var i = 0; i < toDraw; i++)
                     {
-                        var placement = new List<ZonePlacementData>();
+                        var node = Generator.Draw(nodes);
 
-                        void Place(Zone zone)
+                        placement.Add(new()
                         {
-                            placement.Add(new ZonePlacementData
-                            {
-                                LocalIndex = zone.LocalIndex,
-                                Weights = ZonePlacementWeights.GenRandom()
-                            });
-                        }
-
-                        foreach (var zone in layout.Zones)
-                        {
-                            if (Generator.Flip())
-                                continue;
-
-                            Place(zone);
-                        }
-
-                        // If none of the zones were picked, force pick one of the zones. Otherwise
-                        // no items will be placed
-                        if (placement.Count == 0)
-                        {
-                            var index = Math.Clamp(
-                                Generator.Random.Next(1, layout.Zones.Count),
-                                0,
-                                layout.Zones.Count - 1);
-
-                            var zone = layout.Zones[index];
-                            Place(zone);
-                        }
-
-                        data.ObjectiveData.ZonePlacementDatas.Add(placement);
-
-                        break;
+                            LocalIndex = node.ZoneNumber,
+                            Weights = ZonePlacementWeights.GenRandom()
+                        });
                     }
+
+                    data.ObjectiveData.ZonePlacementDatas.Add(placement);
+
+                    break;
+                }
             }
         }
 
