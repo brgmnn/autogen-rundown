@@ -76,4 +76,3 @@ public partial record class WardenObjective : DataBlock
             WavesOnGotoWin.Add(GenericWave.ExitTrickle);
     }
 }
-
