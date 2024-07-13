@@ -81,8 +81,6 @@ namespace AutogenRundown
             using var writer = new JsonTextWriter(destFile);
 
             resourceSet.WriteTo(writer);
-
-            Plugin.Logger.LogWarning($"We got here ok!!! {from} -> {dest}");
         }
 
         /// <summary>
