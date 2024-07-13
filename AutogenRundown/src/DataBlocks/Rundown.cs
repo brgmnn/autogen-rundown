@@ -122,7 +122,9 @@ namespace AutogenRundown.DataBlocks
         {
             var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
 
-            rundown.Name = $"RND Rundown {name}";
+            // Rundown.Name is used by LocalProgression for storing the progression data. Ensure
+            // this is unique to guarantee we store progression between runs.
+            rundown.Name = $"RND_Rundown__Seed={Generator.Seed}";
             rundown.DisplaySeed = Generator.DisplaySeed;
 
             var rundownNumber = $"{Generator.DisplaySeed}";
