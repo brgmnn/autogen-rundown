@@ -13,13 +13,6 @@ namespace AutogenRundown.DataBlocks;
  */
 public partial record class WardenObjective : DataBlock
 {
-    /// <summary>
-    /// Collect the HSU from within a storage zone
-    ///
-    /// WardenObjectiveType.HsuFindSample
-    /// </summary>
-    /// <param name="director"></param>
-    /// <param name="level"></param>
     public void Build_HsuFindSample(BuildDirector director, Level level)
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
