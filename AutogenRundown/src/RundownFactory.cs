@@ -162,7 +162,7 @@ namespace AutogenRundown
                     Complex = Complex.Mining,
                     Complexity = Complexity.Low,
                     Tier = "C",
-                    Objective = WardenObjectiveType.HsuFindSample,
+                    Objective = WardenObjectiveType.GatherSmallItems,
                 };
                 mainDirector.GenPoints();
 
@@ -173,7 +173,7 @@ namespace AutogenRundown
                     new Level
                     {
                         Tier = "C",
-                        Name = "HSU find sample",
+                        Name = "Gather Items",
                         Complex = Complex.Mining,
                         MainDirector = mainDirector,
                         Settings = settings,
