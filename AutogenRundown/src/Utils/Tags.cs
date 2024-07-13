@@ -1,4 +1,4 @@
-namespace AutogenRundown;
+namespace AutogenRundown.Utils;
 
 public class Tags
 {
