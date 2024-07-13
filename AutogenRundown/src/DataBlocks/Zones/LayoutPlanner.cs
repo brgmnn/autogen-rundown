@@ -276,11 +276,31 @@ namespace AutogenRundown.DataBlocks.Zones
 
         /// <summary>
         /// Gets the last zone in a branch. Very useful for building the branch chain upwards.
+        /// Note that this always returns the last zone in the chain regardless of whether it's
+        /// Open/Closed. Care should be used if building new branches from this.
+        ///
+        /// Consider using GetLastOpenZone() if looking for the furthest place in a branch to build
+        /// a new branch from.
         /// </summary>
         /// <param name="bulkhead"></param>
         /// <param name="branchId"></param>
         /// <returns></returns>
         public ZoneNode? GetLastZone(Bulkhead bulkhead = Bulkhead.Main, string? branch = "primary")
+        {
+            var zones = GetZones(bulkhead, branch);
+
+            return zones.Count == 0 ? null : zones.Last();
+        }
+
+        /// <summary>
+        /// Gets the last zone in a branch which is open. Generally this will be the same as
+        /// GetLastZone() except this will return earlier zones if the final zone in that branch
+        /// is not open.
+        /// </summary>
+        /// <param name="bulkhead"></param>
+        /// <param name="branchId"></param>
+        /// <returns></returns>
+        public ZoneNode? GetLastOpenZone(Bulkhead bulkhead = Bulkhead.Main, string? branch = "primary")
         {
             var openZones = GetOpenZones(bulkhead, branch);
 
