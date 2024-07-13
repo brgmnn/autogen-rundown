@@ -393,27 +393,27 @@ namespace AutogenRundown.DataBlocks
             switch (complex)
             {
                 case Complex.Mining:
-                    {
-                        // reactor_open_HA_01 does not work for reactor shutdown
-                        //               "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_open_HA_01.prefab"
-                        //               "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_HA_02.prefab"
-                        CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_HA_02.prefab";
-                        SubComplex = SubComplex.Refinery;
-                        IgnoreRandomGeomorphRotation = true;
-                        Coverage = new CoverageMinMax { Min = 40.0, Max = 40.0 };
-                        break;
-                    }
+                {
+                    // reactor_open_HA_01 does not work for reactor shutdown
+                    //               "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_open_HA_01.prefab"
+                    //               "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_HA_02.prefab"
+                    CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_HA_02.prefab";
+                    SubComplex = SubComplex.Refinery;
+                    IgnoreRandomGeomorphRotation = true;
+                    Coverage = new CoverageMinMax { Min = 40.0, Max = 40.0 };
+                    break;
+                }
 
                 case Complex.Tech:
-                    {
-                        //               "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_01.prefab"
-                        //               "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_02.prefab"
-                        CustomGeomorph = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_01.prefab";
-                        SubComplex = SubComplex.Lab;
-                        IgnoreRandomGeomorphRotation = true;
-                        Coverage = new CoverageMinMax { Min = 40.0, Max = 40.0 };
-                        break;
-                    }
+                {
+                    //               "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_01.prefab"
+                    //               "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_02.prefab"
+                    CustomGeomorph = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_01.prefab";
+                    SubComplex = SubComplex.Lab;
+                    IgnoreRandomGeomorphRotation = true;
+                    Coverage = new CoverageMinMax { Min = 40.0, Max = 40.0 };
+                    break;
+                }
 
                 case Complex.Service:
                 {

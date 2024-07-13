@@ -526,6 +526,10 @@ namespace AutogenRundown.DataBlocks
             var director = Director[bulkhead];
             director.GenPoints();
 
+            // Assign these values to make sure they're all the same
+            director.Complex = Complex;
+            director.Settings = Settings;
+
             var objective = WardenObjective.PreBuild(director, this);
             var direction = RelativeDirection.Global_Forward;
 

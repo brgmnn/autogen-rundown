@@ -47,7 +47,6 @@ namespace AutogenRundown.DataBlocks
                 director.Bulkhead,
                 level.Planner.NextIndex(director.Bulkhead),
                 "reactor_area");
-            // TODO: this doesn't seem to work
             reactorNode.Tags.Add("reactor");
 
             var reactor = new Zone
