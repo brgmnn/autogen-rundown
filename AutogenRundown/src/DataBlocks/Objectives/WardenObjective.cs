@@ -2,7 +2,6 @@
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
-using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -147,8 +146,8 @@ namespace AutogenRundown.DataBlocks
             {
                 WardenObjectiveType.HsuFindSample => Generator.Pick(new List<string>
                     {
-                        "Security clearance for section <color=red>-REDACTED-</color> needed. DNA sample will suffice. PRisoners sent to locate Administrator in stasis unit."
-                    }) ?? "",
+                        "Security clearance for section <color=red>-REDACTED-</color> needed. DNA sample will suffice. Prisoners sent to locate Administrator in stasis unit."
+                    })!,
                 WardenObjectiveType.ReactorStartup => Generator.Pick(new List<string>
                     {
                         // Vanilla lore descriptions
