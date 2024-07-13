@@ -128,10 +128,10 @@ Follow the installation instructions again, check yes to overwrite all files.
     * [x] Hybrids
     * [x] Scouts
       * [x] Regular
-      * [ ] Zoomer
+      * [x] Zoomer
       * [x] Shadow
       * [x] Charger
-      * [ ] Beserker
+      * [x] Beserker
     * [-] Mothers
       * [x] Mother
       * [x] P-Mother
@@ -139,8 +139,8 @@ Follow the installation instructions again, check yes to overwrite all files.
     * [-] Tanks
       * [x] Tank
       * [ ] Immortal Tank
-      * [ ] Potato Tank
-    * [ ] Pouncers (Snatchers)
+      * [x] Potato Tank
+    * [x] Pouncers (Snatchers)
   * Custom enemy spawning
     * [ ] Balanced default spawns (in progress)
     * [x] Charger only zones
