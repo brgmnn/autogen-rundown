@@ -6,26 +6,17 @@
 <!--
 * Can we have boosters generate progression for us
 
+Probably need to rework enemy sleeper spawning now with level planner
+
 Seed: 2024_07_08
 * Check the local progression mod
 * Boosters confirmed not working for modded rundowns
-* Add scaling time for reactor waves.
-  * Early waves seem to have a bit too much time.
-  * Later waves seem pretty good
-  * Probably want to add extra time when there's multiple waves in one reactor wave. Something like
-      base + n_waves*factor + existing_max_duration
-  * Consider adding a small random amount of time to reactor waves to throw off guessing what
-    is spawning
-* Make relatively high chance that there's no enemies spawn in the reactor room
 * Reduce chance of nightmare scout spawning on reactor levels. It requires specialized tool
   generally
 
 Seed: 2024_07_07
 * Can we change the reactor enemy waves to spawn from one direction?
   * Seems like yes but only if we build right next to the elevator drop.
-* Ask in GTFO discord why reactor waves are not spawning if you get too far away.
-    And what does ReactorWaveSpawnType do? https://gtfo-modding.gitbook.io/wiki/reference/enum-types#ereactorwavespawntype
-  * Answer: SpawnInElevator is literally in the elevator zone
 
 Seed: 2024_06_27
 * Check I-Geo, seems to not be spawning bridge. Maybe a geomorph is missing now?
