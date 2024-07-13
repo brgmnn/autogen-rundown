@@ -1,3 +1,6 @@
 {
-  "recommendations": ["github.vscode-github-actions"]
+  "recommendations": [
+    "github.vscode-github-actions",
+    "tamasfe.even-better-toml"
+  ]
 }
