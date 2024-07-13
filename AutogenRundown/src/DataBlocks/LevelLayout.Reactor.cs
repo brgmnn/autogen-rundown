@@ -175,7 +175,7 @@ namespace AutogenRundown.DataBlocks
                     lastZone.TerminalPlacements.Add(
                         new TerminalPlacement
                         {
-                            PlacementWeights = ZonePlacementWeights.AtEnd
+                            PlacementWeights = ZonePlacementWeights.NotAtStart
                         });
 
                 // Lock the entrance zone
@@ -189,6 +189,7 @@ namespace AutogenRundown.DataBlocks
                 // Add an event to open/unlock the door when the wave defense is over (OnMid trigger)
                 if (Generator.Flip(openChance))
                 {
+                    // TODO: The Zone number appears to not work now (E-level)
                     EventBuilder.AddOpenDoor(
                         wave.Events,
                         firstZone.LocalIndex,
