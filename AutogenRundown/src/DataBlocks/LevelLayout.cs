@@ -285,6 +285,13 @@ namespace AutogenRundown.DataBlocks
                         EnemySpawningData.Scout with { Points = 10 },
                         EnemySpawningData.Scout with { Points = 15 },
 
+                        // Zoomers
+                        EnemySpawningData.ScoutZoomer with { Points = 5 },
+                        EnemySpawningData.ScoutZoomer with { Points = 5 },
+                        EnemySpawningData.ScoutZoomer with { Points = 5 },
+                        EnemySpawningData.ScoutZoomer with { Points = 10 },
+                        EnemySpawningData.ScoutZoomer with { Points = 10 },
+
                         // Chargers
                         EnemySpawningData.ScoutCharger with { Points = 5 },
                         EnemySpawningData.ScoutCharger with { Points = 5 },
@@ -296,6 +303,12 @@ namespace AutogenRundown.DataBlocks
                         EnemySpawningData.ScoutShadow with { Points = 5 },
                         EnemySpawningData.ScoutShadow with { Points = 5 },
                         EnemySpawningData.ScoutShadow with { Points = 10 },
+
+                        // Nightmare
+                        EnemySpawningData.ScoutNightmare with { Points = 5 },
+                        EnemySpawningData.ScoutNightmare with { Points = 5 },
+                        EnemySpawningData.ScoutNightmare with { Points = 5 },
+                        EnemySpawningData.ScoutNightmare with { Points = 10 },
                     }),
 
                 _ => (0.0, 0, new List<EnemySpawningData>())
