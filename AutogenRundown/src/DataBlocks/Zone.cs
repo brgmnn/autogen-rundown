@@ -550,14 +550,14 @@ namespace AutogenRundown.DataBlocks
                         var selected = Generator.Select(
                             new List<WeightedDifficulty>
                             {
-                                new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy } },
-                                new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Medium } },
+                                new() { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy } },
+                                new() { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Medium } },
                             });
 
                         foreach (var difficulty in selected.Difficulties)
                         {
                             EnemySpawningInZone.Add(
-                                new EnemySpawningData()
+                                new EnemySpawningData
                                 {
                                     GroupType = EnemyGroupType.Hibernate,
                                     Difficulty = (uint)difficulty,
@@ -573,15 +573,15 @@ namespace AutogenRundown.DataBlocks
                         var selected = Generator.Select(
                             new List<WeightedDifficulty>
                             {
-                                new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Easy } },
-                                new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Medium } },
-                                new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Hard } }
+                                new() { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Easy } },
+                                new() { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Medium } },
+                                new() { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Hard } }
                             });
 
                         foreach (var difficulty in selected.Difficulties)
                         {
                             EnemySpawningInZone.Add(
-                                new EnemySpawningData()
+                                new EnemySpawningData
                                 {
                                     GroupType = EnemyGroupType.Hibernate,
                                     Difficulty = (uint)difficulty,
@@ -598,16 +598,16 @@ namespace AutogenRundown.DataBlocks
                         var selected = Generator.Select(
                             new List<WeightedDifficulty>
                             {
-                                new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Medium } },
-                                new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Medium } },
-                                new WeightedDifficulty { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Medium, EnemyRoleDifficulty.Hard } },
-                                new WeightedDifficulty { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Hard } },
+                                new() { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Easy, EnemyRoleDifficulty.Medium } },
+                                new() { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Medium } },
+                                new() { Weight = 2.0, Difficulties = { EnemyRoleDifficulty.Medium, EnemyRoleDifficulty.Hard } },
+                                new() { Weight = 1.0, Difficulties = { EnemyRoleDifficulty.Hard } },
                             });
 
                         foreach (var difficulty in selected.Difficulties)
                         {
                             EnemySpawningInZone.Add(
-                                new EnemySpawningData()
+                                new EnemySpawningData
                                 {
                                     GroupType = EnemyGroupType.Hibernate,
                                     Difficulty = (uint)difficulty,
@@ -779,6 +779,7 @@ namespace AutogenRundown.DataBlocks
         [JsonProperty("AltitudeData")]
         public Altitude Altitude { get; set; } = new();
 
+        #region Events
         public List<WardenObjectiveEvent> EventsOnEnter { get; set; } = new();
         public List<WardenObjectiveEvent> EventsOnPortalWarp { get; set; } = new();
         public List<WardenObjectiveEvent> EventsOnApproachDoor { get; set; } = new();
@@ -786,6 +787,7 @@ namespace AutogenRundown.DataBlocks
         public List<WardenObjectiveEvent> EventsOnOpenDoor { get; set; } = new();
         public List<WardenObjectiveEvent> EventsOnDoorScanStart { get; set; } = new();
         public List<WardenObjectiveEvent> EventsOnDoorScanDone { get; set; } = new();
+        #endregion
 
         #region Puzzle settings
         public ProgressionPuzzle ProgressionPuzzleToEnter { get; set; } = new ProgressionPuzzle();
@@ -806,16 +808,17 @@ namespace AutogenRundown.DataBlocks
         }
         #endregion
 
+        #region Security door
         public bool IsCheckpointDoor { get; set; } = false;
 
         public bool PlayScannerVoiceAudio { get; set; } = false;
 
         public bool SkipAutomaticProgressionObjective { get; set; } = false;
 
-        // TODO: configure enum for gate
         public SecurityGate SecurityGateToEnter { get; set; } = SecurityGate.Security;
 
         public bool UseStaticBioscanPointsInZone { get; set; } = false;
+        #endregion
 
         #region Error alarms
         /// <summary>
@@ -841,7 +844,7 @@ namespace AutogenRundown.DataBlocks
         [JsonProperty("ActiveEnemyWave")]
         public BloodDoor BloodDoor { get; set; } = BloodDoor.None;
 
-        public List<EnemySpawningData> EnemySpawningInZone { get; set; } = new List<EnemySpawningData>();
+        public List<EnemySpawningData> EnemySpawningInZone { get; set; } = new();
         #endregion
 
         #region Objective settings
