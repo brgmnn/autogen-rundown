@@ -709,6 +709,76 @@ namespace AutogenRundown.DataBlocks
         }
         #endregion
 
+        #region Time Calculation
+        /// <summary>
+        /// Estimate the time it would take to clear this zone. This tries to give a close estimate
+        /// for expedient clearing of the area. There are scale factors to adjust the times which
+        /// is helpful for granting more/less time based on level tier. Knowing this value is very
+        /// helpful for a number of objectives where players need to race against the clock to
+        /// achieve some objective. This function lets us grant the players an amount of time that
+        /// is difficult but still possible.
+        /// </summary>
+        /// <returns>Estimated time to clear the zone and any alarms to _enter_ the zone</returns>
+        public double GetClearTimeEstimate()
+        {
+            var factorAlarms = 1.20;
+            var factorBoss = 1.0;
+            var factorCoverage = 1.20;
+            var factorEnemyPoints = 1.20;
+
+            // Add time based on the zone size
+            var timeCoverage = Coverage.Max * factorCoverage;
+
+            // Time based on enemy points in zones
+            var timeEnemyPoints = EnemySpawningInZone
+                .Sum(spawn => spawn.Points) * factorEnemyPoints;
+
+            // Find and add extra time for bosses. These are generally quite hard to deal with.
+            var timeBosses = EnemySpawningInZone
+                .Where(spawn => spawn.Tags.Contains("boss"))
+                .Sum(spawn =>
+                {
+                    return (Enemy)spawn.Difficulty switch
+                    {
+                        Enemy.Mother => 60.0,
+                        Enemy.PMother => 75.0,
+                        Enemy.Tank => 45.0,
+                        Enemy.TankPotato => 30.0,
+
+                        // Some unknown enemy, we won't add time for unknowns
+                        _ => 0.0
+                    };
+                });
+            timeBosses *= factorBoss;
+
+            // Time based on door alarms
+            // We sum for the component durations, the distance from start pos, and the distance
+            // between the alarm components
+            var timeAlarms = 10.0 + Alarm.Puzzle.Sum(component => component.Duration)
+                                + Alarm.WantedDistanceFromStartPos
+                                + (Alarm.Puzzle.Count - 1) * Alarm.WantedDistanceBetweenPuzzleComponents;
+            timeAlarms *= factorAlarms;
+
+            // Give +20s for a blood door.
+            // TODO: adjust based on spawns in the blood door.
+            var timeBloodDoor = BloodDoor != BloodDoor.None ? 20 : 0;
+
+            // Sum the values
+            var total = timeCoverage
+                        + timeEnemyPoints
+                        + timeBosses
+                        + timeAlarms
+                        + timeBloodDoor;
+
+            Plugin.Logger.LogDebug($"Zone {LocalIndex} time budget: total={total}s -- "
+                                   + $"alarms={timeAlarms}s coverage={timeCoverage}s "
+                                   + $"enemies={timeEnemyPoints}s "
+                                   + $"bosses={timeBosses}s "
+                                   + $"blood_doors={timeBloodDoor}s");
+            return total;
+        }
+        #endregion
+
         #region Internal plugin properties
         /// <summary>
         /// Flags whether the zone is in fog or not.

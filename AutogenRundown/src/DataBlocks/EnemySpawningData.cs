@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.Utils;
 using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks
@@ -105,12 +106,29 @@ namespace AutogenRundown.DataBlocks
     ///     * Flyer: 1
     ///     * Boss Flyer: 10
     /// </summary>
-    public record class EnemySpawningData
+    public record EnemySpawningData
     {
         /// <summary>
         /// Find this in the expedition balance block, EnemyPopulationPerZone.
+        ///
+        /// The actual base value here doesn't really matter, as we scale the RelValue to equal
+        /// the number of points we want in that zone. All that matters is that this value equals
+        /// the value in ExpeditionBalanceDataBlock.
+        ///
+        /// TODO: consider maintaining ExpeditionBalanceDataBlock.
         /// </summary>
-        public static int POPULATION_PER_ZONE = 25;
+        private const int POPULATION_PER_ZONE = 25;
+
+        /// <summary>
+        /// Works with our points system
+        /// </summary>
+        [JsonIgnore]
+        public int Points { get; set; } = 25;
+
+        /// <summary>
+        /// Tags that we can annotate onto enemy spawning data.
+        /// </summary>
+        [JsonIgnore] public Tags Tags { get; set; } = new();
 
         #region Datablock settings
         /// <summary>
@@ -138,14 +156,6 @@ namespace AutogenRundown.DataBlocks
             get => (double)Points / POPULATION_PER_ZONE;
         }
         #endregion
-
-        /// <summary>
-        /// Works with our points system
-        /// </summary>
-        [JsonIgnore]
-        public int Points { get; set; } = 25;
-
-
 
         #region Enemy Tiers
         public static EnemySpawningData TierA = new EnemySpawningData
@@ -200,31 +210,36 @@ namespace AutogenRundown.DataBlocks
         public static EnemySpawningData Scout = new EnemySpawningData
         {
             GroupType = EnemyGroupType.Scout,
-            Difficulty = (uint)EnemyRoleDifficulty.Easy
+            Difficulty = (uint)EnemyRoleDifficulty.Easy,
+            Tags = new Tags("scout")
         };
 
         public static EnemySpawningData ScoutCharger = new EnemySpawningData
         {
             GroupType = EnemyGroupType.Scout,
-            Difficulty = (uint)EnemyRoleDifficulty.MiniBoss
+            Difficulty = (uint)EnemyRoleDifficulty.MiniBoss,
+            Tags = new Tags("scout")
         };
 
         public static EnemySpawningData ScoutShadow = new EnemySpawningData
         {
             GroupType = EnemyGroupType.Scout,
-            Difficulty = (uint)EnemyRoleDifficulty.Boss
+            Difficulty = (uint)EnemyRoleDifficulty.Boss,
+            Tags = new Tags("scout")
         };
 
         public static EnemySpawningData ScoutNightmare = new EnemySpawningData
         {
             GroupType = EnemyGroupType.Scout,
-            Difficulty = (uint)EnemyRoleDifficulty.Biss
+            Difficulty = (uint)EnemyRoleDifficulty.Biss,
+            Tags = new Tags("scout")
         };
 
         public static EnemySpawningData ScoutZoomer = new EnemySpawningData
         {
             GroupType = EnemyGroupType.Scout,
-            Difficulty = (uint)EnemyRoleDifficulty.Tank
+            Difficulty = (uint)EnemyRoleDifficulty.Tank,
+            Tags = new Tags("scout")
         };
         #endregion
 
@@ -232,13 +247,15 @@ namespace AutogenRundown.DataBlocks
         public static EnemySpawningData Mother = new EnemySpawningData
         {
             GroupType = EnemyGroupType.Hibernate,
-            Difficulty = (uint)Enemy.Mother
+            Difficulty = (uint)Enemy.Mother,
+            Tags = new Tags("boss")
         };
 
         public static EnemySpawningData PMother = new EnemySpawningData
         {
             GroupType = EnemyGroupType.Hibernate,
-            Difficulty = (uint)Enemy.PMother
+            Difficulty = (uint)Enemy.PMother,
+            Tags = new Tags("boss")
         };
 
         // Technically not a boss but spawns with the mothers usually
@@ -251,13 +268,15 @@ namespace AutogenRundown.DataBlocks
         public static EnemySpawningData Tank = new EnemySpawningData
         {
             GroupType = EnemyGroupType.Hibernate,
-            Difficulty = (uint)Enemy.Tank
+            Difficulty = (uint)Enemy.Tank,
+            Tags = new Tags("boss")
         };
 
         public static EnemySpawningData TankPotato = new EnemySpawningData
         {
             GroupType = EnemyGroupType.Hibernate,
-            Difficulty = (uint)Enemy.TankPotato
+            Difficulty = (uint)Enemy.TankPotato,
+            Tags = new Tags("boss")
         };
         #endregion
     }
