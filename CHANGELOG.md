@@ -3,7 +3,35 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
-## [v0.28.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.28.1) — July 12, 2024
+## [v0.31.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.31.0) — July 13, 2024
+
+### New
+
+* Add `Survival` objective 🎉
+
+### Changes
+
+* Fix incorrect spawn location for HSU Find Sample objective
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.30.0...v0.31.0
+
+
+## [v0.30.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.30.0) — July 13, 2024
+
+### New
+
+* Added Power Cell Distribution objective to Secondary/Overload objectives.
+* Added `FLUSH_VENTS` variant of Special Terminal Command objective (bring your fog repellers!)
+
+### Changes
+
+* Fixed issue with HSU Find Sample and some related zone placement code not returning any valid zones. Should fix several cases of Autogen crashes on startup
+* Increased relative chance of Service complex spawning from 50% to 70%. Mining / Tech have 100% relative chance.
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.29.0...v0.30.0
+
+
+## [v0.29.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.29.0) — July 12, 2024
 
 ### Changes
 
@@ -11,6 +39,8 @@ See more at https://github.com/brgmnn/autogen-rundown
 * Adjust reactor startup code fetch terminal placements from `AtEnd` to `NotAtStart`. Terminals will now spawn in the middle/end of the zone instead of just at the end of the zone.
 * Update `GatherSmallItems`, `SpecialTerminalCommand`, and `HSUFindSample` to use layout Planner both for zone placement and objective item placement. This should fix issues with items spawning before the Main bulkhead door.
 * Slightly reduce chance of Prisoner Efficiency missions. This is temporary to help reduce chance of level generation lockup.
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.28.0...v0.29.0
 
 
 ## [v0.28.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.28.0) — July 11, 2024
@@ -24,6 +54,8 @@ See more at https://github.com/brgmnn/autogen-rundown
 * Changed D-tier reactor level to use random complex
 * Fixed enemy spawning not happening in all zones
 
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.27.0...v0.28.0
+
 
 ## [v0.27.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.27.0) — July 10, 2024
 
@@ -35,6 +67,8 @@ See more at https://github.com/brgmnn/autogen-rundown
 ### Changes
 
 * Buffed some of the reactor D-tier enemy waves
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.26.0...v0.27.0
 
 
 ## [v0.26.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.26.0) — July 10, 2024
