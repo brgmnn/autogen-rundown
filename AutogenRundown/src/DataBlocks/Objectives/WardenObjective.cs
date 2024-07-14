@@ -2,7 +2,6 @@
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
-using AutogenRundown.DataBlocks.Zones;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -336,6 +335,12 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                case WardenObjectiveType.SpecialTerminalCommand:
+                {
+                    objective.PreBuild_SpecialTerminalCommand(director, level);
+                    break;
+                }
+
                 case WardenObjectiveType.PowerCellDistribution:
                     {
                         objective.PowerCellsToDistribute = director.Tier switch
@@ -554,50 +559,10 @@ namespace AutogenRundown.DataBlocks
                  *          4. Trigger unit wave
                  */
                 case WardenObjectiveType.SpecialTerminalCommand:
-                    {
-                        MainObjective = "Find Computer terminal [ITEM_SERIAL] and input the backdoor command [SPECIAL_COMMAND]";
-                        FindLocationInfo = "Gather information about the location of [ITEM_SERIAL]";
-                        FindLocationInfoHelp = "Access more data in the terminal maintenance system";
-                        GoToZone = "Navigate to [ITEM_ZONE] and find [ITEM_SERIAL]";
-                        GoToZoneHelp = "Use information in the environment to find [ITEM_ZONE]";
-                        InZoneFindItem = "Find [ITEM_SERIAL] somewhere inside [ITEM_ZONE]";
-                        InZoneFindItemHelp = "Use maintenance terminal command PING to find [ITEM_SERIAL]";
-                        SolveItem = "Proceed to input the backdoor command [SPECIAL_COMMAND] in [ITEM_SERIAL]";
-
-                        GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
-                        GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
-                        GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
-                        GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
-                        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
-
-                        // Special Command: Lights Off
-                        SpecialTerminalCommand = "REROUTE_POWER";
-                        SpecialTerminalCommandDesc = "Reroute power coupling to sector that has been powered down.";
-                        EventBuilder.AddLightsOff(EventsOnActivate, 9.0);
-
-                        // Add scans
-                        ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
-                        ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
-
-                        // Add exit wave if this is the main bulkhead
-                        if (director.Bulkhead.HasFlag(Bulkhead.Main))
-                            WavesOnGotoWin.Add(GenericWave.ExitTrickle); // TODO: not this, something else
-
-                        var zn = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead)!;
-                        var zoneIndex = zn.ZoneNumber;
-
-                        dataLayer.ObjectiveData.ZonePlacementDatas.Add(
-                            new List<ZonePlacementData>()
-                            {
-                                new ZonePlacementData
-                                {
-                                    LocalIndex = zoneIndex,
-                                    Weights = ZonePlacementWeights.NotAtStart
-                                }
-                            });
-
-                        break;
-                    }
+                {
+                    Build_SpecialTerminalCommand(director, level);
+                    break;
+                }
 
                 /**
                  * Retrieve an item from within the complex.
@@ -877,6 +842,12 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Type=5: Special terminal command
+        /// <summary>
+        /// Used internally to determine what we should do with the special terminal command
+        /// </summary>
+        [JsonIgnore]
+        public SpecialCommand SpecialTerminalCommand_Type { get; set; } = SpecialCommand.None;
+
         /// <summary>
         /// The Special terminal command players have to enter
         /// </summary>
