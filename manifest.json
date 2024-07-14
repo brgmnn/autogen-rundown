@@ -1,6 +1,6 @@
 {
   "name": "AutogenRundown",
-  "version_number": "0.31.0",
+  "version_number": "0.32.0",
   "website_url": "https://github.com/brgmnn/autogen-rundown",
   "description": "Rundown generation mod for GTFO. New rundowns generated daily.",
   "dependencies": [
