@@ -25,6 +25,9 @@
 
         Environment_DistantFan = 3164826086,
 
+        Alarms_Error = 2200133294,
+        Alarms_ErrorOff = 1190355274,
+
         // Sounds like a fuse blowing
         Environment_PowerdownFailure = 3655606696,
         #endregion

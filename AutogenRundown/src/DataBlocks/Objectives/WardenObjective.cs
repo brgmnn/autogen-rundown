@@ -785,6 +785,8 @@ namespace AutogenRundown.DataBlocks
 
         public List<WardenObjectiveEvent> EventsOnElevatorLand { get; set; } = new List<WardenObjectiveEvent>();
 
+        public List<WardenObjectiveEvent> EventsOnGotoWin { get; set; } = new List<WardenObjectiveEvent>();
+
         /// <summary>
         /// Waves to spawn on returning to win. This seems to only be for the main objective.
         /// </summary>
@@ -935,7 +937,7 @@ namespace AutogenRundown.DataBlocks
         public bool OnActivateOnSolveItem = false;
         public bool StopAllWavesBeforeGotoWin = false;
         public int WaveOnGotoWinTrigger = 0;
-        public JArray EventsOnGotoWin = new JArray();
+        // public JArray EventsOnGotoWin = new JArray();
         public int EventsOnGotoWinTrigger = 0;
         public int FogTransitionDataOnGotoWin = 0;
         public double FogTransitionDurationOnGotoWin = 0.0;

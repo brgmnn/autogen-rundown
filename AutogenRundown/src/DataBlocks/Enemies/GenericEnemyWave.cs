@@ -49,6 +49,20 @@ namespace AutogenRundown.DataBlocks.Enemies
         };
         #endregion
 
+        #region Survival objective waves
+        public static GenericWave Survival_ErrorAlarm = new GenericWave
+        {
+            WaveSettings = (uint)VanillaWaveSettings.Trickle_352_SSpB,
+            WavePopulation = Alarms.WavePopulation.Baseline.PersistentId,
+        };
+
+        public static GenericWave Survival_Impossible_TankPotato = new GenericWave
+        {
+            WaveSettings = Alarms.WaveSettings.Survival_Impossible_MiniBoss.PersistentId,
+            WavePopulation = Alarms.WavePopulation.SingleEnemy_TankPotato.PersistentId,
+        };
+        #endregion
+
         #region Single enemy waves
         public static GenericWave SingleMother = new GenericWave
         {

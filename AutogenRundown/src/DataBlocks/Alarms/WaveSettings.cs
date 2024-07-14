@@ -53,6 +53,11 @@ namespace AutogenRundown.DataBlocks.Alarms
     /// of an enemy and soft cap.
     ///
     /// Enemy costs per type are the following: 0.75 1 1 2 2.
+    ///     - Weakling = 0.75
+    ///     - Standard = 1
+    ///     - Special  = 1
+    ///     - MiniBoss = 2
+    ///     - Boss     = 2
     ///
     /// Soft cap (MaxAllowedCost) is 25.
     ///
@@ -232,6 +237,9 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WaveSettings.AddBlock(ReactorShadows_Hard);
 
             Bins.WaveSettings.AddBlock(ReactorPoints_Special_16pts);
+
+            // Survival
+            Bins.WaveSettings.AddBlock(Survival_Impossible_MiniBoss);
 
             // Single waves
             Bins.WaveSettings.AddBlock(SingleWave_8pts);
@@ -496,6 +504,24 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationRampOverTime = 30
         };
         #endregion
+        #endregion
+
+        #region === Survival Waves ===
+        public static WaveSettings Survival_Impossible_MiniBoss = new()
+        {
+            PopulationFilter = { Enemies.EnemyType.MiniBoss },
+            PauseBeforeStart = 1.0,
+            PauseBetweenGroups = 30.0,
+            PopulationPointsTotal = -1,
+            PopulationPointsMinPerGroup = 4,
+            PopulationPointsPerGroupStart = 4,
+            PopulationPointsPerGroupEnd = 12,
+            PopulationPointsPerWaveEnd = 12,
+            WavePauseMin = 1,
+            WavePauseMax = 25,
+            WavePauseMin_atCost = 1,
+            WavePauseMax_atCost = 25,
+        };
         #endregion
 
         #region Single wave spawns
