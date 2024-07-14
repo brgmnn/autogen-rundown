@@ -737,18 +737,16 @@ namespace AutogenRundown.DataBlocks
             var timeBosses = EnemySpawningInZone
                 .Where(spawn => spawn.Tags.Contains("boss"))
                 .Sum(spawn =>
-                {
-                    return (Enemy)spawn.Difficulty switch
+                    (Enemy)spawn.Difficulty switch
                     {
-                        Enemy.Mother => 60.0,
-                        Enemy.PMother => 75.0,
-                        Enemy.Tank => 45.0,
-                        Enemy.TankPotato => 30.0,
+                        Enemy.Mother => 60.0 * (spawn.Points / 10.0),
+                        Enemy.PMother => 75.0 * (spawn.Points / 10.0),
+                        Enemy.Tank => 45.0 * (spawn.Points / 10.0),
+                        Enemy.TankPotato => 30.0 * (spawn.Points / 10.0),
 
                         // Some unknown enemy, we won't add time for unknowns
                         _ => 0.0
-                    };
-                });
+                    });
             timeBosses *= factorBoss;
 
             // Time based on door alarms
@@ -761,20 +759,35 @@ namespace AutogenRundown.DataBlocks
 
             // Give +20s for a blood door.
             // TODO: adjust based on spawns in the blood door.
-            var timeBloodDoor = BloodDoor != BloodDoor.None ? 20 : 0;
+            var timeBloodDoor = 0.0;
+            var timeBloodDoorBoss = 0.0;
+
+            if (BloodDoor != BloodDoor.None)
+            {
+                timeBloodDoor = 20.0;
+
+                // We need to add extra time for mothers. BloodDoor_BossMother is 1x mother
+                // TODO: I'd prefer to do a full enemy count like we do for the whole zone.
+                if (BloodDoor.EnemyGroupInfrontOfDoor == (uint)VanillaEnemyGroup.BloodDoor_BossMother)
+                    timeBloodDoorBoss += 60.0;
+                if (BloodDoor.EnemyGroupInArea == (uint)VanillaEnemyGroup.BloodDoor_BossMother)
+                    timeBloodDoorBoss += 60.0;
+            }
 
             // Sum the values
             var total = timeCoverage
                         + timeEnemyPoints
                         + timeBosses
                         + timeAlarms
-                        + timeBloodDoor;
+                        + timeBloodDoor
+                        + timeBloodDoorBoss;
 
             Plugin.Logger.LogDebug($"Zone {LocalIndex} time budget: total={total}s -- "
                                    + $"alarms={timeAlarms}s coverage={timeCoverage}s "
                                    + $"enemies={timeEnemyPoints}s "
                                    + $"bosses={timeBosses}s "
-                                   + $"blood_doors={timeBloodDoor}s");
+                                   + $"blood_doors={timeBloodDoor}s "
+                                   + $"blood_door_bosses={timeBloodDoorBoss}s");
             return total;
         }
         #endregion
