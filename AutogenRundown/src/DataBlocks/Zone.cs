@@ -723,7 +723,7 @@ namespace AutogenRundown.DataBlocks
         {
             var factorAlarms = 1.20;
             var factorBoss = 1.0;
-            var factorCoverage = 1.20;
+            var factorCoverage = 1.30;
             var factorEnemyPoints = 1.20;
 
             // Add time based on the zone size
