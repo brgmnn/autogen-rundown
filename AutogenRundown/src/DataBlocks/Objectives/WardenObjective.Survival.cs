@@ -81,8 +81,6 @@ public partial record class WardenObjective : DataBlock
         // Calculate and add the additional times
         Survival_CalculateTime(director, level);
 
-        Survival_TimeToSurvive = 50.0;
-
         //==================== Events ====================
         EventsOnActivate.Add(
             new WardenObjectiveEvent
