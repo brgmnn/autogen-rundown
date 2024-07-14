@@ -1138,8 +1138,11 @@ namespace AutogenRundown.DataBlocks
                     layout.Zones.Add(zone);
 
                     Plugin.Logger.LogDebug(
-                        $"{layout.Name} -- Zone_{zone.LocalIndex} Z{layout.ZoneAliasStart + zone.LocalIndex} " +
-                        $"branch={node.Branch} -- Lights={zone.LightSettings}, InFog={zone.InFog}, Tags={node.Tags}");
+                        $"{layout.Name} -- Zone_{zone.LocalIndex} " +
+                        $"number={layout.ZoneAliasStart + zone.LocalIndex} " +
+                        $"pid={zone.PersistentId} -- " +
+                        $"branch={node.Branch} -- " +
+                        $"Lights={zone.LightSettings}, InFog={zone.InFog}, Tags={node.Tags}");
                 }
             }
 
