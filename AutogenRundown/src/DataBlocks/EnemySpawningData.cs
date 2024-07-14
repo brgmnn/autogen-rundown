@@ -90,7 +90,7 @@ namespace AutogenRundown.DataBlocks
     ///
     ///     * Nightmare Striker: 2
     ///     * Nightmare Shooter: 2
-    /// 
+    ///
     ///     * Scout: 5
     ///     * Charger Scout: 5
     ///     * Shadow Scout: 5
@@ -112,6 +112,7 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public static int POPULATION_PER_ZONE = 25;
 
+        #region Datablock settings
         /// <summary>
         /// What state the enemies are in
         /// </summary>
@@ -122,14 +123,12 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public uint Difficulty { get; set; } = (uint)EnemyRoleDifficulty.Easy;
 
-
-        public EnemyZoneDistribution Distribution { get; set; } = EnemyZoneDistribution.RelValue;
-
         /// <summary>
-        /// Works with our points system
+        /// How should the enemies be distributed. This is only ever between RelValue and ForceOne
+        /// where force one spawns a single unit and rel value will use the calculated rel value
+        /// which is ultimately based on points.
         /// </summary>
-        [JsonIgnore]
-        public int Points { get; set; } = 25;
+        public EnemyZoneDistribution Distribution { get; set; } = EnemyZoneDistribution.RelValue;
 
         /// <summary>
         ///
@@ -138,6 +137,15 @@ namespace AutogenRundown.DataBlocks
         {
             get => (double)Points / POPULATION_PER_ZONE;
         }
+        #endregion
+
+        /// <summary>
+        /// Works with our points system
+        /// </summary>
+        [JsonIgnore]
+        public int Points { get; set; } = 25;
+
+
 
         #region Enemy Tiers
         public static EnemySpawningData TierA = new EnemySpawningData
