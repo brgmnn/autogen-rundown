@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
@@ -282,7 +283,7 @@ namespace AutogenRundown.DataBlocks
                         // TODO: Remove this perhaps, it's quite hard in bulkhead
                         (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_SF_02.prefab", new CoverageMinMax { Min = 30, Max = 50 }),
                                               //Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_SF_02.prefab
-                        
+
                         (SubComplex.Gardens, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_X_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     });
                     break;
@@ -776,15 +777,15 @@ namespace AutogenRundown.DataBlocks
         /// What allowed altitiudes the level can have
         /// </summary>
         [JsonProperty("AltitudeData")]
-        public Altitude Altitude { get; set; } = new Altitude();
+        public Altitude Altitude { get; set; } = new();
 
-        public List<JObject> EventsOnEnter { get; set; } = new List<JObject>();
-        public List<JObject> EventsOnPortalWarp { get; set; } = new List<JObject>();
-        public List<WardenObjectiveEvent> EventsOnApproachDoor { get; set; } = new List<WardenObjectiveEvent>();
-        public List<WardenObjectiveEvent> EventsOnUnlockDoor { get; set; } = new List<WardenObjectiveEvent>();
-        public List<WardenObjectiveEvent> EventsOnOpenDoor { get; set; } = new List<WardenObjectiveEvent>();
-        public List<WardenObjectiveEvent> EventsOnDoorScanStart { get; set; } = new List<WardenObjectiveEvent>();
-        public List<WardenObjectiveEvent> EventsOnDoorScanDone { get; set; } = new List<WardenObjectiveEvent>();
+        public List<WardenObjectiveEvent> EventsOnEnter { get; set; } = new();
+        public List<WardenObjectiveEvent> EventsOnPortalWarp { get; set; } = new();
+        public List<WardenObjectiveEvent> EventsOnApproachDoor { get; set; } = new();
+        public List<WardenObjectiveEvent> EventsOnUnlockDoor { get; set; } = new();
+        public List<WardenObjectiveEvent> EventsOnOpenDoor { get; set; } = new();
+        public List<WardenObjectiveEvent> EventsOnDoorScanStart { get; set; } = new();
+        public List<WardenObjectiveEvent> EventsOnDoorScanDone { get; set; } = new();
 
         #region Puzzle settings
         public ProgressionPuzzle ProgressionPuzzleToEnter { get; set; } = new ProgressionPuzzle();
@@ -812,7 +813,7 @@ namespace AutogenRundown.DataBlocks
         public bool SkipAutomaticProgressionObjective { get; set; } = false;
 
         // TODO: configure enum for gate
-        public int SecurityGateToEnter { get; set; } = 0;
+        public SecurityGate SecurityGateToEnter { get; set; } = SecurityGate.Security;
 
         public bool UseStaticBioscanPointsInZone { get; set; } = false;
 
