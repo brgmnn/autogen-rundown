@@ -5,13 +5,19 @@ using AutogenRundown.DataBlocks.ZoneData;
 namespace AutogenRundown.DataBlocks;
 
 /**
- * Objective: ClearPath
+ * Objective: Survival
  *
  *
  * Fairly straight forward objective, get to the end zone. Some additional enemies
  * at the end make this a more interesting experience.
  *
  * This objective can only be for Main given it ends the level on completion
+ * 
+ * TODO:
+ * 
+ *  - Limit bosses in survival. Maybe no more than 1x tank, 2x mother
+ *  - Check exit zone for 2024_07_13
+ *  - Maybe only have error alarm in E-tier, it's quite difficult with that
  */
 public partial record class WardenObjective : DataBlock
 {
@@ -23,6 +29,10 @@ public partial record class WardenObjective : DataBlock
 
         var nodes = level.Planner.GetZones(director.Bulkhead, null);
 
+        ///
+        /// TODO:
+        ///   * Add time based on boss rolls
+        ///
         foreach (var node in nodes)
         {
             var zone = level.Planner.GetZone(node)!;
@@ -70,6 +80,9 @@ public partial record class WardenObjective : DataBlock
         MainObjective = $"Find a way to stay alive during Warden Protocol X:://FORLORN_DECOY, and make your way to {exitZoneString} for extraction";
         Survival_TimerTitle = "Time until allowed extraction:";
         Survival_TimerToActivateTitle = "<color=red>WARNING!</color> Warden Protocol <color=orange>X:://FORLORN_DECOY</color> will commence in: ";
+        // Set these both as go forward as we always have an exit geo.
+        GoToWinCondition_Elevator = $"Go to the forward exit point in {exitZoneString}";
+        GoToWinCondition_CustomGeo = $"Go to the forward exit point in {exitZoneString}";
 
         // Put a relatively short exit scan time as we will hit them hard on times up
         ChainedPuzzleAtExitScanSpeedMultiplier = GenExitScanTime(30, 40);

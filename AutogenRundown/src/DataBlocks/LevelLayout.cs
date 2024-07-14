@@ -386,6 +386,7 @@ namespace AutogenRundown.DataBlocks
                 #endregion
 
                 // Boss settings
+                // TODO: don't have totally independent of zone points
                 if (Generator.Flip(bossChance) && settings.EnemyBossPack.Count() > 0)
                 {
                     var boss = Generator.Draw(settings.EnemyBossPack);
