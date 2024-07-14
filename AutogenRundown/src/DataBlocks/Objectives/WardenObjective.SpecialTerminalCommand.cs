@@ -74,7 +74,7 @@ public partial record class WardenObjective : DataBlock
         GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
         // Place the terminal in the last zone
-        var node = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead)!;
+        var node = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "find_items")!;
         var zoneIndex = node.ZoneNumber;
 
         dataLayer.ObjectiveData.ZonePlacementDatas.Add(
