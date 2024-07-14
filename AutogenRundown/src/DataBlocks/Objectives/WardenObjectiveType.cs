@@ -16,12 +16,12 @@
         RetrieveBigItems = 6,       // B
         PowerCellDistribution = 7,  // C
         TerminalUplink = 8,         // U
+        Survival = 11,              // X
 
         CentralGeneratorCluster = 9, // TODO: Generator cluster spawn is bugged
 
         // Not yet implemented
         HsuActivateSmall = 10,
-        Survival = 11,              // X
 
         GatherTerminal = 12,
         CorruptedTerminalUplink = 13,

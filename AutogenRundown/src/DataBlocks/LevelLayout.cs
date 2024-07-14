@@ -1074,10 +1074,10 @@ namespace AutogenRundown.DataBlocks
                         {
                             SpawnsPerZone = 2,
                             SpawnData = new List<ItemSpawn>
-                                    {
-                                        new ItemSpawn { Item = Items.Item.PowerCell },
-                                        new ItemSpawn { Item = Items.Item.PowerCell }
-                                    }
+                                {
+                                    new ItemSpawn { Item = Items.Item.PowerCell },
+                                    new ItemSpawn { Item = Items.Item.PowerCell }
+                                }
                         };
                         Bins.BigPickupDistributions.AddBlock(pickup);
 
@@ -1088,6 +1088,24 @@ namespace AutogenRundown.DataBlocks
 
                         break;
                     }
+
+                /**
+                 * Survival is a very custom objective
+                 */
+                case WardenObjectiveType.Survival:
+                {
+                    var start = level.Planner.GetLastZone(director.Bulkhead);
+
+                    if (start == null)
+                    {
+                        Plugin.Logger.LogError($"No node returned when calling Planner.GetLastZone({director.Bulkhead})");
+                        throw new Exception("No zone node returned");
+                    }
+
+                    layout.BuildBranch((ZoneNode)start, director.ZoneCount, "survival_arena");
+
+                    break;
+                }
 
                 /**
                  * For level generation these objectives follow a more generic pattern of creating zones for those

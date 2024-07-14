@@ -24,8 +24,7 @@ namespace AutogenRundown
                 WardenObjectiveType.RetrieveBigItems => prefix + "<color=orange>Package Extraction</color>\n",
                 WardenObjectiveType.PowerCellDistribution => prefix + "<color=orange>Power Cell Distribution</color>\n",
                 WardenObjectiveType.TerminalUplink => prefix + "<color=orange>Network Uplink</color>\n",
-
-                //WardenObjectiveType.Survival => prefix + "<color=orange>Distraction Protocol</color>\n",
+                WardenObjectiveType.Survival => prefix + "<color=orange>Diversion Protocol</color>\n",
                 _ => ""
             };
         }
@@ -160,9 +159,19 @@ namespace AutogenRundown
                     Complex = Complex.Mining,
                     Complexity = Complexity.Low,
                     Tier = "C",
-                    Objective = WardenObjectiveType.GatherSmallItems,
+                    Objective = WardenObjectiveType.Survival,
                 };
                 mainDirector.GenPoints();
+
+                var extremeDirector = new BuildDirector
+                {
+                    Bulkhead = Bulkhead.Extreme,
+                    Complex = Complex.Mining,
+                    Complexity = Complexity.Low,
+                    Tier = "C",
+                    Objective = WardenObjectiveType.PowerCellDistribution,
+                };
+                extremeDirector.GenPoints();
 
                 var settings = new LevelSettings("C");
                 //settings.Modifiers.Add(LevelModifiers.Fog);
@@ -171,9 +180,10 @@ namespace AutogenRundown
                     new Level
                     {
                         Tier = "C",
-                        Name = "Gather Items",
+                        Name = "Generator Cluster",
                         Complex = Complex.Mining,
                         MainDirector = mainDirector,
+                        SecondaryDirector = extremeDirector,
                         Settings = settings,
                         Index = cMax + 1,
                         IsTest = true
@@ -276,9 +286,9 @@ namespace AutogenRundown
                 rundown.AddLevel(level);
             }
 
-            #region Clear Path
+            #region Survival
             {
-                var objective = WardenObjectiveType.ClearPath;
+                var objective = WardenObjectiveType.Survival;
                 var mainDirector = new BuildDirector()
                 {
                     Bulkhead = Bulkhead.Main,
@@ -294,7 +304,7 @@ namespace AutogenRundown
                     new()
                     {
                         Tier = "E",
-                        Prefix = $"<color=orange>P</color><color=#444444>:</color>E",
+                        Prefix = $"<color=orange>X</color><color=#444444>:</color>E",
                         Description = description.PersistentId,
                         MainDirector = mainDirector,
                         Settings = settings,
