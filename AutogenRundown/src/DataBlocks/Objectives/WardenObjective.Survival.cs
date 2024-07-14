@@ -67,9 +67,9 @@ public partial record class WardenObjective : DataBlock
         var exitNumber = layout.ZoneAliasStart + exitZone.ZoneNumber;
         var exitZoneString = $"<color=orange>ZONE {exitNumber}</color>";
 
-        MainObjective = $"Find a way to stay alive during Warden Protocol E.v1, and make your way to {exitZoneString} for extraction";
+        MainObjective = $"Find a way to stay alive during Warden Protocol X:://FORLORN_DECOY, and make your way to {exitZoneString} for extraction";
         Survival_TimerTitle = "Time until allowed extraction:";
-        Survival_TimerToActivateTitle = "<color=red>WARNING!</color> Warden Protocol <color=orange>E.v1</color> will commence in: ";
+        Survival_TimerToActivateTitle = "<color=red>WARNING!</color> Warden Protocol <color=orange>X:://FORLORN_DECOY</color> will commence in: ";
 
         // Put a relatively short exit scan time as we will hit them hard on times up
         ChainedPuzzleAtExitScanSpeedMultiplier = GenExitScanTime(30, 40);
@@ -81,6 +81,7 @@ public partial record class WardenObjective : DataBlock
         // Calculate and add the additional times
         Survival_CalculateTime(director, level);
 
+        Survival_TimeToSurvive = 50.0;
 
         //==================== Events ====================
         EventsOnActivate.Add(
@@ -98,7 +99,10 @@ public partial record class WardenObjective : DataBlock
             ":://WARNING - SECTOR ALARM ACTIVATED");
 
         // Unlock the exit
-        EventBuilder.AddUnlockDoor(EventsOnGotoWin, exitNumber, $"Extraction zone unlocked");
+        EventBuilder.AddUnlockDoor(
+            EventsOnGotoWin,
+            exitZone.ZoneNumber,
+            $"Extraction zone {exitZoneString} unlocked");
 
         // Ending events
         // On end, start the tank

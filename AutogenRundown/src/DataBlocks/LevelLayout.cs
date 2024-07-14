@@ -1116,6 +1116,7 @@ namespace AutogenRundown.DataBlocks
                     exitZone.GenExitGeomorph(director.Complex);
 
                     // Exit scan will be HARD
+                    exitZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
                     exitZone.Alarm = ChainedPuzzle.SkipZone;
 
                     level.Planner.Connect(prev, exitNode);

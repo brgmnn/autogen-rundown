@@ -101,7 +101,8 @@ namespace AutogenRundown
             var bMax = Generator.Random.Next(3, 4);
             var cMax = Generator.Random.Next(2, 4);
             var dMax = Generator.Random.Next(2, 4);
-            var eMax = Generator.Random.Next(1, 2);
+            //var eMax = Generator.Random.Next(1, 2);
+            var eMax = 0;
             /*var aMax = 0;
             var bMax = 0;
             var cMax = 0;
