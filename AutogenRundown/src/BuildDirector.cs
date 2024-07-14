@@ -72,9 +72,6 @@ namespace AutogenRundown
             if (!Bulkhead.HasFlag(Bulkhead.Main))
             {
                 objectives.Remove(WardenObjectiveType.ClearPath);
-
-                // TODO: Apparently you can have this as a non-main. The cells spawn in first zone.
-                objectives.Remove(WardenObjectiveType.PowerCellDistribution);
             }
 
             // These objectives are really intended as side quests.
