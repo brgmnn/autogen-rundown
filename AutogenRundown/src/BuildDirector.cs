@@ -58,6 +58,7 @@ namespace AutogenRundown
                 WardenObjectiveType.RetrieveBigItems,
                 WardenObjectiveType.PowerCellDistribution,
                 WardenObjectiveType.TerminalUplink,
+                WardenObjectiveType.Survival,
 
                 // TODO: Would love to enable this, but central generator cluster spawning is just
                 // too broken. Probably we wait for either a fix from 10Chambers or we have to
@@ -72,6 +73,7 @@ namespace AutogenRundown
             if (!Bulkhead.HasFlag(Bulkhead.Main))
             {
                 objectives.Remove(WardenObjectiveType.ClearPath);
+                objectives.Remove(WardenObjectiveType.Survival);
             }
 
             // These objectives are really intended as side quests.
