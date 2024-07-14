@@ -1,6 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
-using AutogenRundown.DataBlocks.ZoneData;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -23,64 +22,11 @@ public partial record class WardenObjective : DataBlock
 {
     public void Survival_CalculateTime(BuildDirector director, Level level)
     {
-        var factorAlarms = 1.20;
-        var factorBoss = 1.0;
-        var factorCoverage = 1.20;
-        var factorEnemyPoints = 1.20;
-
         var nodes = level.Planner.GetZones(director.Bulkhead, null);
 
-        ///
-        /// TODO:
-        ///   * Add time based on boss rolls
-        ///
         foreach (var node in nodes)
         {
             var zone = level.Planner.GetZone(node)!;
-
-            /*
-            // Add time based on the zone size
-            var timeCoverage = zone.Coverage.Max * factorCoverage;
-
-            // Time based on enemy points in zones
-            var timeEnemyPoints = zone.EnemySpawningInZone.Sum(spawn => spawn.Points) * factorEnemyPoints;
-
-            // Find and add extra time for bosses. These are generally quite hard to deal with.
-            var timeBosses = zone.EnemySpawningInZone
-                .Where(spawn => spawn.Tags.Contains("boss"))
-                .Sum(spawn =>
-                {
-                    return (Enemy)spawn.Difficulty switch
-                    {
-                        Enemy.Mother => 60.0,
-                        Enemy.PMother => 75.0,
-                        Enemy.Tank => 45.0,
-                        Enemy.TankPotato => 30.0,
-
-                        // Some unknown enemy, we won't add time for unknowns
-                        _ => 0.0
-                    };
-                }) * factorBoss;
-
-            // Time based on door alarms
-            // We sum for the component durations, the distance from start pos, and the distance
-            // between the alarm components
-            var timeAlarms = 10 + zone.Alarm.Puzzle.Sum(component => component.Duration)
-                                + zone.Alarm.WantedDistanceFromStartPos
-                                + (zone.Alarm.Puzzle.Count - 1) * zone.Alarm.WantedDistanceBetweenPuzzleComponents;
-            timeAlarms *= factorAlarms;
-
-            // Give +20s for a blood door.
-            var timeBloodDoor = zone.BloodDoor != BloodDoor.None ? 20 : 0;
-
-            // Sum the values
-            var total = timeCoverage
-                            + timeEnemyPoints
-                            + timeBosses
-                            + timeAlarms
-                            + timeBloodDoor;
-            */
-
             var total = zone.GetClearTimeEstimate();
 
             // Add the total zone time to the time to survive
@@ -88,13 +34,6 @@ public partial record class WardenObjective : DataBlock
 
             Plugin.Logger.LogDebug($"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead} -- "
                                    + $"Survival: Zone {node.ZoneNumber} time budget: total={total}s");
-
-            /*Plugin.Logger.LogDebug($"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead} -- "
-                + $"Survival: Zone {node.ZoneNumber} time budget: total={total}s -- "
-                + $"alarms={timeAlarms}s coverage={timeCoverage}s "
-                + $"enemies={timeEnemyPoints}s "
-                + $"bosses={timeBosses}s "
-                + $"blood_doors={timeBloodDoor}s");*/
         }
     }
 
