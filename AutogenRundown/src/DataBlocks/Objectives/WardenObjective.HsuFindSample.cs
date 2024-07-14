@@ -24,7 +24,7 @@ public partial record class WardenObjective : DataBlock
         ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
 
         // Place HSU's within the objective zone
-        var zn = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead)!;
+        var zn = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "find_items")!;
         var zoneIndex = zn.ZoneNumber;
 
         dataLayer.ObjectiveData.ZonePlacementDatas.Add(
