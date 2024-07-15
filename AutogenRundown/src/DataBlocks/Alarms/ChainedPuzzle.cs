@@ -94,6 +94,12 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// Typically set to false for regular scan, and true for extraction scan.
         /// </summary>
         public bool OnlyShowHUDWhenPlayerIsClose { get; set; } = true;
+
+        /// <summary>
+        /// Just return the persistent ID as the name
+        /// </summary>
+        [JsonProperty("name")]
+        public new string Name { get => PersistentId.ToString(); }
         #endregion
 
         #region Rarely set by us
@@ -118,9 +124,14 @@ namespace AutogenRundown.DataBlocks.Alarms
         public new ChainedPuzzle Copy()
         {
             PersistentId = Generator.GetPersistentId();
-            Name = PersistentId.ToString();
+            // Name = PersistentId.ToString();
+
+
 
             Bins.ChainedPuzzles.AddBlock(this);
+
+            var found = Bins.ChainedPuzzles.Find(PersistentId);
+            Plugin.Logger.LogDebug($"-- Saving new ChainPuzzle: {PersistentId} -- Is it there??? {found != null}");
 
             return this;
         }
@@ -220,51 +231,51 @@ namespace AutogenRundown.DataBlocks.Alarms
                         pack.AddRange(new List<ChainedPuzzle>
                         {
                             // Moderately difficult scans
-                            AlarmClass5_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId },
-                            AlarmClass5_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId },
-                            AlarmClass5_Cluster.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId },
-                            AlarmClass5_Mixed.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId },
+                            AlarmClass5_Chargers, AlarmClass5_Chargers,
 
-                            AlarmClass5_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId },
-                            AlarmClass5_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId },
-                            AlarmClass5_Cluster.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId },
-                            AlarmClass5_Mixed.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId },
+                            AlarmClass5_Cluster with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass5_Mixed with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId, PersistentId = Generator.GetPersistentId() },
+
+                            AlarmClass5_Hard with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass5_Hard with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass5_Cluster with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass5_Mixed with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId, PersistentId = Generator.GetPersistentId() },
 
                             // Challenging scans
-                            AlarmClass6_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId },
-                            AlarmClass6_Mixed.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId },
-                            AlarmClass7_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId },
-                            AlarmClass7_Mixed.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId },
+                            AlarmClass6_Hard with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass6_Mixed with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass7_Hard with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass7_Mixed with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId, PersistentId = Generator.GetPersistentId() },
 
                             // Sustained
                             AlarmClass1_Sustained,
-                            AlarmClass1_Sustained.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId },
-                            AlarmClass1_Sustained.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId }
+                            AlarmClass1_Sustained with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass1_Sustained with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId, PersistentId = Generator.GetPersistentId() }
                         });
                     if (settings.Modifiers.Contains(LevelModifiers.Shadows) || settings.Modifiers.Contains(LevelModifiers.ManyShadows))
                         pack.AddRange(new List<ChainedPuzzle>
                         {
                             // Moderately difficult scans
-                            AlarmClass5_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId },
-                            AlarmClass5_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId },
-                            AlarmClass5_Cluster.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId },
-                            AlarmClass5_Mixed.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId },
+                            AlarmClass5_Hard with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass5_Hard with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass5_Cluster with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass5_Mixed with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId, PersistentId = Generator.GetPersistentId() },
 
-                            AlarmClass5_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId },
-                            AlarmClass5_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId },
-                            AlarmClass5_Cluster.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId },
-                            AlarmClass5_Mixed.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId },
+                            AlarmClass5_Hard with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass5_Hard with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass5_Cluster with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass5_Mixed with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId, PersistentId = Generator.GetPersistentId() },
 
                             // Challenging scans
-                            AlarmClass6_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId },
-                            AlarmClass6_Mixed.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId },
-                            AlarmClass7_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId },
-                            AlarmClass7_Mixed.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId },
+                            AlarmClass6_Hard with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass6_Mixed with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass7_Hard with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass7_Mixed with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId, PersistentId = Generator.GetPersistentId() },
 
                             // Sustained
                             AlarmClass1_Sustained,
-                            AlarmClass1_Sustained.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId },
-                            AlarmClass1_Sustained.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId }
+                            AlarmClass1_Sustained with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId, PersistentId = Generator.GetPersistentId() },
+                            AlarmClass1_Sustained with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId, PersistentId = Generator.GetPersistentId() }
                         });
                     if (settings.Modifiers.Contains(LevelModifiers.NoChargers) && settings.Modifiers.Contains(LevelModifiers.NoShadows))
                         pack.AddRange(new List<ChainedPuzzle>
@@ -500,7 +511,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass3_Hard"
+            // // Name = "AlarmClass3_Hard"
         };
 
         public static readonly ChainedPuzzle AlarmClass4 = new()
@@ -521,7 +532,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass4_Hard"
+            // // Name = "AlarmClass4_Hard"
         };
 
         public static readonly ChainedPuzzle AlarmClass4_Chargers = AlarmClass4 with
@@ -529,7 +540,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass4_Chargers"
+            // // Name = "AlarmClass4_Chargers"
         };
 
         public static readonly ChainedPuzzle AlarmClass4_Hybrids = AlarmClass4 with
@@ -537,7 +548,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass4_Hybrids"
+            // // Name = "AlarmClass4_Hybrids"
         };
 
         public static readonly ChainedPuzzle AlarmClass4_Nightmare = AlarmClass4 with
@@ -545,7 +556,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass4_Nightmare"
+            // // Name = "AlarmClass4_Nightmare"
         };
 
         public static readonly ChainedPuzzle AlarmClass5 = new()
@@ -567,7 +578,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass5_Hard"
+            // // Name = "AlarmClass5_Hard"
         };
 
         public static readonly ChainedPuzzle AlarmClass5_Chargers = AlarmClass5 with
@@ -575,7 +586,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass5_Chargers"
+            // // Name = "AlarmClass5_Chargers"
         };
 
         public static readonly ChainedPuzzle AlarmClass5_Hybrids = AlarmClass5 with
@@ -583,7 +594,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass5_Hybrids"
+            // // Name = "AlarmClass5_Hybrids"
         };
 
         public static readonly ChainedPuzzle AlarmClass5_Nightmare = AlarmClass5 with
@@ -591,7 +602,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass5_Nightmare"
+            // // Name = "AlarmClass5_Nightmare"
         };
 
         public static readonly ChainedPuzzle AlarmClass6 = new()
@@ -615,7 +626,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass6_Hard"
+            // Name = "AlarmClass6_Hard"
         };
 
         public static readonly ChainedPuzzle AlarmClass6_Chargers = AlarmClass6 with
@@ -623,7 +634,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass6_Chargers"
+            // Name = "AlarmClass6_Chargers"
         };
 
         public static readonly ChainedPuzzle AlarmClass6_Hybrids = AlarmClass6 with
@@ -631,7 +642,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass6_Hybrids"
+            // Name = "AlarmClass6_Hybrids"
         };
 
         public static readonly ChainedPuzzle AlarmClass6_Nightmare = AlarmClass6 with
@@ -639,7 +650,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass6_Nightmare"
+            // Name = "AlarmClass6_Nightmare"
         };
 
         public static readonly ChainedPuzzle AlarmClass7 = new()
@@ -664,7 +675,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass7_Hard"
+            // Name = "AlarmClass7_Hard"
         };
 
         public static readonly ChainedPuzzle AlarmClass7_Chargers = AlarmClass7 with
@@ -672,7 +683,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass7_Chargers"
+            // Name = "AlarmClass7_Chargers"
         };
 
         public static readonly ChainedPuzzle AlarmClass7_Hybrids = AlarmClass7 with
@@ -680,7 +691,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass7_Hybrids"
+            // Name = "AlarmClass7_Hybrids"
         };
 
         public static readonly ChainedPuzzle AlarmClass7_Nightmare = AlarmClass7 with
@@ -688,7 +699,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass7_Nightmare"
+            // Name = "AlarmClass7_Nightmare"
         };
 
         public static readonly ChainedPuzzle AlarmClass8 = new()
@@ -713,7 +724,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass8_Hard"
+            // Name = "AlarmClass8_Hard"
         };
 
         public static readonly ChainedPuzzle AlarmClass8_Chargers = AlarmClass8 with
@@ -721,7 +732,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass8_Chargers"
+            // Name = "AlarmClass8_Chargers"
         };
 
         public static readonly ChainedPuzzle AlarmClass8_Hybrids = AlarmClass8 with
@@ -729,7 +740,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass8_Hybrids"
+            // Name = "AlarmClass8_Hybrids"
         };
 
         public static readonly ChainedPuzzle AlarmClass8_Nightmare = AlarmClass8 with
@@ -737,7 +748,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
             SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
             PersistentId = Generator.GetPersistentId(),
-            Name = "AlarmClass8_Nightmare"
+            // Name = "AlarmClass8_Nightmare"
         };
         #endregion
 
@@ -1063,7 +1074,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static readonly ChainedPuzzle BulkheadSelect_Main = new()
         {
             PersistentId = 59,
-            Name = "BulkheadSelect_Main",
+            // Name = "BulkheadSelect_Main",
             TriggerAlarmOnActivate = false,
             WantedDistanceFromStartPos = 0.0,
             WantedDistanceBetweenPuzzleComponents = 0.0,
@@ -1077,7 +1088,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static readonly ChainedPuzzle BulkheadSelect_Secondary = new()
         {
             PersistentId = 60,
-            Name = "BulkheadSelect_Extreme",
+            // Name = "BulkheadSelect_Extreme",
             TriggerAlarmOnActivate = false,
             WantedDistanceFromStartPos = 0.0,
             WantedDistanceBetweenPuzzleComponents = 0.0,
@@ -1091,7 +1102,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static readonly ChainedPuzzle BulkheadSelect_Overload = new()
         {
             PersistentId = 61,
-            Name = "BulkheadSelect_Overload",
+            // Name = "BulkheadSelect_Overload",
             TriggerAlarmOnActivate = false,
             WantedDistanceFromStartPos = 0.0,
             WantedDistanceBetweenPuzzleComponents = 0.0,

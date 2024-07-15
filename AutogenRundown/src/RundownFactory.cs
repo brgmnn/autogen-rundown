@@ -98,17 +98,17 @@ namespace AutogenRundown
 
             var levelNames = new List<string>(Words.NounsLevel);
 
-            var aMax = Generator.Random.Next(1, 2);
-            var bMax = Generator.Random.Next(3, 4);
-            var cMax = Generator.Random.Next(2, 4);
-            var dMax = Generator.Random.Next(2, 4);
-            var eMax = Generator.Random.Next(1, 2);
-            //var eMax = 0;
-            /*var aMax = 0;
+            // var aMax = Generator.Random.Next(1, 2);
+            // var bMax = Generator.Random.Next(3, 4);
+            // var cMax = Generator.Random.Next(2, 4);
+            // var dMax = Generator.Random.Next(2, 4);
+            // var eMax = Generator.Random.Next(1, 2);
+
+            var aMax = 0;
             var bMax = 0;
             var cMax = 0;
             var dMax = 0;
-            var eMax = 0;*/
+            var eMax = 0;
 
 
             #region A-Tier Levels
@@ -220,7 +220,7 @@ namespace AutogenRundown
                         Description = description.PersistentId,
                         MainDirector = mainDirector,
                         Settings = settings,
-                        Index = 0
+                        Index = 1
                     });
 
                 rundown.AddLevel(level);
