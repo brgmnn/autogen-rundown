@@ -8,6 +8,9 @@
 
 Probably need to rework enemy sleeper spawning now with level planner
 
+Seed: 2024_07_14
+* D2: Error alarm turnoff in 775 does not unlock
+
 Seed: 2024_07_08
 * Check the local progression mod
 * Boosters confirmed not working for modded rundowns
