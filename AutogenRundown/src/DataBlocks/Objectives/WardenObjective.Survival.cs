@@ -18,7 +18,7 @@ namespace AutogenRundown.DataBlocks;
  *  - Check exit zone for 2024_07_13
  *  - Maybe only have error alarm in E-tier, it's quite difficult with that
  */
-public partial record class WardenObjective : DataBlock
+public partial record WardenObjective : DataBlock
 {
     public void Survival_CalculateTime(BuildDirector director, Level level)
     {

@@ -196,6 +196,35 @@ namespace AutogenRundown
             #endregion
 
             #region D-Tier Levels
+            #region Survival Fixed
+            {
+                var objective = WardenObjectiveType.Survival;
+                var mainDirector = new BuildDirector()
+                {
+                    Bulkhead = Bulkhead.Main,
+                    Tier = "D",
+                    Objective = objective
+                };
+                mainDirector.GenPoints();
+
+                var settings = new LevelSettings("D");
+                var description = new DataBlocks.Text(DescriptionHeader(objective) +
+                                                      DataBlocks.WardenObjective.GenLevelDescription(objective));
+                var level = Level.Build(
+                    new()
+                    {
+                        Tier = "D",
+                        Prefix = $"<color=orange>X</color><color=#444444>:</color>E",
+                        Description = description.PersistentId,
+                        MainDirector = mainDirector,
+                        Settings = settings,
+                        Index = eMax + 1
+                    });
+
+                rundown.AddLevel(level);
+            }
+            #endregion
+
             // D levels
             for (int i = 0; i < dMax; i++)
             {
@@ -288,6 +317,7 @@ namespace AutogenRundown
             }
 
             #region Survival
+            #if false
             {
                 var objective = WardenObjectiveType.Survival;
                 var mainDirector = new BuildDirector()
@@ -314,6 +344,7 @@ namespace AutogenRundown
 
                 rundown.AddLevel(level);
             }
+            #endif
             #endregion
 
             #region Test E Levels
