@@ -673,7 +673,7 @@ namespace AutogenRundown.DataBlocks
             director.GenZones();
 
             var objectiveLayerData = level.GetObjectiveLayerData(director.Bulkhead);
-            var puzzlePack = ChainedPuzzle.BuildPack(level.Tier);
+            var puzzlePack = ChainedPuzzle.BuildPack(level.Tier, level.Settings);
 
             Plugin.Logger.LogDebug($"Building layout ({layout.Name}), Objective = {objective.Type}");
 

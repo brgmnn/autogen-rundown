@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.GeneratorData;
 using BepInEx;
@@ -208,6 +209,7 @@ namespace AutogenRundown
                 mainDirector.GenPoints();
 
                 var settings = new LevelSettings("D");
+                settings.Modifiers.Add(LevelModifiers.Chargers);
                 var description = new DataBlocks.Text(DescriptionHeader(objective) +
                                                       DataBlocks.WardenObjective.GenLevelDescription(objective));
                 var level = Level.Build(
@@ -218,7 +220,7 @@ namespace AutogenRundown
                         Description = description.PersistentId,
                         MainDirector = mainDirector,
                         Settings = settings,
-                        Index = eMax + 1
+                        Index = 0
                     });
 
                 rundown.AddLevel(level);
@@ -226,7 +228,7 @@ namespace AutogenRundown
             #endregion
 
             // D levels
-            for (int i = 0; i < dMax; i++)
+            for (int i = 1; i < dMax + 1; i++)
             {
                 var level = Level.Build(
                     new Level

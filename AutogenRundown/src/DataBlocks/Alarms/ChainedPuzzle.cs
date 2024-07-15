@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using Newtonsoft.Json;
 
@@ -110,116 +111,221 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.ChainedPuzzles.AddBlock(this);
         }
 
+        /// <summary>
+        /// Create a new copy of this record.
+        /// </summary>
+        /// <returns></returns>
+        public new ChainedPuzzle Copy()
+        {
+            PersistentId = Generator.GetPersistentId();
+            Name = PersistentId.ToString();
+
+            Bins.ChainedPuzzles.AddBlock(this);
+
+            return this;
+        }
+
         #region Pack builders
+
         /// <summary>
         /// Chained puzzle pack builders. Generates a pack of alarms that can be Pick()ed from
         /// for building levels.
         /// </summary>
         /// <param name="tier"></param>
         /// <returns></returns>
-        public static List<ChainedPuzzle> BuildPack(string tier)
-            => (tier) switch
+        public static List<ChainedPuzzle> BuildPack(string tier, LevelSettings settings)
+        {
+            switch (tier)
             {
-                "A" => new List<ChainedPuzzle>
+                case "A":
+                    return new List<ChainedPuzzle>
+                    {
+                        None, None,
+                        TeamScan, TeamScan, TeamScan,
+                        AlarmClass2, AlarmClass2, AlarmClass2, AlarmClass2, AlarmClass2,
+                        AlarmClass3, AlarmClass3, AlarmClass3, AlarmClass3, AlarmClass3,
+                        AlarmClass4, AlarmClass4,
+                    };
+
+                case "B":
+                    return new List<ChainedPuzzle>
+                    {
+                        None, None,
+                        TeamScan, TeamScan,
+                        AlarmClass3, AlarmClass3, AlarmClass3,
+                        AlarmClass4, AlarmClass4, AlarmClass4,
+                        AlarmClass5,
+
+                        AlarmClass1_Sustained,
+                    };
+
+                case "C":
+                    return new List<ChainedPuzzle>
+                    {
+                        None,
+
+                        TeamScan, TeamScan,
+
+                        AlarmClass3, AlarmClass3,
+
+                        AlarmClass4, AlarmClass4, AlarmClass4, AlarmClass4,
+                        AlarmClass4_Cluster, AlarmClass4_Cluster,
+                        AlarmClass4_Mixed, AlarmClass4_Mixed,
+
+                        AlarmClass5, AlarmClass5, AlarmClass5,
+                        AlarmClass5_Cluster,
+                        AlarmClass5_Mixed,
+                        AlarmClass5_Mixed,
+
+                        AlarmClass2_Surge,
+
+                        AlarmClass1_Sustained, AlarmClass1_Sustained,
+                    };
+
+                case "D":
                 {
-                    None, None,
-                    TeamScan, TeamScan, TeamScan,
-                    AlarmClass2, AlarmClass2, AlarmClass2, AlarmClass2, AlarmClass2,
-                    AlarmClass3, AlarmClass3, AlarmClass3, AlarmClass3, AlarmClass3,
-                    AlarmClass4, AlarmClass4,
-                },
-                "B" => new List<ChainedPuzzle>
-                {
-                    None, None,
-                    TeamScan, TeamScan,
-                    AlarmClass3, AlarmClass3, AlarmClass3,
-                    AlarmClass4, AlarmClass4, AlarmClass4,
-                    AlarmClass5,
+                    var pack = new List<ChainedPuzzle>
+                    {
+                        // Easy scans
+                        TeamScan, TeamScan,
+                        AlarmClass4,
 
-                    AlarmClass1_Sustained,
-                },
-                "C" => new List<ChainedPuzzle>
-                {
-                    None,
+                        // Stealth and Surprise scans. Secret scans are grouped with their regular
+                        // counterpart
+                        StealthScan4, Secret_StealthScan4_WithChargers,
+                        None, Secret_SpawnTank,
 
-                    TeamScan, TeamScan,
+                        // // Moderately difficult scans
+                        // AlarmClass5_Hard, AlarmClass5_Hybrids, AlarmClass5_Chargers, AlarmClass5_Hard,
+                        // AlarmClass5_Cluster, AlarmClass5_Cluster_Nightmare,
+                        // AlarmClass5_Mixed, AlarmClass5_Mixed,
 
-                    AlarmClass3, AlarmClass3,
+                        // // Challenging scans
+                        // AlarmClass6_Chargers,
+                        // AlarmClass6_Nightmare,
+                        // AlarmClass6_Mixed,
+                        //
+                        // AlarmClass7_Chargers,
+                        // AlarmClass7_Mixed,
 
-                    AlarmClass4, AlarmClass4, AlarmClass4, AlarmClass4,
-                    AlarmClass4_Cluster, AlarmClass4_Cluster,
-                    AlarmClass4_Mixed, AlarmClass4_Mixed,
+                        // Surge (very challenging)
+                        AlarmClass2_Surge,
+                        AlarmClass3_Surge,
 
-                    AlarmClass5, AlarmClass5, AlarmClass5,
-                    AlarmClass5_Cluster,
-                    AlarmClass5_Mixed,
-                    AlarmClass5_Mixed,
+                        // // Sustained
+                        // AlarmClass1_Sustained, AlarmClass1_Sustained, AlarmClass1_Sustained,
+                    };
 
-                    AlarmClass2_Surge,
+                    if (settings.Modifiers.Contains(LevelModifiers.Chargers) || settings.Modifiers.Contains(LevelModifiers.ManyChargers))
+                        pack.AddRange(new List<ChainedPuzzle>
+                        {
+                            // Moderately difficult scans
+                            AlarmClass5_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId },
+                            AlarmClass5_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId },
+                            AlarmClass5_Cluster.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId },
+                            AlarmClass5_Mixed.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId },
 
-                    AlarmClass1_Sustained, AlarmClass1_Sustained,
-                },
-                "D" => new List<ChainedPuzzle>
-                {
-                    // Easy scans
-                    TeamScan, TeamScan,
-                    AlarmClass4,
+                            AlarmClass5_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId },
+                            AlarmClass5_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId },
+                            AlarmClass5_Cluster.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId },
+                            AlarmClass5_Mixed.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId },
 
-                    // Stealth and Surprise scans. Secret scans are grouped with their regular
-                    // counterpart
-                    StealthScan4, Secret_StealthScan4_WithChargers,
-                    None, Secret_SpawnTank,
+                            // Challenging scans
+                            AlarmClass6_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId },
+                            AlarmClass6_Mixed.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId },
+                            AlarmClass7_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId },
+                            AlarmClass7_Mixed.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId },
 
-                    // Moderately difficult scans
-                    AlarmClass5_Hard, AlarmClass5_Hybrids, AlarmClass5_Chargers, AlarmClass5_Hard,
-                    AlarmClass5_Cluster, AlarmClass5_Cluster_Nightmare,
-                    AlarmClass5_Mixed, AlarmClass5_Mixed,
+                            // Sustained
+                            AlarmClass1_Sustained,
+                            AlarmClass1_Sustained.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId },
+                            AlarmClass1_Sustained.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyChargers.PersistentId }
+                        });
+                    if (settings.Modifiers.Contains(LevelModifiers.Shadows) || settings.Modifiers.Contains(LevelModifiers.ManyShadows))
+                        pack.AddRange(new List<ChainedPuzzle>
+                        {
+                            // Moderately difficult scans
+                            AlarmClass5_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId },
+                            AlarmClass5_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId },
+                            AlarmClass5_Cluster.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId },
+                            AlarmClass5_Mixed.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId },
 
-                    // Challenging scans
-                    AlarmClass6_Chargers,
-                    AlarmClass6_Nightmare,
-                    AlarmClass6_Mixed,
+                            AlarmClass5_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId },
+                            AlarmClass5_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId },
+                            AlarmClass5_Cluster.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId },
+                            AlarmClass5_Mixed.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId },
 
-                    AlarmClass7_Chargers,
-                    AlarmClass7_Mixed,
+                            // Challenging scans
+                            AlarmClass6_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId },
+                            AlarmClass6_Mixed.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId },
+                            AlarmClass7_Hard.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId },
+                            AlarmClass7_Mixed.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId },
 
-                    // Surge (very challenging)
-                    AlarmClass2_Surge,
-                    AlarmClass3_Surge,
+                            // Sustained
+                            AlarmClass1_Sustained,
+                            AlarmClass1_Sustained.Copy() with { SurvivalWavePopulation = WavePopulation.Baseline_Shadows.PersistentId },
+                            AlarmClass1_Sustained.Copy() with { SurvivalWavePopulation = WavePopulation.OnlyShadows.PersistentId }
+                        });
+                    if (settings.Modifiers.Contains(LevelModifiers.NoChargers) && settings.Modifiers.Contains(LevelModifiers.NoShadows))
+                        pack.AddRange(new List<ChainedPuzzle>
+                        {
+                            // Moderately difficult scans
+                            AlarmClass5_Hard, AlarmClass5_Hybrids, AlarmClass5_Chargers, AlarmClass5_Hard,
+                            AlarmClass5_Cluster, AlarmClass5_Cluster_Nightmare,
+                            AlarmClass5_Mixed, AlarmClass5_Mixed,
 
-                    // Sustained
-                    AlarmClass1_Sustained, AlarmClass1_Sustained, AlarmClass1_Sustained,
-                },
+                            // Challenging scans
+                            AlarmClass6_Chargers,
+                            AlarmClass6_Nightmare,
+                            AlarmClass6_Mixed,
+
+                            AlarmClass7_Chargers,
+                            AlarmClass7_Mixed,
+
+                            // Sustained
+                            AlarmClass1_Sustained, AlarmClass1_Sustained, AlarmClass1_Sustained
+                        });
+
+                    return pack;
+                }
 
                 // TODO: balance this
-                "E" => new List<ChainedPuzzle>
-                {
-                    // Easy
-                    None,
-                    TeamScan,
-                    AlarmClass4, AlarmClass4,
+                case "E":
+                    return new List<ChainedPuzzle>
+                    {
+                        // Easy
+                        TeamScan,
+                        AlarmClass4, AlarmClass4,
 
-                    // Moderate
-                    AlarmClass5, AlarmClass5, AlarmClass5,
-                    AlarmClass5_Cluster, AlarmClass5_Cluster,
-                    AlarmClass5_Mixed, AlarmClass5_Mixed,
+                        // Stealth and Surprise scans. Secret scans are grouped with their regular
+                        // counterpart
+                        StealthScan4, Secret_StealthScan4_WithChargers,
+                        None, Secret_SpawnTank,
 
-                    // Difficult
-                    AlarmClass6, AlarmClass6, AlarmClass6,
-                    AlarmClass6_Mixed, AlarmClass6_Mixed,
-                    AlarmClass7,
-                    AlarmClass7_Mixed,
-                    AlarmClass8,
+                        // Moderate
+                        AlarmClass5, AlarmClass5, AlarmClass5,
+                        AlarmClass5_Cluster, AlarmClass5_Cluster,
+                        AlarmClass5_Mixed, AlarmClass5_Mixed,
 
-                    // Pure pain scans, TODO: this might be too much
-                    AlarmClass3_Surge, AlarmClass3_Surge,
-                    AlarmClass4_Surge, // !!! Is this possible?
+                        // Difficult
+                        AlarmClass6, AlarmClass6, AlarmClass6,
+                        AlarmClass6_Mixed, AlarmClass6_Mixed,
+                        AlarmClass7,
+                        AlarmClass7_Mixed,
+                        AlarmClass8,
 
-                    // Sustained
-                    AlarmClass1_Sustained, AlarmClass1_Sustained, AlarmClass1_Sustained,
-                },
-                _ => new List<ChainedPuzzle>(),
+                        // Pure pain scans, TODO: this might be too much
+                        AlarmClass3_Surge, AlarmClass3_Surge,
+                        AlarmClass4_Surge, // !!! Is this possible?
+
+                        // Sustained
+                        AlarmClass1_Sustained, AlarmClass1_Sustained, AlarmClass1_Sustained,
+                    };
+
+                default:
+                    return new List<ChainedPuzzle>();
             };
+        }
 
         public static List<ChainedPuzzle> BuildReactorShutdownPack(string tier)
         {

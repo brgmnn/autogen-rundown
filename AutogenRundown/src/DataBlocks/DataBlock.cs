@@ -39,6 +39,18 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
+        /// Create a new copy of this record.
+        /// </summary>
+        /// <returns></returns>
+        public DataBlock Copy()
+        {
+            PersistentId = Generator.GetPersistentId();
+            Name = PersistentId.ToString();
+
+            return this;
+        }
+
+        /// <summary>
         /// Saves the data block to disk, serializing as JSON
         /// </summary>
         /// <param name="path"></param>

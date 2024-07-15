@@ -67,10 +67,12 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WavePopulations.AddBlock(Baseline_Hybrids);
             Bins.WavePopulations.AddBlock(Baseline_Chargers);
             Bins.WavePopulations.AddBlock(Baseline_Nightmare);
+            Bins.WavePopulations.AddBlock(Baseline_Shadows);
 
             Bins.WavePopulations.AddBlock(OnlyChargers);
             Bins.WavePopulations.AddBlock(OnlyHybrids);
             Bins.WavePopulations.AddBlock(OnlyShadows);
+            Bins.WavePopulations.AddBlock(OnlyNightmares);
 
             // Shadows
             Bins.WavePopulations.AddBlock(Shadows_WithHybrids);
@@ -122,6 +124,15 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleSpecial = Enemy.NightmareStriker,
             WaveRoleMiniBoss = Enemy.StrikerGiant_Wave,
             WaveRoleBoss = Enemy.NightmareShooter
+        };
+
+        public static WavePopulation Baseline_Shadows = new WavePopulation
+        {
+            WaveRoleWeakling = Enemy.Shadow,
+            WaveRoleStandard = Enemy.Striker_Wave,
+            WaveRoleSpecial = Enemy.Shadow,
+            WaveRoleMiniBoss = Enemy.ShooterGiant,
+            WaveRoleBoss = Enemy.ShadowGiant
         };
         #endregion
 
