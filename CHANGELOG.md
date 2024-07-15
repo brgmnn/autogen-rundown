@@ -3,6 +3,20 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.32.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.32.0) — July 14, 2024
+
+### Changes
+
+* Fix `Survival` objective go to elevator text
+* Added Nightmare/Zoomer scouts to E-tier
+* Improve zone time factor estimates. For details see `GetClearTimeEstimate` in `Zone`. Time estimates now add time base on the following factors:
+  * Zone size, also increased time factor for coverage by 17%
+  * Alarm to enter zone: number of scans, sum of duration of each scan, distance between scans
+  * Blood doors to enter zone
+  * Total enemy points in the zone
+  * Fixed times per boss in zone and behind blood doors
+
+
 ## [v0.31.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.31.0) — July 13, 2024
 
 ### New
