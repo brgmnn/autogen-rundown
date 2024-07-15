@@ -47,9 +47,9 @@ public partial record WardenObjective : DataBlock
         var exitNumber = layout.ZoneAliasStart + exitZone.ZoneNumber;
         var exitZoneString = $"<color=orange>ZONE {exitNumber}</color>";
 
-        MainObjective = $"Find a way to stay alive during Warden Protocol X:://FORLORN_DECOY, and make your way to {exitZoneString} for extraction";
+        MainObjective = $"Find a way to stay alive during Warden Protocol DECOY, and make your way to {exitZoneString} for extraction";
         Survival_TimerTitle = "Time until allowed extraction:";
-        Survival_TimerToActivateTitle = "<color=red>WARNING!</color> Warden Protocol <color=orange>X:://FORLORN_DECOY</color> will commence in: ";
+        Survival_TimerToActivateTitle = "<color=red>WARNING!</color> Warden Protocol <color=orange>DECOY</color> will commence in: ";
         // Set these both as go forward as we always have an exit geo.
         GoToWinCondition_Elevator = $"Go to the forward exit point in {exitZoneString}";
         GoToWinCondition_CustomGeo = $"Go to the forward exit point in {exitZoneString}";
