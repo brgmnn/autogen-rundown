@@ -117,25 +117,6 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.ChainedPuzzles.AddBlock(this);
         }
 
-        /// <summary>
-        /// Create a new copy of this record.
-        /// </summary>
-        /// <returns></returns>
-        public new ChainedPuzzle Copy()
-        {
-            PersistentId = Generator.GetPersistentId();
-            // Name = PersistentId.ToString();
-
-
-
-            Bins.ChainedPuzzles.AddBlock(this);
-
-            var found = Bins.ChainedPuzzles.Find(PersistentId);
-            Plugin.Logger.LogDebug($"-- Saving new ChainPuzzle: {PersistentId} -- Is it there??? {found != null}");
-
-            return this;
-        }
-
         #region Pack builders
 
         /// <summary>
