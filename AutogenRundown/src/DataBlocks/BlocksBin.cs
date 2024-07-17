@@ -10,8 +10,8 @@ namespace AutogenRundown.DataBlocks
     {
         public static BlocksBin<BigPickupDistribution> BigPickupDistributions { get; private set; }
             = new BlocksBin<BigPickupDistribution>();
-        public static BlocksBin<ChainedPuzzle> ChainedPuzzles { get; private set; }
-            = new BlocksBin<ChainedPuzzle>();
+        public static LazyBlocksBin<ChainedPuzzle> ChainedPuzzles { get; private set; }
+            = new LazyBlocksBin<ChainedPuzzle>();
         public static BlocksBin<ConsumableDistribution> ConsumableDistributions { get; private set; }
             = new BlocksBin<ConsumableDistribution>();
         public static BlocksBin<EnemyGroup> EnemyGroups { get; private set; }
@@ -91,7 +91,7 @@ namespace AutogenRundown.DataBlocks
         [JsonProperty("LastPersistentID")]
         public uint LastPersistentId { get; set; } = 0;
 
-        private HashSet<uint> persistentIds = new HashSet<uint>();
+        internal HashSet<uint> persistentIds = new HashSet<uint>();
 
         /// <summary>
         ///
@@ -122,7 +122,7 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// Saves the data block to disk, serializing as JSON
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="name"></param>
         public void Save(string name)
         {
             JsonSerializer serializer = new JsonSerializer();
@@ -142,6 +142,65 @@ namespace AutogenRundown.DataBlocks
 
             serializer.Serialize(writer, this);
             stream.Flush();
+        }
+    }
+
+    /// <summary>
+    /// Lazy persisting version of BlocksBin.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class LazyBlocksBin<T> : BlocksBin<T> where T : DataBlock
+    {
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="block"></param>
+        public new void AddBlock(T? block)
+        {
+            if (block is null)
+                return;
+
+            // Don't add a block that we already have
+            // TODO: do we need to change this to use a HashMap?
+            if (Blocks.Contains(block))
+                return;
+
+            Blocks.Add(block);
+
+            if (block.PersistentId != 0)
+            {
+                persistentIds.Add(block.PersistentId);
+                LastPersistentId = Math.Max(LastPersistentId, block.PersistentId);
+            }
+        }
+
+        /// <summary>
+        /// Ensure all blocks are assigned an Id
+        /// </summary>
+        public void Persist()
+        {
+            foreach (var block in Blocks)
+            {
+                if (block.PersistentId == 0)
+                {
+                    block.PersistentId = Generator.GetPersistentId();
+                    persistentIds.Add(block.PersistentId);
+                    LastPersistentId = Math.Max(LastPersistentId, block.PersistentId);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Saves the data block to disk, serializing as JSON
+        /// </summary>
+        /// <param name="name"></param>
+        public void Save(string name)
+        {
+            // Ensure all blocks are assign persistent Id's
+            Persist();
+
+            // Call base save
+            base.Save(name);
         }
     }
 }
