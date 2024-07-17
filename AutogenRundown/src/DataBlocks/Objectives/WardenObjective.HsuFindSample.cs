@@ -65,6 +65,7 @@ public partial record class WardenObjective : DataBlock
 
         // Add enemies on Goto Win
         // TODO: do we want this for all bulkheads?
+        // TODO: Reduce the difficulty for non-main objectives
         if (director.Bulkhead.HasFlag(Bulkhead.Main) || director.Tier != "A")
             WavesOnGotoWin.Add(GenericWave.ExitTrickle);
     }
