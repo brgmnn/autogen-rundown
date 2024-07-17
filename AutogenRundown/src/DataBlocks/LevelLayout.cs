@@ -50,12 +50,10 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// Roll for door alarms
         /// </summary>
-        public void RollAlarms(List<ChainedPuzzle> puzzlePack)
+        public void RollAlarms(ICollection<(double, int, ChainedPuzzle)> puzzlePack)
         {
             foreach (var zone in Zones)
-            {
                 zone.RollAlarms(puzzlePack);
-            }
         }
 
         /// <summary>

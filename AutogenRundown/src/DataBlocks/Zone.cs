@@ -627,13 +627,13 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Alarms
-        public void RollAlarms(ICollection<ChainedPuzzle> puzzlePack)
+        public void RollAlarms(ICollection<(double, int, ChainedPuzzle)> pack)
         {
             if (LocalIndex == 0 || Alarm == ChainedPuzzle.SkipZone)
                 return;
 
             // Grab a random puzzle from the puzzle pack
-            var puzzle = Generator.Draw(puzzlePack);
+            var puzzle = Generator.DrawSelect(pack);
 
             if (puzzle == null)
                 return;
