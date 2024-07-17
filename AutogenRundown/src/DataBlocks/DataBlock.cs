@@ -1,12 +1,11 @@
-﻿using BepInEx;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks
 {
     /// <summary>
     /// Base datablock type that all other data blocks inherit from
     /// </summary>
-    public record class DataBlock
+    public record DataBlock
     {
         /// <summary>
         /// All persistent Ids must be unique
@@ -26,9 +25,6 @@ namespace AutogenRundown.DataBlocks
         [JsonProperty("internalEnabled")]
         public bool Enabled { get; set; } = true;
 
-        [JsonIgnore]
-        public string? Filename { get => $"{PersistentId}__{Name?.Replace(' ', '_')}"; }
-
         /// <summary>
         /// Data block class constructor. Ensures a unique persistent ID is assigned
         /// </summary>
@@ -36,42 +32,6 @@ namespace AutogenRundown.DataBlocks
         {
             PersistentId = id ?? Generator.GetPersistentId();
             Name = PersistentId.ToString();
-        }
-
-        /// <summary>
-        /// Create a new copy of this record.
-        /// </summary>
-        /// <returns></returns>
-        public DataBlock Copy()
-        {
-            PersistentId = Generator.GetPersistentId();
-            Name = PersistentId.ToString();
-
-            return this;
-        }
-
-        /// <summary>
-        /// Saves the data block to disk, serializing as JSON
-        /// </summary>
-        /// <param name="path"></param>
-        public void Save()
-        {
-            JsonSerializer serializer = new JsonSerializer();
-            serializer.Formatting = Formatting.Indented;
-
-            var revision = CellBuildData.GetRevision();
-
-            var dir = Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}", "Custom");
-            var path = Path.Combine(dir, $"GameData__{Filename}.json");
-
-            // Ensure the directory exists
-            Directory.CreateDirectory(dir);
-
-            using (StreamWriter sw = new StreamWriter(path))
-            using (JsonWriter writer = new JsonTextWriter(sw))
-            {
-                serializer.Serialize(writer, this);
-            }
         }
 
         public static void Setup()
