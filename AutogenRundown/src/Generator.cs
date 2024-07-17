@@ -175,44 +175,50 @@ namespace AutogenRundown
         /// the element will be removed from the list. Relative weights are relative to the
         /// other elements in the list.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="collection"></param>
+        /// <typeparam name="T">The element type that our collection consists of</typeparam>
+        /// <param name="collection">The collection</param>
+        /// <param name="fixedWeights">
+        ///     Whether elements total weights is the fixed frequency value passed in or if
+        ///     the total weight is the frequency multiplied by elements in the pool
+        /// </param>
         /// <returns></returns>
-        public static T DrawSelect<T>(ICollection<(double, int, T)> collection)
+        public static T DrawSelect<T>(
+            ICollection<(double, int, T)> collection,
+            bool fixedWeights = false)
         {
-            var totalWeight = collection.Sum((x) => x.Item1);
+            var totalWeight = collection.Sum((x) => !fixedWeights ? x.Item1 * x.Item2 : x.Item1);
             var rand = Random.NextDouble();
             var randomWeight = rand * totalWeight;
 
             double weightSum = 0;
 
-            //foreach (var (weight, count, item) in collection)
-            for (int i = 0; i < collection.Count; i++)
+            for (var i = 0; i < collection.Count; i++)
             {
                 var entry = collection.ElementAt(i);
                 var (weight, count, item) = entry;
-                weightSum += weight;
+                weightSum += weight * count;
 
                 if (randomWeight <= weightSum)
                 {
-                    if (count > 1)
-                        entry.Item2 = count - 1;
-                    else
-                        collection.Remove(entry);
+                    collection.Remove(entry);
+                    entry.Item2--;
+
+                    if (entry.Item2 > 0)
+                        collection.Add(entry);
 
                     return item;
                 }
             }
 
             var entryLast = collection.Last();
-            var (_, countLast, itemLast) = entryLast;
 
-            if (countLast > 1)
-                entryLast.Item2 = countLast - 1;
-            else
-                collection.Remove(entryLast);
+            collection.Remove(entryLast);
+            entryLast.Item2--;
 
-            return itemLast;
+            if (entryLast.Item2 > 0)
+                collection.Add(entryLast);
+
+            return entryLast.Item3;
         }
 
         /// <summary>
