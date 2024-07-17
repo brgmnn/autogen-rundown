@@ -318,6 +318,7 @@ public record ChainedPuzzle : DataBlock
         };
     }
 
+    // TODO: We need to finish this with the new system
     public static List<ChainedPuzzle> BuildReactorShutdownPack(string tier)
     {
         switch (tier)
@@ -493,7 +494,6 @@ public record ChainedPuzzle : DataBlock
     public static readonly ChainedPuzzle AlarmClass3_Hard = AlarmClass3 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass4 = new()
@@ -513,28 +513,24 @@ public record ChainedPuzzle : DataBlock
     public static readonly ChainedPuzzle AlarmClass4_Hard = AlarmClass4 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass4_Chargers = AlarmClass4 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
         SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass4_Hybrids = AlarmClass4 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
         SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass4_Nightmare = AlarmClass4 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
         SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass5 = new()
@@ -555,28 +551,24 @@ public record ChainedPuzzle : DataBlock
     public static readonly ChainedPuzzle AlarmClass5_Hard = AlarmClass5 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass5_Chargers = AlarmClass5 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
         SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass5_Hybrids = AlarmClass5 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
         SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass5_Nightmare = AlarmClass5 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
         SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass6 = new()
@@ -599,29 +591,24 @@ public record ChainedPuzzle : DataBlock
     public static readonly ChainedPuzzle AlarmClass6_Hard = AlarmClass6 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass6_Chargers = AlarmClass6 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
         SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass6_Hybrids = AlarmClass6 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
         SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
-        // Name = "AlarmClass6_Hybrids"
     };
 
     public static readonly ChainedPuzzle AlarmClass6_Nightmare = AlarmClass6 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
         SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass7 = new()
@@ -645,28 +632,24 @@ public record ChainedPuzzle : DataBlock
     public static readonly ChainedPuzzle AlarmClass7_Hard = AlarmClass7 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass7_Chargers = AlarmClass7 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
         SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass7_Hybrids = AlarmClass7 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
         SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass7_Nightmare = AlarmClass7 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
         SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass8 = new()
@@ -690,28 +673,24 @@ public record ChainedPuzzle : DataBlock
     public static readonly ChainedPuzzle AlarmClass8_Hard = AlarmClass8 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass8_Chargers = AlarmClass8 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
         SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass8_Hybrids = AlarmClass8 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
         SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
 
     public static readonly ChainedPuzzle AlarmClass8_Nightmare = AlarmClass8 with
     {
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
         SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
-        PersistentId = Generator.GetPersistentId(),
     };
     #endregion
 
@@ -910,7 +889,6 @@ public record ChainedPuzzle : DataBlock
     #endregion
 
     #region Alarms: Sustained
-    // TODO: Fix duration
     public static readonly ChainedPuzzle AlarmClass1_Sustained = new()
     {
         PublicAlarmName = "Class S I Alarm",
