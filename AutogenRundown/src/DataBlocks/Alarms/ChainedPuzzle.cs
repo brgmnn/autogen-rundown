@@ -1054,80 +1054,12 @@ public record ChainedPuzzle : DataBlock
 
     public static new void SaveStatic()
     {
-        /*
-        Bins.ChainedPuzzles.AddBlock(TeamScan);
-
-        #region Apex
-        Bins.ChainedPuzzles.AddBlock(AlarmClass1);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass2);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass3);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass4);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass5);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass6);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass7);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass8);
-
-        Bins.ChainedPuzzles.AddBlock(AlarmClass3_Hard);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass4_Hard);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass5_Hard);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass6_Hard);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass7_Hard);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass8_Hard);
-
-        Bins.ChainedPuzzles.AddBlock(AlarmClass4_Chargers);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass5_Chargers);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass6_Chargers);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass7_Chargers);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass8_Chargers);
-
-        Bins.ChainedPuzzles.AddBlock(AlarmClass4_Hybrids);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass5_Hybrids);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass6_Hybrids);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass7_Hybrids);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass8_Hybrids);
-
-        Bins.ChainedPuzzles.AddBlock(AlarmClass4_Nightmare);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass5_Nightmare);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass6_Nightmare);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass7_Nightmare);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass8_Nightmare);
-        #endregion
-
-        Bins.ChainedPuzzles.AddBlock(AlarmClass2_Cluster);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass3_Cluster);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass4_Cluster);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass5_Cluster);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass5_Cluster_Nightmare);
-
-        Bins.ChainedPuzzles.AddBlock(AlarmClass4_Mixed);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass5_Mixed);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass6_Mixed);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass7_Mixed);
-
-        Bins.ChainedPuzzles.AddBlock(AlarmClass2_Surge);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass3_Surge);
-        Bins.ChainedPuzzles.AddBlock(AlarmClass4_Surge);
-
-        Bins.ChainedPuzzles.AddBlock(AlarmClass1_Sustained);
-        */
-
         // Bulkhead scans are referenced by the game
         BulkheadSelect_Main.Persist();
         BulkheadSelect_Secondary.Persist();
         BulkheadSelect_Overload.Persist();
-
-        // TODO: move this to lazy generation
+        
         // Several objectives use the exit alarm
         ExitAlarm.Persist();
-
-        /*
-            // TODO: we think we always have to assign some of these
-        Bins.ChainedPuzzles.AddBlock(AlarmError_Baseline);
-        Bins.ChainedPuzzles.AddBlock(ExitAlarm);
-
-        Bins.ChainedPuzzles.AddBlock(BulkheadSelect_Main);
-        Bins.ChainedPuzzles.AddBlock(BulkheadSelect_Secondary);
-        Bins.ChainedPuzzles.AddBlock(BulkheadSelect_Overload);
-        */
     }
 }
