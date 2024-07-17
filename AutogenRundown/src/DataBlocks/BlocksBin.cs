@@ -167,11 +167,11 @@ namespace AutogenRundown.DataBlocks
 
             Blocks.Add(block);
 
-            if (block.PersistentId != 0)
-            {
-                persistentIds.Add(block.PersistentId);
-                LastPersistentId = Math.Max(LastPersistentId, block.PersistentId);
-            }
+            if (block.PersistentId == 0)
+                return;
+
+            persistentIds.Add(block.PersistentId);
+            LastPersistentId = Math.Max(LastPersistentId, block.PersistentId);
         }
 
         /// <summary>
@@ -179,14 +179,11 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public void Persist()
         {
-            foreach (var block in Blocks)
+            foreach (var block in Blocks.Where(block => block.PersistentId == 0))
             {
-                if (block.PersistentId == 0)
-                {
-                    block.PersistentId = Generator.GetPersistentId();
-                    persistentIds.Add(block.PersistentId);
-                    LastPersistentId = Math.Max(LastPersistentId, block.PersistentId);
-                }
+                block.PersistentId = Generator.GetPersistentId();
+                persistentIds.Add(block.PersistentId);
+                LastPersistentId = Math.Max(LastPersistentId, block.PersistentId);
             }
         }
 
@@ -194,7 +191,7 @@ namespace AutogenRundown.DataBlocks
         /// Saves the data block to disk, serializing as JSON
         /// </summary>
         /// <param name="name"></param>
-        public void Save(string name)
+        public new void Save(string name)
         {
             // Ensure all blocks are assign persistent Id's
             Persist();
