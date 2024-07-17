@@ -692,6 +692,57 @@ public record ChainedPuzzle : DataBlock
         SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
         SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
     };
+
+    /// <summary>
+    /// These start to get quite hard. The fabled Class IX (9) alarm was a whole level on its own
+    /// in R2 and that was after it was nerfed from a Class X (10)
+    /// </summary>
+    public static readonly ChainedPuzzle AlarmClass9 = new()
+    {
+        PublicAlarmName = "Class IX Alarm",
+        SurvivalWaveSettings = WaveSettings.Baseline_Normal.PersistentId,
+        SurvivalWavePopulation = WavePopulation.Baseline.PersistentId,
+        WantedDistanceBetweenPuzzleComponents = 15.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.AllBig,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ClusterLarge,
+            PuzzleComponent.AllBig,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ScanLarge,
+            PuzzleComponent.AllBig
+        },
+    };
+
+    /// <summary>
+    /// This is the longest and will likely be a very challenging scan on any level. Ammo is likely
+    /// to be a big problem and the possibility of using strategies such as C-foam holding are
+    /// unlikely unless this spawns at a place with plenty of resources. Even moderate enemy
+    /// wave settings will make this extremely challenging.
+    /// </summary>
+    public static readonly ChainedPuzzle AlarmClass10 = new()
+    {
+        PublicAlarmName = "Class X Alarm",
+        SurvivalWaveSettings = WaveSettings.Baseline_Normal.PersistentId,
+        SurvivalWavePopulation = WavePopulation.Baseline.PersistentId,
+        WantedDistanceBetweenPuzzleComponents = 15.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.AllBig,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.AllBig,
+            PuzzleComponent.ClusterLarge,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.AllBig,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ScanLarge,
+            PuzzleComponent.AllBig
+        },
+    };
     #endregion
 
     #region Alarms: Cluster
@@ -1058,7 +1109,7 @@ public record ChainedPuzzle : DataBlock
         BulkheadSelect_Main.Persist();
         BulkheadSelect_Secondary.Persist();
         BulkheadSelect_Overload.Persist();
-        
+
         // Several objectives use the exit alarm
         ExitAlarm.Persist();
     }
