@@ -46,7 +46,7 @@ namespace AutogenRundown
 
     static public class Generator
     {
-        private static PID pid = 100000;
+        public static PID pid = 100000;
 
         private static PID enemyGroupPid = 80;
         private static PID wavePopulationPid = 100;
