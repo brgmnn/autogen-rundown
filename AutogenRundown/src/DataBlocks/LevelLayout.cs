@@ -536,9 +536,7 @@ namespace AutogenRundown.DataBlocks
                 }
 
                 zone.Alarm = puzzle;
-                //zone.ChainedPuzzleToEnter = puzzle.PersistentId;
-
-                Bins.ChainedPuzzles.AddBlock(puzzle);
+                puzzle.Persist();
 
                 // Give a flat chance of being able to turn off the alarm.
                 if (Generator.Flip(0.5))

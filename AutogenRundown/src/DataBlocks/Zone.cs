@@ -646,7 +646,7 @@ namespace AutogenRundown.DataBlocks
             EventsOnDoorScanStart.AddRange(puzzle.EventsOnDoorScanStart);
             EventsOnDoorScanDone.AddRange(puzzle.EventsOnDoorScanDone);
 
-            Bins.ChainedPuzzles.AddBlock(puzzle);
+            puzzle.Persist();
         }
         #endregion
 
