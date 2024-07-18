@@ -3,6 +3,14 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.33.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.33.0) — July 14, 2024
+
+### Changes
+
+* Add charger/shadow waves for certain alarms in D-tier
+* Move survival level to D-tier
+
+
 ## [v0.32.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.32.0) — July 14, 2024
 
 ### Changes
