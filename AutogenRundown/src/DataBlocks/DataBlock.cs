@@ -37,7 +37,11 @@ public record DataBlock
     }
 
     /// <summary>
-    /// Generic function for setting up a BlockBin with the vanilla game data. Can be called
+    /// Generic function for setting up a BlockBin with the vanilla game data. Can be
+    /// called like so:
+    /// ```cs
+    ///     Setup<GameDataWaveSettings, WaveSettings>(Bins.WaveSettings, "SurvivalWaveSettings");
+    /// ```
     /// </summary>
     /// <param name="bin"></param>
     /// <param name="filename"></param>

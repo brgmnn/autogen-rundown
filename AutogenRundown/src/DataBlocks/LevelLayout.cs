@@ -16,7 +16,7 @@ namespace AutogenRundown.DataBlocks
         public uint Enemy { get; set; }
     }
 
-    public partial record class LevelLayout : DataBlock
+    public partial record LevelLayout : DataBlock
     {
         #region hidden data
         [JsonIgnore]
@@ -668,7 +668,6 @@ namespace AutogenRundown.DataBlocks
 
             director.GenZones();
 
-            var objectiveLayerData = level.GetObjectiveLayerData(director.Bulkhead);
             var puzzlePack = ChainedPuzzle.BuildPack(level.Tier, level.Settings);
 
             Plugin.Logger.LogDebug($"Building layout ({layout.Name}), Objective = {objective.Type}");
