@@ -50,22 +50,24 @@ namespace AutogenRundown.DataBlocks.Alarms
             return this;
         }
 
-        public static new void Setup()
+        public static void Setup()
         {
-            var dir = Path.Combine(Paths.PluginPath, Plugin.Name);
-            var path = Path.Combine(dir, $"GameData_SurvivalWavePopulationDataBlock_bin.json");
-            var data = JObject.Parse(File.ReadAllText(path));
+            Setup<GameDataWavePopulation, WavePopulation>(Bins.WavePopulations, "SurvivalWavePopulation");
 
-            if (data?["Blocks"] == null)
-                throw new Exception("Failed to get 'Blocks' property");
-
-            var blocks = data["Blocks"]!.ToObject<List<GameDataWavePopulation>>();
-
-            if (blocks == null)
-                throw new Exception("Failed to parse SurvivalWavePopulation");
-
-            foreach (var block in blocks)
-                Bins.WavePopulations.AddBlock(block);
+            // var dir = Path.Combine(Paths.PluginPath, Plugin.Name);
+            // var path = Path.Combine(dir, $"GameData_SurvivalWavePopulationDataBlock_bin.json");
+            // var data = JObject.Parse(File.ReadAllText(path));
+            //
+            // if (data?["Blocks"] == null)
+            //     throw new Exception("Failed to get 'Blocks' property");
+            //
+            // var blocks = data["Blocks"]!.ToObject<List<GameDataWavePopulation>>();
+            //
+            // if (blocks == null)
+            //     throw new Exception("Failed to parse SurvivalWavePopulation");
+            //
+            // foreach (var block in blocks)
+            //     Bins.WavePopulations.AddBlock(block);
         }
 
         public static new void SaveStatic()

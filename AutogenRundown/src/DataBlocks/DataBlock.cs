@@ -28,11 +28,6 @@ public record DataBlock
     public bool Enabled { get; set; } = true;
 
     /// <summary>
-    ///
-    /// </summary>
-    [JsonIgnore] public static string FileName { get; set; } = "";
-
-    /// <summary>
     /// Data block class constructor. Ensures a unique persistent ID is assigned
     /// </summary>
     public DataBlock(uint? id = null)
@@ -42,18 +37,19 @@ public record DataBlock
     }
 
     /// <summary>
-    /// Generic function for setting up a BlockBin with the vanilla game data
+    /// Generic function for setting up a BlockBin with the vanilla game data. Can be called
     /// </summary>
     /// <param name="bin"></param>
+    /// <param name="filename"></param>
     /// <typeparam name="TGameData"></typeparam>
     /// <typeparam name="TBlock"></typeparam>
     /// <exception cref="Exception"></exception>
-    public static void Setup<TGameData, TBlock>(BlocksBin<TBlock> bin)
+    public static void Setup<TGameData, TBlock>(BlocksBin<TBlock> bin, string filename)
         where TGameData : TBlock
         where TBlock : DataBlock
     {
         var dir = Path.Combine(Paths.PluginPath, Plugin.Name);
-        var path = Path.Combine(dir, $"GameData_{FileName}DataBlock_bin.json");
+        var path = Path.Combine(dir, $"GameData_{filename}DataBlock_bin.json");
         var data = JObject.Parse(File.ReadAllText(path));
 
         if (data?["Blocks"] == null)
@@ -62,7 +58,7 @@ public record DataBlock
         var blocks = data["Blocks"]!.ToObject<List<TGameData>>();
 
         if (blocks == null)
-            throw new Exception($"Failed to parse {FileName}");
+            throw new Exception($"Failed to parse {filename}");
 
         foreach (var block in blocks)
             bin.AddBlock(block);

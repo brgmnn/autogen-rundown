@@ -33,22 +33,24 @@ public record Text : DataBlock
         : base(Generator.GetPersistentId(offsets))
     { }
 
-    public new static void Setup()
+    public static void Setup()
     {
-        var dir = Path.Combine(Paths.PluginPath, Plugin.Name);
-        var path = Path.Combine(dir, $"GameData_TextDataBlock_bin.json");
-        var data = JObject.Parse(File.ReadAllText(path));
+        Setup<GameDataText, Text>(Bins.Texts, "Text");
 
-        if (data?["Blocks"] == null)
-            throw new Exception("Failed to get 'Blocks' property");
-
-        var texts = data["Blocks"]!.ToObject<List<GameDataText>>();
-
-        if (texts == null)
-            throw new Exception("Failed to parse GameDataText");
-
-        foreach (var text in texts)
-            Bins.Texts.AddBlock(text);
+        // var dir = Path.Combine(Paths.PluginPath, Plugin.Name);
+        // var path = Path.Combine(dir, $"GameData_TextDataBlock_bin.json");
+        // var data = JObject.Parse(File.ReadAllText(path));
+        //
+        // if (data?["Blocks"] == null)
+        //     throw new Exception("Failed to get 'Blocks' property");
+        //
+        // var texts = data["Blocks"]!.ToObject<List<GameDataText>>();
+        //
+        // if (texts == null)
+        //     throw new Exception("Failed to parse GameDataText");
+        //
+        // foreach (var text in texts)
+        //     Bins.Texts.AddBlock(text);
     }
 
     /// <summary>
