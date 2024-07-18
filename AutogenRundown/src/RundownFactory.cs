@@ -96,7 +96,7 @@ namespace AutogenRundown
             // Rundown 8 replacement
             var rundown = Rundown.Build(new Rundown { PersistentId = Rundown.R7 });
 
-            var levelNames = new List<string>(Words.NounsLevel);
+            var levelNames = Words.NewLevelNamesPack();
 
             var aMax = Generator.Random.Next(1, 2);
             var bMax = Generator.Random.Next(3, 4);

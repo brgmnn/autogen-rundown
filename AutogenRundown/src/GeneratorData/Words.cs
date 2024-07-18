@@ -2,6 +2,46 @@
 {
     static public class Words
     {
+        static public string NewLevelName()
+        {
+            // Generator.Pick(Words.NounsLevel)
+
+            var firstWord = Generator.Pick(Level_FirstWord);
+            var lastWord = Generator.Pick(Level_LastWord);
+
+            return $"{firstWord} {lastWord}";
+        }
+
+        static public List<string> NewLevelNamesPack()
+        {
+            var predefinedNames = new List<string>(NounsLevel);
+            var first = new List<string>(Level_FirstWord);
+            var last = new List<string>(Level_LastWord);
+            var verb = new List<string>(VerbsPresentParticiple);
+
+            var list = new List<string>();
+
+            for (var i = 0; i < 30; i++)
+            {
+                // Add a predefined name that we have fully generated
+                if (Generator.Flip(0.15))
+                {
+                    var name = Generator.Draw(predefinedNames)!;
+
+                    list.Add(name);
+                    continue;
+                }
+
+                // Create a new name
+                var firstWord = Generator.Draw(Generator.Flip(0.3) ? verb : first);
+                var lastWord = Generator.Draw(last);
+
+                list.Add($"{firstWord} {lastWord}");
+            }
+
+            return list;
+        }
+
         /// <summary>
         /// 200 grim dark adjectives
         /// </summary>
@@ -269,6 +309,212 @@
             "Ravage",
         };
 
+        static public string[] Level_FirstWord =
+        {
+            "Abandon",
+            "Agony",
+            "Anomaly",
+            "Apparition",
+            "Ashes",
+            "Asylum",
+            "Banishment",
+            "Banshee",
+            "Barrow",
+            "Betrayal",
+            "Charnel",
+            "Collapse",
+            "Corruption",
+            "Crypt",
+            "Cursed",
+            "Darkness",
+            "Decay",
+            "Deception",
+            "Decrepit",
+            "Defilement",
+            "Dementia",
+            "Derelict",
+            "Despair",
+            "Detritus",
+            "Dread",
+            "Echoes",
+            "Eclipse",
+            "Eldritch",
+            "Emptiness",
+            "Enigma",
+            "Erosion",
+            "Evocation",
+            "Extinction",
+            "Faded",
+            "Fallen",
+            "Famine",
+            "Fissure",
+            "Forsaken",
+            "Fright",
+            "Ghost",
+            "Gloom",
+            "Grave",
+            "Grim",
+            "Haunted",
+            "Havoc",
+            "Horror",
+            "Hostility",
+            "Inferno",
+            "Isolation",
+            "Labyrinth",
+            "Lament",
+            "Leviathan",
+            "Lurking",
+            "Malevolent",
+            "Malice",
+            "Menace",
+            "Mire",
+            "Misery",
+            "Morbid",
+            "Mournful",
+            "Nightmare",
+            "Oblivion",
+            "Omen",
+            "Pandemonium",
+            "Paranoia",
+            "Perdition",
+            "Phantom",
+            "Plague",
+            "Portal",
+            "Ravine",
+            "Reaper",
+            "Ruin",
+            "Shadows",
+            "Sinister",
+            "Specter",
+            "Spiral",
+            "Stalker",
+            "Stasis",
+            "Subterfuge",
+            "Terror",
+            "Threnody",
+            "Torment",
+            "Torture",
+            "Treachery",
+            "Trepidation",
+            "Tryst",
+            "Twilight",
+            "Unholy",
+            "Vampire",
+            "Vengeance",
+            "Venom",
+            "Vile",
+            "Vortex",
+            "Wailing",
+            "Wasteland",
+            "Whisper",
+            "Wicked",
+            "Wrath",
+            "Wretched",
+            "Zephyr"
+        };
+
+        static public string[] Level_LastWord =
+        {
+            "Abyss",
+            "Anomaly",
+            "Apparition",
+            "Ascent",
+            "Ashes",
+            "Banishment",
+            "Barrow",
+            "Bastion",
+            "Beacon",
+            "Burial",
+            "Cascade",
+            "Cataclysm",
+            "Cavern",
+            "Chasm",
+            "Collapse",
+            "Conundrum",
+            "Corridor",
+            "Corrupter",
+            "Crevasse",
+            "Crypt",
+            "Cyst",
+            "Darkness",
+            "Death",
+            "Delirium",
+            "Demise",
+            "Depth",
+            "Descent",
+            "Detritus",
+            "Dread",
+            "Eclipse",
+            "Embrace",
+            "Empire",
+            "End",
+            "Erosion",
+            "Expanse",
+            "Fissure",
+            "Gallows",
+            "Gloom",
+            "Grave",
+            "Halls",
+            "Hollow",
+            "Horror",
+            "Inferno",
+            "Labyrinth",
+            "Lament",
+            "Legacy",
+            "Maw",
+            "Maze",
+            "Mirage",
+            "Monolith",
+            "Morass",
+            "Morgue",
+            "Nadir",
+            "Necropolis",
+            "Obelisk",
+            "Oblivion",
+            "Obscurity",
+            "Obstruction",
+            "Omen",
+            "Pandemonium",
+            "Paradigm",
+            "Paradox",
+            "Passage",
+            "Phantasm",
+            "Pit",
+            "Portal",
+            "Purgatory",
+            "Quagmire",
+            "Realm",
+            "Reckoning",
+            "Relic",
+            "Requiem",
+            "Rift",
+            "Sanctuary",
+            "Sarcophagus",
+            "Scourge",
+            "Sepulcher",
+            "Shrine",
+            "Spire",
+            "Tomb",
+            "Torment",
+            "Trench",
+            "Trove",
+            "Tundra",
+            "Undertow",
+            "Underworld",
+            "Vale",
+            "Vault",
+            "Veil",
+            "Vestige",
+            "Vortex",
+            "Wasteland",
+            "Whisper",
+            "Womb",
+            "Wraith",
+            "Wreck",
+            "Yawning",
+            "Zenith"
+        };
+
         /// <summary>
         /// Nouns for Level names
         /// </summary>
@@ -396,46 +642,46 @@
         /// </summary>
         static public string[] VerbsPresentParticiple =
         {
-            "Withering",
+            "Atrophying",
+            "Bleeding",
+            "Breaking",
+            "Caving",
+            "Collapsing",
+            "Corroding",
             "Crumbling",
             "Decaying",
-            "Floundering",
-            "Suffering",
-            "Languishing",
-            "Deteriorating",
-            "Collapsing",
-            "Disintegrating",
-            "Perishing",
-            "Degenerating",
-            "Fading",
             "Declining",
-            "Eroding",
-            "Wasting",
-            "Dissipating",
-            "Wilting",
-            "Corroding",
-            "Regressing",
-            "Despairing",
-            "Weakening",
-            "Struggling",
+            "Degenerating",
             "Depleting",
-            "Atrophying",
-            "Wrecking",
+            "Despairing",
+            "Deteriorating",
             "Diminishing",
-            "Bleeding",
-            "Slipping",
-            "Moldering",
-            "Drowning",
-            "Fraying",
-            "Succumbing",
-            "Breaking",
-            "Sinking",
-            "Fading",
-            "Ravaging",
+            "Disintegrating",
+            "Dissipating",
             "Dissolving",
-            "Caving",
+            "Draining",
+            "Drowning",
+            "Eroding",
+            "Fading",
+            "Fading",
+            "Floundering",
+            "Fraying",
             "Fumbling",
-            "Draining"
+            "Languishing",
+            "Moldering",
+            "Perishing",
+            "Ravaging",
+            "Regressing",
+            "Sinking",
+            "Slipping",
+            "Struggling",
+            "Succumbing",
+            "Suffering",
+            "Wasting",
+            "Weakening",
+            "Wilting",
+            "Withering",
+            "Wrecking"
         };
 
         /// <summary>
