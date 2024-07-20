@@ -26,16 +26,16 @@ namespace AutogenRundown.DataBlocks.Enemies
         #region Uplink Waves
         public static GenericWave Uplink_Easy = new GenericWave
         {
-            WaveSettings = (uint)VanillaWaveSettings.Apex,
-            WavePopulation = (uint)Alarms.VanillaWavePopulation.Baseline,
+            WaveSettings = Alarms.WaveSettings.Baseline_Normal.PersistentId,
+            WavePopulation = Alarms.WavePopulation.Baseline.PersistentId,
             SpawnDelay = 2.0,
             TriggerAlarm = true,
         };
 
         public static GenericWave Uplink_Medium = new GenericWave
         {
-            WaveSettings = (uint)VanillaWaveSettings.ApexIncreased,
-            WavePopulation = (uint)Alarms.VanillaWavePopulation.Baseline,
+            WaveSettings = Alarms.WaveSettings.Baseline_Hard.PersistentId,
+            WavePopulation = Alarms.WavePopulation.Baseline.PersistentId,
             SpawnDelay = 2.0,
             TriggerAlarm = true
         };

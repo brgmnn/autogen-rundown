@@ -235,9 +235,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         { }
 
         public static void Setup()
-        {
-            Setup<GameDataWaveSettings, WaveSettings>(Bins.WaveSettings, "SurvivalWaveSettings");
-        }
+            => Setup<GameDataWaveSettings, WaveSettings>(Bins.WaveSettings, "SurvivalWaveSettings");
 
         public override string ToString()
             => $"WavePopulation {{ Name = {Name}, PersistentId = {PersistentId} }}";

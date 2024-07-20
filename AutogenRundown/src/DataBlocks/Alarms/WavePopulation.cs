@@ -48,9 +48,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             => $"WavePopulation {{ Name = {Name}, PersistentId = {PersistentId} }}";
 
         public static void Setup()
-        {
-            Setup<GameDataWavePopulation, WavePopulation>(Bins.WavePopulations, "SurvivalWavePopulation");
-        }
+            => Setup<GameDataWavePopulation, WavePopulation>(Bins.WavePopulations, "SurvivalWavePopulation");
 
         public static List<(double, int, WavePopulation)> BuildPack(string tier, LevelSettings settings)
         {

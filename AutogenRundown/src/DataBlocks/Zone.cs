@@ -637,14 +637,21 @@ namespace AutogenRundown.DataBlocks
 
             // Grab a random puzzle from the puzzle pack
             var puzzle = Generator.DrawSelect(puzzlePack);
-            var population = Generator.DrawSelect(wavePopulationPack);
-            var settings = Generator.DrawSelect(waveSettingsPack);
 
-            if (puzzle == null || population == null || settings == null)
+            if (puzzle == null)
                 return;
 
             // TODO: Randomize things like travel distance here
-            Alarm = puzzle with { Population = population, Settings = settings };
+            // We only copy the population settings in if we have an actual alarm here
+            if (puzzle.TriggerAlarmOnActivate)
+            {
+                var population = Generator.DrawSelect(wavePopulationPack)!;
+                var settings = Generator.DrawSelect(waveSettingsPack)!;
+
+                Alarm = puzzle with { Population = population, Settings = settings };
+            }
+            else
+                Alarm = puzzle;
 
             Plugin.Logger.LogDebug($"Zone {LocalIndex} has door alarm: {puzzle}");
 
