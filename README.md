@@ -6,6 +6,13 @@
 <!--
 * Can we have boosters generate progression for us
 
+JQ Commands for checking blocks:
+
+Check Alarm Persistent IDs for levellayout
+
+  jq -r '.Blocks | map(select(.name | test("^[0-9]+_B1")) | {name, zones: .Zones | map({ChainedPuzzleToEnter})})' build/34855/GameData_LevelLayoutDataBlock_bin.json
+
+
 Probably need to rework enemy sleeper spawning now with level planner
 
 Seed: 2024_07_14
