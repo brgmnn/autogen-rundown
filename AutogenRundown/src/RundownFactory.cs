@@ -54,24 +54,61 @@ namespace AutogenRundown
 
             var blocks = (JArray)resourceSet["Blocks"]!;
 
-            var serviceBlock = blocks.OfType<JObject>()
-                .First(block => (int?)block["persistentID"] == (int)Complex.Service);
-
-            if (serviceBlock?["CustomGeomorphs_Objective_1x1"] == null)
+            ///
+            /// Tech (Datacenter / Lab) custom geomorphs
+            ///
             {
-                Plugin.Logger.LogFatal("No Complex.Service resource block found");
-                return;
+                var techBlock = blocks.OfType<JObject>()
+                .First(block => (int?)block["persistentID"] == (int)Complex.Tech);
+
+                if (techBlock?["CustomGeomorphs_Objective_1x1"] == null)
+                {
+                    Plugin.Logger.LogFatal("No Complex.Service resource block found");
+                    return;
+                }
+
+                var exitGeos = (JArray)techBlock["CustomGeomorphs_Exit_1x1"]!;
+                exitGeos.Insert(0,
+                    new JObject
+                    {
+                        ["Prefab"] = "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_exit_01.prefab",
+                        ["SubComplex"] = (int)SubComplex.DataCenter,
+                        ["Shard"] = "S1"
+                    });
+
+                /*var elevatorGeos = (JArray)techBlock["ElevatorShafts_1x1"]!;
+                exitGeos.Insert(0,
+                    new JObject
+                    {
+                        ["Prefab"] = "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_elevator_shaft_01.prefab",
+                        ["SubComplex"] = (int)SubComplex.DataCenter,
+                        ["Shard"] = "S1"
+                    });*/
             }
 
-            var serviceObjectiveGeos = (JArray)serviceBlock["CustomGeomorphs_Objective_1x1"]!;
+            ///
+            /// Service (Floodways / Gardens) custom geomorph updates
+            ///
+            {
+                var serviceBlock = blocks.OfType<JObject>()
+                .First(block => (int?)block["persistentID"] == (int)Complex.Service);
 
-            serviceObjectiveGeos.Insert(0,
-                new JObject
+                if (serviceBlock?["CustomGeomorphs_Objective_1x1"] == null)
                 {
-                    ["Prefab"] = "Assets/Prefabs/Geomorph/Service/geo_floodways_FA_reactor_01.prefab",
-                    ["SubComplex"] = 6,
-                    ["Shard"] = "S1"
-                });
+                    Plugin.Logger.LogFatal("No Complex.Service resource block found");
+                    return;
+                }
+
+                var objectiveGeos = (JArray)serviceBlock["CustomGeomorphs_Objective_1x1"]!;
+
+                objectiveGeos.Insert(0,
+                    new JObject
+                    {
+                        ["Prefab"] = "Assets/Prefabs/Geomorph/Service/geo_floodways_FA_reactor_01.prefab",
+                        ["SubComplex"] = (int)SubComplex.Floodways,
+                        ["Shard"] = "S1"
+                    });
+            }
 
             // Ensure the directory exists
             Directory.CreateDirectory(destDir);
@@ -196,6 +233,7 @@ namespace AutogenRundown
                 var mainDirector = new BuildDirector()
                 {
                     Bulkhead = Bulkhead.Main,
+                    Complex = Complex.Tech,
                     Tier = "D",
                     Objective = objective
                 };
@@ -211,6 +249,7 @@ namespace AutogenRundown
                         Tier = "D",
                         Prefix = $"<color=orange>X</color><color=#444444>:</color>D",
                         Description = description.PersistentId,
+                        Complex = Complex.Tech,
                         MainDirector = mainDirector,
                         Settings = settings,
                         Index = 1

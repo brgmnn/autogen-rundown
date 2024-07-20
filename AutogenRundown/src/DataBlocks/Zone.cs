@@ -212,8 +212,11 @@ namespace AutogenRundown.DataBlocks
                     break;
 
                 case Complex.Tech:
-                    CustomGeomorph = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_32x32_lab_exit_01.prefab";
-                    SubComplex = SubComplex.All;
+                    (SubComplex, CustomGeomorph) = Generator.Pick(new List<(SubComplex, string)>
+                    {
+                        (SubComplex.All,        "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_32x32_lab_exit_01.prefab"),
+                        (SubComplex.DataCenter, "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_exit_01.prefab")
+                    });
                     break;
 
                 case Complex.Service:
