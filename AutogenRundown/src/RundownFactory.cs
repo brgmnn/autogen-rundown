@@ -76,14 +76,14 @@ namespace AutogenRundown
                         ["Shard"] = "S1"
                     });
 
-                /*var elevatorGeos = (JArray)techBlock["ElevatorShafts_1x1"]!;
-                exitGeos.Insert(0,
+                var elevatorGeos = (JArray)techBlock["ElevatorShafts_1x1"]!;
+                elevatorGeos.Insert(0,
                     new JObject
                     {
                         ["Prefab"] = "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_elevator_shaft_01.prefab",
                         ["SubComplex"] = (int)SubComplex.DataCenter,
                         ["Shard"] = "S1"
-                    });*/
+                    });
             }
 
             ///
