@@ -44,30 +44,58 @@ namespace AutogenRundown.DataBlocks.Alarms
             : base(Generator.GetPersistentId(offsets))
         { }
 
-        public WavePopulation Persist()
-        {
-            Bins.WavePopulations.AddBlock(this);
-            return this;
-        }
+        // public WavePopulation Persist()
+        // {
+        //     Bins.WavePopulations.AddBlock(this);
+        //     return this;
+        // }
 
         public static void Setup()
         {
             Setup<GameDataWavePopulation, WavePopulation>(Bins.WavePopulations, "SurvivalWavePopulation");
+        }
 
-            // var dir = Path.Combine(Paths.PluginPath, Plugin.Name);
-            // var path = Path.Combine(dir, $"GameData_SurvivalWavePopulationDataBlock_bin.json");
-            // var data = JObject.Parse(File.ReadAllText(path));
-            //
-            // if (data?["Blocks"] == null)
-            //     throw new Exception("Failed to get 'Blocks' property");
-            //
-            // var blocks = data["Blocks"]!.ToObject<List<GameDataWavePopulation>>();
-            //
-            // if (blocks == null)
-            //     throw new Exception("Failed to parse SurvivalWavePopulation");
-            //
-            // foreach (var block in blocks)
-            //     Bins.WavePopulations.AddBlock(block);
+        public static List<(double, int, WavePopulation)> BuildPack(string tier, LevelSettings settings)
+        {
+            var pack = new List<(double, int, WavePopulation)>();
+
+            switch (tier)
+            {
+                case "A":
+                {
+                    pack.Add((1.0, 25, Baseline));
+                    break;
+                }
+
+                case "B":
+                {
+                    pack.Add((1.0, 25, Baseline));
+                    break;
+                }
+
+                case "C":
+                {
+                    pack.Add((1.0, 25, Baseline));
+                    pack.Add((1.0, 5, Baseline_Hybrids));
+                    break;
+                }
+
+                case "D":
+                {
+                    pack.Add((1.0, 25, Baseline));
+                    pack.Add((1.0, 5, Baseline_Hybrids));
+                    break;
+                }
+
+                case "E":
+                {
+                    pack.Add((1.0, 25, Baseline));
+                    pack.Add((1.0, 5, Baseline_Hybrids));
+                    break;
+                }
+            }
+
+            return pack;
         }
 
         public static new void SaveStatic()
@@ -94,6 +122,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WavePopulations.AddBlock(SingleEnemy_Pouncer);
         }
 
+        public static WavePopulation None = new() { Name = "None", PersistentId = 0 };
+
         #region Alarm waves
         #region Baseline waves
         /// <summary>
@@ -105,7 +135,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleStandard = Enemy.Striker_Wave,
             WaveRoleSpecial = Enemy.Shooter_Wave,
             WaveRoleMiniBoss = Enemy.StrikerGiant_Wave,
-            WaveRoleBoss = Enemy.ShooterGiant
+            WaveRoleBoss = Enemy.ShooterGiant,
+            Name = "Baseline"
         };
 
         public static WavePopulation Baseline_Hybrids = new WavePopulation
@@ -114,7 +145,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleStandard = Enemy.Striker_Wave,
             WaveRoleSpecial = Enemy.Shooter_Wave,
             WaveRoleMiniBoss = Enemy.Hybrid,
-            WaveRoleBoss = Enemy.Hybrid
+            WaveRoleBoss = Enemy.Hybrid,
+            Name = "Baseline_Hybrids"
         };
 
         public static WavePopulation Baseline_Chargers = new WavePopulation
@@ -123,7 +155,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleStandard = Enemy.Striker_Wave,
             WaveRoleSpecial = Enemy.Charger,
             WaveRoleMiniBoss = Enemy.StrikerGiant_Wave,
-            WaveRoleBoss = Enemy.ChargerGiant
+            WaveRoleBoss = Enemy.ChargerGiant,
+            Name = "Baseline_Chargers"
         };
 
         public static WavePopulation Baseline_Nightmare = new WavePopulation
@@ -132,7 +165,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleStandard = Enemy.Striker_Wave,
             WaveRoleSpecial = Enemy.NightmareStriker,
             WaveRoleMiniBoss = Enemy.StrikerGiant_Wave,
-            WaveRoleBoss = Enemy.NightmareShooter
+            WaveRoleBoss = Enemy.NightmareShooter,
+            Name = "Baseline_Nightmare"
         };
 
         public static WavePopulation Baseline_Shadows = new WavePopulation
@@ -141,7 +175,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleStandard = Enemy.Striker_Wave,
             WaveRoleSpecial = Enemy.Shadow,
             WaveRoleMiniBoss = Enemy.ShooterGiant,
-            WaveRoleBoss = Enemy.ShadowGiant
+            WaveRoleBoss = Enemy.ShadowGiant,
+            Name = "Baseline_Shadows"
         };
         #endregion
 
@@ -150,11 +185,13 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleWeakling = Enemy.Charger,
             WaveRoleStandard = Enemy.Charger,
             WaveRoleMiniBoss = Enemy.ChargerGiant,
+            Name = "OnlyChargers"
         };
 
         public static WavePopulation OnlyHybrids = new WavePopulation
         {
-            WaveRoleSpecial = Enemy.Hybrid
+            WaveRoleSpecial = Enemy.Hybrid,
+            Name = "OnlyHybrids"
         };
 
         public static WavePopulation OnlyShadows = new WavePopulation
@@ -162,6 +199,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleWeakling = Enemy.Shadow,
             WaveRoleStandard = Enemy.Shadow,
             WaveRoleMiniBoss = Enemy.ShadowGiant,
+            Name = "OnlyShadows"
         };
 
         public static WavePopulation OnlyNightmares = new WavePopulation
@@ -169,6 +207,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleStandard = Enemy.NightmareStriker,
             WaveRoleSpecial = Enemy.NightmareShooter,
             //WaveRoleMiniBoss = Enemy.ShooterGiant_Infected,
+            Name = "OnlyNightmares"
         };
 
         public static WavePopulation Shadows_WithHybrids = new WavePopulation
@@ -176,25 +215,27 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleWeakling = Enemy.Shadow,
             WaveRoleStandard = Enemy.Shadow,
             WaveRoleSpecial = Enemy.ShadowGiant,
-            WaveRoleMiniBoss = Enemy.Hybrid
+            WaveRoleMiniBoss = Enemy.Hybrid,
+            Name = "Shadows_WithHybrids"
         };
         #endregion
 
         #region Specific enemies for custom waves
         public static WavePopulation Special_StrikerGiants = new WavePopulation
         {
-            WaveRoleSpecial = Enemy.StrikerGiant_Wave
+            WaveRoleSpecial = Enemy.StrikerGiant_Wave,
+            Name = "Special_StrikerGiants"
         };
         #endregion
 
         #region Single enemies
-        public static WavePopulation SingleEnemy_Mother =     new WavePopulation { WaveRoleMiniBoss = Enemy.Mother };
-        public static WavePopulation SingleEnemy_PMother =    new WavePopulation { WaveRoleMiniBoss = Enemy.PMother };
+        public static WavePopulation SingleEnemy_Mother =     new() { WaveRoleMiniBoss = Enemy.Mother,  Name = "SingleEnemy_Mother" };
+        public static WavePopulation SingleEnemy_PMother =    new() { WaveRoleMiniBoss = Enemy.PMother, Name = "SingleEnemy_PMother" };
 
-        public static WavePopulation SingleEnemy_Tank =       new WavePopulation { WaveRoleMiniBoss = Enemy.Tank };
-        public static WavePopulation SingleEnemy_TankPotato = new WavePopulation { WaveRoleMiniBoss = Enemy.TankPotato };
+        public static WavePopulation SingleEnemy_Tank =       new() { WaveRoleMiniBoss = Enemy.Tank,       Name = "SingleEnemy_Tank" };
+        public static WavePopulation SingleEnemy_TankPotato = new() { WaveRoleMiniBoss = Enemy.TankPotato, Name = "SingleEnemy_TankPotato" };
 
-        public static WavePopulation SingleEnemy_Pouncer =    new WavePopulation { WaveRoleMiniBoss = Enemy.Pouncer };
+        public static WavePopulation SingleEnemy_Pouncer =    new() { WaveRoleMiniBoss = Enemy.Pouncer, Name = "SingleEnemy_Pouncer" };
         #endregion
     }
 

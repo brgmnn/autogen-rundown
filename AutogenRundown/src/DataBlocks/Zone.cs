@@ -108,7 +108,7 @@ namespace AutogenRundown.DataBlocks
     /// <summary>
     ///
     /// </summary>
-    public record class Zone : DataBlock
+    public record Zone : DataBlock
     {
         #region Direction manipulation
         /// <summary>
@@ -627,18 +627,26 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Alarms
-        public void RollAlarms(ICollection<(double, int, ChainedPuzzle)> pack)
+        public void RollAlarms(
+            ICollection<(double, int, ChainedPuzzle)> puzzlePack,
+            ICollection<(double, int, WavePopulation)> wavePopulationPack,
+            ICollection<(double, int, WaveSettings)> waveSettingsPack)
         {
             if (LocalIndex == 0 || Alarm == ChainedPuzzle.SkipZone)
                 return;
 
             // Grab a random puzzle from the puzzle pack
-            var puzzle = Generator.DrawSelect(pack);
+            var puzzle = Generator.DrawSelect(puzzlePack);
+            var population = Generator.DrawSelect(wavePopulationPack);
+            var settings = Generator.DrawSelect(waveSettingsPack);
 
-            if (puzzle == null)
+            if (puzzle == null || population == null || settings == null)
                 return;
 
-            Alarm = puzzle;
+            // TODO: Randomize things like travel distance here
+            Alarm = puzzle with { Population = population, Settings = settings };
+
+            Plugin.Logger.LogDebug($"Zone {LocalIndex} has door alarm: {puzzle}");
 
             EventsOnApproachDoor.AddRange(puzzle.EventsOnApproachDoor);
             EventsOnUnlockDoor.AddRange(puzzle.EventsOnUnlockDoor);

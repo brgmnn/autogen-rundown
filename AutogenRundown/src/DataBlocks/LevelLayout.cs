@@ -50,10 +50,13 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// Roll for door alarms
         /// </summary>
-        public void RollAlarms(ICollection<(double, int, ChainedPuzzle)> puzzlePack)
+        public void RollAlarms(
+            ICollection<(double, int, ChainedPuzzle)> puzzlePack,
+            ICollection<(double, int, WavePopulation)> wavePopulationPack,
+            ICollection<(double, int, WaveSettings)> waveSettingsPack)
         {
             foreach (var zone in Zones)
-                zone.RollAlarms(puzzlePack);
+                zone.RollAlarms(puzzlePack, wavePopulationPack, waveSettingsPack);
         }
 
         /// <summary>
@@ -669,6 +672,8 @@ namespace AutogenRundown.DataBlocks
             director.GenZones();
 
             var puzzlePack = ChainedPuzzle.BuildPack(level.Tier, level.Settings);
+            var wavePopulationPack = WavePopulation.BuildPack(level.Tier, level.Settings);
+            var waveSettingsPack = WaveSettings.BuildPack(level.Tier);
 
             Plugin.Logger.LogDebug($"Building layout ({layout.Name}), Objective = {objective.Type}");
 
@@ -1185,7 +1190,7 @@ namespace AutogenRundown.DataBlocks
             }
 
             // TODO: most or all of these need to be moved
-            layout.RollAlarms(puzzlePack);
+            layout.RollAlarms(puzzlePack, wavePopulationPack, waveSettingsPack);
             layout.RollBloodDoors();
             layout.RollEnemies(director);
             layout.RollErrorAlarm();

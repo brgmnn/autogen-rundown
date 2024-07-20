@@ -19,6 +19,15 @@ public record DataBlock
     /// Optional name, useful mostly for debugging
     /// </summary>
     [JsonProperty("name")]
+    public string BlockName
+    {
+        get => $"{PersistentId}_{Name}";
+        private set { }
+    }
+
+    /// <summary>
+    /// This gets mapped to the data block name, collisions are avoided by concatenating the persistent Id with this
+    /// </summary>
     public string Name { get; set; }
 
     /// <summary>

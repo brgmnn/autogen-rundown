@@ -75,18 +75,24 @@ namespace AutogenRundown.DataBlocks.Alarms
         #region Properties
         /// <summary>
         /// Delay before waves start spawning after alarm start.
+        ///
+        /// Default = 3.0
         /// </summary>
         [JsonProperty("m_pauseBeforeStart")]
         public double PauseBeforeStart { get; set; } = 3.0;
 
         /// <summary>
         /// Delay between enemy groups.
+        ///
+        /// Default = 5.0
         /// </summary>
         [JsonProperty("m_pauseBetweenGroups")]
         public double PauseBetweenGroups { get; set; } = 5.0;
 
         /// <summary>
         /// Minimum score boundary for pauses between waves.
+        ///
+        /// Default = 3.0
         /// </summary>
         [JsonProperty("m_wavePauseMin_atCost")]
         public double WavePauseMin_atCost { get; set; } = 3.0;
@@ -95,54 +101,72 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// Maximum score boundary for pauses between waves.
         /// Above this threshold, the timer for a new wave doesn't move.
         /// Anywhere in-between min and max, the timer speed is lerped.
+        ///
+        /// Default = 10.0
         /// </summary>
         [JsonProperty("m_wavePauseMax_atCost")]
         public double WavePauseMax_atCost { get; set; } = 10.0;
 
         /// <summary>
         /// Delay between waves at or below minimum score boundary.
+        ///
+        /// Default = 3.0
         /// </summary>
         [JsonProperty("m_wavePauseMin")]
         public double WavePauseMin { get; set; } = 3.0;
 
         /// <summary>
         /// Delay between waves at maximum score boundary.
+        ///
+        /// Default = 30.0
         /// </summary>
         [JsonProperty("m_wavePauseMax")]
         public double WavePauseMax { get; set; } = 30.0;
 
         /// <summary>
         /// List of enemy types in filter.
+        ///
+        /// Default = []
         /// </summary>
         [JsonProperty("m_populationFilter")]
-        public List<Enemies.EnemyType> PopulationFilter { get; set; } = new List<Enemies.EnemyType>();
+        public List<Enemies.EnemyType> PopulationFilter { get; set; } = new();
 
         /// <summary>
         /// Whether to spawn only, or spawn all but the types included in population filter.
+        ///
+        /// Default = Include (0)
         /// </summary>
         [JsonProperty("m_filterType")]
         public PopulationFilterType FilterType { get; set; } = PopulationFilterType.Include;
 
         /// <summary>
         /// Chance for spawn direction to change between waves.
+        ///
+        /// Default = 0.75
         /// </summary>
         [JsonProperty("m_chanceToRandomizeSpawnDirectionPerWave")]
         public double ChanceToRandomizeSpawnDirectionPerWave { get; set; } = 0.75;
 
         /// <summary>
         /// Change for spawn direction to change between groups.
+        ///
+        /// Default = 0.1
         /// </summary>
         [JsonProperty("m_chanceToRandomizeSpawnDirectionPerGroup")]
         public double ChanceToRandomizeSpawnDirectionPerGroup { get; set; } = 0.1;
 
         /// <summary>
         /// Whether to override spawn type set in code.
+        ///
+        /// Default = false
         /// </summary>
         [JsonProperty("m_overrideWaveSpawnType")]
         public bool OverrideWaveSpawnType { get; set; } = false;
 
         /// <summary>
         /// The spawn type when override is set to true.
+        ///
+        /// Default = 0
         /// </summary>
         [JsonProperty("m_survivalWaveSpawnType")]
         public int SurvivalWaveSpawnType { get; set; } = 0; // 0 or 1
@@ -150,18 +174,24 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// <summary>
         /// The total population points for waves. The alarm automatically stops if this runs out.
         /// -1 is infinite.
+        ///
+        /// Default = -1
         /// </summary>
         [JsonProperty("m_populationPointsTotal")]
         public double PopulationPointsTotal { get; set; } = -1.0;
 
         /// <summary>
         /// Population points for a wave at start ramp.
+        ///
+        /// Default = 17
         /// </summary>
         [JsonProperty("m_populationPointsPerWaveStart")]
         public double PopulationPointsPerWaveStart { get; set; } = 17.0;
 
         /// <summary>
         /// Population points for a wave at end ramp.
+        ///
+        /// Default = 25
         /// </summary>
         [JsonProperty("m_populationPointsPerWaveEnd")]
         public double PopulationPointsPerWaveEnd { get; set; } = 25.0;
@@ -169,24 +199,32 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// <summary>
         /// Minimum required cost for a group to spawn. This setting is related to the soft cap
         /// of enemies.
+        ///
+        /// Default = 5
         /// </summary>
         [JsonProperty("m_populationPointsMinPerGroup")]
         public double PopulationPointsMinPerGroup { get; set; } = 5.0;
 
         /// <summary>
         /// Population points for a group at start ramp.
+        ///
+        /// Default = 5
         /// </summary>
         [JsonProperty("m_populationPointsPerGroupStart")]
         public double PopulationPointsPerGroupStart { get; set; } = 5.0;
 
         /// <summary>
         /// Population points for a group at end ramp.
+        ///
+        /// Default = 10.0
         /// </summary>
         [JsonProperty("m_populationPointsPerGroupEnd")]
         public double PopulationPointsPerGroupEnd { get; set; } = 10.0;
 
         /// <summary>
         /// Lerp over time for start-end population point settings.
+        ///
+        /// Default = 120.0
         /// </summary>
         [JsonProperty("m_populationRampOverTime")]
         public double PopulationRampOverTime { get; set; } = 120.0;
@@ -222,15 +260,64 @@ namespace AutogenRundown.DataBlocks.Alarms
             //     Bins.WaveSettings.AddBlock(block);
         }
 
+        /// <summary>
+        /// Return a DrawSelect list of wave settings to attach on alarms. Pack is for one LevelLayout. So we need probably
+        /// 30 entries to draw from
+        /// </summary>
+        /// <param name="tier"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static List<(double, int, WaveSettings)> BuildPack(string tier)
+        {
+            return (tier) switch
+            {
+                "A" => new List<(double, int, WaveSettings)>
+                {
+                    (1.00, 15, Baseline_Easy),
+                    (1.00, 15, Baseline_Normal),
+                },
+
+                "B" => new List<(double, int, WaveSettings)>
+                {
+                    (1.00, 15, Baseline_Normal),
+                    (1.00, 15, Baseline_Hard),
+                },
+
+                "C" => new List<(double, int, WaveSettings)>
+                {
+                    (1.00,  5, Baseline_Normal),
+                    (1.00, 20, Baseline_Hard),
+                    (0.65,  5, Baseline_VeryHard),
+                },
+
+                "D" => new List<(double, int, WaveSettings)>
+                {
+                    (1.00, 10, Baseline_Hard),
+                    (1.00, 15, Baseline_VeryHard),
+                },
+
+                "E" => new List<(double, int, WaveSettings)>
+                {
+                    (1.00, 5, Baseline_Hard),
+                    (1.00, 20, Baseline_VeryHard),
+                    (0.55, 5, MiniBoss_Hard),
+                },
+            };
+        }
+
         public static new void SaveStatic()
         {
             // Alarms
             Bins.WaveSettings.AddBlock(Baseline_Easy);
             Bins.WaveSettings.AddBlock(Baseline_Normal);
             Bins.WaveSettings.AddBlock(Baseline_Hard);
+            Bins.WaveSettings.AddBlock(Baseline_VeryHard);
+            Bins.WaveSettings.AddBlock(MiniBoss_Hard);
 
             // Exit
             Bins.WaveSettings.AddBlock(Exit_Baseline);
+
+            // Surge
             Bins.WaveSettings.AddBlock(Surge);
 
             // Reactor
@@ -260,7 +347,9 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WaveSettings.AddBlock(SingleMiniBoss);
         }
 
-        #region Alarm waves
+        public static WaveSettings None = new() { PersistentId = 0, Name = "None" };
+
+        #region Alarm waves -- Baseline
         public static WaveSettings Baseline_Easy = new WaveSettings
         {
             PopulationFilter =
@@ -273,6 +362,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationPointsPerWaveStart = 15,
             PopulationPointsPerWaveEnd = 25,
             PopulationRampOverTime = 200,
+            Name = "Baseline_Easy"
         };
 
         /// <summary>
@@ -284,7 +374,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             FilterType = PopulationFilterType.Exclude,
             PopulationPointsPerWaveStart = 17,
             PopulationPointsPerWaveEnd = 25,
-            PopulationRampOverTime = 150
+            PopulationRampOverTime = 150,
+            Name = "Baseline_Normal"
         };
 
         /// <summary>
@@ -296,31 +387,77 @@ namespace AutogenRundown.DataBlocks.Alarms
             FilterType = PopulationFilterType.Exclude,
             PopulationPointsPerWaveStart = 18,
             PopulationPointsPerWaveEnd = 28,
-            PopulationRampOverTime = 100
+            PopulationRampOverTime = 100,
+            Name = "Baseline_Hard"
         };
-        #endregion
 
-        #region Charger waves
-        public static WaveSettings OnlyChargers = new WaveSettings
+        /// <summary>
+        /// Harder choice, all enemy types can be included here. Will ramp up much faster than the others
+        /// </summary>
+        public static WaveSettings Baseline_VeryHard = new WaveSettings
         {
-            PopulationFilter = { Enemies.EnemyType.Standard },
-            FilterType = PopulationFilterType.Include
+            PopulationFilter = { Enemies.EnemyType.Weakling },
+            FilterType = PopulationFilterType.Exclude,
+            PopulationPointsPerWaveStart = 25,
+            PopulationPointsPerWaveEnd = 30,
+            PopulationRampOverTime = 45,
+            Name = "Baseline_VeryHard"
         };
         #endregion
 
-        #region Exit waves
-        public static WaveSettings Exit_Baseline = new WaveSettings
+        #region MiniBoss_Hard
+        /// <summary>
+        /// This is a hard miniboss (and special) only wave
+        /// </summary>
+        public static WaveSettings MiniBoss_Hard = new WaveSettings
+        {
+            PopulationFilter = { Enemies.EnemyType.Special, Enemies.EnemyType.MiniBoss },
+            FilterType = PopulationFilterType.Include,
+            PopulationPointsPerWaveStart = 18,
+            PopulationPointsPerWaveEnd = 28,
+            PopulationRampOverTime = 100,
+            Name = "MiniBoss_Hard"
+        };
+        #endregion
+
+        #region Error Alarms
+        /// <summary>
+        /// Equivalent to PersistentId=32 "Trickle 3-52 SSpB"
+        ///
+        /// Quite an easy error alarm.
+        /// </summary>
+        public static WaveSettings Error_Normal = new WaveSettings
         {
             PopulationFilter =
             {
                 Enemies.EnemyType.Standard,
-                Enemies.EnemyType.Special,
+                Enemies.EnemyType.Special
             },
             FilterType = PopulationFilterType.Include,
-            PauseBeforeStart = 4.0,
-            PauseBetweenGroups = 8.0,
-        };
+            PauseBeforeStart = 3.0,
+            PauseBetweenGroups = 52.0, // This is the key item, 52s between spawns
 
+            PopulationPointsPerGroupStart = 3.0,
+            PopulationPointsPerGroupEnd = 3.0,
+            PopulationPointsMinPerGroup = 2.0,
+            PopulationRampOverTime = 0,
+
+            PopulationPointsPerWaveStart = 10_000,
+            PopulationPointsPerWaveEnd = 10_000,
+
+            ChanceToRandomizeSpawnDirectionPerGroup = 0.8,
+            ChanceToRandomizeSpawnDirectionPerWave = 1.0,
+
+            WavePauseMin = 1.0,
+            WavePauseMax = 20.0,
+            WavePauseMin_atCost = 1.0,
+            WavePauseMax_atCost = 10.0,
+
+            Name = "Error_Normal"
+        };
+        #endregion
+
+        #region Surge
         /// <summary>
         /// Surge alarms are very difficult as they flood the map with enemies immediately.
         /// Don't expect teams to be able to clear alarms beyond one or two scans if they have
@@ -336,7 +473,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             },
             FilterType = PopulationFilterType.Include,
 
-            PauseBeforeStart = 5.0,
+            PauseBeforeStart = 1.0,
             PauseBetweenGroups = 3.0,
             PopulationPointsPerWaveStart = 10_000,
             PopulationPointsPerWaveEnd = 10_000,
@@ -344,6 +481,24 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationPointsPerGroupStart = 4,
             PopulationPointsPerGroupEnd = 7,
             PopulationRampOverTime = 0,
+
+            Name = "Surge"
+        };
+        #endregion
+
+        #region Exit waves
+        public static WaveSettings Exit_Baseline = new WaveSettings
+        {
+            PopulationFilter =
+            {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+            },
+            FilterType = PopulationFilterType.Include,
+            PauseBeforeStart = 4.0,
+            PauseBetweenGroups = 8.0,
+
+            Name = "Exit_Baseline"
         };
         #endregion
 
