@@ -28,6 +28,7 @@ public record DataBlock
     /// <summary>
     /// This gets mapped to the data block name, collisions are avoided by concatenating the persistent Id with this
     /// </summary>
+    [JsonIgnore]
     public string Name { get; set; }
 
     /// <summary>
