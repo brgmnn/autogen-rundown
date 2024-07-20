@@ -1,5 +1,4 @@
 ﻿using AutogenRundown.DataBlocks.Enemies;
-using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using Newtonsoft.Json;
 
@@ -978,7 +977,8 @@ public record ChainedPuzzle : DataBlock
     /******************** Exit Alarm Scans ********************/
     public static readonly ChainedPuzzle ExitAlarm = new()
     {
-        PublicAlarmName = "Alarm",
+        PersistentId = 50,
+        PublicAlarmName = "Exit Alarm",
         TriggerAlarmOnActivate = false,
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
@@ -1031,6 +1031,14 @@ public record ChainedPuzzle : DataBlock
 
     public static new void SaveStatic()
     {
+        ///
+        /// IMPORTANT NOTE:
+        ///
+        /// ChainedPuzzles are lazily persisted in the game, as a result you should manually assign
+        /// a persistent ID to any records persisted here, or run the risk of attempting to
+        /// reference their persistent ID in game and having it be zero.
+        ///
+
         // Bulkhead scans are referenced by the game
         BulkheadSelect_Main.Persist();
         BulkheadSelect_Secondary.Persist();
