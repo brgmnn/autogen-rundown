@@ -3,12 +3,42 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.35.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.35.0) — December 31, 0000
+
+### New
+
+* Added FlowGeo's Datacenter exit tile
+* Added FlowGeo's Datacenter elevator tile
+
+### Changes
+
+* Fixed exit alarm not spawning
+  * This should fix a number of other issues including Survival objectives not unlocking the final door
+* Adjusted zone coverage values to match more closely those set in geomorph prefabs
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.34.0...v0.35.0
+
+
+## [v0.34.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.34.0) — July 19, 2024
+
+### Changes
+
+* Added more level name variations
+* Updated mod dependencies:
+  * `MTFO` - 4.6.1 to 4.6.2
+* Reworked Alarm generation code, more variation in alarms will now appear
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.33.0...v0.34.0
+
+
 ## [v0.33.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.33.0) — July 14, 2024
 
 ### Changes
 
 * Add charger/shadow waves for certain alarms in D-tier
 * Move survival level to D-tier
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.32.0...v0.33.0
 
 
 ## [v0.32.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.32.0) — July 14, 2024
@@ -23,6 +53,8 @@ See more at https://github.com/brgmnn/autogen-rundown
   * Blood doors to enter zone
   * Total enemy points in the zone
   * Fixed times per boss in zone and behind blood doors
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.31.0...v0.32.0
 
 
 ## [v0.31.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.31.0) — July 13, 2024
