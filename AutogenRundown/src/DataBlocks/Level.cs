@@ -234,8 +234,11 @@ namespace AutogenRundown.DataBlocks
                 ["FogSettings"] = FogSettings.PersistentId,
                 ["EnemyPopulation"] = 1,
                 ["ExpeditionBalance"] = 1,
+
+                // TODO: Replace these with actual wave settings / populations
                 ["ScoutWaveSettings"] = 3,
                 ["ScoutWavePopulation"] = 1,
+
                 ["EnvironmentWetness"] = 0.0,
                 ["DustColor"] = JObject.FromObject(
                     new Color { Alpha = 1.0, Red = 0.5, Green = 0.5, Blue = 0.5 }),

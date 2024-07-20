@@ -938,7 +938,6 @@ namespace AutogenRundown.DataBlocks
         public bool OnActivateOnSolveItem = false;
         public bool StopAllWavesBeforeGotoWin = false;
         public int WaveOnGotoWinTrigger = 0;
-        // public JArray EventsOnGotoWin = new JArray();
         public int EventsOnGotoWinTrigger = 0;
         public int FogTransitionDataOnGotoWin = 0;
         public double FogTransitionDurationOnGotoWin = 0.0;
