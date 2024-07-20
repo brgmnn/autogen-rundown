@@ -32,6 +32,16 @@
         ManyChargers,
         OnlyChargers,
 
+        NoFlyers,
+        Flyers,
+        ManyFlyers,
+        OnlyFlyers,
+
+        NoNightmares,
+        Nightmares,
+        ManyNightmares,
+        OnlyNightmares,
+
         NoShadows,
         Shadows,
         ManyShadows,

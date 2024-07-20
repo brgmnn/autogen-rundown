@@ -2,16 +2,10 @@
 {
     static public class Words
     {
-        static public string NewLevelName()
-        {
-            // Generator.Pick(Words.NounsLevel)
-
-            var firstWord = Generator.Pick(Level_FirstWord);
-            var lastWord = Generator.Pick(Level_LastWord);
-
-            return $"{firstWord} {lastWord}";
-        }
-
+        /// <summary>
+        /// Creates a list of names to pull from
+        /// </summary>
+        /// <returns></returns>
         static public List<string> NewLevelNamesPack()
         {
             var predefinedNames = new List<string>(NounsLevel);
