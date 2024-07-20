@@ -329,12 +329,12 @@ public record ChainedPuzzle : DataBlock
     /// <summary>
     /// Special chain puzzle that has no puzzles to enter
     /// </summary>
-    public static readonly ChainedPuzzle None = new() { PersistentId = 0 };
+    public static readonly ChainedPuzzle None = new() { PersistentId = 0, PublicAlarmName = "None" };
 
     /// <summary>
     /// Special chain puzzle that indicates the zone should be skipped for processing.
     /// </summary>
-    public static readonly ChainedPuzzle SkipZone = new() { PersistentId = 0 };
+    public static readonly ChainedPuzzle SkipZone = new() { PersistentId = 0, PublicAlarmName = "Skip" };
 
     /******************** Non-Alarm Scans ********************/
     /// <summary>
@@ -980,8 +980,8 @@ public record ChainedPuzzle : DataBlock
     {
         PublicAlarmName = "Alarm",
         TriggerAlarmOnActivate = false,
-        SurvivalWaveSettings = (uint)VanillaWaveSettings.Apex,
-        SurvivalWavePopulation = (uint)VanillaWavePopulation.Baseline,
+        Settings = WaveSettings.Baseline_Normal,
+        Population = WavePopulation.Baseline,
         UseRandomPositions = false,
         WantedDistanceFromStartPos = 0.0,
         WantedDistanceBetweenPuzzleComponents = 1.0,

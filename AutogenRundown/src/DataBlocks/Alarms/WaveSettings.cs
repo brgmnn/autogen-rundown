@@ -234,31 +234,13 @@ namespace AutogenRundown.DataBlocks.Alarms
             : base(Generator.GetPersistentId(offsets))
         { }
 
-        public WaveSettings Persist()
-        {
-            Bins.WaveSettings.AddBlock(this);
-            return this;
-        }
-
         public static void Setup()
         {
             Setup<GameDataWaveSettings, WaveSettings>(Bins.WaveSettings, "SurvivalWaveSettings");
-
-            // var dir = Path.Combine(Paths.PluginPath, Plugin.Name);
-            // var path = Path.Combine(dir, $"GameData_SurvivalWaveSettingsDataBlock_bin.json");
-            // var data = JObject.Parse(File.ReadAllText(path));
-            //
-            // if (data?["Blocks"] == null)
-            //     throw new Exception("Failed to get 'Blocks' property");
-            //
-            // var blocks = data["Blocks"]!.ToObject<List<GameDataWaveSettings>>();
-            //
-            // if (blocks == null)
-            //     throw new Exception("Failed to parse SurvivalWaveSettings");
-            //
-            // foreach (var block in blocks)
-            //     Bins.WaveSettings.AddBlock(block);
         }
+
+        public override string ToString()
+            => $"WavePopulation {{ Name = {Name}, PersistentId = {PersistentId} }}";
 
         /// <summary>
         /// Return a DrawSelect list of wave settings to attach on alarms. Pack is for one LevelLayout. So we need probably

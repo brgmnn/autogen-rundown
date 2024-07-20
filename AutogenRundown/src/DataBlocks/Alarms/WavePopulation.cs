@@ -44,11 +44,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             : base(Generator.GetPersistentId(offsets))
         { }
 
-        // public WavePopulation Persist()
-        // {
-        //     Bins.WavePopulations.AddBlock(this);
-        //     return this;
-        // }
+        public override string ToString()
+            => $"WavePopulation {{ Name = {Name}, PersistentId = {PersistentId} }}";
 
         public static void Setup()
         {
