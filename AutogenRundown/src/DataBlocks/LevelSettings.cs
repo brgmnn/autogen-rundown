@@ -33,7 +33,7 @@ namespace AutogenRundown.DataBlocks
                     Remove(LevelModifiers.FogIsInfectious);
                     break;
 
-                case LevelModifiers.NoChargers:
+                /*case LevelModifiers.NoChargers:
                 case LevelModifiers.Chargers:
                 case LevelModifiers.ManyChargers:
                 case LevelModifiers.OnlyChargers:
@@ -41,6 +41,26 @@ namespace AutogenRundown.DataBlocks
                     Remove(LevelModifiers.Chargers);
                     Remove(LevelModifiers.ManyChargers);
                     Remove(LevelModifiers.OnlyChargers);
+                    break;
+
+                case LevelModifiers.NoFlyers:
+                case LevelModifiers.Flyers:
+                case LevelModifiers.ManyFlyers:
+                case LevelModifiers.OnlyFlyers:
+                    Remove(LevelModifiers.NoFlyers);
+                    Remove(LevelModifiers.Flyers);
+                    Remove(LevelModifiers.ManyFlyers);
+                    Remove(LevelModifiers.OnlyFlyers);
+                    break;
+
+                case LevelModifiers.NoNightmares:
+                case LevelModifiers.Nightmares:
+                case LevelModifiers.ManyNightmares:
+                case LevelModifiers.OnlyNightmares:
+                    Remove(LevelModifiers.NoNightmares);
+                    Remove(LevelModifiers.Nightmares);
+                    Remove(LevelModifiers.ManyNightmares);
+                    Remove(LevelModifiers.OnlyNightmares);
                     break;
 
                 case LevelModifiers.NoShadows:
@@ -51,7 +71,7 @@ namespace AutogenRundown.DataBlocks
                     Remove(LevelModifiers.Shadows);
                     Remove(LevelModifiers.ManyShadows);
                     Remove(LevelModifiers.OnlyShadows);
-                    break;
+                    break;*/
             }
 
             return base.Add(modifier);
@@ -177,6 +197,8 @@ namespace AutogenRundown.DataBlocks
                 case "A":
                     {
                         Modifiers.Add(LevelModifiers.NoChargers);
+                        Modifiers.Add(LevelModifiers.NoFlyers);
+                        Modifiers.Add(LevelModifiers.NoNightmares);
                         Modifiers.Add(LevelModifiers.NoShadows);
                         break;
                     }
@@ -184,6 +206,8 @@ namespace AutogenRundown.DataBlocks
                 case "B":
                     {
                         Modifiers.Add(LevelModifiers.NoChargers);
+                        Modifiers.Add(LevelModifiers.NoFlyers);
+                        Modifiers.Add(LevelModifiers.NoNightmares);
                         Modifiers.Add(LevelModifiers.NoShadows);
 
                         // Fog modifiers
@@ -210,6 +234,13 @@ namespace AutogenRundown.DataBlocks
                                 new WeightedModifier { Modifier = LevelModifiers.Chargers,     Weight = 0.5 },
                                 new WeightedModifier { Modifier = LevelModifiers.ManyChargers, Weight = 0.1 },
                             }).Modifier);
+                        Modifiers.Add(
+                            Generator.Select(new List<(double, LevelModifiers)>
+                            {
+                                (0.4, LevelModifiers.NoNightmares),
+                                (100.5, LevelModifiers.Nightmares),
+                                (0.1, LevelModifiers.ManyNightmares),
+                            }));
 
                         if (Generator.Flip(0.3))
                             Modifiers.Add(LevelModifiers.FogIsInfectious);
@@ -249,6 +280,20 @@ namespace AutogenRundown.DataBlocks
                                 new WeightedModifier { Modifier = LevelModifiers.Chargers,     Weight = 0.5 },
                                 new WeightedModifier { Modifier = LevelModifiers.ManyChargers, Weight = 0.1 },
                             }).Modifier);
+                        Modifiers.Add(
+                            Generator.Select(new List<(double, LevelModifiers)>
+                            {
+                                (0.4, LevelModifiers.NoNightmares),
+                                (110.5, LevelModifiers.Nightmares),
+                                (0.1, LevelModifiers.ManyNightmares),
+                            }));
+                        Modifiers.Add(
+                            Generator.Select(new List<(double, LevelModifiers)>
+                            {
+                                (0.4, LevelModifiers.NoFlyers),
+                                (110.5, LevelModifiers.Flyers),
+                                (0.1, LevelModifiers.ManyFlyers),
+                            }));
 
                         if (Generator.Flip(0.5))
                             Modifiers.Add(LevelModifiers.FogIsInfectious);
@@ -301,6 +346,20 @@ namespace AutogenRundown.DataBlocks
                                 new WeightedModifier { Modifier = LevelModifiers.Chargers,     Weight = 0.6 },
                                 new WeightedModifier { Modifier = LevelModifiers.ManyChargers, Weight = 0.1 },
                             }).Modifier);
+                        Modifiers.Add(
+                            Generator.Select(new List<(double, LevelModifiers)>
+                            {
+                                (0.3, LevelModifiers.NoNightmares),
+                                (110.6, LevelModifiers.Nightmares),
+                                (0.1, LevelModifiers.ManyNightmares),
+                            }));
+                        Modifiers.Add(
+                            Generator.Select(new List<(double, LevelModifiers)>
+                            {
+                                (0.3, LevelModifiers.NoFlyers),
+                                (110.6, LevelModifiers.Flyers),
+                                (0.1, LevelModifiers.ManyFlyers),
+                            }));
 
                         if (Generator.Flip(0.8))
                             Modifiers.Add(LevelModifiers.FogIsInfectious);

@@ -643,12 +643,17 @@ namespace AutogenRundown.DataBlocks
 
             // TODO: Randomize things like travel distance here
             // We only copy the population settings in if we have an actual alarm here
-            if (puzzle.TriggerAlarmOnActivate)
+            if (puzzle.TriggerAlarmOnActivate &&
+                puzzle != ChainedPuzzle.AlarmClass3_Surge &&
+                puzzle != ChainedPuzzle.AlarmClass4_Surge)
             {
                 var population = Generator.DrawSelect(wavePopulationPack)!;
                 var settings = Generator.DrawSelect(waveSettingsPack)!;
 
-                Alarm = puzzle with { Population = population, Settings = settings };
+                puzzle = puzzle with { Population = population, Settings = settings };
+                Alarm = puzzle;
+
+                Plugin.Logger.LogDebug($"Zone {LocalIndex} drew population/settings: {population}");
             }
             else
                 Alarm = puzzle;
@@ -661,7 +666,7 @@ namespace AutogenRundown.DataBlocks
             EventsOnDoorScanStart.AddRange(puzzle.EventsOnDoorScanStart);
             EventsOnDoorScanDone.AddRange(puzzle.EventsOnDoorScanDone);
 
-            Alarm.Persist();
+            puzzle.Persist();
         }
         #endregion
 

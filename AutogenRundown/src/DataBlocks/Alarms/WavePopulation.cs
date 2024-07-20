@@ -54,6 +54,30 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             var pack = new List<(double, int, WavePopulation)>();
 
+            if (!settings.Modifiers.Contains(Levels.LevelModifiers.NoChargers))
+            {
+                pack.Add((2.0, 10, Baseline_Chargers));
+                pack.Add((4.0, 2, OnlyChargers));
+            }
+
+            if (!settings.Modifiers.Contains(Levels.LevelModifiers.NoShadows))
+            {
+                pack.Add((2.0, 10, Baseline_Shadows));
+                pack.Add((4.0, 3, OnlyShadows));
+            }
+
+            if (!settings.Modifiers.Contains(Levels.LevelModifiers.NoNightmares))
+            {
+                pack.Add((2.0, 10, Baseline_Nightmare));
+                pack.Add((2.0, 10, OnlyNightmares));
+            }
+
+            if (!settings.Modifiers.Contains(Levels.LevelModifiers.NoFlyers))
+            {
+                pack.Add((3.0, 5, Baseline_Flyers));
+            }
+
+
             switch (tier)
             {
                 case "A":
@@ -151,6 +175,16 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleSpecial = Enemy.Charger,
             WaveRoleMiniBoss = Enemy.StrikerGiant_Wave,
             WaveRoleBoss = Enemy.ChargerGiant,
+            Name = "Baseline_Chargers"
+        };
+
+        public static WavePopulation Baseline_Flyers = new WavePopulation
+        {
+            WaveRoleWeakling = Enemy.Shadow,
+            WaveRoleStandard = Enemy.Striker_Wave,
+            WaveRoleSpecial = Enemy.Flyer,
+            WaveRoleMiniBoss = Enemy.StrikerGiant_Wave,
+            WaveRoleBoss = Enemy.FlyerBig,
             Name = "Baseline_Chargers"
         };
 

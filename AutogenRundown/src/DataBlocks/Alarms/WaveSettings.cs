@@ -1,6 +1,4 @@
-﻿using BepInEx;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks.Alarms
 {
@@ -238,7 +236,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             => Setup<GameDataWaveSettings, WaveSettings>(Bins.WaveSettings, "SurvivalWaveSettings");
 
         public override string ToString()
-            => $"WavePopulation {{ Name = {Name}, PersistentId = {PersistentId} }}";
+            => $"WaveSettings {{ Name = {Name}, PersistentId = {PersistentId} }}";
 
         /// <summary>
         /// Return a DrawSelect list of wave settings to attach on alarms. Pack is for one LevelLayout. So we need probably
@@ -293,6 +291,9 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WaveSettings.AddBlock(Baseline_Hard);
             Bins.WaveSettings.AddBlock(Baseline_VeryHard);
             Bins.WaveSettings.AddBlock(MiniBoss_Hard);
+
+            // Error
+            Bins.WaveSettings.AddBlock(Error_Normal);
 
             // Exit
             Bins.WaveSettings.AddBlock(Exit_Baseline);
