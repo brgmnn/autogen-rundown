@@ -16,7 +16,7 @@ namespace AutogenRundown.DataBlocks.Enemies
         };
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static GenericWave Exit_Surge = new GenericWave
         {
@@ -50,16 +50,16 @@ namespace AutogenRundown.DataBlocks.Enemies
         #endregion
 
         #region Survival objective waves
-        public static GenericWave Survival_ErrorAlarm = new GenericWave
+        public static GenericWave Survival_ErrorAlarm = new()
         {
-            WaveSettings = (uint)VanillaWaveSettings.Trickle_352_SSpB,
-            WavePopulation = Alarms.WavePopulation.Baseline.PersistentId,
+            WaveSettings = Alarms.WaveSettings.Error_Normal.PersistentId,
+            WavePopulation = Alarms.WavePopulation.Baseline.PersistentId
         };
 
-        public static GenericWave Survival_Impossible_TankPotato = new GenericWave
+        public static GenericWave Survival_Impossible_TankPotato = new()
         {
             WaveSettings = Alarms.WaveSettings.Survival_Impossible_MiniBoss.PersistentId,
-            WavePopulation = Alarms.WavePopulation.SingleEnemy_TankPotato.PersistentId,
+            WavePopulation = Alarms.WavePopulation.SingleEnemy_TankPotato.PersistentId
         };
         #endregion
 
