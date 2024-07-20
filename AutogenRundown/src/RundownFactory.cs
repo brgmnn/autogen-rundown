@@ -104,13 +104,6 @@ namespace AutogenRundown
             var dMax = Generator.Random.Next(2, 3);
             var eMax = Generator.Random.Next(1, 2);
 
-            //var aMax = 0;
-            //var bMax = 0;
-            //var cMax = 0;
-            //var dMax = 0;
-            //var eMax = 0;
-
-
             #region A-Tier Levels
             for (int i = 0; i < aMax; i++)
             {
