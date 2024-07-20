@@ -199,7 +199,7 @@ namespace AutogenRundown.DataBlocks
 
         #region Custom geomorph settings
         /// <summary>
-        ///
+        /// Generate an exit tile
         /// </summary>
         /// <param name="complex"></param>
         public void GenExitGeomorph(Complex complex)
@@ -208,12 +208,12 @@ namespace AutogenRundown.DataBlocks
             {
                 case Complex.Mining:
                     CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_exit_01.prefab";
-                    SubComplex = SubComplex.Refinery;
+                    SubComplex = SubComplex.All;
                     break;
 
                 case Complex.Tech:
                     CustomGeomorph = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_32x32_lab_exit_01.prefab";
-                    SubComplex = SubComplex.Lab;
+                    SubComplex = SubComplex.All;
                     break;
 
                 case Complex.Service:
@@ -221,6 +221,8 @@ namespace AutogenRundown.DataBlocks
                     SubComplex = SubComplex.Floodways;
                     break;
             };
+
+            Coverage = CoverageMinMax.Tiny;
         }
 
         /// <summary>

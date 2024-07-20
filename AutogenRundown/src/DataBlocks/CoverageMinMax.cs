@@ -95,19 +95,29 @@ namespace AutogenRundown.DataBlocks
 
         #region Normal size generation
         /// <summary>
-        ///
+        /// Actual sizes are:
+        ///     * 3  (Small, Tiny)
+        ///     * 10 (Medium)
+        ///     * 20 (Large)
+        ///     * 32 (Huge)
+        /// And presumably we need everything else to be a multiple of this.
         /// </summary>
-        private static List<double> NormalSizes = new List<double>
+        private static List<(double, (double, double))> NormalSizes = new List<(double, (double, double))>
         {
-            10.0,
-            15.0,
-            20.0, 20.0,
-            25.0, 25.0,
-            30.0, 30.0,
-            35.0, 35.0,
-            40.0, 40.0,
-            45.0, 45.0,
-            50.0
+            // Small sizes
+            (0.25, (10, 10)),
+            (0.45, (10, 20)),
+
+            // Medium
+            (0.85, (20, 20)),
+            (1.00, (20, 32)),
+            (1.00, (32, 32)),
+            (1.00, (32, 42)),
+
+            // Large
+            (1.00, (42, 42)),
+            (0.55, (42, 64)),
+            (0.45, (64, 64)),
         };
 
         /// <summary>
@@ -118,9 +128,10 @@ namespace AutogenRundown.DataBlocks
         /// <returns></returns>
         public static CoverageMinMax GenNormalSize()
         {
-            var size = Generator.Pick(NormalSizes);
+            //var size = Generator.Pick(NormalSizes);
+            var (min, max) = Generator.Select(NormalSizes);
 
-            return new CoverageMinMax { Min = size, Max = size };
+            return new CoverageMinMax { Min = min, Max = max };
         }
         #endregion
 
