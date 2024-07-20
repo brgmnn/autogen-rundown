@@ -80,6 +80,7 @@ public partial record WardenObjective : DataBlock
             ":://WARNING - SECTOR ALARM ACTIVATED");
 
         // Unlock the exit
+        // TODO: This didn't work again
         EventBuilder.AddUnlockDoor(
             EventsOnGotoWin,
             exitZone.ZoneNumber,
