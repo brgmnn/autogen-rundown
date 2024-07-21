@@ -67,7 +67,7 @@ namespace AutogenRundown.DataBlocks.Objectives
                 });
 
             if (message != null)
-                AddMessage(events, trigger, message, delay);
+                AddMessage(events, message, delay, trigger);
         }
         #endregion
 
@@ -280,9 +280,9 @@ namespace AutogenRundown.DataBlocks.Objectives
         /// <param name="delay"></param>
         public static void AddMessage(
             ICollection<WardenObjectiveEvent> events,
-            WardenObjectiveEventTrigger trigger,
             string message,
-            double delay = 0.0)
+            double delay = 0.0,
+            WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart)
         {
             events.Add(
                 new WardenObjectiveEvent

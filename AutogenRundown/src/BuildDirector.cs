@@ -88,6 +88,16 @@ namespace AutogenRundown
                 objectives.Remove(WardenObjectiveType.CentralGeneratorCluster);
             }
 
+            // In this case we need to set a very simple objective that can be completed quickly
+            if (Bulkhead.HasFlag(Bulkhead.Overload) && exclude.Contains(WardenObjectiveType.Survival))
+            {
+                // For now just set special terminal command and place the terminal in one zone
+                objectives = new List<WardenObjectiveType>
+                {
+                    WardenObjectiveType.SpecialTerminalCommand
+                };
+            }
+
             Objective = Generator.Pick(objectives);
         }
 

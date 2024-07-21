@@ -682,7 +682,7 @@ namespace AutogenRundown.DataBlocks
             }
             #endregion
 
-            #region PostBuild
+            #region Finalize -- WardenObjective.PostBuild()
             level.GetObjective(Bulkhead.Main)!.PostBuild(level.MainDirector, level);
 
             if (selectedBulkheads.HasFlag(Bulkhead.Extreme) && level.GetObjective(Bulkhead.Extreme) != null)
