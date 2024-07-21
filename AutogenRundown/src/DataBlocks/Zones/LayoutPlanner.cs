@@ -125,6 +125,43 @@ namespace AutogenRundown.DataBlocks.Zones
         }
 
         /// <summary>
+        /// If we ever need to update a ZoneNode after it's been inserted, this will go through
+        /// and update all the copies of that zone node in the graph and blocks list
+        ///
+        /// TODO: Add unit tests for this
+        /// </summary>
+        /// <param name="node"></param>
+        public void UpdateNode(ZoneNode node)
+        {
+            // Update graph[node] key
+            if (graph.ContainsKey(node))
+            {
+                var children = graph[node];
+                graph.Remove(node);
+                graph.Add(node, children);
+            }
+
+            // Update graph[*].list
+            foreach (var key in graph.Keys.ToList())
+            {
+                var children = graph[key]!;
+
+                // Iterate through and update any children that match the new node
+                for (int i=0; i<children.Count; i++)
+                    if (children[i] == node)
+                        children[i] = node;
+            }
+
+            // Update blocks
+            if (blocks.ContainsKey(node))
+            {
+                var zone = blocks[node];
+                blocks.Remove(node);
+                blocks.Add(node, zone);
+            }
+        }
+
+        /// <summary>
         /// Handles assigning the right local index and build from index.
         /// </summary>
         /// <param name="node"></param>
