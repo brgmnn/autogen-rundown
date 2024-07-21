@@ -59,6 +59,7 @@ jobs:
       uses: brgmnn/thunderstore-toolkit@v0.2.0
       with:
         command: sync
+        toml-path: ${{ github.workspace }}/thunderstore.toml
 
     # Build the mod.
     - name: Restore dependencies
