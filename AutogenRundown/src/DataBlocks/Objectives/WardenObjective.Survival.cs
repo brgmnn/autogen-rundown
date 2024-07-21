@@ -114,10 +114,25 @@ public partial record WardenObjective : DataBlock
             var node = level.Planner.GetZones(Bulkhead.Extreme, null).First();
             var zone = level.Planner.GetZone(node)!;
 
+            EventBuilder.AddMessage(
+                zone.EventsOnApproachDoor,
+                "SECONDARY OBJECTIVES PRIORITIZED, EXTENDS LOCKDOWN TIME",
+                5.0);
+
             EventBuilder.SetSurvivalTimer(
                 zone.EventsOnOpenDoor,
                 Survival_TimeToSurvive + extremeTimeAdd,
-                $":://INFO - LOCKDOWN DURATION EXTENDED");
+                "LOCKDOWN TIME EXTENDED");
+        }
+        else if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload))
+        {
+            var node = level.Planner.GetZones(Bulkhead.Overload, null).First();
+            var zone = level.Planner.GetZone(node)!;
+
+            EventBuilder.AddMessage(
+                zone.EventsOnApproachDoor,
+                "OVERLOAD OBJECTIVES NOT PRIORITIZED, NO ADDITIONAL TIME",
+                5.0);
         }
     }
 }
