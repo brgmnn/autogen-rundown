@@ -54,6 +54,12 @@ jobs:
           echo "::endgroup::";
         done
 
+    # Test thunderstore-toolkit
+    - name: Test thunderstore-toolkit
+      uses: brgmnn/thunderstore-toolkit@v0.1
+      with:
+        command: sync
+
     # Build the mod.
     - name: Restore dependencies
       run: dotnet restore
