@@ -295,6 +295,25 @@ namespace AutogenRundown.DataBlocks.Objectives
         }
         #endregion
 
+        #region Objectives
+        public static void SetSurvivalTimer(
+            ICollection<WardenObjectiveEvent> events,
+            double duration,
+            string message = "",
+            double delay = 0.0)
+        {
+            events.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.AddToTimer,
+                    Duration = duration,
+                    Delay = delay,
+                    Trigger = WardenObjectiveEventTrigger.OnEnd,
+                    WardenIntel = message
+                });
+        }
+        #endregion
+
         #region Sounds
         /// <summary>
         /// Displays a warden intel message

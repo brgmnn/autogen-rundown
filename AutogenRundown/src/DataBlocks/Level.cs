@@ -682,6 +682,16 @@ namespace AutogenRundown.DataBlocks
             }
             #endregion
 
+            #region PostBuild
+            level.GetObjective(Bulkhead.Main)!.PostBuild(level.MainDirector, level);
+
+            if (selectedBulkheads.HasFlag(Bulkhead.Extreme) && level.GetObjective(Bulkhead.Extreme) != null)
+                level.GetObjective(Bulkhead.Extreme)!.PostBuild(level.SecondaryDirector, level);
+
+            if (selectedBulkheads.HasFlag(Bulkhead.Overload) && level.GetObjective(Bulkhead.Overload) != null)
+                level.GetObjective(Bulkhead.Overload)!.PostBuild(level.OverloadDirector, level);
+            #endregion
+
             Plugin.Logger.LogDebug($"Level={level.Tier}{level.Index} level plan: {level.Planner}");
 
             return level;

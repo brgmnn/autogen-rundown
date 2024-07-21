@@ -20,21 +20,24 @@ namespace AutogenRundown.DataBlocks;
  */
 public partial record WardenObjective : DataBlock
 {
-    public void Survival_CalculateTime(BuildDirector director, Level level)
+    public double Survival_CalculateTime(BuildDirector director, Level level)
     {
         var nodes = level.Planner.GetZones(director.Bulkhead, null);
+        var total = 0.0;
 
         foreach (var node in nodes)
         {
             var zone = level.Planner.GetZone(node)!;
-            var total = zone.GetClearTimeEstimate();
+            var zoneTotal = zone.GetClearTimeEstimate();
 
             // Add the total zone time to the time to survive
-            Survival_TimeToSurvive += total;
+            total += zoneTotal;
 
             Plugin.Logger.LogDebug($"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead} -- "
-                                   + $"Survival: Zone {node.ZoneNumber} time budget: total={total}s");
+                                   + $"Survival: Zone {node.ZoneNumber} time budget: total={zoneTotal}s");
         }
+
+        return total;
     }
 
     public void PreBuild_Survival(BuildDirector director, Level level) { }
@@ -62,7 +65,7 @@ public partial record WardenObjective : DataBlock
         Survival_TimeToSurvive = 30.0;
 
         // Calculate and add the additional times
-        Survival_CalculateTime(director, level);
+        Survival_TimeToSurvive = Survival_CalculateTime(director, level);
 
         //==================== Events ====================
         EventsOnActivate.Add(
@@ -93,5 +96,28 @@ public partial record WardenObjective : DataBlock
             GenericWave.Survival_Impossible_TankPotato,
             4.0,
             ":://CRITICAL ERROR - LARGE B!OM4SS Ð!$_†URß@И¢€");
+    }
+
+    /// <summary>
+    /// Adds an event to grant additional time when opening the extreme bulkhead door
+    /// </summary>
+    /// <param name="director"></param>
+    /// <param name="level"></param>
+    public void PostBuild_Survival(BuildDirector director, Level level)
+    {
+        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme))
+        {
+            var (extremeDataLayer, extremeLayout) = GetObjectiveLayerAndLayout(level.SecondaryDirector, level);
+
+            var extremeTimeAdd = Survival_CalculateTime(level.SecondaryDirector, level);
+
+            var node = level.Planner.GetZones(Bulkhead.Extreme, null).First();
+            var zone = level.Planner.GetZone(node)!;
+
+            EventBuilder.SetSurvivalTimer(
+                zone.EventsOnOpenDoor,
+                Survival_TimeToSurvive + extremeTimeAdd,
+                $":://INFO - LOCKDOWN DURATION EXTENDED");
+        }
     }
 }

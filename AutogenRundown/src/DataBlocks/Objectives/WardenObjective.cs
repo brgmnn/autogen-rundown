@@ -741,6 +741,16 @@ namespace AutogenRundown.DataBlocks
             dataLayer.ObjectiveData.DataBlockId = PersistentId;
         }
 
+        public void PostBuild(BuildDirector director, Level level)
+        {
+            switch (director.Objective)
+            {
+                case WardenObjectiveType.Survival:
+                    PostBuild_Survival(director, level);
+                    break;
+            }
+        }
+
         #region Internal Fields
         [JsonIgnore]
         public bool ReactorStartupGetCodes { get; set; } = false;
@@ -892,6 +902,9 @@ namespace AutogenRundown.DataBlocks
         public int CentralPowerGenClustser_NumberOfPowerCells { get; set; } = 4;
 
         public JArray CentralPowerGenClustser_FogDataSteps = new JArray();
+        #endregion
+
+        #region Type=11: Survival
         #endregion
 
         #region Type=15: Timed terminal sequence
