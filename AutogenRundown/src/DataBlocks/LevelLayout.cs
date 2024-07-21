@@ -1103,32 +1103,7 @@ namespace AutogenRundown.DataBlocks
                 {
                     var start = level.Planner.GetLastZone(director.Bulkhead);
 
-                    if (start == null)
-                    {
-                        Plugin.Logger.LogError($"No node returned when calling Planner.GetLastZone({director.Bulkhead})");
-                        throw new Exception("No zone node returned");
-                    }
-
-                    var prev = layout.BuildBranch((ZoneNode)start, director.ZoneCount, "survival_arena");
-
-                    // We need an exit zone as prisoners have to run to the exit
-                    var exitIndex = level.Planner.NextIndex(director.Bulkhead);
-                    var exitNode = new ZoneNode(director.Bulkhead, exitIndex, "exit");
-                    var exitZone = new Zone
-                    {
-                        Coverage = CoverageMinMax.Tiny,
-                        LightSettings = Lights.GenRandomLight()
-                    };
-
-                    exitZone.GenExitGeomorph(director.Complex);
-
-                    // Exit scan will be HARD
-                    exitZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
-                    exitZone.Alarm = ChainedPuzzle.SkipZone;
-
-                    level.Planner.Connect(prev, exitNode);
-                    level.Planner.AddZone(exitNode, exitZone);
-
+                    layout.BuildLayout_Survival(director, objective, start);
                     break;
                 }
 
