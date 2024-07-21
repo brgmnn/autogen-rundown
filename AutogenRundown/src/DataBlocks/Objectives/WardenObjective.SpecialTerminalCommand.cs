@@ -109,7 +109,7 @@ public partial record class WardenObjective : DataBlock
                 SpecialTerminalCommandDesc = "Divert atmospheric control system to initiate environmental maintenance procedures.";
 
                 // Add a fog turbine in the first zone.
-                var firstNode = level.Planner.GetZones(director.Bulkhead).First()!;
+                var firstNode = level.Planner.GetZones(director.Bulkhead, null).First()!;
                 var firstZone = level.Planner.GetZone(firstNode)!;
                 firstZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
 

@@ -816,6 +816,14 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                case WardenObjectiveType.SpecialTerminalCommand:
+                {
+                    var start = level.Planner.GetLastZone(director.Bulkhead);
+
+                    layout.BuildLayout_SpecialTerminalCommand(director, objective, start);
+                    break;
+                }
+
                 /**
                  * Big items are often single, but we can spawn multiple big items (up to 4 for
                  * E levels). Custom logic for interesting geo's should be added here.
@@ -1111,7 +1119,6 @@ namespace AutogenRundown.DataBlocks
                  * For level generation these objectives follow a more generic pattern of creating zones for those
                  * areas without too much extra going in to it for now
                  */
-                case WardenObjectiveType.SpecialTerminalCommand:
                 case WardenObjectiveType.HsuFindSample:
                 case WardenObjectiveType.GatherSmallItems:
                 default:

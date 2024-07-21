@@ -905,6 +905,9 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Type=11: Survival
+        public double Survival_TimeToActivate { get; set; } = 0.0;
+
+        public double Survival_TimeToSurvive { get; set; } = 0.0;
         #endregion
 
         #region Type=15: Timed terminal sequence
@@ -960,8 +963,6 @@ namespace AutogenRundown.DataBlocks
         public bool DoNotSolveObjectiveOnReactorComplete = false;
         public JArray PostCommandOutput = new JArray();
         public int SpecialCommandRule = 0;
-        public double Survival_TimeToActivate = 0.0;
-        public double Survival_TimeToSurvive = 0.0;
         public int GatherTerminal_SpawnCount = 0;
         public int GatherTerminal_RequiredCount = 0;
         public string GatherTerminal_Command = "";
