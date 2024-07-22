@@ -60,8 +60,8 @@ public partial record WardenObjective : DataBlock
         // Put a relatively short exit scan time as we will hit them hard on times up
         ChainedPuzzleAtExitScanSpeedMultiplier = GenExitScanTime(30, 40);
 
-        // Set the base times. Give 30s to begin and 30s base time on the time to survive
-        Survival_TimeToActivate = 30.0;
+        // Set the base times. Give 60s to begin and 30s base time on the time to survive
+        Survival_TimeToActivate = 60.0;
         Survival_TimeToSurvive = 30.0;
 
         // Calculate and add the additional times
@@ -107,6 +107,9 @@ public partial record WardenObjective : DataBlock
     {
         if (level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme))
         {
+            ///
+            /// For extreme we grant extra time to complete the objective
+            ///
             var (extremeDataLayer, extremeLayout) = GetObjectiveLayerAndLayout(level.SecondaryDirector, level);
 
             var extremeTimeAdd = Survival_CalculateTime(level.SecondaryDirector, level);
@@ -127,6 +130,13 @@ public partial record WardenObjective : DataBlock
 
         if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload))
         {
+            ///
+            /// No additional time is granted for overload objectives in survival. They just
+            /// have to be that hard.
+            ///
+            /// The overload objectives in survival are set to be much shorter, specifically to
+            /// allow them to still be completed in time
+            ///
             var node = level.Planner.GetZones(Bulkhead.Overload, null).First();
             var zone = level.Planner.GetZone(node)!;
 
