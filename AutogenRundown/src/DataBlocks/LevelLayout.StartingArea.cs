@@ -264,7 +264,7 @@ namespace AutogenRundown.DataBlocks
             {
                 Coverage = new CoverageMinMax { Min = 25, Max = 35 },
                 LightSettings = Lights.GenRandomLight(),
-                EnemyPointsMultiplier = 0.6
+                EnemyPointsMultiplier = 0.5
             };
 
             switch (level.Complex)
