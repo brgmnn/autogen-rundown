@@ -124,7 +124,8 @@ public partial record WardenObjective : DataBlock
                 Survival_TimeToSurvive + extremeTimeAdd,
                 "LOCKDOWN TIME EXTENDED");
         }
-        else if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload))
+
+        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload))
         {
             var node = level.Planner.GetZones(Bulkhead.Overload, null).First();
             var zone = level.Planner.GetZone(node)!;
