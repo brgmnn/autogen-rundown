@@ -341,6 +341,7 @@ public record ChainedPuzzle : DataBlock
     /// </summary>
     public static readonly ChainedPuzzle TeamScan = new()
     {
+        PersistentId = 51,
         PublicAlarmName = "Scan",
         TriggerAlarmOnActivate = false,
         Puzzle = new List<PuzzleComponent> { PuzzleComponent.AllBig },
@@ -352,6 +353,7 @@ public record ChainedPuzzle : DataBlock
     /// </summary>
     public static readonly ChainedPuzzle TeamScan_Slow = new()
     {
+        PersistentId = 52,
         PublicAlarmName = "Scan_Blue",
         TriggerAlarmOnActivate = false,
         Puzzle = new List<PuzzleComponent> { PuzzleComponent.AllLarge_Slow },
@@ -1043,6 +1045,10 @@ public record ChainedPuzzle : DataBlock
         BulkheadSelect_Main.Persist();
         BulkheadSelect_Secondary.Persist();
         BulkheadSelect_Overload.Persist();
+
+        // Special terminal command, HSUFindSample etc. use these puzzles
+        TeamScan.Persist();
+        TeamScan_Slow.Persist();
 
         // Several objectives use the exit alarm
         ExitAlarm.Persist();
