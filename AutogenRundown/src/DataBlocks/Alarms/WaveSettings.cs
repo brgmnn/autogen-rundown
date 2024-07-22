@@ -270,8 +270,9 @@ namespace AutogenRundown.DataBlocks.Alarms
 
                 "D" => new List<(double, int, WaveSettings)>
                 {
-                    (1.00, 10, Baseline_Hard),
-                    (1.00, 15, Baseline_VeryHard),
+                    (1.00, 15, Baseline_Hard),
+                    (1.00, 10, Baseline_VeryHard),
+                    (0.55, 5, MiniBoss_Hard),
                 },
 
                 "E" => new List<(double, int, WaveSettings)>
