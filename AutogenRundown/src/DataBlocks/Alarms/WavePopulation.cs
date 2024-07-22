@@ -55,20 +55,26 @@ namespace AutogenRundown.DataBlocks.Alarms
             if (!settings.Modifiers.Contains(Levels.LevelModifiers.NoChargers))
             {
                 pack.Add((2.0, 10, Baseline_Chargers));
-                pack.Add((4.0, 2, OnlyChargers));
+                pack.Add((1.0, 2, OnlyChargers));
             }
+            if (settings.Modifiers.Contains(Levels.LevelModifiers.ManyChargers))
+                pack.Add((5.0, 4, OnlyChargers));
 
             if (!settings.Modifiers.Contains(Levels.LevelModifiers.NoShadows))
             {
                 pack.Add((2.0, 10, Baseline_Shadows));
-                pack.Add((4.0, 3, OnlyShadows));
+                pack.Add((1.0, 3, OnlyShadows));
             }
+            if (settings.Modifiers.Contains(Levels.LevelModifiers.ManyShadows))
+                pack.Add((5.0, 4, OnlyShadows));
 
             if (!settings.Modifiers.Contains(Levels.LevelModifiers.NoNightmares))
             {
                 pack.Add((2.0, 10, Baseline_Nightmare));
-                pack.Add((2.0, 10, OnlyNightmares));
+                pack.Add((1.0, 10, OnlyNightmares));
             }
+            if (settings.Modifiers.Contains(Levels.LevelModifiers.ManyNightmares))
+                pack.Add((5.0, 4, OnlyNightmares));
 
             if (!settings.Modifiers.Contains(Levels.LevelModifiers.NoFlyers))
             {
@@ -123,6 +129,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WavePopulations.AddBlock(Baseline_Nightmare);
             Bins.WavePopulations.AddBlock(Baseline_Shadows);
 
+            // Single enemy variant population
             Bins.WavePopulations.AddBlock(OnlyChargers);
             Bins.WavePopulations.AddBlock(OnlyHybrids);
             Bins.WavePopulations.AddBlock(OnlyShadows);
