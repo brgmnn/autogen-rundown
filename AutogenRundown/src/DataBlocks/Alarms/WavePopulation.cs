@@ -52,6 +52,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             var pack = new List<(double, int, WavePopulation)>();
 
+            // Chargers
             if (!settings.Modifiers.Contains(Levels.LevelModifiers.NoChargers))
             {
                 pack.Add((2.0, 10, Baseline_Chargers));
@@ -60,6 +61,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             if (settings.Modifiers.Contains(Levels.LevelModifiers.ManyChargers))
                 pack.Add((5.0, 4, OnlyChargers));
 
+            // Shadows
             if (!settings.Modifiers.Contains(Levels.LevelModifiers.NoShadows))
             {
                 pack.Add((2.0, 10, Baseline_Shadows));
@@ -68,6 +70,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             if (settings.Modifiers.Contains(Levels.LevelModifiers.ManyShadows))
                 pack.Add((5.0, 4, OnlyShadows));
 
+            // Nightmares
             if (!settings.Modifiers.Contains(Levels.LevelModifiers.NoNightmares))
             {
                 pack.Add((2.0, 10, Baseline_Nightmare));
@@ -76,9 +79,10 @@ namespace AutogenRundown.DataBlocks.Alarms
             if (settings.Modifiers.Contains(Levels.LevelModifiers.ManyNightmares))
                 pack.Add((5.0, 4, OnlyNightmares));
 
+            // Flyers
             if (!settings.Modifiers.Contains(Levels.LevelModifiers.NoFlyers))
             {
-                pack.Add((3.0, 5, Baseline_Flyers));
+                pack.Add((2.0, 10, Baseline_Flyers));
             }
 
 
@@ -126,6 +130,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WavePopulations.AddBlock(Baseline);
             Bins.WavePopulations.AddBlock(Baseline_Hybrids);
             Bins.WavePopulations.AddBlock(Baseline_Chargers);
+            Bins.WavePopulations.AddBlock(Baseline_Flyers);
             Bins.WavePopulations.AddBlock(Baseline_Nightmare);
             Bins.WavePopulations.AddBlock(Baseline_Shadows);
 
@@ -190,7 +195,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleSpecial = Enemy.Flyer,
             WaveRoleMiniBoss = Enemy.StrikerGiant_Wave,
             WaveRoleBoss = Enemy.FlyerBig,
-            Name = "Baseline_Chargers"
+            Name = "Baseline_Flyers"
         };
 
         public static WavePopulation Baseline_Nightmare = new WavePopulation
