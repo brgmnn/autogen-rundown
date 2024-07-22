@@ -823,6 +823,12 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         [JsonIgnore]
         public bool InFog { get; set; } = false;
+
+        /// <summary>
+        /// Factor used to multiply the enemy spawning points in this zone.
+        /// </summary>
+        [JsonIgnore]
+        public double EnemyPointsMultiplier { get; set; } = 1.0;
         #endregion
 
         #region Unused by us properties

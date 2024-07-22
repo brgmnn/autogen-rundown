@@ -55,7 +55,7 @@ namespace AutogenRundown
                 WardenObjectiveType.GatherSmallItems,
                 WardenObjectiveType.ClearPath,
                 WardenObjectiveType.SpecialTerminalCommand,
-                WardenObjectiveType.RetrieveBigItems,
+                WardenObjectiveType.RetrieveBigItems, // TODO: This seems to be throwing errors
                 WardenObjectiveType.PowerCellDistribution,
                 WardenObjectiveType.TerminalUplink,
                 WardenObjectiveType.Survival,
@@ -229,12 +229,15 @@ namespace AutogenRundown
             // Larger zones get more points. The denominator determins the 1.0 benchmark.
             var factor = ((zone.Coverage.Min + zone.Coverage.Max) / 2) / 30.0;
 
+            // Also adjust enemy points by the points factor multiplier
+            factor *= zone.EnemyPointsMultiplier;
+
             // Baseline points will be around 25pts / zone for the baseline size.
             return (int)(factor * (Tier switch
             {
-                "A" => Generator.Random.Next(15, 25),
-                "B" => Generator.Random.Next(20, 25),
-                "C" => Generator.Random.Next(20, 30),
+                "A" => Generator.Random.Next(20, 25),
+                "B" => Generator.Random.Next(23, 27),
+                "C" => Generator.Random.Next(25, 30),
                 "D" => Generator.Random.Next(30, 35),
                 "E" => Generator.Random.Next(35, 40),
 
