@@ -292,16 +292,13 @@ namespace AutogenRundown.DataBlocks
 
                 case WardenObjectiveType.RetrieveBigItems:
                     {
-                        // Temporarily set main to always be matter wave projector
-                        var choices = director.Bulkhead.HasFlag(Bulkhead.Main) ?
-                            new List<(double, WardenObjectiveItem)>() :
-                            new List<(double, WardenObjectiveItem)>
-                            {
-                                (1.0, WardenObjectiveItem.DataSphere),
-                                (1.0, WardenObjectiveItem.CargoCrate),
-                                (1.0, WardenObjectiveItem.CargoCrateHighSecurity),
-                                (1.0, WardenObjectiveItem.CryoCase),
-                            };
+                        var choices = new List<(double, WardenObjectiveItem)>
+                        {
+                            (1.0, WardenObjectiveItem.DataSphere),
+                            (1.0, WardenObjectiveItem.CargoCrate),
+                            (1.0, WardenObjectiveItem.CargoCrateHighSecurity),
+                            (1.0, WardenObjectiveItem.CryoCase),
+                        };
 
                         // These would be main objective items only
                         if (director.Bulkhead.HasFlag(Bulkhead.Main))
