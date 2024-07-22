@@ -24,8 +24,12 @@ namespace AutogenRundown.Patches
                 if (num == 1)
                 {
                     var rundownData = Bins.Rundowns.Find(Rundown.R7);
+                    var name = rundownData?.DisplaySeed;
 
-                    rundown.m_rundownText.text = $"<size=60%><color=green>RND://</color></size>R{rundownData?.DisplaySeed}";
+                    if (name == "")
+                        name = $"<color=orange>{Generator.Seed}</color>";
+
+                    rundown.m_rundownText.text = $"<size=60%><color=green>RND</color><color=#444444>://</color></size>R{name}";
                 }
                 else
                 {
