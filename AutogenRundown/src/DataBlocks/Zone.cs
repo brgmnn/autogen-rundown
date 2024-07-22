@@ -648,9 +648,7 @@ namespace AutogenRundown.DataBlocks
 
             // TODO: Randomize things like travel distance here
             // We only copy the population settings in if we have an actual alarm here
-            if (puzzle.TriggerAlarmOnActivate &&
-                puzzle != ChainedPuzzle.AlarmClass3_Surge &&
-                puzzle != ChainedPuzzle.AlarmClass4_Surge)
+            if (puzzle.TriggerAlarmOnActivate && !puzzle.FixedAlarm)
             {
                 var population = Generator.DrawSelect(wavePopulationPack)!;
                 var settings = Generator.DrawSelect(waveSettingsPack)!;

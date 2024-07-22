@@ -25,6 +25,12 @@ public record ChainedPuzzle : DataBlock
 
     [JsonIgnore]
     public List<WardenObjectiveEvent> EventsOnDoorScanDone { get; set; } = new();
+
+    /// <summary>
+    /// Whether this alarm can be used as a base to roll new settings/pops on
+    /// </summary>
+    [JsonIgnore]
+    public bool FixedAlarm { get; set; } = false;
     #endregion
 
     #region Properties
@@ -820,6 +826,7 @@ public record ChainedPuzzle : DataBlock
         Population = WavePopulation.Baseline,
         WantedDistanceFromStartPos = 10.0,
         WantedDistanceBetweenPuzzleComponents = 20.0,
+        FixedAlarm = true,
         Puzzle = new List<PuzzleComponent>()
         {
             PuzzleComponent.AllLarge,
@@ -834,6 +841,7 @@ public record ChainedPuzzle : DataBlock
         Population = WavePopulation.Baseline,
         WantedDistanceFromStartPos = 10.0,
         WantedDistanceBetweenPuzzleComponents = 20.0,
+        FixedAlarm = true,
         Puzzle = new List<PuzzleComponent>()
         {
             PuzzleComponent.AllLarge,
@@ -852,6 +860,7 @@ public record ChainedPuzzle : DataBlock
         Population = WavePopulation.Baseline,
         WantedDistanceFromStartPos = 10.0,
         WantedDistanceBetweenPuzzleComponents = 20.0,
+        FixedAlarm = true,
         Puzzle = new List<PuzzleComponent>()
         {
             PuzzleComponent.AllLarge,
