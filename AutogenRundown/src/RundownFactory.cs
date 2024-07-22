@@ -145,9 +145,8 @@ namespace AutogenRundown
             for (int i = 0; i < aMax; i++)
             {
                 var level = Level.Build(
-                    new Level
+                    new Level("A")
                     {
-                        Tier = "A",
                         Name = Generator.Draw(levelNames)!,
                         Index = i + 1
                     });
@@ -159,9 +158,8 @@ namespace AutogenRundown
             for (int i = 0; i < bMax; i++)
             {
                 var level = Level.Build(
-                    new Level
+                    new Level("B")
                     {
-                        Tier = "B",
                         Name = Generator.Draw(levelNames)!,
                         Index = i + 1
                     });
@@ -173,9 +171,8 @@ namespace AutogenRundown
             for (int i = 0; i < cMax; i++)
             {
                 var level = Level.Build(
-                    new Level
+                    new Level("C")
                     {
-                        Tier = "C",
                         Name = Generator.Draw(levelNames)!,
                         Index = i + 1
                     });
@@ -244,9 +241,8 @@ namespace AutogenRundown
                 var description = new DataBlocks.Text(DescriptionHeader(objective) +
                                                       DataBlocks.WardenObjective.GenLevelDescription(objective));
                 var level = Level.Build(
-                    new()
+                    new("D")
                     {
-                        Tier = "D",
                         Prefix = $"<color=orange>X</color><color=#444444>:</color>D",
                         Description = description.PersistentId,
                         Complex = Complex.Tech,
@@ -263,9 +259,8 @@ namespace AutogenRundown
             for (int i = 1; i < dMax + 1; i++)
             {
                 var level = Level.Build(
-                    new Level
+                    new Level("D")
                     {
-                        Tier = "D",
                         Name = Generator.Draw(levelNames)!,
                         Index = i + 1
                     });
@@ -291,9 +286,8 @@ namespace AutogenRundown
                 var description = new DataBlocks.Text(DescriptionHeader(objective) +
                                                       DataBlocks.WardenObjective.GenLevelDescription(objective));
                 var level = Level.Build(
-                    new()
+                    new("D")
                     {
-                        Tier = "D",
                         Prefix = $"<color=orange>R</color><color=#444444>:</color>D",
                         Description = description.PersistentId,
                         MainDirector = mainDirector,
@@ -341,9 +335,8 @@ namespace AutogenRundown
             for (int i = 0; i < eMax; i++)
             {
                 var level = Level.Build(
-                    new Level
+                    new Level("E")
                     {
-                        Tier = "E",
                         Name = Generator.Draw(levelNames)!,
                         Index = i + 1
                     });

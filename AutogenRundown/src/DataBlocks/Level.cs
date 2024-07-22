@@ -360,11 +360,21 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         /// <summary>
+        /// Nobody should be using this
+        /// </summary>
+        private Level()
+        {
+            Plugin.Logger.LogError("NOBODY SHOULD BE USING LEVEL()");
+            Settings ??= new LevelSettings("A");
+        }
+
+        /// <summary>
         /// Constructor, we initialize some defaults here
         /// </summary>
-        public Level()
+        public Level(string tier)
         {
-            Settings ??= new LevelSettings(Tier);
+            Tier = tier;
+            Settings = new LevelSettings(tier);
         }
 
         /// <summary>

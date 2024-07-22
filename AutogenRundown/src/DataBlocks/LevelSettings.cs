@@ -33,7 +33,7 @@ namespace AutogenRundown.DataBlocks
                     Remove(LevelModifiers.FogIsInfectious);
                     break;
 
-                /*case LevelModifiers.NoChargers:
+                case LevelModifiers.NoChargers:
                 case LevelModifiers.Chargers:
                 case LevelModifiers.ManyChargers:
                 case LevelModifiers.OnlyChargers:
@@ -71,7 +71,7 @@ namespace AutogenRundown.DataBlocks
                     Remove(LevelModifiers.Shadows);
                     Remove(LevelModifiers.ManyShadows);
                     Remove(LevelModifiers.OnlyShadows);
-                    break;*/
+                    break;
             }
 
             return base.Add(modifier);
@@ -82,7 +82,7 @@ namespace AutogenRundown.DataBlocks
 
     public class LevelSettings
     {
-        public string Tier { get; set; } = "A";
+        public string Tier { get; set; } = "";
 
         public Bulkhead Bulkheads { get; set; } = Bulkhead.Main;
 
@@ -211,14 +211,14 @@ namespace AutogenRundown.DataBlocks
                         Modifiers.Add(LevelModifiers.NoShadows);
 
                         // Fog modifiers
-                        if (Generator.Flip(0.2))
+                        if (Generator.Flip(0.1))
                             Modifiers.Add(LevelModifiers.FogIsInfectious);
 
                         Modifiers.Add(
                             Generator.Select(new List<WeightedModifier>
                             {
-                                new WeightedModifier { Modifier = LevelModifiers.NoFog,    Weight = 0.85 },
-                                new WeightedModifier { Modifier = LevelModifiers.Fog,      Weight = 0.15 },
+                                new WeightedModifier { Modifier = LevelModifiers.NoFog, Weight = 0.85 },
+                                new WeightedModifier { Modifier = LevelModifiers.Fog,   Weight = 0.15 },
                             }).Modifier);
 
                         break;
@@ -238,7 +238,7 @@ namespace AutogenRundown.DataBlocks
                             Generator.Select(new List<(double, LevelModifiers)>
                             {
                                 (0.4, LevelModifiers.NoNightmares),
-                                (100.5, LevelModifiers.Nightmares),
+                                (0.5, LevelModifiers.Nightmares),
                                 (0.1, LevelModifiers.ManyNightmares),
                             }));
 
@@ -284,14 +284,14 @@ namespace AutogenRundown.DataBlocks
                             Generator.Select(new List<(double, LevelModifiers)>
                             {
                                 (0.4, LevelModifiers.NoNightmares),
-                                (110.5, LevelModifiers.Nightmares),
+                                (0.5, LevelModifiers.Nightmares),
                                 (0.1, LevelModifiers.ManyNightmares),
                             }));
                         Modifiers.Add(
                             Generator.Select(new List<(double, LevelModifiers)>
                             {
                                 (0.4, LevelModifiers.NoFlyers),
-                                (110.5, LevelModifiers.Flyers),
+                                (0.5, LevelModifiers.Flyers),
                                 (0.1, LevelModifiers.ManyFlyers),
                             }));
 
@@ -350,14 +350,14 @@ namespace AutogenRundown.DataBlocks
                             Generator.Select(new List<(double, LevelModifiers)>
                             {
                                 (0.3, LevelModifiers.NoNightmares),
-                                (110.6, LevelModifiers.Nightmares),
+                                (0.6, LevelModifiers.Nightmares),
                                 (0.1, LevelModifiers.ManyNightmares),
                             }));
                         Modifiers.Add(
                             Generator.Select(new List<(double, LevelModifiers)>
                             {
                                 (0.3, LevelModifiers.NoFlyers),
-                                (110.6, LevelModifiers.Flyers),
+                                (0.6, LevelModifiers.Flyers),
                                 (0.1, LevelModifiers.ManyFlyers),
                             }));
 
