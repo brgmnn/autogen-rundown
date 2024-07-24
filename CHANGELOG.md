@@ -3,7 +3,29 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
-## [v0.35.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.35.0) — December 31, 0000
+## [v0.36.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.36.0) — July 21, 2024
+
+### New
+
+* Survival main objectives now add additional time when opening the Secondary bulkhead to clear secondary objectives.
+* Survival main objectives with overload objective now has shorter overload (with no additional time to complete it, you just have to go fast!)
+  * Overload objectives for a survival main get 2x resources in the first zone
+
+### Changes
+
+* Adjusted lower tiers (A/B/C) enemy points per zone to be higher
+* Reduced enemy points by 40% in starting zone for 2x and 3x bulkhead custom spawns
+* Reduced number of `VeryHard` alarm wave settings in D-tier and increased `Hard` settings
+* Added extra variation in wave populations rolled for various level modifiers (chargers / shadows etc.)
+* Fixed flyers wave populations not rolling
+* Fixed level modifiers not being applied correctly
+* Fixed surge alarms rolling their wave pops and settings
+* Fix mod dependency version mismatch
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.35.0...v0.36.0
+
+
+## [v0.35.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.35.0) — July 20, 2024
 
 ### New
 
