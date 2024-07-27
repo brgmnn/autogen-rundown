@@ -31,7 +31,7 @@ namespace AutogenRundown.DataBlocks.Enemies
         public EnemyRoleDistribution Distribution { get; set; } = EnemyRoleDistribution.Rel100;
     }
 
-    public record class EnemyGroup : DataBlock
+    public record EnemyGroup : DataBlock
     {
         public EnemyGroupType Type { get; set; } = EnemyGroupType.Hibernate;
 
@@ -58,7 +58,7 @@ namespace AutogenRundown.DataBlocks.Enemies
             : base(Generator.GetPersistentId(offsets))
         { }
 
-        public static new void Setup()
+        public static void Setup()
         {
             JArray array = JArray.Parse(VanillaData);
             var groups = array.ToObject<List<GameDataEnemyGroup>>();
