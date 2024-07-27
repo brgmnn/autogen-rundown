@@ -239,7 +239,7 @@ namespace AutogenRundown.DataBlocks
             switch (complex)
             {
                 case Complex.Mining:
-                    (this.SubComplex, this.CustomGeomorph, this.Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                    (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
                     {
                         (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 70 }),
                         (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_02.prefab", new CoverageMinMax { Min = 15, Max = 20 }),
@@ -261,7 +261,7 @@ namespace AutogenRundown.DataBlocks
                     break;
 
                 case Complex.Tech:
-                    (this.SubComplex, this.CustomGeomorph, this.Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                    (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
                     {
                         (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 60 }),
                         (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_02.prefab", new CoverageMinMax { Min = 15, Max = 30 }),
@@ -279,7 +279,7 @@ namespace AutogenRundown.DataBlocks
                     break;
 
                 case Complex.Service:
-                    (this.SubComplex, this.CustomGeomorph, this.Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                    (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
                     {
                         (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_01.prefab", new CoverageMinMax { Min = 50, Max = 75 }),
                         (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_02.prefab", new CoverageMinMax { Min = 40, Max = 45 }),
@@ -310,7 +310,7 @@ namespace AutogenRundown.DataBlocks
             switch (complex)
             {
                 case Complex.Mining:
-                    (this.SubComplex, this.CustomGeomorph, this.Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                    (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
                     {
                         (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_I_HA_01.prefab", new CoverageMinMax { Min = 10, Max = 30 }),
                         (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_reactor_tunnel_I_HA_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
@@ -330,7 +330,7 @@ namespace AutogenRundown.DataBlocks
                     break;
 
                 case Complex.Tech:
-                    (this.SubComplex, this.CustomGeomorph, this.Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                    (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
                     {
                         (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_node_transition_02_JG.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                         (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_node_transition_03_JG.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
@@ -350,7 +350,7 @@ namespace AutogenRundown.DataBlocks
                     break;
 
                 case Complex.Service:
-                    (this.SubComplex, this.CustomGeomorph, this.Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                    (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
                     {
                         (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_I_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                         (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_I_HA_02.prefab", new CoverageMinMax { Min = 25, Max = 40 }),
