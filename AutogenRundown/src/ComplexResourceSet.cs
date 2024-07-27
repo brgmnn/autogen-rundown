@@ -11,13 +11,13 @@ public class ComplexResourceSet
 
     private JObject resourceSet;
 
+    /// <summary>
+    ///
+    /// </summary>
+    /// <exception cref="Exception"></exception>
     public ComplexResourceSet()
     {
-        //var revision = CellBuildData.GetRevision();
-
         var from = Path.Combine(Paths.PluginPath, Plugin.Name, FileName);
-        //var destDir = Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}");
-        //var dest = Path.Combine(destDir, FileName);
 
         using var sourceFile = File.OpenText(from);
         using var reader = new JsonTextReader(sourceFile);
@@ -25,11 +25,15 @@ public class ComplexResourceSet
         resourceSet = (JObject)JToken.ReadFrom(reader);
 
         if (resourceSet["Blocks"] == null)
+        {
             Plugin.Logger.LogFatal("No complex resource set data blocks found");
-
-        // var blocks = (JArray)resourceSet["Blocks"]!;
+            throw new Exception("No complex resource set data blocks found");
+        }
     }
 
+    /// <summary>
+    ///
+    /// </summary>
     private void WriteFile()
     {
         var revision = CellBuildData.GetRevision();
@@ -48,17 +52,43 @@ public class ComplexResourceSet
         resourceSet.WriteTo(writer);
     }
 
-    public JArray GetGeos(int persistentId, string geos)
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="persistentId"></param>
+    /// <param name="group"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public JArray GetPrefabs(int persistentId, string group)
     {
-        var blocks = resourceSet["Blocks"].OfType<JObject>();
+        var blocks = resourceSet["Blocks"]!.OfType<JObject>();
+        var complexResource = blocks.First(block => (int?)block["persistentID"] == persistentId);
 
-        if (blocks == null)
+        if (complexResource[group] == null)
         {
             Plugin.Logger.LogFatal("No complex resource set data blocks found");
+            throw new Exception("No complex resource set data blocks found");
         }
 
-        var block = blocks.First(block)
+        return (JArray)complexResource[group]!;
     }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="complex"></param>
+    /// <param name="group"></param>
+    /// <returns></returns>
+    public JArray GetPrefabs(Complex complex, string group) => GetPrefabs((int)complex, group);
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="complex"></param>
+    /// <param name="group"></param>
+    /// <param name="prefab"></param>
+    public void AddPrefab(Complex complex, string group, Prefab prefab)
+        => GetPrefabs(complex, group).Insert(0, JObject.FromObject(prefab));
 
     public static void Setup()
     {
