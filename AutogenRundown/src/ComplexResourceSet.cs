@@ -90,26 +90,60 @@ public class ComplexResourceSet
     public void AddPrefab(Complex complex, string group, Prefab prefab)
         => GetPrefabs(complex, group).Insert(0, JObject.FromObject(prefab));
 
+    /// <summary>
+    /// Where to put new prefabs of geos that you're adding?
+    ///
+    ///     * Generic tiles -> GeomorphTiles_1x1
+    ///     * Dead ends / more custom things -> CustomGeomorphs_Objective_1x1
+    ///     * Elevator drops -> ElevatorShafts_1x1
+    ///     * Elevator exit -> CustomGeomorphs_Exit_1x1
+    /// </summary>
     public static void Setup()
     {
         var resourceSet = new ComplexResourceSet();
 
         ///
+        /// Mining (Storage / Refinery / Digsite) custom geomorphs
+        ///
+        resourceSet.AddPrefab(Complex.Mining, "GeomorphTiles_1x1", new Prefab()
+        {
+            Asset = "Assets/Prefabs/Geomorph/Mining/geo_storage_FA_01.prefab",
+            SubComplex = SubComplex.Storage
+        });
+        resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/Prefabs/Geomorph/Mining/geo_storage_FA_dead_end_01.prefab",
+            SubComplex = SubComplex.Storage
+        });
+
+        ///
         /// Tech (Datacenter / Lab) custom geomorphs
         ///
+        resourceSet.AddPrefab(Complex.Tech, "GeomorphTiles_1x1", new Prefab()
         {
-            resourceSet.AddPrefab(Complex.Tech, "CustomGeomorphs_Exit_1x1", new Prefab()
-            {
-                Asset = "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_exit_01.prefab",
-                SubComplex = SubComplex.DataCenter
-            });
-
-            resourceSet.AddPrefab(Complex.Tech, "ElevatorShafts_1x1", new Prefab()
-            {
-                Asset = "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_elevator_shaft_01.prefab",
-                SubComplex = SubComplex.DataCenter
-            });
-        }
+            Asset = "Assets/Prefabs/Geomorph/Tech/geo_lab_FA_01.prefab",
+            SubComplex = SubComplex.Lab
+        });
+        resourceSet.AddPrefab(Complex.Tech, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/Prefabs/Geomorph/Tech/geo_lab_FA_dead_end_01.prefab",
+            SubComplex = SubComplex.Lab
+        });
+        resourceSet.AddPrefab(Complex.Tech, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_I_01.prefab",
+            SubComplex = SubComplex.DataCenter
+        });
+        resourceSet.AddPrefab(Complex.Tech, "CustomGeomorphs_Exit_1x1", new Prefab()
+        {
+            Asset = "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_exit_01.prefab",
+            SubComplex = SubComplex.DataCenter
+        });
+        resourceSet.AddPrefab(Complex.Tech, "ElevatorShafts_1x1", new Prefab()
+        {
+            Asset = "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_elevator_shaft_01.prefab",
+            SubComplex = SubComplex.DataCenter
+        });
 
         ///
         /// Service (Floodways / Gardens) custom geomorph updates
