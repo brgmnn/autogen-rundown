@@ -9,7 +9,7 @@ public record Prefab
     ///
     /// </summary>
     [JsonProperty("Prefab")]
-    public string Value { get; set; } = "";
+    public string Asset { get; set; } = "";
 
     /// <summary>
     ///
