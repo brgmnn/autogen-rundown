@@ -3,12 +3,12 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.Enemies
 {
-    public record class EnemyPopulation : DataBlock
+    public record EnemyPopulation : DataBlock
     {
         [JsonIgnore]
-        public static List<EnemyPopulationRole> Roles = new List<EnemyPopulationRole>();
+        public static List<EnemyPopulationRole> Roles = new();
 
-        public static new void Setup()
+        public static void Setup()
         {
             JArray array = JArray.Parse(EnemyPopulationRole.VanillaData);
             var vanillaRoles = array.ToObject<List<EnemyPopulationRole>>();
@@ -22,7 +22,7 @@ namespace AutogenRundown.DataBlocks.Enemies
             }
         }
 
-        public static new void SaveStatic()
+        public new static void SaveStatic()
         {
             #region Individual enemy populations
             // Easier mapping of enemy role, enemy, and point cost. This should map to vanilla.
@@ -317,6 +317,6 @@ namespace AutogenRundown.DataBlocks.Enemies
             });
         }
 
-        public List<EnemyPopulationRole> RoleDatas { get; set; } = new List<EnemyPopulationRole> { };
+        public List<EnemyPopulationRole> RoleDatas { get; set; } = new();
     }
 }
