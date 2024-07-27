@@ -17,6 +17,8 @@ jobs:
       - name: Generate CHANGELOG.md
         run: |
           ./generate-changelog.sh
+        env:
+          TZ: America/Los_Angeles
       - name: Set Git Authors
         run: |
           git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
