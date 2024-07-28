@@ -957,7 +957,7 @@ namespace AutogenRundown.DataBlocks
                         var entranceZone = level.Planner.GetZone(entrance)!;
                         entranceZone.GenCorridorGeomorph(director.Complex);
                         entranceZone.RollFog(level);
-                        entrance.MaxConnections = 1;
+                        entrance.MaxConnections = 1; // TODO: does this break? it won't update in planner!
 
                         // Zone 2 is a hub zone for branches where generators live
                         var hubIndex = level.Planner.NextIndex(director.Bulkhead);

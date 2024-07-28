@@ -927,11 +927,11 @@ namespace AutogenRundown.DataBlocks
 
         public string TimedTerminalSequence_SourceTerminalWorldEventObjectFilter = "";
 
-        public JArray TimedTerminalSequence_EventsOnSequenceStart = new JArray();
+        public List<List<WardenObjectiveEvent>> TimedTerminalSequence_EventsOnSequenceStart = new();
 
-        public JArray TimedTerminalSequence_EventsOnSequenceDone = new JArray();
+        public List<List<WardenObjectiveEvent>> TimedTerminalSequence_EventsOnSequenceDone = new();
 
-        public JArray TimedTerminalSequence_EventsOnSequenceFail = new JArray();
+        public List<List<WardenObjectiveEvent>> TimedTerminalSequence_EventsOnSequenceFail = new();
         #endregion
 
         #region Expedition exit

@@ -17,7 +17,7 @@
         PowerCellDistribution = 7,  // C
         TerminalUplink = 8,         // U
         Survival = 11,              // X
-        TimedTerminalSequence = 15,  // W
+        TimedTerminalSequence = 15, // W
 
         CentralGeneratorCluster = 9, // TODO: Generator cluster spawn is bugged
 
