@@ -110,6 +110,33 @@ namespace AutogenRundown.DataBlocks.Objectives
 
             return events;
         }
+
+        /// <summary>
+        /// This adds a scripted error alarm which isn't actually an alarm but instead a long list
+        /// of events that trigger periodically. R7D1 snatcher alarm does this with 1 snatcher
+        /// every 4 minutes. The error alarm isn't infinite, it runs out after 1hr 26mins (19 waves).
+        ///
+        /// Results of this are:
+        ///     - No combat music
+        ///     - Players get out of combat stamina between waves
+        ///     - "Alarm" _cannot_ be deactivated by DEACTIVATE_ALARMS
+        ///
+        /// See link for more details:
+        /// https://gtfo.fandom.com/wiki/R7D1#Trivia
+        /// </summary>
+        /// <param name="events"></param>
+        /// <param name="wave"></param>
+        /// <param name="delay"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static ICollection<WardenObjectiveEvent> AddScriptedErrorAlarm(
+            ICollection<WardenObjectiveEvent> events,
+            GenericWave wave,
+            double delay = 2.0,
+            string message = ":://WARNING - BIOMASS SIGNATURE")
+        {
+            return events;
+        }
         #endregion
 
         #region Fog

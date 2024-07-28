@@ -87,6 +87,20 @@ public partial record class WardenObjective : DataBlock
                 }
             });
 
+        /**
+         * Base game commands:
+         *  - REROUTE_POWER
+         *  - OVERRIDE_LOCKDOWN
+         *  - DISABLE_LIFE_SUPPORT
+         *  - FLOODGATE_OPEN_S156F
+         *  - SCCS_LOCAL_TEMP_SET_294_GRAD_INV_FALSE
+         *  - DEACTIVATE_FILTERS_S65T
+         *  - SPFC_REACTOR_A42_LINE_7_TRUE
+         *
+         *  - RECYCLE_GROUP_7A42
+         *  - DRAIN_COOLING_TANKS
+         *  - LOWER_RODS
+         */
         switch (SpecialTerminalCommand_Type)
         {
             ///
