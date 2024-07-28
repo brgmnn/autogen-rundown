@@ -6,7 +6,7 @@ namespace = "the_tavern"
 name = "AutogenRundown"
 versionNumber = "0.37.0"
 description = "Rundown generation mod for GTFO. New rundowns generated daily."
-websiteUrl = " https://github.com/brgmnn/autogen-rundown"
+websiteUrl = "https://github.com/brgmnn/autogen-rundown"
 containsNsfwContent = false
 
 [package.dependencies]
