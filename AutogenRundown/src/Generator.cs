@@ -68,6 +68,15 @@ namespace AutogenRundown
             => Random.NextDouble() * max;
 
         /// <summary>
+        /// Returns a random integer between the two numbers (inclusive)
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static int Between(int min, int max)
+            => Random.Next(min, max + 1);
+
+        /// <summary>
         /// Coin flip with a true/false outcome. Optional chance param
         /// </summary>
         /// <param name="chance"></param>

@@ -23,6 +23,7 @@ namespace AutogenRundown
                 WardenObjectiveType.PowerCellDistribution => prefix + "<color=orange>Power Cell Distribution</color>\n",
                 WardenObjectiveType.TerminalUplink => prefix + "<color=orange>Network Uplink</color>\n",
                 WardenObjectiveType.Survival => prefix + "<color=orange>Diversion Protocol</color>\n",
+                WardenObjectiveType.TimedTerminalSequence => prefix + "<color=orange>Timed Sequence</color>\n",
                 _ => ""
             };
         }
@@ -41,11 +42,11 @@ namespace AutogenRundown
 
             var levelNames = Words.NewLevelNamesPack();
 
-            var aMax = Generator.Random.Next(1, 2);
-            var bMax = Generator.Random.Next(3, 4);
-            var cMax = Generator.Random.Next(2, 4);
-            var dMax = Generator.Random.Next(2, 3);
-            var eMax = Generator.Random.Next(1, 2);
+            var aMax = Generator.Between(1, 2);
+            var bMax = Generator.Between(3, 4);
+            var cMax = Generator.Between(2, 4);
+            var dMax = Generator.Between(1, 2);
+            var eMax = Generator.Between(1, 4);
 
             #region A-Tier Levels
             for (int i = 0; i < aMax; i++)
@@ -173,6 +174,37 @@ namespace AutogenRundown
                 rundown.AddLevel(level);
             }
 
+            #region Timed Terminal Sequence
+            {
+                ///
+                /// Timed Terminal Sequence mission. This is a hard coded mission of sequence stuff
+                ///
+                var objective = WardenObjectiveType.TimedTerminalSequence;
+                var mainDirector = new BuildDirector()
+                {
+                    Bulkhead = Bulkhead.Main,
+                    Tier = "D",
+                    Objective = objective
+                };
+                mainDirector.GenPoints();
+
+                var settings = new LevelSettings("D");
+                var description = new DataBlocks.Text(DescriptionHeader(objective) +
+                                                      DataBlocks.WardenObjective.GenLevelDescription(objective));
+                var level = Level.Build(
+                    new("D")
+                    {
+                        Prefix = $"<color=orange>W</color><color=#444444>:</color>D",
+                        Description = description.PersistentId,
+                        MainDirector = mainDirector,
+                        Settings = settings,
+                        Index = dMax + 2
+                    });
+
+                rundown.AddLevel(level);
+            }
+            #endregion
+
             #region Reactor startup
             {
                 ///
@@ -198,7 +230,7 @@ namespace AutogenRundown
                         Description = description.PersistentId,
                         MainDirector = mainDirector,
                         Settings = settings,
-                        Index = dMax + 2
+                        Index = dMax + 3
                     });
 
                 rundown.AddLevel(level);
