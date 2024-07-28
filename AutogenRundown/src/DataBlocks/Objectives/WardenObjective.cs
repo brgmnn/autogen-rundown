@@ -733,6 +733,13 @@ namespace AutogenRundown.DataBlocks
                     Build_Survival(director, level);
                     break;
                 }
+
+                /**
+                 * Timed terminal missions
+                 */
+                case WardenObjectiveType.TimedTerminalSequence:
+                    Build_TimedTerminalSequence(director, level);
+                    break;
             }
 
             dataLayer.ObjectiveData.DataBlockId = PersistentId;

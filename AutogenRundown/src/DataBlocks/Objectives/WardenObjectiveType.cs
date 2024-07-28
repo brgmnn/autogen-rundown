@@ -17,15 +17,14 @@
         PowerCellDistribution = 7,  // C
         TerminalUplink = 8,         // U
         Survival = 11,              // X
+        TimedTerminalSequence = 15,  // W
 
         CentralGeneratorCluster = 9, // TODO: Generator cluster spawn is bugged
 
         // Not yet implemented
         HsuActivateSmall = 10,
-
         GatherTerminal = 12,
         CorruptedTerminalUplink = 13,
-        Empty = 14,
-        TimedTerminalSequence = 15
+        Empty = 14
     }
 }

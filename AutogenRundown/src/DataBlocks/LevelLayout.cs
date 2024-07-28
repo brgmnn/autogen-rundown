@@ -1116,6 +1116,17 @@ namespace AutogenRundown.DataBlocks
                 }
 
                 /**
+                 * Survival is a very custom objective
+                 */
+                case WardenObjectiveType.TimedTerminalSequence:
+                {
+                    var start = level.Planner.GetLastZone(director.Bulkhead);
+
+                    layout.BuildLayout_TimedTerminalSequence(director, objective, start);
+                    break;
+                }
+
+                /**
                  * For level generation these objectives follow a more generic pattern of creating zones for those
                  * areas without too much extra going in to it for now
                  */
