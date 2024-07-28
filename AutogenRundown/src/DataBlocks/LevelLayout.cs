@@ -1120,9 +1120,9 @@ namespace AutogenRundown.DataBlocks
                  */
                 case WardenObjectiveType.TimedTerminalSequence:
                 {
-                    var start = level.Planner.GetLastZone(director.Bulkhead);
+                    var start = level.Planner.GetLastZone(director.Bulkhead)!;
 
-                    layout.BuildLayout_TimedTerminalSequence(director, objective, start);
+                    layout.BuildLayout_TimedTerminalSequence(director, objective, (ZoneNode)start);
                     break;
                 }
 
