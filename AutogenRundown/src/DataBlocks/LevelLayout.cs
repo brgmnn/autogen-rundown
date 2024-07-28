@@ -836,6 +836,7 @@ namespace AutogenRundown.DataBlocks
                         // Zone 1 is normal
                         var entrance = level.Planner.GetExactZones(director.Bulkhead).First();
                         entrance.MaxConnections = 2;
+                        level.Planner.UpdateNode(entrance);
 
                         var entranceZone = level.Planner.GetZone(entrance)!;
                         //entranceZone.GenHubGeomorph(director.Complex);
@@ -957,7 +958,8 @@ namespace AutogenRundown.DataBlocks
                         var entranceZone = level.Planner.GetZone(entrance)!;
                         entranceZone.GenCorridorGeomorph(director.Complex);
                         entranceZone.RollFog(level);
-                        entrance.MaxConnections = 1; // TODO: does this break? it won't update in planner!
+                        entrance.MaxConnections = 1;
+                        level.Planner.UpdateNode(entrance);
 
                         // Zone 2 is a hub zone for branches where generators live
                         var hubIndex = level.Planner.NextIndex(director.Bulkhead);
