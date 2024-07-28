@@ -7,5 +7,7 @@ public class Intel
     public const string Warning = ":://WARNING";
 
     public const string Error = ":://ERROR";
+
+    public string Zone(int number) => $"<color=orange>ZONE {number}</color>";
 }
 
