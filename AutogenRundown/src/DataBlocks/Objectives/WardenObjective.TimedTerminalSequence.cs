@@ -31,24 +31,12 @@ public partial record WardenObjective : DataBlock
             new List<WardenObjectiveEvent>(),
             TimedTerminalSequence_NumberOfRounds).ToList();
 
-        var hub = level.Planner.GetZones(director.Bulkhead, "terminal_hub").First();
+        /*var hub = level.Planner.GetZones(director.Bulkhead, "timed_terminal_hub").First();
         var zone = level.Planner.GetZone(hub)!;
 
         zone.TerminalPlacements = new List<TerminalPlacement>();
 
         for (var i = 0; i < TimedTerminalSequence_NumberOfTerminals + 1; i++)
-            zone.TerminalPlacements.Add(new TerminalPlacement());
-
-        // Place terminals
-        for (var i = 0; i < TimedTerminalSequence_NumberOfTerminals; i++)
-            dataLayer.ObjectiveData.ZonePlacementDatas.Add(
-                new List<ZonePlacementData>
-                {
-                    new ZonePlacementData()
-                    {
-                        LocalIndex = hub.ZoneNumber,
-                        Weights = ZonePlacementWeights.NotAtStart
-                    }
-                });
+            zone.TerminalPlacements.Add(new TerminalPlacement());*/
     }
 }
