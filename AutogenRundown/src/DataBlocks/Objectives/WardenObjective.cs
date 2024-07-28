@@ -204,10 +204,14 @@ namespace AutogenRundown.DataBlocks
                     _ => "Prisoners to collect items from storage facility. High asset fatality rate expected."
                 },
                 WardenObjectiveType.Survival => Generator.Pick(new List<string>
-                    {
-                        $"Prisoners expended for diversion to clear adjacent sectors. Local power grid unstable. {IntelCasualtyWarning()}",
-                        "Prisoners will act as decoy for undiscolsed parallel objective. Surviving prisoners will return for extraction once undisclosed objective has been completed."
-                    })!,
+                {
+                    $"Prisoners expended for diversion to clear adjacent sectors. Local power grid unstable. {IntelCasualtyWarning()}",
+                    "Prisoners will act as decoy for undiscolsed parallel objective. Surviving prisoners will return for extraction once undisclosed objective has been completed."
+                })!,
+                WardenObjectiveType.TimedTerminalSequence => Generator.Pick(new List<string>
+                {
+                    "Timed terminal input sequence"
+                })!,
                 _ => "",
             };
 
@@ -344,19 +348,23 @@ namespace AutogenRundown.DataBlocks
                 }
 
                 case WardenObjectiveType.PowerCellDistribution:
+                {
+                    objective.PowerCellsToDistribute = director.Tier switch
                     {
-                        objective.PowerCellsToDistribute = director.Tier switch
-                        {
-                            "A" => Generator.Random.Next(1, 2),
-                            "B" => Generator.Random.Next(1, 2),
-                            "C" => Generator.Random.Next(2, 3),
-                            "D" => Generator.Random.Next(3, 4),
-                            "E" => Generator.Random.Next(3, 5),
-                            _ => 2
-                        };
+                        "A" => Generator.Random.Next(1, 2),
+                        "B" => Generator.Random.Next(1, 2),
+                        "C" => Generator.Random.Next(2, 3),
+                        "D" => Generator.Random.Next(3, 4),
+                        "E" => Generator.Random.Next(3, 5),
+                        _ => 2
+                    };
 
-                        break;
-                    }
+                    break;
+                }
+
+                case WardenObjectiveType.TimedTerminalSequence:
+                    objective.PreBuild_TimedTerminalSequence(director, level);
+                    break;
             }
 
             return objective;

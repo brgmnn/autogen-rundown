@@ -19,7 +19,7 @@ public partial record LevelLayout : DataBlock
 
         // Create hub zone
         var hubIndex = level.Planner.NextIndex(director.Bulkhead);
-        var hub = new ZoneNode(director.Bulkhead, hubIndex);
+        var hub = new ZoneNode(director.Bulkhead, hubIndex, "terminal_hub");
         hub.MaxConnections = 3;
 
         var zone = new Zone { LightSettings = Lights.GenRandomLight() };
