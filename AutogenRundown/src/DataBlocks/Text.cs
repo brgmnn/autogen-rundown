@@ -1,6 +1,4 @@
-using BepInEx;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -34,24 +32,7 @@ public record Text : DataBlock
     { }
 
     public static void Setup()
-    {
-        Setup<GameDataText, Text>(Bins.Texts, "Text");
-
-        // var dir = Path.Combine(Paths.PluginPath, Plugin.Name);
-        // var path = Path.Combine(dir, $"GameData_TextDataBlock_bin.json");
-        // var data = JObject.Parse(File.ReadAllText(path));
-        //
-        // if (data?["Blocks"] == null)
-        //     throw new Exception("Failed to get 'Blocks' property");
-        //
-        // var texts = data["Blocks"]!.ToObject<List<GameDataText>>();
-        //
-        // if (texts == null)
-        //     throw new Exception("Failed to parse GameDataText");
-        //
-        // foreach (var text in texts)
-        //     Bins.Texts.AddBlock(text);
-    }
+        => Setup<GameDataText, Text>(Bins.Texts, "Text");
 
     /// <summary>
     /// The actual text value that this text holds.
