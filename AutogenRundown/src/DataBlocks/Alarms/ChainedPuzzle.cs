@@ -908,6 +908,8 @@ public record ChainedPuzzle : DataBlock
     public static readonly ChainedPuzzle Secret_SpawnTank = new()
     {
         PersistentId = 0,
+        FixedAlarm = true,
+        TriggerAlarmOnActivate = false,
         EventsOnOpenDoor = new List<WardenObjectiveEvent>
         {
             new WardenObjectiveEvent
@@ -943,6 +945,7 @@ public record ChainedPuzzle : DataBlock
     public static readonly ChainedPuzzle Secret_StealthScan4_WithChargers = new()
     {
         PublicAlarmName = "Class IV Scan",
+        FixedAlarm = true,
         TriggerAlarmOnActivate = false,
         WantedDistanceFromStartPos = 0.0,
         WantedDistanceBetweenPuzzleComponents = 35.0,
