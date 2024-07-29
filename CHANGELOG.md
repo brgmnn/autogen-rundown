@@ -3,15 +3,17 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
-## [v0.37.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.37.0) — July 27, 2024
+## [v0.37.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.37.0) — July 28, 2024
 
 ### New
 
+* Add new `TimedTerminalSequence` objective! [[1]](https://gtfo.fandom.com/wiki/Timed_Sequence)
 * Added in remaining FlowGeo's tiles
 
 ### Changes
 
-* 
+* Add fix for max connections on tiles not being respected.
+* Fix issue with stealth scans attempting to randomize enemies.
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.36.0...v0.37.0
 
