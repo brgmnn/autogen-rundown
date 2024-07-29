@@ -183,6 +183,7 @@ namespace AutogenRundown
                 var mainDirector = new BuildDirector()
                 {
                     Bulkhead = Bulkhead.Main,
+                    Complex = Complex.Mining,
                     Tier = "D",
                     Objective = objective
                 };
@@ -196,6 +197,7 @@ namespace AutogenRundown
                     {
                         Prefix = $"<color=orange>W</color><color=#444444>:</color>D",
                         Description = description.PersistentId,
+                        Complex = Complex.Mining,
                         MainDirector = mainDirector,
                         Settings = settings,
                         Index = dMax + 2
