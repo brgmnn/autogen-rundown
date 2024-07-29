@@ -317,6 +317,9 @@ namespace AutogenRundown.DataBlocks.Alarms
             // Survival
             Bins.WaveSettings.AddBlock(Survival_Impossible_MiniBoss);
 
+            // Fixed points (multiple waves)
+            Bins.WaveSettings.AddBlock(Finite_35pts_Hard);
+
             // Single waves
             Bins.WaveSettings.AddBlock(SingleWave_8pts);
             Bins.WaveSettings.AddBlock(SingleWave_12pts);
@@ -436,6 +439,34 @@ namespace AutogenRundown.DataBlocks.Alarms
             WavePauseMax_atCost = 10.0,
 
             Name = "Error_Normal"
+        };
+        #endregion
+
+        #region
+        public static WaveSettings Finite_35pts_Hard = new WaveSettings
+        {
+            PopulationFilter = { Enemies.EnemyType.Weakling },
+            FilterType = PopulationFilterType.Exclude,
+            PauseBeforeStart = 3.0,
+
+            PopulationPointsPerGroupStart = 7,
+            PopulationPointsPerGroupEnd = 7,
+            PopulationPointsMinPerGroup = 4,
+            PopulationRampOverTime = 45.0,
+
+            PopulationPointsTotal = 35,
+            PopulationPointsPerWaveStart = 7,
+            PopulationPointsPerWaveEnd = 14,
+
+            ChanceToRandomizeSpawnDirectionPerGroup = 0.8,
+            ChanceToRandomizeSpawnDirectionPerWave = 1.0,
+
+            WavePauseMin = 1.0,
+            WavePauseMax = 20.0,
+            WavePauseMin_atCost = 1.0,
+            WavePauseMax_atCost = 10.0,
+
+            Name = "Finite_35pts_Hard"
         };
         #endregion
 
