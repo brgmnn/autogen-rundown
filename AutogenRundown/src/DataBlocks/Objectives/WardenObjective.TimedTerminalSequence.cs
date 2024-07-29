@@ -1,4 +1,7 @@
+using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -6,6 +9,7 @@ public partial record WardenObjective : DataBlock
 {
     public void PreBuild_TimedTerminalSequence(BuildDirector director, Level level)
     {
+        // TODO: change these?
         TimedTerminalSequence_NumberOfRounds = 3;
         TimedTerminalSequence_NumberOfTerminals = 3;
     }
@@ -19,14 +23,7 @@ public partial record WardenObjective : DataBlock
         FindLocationInfoHelp = "Access more data in the terminal maintenance system";
 
         TimedTerminalSequence_TimeForConfirmation = 10.0;
-
-        // Initialize the lists to the correct size. Hopefully we can refactor this
-        TimedTerminalSequence_EventsOnSequenceStart = Enumerable.Repeat(
-            new List<WardenObjectiveEvent>(),
-            TimedTerminalSequence_NumberOfRounds).ToList();
-        TimedTerminalSequence_EventsOnSequenceDone = Enumerable.Repeat(
-            new List<WardenObjectiveEvent>(),
-            TimedTerminalSequence_NumberOfRounds).ToList();
+        //TimedTerminalSequence_TimeForConfirmation = 120.0; // DEBUG
 
         TimedTerminalSequence_TimePerRound = 60.0;
 
@@ -45,6 +42,76 @@ public partial record WardenObjective : DataBlock
             // We will just set the time per round to the max time we would need to clear the
             // hardest zone
             TimedTerminalSequence_TimePerRound = Math.Max(TimedTerminalSequence_TimePerRound, total);
+        }
+
+        ///
+        /// Build the event pool of things that can be triggered on sequence events
+        ///
+        var eventPool = new List<(double, int, ICollection<WardenObjectiveEvent>)>
+        {
+            // Base error alarm
+            (1.0, 1, new List<WardenObjectiveEvent>()
+                    .AddMessage($"{Intel.Error}! Alarm Active", 7.0)
+                    .AddSpawnWave(new GenericWave
+                    {
+                        WavePopulation = WavePopulation.Baseline.PersistentId,
+                        WaveSettings = WaveSettings.Error_Normal.PersistentId,
+                    }, 8.0)),
+
+            // Some padding waves to always have something
+            (0.5, 3, new List<WardenObjectiveEvent>()
+                    .AddSpawnWave(new GenericWave
+                    {
+                        WavePopulation = WavePopulation.Baseline.PersistentId,
+                        WaveSettings = WaveSettings.Finite_35pts_Hard.PersistentId
+                    }, 15.0))
+        };
+
+        var roundTwoEvents = new List<(double, int, ICollection<WardenObjectiveEvent>)>
+        {
+            // Tank single spawn
+            (1.0, 2, new List<WardenObjectiveEvent>()
+                    .AddMessage($"{Intel.Error} LARGE BIOMASS DETECTED", 12.0)
+                    .AddSpawnWave(GenericWave.SingleTank, 11.0)),
+
+            // Single Potato
+            (0.5, 2, new List<WardenObjectiveEvent>()
+                    .AddMessage($"{Intel.Error} LARGE BIOMASS DETECTED", 12.0)
+                    .AddSpawnWave(GenericWave.SingleTankPotato, 18.0)),
+
+            // Single Mother
+            (0.1, 3, new List<WardenObjectiveEvent>()
+                    .AddMessage($"{Intel.Error} LARGE BIOMASS DETECTED", 12.0)
+                    .AddSpawnWave(GenericWave.SingleMother, 22.0))
+        };
+
+        var extraEvents = new List<(double, int, ICollection<WardenObjectiveEvent>)>
+        {
+            // Nothing
+            (1.0, 3, new List<WardenObjectiveEvent>()),
+
+            // Lights off
+            (0.5, 1, new List<WardenObjectiveEvent>().AddLightsOff(20.0)),
+        };
+
+        // Add waves etc. on each round
+        for (int round = 0; round < TimedTerminalSequence_NumberOfRounds; round++)
+        {
+            var onStart = Generator.DrawSelect(eventPool).ToList();
+            TimedTerminalSequence_EventsOnSequenceDone.Add(new());
+            TimedTerminalSequence_EventsOnSequenceFail.Add(new());
+
+            //var first = level.Planner.GetZones(director.Bulkhead, $"timed_terminal_{round}").First();
+            //EventBuilder.AddUnlockDoor(onStart, first.ZoneNumber);
+
+            // Add some more events for post round 0
+            if (round > 0)
+                eventPool.AddRange(roundTwoEvents);
+
+            // Potentially add some bonus events
+            onStart.AddRange(Generator.DrawSelect(extraEvents));
+
+            TimedTerminalSequence_EventsOnSequenceStart.Add(onStart);
         }
     }
 }

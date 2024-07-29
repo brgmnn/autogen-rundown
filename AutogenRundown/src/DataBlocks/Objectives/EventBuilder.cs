@@ -2,6 +2,77 @@
 
 namespace AutogenRundown.DataBlocks.Objectives
 {
+    public static class EventCollectionExtensions
+    {
+        /// <summary>
+        /// Adds a spawn wave event
+        /// </summary>
+        /// <param name="events"></param>
+        /// <param name="wave"></param>
+        /// <param name="delay"></param>
+        /// <returns></returns>
+        public static ICollection<WardenObjectiveEvent> AddSpawnWave(
+            this ICollection<WardenObjectiveEvent> events,
+            GenericWave wave,
+            double delay = 0.0)
+        {
+            events.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.SpawnEnemyWave,
+                    Delay = delay,
+                    SoundId = Sound.Enemies_DistantLowRoar,
+                    EnemyWaveData = wave
+                });
+
+            return events;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="events"></param>
+        /// <param name="message"></param>
+        /// <param name="delay"></param>
+        /// <returns></returns>
+        public static ICollection<WardenObjectiveEvent> AddMessage(
+            this ICollection<WardenObjectiveEvent> events,
+            string message,
+            double delay = 0.0)
+        {
+            events.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.None,
+                    Delay = delay,
+                    WardenIntel = message
+                });
+
+            return events;
+        }
+
+        public static ICollection<WardenObjectiveEvent> AddLightsOff(
+            this ICollection<WardenObjectiveEvent> events,
+            double delay = 0.0,
+            string message = ":://CRITICAL FAILURE - SUPPORT SYSTEMS OFFLINE")
+        {
+            EventBuilder.AddLightsOff(events, delay, message);
+
+            return events;
+        }
+
+        public static ICollection<WardenObjectiveEvent> AddFillFog(
+            this ICollection<WardenObjectiveEvent> events,
+            double delay = 5.0,
+            double duration = 20.0,
+            string message = ":://CRITICAL FAILURE - VENTILATION SYSTEMS OFFLINE")
+        {
+            EventBuilder.AddFillFog(events, delay, duration, message);
+
+            return events;
+        }
+    }
+
     public class EventBuilder
     {
         #region Doors

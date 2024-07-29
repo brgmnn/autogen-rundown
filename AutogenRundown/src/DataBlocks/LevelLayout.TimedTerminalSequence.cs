@@ -83,6 +83,12 @@ public partial record LevelLayout : DataBlock
                         Weights = ZonePlacementWeights.NotAtStart
                     }
                 });
+
+            // Lock the first door to the first zone
+            /*var first = planner.GetZones(director.Bulkhead, $"timed_terminal_{i}").First();
+            var firstZone = planner.GetZone(first!);
+
+            firstZone!.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;*/
         }
     }
 }
