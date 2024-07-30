@@ -1,7 +1,6 @@
 using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
-using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -92,6 +91,10 @@ public partial record WardenObjective : DataBlock
 
             // Lights off
             (0.5, 1, new List<WardenObjectiveEvent>().AddLightsOff(20.0)),
+
+            // Fog flood
+            (100.1, 1, new List<WardenObjectiveEvent>().AddFillFog(
+                5, 600, $"{Intel.Warning} - VENTILATION SYSTEM ON BACKUP POWER"))
         };
 
         // Add waves etc. on each round
@@ -101,8 +104,15 @@ public partial record WardenObjective : DataBlock
             TimedTerminalSequence_EventsOnSequenceDone.Add(new());
             TimedTerminalSequence_EventsOnSequenceFail.Add(new());
 
-            //var first = level.Planner.GetZones(director.Bulkhead, $"timed_terminal_{round}").First();
-            //EventBuilder.AddUnlockDoor(onStart, first.ZoneNumber);
+            // Unlock all the terminal zone doors on round start
+            if (round == 0)
+            {
+                for (int t = 0; t < TimedTerminalSequence_NumberOfTerminals; t++)
+                {
+                    var first = level.Planner.GetZones(director.Bulkhead, $"timed_terminal_{t}").First();
+                    EventBuilder.AddUnlockDoor(onStart, first.ZoneNumber);
+                }
+            }
 
             // Add some more events for post round 0
             if (round > 0)

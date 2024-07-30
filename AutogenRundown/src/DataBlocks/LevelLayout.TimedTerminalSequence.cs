@@ -85,10 +85,10 @@ public partial record LevelLayout : DataBlock
                 });
 
             // Lock the first door to the first zone
-            /*var first = planner.GetZones(director.Bulkhead, $"timed_terminal_{i}").First();
+            var first = planner.GetZones(director.Bulkhead, $"timed_terminal_{i}").First();
             var firstZone = planner.GetZone(first!);
 
-            firstZone!.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;*/
+            firstZone!.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
         }
     }
 }
