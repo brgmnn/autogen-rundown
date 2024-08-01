@@ -334,12 +334,22 @@ public record ChainedPuzzle : DataBlock
     /// <summary>
     /// Special chain puzzle that has no puzzles to enter
     /// </summary>
-    public static readonly ChainedPuzzle None = new() { PersistentId = 0, PublicAlarmName = "None" };
+    public static readonly ChainedPuzzle None = new()
+    {
+        PersistentId = 0,
+        PublicAlarmName = "None",
+        FixedAlarm = true
+    };
 
     /// <summary>
     /// Special chain puzzle that indicates the zone should be skipped for processing.
     /// </summary>
-    public static readonly ChainedPuzzle SkipZone = new() { PersistentId = 0, PublicAlarmName = "Skip" };
+    public static readonly ChainedPuzzle SkipZone = new()
+    {
+        PersistentId = 0,
+        PublicAlarmName = "Skip",
+        FixedAlarm = true
+    };
 
     /******************** Non-Alarm Scans ********************/
     /// <summary>
