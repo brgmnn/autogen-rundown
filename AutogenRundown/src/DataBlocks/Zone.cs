@@ -659,11 +659,13 @@ namespace AutogenRundown.DataBlocks
 
                 puzzle = puzzle with { Population = population, Settings = settings };
                 Alarm = puzzle;
+                Plugin.Logger.LogDebug($"Zone {LocalIndex} alarm(rolled): {puzzle}");
             }
             else
+            {
                 Alarm = puzzle;
-
-            Plugin.Logger.LogDebug($"Zone {LocalIndex} alarm: {puzzle}");
+                Plugin.Logger.LogDebug($"Zone {LocalIndex} alarm(fixed): {puzzle}");
+            }
 
             EventsOnApproachDoor.AddRange(puzzle.EventsOnApproachDoor);
             EventsOnUnlockDoor.AddRange(puzzle.EventsOnUnlockDoor);
