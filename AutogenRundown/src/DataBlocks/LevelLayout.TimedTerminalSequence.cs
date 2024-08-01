@@ -27,7 +27,7 @@ public partial record LevelLayout : DataBlock
 
         var zone = new Zone { LightSettings = Lights.GenRandomLight() };
         zone.GenHubGeomorph(director.Complex);
-        zone.RollFog(level);
+        zone.SetOutOfFog(level);
 
         // Place first terminal in the hub
         layerData.ObjectiveData.ZonePlacementDatas.Add(
