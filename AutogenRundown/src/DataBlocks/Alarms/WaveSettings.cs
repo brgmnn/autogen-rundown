@@ -2,6 +2,7 @@
 
 namespace AutogenRundown.DataBlocks.Alarms
 {
+    // TODO: Remove as we use custom wave settings now
     public enum VanillaWaveSettings : uint
     {
         None = 0,
@@ -232,8 +233,9 @@ namespace AutogenRundown.DataBlocks.Alarms
             : base(Generator.GetPersistentId(offsets))
         { }
 
-        public static void Setup()
-            => Setup<GameDataWaveSettings, WaveSettings>(Bins.WaveSettings, "SurvivalWaveSettings");
+        /*public static void Setup()
+            => Setup<GameDataWaveSettings, WaveSettings>(Bins.WaveSettings, "SurvivalWaveSettings");*/
+        public static void Setup() { }
 
         public override string ToString()
             => $"WaveSettings {{ Name = {Name}, PersistentId = {PersistentId} }}";

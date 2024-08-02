@@ -293,7 +293,8 @@ public record ChainedPuzzle : DataBlock
                         new ChainedPuzzle
                         {
                             PublicAlarmName = "Class VIII",
-                            SurvivalWaveSettings = (uint)VanillaWaveSettings.ApexIncreased,
+                            //SurvivalWaveSettings = (uint)VanillaWaveSettings.ApexIncreased,
+                            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
                             SurvivalWavePopulation = (uint)VanillaWavePopulation.ReactorBaselineHybrid,
                             Puzzle = new List<PuzzleComponent>
                             {
@@ -312,7 +313,8 @@ public record ChainedPuzzle : DataBlock
                         new ChainedPuzzle
                         {
                             PublicAlarmName = AlarmClass1_Sustained.PublicAlarmName,
-                            SurvivalWaveSettings = (uint)VanillaWaveSettings.ApexIncreased,
+                            //SurvivalWaveSettings = (uint)VanillaWaveSettings.ApexIncreased,
+                            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
                             SurvivalWavePopulation = (uint)VanillaWavePopulation.ReactorBaselineHybrid,
                             WantedDistanceFromStartPos = 6.0,
                             WantedDistanceBetweenPuzzleComponents = 2.0,

@@ -9,8 +9,10 @@ namespace AutogenRundown.DataBlocks.Enemies
         /// </summary>
         public static GenericWave ExitTrickle = new GenericWave
         {
-            WaveSettings = (uint)VanillaWaveSettings.ExitTrickle_38S_Original,
-            WavePopulation = (uint)VanillaWavePopulation.Baseline,
+            //WaveSettings = (uint)VanillaWaveSettings.ExitTrickle_38S_Original,
+            WaveSettings = Alarms.WaveSettings.Exit_Baseline.PersistentId,
+            //WavePopulation = (uint)VanillaWavePopulation.Baseline,
+            WavePopulation = Alarms.WavePopulation.Baseline.PersistentId,
             SpawnDelay = 4.0,
             TriggerAlarm = true,
         };
