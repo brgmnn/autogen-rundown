@@ -13,6 +13,10 @@ Check Alarm Persistent IDs for levellayout
   jq -r '.Blocks | map(select(.name | test("^[0-9]+_B1")) | {name, zones: .Zones | map({ChainedPuzzleToEnter})})' build/34855/GameData_LevelLayoutDataBlock_bin.json
 
 
+Seed: 201
+* D3, Main bulkhead door spawned with secret tank and it looks buggy.
+  Showed stealth door
+
 Probably need to rework enemy sleeper spawning now with level planner
 
 Seed: 2024_07_14
