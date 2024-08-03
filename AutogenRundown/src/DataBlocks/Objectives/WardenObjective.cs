@@ -775,14 +775,21 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Type=?: Chained puzzles
-        public uint ChainedPuzzleToActive { get; set; } = 0;
+        [JsonIgnore]
+        public ChainedPuzzle StartPuzzle { get; set; } = ChainedPuzzle.None;
+
+        public uint ChainedPuzzleToActive
+        {
+            get => StartPuzzle.PersistentId;
+            private set { }
+        }
 
         [JsonIgnore]
-        public ChainedPuzzle MidObjective { get; set; } = ChainedPuzzle.None;
+        public ChainedPuzzle MidPuzzle { get; set; } = ChainedPuzzle.None;
 
         public uint ChainedPuzzleMidObjective
         {
-            get => MidObjective.PersistentId;
+            get => MidPuzzle.PersistentId;
             private set { }
         }
         #endregion

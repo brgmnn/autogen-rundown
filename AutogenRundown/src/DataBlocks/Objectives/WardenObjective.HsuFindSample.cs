@@ -21,7 +21,7 @@ public partial record class WardenObjective : DataBlock
 
         ActivateHSU_BringItemInElevator = true;
         GatherItemId = (uint)WardenObjectiveItem.HSU;
-        ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
+        StartPuzzle = ChainedPuzzle.FindOrPersist(ChainedPuzzle.TeamScan);
 
         // Place HSU's within the objective zone
         var zn = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "find_items")!;

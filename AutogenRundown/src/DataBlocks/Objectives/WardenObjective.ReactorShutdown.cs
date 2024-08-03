@@ -24,12 +24,12 @@ public partial record class WardenObjective : DataBlock
         LightsOnDuringIntro = true;
         LightsOnWhenStartupComplete = false;
 
-        ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
+        StartPuzzle = ChainedPuzzle.FindOrPersist(ChainedPuzzle.TeamScan);
 
         // TODO: Rework this
         var midScan = Generator.Pick(ChainedPuzzle.BuildReactorShutdownPack(director.Tier)) ?? ChainedPuzzle.AlarmClass5;
 
-        MidObjective = ChainedPuzzle.FindOrPersist(midScan);
+        MidPuzzle = ChainedPuzzle.FindOrPersist(midScan);
 
         // Seems we set these as empty?
         // TODO: can we remove these?

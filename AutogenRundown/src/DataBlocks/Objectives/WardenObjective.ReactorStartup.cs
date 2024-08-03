@@ -39,7 +39,7 @@ public partial record class WardenObjective : DataBlock
         GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
         GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
-        ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
+        StartPuzzle = ChainedPuzzle.FindOrPersist(ChainedPuzzle.TeamScan);
 
         // Setup reactor waves. We should not override these so that level layout
         // can assign codes to some of these waves.

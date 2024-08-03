@@ -134,7 +134,7 @@ public partial record class WardenObjective : DataBlock
         }
 
         // Add scans
-        ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
+        StartPuzzle = ChainedPuzzle.FindOrPersist(ChainedPuzzle.TeamScan);
         ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
 
         // Add exit wave if this is the main bulkhead

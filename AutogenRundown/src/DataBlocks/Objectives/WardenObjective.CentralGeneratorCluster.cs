@@ -27,7 +27,7 @@ public partial record class WardenObjective : DataBlock
         GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
         GoToWinCondition_ToMainLayer = "Malfunction in air purification system. Make your way for the forward emergency exit.";
 
-        MidObjective = ChainedPuzzle.FindOrPersist(ChainedPuzzle.AlarmClass1);
+        MidPuzzle = ChainedPuzzle.FindOrPersist(ChainedPuzzle.AlarmClass1);
         //"ChainedPuzzleAtExit": 11,
 
         PowerCellsToDistribute = 3;
