@@ -61,7 +61,7 @@ public partial record WardenObjective : DataBlock
                     .AddSpawnWave(new GenericWave
                     {
                         WavePopulation = WavePopulation.Baseline.PersistentId,
-                        WaveSettings = WaveSettings.Error_Normal.PersistentId,
+                        WaveSettings = WaveSettings.Error_Easy.PersistentId,
                     }, 8.0)),
 
             // Some padding waves to always have something
@@ -130,5 +130,7 @@ public partial record WardenObjective : DataBlock
 
             TimedTerminalSequence_EventsOnSequenceStart.Add(onStart);
         }
+
+        //
     }
 }

@@ -54,7 +54,7 @@ namespace AutogenRundown.DataBlocks.Enemies
         #region Survival objective waves
         public static GenericWave Survival_ErrorAlarm = new()
         {
-            WaveSettings = Alarms.WaveSettings.Error_Normal.PersistentId,
+            WaveSettings = Alarms.WaveSettings.Error_Easy.PersistentId,
             WavePopulation = Alarms.WavePopulation.Baseline.PersistentId
         };
 

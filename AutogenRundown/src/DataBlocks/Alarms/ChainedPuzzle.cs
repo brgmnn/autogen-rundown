@@ -939,7 +939,7 @@ public record ChainedPuzzle : DataBlock
         AlarmSoundStart = 2200133294,
         AlarmSoundStop = 1190355274,
 
-        Settings = WaveSettings.Error_Normal,
+        Settings = WaveSettings.Error_Easy,
         Population = WavePopulation.Baseline,
         // SurvivalWaveSettings = (uint)VanillaWaveSettings.Trickle_352_SSpB,
         // SurvivalWavePopulation = (uint)VanillaWavePopulation.Baseline,

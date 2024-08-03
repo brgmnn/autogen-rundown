@@ -296,6 +296,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WaveSettings.AddBlock(MiniBoss_Hard);
 
             // Error
+            Bins.WaveSettings.AddBlock(Error_Easy);
             Bins.WaveSettings.AddBlock(Error_Normal);
 
             // Exit
@@ -413,7 +414,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         ///
         /// Quite an easy error alarm.
         /// </summary>
-        public static WaveSettings Error_Normal = new WaveSettings
+        public static WaveSettings Error_Easy = new WaveSettings
         {
             PopulationFilter =
             {
@@ -440,11 +441,29 @@ namespace AutogenRundown.DataBlocks.Alarms
             WavePauseMin_atCost = 1.0,
             WavePauseMax_atCost = 10.0,
 
+            Name = "Error_Easy"
+        };
+
+        /// <summary>
+        /// Harder than easy. This shouldn't feel relaxed to deal with
+        /// </summary>
+        public static WaveSettings Error_Normal = Error_Easy with
+        {
+            PopulationFilter = new()
+            {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+                Enemies.EnemyType.MiniBoss,
+            },
+            PauseBetweenGroups = 48,
+            PopulationPointsPerGroupStart = 4.0,
+            PopulationPointsPerGroupEnd = 4.0,
+
             Name = "Error_Normal"
         };
         #endregion
 
-        #region
+        #region Finite points value
         public static WaveSettings Finite_35pts_Hard = new WaveSettings
         {
             PopulationFilter = { Enemies.EnemyType.Weakling },
