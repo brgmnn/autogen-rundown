@@ -1,4 +1,3 @@
-using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 
@@ -46,22 +45,7 @@ public partial record LevelLayout : DataBlock
         // Now we build the zones for the codes
         for (var i = 0; i < objective.TimedTerminalSequence_NumberOfTerminals; i++)
         {
-            var size = director.Tier switch
-            {
-                "D" => Generator.Select(new List<(double, int)>
-                {
-                    (0.65, 1),
-                    (0.35, 2)
-                }),
-                "E" => Generator.Select(new List<(double, int)>
-                {
-                    (0.3, 1),
-                    (0.7, 2)
-                }),
-
-                _ => 1,
-            };
-            var end = BuildBranch(hub, size, $"timed_terminal_{i}");
+            var end = BuildBranch(hub, 1, $"timed_terminal_{i}");
             var endZone = planner.GetZone(end)!;
 
             // Place 3 terminals in the zone

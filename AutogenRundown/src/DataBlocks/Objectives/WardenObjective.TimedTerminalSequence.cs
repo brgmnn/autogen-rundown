@@ -100,8 +100,8 @@ public partial record WardenObjective : DataBlock
             (0.5, 1, new List<WardenObjectiveEvent>().AddLightsOff(20.0)),
 
             // Fog flood
-            (100.1, 1, new List<WardenObjectiveEvent>().AddFillFog(
-                5, 600, $"{Intel.Warning} - VENTILATION SYSTEM ON BACKUP POWER"))
+            (0.1, 1, new List<WardenObjectiveEvent>().AddFillFog(
+                5, 1800, $"{Intel.Warning} - VENTILATION SYSTEM ON BACKUP POWER"))
         };
 
         // Add waves etc. on each round
