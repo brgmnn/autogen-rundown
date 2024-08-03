@@ -146,6 +146,10 @@ public record ChainedPuzzle : DataBlock
     /// <returns></returns>
     public static ChainedPuzzle FindOrPersist(ChainedPuzzle puzzle)
     {
+        // We specifically don't want to persist none, as we want to set the PersistentID to 0
+        if (puzzle == None)
+            return None;
+
         var existingPuzzle = Bins.ChainedPuzzles.GetBlock(puzzle);
 
         if (existingPuzzle != null)
