@@ -777,7 +777,14 @@ namespace AutogenRundown.DataBlocks
         #region Type=?: Chained puzzles
         public uint ChainedPuzzleToActive { get; set; } = 0;
 
-        public uint ChainedPuzzleMidObjective { get; set; } = 0;
+        [JsonIgnore]
+        public ChainedPuzzle MidObjective { get; set; } = ChainedPuzzle.None;
+
+        public uint ChainedPuzzleMidObjective
+        {
+            get => MidObjective.PersistentId;
+            private set { }
+        }
         #endregion
 
         #region Type=0: Find HSU sample

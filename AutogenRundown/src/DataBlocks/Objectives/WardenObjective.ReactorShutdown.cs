@@ -28,9 +28,8 @@ public partial record class WardenObjective : DataBlock
 
         // TODO: Rework this
         var midScan = Generator.Pick(ChainedPuzzle.BuildReactorShutdownPack(director.Tier)) ?? ChainedPuzzle.AlarmClass5;
-        //midScan.Persist();
 
-        ChainedPuzzleMidObjective = ChainedPuzzle.FindOrPersist(midScan).PersistentId;
+        MidObjective = ChainedPuzzle.FindOrPersist(midScan);
 
         // Seems we set these as empty?
         // TODO: can we remove these?
