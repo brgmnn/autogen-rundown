@@ -465,10 +465,11 @@ namespace AutogenRundown.DataBlocks
 
                         ChainedPuzzleToActive = ChainedPuzzle.TeamScan.PersistentId;
 
+                        // TODO: Rework this
                         var midScan = Generator.Pick(ChainedPuzzle.BuildReactorShutdownPack(director.Tier)) ?? ChainedPuzzle.AlarmClass5;
-                        midScan.Persist();
+                        //midScan.Persist();
 
-                        ChainedPuzzleMidObjective = midScan.PersistentId;
+                        ChainedPuzzleMidObjective = ChainedPuzzle.FindOrPersist(midScan).PersistentId;
 
                         // Seems we set these as empty?
                         // TODO: can we remove these?

@@ -49,7 +49,7 @@ namespace AutogenRundown
         public static PID pid = 100000;
 
         private static PID enemyGroupPid = 80;
-        private static PID wavePopulationPid = 100;
+        private static PID wavePopulationPid = 200;
         private static PID waveSettingsPid = 1;
 
         public static string DisplaySeed { get; set; } = "";

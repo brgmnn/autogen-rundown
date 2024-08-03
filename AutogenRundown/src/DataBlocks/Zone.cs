@@ -658,12 +658,10 @@ namespace AutogenRundown.DataBlocks
                 var settings = Generator.DrawSelect(waveSettingsPack)!;
 
                 puzzle = puzzle with { Population = population, Settings = settings };
-                Alarm = puzzle;
                 Plugin.Logger.LogDebug($"Zone {LocalIndex} alarm(rolled): {puzzle}");
             }
             else
             {
-                Alarm = puzzle;
                 Plugin.Logger.LogDebug($"Zone {LocalIndex} alarm(fixed): {puzzle}");
             }
 
@@ -673,7 +671,10 @@ namespace AutogenRundown.DataBlocks
             EventsOnDoorScanStart.AddRange(puzzle.EventsOnDoorScanStart);
             EventsOnDoorScanDone.AddRange(puzzle.EventsOnDoorScanDone);
 
-            puzzle.Persist();
+            if (Bins.ChainedPuzzles.Contains(puzzle))
+                Plugin.Logger.LogInfo($"Zone {LocalIndex} alarm reassigned: {puzzle}");
+
+            Alarm = ChainedPuzzle.FindOrPersist(puzzle);
         }
         #endregion
 

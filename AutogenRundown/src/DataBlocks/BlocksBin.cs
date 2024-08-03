@@ -163,7 +163,10 @@ namespace AutogenRundown.DataBlocks
             // Don't add a block that we already have
             // TODO: do we need to change this to use a HashMap?
             if (Blocks.Contains(block))
+            {
+                Plugin.Logger.LogWarning($"Already got ChainedPuzzle: {block}");
                 return;
+            }
 
             Blocks.Add(block);
 
@@ -173,6 +176,10 @@ namespace AutogenRundown.DataBlocks
             persistentIds.Add(block.PersistentId);
             LastPersistentId = Math.Max(LastPersistentId, block.PersistentId);
         }
+
+        public bool Contains(T? block) => Blocks.Contains(block);
+
+        public T? GetBlock(T? block) => Blocks.Find(b => b == block);
 
         /// <summary>
         /// Ensure all blocks are assigned an Id

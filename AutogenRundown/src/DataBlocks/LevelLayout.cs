@@ -536,8 +536,7 @@ namespace AutogenRundown.DataBlocks
                     return;
                 }
 
-                zone.Alarm = puzzle;
-                puzzle.Persist();
+                zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
 
                 // Give a flat chance of being able to turn off the alarm.
                 if (Generator.Flip(0.5))

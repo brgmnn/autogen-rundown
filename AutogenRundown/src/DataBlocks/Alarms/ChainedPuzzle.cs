@@ -139,6 +139,24 @@ public record ChainedPuzzle : DataBlock
     }
 
     /// <summary>
+    /// Given a puzzle, either find it's duplicate and use that or persist this one and return that
+    /// instance.
+    /// </summary>
+    /// <param name="puzzle"></param>
+    /// <returns></returns>
+    public static ChainedPuzzle FindOrPersist(ChainedPuzzle puzzle)
+    {
+        var existingPuzzle = Bins.ChainedPuzzles.GetBlock(puzzle);
+
+        if (existingPuzzle != null)
+            return existingPuzzle;
+
+        puzzle.Persist();
+
+        return puzzle;
+    }
+
+    /// <summary>
     /// We explicitly want to not assign a persistent ID on creation of this object as we are
     /// lazily persisting them.
     /// </summary>
@@ -362,6 +380,7 @@ public record ChainedPuzzle : DataBlock
         PersistentId = 51,
         PublicAlarmName = "Scan",
         TriggerAlarmOnActivate = false,
+        FixedAlarm = true,
         Puzzle = new List<PuzzleComponent> { PuzzleComponent.AllBig },
     };
 
@@ -374,6 +393,7 @@ public record ChainedPuzzle : DataBlock
         PersistentId = 52,
         PublicAlarmName = "Scan_Blue",
         TriggerAlarmOnActivate = false,
+        FixedAlarm = true,
         Puzzle = new List<PuzzleComponent> { PuzzleComponent.AllLarge_Slow },
     };
 
@@ -381,8 +401,11 @@ public record ChainedPuzzle : DataBlock
     #region Stealth scans
     public static readonly ChainedPuzzle StealthScan2 = new()
     {
+        PersistentId = Generator.GetPersistentId(),
+
         PublicAlarmName = "Class II Scan",
         TriggerAlarmOnActivate = false,
+        FixedAlarm = true,
         WantedDistanceFromStartPos = 0.0,
         WantedDistanceBetweenPuzzleComponents = 35.0,
         Puzzle = new List<PuzzleComponent>
@@ -394,8 +417,11 @@ public record ChainedPuzzle : DataBlock
 
     public static readonly ChainedPuzzle StealthScan3 = new()
     {
+        PersistentId = Generator.GetPersistentId(),
+
         PublicAlarmName = "Class III Scan",
         TriggerAlarmOnActivate = false,
+        FixedAlarm = true,
         WantedDistanceFromStartPos = 0.0,
         WantedDistanceBetweenPuzzleComponents = 35.0,
         Puzzle = new List<PuzzleComponent>
@@ -408,8 +434,11 @@ public record ChainedPuzzle : DataBlock
 
     public static readonly ChainedPuzzle StealthScan4 = new()
     {
+        PersistentId = Generator.GetPersistentId(),
+
         PublicAlarmName = "Class IV Scan",
         TriggerAlarmOnActivate = false,
+        FixedAlarm = true,
         WantedDistanceFromStartPos = 0.0,
         WantedDistanceBetweenPuzzleComponents = 35.0,
         Puzzle = new List<PuzzleComponent>
