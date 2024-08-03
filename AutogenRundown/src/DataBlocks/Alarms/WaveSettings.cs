@@ -286,7 +286,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             };
         }
 
-        public static new void SaveStatic()
+        public new static void SaveStatic()
         {
             // Alarms
             Bins.WaveSettings.AddBlock(Baseline_Easy);

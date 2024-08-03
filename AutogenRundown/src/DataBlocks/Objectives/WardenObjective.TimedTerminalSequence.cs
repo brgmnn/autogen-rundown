@@ -13,6 +13,13 @@ public partial record WardenObjective : DataBlock
         TimedTerminalSequence_NumberOfTerminals = 3;
     }
 
+    /// <summary>
+    /// Aparently you can set the terminal it picks using the WorldEventFilter?
+    ///
+    /// If true, it would mean we could control which terminals are used.
+    /// </summary>
+    /// <param name="director"></param>
+    /// <param name="level"></param>
     public void Build_TimedTerminalSequence(BuildDirector director, Level level)
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);

@@ -13,6 +13,10 @@ Check Alarm Persistent IDs for levellayout
   jq -r '.Blocks | map(select(.name | test("^[0-9]+_B1")) | {name, zones: .Zones | map({ChainedPuzzleToEnter})})' build/34855/GameData_LevelLayoutDataBlock_bin.json
 
 
+TODO:
+  * Use Zone Prefix Override to alert to specific tiles.
+
+
 Seed: 201
 * D3, Main bulkhead door spawned with secret tank and it looks buggy.
   Showed stealth door
