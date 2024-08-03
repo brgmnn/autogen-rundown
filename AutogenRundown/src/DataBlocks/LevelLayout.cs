@@ -757,7 +757,8 @@ namespace AutogenRundown.DataBlocks
                             StartPosition = ZoneEntranceBuildFrom.Furthest,
                             StartExpansion = startExpansion,
                             ZoneExpansion = zoneExpansion,
-                            ForbidTerminalsInZone = true
+                            ForbidTerminalsInZone = true,
+                            AliasPrefix = "Reactor, ZONE"
                         };
                         reactor.GenReactorGeomorph(director.Complex);
                         reactor.TerminalPlacements = new List<TerminalPlacement>();

@@ -836,7 +836,6 @@ namespace AutogenRundown.DataBlocks
 
         #region Unused by us properties
         public int AliasOverride = -1;
-        public bool OverrideAliasPrefix = false;
         #endregion
 
         #region Seed properties
@@ -854,6 +853,26 @@ namespace AutogenRundown.DataBlocks
         /// Which zone to build this zone from
         /// </summary>
         public int BuildFromLocalIndex { get; set; } = 0;
+
+        #region Zone Prefix
+        public bool OverrideAliasPrefix
+        {
+            get => AliasPrefix != string.Empty;
+            private set { }
+        }
+
+        public string AliasPrefixOverride
+        {
+            get => AliasPrefix;
+            private set { }
+        }
+
+        /// <summary>
+        /// What Zone Alias prefix to use. Leave this empty for the default `ZONE` prefix
+        /// </summary>
+        [JsonIgnore]
+        public string AliasPrefix { get; set; } = string.Empty;
+        #endregion
 
         /// <summary>
         /// Which tileset to use
