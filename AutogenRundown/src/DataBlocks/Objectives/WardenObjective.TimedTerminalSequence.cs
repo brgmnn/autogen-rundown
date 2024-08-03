@@ -131,6 +131,12 @@ public partial record WardenObjective : DataBlock
             TimedTerminalSequence_EventsOnSequenceStart.Add(onStart);
         }
 
-        //
+        // Add event to unlock error alarm disable
+        var turnOff = level.Planner.GetZones(director.Bulkhead, "timed_terminal_error_off").First()!;
+        EventsOnGotoWin.Add(new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.UnlockSecurityDoor,
+                LocalIndex = turnOff.ZoneNumber
+            });
     }
 }

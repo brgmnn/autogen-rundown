@@ -1,3 +1,4 @@
+using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 
@@ -57,6 +58,10 @@ public partial record LevelLayout : DataBlock
             };
             endZone.Coverage = new CoverageMinMax() { Min = 32, Max = 64 };
 
+            // Trial error alarm of baseline enemies
+            var puzzle = ChainedPuzzle.AlarmError_Baseline with { Settings = WaveSettings.Error_Normal };
+            endZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
+
             // Mark the zone for the objective
             layerData.ObjectiveData.ZonePlacementDatas.Add(
                 new List<ZonePlacementData>()
@@ -73,6 +78,30 @@ public partial record LevelLayout : DataBlock
             var firstZone = planner.GetZone(first!);
 
             firstZone!.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
+        }
+
+        var selectedIndex = Generator.Between(0, objective.TimedTerminalSequence_NumberOfTerminals - 1);
+        var selected = planner.GetZones(director.Bulkhead, $"timed_terminal_{selectedIndex}").First();
+
+        // Add turnoff zone
+        var turnOff = new ZoneNode(director.Bulkhead, planner.NextIndex(director.Bulkhead), $"timed_terminal_error_off");
+        planner.Connect(selected, turnOff);
+        planner.AddZone(turnOff,
+            new Zone
+            {
+                Coverage = new() { Min = 3.0, Max = 3.0 },
+                LightSettings = Lights.GenRandomLight(),
+                ProgressionPuzzleToEnter = ProgressionPuzzle.Locked
+            });
+
+        // Mark terminal zones as they can be disabled
+        for (var i = 0; i < objective.TimedTerminalSequence_NumberOfTerminals; i++)
+        {
+            var node = level.Planner.GetZones(director.Bulkhead, $"timed_terminal_{i}").First()!;
+            var terminalZone = level.Planner.GetZone(node)!;
+
+            terminalZone.TurnOffAlarmOnTerminal = true;
+            terminalZone.TerminalPuzzleZone.LocalIndex = turnOff.ZoneNumber;
         }
     }
 }

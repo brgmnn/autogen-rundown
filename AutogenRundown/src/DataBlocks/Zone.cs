@@ -641,7 +641,7 @@ namespace AutogenRundown.DataBlocks
             ICollection<(double, int, WavePopulation)> wavePopulationPack,
             ICollection<(double, int, WaveSettings)> waveSettingsPack)
         {
-            if (LocalIndex == 0 || Alarm == ChainedPuzzle.SkipZone)
+            if (LocalIndex == 0 || Alarm == ChainedPuzzle.SkipZone || Alarm != ChainedPuzzle.None)
                 return;
 
             // Grab a random puzzle from the puzzle pack
