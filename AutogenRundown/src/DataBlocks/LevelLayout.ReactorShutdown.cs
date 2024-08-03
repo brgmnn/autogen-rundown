@@ -32,6 +32,9 @@ public partial record LevelLayout : DataBlock
         // Create some initial zones
         var prev = BuildBranch(start, preludeZoneCount, "primary");
 
+        BuildReactor(prev);
+
+        /*
         // Pick a random direction to expand the reactor
         var (startExpansion, zoneExpansion) = Generator.Pick(
             new List<(ZoneBuildExpansion, ZoneExpansion)>
@@ -73,7 +76,7 @@ public partial record LevelLayout : DataBlock
         reactor.TerminalPlacements = new List<TerminalPlacement>();
 
         level.Planner.Connect(corridorNode, reactorNode);
-        level.Planner.AddZone(reactorNode, reactor);
+        level.Planner.AddZone(reactorNode, reactor);*/
     }
 }
 
