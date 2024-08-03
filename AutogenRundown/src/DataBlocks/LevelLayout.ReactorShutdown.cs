@@ -1,12 +1,11 @@
-﻿using AutogenRundown.DataBlocks.ZoneData;
-using AutogenRundown.DataBlocks.Zones;
+﻿using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
 public partial record LevelLayout : DataBlock
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="director"></param>
     /// <param name="objective"></param>
@@ -33,50 +32,6 @@ public partial record LevelLayout : DataBlock
         var prev = BuildBranch(start, preludeZoneCount, "primary");
 
         BuildReactor(prev);
-
-        /*
-        // Pick a random direction to expand the reactor
-        var (startExpansion, zoneExpansion) = Generator.Pick(
-            new List<(ZoneBuildExpansion, ZoneExpansion)>
-            {
-                (ZoneBuildExpansion.Left, ZoneExpansion.Left),
-                (ZoneBuildExpansion.Right, ZoneExpansion.Right),
-                (ZoneBuildExpansion.Forward, ZoneExpansion.Forward),
-                (ZoneBuildExpansion.Backward, ZoneExpansion.Backward)
-            });
-        // Use the same light for both corridor and reactor
-        var light = Lights.GenReactorLight();
-
-        // Always generate a corridor of some kind (currently fixed) for the reactor zones.
-        var corridorNode = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead));
-        var corridor = new Zone
-        {
-            LightSettings = light,
-            StartPosition = ZoneEntranceBuildFrom.Furthest,
-            StartExpansion = startExpansion,
-            ZoneExpansion = zoneExpansion
-        };
-        corridor.GenReactorCorridorGeomorph(director.Complex);
-
-        level.Planner.Connect(prev, corridorNode);
-        level.Planner.AddZone(corridorNode, corridor);
-
-        // Create the reactor zone
-        var reactorNode = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead));
-        var reactor = new Zone
-        {
-            LightSettings = light,
-            StartPosition = ZoneEntranceBuildFrom.Furthest,
-            StartExpansion = startExpansion,
-            ZoneExpansion = zoneExpansion,
-            ForbidTerminalsInZone = true,
-            AliasPrefix = "Reactor, ZONE"
-        };
-        reactor.GenReactorGeomorph(director.Complex);
-        reactor.TerminalPlacements = new List<TerminalPlacement>();
-
-        level.Planner.Connect(corridorNode, reactorNode);
-        level.Planner.AddZone(reactorNode, reactor);*/
     }
 }
 
