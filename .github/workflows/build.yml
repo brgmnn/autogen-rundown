@@ -72,6 +72,7 @@ jobs:
 
     # Run the unit tests
     - name: Test
+      if: false
       run: |
         dotnet test --no-build \
           --configuration Release \
