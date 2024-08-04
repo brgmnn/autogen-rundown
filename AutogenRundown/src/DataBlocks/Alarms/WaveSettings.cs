@@ -305,6 +305,9 @@ namespace AutogenRundown.DataBlocks.Alarms
             // Surge
             Bins.WaveSettings.AddBlock(Surge);
 
+            // Scout
+            Bins.WaveSettings.AddBlock(Scout_Easy);
+
             // Reactor
             Bins.WaveSettings.AddBlock(Reactor_Easy);
             Bins.WaveSettings.AddBlock(Reactor_Medium);
@@ -517,6 +520,42 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationRampOverTime = 0,
 
             Name = "Surge"
+        };
+        #endregion
+
+        #region Scout
+        /// <summary>
+        /// Equivalent to PersistentId=32 "Trickle 3-52 SSpB"
+        ///
+        /// Quite an easy error alarm.
+        /// </summary>
+        public static WaveSettings Scout_Easy = new WaveSettings
+        {
+            PopulationFilter =
+            {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+                Enemies.EnemyType.MiniBoss,
+            },
+            FilterType = PopulationFilterType.Include,
+
+            PauseBeforeStart = 1.0,
+            PauseBetweenGroups = 3.0,
+
+            PopulationPointsPerGroupStart = 5.0,
+            PopulationPointsPerGroupEnd = 5.0,
+            PopulationPointsMinPerGroup = 3.0,
+
+            PopulationPointsPerWaveStart = 12,
+            PopulationPointsPerWaveEnd = 12,
+            PopulationPointsTotal = 12,
+
+            WavePauseMin = 1.0,
+            WavePauseMax = 20.0,
+            WavePauseMin_atCost = 1.0,
+            WavePauseMax_atCost = 10.0,
+
+            Name = "Scout_Easy"
         };
         #endregion
 

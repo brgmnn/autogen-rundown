@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Levels;
+﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.GeneratorData;
@@ -236,8 +237,8 @@ namespace AutogenRundown.DataBlocks
                 ["ExpeditionBalance"] = 1,
 
                 // TODO: Replace these with actual wave settings / populations
-                ["ScoutWaveSettings"] = 3,
-                ["ScoutWavePopulation"] = 1,
+                ["ScoutWaveSettings"] = WaveSettings.Scout_Easy.PersistentId,
+                ["ScoutWavePopulation"] = WavePopulation.Baseline.PersistentId,
 
                 ["EnvironmentWetness"] = 0.0,
                 ["DustColor"] = JObject.FromObject(
