@@ -15,7 +15,7 @@ Check Alarm Persistent IDs for levellayout
 
 TODO:
   * Use Zone Prefix Override to alert to specific tiles.
-
+  * Enable unit tests again after fixing chained puzzles.
 
 Seed: 201
 * D3, Main bulkhead door spawned with secret tank and it looks buggy.
