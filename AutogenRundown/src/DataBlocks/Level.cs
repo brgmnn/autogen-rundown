@@ -237,8 +237,8 @@ namespace AutogenRundown.DataBlocks
                 ["ExpeditionBalance"] = 1,
 
                 // TODO: Replace these with actual wave settings / populations
-                ["ScoutWaveSettings"] = WaveSettings.Scout_Easy.PersistentId,
-                ["ScoutWavePopulation"] = WavePopulation.Baseline.PersistentId,
+                ["ScoutWaveSettings"] = ScoutWaveSettings.PersistentId,
+                ["ScoutWavePopulation"] = ScoutWavePopulation.PersistentId,
 
                 ["EnvironmentWetness"] = 0.0,
                 ["DustColor"] = JObject.FromObject(
@@ -346,9 +346,10 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// Additional override data JSON encoding
         /// </summary>
+        [JsonProperty("SpecialOverrideData")]
         public JObject SpecialOverrideData
         {
-            get => new JObject
+            get => new()
             {
                 ["WeakResourceContainerWithPackChanceForLocked"] = -1.0,
                 ["InfectionLevelAtExpeditionStart"] = StartingInfection,
@@ -360,14 +361,22 @@ namespace AutogenRundown.DataBlocks
         }
         #endregion
 
+        #region Scout Waves
         /// <summary>
-        /// Nobody should be using this
+        /// What wave population to use for scout waves.
         /// </summary>
-        private Level()
-        {
-            Plugin.Logger.LogError("NOBODY SHOULD BE USING LEVEL()");
-            Settings ??= new LevelSettings("A");
-        }
+        [JsonIgnore]
+        public WavePopulation ScoutWavePopulation { get; set; } = WavePopulation.Baseline;
+
+        /// <summary>
+        /// What wave settings to use for scout waves.
+        ///
+        /// Note that wave setting should have finite points, otherwise scout waves will _never_
+        /// end when triggered.
+        /// </summary>
+        [JsonIgnore]
+        public WaveSettings ScoutWaveSettings { get; set; } = WaveSettings.Scout_Easy;
+        #endregion
 
         /// <summary>
         /// Constructor, we initialize some defaults here
@@ -383,24 +392,15 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         private void GenerateDepth()
         {
-            switch (Tier)
+            Depth = Tier switch
             {
-                case "A":
-                    Depth = Generator.Random.Next(420, 650);
-                    break;
-                case "B":
-                    Depth = Generator.Random.Next(600, 850);
-                    break;
-                case "C":
-                    Depth = Generator.Random.Next(800, 1000);
-                    break;
-                case "D":
-                    Depth = Generator.Random.Next(900, 1100);
-                    break;
-                case "E":
-                    Depth = Generator.Random.Next(950, 1500);
-                    break;
-            }
+                "A" => Generator.Random.Next(420, 650),
+                "B" => Generator.Random.Next(600, 850),
+                "C" => Generator.Random.Next(800, 1000),
+                "D" => Generator.Random.Next(900, 1100),
+                "E" => Generator.Random.Next(950, 1500),
+                _ => Depth
+            };
         }
 
         /// <summary>
@@ -462,24 +462,17 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         /// <param name="variant"></param>
         /// <returns></returns>
-        public ObjectiveLayerData GetObjectiveLayerData(Bulkhead variant)
-        {
-            switch (variant)
+        public ObjectiveLayerData GetObjectiveLayerData(Bulkhead variant) =>
+            variant switch
             {
-                case Bulkhead.Main:
-                    return MainLayerData;
-                case Bulkhead.Extreme:
-                    return SecondaryLayerData;
-                case Bulkhead.Overload:
-                    return ThirdLayerData;
-                default:
-                    return MainLayerData;
-            }
-        }
+                Bulkhead.Main => MainLayerData,
+                Bulkhead.Extreme => SecondaryLayerData,
+                Bulkhead.Overload => ThirdLayerData,
+                _ => MainLayerData
+            };
 
-        public WardenObjective? GetObjective(Bulkhead variant)
-        {
-            return variant switch
+        public WardenObjective? GetObjective(Bulkhead variant) =>
+            variant switch
             {
                 Bulkhead.Main => Bins.WardenObjectives.Find(MainLayerData.ObjectiveData.DataBlockId),
                 Bulkhead.Extreme => Bins.WardenObjectives.Find(SecondaryLayerData.ObjectiveData.DataBlockId),
@@ -489,28 +482,21 @@ namespace AutogenRundown.DataBlocks
                 Bulkhead.All => throw new NotImplementedException(),
                 _ => throw new NotImplementedException(),
             };
-        }
 
-        public LevelLayout? GetLevelLayout(Bulkhead variant)
-        {
-            switch (variant)
+        public LevelLayout? GetLevelLayout(Bulkhead variant) =>
+            variant switch
             {
-                case Bulkhead.Main:
-                    return Bins.LevelLayouts.Find(LevelLayoutData);
-                case Bulkhead.Extreme:
-                    return Bins.LevelLayouts.Find(SecondaryLayout);
-                case Bulkhead.Overload:
-                    return Bins.LevelLayouts.Find(ThirdLayout);
-                default:
-                    return Bins.LevelLayouts.Find(LevelLayoutData);
-            }
-        }
+                Bulkhead.Main => Bins.LevelLayouts.Find(LevelLayoutData),
+                Bulkhead.Extreme => Bins.LevelLayouts.Find(SecondaryLayout),
+                Bulkhead.Overload => Bins.LevelLayouts.Find(ThirdLayout),
+                _ => Bins.LevelLayouts.Find(LevelLayoutData)
+            };
 
         /// <summary>
         /// Builds a specific bulkhead layout
         /// </summary>
         /// <param name="bulkhead"></param>
-        public void BuildLayout(Bulkhead bulkhead)
+        private void BuildLayout(Bulkhead bulkhead)
         {
             var existing = new List<WardenObjectiveType>();
 
@@ -586,7 +572,7 @@ namespace AutogenRundown.DataBlocks
         ///
         /// </summary>
         /// <returns></returns>
-        static public Level Build(Level level)
+        public static Level Build(Level level)
         {
             if (level.Name == "")
                 level.Name = Generator.Pick(Words.NounsLevel) ?? "";
