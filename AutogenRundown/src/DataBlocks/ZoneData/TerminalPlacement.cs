@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using AutogenRundown.DataBlocks.Terminals;
+using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.ZoneData
 {
@@ -11,8 +12,7 @@ namespace AutogenRundown.DataBlocks.ZoneData
         public int MarkerSeedOffset { get; set; } = 0;
         public JArray LocalLogFiles { get; set; } = new JArray();
 
-        // TODO: implement
-        public List<string> UniqueCommands { get; set; } = new List<string>();
+        public List<CustomTerminalCommand> UniqueCommands { get; set; } = new();
 
         // TODO: Implement this for more complex terminal usage
         public object StartingStateData { get; set; } = new

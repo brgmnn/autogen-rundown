@@ -872,6 +872,8 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         [JsonIgnore]
         public string AliasPrefix { get; set; } = string.Empty;
+
+        public string AliasPrefixShortOverride { get; set; } = "";
         #endregion
 
         /// <summary>

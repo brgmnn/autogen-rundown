@@ -32,6 +32,26 @@ namespace AutogenRundown.DataBlocks.Objectives
         /// 
         /// </summary>
         /// <param name="events"></param>
+        /// <param name="delay"></param>
+        /// <returns></returns>
+        public static ICollection<WardenObjectiveEvent> AddTurnOffAlarms(
+            this ICollection<WardenObjectiveEvent> events,
+            double delay = 0.0)
+        {
+            events.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.StopEnemyWaves,
+                    Delay = delay
+                });
+
+            return events;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="events"></param>
         /// <param name="message"></param>
         /// <param name="delay"></param>
         /// <returns></returns>

@@ -1,4 +1,5 @@
 using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 
@@ -43,6 +44,12 @@ public partial record LevelLayout : DataBlock
         level.Planner.Connect(start, hub);
         level.Planner.AddZone(hub, zone);
 
+        var errorPopulation = new List<(double, int, WavePopulation)>
+        {
+            (1.0, 2, WavePopulation.Baseline),
+            (1.0, 1, WavePopulation.OnlyChargers)
+        };
+
         // Now we build the zones for the codes
         for (var i = 0; i < objective.TimedTerminalSequence_NumberOfTerminals; i++)
         {
@@ -59,7 +66,11 @@ public partial record LevelLayout : DataBlock
             endZone.Coverage = new CoverageMinMax() { Min = 32, Max = 64 };
 
             // Trial error alarm of baseline enemies
-            var puzzle = ChainedPuzzle.AlarmError_Baseline with { Settings = WaveSettings.Error_Normal };
+            var puzzle = ChainedPuzzle.AlarmError_Baseline with
+            {
+                Settings = WaveSettings.Error_Normal,
+                Population = Generator.DrawSelect(errorPopulation)
+            };
             endZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
 
             // Mark the zone for the objective
@@ -85,23 +96,32 @@ public partial record LevelLayout : DataBlock
 
         // Add turnoff zone
         var turnOff = new ZoneNode(director.Bulkhead, planner.NextIndex(director.Bulkhead), $"timed_terminal_error_off");
-        planner.Connect(selected, turnOff);
-        planner.AddZone(turnOff,
-            new Zone
-            {
-                Coverage = new() { Min = 3.0, Max = 3.0 },
-                LightSettings = Lights.GenRandomLight(),
-                ProgressionPuzzleToEnter = ProgressionPuzzle.Locked
-            });
-
-        // Mark terminal zones as they can be disabled
-        for (var i = 0; i < objective.TimedTerminalSequence_NumberOfTerminals; i++)
+        var turnOffZone = new Zone
         {
-            var node = level.Planner.GetZones(director.Bulkhead, $"timed_terminal_{i}").First()!;
-            var terminalZone = level.Planner.GetZone(node)!;
+            Coverage = new() { Min = 3.0, Max = 3.0 },
+            LightSettings = Lights.GenRandomLight(),
+            ProgressionPuzzleToEnter = ProgressionPuzzle.Locked,
+            AliasPrefix = "Alarm Control, ZONE",
+            AliasPrefixShortOverride = "Alarm Control, Z",
+            TerminalPlacements = new()
+            {
+                new()
+                {
+                    PlacementWeights = ZonePlacementWeights.AtEnd,
+                    UniqueCommands = new()
+                    {
+                        new()
+                        {
+                            Command = "DEACTIVATE_ALARMS",
+                            CommandDesc = "Turn off all active alarms",
+                            CommandEvents = new List<WardenObjectiveEvent>().AddTurnOffAlarms().ToList(),
+                        }
+                    }
+                }
+            }
+        };
 
-            terminalZone.TurnOffAlarmOnTerminal = true;
-            terminalZone.TerminalPuzzleZone.LocalIndex = turnOff.ZoneNumber;
-        }
+        planner.Connect(selected, turnOff);
+        planner.AddZone(turnOff, turnOffZone);
     }
 }
