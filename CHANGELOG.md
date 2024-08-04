@@ -3,6 +3,22 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.38.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.38.0) — August 03, 2024
+
+### New
+
+* Added Zone prefixes for reactor rooms `Reactor, ZONE 123`
+* Reworked Timed Sequence to have closed doors until starting the sequence
+
+### Changes
+
+* Fixed additional issues with Alarms not spawning correctly
+* Fixed several issues with ReactorShutdown
+  * There are still known issues with `ReactorShutdown` missions not working on certain tilesets.
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.37.0...v0.38.0
+
+
 ## [v0.37.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.37.0) — July 28, 2024
 
 ### New
