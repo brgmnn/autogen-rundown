@@ -27,23 +27,23 @@ public class Plugin : BasePlugin
         // Plugin startup logic
         Log.LogInfo("Startup...");
 
-        var SeedConfig = Config.Bind(
+        var seedConfig = Config.Bind(
             new ConfigDefinition("AutogenRundown", "Seed"),
             "",
             new ConfigDescription("Specify a seed to override rundown generation"));
 
-        var RegenerateOnStartup = Config.Bind(
+        var regenerateOnStartup = Config.Bind(
             new ConfigDefinition("AutogenRundown", "RegenerateOnStartup"),
             true,
             new ConfigDescription("Should datablocks be regenerated on game startup."));
 
-        Log.LogInfo($"ConfigSeed=\"{SeedConfig.Value}\"");
-        Log.LogInfo($"RegenerateOnStartup={RegenerateOnStartup.Value}");
+        Log.LogInfo($"ConfigSeed=\"{seedConfig.Value}\"");
+        Log.LogInfo($"RegenerateOnStartup={regenerateOnStartup.Value}");
 
         // Reads or generates the seed
-        Generator.ReadOrSetSeed(SeedConfig.Value);
+        Generator.ReadOrSetSeed(seedConfig.Value);
 
-        if (RegenerateOnStartup.Value)
+        if (regenerateOnStartup.Value)
         {
             RundownFactory.Build();
             Log.LogInfo($"Rundown generated, Seed=\"{Generator.Seed}\"");
