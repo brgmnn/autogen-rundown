@@ -3,6 +3,15 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.38.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.38.1) — August 04, 2024
+
+### Changes
+
+* Fixed Scout waves to not be infinite
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.38.0...v0.38.1
+
+
 ## [v0.38.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.38.0) — August 03, 2024
 
 ### New
