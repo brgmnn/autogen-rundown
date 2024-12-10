@@ -16,6 +16,13 @@ namespace AutogenRundown.DataBlocks
         public uint Enemy { get; set; }
     }
 
+    public enum SizeFactor
+    {
+        Small,
+        Medium,
+        Large
+    }
+
     public partial record LevelLayout : DataBlock
     {
         #region hidden data
@@ -609,6 +616,40 @@ namespace AutogenRundown.DataBlocks
                 _ => SubComplex.All
             };
 
+
+        /// <summary>
+        /// Generates a number to be used for level layout generation based on size factors for the inputs
+        /// </summary>
+        /// <param name="tier"></param>
+        /// <param name="bulkhead"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        int GenNumZones(string tier, Bulkhead bulkhead, SizeFactor size)
+            => (tier, bulkhead, size) switch
+            {
+                ("A", Bulkhead.Main, _) => 1,
+                ("A", Bulkhead.Extreme, _) => 1,
+                ("A", Bulkhead.Overload, _) => 1,
+
+                ("B", Bulkhead.Main, _) => 1,
+                ("B", Bulkhead.Extreme, _) => 1,
+                ("B", Bulkhead.Overload, _) => 1,
+
+                ("C", Bulkhead.Main, _) => 1,
+                ("C", Bulkhead.Extreme, _) => 1,
+                ("C", Bulkhead.Overload, _) => 1,
+
+                ("D", Bulkhead.Main, _) => 1,
+                ("D", Bulkhead.Extreme, _) => 1,
+                ("D", Bulkhead.Overload, _) => 1,
+
+                ("E", Bulkhead.Main, _) => 1,
+                ("E", Bulkhead.Extreme, _) => 1,
+                ("E", Bulkhead.Overload, _) => 1,
+
+                (_, _, _) => 1
+            };
+
         /// <summary>
         /// Builds a branch, connecting zones and returning the last zone.
         /// </summary>
@@ -753,6 +794,9 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                /**
+                 *
+                 */
                 case WardenObjectiveType.SpecialTerminalCommand:
                 {
                     var start = level.Planner.GetLastZone(director.Bulkhead);
@@ -1051,6 +1095,17 @@ namespace AutogenRundown.DataBlocks
                     var start = level.Planner.GetLastZone(director.Bulkhead);
 
                     layout.BuildLayout_Survival(director, objective, start);
+                    break;
+                }
+
+                /**
+                 * Terminal Uplink
+                 */
+                case WardenObjectiveType.TerminalUplink:
+                {
+                    var start = level.Planner.GetLastZone(director.Bulkhead);
+
+                    layout.BuildLayout_TerminalUplink(director, objective, start);
                     break;
                 }
 

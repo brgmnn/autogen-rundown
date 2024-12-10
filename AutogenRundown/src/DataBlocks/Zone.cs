@@ -533,6 +533,31 @@ namespace AutogenRundown.DataBlocks
                     }
             }
         }
+
+        /// <summary>
+        /// Creates a Geomorph used as a primary objective point
+        /// </summary>
+        /// <param name="complex"></param>
+        public void GenKingOfTheHillGeomorph(Complex complex)
+        {
+            switch (complex)
+            {
+                case Complex.Mining:
+                    SubComplex = SubComplex.Refinery;
+                    CustomGeomorph =
+                        "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04_test.prefab";
+                    Coverage = new CoverageMinMax { Min = 20, Max = 30 };
+                    break;
+
+                case Complex.Tech:
+                    GenHubGeomorph(complex);
+                    break;
+
+                case Complex.Service:
+                    GenHubGeomorph(complex);
+                    break;
+            }
+        }
         #endregion
 
         #region Enemies
