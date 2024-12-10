@@ -25,21 +25,24 @@ public partial record LevelLayout : DataBlock
         {
             case 2:
             {
-                var last = BuildBranch((ZoneNode)start, GenNumZones(director.Tier, director.Bulkhead, SizeFactor.Medium));
+                var last = BuildBranch((ZoneNode)start,
+                    GenNumZones(director.Tier, director.Bulkhead, SizeFactor.Medium));
                 BuildBranch(last, 2, "uplink_terminals");
                 break;
             }
 
             case 3:
             {
-                var last = BuildBranch((ZoneNode)start, GenNumZones(director.Tier, director.Bulkhead, SizeFactor.Small));
+                var last = BuildBranch((ZoneNode)start,
+                    GenNumZones(director.Tier, director.Bulkhead, SizeFactor.Small));
                 BuildBranch(last, 3, "uplink_terminals");
                 break;
             }
 
             case 4:
             {
-                var last = BuildBranch((ZoneNode)start, GenNumZones(director.Tier, director.Bulkhead, SizeFactor.Small));
+                var last = BuildBranch((ZoneNode)start,
+                    GenNumZones(director.Tier, director.Bulkhead, SizeFactor.Small));
                 BuildBranch(last, 4, "uplink_terminals");
                 break;
             }
@@ -47,11 +50,12 @@ public partial record LevelLayout : DataBlock
             // 1 uplink terminal
             default:
             {
-                var last = BuildBranch((ZoneNode)start, GenNumZones(director.Tier, director.Bulkhead, SizeFactor.Large));
+                var last = BuildBranch((ZoneNode)start,
+                    GenNumZones(director.Tier, director.Bulkhead, SizeFactor.Large));
                 var uplinkZoneNode = BuildBranch(last, 1, "uplink_terminals");
 
-                var zone = planner.GetZone(uplinkZoneNode);
-                zone.GenKingOfTheHillGeomorph(director.Complex);
+                //var zone = planner.GetZone(uplinkZoneNode);
+                //zone.GenKingOfTheHillGeomorph(director.Complex);
 
                 break;
             }

@@ -81,8 +81,10 @@ public partial record class WardenObjective : DataBlock
 
         var placements = new List<ZonePlacementData>();
         // TODO: Generate proper zones, one for each uplink terminal
-        var zones = level.Planner.GetZones(director.Bulkhead, "terminal_uplinks")
+        var zones = level.Planner.GetZones(director.Bulkhead, "uplink_terminals")
                                  .TakeLast(Uplink_NumberOfTerminals);
+
+
 
         foreach (var zone in zones)
         {
