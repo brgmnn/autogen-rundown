@@ -3,6 +3,28 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.38.3](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.38.3) — December 10, 2024
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fixed Open and Unlock door events not working in Secondary / Overload bulkheads
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.38.2...v0.38.3
+
+
+## [v0.38.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.38.2) — December 09, 2024
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fixed Terminal Uplink always spawning terminals in the first zone of the layer.
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.38.1...v0.38.2
+
+
 ## [v0.38.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.38.1) — August 04, 2024
 
 ### Changes
