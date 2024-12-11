@@ -561,10 +561,6 @@ namespace AutogenRundown.DataBlocks
             var layerData = ObjectiveLayer[bulkhead];
             layerData.ObjectiveData.DataBlockId = objective.PersistentId;
 
-            // TODO: can this be moved somewhere else?
-            if (director.Objective == WardenObjectiveType.ClearPath)
-                layerData.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
-
             Bins.WardenObjectives.AddBlock(objective);
         }
 

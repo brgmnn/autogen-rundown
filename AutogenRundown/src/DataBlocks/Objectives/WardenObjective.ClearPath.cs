@@ -27,6 +27,8 @@ public partial record class WardenObjective : DataBlock
         GoToWinCondition_Elevator = "";
         GoToWinCondition_CustomGeo = $"Go to the forward exit point in {exitZoneString}";
 
+        dataLayer.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
+
         // Ensure there's a nice spicy hoard at the end
         exitZone?.EnemySpawningInZone.Add(
             // These will be predominately strikers / shooters
