@@ -137,7 +137,7 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] Survival - *Timed survival*
   * [ ] Gather Terminal
   * [ ] Corrupted Terminal Uplink
-  * [ ] Timed Terminal Sequence
+  * [x] Timed Terminal Sequence
 * Enemies
   * [x] Basic hybernation
   * [x] Event based activation
@@ -146,7 +146,7 @@ Follow the installation instructions again, check yes to overwrite all files.
     * [x] Giants
     * [x] Chargers
     * [x] Shadows
-    * [ ] Beserkers
+    * [x] Beserkers
     * [x] Hybrids
     * [x] Scouts
       * [x] Regular
