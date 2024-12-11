@@ -2,6 +2,11 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+/**
+ *
+ * TODO: Check through all these events and see if any others (Than Open/Unlock Doors) require the .Layer property
+ * set. It seems to be used for selecting Main/Extreme/Overload
+ */
 namespace AutogenRundown.DataBlocks.Objectives
 {
     public record class WardenObjectiveEvent
@@ -23,7 +28,18 @@ namespace AutogenRundown.DataBlocks.Objectives
 
         public bool UseStaticBioscanPoints { get; set; } = false;
 
+        /// <summary>
+        /// What Zone this event applies to. Typically for doors to be opened etc.
+        ///
+        /// NOTE: Make sure you also set the appropriate `Layer` property for the event.
+        /// </summary>
         public int LocalIndex { get; set; } = 0;
+
+        /// <summary>
+        /// Which layer this event applies to. For opening / unlocking doors this is used to determin whether it's in
+        /// Main / Extreme / Overload.
+        /// </summary>
+        public int Layer { get; set; } = 0;
 
         public double Delay { get; set; } = 0.0;
 
@@ -67,7 +83,6 @@ namespace AutogenRundown.DataBlocks.Objectives
         #endregion
 
         #region Not implemented yet
-        public int Layer { get; set; } = 0;
         public int DimensionIndex = 0;
         public uint SoundSubtitle = 0;
         public uint DialogueID = 0;

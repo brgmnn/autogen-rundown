@@ -84,8 +84,10 @@ public partial record WardenObjective : DataBlock
 
         // Unlock the exit
         // TODO: This didn't work again
+        // Update: was it perhaps the layer number?
         EventBuilder.AddUnlockDoor(
             EventsOnGotoWin,
+            director.Bulkhead,
             exitZone.ZoneNumber,
             $"Extraction zone {exitZoneString} unlocked");
 

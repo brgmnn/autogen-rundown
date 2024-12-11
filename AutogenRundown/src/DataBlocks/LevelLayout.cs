@@ -572,13 +572,8 @@ namespace AutogenRundown.DataBlocks
 
                     var turnOffZone = planner.GetZone(turnOff)!;
 
-                    // Unlock the turn off zone door when the alarm door has opened.
-                    zone.EventsOnDoorScanDone.Add(
-                        new WardenObjectiveEvent
-                        {
-                            Type = WardenObjectiveEventType.UnlockSecurityDoor,
-                            LocalIndex = turnOff.ZoneNumber
-                        });
+                    // Unlock the turn-off zone door when the alarm door has opened.
+                    zone.EventsOnDoorScanDone.AddUnlockDoor(director.Bulkhead, turnOff.ZoneNumber);
 
                     turnOffZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
 

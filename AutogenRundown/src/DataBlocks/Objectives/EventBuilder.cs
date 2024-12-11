@@ -4,6 +4,27 @@ namespace AutogenRundown.DataBlocks.Objectives
 {
     public static class EventCollectionExtensions
     {
+        #region Doors
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="events"></param>
+        /// <param name="delay"></param>
+        /// <returns></returns>
+        public static ICollection<WardenObjectiveEvent> AddUnlockDoor(
+            this ICollection<WardenObjectiveEvent> events,
+            Bulkhead bulkhead,
+            int zoneIndex,
+            string? message = null,
+            WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
+            double delay = 0.0)
+        {
+            EventBuilder.AddUnlockDoor(events, bulkhead, zoneIndex, message, trigger, delay);
+
+            return events;
+        }
+        #endregion
+
         /// <summary>
         /// Adds a spawn wave event
         /// </summary>
@@ -29,7 +50,7 @@ namespace AutogenRundown.DataBlocks.Objectives
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="events"></param>
         /// <param name="delay"></param>
@@ -49,7 +70,7 @@ namespace AutogenRundown.DataBlocks.Objectives
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="events"></param>
         /// <param name="message"></param>
@@ -95,9 +116,17 @@ namespace AutogenRundown.DataBlocks.Objectives
 
     public class EventBuilder
     {
+        private static int GetLayerFromBulkhead(Bulkhead bulkhead)
+            => bulkhead switch
+            {
+                Bulkhead.Main => 0,
+                Bulkhead.Extreme => 1,
+                Bulkhead.Overload => 2,
+            };
+
         #region Doors
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="events"></param>
         /// <param name="zoneIndex"></param>
@@ -106,6 +135,7 @@ namespace AutogenRundown.DataBlocks.Objectives
         /// <param name="delay"></param>
         public static void AddOpenDoor(
             ICollection<WardenObjectiveEvent> events,
+            Bulkhead bulkhead,
             int zoneIndex,
             string? message = null,
             WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
@@ -116,6 +146,7 @@ namespace AutogenRundown.DataBlocks.Objectives
                 {
                     Type = WardenObjectiveEventType.OpenSecurityDoor,
                     LocalIndex = zoneIndex,
+                    Layer = GetLayerFromBulkhead(bulkhead),
                     Delay = message != null ? delay + 1.0 : delay,
                     Trigger = trigger,
                 });
@@ -143,6 +174,7 @@ namespace AutogenRundown.DataBlocks.Objectives
         /// <param name="delay"></param>
         public static void AddUnlockDoor(
             ICollection<WardenObjectiveEvent> events,
+            Bulkhead bulkhead,
             int zoneIndex,
             string? message = null,
             WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
@@ -153,6 +185,7 @@ namespace AutogenRundown.DataBlocks.Objectives
                 {
                     Type = WardenObjectiveEventType.UnlockSecurityDoor,
                     LocalIndex = zoneIndex,
+                    Layer = GetLayerFromBulkhead(bulkhead),
                     Delay = message != null ? delay + 1.0 : delay,
                     Trigger = trigger,
                 });

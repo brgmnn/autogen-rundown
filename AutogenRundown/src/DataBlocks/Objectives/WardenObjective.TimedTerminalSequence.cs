@@ -117,7 +117,7 @@ public partial record WardenObjective : DataBlock
                 for (int t = 0; t < TimedTerminalSequence_NumberOfTerminals; t++)
                 {
                     var first = level.Planner.GetZones(director.Bulkhead, $"timed_terminal_{t}").First();
-                    EventBuilder.AddUnlockDoor(onStart, first.ZoneNumber);
+                    EventBuilder.AddUnlockDoor(onStart, director.Bulkhead, first.ZoneNumber);
                 }
             }
 

@@ -193,6 +193,7 @@ namespace AutogenRundown.DataBlocks
                     // TODO: The Zone number appears to not work now (E-level)
                     EventBuilder.AddOpenDoor(
                         wave.Events,
+                        director.Bulkhead,
                         firstZone.LocalIndex,
                         $"Door to [ZONE_{firstZone.LocalIndex}] opened by startup sequence",
                         WardenObjectiveEventTrigger.OnMid,
@@ -204,6 +205,7 @@ namespace AutogenRundown.DataBlocks
                 else
                     EventBuilder.AddUnlockDoor(
                         wave.Events,
+                        director.Bulkhead,
                         firstZone.LocalIndex,
                         $"Door to [ZONE_{firstZone.LocalIndex}] unlocked by startup sequence",
                         WardenObjectiveEventTrigger.OnMid,
