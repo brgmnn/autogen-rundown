@@ -102,9 +102,18 @@ public class ComplexResourceSet
     {
         var resourceSet = new ComplexResourceSet();
 
+        #region Mining
         ///
         /// Mining (Storage / Refinery / Digsite) custom geomorphs
         ///
+        // R8B3 tower
+        resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04_test.prefab",
+            SubComplex = SubComplex.Storage
+        });
+
+        // Floweria tiles
         resourceSet.AddPrefab(Complex.Mining, "GeomorphTiles_1x1", new Prefab()
         {
             Asset = "Assets/Prefabs/Geomorph/Mining/geo_storage_FA_01.prefab",
@@ -115,7 +124,9 @@ public class ComplexResourceSet
             Asset = "Assets/Prefabs/Geomorph/Mining/geo_storage_FA_dead_end_01.prefab",
             SubComplex = SubComplex.Storage
         });
+        #endregion
 
+        #region Tech
         ///
         /// Tech (Datacenter / Lab) custom geomorphs
         ///
@@ -144,17 +155,18 @@ public class ComplexResourceSet
             Asset = "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_elevator_shaft_01.prefab",
             SubComplex = SubComplex.DataCenter
         });
+        #endregion
 
+        #region Service Floodways
         ///
         /// Service (Floodways / Gardens) custom geomorph updates
         ///
+        resourceSet.AddPrefab(Complex.Tech, "CustomGeomorphs_Objective_1x1", new Prefab()
         {
-            resourceSet.AddPrefab(Complex.Tech, "CustomGeomorphs_Objective_1x1", new Prefab()
-            {
-                Asset = "Assets/Prefabs/Geomorph/Service/geo_floodways_FA_reactor_01.prefab",
-                SubComplex = SubComplex.Floodways
-            });
-        }
+            Asset = "Assets/Prefabs/Geomorph/Service/geo_floodways_FA_reactor_01.prefab",
+            SubComplex = SubComplex.Floodways
+        });
+        #endregion
 
         resourceSet.WriteFile();
     }
