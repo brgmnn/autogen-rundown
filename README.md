@@ -120,6 +120,7 @@ Follow the installation instructions again, check yes to overwrite all files.
     * [ ] Cell to power generator to unlock doors
     * [x] Fog
     * [ ] Infectious fog
+    * [ ] Security Sensors
   * [ ] Dimensions
 * Objectives
   * [x] Clear Path — *Navigate through the zones to a separate extraction elevator*
