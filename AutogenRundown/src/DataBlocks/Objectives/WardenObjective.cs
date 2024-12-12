@@ -362,6 +362,12 @@ namespace AutogenRundown.DataBlocks
                     break;
                 }
 
+                case WardenObjectiveType.TerminalUplink:
+                {
+                    objective.PreBuild_TerminalUplink(director, level);
+                    break;
+                }
+
                 case WardenObjectiveType.TimedTerminalSequence:
                     objective.PreBuild_TimedTerminalSequence(director, level);
                     break;

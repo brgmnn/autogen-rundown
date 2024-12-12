@@ -23,6 +23,19 @@ public partial record LevelLayout : DataBlock
 
         switch (objective.Uplink_NumberOfTerminals)
         {
+            case 1:
+            {
+                var last = BuildBranch((ZoneNode)start,
+                    GenNumZones(director.Tier, director.Bulkhead, SizeFactor.Large));
+                var uplinkZoneNode = BuildBranch(last, 1, "uplink_terminals");
+
+                // We can have a fun terminal uplink zone
+                var zone = planner.GetZone(uplinkZoneNode);
+                zone.GenKingOfTheHillGeomorph(director.Complex);
+
+                break;
+            }
+
             case 2:
             {
                 var last = BuildBranch((ZoneNode)start,
@@ -47,16 +60,11 @@ public partial record LevelLayout : DataBlock
                 break;
             }
 
-            // 1 uplink terminal
             default:
             {
                 var last = BuildBranch((ZoneNode)start,
                     GenNumZones(director.Tier, director.Bulkhead, SizeFactor.Large));
-                var uplinkZoneNode = BuildBranch(last, 1, "uplink_terminals");
-
-                //var zone = planner.GetZone(uplinkZoneNode);
-                //zone.GenKingOfTheHillGeomorph(director.Complex);
-
+                BuildBranch(last, 1, "uplink_terminals");
                 break;
             }
         }

@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
+using BepInEx.Logging;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -14,22 +15,8 @@ namespace AutogenRundown.DataBlocks;
  */
 public partial record class WardenObjective : DataBlock
 {
-    public void Build_TerminalUplink(BuildDirector director, Level level)
+    public void PreBuild_TerminalUplink(BuildDirector director, Level level)
     {
-        var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
-
-        MainObjective = "Find the <u>Uplink Terminals</u> [ALL_ITEMS] and establish an external uplink from each terminal";
-        FindLocationInfo = "Gather information about the location of [ALL_ITEMS]";
-        FindLocationInfoHelp = "Access more data in the terminal maintenance system";
-        SolveItem = "Use [ITEM_SERIAL] to create an uplink to [UPLINK_ADDRESS]";
-        SolveItemHelp = "Use the UPLINK_CONNECT command to establish the connection";
-
-        GoToWinCondition_Elevator = "Neural Imprinting Protocols retrieved. Return to the point of entrance in [EXTRACTION_ZONE]";
-        GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
-        GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
-        GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
-        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
-
         Uplink_NumberOfTerminals = (level.Tier, director.Bulkhead) switch
         {
             ("A", _) => 1,
@@ -68,6 +55,24 @@ public partial record class WardenObjective : DataBlock
 
             (_, _) => 1,
         };
+    }
+
+    public void Build_TerminalUplink(BuildDirector director, Level level)
+    {
+        var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
+
+        MainObjective = "Find the <u>Uplink Terminals</u> [ALL_ITEMS] and establish an external uplink from each terminal";
+        FindLocationInfo = "Gather information about the location of [ALL_ITEMS]";
+        FindLocationInfoHelp = "Access more data in the terminal maintenance system";
+        SolveItem = "Use [ITEM_SERIAL] to create an uplink to [UPLINK_ADDRESS]";
+        SolveItemHelp = "Use the UPLINK_CONNECT command to establish the connection";
+
+        GoToWinCondition_Elevator = "Neural Imprinting Protocols retrieved. Return to the point of entrance in [EXTRACTION_ZONE]";
+        GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
+        GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+        GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
+        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+
         Uplink_WaveSpawnType = SurvivalWaveSpawnType.InSuppliedCourseNodeZone;
 
         var wave = level.Tier switch
@@ -83,8 +88,6 @@ public partial record class WardenObjective : DataBlock
         // TODO: Generate proper zones, one for each uplink terminal
         var zones = level.Planner.GetZones(director.Bulkhead, "uplink_terminals")
                                  .TakeLast(Uplink_NumberOfTerminals);
-
-
 
         foreach (var zone in zones)
         {
