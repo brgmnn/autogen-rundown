@@ -113,6 +113,8 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// Create a deck of hibernating enemies to draw for the level. We will need quite a lot
         /// of these as we will be drawing from this deck multiple times for every zone.
+        ///
+        /// TODO: this actually looks unused. LevelLayout is responsible for generating enemies
         /// </summary>
         public List<EnemySpawningData> GenerateHibernatingEnemyPack()
         {

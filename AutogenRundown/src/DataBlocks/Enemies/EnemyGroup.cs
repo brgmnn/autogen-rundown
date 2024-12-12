@@ -91,6 +91,7 @@ namespace AutogenRundown.DataBlocks.Enemies
                 (EnemyRole.Lurker, Enemy.Charger, 8.0),
                 (EnemyRole.Lurker, Enemy.Charger, 10.0),
 
+                // Shadows
                 (EnemyRole.Melee, Enemy.Shadow, 4.0),
                 (EnemyRole.Melee, Enemy.Shadow, 6.0),
                 (EnemyRole.Melee, Enemy.Shadow, 10.0),
@@ -101,6 +102,7 @@ namespace AutogenRundown.DataBlocks.Enemies
                 (EnemyRole.Lurker, Enemy.ChargerGiant, 8.0),
                 (EnemyRole.Melee,  Enemy.ShadowGiant,  8.0),
 
+                // Hybrids
                 (EnemyRole.PureSneak, Enemy.Hybrid, 6.0),
                 (EnemyRole.PureSneak, Enemy.Hybrid, 9.0),
 
@@ -124,11 +126,7 @@ namespace AutogenRundown.DataBlocks.Enemies
                         MaxScore = maxScore,
                         Roles = new List<EnemyGroupRole>
                         {
-                            new EnemyGroupRole
-                            {
-                                Role = role,
-                                Distribution = EnemyRoleDistribution.Rel100,
-                            }
+                            new() { Role = role, Distribution = EnemyRoleDistribution.Rel100 }
                         }
                     });
             }

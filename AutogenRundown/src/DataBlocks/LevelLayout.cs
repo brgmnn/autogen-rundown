@@ -210,6 +210,8 @@ namespace AutogenRundown.DataBlocks
 
         /// <summary>
         /// Roll enemies for each zone.
+        ///
+        /// TODO: we might want to use an enemies pack for building this
         /// </summary>
         public void RollEnemies(BuildDirector director)
         {
@@ -366,7 +368,6 @@ namespace AutogenRundown.DataBlocks
                 if (points < 3)
                     continue;
 
-
                 // If we have a blood door, reduce the number of enemies that spawn in the zone
                 // by 1/3rd.
                 if (zone.BloodDoor.Enabled)
@@ -396,12 +397,22 @@ namespace AutogenRundown.DataBlocks
                 var hybridChance = 0.0;
 
                 if (settings.Modifiers.Contains(LevelModifiers.Hybrids))
-                    hybridChance = 0.15;
+                    hybridChance = 0.2;
+                #endregion
+
+                #region Nightmares roll check
+                var nightmaresChance = 0.0;
+
+                if (settings.Modifiers.Contains(LevelModifiers.Nightmares))
+                    nightmaresChance = 0.2;
+
+                if (settings.Modifiers.Contains(LevelModifiers.ManyNightmares))
+                    nightmaresChance = 0.5;
                 #endregion
 
                 // Boss settings
                 // TODO: don't have totally independent of zone points
-                if (Generator.Flip(bossChance) && settings.EnemyBossPack.Count() > 0)
+                if (Generator.Flip(bossChance) && settings.EnemyBossPack.Any())
                 {
                     var boss = Generator.Draw(settings.EnemyBossPack);
 
@@ -438,6 +449,14 @@ namespace AutogenRundown.DataBlocks
                         AutogenDifficulty.Base,
                         AutogenDifficulty.Hybrids
                     }),
+
+                    // Nightmares
+                    (nightmaresChance, new List<AutogenDifficulty> { AutogenDifficulty.Nightmares }),
+                    (nightmaresChance, new List<AutogenDifficulty>
+                    {
+                        AutogenDifficulty.Base,
+                        AutogenDifficulty.Nightmares
+                    }),
                 };
 
                 if (chargerChance > 0 && shadowChance > 0)
@@ -449,15 +468,62 @@ namespace AutogenRundown.DataBlocks
                                 AutogenDifficulty.Shadows
                             }));
 
+                if (chargerChance > 0 && nightmaresChance > 0)
+                    groupChoices.Add(
+                        (0.2, new List<AutogenDifficulty>
+                        {
+                            AutogenDifficulty.Base,
+                            AutogenDifficulty.Chargers,
+                            AutogenDifficulty.Nightmares
+                        }));
+
+                if (shadowChance > 0 && nightmaresChance > 0)
+                    groupChoices.Add(
+                        (0.2, new List<AutogenDifficulty>
+                        {
+                            AutogenDifficulty.Base,
+                            AutogenDifficulty.Shadows,
+                            AutogenDifficulty.Nightmares
+                        }));
+
                 if (chargerChance > 0 && shadowChance > 0 && hybridChance > 0)
                     groupChoices.Add(
                         (0.1, new List<AutogenDifficulty>
                             {
-                                AutogenDifficulty.Base,
                                 AutogenDifficulty.Chargers,
                                 AutogenDifficulty.Shadows,
                                 AutogenDifficulty.Hybrids
                             }));
+
+                if (chargerChance > 0 && nightmaresChance > 0 && hybridChance > 0)
+                    groupChoices.Add(
+                        (0.1, new List<AutogenDifficulty>
+                        {
+                            AutogenDifficulty.Chargers,
+                            AutogenDifficulty.Nightmares,
+                            AutogenDifficulty.Hybrids
+                        }));
+
+                if (shadowChance > 0 && nightmaresChance > 0 && hybridChance > 0)
+                    groupChoices.Add(
+                        (0.1, new List<AutogenDifficulty>
+                        {
+                            AutogenDifficulty.Shadows,
+                            AutogenDifficulty.Nightmares,
+                            AutogenDifficulty.Hybrids
+                        }));
+
+                // TODO: TBD if we like having a room with literally everything in it
+                if (chargerChance > 0 && shadowChance > 0 && nightmaresChance > 0 && hybridChance > 0)
+                    groupChoices.Add(
+                        (0.1, new List<AutogenDifficulty>
+                        {
+                            AutogenDifficulty.Chargers,
+                            AutogenDifficulty.Shadows,
+                            AutogenDifficulty.Nightmares,
+                            AutogenDifficulty.Hybrids
+                        }));
+
 
                 var groups = Generator.Select(groupChoices);
 
