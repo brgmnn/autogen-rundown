@@ -561,6 +561,7 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Enemies
+        [Obsolete("Prefer using tuples instead for weighting values")]
         public class WeightedDifficulty : Generator.ISelectable
         {
             public double Weight { get; set; }
@@ -570,6 +571,8 @@ namespace AutogenRundown.DataBlocks
 
         /// <summary>
         /// Generate enemies for the zone
+        ///
+        /// TODO: We may be able to remove. Looks unused
         /// </summary>
         /// <param name="director"></param>
         public void GenEnemies(BuildDirector director)
