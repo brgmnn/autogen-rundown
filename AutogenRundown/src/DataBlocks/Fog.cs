@@ -91,32 +91,52 @@ namespace AutogenRundown.DataBlocks
             NoFogLevels = { }
         };
 
+        public static Fog LowFog_Infectious = LowFog with
+        {
+            Name = "Fog_Low_Infectious",
+            PersistentId = Generator.GetPersistentId(),
+            FogColor = Color.InfectiousFog_R8D1,
+            Infection = 0.03
+        };
+
+        public static Fog LowMidFog_Infectious = LowMidFog with
+        {
+            Name = "Fog_LowMid_Infectious",
+            PersistentId = Generator.GetPersistentId(),
+            FogColor = Color.InfectiousFog_R8D1,
+            Infection = 0.03
+        };
+
         public static Fog FullFog_Infectious = FullFog with
         {
-            Name = "Fog_FullInfectious",
+            Name = "Fog_Full_Infectious",
             PersistentId = Generator.GetPersistentId(),
+            FogColor = Color.InfectiousFog_R8D1,
             Infection = 0.03
         };
         #endregion
 
-        public static new void SaveStatic()
+        public new static void SaveStatic()
         {
             Bins.Fogs.AddBlock(DefaultFog);
 
             Bins.Fogs.AddBlock(LowFog);
             Bins.Fogs.AddBlock(FullFog);
+
+            Bins.Fogs.AddBlock(LowFog_Infectious);
+            Bins.Fogs.AddBlock(LowMidFog_Infectious);
             Bins.Fogs.AddBlock(FullFog_Infectious);
         }
 
         #region Internal properties not exposed in the data block
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [JsonIgnore]
         public List<Height> FogLevels { get; set; } = new List<Height>();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [JsonIgnore]
         public List<Height> NoFogLevels { get; set; } = new List<Height>

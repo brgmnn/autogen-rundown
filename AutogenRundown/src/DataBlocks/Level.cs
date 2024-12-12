@@ -590,13 +590,22 @@ namespace AutogenRundown.DataBlocks
             // Assign bulkheads
             level.Settings.Bulkheads = selectedBulkheads;
 
+            #region Fog settings
+            var lowFog = level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)
+                ? Fog.LowFog_Infectious
+                : Fog.LowFog;
+            var lowMidFog = level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)
+                ? Fog.LowMidFog_Infectious
+                : Fog.LowMidFog;
+
             // Set low fog if we have fog
             if (level.Settings.Modifiers.Contains(LevelModifiers.Fog))
-                level.FogSettings = Fog.LowFog;
+                level.FogSettings = lowFog;
 
             // For heavy fog we can also roll low mid fog
             if (level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
-                level.FogSettings = Generator.Flip(0.75) ? Fog.LowFog : Fog.LowMidFog;
+                level.FogSettings = Generator.Flip(0.75) ? lowFog : lowMidFog;
+            #endregion
 
             Plugin.Logger.LogDebug($"{logLevelId} ({level.Complex}) - Modifiers: {level.Settings.Modifiers}, Fog: {level.FogSettings.Name}");
 
