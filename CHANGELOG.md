@@ -3,6 +3,17 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.39.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.39.0) — December 11, 2024
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Added R8B3 center room tower as option for Uplink Terminal objectives with one terminal
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.38.3...v0.39.0
+
+
 ## [v0.38.3](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.38.3) — December 10, 2024
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
