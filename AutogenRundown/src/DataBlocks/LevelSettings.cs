@@ -361,7 +361,7 @@ namespace AutogenRundown.DataBlocks
                                 (0.1, LevelModifiers.ManyFlyers),
                             }));
 
-                        if (Generator.Flip(0.8))
+                        if (Generator.Flip(0.9))
                             Modifiers.Add(LevelModifiers.FogIsInfectious);
 
                         Modifiers.Add(
