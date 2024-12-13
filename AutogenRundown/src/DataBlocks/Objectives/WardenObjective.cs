@@ -780,7 +780,7 @@ namespace AutogenRundown.DataBlocks
         /// Specifies which items are to be retrieved for this objective
         /// </summary>
         [JsonProperty("Retrieve_Items")]
-        public List<WardenObjectiveItem> RetrieveItems { get; set; } = new List<WardenObjectiveItem>();
+        public List<WardenObjectiveItem> RetrieveItems { get; set; } = new();
         #endregion
 
         #region Type=7: Power cell distribution

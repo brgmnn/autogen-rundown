@@ -23,6 +23,11 @@ Seed: 201
 
 Probably need to rework enemy sleeper spawning now with level planner
 
+Seed: 2024_12_11
+* C2: Consider adding more disposable fog repellers for fog areas
+* C2 Extreme: Check HiSec cargo, destination zone is wrong
+* C2 Extreme: too many zones, has 7 zones probably needs like 5
+
 Seed: 2024_07_14
 * D2: Error alarm turnoff in 775 does not unlock
 
