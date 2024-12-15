@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.GeneratorData;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
@@ -23,72 +24,88 @@ namespace AutogenRundown.DataBlocks
         public List<Level> TierD { get; set; } = new List<Level>();
         public List<Level> TierE { get; set; } = new List<Level>();
 
+        /// <summary>
+        /// Name of the rundown to be used
+        /// </summary>
+        [JsonIgnore]
+        public string Title { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Name of the rundown to be used
+        /// </summary>
+        [JsonIgnore]
+        public string StoryTitle { get; set; } = string.Empty;
+
+
         // Values we just leave as is
         public bool NeverShowRundownTree = false;
         public bool UseTierUnlockRequirements = false;
         public int VanityItemLayerDropDataBlock = 10;
 
         // No restrictions on which levels can be accessed, so these are all defaults
-        public ReqToReachTier ReqToReachTierB = new ReqToReachTier();
-        public ReqToReachTier ReqToReachTierC = new ReqToReachTier();
-        public ReqToReachTier ReqToReachTierD = new ReqToReachTier();
-        public ReqToReachTier ReqToReachTierE = new ReqToReachTier();
+        public ReqToReachTier ReqToReachTierB = new();
+        public ReqToReachTier ReqToReachTierC = new();
+        public ReqToReachTier ReqToReachTierD = new();
+        public ReqToReachTier ReqToReachTierE = new();
 
-        public JObject StorytellingData = JObject.FromObject(new
-        {
-            Title = "Alt Rundown",
-            TextLog = 1268,
-            TextLogPos = new
+        public JObject StorytellingData {
+            get => JObject.FromObject(new
             {
-                x = 0.0,
-                y = 0.0,
-                magnitude = 0.0,
-                sqrMagnitude = 0.0
-            },
-            Visuals = new
-            {
-                ColorBackground = new Color { Alpha = 1.0f },
-                TierAVisuals = new
+                Title = StoryTitle,
+                TextLog = 1268,
+                TextLogPos = new
                 {
-                    Color = Color.MenuVisuals,
-                    Scale = 0.75,
-                    ScaleYModifier = 0.3
+                    x = 0.0,
+                    y = 0.0,
+                    magnitude = 0.0,
+                    sqrMagnitude = 0.0
                 },
-                TierBVisuals = new
+                Visuals = new
                 {
-                    Color = Color.MenuVisuals,
-                    Scale = 0.75,
-                    ScaleYModifier = 0.3
+                    ColorBackground = new Color { Alpha = 1.0f },
+                    TierAVisuals = new
+                    {
+                        Color = Color.MenuVisuals,
+                        Scale = 0.75,
+                        ScaleYModifier = 0.3
+                    },
+                    TierBVisuals = new
+                    {
+                        Color = Color.MenuVisuals,
+                        Scale = 0.75,
+                        ScaleYModifier = 0.3
+                    },
+                    TierCVisuals = new
+                    {
+                        Color = Color.MenuVisuals,
+                        Scale = 0.75,
+                        ScaleYModifier = 0.3
+                    },
+                    TierDVisuals = new
+                    {
+                        Color = Color.MenuVisuals,
+                        Scale = 0.75,
+                        ScaleYModifier = 0.3
+                    },
+                    TierEVisuals = new
+                    {
+                        Color = Color.MenuVisuals,
+                        Scale = 0.75,
+                        ScaleYModifier = 0.3
+                    },
                 },
-                TierCVisuals = new
+                SurfaceIconPosition = new
                 {
-                    Color = Color.MenuVisuals,
-                    Scale = 0.75,
-                    ScaleYModifier = 0.3
+                    x = 0.0,
+                    y = 0.0,
+                    magnitude = 0.0,
+                    sqrMagnitude = 0.0
                 },
-                TierDVisuals = new
-                {
-                    Color = Color.MenuVisuals,
-                    Scale = 0.75,
-                    ScaleYModifier = 0.3
-                },
-                TierEVisuals = new
-                {
-                    Color = Color.MenuVisuals,
-                    Scale = 0.75,
-                    ScaleYModifier = 0.3
-                },
-            },
-            SurfaceIconPosition = new
-            {
-                x = 0.0,
-                y = 0.0,
-                magnitude = 0.0,
-                sqrMagnitude = 0.0
-            },
-            SurfaceDescription = 1267,
-            ExternalExpTitle = 3901084012
-        });
+                SurfaceDescription = 1267,
+                ExternalExpTitle = 3901084012
+            });
+            private set { }
+        }
 
         public string DisplaySeed { get; set; } = "";
 
@@ -118,17 +135,12 @@ namespace AutogenRundown.DataBlocks
         /// Builds a new Rundown
         /// </summary>
         /// <returns></returns>
-        static public Rundown Build(Rundown rundown)
+        public static Rundown Build(Rundown rundown)
         {
-            var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
-
             // Rundown.Name is used by LocalProgression for storing the progression data. Ensure
             // this is unique to guarantee we store progression between runs.
             rundown.Name = $"RND_Rundown__Seed={Generator.Seed}";
             rundown.DisplaySeed = Generator.DisplaySeed;
-
-            var rundownNumber = $"{Generator.DisplaySeed}";
-            rundown.StorytellingData["Title"] = $"<color=green>RND://</color>RUNDOWN {rundownNumber}\r\nTITLE: {name.ToUpper()}";
 
             return rundown;
         }

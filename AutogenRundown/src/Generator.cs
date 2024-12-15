@@ -56,7 +56,7 @@ namespace AutogenRundown
 
         public static string Seed { get; set; } = "";
 
-        public static Random Random { get; private set; } = new Random();
+        public static Random Random { get; private set; } = new();
 
         public static double NextDouble()
             => Random.NextDouble();
@@ -263,21 +263,19 @@ namespace AutogenRundown
         }
 
         /// <summary>
-        /// Regenerates the seed value and then reload the generators
+        /// Used for the monthly rundown seed
         /// </summary>
-        public static void RegenerateSeed()
+        public static void SetMonthSeed()
         {
-            string GetWord()
-            {
-                var word = Pick(GeneratorData.Words.SeedWords)!;
-                return word.Substring(0, 1).ToUpper() + word.Substring(1);
-            }
+            var utcNow = DateTime.UtcNow;
+            var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            var pst = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
 
-            Seed = $"{GetWord()}_{GetWord()}_{GetWord()}";
-            DisplaySeed = Seed;
+            var now = pst.ToString("yyyy_MM");
+            var display = pst.ToString("MMMM");
 
-            WriteSeed();
-            Reload();
+            Seed = now;
+            DisplaySeed = $"<color=orange>{display}</color>";
         }
 
         /// <summary>
@@ -293,6 +291,8 @@ namespace AutogenRundown
             if (seed != "")
             {
                 Seed = seed;
+                DisplaySeed = $"<color=orange>{seed}</color>";
+
                 return;
             }
 

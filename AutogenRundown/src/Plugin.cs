@@ -40,12 +40,9 @@ public class Plugin : BasePlugin
         Log.LogInfo($"ConfigSeed=\"{seedConfig.Value}\"");
         Log.LogInfo($"RegenerateOnStartup={regenerateOnStartup.Value}");
 
-        // Reads or generates the seed
-        Generator.ReadOrSetSeed(seedConfig.Value);
-
         if (regenerateOnStartup.Value)
         {
-            RundownFactory.Build();
+            RundownFactory.Build(seedConfig.Value);
             Log.LogInfo($"Rundown generated, Seed=\"{Generator.Seed}\"");
         }
         else
