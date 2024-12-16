@@ -56,6 +56,7 @@ public class RundownNames
                 rundown.SetButtonEnabled(false);
                 rundown.SetIsUsed(false);
                 rundown.m_rundownText.text = "";
+                rundown.m_originalColor = new UnityEngine.Color(0.1f, 0.1f, 0.1f);
             }
 
             num++;
