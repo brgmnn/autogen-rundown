@@ -28,7 +28,7 @@ public static class RundownFactory
         };
     }
 
-    public static Rundown BuildRundown(Rundown newRundown)
+    public static Rundown BuildRundown(Rundown newRundown, bool withFixed = true)
     {
         var rundown = Rundown.Build(newRundown);
 
@@ -79,7 +79,7 @@ public static class RundownFactory
         }
 
         #region Test C Levels
-        #if true
+        if (true && withFixed)
         {
             var mainDirector = new BuildDirector
             {
@@ -118,12 +118,12 @@ public static class RundownFactory
                 });
             rundown.AddLevel(testLevel);
         }
-        #endif
         #endregion
         #endregion
 
         #region D-Tier Levels
         #region Survival Fixed
+        if (withFixed)
         {
             var objective = WardenObjectiveType.Survival;
             var mainDirector = new BuildDirector()
@@ -167,6 +167,7 @@ public static class RundownFactory
         }
 
         #region Timed Terminal Sequence
+        if (withFixed)
         {
             ///
             /// Timed Terminal Sequence mission. This is a hard coded mission of sequence stuff
@@ -200,6 +201,7 @@ public static class RundownFactory
         #endregion
 
         #region Reactor startup
+        if (withFixed)
         {
             ///
             /// Reactor startup mission. This will always spawn a reactor startup mission as
@@ -276,65 +278,65 @@ public static class RundownFactory
         }
 
         #region Survival
-        #if false
-        {
-            var objective = WardenObjectiveType.Survival;
-            var mainDirector = new BuildDirector()
-            {
-                Bulkhead = Bulkhead.Main,
-                Tier = "E",
-                Objective = objective
-            };
-            mainDirector.GenPoints();
-
-            var settings = new LevelSettings("E");
-            var description = new DataBlocks.Text(DescriptionHeader(objective) +
-                                                  DataBlocks.WardenObjective.GenLevelDescription(objective));
-            var level = Level.Build(
-                new()
-                {
-                    Tier = "E",
-                    Prefix = $"<color=orange>X</color><color=#444444>:</color>E",
-                    Description = description.PersistentId,
-                    MainDirector = mainDirector,
-                    Settings = settings,
-                    Index = eMax + 1
-                });
-
-            rundown.AddLevel(level);
-        }
-        #endif
+        // if (false && withFixed)
+        // {
+        //     var objective = WardenObjectiveType.Survival;
+        //     var mainDirector = new BuildDirector()
+        //     {
+        //         Bulkhead = Bulkhead.Main,
+        //         Tier = "E",
+        //         Objective = objective
+        //     };
+        //     mainDirector.GenPoints();
+        //
+        //     var settings = new LevelSettings("E");
+        //     var description = new DataBlocks.Text(DescriptionHeader(objective) +
+        //                                           DataBlocks.WardenObjective.GenLevelDescription(objective));
+        //     var level = Level.Build(
+        //         new()
+        //         {
+        //             Tier = "E",
+        //             Prefix = $"<color=orange>X</color><color=#444444>:</color>E",
+        //             Description = description.PersistentId,
+        //             MainDirector = mainDirector,
+        //             Settings = settings,
+        //             Index = eMax + 1
+        //         });
+        //
+        //     rundown.AddLevel(level);
+        // }
         #endregion
 
         #region Test E Levels
-        #if false
-        var mainDirectorE = new BuildDirector
-        {
-            Bulkhead = Bulkhead.Main,
-            Complex = Complex.Mining,
-            Complexity = Complexity.Low,
-            Tier = "E",
-            Objective = WardenObjectiveType.TerminalUplink,
-        };
-        mainDirectorE.GenPoints();
-
-        var settingsE = new LevelSettings("E");
-        settingsE.Modifiers.Add(LevelModifiers.ManyChargers);
-        settingsE.Modifiers.Add(LevelModifiers.ManyShadows);
-
-        var testLevelE = Level.Build(
-            new Level
-            {
-                Tier = "E",
-                Name = "Terminal Command",
-                Complex = Complex.Tech,
-                MainDirector = mainDirectorE,
-                Settings = settingsE,
-                Index = eMax + 1,
-                IsTest = true
-            });
-        rundown.AddLevel(testLevelE);
-        #endif
+        // if (false && withFixed)
+        // {
+        //     var mainDirectorE = new BuildDirector
+        //     {
+        //         Bulkhead = Bulkhead.Main,
+        //         Complex = Complex.Mining,
+        //         Complexity = Complexity.Low,
+        //         Tier = "E",
+        //         Objective = WardenObjectiveType.TerminalUplink,
+        //     };
+        //     mainDirectorE.GenPoints();
+        //
+        //     var settingsE = new LevelSettings("E");
+        //     settingsE.Modifiers.Add(LevelModifiers.ManyChargers);
+        //     settingsE.Modifiers.Add(LevelModifiers.ManyShadows);
+        //
+        //     var testLevelE = Level.Build(
+        //         new Level
+        //         {
+        //             Tier = "E",
+        //             Name = "Terminal Command",
+        //             Complex = Complex.Tech,
+        //             MainDirector = mainDirectorE,
+        //             Settings = settingsE,
+        //             Index = eMax + 1,
+        //             IsTest = true
+        //         });
+        //     rundown.AddLevel(testLevelE);
+        // }
         #endregion
         #endregion
 
@@ -358,14 +360,20 @@ public static class RundownFactory
 
             var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
 
-            var rundownMonthly = BuildRundown(new Rundown
+            var monthly = BuildRundown(new Rundown
             {
                 PersistentId = Rundown.R4,
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>MONTHLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
-            });
+            }, false);
 
-            Bins.Rundowns.AddBlock(rundownMonthly);
+            // Add progression requirements for the monthly
+            monthly.ReqToReachTierB.MainSectors = monthly.TierA.Count;
+            monthly.ReqToReachTierC.MainSectors = monthly.TierA.Count + monthly.TierB.Count;
+            monthly.ReqToReachTierD.MainSectors = monthly.TierA.Count + monthly.TierB.Count + monthly.TierC.Count;
+            monthly.ReqToReachTierE.MainSectors = monthly.TierA.Count + monthly.TierB.Count + monthly.TierC.Count + monthly.TierD.Count;
+
+            Bins.Rundowns.AddBlock(monthly);
         }
         #endregion
 
@@ -377,14 +385,14 @@ public static class RundownFactory
             Generator.Reload();
 
             var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
-            var rundownDaily = BuildRundown(new Rundown
+            var daily = BuildRundown(new Rundown
             {
                 PersistentId = Rundown.R7,
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>DAILY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
             });
 
-            Bins.Rundowns.AddBlock(rundownDaily);
+            Bins.Rundowns.AddBlock(daily);
         }
         #endregion
 
