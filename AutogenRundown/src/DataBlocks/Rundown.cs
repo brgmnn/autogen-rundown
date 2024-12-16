@@ -1,5 +1,4 @@
-﻿using AutogenRundown.GeneratorData;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks

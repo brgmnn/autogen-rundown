@@ -6,6 +6,9 @@ using XXHashing;
 
 namespace AutogenRundown.Patches;
 
+/// <summary>
+/// TODO: This doesn't actually seem to work?
+/// </summary>
 public class LevelGenPatcher
 {
     public static LG_ZoneJob_CreateExpandFromData currentZone;
@@ -66,8 +69,8 @@ public class LevelGenPatcher
 }
 
 
-/* 
- 
+/*
+
  public static LG_ZoneJob_CreateExpandFromData currentZone;
         [HarmonyFinalizer]
         [HarmonyPatch(typeof(LG_ZoneJob_CreateExpandFromData), nameof(LG_ZoneJob_CreateExpandFromData.Build))]
@@ -82,7 +85,7 @@ public class LevelGenPatcher
                 __instance.m_subSeed++;
                 __result = true;
             }
-            else { 
+            else {
                 EntryPoint.LogIt($"Building {__instance.m_zone.AliasName} -- {__instance.m_zone.m_sourceExpander.name} -- {__result}");
             }
         }
@@ -119,5 +122,5 @@ public class LevelGenPatcher
                 }
             }
         }
- 
+
  */
