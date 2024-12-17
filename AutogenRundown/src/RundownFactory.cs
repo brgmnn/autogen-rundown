@@ -377,6 +377,32 @@ public static class RundownFactory
         }
         #endregion
 
+        // Weekly Rundown -- Rundown 5 replacement
+        #region Monthly Rundown
+        {
+            // Set the monthly seed
+            Generator.SetWeeklySeed();
+            Generator.Reload();
+
+            var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
+
+            var weekly = BuildRundown(new Rundown
+            {
+                PersistentId = Rundown.R5,
+                Title = $"{name.ToUpper()}",
+                StoryTitle = $"<color=green>RND://</color>WEEKLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
+            }, false);
+
+            // Add progression requirements for the monthly
+            weekly.ReqToReachTierB.MainSectors = weekly.TierA.Count;
+            weekly.ReqToReachTierC.MainSectors = weekly.TierA.Count + weekly.TierB.Count;
+            weekly.ReqToReachTierD.MainSectors = weekly.TierA.Count + weekly.TierB.Count + weekly.TierC.Count;
+            weekly.ReqToReachTierE.MainSectors = weekly.TierA.Count + weekly.TierB.Count + weekly.TierC.Count + weekly.TierD.Count;
+
+            Bins.Rundowns.AddBlock(weekly);
+        }
+        #endregion
+
         // Daily Rundown -- Rundown 7 replacement
         #region Daily Rundown
         {
@@ -400,7 +426,7 @@ public static class RundownFactory
         Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R2, Name = "ALT Rundown 2.0" });
         Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R3, Name = "ALT Rundown 3.0" });
         // Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R4, Name = "ALT Rundown 4.0" });
-        Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R5, Name = "ALT Rundown 5.0" });
+        // Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R5, Name = "ALT Rundown 5.0" });
         Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R6, Name = "ALT Rundown 6.0" });
         //Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R7, Name = "Rundown 7.0" });
         Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R8, Name = "Rundown 8.0" });

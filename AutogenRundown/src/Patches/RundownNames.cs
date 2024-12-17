@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks;
+using CellMenu;
 using UnityEngine;
 
 namespace AutogenRundown.Patches;
@@ -26,8 +27,19 @@ public class RundownNames
         int num = 0;
         var enumerator = MainMenuGuiLayer.Current.PageRundownNew.m_rundownSelections.GetEnumerator();
 
+        // MainMenuGuiLayer.Current.PageRundownNew.m_rundownTimerData = new RundownTimerData()
+        // {
+        //     ShowCountdownTimer = true,
+        //     UTC_Target_Minute = 0,
+        //     UTC_Target_Hour = 0,
+        //     UTC_Target_Day = 1,
+        //     UTC_Target_Month = 1,
+        //     UTC_Target_Year = 2025
+        // };
+
         while (enumerator.MoveNext())
         {
+            // CM_RundownSelection rundown = enumerator.Current;
             var rundown = enumerator.Current;
 
             // Remove existing text for that rundown label
@@ -36,6 +48,10 @@ public class RundownNames
                 UnityEngine.Object.Destroy(((Component)(object)rundown.m_altText).gameObject);
             }
 
+            //CM_PageRundown_New r2;
+            // TIMER?!
+            //MainMenuGuiLayer.Current.PageRundownNew.m_rundownTimerData.
+
             // Rundown 7
             if (num == 1)
             {
@@ -43,12 +59,19 @@ public class RundownNames
 
                 rundown.m_rundownText.text = $"<size=70%><color=orange>DAILY</color><color=#444444>:</color> {rundownData.Title}</size>";
             }
-            // Rundown ?
+            // Rundown 5
+            else if (num == 5)
+            {
+                var rundownData = Bins.Rundowns.Find(Rundown.R5);
+
+                rundown.m_rundownText.text = $"<size=70%><color=green>WEEKLY #{Generator.WeekNumber}</color><color=#444444>:</color> {rundownData.Title}</size>";
+            }
+            // Rundown 4
             else if (num == 4)
             {
                 var rundownData = Bins.Rundowns.Find(Rundown.R4);
 
-                rundown.m_rundownText.text = $"<size=70%><color=green>MONTHLY</color><color=#444444>:</color> {rundownData.Title}</size>";
+                rundown.m_rundownText.text = $"<size=70%><color=#58fcee>MONTHLY</color><color=#444444>:</color> {rundownData.Title}</size>";
             }
             else
             {

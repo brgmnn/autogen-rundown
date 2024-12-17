@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿using System.Globalization;
+using BepInEx;
 
 namespace AutogenRundown
 {
@@ -51,6 +52,8 @@ namespace AutogenRundown
         private static PID enemyGroupPid = 80;
         private static PID wavePopulationPid = 200;
         private static PID waveSettingsPid = 1;
+
+        public static int WeekNumber { get; set; } = -1;
 
         public static string DisplaySeed { get; set; } = "";
 
@@ -276,6 +279,28 @@ namespace AutogenRundown
 
             Seed = now;
             DisplaySeed = $"<color=orange>{display}</color>";
+        }
+
+        /// <summary>
+        /// Used for the weekly rundown seed
+        /// </summary>
+        public static void SetWeeklySeed()
+        {
+            var utcNow = DateTime.UtcNow;
+            var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            var pst = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
+
+            var week = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
+                pst,
+                CalendarWeekRule.FirstFullWeek,
+                DayOfWeek.Tuesday);
+
+            var now = $"{pst:yyyy}_{week}";
+            var display = $"Week {week}";
+
+            Seed = now;
+            DisplaySeed = $"<color=orange>{display}</color>";
+            WeekNumber = week;
         }
 
         /// <summary>
