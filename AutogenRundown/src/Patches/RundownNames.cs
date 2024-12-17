@@ -1,5 +1,4 @@
 ﻿using AutogenRundown.DataBlocks;
-using CellMenu;
 using UnityEngine;
 
 namespace AutogenRundown.Patches;
@@ -55,21 +54,21 @@ public class RundownNames
             // Rundown 7
             if (num == 1)
             {
-                var rundownData = Bins.Rundowns.Find(Rundown.R7);
+                var rundownData = Bins.Rundowns.Find(Rundown.R_Daily);
 
                 rundown.m_rundownText.text = $"<size=70%><color=orange>DAILY</color><color=#444444>:</color> {rundownData.Title}</size>";
             }
             // Rundown 5
             else if (num == 5)
             {
-                var rundownData = Bins.Rundowns.Find(Rundown.R5);
+                var rundownData = Bins.Rundowns.Find(Rundown.R_Weekly);
 
                 rundown.m_rundownText.text = $"<size=70%><color=green>WEEKLY #{Generator.WeekNumber}</color><color=#444444>:</color> {rundownData.Title}</size>";
             }
             // Rundown 4
             else if (num == 4)
             {
-                var rundownData = Bins.Rundowns.Find(Rundown.R4);
+                var rundownData = Bins.Rundowns.Find(Rundown.R_Monthly);
 
                 rundown.m_rundownText.text = $"<size=70%><color=#58fcee>MONTHLY</color><color=#444444>:</color> {rundownData.Title}</size>";
             }

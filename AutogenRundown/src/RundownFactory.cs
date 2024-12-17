@@ -351,6 +351,12 @@ public static class RundownFactory
         Bins.Setup();
         ComplexResourceSet.Setup();
 
+        var gameSetup = new GameSetup()
+        {
+            PersistentId = 1,
+            Name = "Default"
+        };
+
         // Monthly Rundown -- Rundown 4 replacement
         #region Monthly Rundown
         {
@@ -362,7 +368,8 @@ public static class RundownFactory
 
             var monthly = BuildRundown(new Rundown
             {
-                PersistentId = Rundown.R4,
+                // PersistentId = Rundown.R4,
+                PersistentId = Rundown.R_Monthly,
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>MONTHLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
             }, false);
@@ -388,7 +395,8 @@ public static class RundownFactory
 
             var weekly = BuildRundown(new Rundown
             {
-                PersistentId = Rundown.R5,
+                // PersistentId = Rundown.R5,
+                PersistentId = Rundown.R_Weekly,
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>WEEKLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
             }, false);
@@ -413,7 +421,8 @@ public static class RundownFactory
             var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
             var daily = BuildRundown(new Rundown
             {
-                PersistentId = Rundown.R7,
+                // PersistentId = Rundown.R7,
+                PersistentId = Rundown.R_Daily,
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>DAILY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
             });
@@ -429,9 +438,26 @@ public static class RundownFactory
         // Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R5, Name = "ALT Rundown 5.0" });
         Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R6, Name = "ALT Rundown 6.0" });
         //Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R7, Name = "Rundown 7.0" });
+
         Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R8, Name = "Rundown 8.0" });
         Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.Tutorial, Name = "Tutorial" });
         Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.Geomorph, Name = "Geomorph" });
+
+        // Can we use LocalProgression EnableNoBoosterUsedProgressionForRundown to disable
+        // boosters being used?
+
+        gameSetup.RundownIdsToLoad = new List<uint>
+        {
+            Rundown.R1,
+            Rundown.R_Daily, // Rundown.R7,
+            Rundown.R2,
+            Rundown.R3,
+            Rundown.R_Monthly, // Rundown.R4,
+            Rundown.R_Weekly, // Rundown.R5,
+            Rundown.R6,
+            Rundown.R8,
+        };
+        Bins.GameSetups.AddBlock(gameSetup);
 
         Bins.Save();
     }

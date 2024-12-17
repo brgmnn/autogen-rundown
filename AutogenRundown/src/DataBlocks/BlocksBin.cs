@@ -20,6 +20,8 @@ namespace AutogenRundown.DataBlocks
             = new BlocksBin<EnemyPopulation>();
         public static BlocksBin<Fog> Fogs { get; private set; }
             = new BlocksBin<Fog>();
+        public static BlocksBin<GameSetup> GameSetups { get; private set; }
+            = new BlocksBin<GameSetup>();
         public static BlocksBin<LevelLayout> LevelLayouts { get; private set; }
             = new BlocksBin<LevelLayout>();
         public static BlocksBin<Rundown> Rundowns { get; private set; }
@@ -70,6 +72,7 @@ namespace AutogenRundown.DataBlocks
             EnemyGroups.Save("EnemyGroup");
             EnemyPopulations.Save("EnemyPopulation");
             Fogs.Save("FogSettings");
+            GameSetups.Save("GameSetup");
             LevelLayouts.Save("LevelLayout");
             Rundowns.Save("Rundown");
             Texts.Save("Text");

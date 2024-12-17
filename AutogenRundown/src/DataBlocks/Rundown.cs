@@ -17,6 +17,10 @@ namespace AutogenRundown.DataBlocks
         public static uint R7 = 31;
         public static uint R8 = 35;
 
+        public static uint R_Daily = 1;
+        public static uint R_Weekly = 2;
+        public static uint R_Monthly = 3;
+
         public List<Level> TierA { get; set; } = new List<Level>();
         public List<Level> TierB { get; set; } = new List<Level>();
         public List<Level> TierC { get; set; } = new List<Level>();
