@@ -23,7 +23,7 @@ public class RundownNames
     /// </summary>
     public static void OnTitleDataUpdated()
     {
-        int num = 0;
+        var num = 0;
         var enumerator = MainMenuGuiLayer.Current.PageRundownNew.m_rundownSelections.GetEnumerator();
 
         // MainMenuGuiLayer.Current.PageRundownNew.m_rundownTimerData = new RundownTimerData()
