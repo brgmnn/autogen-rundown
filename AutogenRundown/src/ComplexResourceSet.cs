@@ -161,7 +161,8 @@ public class ComplexResourceSet
         ///
         /// Service (Floodways / Gardens) custom geomorph updates
         ///
-        resourceSet.AddPrefab(Complex.Tech, "CustomGeomorphs_Objective_1x1", new Prefab()
+        // Floweria tiles
+        resourceSet.AddPrefab(Complex.Service, "CustomGeomorphs_Objective_1x1", new Prefab()
         {
             Asset = "Assets/Prefabs/Geomorph/Service/geo_floodways_FA_reactor_01.prefab",
             SubComplex = SubComplex.Floodways
