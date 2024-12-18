@@ -47,6 +47,14 @@ namespace AutogenRundown.DataBlocks
         DirectionalRandom = 7
     }
 
+    // ZoneExpansion = ZoneExpansion.Right;
+    // StartExpansion = ZoneBuildExpansion.Right;
+    // StartPosition = ZoneEntranceBuildFrom.BetweenStartAndFurthest;
+
+    // "StartPosition": 0,
+    // "StartExpansion": 0,
+    // "ZoneExpansion": 0,
+
     /// <summary>
     /// Where in the source zone to try to make the entrance to this zone.
     /// Note that a valid gate may not generate around the set source position/area.
@@ -287,7 +295,6 @@ namespace AutogenRundown.DataBlocks
 
                         // TODO: Remove this perhaps, it's quite hard in bulkhead
                         (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_SF_02.prefab", new CoverageMinMax { Min = 30, Max = 50 }),
-                                              //Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_SF_02.prefab
 
                         (SubComplex.Gardens, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_X_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     });

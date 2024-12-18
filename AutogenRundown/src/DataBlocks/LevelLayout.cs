@@ -9,13 +9,6 @@ using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks
 {
-    public record class Hibernating : Generator.ISelectable
-    {
-        public double Weight { get; set; } = 1.0;
-
-        public uint Enemy { get; set; }
-    }
-
     public enum SizeFactor
     {
         Small,
@@ -726,7 +719,7 @@ namespace AutogenRundown.DataBlocks
                 return prev;
 
             // Generate the zones for this branch
-            for (int i = 0; i < zoneCount; i++)
+            for (var i = 0; i < zoneCount; i++)
             {
                 var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
                 var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
@@ -1112,8 +1105,13 @@ namespace AutogenRundown.DataBlocks
                 if (zone != null)
                 {
                     // Crude way to force the direction of zones for now
+                    // TODO: This should live in the zone node building process. We should be able to set the direction
+                    //       of these more dynamically
                     if (node.Branch == "primary")
                         zone.ZoneExpansion = direction.Forward;
+
+                    // if (node.Bulkhead.HasFlag(Bulkhead.StartingArea))
+                    //     zone.StartPosition = ZoneEntranceBuildFrom.Furthest;
 
                     layout.Zones.Add(zone);
 
