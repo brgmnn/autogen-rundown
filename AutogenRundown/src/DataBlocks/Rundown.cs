@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks
 {
-    public record class Rundown : DataBlock
+    public record Rundown : DataBlock
     {
         public static uint Tutorial = 39;
         public static uint Geomorph = 27;
@@ -21,11 +21,11 @@ namespace AutogenRundown.DataBlocks
         public static uint R_Weekly = 2;
         public static uint R_Monthly = 3;
 
-        public List<Level> TierA { get; set; } = new List<Level>();
-        public List<Level> TierB { get; set; } = new List<Level>();
-        public List<Level> TierC { get; set; } = new List<Level>();
-        public List<Level> TierD { get; set; } = new List<Level>();
-        public List<Level> TierE { get; set; } = new List<Level>();
+        public List<Level> TierA { get; set; } = new();
+        public List<Level> TierB { get; set; } = new();
+        public List<Level> TierC { get; set; } = new();
+        public List<Level> TierD { get; set; } = new();
+        public List<Level> TierE { get; set; } = new();
 
         /// <summary>
         /// Name of the rundown to be used
@@ -43,7 +43,7 @@ namespace AutogenRundown.DataBlocks
         // Values we just leave as is
         public bool NeverShowRundownTree = false;
         public bool UseTierUnlockRequirements = false;
-        public int VanityItemLayerDropDataBlock = 10;
+        public int VanityItemLayerDropDataBlock = 0;
 
         // No restrictions on which levels can be accessed, so these are all defaults
         public ReqToReachTier ReqToReachTierB = new();
