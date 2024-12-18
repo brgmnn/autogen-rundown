@@ -402,10 +402,12 @@ public static class RundownFactory
             }, false);
 
             // Add progression requirements for the monthly
-            weekly.ReqToReachTierB.MainSectors = weekly.TierA.Count;
-            weekly.ReqToReachTierC.MainSectors = weekly.TierA.Count + weekly.TierB.Count;
-            weekly.ReqToReachTierD.MainSectors = weekly.TierA.Count + weekly.TierB.Count + weekly.TierC.Count;
-            weekly.ReqToReachTierE.MainSectors = weekly.TierA.Count + weekly.TierB.Count + weekly.TierC.Count + weekly.TierD.Count;
+            weekly.ReqToReachTierB.MainSectors = Math.Max(0, weekly.TierA.Count - 1);
+            weekly.ReqToReachTierC.MainSectors = Math.Max(0, weekly.TierA.Count + weekly.TierB.Count - 1);
+            weekly.ReqToReachTierD.MainSectors =
+                Math.Max(0, weekly.TierA.Count + weekly.TierB.Count + weekly.TierC.Count - 1);
+            weekly.ReqToReachTierE.MainSectors =
+                Math.Max(0, weekly.TierA.Count + weekly.TierB.Count + weekly.TierC.Count + weekly.TierD.Count - 1);
 
             Bins.Rundowns.AddBlock(weekly);
         }
