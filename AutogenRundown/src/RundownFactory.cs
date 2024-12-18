@@ -28,7 +28,7 @@ public static class RundownFactory
         };
     }
 
-    public static Rundown BuildRundown(Rundown newRundown, bool withFixed = true)
+    public static Rundown BuildRundown(Rundown newRundown, bool withFixed = true, bool withUnlocks = true)
     {
         var rundown = Rundown.Build(newRundown);
 
@@ -340,6 +340,17 @@ public static class RundownFactory
         #endregion
         #endregion
 
+        // Add progression requirements if unlocks are needed
+        if (withUnlocks)
+        {
+            rundown.ReqToReachTierB.MainSectors = Math.Max(0, rundown.TierA.Count - 1);
+            rundown.ReqToReachTierC.MainSectors = Math.Max(0, rundown.TierA.Count + rundown.TierB.Count - 1);
+            rundown.ReqToReachTierD.MainSectors =
+                Math.Max(0, rundown.TierA.Count + rundown.TierB.Count + rundown.TierC.Count - 1);
+            rundown.ReqToReachTierE.MainSectors =
+                Math.Max(0, rundown.TierA.Count + rundown.TierB.Count + rundown.TierC.Count + rundown.TierD.Count - 1);
+        }
+
         return rundown;
     }
 
@@ -373,14 +384,6 @@ public static class RundownFactory
                 StoryTitle = $"<color=green>RND://</color>MONTHLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
             }, false);
 
-            // Add progression requirements for the monthly
-            monthly.ReqToReachTierB.MainSectors = Math.Max(0, monthly.TierA.Count - 1);
-            monthly.ReqToReachTierC.MainSectors = Math.Max(0, monthly.TierA.Count + monthly.TierB.Count - 1);
-            monthly.ReqToReachTierD.MainSectors =
-                Math.Max(0, monthly.TierA.Count + monthly.TierB.Count + monthly.TierC.Count - 1);
-            monthly.ReqToReachTierE.MainSectors =
-                Math.Max(0, monthly.TierA.Count + monthly.TierB.Count + monthly.TierC.Count + monthly.TierD.Count - 1);
-
             Bins.Rundowns.AddBlock(monthly);
         }
         #endregion
@@ -401,14 +404,6 @@ public static class RundownFactory
                 StoryTitle = $"<color=green>RND://</color>WEEKLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
             }, false);
 
-            // Add progression requirements for the monthly
-            weekly.ReqToReachTierB.MainSectors = Math.Max(0, weekly.TierA.Count - 1);
-            weekly.ReqToReachTierC.MainSectors = Math.Max(0, weekly.TierA.Count + weekly.TierB.Count - 1);
-            weekly.ReqToReachTierD.MainSectors =
-                Math.Max(0, weekly.TierA.Count + weekly.TierB.Count + weekly.TierC.Count - 1);
-            weekly.ReqToReachTierE.MainSectors =
-                Math.Max(0, weekly.TierA.Count + weekly.TierB.Count + weekly.TierC.Count + weekly.TierD.Count - 1);
-
             Bins.Rundowns.AddBlock(weekly);
         }
         #endregion
@@ -427,7 +422,7 @@ public static class RundownFactory
                 PersistentId = Rundown.R_Daily,
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>DAILY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
-            });
+            }, true, false);
 
             Bins.Rundowns.AddBlock(daily);
         }
