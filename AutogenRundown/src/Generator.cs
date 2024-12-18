@@ -53,6 +53,8 @@ namespace AutogenRundown
         private static PID wavePopulationPid = 200;
         private static PID waveSettingsPid = 1;
 
+        public static int MonthNumber { get; set; } = -1;
+
         public static int WeekNumber { get; set; } = -1;
 
         public static string DisplaySeed { get; set; } = "";
@@ -279,6 +281,7 @@ namespace AutogenRundown
 
             Seed = now;
             DisplaySeed = $"<color=orange>{display}</color>";
+            MonthNumber = pst.Month;
         }
 
         /// <summary>

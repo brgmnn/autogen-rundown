@@ -375,7 +375,7 @@ public static class RundownFactory
             Generator.SetMonthSeed();
             Generator.Reload();
 
-            var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
+            var name = Words.RundownNameMonthly();
 
             var monthly = BuildRundown(new Rundown
             {

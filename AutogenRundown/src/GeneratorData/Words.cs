@@ -36,6 +36,87 @@
             return list;
         }
 
+        public static string RundownNameMonthly()
+        {
+            var noun = Generator.MonthNumber switch
+            {
+                // January
+                1 => Generator.Pick(new List<string>
+                {
+                    "Bleakburrow", "Mooncrypt", "Obsidian Grotto", "Chillmarrow", "Dampvault", "Umbral Cage",
+                    "Nightfissure", "Wraithclot", "Pale Labyrinth", "Blackmarsh"
+                }),
+                // February
+                2 => Generator.Pick(new List<string>
+                {
+                    "Depthshroud", "Fallowchasm", "Ravencrypt", "Silent Hollow", "Marrowfane", "Crowvault",
+                    "Lurid Veil", "Creviceborn", "Dire Maw", "Sunken Gloom"
+                }),
+                // March
+                3 => Generator.Pick(new List<string>
+                {
+                    "Sourgrove", "Waning Crypt", "Fetid Mine", "Gravewhisper", "Underrot", "Stagnant Grotto",
+                    "Mireclaw", "Stillroot", "Gloomchoke", "Weeping Den"
+                }),
+                // April
+                4 => Generator.Pick(new List<string>
+                {
+                    "Fogshard", "Drearnest", "Rotwood", "Witherspine", "Sporefen", "Tanglechasm", "Musty Hollow",
+                    "Duskreef", "Faint Maze", "Subtlecrag"
+                }),
+                // May
+                5 => Generator.Pick(new List<string>
+                {
+                    "Fetid Thicket", "Wormblight", "Ashen Vault", "Goreburrow", "Briarcrypt", "Umbraspore",
+                    "Gullychill", "Soulchoke", "Darkfen", "Verdant Rot"
+                }),
+                // June
+                6 => Generator.Pick(new List<string>
+                {
+                    "Cinderdeep", "Molded Pit", "Charfall", "Blightbarrow", "Grimwarren", "Gorecliff", "Dusthusk",
+                    "Marrow Reach", "Wraith Fane", "Hollow Thorn"
+                }),
+                // July
+                7 => Generator.Pick(new List<string>
+                {
+                    "Bonechoke", "Rotcairn", "Dreggrotto", "Wraithknell", "Palechasm", "Dustwraith", "Husked Vale",
+                    "Bleakcyst", "Sunless Maw", "Murkspan"
+                }),
+                // August
+                8 => Generator.Pick(new List<string>
+                {
+                    "Gorechoke", "Hollowrift", "Lurid Pit", "Cavernfrost", "Wormclot", "Faintcrawl", "Midnight Grotto",
+                    "Wraithscar", "Ember Hollow", "Sour Vault"
+                }),
+                // September
+                9 => Generator.Pick(new List<string>
+                {
+                    "Underclaw", "Duskmarsh", "Cindercrypt", "Fallow Maw", "Grimspire", "Dregfen", "Shadowchoke",
+                    "Hazecrypt", "Briarchasm", "Twilight Burrow"
+                }),
+                // October
+                10 => Generator.Pick(new List<string>
+                {
+                    "Wraithgrove", "Hollowthorn", "Ragged Depths", "Twilight Rift", "Musty Chasm", "Blackburrow",
+                    "Rotspire", "Moonfen", "Nightflare", "Molderclaw"
+                }),
+                // November
+                11 => Generator.Pick(new List<string>
+                {
+                    "Frostwhisper", "Eboncrypt", "Shadowfen", "Dimthorn", "Quiet Grotto", "Waning Hollow", "Bleak Haze",
+                    "Underfissure", "Grey Rot", "Stygian Vault"
+                }),
+                // December
+                12 => Generator.Pick(new List<string>
+                {
+                    "Night Shiver", "Bone Whisper", "Gloom Fane", "Cinderhusk", "Riftgloom", "Soul Hollow",
+                    "Midnightfen", "Plague Claw", "Umbral Crypt", "Bleakharrow"
+                }),
+            };
+
+            return noun;
+        }
+
         /// <summary>
         /// 200 grim dark adjectives
         /// </summary>
