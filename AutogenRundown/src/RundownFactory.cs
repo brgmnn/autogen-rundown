@@ -368,17 +368,18 @@ public static class RundownFactory
 
             var monthly = BuildRundown(new Rundown
             {
-                // PersistentId = Rundown.R4,
                 PersistentId = Rundown.R_Monthly,
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>MONTHLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
             }, false);
 
             // Add progression requirements for the monthly
-            monthly.ReqToReachTierB.MainSectors = monthly.TierA.Count;
-            monthly.ReqToReachTierC.MainSectors = monthly.TierA.Count + monthly.TierB.Count;
-            monthly.ReqToReachTierD.MainSectors = monthly.TierA.Count + monthly.TierB.Count + monthly.TierC.Count;
-            monthly.ReqToReachTierE.MainSectors = monthly.TierA.Count + monthly.TierB.Count + monthly.TierC.Count + monthly.TierD.Count;
+            monthly.ReqToReachTierB.MainSectors = Math.Max(0, monthly.TierA.Count - 1);
+            monthly.ReqToReachTierC.MainSectors = Math.Max(0, monthly.TierA.Count + monthly.TierB.Count - 1);
+            monthly.ReqToReachTierD.MainSectors =
+                Math.Max(0, monthly.TierA.Count + monthly.TierB.Count + monthly.TierC.Count - 1);
+            monthly.ReqToReachTierE.MainSectors =
+                Math.Max(0, monthly.TierA.Count + monthly.TierB.Count + monthly.TierC.Count + monthly.TierD.Count - 1);
 
             Bins.Rundowns.AddBlock(monthly);
         }
@@ -395,7 +396,6 @@ public static class RundownFactory
 
             var weekly = BuildRundown(new Rundown
             {
-                // PersistentId = Rundown.R5,
                 PersistentId = Rundown.R_Weekly,
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>WEEKLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
