@@ -32,7 +32,6 @@ Seed: 2024_07_14
 * D2: Error alarm turnoff in 775 does not unlock
 
 Seed: 2024_07_08
-* Check the local progression mod
 * Boosters confirmed not working for modded rundowns
 * Reduce chance of nightmare scout spawning on reactor levels. It requires specialized tool
   generally
@@ -43,9 +42,6 @@ Seed: 2024_07_07
 
 Seed: 2024_06_27
 * Check I-Geo, seems to not be spawning bridge. Maybe a geomorph is missing now?
-
-Seed: 2024_06_25
-* Level lockup: E1
 -->
 
 Automatic Rundown generation, using procedural seed based generation. A new rundown seed is generated each day. Play with friends with zero configuration.

@@ -538,52 +538,10 @@ namespace AutogenRundown.DataBlocks
                  * Retrieve an item from within the complex.
                  * */
                 case WardenObjectiveType.RetrieveBigItems:
-                    {
-                        var item = RetrieveItems.First();
-
-                        MainObjective = "Find [ALL_ITEMS] and bring it to the extraction scan in [EXTRACTION_ZONE]";
-                        FindLocationInfo = "Gather information about the location of [ALL_ITEMS]";
-                        FindLocationInfoHelp = "Access more data in the terminal maintenance system";
-
-                        // TODO: change the zone number
-                        GoToZone = "Navigate to <color=orange>ZONE 20</color> and find [ALL_ITEMS]";
-                        GoToZoneHelp = "Use information in the environment to find <color=orange>ZONE 20</color>";
-                        InZoneFindItem = "Find [ALL_ITEMS] somewhere inside [ITEM_ZONE]";
-
-                        InZoneFindItemHelp = "Use maintenance terminal command PING to find [ALL_ITEMS]";
-                        // TODO: rename this
-                        SolveItem = "WARNING - Hisec Cargo misplaced - ENGAGING SECURITY PROTOCOLS";
-
-                        if (RetrieveItems.Count() > 1)
-                        {
-                            GoToWinCondition_Elevator = "Return [ALL_ITEMS] to the extraction point in [EXTRACTION_ZONE]";
-                            GoToWinCondition_CustomGeo = "Return [ALL_ITEMS] to the extraction point in [EXTRACTION_ZONE]";
-                        }
-                        else
-                        {
-                            GoToWinCondition_Elevator = "Return the [ALL_ITEMS] to the extraction point in [EXTRACTION_ZONE]";
-                            GoToWinCondition_CustomGeo = "Return the [ALL_ITEMS] to the extraction point in [EXTRACTION_ZONE]";
-                        }
-
-                        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
-
-                        if (item == WardenObjectiveItem.MatterWaveProjector)
-                        {
-                            var zoneIndex = dataLayer.ObjectiveData.ZonePlacementDatas[0][0].LocalIndex;
-
-                            WavesOnGotoWin.Add(GenericWave.ExitTrickle);
-
-                            // Manually set the zones as the inbuilt ITEM_ZONE doesn't seem to
-                            // work correctly for MWP
-                            GoToZone = $"Navigate to [ZONE_{zoneIndex}] and find [ALL_ITEMS]";
-                            GoToZoneHelp = $"Use information in the environment to find [ZONE_{zoneIndex}]";
-                            InZoneFindItem = $"Find [ALL_ITEMS] somewhere inside [ZONE_{zoneIndex}]";
-
-                            SolveItem = "WARNING - Matter Wave Projector misplaced - ENGAGING SECURITY PROTOCOLS";
-                        }
-
-                        break;
-                    }
+                {
+                    Build_RetrieveBigItems(director, level);
+                    break;
+                }
 
                 /**
                  * Drop in with power cells and distribute them to generators in various zones.
