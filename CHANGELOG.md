@@ -3,6 +3,47 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.42.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.42.0) — December 18, 2024
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fix monthly rundown build seeds and validate entire rundown doesn't lock up
+* Fix intel for retrieve big items always showing zone 20
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.41.0...v0.42.0
+
+
+## [v0.41.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.41.0) — December 17, 2024
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Removed vanity items buttons from rundown screen
+* Fixed floodways reactor tile using the wrong complex
+* Reduced requirements to get to next tier in monthly/weekly in case of locked levels
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.40.0...v0.41.0
+
+
+## [v0.40.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.40.0) — December 16, 2024
+
+### New
+
+* Added Monthly and Weekly rundowns! 🎉 
+* Added nightmare enemies as possible sleepers
+* Added infectious fog as possible fog roll
+
+### Changes
+
+* Fix Rundowns to use local progression instead of existing rundown ID 🎉
+* Reduced number of zones for retrieve big item to balance
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.39.0...v0.40.0
+
+
 ## [v0.39.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.39.0) — December 11, 2024
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
