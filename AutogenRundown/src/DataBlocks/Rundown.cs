@@ -27,6 +27,17 @@ namespace AutogenRundown.DataBlocks
         public List<Level> TierD { get; set; } = new();
         public List<Level> TierE { get; set; } = new();
 
+        public int TierA_Count { get; set; } = Generator.Between(1, 2);
+        public int TierB_Count { get; set; } = Generator.Between(3, 4);
+        public int TierC_Count { get; set; } = Generator.Between(2, 4);
+        public int TierD_Count { get; set; } = Generator.Between(1, 2);
+        public int TierE_Count { get; set; } = Generator.Between(1, 2);
+
+        /// <summary>
+        /// If there are build seeds in this pool they will be used to set the build seed of the level being built.
+        /// </summary>
+        public List<int> BuildSeedPool { get; set; } = new();
+
         /// <summary>
         /// Name of the rundown to be used
         /// </summary>

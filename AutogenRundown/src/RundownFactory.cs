@@ -28,33 +28,37 @@ public static class RundownFactory
         };
     }
 
-    public static Rundown BuildRundown(Rundown newRundown, bool withFixed = true, bool withUnlocks = true)
+    public static Rundown BuildRundown(
+        Rundown newRundown,
+        bool withFixed = true,
+        bool withUnlocks = true)
     {
         var rundown = Rundown.Build(newRundown);
-
         var levelNames = Words.NewLevelNamesPack();
 
-        var aMax = Generator.Between(1, 2);
-        var bMax = Generator.Between(3, 4);
-        var cMax = Generator.Between(2, 4);
-        var dMax = Generator.Between(1, 2);
-        var eMax = Generator.Between(1, 4);
-
         #region A-Tier Levels
-        for (int i = 0; i < aMax; i++)
+        for (int i = 0; i < rundown.TierA_Count; i++)
         {
             var level = Level.Build(
                 new Level("A")
                 {
                     Name = Generator.Draw(levelNames)!,
-                    Index = i + 1
+                    Index = i + 1,
+
                 });
+
+            if (rundown.BuildSeedPool.Count > 0)
+            {
+                level.BuildSeed = rundown.BuildSeedPool[0];
+                rundown.BuildSeedPool.RemoveAt(0);
+            }
+
             rundown.AddLevel(level);
         }
         #endregion
 
         #region B-Tier Levels
-        for (int i = 0; i < bMax; i++)
+        for (int i = 0; i < rundown.TierB_Count; i++)
         {
             var level = Level.Build(
                 new Level("B")
@@ -62,12 +66,19 @@ public static class RundownFactory
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1
                 });
+
+            if (rundown.BuildSeedPool.Count > 0)
+            {
+                level.BuildSeed = rundown.BuildSeedPool[0];
+                rundown.BuildSeedPool.RemoveAt(0);
+            }
+
             rundown.AddLevel(level);
         }
         #endregion
 
         #region C-Tier Levels
-        for (int i = 0; i < cMax; i++)
+        for (int i = 0; i < rundown.TierC_Count; i++)
         {
             var level = Level.Build(
                 new Level("C")
@@ -75,6 +86,13 @@ public static class RundownFactory
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1
                 });
+
+            if (rundown.BuildSeedPool.Count > 0)
+            {
+                level.BuildSeed = rundown.BuildSeedPool[0];
+                rundown.BuildSeedPool.RemoveAt(0);
+            }
+
             rundown.AddLevel(level);
         }
 
@@ -113,7 +131,7 @@ public static class RundownFactory
                     MainDirector = mainDirector,
                     // SecondaryDirector = extremeDirector,
                     Settings = settings,
-                    Index = cMax + 1,
+                    Index = rundown.TierC_Count + 1,
                     IsTest = true
                 });
             rundown.AddLevel(testLevel);
@@ -155,7 +173,7 @@ public static class RundownFactory
         #endregion
 
         // D levels
-        for (int i = 1; i < dMax + 1; i++)
+        for (int i = 1; i < rundown.TierD_Count + 1; i++)
         {
             var level = Level.Build(
                 new Level("D")
@@ -163,6 +181,13 @@ public static class RundownFactory
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1
                 });
+
+            if (rundown.BuildSeedPool.Count > 0)
+            {
+                level.BuildSeed = rundown.BuildSeedPool[0];
+                rundown.BuildSeedPool.RemoveAt(0);
+            }
+
             rundown.AddLevel(level);
         }
 
@@ -193,7 +218,7 @@ public static class RundownFactory
                     Complex = Complex.Mining,
                     MainDirector = mainDirector,
                     Settings = settings,
-                    Index = dMax + 2
+                    Index = rundown.TierD_Count + 2
                 });
 
             rundown.AddLevel(level);
@@ -226,7 +251,7 @@ public static class RundownFactory
                     Description = description.PersistentId,
                     MainDirector = mainDirector,
                     Settings = settings,
-                    Index = dMax + 3
+                    Index = rundown.TierD_Count + 3
                 });
 
             rundown.AddLevel(level);
@@ -266,7 +291,7 @@ public static class RundownFactory
 
         #region E-Tier Levels
         // E levels
-        for (int i = 0; i < eMax; i++)
+        for (int i = 0; i < rundown.TierE_Count; i++)
         {
             var level = Level.Build(
                 new Level("E")
@@ -274,6 +299,13 @@ public static class RundownFactory
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1
                 });
+
+            if (rundown.BuildSeedPool.Count > 0)
+            {
+                level.BuildSeed = rundown.BuildSeedPool[0];
+                rundown.BuildSeedPool.RemoveAt(0);
+            }
+
             rundown.AddLevel(level);
         }
 
@@ -371,6 +403,15 @@ public static class RundownFactory
         // Monthly Rundown -- Rundown 4 replacement
         #region Monthly Rundown
         {
+            ///
+            /// The monthly rundown will get a bit more hand crafted work to ensure it loads. Specifically each month
+            /// before the new month go through and verify that every level will at least load. Use the BuildSeed to
+            /// re-roll any levels that do not load.
+            ///
+            /// It's not ideal as there needs to be a monthly release to ensure these levels work, but it should always
+            /// mean they will load.
+            ///
+
             // Set the monthly seed
             Generator.SetMonthSeed();
             Generator.Reload();
@@ -382,6 +423,27 @@ public static class RundownFactory
                 PersistentId = Rundown.R_Monthly,
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>MONTHLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
+
+                TierA_Count = 2,
+                TierB_Count = 3,
+                TierC_Count = 4,
+                TierD_Count = 3,
+                TierE_Count = 2,
+
+                ///
+                /// Use the seed pool to re-roll levels. Start by setting these at 1 and incrementing each time
+                /// there's a level lockup
+                ///
+                /// December 2024: All levels checked for lockup
+                ///
+                BuildSeedPool = new List<int>
+                {
+                    1, 1,       // Tier A
+                    1, 1, 1,    // Tier B
+                    1, 1, 1, 1, // Tier C
+                    1, 3, 1,    // Tier D
+                    1, 1        // Tier E
+                }
             }, false);
 
             Bins.Rundowns.AddBlock(monthly);
@@ -389,7 +451,7 @@ public static class RundownFactory
         #endregion
 
         // Weekly Rundown -- Rundown 5 replacement
-        #region Monthly Rundown
+        #region Weekly Rundown
         {
             // Set the monthly seed
             Generator.SetWeeklySeed();
@@ -418,10 +480,12 @@ public static class RundownFactory
             var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
             var daily = BuildRundown(new Rundown
             {
-                // PersistentId = Rundown.R7,
                 PersistentId = Rundown.R_Daily,
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>DAILY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
+
+                TierD_Count = 1,
+                TierE_Count = Generator.Between(1, 4),
             }, true, false);
 
             Bins.Rundowns.AddBlock(daily);

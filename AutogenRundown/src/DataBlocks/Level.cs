@@ -210,20 +210,27 @@ namespace AutogenRundown.DataBlocks
 
                 // Description shows up in menu
                 ["ExpeditionDescription"] = Description,
-                // ["ExpeditionDescription"] = 931,
 
                 // Warden intel displays during drop
                 ["RoleplayedWardenIntel"] = 1426
             };
         }
 
-        public JObject Seeds = JObject.FromObject(new
+        /// <summary>
+        /// Level build seed. Use this to re-roll the level
+        /// </summary>
+        public int BuildSeed { get; set; } = Generator.Between(1, 2000);
+
+        public JObject Seeds
         {
-            BuildSeed = Generator.Random.Next(2000),
-            FunctionMarkerOffset = 1,
-            StandardMarkerOffset = 0,
-            LightJobSeedOffset = 0
-        });
+            get => new JObject
+            {
+                ["BuildSeed"] = BuildSeed,
+                ["FunctionMarkerOffset"] = 1,
+                ["StandardMarkerOffset"] = 0,
+                ["LightJobSeedOffset"] = 0
+            };
+        }
 
         public JObject Expedition
         {
