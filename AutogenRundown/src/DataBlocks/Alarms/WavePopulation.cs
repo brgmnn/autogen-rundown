@@ -223,13 +223,19 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             WaveRoleWeakling = Enemy.Charger,
             WaveRoleStandard = Enemy.Charger,
+            WaveRoleSpecial = Enemy.Charger,
             WaveRoleMiniBoss = Enemy.ChargerGiant,
+            WaveRoleBoss = Enemy.ChargerGiant,
             Name = "OnlyChargers"
         };
 
         public static WavePopulation OnlyHybrids = new WavePopulation
         {
+            WaveRoleWeakling = Enemy.Shooter_Wave,
+            WaveRoleStandard = Enemy.Shooter_Wave,
             WaveRoleSpecial = Enemy.Hybrid,
+            WaveRoleMiniBoss = Enemy.Hybrid,
+            WaveRoleBoss = Enemy.Hybrid,
             Name = "OnlyHybrids"
         };
 
@@ -237,14 +243,19 @@ namespace AutogenRundown.DataBlocks.Alarms
         {
             WaveRoleWeakling = Enemy.Shadow,
             WaveRoleStandard = Enemy.Shadow,
+            WaveRoleSpecial = Enemy.Shadow,
             WaveRoleMiniBoss = Enemy.ShadowGiant,
+            WaveRoleBoss = Enemy.ShadowGiant,
             Name = "OnlyShadows"
         };
 
         public static WavePopulation OnlyNightmares = new WavePopulation
         {
+            WaveRoleWeakling = Enemy.NightmareStriker,
             WaveRoleStandard = Enemy.NightmareStriker,
             WaveRoleSpecial = Enemy.NightmareShooter,
+            WaveRoleMiniBoss = Enemy.NightmareShooter,
+            WaveRoleBoss = Enemy.NightmareShooter,
             //WaveRoleMiniBoss = Enemy.ShooterGiant_Infected,
             Name = "OnlyNightmares"
         };
@@ -255,6 +266,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleStandard = Enemy.Shadow,
             WaveRoleSpecial = Enemy.ShadowGiant,
             WaveRoleMiniBoss = Enemy.Hybrid,
+            WaveRoleBoss = Enemy.Hybrid,
             Name = "Shadows_WithHybrids"
         };
         #endregion

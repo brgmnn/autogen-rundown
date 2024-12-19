@@ -17,6 +17,12 @@ TODO:
   * Use Zone Prefix Override to alert to specific tiles.
   * Enable unit tests again after fixing chained puzzles.
 
+Seed: 2024_12_18
+* Still too many zones in A retrieve big items
+* Some units are not spawning, looks to be OnlyChargers with Miniboss as the setting
+    Seems to be because we don't define units
+* LocalProgression not working
+
 Seed: 201
 * D3, Main bulkhead door spawned with secret tank and it looks buggy.
   Showed stealth door
