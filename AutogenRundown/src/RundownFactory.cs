@@ -375,6 +375,8 @@ public static class RundownFactory
         // Add progression requirements if unlocks are needed
         if (withUnlocks)
         {
+            rundown.UseTierUnlockRequirements = true;
+
             rundown.ReqToReachTierB.MainSectors = Math.Max(0, rundown.TierA.Count - 1);
             rundown.ReqToReachTierC.MainSectors = Math.Max(0, rundown.TierA.Count + rundown.TierB.Count - 1);
             rundown.ReqToReachTierD.MainSectors =
@@ -492,31 +494,12 @@ public static class RundownFactory
         }
         #endregion
 
-        Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R1, Name = "ALT Rundown 1.0" });
-        Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R2, Name = "ALT Rundown 2.0" });
-        Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R3, Name = "ALT Rundown 3.0" });
-        // Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R4, Name = "ALT Rundown 4.0" });
-        // Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R5, Name = "ALT Rundown 5.0" });
-        Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R6, Name = "ALT Rundown 6.0" });
-        //Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R7, Name = "Rundown 7.0" });
-
-        Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.R8, Name = "Rundown 8.0" });
-        Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.Tutorial, Name = "Tutorial" });
-        Bins.Rundowns.AddBlock(new Rundown { PersistentId = Rundown.Geomorph, Name = "Geomorph" });
-
-        // Can we use LocalProgression EnableNoBoosterUsedProgressionForRundown to disable
-        // boosters being used?
-
+        // Only load the rundowns we want
         gameSetup.RundownIdsToLoad = new List<uint>
         {
-            Rundown.R1,
             Rundown.R_Daily, // Rundown.R7,
-            Rundown.R2,
-            Rundown.R3,
             Rundown.R_Monthly, // Rundown.R4,
             Rundown.R_Weekly, // Rundown.R5,
-            Rundown.R6,
-            Rundown.R8,
         };
         Bins.GameSetups.AddBlock(gameSetup);
 

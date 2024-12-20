@@ -52,34 +52,45 @@ public class RundownNames
             //MainMenuGuiLayer.Current.PageRundownNew.m_rundownTimerData.
 
             // Rundown 7
-            if (num == 1)
+            ///
+            /// Daily
+            /// -> R1
+            ///
+            if (num == 0)
             {
                 var rundownData = Bins.Rundowns.Find(Rundown.R_Daily);
 
                 rundown.m_rundownText.text = $"<size=70%><color=orange>DAILY</color><color=#444444>:</color> {rundownData.Title}</size>";
             }
-            // Rundown 5
-            else if (num == 5)
+            ///
+            /// Weekly
+            /// -> R3
+            ///
+            else if (num == 2)
             {
                 var rundownData = Bins.Rundowns.Find(Rundown.R_Weekly);
 
-                rundown.m_rundownText.text = $"<size=70%><color=green>WEEKLY #{Generator.WeekNumber}</color><color=#444444>:</color> {rundownData.Title}</size>";
+                rundown.m_rundownText.text = $"<size=70%><color=green>WEEK #{Generator.WeekNumber}</color><color=#444444>:</color> {rundownData.Title}</size>";
             }
             // Rundown 4
-            else if (num == 4)
+            ///
+            /// Monthly
+            /// -> R7
+            ///
+            else if (num == 1)
             {
                 var rundownData = Bins.Rundowns.Find(Rundown.R_Monthly);
 
                 rundown.m_rundownText.text = $"<size=70%><color=#58fcee>MONTHLY</color><color=#444444>:</color> {rundownData.Title}</size>";
             }
-            else
-            {
-                // Disable other rundowns
-                rundown.SetButtonEnabled(false);
-                rundown.SetIsUsed(false);
-                rundown.m_rundownText.text = "";
-                rundown.m_originalColor = new UnityEngine.Color(0.1f, 0.1f, 0.1f);
-            }
+            // else
+            // {
+            //     // Disable other rundowns
+            //     rundown.SetButtonEnabled(false);
+            //     rundown.SetIsUsed(false);
+            //     rundown.m_rundownText.text = "";
+            //     rundown.m_originalColor = new UnityEngine.Color(0.1f, 0.1f, 0.1f);
+            // }
 
             num++;
         }
