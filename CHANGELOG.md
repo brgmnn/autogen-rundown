@@ -3,6 +3,21 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.43.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.43.0) — December 19, 2024
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Enabled "Unaugmented" (No booster) clear tracking via LocalProgression (still in testing)
+
+### Changes
+
+* Fix LocalProgression not saving
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.42.0...v0.43.0
+
+
 ## [v0.42.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.42.0) — December 18, 2024
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
