@@ -27,15 +27,21 @@ namespace AutogenRundown.DataBlocks
         public List<Level> TierD { get; set; } = new();
         public List<Level> TierE { get; set; } = new();
 
+        [JsonIgnore]
         public int TierA_Count { get; set; } = Generator.Between(1, 2);
+        [JsonIgnore]
         public int TierB_Count { get; set; } = Generator.Between(3, 4);
+        [JsonIgnore]
         public int TierC_Count { get; set; } = Generator.Between(2, 4);
+        [JsonIgnore]
         public int TierD_Count { get; set; } = Generator.Between(1, 2);
+        [JsonIgnore]
         public int TierE_Count { get; set; } = Generator.Between(1, 2);
 
         /// <summary>
         /// If there are build seeds in this pool they will be used to set the build seed of the level being built.
         /// </summary>
+        [JsonIgnore]
         public List<int> BuildSeedPool { get; set; } = new();
 
         /// <summary>
@@ -53,14 +59,17 @@ namespace AutogenRundown.DataBlocks
 
         // Values we just leave as is
         public bool NeverShowRundownTree = false;
-        public bool UseTierUnlockRequirements = false;
         public int VanityItemLayerDropDataBlock = 0;
+
+        #region Unlock requirements for levels
+        public bool UseTierUnlockRequirements { get; set; } = false;
 
         // No restrictions on which levels can be accessed, so these are all defaults
         public ReqToReachTier ReqToReachTierB = new();
         public ReqToReachTier ReqToReachTierC = new();
         public ReqToReachTier ReqToReachTierD = new();
         public ReqToReachTier ReqToReachTierE = new();
+        #endregion
 
         public JObject StorytellingData {
             get => JObject.FromObject(new
@@ -121,6 +130,7 @@ namespace AutogenRundown.DataBlocks
             private set { }
         }
 
+        [JsonIgnore]
         public string DisplaySeed { get; set; } = "";
 
         public void AddLevel(Level level)
@@ -153,10 +163,17 @@ namespace AutogenRundown.DataBlocks
         {
             // Rundown.Name is used by LocalProgression for storing the progression data. Ensure
             // this is unique to guarantee we store progression between runs.
-            rundown.Name = $"RND_Rundown__Seed={Generator.Seed}";
+            rundown.Name = $"RndRundownSeed{Generator.Seed.Replace("_", "")}";
             rundown.DisplaySeed = Generator.DisplaySeed;
 
             return rundown;
+        }
+
+        [JsonProperty("name")]
+        public new string BlockName
+        {
+            get => Name;
+            private set { }
         }
     }
 }
