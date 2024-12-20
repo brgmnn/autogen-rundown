@@ -14,7 +14,7 @@ namespace AutogenRundown;
 [BepInDependency("Inas.LocalProgression")]
 public class Plugin : BasePlugin
 {
-    public const string Version = "0.42.0";
+    public const string Version = "0.43.0";
 
     public const string Name = "the_tavern-AutogenRundown";
 
