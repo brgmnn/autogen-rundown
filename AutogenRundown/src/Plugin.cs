@@ -6,12 +6,12 @@ using HarmonyLib;
 
 namespace AutogenRundown;
 
-[BepInPlugin("AutogenRundown", "AutogenRundown", Version)]
+[BepInPlugin("the_tavern-AutogenRundown", "AutogenRundown", Version)]
 [BepInProcess("GTFO.exe")]
 [BepInDependency("com.dak.MTFO")]
 [BepInDependency("dev.gtfomodding.gtfo-api")]
 [BepInDependency("FlowGeos")]
-[BepInDependency("Inas.LocalProgression", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("Inas.LocalProgression")]
 public class Plugin : BasePlugin
 {
     public const string Version = "0.42.0";
@@ -23,9 +23,6 @@ public class Plugin : BasePlugin
     public override void Load()
     {
         Logger = Log;
-
-        // Plugin startup logic
-        Log.LogInfo("Startup...");
 
         var seedConfig = Config.Bind(
             new ConfigDefinition("AutogenRundown", "Seed"),
@@ -52,8 +49,11 @@ public class Plugin : BasePlugin
 
         PlayFabManager.add_OnTitleDataUpdated((Action)Patches.RundownNames.OnTitleDataUpdated);
 
+        // EventAPI.OnManagersSetup += LocalProgressionManager.Current.Init;
+        // AssetAPI.OnAssetBundlesLoaded += Assets.Init;
+
         // Apply patches
-        var harmony = new Harmony("AutogenRundown");
+        var harmony = new Harmony("the_tavern-AutogenRundown");
         harmony.PatchAll();
     }
 }

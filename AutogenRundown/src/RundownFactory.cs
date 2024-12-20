@@ -504,6 +504,9 @@ public static class RundownFactory
         Bins.GameSetups.AddBlock(gameSetup);
 
         Bins.Save();
+
+        // Write the rundown local progression config
+        LocalProgression.WriteConfig();
     }
 }
 

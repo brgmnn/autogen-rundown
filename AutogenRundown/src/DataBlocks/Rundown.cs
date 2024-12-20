@@ -5,18 +5,6 @@ namespace AutogenRundown.DataBlocks
 {
     public record Rundown : DataBlock
     {
-        public static uint Tutorial = 39;
-        public static uint Geomorph = 27;
-
-        public static uint R1 = 32;
-        public static uint R2 = 33;
-        public static uint R3 = 34;
-        public static uint R4 = 37;
-        public static uint R5 = 38;
-        public static uint R6 = 41;
-        public static uint R7 = 31;
-        public static uint R8 = 35;
-
         public static uint R_Daily = 1;
         public static uint R_Weekly = 2;
         public static uint R_Monthly = 3;
