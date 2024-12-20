@@ -34,11 +34,37 @@ public record Text : DataBlock
     public static void Setup()
         => Setup<GameDataText, Text>(Bins.Texts, "Text");
 
+    private static GameDataText LocalProgression = new()
+    {
+        Value = "Unaugmented",
+        CharacterMetaData = 5,
+        ExportVersion = 1,
+        ImportVersion = 1,
+        Name = "InGame.ExpeditionSuccessPage.AllClearWithNoBoosterUsed",
+        IsLocalProgression = true,
+        PersistentId = Generator.GetPersistentId()
+    };
+
+    public new static void SaveStatic()
+    {
+        Bins.Texts.AddBlock(LocalProgression);
+    }
+
     /// <summary>
     /// The actual text value that this text holds.
     /// </summary>
     [JsonProperty("English")]
     public string Value { get; set; } = "";
+
+    [JsonIgnore]
+    private bool IsLocalProgression { get; set; } = false;
+
+    [JsonProperty("name")]
+    public new string BlockName
+    {
+        get => IsLocalProgression ? "InGame.ExpeditionSuccessPage.AllClearWithNoBoosterUsed" : $"{PersistentId}_{Name}";
+        private set { }
+    }
 
     #region Fixed properties
     public string Description { get; set; } = "";
