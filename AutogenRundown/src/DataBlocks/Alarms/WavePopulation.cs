@@ -2,6 +2,10 @@
 
 namespace AutogenRundown.DataBlocks.Alarms
 {
+    /// <summary>
+    /// If a wave population doesn't define an enemy for each of it's five roles, the game will default to picking
+    /// an enemy for us. And ususally it picks a Giant Striker which isn't what we want.
+    /// </summary>
     public record WavePopulation : DataBlock
     {
         #region Properties
