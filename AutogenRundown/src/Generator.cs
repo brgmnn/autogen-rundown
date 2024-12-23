@@ -273,6 +273,7 @@ namespace AutogenRundown
         public static void SetMonthSeed()
         {
             var utcNow = DateTime.UtcNow;
+            // var utcNow = new DateTime(2025, 1, 1, 10, 0, 0); // Debugging specific months
             var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             var pst = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
 
