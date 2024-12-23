@@ -420,32 +420,56 @@ public static class RundownFactory
 
             var name = Words.RundownNameMonthly();
 
+            ///
+            /// Use the seed pool to re-roll levels. Start by setting these at 1 and incrementing each time
+            /// there's a level lockup
+            ///
+            /// "2024_12" - December 2024: All levels checked for lockup
+            /// "2025_01" - January  2025:
+            ///
+            var buildPools = new Dictionary<string, List<int>>()
+            {
+                {
+                    "2024_12", new()
+                    {
+                        1, 1,       // Tier A
+                        1, 1, 1,    // Tier B
+                        1, 1, 1, 1, // Tier C
+                        1, 3, 1,    // Tier D
+                        1, 1        // Tier E
+                    }
+                },
+                {
+                    "2025_01", new()
+                    {
+                        5,          // Tier A
+                        5, 6, 5,    // Tier B
+                        5, 5, 6, 5, // Tier C
+                        5, 7, 5, 5, // Tier D
+                        5, 5        // Tier E
+                    }
+                }
+            };
+
+            buildPools.TryGetValue(Generator.Seed, out var buildSeeds);
+
             var monthly = BuildRundown(new Rundown
             {
                 PersistentId = Rundown.R_Monthly,
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>MONTHLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
 
-                TierA_Count = 2,
+                TierA_Count = Generator.Seed == "2025_01" ? 1 : 2,
                 TierB_Count = 3,
                 TierC_Count = 4,
-                TierD_Count = 3,
+                TierD_Count = Generator.Seed == "2025_01" ? 4 : 3,
                 TierE_Count = 2,
 
                 ///
                 /// Use the seed pool to re-roll levels. Start by setting these at 1 and incrementing each time
                 /// there's a level lockup
                 ///
-                /// December 2024: All levels checked for lockup
-                ///
-                BuildSeedPool = new List<int>
-                {
-                    1, 1,       // Tier A
-                    1, 1, 1,    // Tier B
-                    1, 1, 1, 1, // Tier C
-                    1, 3, 1,    // Tier D
-                    1, 1        // Tier E
-                }
+                BuildSeedPool = buildSeeds ?? new List<int>()
             }, false);
 
             Bins.Rundowns.AddBlock(monthly);

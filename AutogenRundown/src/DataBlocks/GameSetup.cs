@@ -23,6 +23,9 @@ public record GameSetup : DataBlock
     public List<uint> RundownIdsToLoad { get; set; } = new();
 
     #region Base game settings
+    /// <summary>
+    /// Leave this as 3 for now
+    /// </summary>
     public uint StartupScreenToLoad = 3;
     #endregion
 }

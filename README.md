@@ -17,6 +17,9 @@ TODO:
   * Use Zone Prefix Override to alert to specific tiles.
   * Enable unit tests again after fixing chained puzzles.
 
+Seed: 2024_12_19
+* Monthly: B1 Extreme: reactor startup zone unlocks and intel aren't quite right. Use Intel instead
+
 Seed: 2024_12_18
 * Still too many zones in A retrieve big items
 * Some units are not spawning, looks to be OnlyChargers with Miniboss as the setting

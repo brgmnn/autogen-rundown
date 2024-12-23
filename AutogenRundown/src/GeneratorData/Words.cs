@@ -43,8 +43,9 @@
                 // January
                 1 => Generator.Pick(new List<string>
                 {
-                    "Bleakburrow", "Mooncrypt", "Obsidian Grotto", "Chillmarrow", "Dampvault", "Umbral Cage",
-                    "Nightfissure", "Wraithclot", "Pale Labyrinth", "Blackmarsh"
+                    // "Bleakburrow", "Mooncrypt", "Obsidian Grotto", "Chillmarrow", "Dampvault", "Umbral Cage",
+                    // "Nightfissure", "Wraithclot", "Pale Labyrinth", "Blackmarsh"
+                    "Nova Vault"
                 }),
                 // February
                 2 => Generator.Pick(new List<string>
