@@ -144,10 +144,10 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Layout and layer data
-        [JsonIgnore]
         /// <summary>
         /// Allows easy access to the directors without having to switch
         /// </summary>
+        [JsonIgnore]
         public Dictionary<Bulkhead, ObjectiveLayerData> ObjectiveLayer { get; private set; }
             = new Dictionary<Bulkhead, ObjectiveLayerData>
             {
@@ -156,10 +156,16 @@ namespace AutogenRundown.DataBlocks
                 { Bulkhead.Overload, new ObjectiveLayerData() }
             };
 
+        /// <summary>
+        /// Tracking of other objectives
+        /// </summary>
         [JsonIgnore]
+        public Dictionary<Bulkhead, WardenObjective> Objective { get; set; } = new();
+
         /// <summary>
         /// Allows easy access to the directors without having to switch
         /// </summary>
+        [JsonIgnore]
         public Dictionary<Bulkhead, uint> LayoutRef { get; private set; }
             = new Dictionary<Bulkhead, uint>
             {
@@ -500,10 +506,11 @@ namespace AutogenRundown.DataBlocks
             };
 
         /// <summary>
-        /// Builds a specific bulkhead layout
+        /// Prebuild one of the layouts, this is needed for setting up the objectives which is then used for level
+        /// generation across all the other layouts
         /// </summary>
         /// <param name="bulkhead"></param>
-        private void BuildLayout(Bulkhead bulkhead)
+        private void PreBuildObjective(Bulkhead bulkhead)
         {
             var existing = new List<WardenObjectiveType>();
 
@@ -536,6 +543,50 @@ namespace AutogenRundown.DataBlocks
             director.Settings = Settings;
 
             var objective = WardenObjective.PreBuild(director, this);
+
+            Objective[bulkhead] = objective;
+        }
+
+        /// <summary>
+        /// Builds a specific bulkhead layout
+        /// </summary>
+        /// <param name="bulkhead"></param>
+        private void BuildLayout(Bulkhead bulkhead)
+        {
+            // var existing = new List<WardenObjectiveType>();
+            //
+            // if (Director.ContainsKey(Bulkhead.Main))
+            //     existing.Add(Director[Bulkhead.Main].Objective);
+            // if (Director.ContainsKey(Bulkhead.Extreme))
+            //     existing.Add(Director[Bulkhead.Extreme].Objective);
+            // if (Director.ContainsKey(Bulkhead.Overload))
+            //     existing.Add(Director[Bulkhead.Overload].Objective);
+            //
+            // if (!Director.ContainsKey(bulkhead))
+            // {
+            //     Director[bulkhead] = new BuildDirector
+            //     {
+            //         Bulkhead = bulkhead,
+            //         Complex = Complex,
+            //         Complexity = Complexity.Low,
+            //         Settings = Settings,
+            //         Tier = Tier
+            //     };
+            //
+            //     Director[bulkhead].GenObjective(existing);
+            // }
+            //
+            // var director = Director[bulkhead];
+            // director.GenPoints();
+            //
+            // // Assign these values to make sure they're all the same
+            // director.Complex = Complex;
+            // director.Settings = Settings;
+            //
+            // var objective = WardenObjective.PreBuild(director, this);
+
+            var director = Director[bulkhead];
+            var objective = Objective[bulkhead];
             var direction = RelativeDirection.Global_Forward;
 
             if (bulkhead == Bulkhead.Main)
@@ -638,6 +689,16 @@ namespace AutogenRundown.DataBlocks
                 // (1.0, "all"),
                 // (1.0, "choice"), // TODO: implement
             });
+
+            #region Objective prebuild
+            level.PreBuildObjective(Bulkhead.Main);
+
+            if (selectedBulkheads.HasFlag(Bulkhead.Extreme))
+                level.PreBuildObjective(Bulkhead.Extreme);
+
+            if (selectedBulkheads.HasFlag(Bulkhead.Overload))
+                level.PreBuildObjective(Bulkhead.Overload);
+            #endregion
 
             #region Layout generation
             level.BuildLayout(Bulkhead.Main);
