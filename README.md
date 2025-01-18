@@ -93,10 +93,11 @@ If you did not make a backup of the game: delete the GTFO game folder and run "V
 
 Follow the installation instructions again, check yes to overwrite all files.
 
-## Features progress
 
 > [!CAUTION]
-> Rundown 8 spoilers below!
+> GTFO game and mod spoilers below!
+
+## Base game features
 
 * Levels
   * [x] A Tier
@@ -107,8 +108,6 @@ Follow the installation instructions again, check yes to overwrite all files.
   * Additional objectives
     * [x] Secondary
     * [x] Overload
-    * [x] Simple Bulkhead key placement
-    * [ ] Chained Bulkhead key placement
   * Lights
     * [x] Random lights selection
     * [x] Reactor specific lights
@@ -186,6 +185,12 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] S-Class alarms
   * [x] Surge alarms
   * [x] High class alarms (> Class V)
+
+
+## Additional vanilla-like features
+
+* Alarms
+  * [x] Secret Alarms — *Appear to be free but aren't*
 * Glowsticks — *All colors available to spawn*
   * [x] Green (normal)
   * [x] Yellow

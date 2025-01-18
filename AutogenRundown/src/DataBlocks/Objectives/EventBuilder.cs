@@ -102,6 +102,16 @@ namespace AutogenRundown.DataBlocks.Objectives
             return events;
         }
 
+        public static ICollection<WardenObjectiveEvent> AddLightsOn(
+            this ICollection<WardenObjectiveEvent> events,
+            double delay = 0.0,
+            string message = "AUXILIARY ELECTRICAL SYSTEM ONLINE")
+        {
+            EventBuilder.AddLightsOn(events, delay, message);
+
+            return events;
+        }
+
         public static ICollection<WardenObjectiveEvent> AddFillFog(
             this ICollection<WardenObjectiveEvent> events,
             double delay = 5.0,
@@ -406,6 +416,35 @@ namespace AutogenRundown.DataBlocks.Objectives
                 new WardenObjectiveEvent
                 {
                     Type = WardenObjectiveEventType.AllLightsOff,
+                    Trigger = WardenObjectiveEventTrigger.OnStart,
+                    Delay = delay + 1.0
+                });
+            events.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.PlaySound,
+                    Trigger = WardenObjectiveEventTrigger.OnStart,
+                    SoundId = Sound.LightsOff,
+                    WardenIntel = message,
+                    Delay = delay
+                });
+        }
+
+        /// <summary>
+        /// Turns on all the lights in the whole level.
+        /// </summary>
+        /// <param name="events">Target event list to add the events to</param>
+        /// <param name="delay">How many seconds to delay the event by</param>
+        /// <param name="message">Warden intel message to display</param>
+        public static void AddLightsOn(
+            ICollection<WardenObjectiveEvent> events,
+            double delay = 2.0,
+            string message = "ELECTRICAL SYSTEMS RESTARTED")
+        {
+            events.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.AllLightsOn,
                     Trigger = WardenObjectiveEventTrigger.OnStart,
                     Delay = delay + 1.0
                 });

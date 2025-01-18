@@ -56,7 +56,7 @@ namespace AutogenRundown.DataBlocks
             ICollection<(double, int, WaveSettings)> waveSettingsPack)
         {
             foreach (var zone in Zones)
-                zone.RollAlarms(puzzlePack, wavePopulationPack, waveSettingsPack);
+                zone.RollAlarms(level, this, puzzlePack, wavePopulationPack, waveSettingsPack);
         }
 
         /// <summary>

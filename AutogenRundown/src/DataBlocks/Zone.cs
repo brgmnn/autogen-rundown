@@ -568,7 +568,31 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Alarms
+
+        private void AlarmModifier_LightsOff()
+        {
+            EventsOnDoorScanStart.AddLightsOff(3.0);
+            EventsOnDoorScanDone.AddLightsOn(1.0);
+        }
+
+        /// <summary>
+        /// Ideas for alarm modifications
+        ///
+        ///     * Lights off during alarm
+        ///         * Lights flashing during alarm
+        ///         * Lights change during alarm?
+        ///     * Fog rising during alarm
+        ///         * Fog lowering from ceiling
+        ///         * Fog clears in fog level during alarm
+        ///     * Spawn custom enemies, tank / mother / pouncer etc.
+        ///
+        /// </summary>
+        /// <param name="puzzlePack"></param>
+        /// <param name="wavePopulationPack"></param>
+        /// <param name="waveSettingsPack"></param>
         public void RollAlarms(
+            Level level,
+            LevelLayout layout,
             ICollection<(double, int, ChainedPuzzle)> puzzlePack,
             ICollection<(double, int, WavePopulation)> wavePopulationPack,
             ICollection<(double, int, WaveSettings)> waveSettingsPack)
@@ -602,6 +626,55 @@ namespace AutogenRundown.DataBlocks
             EventsOnOpenDoor.AddRange(puzzle.EventsOnOpenDoor);
             EventsOnDoorScanStart.AddRange(puzzle.EventsOnDoorScanStart);
             EventsOnDoorScanDone.AddRange(puzzle.EventsOnDoorScanDone);
+
+            // Add custom events on alarms
+            if (!puzzle.FixedAlarm)
+            {
+                switch (level.Tier)
+                {
+                    case "B":
+                    {
+                        // Small chance to disable lights during the alarm
+                        if (Generator.Flip(0.08))
+                            AlarmModifier_LightsOff();
+                        break;
+                    }
+
+                    case "C":
+                    {
+                        // Small chance to disable lights during the alarm
+                        if (Generator.Flip(0.1))
+                            AlarmModifier_LightsOff();
+                        break;
+                    }
+
+                    case "D":
+                    {
+                        // Small chance to disable lights during the alarm
+                        if (Generator.Flip(0.12))
+                            AlarmModifier_LightsOff();
+
+                        // "Fun" single enemies on start wave
+                        if (Generator.Flip(0.05))
+                            EventsOnDoorScanStart.AddSpawnWave(GenericWave.SingleTank, Generator.Between(1, 27));
+                        break;
+                    }
+
+                    case "E":
+                    {
+                        // Small chance to disable lights during the alarm
+                        if (Generator.Flip(0.3))
+                            AlarmModifier_LightsOff();
+
+                        // Single enemies on wave start
+                        if (Generator.Flip(0.05))
+                            EventsOnDoorScanStart.AddSpawnWave(GenericWave.SingleTank, Generator.Between(5, 27));
+                        else if (Generator.Flip(0.03))
+                            EventsOnDoorScanStart.AddSpawnWave(GenericWave.SingleTankPotato, Generator.Between(5, 27));
+                        break;
+                    }
+                }
+            }
 
             if (Bins.ChainedPuzzles.Contains(puzzle))
                 Plugin.Logger.LogInfo($"Zone {LocalIndex} alarm reassigned: {puzzle}");
