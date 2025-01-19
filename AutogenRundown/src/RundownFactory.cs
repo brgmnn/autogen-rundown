@@ -378,11 +378,9 @@ public static class RundownFactory
             rundown.UseTierUnlockRequirements = true;
 
             rundown.ReqToReachTierB.MainSectors = Math.Max(0, rundown.TierA.Count - 1);
-            rundown.ReqToReachTierC.MainSectors = Math.Max(0, rundown.TierA.Count + rundown.TierB.Count - 1);
-            rundown.ReqToReachTierD.MainSectors =
-                Math.Max(0, rundown.TierA.Count + rundown.TierB.Count + rundown.TierC.Count - 1);
-            rundown.ReqToReachTierE.MainSectors =
-                Math.Max(0, rundown.TierA.Count + rundown.TierB.Count + rundown.TierC.Count + rundown.TierD.Count - 1);
+            rundown.ReqToReachTierC.MainSectors = Math.Max(0, rundown.ReqToReachTierB.MainSectors + rundown.TierB.Count - 1);
+            rundown.ReqToReachTierD.MainSectors = Math.Max(0, rundown.ReqToReachTierC.MainSectors + rundown.TierC.Count - 1);
+            rundown.ReqToReachTierE.MainSectors = Math.Max(0, rundown.ReqToReachTierD.MainSectors + rundown.TierD.Count - 1);
         }
 
         return rundown;
