@@ -771,6 +771,9 @@ namespace AutogenRundown.DataBlocks
 
             Plugin.Logger.LogDebug($"Building layout ({layout.Name}), Objective = {objective.Type}");
 
+            if (objective.Type == WardenObjectiveType.RetrieveBigItems)
+                Plugin.Logger.LogDebug($" -- Retrieve Item(s) = {objective.RetrieveItems.First()}");
+
             BuildStartingArea(level, director);
 
             switch (director.Objective)

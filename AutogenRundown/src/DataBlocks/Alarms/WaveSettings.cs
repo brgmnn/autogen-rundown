@@ -2,46 +2,6 @@
 
 namespace AutogenRundown.DataBlocks.Alarms
 {
-    // TODO: Remove as we use custom wave settings now
-    public enum VanillaWaveSettings : uint
-    {
-        None = 0,
-
-        // Alarms?
-        Apex = 1,
-        ApexReducedShadows = 4,
-        ApexReduced = 12,
-        ApexS = 13,
-        ApexIncreased = 38,
-
-        // Surge alarms
-        Surge = 21,
-
-        // Mixed alarms
-        Modified_SpHybrid = 9,
-
-        // Diminished
-        ApexDiminished_ssp = 57,
-
-        // Scout Waves
-        Scout_sspm = 3,
-
-        // Error alarms
-        Trickle_352_SSpB = 32,
-
-        // Exit Trickles
-        ExitTrickle_38S_Original = 5,
-        ExitTrickle_18S = 11,
-        ExitTrickle_410_S = 14,
-        ExitTrickle_445_sspb = 15,
-        ExitTrickle_46_b = 16,
-        ExitTrickle_212_S = 20,
-
-        // Reactor
-        Reactor_24_sspmb = 7,
-        Reactor_6_mb = 9,
-    }
-
     /// <summary>
     /// Provides the settings for alarms, scout waves and similar types of waves (all referred to
     /// as "alarm" in sections below).
@@ -301,6 +261,10 @@ namespace AutogenRundown.DataBlocks.Alarms
 
             // Exit
             Bins.WaveSettings.AddBlock(Exit_Baseline);
+            Bins.WaveSettings.AddBlock(Exit_Objective_Easy);
+            Bins.WaveSettings.AddBlock(Exit_Objective_Medium);
+            Bins.WaveSettings.AddBlock(Exit_Objective_Hard);
+            Bins.WaveSettings.AddBlock(Exit_Objective_VeryHard);
 
             // Surge
             Bins.WaveSettings.AddBlock(Surge);
@@ -466,6 +430,87 @@ namespace AutogenRundown.DataBlocks.Alarms
         };
         #endregion
 
+        #region Objective/Exit Error Alarms
+        public static WaveSettings Exit_Baseline = new WaveSettings
+        {
+            PopulationFilter =
+            {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+            },
+            FilterType = PopulationFilterType.Include,
+            PauseBeforeStart = 4.0,
+            PauseBetweenGroups = 8.0,
+
+            Name = "Exit_Baseline"
+        };
+
+        public static WaveSettings Exit_Objective_Easy = new()
+        {
+            PopulationFilter = { Enemies.EnemyType.Standard },
+            FilterType = PopulationFilterType.Include,
+
+            PauseBeforeStart = 2.0,
+            PauseBetweenGroups = 12.0,
+            PopulationPointsPerWaveStart = 2.0,
+            PopulationPointsPerWaveEnd = 4.0,
+            PopulationPointsMinPerGroup = 2,
+            PopulationPointsPerGroupStart = 2,
+            PopulationPointsPerGroupEnd = 4,
+            PopulationRampOverTime = 240,
+        };
+
+        public static WaveSettings Exit_Objective_Medium = new()
+        {
+            PopulationFilter =
+            {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special
+            },
+            FilterType = PopulationFilterType.Include,
+
+            PauseBeforeStart = 2.0,
+            PauseBetweenGroups = 12.0,
+            PopulationPointsPerWaveStart = 3.0,
+            PopulationPointsPerWaveEnd = 6.0,
+            PopulationPointsMinPerGroup = 2,
+            PopulationPointsPerGroupStart = 3,
+            PopulationPointsPerGroupEnd = 6,
+            PopulationRampOverTime = 180,
+        };
+
+        public static WaveSettings Exit_Objective_Hard = new()
+        {
+            PopulationFilter = { Enemies.EnemyType.Weakling, Enemies.EnemyType.Boss },
+            FilterType = PopulationFilterType.Exclude,
+
+            PauseBeforeStart = 2.0,
+            PauseBetweenGroups = 12.0,
+            PopulationPointsPerWaveStart = 5.0,
+            PopulationPointsPerWaveEnd = 8.0,
+            PopulationPointsMinPerGroup = 3,
+            PopulationPointsPerGroupStart = 3,
+            PopulationPointsPerGroupEnd = 5,
+            PopulationRampOverTime = 180,
+        };
+
+        public static WaveSettings Exit_Objective_VeryHard = new()
+        {
+            PopulationFilter = { Enemies.EnemyType.Weakling },
+            FilterType = PopulationFilterType.Exclude,
+
+            PauseBeforeStart = 2.0,
+            PauseBetweenGroups = 12.0,
+
+            PopulationPointsPerWaveStart = 6.0,
+            PopulationPointsPerWaveEnd = 10.0,
+            PopulationPointsMinPerGroup = 3,
+            PopulationPointsPerGroupStart = 4,
+            PopulationPointsPerGroupEnd = 6,
+            PopulationRampOverTime = 180,
+        };
+        #endregion
+
         #region Finite points value
         public static WaveSettings Finite_35pts_Hard = new WaveSettings
         {
@@ -559,20 +604,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         };
         #endregion
 
-        #region Exit waves
-        public static WaveSettings Exit_Baseline = new WaveSettings
-        {
-            PopulationFilter =
-            {
-                Enemies.EnemyType.Standard,
-                Enemies.EnemyType.Special,
-            },
-            FilterType = PopulationFilterType.Include,
-            PauseBeforeStart = 4.0,
-            PauseBetweenGroups = 8.0,
+        #region === HiSec Cargo Crage Exit Waves ===
 
-            Name = "Exit_Baseline"
-        };
         #endregion
 
         #region === Reactor Waves ===

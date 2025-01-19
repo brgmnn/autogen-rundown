@@ -116,7 +116,7 @@ namespace AutogenRundown.DataBlocks.Objectives
             this ICollection<WardenObjectiveEvent> events,
             double delay = 5.0,
             double duration = 20.0,
-            string message = ":://CRITICAL FAILURE - VENTILATION SYSTEMS OFFLINE")
+            string? message = ":://CRITICAL FAILURE - VENTILATION SYSTEMS OFFLINE")
         {
             EventBuilder.AddFillFog(events, delay, duration, message);
 
@@ -285,7 +285,7 @@ namespace AutogenRundown.DataBlocks.Objectives
             ICollection<WardenObjectiveEvent> events,
             double delay = 5.0,
             double duration = 20.0,
-            string message = ":://WARNING - VENTILATION SYSTEM OFFLINE")
+            string? message = ":://WARNING - VENTILATION SYSTEM OFFLINE")
         {
             events.Add(
                 new WardenObjectiveEvent
@@ -296,6 +296,10 @@ namespace AutogenRundown.DataBlocks.Objectives
                     FogTransitionDuration = duration,
                     Delay = delay + 0.7,
                 });
+
+            // Don't play the sound or show the message if message is null.
+            if (message == null) return;
+
             events.Add(
                 new WardenObjectiveEvent
                 {
