@@ -585,6 +585,7 @@ namespace AutogenRundown.DataBlocks
         ///         * Fog lowering from ceiling
         ///         * Fog clears in fog level during alarm
         ///     * Spawn custom enemies, tank / mother / pouncer etc.
+        ///     * Turn on the security error scans from R8?
         ///
         /// </summary>
         /// <param name="puzzlePack"></param>
