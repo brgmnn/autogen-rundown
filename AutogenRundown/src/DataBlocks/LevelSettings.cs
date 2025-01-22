@@ -110,6 +110,9 @@ namespace AutogenRundown.DataBlocks
             }
         }
 
+        public bool HasFog() =>
+            Modifiers.Contains(LevelModifiers.Fog) || Modifiers.Contains(LevelModifiers.HeavyFog);
+
         public bool HasChargers() =>
             Modifiers.Contains(LevelModifiers.Chargers) || Modifiers.Contains(LevelModifiers.ManyChargers);
 
