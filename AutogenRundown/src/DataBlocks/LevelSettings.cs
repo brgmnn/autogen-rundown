@@ -110,6 +110,15 @@ namespace AutogenRundown.DataBlocks
             }
         }
 
+        public bool HasChargers() =>
+            Modifiers.Contains(LevelModifiers.Chargers) || Modifiers.Contains(LevelModifiers.ManyChargers);
+
+        public bool HasNightmares() =>
+            Modifiers.Contains(LevelModifiers.Nightmares) || Modifiers.Contains(LevelModifiers.ManyNightmares);
+
+        public bool HasShadows() =>
+            Modifiers.Contains(LevelModifiers.Shadows) || Modifiers.Contains(LevelModifiers.ManyShadows);
+
         /// <summary>
         /// Create a deck of hibernating enemies to draw for the level. We will need quite a lot
         /// of these as we will be drawing from this deck multiple times for every zone.

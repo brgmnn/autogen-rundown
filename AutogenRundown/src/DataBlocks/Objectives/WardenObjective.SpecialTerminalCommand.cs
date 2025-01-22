@@ -26,31 +26,44 @@ namespace AutogenRundown.DataBlocks;
  *              b. Instantly flood
  *          3. Trigger error alarm
  *          4. Trigger unit wave
+ *          5. Trigger survival of the rest of the level with spawning mega wave at the end
  */
 public partial record class WardenObjective : DataBlock
 {
-    public string SpecialTerminalCommand_GetCommand()
-        => SpecialTerminalCommand_Type switch
-        {
-            SpecialCommand.LightsOff => "REROUTE_POWER",
-
-            SpecialCommand.FillWithFog => Generator.Pick(new List<string>
-                {
-                    "FLUSH_VENTS"
-                })!,
-
-            _ => "UNKNOWN_COMMAND"
-        };
-
     public void PreBuild_SpecialTerminalCommand(BuildDirector director, Level level)
     {
         SpecialTerminalCommand_Type = director.Tier switch
         {
-            _ => Generator.Select(new List<(double, SpecialCommand)>
-                {
-                    (1.0, SpecialCommand.LightsOff),
-                    (1.0, SpecialCommand.FillWithFog)
-                })
+            "A" => Generator.Select(new List<(double, SpecialCommand)>
+            {
+                (0.80, SpecialCommand.LightsOff),
+                (0.15, SpecialCommand.FillWithFog),
+                (0.05, SpecialCommand.ErrorAlarm)
+            }),
+            "B" => Generator.Select(new List<(double, SpecialCommand)>
+            {
+                (0.60, SpecialCommand.LightsOff),
+                (0.15, SpecialCommand.FillWithFog),
+                (0.15, SpecialCommand.ErrorAlarm)
+            }),
+            "C" => Generator.Select(new List<(double, SpecialCommand)>
+            {
+                (0.40, SpecialCommand.LightsOff),
+                (0.30, SpecialCommand.FillWithFog),
+                (0.30, SpecialCommand.ErrorAlarm)
+            }),
+            "D" => Generator.Select(new List<(double, SpecialCommand)>
+            {
+                (0.33, SpecialCommand.LightsOff),
+                (0.33, SpecialCommand.FillWithFog),
+                (0.34, SpecialCommand.ErrorAlarm)
+            }),
+            "E" => Generator.Select(new List<(double, SpecialCommand)>
+            {
+                (0.10, SpecialCommand.LightsOff),
+                (0.40, SpecialCommand.FillWithFog),
+                (0.50, SpecialCommand.ErrorAlarm)
+            }),
         };
     }
 
@@ -110,7 +123,9 @@ public partial record class WardenObjective : DataBlock
             {
                 SpecialTerminalCommand = "REROUTE_POWER";
                 SpecialTerminalCommandDesc = "Reroute power coupling to sector that has been powered down.";
-                EventBuilder.AddLightsOff(EventsOnActivate, 9.0);
+
+                EventsOnActivate.AddLightsOff(9.0);
+
                 break;
             }
 
@@ -127,7 +142,100 @@ public partial record class WardenObjective : DataBlock
                 var firstZone = level.Planner.GetZone(firstNode)!;
                 firstZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
 
-                EventBuilder.AddFillFog(EventsOnActivate, 11.0);
+                EventsOnActivate.AddFillFog(11.0);
+
+                break;
+            }
+
+            ///
+            /// Triggers an error alarm on the activation of the alarm
+            ///
+            case SpecialCommand.ErrorAlarm:
+            {
+                (SpecialTerminalCommand, SpecialTerminalCommandDesc) = Generator.Pick(new List<(string, string)>
+                {
+                    ("ALARM_TEST_PROTOCOL", "Execute system-wide alarm diagnostics and test protocol."),
+                    ("OPEN_LOCKDOWN_AREA", "Lift access restrictions on sealed zones, existing biomass containment will be compromised."),
+                    ("OVERRIDE_LOCKDOWN", "Bypass emergency containment protocols, initiating a continuous security alert."),
+                    ("RESTART_SECURITY_SYSTEM", "Reinitialize all security functions, broadcasting a persistent hostile threat alert."),
+                });
+
+                switch (level.Tier, director.Bulkhead)
+                {
+                    case ("D", Bulkhead.Main):
+                        EventsOnActivate.AddSpawnWave(new()
+                        {
+                            WavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
+                            WaveSettings = WaveSettings.Exit_Objective_Hard.PersistentId,
+                            TriggerAlarm = true
+                        }, 6.0);
+                        break;
+                    case ("D", Bulkhead.Extreme):
+                        EventsOnActivate.AddSpawnWave(new()
+                        {
+                            WavePopulation = WavePopulation.Baseline.PersistentId,
+                            WaveSettings = WaveSettings.Exit_Objective_Medium.PersistentId,
+                            TriggerAlarm = true
+                        }, 10.0);
+                        break;
+                    case ("D", Bulkhead.Overload):
+                        EventsOnActivate.AddSpawnWave(new()
+                        {
+                            WavePopulation = (level.Settings.HasChargers(), level.Settings.HasShadows()) switch
+                            {
+                                (true, _) => WavePopulation.OnlyChargers.PersistentId,
+                                (_, true) => WavePopulation.OnlyShadows.PersistentId,
+                                (_, _) => WavePopulation.Baseline.PersistentId
+                            },
+                            WaveSettings = level.Settings.HasChargers() ?
+                                WaveSettings.Exit_Objective_Medium.PersistentId :
+                                WaveSettings.Exit_Objective_Hard.PersistentId,
+                            TriggerAlarm = true
+                        }, 7.0);
+                        break;
+
+                    case ("E", Bulkhead.Main):
+                        EventsOnActivate.AddSpawnWave(new()
+                        {
+                            WavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
+                            WaveSettings = WaveSettings.Exit_Objective_VeryHard.PersistentId,
+                            TriggerAlarm = true
+                        }, 4.0);
+                        break;
+                    case ("E", Bulkhead.Extreme):
+                        EventsOnActivate.AddSpawnWave(new()
+                        {
+                            WavePopulation = WavePopulation.Baseline.PersistentId,
+                            WaveSettings = WaveSettings.Exit_Objective_Medium.PersistentId,
+                            TriggerAlarm = true
+                        }, 10.0);
+                        break;
+                    case ("E", Bulkhead.Overload):
+                        EventsOnActivate.AddSpawnWave(new()
+                        {
+                            WavePopulation = (level.Settings.HasChargers(), level.Settings.HasShadows()) switch
+                            {
+                                (true, _) => WavePopulation.OnlyChargers.PersistentId,
+                                (_, true) => WavePopulation.OnlyShadows.PersistentId,
+                                (_, _) => WavePopulation.Baseline.PersistentId
+                            },
+                            WaveSettings = level.Settings.HasChargers() ?
+                                WaveSettings.Exit_Objective_Medium.PersistentId :
+                                WaveSettings.Exit_Objective_Hard.PersistentId,
+                            TriggerAlarm = true
+                        }, 10.0);
+                        break;
+
+                    // Default case is not meant to be too hard
+                    default:
+                        EventsOnActivate.AddSpawnWave(new()
+                        {
+                            WavePopulation = WavePopulation.Baseline.PersistentId,
+                            WaveSettings = WaveSettings.Exit_Objective_Easy.PersistentId,
+                            TriggerAlarm = true
+                        }, 12.0);
+                        break;
+                }
 
                 break;
             }
@@ -137,8 +245,14 @@ public partial record class WardenObjective : DataBlock
         StartPuzzle = ChainedPuzzle.FindOrPersist(ChainedPuzzle.TeamScan);
         ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
 
-        // Add exit wave if this is the main bulkhead
-        if (director.Bulkhead.HasFlag(Bulkhead.Main))
-            WavesOnGotoWin.Add(GenericWave.ExitTrickle); // TODO: not this, something else
+        // Add exit wave if this is the main bulkhead and it's not already an error alarm command
+        if (director.Bulkhead.HasFlag(Bulkhead.Main) && SpecialTerminalCommand_Type != SpecialCommand.ErrorAlarm)
+            WavesOnGotoWin.Add(new GenericWave
+            {
+                WavePopulation = WavePopulation.Baseline.PersistentId,
+                WaveSettings = WaveSettings.Exit_Objective_Easy.PersistentId,
+                TriggerAlarm = true,
+                SpawnDelay = 4.0
+            });
     }
 }

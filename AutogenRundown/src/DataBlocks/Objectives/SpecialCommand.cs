@@ -14,4 +14,9 @@ public enum SpecialCommand
     ///
     FillWithFog = 2,
     //FillWithInfectiousFog = 3,
+
+    ///
+    /// Alarm commands
+    ///
+    ErrorAlarm
 }
