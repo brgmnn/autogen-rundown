@@ -502,7 +502,7 @@ namespace AutogenRundown.DataBlocks.Objectives
                     Type = WardenObjectiveEventType.AddToTimer,
                     Duration = duration,
                     Delay = delay,
-                    Trigger = WardenObjectiveEventTrigger.OnEnd,
+                    Trigger = WardenObjectiveEventTrigger.None,
                     WardenIntel = message
                 });
         }

@@ -60,11 +60,8 @@ public partial record WardenObjective : DataBlock
         // Put a relatively short exit scan time as we will hit them hard on times up
         ChainedPuzzleAtExitScanSpeedMultiplier = GenExitScanTime(30, 40);
 
-        // Set the base times. Give 60s to begin and 30s base time on the time to survive
+        // Set the base times. Give 60s to begin and calculate and add the additional times for survival
         Survival_TimeToActivate = 60.0;
-        Survival_TimeToSurvive = 30.0;
-
-        // Calculate and add the additional times
         Survival_TimeToSurvive = Survival_CalculateTime(director, level);
 
         //==================== Events ====================
@@ -124,10 +121,8 @@ public partial record WardenObjective : DataBlock
                 "SECONDARY OBJECTIVES PRIORITIZED, EXTENDS LOCKDOWN TIME",
                 5.0);
 
-            EventBuilder.SetSurvivalTimer(
-                zone.EventsOnOpenDoor,
-                Survival_TimeToSurvive + extremeTimeAdd,
-                "LOCKDOWN TIME EXTENDED");
+            // This sets a new survival timer?
+            EventBuilder.SetSurvivalTimer(zone.EventsOnOpenDoor, extremeTimeAdd, "LOCKDOWN TIME EXTENDED");
         }
 
         if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload))
@@ -138,6 +133,8 @@ public partial record WardenObjective : DataBlock
             ///
             /// The overload objectives in survival are set to be much shorter, specifically to
             /// allow them to still be completed in time
+            ///
+            /// We could actually use the add to timer here now that it works correctly
             ///
             var node = level.Planner.GetZones(Bulkhead.Overload, null).First();
             var zone = level.Planner.GetZone(node)!;
