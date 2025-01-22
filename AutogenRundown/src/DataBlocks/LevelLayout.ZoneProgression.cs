@@ -6,17 +6,36 @@ namespace AutogenRundown.DataBlocks
     public partial record class LevelLayout : DataBlock
     {
         /// <summary>
-        /// Adds a key puzzle to enter the zone we have selected
+        ///
         /// </summary>
-        public void AddKeyedPuzzle(ZoneNode lockedNode)
+        /// <param name="lockedNode"></param>
+        /// <param name="searchBranch"></param>
+        /// <param name="generatorBranchLength"></param>
+        public void AddGeneratorPuzzle(
+            ZoneNode lockedNode,
+            string? searchBranch = null,
+            int generatorBranchLength = -1)
+        {}
+
+        /// <summary>
+        /// Adds a key puzzle to enter the zone we have selected
+        ///
+        /// Generally this should be added manually depending on the objective.
+        /// </summary>
+        public void AddKeyedPuzzle(
+            ZoneNode lockedNode,
+            string? searchBranch = null,
+            int keyBranchLength = -1)
         {
             var lockedZone = level.Planner.GetZone(lockedNode);
 
             if (lockedZone == null)
                 return;
 
+            searchBranch ??= lockedNode.Branch;
+
             var openZones = level.Planner
-                .GetOpenZones(director.Bulkhead, lockedNode.Branch)
+                .GetOpenZones(director.Bulkhead, searchBranch)
                 .Where(node => node.ZoneNumber < lockedNode.ZoneNumber).ToList();
             var keyZoneNumber = 0;
 
@@ -25,26 +44,21 @@ namespace AutogenRundown.DataBlocks
                 // We are able to construct a branch to store the key
 
                 // Determin the key branch length
-                var branchLength = director.Tier switch
+                var branchLength = keyBranchLength > 0 ? keyBranchLength : director.Tier switch
                 {
                     "A" => 1,
                     "B" => 1,
-                    "C" => Generator.Select(new List<(double, int)>
+                    "C" => 1,
+                    "D" => Generator.Select(new List<(double, int)>
                     {
                         (0.75, 1),
                         (0.25, 2)
                     }),
-                    "D" => Generator.Select(new List<(double, int)>
-                    {
-                        (0.60, 1),
-                        (0.37, 2),
-                        (0.03, 3)
-                    }),
                     "E" => Generator.Select(new List<(double, int)>
                     {
-                        (0.50, 1),
-                        (0.40, 2),
-                        (0.10, 3)
+                        (0.60, 1),
+                        (0.35, 2),
+                        (0.05, 3)
                     }),
 
                     _ => 1
@@ -88,10 +102,7 @@ namespace AutogenRundown.DataBlocks
                 PuzzleType = ProgressionPuzzleType.Keycard,
                 ZonePlacementData = new List<ZonePlacementData>
                 {
-                    new ZonePlacementData
-                    {
-                        LocalIndex = keyZoneNumber
-                    }
+                    new() { LocalIndex = keyZoneNumber }
                 }
             };
         }

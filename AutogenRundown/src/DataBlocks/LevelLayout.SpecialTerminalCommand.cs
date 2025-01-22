@@ -6,7 +6,7 @@ namespace AutogenRundown.DataBlocks;
 public partial record LevelLayout : DataBlock
 {
     /// <summary>
-    /// 
+    /// Adds a special terminal command layout
     /// </summary>
     /// <param name="director"></param>
     /// <param name="objective"></param>
@@ -43,5 +43,11 @@ public partial record LevelLayout : DataBlock
 
         // Normal generation for this
         BuildBranch(start, director.ZoneCount, "find_items");
+
+        var terminal = planner.GetLastZone(director.Bulkhead, "find_items");
+
+        // 55% chance to attempt to lock the end zone with a key puzzle
+        if (terminal != null && Generator.Flip(0.55))
+            AddKeyedPuzzle((ZoneNode)terminal, "find_items", director.Bulkhead == Bulkhead.Main ? 2 : 1);
     }
 }
