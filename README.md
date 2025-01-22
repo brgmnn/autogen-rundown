@@ -18,8 +18,6 @@ TODO:
   * Enable unit tests again after fixing chained puzzles.
   * Add the big flashlight
 
-* Check survival for adding too much time after timer expires
-
 Seed: 2024_12_19
 * Monthly: B1 Extreme: reactor startup zone unlocks and intel aren't quite right. Use Intel instead
 
