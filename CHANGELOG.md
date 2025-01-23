@@ -3,6 +3,27 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.45.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.45.0) — January 22, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Added error alarm SpecialTerminalCommand objective
+  * Also re-balanced chances for each special terminal command type
+* Add key puzzle in SpecialTerminalCommand objective layouts to appear 55% of the time
+* Add some additional modifiers to alarm rolls
+
+### Changes
+
+* Fixed Survival event timer restarting after adding Extreme extra time
+* Adjusted more resources in Survival missions
+* Finished HiSec Cargo Crate and Data Sphere objectives to have working exit alarms
+* Adjusted down unlock requirements for monthly/weekly rundowns
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.44.0...v0.45.0
+
+
 ## [v0.44.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.44.0) — December 22, 2024
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
