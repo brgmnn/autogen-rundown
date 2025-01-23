@@ -5,30 +5,20 @@ namespace AutogenRundown.DataBlocks
     public record class ConsumableDistribution : DataBlock
     {
         /// <summary>
-        /// Mostly glowsticks and lock melters, with a small chance of tripmines and c-foam.
+        /// Mostly glowsticks and lock melters, with a small chance of tripmines and c-foam. Also include long range
+        /// flashlight by popular demand.
         /// This distribution is intended to be applicable for any zone.
         /// </summary>
-        public static ConsumableDistribution Baseline = new ConsumableDistribution
+        public static ConsumableDistribution Baseline = new()
         {
             SpawnsPerZone = 6,
             SpawnData = Collections.Flatten(
                 ItemSpawn.GlowSticks(8.0),
                 new List<ItemSpawn> {
-                    new ItemSpawn
-                    {
-                        Item = Items.Item.LockMelter,
-                        Weight = 8.0
-                    },
-                    new ItemSpawn
-                    {
-                        Item = Items.Item.CfoamGrenade,
-                        Weight = 1.0
-                    },
-                    new ItemSpawn
-                    {
-                        Item = Items.Item.ExplosiveTripmine,
-                        Weight = 1.0
-                    }
+                    new() { Weight = 8.0, Item = Items.Item.LockMelter },
+                    new() { Weight = 1.0, Item = Items.Item.CfoamGrenade },
+                    new() { Weight = 1.0, Item = Items.Item.ExplosiveTripmine },
+                    new() { Weight = 1.0, Item = Items.Item.LongRangeFlashlight }
                 }
             ),
         };
@@ -37,22 +27,14 @@ namespace AutogenRundown.DataBlocks
         /// Baseline with heavy weighting to fog repellers. Averages to 4 repellers, 2 glowsticks,
         /// and 1 lock melter per zone.
         /// </summary>
-        public static ConsumableDistribution Baseline_FogRepellers = new ConsumableDistribution
+        public static ConsumableDistribution Baseline_FogRepellers = new()
         {
             SpawnsPerZone = 8,
             SpawnData = Collections.Flatten(
                 ItemSpawn.GlowSticks(3.0),
                 new List<ItemSpawn> {
-                    new ItemSpawn
-                    {
-                        Item = Items.Item.LockMelter,
-                        Weight = 1.0
-                    },
-                    new ItemSpawn
-                    {
-                        Item = Items.Item.FogRepeller,
-                        Weight = 4.0
-                    }
+                    new() { Weight = 1.0, Item = Items.Item.LockMelter },
+                    new() { Weight = 4.0, Item = Items.Item.FogRepeller }
                 }
             )
         };
@@ -61,22 +43,18 @@ namespace AutogenRundown.DataBlocks
         /// Baseline with heavy weighting to fog repellers. Averages to 4 repellers, 2 glowsticks,
         /// and 1 lock melter per zone.
         /// </summary>
-        public static ConsumableDistribution Reactor_FogRepellers = new ConsumableDistribution
+        public static ConsumableDistribution Reactor_FogRepellers = new()
         {
             SpawnsPerZone = 10,
             SpawnData = Collections.Flatten(
                 ItemSpawn.GlowSticks(2.0),
                 new List<ItemSpawn> {
-                    new ItemSpawn
-                    {
-                        Item = Items.Item.FogRepeller,
-                        Weight = 8.0
-                    }
+                    new() { Weight = 8.0, Item = Items.Item.FogRepeller }
                 }
             )
         };
 
-        public static new void SaveStatic()
+        public new static void SaveStatic()
         {
             Bins.ConsumableDistributions.AddBlock(Baseline);
             Bins.ConsumableDistributions.AddBlock(Baseline_FogRepellers);
