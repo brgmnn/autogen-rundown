@@ -440,10 +440,10 @@ public static class RundownFactory
                 {
                     "2025_01", new()
                     {
-                        5,          // Tier A
-                        5, 6, 5,    // Tier B
-                        5, 5, 6, 5, // Tier C
-                        5, 7, 5, 5, // Tier D
+                        5,          // Tier A - yes
+                        5, 6, 5,    // Tier B - yes
+                        6, 5, 6, 6, // Tier C - yes
+                        5, 8, 5, 5, // Tier D - yes (D2 broken exit spawn)
                         5, 5        // Tier E
                     }
                 }
