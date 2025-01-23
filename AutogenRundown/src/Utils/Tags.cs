@@ -14,9 +14,28 @@ public class Tags
             tags.Add(tag);
     }
 
+    /// <summary>
+    /// Copy constructor
+    /// </summary>
+    /// <param name="previous"></param>
+    public Tags(Tags previous)
+    {
+        tags = new HashSet<string>(previous.tags);
+    }
+
     public bool Add(string tag) => tags.Add(tag);
 
     public bool Contains(string tag) => tags.Contains(tag);
+
+    public Tags Extend(params string[] tags)
+    {
+        var newTags = new Tags(this);
+
+        foreach (var tag in tags)
+            newTags.Add(tag);
+
+        return newTags;
+    }
 
     public override string ToString()
     {

@@ -385,6 +385,22 @@ namespace AutogenRundown.DataBlocks.Zones
         }
 
         /// <summary>
+        /// Get all zones that have a specified tag
+        /// </summary>
+        /// <param name="bulkhead"></param>
+        /// <param name="tag"></param>
+        /// <param name="branch"></param>
+        /// <returns></returns>
+        public List<ZoneNode> GetZonesByTag(Bulkhead bulkhead, string tag, string? branch = null)
+            => graph
+                .Where(node => (node.Key.Bulkhead & bulkhead) != 0)
+                .Where(node => node.Key.Tags.Contains(tag))
+                .Where(node => branch == null || node.Key.Branch == branch)
+                .Select(node => node.Key)
+                .OrderBy(zone => zone.ZoneNumber)
+                .ToList();
+
+        /// <summary>
         /// Returns all ZoneNodes which have connections to other bulkhead zones.
         /// </summary>
         /// <returns></returns>
