@@ -41,5 +41,52 @@ public partial record LevelLayout : DataBlock
 
         level.Planner.Connect(prev, exitNode);
         level.Planner.AddZone(exitNode, exitZone);
+
+        level.Planner.GetZones(director.Bulkhead, null).ForEach(node =>
+        {
+            var zone = level.Planner.GetZone(node)!;
+
+            switch (level.Tier)
+            {
+                case "A":
+                {
+                    zone.WeaponAmmoMulti *= 2.0;
+                    zone.ToolAmmoMulti *= 2.0;
+                    zone.HealthMulti *= 2.0;
+                    break;
+                }
+
+                case "B":
+                {
+                    zone.WeaponAmmoMulti *= 1.6;
+                    zone.ToolAmmoMulti *= 1.6;
+                    zone.HealthMulti *= 1.6;
+                    break;
+                }
+
+                case "C":
+                {
+                    // TODO: change all of these so we can assign actual numbers of ammo / health / tool use
+                    zone.WeaponAmmoMulti *= 1.4;
+                    zone.ToolAmmoMulti *= 1.4;
+                    zone.HealthMulti *= 1.4;
+                    break;
+                }
+
+                case "D":
+                {
+                    zone.WeaponAmmoMulti *= 1.2;
+                    zone.ToolAmmoMulti *= 1.2;
+                    zone.HealthMulti *= 1.2;
+                    break;
+                }
+
+                case "E":
+                {
+                    // No extra resources in E
+                    break;
+                }
+            }
+        });
     }
 }

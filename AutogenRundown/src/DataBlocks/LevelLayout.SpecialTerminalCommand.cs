@@ -47,8 +47,8 @@ public partial record LevelLayout : DataBlock
         var terminal = (ZoneNode)planner.GetLastZone(director.Bulkhead, "find_items");
 
         // 55% chance to attempt to lock the end zone with a key puzzle
-        if (terminal != null && Generator.Flip(0.55))
-            AddKeyedPuzzle((ZoneNode)terminal, "find_items", director.Bulkhead == Bulkhead.Main ? 2 : 1);
+        if (Generator.Flip(0.55))
+            AddKeyedPuzzle(terminal, "find_items", director.Bulkhead == Bulkhead.Main ? 2 : 1);
 
         planner.UpdateNode(terminal with { Tags = terminal.Tags.Extend("bulkhead_candidate") });
     }
