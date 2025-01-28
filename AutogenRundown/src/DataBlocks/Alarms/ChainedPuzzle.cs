@@ -155,6 +155,10 @@ public record ChainedPuzzle : DataBlock
         if (existingPuzzle != null)
             return existingPuzzle;
 
+        // TODO: why didn't we do this before?
+        if (puzzle.PersistentId == 0)
+            puzzle.PersistentId = Generator.GetPersistentId();
+
         puzzle.Persist();
 
         return puzzle;
@@ -453,6 +457,23 @@ public record ChainedPuzzle : DataBlock
             PuzzleComponent.ClusterSmall
         },
     };
+
+    public static readonly ChainedPuzzle StealthScan5 = new()
+    {
+        PublicAlarmName = "Class V Scan",
+        TriggerAlarmOnActivate = false,
+        FixedAlarm = true,
+        WantedDistanceFromStartPos = 0.0,
+        WantedDistanceBetweenPuzzleComponents = 35.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.ScanLarge,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.Cluster,
+        },
+    };
     #endregion
 
     /******************** Alarm Scans ********************/
@@ -522,29 +543,6 @@ public record ChainedPuzzle : DataBlock
         },
     };
 
-    // public static readonly ChainedPuzzle AlarmClass5_Hard = AlarmClass5 with
-    // {
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    // };
-    //
-    // public static readonly ChainedPuzzle AlarmClass5_Chargers = AlarmClass5 with
-    // {
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    //     SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
-    // };
-    //
-    // public static readonly ChainedPuzzle AlarmClass5_Hybrids = AlarmClass5 with
-    // {
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    //     SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
-    // };
-    //
-    // public static readonly ChainedPuzzle AlarmClass5_Nightmare = AlarmClass5 with
-    // {
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    //     SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
-    // };
-
     public static readonly ChainedPuzzle AlarmClass6 = new()
     {
         PublicAlarmName = "Class VI Alarm",
@@ -561,29 +559,6 @@ public record ChainedPuzzle : DataBlock
             PuzzleComponent.ScanLarge
         },
     };
-
-    // public static readonly ChainedPuzzle AlarmClass6_Hard = AlarmClass6 with
-    // {
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    // };
-    //
-    // public static readonly ChainedPuzzle AlarmClass6_Chargers = AlarmClass6 with
-    // {
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    //     SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
-    // };
-    //
-    // public static readonly ChainedPuzzle AlarmClass6_Hybrids = AlarmClass6 with
-    // {
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    //     SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
-    // };
-    //
-    // public static readonly ChainedPuzzle AlarmClass6_Nightmare = AlarmClass6 with
-    // {
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    //     SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
-    // };
 
     public static readonly ChainedPuzzle AlarmClass7 = new()
     {
@@ -603,29 +578,6 @@ public record ChainedPuzzle : DataBlock
         },
     };
 
-    // public static readonly ChainedPuzzle AlarmClass7_Hard = AlarmClass7 with
-    // {
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    // };
-    //
-    // public static readonly ChainedPuzzle AlarmClass7_Chargers = AlarmClass7 with
-    // {
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    //     SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
-    // };
-    //
-    // public static readonly ChainedPuzzle AlarmClass7_Hybrids = AlarmClass7 with
-    // {
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    //     SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
-    // };
-    //
-    // public static readonly ChainedPuzzle AlarmClass7_Nightmare = AlarmClass7 with
-    // {
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    //     SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
-    // };
-
     public static readonly ChainedPuzzle AlarmClass8 = new()
     {
         PublicAlarmName = "Class VIII Alarm",
@@ -643,29 +595,6 @@ public record ChainedPuzzle : DataBlock
             PuzzleComponent.ScanLarge
         },
     };
-
-    // public static readonly ChainedPuzzle AlarmClass8_Hard = AlarmClass8 with
-    // {
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    // };
-    //
-    // public static readonly ChainedPuzzle AlarmClass8_Chargers = AlarmClass8 with
-    // {
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    //     SurvivalWavePopulation = WavePopulation.Baseline_Chargers.PersistentId,
-    // };
-    //
-    // public static readonly ChainedPuzzle AlarmClass8_Hybrids = AlarmClass8 with
-    // {
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    //     SurvivalWavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
-    // };
-    //
-    // public static readonly ChainedPuzzle AlarmClass8_Nightmare = AlarmClass8 with
-    // {
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    //     SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
-    // };
 
     /// <summary>
     /// These start to get quite hard. The fabled Class IX (9) alarm was a whole level on its own
@@ -778,24 +707,39 @@ public record ChainedPuzzle : DataBlock
         },
     };
 
-    // public static readonly ChainedPuzzle AlarmClass5_Cluster_Nightmare = new()
-    // {
-    //     PublicAlarmName = "Class V Cluster Alarm",
-    //     SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-    //     SurvivalWavePopulation = WavePopulation.Baseline_Nightmare.PersistentId,
-    //     WantedDistanceBetweenPuzzleComponents = 5.0,
-    //     Puzzle = new List<PuzzleComponent>
-    //     {
-    //         PuzzleComponent.AllBig,
-    //         PuzzleComponent.Cluster,
-    //         PuzzleComponent.Cluster,
-    //         PuzzleComponent.Cluster,
-    //         PuzzleComponent.Cluster,
-    //     },
-    // };
+    public static readonly ChainedPuzzle AlarmClass6_Cluster = new()
+    {
+        PublicAlarmName = "Class V Cluster Alarm",
+        Settings = WaveSettings.Baseline_Hard,
+        Population = WavePopulation.Baseline,
+        WantedDistanceBetweenPuzzleComponents = 5.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.AllBig,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.AllBig,
+        },
+    };
     #endregion
 
     #region Alarms: Mixed
+    public static readonly ChainedPuzzle AlarmClass3_Mixed = new()
+    {
+        PublicAlarmName = "Class III M Alarm",
+        Settings = WaveSettings.Baseline_Normal,
+        Population = WavePopulation.Baseline,
+        WantedDistanceBetweenPuzzleComponents = 20.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.AllBig,
+            PuzzleComponent.ClusterLarge,
+            PuzzleComponent.SustainedSmall,
+        },
+    };
+
     public static readonly ChainedPuzzle AlarmClass4_Mixed = new()
     {
         PublicAlarmName = "Class IV M Alarm",

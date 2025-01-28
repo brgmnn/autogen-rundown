@@ -50,6 +50,29 @@ namespace AutogenRundown.DataBlocks.Objectives
         }
 
         /// <summary>
+        /// Adds a spawn wave event
+        /// </summary>
+        /// <param name="events"></param>
+        /// <param name="wave"></param>
+        /// <param name="delay"></param>
+        /// <returns></returns>
+        public static ICollection<WardenObjectiveEvent> AddGenericWave(
+            this ICollection<WardenObjectiveEvent> events,
+            GenericWave wave,
+            double delay = 0.0)
+        {
+            events.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.SpawnEnemyWave,
+                    Delay = delay,
+                    EnemyWaveData = wave
+                });
+
+            return events;
+        }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="events"></param>
@@ -87,6 +110,29 @@ namespace AutogenRundown.DataBlocks.Objectives
                     Type = WardenObjectiveEventType.None,
                     Delay = delay,
                     WardenIntel = message
+                });
+
+            return events;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="events"></param>
+        /// <param name="message"></param>
+        /// <param name="delay"></param>
+        /// <returns></returns>
+        public static ICollection<WardenObjectiveEvent> AddSound(
+            this ICollection<WardenObjectiveEvent> events,
+            Sound sound,
+            double delay = 0.0)
+        {
+            events.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.None,
+                    Delay = delay,
+                    SoundId = sound
                 });
 
             return events;

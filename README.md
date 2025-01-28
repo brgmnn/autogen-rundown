@@ -16,7 +16,11 @@ Check Alarm Persistent IDs for levellayout
 TODO:
   * Use Zone Prefix Override to alert to specific tiles.
   * Enable unit tests again after fixing chained puzzles.
-  * Add the big flashlight
+  * Don't allow small item pickup to have so many extras that we don't need to do all the zones
+  * Reactor Shutdown:
+    * Add exit trickle for all versions
+    * Add D/E tier scans for it
+  * Add R8A1 garden hub tile to hubs
 
 Seed: 2024_12_19
 * Monthly: B1 Extreme: reactor startup zone unlocks and intel aren't quite right. Use Intel instead
@@ -25,7 +29,6 @@ Seed: 2024_12_18
 * Still too many zones in A retrieve big items
 * Some units are not spawning, looks to be OnlyChargers with Miniboss as the setting
     Seems to be because we don't define units
-* LocalProgression not working
 
 Seed: 201
 * D3, Main bulkhead door spawned with secret tank and it looks buggy.
@@ -50,8 +53,6 @@ Seed: 2024_07_07
 * Can we change the reactor enemy waves to spawn from one direction?
   * Seems like yes but only if we build right next to the elevator drop.
 
-Seed: 2024_06_27
-* Check I-Geo, seems to not be spawning bridge. Maybe a geomorph is missing now?
 -->
 
 Automatic Rundown generation, using procedural seed based generation. A new rundown seed is generated each day. Play with friends with zero configuration.

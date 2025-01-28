@@ -116,6 +116,9 @@ namespace AutogenRundown.DataBlocks
         public bool HasChargers() =>
             Modifiers.Contains(LevelModifiers.Chargers) || Modifiers.Contains(LevelModifiers.ManyChargers);
 
+        public bool HasFlyers() =>
+            Modifiers.Contains(LevelModifiers.Flyers) || Modifiers.Contains(LevelModifiers.ManyFlyers);
+
         public bool HasNightmares() =>
             Modifiers.Contains(LevelModifiers.Nightmares) || Modifiers.Contains(LevelModifiers.ManyNightmares);
 

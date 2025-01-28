@@ -6,12 +6,22 @@ using HarmonyLib;
 
 namespace AutogenRundown;
 
-[BepInPlugin("the_tavern-AutogenRundown", "AutogenRundown", Version)]
+/// <summary>
+/// Main plugin class
+///
+/// Note that we must use a GUID for the plugin that places this plugin before any of the other
+/// plugins that depend on the generated JSON files from Autogen. This includes:
+///     * Inas07.ExtraObjectiveSetup
+///     * Inas07.EOSExt.Reactor
+///
+/// For now we just solve this by padding 0's to the front of the guid name. It's not ideal but
+/// it works.
+/// </summary>
+[BepInPlugin("000-the_tavern-AutogenRundown", "AutogenRundown", Version)]
 [BepInProcess("GTFO.exe")]
 [BepInDependency("com.dak.MTFO")]
 [BepInDependency("dev.gtfomodding.gtfo-api")]
 [BepInDependency("FlowGeos")]
-[BepInDependency("Inas.LocalProgression")]
 public class Plugin : BasePlugin
 {
     public const string Version = "0.45.0";

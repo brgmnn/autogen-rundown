@@ -305,7 +305,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static WaveSettings None = new() { PersistentId = 0, Name = "None" };
 
         #region Alarm waves -- Baseline
-        public static WaveSettings Baseline_Easy = new WaveSettings
+        public static WaveSettings Baseline_Easy = new()
         {
             PopulationFilter =
             {
@@ -323,7 +323,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// <summary>
         /// Should be a good choice for many alarms. This is equivalent to Apex in the base game
         /// </summary>
-        public static WaveSettings Baseline_Normal = new WaveSettings
+        public static WaveSettings Baseline_Normal = new()
         {
             PopulationFilter = { Enemies.EnemyType.Weakling, Enemies.EnemyType.Boss },
             FilterType = PopulationFilterType.Exclude,
@@ -602,10 +602,6 @@ namespace AutogenRundown.DataBlocks.Alarms
 
             Name = "Scout_Easy"
         };
-        #endregion
-
-        #region === HiSec Cargo Crage Exit Waves ===
-
         #endregion
 
         #region === Reactor Waves ===
