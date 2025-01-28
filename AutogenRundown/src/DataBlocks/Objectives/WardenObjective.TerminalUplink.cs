@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Enemies;
+﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using BepInEx.Logging;
 
@@ -72,6 +73,9 @@ public partial record class WardenObjective : DataBlock
         GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
         GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
         GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+
+        // Require a team scan to start the uplink
+        StartPuzzle = ChainedPuzzle.TeamScan;
 
         Uplink_WaveSpawnType = SurvivalWaveSpawnType.InSuppliedCourseNodeZone;
 
