@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 
-public class Definition
+public class ZoneSelectionData
 {
     public string DimensionIndex { get; set; } = "Reality";
 
@@ -22,12 +22,18 @@ public class Definition
     [JsonIgnore]
     public Bulkhead Bulkhead { get; set; } = Bulkhead.Main;
 
+    [JsonIgnore]
+    public int ZoneNumber { get; set; } = 0;
+
     public string LocalIndex
     {
         get => $"Zone_{ZoneNumber}";
         private set { }
     }
 
-    [JsonIgnore]
-    public int ZoneNumber { get; set; } = 0;
+    public string SeedType { get; set; } = "SessionSeed";
+
+    public int TerminalIndex { get; set; } = 0;
+
+    public int StaticSeed { get; set; } = 0;
 }

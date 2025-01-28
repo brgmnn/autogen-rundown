@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks;
+using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.GeneratorData;
@@ -55,6 +56,48 @@ public static class RundownFactory
 
             rundown.AddLevel(level);
         }
+
+        #region Test A Levels
+        if (true && withFixed)
+        {
+            var mainDirector = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Main,
+                Complex = Complex.Mining,
+                Complexity = Complexity.Low,
+                Tier = "A",
+                Objective = WardenObjectiveType.ReactorShutdown,
+            };
+            mainDirector.GenPoints();
+
+            // var extremeDirector = new BuildDirector
+            // {
+            //     Bulkhead = Bulkhead.Extreme,
+            //     Complex = Complex.Mining,
+            //     Complexity = Complexity.Low,
+            //     Tier = "C",
+            //     Objective = WardenObjectiveType.PowerCellDistribution,
+            // };
+            // extremeDirector.GenPoints();
+
+            var settings = new LevelSettings("A");
+            //settings.Modifiers.Add(LevelModifiers.Fog);
+
+            var testLevel = Level.Build(
+                new Level("A")
+                {
+                    Tier = "A",
+                    Name = "Reactor Shutdown",
+                    Complex = Complex.Mining,
+                    MainDirector = mainDirector,
+                    // SecondaryDirector = extremeDirector,
+                    Settings = settings,
+                    Index = rundown.TierA_Count + 1,
+                    IsTest = true
+                });
+            rundown.AddLevel(testLevel);
+        }
+        #endregion
         #endregion
 
         #region B-Tier Levels
@@ -393,6 +436,7 @@ public static class RundownFactory
     {
         Bins.Setup();
         ComplexResourceSet.Setup();
+        LayoutDefinitions.Setup();
 
         var gameSetup = new GameSetup()
         {

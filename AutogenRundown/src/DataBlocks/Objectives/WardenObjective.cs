@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
@@ -294,6 +295,12 @@ namespace AutogenRundown.DataBlocks
                         break;
                     }
 
+                case WardenObjectiveType.ReactorShutdown:
+                {
+                    objective.PreBuild_ReactorShutdown(director, level);
+                    break;
+                }
+
                 case WardenObjectiveType.RetrieveBigItems:
                     {
                         var choices = new List<(double, WardenObjectiveItem)>
@@ -400,7 +407,7 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
-        ///
+        /// This is called _after_ the level layout has been built
         /// </summary>
         /// <param name="director"></param>
         /// <param name="level"></param>
@@ -598,6 +605,10 @@ namespace AutogenRundown.DataBlocks
         {
             switch (director.Objective)
             {
+                case WardenObjectiveType.ReactorShutdown:
+                    PostBuild_ReactorShutdown(director, level);
+                    break;
+
                 case WardenObjectiveType.Survival:
                     PostBuild_Survival(director, level);
                     break;
@@ -662,6 +673,14 @@ namespace AutogenRundown.DataBlocks
         public List<GenericWave> WavesOnActivate { get; set; } = new List<GenericWave>();
         #endregion
 
+        #region === MODs: Inas07/ExtraObjectiveSetup
+        /// <summary>
+        /// Any layout definitions we need for this objective
+        /// </summary>
+        [JsonIgnore]
+        public LayoutDefinitions? LayoutDefinitions { get; set; } = null;
+        #endregion
+
         #region Type=?: Chained puzzles
         [JsonIgnore]
         public ChainedPuzzle StartPuzzle { get; set; } = ChainedPuzzle.None;
@@ -695,7 +714,7 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Type=1 & 2: Reactor startup/shutdown
-        public List<ReactorWave> ReactorWaves { get; set; } = new List<ReactorWave>();
+        public List<ReactorWave> ReactorWaves { get; set; } = new();
         #endregion
 
         #region Type=3: Gather small items

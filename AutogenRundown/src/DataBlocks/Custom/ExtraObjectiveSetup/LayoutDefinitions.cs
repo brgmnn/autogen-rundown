@@ -15,10 +15,22 @@ public class LayoutDefinitions
 
     public List<Definition> Definitions { get; set; } = new();
 
+    /// <summary>
+    /// Primarily cleans the directories
+    /// </summary>
+    public static void Setup()
+    {
+        // Replace with Plugin.GameRevision to avoid interop dependency
+        var revision = CellBuildData.GetRevision();
+
+        Directory.Delete(
+            Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}", "Custom", "ExtraObjectiveSetup"),
+            recursive: true);
+    }
+
     public void Save()
     {
-        var serializer = new JsonSerializer();
-        serializer.Formatting = Formatting.Indented;
+        var serializer = new JsonSerializer { Formatting = Formatting.Indented };
 
         // Replace with Plugin.GameRevision to avoid interop dependency
         var revision = CellBuildData.GetRevision();
@@ -49,8 +61,8 @@ public class LayoutDefinitions
         // Ensure the directory exists
         Directory.CreateDirectory(dir);
 
-        using StreamWriter stream = new StreamWriter(path);
-        using JsonWriter writer = new JsonTextWriter(stream);
+        using var stream = new StreamWriter(path);
+        using var writer = new JsonTextWriter(stream);
 
         serializer.Serialize(writer, this);
         stream.Flush();

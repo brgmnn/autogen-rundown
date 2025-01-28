@@ -58,32 +58,16 @@ public class ReactorShutdown : Definition
         ["InstanceIndex"] = 0
     };
 
-    public JObject ReactorTerminal = new()
+    [JsonIgnore]
+    public PasswordData Password { get; set; } = new();
+
+    public JObject ReactorTerminal
     {
-        ["LocalLogFiles"] = new JArray(),
-        ["UniqueCommands"] = new JArray(),
-        ["PasswordData"] = new JObject {
-            ["PasswordProtected"] = false,
-            ["PasswordHintText"] = "Password Required.",
-            ["GeneratePassword"] = true,
-            ["PasswordPartCount"] = 1,
-            ["ShowPasswordLength"] = false,
-            ["ShowPasswordPartPositions"] = false,
-            ["TerminalZoneSelectionDatas"] = new JArray
-            {
-                new JArray
-                {
-                    new JObject
-                    {
-                        ["DimensionIndex"] = "Reality",
-                        ["LayerType"] = "MainLayer",
-                        ["LocalIndex"] = "Zone_0",
-                        ["SeedType"] = "SessionSeed",
-                        ["TerminalIndex"] = 0,
-                        ["StaticSeed"] = 0
-                    }
-                }
-            }
-        }
-    };
+        get => new()
+        {
+            ["LocalLogFiles"] = new JArray(),
+            ["UniqueCommands"] = new JArray(),
+            ["PasswordData"] = JObject.FromObject(Password)
+        };
+    }
 }

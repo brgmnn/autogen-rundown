@@ -409,8 +409,6 @@ public record ChainedPuzzle : DataBlock
     #region Stealth scans
     public static readonly ChainedPuzzle StealthScan2 = new()
     {
-        PersistentId = Generator.GetPersistentId(),
-
         PublicAlarmName = "Class II Scan",
         TriggerAlarmOnActivate = false,
         FixedAlarm = true,
@@ -425,8 +423,6 @@ public record ChainedPuzzle : DataBlock
 
     public static readonly ChainedPuzzle StealthScan3 = new()
     {
-        PersistentId = Generator.GetPersistentId(),
-
         PublicAlarmName = "Class III Scan",
         TriggerAlarmOnActivate = false,
         FixedAlarm = true,

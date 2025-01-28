@@ -553,38 +553,6 @@ namespace AutogenRundown.DataBlocks
         /// <param name="bulkhead"></param>
         private void BuildLayout(Bulkhead bulkhead)
         {
-            // var existing = new List<WardenObjectiveType>();
-            //
-            // if (Director.ContainsKey(Bulkhead.Main))
-            //     existing.Add(Director[Bulkhead.Main].Objective);
-            // if (Director.ContainsKey(Bulkhead.Extreme))
-            //     existing.Add(Director[Bulkhead.Extreme].Objective);
-            // if (Director.ContainsKey(Bulkhead.Overload))
-            //     existing.Add(Director[Bulkhead.Overload].Objective);
-            //
-            // if (!Director.ContainsKey(bulkhead))
-            // {
-            //     Director[bulkhead] = new BuildDirector
-            //     {
-            //         Bulkhead = bulkhead,
-            //         Complex = Complex,
-            //         Complexity = Complexity.Low,
-            //         Settings = Settings,
-            //         Tier = Tier
-            //     };
-            //
-            //     Director[bulkhead].GenObjective(existing);
-            // }
-            //
-            // var director = Director[bulkhead];
-            // director.GenPoints();
-            //
-            // // Assign these values to make sure they're all the same
-            // director.Complex = Complex;
-            // director.Settings = Settings;
-            //
-            // var objective = WardenObjective.PreBuild(director, this);
-
             var director = Director[bulkhead];
             var objective = Objective[bulkhead];
             var direction = RelativeDirection.Global_Forward;
@@ -714,21 +682,21 @@ namespace AutogenRundown.DataBlocks
             level.MainLayerData.BulkheadKeyPlacements.Add(
                 new List<ZonePlacementData>
                 {
-                    new ZonePlacementData { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
                 });
 
             if (selectedBulkheads.HasFlag(Bulkhead.Extreme))
                 level.SecondaryLayerData.BulkheadKeyPlacements.Add(
                     new List<ZonePlacementData>
                     {
-                        new ZonePlacementData { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+                        new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
                     });
 
             if (selectedBulkheads.HasFlag(Bulkhead.Overload))
                 level.ThirdLayerData.BulkheadKeyPlacements.Add(
                     new List<ZonePlacementData>
                     {
-                        new ZonePlacementData { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+                        new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
                     });
             #endregion
 
