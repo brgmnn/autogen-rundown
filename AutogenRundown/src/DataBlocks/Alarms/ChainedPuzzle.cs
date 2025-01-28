@@ -869,6 +869,23 @@ public record ChainedPuzzle : DataBlock
             PuzzleComponent.Sustained
         }
     };
+
+    /// <summary>
+    /// This scan is a gigantic-sized scan and usually should be used for a King of the Hill
+    /// style objective.
+    /// </summary>
+    public static readonly ChainedPuzzle AlarmClass1_Sustained_MegaHuge = new()
+    {
+        PublicAlarmName = "Class S I Alarm",
+        Settings = WaveSettings.Baseline_Hard,
+        Population = WavePopulation.Baseline,
+        WantedDistanceFromStartPos = 0.0,
+        WantedDistanceBetweenPuzzleComponents = 0.0,
+        Puzzle = new List<PuzzleComponent>()
+        {
+            PuzzleComponent.SustainedMegaHuge
+        }
+    };
     #endregion
 
     #region Alarms: Error alarms
