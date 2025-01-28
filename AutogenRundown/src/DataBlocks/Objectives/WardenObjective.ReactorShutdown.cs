@@ -2,12 +2,134 @@
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
-using AutogenRundown.DataBlocks.Objectives.Reactor;
 
 namespace AutogenRundown.DataBlocks;
 
 public partial record class WardenObjective : DataBlock
 {
+    #region Custom Reactor Shutdown Alarm bases
+    //
+    // These are copies of the base versions of these alarms but the first team scan is switched
+    // with a large red scan instead. This follows more what the base game does.
+    //
+
+    private static readonly ChainedPuzzle Reactor_AlarmClass4 = new()
+    {
+        PublicAlarmName = "Class IV Alarm",
+        Settings = WaveSettings.Baseline_Normal,
+        Population = WavePopulation.Baseline,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.ScanLarge,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ScanLarge
+        },
+    };
+
+    private static readonly ChainedPuzzle Reactor_AlarmClass5 = new()
+    {
+        PublicAlarmName = "Class V Alarm",
+        Settings = WaveSettings.Baseline_Normal,
+        Population = WavePopulation.Baseline,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.ScanLarge,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ClusterLarge,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ScanLarge
+        },
+    };
+
+    private static readonly ChainedPuzzle Reactor_AlarmClass6 = new()
+    {
+        PublicAlarmName = "Class VI Alarm",
+        Settings = WaveSettings.Baseline_Normal,
+        Population = WavePopulation.Baseline,
+        WantedDistanceBetweenPuzzleComponents = 15.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.ScanLarge,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ClusterLarge,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ScanLarge
+        },
+    };
+
+    private static readonly ChainedPuzzle Reactor_AlarmClass4_Cluster = new()
+    {
+        PublicAlarmName = "Class IV Cluster Alarm",
+        Settings = WaveSettings.Baseline_Hard,
+        Population = WavePopulation.Baseline,
+        WantedDistanceBetweenPuzzleComponents = 5.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.ScanLarge,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.Cluster,
+        },
+    };
+
+    private static readonly ChainedPuzzle Reactor_AlarmClass5_Cluster = new()
+    {
+        PublicAlarmName = "Class V Cluster Alarm",
+        Settings = WaveSettings.Baseline_Hard,
+        Population = WavePopulation.Baseline,
+        WantedDistanceBetweenPuzzleComponents = 5.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.ScanLarge,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.Cluster,
+        },
+    };
+
+    private static readonly ChainedPuzzle Reactor_AlarmClass6_Cluster = new()
+    {
+        PublicAlarmName = "Class V Cluster Alarm",
+        Settings = WaveSettings.Baseline_Hard,
+        Population = WavePopulation.Baseline,
+        WantedDistanceBetweenPuzzleComponents = 5.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.ScanLarge,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.AllBig,
+        },
+    };
+
+    private static readonly ChainedPuzzle Reactor_AlarmClass6_Mixed = new()
+    {
+        PublicAlarmName = "Class VI M Alarm",
+        Settings = WaveSettings.Baseline_Hard,
+        Population = WavePopulation.Baseline,
+        WantedDistanceBetweenPuzzleComponents = 20.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.ScanLarge,
+            PuzzleComponent.ClusterLarge,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ClusterLarge,
+            PuzzleComponent.ClusterLarge,
+            PuzzleComponent.SustainedSmall,
+        },
+    };
+    #endregion
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="director"></param>
+    /// <param name="level"></param>
     public void PreBuild_ReactorShutdown(BuildDirector director, Level level)
     {
         // We have to set the persistent ID later
@@ -70,14 +192,14 @@ public partial record class WardenObjective : DataBlock
 
                 puzzle = Generator.Select(new List<(double, ChainedPuzzle)>
                 {
-                    (6.0, ChainedPuzzle.AlarmClass4 with
+                    (6.0, Reactor_AlarmClass4 with
                     {
                         Population = population,
                         Settings = WaveSettings.Baseline_Hard,
                         WantedDistanceFromStartPos = 20.0,
                         WantedDistanceBetweenPuzzleComponents = 10.0,
                     }),
-                    (6.0, ChainedPuzzle.AlarmClass4_Cluster with
+                    (6.0, Reactor_AlarmClass4_Cluster with
                     {
                         Population = population,
                         Settings = WaveSettings.Baseline_Normal,
@@ -171,21 +293,21 @@ public partial record class WardenObjective : DataBlock
 
                 puzzle = Generator.Select(new List<(double, ChainedPuzzle)>
                 {
-                    (6.0, ChainedPuzzle.AlarmClass5 with
+                    (6.0, Reactor_AlarmClass5 with
                     {
                         Population = population,
                         Settings = WaveSettings.Baseline_Hard,
                         WantedDistanceFromStartPos = 30.0,
                         WantedDistanceBetweenPuzzleComponents = 30.0
                     }),
-                    (6.0, ChainedPuzzle.AlarmClass5_Cluster with
+                    (6.0, Reactor_AlarmClass5_Cluster with
                     {
                         Population = population,
                         Settings = WaveSettings.Baseline_Normal,
                         WantedDistanceFromStartPos = 30.0,
                         WantedDistanceBetweenPuzzleComponents = 30.0
                     }),
-                    (5.0, ChainedPuzzle.AlarmClass6_Mixed with
+                    (5.0, Reactor_AlarmClass6_Mixed with
                     {
                         Population = population,
                         Settings = WaveSettings.Baseline_Normal,
@@ -293,21 +415,21 @@ public partial record class WardenObjective : DataBlock
 
                 puzzle = Generator.Select(new List<(double, ChainedPuzzle)>
                 {
-                    (6.0, ChainedPuzzle.AlarmClass5 with
+                    (6.0, Reactor_AlarmClass5 with
                     {
                         Population = population,
                         Settings = WaveSettings.Baseline_Hard,
                         WantedDistanceFromStartPos = 40.0,
                         WantedDistanceBetweenPuzzleComponents = 40.0
                     }),
-                    (6.0, ChainedPuzzle.AlarmClass5_Cluster with
+                    (6.0, Reactor_AlarmClass5_Cluster with
                     {
                         Population = population,
                         Settings = WaveSettings.Baseline_Hard,
                         WantedDistanceFromStartPos = 40.0,
                         WantedDistanceBetweenPuzzleComponents = 40.0
                     }),
-                    (5.0, ChainedPuzzle.AlarmClass6_Mixed with
+                    (5.0, Reactor_AlarmClass6_Mixed with
                     {
                         Population = population,
                         Settings = WaveSettings.Baseline_Hard,
@@ -426,21 +548,21 @@ public partial record class WardenObjective : DataBlock
 
                 puzzle = Generator.Select(new List<(double, ChainedPuzzle)>
                 {
-                    (4.0, ChainedPuzzle.AlarmClass5 with
+                    (4.0, Reactor_AlarmClass5 with
                     {
                         Population = population,
                         Settings = WaveSettings.Baseline_VeryHard,
                         WantedDistanceFromStartPos = 40.0,
                         WantedDistanceBetweenPuzzleComponents = 40.0
                     }),
-                    (4.0, ChainedPuzzle.AlarmClass5_Cluster with
+                    (4.0, Reactor_AlarmClass5_Cluster with
                     {
                         Population = population,
                         Settings = WaveSettings.Baseline_VeryHard,
                         WantedDistanceFromStartPos = 40.0,
                         WantedDistanceBetweenPuzzleComponents = 40.0
                     }),
-                    (3.0, ChainedPuzzle.AlarmClass6_Mixed with
+                    (3.0, Reactor_AlarmClass6_Mixed with
                     {
                         Population = population,
                         Settings = WaveSettings.Baseline_VeryHard,
@@ -450,8 +572,8 @@ public partial record class WardenObjective : DataBlock
                     // This may be extremely hard to do
                     (2.0, ChainedPuzzle.AlarmClass2_Surge with
                     {
-                        WantedDistanceFromStartPos = 20.0,
-                        WantedDistanceBetweenPuzzleComponents = 20.0
+                        WantedDistanceFromStartPos = 15.0,
+                        WantedDistanceBetweenPuzzleComponents = 15.0
                     }),
 
                     // This is the boss bait scan
@@ -569,14 +691,14 @@ public partial record class WardenObjective : DataBlock
 
                 puzzle = Generator.Select(new List<(double, ChainedPuzzle)>
                 {
-                    (3.0, ChainedPuzzle.AlarmClass6 with
+                    (3.0, Reactor_AlarmClass6 with
                     {
                         Population = population,
                         Settings = WaveSettings.Baseline_VeryHard,
                         WantedDistanceFromStartPos = 40.0,
                         WantedDistanceBetweenPuzzleComponents = 40.0
                     }),
-                    (3.0, ChainedPuzzle.AlarmClass6_Cluster with
+                    (3.0, Reactor_AlarmClass6_Cluster with
                     {
                         Population = population,
                         Settings = WaveSettings.Baseline_VeryHard,
@@ -587,14 +709,14 @@ public partial record class WardenObjective : DataBlock
                     {
                         Population = population,
                         Settings = WaveSettings.Baseline_VeryHard,
-                        WantedDistanceFromStartPos = 40.0,
+                        WantedDistanceFromStartPos = 30.0,
                         WantedDistanceBetweenPuzzleComponents = 20.0
                     }),
                     // This may be extremely hard to do
                     (2.0, ChainedPuzzle.AlarmClass3_Surge with
                     {
                         WantedDistanceFromStartPos = 20.0,
-                        WantedDistanceBetweenPuzzleComponents = 20.0
+                        WantedDistanceBetweenPuzzleComponents = 15.0
                     }),
 
                     // This is the boss bait scan

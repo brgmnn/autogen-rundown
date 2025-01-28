@@ -217,7 +217,7 @@ namespace AutogenRundown.DataBlocks
             };
 
         public static List<(WardenObjectiveItem, string, string)> BuildSmallPickupPack(string tier)
-            => new List<(WardenObjectiveItem, string, string)>
+            => new()
             {
                 // Currently disabled items.
                 //  * MemoryStick: The model is quite small and hard to see especially in boxes.
@@ -601,6 +601,11 @@ namespace AutogenRundown.DataBlocks
             dataLayer.ObjectiveData.DataBlockId = PersistentId;
         }
 
+        /// <summary>
+        /// Run after everything has been built
+        /// </summary>
+        /// <param name="director"></param>
+        /// <param name="level"></param>
         public void PostBuild(BuildDirector director, Level level)
         {
             switch (director.Objective)

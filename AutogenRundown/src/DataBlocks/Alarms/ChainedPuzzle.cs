@@ -705,7 +705,7 @@ public record ChainedPuzzle : DataBlock
 
     public static readonly ChainedPuzzle AlarmClass6_Cluster = new()
     {
-        PublicAlarmName = "Class V Cluster Alarm",
+        PublicAlarmName = "Class VI Cluster Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
         WantedDistanceBetweenPuzzleComponents = 5.0,
