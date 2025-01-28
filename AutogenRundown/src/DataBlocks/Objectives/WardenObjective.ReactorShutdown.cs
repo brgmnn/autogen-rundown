@@ -26,10 +26,8 @@ public partial record class WardenObjective : DataBlock
     /// <param name="level"></param>
     public void Build_ReactorShutdown(BuildDirector director, Level level)
     {
-        MainObjective = "Find the main reactor and shut it down";
-        FindLocationInfo = "Gather information about the location of the Reactor";
-        SolveItem = "Make sure the Reactor is fully shut down before leaving";
-        // `GoToZone` set up in level layout
+        FindLocationInfo = "Make sure the Reactor is fully shut down before leaving";
+        // SolveItem = "Make sure the Reactor is fully shut down before leaving";
         GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
         GoToWinConditionHelp_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
@@ -38,6 +36,8 @@ public partial record class WardenObjective : DataBlock
         LightsOnWhenStartupComplete = false;
 
         StartPuzzle = ChainedPuzzle.FindOrPersist(ChainedPuzzle.TeamScan);
+
+        // TODO: it doesn't spawn the extract scan?
 
         // TODO: we might want a better way to determin the type of this
         var reactorDefinition = (ReactorShutdown)LayoutDefinitions!.Definitions.First();
@@ -50,7 +50,6 @@ public partial record class WardenObjective : DataBlock
             case "A":
             {
                 var population = WavePopulation.Baseline;
-                var events = new List<WardenObjectiveEvent>();
                 var surpriseBossEvents = new List<WardenObjectiveEvent>();
 
                 // Surprise boss events
@@ -116,7 +115,6 @@ public partial record class WardenObjective : DataBlock
                     };
                 }
 
-                reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(events);
                 reactorDefinition.EventsOnComplete.AddGenericWave(new GenericWave
                 {
                     WaveSettings = director.Bulkhead switch

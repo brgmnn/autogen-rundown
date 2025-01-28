@@ -96,6 +96,8 @@ public partial record LevelLayout : DataBlock
         }
 
         // Some objective texts
+        // Find the main reactor and shut it down
+        objective.MainObjective = $"Find the main reactor in {Lore.Zone(reactor.ZoneNumber)} and shut it down";
         objective.GoToZone = $"Navigate to {Lore.Zone(reactor.ZoneNumber)} and initiate the shutdown process";
 
         objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);

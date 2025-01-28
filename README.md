@@ -129,8 +129,9 @@ Follow the installation instructions again, check yes to overwrite all files.
   * Challenges
     * [x] Key to unlock doors
     * [ ] Cell to power generator to unlock doors
+    * [ ] Locked terminals
     * [x] Fog
-    * [ ] Infectious fog
+    * [x] Infectious fog
     * [ ] Security Sensors
   * [ ] Dimensions
 * Objectives
@@ -193,6 +194,8 @@ Follow the installation instructions again, check yes to overwrite all files.
 
 * Alarms
   * [x] Secret Alarms — *Appear to be free but aren't*
+* Challenges
+  * [x] Reactor terminals can be locked just like regular terminals
 * Glowsticks — *All colors available to spawn*
   * [x] Green (normal)
   * [x] Yellow

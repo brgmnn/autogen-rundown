@@ -19,6 +19,6 @@
 
         public static string KeycardZone = "[KEYCARD_ZONE]";
 
-        public static string Zone(int zoneNumber) => $"<color=orange>ZONE {zoneNumber}</color>";
+        public static string Zone(int zoneNumber) => $"<color=orange>ZONE_{zoneNumber}</color>";
     }
 }
