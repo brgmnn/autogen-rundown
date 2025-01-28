@@ -172,7 +172,7 @@ namespace AutogenRundown.DataBlocks.Objectives
 
     public class EventBuilder
     {
-        private static int GetLayerFromBulkhead(Bulkhead bulkhead)
+        public static int GetLayerFromBulkhead(Bulkhead bulkhead)
             => bulkhead switch
             {
                 Bulkhead.Main => 0,

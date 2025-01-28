@@ -21,13 +21,14 @@ public partial record class WardenObjective : DataBlock
     /// <summary>
     /// Reactor shutdown will result in the lights being off for the remainder of the
     /// level. Factor that as a difficulty modifier.
+    ///
+    /// TODO: we may want to remove the team scan at the start of our scans
     /// </summary>
     /// <param name="director"></param>
     /// <param name="level"></param>
     public void Build_ReactorShutdown(BuildDirector director, Level level)
     {
         FindLocationInfo = "Make sure the Reactor is fully shut down before leaving";
-        // SolveItem = "Make sure the Reactor is fully shut down before leaving";
         GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
         GoToWinConditionHelp_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
@@ -36,8 +37,6 @@ public partial record class WardenObjective : DataBlock
         LightsOnWhenStartupComplete = false;
 
         StartPuzzle = ChainedPuzzle.FindOrPersist(ChainedPuzzle.TeamScan);
-
-        // TODO: it doesn't spawn the extract scan?
 
         // TODO: we might want a better way to determin the type of this
         var reactorDefinition = (ReactorShutdown)LayoutDefinitions!.Definitions.First();
@@ -71,19 +70,19 @@ public partial record class WardenObjective : DataBlock
 
                 puzzle = Generator.Select(new List<(double, ChainedPuzzle)>
                 {
-                    (6.0, ChainedPuzzle.AlarmClass5 with
+                    (6.0, ChainedPuzzle.AlarmClass4 with
                     {
                         Population = population,
                         Settings = WaveSettings.Baseline_Hard,
                         WantedDistanceFromStartPos = 20.0,
-                        WantedDistanceBetweenPuzzleComponents = 20.0,
+                        WantedDistanceBetweenPuzzleComponents = 10.0,
                     }),
-                    (6.0, ChainedPuzzle.AlarmClass5_Cluster with
+                    (6.0, ChainedPuzzle.AlarmClass4_Cluster with
                     {
                         Population = population,
                         Settings = WaveSettings.Baseline_Normal,
                         WantedDistanceFromStartPos = 20.0,
-                        WantedDistanceBetweenPuzzleComponents = 20.0,
+                        WantedDistanceBetweenPuzzleComponents = 10.0,
                     }),
 
                     // This is the boss bait scan
@@ -644,6 +643,14 @@ public partial record class WardenObjective : DataBlock
         }
 
         reactorDefinition.PuzzleOnVerification = ChainedPuzzle.FindOrPersist(puzzle);
+
+        // We have to force complete the objective in EOS
+        reactorDefinition.EventsOnComplete.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ForceCompleteObjective,
+                Layer = EventBuilder.GetLayerFromBulkhead(director.Bulkhead)
+            });
     }
 
     public void PostBuild_ReactorShutdown(BuildDirector director, Level level)
