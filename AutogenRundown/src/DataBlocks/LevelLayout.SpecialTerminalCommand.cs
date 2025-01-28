@@ -1,4 +1,6 @@
-﻿using AutogenRundown.DataBlocks.Objectives;
+﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
@@ -26,13 +28,59 @@ public partial record LevelLayout : DataBlock
 
         var start = (ZoneNode)startish;
 
+        // We have a special flow for KingOfTheHill
+        if (objective.SpecialTerminalCommand_Type == SpecialCommand.KingOfTheHill)
+        {
+            var hill = BuildBranch(start, 2, "special_terminal");
+            var hillZone = planner.GetZone(hill)!;
+
+            hillZone.GenKingOfTheHillGeomorph(director.Complex);
+            hillZone.TerminalPlacements = new List<TerminalPlacement>
+            {
+                new() { PlacementWeights = ZonePlacementWeights.AtMiddle }
+            };
+
+            var spawnZoneCount = 3;
+
+            // Build the spawn zones
+            // Uses a customized version of build branch because we want more control over creating the zone
+            for (var num = 0; num < spawnZoneCount; num++)
+            {
+                const string branch = "hill_spawn";
+                var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
+                var node = new ZoneNode(director.Bulkhead, zoneIndex, branch, 0);
+                node.Tags.Add("no_enemies");
+
+                var zone = new Zone
+                {
+                    LightSettings = Lights.GenRandomLight(),
+                };
+                zone.RollFog(level);
+                zone.GenKingOfTheHillSpawnGeomorph(director.Complex);
+
+                // No terminals needed in the spawn zones
+                zone.TerminalPlacements = new List<TerminalPlacement>();
+
+                // No alarm needed on the door and have it be locked
+                zone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
+                zone.Alarm = ChainedPuzzle.SkipZone;
+
+                // Add event to open the door on activation
+                objective.EventsOnActivate.AddOpenDoor(director.Bulkhead, node.ZoneNumber);
+
+                level.Planner.Connect(hill, node);
+                level.Planner.AddZone(node, zone);
+            }
+
+            return;
+        }
+
         // If this is true, then we have a very limited objective that needs to be completed _fast_.
         if (level.MainDirector.Objective == WardenObjectiveType.Survival &&
             director.Bulkhead.HasFlag(Bulkhead.Overload))
         {
             // Mark the first zone to be where the terminal will spawn
-            //start.Branch = "find_items";
-            planner.UpdateNode(start with { Branch = "find_items" });
+            planner.UpdateNode(start with { Branch = "special_terminal" });
 
             // Largeish zone size
             var zone = planner.GetZone(start)!;
@@ -42,13 +90,11 @@ public partial record LevelLayout : DataBlock
         }
 
         // Normal generation for this
-        BuildBranch(start, director.ZoneCount, "find_items");
-
-        var terminal = (ZoneNode)planner.GetLastZone(director.Bulkhead, "find_items");
+        var terminal = BuildBranch(start, director.ZoneCount, "special_terminal");
 
         // 55% chance to attempt to lock the end zone with a key puzzle
         if (Generator.Flip(0.55))
-            AddKeyedPuzzle(terminal, "find_items", director.Bulkhead == Bulkhead.Main ? 2 : 1);
+            AddKeyedPuzzle(terminal, "special_terminal", director.Bulkhead == Bulkhead.Main ? 2 : 1);
 
         planner.UpdateNode(terminal with { Tags = terminal.Tags.Extend("bulkhead_candidate") });
     }

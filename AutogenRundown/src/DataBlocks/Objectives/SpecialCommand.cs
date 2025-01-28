@@ -7,16 +7,23 @@ public enum SpecialCommand
     ///
     /// Light based commands
     ///
-    LightsOff = 1,
+    LightsOff,
 
     ///
     /// Fog based commands
     ///
-    FillWithFog = 2,
+    FillWithFog,
     //FillWithInfectiousFog = 3,
 
     ///
     /// Alarm commands
     ///
-    ErrorAlarm
+    ErrorAlarm,
+
+    ///
+    /// King of the Hill
+    ///
+    /// This is a room wide scan
+    ///
+    KingOfTheHill
 }

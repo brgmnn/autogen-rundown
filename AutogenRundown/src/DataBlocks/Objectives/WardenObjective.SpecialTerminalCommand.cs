@@ -30,15 +30,21 @@ namespace AutogenRundown.DataBlocks;
  */
 public partial record class WardenObjective : DataBlock
 {
+    /// <summary>
+    /// We need to select the type of special terminal command that will be used here
+    /// </summary>
+    /// <param name="director"></param>
+    /// <param name="level"></param>
     public void PreBuild_SpecialTerminalCommand(BuildDirector director, Level level)
     {
         SpecialTerminalCommand_Type = director.Tier switch
         {
             "A" => Generator.Select(new List<(double, SpecialCommand)>
             {
-                (0.80, SpecialCommand.LightsOff),
-                (0.15, SpecialCommand.FillWithFog),
-                (0.05, SpecialCommand.ErrorAlarm)
+                (1.0, SpecialCommand.KingOfTheHill)
+                // (0.80, SpecialCommand.LightsOff),
+                // (0.15, SpecialCommand.FillWithFog),
+                // (0.05, SpecialCommand.ErrorAlarm)
             }),
             "B" => Generator.Select(new List<(double, SpecialCommand)>
             {
@@ -87,7 +93,7 @@ public partial record class WardenObjective : DataBlock
         GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
         // Place the terminal in the last zone
-        var node = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "find_items")!;
+        var node = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "special_terminal")!;
         var zoneIndex = node.ZoneNumber;
 
         dataLayer.ObjectiveData.ZonePlacementDatas.Add(
@@ -109,6 +115,7 @@ public partial record class WardenObjective : DataBlock
          *  - SCCS_LOCAL_TEMP_SET_294_GRAD_INV_FALSE
          *  - DEACTIVATE_FILTERS_S65T
          *  - SPFC_REACTOR_A42_LINE_7_TRUE
+         *  - OPEN_SECURITY_DOORS
          *
          *  - RECYCLE_GROUP_7A42
          *  - DRAIN_COOLING_TANKS
@@ -239,10 +246,27 @@ public partial record class WardenObjective : DataBlock
 
                 break;
             }
+
+            ///
+            ///
+            ///
+            case SpecialCommand.KingOfTheHill:
+            {
+                SpecialTerminalCommand = "OPEN_SECURITY_DOORS";
+                SpecialTerminalCommandDesc = "Opens all security doors";
+                break;
+            }
         }
 
-        // Add scans
-        StartPuzzle = ChainedPuzzle.FindOrPersist(ChainedPuzzle.TeamScan);
+        // Always have the team scan to verify everyone's here to start the objective
+        StartPuzzle = ChainedPuzzle.TeamScan;
+
+        // King of the hill has extra scan
+        if (SpecialTerminalCommand_Type == SpecialCommand.KingOfTheHill)
+        {
+            MidPuzzle = ChainedPuzzle.FindOrPersist(ChainedPuzzle.AlarmClass1_Sustained_MegaHuge);
+        }
+
         ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
 
         // Add exit wave if this is the main bulkhead and it's not already an error alarm command

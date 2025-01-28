@@ -332,7 +332,7 @@ namespace AutogenRundown.DataBlocks
 
                 // Skip adding any enemies to the reactor area
                 // TODO: we may want to add a chance for some enemies here
-                if (node.Tags.Contains("reactor"))
+                if (node.Tags.Contains("reactor") || node.Tags.Contains("no_enemies"))
                     continue;
 
                 var points = director.GetPoints(zone);
