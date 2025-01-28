@@ -1,13 +1,12 @@
 ﻿using BepInEx;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 
 public class LayoutDefinitions
 {
     [JsonIgnore]
-    public string Folder { get; set; } = "";
+    public ExtraObjectiveSetupType Type { get; set; }
 
     [JsonIgnore]
     public string Name { get; set; } = "";
@@ -23,6 +22,20 @@ public class LayoutDefinitions
 
         // Replace with Plugin.GameRevision to avoid interop dependency
         var revision = CellBuildData.GetRevision();
+        var folder = Type switch
+        {
+            ExtraObjectiveSetupType.ActivateSmallHSU => "ActivateSmallHSU",
+            ExtraObjectiveSetupType.EventsOnBossDeath => "EventsOnBossDeath",
+            ExtraObjectiveSetupType.EventsOnScoutScream => "EventsOnScoutScream",
+            ExtraObjectiveSetupType.ExtraExpeditionSettings => "ExtraExpeditionSettings",
+            ExtraObjectiveSetupType.GeneratorCluster => "GeneratorCluster",
+            ExtraObjectiveSetupType.IndividualGenerator => "IndividualGenerator",
+            ExtraObjectiveSetupType.ObjectiveCounter => "ObjectiveCounter",
+            ExtraObjectiveSetupType.ReactorShutdown => "ReactorShutdown",
+            ExtraObjectiveSetupType.ReactorStartup => "ReactorStartup",
+            ExtraObjectiveSetupType.TerminalPosition => "TerminalPosition",
+            ExtraObjectiveSetupType.TerminalUplink => "TerminalUplink"
+        };
 
         var dir = Path.Combine(
             Paths.BepInExRootPath,
@@ -30,7 +43,7 @@ public class LayoutDefinitions
             $"{revision}",
             "Custom",
             "ExtraObjectiveSetup",
-            Folder);
+            folder);
         var path = Path.Combine(dir, $"{MainLevelLayout}_{Name}.json");
 
         // Ensure the directory exists
