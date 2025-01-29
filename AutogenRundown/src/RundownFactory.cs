@@ -57,8 +57,9 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
-        #region Test A Levels
-        if (true && withFixed)
+        #region Debugging test level
+        #if false
+        if (withFixed)
         {
             var mainDirector = new BuildDirector
             {
@@ -97,6 +98,7 @@ public static class RundownFactory
                 });
             rundown.AddLevel(testLevel);
         }
+        #endif
         #endregion
         #endregion
 
@@ -468,19 +470,10 @@ public static class RundownFactory
             ///
             /// "2024_12" - December 2024: All levels checked for lockup
             /// "2025_01" - January  2025:
+            /// "2025_02" - February 2025:
             ///
             var buildPools = new Dictionary<string, List<int>>()
             {
-                {
-                    "2024_12", new()
-                    {
-                        1, 1,       // Tier A
-                        1, 1, 1,    // Tier B
-                        1, 1, 1, 1, // Tier C
-                        1, 3, 1,    // Tier D
-                        1, 1        // Tier E
-                    }
-                },
                 {
                     "2025_01", new()
                     {
@@ -489,6 +482,16 @@ public static class RundownFactory
                         6, 5, 6, 6, // Tier C - yes
                         5, 8, 5, 5, // Tier D - yes (D2 broken exit spawn)
                         5, 5        // Tier E
+                    }
+                },
+                {
+                    "2025_02", new()
+                    {
+                        1, 1,       // Tier A
+                        1, 1, 1,    // Tier B
+                        1, 1, 1, 1, // Tier C
+                        1, 1, 1, 1, // Tier D
+                        1, 1, 1     // Tier E
                     }
                 }
             };
@@ -501,11 +504,11 @@ public static class RundownFactory
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>MONTHLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
 
-                TierA_Count = Generator.Seed == "2025_01" ? 1 : 2,
+                TierA_Count = Generator.Seed == "2025_02" ? 2 : 1,
                 TierB_Count = 3,
                 TierC_Count = 4,
-                TierD_Count = Generator.Seed == "2025_01" ? 4 : 3,
-                TierE_Count = 2,
+                TierD_Count = 4,
+                TierE_Count = Generator.Seed == "2025_02" ? 3 : 2,
 
                 ///
                 /// Use the seed pool to re-roll levels. Start by setting these at 1 and incrementing each time
