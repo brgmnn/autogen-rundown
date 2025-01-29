@@ -412,8 +412,11 @@ namespace AutogenRundown.DataBlocks
                 case Complex.Mining:
                 {
                     // reactor_open_HA_01 does not work for reactor shutdown without mods. EOS does allow this though.
-                    // CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_open_HA_01.prefab";
-                    CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_HA_02.prefab";
+                    CustomGeomorph = Generator.Pick(new List<string>
+                    {
+                        "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_open_HA_01.prefab",
+                        "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_HA_02.prefab"
+                    });
                     SubComplex = SubComplex.Refinery;
                     IgnoreRandomGeomorphRotation = true;
                     Coverage = new CoverageMinMax { Min = 40.0, Max = 40.0 };
