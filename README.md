@@ -17,9 +17,6 @@ TODO:
   * Use Zone Prefix Override to alert to specific tiles.
   * Enable unit tests again after fixing chained puzzles.
   * Don't allow small item pickup to have so many extras that we don't need to do all the zones
-  * Reactor Shutdown:
-    * Add exit trickle for all versions
-    * Add D/E tier scans for it
   * Add R8A1 garden hub tile to hubs
 
 Seed: 2024_12_19
@@ -27,8 +24,6 @@ Seed: 2024_12_19
 
 Seed: 2024_12_18
 * Still too many zones in A retrieve big items
-* Some units are not spawning, looks to be OnlyChargers with Miniboss as the setting
-    Seems to be because we don't define units
 
 Seed: 201
 * D3, Main bulkhead door spawned with secret tank and it looks buggy.
