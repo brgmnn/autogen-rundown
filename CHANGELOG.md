@@ -3,6 +3,25 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.46.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.46.0) — January 28, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Completely reworked Reactor Shutdown
+  * Reactor Shutdown objectives can now have locked reactors requiring fetching a password
+  * Alarms and waves reworked
+* Added King of the Hill special terminal command
+
+### Changes
+
+* Fix Terminal Uplink objectives not having team scan to start the uplink
+* Fixed open reactor layout to work for Reactor Shutdown
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.45.0...v0.46.0
+
+
 ## [v0.45.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.45.0) — January 22, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
