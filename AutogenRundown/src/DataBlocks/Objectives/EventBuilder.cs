@@ -23,6 +23,29 @@ namespace AutogenRundown.DataBlocks.Objectives
 
             return events;
         }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="events"></param>
+        /// <param name="bulkhead"></param>
+        /// <param name="zoneIndex"></param>
+        /// <param name="message"></param>
+        /// <param name="trigger"></param>
+        /// <param name="delay"></param>
+        /// <returns></returns>
+        public static ICollection<WardenObjectiveEvent> AddOpenDoor(
+            this ICollection<WardenObjectiveEvent> events,
+            Bulkhead bulkhead,
+            int zoneIndex,
+            string? message = null,
+            WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
+            double delay = 0.0)
+        {
+            EventBuilder.AddOpenDoor(events, bulkhead, zoneIndex, message, trigger, delay);
+
+            return events;
+        }
         #endregion
 
         /// <summary>
