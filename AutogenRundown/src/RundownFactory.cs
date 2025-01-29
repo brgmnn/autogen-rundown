@@ -458,7 +458,6 @@ public static class RundownFactory
             /// Use the seed pool to re-roll levels. Start by setting these at 1 and incrementing each time
             /// there's a level lockup
             ///
-            /// "2024_12" - December 2024: All levels checked for lockup
             /// "2025_01" - January  2025:
             /// "2025_02" - February 2025:
             ///
@@ -467,11 +466,11 @@ public static class RundownFactory
                 {
                     "2025_01", new()
                     {
-                        5,          // Tier A - yes
-                        5, 6, 5,    // Tier B - yes
-                        6, 5, 6, 6, // Tier C - yes
-                        5, 8, 5, 5, // Tier D - yes (D2 broken exit spawn)
-                        5, 5        // Tier E
+                        5,          // Tier A - y
+                        5, 6, 5,    // Tier B - y,y,y
+                        6, 5, 6, 6, // Tier C - y,y,y,y
+                        5, 8, 5, 5, // Tier D - y,y,y,y
+                        5, 6        // Tier E - y,y
                     }
                 },
                 {
