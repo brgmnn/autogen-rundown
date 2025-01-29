@@ -123,7 +123,7 @@ Follow the installation instructions again, check yes to overwrite all files.
       * [ ] Rundown 8 Geomorphs
     * Curated event layouts
       * [ ] Class 10+ alarm room
-      * [ ] King of the hill room
+      * [x] King of the hill room
     * [ ] Specialized bulkhead geomorphs and layouts
     * [ ] Bulkheads behind bulkheads
   * Challenges
