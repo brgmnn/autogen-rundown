@@ -66,29 +66,19 @@ public static class RundownFactory
                 Bulkhead = Bulkhead.Main,
                 Complex = Complex.Mining,
                 Complexity = Complexity.Low,
-                Tier = "A",
-                Objective = WardenObjectiveType.ReactorShutdown,
+                Tier = "E",
+                Objective = WardenObjectiveType.SpecialTerminalCommand,
             };
             mainDirector.GenPoints();
 
-            // var extremeDirector = new BuildDirector
-            // {
-            //     Bulkhead = Bulkhead.Extreme,
-            //     Complex = Complex.Mining,
-            //     Complexity = Complexity.Low,
-            //     Tier = "C",
-            //     Objective = WardenObjectiveType.PowerCellDistribution,
-            // };
-            // extremeDirector.GenPoints();
-
-            var settings = new LevelSettings("A");
-            //settings.Modifiers.Add(LevelModifiers.Fog);
+            var settings = new LevelSettings("E");
+            settings.Modifiers.Add(LevelModifiers.Chargers);
 
             var testLevel = Level.Build(
-                new Level("A")
+                new Level("E")
                 {
-                    Tier = "A",
-                    Name = "Reactor Shutdown",
+                    Tier = "E",
+                    Name = "Debug Test",
                     Complex = Complex.Mining,
                     MainDirector = mainDirector,
                     // SecondaryDirector = extremeDirector,
