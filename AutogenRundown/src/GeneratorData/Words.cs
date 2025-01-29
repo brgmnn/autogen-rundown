@@ -45,13 +45,14 @@
                 {
                     // "Bleakburrow", "Mooncrypt", "Obsidian Grotto", "Chillmarrow", "Dampvault", "Umbral Cage",
                     // "Nightfissure", "Wraithclot", "Pale Labyrinth", "Blackmarsh"
-                    "Nova Vault"
+                    "Nova Vault" // TODO: remove and use random names after 31/01/2025
                 }),
                 // February
                 2 => Generator.Pick(new List<string>
                 {
-                    "Depthshroud", "Fallowchasm", "Ravencrypt", "Silent Hollow", "Marrowfane", "Crowvault",
-                    "Lurid Veil", "Creviceborn", "Dire Maw", "Sunken Gloom"
+                    // "Depthshroud", "Fallowchasm", "Ravencrypt", "Silent Hollow", "Marrowfane", "Crowvault",
+                    // "Lurid Veil", "Creviceborn", "Dire Maw", "Sunken Gloom"
+                    "Kovac's Shroud"
                 }),
                 // March
                 3 => Generator.Pick(new List<string>
