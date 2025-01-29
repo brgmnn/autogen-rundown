@@ -766,6 +766,15 @@ public partial record class WardenObjective : DataBlock
 
         reactorDefinition.PuzzleOnVerification = ChainedPuzzle.FindOrPersist(puzzle);
 
+        // Add event to turn off the lights as not all the reactor geos correctly do this
+        reactorDefinition.EventsOnActive.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.AllLightsOff,
+                Trigger = WardenObjectiveEventTrigger.OnStart,
+                Delay = 0.0
+            });
+
         // We have to force complete the objective in EOS
         reactorDefinition.EventsOnComplete.Add(
             new WardenObjectiveEvent
