@@ -50,25 +50,29 @@ public partial record class WardenObjective : DataBlock
             {
                 (0.60, SpecialCommand.LightsOff),
                 (0.15, SpecialCommand.FillWithFog),
-                (0.15, SpecialCommand.ErrorAlarm)
+                (0.15, SpecialCommand.ErrorAlarm),
+                (1.0, SpecialCommand.KingOfTheHill)
             }),
             "C" => Generator.Select(new List<(double, SpecialCommand)>
             {
                 (0.40, SpecialCommand.LightsOff),
                 (0.30, SpecialCommand.FillWithFog),
-                (0.30, SpecialCommand.ErrorAlarm)
+                (0.30, SpecialCommand.ErrorAlarm),
+                (1.0, SpecialCommand.KingOfTheHill)
             }),
             "D" => Generator.Select(new List<(double, SpecialCommand)>
             {
                 (0.33, SpecialCommand.LightsOff),
                 (0.33, SpecialCommand.FillWithFog),
-                (0.34, SpecialCommand.ErrorAlarm)
+                (0.34, SpecialCommand.ErrorAlarm),
+                (1.0, SpecialCommand.KingOfTheHill)
             }),
             "E" => Generator.Select(new List<(double, SpecialCommand)>
             {
-                (0.10, SpecialCommand.LightsOff),
-                (0.40, SpecialCommand.FillWithFog),
-                (0.50, SpecialCommand.ErrorAlarm)
+                (0.05, SpecialCommand.LightsOff),
+                (0.15, SpecialCommand.FillWithFog),
+                (0.30, SpecialCommand.ErrorAlarm),
+                (0.50, SpecialCommand.KingOfTheHill)
             }),
         };
     }
