@@ -41,31 +41,30 @@ public partial record class WardenObjective : DataBlock
         {
             "A" => Generator.Select(new List<(double, SpecialCommand)>
             {
-                (1.0, SpecialCommand.KingOfTheHill)
-                // (0.80, SpecialCommand.LightsOff),
-                // (0.15, SpecialCommand.FillWithFog),
-                // (0.05, SpecialCommand.ErrorAlarm)
+                (0.50, SpecialCommand.LightsOff),
+                (0.07, SpecialCommand.FillWithFog),
+                (0.43, SpecialCommand.KingOfTheHill)
             }),
             "B" => Generator.Select(new List<(double, SpecialCommand)>
             {
-                (0.60, SpecialCommand.LightsOff),
-                (0.15, SpecialCommand.FillWithFog),
-                (0.15, SpecialCommand.ErrorAlarm),
-                (1.0, SpecialCommand.KingOfTheHill)
+                (0.30, SpecialCommand.LightsOff),
+                (0.10, SpecialCommand.FillWithFog),
+                (0.10, SpecialCommand.ErrorAlarm),
+                (0.50, SpecialCommand.KingOfTheHill)
             }),
             "C" => Generator.Select(new List<(double, SpecialCommand)>
             {
-                (0.40, SpecialCommand.LightsOff),
-                (0.30, SpecialCommand.FillWithFog),
-                (0.30, SpecialCommand.ErrorAlarm),
-                (1.0, SpecialCommand.KingOfTheHill)
+                (0.30, SpecialCommand.LightsOff),
+                (0.10, SpecialCommand.FillWithFog),
+                (0.15, SpecialCommand.ErrorAlarm),
+                (0.45, SpecialCommand.KingOfTheHill)
             }),
             "D" => Generator.Select(new List<(double, SpecialCommand)>
             {
-                (0.33, SpecialCommand.LightsOff),
-                (0.33, SpecialCommand.FillWithFog),
-                (0.34, SpecialCommand.ErrorAlarm),
-                (1.0, SpecialCommand.KingOfTheHill)
+                (0.25, SpecialCommand.LightsOff),
+                (0.15, SpecialCommand.FillWithFog),
+                (0.20, SpecialCommand.ErrorAlarm),
+                (0.40, SpecialCommand.KingOfTheHill)
             }),
             "E" => Generator.Select(new List<(double, SpecialCommand)>
             {
@@ -268,7 +267,63 @@ public partial record class WardenObjective : DataBlock
         // King of the hill has extra scan
         if (SpecialTerminalCommand_Type == SpecialCommand.KingOfTheHill)
         {
-            MidPuzzle = ChainedPuzzle.FindOrPersist(ChainedPuzzle.AlarmClass1_Sustained_MegaHuge);
+            var population = WavePopulation.Baseline;
+
+            if (level.Settings.HasShadows())
+                population = WavePopulation.Baseline_Shadows;
+            else if (level.Settings.HasChargers())
+                population = WavePopulation.Baseline_Chargers;
+            else if (level.Settings.HasNightmares())
+                population = WavePopulation.Baseline_Nightmare;
+
+            var settings = director.Tier switch
+            {
+                "A" => WaveSettings.Baseline_Easy,
+                "B" => WaveSettings.Baseline_Normal,
+                "C" => WaveSettings.Baseline_Hard,
+                "D" => WaveSettings.Baseline_VeryHard,
+                "E" => WaveSettings.Baseline_VeryHard
+            };
+
+            MidPuzzle = ChainedPuzzle.FindOrPersist(
+                ChainedPuzzle.AlarmClass1_Sustained_MegaHuge with
+                {
+                    Population = population,
+                    Settings = settings
+                });
+
+            // Extra boss waves?
+            var events = new List<WardenObjectiveEvent>();
+
+            if (director.Tier == "C")
+            {
+                if (Generator.Flip(0.6))
+                    events.AddSpawnWave(GenericWave.SinglePouncer, Generator.Between(90, 120));
+            }
+            else if (director.Tier == "D")
+            {
+                if (Generator.Flip(0.9))
+                    events.AddSpawnWave(GenericWave.SingleTankPotato, Generator.Between(20, 180));
+
+                if (Generator.Flip(0.2))
+                    events.AddSpawnWave(GenericWave.SingleTankPotato, Generator.Between(120, 180));
+            }
+            else if (director.Tier == "E")
+            {
+                if (Generator.Flip(0.5))
+                    events.AddSpawnWave(GenericWave.SingleMother, Generator.Between(120, 240));
+
+                if (Generator.Flip(0.5))
+                    events.AddSpawnWave(GenericWave.SingleTank, Generator.Between(20, 180));
+
+                if (Generator.Flip(0.9))
+                    events.AddSpawnWave(GenericWave.SingleTankPotato, Generator.Between(20, 180));
+
+                if (Generator.Flip(0.2))
+                    events.AddSpawnWave(GenericWave.SingleTankPotato, Generator.Between(120, 180));
+            }
+
+            EventsOnActivate.AddRange(events);
         }
 
         ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
