@@ -167,6 +167,20 @@ public class ComplexResourceSet
         ///
         /// Service (Floodways / Gardens) custom geomorph updates
         ///
+
+        // Base game
+        resourceSet.AddPrefab(Complex.Service, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_dead_end_HA_02.prefab",
+            SubComplex = SubComplex.Floodways
+        });
+        resourceSet.AddPrefab(Complex.Service, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            // Mega Nightmare mother room
+            Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03_V2.prefab",
+            SubComplex = SubComplex.Floodways
+        });
+
         // Floweria tiles
         resourceSet.AddPrefab(Complex.Service, "CustomGeomorphs_Objective_1x1", new Prefab()
         {

@@ -611,7 +611,16 @@ namespace AutogenRundown.DataBlocks
                     break;
 
                 case Complex.Service:
-                    GenHubGeomorph(complex);
+                    (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                    {
+                        // --- Good ---
+                        (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_01.prefab", new CoverageMinMax { Min = 50, Max = 60 }),
+                        (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03.prefab", new CoverageMinMax { Min = 30, Max = 50 }),
+
+                        // Mega Nightmare Mother room
+                        // TODO: do we actually want it for this? Seems cool
+                        (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03_V2.prefab", new CoverageMinMax { Min = 50, Max = 60 }),
+                    });
                     break;
             }
         }
