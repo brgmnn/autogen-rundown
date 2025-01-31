@@ -24,7 +24,7 @@ namespace AutogenRundown;
 [BepInDependency("FlowGeos")]
 public class Plugin : BasePlugin
 {
-    public const string Version = "0.46.0";
+    public const string Version = "0.47.0";
 
     public const string Name = "the_tavern-AutogenRundown";
 
