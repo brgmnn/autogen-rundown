@@ -273,7 +273,7 @@ namespace AutogenRundown
         public static void SetMonthSeed()
         {
             var utcNow = DateTime.UtcNow;
-            // var utcNow = new DateTime(2025, 1, 1, 10, 0, 0); // Debugging specific months
+            // var utcNow = new DateTime(2025, 2, 1, 10, 0, 0); // Debugging specific months
             var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             var pst = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
 
@@ -309,10 +309,12 @@ namespace AutogenRundown
 
         /// <summary>
         /// Reload the generators
+        ///
+        /// Optionally takes a build seed parameter for us to roll with build seeds
         /// </summary>
-        public static void Reload()
+        public static void Reload(string? buildSeed = null)
         {
-            Random = new Random(GetHashCode(Seed));
+            Random = new Random(GetHashCode(Seed + (buildSeed != null ? $"{buildSeed}" : "")));
         }
 
         public static void ReadOrSetSeed(string seed = "")

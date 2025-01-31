@@ -40,19 +40,23 @@ public static class RundownFactory
         #region A-Tier Levels
         for (int i = 0; i < rundown.TierA_Count; i++)
         {
+            var buildSeed = 1;
+
+            if (rundown.BuildSeedPool.Count > 0)
+            {
+                buildSeed = rundown.BuildSeedPool[0];
+                rundown.BuildSeedPool.RemoveAt(0);
+
+                Generator.Reload($"A{i+1}_{buildSeed}");
+            }
+
             var level = Level.Build(
                 new Level("A")
                 {
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
-
+                    BuildSeed = buildSeed
                 });
-
-            if (rundown.BuildSeedPool.Count > 0)
-            {
-                level.BuildSeed = rundown.BuildSeedPool[0];
-                rundown.BuildSeedPool.RemoveAt(0);
-            }
 
             rundown.AddLevel(level);
         }
@@ -95,18 +99,23 @@ public static class RundownFactory
         #region B-Tier Levels
         for (int i = 0; i < rundown.TierB_Count; i++)
         {
+            var buildSeed = 1;
+
+            if (rundown.BuildSeedPool.Count > 0)
+            {
+                buildSeed = rundown.BuildSeedPool[0];
+                rundown.BuildSeedPool.RemoveAt(0);
+
+                Generator.Reload($"B{i+1}_{buildSeed}");
+            }
+
             var level = Level.Build(
                 new Level("B")
                 {
                     Name = Generator.Draw(levelNames)!,
-                    Index = i + 1
+                    Index = i + 1,
+                    BuildSeed = buildSeed
                 });
-
-            if (rundown.BuildSeedPool.Count > 0)
-            {
-                level.BuildSeed = rundown.BuildSeedPool[0];
-                rundown.BuildSeedPool.RemoveAt(0);
-            }
 
             rundown.AddLevel(level);
         }
@@ -115,18 +124,23 @@ public static class RundownFactory
         #region C-Tier Levels
         for (int i = 0; i < rundown.TierC_Count; i++)
         {
+            var buildSeed = 1;
+
+            if (rundown.BuildSeedPool.Count > 0)
+            {
+                buildSeed = rundown.BuildSeedPool[0];
+                rundown.BuildSeedPool.RemoveAt(0);
+
+                Generator.Reload($"C{i+1}_{buildSeed}");
+            }
+
             var level = Level.Build(
                 new Level("C")
                 {
                     Name = Generator.Draw(levelNames)!,
-                    Index = i + 1
+                    Index = i + 1,
+                    BuildSeed = buildSeed
                 });
-
-            if (rundown.BuildSeedPool.Count > 0)
-            {
-                level.BuildSeed = rundown.BuildSeedPool[0];
-                rundown.BuildSeedPool.RemoveAt(0);
-            }
 
             rundown.AddLevel(level);
         }
@@ -210,18 +224,23 @@ public static class RundownFactory
         // D levels
         for (int i = 1; i < rundown.TierD_Count + 1; i++)
         {
+            var buildSeed = 1;
+
+            if (rundown.BuildSeedPool.Count > 0)
+            {
+                buildSeed = rundown.BuildSeedPool[0];
+                rundown.BuildSeedPool.RemoveAt(0);
+
+                Generator.Reload($"D{i+1}_{buildSeed}");
+            }
+
             var level = Level.Build(
                 new Level("D")
                 {
                     Name = Generator.Draw(levelNames)!,
-                    Index = i + 1
+                    Index = i + 1,
+                    BuildSeed = buildSeed
                 });
-
-            if (rundown.BuildSeedPool.Count > 0)
-            {
-                level.BuildSeed = rundown.BuildSeedPool[0];
-                rundown.BuildSeedPool.RemoveAt(0);
-            }
 
             rundown.AddLevel(level);
         }
@@ -328,18 +347,23 @@ public static class RundownFactory
         // E levels
         for (int i = 0; i < rundown.TierE_Count; i++)
         {
+            var buildSeed = 1;
+
+            if (rundown.BuildSeedPool.Count > 0)
+            {
+                buildSeed = rundown.BuildSeedPool[0];
+                rundown.BuildSeedPool.RemoveAt(0);
+
+                Generator.Reload($"E{i+1}_{buildSeed}");
+            }
+
             var level = Level.Build(
                 new Level("E")
                 {
                     Name = Generator.Draw(levelNames)!,
-                    Index = i + 1
+                    Index = i + 1,
+                    BuildSeed = buildSeed
                 });
-
-            if (rundown.BuildSeedPool.Count > 0)
-            {
-                level.BuildSeed = rundown.BuildSeedPool[0];
-                rundown.BuildSeedPool.RemoveAt(0);
-            }
 
             rundown.AddLevel(level);
         }
@@ -457,6 +481,9 @@ public static class RundownFactory
             ///
             /// Use the seed pool to re-roll levels. Start by setting these at 1 and incrementing each time
             /// there's a level lockup
+            /// TODO: Clear Path objectives seem to fail to place the exit zone often
+            /// TODO: the objective roles seem very samey. Check the seed reroll and
+            ///       re-roll all of these.
             ///
             /// "2025_01" - January  2025:
             /// "2025_02" - February 2025:
@@ -464,6 +491,7 @@ public static class RundownFactory
             var buildPools = new Dictionary<string, List<int>>()
             {
                 {
+                    // TODO: delete after 01/02/2025
                     "2025_01", new()
                     {
                         5,          // Tier A - y
@@ -476,11 +504,11 @@ public static class RundownFactory
                 {
                     "2025_02", new()
                     {
-                        1, 1,       // Tier A
-                        1, 1, 1,    // Tier B
-                        1, 1, 1, 1, // Tier C
-                        1, 1, 1, 1, // Tier D
-                        1, 1, 1     // Tier E
+                        1, 3,       // Tier A - y,y
+                        1, 1, 1,    // Tier B - y,y,y
+                        1, 1, 1, 3, // Tier C - y,y,y,y
+                        1, 1, 1, 9, // Tier D - y,y,y,y
+                        2, 4, 7     // Tier E - y,y,y
                     }
                 }
             };

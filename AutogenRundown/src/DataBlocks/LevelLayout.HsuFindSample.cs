@@ -1,7 +1,4 @@
-﻿using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
-using AutogenRundown.DataBlocks.Objectives;
-using AutogenRundown.DataBlocks.ZoneData;
-using AutogenRundown.DataBlocks.Zones;
+﻿using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
