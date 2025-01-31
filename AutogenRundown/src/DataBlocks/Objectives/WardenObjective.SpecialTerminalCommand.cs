@@ -255,8 +255,11 @@ public partial record class WardenObjective : DataBlock
             ///
             case SpecialCommand.KingOfTheHill:
             {
-                SpecialTerminalCommand = "OPEN_SECURITY_DOORS";
-                SpecialTerminalCommandDesc = "Opens all security doors";
+                (SpecialTerminalCommand, SpecialTerminalCommandDesc) = Generator.Pick(new List<(string, string)>
+                {
+                    ("OPEN_SECURITY_DOORS", "Opens all security doors"),
+                    ("RELEASE_CONTAINMENT", "Open containment chambers"),
+                });
                 break;
             }
         }
