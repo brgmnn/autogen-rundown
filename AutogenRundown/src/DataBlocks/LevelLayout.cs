@@ -1067,11 +1067,28 @@ namespace AutogenRundown.DataBlocks
                 }
 
                 /**
-                 * For level generation these objectives follow a more generic pattern of creating zones for those
-                 * areas without too much extra going in to it for now
+                 * This is finding the HSU
                  */
                 case WardenObjectiveType.HsuFindSample:
+                {
+                    var start = level.Planner.GetLastZone(director.Bulkhead)!;
+
+                    layout.BuildLayout_HsuFindSample(director, objective, (ZoneNode)start);
+                    break;
+                }
+
+                /**
+                 * Gather small items such as GLPs or plant samples
+                 */
                 case WardenObjectiveType.GatherSmallItems:
+                {
+                    var start = level.Planner.GetLastZone(director.Bulkhead)!;
+
+                    layout.BuildLayout_GatherSmallItems(director, objective, (ZoneNode)start);
+                    break;
+                }
+
+                // Something has gone wrong if we are reaching this
                 default:
                 {
                     var start = level.Planner.GetLastZone(director.Bulkhead);

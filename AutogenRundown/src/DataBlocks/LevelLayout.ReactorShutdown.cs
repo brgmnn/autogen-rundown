@@ -1,5 +1,4 @@
 ﻿using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
-using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
