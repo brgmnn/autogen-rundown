@@ -3,6 +3,18 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.47.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.47.0) — January 31, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Add `RELEASE_CONTAINMENT` variant of King of the Hill / Special Terminal Command objective.
+* Check 02/2025 monthly seeds for level lock.
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.46.0...v0.47.0
+
+
 ## [v0.46.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.46.0) — January 28, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
