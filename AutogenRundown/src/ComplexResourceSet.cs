@@ -106,6 +106,13 @@ public class ComplexResourceSet
         ///
         /// Mining (Storage / Refinery / Digsite) custom geomorphs
         ///
+        // R5D1 overload pit hub
+        resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_dig_site_04.prefab",
+            SubComplex = SubComplex.DigSite
+        });
+
         // R8B3 tower
         resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Objective_1x1", new Prefab()
         {
