@@ -312,9 +312,9 @@ namespace AutogenRundown
         ///
         /// Optionally takes a build seed parameter for us to roll with build seeds
         /// </summary>
-        public static void Reload(string? buildSeed = null)
+        public static void Reload()
         {
-            Random = new Random(GetHashCode(Seed + (buildSeed != null ? $"{buildSeed}" : "")));
+            Random = new Random(GetHashCode(Seed));
         }
 
         public static void ReadOrSetSeed(string seed = "")
@@ -328,6 +328,16 @@ namespace AutogenRundown
             }
 
             GenerateTimeSeed();
+        }
+
+        /// <summary>
+        /// Advances the random sequence by `rounds` number of iterations.
+        /// </summary>
+        /// <param name="rounds">How many rounds to advance the random sequence</param>
+        public static void AdvanceSequence(int rounds)
+        {
+            while (rounds-- > 0)
+                Random.Next();
         }
 
         public static void WriteSeed()

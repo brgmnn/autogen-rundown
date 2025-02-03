@@ -47,7 +47,7 @@ public static class RundownFactory
                 buildSeed = rundown.BuildSeedPool[0];
                 rundown.BuildSeedPool.RemoveAt(0);
 
-                Generator.Reload($"A{i+1}_{buildSeed}");
+                Generator.AdvanceSequence(buildSeed);
             }
 
             var level = Level.Build(
@@ -68,22 +68,22 @@ public static class RundownFactory
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
-                Complex = Complex.Mining,
+                Complex = Complex.Tech,
                 Complexity = Complexity.Low,
-                Tier = "E",
-                Objective = WardenObjectiveType.SpecialTerminalCommand,
+                Tier = "A",
+                Objective = WardenObjectiveType.ReactorShutdown,
             };
             mainDirector.GenPoints();
 
-            var settings = new LevelSettings("E");
+            var settings = new LevelSettings("A");
             settings.Modifiers.Add(LevelModifiers.Chargers);
 
             var testLevel = Level.Build(
-                new Level("E")
+                new Level("A")
                 {
-                    Tier = "E",
+                    Tier = "A",
                     Name = "Debug Test",
-                    Complex = Complex.Mining,
+                    Complex = Complex.Tech,
                     MainDirector = mainDirector,
                     // SecondaryDirector = extremeDirector,
                     Settings = settings,
@@ -106,7 +106,7 @@ public static class RundownFactory
                 buildSeed = rundown.BuildSeedPool[0];
                 rundown.BuildSeedPool.RemoveAt(0);
 
-                Generator.Reload($"B{i+1}_{buildSeed}");
+                Generator.AdvanceSequence(buildSeed);
             }
 
             var level = Level.Build(
@@ -131,7 +131,7 @@ public static class RundownFactory
                 buildSeed = rundown.BuildSeedPool[0];
                 rundown.BuildSeedPool.RemoveAt(0);
 
-                Generator.Reload($"C{i+1}_{buildSeed}");
+                Generator.AdvanceSequence(buildSeed);
             }
 
             var level = Level.Build(
@@ -231,7 +231,7 @@ public static class RundownFactory
                 buildSeed = rundown.BuildSeedPool[0];
                 rundown.BuildSeedPool.RemoveAt(0);
 
-                Generator.Reload($"D{i+1}_{buildSeed}");
+                Generator.AdvanceSequence(buildSeed);
             }
 
             var level = Level.Build(
@@ -354,7 +354,7 @@ public static class RundownFactory
                 buildSeed = rundown.BuildSeedPool[0];
                 rundown.BuildSeedPool.RemoveAt(0);
 
-                Generator.Reload($"E{i+1}_{buildSeed}");
+                Generator.AdvanceSequence(buildSeed);
             }
 
             var level = Level.Build(
