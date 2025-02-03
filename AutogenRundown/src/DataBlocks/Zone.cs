@@ -426,9 +426,11 @@ namespace AutogenRundown.DataBlocks
 
                 case Complex.Tech:
                 {
-                    //               "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_01.prefab"
-                    //               "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_02.prefab"
-                    CustomGeomorph = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_01.prefab";
+                    CustomGeomorph = Generator.Pick(new List<string>
+                    {
+                        "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_01.prefab",
+                        "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_02.prefab"
+                    });
                     SubComplex = SubComplex.Lab;
                     IgnoreRandomGeomorphRotation = true;
                     Coverage = new CoverageMinMax { Min = 40.0, Max = 40.0 };
