@@ -80,110 +80,91 @@ namespace AutogenRundown.DataBlocks
             // Door pack is used to select enemies that spawn behind the door.
             var doorPack = director.Tier switch
             {
-                "B" => new List<VanillaEnemyGroup>
+                "B" => new List<(double, int, VanillaEnemyGroup)>
                 {
-                    VanillaEnemyGroup.BloodDoor_Easy,
-                    VanillaEnemyGroup.BloodDoor_Easy,
-                    VanillaEnemyGroup.BloodDoor_Medium
+                    (1.0, 2, VanillaEnemyGroup.BloodDoor_Easy),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Medium)
                 },
 
-                "C" => new List<VanillaEnemyGroup>
+                "C" => new List<(double, int, VanillaEnemyGroup)>
                 {
-                    VanillaEnemyGroup.BloodDoor_Easy,
-                    VanillaEnemyGroup.BloodDoor_Medium,
-                    VanillaEnemyGroup.BloodDoor_Medium,
-                    VanillaEnemyGroup.BloodDoor_Bigs,
-                    VanillaEnemyGroup.BloodDoor_Hybrids_Easy,
-                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Easy),
+                    (1.0, 2, VanillaEnemyGroup.BloodDoor_Medium),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Bigs),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Hybrids_Easy),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Hybrids_Medium)
                 },
 
-                "D" => new List<VanillaEnemyGroup>
+                "D" => new List<(double, int, VanillaEnemyGroup)>
                 {
-                    VanillaEnemyGroup.BloodDoor_Medium,
-                    VanillaEnemyGroup.BloodDoor_Medium,
-                    VanillaEnemyGroup.BloodDoor_Medium,
-                    VanillaEnemyGroup.BloodDoor_Bigs,
-                    VanillaEnemyGroup.BloodDoor_Bigs,
-                    VanillaEnemyGroup.BloodDoor_Chargers_Easy,
-                    VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy,
-                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
-                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
-                    VanillaEnemyGroup.BloodDoor_Shadows_Easy,
-                    VanillaEnemyGroup.BloodDoor_BossMother
+                    (1.0, 3, VanillaEnemyGroup.BloodDoor_Medium),
+                    (1.0, 2, VanillaEnemyGroup.BloodDoor_Bigs),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Chargers_Easy),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy),
+                    (1.0, 2, VanillaEnemyGroup.BloodDoor_Hybrids_Medium),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Shadows_Easy),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_BossMother)
                 },
 
-                "E" => new List<VanillaEnemyGroup>
+                "E" => new List<(double, int, VanillaEnemyGroup)>
                 {
-                    VanillaEnemyGroup.BloodDoor_Medium,
-                    VanillaEnemyGroup.BloodDoor_Medium,
-                    VanillaEnemyGroup.BloodDoor_Bigs,
-                    VanillaEnemyGroup.BloodDoor_Bigs,
-                    VanillaEnemyGroup.BloodDoor_Chargers_Easy,
-                    VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy,
-                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
-                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
-                    VanillaEnemyGroup.BloodDoor_Shadows_Easy,
-                    VanillaEnemyGroup.BloodDoor_BossMother,
-                    VanillaEnemyGroup.BloodDoor_BossMother
+                    (1.0, 2, VanillaEnemyGroup.BloodDoor_Medium),
+                    (1.0, 2, VanillaEnemyGroup.BloodDoor_Bigs),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Chargers_Easy),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy),
+                    (1.0, 2, VanillaEnemyGroup.BloodDoor_Hybrids_Medium),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Shadows_Easy),
+                    (1.0, 2, VanillaEnemyGroup.BloodDoor_BossMother)
                 },
 
-                _ => new List<VanillaEnemyGroup>()
+                _ => new List<(double, int, VanillaEnemyGroup)>()
             };
 
             // Area pack picks enemies to spawn further back, if we successfully roll to add them.
             var areaPack = director.Tier switch
             {
-                "B" => new List<VanillaEnemyGroup>
+                "B" => new List<(double, int, VanillaEnemyGroup)>
                 {
-                    VanillaEnemyGroup.BloodDoor_Easy,
-                    VanillaEnemyGroup.BloodDoor_Medium
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Easy),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Medium)
                 },
 
-                "C" => new List<VanillaEnemyGroup>
+                "C" => new List<(double, int, VanillaEnemyGroup)>
                 {
-                    VanillaEnemyGroup.BloodDoor_Easy,
-                    VanillaEnemyGroup.BloodDoor_Medium,
-                    VanillaEnemyGroup.BloodDoor_Medium,
-                    VanillaEnemyGroup.BloodDoor_Bigs,
-                    VanillaEnemyGroup.BloodDoor_Chargers_Easy,
-                    VanillaEnemyGroup.BloodDoor_Hybrids_Easy,
-                    VanillaEnemyGroup.BloodDoor_Shadows_Easy,
-                    VanillaEnemyGroup.BloodDoor_Pouncers
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Easy),
+                    (1.0, 2, VanillaEnemyGroup.BloodDoor_Medium),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Bigs),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Chargers_Easy),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Hybrids_Easy),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Shadows_Easy),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Pouncers)
                 },
 
-                "D" => new List<VanillaEnemyGroup>
+                "D" => new List<(double, int, VanillaEnemyGroup)>
                 {
-                    VanillaEnemyGroup.BloodDoor_Medium,
-                    VanillaEnemyGroup.BloodDoor_Medium,
-                    VanillaEnemyGroup.BloodDoor_Medium,
-                    VanillaEnemyGroup.BloodDoor_Bigs,
-                    VanillaEnemyGroup.BloodDoor_Bigs,
-                    VanillaEnemyGroup.BloodDoor_Chargers_Easy,
-                    VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy,
-                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
-                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
-                    VanillaEnemyGroup.BloodDoor_Shadows_Easy,
-                    VanillaEnemyGroup.BloodDoor_BossMother,
-                    VanillaEnemyGroup.BloodDoor_Pouncers
+                    (1.0, 3, VanillaEnemyGroup.BloodDoor_Medium),
+                    (1.0, 2, VanillaEnemyGroup.BloodDoor_Bigs),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Chargers_Easy),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy),
+                    (1.0, 2, VanillaEnemyGroup.BloodDoor_Hybrids_Medium),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Shadows_Easy),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_BossMother),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Pouncers)
                 },
 
-                "E" => new List<VanillaEnemyGroup>
+                "E" => new List<(double, int, VanillaEnemyGroup)>
                 {
-                    VanillaEnemyGroup.BloodDoor_Medium,
-                    VanillaEnemyGroup.BloodDoor_Medium,
-                    VanillaEnemyGroup.BloodDoor_Medium,
-                    VanillaEnemyGroup.BloodDoor_Bigs,
-                    VanillaEnemyGroup.BloodDoor_Bigs,
-                    VanillaEnemyGroup.BloodDoor_Chargers_Easy,
-                    VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy,
-                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
-                    VanillaEnemyGroup.BloodDoor_Hybrids_Medium,
-                    VanillaEnemyGroup.BloodDoor_Shadows_Easy,
-                    VanillaEnemyGroup.BloodDoor_BossMother,
-                    VanillaEnemyGroup.BloodDoor_Pouncers
+                    (1.0, 3, VanillaEnemyGroup.BloodDoor_Medium),
+                    (1.0, 2, VanillaEnemyGroup.BloodDoor_Bigs),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Chargers_Easy),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy),
+                    (1.0, 2, VanillaEnemyGroup.BloodDoor_Hybrids_Medium),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Shadows_Easy),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_BossMother),
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Pouncers)
                 },
 
-                _ => new List<VanillaEnemyGroup>()
+                _ => new List<(double, int, VanillaEnemyGroup)>()
             };
 
             // Do not add blood doors to Zone 0, these are always either the elevator or bulkhead doors.
@@ -194,8 +175,8 @@ namespace AutogenRundown.DataBlocks
 
                     zone.BloodDoor = new BloodDoor
                     {
-                        EnemyGroupInfrontOfDoor = (uint)Generator.Draw(doorPack),
-                        EnemyGroupInArea = withArea ? (uint)Generator.Draw(areaPack) : 0,
+                        EnemyGroupInfrontOfDoor = (uint)Generator.DrawSelect(doorPack),
+                        EnemyGroupInArea = withArea ? (uint)Generator.DrawSelect(areaPack) : 0,
                         EnemyGroupsInArea = withArea ? 1 : 0,
                     };
                 }
@@ -852,7 +833,8 @@ namespace AutogenRundown.DataBlocks
                     }
 
                 /**
-                 *
+                 * These all involve entering a command on a terminal, though this includes things
+                 * like King of the Hill
                  */
                 case WardenObjectiveType.SpecialTerminalCommand:
                 {
@@ -1129,9 +1111,6 @@ namespace AutogenRundown.DataBlocks
                     //       of these more dynamically
                     if (node.Branch == "primary")
                         zone.ZoneExpansion = direction.Forward;
-
-                    // if (node.Bulkhead.HasFlag(Bulkhead.StartingArea))
-                    //     zone.StartPosition = ZoneEntranceBuildFrom.Furthest;
 
                     layout.Zones.Add(zone);
 
