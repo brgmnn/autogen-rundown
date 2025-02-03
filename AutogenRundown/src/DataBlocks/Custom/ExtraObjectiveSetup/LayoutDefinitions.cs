@@ -11,6 +11,11 @@ public class LayoutDefinitions
     [JsonIgnore]
     public string Name { get; set; } = "";
 
+    /// <summary>
+    /// Note that this is _always_ the main level layout. Never the extreme/overload layouts.
+    /// Presumably this is because these definitions can be applied across multiple level
+    /// layouts.
+    /// </summary>
     public uint MainLevelLayout { get; set; } = 0u;
 
     public List<Definition> Definitions { get; set; } = new();

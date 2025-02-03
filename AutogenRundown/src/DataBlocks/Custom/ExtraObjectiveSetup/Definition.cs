@@ -8,6 +8,7 @@ public class Definition
     public string DimensionIndex { get; set; } = "Reality";
 
     // TODO: check they work in all bulkheads
+    // Checked main and overload
     public string LayerType
     {
         get => Bulkhead switch
@@ -22,9 +23,9 @@ public class Definition
     [JsonIgnore]
     public Bulkhead Bulkhead { get; set; } = Bulkhead.Main;
 
-    public string LocalIndex
+    public int LocalIndex
     {
-        get => $"Zone_{ZoneNumber}";
+        get => ZoneNumber;
         private set { }
     }
 

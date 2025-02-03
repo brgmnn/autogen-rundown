@@ -50,13 +50,13 @@ public class ReactorShutdown : Definition
 
     public int InstanceIndex { get; set; } = 0;
 
-    public JObject VerificationCodeTerminal = new()
-    {
-        ["DimensionIndex"] = "Reality",
-        ["LayerType"] = "MainLayer",
-        ["LocalIndex"] = 0,
-        ["InstanceIndex"] = 0
-    };
+    public JObject VerificationCodeTerminal = new();
+    // {
+    //     ["DimensionIndex"] = "Reality",
+    //     ["LayerType"] = "MainLayer",
+    //     ["LocalIndex"] = 0,
+    //     ["InstanceIndex"] = 0
+    // };
 
     [JsonIgnore]
     public PasswordData Password { get; set; } = new();

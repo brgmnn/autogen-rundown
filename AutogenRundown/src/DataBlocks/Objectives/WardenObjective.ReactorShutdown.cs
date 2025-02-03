@@ -789,7 +789,8 @@ public partial record class WardenObjective : DataBlock
         // EOS needs this to be set to empty to work
         Type = WardenObjectiveType.Empty;
 
-        LayoutDefinitions.MainLevelLayout = level.GetLevelLayout(director.Bulkhead)!.PersistentId;
+        // This always needs to be the main level layout
+        LayoutDefinitions.MainLevelLayout = level.GetLevelLayout(Bulkhead.Main)!.PersistentId;
         LayoutDefinitions.Save();
     }
 }

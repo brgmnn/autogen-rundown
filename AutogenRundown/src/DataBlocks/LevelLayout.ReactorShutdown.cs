@@ -63,9 +63,6 @@ public partial record LevelLayout : DataBlock
                 (_, _) => 0.3
             });
 
-        // TODO: do we need this?
-        reactorZone.TerminalPlacements.Add(new TerminalPlacement());
-
         // Set up the password retrieval for the reactor
         if (lockedReactor)
         {
