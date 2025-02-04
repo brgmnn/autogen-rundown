@@ -3,6 +3,27 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.48.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.48.0) — February 03, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Tech / Labs: Added `lab_reactor_HA_02.prefab` geo to reactor tile list.
+  * R5D2 high reactor zone 
+* Mining / DigSite: Added `elevator_shaft_dig_site_04.prefab` geo to hub tile list.
+  * R5D1 extreme first zone
+
+### Changes
+
+* Fixed `ReactorShutdown` not working in Secondary / Overload layouts
+* Increased difficulty of scans across all tiers
+* Added stealth surprise scans to all tiers (with varying chance of occurring)
+* Improve monthly randomness between levels
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.47.0...v0.48.0
+
+
 ## [v0.47.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.47.0) — January 31, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
