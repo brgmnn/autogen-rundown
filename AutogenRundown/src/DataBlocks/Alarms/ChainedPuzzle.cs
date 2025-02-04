@@ -186,41 +186,75 @@ public record ChainedPuzzle : DataBlock
             case "A":
                 return new List<(double, int, ChainedPuzzle)>
                 {
+                    // Easy / free
                     (1.0, 2, None),
                     (1.0, 3, TeamScan),
-                    (1.0, 5, AlarmClass2),
-                    (1.0, 5, AlarmClass3),
-                    (1.0, 2, AlarmClass4)
+
+                    // Stealth and Surprise scans. Secret scans are grouped with their regular
+                    // counterpart
+                    (0.2, 1, Secret_TeamScan_EasyBaseline),
+
+                    // Moderate
+                    (1.0, 1, AlarmClass2),
+                    (1.0, 2, AlarmClass3),
+                    (1.0, 4, AlarmClass4),
+
+                    // Hard
+                    (1.0, 3, AlarmClass5),
+                    (1.0, 1, AlarmClass5_Cluster),
                 };
 
             case "B":
                 return new List<(double, int, ChainedPuzzle)>
                 {
+                    // Easy / free
                     (1.0, 2, None),
                     (1.0, 2, TeamScan),
-                    (1.0, 3, AlarmClass3),
-                    (1.0, 3, AlarmClass4),
-                    (1.0, 1, AlarmClass5),
 
+                    // Stealth and Surprise scans. Secret scans are grouped with their regular
+                    // counterpart
+                    (0.4, 1, Secret_TeamScan_EasyBaseline),
+                    (1.0, 1, StealthScan4),
+                    (0.4, 1, Secret_StealthScan4_NormalBaseline),
+
+                    // Moderate
+                    (1.0, 1, AlarmClass3),
+                    (1.0, 2, AlarmClass4),
+                    (1.0, 5, AlarmClass5),
+                    (1.0, 2, AlarmClass5_Mixed),
+                    (1.0, 2, AlarmClass6),
+
+                    // Hard
                     (1.0, 1, AlarmClass1_Sustained)
                 };
 
             case "C":
                 return new List<(double, int, ChainedPuzzle)>
                 {
+                    // Easy scans
                     (1.0, 1, None),
                     (1.0, 2, TeamScan),
 
-                    (1.0, 2, AlarmClass3),
-                    (1.0, 4, AlarmClass4),
+                    // Stealth and Surprise scans. Secret scans are grouped with their regular
+                    // counterpart
+                    (0.4, 1, Secret_TeamScan_EasyBaseline),
+                    (1.0, 1, StealthScan4),
+                    (0.3, 2, Secret_StealthScan4_NormalBaseline),
+
+                    // Moderate
+                    // (1.0, 2, AlarmClass3),
+                    // (1.0, 4, AlarmClass4),
                     (1.0, 2, AlarmClass4_Cluster),
                     (1.0, 2, AlarmClass4_Mixed),
                     (1.0, 3, AlarmClass5),
                     (1.0, 1, AlarmClass5_Cluster),
                     (1.0, 2, AlarmClass5_Mixed),
+                    (1.0, 2, AlarmClass6),
+                    (1.0, 2, AlarmClass6_Mixed),
 
+                    // Hard
+                    (1.0, 2, AlarmClass7),
                     (1.0, 1, AlarmClass2_Surge),
-
                     (1.0, 1, AlarmClass1_Sustained),
                 };
 
@@ -230,7 +264,6 @@ public record ChainedPuzzle : DataBlock
                 {
                     // Easy scans
                     (1.0, 2, TeamScan),
-                    (1.0, 1, AlarmClass4),
 
                     // Stealth and Surprise scans. Secret scans are grouped with their regular
                     // counterpart
@@ -240,15 +273,17 @@ public record ChainedPuzzle : DataBlock
                     (1.0, 1, Secret_SpawnTank),
 
                     // Moderate
-                    (1.0, 4, AlarmClass5),
-                    (1.0, 2, AlarmClass5_Cluster),
-                    (1.0, 2, AlarmClass5_Mixed),
+                    (1.0, 1, AlarmClass5),
+                    (1.0, 1, AlarmClass5_Cluster),
+                    (1.0, 1, AlarmClass5_Mixed),
 
                     // Hard
                     (1.0, 2, AlarmClass6),
-                    (1.0, 1, AlarmClass6_Mixed),
-                    (1.0, 1, AlarmClass7),
-                    (1.0, 1, AlarmClass7_Mixed),
+                    (1.0, 2, AlarmClass6_Mixed),
+                    (1.0, 3, AlarmClass7),
+                    (1.0, 3, AlarmClass7_Mixed),
+                    (1.0, 1, AlarmClass8),
+                    (0.5, 1, AlarmClass9),
 
                     // Surge (very challenging)
                     (1.0, 1, AlarmClass2_Surge),
@@ -275,16 +310,19 @@ public record ChainedPuzzle : DataBlock
                     (1.0, 1, Secret_SpawnTank),
 
                     // Moderate
-                    (1.0, 3, AlarmClass5),
-                    (1.0, 2, AlarmClass5_Cluster),
-                    (1.0, 2, AlarmClass5_Mixed),
+                    (1.0, 1, AlarmClass5),
+                    (1.0, 1, AlarmClass5_Cluster),
+                    (1.0, 1, AlarmClass5_Mixed),
+                    (1.0, 2, AlarmClass6),
+                    (1.0, 2, AlarmClass6_Mixed),
+                    (1.0, 2, AlarmClass6_Cluster),
 
                     // Difficult
-                    (1.0, 3, AlarmClass6),
-                    (1.0, 2, AlarmClass6_Mixed),
-                    (1.0, 1, AlarmClass7),
-                    (1.0, 1, AlarmClass7_Mixed),
-                    (1.0, 1, AlarmClass8),
+                    (1.0, 2, AlarmClass7),
+                    (1.0, 2, AlarmClass7_Mixed),
+                    (1.0, 2, AlarmClass8),
+                    (1.0, 1, AlarmClass9),
+                    (1.0, 1, AlarmClass10),
 
                     // Pure pain scans, TODO: this might be too much
                     (1.0, 2, AlarmClass3_Surge),
@@ -438,8 +476,6 @@ public record ChainedPuzzle : DataBlock
 
     public static readonly ChainedPuzzle StealthScan4 = new()
     {
-        PersistentId = Generator.GetPersistentId(),
-
         PublicAlarmName = "Class IV Scan",
         TriggerAlarmOnActivate = false,
         FixedAlarm = true,
@@ -907,6 +943,82 @@ public record ChainedPuzzle : DataBlock
 
     #region Alarms: Secret alarms
     /******************** Autogen Special Alarms ********************/
+    public static readonly ChainedPuzzle Secret_TeamScan_EasyBaseline = TeamScan with
+    {
+        EventsOnDoorScanStart = new List<WardenObjectiveEvent>
+        {
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.PlaySound,
+                Trigger = WardenObjectiveEventTrigger.OnStart,
+                SoundId = Sound.SheetMetalLand,
+                Delay = 27.0
+            },
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SpawnEnemyWave,
+                Delay = 32.0,
+                EnemyWaveData = new()
+                {
+                    WaveSettings = WaveSettings.SingleWave_20pts.PersistentId,
+                    WavePopulation = WavePopulation.Baseline.PersistentId,
+                    TriggerAlarm = false,
+                }
+            },
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.PlaySound,
+                SoundId = Sound.TankRoar,
+                Delay = 32.0
+            },
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.None,
+                Delay = 32.0,
+                WardenIntel = ":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr..."
+            },
+        }
+    };
+
+    public static readonly ChainedPuzzle Secret_StealthScan4_NormalBaseline = StealthScan4 with
+    {
+        FixedAlarm = false,
+
+        EventsOnDoorScanStart = new List<WardenObjectiveEvent>
+        {
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.PlaySound,
+                Trigger = WardenObjectiveEventTrigger.OnStart,
+                SoundId = Sound.SheetMetalLand,
+                Delay = 15.0
+            },
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SpawnEnemyWave,
+                Delay = 20.0,
+                EnemyWaveData = new()
+                {
+                    WaveSettings = WaveSettings.SingleWave_28pts.PersistentId,
+                    WavePopulation = WavePopulation.Baseline.PersistentId,
+                    TriggerAlarm = false,
+                }
+            },
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.PlaySound,
+                SoundId = Sound.TankRoar,
+                Delay = 20.0
+            },
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.None,
+                Delay = 20.0,
+                WardenIntel = ":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr..."
+            },
+        }
+    };
+
     public static readonly ChainedPuzzle Secret_SpawnTank = new()
     {
         PersistentId = 0,
