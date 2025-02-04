@@ -126,46 +126,51 @@ public partial record class LevelLayout : DataBlock
         var item = objective.RetrieveItems.First();
 
         // Zone 1 is normal
-        var entrance = level.Planner.GetExactZones(director.Bulkhead).First();
+        var entrance = (ZoneNode)startish;
         entrance.MaxConnections = 2;
         level.Planner.UpdateNode(entrance);
 
         var entranceZone = level.Planner.GetZone(entrance)!;
-        //entranceZone.GenHubGeomorph(director.Complex);
+
+        if (Generator.Flip())
+        {
+            entranceZone.GenHubGeomorph(director.Complex);
+            entrance.MaxConnections = 3;
+        }
+        else
+        {
+            entranceZone.Coverage = new CoverageMinMax { Min = 50, Max = 60 };
+        }
+
         entranceZone.RollFog(level);
-        entranceZone.Coverage = new CoverageMinMax { Min = 50, Max = 60 };
 
-        // Zone 2 is an I corridor
-        var corridorIndex = level.Planner.NextIndex(director.Bulkhead);
-        var corridor = new ZoneNode(director.Bulkhead, corridorIndex);
-        corridor.MaxConnections = 1;
+        // // Zone 2 is an I corridor
+        // var corridorIndex = level.Planner.NextIndex(director.Bulkhead);
+        // var corridor = new ZoneNode(director.Bulkhead, corridorIndex);
+        // corridor.MaxConnections = 1;
+        //
+        // var corridorZone = new Zone { LightSettings = Lights.GenRandomLight() };
+        // //corridorZone.GenCorridorGeomorph(director.Complex);
+        // corridorZone.RollFog(level);
+        //
+        // level.Planner.Connect(entrance, corridor);
+        // level.Planner.AddZone(corridor, corridorZone);
 
-        var corridorZone = new Zone { LightSettings = Lights.GenRandomLight() };
-        //corridorZone.GenCorridorGeomorph(director.Complex);
-        corridorZone.RollFog(level);
-
-        level.Planner.Connect(entrance, corridor);
-        level.Planner.AddZone(corridor, corridorZone);
-
-        // Zone 3 is a hub zone regarduless
-        var hubIndex = level.Planner.NextIndex(director.Bulkhead);
-        var hub = new ZoneNode(director.Bulkhead, hubIndex);
-        hub.MaxConnections = 3;
-
-        var zone = new Zone { LightSettings = Lights.GenRandomLight() };
-        zone.GenHubGeomorph(director.Complex);
-        zone.RollFog(level);
-
-        level.Planner.Connect(corridor, hub);
-        level.Planner.AddZone(hub, zone);
+        // // Zone 3 is a hub zone regarduless
+        // var hubIndex = level.Planner.NextIndex(director.Bulkhead);
+        // var hub = new ZoneNode(director.Bulkhead, hubIndex);
+        // hub.MaxConnections = 3;
+        //
+        // var zone = new Zone { LightSettings = Lights.GenRandomLight() };
+        // zone.GenHubGeomorph(director.Complex);
+        // zone.RollFog(level);
+        //
+        // level.Planner.Connect(corridor, hub);
+        // level.Planner.AddZone(hub, zone);
 
         if (item == WardenObjectiveItem.MatterWaveProjector)
         {
-            BuildLayout_MatterWaveProjector(
-                level,
-                director,
-                objective,
-                hub);
+            BuildLayout_MatterWaveProjector(level, director, objective, entrance);
             return;
         }
 
@@ -179,7 +184,7 @@ public partial record class LevelLayout : DataBlock
                 3 => Generator.Between(1, 2),
                 _ => 1
             };
-            var zoneNode = BuildBranch(hub, zoneCount, $"bigitem_{g}");
+            var zoneNode = BuildBranch(entrance, zoneCount, $"bigitem_{g}");
 
             layerData.ObjectiveData.ZonePlacementDatas.Add(
                 new List<ZonePlacementData>
