@@ -102,7 +102,7 @@ namespace AutogenRundown.DataBlocks
         ///     * 32 (Huge)
         /// And presumably we need everything else to be a multiple of this.
         /// </summary>
-        private static List<(double, (double, double))> NormalSizes = new List<(double, (double, double))>
+        private static List<(double, (double, double))> NormalSizes = new()
         {
             // Small sizes
             (0.25, (10, 10)),

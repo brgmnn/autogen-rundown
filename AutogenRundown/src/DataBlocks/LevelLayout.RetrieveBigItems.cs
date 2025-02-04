@@ -7,6 +7,8 @@ public partial record class LevelLayout : DataBlock
 {
     /// <summary>
     /// Builds the level layout for the Matter Wave Projector big item retrieval objective.
+    ///
+    /// TODO: re-evaluate this objective
     /// </summary>
     public static void BuildLayout_MatterWaveProjector(
         Level level,
