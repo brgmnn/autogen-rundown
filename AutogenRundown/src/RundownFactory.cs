@@ -482,33 +482,19 @@ public static class RundownFactory
             /// Use the seed pool to re-roll levels. Start by setting these at 1 and incrementing each time
             /// there's a level lockup
             /// TODO: Clear Path objectives seem to fail to place the exit zone often
-            /// TODO: the objective roles seem very samey. Check the seed reroll and
-            ///       re-roll all of these.
-            ///
             /// "2025_01" - January  2025:
             /// "2025_02" - February 2025:
             ///
             var buildPools = new Dictionary<string, List<int>>()
             {
                 {
-                    // TODO: delete after 01/02/2025
-                    "2025_01", new()
-                    {
-                        5,          // Tier A - y
-                        5, 6, 5,    // Tier B - y,y,y
-                        6, 5, 6, 6, // Tier C - y,y,y,y
-                        5, 8, 5, 5, // Tier D - y,y,y,y
-                        5, 6        // Tier E - y,y
-                    }
-                },
-                {
                     "2025_02", new()
                     {
-                        1, 3,       // Tier A - y,y
+                        1, 2,       // Tier A - y,y
                         1, 1, 1,    // Tier B - y,y,y
-                        1, 1, 1, 3, // Tier C - y,y,y,y
-                        1, 1, 1, 9, // Tier D - y,y,y,y
-                        2, 4, 7     // Tier E - y,y,y
+                        1, 1, 1, 2, // Tier C - y,y,y,y
+                        1, 1, 1, 1, // Tier D - y,y,y,y
+                        1, 1, 1     // Tier E - y,y,y
                     }
                 }
             };
