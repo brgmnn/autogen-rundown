@@ -734,5 +734,77 @@ namespace AutogenRundown.DataBlocks
 
             return level;
         }
+
+        /// <summary>
+        /// Test level construction for testing out new geos
+        /// </summary>
+        /// <param name="level"></param>
+        /// <returns></returns>
+        public static Level Debug_BuildGeoTest(string geo, Level level)
+        {
+            try
+            {
+                level.GenerateDepth();
+                level.GenerateZoneAliasStarts();
+
+                #region Level.Build()
+
+                // level.PreBuildObjective(Bulkhead.Main);
+                var director = new BuildDirector
+                {
+                    Bulkhead = Bulkhead.Main,
+                    Complex = level.Complex,
+                    Complexity = Complexity.Low,
+                    Objective = WardenObjectiveType.SpecialTerminalCommand,
+                    Settings = level.Settings,
+                    Tier = level.Tier
+                };
+                var objective = WardenObjective.PreBuild(director, level);
+
+                level.Director[Bulkhead.Main] = director;
+                level.Objective[Bulkhead.Main] = objective;
+
+                //level.GetObjective(Bulkhead.Main)!.PostBuild(level.MainDirector, level);
+
+                #endregion
+
+                #region LevelLayout.Build()
+
+                // var layout = LevelLayout.Build(this, director, objective, direction);
+                var layout = new LevelLayout(level, director, level.Settings, level.Planner);
+
+                level.LayoutRef[Bulkhead.Main] = layout.PersistentId;
+
+                // objective.Build(director, this);
+
+                var layerData = level.ObjectiveLayer[Bulkhead.Main];
+                layerData.ObjectiveData.DataBlockId = objective.PersistentId;
+
+                Bins.WardenObjectives.AddBlock(objective);
+
+                #endregion
+
+                // The zones
+                var elevatorDrop = new ZoneNode(Bulkhead.Main, level.Planner.NextIndex(Bulkhead.Main));
+                var elevatorDropZone = new Zone
+                {
+                    Coverage = new CoverageMinMax { Min = 25, Max = 35 },
+                    LightSettings = Lights.GenRandomLight(),
+                    LocalIndex = 0,
+                    CustomGeomorph = geo
+                };
+
+                level.Planner.AddZone(elevatorDrop, elevatorDropZone);
+                layout.Zones.Add(elevatorDropZone);
+
+                Bins.LevelLayouts.AddBlock(layout);
+            }
+            catch (Exception err)
+            {
+                Plugin.Logger.LogError($"OH NO: {err}");
+            }
+
+            return level;
+        }
     }
 }
