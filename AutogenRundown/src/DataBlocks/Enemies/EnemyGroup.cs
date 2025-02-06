@@ -41,7 +41,7 @@ namespace AutogenRundown.DataBlocks.Enemies
         /// Technically this is the following enum:
         /// https://gtfo-modding.gitbook.io/wiki/reference/enum-types#espawnplacementtype
         /// </summary>
-        public uint SpawnPlacementType { get; set; } = 0;
+        public SpawnPlacementType SpawnPlacementType { get; set; } = SpawnPlacementType.Default;
 
         public double MaxScore { get; set; } = 1.0;
 
@@ -130,6 +130,25 @@ namespace AutogenRundown.DataBlocks.Enemies
                         }
                     });
             }
+
+            #region Boss aligned spawn bosses
+            // These bosses are set up to spawn in boss aligned spawn points
+            foreach (var boss in EnemyInfo.SpawnAlignedBosses)
+            {
+                Bins.EnemyGroups.AddBlock(
+                    new EnemyGroup
+                    {
+                        Type = EnemyGroupType.PureSneak,
+                        Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)boss.Enemy,
+                        MaxScore = boss.Points,
+                        SpawnPlacementType = SpawnPlacementType.CycleAllAligns,
+                        Roles = new List<EnemyGroupRole>
+                        {
+                            new() { Role = boss.Role, Distribution = EnemyRoleDistribution.Rel100 }
+                        }
+                    });
+            }
+            #endregion
 
             #region AutoDiff, common groups
             // Assign common groups to all Autogen Difficulties. Often for the base enemies of

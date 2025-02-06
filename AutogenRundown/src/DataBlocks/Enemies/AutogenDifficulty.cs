@@ -11,6 +11,9 @@
         Flyers     = 0x0008,
         Nightmares = 0x0010,
 
+        // Boss aligned spawned bosses
+        BossAlignedSpawn = 0x0020,
+
         // Tiers of difficulty
         TierA = 0x0100,
         TierB = 0x0200,

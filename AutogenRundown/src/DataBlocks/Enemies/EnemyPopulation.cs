@@ -66,6 +66,22 @@ namespace AutogenRundown.DataBlocks.Enemies
             }
             #endregion
 
+            #region Boss Aligned spawns
+            // We add the bosses again but including the boss aligned spawn difficulty mask.
+            // These are then set up again in EnemyGroup.cs to spawn with boss alignment on
+            // geos that support it.
+            foreach (var bossInfo in EnemyInfo.SpawnAlignedBosses)
+            {
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)bossInfo.Role,
+                    Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)bossInfo.Enemy,
+                    Enemy = bossInfo.Enemy,
+                    Cost = bossInfo.Points,
+                });
+            }
+            #endregion
+
             #region Level Tier populations
             #region Tier-A
             /** ================  Tier A  ================

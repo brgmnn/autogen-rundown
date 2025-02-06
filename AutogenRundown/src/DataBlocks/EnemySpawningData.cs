@@ -279,5 +279,66 @@ namespace AutogenRundown.DataBlocks
             Tags = new Tags("boss")
         };
         #endregion
+
+        #region Bosses (Spawn Aligned)
+        /**
+         * Mothers
+         */
+        public static readonly EnemySpawningData Mother_AlignedSpawn = new()
+        {
+            GroupType = EnemyGroupType.PureSneak,
+            Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)Enemy.Mother,
+            Points = 10,
+            Tags = new Tags("boss")
+        };
+
+        public static readonly EnemySpawningData PMother_AlignedSpawn = new()
+        {
+            GroupType = EnemyGroupType.PureSneak,
+            Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)Enemy.PMother,
+            Points = 10,
+            Tags = new Tags("boss")
+        };
+
+        // TODO: MegaMother appears to also spawn non-babies. It may be spawning enemies from the
+        // levels normal enemy spawning options! Saw it spawn chargers
+        public static readonly EnemySpawningData MegaMother_AlignedSpawn = new()
+        {
+            GroupType = EnemyGroupType.PureSneak,
+            Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)Enemy.MegaMother,
+            Points = 40,
+            Tags = new Tags("boss")
+        };
+
+        /**
+         * Tanks
+         */
+        public static readonly EnemySpawningData Tank_AlignedSpawn = new()
+        {
+            GroupType = EnemyGroupType.PureSneak,
+            Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)Enemy.Tank,
+            Points = 10,
+            Tags = new Tags("boss")
+        };
+
+        public static readonly EnemySpawningData TankPotato_AlignedSpawn = new()
+        {
+            GroupType = EnemyGroupType.PureSneak,
+            Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)Enemy.TankPotato,
+            Points = 10,
+            Tags = new Tags("boss")
+        };
+
+        /**
+         * Pouncers
+         */
+        public static readonly EnemySpawningData Pouncer_AlignedSpawn = new()
+        {
+            GroupType = EnemyGroupType.PureSneak,
+            Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)Enemy.Pouncer,
+            Points = 4,
+            Tags = new Tags("boss")
+        };
+        #endregion
     }
 }

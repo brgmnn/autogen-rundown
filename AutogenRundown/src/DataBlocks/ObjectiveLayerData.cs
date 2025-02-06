@@ -23,6 +23,7 @@ namespace AutogenRundown.DataBlocks
         public WardenObjectiveLayerData ObjectiveData { get; set; }
             = new WardenObjectiveLayerData();
 
+        // TODO: Can we have multiple objectives chained in one zone? :hmm:
         public List<WardenObjectiveLayerData> ChainedObjectiveData { get; set; }
             = new List<WardenObjectiveLayerData>();
 
