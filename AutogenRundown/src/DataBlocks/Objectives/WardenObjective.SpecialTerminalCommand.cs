@@ -175,31 +175,31 @@ public partial record class WardenObjective : DataBlock
                     case ("D", Bulkhead.Main):
                         EventsOnActivate.AddSpawnWave(new()
                         {
-                            WavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
-                            WaveSettings = WaveSettings.Exit_Objective_Hard.PersistentId,
+                            Population = WavePopulation.Baseline_Hybrids,
+                            Settings = WaveSettings.Exit_Objective_Hard,
                             TriggerAlarm = true
                         }, 6.0);
                         break;
                     case ("D", Bulkhead.Extreme):
                         EventsOnActivate.AddSpawnWave(new()
                         {
-                            WavePopulation = WavePopulation.Baseline.PersistentId,
-                            WaveSettings = WaveSettings.Exit_Objective_Medium.PersistentId,
+                            Population = WavePopulation.Baseline,
+                            Settings = WaveSettings.Exit_Objective_Medium,
                             TriggerAlarm = true
                         }, 10.0);
                         break;
                     case ("D", Bulkhead.Overload):
                         EventsOnActivate.AddSpawnWave(new()
                         {
-                            WavePopulation = (level.Settings.HasChargers(), level.Settings.HasShadows()) switch
+                            Population = (level.Settings.HasChargers(), level.Settings.HasShadows()) switch
                             {
-                                (true, _) => WavePopulation.OnlyChargers.PersistentId,
-                                (_, true) => WavePopulation.OnlyShadows.PersistentId,
-                                (_, _) => WavePopulation.Baseline.PersistentId
+                                (true, _) => WavePopulation.OnlyChargers,
+                                (_, true) => WavePopulation.OnlyShadows,
+                                (_, _) => WavePopulation.Baseline
                             },
-                            WaveSettings = level.Settings.HasChargers() ?
-                                WaveSettings.Exit_Objective_Medium.PersistentId :
-                                WaveSettings.Exit_Objective_Hard.PersistentId,
+                            Settings = level.Settings.HasChargers() ?
+                                WaveSettings.Exit_Objective_Medium :
+                                WaveSettings.Exit_Objective_Hard,
                             TriggerAlarm = true
                         }, 7.0);
                         break;
@@ -207,31 +207,31 @@ public partial record class WardenObjective : DataBlock
                     case ("E", Bulkhead.Main):
                         EventsOnActivate.AddSpawnWave(new()
                         {
-                            WavePopulation = WavePopulation.Baseline_Hybrids.PersistentId,
-                            WaveSettings = WaveSettings.Exit_Objective_VeryHard.PersistentId,
+                            Population = WavePopulation.Baseline_Hybrids,
+                            Settings = WaveSettings.Exit_Objective_VeryHard,
                             TriggerAlarm = true
                         }, 4.0);
                         break;
                     case ("E", Bulkhead.Extreme):
                         EventsOnActivate.AddSpawnWave(new()
                         {
-                            WavePopulation = WavePopulation.Baseline.PersistentId,
-                            WaveSettings = WaveSettings.Exit_Objective_Medium.PersistentId,
+                            Population = WavePopulation.Baseline,
+                            Settings = WaveSettings.Exit_Objective_Medium,
                             TriggerAlarm = true
                         }, 10.0);
                         break;
                     case ("E", Bulkhead.Overload):
                         EventsOnActivate.AddSpawnWave(new()
                         {
-                            WavePopulation = (level.Settings.HasChargers(), level.Settings.HasShadows()) switch
+                            Population = (level.Settings.HasChargers(), level.Settings.HasShadows()) switch
                             {
-                                (true, _) => WavePopulation.OnlyChargers.PersistentId,
-                                (_, true) => WavePopulation.OnlyShadows.PersistentId,
-                                (_, _) => WavePopulation.Baseline.PersistentId
+                                (true, _) => WavePopulation.OnlyChargers,
+                                (_, true) => WavePopulation.OnlyShadows,
+                                (_, _) => WavePopulation.Baseline
                             },
-                            WaveSettings = level.Settings.HasChargers() ?
-                                WaveSettings.Exit_Objective_Medium.PersistentId :
-                                WaveSettings.Exit_Objective_Hard.PersistentId,
+                            Settings = level.Settings.HasChargers() ?
+                                WaveSettings.Exit_Objective_Medium :
+                                WaveSettings.Exit_Objective_Hard,
                             TriggerAlarm = true
                         }, 10.0);
                         break;
@@ -240,8 +240,8 @@ public partial record class WardenObjective : DataBlock
                     default:
                         EventsOnActivate.AddSpawnWave(new()
                         {
-                            WavePopulation = WavePopulation.Baseline.PersistentId,
-                            WaveSettings = WaveSettings.Exit_Objective_Easy.PersistentId,
+                            Population = WavePopulation.Baseline,
+                            Settings = WaveSettings.Exit_Objective_Easy,
                             TriggerAlarm = true
                         }, 12.0);
                         break;
@@ -335,8 +335,8 @@ public partial record class WardenObjective : DataBlock
         if (director.Bulkhead.HasFlag(Bulkhead.Main) && SpecialTerminalCommand_Type != SpecialCommand.ErrorAlarm)
             WavesOnGotoWin.Add(new GenericWave
             {
-                WavePopulation = WavePopulation.Baseline.PersistentId,
-                WaveSettings = WaveSettings.Exit_Objective_Easy.PersistentId,
+                Population = WavePopulation.Baseline,
+                Settings = WaveSettings.Exit_Objective_Easy,
                 TriggerAlarm = true,
                 SpawnDelay = 4.0
             });

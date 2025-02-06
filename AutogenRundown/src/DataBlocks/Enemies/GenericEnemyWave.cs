@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks.Enemies;
 
@@ -7,12 +8,11 @@ public record GenericWave
     /// <summary>
     /// Exit trickle alarm for running to extraction at the end of the level.
     /// </summary>
-    public static GenericWave ExitTrickle = new GenericWave
+    public static readonly GenericWave ExitTrickle = new()
     {
         //WaveSettings = (uint)VanillaWaveSettings.ExitTrickle_38S_Original,
-        WaveSettings = Alarms.WaveSettings.Exit_Baseline.PersistentId,
-        //WavePopulation = (uint)VanillaWavePopulation.Baseline,
-        WavePopulation = Alarms.WavePopulation.Baseline.PersistentId,
+        Settings = WaveSettings.Exit_Baseline,
+        Population = WavePopulation.Baseline,
         SpawnDelay = 4.0,
         TriggerAlarm = true,
     };
@@ -20,86 +20,107 @@ public record GenericWave
     /// <summary>
     ///
     /// </summary>
-    public static GenericWave Exit_Surge = new GenericWave
+    public static readonly GenericWave Exit_Surge = new()
     {
-        WaveSettings = Alarms.WaveSettings.Exit_Baseline.PersistentId,
+        Settings = WaveSettings.Exit_Baseline,
     };
 
     #region Uplink Waves
-    public static GenericWave Uplink_Easy = new GenericWave
+    public static readonly GenericWave Uplink_Easy = new()
     {
-        WaveSettings = Alarms.WaveSettings.Baseline_Normal.PersistentId,
-        WavePopulation = Alarms.WavePopulation.Baseline.PersistentId,
+        Settings = WaveSettings.Baseline_Normal,
+        Population = WavePopulation.Baseline,
         SpawnDelay = 2.0,
         TriggerAlarm = true,
     };
 
-    public static GenericWave Uplink_Medium = new GenericWave
+    public static readonly GenericWave Uplink_Medium = new()
     {
-        WaveSettings = Alarms.WaveSettings.Baseline_Hard.PersistentId,
-        WavePopulation = Alarms.WavePopulation.Baseline.PersistentId,
+        Settings = WaveSettings.Baseline_Hard,
+        Population = WavePopulation.Baseline,
         SpawnDelay = 2.0,
         TriggerAlarm = true
     };
     #endregion
 
     #region Chargers
-    public static GenericWave GiantChargers_35pts = new GenericWave
+    public static readonly GenericWave GiantChargers_35pts = new()
     {
-        WaveSettings = Alarms.WaveSettings.SingleWave_35pts.PersistentId,
-        WavePopulation = Alarms.WavePopulation.OnlyChargers.PersistentId
+        Settings = WaveSettings.SingleWave_35pts,
+        Population = WavePopulation.OnlyChargers
     };
     #endregion
 
     #region Survival objective waves
-    public static GenericWave Survival_ErrorAlarm = new()
+    public static readonly GenericWave Survival_ErrorAlarm = new()
     {
-        WaveSettings = Alarms.WaveSettings.Error_Easy.PersistentId,
-        WavePopulation = Alarms.WavePopulation.Baseline.PersistentId
+        Settings = WaveSettings.Error_Easy,
+        Population = WavePopulation.Baseline
     };
 
-    public static GenericWave Survival_Impossible_TankPotato = new()
+    public static readonly GenericWave Survival_Impossible_TankPotato = new()
     {
-        WaveSettings = Alarms.WaveSettings.Survival_Impossible_MiniBoss.PersistentId,
-        WavePopulation = Alarms.WavePopulation.SingleEnemy_TankPotato.PersistentId
+        Settings = WaveSettings.Survival_Impossible_MiniBoss,
+        Population = WavePopulation.SingleEnemy_TankPotato
     };
     #endregion
 
     #region Single enemy waves
-    public static GenericWave SingleMother = new GenericWave
+    public static readonly GenericWave SingleMother = new()
     {
-        WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
-        WavePopulation = Alarms.WavePopulation.SingleEnemy_Mother.PersistentId,
+        Settings = WaveSettings.SingleMiniBoss,
+        Population = WavePopulation.SingleEnemy_Mother,
     };
 
-    public static GenericWave SinglePMother = new GenericWave
+    public static readonly GenericWave SinglePMother = new()
     {
-        WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
-        WavePopulation = Alarms.WavePopulation.SingleEnemy_PMother.PersistentId,
+        Settings = WaveSettings.SingleMiniBoss,
+        Population = WavePopulation.SingleEnemy_PMother,
     };
 
-    public static GenericWave SingleTank = new GenericWave
+    public static readonly GenericWave SingleTank = new()
     {
-        WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
-        WavePopulation = Alarms.WavePopulation.SingleEnemy_Tank.PersistentId,
+        Settings = WaveSettings.SingleMiniBoss,
+        Population = WavePopulation.SingleEnemy_Tank,
     };
 
-    public static GenericWave SingleTankPotato = new GenericWave
+    public static readonly GenericWave SingleTankPotato = new()
     {
-        WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
-        WavePopulation = Alarms.WavePopulation.SingleEnemy_TankPotato.PersistentId,
+        Settings = WaveSettings.SingleMiniBoss,
+        Population = WavePopulation.SingleEnemy_TankPotato,
     };
 
-    public static GenericWave SinglePouncer = new GenericWave
+    public static readonly GenericWave SinglePouncer = new()
     {
-        WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
-        WavePopulation = Alarms.WavePopulation.SingleEnemy_Pouncer.PersistentId,
+        Settings = WaveSettings.SingleMiniBoss,
+        Population = WavePopulation.SingleEnemy_Pouncer,
     };
     #endregion
 
-    public uint WaveSettings { get; set; } = 0;
 
-    public uint WavePopulation { get; set; } = 0;
+    [JsonProperty("WaveSettings")]
+    public uint SurvivalWaveSettings
+    {
+        get => Settings.PersistentId;
+        private set { }
+    }
+
+    [JsonIgnore]
+    public WaveSettings Settings { get; set; } = WaveSettings.None;
+
+    // public uint WaveSettings { get; set; } = 0;
+
+    [JsonIgnore]
+    public WavePopulation Population { get; set; } = WavePopulation.None;
+
+    [JsonProperty("WavePopulation")]
+    public uint SurvivalWavePopulation
+    {
+        get => Population.PersistentId;
+        private set { }
+    }
+
+    // public uint WavePopulation { get; set; } = 0;
 
     /// <summary>
     /// Room distance, in general this should always be left at 2.

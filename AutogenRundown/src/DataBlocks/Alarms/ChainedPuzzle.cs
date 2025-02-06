@@ -958,10 +958,10 @@ public record ChainedPuzzle : DataBlock
             {
                 Type = WardenObjectiveEventType.SpawnEnemyWave,
                 Delay = 32.0,
-                EnemyWaveData = new()
+                EnemyWaveData = new GenericWave
                 {
-                    WaveSettings = WaveSettings.SingleWave_20pts.PersistentId,
-                    WavePopulation = WavePopulation.Baseline.PersistentId,
+                    Settings = WaveSettings.SingleWave_20pts,
+                    Population = WavePopulation.Baseline,
                     TriggerAlarm = false,
                 }
             },
@@ -997,10 +997,10 @@ public record ChainedPuzzle : DataBlock
             {
                 Type = WardenObjectiveEventType.SpawnEnemyWave,
                 Delay = 20.0,
-                EnemyWaveData = new()
+                EnemyWaveData = new GenericWave
                 {
-                    WaveSettings = WaveSettings.SingleWave_28pts.PersistentId,
-                    WavePopulation = WavePopulation.Baseline.PersistentId,
+                    Settings = WaveSettings.SingleWave_28pts,
+                    Population = WavePopulation.Baseline,
                     TriggerAlarm = false,
                 }
             },

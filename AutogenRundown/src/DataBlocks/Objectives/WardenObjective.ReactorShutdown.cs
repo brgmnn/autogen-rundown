@@ -238,13 +238,13 @@ public partial record class WardenObjective : DataBlock
 
                 reactorDefinition.EventsOnComplete.AddGenericWave(new GenericWave
                 {
-                    WaveSettings = director.Bulkhead switch
+                    Settings = director.Bulkhead switch
                     {
-                        Bulkhead.Main => WaveSettings.Exit_Objective_Medium.PersistentId,
-                        Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy.PersistentId,
-                        Bulkhead.Overload => WaveSettings.Exit_Objective_Easy.PersistentId,
+                        Bulkhead.Main => WaveSettings.Exit_Objective_Medium,
+                        Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy,
+                        Bulkhead.Overload => WaveSettings.Exit_Objective_Easy
                     },
-                    WavePopulation = WavePopulation.Baseline.PersistentId,
+                    Population = WavePopulation.Baseline,
                     TriggerAlarm = true
                 });
                 break;
@@ -347,13 +347,13 @@ public partial record class WardenObjective : DataBlock
                 reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(events);
                 reactorDefinition.EventsOnComplete.AddGenericWave(new GenericWave
                 {
-                    WaveSettings = director.Bulkhead switch
+                    Settings = director.Bulkhead switch
                     {
-                        Bulkhead.Main => WaveSettings.Exit_Objective_Medium.PersistentId,
-                        Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy.PersistentId,
-                        Bulkhead.Overload => WaveSettings.Exit_Objective_Easy.PersistentId,
+                        Bulkhead.Main => WaveSettings.Exit_Objective_Medium,
+                        Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy,
+                        Bulkhead.Overload => WaveSettings.Exit_Objective_Easy
                     },
-                    WavePopulation = WavePopulation.Baseline.PersistentId,
+                    Population = WavePopulation.Baseline,
                     TriggerAlarm = true
                 });
                 break;
@@ -469,13 +469,13 @@ public partial record class WardenObjective : DataBlock
                 reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(events);
                 reactorDefinition.EventsOnComplete.AddGenericWave(new GenericWave
                 {
-                    WaveSettings = director.Bulkhead switch
+                    Settings = director.Bulkhead switch
                     {
-                        Bulkhead.Main => WaveSettings.Exit_Objective_Hard.PersistentId,
-                        Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy.PersistentId,
-                        Bulkhead.Overload => WaveSettings.Exit_Objective_Medium.PersistentId,
+                        Bulkhead.Main => WaveSettings.Exit_Objective_Hard,
+                        Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy,
+                        Bulkhead.Overload => WaveSettings.Exit_Objective_Medium
                     },
-                    WavePopulation = WavePopulation.Baseline.PersistentId,
+                    Population = WavePopulation.Baseline,
                     TriggerAlarm = true
                 });
                 break;
@@ -608,13 +608,13 @@ public partial record class WardenObjective : DataBlock
                 reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(events);
                 reactorDefinition.EventsOnComplete.AddGenericWave(new GenericWave
                 {
-                    WaveSettings = director.Bulkhead switch
+                    Settings = director.Bulkhead switch
                     {
-                        Bulkhead.Main => WaveSettings.Exit_Objective_VeryHard.PersistentId,
-                        Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy.PersistentId,
-                        Bulkhead.Overload => WaveSettings.Exit_Objective_Medium.PersistentId,
+                        Bulkhead.Main => WaveSettings.Exit_Objective_VeryHard,
+                        Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy,
+                        Bulkhead.Overload => WaveSettings.Exit_Objective_Medium
                     },
-                    WavePopulation = WavePopulation.Baseline.PersistentId,
+                    Population = WavePopulation.Baseline,
                     TriggerAlarm = true
                 });
                 break;
@@ -751,13 +751,13 @@ public partial record class WardenObjective : DataBlock
                 reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(events);
                 reactorDefinition.EventsOnComplete.AddGenericWave(new GenericWave
                 {
-                    WaveSettings = director.Bulkhead switch
+                    Settings = director.Bulkhead switch
                     {
-                        Bulkhead.Main => WaveSettings.Baseline_Normal.PersistentId,
-                        Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy.PersistentId,
-                        Bulkhead.Overload => WaveSettings.Exit_Objective_Medium.PersistentId,
+                        Bulkhead.Main => WaveSettings.Exit_Objective_VeryHard,
+                        Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy,
+                        Bulkhead.Overload => WaveSettings.Exit_Objective_Medium
                     },
-                    WavePopulation = WavePopulation.Baseline.PersistentId,
+                    Population = WavePopulation.Baseline,
                     TriggerAlarm = true
                 });
                 break;

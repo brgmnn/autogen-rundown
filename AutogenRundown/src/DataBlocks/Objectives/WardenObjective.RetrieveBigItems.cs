@@ -73,16 +73,16 @@ public partial record WardenObjective
                         if (director.Bulkhead == Bulkhead.Main)
                             WavesOnGotoWin.Add(new GenericWave
                             {
-                                WaveSettings = WaveSettings.Exit_Objective_Easy.PersistentId,
-                                WavePopulation = WavePopulation.Baseline.PersistentId,
+                                Settings = WaveSettings.Exit_Objective_Easy,
+                                Population = WavePopulation.Baseline,
                                 SpawnDelay = 8.0,
                                 TriggerAlarm = true
                             });
                         else
                             WavesOnGotoWin.Add(new GenericWave
                             {
-                                WaveSettings = WaveSettings.SingleWave_28pts.PersistentId,
-                                WavePopulation = WavePopulation.Baseline.PersistentId,
+                                Settings = WaveSettings.SingleWave_28pts,
+                                Population = WavePopulation.Baseline,
                                 SpawnDelay = 6.0,
                                 TriggerAlarm = false
                             });
@@ -93,10 +93,10 @@ public partial record WardenObjective
                     {
                         WavesOnGotoWin.Add(new GenericWave
                         {
-                            WaveSettings = director.Bulkhead == Bulkhead.Main ?
-                                WaveSettings.Exit_Objective_Medium.PersistentId :
-                                WaveSettings.Exit_Objective_Easy.PersistentId,
-                            WavePopulation = WavePopulation.Baseline.PersistentId,
+                            Settings = director.Bulkhead == Bulkhead.Main ?
+                                WaveSettings.Exit_Objective_Medium :
+                                WaveSettings.Exit_Objective_Easy,
+                            Population = WavePopulation.Baseline,
                             SpawnDelay = 8.0,
                             TriggerAlarm = true
                         });
@@ -113,16 +113,16 @@ public partial record WardenObjective
                         if (level.Settings.Modifiers.Contains(LevelModifiers.Chargers) && Generator.Flip(0.1))
                             WavesOnGotoWin.Add(new GenericWave
                             {
-                                WaveSettings = WaveSettings.Exit_Objective_Easy.PersistentId,
-                                WavePopulation = WavePopulation.OnlyChargers.PersistentId,
+                                Settings = WaveSettings.Exit_Objective_Easy,
+                                Population = WavePopulation.OnlyChargers,
                                 SpawnDelay = 5.0,
                                 TriggerAlarm = true
                             });
                         else
                             WavesOnGotoWin.Add(new GenericWave
                             {
-                                WaveSettings = WaveSettings.Exit_Objective_Medium.PersistentId,
-                                WavePopulation = WavePopulation.Baseline.PersistentId,
+                                Settings = WaveSettings.Exit_Objective_Medium,
+                                Population = WavePopulation.Baseline,
                                 SpawnDelay = 5.0,
                                 TriggerAlarm = true
                             });
@@ -149,10 +149,10 @@ public partial record WardenObjective
                             level.Settings.Modifiers.Contains(LevelModifiers.ManyShadows))
                             WavesOnGotoWin.Add(new GenericWave
                             {
-                                WaveSettings = director.Bulkhead == Bulkhead.Main ?
-                                    WaveSettings.Exit_Objective_Hard.PersistentId :
-                                    WaveSettings.Exit_Objective_Medium.PersistentId,
-                                WavePopulation = WavePopulation.OnlyShadows.PersistentId,
+                                Settings = director.Bulkhead == Bulkhead.Main ?
+                                    WaveSettings.Exit_Objective_Hard :
+                                    WaveSettings.Exit_Objective_Medium,
+                                Population = WavePopulation.OnlyShadows,
                                 SpawnDelay = 5.0,
                                 TriggerAlarm = true
                             });
@@ -160,10 +160,10 @@ public partial record WardenObjective
                             level.Settings.Modifiers.Contains(LevelModifiers.ManyChargers))
                             WavesOnGotoWin.Add(new GenericWave
                             {
-                                WaveSettings = director.Bulkhead == Bulkhead.Main ?
-                                    WaveSettings.Exit_Objective_Medium.PersistentId :
-                                    WaveSettings.Exit_Objective_Easy.PersistentId,
-                                WavePopulation = WavePopulation.OnlyChargers.PersistentId,
+                                Settings = director.Bulkhead == Bulkhead.Main ?
+                                    WaveSettings.Exit_Objective_Medium :
+                                    WaveSettings.Exit_Objective_Easy,
+                                Population = WavePopulation.OnlyChargers,
                                 SpawnDelay = 5.0,
                                 TriggerAlarm = true
                             });
@@ -171,16 +171,16 @@ public partial record WardenObjective
                                  level.Settings.Modifiers.Contains(LevelModifiers.ManyNightmares))
                             WavesOnGotoWin.Add(new GenericWave
                             {
-                                WaveSettings = WaveSettings.Exit_Objective_Easy.PersistentId,
-                                WavePopulation = WavePopulation.OnlyNightmares.PersistentId,
+                                Settings = WaveSettings.Exit_Objective_Easy,
+                                Population = WavePopulation.OnlyNightmares,
                                 SpawnDelay = 5.0,
                                 TriggerAlarm = true
                             });
                         else
                             WavesOnGotoWin.Add(new GenericWave
                             {
-                                WaveSettings = WaveSettings.Exit_Objective_Hard.PersistentId,
-                                WavePopulation = WavePopulation.Baseline.PersistentId,
+                                Settings = WaveSettings.Exit_Objective_Hard,
+                                Population = WavePopulation.Baseline,
                                 SpawnDelay = 5.0,
                                 TriggerAlarm = true
                             });
@@ -225,10 +225,10 @@ public partial record WardenObjective
                             level.Settings.Modifiers.Contains(LevelModifiers.ManyShadows))
                             WavesOnGotoWin.Add(new GenericWave
                             {
-                                WaveSettings = director.Bulkhead == Bulkhead.Main ?
-                                    WaveSettings.Exit_Objective_Hard.PersistentId :
-                                    WaveSettings.Exit_Objective_Medium.PersistentId,
-                                WavePopulation = WavePopulation.OnlyShadows.PersistentId,
+                                Settings = director.Bulkhead == Bulkhead.Main ?
+                                    WaveSettings.Exit_Objective_Hard :
+                                    WaveSettings.Exit_Objective_Medium,
+                                Population = WavePopulation.OnlyShadows,
                                 SpawnDelay = 5.0,
                                 TriggerAlarm = true
                             });
@@ -236,10 +236,10 @@ public partial record WardenObjective
                             level.Settings.Modifiers.Contains(LevelModifiers.ManyChargers))
                             WavesOnGotoWin.Add(new GenericWave
                             {
-                                WaveSettings = director.Bulkhead == Bulkhead.Main ?
-                                    WaveSettings.Exit_Objective_Medium.PersistentId :
-                                    WaveSettings.Exit_Objective_Easy.PersistentId,
-                                WavePopulation = WavePopulation.OnlyChargers.PersistentId,
+                                Settings = director.Bulkhead == Bulkhead.Main ?
+                                    WaveSettings.Exit_Objective_Medium :
+                                    WaveSettings.Exit_Objective_Easy,
+                                Population = WavePopulation.OnlyChargers,
                                 SpawnDelay = 5.0,
                                 TriggerAlarm = true
                             });
@@ -247,16 +247,16 @@ public partial record WardenObjective
                                  level.Settings.Modifiers.Contains(LevelModifiers.ManyNightmares))
                             WavesOnGotoWin.Add(new GenericWave
                             {
-                                WaveSettings = WaveSettings.Exit_Objective_Easy.PersistentId,
-                                WavePopulation = WavePopulation.OnlyNightmares.PersistentId,
+                                Settings = WaveSettings.Exit_Objective_Easy,
+                                Population = WavePopulation.OnlyNightmares,
                                 SpawnDelay = 5.0,
                                 TriggerAlarm = true
                             });
                         else
                             WavesOnGotoWin.Add(new GenericWave
                             {
-                                WaveSettings = WaveSettings.Exit_Objective_VeryHard.PersistentId,
-                                WavePopulation = WavePopulation.Baseline.PersistentId,
+                                Settings = WaveSettings.Exit_Objective_VeryHard,
+                                Population = WavePopulation.Baseline,
                                 SpawnDelay = 5.0,
                                 TriggerAlarm = true
                             });

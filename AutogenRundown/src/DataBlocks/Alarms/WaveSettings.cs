@@ -302,7 +302,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WaveSettings.AddBlock(SingleMiniBoss);
         }
 
-        public static WaveSettings None = new() { PersistentId = 0, Name = "None" };
+        public static readonly WaveSettings None = new() { PersistentId = 0, Name = "None" };
 
         #region Alarm waves -- Baseline
         public static WaveSettings Baseline_Easy = new()

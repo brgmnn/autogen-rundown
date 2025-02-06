@@ -60,16 +60,16 @@ public partial record WardenObjective : DataBlock
                     .AddMessage($"{Intel.Error}! Alarm Active", 7.0)
                     .AddSpawnWave(new GenericWave
                     {
-                        WavePopulation = WavePopulation.Baseline.PersistentId,
-                        WaveSettings = WaveSettings.Error_Easy.PersistentId,
+                        Population = WavePopulation.Baseline,
+                        Settings = WaveSettings.Error_Easy,
                     }, 8.0)),
 
             // Some padding waves to always have something
             (0.5, 3, new List<WardenObjectiveEvent>()
                     .AddSpawnWave(new GenericWave
                     {
-                        WavePopulation = WavePopulation.Baseline.PersistentId,
-                        WaveSettings = WaveSettings.Finite_35pts_Hard.PersistentId
+                        Population = WavePopulation.Baseline,
+                        Settings = WaveSettings.Finite_35pts_Hard
                     }, 15.0))
         };
 
