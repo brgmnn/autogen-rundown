@@ -17,6 +17,12 @@ TODO:
   * Use Zone Prefix Override to alert to specific tiles.
   * Enable unit tests again after fixing chained puzzles.
   * Don't allow small item pickup to have so many extras that we don't need to do all the zones
+  * Make giants blood door a bit harder? B-tier was easy
+
+Monthly Feb bugs
+  * Double cargo B1
+
+Missing tiles to add
   * Add R8A1 garden hub tile to hubs
 
 Seed: 2024_12_19
@@ -44,17 +50,17 @@ Seed: 2024_07_08
 * Reduce chance of nightmare scout spawning on reactor levels. It requires specialized tool
   generally
 
-Seed: 2024_07_07
-* Can we change the reactor enemy waves to spawn from one direction?
-  * Seems like yes but only if we build right next to the elevator drop.
-
 -->
 
-Automatic Rundown generation, using procedural seed based generation. A new rundown seed is generated each day. Play with friends with zero configuration.
+Automatic Rundown generation, using procedural seed based generation. Three active rundowns to choose from: the daily, weekly, and monthly. Play with friends with zero configuration of seeds.
 
-Levels and rundowns are designed to feel like playing fairly vanilla GTFO. Some custom tiles are used to complete the game for things like Reactor in Floodways.
+![Rundown Selection](https://github.com/brgmnn/autogen-rundown/blob/03583187a757755e486623da73d4712e00187be7/docs/rundown_selection.jpg?raw=true "Rundown Selection")
 
-![Rundown Preview](https://github.com/brgmnn/autogen-rundown/blob/1aeb44424053e812f7b055f14a5045cbddcbc6c8/docs/rundown_preview.jpg?raw=true "Rundown Preview")
+Track your progression in each rundown separately from the base game and other modded rundowns, see if you can clear them "Unaugmented"! (Without boosters)
+
+![Monthly Rundown Preview](https://github.com/brgmnn/autogen-rundown/blob/03583187a757755e486623da73d4712e00187be7/docs/monthly_rundown.jpg?raw=true "Monthly Rundown Preview")
+
+Levels and rundowns are designed to be similar and in the spirit of vanilla GTFO. The largest difference is in the addition of new tilesets (geomorphs) to add more variety to the existing games set of tiles.
 
 ## Installation
 
@@ -196,3 +202,15 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] Yellow
   * [x] Halloween (orange)
   * [x] Christmas (red)
+
+## Acknowledgements
+
+Many thanks to the modding community for making GTFO modding possible, and a special thank you to the following creators for work that this mod depends on:
+
+* Dak's [MTFO](https://thunderstore.io/c/gtfo/p/dakkhuza/MTFO/) and [Geomorph Pack](https://thunderstore.io/c/gtfo/p/dakkhuza/DakGeos/)
+* Inas07's [many mods](https://thunderstore.io/c/gtfo/p/Inas07/)
+  * Notably [LocalProgression](https://thunderstore.io/c/gtfo/p/Inas07/LocalProgression/) and [ExtraObjectiveSetup](https://thunderstore.io/c/gtfo/p/Inas07/ExtraObjectiveSetup/)
+* Flowaria's [Geomorph Pack](https://thunderstore.io/c/gtfo/p/Flowaria/FlowGeos/)
+  * Including the fantastic Floodways Reactor tile enables reactor missions in the service Complex.
+* donan3967's [Geomorph Pack](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_1/)
+* Red_Leicester_Cheese's [Geomorph Pack](https://thunderstore.io/c/gtfo/p/Red_Leicester_Cheese/CheeseGeos/)
