@@ -164,7 +164,7 @@ jobs:
           mv deps/dakkhuza-DakGeos/* build/AutogenRundown_GTFO/BepInEx/plugins/dakkhuza-DakGeos/
 
           # --- donan3967 geo pack 1
-          mv deps/donan3967-donan3967_geo_pack_1/plugins build/AutogenRundown_GTFO/BepInEx/plugins/donan3967-donan3967_geo_pack_1
+          mkdir build/AutogenRundown_GTFO/BepInEx/plugins/donan3967-donan3967_geo_pack_1
           mv deps/donan3967-donan3967_geo_pack_1/Assets/AssetBundles/* build/AutogenRundown_GTFO/BepInEx/Assets/AssetBundles/
           mv deps/donan3967-donan3967_geo_pack_1/* build/AutogenRundown_GTFO/BepInEx/plugins/donan3967-donan3967_geo_pack_1/
 
