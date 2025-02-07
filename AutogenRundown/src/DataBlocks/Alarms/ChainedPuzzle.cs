@@ -419,6 +419,18 @@ public record ChainedPuzzle : DataBlock
 
     /******************** Non-Alarm Scans ********************/
     /// <summary>
+    /// Some tiles depend on this
+    /// </summary>
+    public static readonly ChainedPuzzle Scan = new()
+    {
+        PersistentId = 4,
+        PublicAlarmName = "Scan",
+        TriggerAlarmOnActivate = false,
+        FixedAlarm = true,
+        Puzzle = new List<PuzzleComponent> { PuzzleComponent.AllBig },
+    };
+
+    /// <summary>
     /// Standard team (orange) scan
     /// </summary>
     public static readonly ChainedPuzzle TeamScan = new()
@@ -1173,6 +1185,7 @@ public record ChainedPuzzle : DataBlock
         BulkheadSelect_Overload.Persist();
 
         // Special terminal command, HSUFindSample etc. use these puzzles
+        Scan.Persist();
         TeamScan.Persist();
         TeamScan_Slow.Persist();
 

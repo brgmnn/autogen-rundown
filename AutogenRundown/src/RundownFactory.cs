@@ -61,7 +61,7 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
-        #region Debugging test level
+        #region Regular debugging level
         #if false
         if (withFixed)
         {
@@ -90,6 +90,29 @@ public static class RundownFactory
                     Index = rundown.TierA_Count + 1,
                     IsTest = true
                 });
+            rundown.AddLevel(testLevel);
+        }
+        #endif
+        #endregion
+
+        #region Geomorph Debugging test level
+        #if true
+        if (withFixed)
+        {
+            var settings = new LevelSettings("A");
+
+            var testLevel = Level.Debug_BuildGeoTest(
+                "Assets/Bundles/RLC_Tech/geo_64x64_tech_datacenter_I_RLC_01.prefab",
+                new Level("A")
+                {
+                    Tier = "A",
+                    Name = "Debug Test",
+                    Complex = Complex.Tech,
+                    Settings = settings,
+                    Index = rundown.TierA_Count + 1,
+                    IsTest = true
+                }, 3);
+
             rundown.AddLevel(testLevel);
         }
         #endif

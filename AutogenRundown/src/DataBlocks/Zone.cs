@@ -221,7 +221,10 @@ namespace AutogenRundown.DataBlocks
 
                         // --- MOD Geomorphs ---
                         // DakGeos
-                        (SubComplex.DigSite, "assets/geo_64x64_dig_site_exit_dak_01.prefab")
+                        (SubComplex.DigSite, "Assets/geo_64x64_dig_site_exit_dak_01.prefab"),
+
+                        // Red_Leicester_Cheese
+                        (SubComplex.Storage, "Assets/Bundles/RLC_Mining/geo_64x64_mining_storage_exit_hub_RLC_01.prefab")
                     });
                     break;
 
@@ -276,6 +279,9 @@ namespace AutogenRundown.DataBlocks
                         // --- MOD Geomorphs ---
                         // DakGeos
                         (SubComplex.DigSite, "assets/geo_64x64_mining_dig_site_t_dak_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+
+                        // Red_Leicester_Cheese
+                        (SubComplex.Refinery, "Assets/Bundles/RLC_Mining/geo_64x64_mining_refinery_X_RLC_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     });
                     break;
 
@@ -298,6 +304,10 @@ namespace AutogenRundown.DataBlocks
                         // --- MOD Geomorphs ---
                         // donan3967
                         (SubComplex.DataCenter, "Assets/geo_64x64_tech_data_center_hub_DS_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
+                        // Red_Leicester_Cheese
+                        (SubComplex.Lab, "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_Hub_RLC_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                        (SubComplex.DataCenter, "Assets/Bundles/RLC_Tech/geo_64x64_tech_data_center_hub_JG_RLC_02_v3.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     });
                     break;
 
@@ -356,6 +366,10 @@ namespace AutogenRundown.DataBlocks
                         // --- MOD Geomorphs ---
                         // DakGeos
                         (SubComplex.DigSite, "assets/geo_64x64_dig_site_i_dak_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+
+                        // Red_Leicester_Cheese
+                        (SubComplex.Storage, "Assets/Bundles/RLC_Mining/geo_64x64_mining_storage_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
+                        (SubComplex.Refinery, "Assets/Bundles/RLC_Mining/geo_64x64_mining_refinery_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
                     });
                     break;
 
@@ -379,6 +393,10 @@ namespace AutogenRundown.DataBlocks
 
                         // FlowGeos
                         (SubComplex.DataCenter, "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_I_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
+                        // Red_Leicester_Cheese
+                        (SubComplex.Lab, "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
+                        (SubComplex.DataCenter, "Assets/Bundles/RLC_Tech/geo_64x64_tech_datacenter_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
                     });
                     break;
 
@@ -658,6 +676,8 @@ namespace AutogenRundown.DataBlocks
 
         /// <summary>
         /// Used for king of the hill or other areas
+        ///
+        /// Dead end geos
         /// </summary>
         /// <param name="complex"></param>
         public void GenKingOfTheHillSpawnGeomorph(Complex complex)
@@ -670,9 +690,12 @@ namespace AutogenRundown.DataBlocks
                         // (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_dead_end_HA_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
                         // (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_dead_end_HA_01_R8B3.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
 
-                        // TODO: add more
-                        // Mod Geos
+                        // --- MOD Geomorphs ---
+                        // Floweria
                         (SubComplex.Storage, "Assets/Prefabs/Geomorph/Mining/geo_storage_FA_dead_end_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
+
+                        // Red_Leicester_Cheese
+                        (SubComplex.DigSite, "Assets/Bundles/RLC_Mining/geo_64x64_mining_digsite_dead_end_RLC_01.prefab", new CoverageMinMax { Min = 10, Max = 15 }),
                     });
                     break;
 
@@ -683,7 +706,8 @@ namespace AutogenRundown.DataBlocks
                         (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_data_center_dead_end_HA_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
                         (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_dead_end_HA_03.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
 
-                        // Mod Geos
+                        // --- MOD Geomorphs ---
+                        // Floweria
                         (SubComplex.Lab, "Assets/Prefabs/Geomorph/Tech/geo_lab_FA_dead_end_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
                     });
                     break;

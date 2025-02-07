@@ -182,6 +182,63 @@ public class ComplexResourceSet
             SubComplex = SubComplex.Storage
         });
         #endregion
+
+        #region MODDER: Red_Leicester_Cheese
+        // Simple dead end tile
+        resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/Bundles/RLC_Mining/geo_64x64_mining_digsite_dead_end_RLC_01.prefab",
+            SubComplex = SubComplex.DigSite
+        });
+
+        // Non-destroyed elevator exit.
+        // TODO: not totally convinced on keeping this one
+        resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Exit_1x1", new Prefab()
+        {
+            Asset = "Assets/Bundles/RLC_Mining/geo_64x64_mining_storage_exit_hub_RLC_01.prefab",
+            SubComplex = SubComplex.Storage
+        });
+
+        // Corridor / I tile
+        resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/Bundles/RLC_Mining/geo_64x64_mining_storage_I_RLC_01.prefab",
+            SubComplex = SubComplex.Storage
+        });
+
+        // Hub tile
+        resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/Bundles/RLC_Mining/geo_64x64_mining_refinery_X_RLC_01.prefab",
+            SubComplex = SubComplex.Refinery
+        });
+
+        // Basic Corridor I-tile
+        resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/Bundles/RLC_Mining/geo_64x64_mining_refinery_I_RLC_01.prefab",
+            SubComplex = SubComplex.Refinery
+        });
+
+        // Corridor I-tile with a broken portal machine.
+        // NOTE: Has no good terminal spawns it seems and there's a model prisoner under the tile.
+        // Reference model perhaps?
+        // TODO: Decide if we add this to the corridor list
+        resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/Bundles/RLC_Mining/geo_64x64_mining_refinery_portal_I_RLC_01.prefab",
+            SubComplex = SubComplex.Refinery
+        });
+
+        // Reactor tile for digsite.
+        // TODO: This one needs custom lighting (see the CheeseGeo readme). Adding this will have
+        // to wait on working on the custom LightSettings.
+        resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/Bundles/RLC_Mining/geo_64x64_mining_reactor_RLC_01.prefab",
+            SubComplex = SubComplex.All
+        });
+        #endregion
         #endregion
 
         #region Tech
@@ -256,6 +313,38 @@ public class ComplexResourceSet
         resourceSet.AddPrefab(Complex.Tech, "ElevatorShafts_1x1", new Prefab()
         {
             Asset = "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_elevator_shaft_01.prefab",
+            SubComplex = SubComplex.DataCenter
+        });
+        #endregion
+
+        #region MODDER: Red_Leicester_Cheese
+        // Lab Corridor
+        // NOTE: they have a weird stair railing on the way to the bottom level. It goes
+        // into the ground
+        resourceSet.AddPrefab(Complex.Tech, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_I_RLC_01.prefab",
+            SubComplex = SubComplex.Lab
+        });
+
+        // Hub tile
+        resourceSet.AddPrefab(Complex.Tech, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_Hub_RLC_01.prefab",
+            SubComplex = SubComplex.Lab
+        });
+
+        // Hub tile
+        resourceSet.AddPrefab(Complex.Tech, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/Bundles/RLC_Tech/geo_64x64_tech_data_center_hub_JG_RLC_02_v3.prefab",
+            SubComplex = SubComplex.DataCenter
+        });
+
+        // Corridor I-tile
+        resourceSet.AddPrefab(Complex.Tech, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/Bundles/RLC_Tech/geo_64x64_tech_datacenter_I_RLC_01.prefab",
             SubComplex = SubComplex.DataCenter
         });
         #endregion

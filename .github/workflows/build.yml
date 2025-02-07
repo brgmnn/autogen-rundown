@@ -156,7 +156,7 @@ jobs:
           # ====== Custom Geomorphs ======
           # --- Daks Geos
           mv deps/dakkhuza-DakGeos/plugins build/AutogenRundown_GTFO/BepInEx/plugins/dakkhuza-DakGeos
-          mv deps/dakkhuza-DakGeos/Assets/AssetBundles/* build/AutogenRundown_GTFO/BepInEx/Assets/AssetBundles/
+          mv deps/dakkhuza-DakGeos/config/Assets/AssetBundles/* build/AutogenRundown_GTFO/BepInEx/Assets/AssetBundles/
           mv deps/dakkhuza-DakGeos/* build/AutogenRundown_GTFO/BepInEx/plugins/dakkhuza-DakGeos/
 
           # --- donan3967 geo pack 1
@@ -168,6 +168,11 @@ jobs:
           mv deps/Flowaria-FlowGeos/plugins build/AutogenRundown_GTFO/BepInEx/plugins/Flowaria-FlowGeos
           mv deps/Flowaria-FlowGeos/Assets/AssetBundles/* build/AutogenRundown_GTFO/BepInEx/Assets/AssetBundles/
           mv deps/Flowaria-FlowGeos/* build/AutogenRundown_GTFO/BepInEx/plugins/Flowaria-FlowGeos/
+
+          # --- CheeseGeos
+          mv deps/Red_Leicester_Cheese-CheeseGeos/plugins build/AutogenRundown_GTFO/BepInEx/plugins/Red_Leicester_Cheese-CheeseGeos
+          mv deps/Red_Leicester_Cheese-CheeseGeos/Assets/AssetBundles/* build/AutogenRundown_GTFO/BepInEx/Assets/AssetBundles/
+          mv deps/Red_Leicester_Cheese-CheeseGeos/* build/AutogenRundown_GTFO/BepInEx/plugins/Red_Leicester_Cheese-CheeseGeos/
 
 
           # Custom config
