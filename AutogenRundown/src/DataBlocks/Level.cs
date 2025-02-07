@@ -218,9 +218,23 @@ namespace AutogenRundown.DataBlocks
                 ["ExpeditionDescription"] = Description,
 
                 // Warden intel displays during drop
-                ["RoleplayedWardenIntel"] = 1426
+                // Original:
+                //
+                //  "... Shoot me then, 'cause I'm not going in there.  \r\n... Look, there's no time– \r\n... [gunshot]  \r\n... <size=200%><color=red>Start scanning.\r</color></size>",
+                // ["RoleplayedWardenIntel"] = 1426
+                ["RoleplayedWardenIntel"] = ElevatorDropWardenIntel,
             };
         }
+
+        /// <summary>
+        /// This string is displayed in the drop of the elevator as a role played intel message
+        /// from the warden. It's always supposed to be an intercepted audio transmission from
+        /// other prisoners attempting this particular mission and should hint at some of the
+        /// surprises that will be found in the level.
+        /// </summary>
+        [JsonIgnore]
+        public string ElevatorDropWardenIntel { get; set; } =
+            "... Shoot me then, 'cause I'm not going in there.  \r\n... Look, there's no time– \r\n... [gunshot]  \r\n... <size=200%><color=red>Start scanning.\r</color></size>";
 
         /// <summary>
         /// Level build seed. Use this to re-roll the level
@@ -740,7 +754,7 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         /// <param name="level"></param>
         /// <returns></returns>
-        public static Level Debug_BuildGeoTest(string geo, Level level)
+        public static Level Debug_BuildGeoTest(string geo, Level level, int forwardZones = 0)
         {
             try
             {
@@ -794,8 +808,20 @@ namespace AutogenRundown.DataBlocks
                     CustomGeomorph = geo
                 };
 
+                // elevatorDropZone.EnemySpawningInZone.Add(
+                //     EnemySpawningData.TankPotato_AlignedSpawn with { Points = 10 });
+
                 level.Planner.AddZone(elevatorDrop, elevatorDropZone);
                 layout.Zones.Add(elevatorDropZone);
+
+                for (var z = 0; z < forwardZones; z++)
+                    layout.Zones.Add(new Zone
+                    {
+                        Coverage = new CoverageMinMax { Min = 5, Max = 10 },
+                        LightSettings = Lights.GenRandomLight(),
+                        LocalIndex = z + 1,
+                        BuildFromLocalIndex = 0
+                    });
 
                 Bins.LevelLayouts.AddBlock(layout);
             }
