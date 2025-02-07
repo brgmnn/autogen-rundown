@@ -154,6 +154,11 @@ jobs:
           mv deps/Inas07-LocalProgression/* build/AutogenRundown_GTFO/BepInEx/plugins/Inas07-LocalProgression/
 
           # ====== Custom Geomorphs ======
+          # --- Daks Geos
+          mv deps/dakkhuza-DakGeos/plugins build/AutogenRundown_GTFO/BepInEx/plugins/dakkhuza-DakGeos
+          mv deps/dakkhuza-DakGeos/Assets/AssetBundles/* build/AutogenRundown_GTFO/BepInEx/Assets/AssetBundles/
+          mv deps/dakkhuza-DakGeos/* build/AutogenRundown_GTFO/BepInEx/plugins/dakkhuza-DakGeos/
+
           # --- donan3967 geo pack 1
           mv deps/donan3967-donan3967_geo_pack_1/plugins build/AutogenRundown_GTFO/BepInEx/plugins/donan3967-donan3967_geo_pack_1
           mv deps/donan3967-donan3967_geo_pack_1/Assets/AssetBundles/* build/AutogenRundown_GTFO/BepInEx/Assets/AssetBundles/

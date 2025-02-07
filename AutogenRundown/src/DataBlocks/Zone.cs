@@ -215,8 +215,14 @@ namespace AutogenRundown.DataBlocks
             switch (complex)
             {
                 case Complex.Mining:
-                    CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_exit_01.prefab";
-                    SubComplex = SubComplex.All;
+                    (SubComplex, CustomGeomorph) = Generator.Pick(new List<(SubComplex, string)>
+                    {
+                        (SubComplex.All,        "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_exit_01.prefab"),
+
+                        // --- MOD Geomorphs ---
+                        // DakGeos
+                        (SubComplex.DigSite, "assets/geo_64x64_dig_site_exit_dak_01.prefab")
+                    });
                     break;
 
                 case Complex.Tech:
@@ -265,7 +271,11 @@ namespace AutogenRundown.DataBlocks
                         (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_02.prefab", new CoverageMinMax { Min = 40, Max = 60 }),
                         (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_03.prefab", new CoverageMinMax { Min = 35, Max = 90 }),
                         (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_04.prefab", new CoverageMinMax { Min = 20, Max = 50 }),
-                        (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_VS_01.prefab", new CoverageMinMax { Min = 25, Max = 35 })
+                        (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_VS_01.prefab", new CoverageMinMax { Min = 25, Max = 35 }),
+
+                        // --- MOD Geomorphs ---
+                        // DakGeos
+                        (SubComplex.DigSite, "assets/geo_64x64_mining_dig_site_t_dak_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                     });
                     break;
 
@@ -342,6 +352,10 @@ namespace AutogenRundown.DataBlocks
                         (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_I_HA_06.prefab", new CoverageMinMax { Min = 15, Max = 25 }),
 
                         (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_I_HA_01.prefab", new CoverageMinMax { Min = 10, Max = 20 }),
+
+                        // --- MOD Geomorphs ---
+                        // DakGeos
+                        (SubComplex.DigSite, "assets/geo_64x64_dig_site_i_dak_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                     });
                     break;
 

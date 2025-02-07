@@ -123,6 +123,52 @@ public class ComplexResourceSet
         });
         #endregion
 
+        #region MODDER: dakkhuza
+        // Modder notes:
+        //
+        // > This tile is a T intersection. Exits are forward and right. There is a flyer
+        // > spawnpoint in the fan. A terminal can spawn inside the small elevator.
+        // > There is a variation without the spawnpoints called
+        // > "assets/geo_64x64_mining_dig_site_t_dak_01_nospawn.prefab"
+        resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "assets/geo_64x64_mining_dig_site_t_dak_01.prefab",
+            SubComplex = SubComplex.DigSite
+            // Shard = "2"
+        });
+
+        // Modder notes:
+        //
+        // > This tile is a bridge tile. There is one exit opposite the entrance. The bridge has
+        // > a roof area and catwalks running underneath. There is a variation without the
+        // > spawnpoints called "assets/geo_64x64_dig_site_i_dak_01_nospawn.prefab"
+        resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "assets/geo_64x64_dig_site_i_dak_01.prefab",
+            SubComplex = SubComplex.DigSite
+            // Shard = "2"
+        });
+
+        // Modder notes (for both tiles):
+        //
+        // > This tile is configured as an exit. It is a dead end tile. There are open areas to the
+        // > left and right of the evac point. There is a variation of this configured as a regular
+        // > dead end tile, "ASSETS/GEO_64X64_DIG_SITE_DEAD_END_DAK_01.PREFAB"
+        // > Use the dead end tile if you don't want to be forced into a forward evac.
+        resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Exit_1x1", new Prefab()
+        {
+            Asset = "assets/geo_64x64_dig_site_exit_dak_01.prefab",
+            SubComplex = SubComplex.DigSite
+            // Shard = "2"
+        });
+        resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "assets/geo_64x64_dig_site_dead_end_dak_01.prefab",
+            SubComplex = SubComplex.DigSite
+            // Shard = "2"
+        });
+        #endregion
+
         #region MODDER: Floweria
         // Floweria tiles
         resourceSet.AddPrefab(Complex.Mining, "GeomorphTiles_1x1", new Prefab()

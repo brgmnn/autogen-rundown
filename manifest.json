@@ -6,8 +6,9 @@
   "dependencies": [
     "BepInEx-BepInExPack_GTFO-3.2.1",
     "dakkhuza-MTFO-4.6.2",
-    "Flowaria-FlowGeos-0.9.3",
+    "dakkhuza-DakGeos-0.3.8",
     "donan3967-donan3967_geo_pack_1-1.1.1",
+    "Flowaria-FlowGeos-0.9.3",
     "Inas07-EOSExt_Reactor-1.0.7",
     "Inas07-ExtraObjectiveSetup-1.6.4",
     "Inas07-LocalProgression-1.3.7"
