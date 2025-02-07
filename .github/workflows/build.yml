@@ -144,10 +144,20 @@ jobs:
           # --- MTFO
           mv deps/dakkhuza-MTFO build/AutogenRundown_GTFO/BepInEx/plugins/
 
+          # --- Extra Objective Setup and friends
+          mv deps/Inas07-ExtraObjectiveSetup/* build/AutogenRundown_GTFO/BepInEx/plugins/Inas07-ExtraObjectiveSetup/
+          mv deps/Inas07-EOSExt_Reactor/* build/AutogenRundown_GTFO/BepInEx/plugins/Inas07-EOSExt_Reactor/
+
           # --- LocalProgression
           mv deps/Inas07-LocalProgression/plugins build/AutogenRundown_GTFO/BepInEx/plugins/Inas07-LocalProgression
           mv deps/Inas07-LocalProgression/Assets/AssetBundles/* build/AutogenRundown_GTFO/BepInEx/Assets/AssetBundles/
           mv deps/Inas07-LocalProgression/* build/AutogenRundown_GTFO/BepInEx/plugins/Inas07-LocalProgression/
+
+          # ====== Custom Geomorphs ======
+          # --- donan3967 geo pack 1
+          mv deps/donan3967-donan3967_geo_pack_1/plugins build/AutogenRundown_GTFO/BepInEx/plugins/donan3967-donan3967_geo_pack_1
+          mv deps/donan3967-donan3967_geo_pack_1/Assets/AssetBundles/* build/AutogenRundown_GTFO/BepInEx/Assets/AssetBundles/
+          mv deps/donan3967-donan3967_geo_pack_1/* build/AutogenRundown_GTFO/BepInEx/plugins/donan3967-donan3967_geo_pack_1/
 
           # --- FlowGeos
           mv deps/Flowaria-FlowGeos/plugins build/AutogenRundown_GTFO/BepInEx/plugins/Flowaria-FlowGeos
