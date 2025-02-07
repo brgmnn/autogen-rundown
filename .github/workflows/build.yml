@@ -159,7 +159,7 @@ jobs:
 
           # ====== Custom Geomorphs ======
           # --- Daks Geos
-          mv deps/dakkhuza-DakGeos/plugins build/AutogenRundown_GTFO/BepInEx/plugins/dakkhuza-DakGeos
+          mkdir build/AutogenRundown_GTFO/BepInEx/plugins/dakkhuza-DakGeos
           mv deps/dakkhuza-DakGeos/config/Assets/AssetBundles/* build/AutogenRundown_GTFO/BepInEx/Assets/AssetBundles/
           mv deps/dakkhuza-DakGeos/* build/AutogenRundown_GTFO/BepInEx/plugins/dakkhuza-DakGeos/
 
