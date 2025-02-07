@@ -38,5 +38,5 @@ public class ProgressionPuzzle
     /// <summary>
     /// Alternative placement locations. Picked randomly from the list.
     /// </summary>
-    public List<ZonePlacementData> ZonePlacementData { get; set; } = new List<ZonePlacementData>();
+    public List<ZonePlacementData> ZonePlacementData { get; set; } = new();
 }
