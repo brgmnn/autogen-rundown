@@ -8,6 +8,41 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         ///
         /// </summary>
+        /// <param name="lockedNode">
+        ///     The ZoneNode who's entrance is to be locked behind the power generator
+        /// </param>
+        /// <param name="cellNode">The ZoneNode to place the power cell</param>
+        public void AddGeneratorPuzzle(ZoneNode lockedNode, ZoneNode cellNode)
+        {
+            var lockedZone = level.Planner.GetZone(lockedNode);
+            var cellZone = level.Planner.GetZone(cellNode);
+
+            if (lockedZone == null || cellZone == null)
+            {
+                Plugin.Logger.LogWarning($"AddGeneratorPuzzle() returned early due to missing zones: locked={lockedZone} cell={cellZone}");
+                return;
+            }
+
+            // Place the key for the locked zone
+            lockedZone.ProgressionPuzzleToEnter = new ProgressionPuzzle
+            {
+                PuzzleType = ProgressionPuzzleType.Generator,
+                PlacementCount = 0,
+                // ZonePlacementData = new List<ZonePlacementData>
+                // {
+                //     new() { LocalIndex = cellNode.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart }
+                // }
+            };
+
+            cellZone.ForceBigPickupsAllocation = true;
+            // TODO: Change this so we can dynamically set distributions
+            // For instance adding additional cells without needing to know what they are
+            cellZone.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
         /// <param name="lockedNode"></param>
         /// <param name="searchBranch"></param>
         /// <param name="generatorBranchLength"></param>
