@@ -1,0 +1,12 @@
+﻿namespace AutogenRundown.DataBlocks.Light;
+
+public enum LightCategory
+{
+    General = 0,
+    Special = 1,
+    Emergency = 2,
+    Independent = 3,
+    Door = 4,
+    Sign = 5,
+    DoorImportant = 6
+}
