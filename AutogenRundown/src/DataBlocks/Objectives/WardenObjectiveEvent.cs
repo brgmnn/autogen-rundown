@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Enemies;
+﻿using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
+using AutogenRundown.DataBlocks.Enemies;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -86,5 +87,30 @@ public record class WardenObjectiveEvent
     public int DimensionIndex = 0;
     public uint SoundSubtitle = 0;
     public uint DialogueID = 0;
+    #endregion
+
+    #region ====== MODS: AWO AdvancedWardenObjective ======
+
+    /// <summary>
+    /// Used in conjunction with EventType.SetLightDataInZone (10016) to update the lights in a
+    /// zone. Accepts the following structure as per the wiki
+    ///
+    /// ```json
+    /// {
+    ///   "Type": 10016,
+    ///   "DimensionIndex": 0,
+    ///   "Layer": 0,
+    ///   "LocalIndex": 0,
+    ///   "SetZoneLight": {
+    ///     "Type": "SetZoneLightData", // Accepted enums: RevertToOriginal, SetZoneLightData
+    ///     "LightDataID": 20,
+    ///     "TransitionDuration": 1.0,
+    ///     "Seed": 0
+    ///   }
+    /// }
+    /// ```
+    /// </summary>
+    public SetZoneLight SetZoneLight { get; set; } = new();
+
     #endregion
 }
