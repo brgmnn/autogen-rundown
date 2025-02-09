@@ -1169,7 +1169,7 @@ public record ChainedPuzzle : DataBlock
     };
     #endregion
 
-    public static new void SaveStatic()
+    public new static void SaveStatic()
     {
         ///
         /// IMPORTANT NOTE:

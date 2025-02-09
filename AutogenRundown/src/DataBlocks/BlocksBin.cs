@@ -24,6 +24,8 @@ namespace AutogenRundown.DataBlocks
             = new BlocksBin<GameSetup>();
         public static BlocksBin<LevelLayout> LevelLayouts { get; private set; }
             = new BlocksBin<LevelLayout>();
+
+        public static LazyBlocksBin<Light.LightSettings> LightSettings { get; private set; } = new();
         public static BlocksBin<Rundown> Rundowns { get; private set; }
             = new BlocksBin<Rundown>();
         public static BlocksBin<Text> Texts { get; private set; }
@@ -40,6 +42,8 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public static void Setup()
         {
+            Light.LightSettings.Setup();
+            Light.LightSettings.SaveStatic();
             Text.Setup();
             Text.SaveStatic();
 
@@ -74,6 +78,7 @@ namespace AutogenRundown.DataBlocks
             Fogs.Save("FogSettings");
             GameSetups.Save("GameSetup");
             LevelLayouts.Save("LevelLayout");
+            LightSettings.Save("LightSettings");
             Rundowns.Save("Rundown");
             Texts.Save("Text");
             WardenObjectives.Save("WardenObjective");
