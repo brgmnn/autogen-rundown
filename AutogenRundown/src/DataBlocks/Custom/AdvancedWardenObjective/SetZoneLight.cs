@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AutogenRundown.DataBlocks.Light;
+using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 
@@ -21,7 +22,13 @@ public record SetZoneLight
     /// LightSettingsDB id to change zone lights to.
     /// </summary>
     [JsonProperty("LightDataID")]
-    public uint LightSettings { get; set; } = 0u;
+    public uint LocalIndex
+    {
+        get => LightSettings.PersistentId;
+        private set { }
+    }
+
+    [JsonIgnore] public LightSettings LightSettings { get; set; } = LightSettings.None;
 
     /// <summary>
     /// How long to transition between the lights
