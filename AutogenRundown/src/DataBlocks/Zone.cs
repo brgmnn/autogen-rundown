@@ -864,41 +864,42 @@ namespace AutogenRundown.DataBlocks
 
             var parent = level.Planner.GetBuildFrom(new ZoneNode { Bulkhead = Bulkhead.Extreme, ZoneNumber = LocalIndex });
 
-            if (level.Tier == "A")
-            {
-                EventsOnDoorScanStart.Add(
-                    new WardenObjectiveEvent()
-                    {
-                        Type = WardenObjectiveEventType.SetLightDataInZone,
-                        Trigger = WardenObjectiveEventTrigger.OnStart,
-                        LocalIndex = parent?.ZoneNumber ?? 0,
-                        Layer = 0,
-                        Delay = 0.0,
-                        Duration = 0.1,
-                        SetZoneLight = new()
-                        {
-                            LightSettings = Light.LightSettings.RedZoneDoor,
-                            Duration = 0.1,
-                            Seed = 1,
-                        }
-                    });
-                EventsOnDoorScanDone.Add(
-                    new WardenObjectiveEvent()
-                    {
-                        Type = WardenObjectiveEventType.SetLightDataInZone,
-                        Trigger = WardenObjectiveEventTrigger.OnStart,
-                        LocalIndex = parent?.ZoneNumber ?? 0,
-                        Layer = 0,
-                        Delay = 0.0,
-                        Duration = 0.1,
-                        SetZoneLight = new()
-                        {
-                            Duration = 0.1,
-                            Seed = 1,
-                            SetLight = SetZoneLightType.Revert
-                        }
-                    });
-            }
+            // // Flashing alarm test code
+            // if (level.Tier == "A")
+            // {
+            //     EventsOnDoorScanStart.Add(
+            //         new WardenObjectiveEvent()
+            //         {
+            //             Type = WardenObjectiveEventType.SetLightDataInZone,
+            //             Trigger = WardenObjectiveEventTrigger.OnStart,
+            //             LocalIndex = parent?.ZoneNumber ?? 0,
+            //             Layer = 0,
+            //             Delay = 0.0,
+            //             Duration = 0.1,
+            //             SetZoneLight = new()
+            //             {
+            //                 LightSettings = Light.LightSettings.RedZoneDoor,
+            //                 Duration = 0.1,
+            //                 Seed = 1,
+            //             }
+            //         });
+            //     EventsOnDoorScanDone.Add(
+            //         new WardenObjectiveEvent()
+            //         {
+            //             Type = WardenObjectiveEventType.SetLightDataInZone,
+            //             Trigger = WardenObjectiveEventTrigger.OnStart,
+            //             LocalIndex = parent?.ZoneNumber ?? 0,
+            //             Layer = 0,
+            //             Delay = 0.0,
+            //             Duration = 0.1,
+            //             SetZoneLight = new()
+            //             {
+            //                 Duration = 0.1,
+            //                 Seed = 1,
+            //                 SetLight = SetZoneLightType.Revert
+            //             }
+            //         });
+            // }
 
 
             // if (level.Tier == "A")
