@@ -62,30 +62,39 @@ public static class RundownFactory
         }
 
         #region Regular debugging level
-        #if false
+        #if true
         if (withFixed)
         {
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
-                Complex = Complex.Tech,
+                Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "A",
-                Objective = WardenObjectiveType.ReactorShutdown,
+                Objective = WardenObjectiveType.HsuFindSample,
             };
             mainDirector.GenPoints();
 
+            var extremeDirector = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Extreme,
+                Complex = Complex.Mining,
+                Complexity = Complexity.Low,
+                Tier = "A",
+                Objective = WardenObjectiveType.HsuFindSample,
+            };
+            extremeDirector.GenPoints();
+
             var settings = new LevelSettings("A");
-            settings.Modifiers.Add(LevelModifiers.Chargers);
 
             var testLevel = Level.Build(
                 new Level("A")
                 {
                     Tier = "A",
                     Name = "Debug Test",
-                    Complex = Complex.Tech,
+                    Complex = Complex.Mining,
                     MainDirector = mainDirector,
-                    // SecondaryDirector = extremeDirector,
+                    SecondaryDirector = extremeDirector,
                     Settings = settings,
                     Index = rundown.TierA_Count + 1,
                     IsTest = true
@@ -96,7 +105,7 @@ public static class RundownFactory
         #endregion
 
         #region Geomorph Debugging test level
-        #if true
+        #if false
         if (withFixed)
         {
             var settings = new LevelSettings("A");
