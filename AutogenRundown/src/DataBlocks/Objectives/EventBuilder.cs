@@ -153,7 +153,8 @@ namespace AutogenRundown.DataBlocks.Objectives
             events.Add(
                 new WardenObjectiveEvent
                 {
-                    Type = WardenObjectiveEventType.None,
+                    Type = WardenObjectiveEventType.PlaySound,
+                    Trigger = WardenObjectiveEventTrigger.OnStart,
                     Delay = delay,
                     SoundId = sound
                 });
