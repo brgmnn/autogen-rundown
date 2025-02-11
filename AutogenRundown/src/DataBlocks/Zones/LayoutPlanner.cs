@@ -87,9 +87,9 @@ namespace AutogenRundown.DataBlocks.Zones
         private int indexExtreme = 0;
         private int indexOverload = 0;
 
-        private Dictionary<ZoneNode, List<ZoneNode>> graph = new Dictionary<ZoneNode, List<ZoneNode>>();
+        private readonly Dictionary<ZoneNode, List<ZoneNode>> graph = new Dictionary<ZoneNode, List<ZoneNode>>();
 
-        private Dictionary<ZoneNode, Zone> blocks = new Dictionary<ZoneNode, Zone>();
+        private readonly Dictionary<ZoneNode, Zone> blocks = new Dictionary<ZoneNode, Zone>();
 
         private IEnumerable<KeyValuePair<ZoneNode, List<ZoneNode>>> GetSubgraph(
                 Bulkhead bulkhead = Bulkhead.All,
@@ -184,7 +184,14 @@ namespace AutogenRundown.DataBlocks.Zones
                 BuildFromLocalIndex = GetBuildFrom(node)?.ZoneNumber ?? 0,
             };
 
-            blocks.Add(node, updatedZone);
+            try
+            {
+                blocks.Add(node, updatedZone);
+            }
+            catch (System.ArgumentException _)
+            {
+                Plugin.Logger.LogWarning($"Planner.AddZone() did not add zone as it already exists: node = ${node}");
+            }
 
             return updatedZone;
         }
@@ -253,7 +260,7 @@ namespace AutogenRundown.DataBlocks.Zones
                 .ToList();
 
         /// <summary>
-        ///
+        /// Get's all the next zones building off the source `node` zone
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>

@@ -1,7 +1,9 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
+using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
@@ -323,6 +325,43 @@ namespace AutogenRundown.DataBlocks
 
                         (SubComplex.Gardens, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_X_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
 
+                        // --- MOD Geomorphs ---
+                        // donan3967
+                        (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_hub_DS_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    });
+                    break;
+            }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="complex"></param>
+        public void GenTGeomorph(Complex complex)
+        {
+            switch (complex)
+            {
+                case Complex.Mining:
+                    (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                    {
+                        // --- MOD Geomorphs ---
+                        // DakGeos
+                        (SubComplex.DigSite, "assets/geo_64x64_mining_dig_site_t_dak_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+                    });
+                    break;
+
+                case Complex.Tech:
+                    (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                    {
+                        // --- MOD Geomorphs ---
+                        // donan3967
+                        (SubComplex.DataCenter, "Assets/geo_64x64_tech_data_center_hub_DS_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    });
+                    break;
+
+                case Complex.Service:
+                    (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                    {
                         // --- MOD Geomorphs ---
                         // donan3967
                         (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_hub_DS_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
@@ -822,6 +861,89 @@ namespace AutogenRundown.DataBlocks
             EventsOnOpenDoor.AddRange(puzzle.EventsOnOpenDoor);
             EventsOnDoorScanStart.AddRange(puzzle.EventsOnDoorScanStart);
             EventsOnDoorScanDone.AddRange(puzzle.EventsOnDoorScanDone);
+
+            var parent = level.Planner.GetBuildFrom(new ZoneNode { Bulkhead = Bulkhead.Extreme, ZoneNumber = LocalIndex });
+
+            if (level.Tier == "A")
+            {
+                EventsOnDoorScanStart.Add(
+                    new WardenObjectiveEvent()
+                    {
+                        Type = WardenObjectiveEventType.SetLightDataInZone,
+                        Trigger = WardenObjectiveEventTrigger.OnStart,
+                        LocalIndex = parent?.ZoneNumber ?? 0,
+                        Layer = 0,
+                        Delay = 0.0,
+                        Duration = 0.1,
+                        SetZoneLight = new()
+                        {
+                            LightSettings = Light.LightSettings.RedZoneDoor,
+                            Duration = 0.1,
+                            Seed = 1,
+                        }
+                    });
+                EventsOnDoorScanDone.Add(
+                    new WardenObjectiveEvent()
+                    {
+                        Type = WardenObjectiveEventType.SetLightDataInZone,
+                        Trigger = WardenObjectiveEventTrigger.OnStart,
+                        LocalIndex = parent?.ZoneNumber ?? 0,
+                        Layer = 0,
+                        Delay = 0.0,
+                        Duration = 0.1,
+                        SetZoneLight = new()
+                        {
+                            Duration = 0.1,
+                            Seed = 1,
+                            SetLight = SetZoneLightType.Revert
+                        }
+                    });
+            }
+
+
+            // if (level.Tier == "A")
+            //     EventsOnDoorScanStart.Add(
+            //         new WardenObjectiveEvent()
+            //         {
+            //             Type = WardenObjectiveEventType.StartEventLoop,
+            //             EventLoop = new()
+            //             {
+            //                 LoopIndex = 0,
+            //                 LoopDelay = 1.0,
+            //                 LoopCount = 100,
+            //                 EventsToActivate = new List<WardenObjectiveEvent>()
+            //                 {
+            //                     new WardenObjectiveEvent()
+            //                     {
+            //                         Type = WardenObjectiveEventType.SetLightDataInZone,
+            //                         LocalIndex = parent?.ZoneNumber ?? 0,
+            //                         Layer = 1,
+            //                         Delay = 0.0,
+            //                         Duration = 0.1,
+            //                         SetZoneLight = new()
+            //                         {
+            //                             LightSettings = Light.LightSettings.LightsOff,
+            //                             Duration = 0.1,
+            //                             Seed = 1,
+            //                         }
+            //                     },
+            //                     new WardenObjectiveEvent()
+            //                     {
+            //                         Type = WardenObjectiveEventType.SetLightDataInZone,
+            //                         LocalIndex = parent?.ZoneNumber ?? 0,
+            //                         Layer = 1,
+            //                         Delay = 0.5,
+            //                         Duration = 0.1,
+            //                         SetZoneLight = new()
+            //                         {
+            //                             LightSettings = Light.LightSettings.ErrorFlashOn,
+            //                             Duration = 0.1,
+            //                             Seed = 2,
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //         });
 
             // Add custom events on alarms
             if (!puzzle.FixedAlarm)
