@@ -181,6 +181,34 @@ namespace AutogenRundown
         }
 
         /// <summary>
+        /// Randomly selects from a collection of tuples of (weight, action) and runs the selected
+        /// action. Useful for 3+ choices to pick from where we would like to control the weighting
+        /// of each branch without resorting to if statements
+        /// </summary>
+        /// <param name="collection">Collection of actions to pick and run from</param>
+        /// <returns>Randomly selected item</returns>
+        public static void SelectRun(ICollection<(double, Action)> collection)
+        {
+            var totalWeight = collection.Sum((x) => x.Item1);
+            var rand = Random.NextDouble();
+            var randomWeight = rand * totalWeight;
+
+            double weightSum = 0;
+
+            foreach (var (weight, action) in collection)
+            {
+                weightSum += weight;
+
+                if (randomWeight <= weightSum)
+                {
+                    action();
+                }
+            }
+
+            collection.Last().Item2();
+        }
+
+        /// <summary>
         /// Draws an element from a collection. The collection is a list of:
         ///
         ///     (relative weighting, item count, item)
