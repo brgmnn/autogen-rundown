@@ -5,7 +5,7 @@ using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks
 {
-    public partial record class LevelLayout : DataBlock
+    public partial record LevelLayout : DataBlock
     {
         #region Generator Powered Door
         /// <summary>
@@ -17,10 +17,20 @@ namespace AutogenRundown.DataBlocks
         /// <param name="cellNode">The ZoneNode to place the power cell</param>
         public void AddGeneratorPuzzle(ZoneNode lockedNode, ZoneNode cellNode)
         {
-            var lockedZone = level.Planner.GetZone(lockedNode);
-            var cellZone = level.Planner.GetZone(cellNode);
+            var lockedZone = planner.GetZone(lockedNode);
+            var cellZone = planner.GetZone(cellNode);
+            var powerOffish = planner.GetBuildFrom(lockedNode);
 
-            if (lockedZone == null || cellZone == null)
+            if (powerOffish == null)
+            {
+                Plugin.Logger.LogWarning($"AddGeneratorPuzzle() returned early due to no parent node: locked={lockedZone} cell={cellZone}");
+                return;
+            }
+
+            var powerOff = (ZoneNode)powerOffish;
+            var powerOffZone = planner.GetZone(powerOff);
+
+            if (lockedZone == null || cellZone == null || powerOffZone == null)
             {
                 Plugin.Logger.LogWarning($"AddGeneratorPuzzle() returned early due to missing zones: locked={lockedZone} cell={cellZone}");
                 return;
@@ -37,19 +47,23 @@ namespace AutogenRundown.DataBlocks
             // TODO: Change this so we can dynamically set distributions
             // For instance adding additional cells without needing to know what they are
             cellZone.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
-            cellZone.LightSettings = Lights.Light.Pitch_black_1;
 
+            // Turn off the lights in the zone that the locked zone builds from. We will turn on
+            // the emergency lights when the cell is plugged in.
+            powerOffZone.LightSettings = Lights.Light.Pitch_black_1;
+
+            // Turn
             var powerGenerator = new IndividualPowerGenerator()
             {
-                Bulkhead = cellNode.Bulkhead,
-                ZoneNumber = cellNode.ZoneNumber,
+                Bulkhead = powerOff.Bulkhead,
+                ZoneNumber = powerOff.ZoneNumber,
                 EventsOnInsertCell = new()
                 {
                     new WardenObjectiveEvent()
                     {
                         Type = WardenObjectiveEventType.SetLightDataInZone,
                         Trigger = WardenObjectiveEventTrigger.OnStart,
-                        LocalIndex = cellZone.LocalIndex,
+                        LocalIndex = powerOff.ZoneNumber,
                         Layer = 0,
                         Delay = 2.5,
                         Duration = 0.1,
@@ -67,21 +81,36 @@ namespace AutogenRundown.DataBlocks
             level.EOS_IndividualGenerator.Definitions.Add(powerGenerator);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="lockedNode"></param>
-        /// <param name="searchBranch"></param>
-        /// <param name="generatorBranchLength"></param>
-        public void AddGeneratorPuzzle(
-            ZoneNode lockedNode,
-            string? searchBranch = null,
-            int generatorBranchLength = -1)
-        {}
-
         #endregion
 
         #region Keyed Puzzles
+        /// <summary>
+        /// Adds a keycard lock on the locked zone and places the keycard in keycardNode.
+        /// </summary>
+        /// <param name="lockedNode"></param>
+        /// <param name="keycardNode"></param>
+        public void AddKeycardPuzzle(ZoneNode lockedNode, ZoneNode keycardNode)
+        {
+            var lockedZone = level.Planner.GetZone(lockedNode);
+            var keycardZone = level.Planner.GetZone(keycardNode);
+
+            if (lockedZone == null || keycardZone == null)
+            {
+                Plugin.Logger.LogWarning($"AddKeycardPuzzle() returned early due to missing zones: locked={lockedZone} keycard={keycardZone}");
+                return;
+            }
+
+            // Place the key for the locked zone
+            lockedZone.ProgressionPuzzleToEnter = new ProgressionPuzzle
+            {
+                PuzzleType = ProgressionPuzzleType.Keycard,
+                ZonePlacementData = new List<ZonePlacementData>
+                {
+                    new() { LocalIndex = keycardZone.LocalIndex }
+                }
+            };
+        }
+
         /// <summary>
         /// Adds a key puzzle to enter the zone we have selected
         ///
@@ -170,38 +199,6 @@ namespace AutogenRundown.DataBlocks
                     new() { LocalIndex = keyZoneNumber }
                 }
             };
-        }
-
-        /// <summary>
-        /// Attempts to add some keyed doors
-        /// </summary>
-        public void RollKeyedDoors()
-        {
-            // Chance not to add any keyed doors
-            if (Generator.Flip(0.6))
-                return;
-
-            // How many locked zones to add
-            var locked = director.Tier switch
-            {
-                "A" => 1,
-                "B" => 1,
-                "C" => 1,
-                "D" => 1,
-                "E" => 1,
-
-                _ => 0,
-            };
-
-            for (int i=0; i<locked; i++)
-            {
-                var candidates = level.Planner.GetZones(director.Bulkhead)
-                    .Where(node => node.ZoneNumber > 0);
-                var lockedZoneNode = Generator.Pick(candidates);
-
-                if (candidates.Any())
-                    AddKeyedPuzzle(lockedZoneNode);
-            }
         }
         #endregion
     }
