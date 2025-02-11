@@ -39,4 +39,6 @@ public record LightCategorySetting
     /// Weighted chance of being selected
     /// </summary>
     public double Weight { get; set; } = 1.0;
+
+    public static LightCategorySetting Off(LightCategory category) => new() { Category = category, Chance = 0.0 };
 }

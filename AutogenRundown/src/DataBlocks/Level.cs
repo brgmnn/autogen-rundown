@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
@@ -112,6 +113,28 @@ namespace AutogenRundown.DataBlocks
                 Bulkhead.Overload => ZoneAliasStart_Overload,
                 _ => 0,
             };
+        #endregion
+
+        #region === MODS ===
+        #region ExtraObjectiveSetup Definitions
+        /// <summary>
+        /// Individual Generator LayoutDefinitions
+        /// </summary>
+        [JsonIgnore]
+        public LayoutDefinitions EOS_IndividualGenerator { get; private set; } = new()
+        {
+            Type = ExtraObjectiveSetupType.IndividualGenerator
+        };
+
+        /// <summary>
+        /// Reactor Shutdown LayoutDefinitions
+        /// </summary>
+        [JsonIgnore]
+        public LayoutDefinitions EOS_ReactorShutdown { get; private set; } = new()
+        {
+            Type = ExtraObjectiveSetupType.ReactorShutdown
+        };
+        #endregion
         #endregion
 
         #region Build directors
@@ -742,6 +765,25 @@ namespace AutogenRundown.DataBlocks
 
             if (selectedBulkheads.HasFlag(Bulkhead.Overload) && level.GetObjective(Bulkhead.Overload) != null)
                 level.GetObjective(Bulkhead.Overload)!.PostBuild(level.OverloadDirector, level);
+            #endregion
+
+            #region Finalize -- ExtraObjectiveSetup
+            // We need to make sure the ExtraObjectiveSetup layout definitions are set up with the
+            // correct main level layout persistent id and that they are saved if we added any
+            // definitions to them.
+
+            level.EOS_IndividualGenerator.Name = $"{level.Tier}{level.Index}_{level.Name.Replace(" ", "_")}";
+            level.EOS_IndividualGenerator.MainLevelLayout = level.LevelLayoutData;
+
+            level.EOS_ReactorShutdown.Name = $"{level.Tier}{level.Index}_{level.Name.Replace(" ", "_")}";
+            level.EOS_ReactorShutdown.MainLevelLayout = level.LevelLayoutData;
+
+            if (level.EOS_IndividualGenerator.Definitions.Any())
+                level.EOS_IndividualGenerator.Save();
+
+            if (level.EOS_ReactorShutdown.Definitions.Any())
+                level.EOS_ReactorShutdown.Save();
+
             #endregion
 
             Plugin.Logger.LogDebug($"Level={level.Tier}{level.Index} level plan: {level.Planner}");

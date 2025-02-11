@@ -32,6 +32,17 @@
         Environment_PowerdownFailure = 3655606696,
         #endregion
 
+        #region Environment: Electrical System and Power
+
+        Sparks = 2380278191,
+
+        LightsOn_Vol1 = 3206896764,
+        LightsOn_Vol2 = 3206896767,
+        LightsOn_Vol3 = 3206896766,
+        LightsOn_Vol4 = 3206896761,
+
+        #endregion
+
         SheetMetalLand = 157965313,
         DistantFanBlade = 166915794,
 

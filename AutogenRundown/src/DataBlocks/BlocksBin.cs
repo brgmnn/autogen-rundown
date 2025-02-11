@@ -189,6 +189,8 @@ namespace AutogenRundown.DataBlocks
 
         public T? GetBlock(T? block) => Blocks.Find(b => b == block);
 
+        public T? GetBlock(Predicate<T> predicate) => Blocks.Find(predicate);
+
         /// <summary>
         /// Ensure all blocks are assigned an Id
         /// </summary>

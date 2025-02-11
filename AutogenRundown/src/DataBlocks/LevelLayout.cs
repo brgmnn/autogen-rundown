@@ -41,6 +41,9 @@ namespace AutogenRundown.DataBlocks
 
         public LevelLayout(Level level, BuildDirector director, LevelSettings settings, LayoutPlanner planner)
         {
+            // Always assign a new persistent id upfront to level layout
+            PersistentId = Generator.GetPersistentId();
+
             this.director = director;
             this.level = level;
             this.planner = planner;

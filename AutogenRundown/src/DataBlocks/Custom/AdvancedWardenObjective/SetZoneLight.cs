@@ -3,6 +3,9 @@ using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 
+/// <summary>
+/// This is part of AdvancedWardenObjective
+/// </summary>
 public record SetZoneLight
 {
     [JsonIgnore]
