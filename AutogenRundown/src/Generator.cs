@@ -199,10 +199,11 @@ namespace AutogenRundown
             {
                 weightSum += weight;
 
-                if (randomWeight <= weightSum)
-                {
-                    action();
-                }
+                if (randomWeight > weightSum)
+                    continue;
+
+                action();
+                return;
             }
 
             collection.Last().Item2();
