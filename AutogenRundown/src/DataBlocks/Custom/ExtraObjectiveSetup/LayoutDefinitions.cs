@@ -28,9 +28,16 @@ public class LayoutDefinitions
         // Replace with Plugin.GameRevision to avoid interop dependency
         var revision = CellBuildData.GetRevision();
 
-        Directory.Delete(
-            Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}", "Custom", "ExtraObjectiveSetup"),
-            recursive: true);
+        try
+        {
+            Directory.Delete(
+                Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}", "Custom", "ExtraObjectiveSetup"),
+                recursive: true);
+        }
+        catch (DirectoryNotFoundException)
+        {
+            Plugin.Logger.LogWarning("LayoutDefinitions.Setup(): Could not delete ExtraObjectiveSetup dir.");
+        }
     }
 
     public void Save()
