@@ -52,7 +52,7 @@ namespace AutogenRundown.DataBlocks
             // the emergency lights when the cell is plugged in.
             powerOffZone.LightSettings = Lights.Light.Pitch_black_1;
 
-            // Turn
+            // Turn on the Auxiliary power lights when inserting the cell
             var powerGenerator = new IndividualPowerGenerator()
             {
                 Bulkhead = powerOff.Bulkhead,

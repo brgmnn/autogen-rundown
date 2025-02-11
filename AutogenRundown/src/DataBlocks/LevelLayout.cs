@@ -689,41 +689,6 @@ namespace AutogenRundown.DataBlocks
             };
 
         /// <summary>
-        /// Builds a branch, connecting zones and returning the last zone.
-        /// </summary>
-        /// <param name="baseNode"></param>
-        /// <param name="zoneCount"></param>
-        /// <param name="branch"></param>
-        /// <returns>The last zone node in the branch</returns>
-        ZoneNode BuildBranch(ZoneNode baseNode, int zoneCount, string branch = "primary")
-        {
-            var prev = baseNode;
-
-            if (zoneCount < 1)
-                return prev;
-
-            // Generate the zones for this branch
-            for (var i = 0; i < zoneCount; i++)
-            {
-                var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-                var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
-                var nextZone = new Zone
-                {
-                    Coverage = CoverageMinMax.GenNormalSize(),
-                    LightSettings = Lights.GenRandomLight(),
-                };
-                nextZone.RollFog(level);
-
-                level.Planner.Connect(prev, next);
-                level.Planner.AddZone(next, nextZone);
-
-                prev = next;
-            }
-
-            return prev;
-        }
-
-        /// <summary>
         /// Builds the main level
         ///
         /// Objective is not a fully initialized objective, it is a pre-built objective with just
