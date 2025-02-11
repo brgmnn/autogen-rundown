@@ -187,7 +187,7 @@ public record ChainedPuzzle : DataBlock
                 return new List<(double, int, ChainedPuzzle)>
                 {
                     // Easy / free
-                    (1.0, 2, None),
+                    (1.0, 1, None),
                     (1.0, 3, TeamScan),
 
                     // Stealth and Surprise scans. Secret scans are grouped with their regular
