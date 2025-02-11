@@ -112,5 +112,11 @@ public record class WardenObjectiveEvent
     /// </summary>
     public SetZoneLight SetZoneLight { get; set; } = new();
 
+    /// <summary>
+    ///
+    /// </summary>
+    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    public EventLoop? EventLoop { get; set; }
+
     #endregion
 }

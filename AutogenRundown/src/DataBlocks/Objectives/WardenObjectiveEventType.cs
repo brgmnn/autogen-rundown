@@ -47,6 +47,9 @@ public enum WardenObjectiveEventType : uint
      * to use in the rundown giving a lot of fun flexibility in designing levels.
      */
 
-    SetLightDataInZone = 10016
+    SetLightDataInZone = 10016,
+
+    StartEventLoop = 20001,
+    StopEventLoop = 20002,
     #endregion
 }
