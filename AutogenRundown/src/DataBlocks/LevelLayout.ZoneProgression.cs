@@ -1,10 +1,13 @@
-﻿using AutogenRundown.DataBlocks.Objectives;
+﻿using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
+using AutogenRundown.DataBlocks.Light;
+using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks
 {
     public partial record class LevelLayout : DataBlock
     {
+        #region Generator Powered Door
         /// <summary>
         ///
         /// </summary>
@@ -28,16 +31,40 @@ namespace AutogenRundown.DataBlocks
             {
                 PuzzleType = ProgressionPuzzleType.Generator,
                 PlacementCount = 0,
-                // ZonePlacementData = new List<ZonePlacementData>
-                // {
-                //     new() { LocalIndex = cellNode.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart }
-                // }
             };
 
             cellZone.ForceBigPickupsAllocation = true;
             // TODO: Change this so we can dynamically set distributions
             // For instance adding additional cells without needing to know what they are
             cellZone.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
+            cellZone.LightSettings = Lights.Light.Pitch_black_1;
+
+            var powerGenerator = new IndividualPowerGenerator()
+            {
+                Bulkhead = cellNode.Bulkhead,
+                ZoneNumber = cellNode.ZoneNumber,
+                EventsOnInsertCell = new()
+                {
+                    new WardenObjectiveEvent()
+                    {
+                        Type = WardenObjectiveEventType.SetLightDataInZone,
+                        Trigger = WardenObjectiveEventTrigger.OnStart,
+                        LocalIndex = cellZone.LocalIndex,
+                        Layer = 0,
+                        Delay = 2.5,
+                        Duration = 0.1,
+                        SetZoneLight = new()
+                        {
+                            LightSettings = LightSettings.AuxiliaryPower,
+                            Duration = 0.1,
+                            Seed = 1,
+                        }
+                    }
+                }
+            };
+            powerGenerator.EventsOnInsertCell.AddSound(Sound.LightsOn_Vol1, 2.0);
+
+            level.EOS_IndividualGenerator.Definitions.Add(powerGenerator);
         }
 
         /// <summary>
@@ -52,6 +79,9 @@ namespace AutogenRundown.DataBlocks
             int generatorBranchLength = -1)
         {}
 
+        #endregion
+
+        #region Keyed Puzzles
         /// <summary>
         /// Adds a key puzzle to enter the zone we have selected
         ///
@@ -173,5 +203,6 @@ namespace AutogenRundown.DataBlocks
                     AddKeyedPuzzle(lockedZoneNode);
             }
         }
+        #endregion
     }
 }

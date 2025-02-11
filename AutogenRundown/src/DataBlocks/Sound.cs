@@ -36,10 +36,10 @@
 
         Sparks = 2380278191,
 
-        LightsOn_Vol1 = 3206896764,
-        LightsOn_Vol2 = 3206896767,
-        LightsOn_Vol3 = 3206896766,
-        LightsOn_Vol4 = 3206896761,
+        LightsOn_Vol1 = 3206896764, // Not too loud
+        LightsOn_Vol2 = 3206896767, // Decently loud but ok
+        LightsOn_Vol3 = 3206896766, // Still quite loud
+        LightsOn_Vol4 = 3206896761, // Very loud
 
         #endregion
 
