@@ -119,50 +119,74 @@ public partial record LevelLayout
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // // Basic error alarm run with turnoff zone deep at the end
-                    // (0.1, () =>
-                    // {
-                    //     var (locked, _) = AddZone(start, new ZoneNode { Branch = "primary" });
-                    //     var end = BuildBranch(locked, 1);
-                    //     var (hsu, _) = AddZone(end, new ZoneNode { Branch = "hsu_sample" });
-                    //
-                    //     // Any side objectives and we allow disabling the alarm
-                    //     var allowTurnoff = level.Settings.Bulkheads != Bulkhead.Main;
-                    //
-                    //     ZoneNode? terminal = allowTurnoff ? BuildBranch(hsu, 1, "error_turnoff") : null;
-                    //
-                    //     // Optionally add shadows if the level has shadows in it
-                    //     var population = level.Settings.HasShadows()
-                    //         ? WavePopulation.OnlyShadows
-                    //         : WavePopulation.Baseline;
-                    //
-                    //     // Lock the first zone
-                    //     AddErrorAlarm(locked, terminal, ChainedPuzzle.AlarmError_Baseline with
-                    //     {
-                    //         PersistentId = 0,
-                    //         Population = population,
-                    //         Settings = WaveSettings.Error_Easy
-                    //     });
-                    //
-                    //     startZone.Coverage = CoverageMinMax.Tiny;
-                    // }),
-                    //
-                    // // Build generator locked puzzle
-                    // (0.35, () =>
-                    // {
-                    //     planner.UpdateNode(start with { MaxConnections = 3 });
-                    //
-                    //     var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
-                    //     var cell = BuildBranch(start, 2, "power_cell");
-                    //
-                    //     // Lock the first zone
-                    //     AddGeneratorPuzzle(locked, cell);
-                    //
-                    //     startZone.GenHubGeomorph(level.Complex);
-                    // }),
+                    // Basic error alarm run with turnoff zone deep at the end
+                    (0.05, () =>
+                    {
+                        var (locked, _) = AddZone(start, new ZoneNode { Branch = "primary" });
+                        var end = BuildBranch(locked, 1);
+                        var (hsu, _) = AddZone(end, new ZoneNode { Branch = "hsu_sample" });
+
+                        // Any side objectives and we allow disabling the alarm
+                        var allowTurnoff = level.Settings.Bulkheads != Bulkhead.Main;
+
+                        ZoneNode? terminal = allowTurnoff ? BuildBranch(hsu, 1, "error_turnoff") : null;
+
+                        // Optionally add shadows if the level has shadows in it
+                        var population = level.Settings.HasShadows()
+                            ? WavePopulation.OnlyShadows
+                            : WavePopulation.Baseline;
+
+                        // Lock the first zone
+                        AddErrorAlarm(locked, terminal, ChainedPuzzle.AlarmError_Baseline with
+                        {
+                            PersistentId = 0,
+                            Population = population,
+                            Settings = WaveSettings.Error_Easy
+                        });
+
+                        startZone.Coverage = CoverageMinMax.Tiny;
+                    }),
+
+                    // Big Apex alarm to enter
+                    (0.20, () =>
+                    {
+                        var (lockedApex, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
+
+                        // Add some extra resources
+                        startZone.HealthMulti *= 2.0;
+                        startZone.ToolAmmoMulti *= 2.0;
+                        startZone.WeaponAmmoMulti *= 2.0;
+
+                        // Configure the wave population
+                        var population = WavePopulation.Baseline;
+
+                        if (Generator.Flip(0.2))
+                            population = WavePopulation.Baseline_Hybrids;
+
+                        if (level.Settings.HasShadows())
+                            population = Generator.Flip(0.4) ? WavePopulation.OnlyShadows : WavePopulation
+                                .Baseline_Shadows;
+
+                        // Add the apex alarm
+                        AddApexAlarm(lockedApex, population);
+                    }),
+
+                    // Generator locked forward progression
+                    (0.35, () =>
+                    {
+                        planner.UpdateNode(start with { MaxConnections = 3 });
+
+                        var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
+                        var cell = BuildBranch(start, 2, "power_cell");
+
+                        // Lock the first zone
+                        AddGeneratorPuzzle(locked, cell);
+
+                        startZone.GenHubGeomorph(level.Complex);
+                    }),
 
                     // Build keycard locked puzzle
-                    (0.35, () =>
+                    (0.30, () =>
                     {
                         // Possibly add an extra zone to go throuh
                         start = BuildBranch(start, Generator.Between(0, 2));
@@ -179,12 +203,12 @@ public partial record LevelLayout
                         AddKeycardPuzzle(locked, keycard);
                     }),
 
-                    // // Just a straight shot to the HSU
-                    // (0.2, () =>
-                    // {
-                    //     var last = BuildBranch(start, Generator.Between(2, 3));
-                    //     planner.UpdateNode(last with { Branch = "hsu_sample" });
-                    // })
+                    // Just a straight shot to the HSU
+                    (0.10, () =>
+                    {
+                        var last = BuildBranch(start, Generator.Between(2, 3));
+                        planner.UpdateNode(last with { Branch = "hsu_sample" });
+                    })
                 });
                 break;
             }
@@ -192,22 +216,53 @@ public partial record LevelLayout
 
             #region Tier: C
             // TODO: Implement
-            // case ("C", _):
-            //     break;
-            //
+            case ("C", _):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Straight to HSU
+                    (0.10, () =>
+                    {
+                        var last = BuildBranch(start, Generator.Between(2, 3));
+                        planner.UpdateNode(last with { Branch = "hsu_sample" });
+                    })
+                });
+                break;
+            }
             #endregion
 
             #region Tier: D
             // TODO: Implement
-            // case ("D", _):
-            //     break;
-            //
+            case ("D", _):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Straight to HSU
+                    (0.10, () =>
+                    {
+                        var last = BuildBranch(start, Generator.Between(2, 3));
+                        planner.UpdateNode(last with { Branch = "hsu_sample" });
+                    })
+                });
+                break;
+            }
             #endregion
 
             #region Tier: E
             // TODO: Implement
-            // case ("E", _):
-            //     break;
+            case ("E", _):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Straight to HSU
+                    (0.10, () =>
+                    {
+                        var last = BuildBranch(start, Generator.Between(2, 3));
+                        planner.UpdateNode(last with { Branch = "hsu_sample" });
+                    })
+                });
+                break;
+            }
             #endregion
 
             default:
