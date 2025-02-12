@@ -15,8 +15,12 @@ namespace AutogenRundown.DataBlocks
         /// Add a BIG alarm in a big room that will be challenging to beat.
         /// </summary>
         /// <param name="lockedNode"></param>
-        /// <param name="puzzle"></param>
-        public void AddApexAlarm(ZoneNode lockedNode)
+        /// <param name="population"></param>
+        /// <param name="settings"></param>
+        public void AddApexAlarm(
+            ZoneNode lockedNode,
+            WavePopulation population = null,
+            WaveSettings settings = null)
         {
             var lockedZone = planner.GetZone(lockedNode);
             var setupish = planner.GetBuildFrom(lockedNode);
@@ -53,8 +57,19 @@ namespace AutogenRundown.DataBlocks
             sideSpawnZone.GenKingOfTheHillSpawnGeomorph(level.Complex);
             sideSpawnZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
 
+            var puzzle = director.Tier switch
+            {
+                "A" => ChainedPuzzle.AlarmClass8,
+                "B" => ChainedPuzzle.AlarmClass9,
+                "C" => ChainedPuzzle.AlarmClass10,
+                "D" => ChainedPuzzle.AlarmClass11,
+                "E" => ChainedPuzzle.AlarmClass12,
+
+                _ => ChainedPuzzle.AlarmClass10,
+            };
+
             lockedZone.SecurityGateToEnter = SecurityGate.Apex;
-            lockedZone.Alarm = ChainedPuzzle.FindOrPersist(ChainedPuzzle.AlarmClass10);
+            lockedZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle with { Population = population, Settings = settings });
 
             // Force open the side room
             lockedZone.EventsOnDoorScanStart.AddOpenDoor(director.Bulkhead, sideSpawn.ZoneNumber);
