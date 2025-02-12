@@ -643,6 +643,8 @@ public record ChainedPuzzle : DataBlock
     /// <summary>
     /// These start to get quite hard. The fabled Class IX (9) alarm was a whole level on its own
     /// in R2 and that was after it was nerfed from a Class X (10)
+    ///
+    /// Apex Alarms for B-tier levels
     /// </summary>
     public static readonly ChainedPuzzle AlarmClass9 = new()
     {
@@ -669,13 +671,15 @@ public record ChainedPuzzle : DataBlock
     /// to be a big problem and the possibility of using strategies such as C-foam holding are
     /// unlikely unless this spawns at a place with plenty of resources. Even moderate enemy
     /// wave settings will make this extremely challenging.
+    ///
+    /// Apex Alarms for C-tier levels
     /// </summary>
     public static readonly ChainedPuzzle AlarmClass10 = new()
     {
         PublicAlarmName = "Class X Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 15.0,
+        WantedDistanceBetweenPuzzleComponents = 35.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -687,6 +691,64 @@ public record ChainedPuzzle : DataBlock
             PuzzleComponent.AllBig,
             PuzzleComponent.ClusterSmall,
             PuzzleComponent.ScanLarge,
+            PuzzleComponent.AllBig
+        },
+    };
+
+    /// <summary>
+    /// This is the longest and will likely be a very challenging scan on any level. Ammo is likely
+    /// to be a big problem and the possibility of using strategies such as C-foam holding are
+    /// unlikely unless this spawns at a place with plenty of resources. Even moderate enemy
+    /// wave settings will make this extremely challenging.
+    ///
+    /// Apex Alarms for D-tier levels
+    /// </summary>
+    public static readonly ChainedPuzzle AlarmClass11 = new()
+    {
+        PublicAlarmName = "Class XI Alarm",
+        Settings = WaveSettings.Baseline_Hard,
+        Population = WavePopulation.Baseline,
+        WantedDistanceBetweenPuzzleComponents = 35.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.AllBig,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ScanLarge,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.AllBig,
+            PuzzleComponent.ClusterLarge,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.AllBig,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ScanLarge,
+            PuzzleComponent.AllBig
+        },
+    };
+
+    /// <summary>
+    /// This is going to be very difficult. Only for E-tier levels
+    ///
+    /// Apex Alarms for E-tier levels
+    /// </summary>
+    public static readonly ChainedPuzzle AlarmClass12 = new()
+    {
+        PublicAlarmName = "Class XII Alarm",
+        Settings = WaveSettings.Baseline_VeryHard,
+        Population = WavePopulation.Baseline,
+        WantedDistanceBetweenPuzzleComponents = 35.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.AllBig,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ClusterLarge,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.AllBig,
+            PuzzleComponent.ClusterLarge,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.AllBig,
+            PuzzleComponent.ClusterSmall,
+            PuzzleComponent.ScanLarge,
+            PuzzleComponent.ClusterSmall,
             PuzzleComponent.AllBig
         },
     };
