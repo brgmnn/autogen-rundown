@@ -1,8 +1,10 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
+using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Utils;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -14,7 +16,7 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         /// <param name="lockedNode"></param>
         /// <param name="puzzle"></param>
-        public void AddApexAlarm(ZoneNode lockedNode, ChainedPuzzle? puzzle)
+        public void AddApexAlarm(ZoneNode lockedNode)
         {
             var lockedZone = planner.GetZone(lockedNode);
             var setupish = planner.GetBuildFrom(lockedNode);
@@ -34,9 +36,28 @@ namespace AutogenRundown.DataBlocks
                 return;
             }
 
-            lockedZone.Alarm = ChainedPuzzle.AlarmClass10;
+            planner.UpdateNode(setupNode with { MaxConnections = 3 });
+            setupZone.GenKingOfTheHillGeomorph(level.Complex);
 
-            
+            // We want a side spawn room to make it basically impossible to C-foam hold this alarm
+            // NOTE: the side spawn room CAN have blood doors roll on it!
+            var (sideSpawn, sideSpawnZone) = AddZone(
+                setupNode,
+                new ZoneNode
+                {
+                    Branch = "koth_spawn",
+                    MaxConnections = 0,
+                    Tags = new Tags("no_enemies")
+                });
+
+            sideSpawnZone.GenKingOfTheHillSpawnGeomorph(level.Complex);
+            sideSpawnZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
+
+            lockedZone.SecurityGateToEnter = SecurityGate.Apex;
+            lockedZone.Alarm = ChainedPuzzle.FindOrPersist(ChainedPuzzle.AlarmClass10);
+
+            // Force open the side room
+            lockedZone.EventsOnDoorScanStart.AddOpenDoor(director.Bulkhead, sideSpawn.ZoneNumber);
         }
         #endregion
 
@@ -74,8 +95,8 @@ namespace AutogenRundown.DataBlocks
             // Set the alarm
             lockedZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle ?? ChainedPuzzle.AlarmError_Baseline);
 
-            // Set the turn off code (if we have it)
-            if (terminalish != null)
+            // Set the turnoff code (if we have it)
+            if (terminalish == null)
                 return;
 
             var terminalNode = (ZoneNode)terminalish;
