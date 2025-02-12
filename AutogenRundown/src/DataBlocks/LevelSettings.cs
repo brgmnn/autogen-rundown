@@ -84,6 +84,9 @@ namespace AutogenRundown.DataBlocks
     {
         public string Tier { get; set; } = "";
 
+        /// <summary>
+        /// Which of the three bulkheads this level has.
+        /// </summary>
         public Bulkhead Bulkheads { get; set; } = Bulkhead.Main;
 
         public Dictionary<Bulkhead, ZoneBuildExpansion> Directions { get; private set; }

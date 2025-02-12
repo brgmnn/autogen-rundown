@@ -200,6 +200,42 @@ namespace AutogenRundown.DataBlocks.Alarms
         public override string ToString()
             => $"WaveSettings {{ Name = {Name}, PersistentId = {PersistentId} }}";
 
+        public void Persist(BlocksBin<WaveSettings>? bin = null)
+        {
+            bin ??= Bins.WaveSettings;
+            bin.AddBlock(this);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="lights"></param>
+        /// <returns></returns>
+        public static WaveSettings FindOrPersist(WaveSettings settings)
+        {
+            // We specifically don't want to persist none, as we want to set the PersistentID to 0
+            if (settings == None)
+                return None;
+
+            var existing = Bins.WaveSettings.GetBlock(settings);
+
+            if (existing != null)
+                return existing;
+
+            if (settings.PersistentId == 0)
+                settings.PersistentId = Generator.GetPersistentId(PidOffsets.WaveSettings);
+
+            settings.Persist();
+
+            return settings;
+        }
+
+        /// <summary>
+        /// Instance version of static method
+        /// </summary>
+        /// <returns></returns>
+        public WaveSettings FindOrPersist() => FindOrPersist(this);
+
         /// <summary>
         /// Return a DrawSelect list of wave settings to attach on alarms. Pack is for one LevelLayout. So we need probably
         /// 30 entries to draw from
@@ -377,11 +413,15 @@ namespace AutogenRundown.DataBlocks.Alarms
 
         #region Error Alarms
         /// <summary>
-        /// Equivalent to PersistentId=32 "Trickle 3-52 SSpB"
+        /// Somewhat equavlent to PersistentId=32 "Trickle 3-52 SSpB"
         ///
         /// Quite an easy error alarm.
+        /// -> 3pts of enemies every 52 seconds.
+        ///
+        /// This should be very easy for one player to fully manage with just a hammer by
+        /// themselves while the rest of the team continues with their objectives
         /// </summary>
-        public static WaveSettings Error_Easy = new WaveSettings
+        public static readonly WaveSettings Error_Easy = new()
         {
             PopulationFilter =
             {
@@ -397,8 +437,9 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationPointsMinPerGroup = 2.0,
             PopulationRampOverTime = 0,
 
-            PopulationPointsPerWaveStart = 10_000,
-            PopulationPointsPerWaveEnd = 10_000,
+            // This controls how many points of enemies. We don't want any ramping here.
+            PopulationPointsPerWaveStart = 3.0,
+            PopulationPointsPerWaveEnd = 3.0,
 
             ChanceToRandomizeSpawnDirectionPerGroup = 0.8,
             ChanceToRandomizeSpawnDirectionPerWave = 1.0,

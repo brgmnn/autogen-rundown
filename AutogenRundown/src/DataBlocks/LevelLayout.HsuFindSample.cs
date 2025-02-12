@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Objectives;
+﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
@@ -114,9 +115,79 @@ public partial record LevelLayout
 
             #region Tier: B
             // We want: Generator, keycard, king of the hill alarm
-            // TODO: Implement
-            // case ("B", _):
-            //     break;
+            case ("B", Bulkhead.Main):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // // Basic error alarm run with turnoff zone deep at the end
+                    // (0.1, () =>
+                    // {
+                    //     var (locked, _) = AddZone(start, new ZoneNode { Branch = "primary" });
+                    //     var end = BuildBranch(locked, 1);
+                    //     var (hsu, _) = AddZone(end, new ZoneNode { Branch = "hsu_sample" });
+                    //
+                    //     // Any side objectives and we allow disabling the alarm
+                    //     var allowTurnoff = level.Settings.Bulkheads != Bulkhead.Main;
+                    //
+                    //     ZoneNode? terminal = allowTurnoff ? BuildBranch(hsu, 1, "error_turnoff") : null;
+                    //
+                    //     // Optionally add shadows if the level has shadows in it
+                    //     var population = level.Settings.HasShadows()
+                    //         ? WavePopulation.OnlyShadows
+                    //         : WavePopulation.Baseline;
+                    //
+                    //     // Lock the first zone
+                    //     AddErrorAlarm(locked, terminal, ChainedPuzzle.AlarmError_Baseline with
+                    //     {
+                    //         PersistentId = 0,
+                    //         Population = population,
+                    //         Settings = WaveSettings.Error_Easy
+                    //     });
+                    //
+                    //     startZone.Coverage = CoverageMinMax.Tiny;
+                    // }),
+                    //
+                    // // Build generator locked puzzle
+                    // (0.35, () =>
+                    // {
+                    //     planner.UpdateNode(start with { MaxConnections = 3 });
+                    //
+                    //     var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
+                    //     var cell = BuildBranch(start, 2, "power_cell");
+                    //
+                    //     // Lock the first zone
+                    //     AddGeneratorPuzzle(locked, cell);
+                    //
+                    //     startZone.GenHubGeomorph(level.Complex);
+                    // }),
+
+                    // Build keycard locked puzzle
+                    (0.35, () =>
+                    {
+                        // Possibly add an extra zone to go throuh
+                        start = BuildBranch(start, Generator.Between(0, 2));
+                        startZone = planner.GetZone(start)!;
+
+                        // Update number of connections for hub zone
+                        planner.UpdateNode(start with { MaxConnections = 3 });
+                        startZone.GenHubGeomorph(level.Complex);
+
+                        var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
+                        var keycard = BuildBranch(start, 1, "keycard");
+
+                        // Lock the first zone
+                        AddKeycardPuzzle(locked, keycard);
+                    }),
+
+                    // // Just a straight shot to the HSU
+                    // (0.2, () =>
+                    // {
+                    //     var last = BuildBranch(start, Generator.Between(2, 3));
+                    //     planner.UpdateNode(last with { Branch = "hsu_sample" });
+                    // })
+                });
+                break;
+            }
             #endregion
 
             #region Tier: C

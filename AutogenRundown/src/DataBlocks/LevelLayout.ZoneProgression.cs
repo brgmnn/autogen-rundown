@@ -1,12 +1,94 @@
-﻿using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
+﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks
 {
-    public partial record LevelLayout : DataBlock
+    public partial record LevelLayout
     {
+        #region Apex Alarms
+        /// <summary>
+        /// Add a BIG alarm in a big room that will be challenging to beat.
+        /// </summary>
+        /// <param name="lockedNode"></param>
+        /// <param name="puzzle"></param>
+        public void AddApexAlarm(ZoneNode lockedNode, ChainedPuzzle? puzzle)
+        {
+            var lockedZone = planner.GetZone(lockedNode);
+            var setupish = planner.GetBuildFrom(lockedNode);
+
+            if (setupish == null)
+            {
+                Plugin.Logger.LogWarning($"AddGeneratorPuzzle() returned early due to missing zones: locked={lockedNode}");
+                return;
+            }
+
+            var setupNode = (ZoneNode)setupish;
+            var setupZone = planner.GetZone(setupNode);
+
+            if (lockedZone == null || setupZone == null)
+            {
+                Plugin.Logger.LogWarning($"AddGeneratorPuzzle() returned early due to missing zones: locked={lockedZone}");
+                return;
+            }
+
+            lockedZone.Alarm = ChainedPuzzle.AlarmClass10;
+
+            
+        }
+        #endregion
+
+        #region Error alarms
+        /// <summary>
+        /// Adds an error alarm (or desired otherwise alarm) to the locked node and also sets up
+        /// the turn off alarms terminal if it's passed in
+        /// </summary>
+        /// <param name="lockedNode"></param>
+        /// <param name="terminalNode"></param>
+        /// /// <param name="puzzle"></param>
+        public void AddErrorAlarm(
+            ZoneNode lockedNode,
+            ZoneNode? terminalish,
+            ChainedPuzzle? puzzle)
+        {
+            var lockedZone = planner.GetZone(lockedNode);
+            var setupish = planner.GetBuildFrom(lockedNode);
+
+            if (setupish == null)
+            {
+                Plugin.Logger.LogWarning($"AddGeneratorPuzzle() returned early due to missing zones: locked={lockedNode} terminal={terminalish}");
+                return;
+            }
+
+            var setupNode = (ZoneNode)setupish;
+            var setupZone = planner.GetZone(setupNode);
+
+            if (lockedZone == null || setupZone == null)
+            {
+                Plugin.Logger.LogWarning($"AddGeneratorPuzzle() returned early due to missing zones: locked={lockedZone} terminal={terminalish}");
+                return;
+            }
+
+            // Set the alarm
+            lockedZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle ?? ChainedPuzzle.AlarmError_Baseline);
+
+            // Set the turn off code (if we have it)
+            if (terminalish != null)
+                return;
+
+            var terminalNode = (ZoneNode)terminalish;
+
+            lockedZone.TurnOffAlarmOnTerminal = true;
+            lockedZone.TerminalPuzzleZone.LocalIndex = terminalNode.ZoneNumber;
+
+            // Unlock the turn-off zone door when the alarm door has opened.
+            lockedZone.EventsOnDoorScanDone.AddUnlockDoor(director.Bulkhead, terminalNode.ZoneNumber);
+        }
+
+        #endregion
+
         #region Generator Powered Door
         /// <summary>
         ///
@@ -80,7 +162,6 @@ namespace AutogenRundown.DataBlocks
 
             level.EOS_IndividualGenerator.Definitions.Add(powerGenerator);
         }
-
         #endregion
 
         #region Keyed Puzzles

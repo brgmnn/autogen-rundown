@@ -68,9 +68,9 @@ public static class RundownFactory
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
-                Complex = Complex.Mining,
+                Complex = Complex.Tech,
                 Complexity = Complexity.Low,
-                Tier = "A",
+                Tier = "B",
                 Objective = WardenObjectiveType.HsuFindSample,
             };
             mainDirector.GenPoints();
@@ -78,25 +78,26 @@ public static class RundownFactory
             var extremeDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Extreme,
-                Complex = Complex.Mining,
+                Complex = Complex.Tech,
                 Complexity = Complexity.Low,
-                Tier = "A",
+                Tier = "B",
                 Objective = WardenObjectiveType.HsuFindSample,
             };
             extremeDirector.GenPoints();
 
-            var settings = new LevelSettings("A");
+            var settings = new LevelSettings("B");
+            settings.Modifiers.Add(LevelModifiers.Shadows);
 
             var testLevel = Level.Build(
-                new Level("A")
+                new Level("B")
                 {
-                    Tier = "A",
+                    Tier = "B",
                     Name = "Debug Test",
-                    Complex = Complex.Mining,
+                    Complex = Complex.Tech,
                     MainDirector = mainDirector,
-                    SecondaryDirector = extremeDirector,
+                    // SecondaryDirector = extremeDirector,
                     Settings = settings,
-                    Index = rundown.TierA_Count + 1,
+                    Index = rundown.TierB_Count + 1,
                     IsTest = true
                 });
             rundown.AddLevel(testLevel);

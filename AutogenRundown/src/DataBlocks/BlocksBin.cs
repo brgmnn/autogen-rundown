@@ -120,6 +120,12 @@ namespace AutogenRundown.DataBlocks
             }
         }
 
+        public bool Contains(T? block) => Blocks.Contains(block);
+
+        public T? GetBlock(T? block) => Blocks.Find(b => b == block);
+
+        public T? GetBlock(Predicate<T> predicate) => Blocks.Find(predicate);
+
         /// <summary>
         /// Gets a block with a given Id, otherwise null.
         /// </summary>
@@ -184,12 +190,6 @@ namespace AutogenRundown.DataBlocks
             persistentIds.Add(block.PersistentId);
             LastPersistentId = Math.Max(LastPersistentId, block.PersistentId);
         }
-
-        public bool Contains(T? block) => Blocks.Contains(block);
-
-        public T? GetBlock(T? block) => Blocks.Find(b => b == block);
-
-        public T? GetBlock(Predicate<T> predicate) => Blocks.Find(predicate);
 
         /// <summary>
         /// Ensure all blocks are assigned an Id
