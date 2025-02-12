@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Items;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
@@ -171,8 +172,9 @@ namespace AutogenRundown.DataBlocks
             };
 
             // Do not add blood doors to Zone 0, these are always either the elevator or bulkhead doors.
+            // Do not add blood doors to Apex security doors
             foreach (var zone in Zones)
-                if (zone.LocalIndex > 0 && Generator.Flip(chance) && (count++ < max || max == -1))
+                if (zone.LocalIndex > 0 && zone.SecurityGateToEnter == SecurityGate.Security && Generator.Flip(chance) && (count++ < max || max == -1))
                 {
                     var withArea = Generator.Flip(inAreaChance);
 
