@@ -13,14 +13,18 @@ namespace AutogenRundown.DataBlocks
         #region Apex Alarms
         /// <summary>
         /// Add a BIG alarm in a big room that will be challenging to beat.
+        ///
+        /// It may be desirable to increase the resources that go into the zone for higher tier
+        /// alarms. Especially for harder enemies such as Nightmare enemies that require a lot
+        /// of ammo and tool to clear. Resourcing is left entirely up to the calling site.
         /// </summary>
         /// <param name="lockedNode"></param>
         /// <param name="population"></param>
         /// <param name="settings"></param>
         public void AddApexAlarm(
             ZoneNode lockedNode,
-            WavePopulation population = null,
-            WaveSettings settings = null)
+            WavePopulation? population = null,
+            WaveSettings? settings = null)
         {
             var lockedZone = planner.GetZone(lockedNode);
             var setupish = planner.GetBuildFrom(lockedNode);
@@ -69,7 +73,11 @@ namespace AutogenRundown.DataBlocks
             };
 
             lockedZone.SecurityGateToEnter = SecurityGate.Apex;
-            lockedZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle with { Population = population, Settings = settings });
+            lockedZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle with
+            {
+                Population = population ?? puzzle.Population,
+                Settings = settings ?? puzzle.Settings
+            });
 
             // Force open the side room
             lockedZone.EventsOnDoorScanStart.AddOpenDoor(director.Bulkhead, sideSpawn.ZoneNumber);
