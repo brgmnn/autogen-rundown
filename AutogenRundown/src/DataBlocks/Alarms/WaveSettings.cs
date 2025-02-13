@@ -463,9 +463,11 @@ namespace AutogenRundown.DataBlocks.Alarms
                 Enemies.EnemyType.Special,
                 Enemies.EnemyType.MiniBoss,
             },
-            PauseBetweenGroups = 48,
+            PauseBetweenGroups = 45,
             PopulationPointsPerGroupStart = 4.0,
             PopulationPointsPerGroupEnd = 4.0,
+            PopulationPointsPerWaveStart = 4.0,
+            PopulationPointsPerWaveEnd = 4.0,
 
             Name = "Error_Normal"
         };

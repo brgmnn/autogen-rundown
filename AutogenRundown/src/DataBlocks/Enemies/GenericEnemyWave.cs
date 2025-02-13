@@ -25,6 +25,19 @@ public record GenericWave
         Settings = WaveSettings.Exit_Baseline,
     };
 
+    #region Error Alarms
+    /// <summary>
+    /// Base error alarm
+    /// </summary>
+    public static readonly GenericWave ErrorAlarm_Normal = new()
+    {
+        Settings = WaveSettings.Error_Normal,
+        Population = WavePopulation.Baseline,
+        SpawnDelay = 4.0,
+        TriggerAlarm = true
+    };
+    #endregion
+
     #region Uplink Waves
     public static readonly GenericWave Uplink_Easy = new()
     {

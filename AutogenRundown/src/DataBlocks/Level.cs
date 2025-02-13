@@ -297,7 +297,7 @@ namespace AutogenRundown.DataBlocks
             };
         }
 
-        public JObject VanityItemsDropData = new JObject { ["Groups"] = new JArray() };
+        public JObject VanityItemsDropData = new() { ["Groups"] = new JArray() };
 
         #region Main Objective Data
         /// <summary>

@@ -668,14 +668,19 @@ namespace AutogenRundown.DataBlocks
         public List<WardenObjectiveEvent> EventsOnGotoWin { get; set; } = new List<WardenObjectiveEvent>();
 
         /// <summary>
+        /// This triggers waves that spawn as soon as you land
+        /// </summary>
+        public List<GenericWave> WavesOnElevatorLand { get; set; } = new();
+
+        /// <summary>
         /// Waves to spawn on returning to win. This seems to only be for the main objective.
         /// </summary>
-        public List<GenericWave> WavesOnGotoWin { get; set; } = new List<GenericWave>();
+        public List<GenericWave> WavesOnGotoWin { get; set; } = new();
 
         /// <summary>
         /// Enemy waves to spawn on activating the objective.
         /// </summary>
-        public List<GenericWave> WavesOnActivate { get; set; } = new List<GenericWave>();
+        public List<GenericWave> WavesOnActivate { get; set; } = new();
         #endregion
 
         #region === MODs: Inas07/ExtraObjectiveSetup
@@ -839,7 +844,6 @@ namespace AutogenRundown.DataBlocks
         public int GenericItemFromStart = 0;
         public bool DoNotMarkPickupItemsAsWardenObjectives = false;
         public bool OverrideNoRequiredItemsForExit = false;
-        public JArray WavesOnElevatorLand = new JArray();
         public int FogTransitionDataOnElevatorLand = 0;
         public double FogTransitionDurationOnElevatorLand = 0.0;
         public bool OnActivateOnSolveItem = false;
