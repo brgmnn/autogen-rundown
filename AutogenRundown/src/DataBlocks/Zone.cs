@@ -1073,10 +1073,10 @@ namespace AutogenRundown.DataBlocks
         /// <returns>Estimated time to clear the zone and any alarms to _enter_ the zone</returns>
         public double GetClearTimeEstimate()
         {
-            var factorAlarms = 1.20;
-            var factorBoss = 1.0;
-            var factorCoverage = 1.30;
-            var factorEnemyPoints = 1.20;
+            const double factorAlarms = 1.20;
+            const double factorBoss = 1.0;
+            const double factorCoverage = 1.30;
+            const double factorEnemyPoints = 2.40;
 
             // Add time based on the zone size
             var timeCoverage = Coverage.Max * factorCoverage;
