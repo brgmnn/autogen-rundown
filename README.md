@@ -19,8 +19,15 @@ TODO:
   * Don't allow small item pickup to have so many extras that we don't need to do all the zones
   * Make giants blood door a bit harder? B-tier was easy
 
-Monthly Feb bugs
-  * Double cargo B1
+Monthly Feb
+  * Double cargo B1 -- Not sure why?
+  * Reactor D2
+    [ ] Need to ensure resources spawn. Flat mining reactor doesn't have enoug spawn points, no tool spawned?
+    [ ] Possibly reduce the number of waves but up the difficulty. First 3-4 waves were easy and a bit of nothing
+    [x] Increase time granted for clearing zones. Maybe double the time granted per point of eneies? Feels like they need a tiny bit more.
+    [ ] Increase resources in side rooms. Requires a lot of shooting and hard to find any resources in larger rooms
+    [ ] May consider reducing the number of zones?
+    [ ] Mother wave had good amount of time. DONT CHANGE
 
 Missing tiles to add
   * Add R8A1 garden hub tile to hubs
