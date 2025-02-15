@@ -294,6 +294,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             // Error
             Bins.WaveSettings.AddBlock(Error_Easy);
             Bins.WaveSettings.AddBlock(Error_Normal);
+            Bins.WaveSettings.AddBlock(Error_Hard);
+            Bins.WaveSettings.AddBlock(Error_VeryHard);
 
             // Exit
             Bins.WaveSettings.AddBlock(Exit_Baseline);
@@ -468,6 +470,48 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationPointsPerGroupEnd = 4.0,
             PopulationPointsPerWaveStart = 4.0,
             PopulationPointsPerWaveEnd = 4.0,
+
+            Name = "Error_Normal"
+        };
+
+        /// <summary>
+        /// Harder than easy. This shouldn't feel relaxed to deal with
+        /// </summary>
+        public static WaveSettings Error_Hard = Error_Easy with
+        {
+            PopulationFilter = new()
+            {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+                Enemies.EnemyType.MiniBoss,
+            },
+            PauseBetweenGroups = 37,
+
+            PopulationPointsPerGroupStart = 5.0,
+            PopulationPointsPerGroupEnd = 5.0,
+            PopulationPointsPerWaveStart = 5.0,
+            PopulationPointsPerWaveEnd = 5.0,
+
+            Name = "Error_Normal"
+        };
+
+        /// <summary>
+        /// Harder than easy. This shouldn't feel relaxed to deal with
+        /// </summary>
+        public static WaveSettings Error_VeryHard = Error_Easy with
+        {
+            PopulationFilter = new()
+            {
+                Enemies.EnemyType.Standard,
+                Enemies.EnemyType.Special,
+                Enemies.EnemyType.MiniBoss,
+                Enemies.EnemyType.Boss
+            },
+            PauseBetweenGroups = 30,
+            PopulationPointsPerGroupStart = 6.0,
+            PopulationPointsPerGroupEnd = 6.0,
+            PopulationPointsPerWaveStart = 6.0,
+            PopulationPointsPerWaveEnd = 6.0,
 
             Name = "Error_Normal"
         };

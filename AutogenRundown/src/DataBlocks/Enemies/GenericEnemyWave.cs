@@ -36,6 +36,28 @@ public record GenericWave
         SpawnDelay = 4.0,
         TriggerAlarm = true
     };
+
+    /// <summary>
+    /// Base error alarm
+    /// </summary>
+    public static readonly GenericWave ErrorAlarm_Hard = new()
+    {
+        Settings = WaveSettings.Error_Hard,
+        Population = WavePopulation.Baseline,
+        SpawnDelay = 4.0,
+        TriggerAlarm = true
+    };
+
+    /// <summary>
+    /// Base error alarm
+    /// </summary>
+    public static readonly GenericWave ErrorAlarm_VeryHard = new()
+    {
+        Settings = WaveSettings.Error_VeryHard,
+        Population = WavePopulation.Baseline,
+        SpawnDelay = 4.0,
+        TriggerAlarm = true
+    };
     #endregion
 
     #region Uplink Waves
