@@ -245,7 +245,7 @@ namespace AutogenRundown.DataBlocks
                 //
                 //  "... Shoot me then, 'cause I'm not going in there.  \r\n... Look, there's no time– \r\n... [gunshot]  \r\n... <size=200%><color=red>Start scanning.\r</color></size>",
                 // ["RoleplayedWardenIntel"] = 1426
-                ["RoleplayedWardenIntel"] = ElevatorDropWardenIntel,
+                ["RoleplayedWardenIntel"] = ElevatorDropWardenIntel.MaxBy(intel => intel.Item1).Item2,
             };
         }
 
@@ -256,8 +256,7 @@ namespace AutogenRundown.DataBlocks
         /// surprises that will be found in the level.
         /// </summary>
         [JsonIgnore]
-        public string ElevatorDropWardenIntel { get; set; } =
-            "... Shoot me then, 'cause I'm not going in there.  \r\n... Look, there's no time– \r\n... [gunshot]  \r\n... <size=200%><color=red>Start scanning.\r</color></size>";
+        public List<(int, string)> ElevatorDropWardenIntel { get; set; } = new();
 
         /// <summary>
         /// Level build seed. Use this to re-roll the level
@@ -435,6 +434,42 @@ namespace AutogenRundown.DataBlocks
         {
             Tier = tier;
             Settings = new LevelSettings(tier);
+
+            // --- Ideas for level specific items
+            // ">... [static crackle]\r\n>... We search for the key?\r\n>... <size=200%><color=red>Time is running out!</color></size>\n"
+            // ">... [coughing] This air is thick.\r\n>... Where is that repeller?\r\n>... <size=200%><color=red>We need it now!</color></size>"
+            // ">... [beeping] Is that a motion scan?\r\n>... Keep eyes on that display.\r\n>... <size=200%><color=red>They move fast. Stay close.</color></size>",
+
+            // We pick some
+            var intel = Generator.Pick(new List<string>
+            {
+                // Base game messages
+                // ">... Shoot me then, 'cause I'm not going in there.\r\n>... Look, there's no time–\r\n>... [gunshot]\r\n>... <size=200%><color=red>Start scanning.</color></size>",
+                // ">... And... got it! That's all of them.\r\n>... Let's get that door open then.\r\n<size=200%><color=red>>... Ready?</color></size>",
+                // ">... Quiet now. <size=200%><color=red>They hear everything.</size></color>\r\n>... Turn off your damn light...\r\n>... There it is! You take that side and–\r\n>... [unintelligible]",
+
+                // New messages
+                ">... [whispering] Lights off, keep heads low.\r\n>... Do not wake them, ever.\r\n>... <size=200%><color=red>They can hear us.</color></size>",
+                ">... [footsteps] Keep your eyes sharp.\r\\n>... Any movement?\r\n>... <size=200%><color=red>Something is here. Stay low.</color></size>",
+                ">... Watch that corridor.\r\n>... We lost contact before.\r\n>... <size=200%><color=red>Stay alert. They're ahead.</color></size>",
+                ">... [gasp] It's so dark...\r\n>... Use that flashlight carefully.\r\n>... <size=200%><color=red>They hate bright light!</color></size>",
+                ">... Wait, what's that noise?\r\n>... [low rumbling]\r\n>... <size=200%><color=red>Ready weapons. This could be bad.</color></size>",
+                ">... Check that locker.\r\n>... See any ammo?\r\n>... <size=200%><color=red>We can't fight empty-handed!</color></size>",
+                ">... [whispering] Keep formation.\r\n>... No sudden moves.\r\n>... <size=200%><color=red>They sense motion and sound.</color></size>",
+                ">... [footsteps] Keep your eyes sharp.\r\n>... Any movement?\r\n>... <size=200%><color=red>Something is here. Stay low.</color></size>",
+                ">... <size=200%><color=red>[footsteps]</color></size>\r\n>... They are close.\r\n>... Keep your weapons ready.",
+                ">... <size=200%><color=red>We must hurry</color></size> or die.\r\n>... [low growl] Listen carefully.\r\n>... Wait for movement.",
+                ">... Keep it quiet.\r\n>... They sense <size=200%><color=red>every sound</color></size> here.\r\n>... [heartbeat]",
+                ">... [labored breathing] Keep scanning.\r\n>... They come from behind <size=200%><color=red>that door</color></size>.",
+                ">... <size=200%><color=red>Hold</color></size> your fire!\r\n>... They're not awake yet.\r\n>... Stay behind cover.\r\n>... [faint clicking]",
+                ">... This place stinks of decay.\r\n>... <size=200%><color=red>Don't breathe it in</color></size>.\r\n>... [gagging, coughing]",
+                ">... [muffled screams]\r\n>... <size=200%><color=red>Open that locker</color></size>, now.\r\n>... We need gear, fast.",
+                ">... <size=200%><color=red>Don't wake them!</color></size>\r\n>... Lights out, no chatter.\r\n>... [soft skittering]",
+                ">... I see something shining.\r\n>... <size=200%><color=red>Check that panel</color></size> carefully.\r\n>... Might be our way out.",
+                ">... This won't be easy.\r\n>... <size=200%><color=red>Load up</color></size> everything we have.\r\n>... We face them soon."
+            })!;
+
+            ElevatorDropWardenIntel.Add((0, intel));
         }
 
         /// <summary>

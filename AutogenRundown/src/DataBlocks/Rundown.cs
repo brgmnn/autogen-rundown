@@ -5,9 +5,9 @@ namespace AutogenRundown.DataBlocks
 {
     public record Rundown : DataBlock
     {
-        public static uint R_Daily = 1;
-        public static uint R_Weekly = 2;
-        public static uint R_Monthly = 3;
+        public static readonly uint R_Daily = 1;
+        public static readonly uint R_Weekly = 2;
+        public static readonly uint R_Monthly = 3;
 
         public List<Level> TierA { get; set; } = new();
         public List<Level> TierB { get; set; } = new();
@@ -59,6 +59,18 @@ namespace AutogenRundown.DataBlocks
         public ReqToReachTier ReqToReachTierE = new();
         #endregion
 
+        private double ScaleTierWidth(int levelCount)
+            => levelCount switch
+            {
+                1 => 0.01,
+                2 => 0.50,
+                3 => 0.65,
+                4 => 0.75,
+                5 => 0.85,
+
+                _ => 1.0
+            };
+
         public JObject StorytellingData {
             get => JObject.FromObject(new
             {
@@ -77,31 +89,31 @@ namespace AutogenRundown.DataBlocks
                     TierAVisuals = new
                     {
                         Color = Color.MenuVisuals,
-                        Scale = 0.75,
+                        Scale = ScaleTierWidth(TierA.Count),
                         ScaleYModifier = 0.3
                     },
                     TierBVisuals = new
                     {
                         Color = Color.MenuVisuals,
-                        Scale = 0.75,
+                        Scale = ScaleTierWidth(TierB.Count),
                         ScaleYModifier = 0.3
                     },
                     TierCVisuals = new
                     {
                         Color = Color.MenuVisuals,
-                        Scale = 0.75,
+                        Scale = ScaleTierWidth(TierC.Count),
                         ScaleYModifier = 0.3
                     },
                     TierDVisuals = new
                     {
                         Color = Color.MenuVisuals,
-                        Scale = 0.75,
+                        Scale = ScaleTierWidth(TierD.Count),
                         ScaleYModifier = 0.3
                     },
                     TierEVisuals = new
                     {
                         Color = Color.MenuVisuals,
-                        Scale = 0.75,
+                        Scale = ScaleTierWidth(TierE.Count),
                         ScaleYModifier = 0.3
                     },
                 },
