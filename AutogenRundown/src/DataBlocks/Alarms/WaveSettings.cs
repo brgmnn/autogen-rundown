@@ -457,7 +457,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// <summary>
         /// Harder than easy. This shouldn't feel relaxed to deal with
         /// </summary>
-        public static WaveSettings Error_Normal = Error_Easy with
+        public static readonly WaveSettings Error_Normal = Error_Easy with
         {
             PopulationFilter = new()
             {
@@ -477,7 +477,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// <summary>
         /// Harder than easy. This shouldn't feel relaxed to deal with
         /// </summary>
-        public static WaveSettings Error_Hard = Error_Easy with
+        public static readonly WaveSettings Error_Hard = Error_Easy with
         {
             PopulationFilter = new()
             {
@@ -498,7 +498,7 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// <summary>
         /// Harder than easy. This shouldn't feel relaxed to deal with
         /// </summary>
-        public static WaveSettings Error_VeryHard = Error_Easy with
+        public static readonly WaveSettings Error_VeryHard = Error_Easy with
         {
             PopulationFilter = new()
             {

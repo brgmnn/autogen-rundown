@@ -25,6 +25,34 @@ public record GenericWave
         Settings = WaveSettings.Exit_Baseline,
     };
 
+    #region Objective Exit
+
+    public static readonly GenericWave Exit_Objective_Easy = new()
+    {
+        Settings = WaveSettings.Exit_Objective_Easy,
+        Population = WavePopulation.Baseline
+    };
+
+    public static readonly GenericWave Exit_Objective_Medium = new()
+    {
+        Settings = WaveSettings.Exit_Objective_Medium,
+        Population = WavePopulation.Baseline
+    };
+
+    public static readonly GenericWave Exit_Objective_Hard = new()
+    {
+        Settings = WaveSettings.Exit_Objective_Hard,
+        Population = WavePopulation.Baseline
+    };
+
+    public static readonly GenericWave Exit_Objective_VeryHard = new()
+    {
+        Settings = WaveSettings.Exit_Objective_VeryHard,
+        Population = WavePopulation.Baseline
+    };
+
+    #endregion
+
     #region Error Alarms
     /// <summary>
     /// Base error alarm
