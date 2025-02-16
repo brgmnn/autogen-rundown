@@ -145,11 +145,8 @@ public partial record LevelLayout
         int sideKeycardZones,
         int terminalTurnoffZones)
     {
-        if (errorZones < 1)
-        {
-            Plugin.Logger.LogError($"BuildChallenge_ErrorWithOff_KeycardInSide(): Called with invalid number of error zones: {errorZones}");
-            return (start, planner.GetZone(start)!);
-        }
+        // Enforce a minimum of 1 zone
+        errorZones = Math.Max(1, errorZones);
 
         // We need to scale up the resources in the error zones as the alarms can be quite challenging to work through
         var resourceMultiplier = level.Tier switch
@@ -172,10 +169,9 @@ public partial record LevelLayout
             zone => zone.SetMainResourceMulti(value => value * 3)).Last();
         planner.UpdateNode(penultimate with { MaxConnections = 2 });
 
-        // Add penultimate zone
+        // Add the ending zone that will be returned
         var (end, endZone) = AddZone(penultimate, new ZoneNode { Branch = "primary" });
         endZone.SetMainResourceMulti(value => value * 3);
-        // endZone.Coverage = CoverageMinMax.Medium;
 
         // Build the side chain for the keycard if we have keycard zones
         // If this is zero it will just default to returning the penultimate zone
