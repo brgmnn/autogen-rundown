@@ -570,63 +570,12 @@ public partial record LevelLayout
                             start,
                             Generator.Between(2, 3),
                             1,
-                            Generator.Between(1, 2)
+                            1
                         );
 
                         planner.UpdateNode(hsu with { Branch = "hsu_sample" });
 
                         hsuZone.Coverage = CoverageMinMax.Medium;
-
-                        // // Second area, with the locked keycard
-                        // var (node2, zone2) = AddZone(start, new ZoneNode { Branch = "primary", MaxConnections = 3 });
-                        // zone2.Coverage = CoverageMinMax.Large;
-                        // zone2.SetMainResourceMulti(value => value * 3);
-                        //
-                        // var end = AddBranch(
-                        //     node2,
-                        //     Generator.Between(1, 2),
-                        //     "primary",
-                        //     zone => zone.SetMainResourceMulti(value => value * 3)).Last();
-                        // planner.UpdateNode(end with { MaxConnections = 2 });
-                        //
-                        // var (hsu, hsuZone) = AddZone(end, new ZoneNode { Branch = "hsu_sample" });
-                        // hsuZone.SetMainResourceMulti(value => value * 3);
-                        //
-                        // var (keycard, keycardZone) = AddZone(end, new ZoneNode { Branch = "keycard" });
-                        // keycardZone.SetMainResourceMulti(value => value * 3);
-                        //
-                        // ZoneNode? terminal = AddBranch(
-                        //     hsu,
-                        //     Generator.Between(1, 2),
-                        //     "error_turnoff",
-                        //     zone => zone.SetMainResourceMulti(value => value * 3)).Last();
-                        //
-                        // var population = WavePopulation.Baseline;
-                        //
-                        // // First set shadows if we have them
-                        // if (level.Settings.HasShadows())
-                        //     population = Generator.Flip(0.8) ? WavePopulation.OnlyShadows : WavePopulation
-                        //         .Baseline_Shadows;
-                        //
-                        // // Next check and set chargers first, then flyers
-                        // if (level.Settings.HasChargers())
-                        //     population = WavePopulation.Baseline_Chargers;
-                        // else if (level.Settings.HasFlyers())
-                        //     population = WavePopulation.Baseline_Flyers;
-                        //
-                        //
-                        // // Lock the first zone
-                        // AddErrorAlarm(node2, terminal, ChainedPuzzle.AlarmError_Baseline with
-                        // {
-                        //     PersistentId = 0,
-                        //     Population = population,
-                        //     Settings = WaveSettings.Error_Hard
-                        // });
-                        //
-                        // // Lock the HSU zone
-                        // AddKeycardPuzzle(hsu, keycard);
-                        //
-                        // hsuZone.Coverage = CoverageMinMax.Medium;
                     }),
 
                     // // Error alarm with generator lock
@@ -871,43 +820,14 @@ public partial record LevelLayout
                     //                                  -> keycard
                     (0.15, () =>
                     {
-                        // Second area, with the locked keycard
-                        var (node2, zone2) = AddZone(start, new ZoneNode { Branch = "primary", MaxConnections = 3 });
-                        zone2.Coverage = CoverageMinMax.Large;
+                        var (hsu, hsuZone) = BuildChallenge_ErrorWithOff_KeycardInSide(
+                            start,
+                            Generator.Between(2, 3),
+                            1,
+                            Generator.Between(1, 2)
+                        );
 
-                        var end = BuildBranch(node2, Generator.Between(1, 2));
-                        planner.UpdateNode(end with { MaxConnections = 2 });
-
-                        var (hsu, hsuZone) = AddZone(end, new ZoneNode { Branch = "hsu_sample" });
-                        var (keycard, _) = AddZone(end, new ZoneNode { Branch = "keycard" });
-
-                        ZoneNode? terminal = BuildBranch(hsu, Generator.Between(1, 2), "error_turnoff");
-
-                        var population = WavePopulation.Baseline;
-
-                        // First set shadows if we have them
-                        if (level.Settings.HasShadows())
-                            population = Generator.Flip(0.8) ? WavePopulation.OnlyShadows : WavePopulation
-                                .Baseline_Shadows;
-
-                        // Next check and set chargers first, then flyers
-                        if (level.Settings.HasChargers())
-                            population = WavePopulation.Baseline_Chargers;
-                        else if (level.Settings.HasFlyers())
-                            population = WavePopulation.Baseline_Flyers;
-                        else if (level.Settings.HasNightmares())
-                            population = WavePopulation.Baseline_Nightmare;
-
-                        // Lock the first zone
-                        AddErrorAlarm(node2, terminal, ChainedPuzzle.AlarmError_Baseline with
-                        {
-                            PersistentId = 0,
-                            Population = population,
-                            Settings = WaveSettings.Error_VeryHard
-                        });
-
-                        // Lock the HSU zone
-                        AddKeycardPuzzle(hsu, keycard);
+                        planner.UpdateNode(hsu with { Branch = "hsu_sample" });
 
                         hsuZone.Coverage = CoverageMinMax.Medium;
                     }),
