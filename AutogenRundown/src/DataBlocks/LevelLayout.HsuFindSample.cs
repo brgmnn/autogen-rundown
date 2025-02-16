@@ -396,33 +396,14 @@ public partial record LevelLayout
                     //                                -> keycard
                     (0.15, () =>
                     {
-                        // Second area, with the locked keycard
-                        var (node2, zone2) = AddZone(start, new ZoneNode { Branch = "primary", MaxConnections = 3 });
-                        zone2.Coverage = CoverageMinMax.Large;
+                        var (hsu, hsuZone) = BuildChallenge_ErrorWithOff_KeycardInSide(
+                            start,
+                            2,
+                            1,
+                            1
+                        );
 
-                        var end = BuildBranch(node2, 1);
-                        planner.UpdateNode(end with { MaxConnections = 2 });
-
-                        var (hsu, hsuZone) = AddZone(end, new ZoneNode { Branch = "hsu_sample" });
-                        var (keycard, _) = AddZone(end, new ZoneNode { Branch = "keycard" });
-
-                        ZoneNode? terminal = BuildBranch(hsu, 1, "error_turnoff");
-
-                        // Optionally add shadows if the level has shadows in it
-                        var population = level.Settings.HasShadows()
-                            ? WavePopulation.OnlyShadows
-                            : WavePopulation.Baseline;
-
-                        // Lock the first zone
-                        AddErrorAlarm(node2, terminal, ChainedPuzzle.AlarmError_Baseline with
-                        {
-                            PersistentId = 0,
-                            Population = population,
-                            Settings = WaveSettings.Error_Normal
-                        });
-
-                        // Lock the HSU zone
-                        AddKeycardPuzzle(hsu, keycard);
+                        planner.UpdateNode(hsu with { Branch = "hsu_sample" });
 
                         hsuZone.Coverage = CoverageMinMax.Medium;
                     }),
@@ -561,9 +542,7 @@ public partial record LevelLayout
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // Error alarm and keycard. Zone layout is as follows:
-                    //   start -> node2 -> [0-1] -> end -> hsu     -> error
-                    //                                  -> keycard
+                    // Error alarm and keycard
                     (0.15, () =>
                     {
                         var (hsu, hsuZone) = BuildChallenge_ErrorWithOff_KeycardInSide(
@@ -579,43 +558,14 @@ public partial record LevelLayout
                     }),
 
                     // Error alarm with generator lock
-                    //      start (cell) -> node2 -> [0-1] -> end (generator) -> hsu -> error_turnoff
                     (0.20, () =>
                     {
-                        // Second area, with the locked keycard
-                        var (node2, zone2) = AddZone(start, new ZoneNode { Branch = "primary", MaxConnections = 3 });
-                        zone2.Coverage = CoverageMinMax.Large;
+                        var (hsu, hsuZone) = BuildChallenge_ErrorWithOff_GeneratorCellCarry(
+                            start,
+                            Generator.Between(2, 3),
+                            1);
 
-                        var end = BuildBranch(node2, Generator.Between(1, 2));
-                        planner.UpdateNode(end with { MaxConnections = 2 });
-
-                        var (hsu, hsuZone) = AddZone(end, new ZoneNode { Branch = "hsu_sample" });
-
-                        ZoneNode? terminal = BuildBranch(hsu, 1, "error_turnoff");
-
-                        var population = WavePopulation.Baseline;
-
-                        // First set shadows if we have them
-                        if (level.Settings.HasShadows())
-                            population = Generator.Flip(0.8) ? WavePopulation.OnlyShadows : WavePopulation
-                                .Baseline_Shadows;
-
-                        // Next check and set chargers first, then flyers
-                        if (level.Settings.HasChargers())
-                            population = WavePopulation.Baseline_Chargers;
-                        else if (level.Settings.HasFlyers())
-                            population = WavePopulation.Baseline_Flyers;
-
-                        // Lock the first zone
-                        AddErrorAlarm(node2, terminal, ChainedPuzzle.AlarmError_Baseline with
-                        {
-                            PersistentId = 0,
-                            Population = population,
-                            Settings = WaveSettings.Error_Hard
-                        });
-
-                        // Lock the HSU zone behind a generator
-                        AddGeneratorPuzzle(hsu, node2);
+                        planner.UpdateNode(hsu with { Branch = "hsu_sample" });
 
                         hsuZone.Coverage = CoverageMinMax.Medium;
                     }),
@@ -630,11 +580,13 @@ public partial record LevelLayout
                         });
                         preludeZone.GenTGeomorph(level.Complex);
 
-                        var (locked, _) = AddZone(prelude, new ZoneNode { Branch = "hsu_sample" });
+                        var (hsu, hsuZone) = AddZone(prelude, new ZoneNode { Branch = "hsu_sample" });
+                        hsuZone.Coverage = CoverageMinMax.Medium;
+
                         var cell = BuildBranch(prelude, Generator.Between(2, 3), "power_cell");
 
                         // Lock the first zone
-                        AddGeneratorPuzzle(locked, cell);
+                        AddGeneratorPuzzle(hsu, cell);
                     }),
 
                     // 2 keycards
@@ -836,42 +788,12 @@ public partial record LevelLayout
                     //      start (cell) -> node2 -> [0-1] -> end (generator) -> hsu -> error_turnoff
                     (0.20, () =>
                     {
-                        // Second area, with the locked keycard
-                        var (node2, zone2) = AddZone(start, new ZoneNode { Branch = "primary", MaxConnections = 3 });
-                        zone2.Coverage = CoverageMinMax.Large;
+                        var (hsu, hsuZone) = BuildChallenge_ErrorWithOff_GeneratorCellCarry(
+                            start,
+                            Generator.Between(2, 3),
+                            1);
 
-                        var end = BuildBranch(node2, Generator.Between(1, 2));
-                        planner.UpdateNode(end with { MaxConnections = 2 });
-
-                        var (hsu, hsuZone) = AddZone(end, new ZoneNode { Branch = "hsu_sample" });
-
-                        ZoneNode? terminal = BuildBranch(hsu, 1, "error_turnoff");
-
-                        var population = WavePopulation.Baseline;
-
-                        // First set shadows if we have them
-                        if (level.Settings.HasShadows())
-                            population = Generator.Flip(0.8) ? WavePopulation.OnlyShadows : WavePopulation
-                                .Baseline_Shadows;
-
-                        // Next check and set chargers first, then flyers
-                        if (level.Settings.HasChargers())
-                            population = WavePopulation.Baseline_Chargers;
-                        else if (level.Settings.HasFlyers())
-                            population = WavePopulation.Baseline_Flyers;
-                        else if (level.Settings.HasNightmares())
-                            population = WavePopulation.Baseline_Nightmare;
-
-                        // Lock the first zone
-                        AddErrorAlarm(node2, terminal, ChainedPuzzle.AlarmError_Baseline with
-                        {
-                            PersistentId = 0,
-                            Population = population,
-                            Settings = WaveSettings.Error_VeryHard
-                        });
-
-                        // Lock the HSU zone behind a generator
-                        AddGeneratorPuzzle(hsu, node2);
+                        planner.UpdateNode(hsu with { Branch = "hsu_sample" });
 
                         hsuZone.Coverage = CoverageMinMax.Medium;
                     }),

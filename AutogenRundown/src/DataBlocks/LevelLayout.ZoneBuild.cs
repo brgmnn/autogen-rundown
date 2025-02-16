@@ -227,5 +227,99 @@ public partial record LevelLayout
         return (end, endZone);
     }
 
+    /// <summary>
+    /// Generates a challenge zone build with:
+    ///
+    ///     start -> firstErrorZone (with cell) -> error zones [1,...] -> penultimate (with generator) -> end
+    ///
+    /// Note that this requires a team member carrying the cell through the error zones whilst
+    /// the error alarm is ongoing which will be _hard_. Not recommended to use this challenge
+    /// for anything above a C-tier.
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="errorZones"></param>
+    /// <param name="sideCellZones"></param>
+    /// <param name="terminalTurnoffZones"></param>
+    /// <returns></returns>
+    public (ZoneNode, Zone) BuildChallenge_ErrorWithOff_GeneratorCellCarry(
+        ZoneNode start,
+        int errorZones,
+        int terminalTurnoffZones)
+    {
+        // Enforce a minimum of 1 zone
+        errorZones = Math.Max(1, errorZones);
+
+        // We need to scale up the resources in the error zones as the alarms can be quite challenging to work through
+        var resourceMultiplier = level.Tier switch
+        {
+            _ => 3.0
+        };
+
+        // first error alarm zone
+        var (firstError, firstErrorZone) = AddZone(
+            start,
+            new ZoneNode { Branch = "primary", MaxConnections = 3 });
+        firstErrorZone.Coverage = CoverageMinMax.Large;
+        firstErrorZone.SetMainResourceMulti(value => value * 3);
+
+        // Add subsequent error alarm zones to go through
+        var penultimate = AddBranch(
+            firstError,
+            errorZones - 1,
+            "primary",
+            zone => zone.SetMainResourceMulti(value => value * 3)).Last();
+        planner.UpdateNode(penultimate with { MaxConnections = 2 });
+
+        // Add the ending zone that will be returned
+        var (end, endZone) = AddZone(penultimate, new ZoneNode { Branch = "primary" });
+        endZone.SetMainResourceMulti(value => value * 3);
+
+        // Lock the end zone behind a generator puzzle
+        // The cell has to be carried from the first error zone
+        AddGeneratorPuzzle(end, firstError);
+
+        // Build terminal zones
+        // If `terminalTurnoffZones` is set to zero, then the turnoff terminal will be placed in the end zone.
+        ZoneNode? terminal = AddBranch(
+            end,
+            terminalTurnoffZones,
+            "error_turnoff",
+            zone => zone.SetMainResourceMulti(value => value * 3)).Last();
+
+        var population = WavePopulation.Baseline;
+
+        // First set shadows if we have them
+        if (level.Settings.HasShadows())
+            population = Generator.Flip(0.6) ? WavePopulation.OnlyShadows : WavePopulation
+                .Baseline_Shadows;
+
+        // Next check and set chargers first, then flyers
+        if (level.Settings.HasChargers())
+            population = WavePopulation.Baseline_Chargers;
+        else if (level.Settings.HasFlyers())
+            population = WavePopulation.Baseline_Flyers;
+
+        // Error wave settings
+        var settings = level.Tier switch
+        {
+            "B" => WaveSettings.Error_Easy,
+            "C" => WaveSettings.Error_Normal,
+            "D" => WaveSettings.Error_Hard,
+            "E" => WaveSettings.Error_VeryHard,
+
+            _ => WaveSettings.Error_Easy,
+        };
+
+        // Lock the first zone with the error alarm
+        AddErrorAlarm(firstError, terminal, ChainedPuzzle.AlarmError_Baseline with
+        {
+            PersistentId = 0,
+            Population = population,
+            Settings = settings
+        });
+
+        return (end, endZone);
+    }
+
     #endregion
 }
