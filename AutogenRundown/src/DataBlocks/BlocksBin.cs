@@ -18,6 +18,8 @@ namespace AutogenRundown.DataBlocks
             = new BlocksBin<EnemyGroup>();
         public static BlocksBin<EnemyPopulation> EnemyPopulations { get; private set; }
             = new BlocksBin<EnemyPopulation>();
+        public static BlocksBin<ExpeditionBalance> ExpeditionBalances { get; private set; }
+            = new BlocksBin<ExpeditionBalance>();
         public static BlocksBin<Fog> Fogs { get; private set; }
             = new BlocksBin<Fog>();
         public static BlocksBin<GameSetup> GameSetups { get; private set; }
@@ -57,6 +59,7 @@ namespace AutogenRundown.DataBlocks
             ConsumableDistribution.SaveStatic();
             EnemyGroup.SaveStatic();
             EnemyPopulation.SaveStatic();
+            ExpeditionBalance.SaveStatic();
             Fog.SaveStatic();
             LevelLayout.SaveStatic();
             Rundown.SaveStatic();
@@ -75,6 +78,7 @@ namespace AutogenRundown.DataBlocks
             ConsumableDistributions.Save("ConsumableDistribution");
             EnemyGroups.Save("EnemyGroup");
             EnemyPopulations.Save("EnemyPopulation");
+            ExpeditionBalances.Save("ExpeditionBalance");
             Fogs.Save("FogSettings");
             GameSetups.Save("GameSetup");
             LevelLayouts.Save("LevelLayout");

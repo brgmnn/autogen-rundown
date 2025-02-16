@@ -50,34 +50,34 @@ public partial record LevelLayout : DataBlock
             {
                 case "A":
                 {
-                    zone.WeaponAmmoMulti *= 2.0;
-                    zone.ToolAmmoMulti *= 2.0;
-                    zone.HealthMulti *= 2.0;
+                    zone.AmmoPacks *= 2.0;
+                    zone.ToolPacks *= 2.0;
+                    zone.HealthPacks *= 2.0;
                     break;
                 }
 
                 case "B":
                 {
-                    zone.WeaponAmmoMulti *= 1.6;
-                    zone.ToolAmmoMulti *= 1.6;
-                    zone.HealthMulti *= 1.6;
+                    zone.AmmoPacks *= 1.6;
+                    zone.ToolPacks *= 1.6;
+                    zone.HealthPacks *= 1.6;
                     break;
                 }
 
                 case "C":
                 {
                     // TODO: change all of these so we can assign actual numbers of ammo / health / tool use
-                    zone.WeaponAmmoMulti *= 1.4;
-                    zone.ToolAmmoMulti *= 1.4;
-                    zone.HealthMulti *= 1.4;
+                    zone.AmmoPacks *= 1.4;
+                    zone.ToolPacks *= 1.4;
+                    zone.HealthPacks *= 1.4;
                     break;
                 }
 
                 case "D":
                 {
-                    zone.WeaponAmmoMulti *= 1.2;
-                    zone.ToolAmmoMulti *= 1.2;
-                    zone.HealthMulti *= 1.2;
+                    zone.AmmoPacks *= 1.2;
+                    zone.ToolPacks *= 1.2;
+                    zone.HealthPacks *= 1.2;
                     break;
                 }
 

@@ -1360,21 +1360,53 @@ namespace AutogenRundown.DataBlocks
         public uint ConsumableDistributionInZone { get; set; }
             = ConsumableDistribution.Baseline.PersistentId;
 
-        public double HealthMulti { get; set; } = 1.0;
+        // public double HealthPerZone { get; set; } = 1.0;
+        // public double DisinfectionPerZone { get; set; } = 1.0;
+        // public double WeaponAmmoPerZone { get; set; } = 0.8;
+        // public double ToolAmmoPerZone { get; set; } = 0.7;
+
+        /// <summary>
+        /// How many health pack uses are in this zone
+        /// </summary>
+        [JsonProperty("HealthMulti")]
+        public double HealthPacks { get; set; } = 5;
 
         public Placement HealthPlacement { get; set; } = new Placement();
 
-        public double WeaponAmmoMulti { get; set; } = 1.0;
+        /// <summary>
+        /// How many ammo pack uses are in this zone
+        /// </summary>
+        [JsonProperty("WeaponAmmoMulti")]
+        public double AmmoPacks { get; set; } = 4;
 
         public Placement WeaponAmmoPlacement { get; set; } = new Placement();
 
-        public double ToolAmmoMulti { get; set; } = 1.0;
+        /// <summary>
+        /// How many tool pack uses are in this zone
+        /// </summary>
+        [JsonProperty("ToolAmmoMulti")]
+        public double ToolPacks { get; set; } = 3.5;
 
         public Placement ToolAmmoPlacement { get; set; } = new Placement();
 
-        public double DisinfectionMulti { get; set; } = 0.0;
+        /// <summary>
+        /// How many disinfect pack uses are in this zone
+        /// </summary>
+        [JsonProperty("DisinfectionMulti")]
+        public double DisinfectPacks { get; set; } = 0; // Default is 5 in base game
 
         public Placement DisinfectionPlacement { get; set; } = new Placement();
+
+        /// <summary>
+        /// Takes an input function and applies it to each of the three major resource multiples.
+        /// </summary>
+        /// <param name="transformer"></param>
+        public void SetMainResourceMulti(Func<double, double> transformer)
+        {
+            HealthPacks = transformer(HealthPacks);
+            ToolPacks = transformer(ToolPacks);
+            AmmoPacks = transformer(AmmoPacks);
+        }
         #endregion
 
         public JArray StaticSpawnDataContainers { get; set; } = new JArray();

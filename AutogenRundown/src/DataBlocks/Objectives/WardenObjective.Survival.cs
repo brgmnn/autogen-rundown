@@ -140,9 +140,9 @@ public partial record WardenObjective : DataBlock
             var zone = level.Planner.GetZone(node)!;
 
             // Add extra resources to the overload zone to help reward doing it
-            zone.WeaponAmmoMulti *= 2.0;
-            zone.ToolAmmoMulti *= 2.0;
-            zone.HealthMulti *= 2.0;
+            zone.AmmoPacks *= 2.0;
+            zone.ToolPacks *= 2.0;
+            zone.HealthPacks *= 2.0;
 
             EventBuilder.AddMessage(
                 zone.EventsOnApproachDoor,

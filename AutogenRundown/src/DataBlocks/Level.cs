@@ -284,7 +284,7 @@ namespace AutogenRundown.DataBlocks
                 ["LightSettings"] = 36,
                 ["FogSettings"] = FogSettings.PersistentId,
                 ["EnemyPopulation"] = 1,
-                ["ExpeditionBalance"] = 1,
+                ["ExpeditionBalance"] = ExpeditionBalance.DefaultBalance.PersistentId,
 
                 // TODO: Replace these with actual wave settings / populations
                 ["ScoutWaveSettings"] = ScoutWaveSettings.PersistentId,

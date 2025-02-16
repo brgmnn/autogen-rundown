@@ -313,9 +313,9 @@ public partial record class WardenObjective : DataBlock
         foreach (var zone in zones)
         {
             // We don't give as much health
-            zone.HealthMulti = baseResourcesMulti * 0.6;
-            zone.WeaponAmmoMulti = baseResourcesMulti;
-            zone.ToolAmmoMulti = baseResourcesMulti;
+            zone.HealthPacks = 3 * baseResourcesMulti;
+            zone.AmmoPacks = 5 * baseResourcesMulti;
+            zone.ToolPacks = 5 * baseResourcesMulti;
         }
 
         Plugin.Logger.LogDebug($"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead} -- "

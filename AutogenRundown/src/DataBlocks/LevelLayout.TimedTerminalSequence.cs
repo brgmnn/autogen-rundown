@@ -72,9 +72,9 @@ public partial record LevelLayout : DataBlock
                 Population = Generator.DrawSelect(errorPopulation)
             };
             endZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
-            endZone.WeaponAmmoMulti *= 2;
-            endZone.ToolAmmoMulti *= 2;
-            endZone.HealthMulti *= 2;
+            endZone.AmmoPacks *= 2;
+            endZone.ToolPacks *= 2;
+            endZone.HealthPacks *= 2;
 
             // Mark the zone for the objective
             layerData.ObjectiveData.ZonePlacementDatas.Add(
