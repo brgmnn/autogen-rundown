@@ -3,6 +3,40 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.49.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.49.0) — February 16, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Reworks HSU sample retrieval objective
+  * Added generator / keycard / error alarm / Apex Alarm variants
+ * Added several new Geomorph packs (new map tiles) and enabled most of the tiles
+   * [donan3967 geo pack 1](https://github.com/brgmnn/autogen-rundown/commit/af277c2087c9ce9c8f642738557cdd60f801a019)
+     * 2 new hub (X-tile) geos, and 1 new corridor (I-tile) geo
+   * [DaksGeos](https://github.com/brgmnn/autogen-rundown/commit/217e822399e4039e8a926b12671688f89a1914bd)
+     * 1 new exit geo, 1 new hub geo, 1 new corridor geo
+   * [CheeseGeos](https://github.com/brgmnn/autogen-rundown/commit/d527de39615c6a0108c54add2787c67e6ed36757)
+     * 1 new exit geo, 3 new hub geo, 4 new corridor geos, 1 new dead end geo
+* Added AdvancedWardenObjective mod for additional events 
+* Added customizable lighting for some events
+* Levels are now center aligned in the Rundown menu
+* Added new Warden Elevator Drop Intel (instead of all levels having the same message)
+
+### Changes
+
+* Fixed PlaySound events sometimes not triggering
+* Fixed crash on first time startup due to attempting to remove EOS directory that doesn't exist
+  * Fixed #15 
+* Balance: Reduced free doors in A-tier alarm puzzle pack (`2` to `1`), which slightly reduces the chance of doors with no scans
+* Balance: Increased base zone estimate time for enemy points from 1.2s/pt to 2.4s/pt
+  * This will slightly increase time given to fetch codes and clear areas based on number of enemies
+* Balance: Reworked exit alarms for HSU collect sample
+* Updated color on rundown screen for daily / monthly to be colored on E-tier
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.48.0...v0.49.0
+
+
 ## [v0.48.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.48.0) — February 03, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
