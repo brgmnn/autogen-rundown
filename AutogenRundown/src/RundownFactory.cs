@@ -518,16 +518,26 @@ public static class RundownFactory
             /// "2025_01" - January  2025:
             /// "2025_02" - February 2025:
             ///
-            var buildPools = new Dictionary<string, List<int>>()
+            var buildPools = new Dictionary<string, List<int>>
             {
                 {
                     "2025_02", new()
                     {
-                        1, 2,       // Tier A - y,y
-                        1, 1, 1,    // Tier B - y,y,y
-                        1, 1, 1, 2, // Tier C - y,y,y,y
-                        1, 1, 1, 1, // Tier D - y,y,y,y
+                        3, 1,       // Tier A - y,y
+                        1, 2, 1,    // Tier B - y,y,y
+                        1, 2, 1, 1, // Tier C - y,y,y,y
+                        1, 2, 2, 1, // Tier D - y,y,y,y
                         1, 1, 1     // Tier E - y,y,y
+                    }
+                },
+                {
+                    "2025_03", new()
+                    {
+                        1, 1,       // Tier A - y,y
+                        1, 1, 1,    // Tier B - y,y,y
+                        1, 1, 1, 1, // Tier C - y,?,?,?
+                        1, 1, 1, 1, // Tier D - ?,?,?,?
+                        1, 1, 1     // Tier E - ?,?,?
                     }
                 }
             };
@@ -540,11 +550,11 @@ public static class RundownFactory
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>MONTHLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
 
-                TierA_Count = Generator.Seed == "2025_02" ? 2 : 1,
+                TierA_Count = 2,
                 TierB_Count = 3,
                 TierC_Count = 4,
                 TierD_Count = 4,
-                TierE_Count = Generator.Seed == "2025_02" ? 3 : 2,
+                TierE_Count = 3,
 
                 ///
                 /// Use the seed pool to re-roll levels. Start by setting these at 1 and incrementing each time
@@ -552,6 +562,8 @@ public static class RundownFactory
                 ///
                 BuildSeedPool = buildSeeds ?? new List<int>()
             }, false);
+
+            monthly.VisualsETier = Color.MenuVisuals_MonthlyE;
 
             Bins.Rundowns.AddBlock(monthly);
         }
@@ -594,6 +606,8 @@ public static class RundownFactory
                 TierD_Count = 1,
                 TierE_Count = Generator.Between(1, 4),
             }, true, false);
+
+            daily.VisualsETier = Color.MenuVisuals_DailyE;
 
             Bins.Rundowns.AddBlock(daily);
         }

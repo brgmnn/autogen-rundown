@@ -71,6 +71,9 @@ namespace AutogenRundown.DataBlocks
                 _ => 1.0
             };
 
+        [JsonIgnore]
+        public Color VisualsETier { get; set; } = Color.MenuVisuals;
+
         public JObject StorytellingData {
             get => JObject.FromObject(new
             {
@@ -112,7 +115,7 @@ namespace AutogenRundown.DataBlocks
                     },
                     TierEVisuals = new
                     {
-                        Color = Color.MenuVisuals,
+                        Color = VisualsETier,
                         Scale = ScaleTierWidth(TierE.Count),
                         ScaleYModifier = 0.3
                     },

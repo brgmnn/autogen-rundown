@@ -459,6 +459,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// </summary>
         public static readonly WaveSettings Error_Normal = Error_Easy with
         {
+            PersistentId = 0,
+
             PopulationFilter = new()
             {
                 Enemies.EnemyType.Standard,
@@ -479,6 +481,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// </summary>
         public static readonly WaveSettings Error_Hard = Error_Easy with
         {
+            PersistentId = 0,
+
             PopulationFilter = new()
             {
                 Enemies.EnemyType.Standard,
@@ -500,6 +504,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// </summary>
         public static readonly WaveSettings Error_VeryHard = Error_Easy with
         {
+            PersistentId = 0,
+
             PopulationFilter = new()
             {
                 Enemies.EnemyType.Standard,

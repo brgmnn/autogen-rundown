@@ -4,6 +4,7 @@ namespace AutogenRundown.DataBlocks;
 
 public record Color
 {
+    #region Menu Visuals
     public static readonly Color MenuVisuals = new()
     {
         Alpha = 1.0,
@@ -11,6 +12,23 @@ public record Color
         Green = 0.7490196,
         Blue = 0.858823538,
     };
+
+    public static readonly Color MenuVisuals_MonthlyE = new()
+    {
+        Alpha = 1.0,
+        Red = 0.0009804,
+        Green = 0.3390196,
+        Blue = 0.858823538,
+    };
+
+    public static readonly Color MenuVisuals_DailyE = new()
+    {
+        Alpha = 1.0,
+        Red = 0.8509804,
+        Green = 0.3390196,
+        Blue = 0.008823538,
+    };
+    #endregion
 
     public static readonly Color White = new() { Red = 1.0, Green = 1.0, Blue = 1.0, Alpha = 1.0 };
 
