@@ -28,6 +28,16 @@ Monthly Feb
     [ ] Increase resources in side rooms. Requires a lot of shooting and hard to find any resources in larger rooms
     [ ] May consider reducing the number of zones?
     [ ] Mother wave had good amount of time. DONT CHANGE
+Monthly Feb 0.49.0
+  * Secondary or otherwise key seems to always spawn in the elevator
+  * C2 Extreme
+    * Bug: Bulkhead Key spawned in the elevator drop?????!!!!
+      * It was in the Cheese Geos hub
+    * Bug: No power cells spawned in secondary
+  * C2 Main
+    * Keycard spawned deep in zone instead of in side zone
+  * D4 Main
+    * _Very_ difficult first room scan: tbd if we should fix this somehow? No doors to hold or anything
 
 Missing tiles to add
   * Add R8A1 garden hub tile to hubs

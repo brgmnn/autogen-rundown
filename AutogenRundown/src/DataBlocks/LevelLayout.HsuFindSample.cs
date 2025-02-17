@@ -396,6 +396,7 @@ public partial record LevelLayout
                     //                                -> keycard
                     (0.15, () =>
                     {
+                        // TODO: This didn't seem to work at all in C2
                         var (hsu, hsuZone) = BuildChallenge_ErrorWithOff_KeycardInSide(
                             start,
                             2,
