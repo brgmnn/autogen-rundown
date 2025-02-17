@@ -457,21 +457,31 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// <summary>
         /// Harder than easy. This shouldn't feel relaxed to deal with
         /// </summary>
-        public static readonly WaveSettings Error_Normal = Error_Easy with
+        public static readonly WaveSettings Error_Normal = new()
         {
-            PersistentId = 0,
-
             PopulationFilter = new()
             {
                 Enemies.EnemyType.Standard,
                 Enemies.EnemyType.Special,
                 Enemies.EnemyType.MiniBoss,
             },
+            FilterType = PopulationFilterType.Include,
+
+            PauseBeforeStart = 3.0,
             PauseBetweenGroups = 45,
             PopulationPointsPerGroupStart = 4.0,
             PopulationPointsPerGroupEnd = 4.0,
             PopulationPointsPerWaveStart = 4.0,
             PopulationPointsPerWaveEnd = 4.0,
+
+            PopulationRampOverTime = 0,
+            ChanceToRandomizeSpawnDirectionPerGroup = 0.8,
+            ChanceToRandomizeSpawnDirectionPerWave = 1.0,
+
+            WavePauseMin = 1.0,
+            WavePauseMax = 20.0,
+            WavePauseMin_atCost = 1.0,
+            WavePauseMax_atCost = 10.0,
 
             Name = "Error_Normal"
         };
@@ -479,16 +489,17 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// <summary>
         /// Harder than easy. This shouldn't feel relaxed to deal with
         /// </summary>
-        public static readonly WaveSettings Error_Hard = Error_Easy with
+        public static readonly WaveSettings Error_Hard = new()
         {
-            PersistentId = 0,
-
             PopulationFilter = new()
             {
                 Enemies.EnemyType.Standard,
                 Enemies.EnemyType.Special,
                 Enemies.EnemyType.MiniBoss,
             },
+            FilterType = PopulationFilterType.Include,
+
+            PauseBeforeStart = 3.0,
             PauseBetweenGroups = 37,
 
             PopulationPointsPerGroupStart = 5.0,
@@ -496,16 +507,23 @@ namespace AutogenRundown.DataBlocks.Alarms
             PopulationPointsPerWaveStart = 5.0,
             PopulationPointsPerWaveEnd = 5.0,
 
-            Name = "Error_Normal"
+            PopulationRampOverTime = 0,
+            ChanceToRandomizeSpawnDirectionPerGroup = 0.8,
+            ChanceToRandomizeSpawnDirectionPerWave = 1.0,
+
+            WavePauseMin = 1.0,
+            WavePauseMax = 20.0,
+            WavePauseMin_atCost = 1.0,
+            WavePauseMax_atCost = 10.0,
+
+            Name = "Error_Hard"
         };
 
         /// <summary>
         /// Harder than easy. This shouldn't feel relaxed to deal with
         /// </summary>
-        public static readonly WaveSettings Error_VeryHard = Error_Easy with
+        public static readonly WaveSettings Error_VeryHard = new()
         {
-            PersistentId = 0,
-
             PopulationFilter = new()
             {
                 Enemies.EnemyType.Standard,
@@ -513,13 +531,26 @@ namespace AutogenRundown.DataBlocks.Alarms
                 Enemies.EnemyType.MiniBoss,
                 Enemies.EnemyType.Boss
             },
+            FilterType = PopulationFilterType.Include,
+
+            PauseBeforeStart = 3.0,
             PauseBetweenGroups = 30,
+
             PopulationPointsPerGroupStart = 6.0,
             PopulationPointsPerGroupEnd = 6.0,
             PopulationPointsPerWaveStart = 6.0,
             PopulationPointsPerWaveEnd = 6.0,
 
-            Name = "Error_Normal"
+            PopulationRampOverTime = 0,
+            ChanceToRandomizeSpawnDirectionPerGroup = 0.8,
+            ChanceToRandomizeSpawnDirectionPerWave = 1.0,
+
+            WavePauseMin = 1.0,
+            WavePauseMax = 20.0,
+            WavePauseMin_atCost = 1.0,
+            WavePauseMax_atCost = 10.0,
+
+            Name = "Error_VeryHard"
         };
         #endregion
 

@@ -122,22 +122,22 @@ Follow the installation instructions again, check yes to overwrite all files.
     * [x] Random lights selection
     * [x] Reactor specific lights
     * [ ] Fog specific lights
-    * [ ] Custom lights(?)
+    * [x] Custom lights(?)
   * Zones
     * Custom Geomorphs
       * [x] Hubs
       * [x] I's (corridors)
       * [ ] Warp portals
-      * [ ] Rundown 8 Geomorphs
+      * [x] Rundown 8 Geomorphs
     * Curated event layouts
-      * [ ] Class 10+ alarm room
+      * [x] Class 10+ alarm room
       * [x] King of the hill room
     * [ ] Specialized bulkhead geomorphs and layouts
     * [ ] Bulkheads behind bulkheads
   * Challenges
     * [x] Key to unlock doors
-    * [ ] Cell to power generator to unlock doors
-    * [ ] Locked terminals
+    * [x] Cell to power generator to unlock doors
+    * [x] Locked terminals
     * [x] Fog
     * [x] Infectious fog
     * [ ] Security Sensors
@@ -204,11 +204,13 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] Secret Alarms — *Appear to be free but aren't*
 * Challenges
   * [x] Reactor terminals can be locked just like regular terminals
-* Glowsticks — *All colors available to spawn*
-  * [x] Green (normal)
-  * [x] Yellow
-  * [x] Halloween (orange)
-  * [x] Christmas (red)
+* Cosmetic
+  * Glowsticks — *All colors available to spawn*
+    * [x] Green (normal)
+    * [x] Yellow
+    * [x] Halloween (orange)
+    * [x] Christmas (red)
+  * Inserting generator cells turns on emergency lights
 
 ## Acknowledgements
 

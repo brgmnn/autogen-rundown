@@ -62,13 +62,13 @@ public static class RundownFactory
         }
 
         #region Regular debugging level
-        #if true
+        #if false
         if (withFixed)
         {
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
-                Complex = Complex.Tech,
+                Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "D",
                 Objective = WardenObjectiveType.HsuFindSample,
@@ -78,7 +78,7 @@ public static class RundownFactory
             var extremeDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Extreme,
-                Complex = Complex.Tech,
+                Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "D",
                 Objective = WardenObjectiveType.HsuFindSample,
@@ -93,7 +93,7 @@ public static class RundownFactory
                 {
                     Tier = "D",
                     Name = "Debug Test",
-                    Complex = Complex.Tech,
+                    Complex = Complex.Mining,
                     MainDirector = mainDirector,
                     // SecondaryDirector = extremeDirector,
                     Settings = settings,
