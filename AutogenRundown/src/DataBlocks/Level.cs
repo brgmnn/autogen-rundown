@@ -79,7 +79,7 @@ namespace AutogenRundown.DataBlocks
         public LevelSettings Settings { get; set; }
 
         [JsonIgnore]
-        public List<RelativeDirection> RelativeDirections { get; set; } = new List<RelativeDirection>
+        public List<RelativeDirection> RelativeDirections { get; set; } = new()
             {
                 RelativeDirection.Global_Forward,
                 RelativeDirection.Global_Left,
@@ -142,7 +142,7 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// Allows easy access to the directors without having to switch
         /// </summary>
-        public Dictionary<Bulkhead, BuildDirector> Director { get; private set; } = new Dictionary<Bulkhead, BuildDirector>();
+        public Dictionary<Bulkhead, BuildDirector> Director { get; private set; } = new();
 
         [JsonIgnore]
         public BuildDirector MainDirector
@@ -244,7 +244,6 @@ namespace AutogenRundown.DataBlocks
                 // Original:
                 //
                 //  "... Shoot me then, 'cause I'm not going in there.  \r\n... Look, there's no time– \r\n... [gunshot]  \r\n... <size=200%><color=red>Start scanning.\r</color></size>",
-                // ["RoleplayedWardenIntel"] = 1426
                 ["RoleplayedWardenIntel"] = ElevatorDropWardenIntel.MaxBy(intel => intel.Item1).Item2,
             };
         }
@@ -620,13 +619,13 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
-        /// Builds a specific bulkhead layout
+        ///
         /// </summary>
         /// <param name="bulkhead"></param>
-        private void BuildLayout(Bulkhead bulkhead)
+        private void SelectDirection(Bulkhead bulkhead)
         {
-            var director = Director[bulkhead];
-            var objective = Objective[bulkhead];
+            // var director = Director[bulkhead];
+            // var objective = Objective[bulkhead];
             var direction = RelativeDirection.Global_Forward;
 
             if (bulkhead == Bulkhead.Main)
@@ -651,7 +650,54 @@ namespace AutogenRundown.DataBlocks
                 direction = Generator.Draw(RelativeDirections);
             }
 
-            var layout = LevelLayout.Build(this, director, objective, direction);
+            Settings.SetDirections(bulkhead, direction);
+
+            // var layout = LevelLayout.Build(this, director, objective, direction);
+            // LayoutRef[bulkhead] = layout.PersistentId;
+            //
+            // objective.Build(director, this);
+            //
+            // var layerData = ObjectiveLayer[bulkhead];
+            // layerData.ObjectiveData.DataBlockId = objective.PersistentId;
+            //
+            // Bins.WardenObjectives.AddBlock(objective);
+        }
+
+        /// <summary>
+        /// Builds a specific bulkhead layout
+        /// </summary>
+        /// <param name="bulkhead"></param>
+        private void BuildLayout(Bulkhead bulkhead)
+        {
+            var director = Director[bulkhead];
+            var objective = Objective[bulkhead];
+            // var direction = RelativeDirection.Global_Forward;
+            //
+            // if (bulkhead == Bulkhead.Main)
+            // {
+            //     direction = Generator.Draw(RelativeDirections);
+            //
+            //     // We also want to remove the reverse direction of what we have selected for Main.
+            //     // The rationale is we don't want Extreme/Overload to attempt to build backwards
+            //     // along the same direction as Main is heading, but instead to branch off.
+            //     var removeBackwards = direction.Forward switch
+            //     {
+            //         ZoneExpansion.Forward => RelativeDirection.Global_Backward,
+            //         ZoneExpansion.Left => RelativeDirection.Global_Right,
+            //         ZoneExpansion.Right => RelativeDirection.Global_Left,
+            //         ZoneExpansion.Backward => RelativeDirection.Global_Forward,
+            //     };
+            //
+            //     RelativeDirections.Remove(removeBackwards);
+            // }
+            // else if (bulkhead == Bulkhead.Extreme || bulkhead == Bulkhead.Overload)
+            // {
+            //     direction = Generator.Draw(RelativeDirections);
+            // }
+            //
+            // Settings.SetDirections(bulkhead, direction);
+
+            var layout = LevelLayout.Build(this, director, objective);
             LayoutRef[bulkhead] = layout.PersistentId;
 
             objective.Build(director, this);
@@ -707,7 +753,7 @@ namespace AutogenRundown.DataBlocks
 
             Plugin.Logger.LogDebug($"{logLevelId} ({level.Complex}) - Modifiers: {level.Settings.Modifiers}, Fog: {level.FogSettings.Name}");
 
-            /**
+            /*
              * Options for bulkhead keys and bulkhead DCs:
              *
              *  * All unlocked: main, extreme, overload
@@ -720,7 +766,7 @@ namespace AutogenRundown.DataBlocks
              *  * Choice: main -> overload -> END
              *                 -> extreme -> overload -> END
              *    Main has extreme/overload DC, extreme has extra key for overload DC.
-             */
+             * */
             var bulkheadKeys = Generator.Select(new List<(double, string)>
             {
                 (1.0, "chained"),
@@ -730,7 +776,25 @@ namespace AutogenRundown.DataBlocks
                 // (1.0, "choice"), // TODO: implement
             });
 
+            #region Bulkhead direction selection
+            /*
+             * We must select the relative directions we want to try and build each of the bulkhead
+             * zones upfront as it has an impact on the other areas of level generation.
+             * */
+            level.SelectDirection(Bulkhead.Main);
+
+            if (selectedBulkheads.HasFlag(Bulkhead.Extreme))
+                level.SelectDirection(Bulkhead.Extreme);
+
+            if (selectedBulkheads.HasFlag(Bulkhead.Overload))
+                level.SelectDirection(Bulkhead.Overload);
+            #endregion
+
             #region Objective prebuild
+            /* We prebuild the objectives as certain objectives have components that affect level
+             * generation. For example the "distribute cells to generator cluster" objective
+             * requires that the level generate enough generators for each of the cells to be
+             * distributed to. */
             level.PreBuildObjective(Bulkhead.Main);
 
             if (selectedBulkheads.HasFlag(Bulkhead.Extreme))
@@ -741,6 +805,14 @@ namespace AutogenRundown.DataBlocks
             #endregion
 
             #region Layout generation
+            /*
+             * Here we go ahead and generate the level and zones. We want to start with main first,
+             * and then go with extreme -> overload.
+             *
+             * TODO: for now bulkhead placement is always at the start of main.
+             * In the future we will want to look at placing the extreme / overload bulkheads
+             * within each other and main, instead of all in the starting area.
+             * */
             level.BuildLayout(Bulkhead.Main);
 
             if (selectedBulkheads.HasFlag(Bulkhead.Extreme))
@@ -751,6 +823,10 @@ namespace AutogenRundown.DataBlocks
             #endregion
 
             #region Bulkhead Keys
+            /*
+             * Ensure we place the bulkhead keys. For now, we just place one at the start of each
+             * bulkhead zone. This is guaranteed to allow us to complete all the objectives.
+             */
             level.MainLayerData.BulkheadKeyPlacements.Add(
                 new List<ZonePlacementData>
                 {
@@ -803,9 +879,11 @@ namespace AutogenRundown.DataBlocks
             #endregion
 
             #region Finalize -- ExtraObjectiveSetup
-            // We need to make sure the ExtraObjectiveSetup layout definitions are set up with the
-            // correct main level layout persistent id and that they are saved if we added any
-            // definitions to them.
+            /*
+             * We need to make sure the ExtraObjectiveSetup layout definitions are set up with the
+             * correct main level layout persistent id and that they are saved if we added any
+             * definitions to them.
+             */
 
             level.EOS_IndividualGenerator.Name = $"{level.Tier}{level.Index}_{level.Name.Replace(" ", "_")}";
             level.EOS_IndividualGenerator.MainLevelLayout = level.LevelLayoutData;

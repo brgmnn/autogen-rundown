@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks
 {
@@ -97,12 +98,26 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// A pack of enemies that will be drawn for placing bosses in the level.
         /// </summary>
-        public List<EnemySpawningData> EnemyBossPack { get; set; } = new List<EnemySpawningData>();
+        public List<EnemySpawningData> EnemyBossPack { get; set; } = new();
 
         /// <summary>
         /// Enemy hibernation packs for the whole level
         /// </summary>
-        public List<EnemySpawningData> EnemyHibernationPack { get; set; } = new List<EnemySpawningData>();
+        public List<EnemySpawningData> EnemyHibernationPack { get; set; } = new();
+
+        #region Build directions
+        /// <summary>
+        /// We need to store the relative directions of each of the bulkheads so we can use them
+        /// to try and reduce level lockup
+        /// </summary>
+        private readonly Dictionary<Bulkhead, RelativeDirection> bulkheadDirections = new();
+
+        public RelativeDirection GetDirections(Bulkhead bulkhead)
+            => bulkheadDirections.GetValueOrDefault(bulkhead, RelativeDirection.Global_Forward);
+
+        public void SetDirections(Bulkhead bulkhead, RelativeDirection direction)
+            => bulkheadDirections[bulkhead] = direction;
+        #endregion
 
         public LevelSettings(string? tier = null)
         {

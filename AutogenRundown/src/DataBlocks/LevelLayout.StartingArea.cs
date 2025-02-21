@@ -4,7 +4,7 @@ using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks
 {
-    public partial record class LevelLayout : DataBlock
+    public partial record LevelLayout
     {
         /// <summary>
         /// Connects the first bulkhead zone to a zone in this layout
@@ -18,11 +18,11 @@ namespace AutogenRundown.DataBlocks
             ZoneNode from,
             Zone? zone = null)
         {
-            var bulkheadZone = new ZoneNode(bulkhead, level.Planner.NextIndex(bulkhead));
-            level.Planner.Connect(from, bulkheadZone);
+            var bulkheadNode = new ZoneNode(bulkhead, level.Planner.NextIndex(bulkhead));
+            level.Planner.Connect(from, bulkheadNode);
 
             level.Planner.AddZone(
-                bulkheadZone,
+                bulkheadNode,
                 zone ?? new Zone
                 {
                     Coverage = CoverageMinMax.GenNormalSize(),
@@ -67,8 +67,8 @@ namespace AutogenRundown.DataBlocks
             }
             else
             {
-                level.MainBulkheadZone = bulkheadZone.ZoneNumber;
-                level.MainLayerData.ZonesWithBulkheadEntrance.Add(bulkheadZone.ZoneNumber);
+                level.MainBulkheadZone = bulkheadNode.ZoneNumber;
+                level.MainLayerData.ZonesWithBulkheadEntrance.Add(bulkheadNode.ZoneNumber);
                 Plugin.Logger.LogInfo($"Level={level.Tier}{level.Index} - Main Bulkhead Entrance = {from}");
             }
         }

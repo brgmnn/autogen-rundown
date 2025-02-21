@@ -704,9 +704,9 @@ namespace AutogenRundown.DataBlocks
         public static LevelLayout Build(
             Level level,
             BuildDirector director,
-            WardenObjective objective,
-            RelativeDirection direction)
+            WardenObjective objective)
         {
+            var direction = level.Settings.GetDirections(director.Bulkhead);
             var layout = new LevelLayout(level, director, level.Settings, level.Planner)
             {
                 Name = $"{level.Tier}{level.Index} {level.Name} {director.Bulkhead}",
@@ -726,6 +726,23 @@ namespace AutogenRundown.DataBlocks
                 Plugin.Logger.LogDebug($" -- Retrieve Item(s) = {objective.RetrieveItems.First()}");
 
             BuildStartingArea(level, director);
+
+            #region Set the right directions
+            /*
+             * Attempt to set the very first zones build expansion and direction
+             */
+            var bulkheadFirstNode = level.Planner.GetExactZones(director.Bulkhead).First();
+            var bulkheadFirstZone = level.Planner.GetZone(bulkheadFirstNode)!;
+
+            bulkheadFirstZone.ZoneExpansion = direction.Forward;
+            bulkheadFirstZone.StartExpansion = direction.Forward switch
+            {
+                ZoneExpansion.Forward => ZoneBuildExpansion.Forward,
+                ZoneExpansion.Backward => ZoneBuildExpansion.Backward,
+                ZoneExpansion.Left => ZoneBuildExpansion.Left,
+                ZoneExpansion.Right => ZoneBuildExpansion.Right
+            };
+            #endregion
 
             switch (director.Objective)
             {
@@ -1056,8 +1073,6 @@ namespace AutogenRundown.DataBlocks
                     break;
                 }
             }
-
-            //layout.RollKeyedDoors();
 
             // Attempt to reduce the chance of generation locking where zones cannot be placed
             level.Planner.PlanBulkheadPlacements(director.Bulkhead, direction);
