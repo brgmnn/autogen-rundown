@@ -791,6 +791,10 @@ namespace AutogenRundown.DataBlocks
 
                             nextZone.RollFog(level);
 
+                            // This means it is the last zone
+                            if (i == director.ZoneCount - 1)
+                                next.Tags.Add("exit_elevator");
+
                             level.Planner.Connect(prev, next);
                             level.Planner.AddZone(next, nextZone);
 

@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Objectives;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -11,26 +12,26 @@ namespace AutogenRundown.DataBlocks;
  *
  * This objective can only be for Main given it ends the level on completion
  */
-public partial record class WardenObjective : DataBlock
+public partial record WardenObjective
 {
     public void Build_ClearPath(BuildDirector director, Level level)
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
-        // TODO: For some reason "[EXTRACTION_ZONE]" is not registering the exit zone correctly.
-        // For now we manually find the exit zone number.
-        var exitZone = layout.Zones.Find(z => z.CustomGeomorph != null && z.CustomGeomorph.Contains("exit_01"));
-        var exitIndex = layout.ZoneAliasStart + exitZone?.LocalIndex;
-        var exitZoneString = $"<color=orange>ZONE {exitIndex}</color>";
+        // Find the exit zone
+        var exit = level.Planner.GetZonesByTag(director.Bulkhead, "exit_elevator").First();
+        var exitZone = level.Planner.GetZone(exit)!;
+        var exitZoneNumber = layout.ZoneAliasStart + exit.ZoneNumber;
+        // var exitZoneString = $"<color=orange>ZONE {exitIndex}</color>";
 
-        MainObjective = $"Clear a path to the exit point in {exitZoneString}";
+        MainObjective = $"Clear a path to the exit point in {Lore.Zone(exitZoneNumber)}";
         GoToWinCondition_Elevator = "";
-        GoToWinCondition_CustomGeo = $"Go to the forward exit point in {exitZoneString}";
+        GoToWinCondition_CustomGeo = $"Go to the forward exit point in {Lore.Zone(exitZoneNumber)}";
 
         dataLayer.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
 
         // Ensure there's a nice spicy hoard at the end
-        exitZone?.EnemySpawningInZone.Add(
+        exitZone.EnemySpawningInZone.Add(
             // These will be predominately strikers / shooters
             new EnemySpawningData()
             {
