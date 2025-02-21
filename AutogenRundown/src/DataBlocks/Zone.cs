@@ -435,7 +435,8 @@ namespace AutogenRundown.DataBlocks
 
                         // Red_Leicester_Cheese
                         (SubComplex.Lab, "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
-                        (SubComplex.DataCenter, "Assets/Bundles/RLC_Tech/geo_64x64_tech_datacenter_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
+                        // TODO: This tile seems to not have enough room to spawn items like cells and bulkhead keys
+                        // (SubComplex.DataCenter, "Assets/Bundles/RLC_Tech/geo_64x64_tech_datacenter_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
                     });
                     break;
 
