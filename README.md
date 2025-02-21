@@ -64,8 +64,6 @@ Seed: 2024_07_14
 
 Seed: 2024_07_08
 * Boosters confirmed not working for modded rundowns
-* Reduce chance of nightmare scout spawning on reactor levels. It requires specialized tool
-  generally
 
 -->
 
