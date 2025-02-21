@@ -624,8 +624,6 @@ namespace AutogenRundown.DataBlocks
         /// <param name="bulkhead"></param>
         private void SelectDirection(Bulkhead bulkhead)
         {
-            // var director = Director[bulkhead];
-            // var objective = Objective[bulkhead];
             var direction = RelativeDirection.Global_Forward;
 
             if (bulkhead == Bulkhead.Main)
@@ -651,16 +649,6 @@ namespace AutogenRundown.DataBlocks
             }
 
             Settings.SetDirections(bulkhead, direction);
-
-            // var layout = LevelLayout.Build(this, director, objective, direction);
-            // LayoutRef[bulkhead] = layout.PersistentId;
-            //
-            // objective.Build(director, this);
-            //
-            // var layerData = ObjectiveLayer[bulkhead];
-            // layerData.ObjectiveData.DataBlockId = objective.PersistentId;
-            //
-            // Bins.WardenObjectives.AddBlock(objective);
         }
 
         /// <summary>
@@ -671,31 +659,6 @@ namespace AutogenRundown.DataBlocks
         {
             var director = Director[bulkhead];
             var objective = Objective[bulkhead];
-            // var direction = RelativeDirection.Global_Forward;
-            //
-            // if (bulkhead == Bulkhead.Main)
-            // {
-            //     direction = Generator.Draw(RelativeDirections);
-            //
-            //     // We also want to remove the reverse direction of what we have selected for Main.
-            //     // The rationale is we don't want Extreme/Overload to attempt to build backwards
-            //     // along the same direction as Main is heading, but instead to branch off.
-            //     var removeBackwards = direction.Forward switch
-            //     {
-            //         ZoneExpansion.Forward => RelativeDirection.Global_Backward,
-            //         ZoneExpansion.Left => RelativeDirection.Global_Right,
-            //         ZoneExpansion.Right => RelativeDirection.Global_Left,
-            //         ZoneExpansion.Backward => RelativeDirection.Global_Forward,
-            //     };
-            //
-            //     RelativeDirections.Remove(removeBackwards);
-            // }
-            // else if (bulkhead == Bulkhead.Extreme || bulkhead == Bulkhead.Overload)
-            // {
-            //     direction = Generator.Draw(RelativeDirections);
-            // }
-            //
-            // Settings.SetDirections(bulkhead, direction);
 
             var layout = LevelLayout.Build(this, director, objective);
             LayoutRef[bulkhead] = layout.PersistentId;
