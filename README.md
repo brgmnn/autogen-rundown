@@ -34,6 +34,7 @@ Monthly Feb 0.49.0
     * Bug: Bulkhead Key spawned in the elevator drop?????!!!!
       * It was in the Cheese Geos hub
     * Bug: No power cells spawned in secondary
+    * All of these bugs seem to be from that Cheese Geos tile!!!!
   * C2 Main
     * Keycard spawned deep in zone instead of in side zone
   * D4 Main
@@ -56,8 +57,6 @@ Probably need to rework enemy sleeper spawning now with level planner
 
 Seed: 2024_12_11
 * C2: Consider adding more disposable fog repellers for fog areas
-* C2 Extreme: Check HiSec cargo, destination zone is wrong
-* C2 Extreme: too many zones, has 7 zones probably needs like 5
 
 Seed: 2024_07_14
 * D2: Error alarm turnoff in 775 does not unlock
@@ -219,6 +218,15 @@ Follow the installation instructions again, check yes to overwrite all files.
     * [x] Halloween (orange)
     * [x] Christmas (red)
   * Inserting generator cells turns on emergency lights
+* Lore
+  * Custom Warden intel messages
+    * [x] General
+    * [ ] Objectives
+      * [x] HSU Find Sample
+      * [ ] Clear Path
+      * [ ] Reactor Startup
+      * [ ] Reactor Shutdown
+      * [ ] Distribute Power Cells
 
 ## Acknowledgements
 
