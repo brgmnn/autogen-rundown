@@ -443,9 +443,9 @@ namespace AutogenRundown.DataBlocks
             var intel = Generator.Pick(new List<string>
             {
                 // Base game messages
-                // ">... Shoot me then, 'cause I'm not going in there.\r\n>... Look, there's no time–\r\n>... [gunshot]\r\n>... <size=200%><color=red>Start scanning.</color></size>",
-                // ">... And... got it! That's all of them.\r\n>... Let's get that door open then.\r\n<size=200%><color=red>>... Ready?</color></size>",
-                // ">... Quiet now. <size=200%><color=red>They hear everything.</size></color>\r\n>... Turn off your damn light...\r\n>... There it is! You take that side and–\r\n>... [unintelligible]",
+                ">... Shoot me then, 'cause I'm not going in there.\r\n>... Look, there's no time–\r\n>... [gunshot]\r\n>... <size=200%><color=red>Start scanning.</color></size>",
+                ">... And... got it! That's all of them.\r\n>... Let's get that door open then.\r\n<size=200%><color=red>>... Ready?</color></size>",
+                ">... Quiet now. <size=200%><color=red>They hear everything.</size></color>\r\n>... Turn off your damn light...\r\n>... There it is! You take that side and–\r\n>... [unintelligible]",
 
                 // New messages
                 ">... [whispering] Lights off, keep heads low.\r\n>... Do not wake them, ever.\r\n>... <size=200%><color=red>They can hear us.</color></size>",
