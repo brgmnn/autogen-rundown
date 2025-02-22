@@ -1361,42 +1361,37 @@ namespace AutogenRundown.DataBlocks
         public uint ConsumableDistributionInZone { get; set; }
             = ConsumableDistribution.Baseline.PersistentId;
 
-        // public double HealthPerZone { get; set; } = 1.0;
-        // public double DisinfectionPerZone { get; set; } = 1.0;
-        // public double WeaponAmmoPerZone { get; set; } = 0.8;
-        // public double ToolAmmoPerZone { get; set; } = 0.7;
-
         /// <summary>
-        /// How many health pack uses are in this zone
+        /// How many health pack uses are in this zone. Default = 5
         /// </summary>
         [JsonProperty("HealthMulti")]
         public double HealthPacks { get; set; } = 5;
 
-        public Placement HealthPlacement { get; set; } = new Placement();
+        public Placement HealthPlacement { get; set; } = new();
 
         /// <summary>
-        /// How many ammo pack uses are in this zone
+        /// How many ammo pack uses are in this zone. Default = 4
         /// </summary>
         [JsonProperty("WeaponAmmoMulti")]
         public double AmmoPacks { get; set; } = 4;
 
-        public Placement WeaponAmmoPlacement { get; set; } = new Placement();
+        public Placement WeaponAmmoPlacement { get; set; } = new();
 
         /// <summary>
-        /// How many tool pack uses are in this zone
+        /// How many tool pack uses are in this zone. Default = 3.5
         /// </summary>
         [JsonProperty("ToolAmmoMulti")]
         public double ToolPacks { get; set; } = 3.5;
 
-        public Placement ToolAmmoPlacement { get; set; } = new Placement();
+        public Placement ToolAmmoPlacement { get; set; } = new();
 
         /// <summary>
-        /// How many disinfect pack uses are in this zone
+        /// How many disinfect pack uses are in this zone. Default = 0 (5 in base game)
         /// </summary>
         [JsonProperty("DisinfectionMulti")]
         public double DisinfectPacks { get; set; } = 0; // Default is 5 in base game
 
-        public Placement DisinfectionPlacement { get; set; } = new Placement();
+        public Placement DisinfectionPlacement { get; set; } = new();
 
         /// <summary>
         /// Takes an input function and applies it to each of the three major resource multiples.

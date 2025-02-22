@@ -156,9 +156,9 @@ public partial record LevelLayout
                         var (lockedApex, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
 
                         // Add some extra resources
-                        startZone.HealthPacks *= 2.0;
-                        startZone.ToolPacks *= 2.0;
-                        startZone.AmmoPacks *= 2.0;
+                        startZone.HealthPacks += 4;
+                        startZone.ToolPacks += 4;
+                        startZone.AmmoPacks += 5;
 
                         // Configure the wave population
                         var population = WavePopulation.Baseline;
@@ -306,9 +306,9 @@ public partial record LevelLayout
                         var (lockedApex, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
 
                         // Add some extra resources
-                        startZone.HealthPacks *= 2.0;
-                        startZone.ToolPacks *= 2.0;
-                        startZone.AmmoPacks *= 2.0;
+                        startZone.HealthPacks += 5;
+                        startZone.ToolPacks += 4;
+                        startZone.AmmoPacks += 5;
 
                         // Configure the wave population
                         var population = WavePopulation.Baseline_Hybrids;
@@ -513,9 +513,9 @@ public partial record LevelLayout
                         var (lockedApex, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
 
                         // Add some extra resources
-                        startZone.HealthPacks *= 2.0;
-                        startZone.ToolPacks *= 2.0;
-                        startZone.AmmoPacks *= 2.0;
+                        startZone.HealthPacks += 5;
+                        startZone.ToolPacks += 5;
+                        startZone.AmmoPacks += 6;
 
                         // Configure the wave population
                         var population = WavePopulation.Baseline_Hybrids;
@@ -738,9 +738,9 @@ public partial record LevelLayout
                         var (lockedApex, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
 
                         // Add some extra resources
-                        startZone.HealthPacks *= 2.0;
-                        startZone.ToolPacks *= 2.0;
-                        startZone.AmmoPacks *= 2.0;
+                        startZone.HealthPacks += 4;
+                        startZone.ToolPacks += 4;
+                        startZone.AmmoPacks += 6;
 
                         // Configure the wave population
                         var population = WavePopulation.Baseline_Hybrids;
@@ -968,9 +968,9 @@ public partial record LevelLayout
                         var (lockedApex, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
 
                         // Add some extra resources
-                        startZone.HealthPacks *= 2.0;
-                        startZone.ToolPacks *= 2.0;
-                        startZone.AmmoPacks *= 2.0;
+                        startZone.HealthPacks += 2;
+                        startZone.ToolPacks += 6;
+                        startZone.AmmoPacks += 8;
 
                         // Configure the wave population
                         var population = WavePopulation.Baseline_Hybrids;
