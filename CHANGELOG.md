@@ -3,6 +3,24 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.50.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.50.0) — February 21, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Added Warden intel messages for `HSUFindSample` missions
+
+### Changes
+
+* Added improvements to bulkhead zone direction placement to help reduce level lockup and broken level generation
+* Removed `tech_datacenter_I_RLC_01.prefab` due to big item spawning issues - a65cb4972578377ed2042c9f6e7893cf4f3cd390
+* Fix some cases where `ClearPath` objective would not correctly specify the exit zone number on some mod geomorphs
+* Balance: Slightly adjusted resources granted in `HSUFindSample` King-of-the-Hill scans
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.49.0...v0.50.0
+
+
 ## [v0.49.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.49.0) — February 16, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
