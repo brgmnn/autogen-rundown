@@ -3,6 +3,7 @@ using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Utils;
 
@@ -81,6 +82,223 @@ namespace AutogenRundown.DataBlocks
 
             // Force open the side room
             lockedZone.EventsOnDoorScanStart.AddOpenDoor(director.Bulkhead, sideSpawn.ZoneNumber);
+        }
+        #endregion
+
+        #region Sleeping Boss Zone
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="bossNode"></param>
+        public void AddAlignedBossFight(ZoneNode bossNode)
+        {
+            var zone = planner.GetZone(bossNode);
+
+            if (zone == null)
+            {
+                Plugin.Logger.LogDebug($"Skipping adding boss zone as zone is null: {bossNode}");
+                return;
+            }
+
+            zone.GenBossGeomorph(level.Complex);
+            zone.EventsOnOpenDoor.AddSound(Sound.TenseRevelation, 4.0);
+
+            switch (level.Tier)
+            {
+                case "A":
+                {
+                    Generator.SelectRun(new List<(double, Action)>
+                    {
+                        // Single mother
+                        (0.4, () =>
+                        {
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Mother_AlignedSpawn with { Points = 10 });
+                            zone.StaticSpawnDataContainers.Add(
+                                new StaticSpawnDataContainer
+                                {
+                                    Count = 200,
+                                    DistributionWeightType = 0,
+                                    DistributionWeight = 1.0,
+                                    DistributionRandomBlend = 0.0,
+                                    DistributionResultPow = 2.0,
+                                    Unit = StaticSpawnUnit.EggSack,
+                                    FixedSeed = 121
+                                });
+                        }),
+
+                        // Single pouncer
+                        (0.6, () =>
+                        {
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer_AlignedSpawn with { Points = 4 });
+                        }),
+                    });
+                    break;
+                }
+
+                case "B":
+                {
+                    Generator.SelectRun(new List<(double, Action)>
+                    {
+                        // Single mother
+                        (0.6, () =>
+                        {
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Mother_AlignedSpawn with { Points = 10 });
+                            zone.StaticSpawnDataContainers.Add(
+                                new StaticSpawnDataContainer
+                                {
+                                    Count = 200,
+                                    DistributionWeightType = 0,
+                                    DistributionWeight = 1.0,
+                                    DistributionRandomBlend = 0.0,
+                                    DistributionResultPow = 2.0,
+                                    Unit = StaticSpawnUnit.EggSack,
+                                    FixedSeed = 121
+                                });
+                        }),
+
+                        // Single pouncer
+                        (0.4, () =>
+                        {
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer_AlignedSpawn with { Points = 10 });
+                        }),
+                    });
+                    break;
+                }
+
+                case "C":
+                {
+                    Generator.SelectRun(new List<(double, Action)>
+                    {
+                        // // Single mother
+                        // (0.4, () =>
+                        // {
+                        //     zone.EnemySpawningInZone.Add(EnemySpawningData.Mother_AlignedSpawn with { Points = 10 });
+                        //     zone.StaticSpawnDataContainers.Add(
+                        //         new StaticSpawnDataContainer
+                        //         {
+                        //             Count = 200,
+                        //             DistributionWeightType = 0,
+                        //             DistributionWeight = 1.0,
+                        //             DistributionRandomBlend = 0.0,
+                        //             DistributionResultPow = 2.0,
+                        //             Unit = StaticSpawnUnit.EggSack,
+                        //             FixedSeed = 121
+                        //         });
+                        // }),
+
+                        // Mother and Pouncer
+                        (0.2, () =>
+                        {
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 10 });
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Mother_AlignedSpawn with { Points = 10 });
+
+                            zone.StaticSpawnDataContainers.Add(
+                                new StaticSpawnDataContainer
+                                {
+                                    Count = 200,
+                                    DistributionWeightType = 0,
+                                    DistributionWeight = 1.0,
+                                    DistributionRandomBlend = 0.0,
+                                    DistributionResultPow = 2.0,
+                                    Unit = StaticSpawnUnit.EggSack,
+                                    FixedSeed = 121
+                                });
+                        }),
+
+                        // // Single tank
+                        // (0.4, () =>
+                        // {
+                        //     zone.EnemySpawningInZone.Add(
+                        //         EnemySpawningData.Tank_AlignedSpawn with { Points = 10 });
+                        //
+                        //     zone.StaticSpawnDataContainers.Add(
+                        //         new StaticSpawnDataContainer
+                        //         {
+                        //             Count = 100,
+                        //             DistributionWeightType = 0,
+                        //             DistributionWeight = 1.0,
+                        //             DistributionRandomBlend = 0.0,
+                        //             DistributionResultPow = 2.0,
+                        //             Unit = StaticSpawnUnit.Corpses,
+                        //             FixedSeed = 121
+                        //         });
+                        // }),
+                    });
+                    break;
+                }
+
+                case "D":
+                {
+                    /*
+                     *
+                     */
+                    zone.EnemySpawningInZone.Add(
+                        EnemySpawningData.Mother_AlignedSpawn with { Points = 10 });
+                    break;
+                }
+
+                case "E":
+                {
+                    Generator.SelectRun(new List<(double, Action)>
+                    {
+                        // // Single mother
+                        // (0.4, () =>
+                        // {
+                        //     zone.EnemySpawningInZone.Add(EnemySpawningData.Mother_AlignedSpawn with { Points = 10 });
+                        //     zone.StaticSpawnDataContainers.Add(
+                        //         new StaticSpawnDataContainer
+                        //         {
+                        //             Count = 200,
+                        //             DistributionWeightType = 0,
+                        //             DistributionWeight = 1.0,
+                        //             DistributionRandomBlend = 0.0,
+                        //             DistributionResultPow = 2.0,
+                        //             Unit = StaticSpawnUnit.EggSack,
+                        //             FixedSeed = 121
+                        //         });
+                        // }),
+
+                        // MegaMother
+                        (0.2, () =>
+                        {
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.MegaMother_AlignedSpawn with { Points = 10 });
+                            zone.StaticSpawnDataContainers.Add(
+                                new StaticSpawnDataContainer
+                                {
+                                    Count = 300,
+                                    DistributionWeightType = 0,
+                                    DistributionWeight = 1.0,
+                                    DistributionRandomBlend = 0.0,
+                                    DistributionResultPow = 2.0,
+                                    Unit = StaticSpawnUnit.EggSack,
+                                    FixedSeed = 121
+                                });
+
+                            zone.AmmoPacks += 8;
+                        }),
+
+                        // // Single tank
+                        // (0.4, () =>
+                        // {
+                        //     zone.EnemySpawningInZone.Add(
+                        //         EnemySpawningData.Tank_AlignedSpawn with { Points = 10 });
+                        //
+                        //     zone.StaticSpawnDataContainers.Add(
+                        //         new StaticSpawnDataContainer
+                        //         {
+                        //             Count = 100,
+                        //             DistributionWeightType = 0,
+                        //             DistributionWeight = 1.0,
+                        //             DistributionRandomBlend = 0.0,
+                        //             DistributionResultPow = 2.0,
+                        //             Unit = StaticSpawnUnit.Corpses,
+                        //             FixedSeed = 121
+                        //         });
+                        // }),
+                    });
+                    break;
+                }
+            }
         }
         #endregion
 

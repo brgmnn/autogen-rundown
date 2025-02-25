@@ -40,7 +40,7 @@
 
         public static readonly EnemyInfo TankPotato    = new() { Role = EnemyRole.PureSneak, Enemy = Enemy.TankPotato, Points = 10.0 };
 
-        public static readonly EnemyInfo Pouncer       = new() { Role = EnemyRole.Hunter, Enemy = Enemy.Pouncer, Points = 1.0 };
+        public static readonly EnemyInfo Pouncer       = new() { Role = EnemyRole.Hunter,    Enemy = Enemy.Pouncer, Points = 4.0 };
         public static readonly EnemyInfo Pouncer_Sneak = new() { Role = EnemyRole.PureSneak, Enemy = Enemy.Pouncer, Points = 4.0 };
         #endregion
 

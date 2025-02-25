@@ -10,7 +10,6 @@ public record GenericWave
     /// </summary>
     public static readonly GenericWave ExitTrickle = new()
     {
-        //WaveSettings = (uint)VanillaWaveSettings.ExitTrickle_38S_Original,
         Settings = WaveSettings.Exit_Baseline,
         Population = WavePopulation.Baseline,
         SpawnDelay = 4.0,
@@ -182,8 +181,6 @@ public record GenericWave
         get => Population.PersistentId;
         private set { }
     }
-
-    // public uint WavePopulation { get; set; } = 0;
 
     /// <summary>
     /// Room distance, in general this should always be left at 2.

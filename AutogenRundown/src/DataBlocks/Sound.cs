@@ -17,6 +17,13 @@
         /// </summary>
         KdsDeepVentilationProcedure = 2591647810,
 
+        #region Atmosphere and mood
+        /// <summary>
+        /// This is a tense deep ominous sound. Played when you enter the R3B2 mother room
+        /// </summary>
+        TenseRevelation = 1819247891,
+        #endregion
+
         #region Environment noises
         Environment_DistantMetalImpacts = 3865016528,
 

@@ -22,7 +22,6 @@ public partial record WardenObjective
         var exit = level.Planner.GetZonesByTag(director.Bulkhead, "exit_elevator").First();
         var exitZone = level.Planner.GetZone(exit)!;
         var exitZoneNumber = layout.ZoneAliasStart + exit.ZoneNumber;
-        // var exitZoneString = $"<color=orange>ZONE {exitIndex}</color>";
 
         MainObjective = $"Clear a path to the exit point in {Lore.Zone(exitZoneNumber)}";
         GoToWinCondition_Elevator = "";

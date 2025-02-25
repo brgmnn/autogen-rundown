@@ -773,7 +773,8 @@ namespace AutogenRundown.DataBlocks
                 case Complex.Mining:
                     (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
                     {
-                        (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 70 }),
+                        // (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04.prefab", new CoverageMinMax { Min = 30, Max = 70 }),
+                        (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_06.prefab", new CoverageMinMax { Min = 30, Max = 70 }),
 
                         // --- MOD Geomorphs ---
                     });
@@ -782,7 +783,8 @@ namespace AutogenRundown.DataBlocks
                 case Complex.Tech:
                     (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
                     {
-                        (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 60 }),
+                        // (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 60 }),
+                        (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_04.prefab", new CoverageMinMax { Min = 30, Max = 60 }),
 
                         // --- MOD Geomorphs ---
                     });
@@ -791,7 +793,8 @@ namespace AutogenRundown.DataBlocks
                 case Complex.Service:
                     (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
                     {
-                        (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_01.prefab", new CoverageMinMax { Min = 50, Max = 75 }),
+                        // (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_01.prefab", new CoverageMinMax { Min = 50, Max = 75 }),
+                        (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03_V2.prefab", new CoverageMinMax { Min = 50, Max = 75 }),
 
                         // --- MOD Geomorphs ---
                         // donan3967
@@ -1336,6 +1339,13 @@ namespace AutogenRundown.DataBlocks
         public JArray EnemyRespawnExcludeList = new JArray();
         #endregion
 
+        #region Static Spawns (Spitters, Mother Sacks etc)
+        /// <summary>
+        ///
+        /// </summary>
+        public List<StaticSpawnDataContainer> StaticSpawnDataContainers { get; set; } = new();
+        #endregion
+
         public int CorpseClustersInZone { get; set; } = 0;
         public int ResourceContainerClustersInZone { get; set; } = 0;
         public int GeneratorClustersInZone { get; set; } = 0;
@@ -1404,8 +1414,6 @@ namespace AutogenRundown.DataBlocks
             AmmoPacks = transformer(AmmoPacks);
         }
         #endregion
-
-        public JArray StaticSpawnDataContainers { get; set; } = new JArray();
 
         public Zone()
         {

@@ -1,11 +1,10 @@
-﻿namespace AutogenRundown.DataBlocks.Enemies
+﻿namespace AutogenRundown.DataBlocks.Enemies;
+
+public enum EnemyType : uint
 {
-    public enum EnemyType : uint
-    {
-        Weakling = 0,
-        Standard = 1,
-        Special = 2,
-        MiniBoss = 3,
-        Boss = 4
-    }
+    Weakling = 0,
+    Standard = 1,
+    Special = 2,
+    MiniBoss = 3,
+    Boss = 4
 }

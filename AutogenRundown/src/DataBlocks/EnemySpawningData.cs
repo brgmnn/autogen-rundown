@@ -278,6 +278,14 @@ namespace AutogenRundown.DataBlocks
             Difficulty = (uint)Enemy.TankPotato,
             Tags = new Tags("boss")
         };
+
+        public static readonly EnemySpawningData Pouncer = new()
+        {
+            GroupType = EnemyGroupType.PureSneak,
+            Difficulty = (uint)Enemy.Pouncer,
+            Points = 4,
+            Tags = new Tags("boss")
+        };
         #endregion
 
         #region Bosses (Spawn Aligned)

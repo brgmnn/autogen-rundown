@@ -15,6 +15,8 @@ public partial record LevelLayout
         // var prev = level.Planner.GetExactZones(director.Bulkhead).First();
         var prev = start;
 
+        // AddAlignedBossFight(start);
+
         for (int i = 1; i < director.ZoneCount; i++)
         {
             var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
