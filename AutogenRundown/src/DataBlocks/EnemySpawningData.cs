@@ -281,7 +281,7 @@ namespace AutogenRundown.DataBlocks
 
         public static readonly EnemySpawningData Pouncer = new()
         {
-            GroupType = EnemyGroupType.PureSneak,
+            GroupType = EnemyGroupType.Hibernate,
             Difficulty = (uint)Enemy.Pouncer,
             Points = 4,
             Tags = new Tags("boss")
