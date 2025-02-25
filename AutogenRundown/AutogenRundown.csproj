@@ -20,6 +20,8 @@
   <PropertyGroup Condition="$(Debug) != 'false'">
     <BepInEx_Debug>$(AppData)\r2modmanPlus-local\GTFO\profiles\modding\BepInEx</BepInEx_Debug>
     <OutputPath_Debug>$(BepInEx_Debug)\plugins\the_tavern-$(SolutionName)</OutputPath_Debug>
+
+    <DefineConstants>DEBUG</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

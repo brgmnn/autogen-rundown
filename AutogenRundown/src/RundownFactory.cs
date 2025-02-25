@@ -29,6 +29,13 @@ public static class RundownFactory
         };
     }
 
+    /// <summary>
+    /// Generates a rundown
+    /// </summary>
+    /// <param name="newRundown"></param>
+    /// <param name="withFixed"></param>
+    /// <param name="withUnlocks"></param>
+    /// <returns></returns>
     public static Rundown BuildRundown(
         Rundown newRundown,
         bool withFixed = true,
@@ -62,50 +69,51 @@ public static class RundownFactory
         }
 
         #region Regular debugging level
-        #if false
-        if (withFixed)
-        {
-            var mainDirector = new BuildDirector
-            {
-                Bulkhead = Bulkhead.Main,
-                Complex = Complex.Mining,
-                Complexity = Complexity.Low,
-                Tier = "D",
-                Objective = WardenObjectiveType.HsuFindSample,
-            };
-            mainDirector.GenPoints();
-
-            var extremeDirector = new BuildDirector
-            {
-                Bulkhead = Bulkhead.Extreme,
-                Complex = Complex.Mining,
-                Complexity = Complexity.Low,
-                Tier = "D",
-                Objective = WardenObjectiveType.HsuFindSample,
-            };
-            extremeDirector.GenPoints();
-
-            var settings = new LevelSettings("D");
-            settings.Modifiers.Add(LevelModifiers.Chargers);
-
-            var testLevel = Level.Build(
-                new Level("D")
-                {
-                    Tier = "D",
-                    Name = "Debug Test",
-                    Complex = Complex.Mining,
-                    MainDirector = mainDirector,
-                    // SecondaryDirector = extremeDirector,
-                    Settings = settings,
-                    Index = rundown.TierB_Count + 1,
-                    IsTest = true
-                });
-            rundown.AddLevel(testLevel);
-        }
+        #if DEBUG
+        // if (withFixed)
+        // {
+        //     var mainDirector = new BuildDirector
+        //     {
+        //         Bulkhead = Bulkhead.Main,
+        //         Complex = Complex.Mining,
+        //         Complexity = Complexity.Low,
+        //         Tier = "D",
+        //         Objective = WardenObjectiveType.HsuFindSample,
+        //     };
+        //     mainDirector.GenPoints();
+        //
+        //     var extremeDirector = new BuildDirector
+        //     {
+        //         Bulkhead = Bulkhead.Extreme,
+        //         Complex = Complex.Mining,
+        //         Complexity = Complexity.Low,
+        //         Tier = "D",
+        //         Objective = WardenObjectiveType.HsuFindSample,
+        //     };
+        //     extremeDirector.GenPoints();
+        //
+        //     var settings = new LevelSettings("D");
+        //     settings.Modifiers.Add(LevelModifiers.Chargers);
+        //
+        //     var testLevel = Level.Build(
+        //         new Level("D")
+        //         {
+        //             Tier = "D",
+        //             Name = "Debug Test",
+        //             Complex = Complex.Mining,
+        //             MainDirector = mainDirector,
+        //             // SecondaryDirector = extremeDirector,
+        //             Settings = settings,
+        //             Index = rundown.TierB_Count + 1,
+        //             IsTest = true
+        //         });
+        //     rundown.AddLevel(testLevel);
+        // }
         #endif
         #endregion
 
         #region Geomorph Debugging test level
+        #if DEBUG
         #if false
         if (withFixed)
         {
@@ -125,6 +133,7 @@ public static class RundownFactory
 
             rundown.AddLevel(testLevel);
         }
+        #endif
         #endif
         #endregion
         #endregion
@@ -179,7 +188,8 @@ public static class RundownFactory
         }
 
         #region Test C Levels
-        if (true && withFixed)
+        #if DEBUG
+        if (withFixed)
         {
             var mainDirector = new BuildDirector
             {
@@ -218,11 +228,13 @@ public static class RundownFactory
                 });
             rundown.AddLevel(testLevel);
         }
+        #endif
         #endregion
         #endregion
 
         #region D-Tier Levels
         #region Survival Fixed
+        #if DEBUG
         if (withFixed)
         {
             var objective = WardenObjectiveType.Survival;
@@ -252,6 +264,7 @@ public static class RundownFactory
 
             rundown.AddLevel(level);
         }
+        #endif
         #endregion
 
         // D levels
@@ -279,6 +292,7 @@ public static class RundownFactory
         }
 
         #region Timed Terminal Sequence
+        #if DEBUG
         if (withFixed)
         {
             ///
@@ -310,9 +324,11 @@ public static class RundownFactory
 
             rundown.AddLevel(level);
         }
+        #endif
         #endregion
 
         #region Reactor startup
+        #if DEBUG
         if (withFixed)
         {
             ///
@@ -343,35 +359,6 @@ public static class RundownFactory
 
             rundown.AddLevel(level);
         }
-        #endregion
-
-        #region Test D Levels
-        #if false
-        var mainDirectorD = new BuildDirector
-        {
-            Bulkhead = Bulkhead.Main,
-            Complex = Complex.Mining,
-            Complexity = Complexity.Low,
-            Tier = "D",
-            Objective = WardenObjectiveType.ReactorStartup,
-        };
-        mainDirectorD.GenPoints();
-
-        var settingsD = new LevelSettings("D");
-        // settingsD.Modifiers.Add(LevelModifiers.ManyShadows);
-
-        var testLevelD = Level.Build(
-            new Level
-            {
-                Tier = "D",
-                Name = "Reactor Startup",
-                Complex = Complex.Mining,
-                MainDirector = mainDirectorD,
-                Settings = settingsD,
-                Index = dMax + 1,
-                IsTest = true
-            });
-        rundown.AddLevel(testLevelD);
         #endif
         #endregion
         #endregion
@@ -401,37 +388,8 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
-        #region Survival
-        // if (false && withFixed)
-        // {
-        //     var objective = WardenObjectiveType.Survival;
-        //     var mainDirector = new BuildDirector()
-        //     {
-        //         Bulkhead = Bulkhead.Main,
-        //         Tier = "E",
-        //         Objective = objective
-        //     };
-        //     mainDirector.GenPoints();
-        //
-        //     var settings = new LevelSettings("E");
-        //     var description = new DataBlocks.Text(DescriptionHeader(objective) +
-        //                                           DataBlocks.WardenObjective.GenLevelDescription(objective));
-        //     var level = Level.Build(
-        //         new()
-        //         {
-        //             Tier = "E",
-        //             Prefix = $"<color=orange>X</color><color=#444444>:</color>E",
-        //             Description = description.PersistentId,
-        //             MainDirector = mainDirector,
-        //             Settings = settings,
-        //             Index = eMax + 1
-        //         });
-        //
-        //     rundown.AddLevel(level);
-        // }
-        #endregion
-
         #region Test E Levels
+        #if DEBUG
         // if (false && withFixed)
         // {
         //     var mainDirectorE = new BuildDirector
@@ -461,19 +419,21 @@ public static class RundownFactory
         //         });
         //     rundown.AddLevel(testLevelE);
         // }
+        #endif
         #endregion
         #endregion
+
+        // Return without unlocks if we don't want them
+        if (!withUnlocks)
+            return rundown;
 
         // Add progression requirements if unlocks are needed
-        if (withUnlocks)
-        {
-            rundown.UseTierUnlockRequirements = true;
+        rundown.UseTierUnlockRequirements = true;
 
-            rundown.ReqToReachTierB.MainSectors = Math.Max(0, rundown.TierA.Count - 1);
-            rundown.ReqToReachTierC.MainSectors = Math.Max(0, rundown.ReqToReachTierB.MainSectors + rundown.TierB.Count - 1);
-            rundown.ReqToReachTierD.MainSectors = Math.Max(0, rundown.ReqToReachTierC.MainSectors + rundown.TierC.Count - 1);
-            rundown.ReqToReachTierE.MainSectors = Math.Max(0, rundown.ReqToReachTierD.MainSectors + rundown.TierD.Count - 1);
-        }
+        rundown.ReqToReachTierB.MainSectors = Math.Max(0, rundown.TierA.Count - 1);
+        rundown.ReqToReachTierC.MainSectors = Math.Max(0, rundown.ReqToReachTierB.MainSectors + rundown.TierB.Count - 1);
+        rundown.ReqToReachTierD.MainSectors = Math.Max(0, rundown.ReqToReachTierC.MainSectors + rundown.TierC.Count - 1);
+        rundown.ReqToReachTierE.MainSectors = Math.Max(0, rundown.ReqToReachTierD.MainSectors + rundown.TierD.Count - 1);
 
         return rundown;
     }
@@ -533,10 +493,10 @@ public static class RundownFactory
                 {
                     "2025_03", new()
                     {
-                        1, 1, 1,    // Tier A - ?,?,?
-                        1,          // Tier B - ?,?,?
+                        1,          // Tier A - ?
+                        1, 1, 1,    // Tier B - ?,?,?,?
                         1, 1, 1, 1, // Tier C - ?,?,?,?
-                        1, 1, 1, 1, // Tier D - ?,?,?,?
+                        1, 1, 1,    // Tier D - ?,?,?
                         1, 1, 1     // Tier E - ?,?,?
                     }
                 }
