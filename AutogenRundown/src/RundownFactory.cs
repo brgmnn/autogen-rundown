@@ -197,7 +197,7 @@ public static class RundownFactory
                 Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "C",
-                Objective = WardenObjectiveType.TerminalUplink,
+                Objective = WardenObjectiveType.ClearPath,
             };
             mainDirector.GenPoints();
 
@@ -218,7 +218,7 @@ public static class RundownFactory
                 new Level("C")
                 {
                     Tier = "C",
-                    Name = "Terminal Uplink",
+                    Name = "Clear Path",
                     Complex = Complex.Mining,
                     MainDirector = mainDirector,
                     // SecondaryDirector = extremeDirector,
