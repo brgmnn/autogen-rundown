@@ -100,6 +100,37 @@ namespace AutogenRundown.DataBlocks
                 return;
             }
 
+            /*
+             * Reusable function for us to call any time we want to set up a mother zone
+             */
+            void SetMotherVibe(Zone zone, int eggSacks = 200)
+            {
+                // Pick some mother like lights
+                zone.LightSettings = Generator.Pick(new List<Lights.Light>
+                {
+                    Lights.Light.Monochrome_Red,
+                    Lights.Light.RedToYellow_1,
+                    Lights.Light.OrangeToBrown_1,
+                    Lights.Light.OrangeToYellow_1,
+                    Lights.Light.YellowToOrange_1,
+                    Lights.Light.Monochrome_Orange_Flickering,
+                    Lights.Light.WashedOutRed_1
+                });
+
+                // Add mother egg sacks to the zone
+                zone.StaticSpawnDataContainers.Add(
+                    new StaticSpawnDataContainer
+                    {
+                        Count = eggSacks,
+                        DistributionWeightType = 0,
+                        DistributionWeight = 1.0,
+                        DistributionRandomBlend = 0.0,
+                        DistributionResultPow = 2.0,
+                        Unit = StaticSpawnUnit.EggSack,
+                        FixedSeed = 121
+                    });
+            }
+
             zone.GenBossGeomorph(level.Complex);
             zone.EventsOnOpenDoor.AddSound(Sound.TenseRevelation, 4.0);
 
@@ -113,17 +144,8 @@ namespace AutogenRundown.DataBlocks
                         (0.4, () =>
                         {
                             zone.EnemySpawningInZone.Add(EnemySpawningData.Mother_AlignedSpawn with { Points = 10 });
-                            zone.StaticSpawnDataContainers.Add(
-                                new StaticSpawnDataContainer
-                                {
-                                    Count = 200,
-                                    DistributionWeightType = 0,
-                                    DistributionWeight = 1.0,
-                                    DistributionRandomBlend = 0.0,
-                                    DistributionResultPow = 2.0,
-                                    Unit = StaticSpawnUnit.EggSack,
-                                    FixedSeed = 121
-                                });
+
+                            SetMotherVibe(zone, 150);
                         }),
 
                         // Single pouncer
@@ -143,17 +165,8 @@ namespace AutogenRundown.DataBlocks
                         (0.6, () =>
                         {
                             zone.EnemySpawningInZone.Add(EnemySpawningData.Mother_AlignedSpawn with { Points = 10 });
-                            zone.StaticSpawnDataContainers.Add(
-                                new StaticSpawnDataContainer
-                                {
-                                    Count = 200,
-                                    DistributionWeightType = 0,
-                                    DistributionWeight = 1.0,
-                                    DistributionRandomBlend = 0.0,
-                                    DistributionResultPow = 2.0,
-                                    Unit = StaticSpawnUnit.EggSack,
-                                    FixedSeed = 121
-                                });
+
+                            SetMotherVibe(zone);
                         }),
 
                         // Single pouncer
@@ -169,60 +182,41 @@ namespace AutogenRundown.DataBlocks
                 {
                     Generator.SelectRun(new List<(double, Action)>
                     {
-                        // // Single mother
-                        // (0.4, () =>
-                        // {
-                        //     zone.EnemySpawningInZone.Add(EnemySpawningData.Mother_AlignedSpawn with { Points = 10 });
-                        //     zone.StaticSpawnDataContainers.Add(
-                        //         new StaticSpawnDataContainer
-                        //         {
-                        //             Count = 200,
-                        //             DistributionWeightType = 0,
-                        //             DistributionWeight = 1.0,
-                        //             DistributionRandomBlend = 0.0,
-                        //             DistributionResultPow = 2.0,
-                        //             Unit = StaticSpawnUnit.EggSack,
-                        //             FixedSeed = 121
-                        //         });
-                        // }),
+                        // Single mother
+                        (0.4, () =>
+                        {
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Mother_AlignedSpawn with { Points = 10 });
+
+                            SetMotherVibe(zone);
+                        }),
 
                         // Mother and Pouncer
                         (0.2, () =>
                         {
-                            zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 10 });
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
                             zone.EnemySpawningInZone.Add(EnemySpawningData.Mother_AlignedSpawn with { Points = 10 });
+
+                            SetMotherVibe(zone);
+                        }),
+
+                        // Single tank
+                        (0.4, () =>
+                        {
+                            zone.EnemySpawningInZone.Add(
+                                EnemySpawningData.Tank_AlignedSpawn with { Points = 10 });
 
                             zone.StaticSpawnDataContainers.Add(
                                 new StaticSpawnDataContainer
                                 {
-                                    Count = 200,
+                                    Count = 100,
                                     DistributionWeightType = 0,
                                     DistributionWeight = 1.0,
                                     DistributionRandomBlend = 0.0,
                                     DistributionResultPow = 2.0,
-                                    Unit = StaticSpawnUnit.EggSack,
+                                    Unit = StaticSpawnUnit.Corpses,
                                     FixedSeed = 121
                                 });
                         }),
-
-                        // // Single tank
-                        // (0.4, () =>
-                        // {
-                        //     zone.EnemySpawningInZone.Add(
-                        //         EnemySpawningData.Tank_AlignedSpawn with { Points = 10 });
-                        //
-                        //     zone.StaticSpawnDataContainers.Add(
-                        //         new StaticSpawnDataContainer
-                        //         {
-                        //             Count = 100,
-                        //             DistributionWeightType = 0,
-                        //             DistributionWeight = 1.0,
-                        //             DistributionRandomBlend = 0.0,
-                        //             DistributionResultPow = 2.0,
-                        //             Unit = StaticSpawnUnit.Corpses,
-                        //             FixedSeed = 121
-                        //         });
-                        // }),
                     });
                     break;
                 }
@@ -262,17 +256,8 @@ namespace AutogenRundown.DataBlocks
                         (0.2, () =>
                         {
                             zone.EnemySpawningInZone.Add(EnemySpawningData.MegaMother_AlignedSpawn with { Points = 10 });
-                            zone.StaticSpawnDataContainers.Add(
-                                new StaticSpawnDataContainer
-                                {
-                                    Count = 300,
-                                    DistributionWeightType = 0,
-                                    DistributionWeight = 1.0,
-                                    DistributionRandomBlend = 0.0,
-                                    DistributionResultPow = 2.0,
-                                    Unit = StaticSpawnUnit.EggSack,
-                                    FixedSeed = 121
-                                });
+
+                            SetMotherVibe(zone, 300);
 
                             zone.AmmoPacks += 8;
                         }),

@@ -12,12 +12,11 @@ public partial record LevelLayout
     /// <param name="startish"></param>
     public void BuildLayout_ClearPath(BuildDirector director, WardenObjective objective, ZoneNode start)
     {
-        // var prev = level.Planner.GetExactZones(director.Bulkhead).First();
         var prev = start;
 
-        // AddAlignedBossFight(start);
+        AddAlignedBossFight(start);
 
-        for (int i = 1; i < director.ZoneCount; i++)
+        for (var i = 1; i < director.ZoneCount; i++)
         {
             var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
             var next = new ZoneNode(director.Bulkhead, zoneIndex);
