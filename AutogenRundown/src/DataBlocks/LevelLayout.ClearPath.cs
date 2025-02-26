@@ -14,7 +14,7 @@ public partial record LevelLayout
     {
         var prev = start;
 
-        AddAlignedBossFight(start);
+        // AddAlignedBossFight(start);
 
         for (var i = 1; i < director.ZoneCount; i++)
         {

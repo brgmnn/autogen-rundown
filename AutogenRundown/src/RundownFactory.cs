@@ -510,16 +510,21 @@ public static class RundownFactory
 
             buildPools.TryGetValue(Generator.Seed, out var buildSeeds);
 
+            var withUnlocks = true;
+            #if DEBUG
+            withUnlocks = false;
+            #endif
+
             var monthly = BuildRundown(new Rundown
             {
                 PersistentId = Rundown.R_Monthly,
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>MONTHLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
 
-                TierA_Count = 2,
+                TierA_Count = Generator.Seed == "2025_03" ? 1 : 2,
                 TierB_Count = 3,
                 TierC_Count = 4,
-                TierD_Count = 4,
+                TierD_Count = Generator.Seed == "2025_03" ? 3 : 4,
                 TierE_Count = 3,
 
                 ///
@@ -527,7 +532,7 @@ public static class RundownFactory
                 /// there's a level lockup
                 ///
                 BuildSeedPool = buildSeeds ?? new List<int>()
-            }, false);
+            }, false, withUnlocks);
 
             monthly.VisualsETier = Color.MenuVisuals_MonthlyE;
 
@@ -569,6 +574,7 @@ public static class RundownFactory
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>DAILY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
 
+                TierA_Count = 1,
                 TierD_Count = 2,
                 TierE_Count = Generator.Between(0, 2),
             }, true, false);

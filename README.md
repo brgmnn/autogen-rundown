@@ -18,6 +18,7 @@ TODO:
   * Enable unit tests again after fixing chained puzzles.
   * Don't allow small item pickup to have so many extras that we don't need to do all the zones
   * Make giants blood door a bit harder? B-tier was easy
+  * Rework lights on zone to load into lightsettings and let us set our own light settings
 
 Monthly Feb
   * Double cargo B1 -- Not sure why?

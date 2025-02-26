@@ -16,8 +16,8 @@ public record Color
     public static readonly Color MenuVisuals_MonthlyE = new()
     {
         Alpha = 1.0,
-        Red = 0.0009804,
-        Green = 0.3390196,
+        Red = 0.1509804,
+        Green = 0.4190196,
         Blue = 0.858823538,
     };
 

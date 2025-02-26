@@ -43,9 +43,8 @@
                 // January
                 1 => Generator.Pick(new List<string>
                 {
-                    // "Bleakburrow", "Mooncrypt", "Obsidian Grotto", "Chillmarrow", "Dampvault", "Umbral Cage",
-                    // "Nightfissure", "Wraithclot", "Pale Labyrinth", "Blackmarsh"
-                    "Nova Vault" // TODO: remove and use random names after 31/01/2025
+                    "Bleakburrow", "Mooncrypt", "Obsidian Grotto", "Chillmarrow", "Dampvault", "Umbral Cage",
+                    "Nightfissure", "Wraithclot", "Pale Labyrinth", "Blackmarsh"
                 }),
                 // February
                 2 => Generator.Pick(new List<string>
@@ -57,7 +56,7 @@
                 // March
                 3 => Generator.Pick(new List<string>
                 {
-                    "Sourgrove", "Waning Crypt", "Fetid Mine", "Gravewhisper", "Underrot", "Stagnant Grotto",
+                    "Sourgrove", "Waning Crypt", "Fetid Mine", "Gravewhisper", "Underrot", // "Stagnant Grotto",
                     "Mireclaw", "Stillroot", "Gloomchoke", "Weeping Den"
                 }),
                 // April

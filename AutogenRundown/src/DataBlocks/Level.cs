@@ -449,7 +449,7 @@ namespace AutogenRundown.DataBlocks
 
                 // New messages
                 ">... [whispering] Lights off, keep heads low.\r\n>... Do not wake them, ever.\r\n>... <size=200%><color=red>They can hear us.</color></size>",
-                ">... [footsteps] Keep your eyes sharp.\r\\n>... Any movement?\r\n>... <size=200%><color=red>Something is here. Stay low.</color></size>",
+                ">... [footsteps] Keep your eyes sharp.\r\n>... Any movement?\r\n>... <size=200%><color=red>Something is here. Stay low.</color></size>",
                 ">... Watch that corridor.\r\n>... We lost contact before.\r\n>... <size=200%><color=red>Stay alert. They're ahead.</color></size>",
                 ">... [gasp] It's so dark...\r\n>... Use that flashlight carefully.\r\n>... <size=200%><color=red>They hate bright light!</color></size>",
                 ">... Wait, what's that noise?\r\n>... [low rumbling]\r\n>... <size=200%><color=red>Ready weapons. This could be bad.</color></size>",
