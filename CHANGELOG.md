@@ -3,6 +3,19 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.51.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.51.0) — February 25, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Weekly / Monthly now require at least 1 A-tier clear to proceed. Previously rundowns with only 1 A level could be skipped.
+* Fixed glitched text in one lore message
+* Checked and rolled March monthly seeds
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.50.0...v0.51.0
+
+
 ## [v0.50.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.50.0) — February 21, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
