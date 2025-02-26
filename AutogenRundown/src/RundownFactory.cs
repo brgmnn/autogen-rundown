@@ -235,6 +235,7 @@ public static class RundownFactory
         #region D-Tier Levels
         #region Survival Fixed
         #if DEBUG
+        #if false
         if (withFixed)
         {
             var objective = WardenObjectiveType.Survival;
@@ -265,6 +266,7 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
         #endif
+        #endif
         #endregion
 
         // D levels
@@ -293,6 +295,7 @@ public static class RundownFactory
 
         #region Timed Terminal Sequence
         #if DEBUG
+        #if false
         if (withFixed)
         {
             ///
@@ -325,10 +328,12 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
         #endif
+        #endif
         #endregion
 
         #region Reactor startup
         #if DEBUG
+        #if false
         if (withFixed)
         {
             ///
@@ -359,6 +364,7 @@ public static class RundownFactory
 
             rundown.AddLevel(level);
         }
+        #endif
         #endif
         #endregion
         #endregion
@@ -563,8 +569,8 @@ public static class RundownFactory
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>DAILY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
 
-                TierD_Count = 1,
-                TierE_Count = Generator.Between(1, 4),
+                TierD_Count = 2,
+                TierE_Count = Generator.Between(0, 2),
             }, true, false);
 
             daily.VisualsETier = Color.MenuVisuals_DailyE;

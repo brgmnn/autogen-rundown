@@ -25,8 +25,8 @@ public record Color
     {
         Alpha = 1.0,
         Red = 0.8509804,
-        Green = 0.3390196,
-        Blue = 0.008823538,
+        Green = 0.4190196,
+        Blue = 0.158823538,
     };
     #endregion
 
