@@ -499,11 +499,11 @@ public static class RundownFactory
                 {
                     "2025_03", new()
                     {
-                        1,          // Tier A - ?
-                        1, 1, 1,    // Tier B - ?,?,?,?
-                        1, 1, 1, 1, // Tier C - ?,?,?,?
-                        1, 1, 1,    // Tier D - ?,?,?
-                        1, 1, 1     // Tier E - ?,?,?
+                        1,          // Tier A - y
+                        1, 1, 1,    // Tier B - y,y,y
+                        1, 1, 1, 1, // Tier C - y,y,y,y
+                        1, 1, 2,    // Tier D - y,y,y
+                        1, 1, 3     // Tier E - y,y,y
                     }
                 }
             };
