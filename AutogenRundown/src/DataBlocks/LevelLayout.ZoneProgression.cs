@@ -131,13 +131,50 @@ namespace AutogenRundown.DataBlocks
                     });
             }
 
+            void SetInfectionVibe(Zone zone, int spitters = 100)
+            {
+                // Pick some mother like lights
+                zone.LightSettings = Generator.Pick(new List<Lights.Light>
+                {
+                    Lights.Light.Monochrome_Green,
+                    Lights.Light.Monochrome_YellowToGreen,
+                    Lights.Light.DarkGreenToRed_1,
+                    Lights.Light.camo_green_R4E1,
+                    Lights.Light.BlueToGreen_1
+                });
+
+                // Add mother egg sacks to the zone
+                zone.StaticSpawnDataContainers.Add(
+                    new StaticSpawnDataContainer
+                    {
+                        Count = spitters,
+                        DistributionWeightType = 0,
+                        DistributionWeight = 1.0,
+                        DistributionRandomBlend = 0.0,
+                        DistributionResultPow = 2.0,
+                        Unit = StaticSpawnUnit.Spitter,
+                        FixedSeed = Generator.Between(10, 150)
+                    });
+            }
+
             zone.GenBossGeomorph(level.Complex);
-            zone.EventsOnOpenDoor.AddSound(Sound.TenseRevelation, 4.0);
+            zone.EventsOnOpenDoor.AddSound(Sound.TenseRevelation, 2.0);
+
+            // Disable any scouts on anything except E-tier
+            if (level.Tier != "E")
+                bossNode = planner.UpdateNode(bossNode with { Tags = bossNode.Tags.Extend("no_scouts") });
+
+            // Disable blood doors
+            if (level.Tier != "D" && level.Tier != "E")
+                bossNode = planner.UpdateNode(bossNode with { Tags = bossNode.Tags.Extend("no_blood_door") });
 
             switch (level.Tier)
             {
                 case "A":
                 {
+                    // TODO: still need to add more or just balance more
+                    bossNode = planner.UpdateNode(bossNode with { Tags = bossNode.Tags.Extend("no_enemies") });
+
                     Generator.SelectRun(new List<(double, Action)>
                     {
                         // Single mother
@@ -159,6 +196,7 @@ namespace AutogenRundown.DataBlocks
 
                 case "B":
                 {
+                    // TODO: still need to add more
                     Generator.SelectRun(new List<(double, Action)>
                     {
                         // Single mother
@@ -169,10 +207,11 @@ namespace AutogenRundown.DataBlocks
                             SetMotherVibe(zone);
                         }),
 
-                        // Single pouncer
+                        // Double pouncer
                         (0.4, () =>
                         {
-                            zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer_AlignedSpawn with { Points = 10 });
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer_AlignedSpawn with { Points = 4 });
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
                         }),
                     });
                     break;
@@ -180,6 +219,7 @@ namespace AutogenRundown.DataBlocks
 
                 case "C":
                 {
+                    // TODO: still need to add more
                     Generator.SelectRun(new List<(double, Action)>
                     {
                         // Single mother
@@ -199,23 +239,13 @@ namespace AutogenRundown.DataBlocks
                             SetMotherVibe(zone);
                         }),
 
-                        // Single tank
+                        // Tank + pouncer with lots of spitters
                         (0.4, () =>
                         {
-                            zone.EnemySpawningInZone.Add(
-                                EnemySpawningData.Tank_AlignedSpawn with { Points = 10 });
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Tank_AlignedSpawn with { Points = 10 });
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
 
-                            zone.StaticSpawnDataContainers.Add(
-                                new StaticSpawnDataContainer
-                                {
-                                    Count = 100,
-                                    DistributionWeightType = 0,
-                                    DistributionWeight = 1.0,
-                                    DistributionRandomBlend = 0.0,
-                                    DistributionResultPow = 2.0,
-                                    Unit = StaticSpawnUnit.Corpses,
-                                    FixedSeed = 121
-                                });
+                            SetInfectionVibe(zone, 200);
                         }),
                     });
                     break;
@@ -223,63 +253,81 @@ namespace AutogenRundown.DataBlocks
 
                 case "D":
                 {
-                    /*
-                     *
-                     */
-                    zone.EnemySpawningInZone.Add(
-                        EnemySpawningData.Mother_AlignedSpawn with { Points = 10 });
+                    // TODO: still need to add more
+                    Generator.SelectRun(new List<(double, Action)>
+                    {
+                        // PMother
+                        (0.4, () =>
+                        {
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.PMother_AlignedSpawn with { Points = 10 });
+
+                            SetMotherVibe(zone);
+                        }),
+                    });
                     break;
                 }
 
                 case "E":
                 {
+                    // Done for now
                     Generator.SelectRun(new List<(double, Action)>
                     {
-                        // // Single mother
-                        // (0.4, () =>
-                        // {
-                        //     zone.EnemySpawningInZone.Add(EnemySpawningData.Mother_AlignedSpawn with { Points = 10 });
-                        //     zone.StaticSpawnDataContainers.Add(
-                        //         new StaticSpawnDataContainer
-                        //         {
-                        //             Count = 200,
-                        //             DistributionWeightType = 0,
-                        //             DistributionWeight = 1.0,
-                        //             DistributionRandomBlend = 0.0,
-                        //             DistributionResultPow = 2.0,
-                        //             Unit = StaticSpawnUnit.EggSack,
-                        //             FixedSeed = 121
-                        //         });
-                        // }),
-
-                        // MegaMother
-                        (0.2, () =>
+                        // Tank + pouncer with lots of spitters
+                        (0.35, () =>
                         {
-                            zone.EnemySpawningInZone.Add(EnemySpawningData.MegaMother_AlignedSpawn with { Points = 10 });
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Tank_AlignedSpawn with { Points = 10 });
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
+
+                            SetInfectionVibe(zone, 200);
+                        }),
+
+                        // Triple Potato + Tank
+                        // Also probably very hard
+                        (0.25, () =>
+                        {
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Tank_AlignedSpawn with { Points = 10 });
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.TankPotato with { Points = 30 });
+
+                            zone.LightSettings = Lights.Light.Pitch_black_1;
+
+                            zone.AmmoPacks += 4;
+
+                            zone.StaticSpawnDataContainers.Add(
+                                new StaticSpawnDataContainer { Count = 50, Unit = StaticSpawnUnit.Corpses });
+                        }),
+
+                        // MegaMother, with some chaff
+                        // Probably the hardest boss fight on offer
+                        (0.15, () =>
+                        {
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.MegaMother_AlignedSpawn with { Points = 40 });
+
+                            // Some small enemies
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Baby with { Points = 10 });
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Striker with { Points = 5 });
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Shooter with { Points = 5 });
+
+                            // Set the zone to be excluded from enemy rolls
+                            planner.UpdateNode(bossNode with { Tags = bossNode.Tags.Extend("no_enemies") });
 
                             SetMotherVibe(zone, 300);
 
-                            zone.AmmoPacks += 8;
+                            zone.AmmoPacks += 10;
+                            zone.ToolPacks += 4;
                         }),
 
-                        // // Single tank
-                        // (0.4, () =>
-                        // {
-                        //     zone.EnemySpawningInZone.Add(
-                        //         EnemySpawningData.Tank_AlignedSpawn with { Points = 10 });
-                        //
-                        //     zone.StaticSpawnDataContainers.Add(
-                        //         new StaticSpawnDataContainer
-                        //         {
-                        //             Count = 100,
-                        //             DistributionWeightType = 0,
-                        //             DistributionWeight = 1.0,
-                        //             DistributionRandomBlend = 0.0,
-                        //             DistributionResultPow = 2.0,
-                        //             Unit = StaticSpawnUnit.Corpses,
-                        //             FixedSeed = 121
-                        //         });
-                        // }),
+                        // Tank & PMother
+                        (0.25, () =>
+                        {
+                            // Spawn align the mother, and default spawn the tank
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.PMother_AlignedSpawn with { Points = 10 });
+                            zone.EnemySpawningInZone.Add(EnemySpawningData.Tank with { Points = 10 });
+
+                            SetMotherVibe(zone, 250);
+
+                            zone.AmmoPacks += 6;
+                            zone.ToolPacks += 2;
+                        }),
                     });
                     break;
                 }

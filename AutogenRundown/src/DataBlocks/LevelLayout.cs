@@ -174,7 +174,11 @@ namespace AutogenRundown.DataBlocks
             // Do not add blood doors to Zone 0, these are always either the elevator or bulkhead doors.
             // Do not add blood doors to Apex security doors
             foreach (var zone in Zones)
-                if (zone.LocalIndex > 0 && zone.SecurityGateToEnter == SecurityGate.Security && Generator.Flip(chance) && (count++ < max || max == -1))
+                if (!planner.GetZoneNode(zone.LocalIndex).Tags.Contains("no_blood_door") &&
+                    zone.LocalIndex > 0 &&
+                    zone.SecurityGateToEnter == SecurityGate.Security &&
+                    Generator.Flip(chance) &&
+                    (count++ < max || max == -1))
                 {
                     var withArea = Generator.Flip(inAreaChance);
 
@@ -327,7 +331,10 @@ namespace AutogenRundown.DataBlocks
                 var scoutRollModifier = zone.BloodDoor.Enabled ? 0.5 : 1.0;
 
                 // Roll for adding scouts
-                if (Generator.Flip(chance * scoutRollModifier) && (scoutCount++ < max || max == -1))
+                // Do not role if the zone is tagged with `no_scouts`
+                if (!node.Tags.Contains("no_scouts") &&
+                    Generator.Flip(chance * scoutRollModifier) &&
+                    (scoutCount++ < max || max == -1))
                 {
                     var scout = Generator.Draw(scoutPack);
 

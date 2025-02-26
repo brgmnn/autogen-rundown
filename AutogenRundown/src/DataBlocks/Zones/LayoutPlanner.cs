@@ -141,7 +141,7 @@ namespace AutogenRundown.DataBlocks.Zones
         /// TODO: Add unit tests for this
         /// </summary>
         /// <param name="node"></param>
-        public void UpdateNode(ZoneNode node)
+        public ZoneNode UpdateNode(ZoneNode node)
         {
             // Update graph[node] key
             if (graph.ContainsKey(node))
@@ -169,6 +169,8 @@ namespace AutogenRundown.DataBlocks.Zones
                 blocks.Remove(node);
                 blocks.Add(node, zone);
             }
+
+            return node;
         }
 
         /// <summary>
