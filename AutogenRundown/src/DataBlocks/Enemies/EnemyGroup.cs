@@ -111,10 +111,11 @@ namespace AutogenRundown.DataBlocks.Enemies
                 (EnemyRole.BirtherChild, Enemy.Baby, 8.0),
 
                 // Bosses, these need to be individually spawned given their difficulty
-                (EnemyRole.PureSneak, Enemy.Tank,    10.0),
-                (EnemyRole.PureSneak, Enemy.Mother,  10.0),
-                (EnemyRole.PureSneak, Enemy.PMother, 10.0),
-                (EnemyRole.PureSneak, Enemy.Pouncer, 4.0),
+                (EnemyRole.PureSneak, Enemy.Tank,       10.0),
+                (EnemyRole.PureSneak, Enemy.TankPotato, 10.0),
+                (EnemyRole.PureSneak, Enemy.Mother,     10.0),
+                (EnemyRole.PureSneak, Enemy.PMother,    10.0),
+                (EnemyRole.PureSneak, Enemy.Pouncer,    4.0),
             };
 
             foreach (var (role, enemy, maxScore) in hibernatingGroups)

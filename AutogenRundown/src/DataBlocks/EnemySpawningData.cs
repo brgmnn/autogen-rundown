@@ -272,10 +272,11 @@ namespace AutogenRundown.DataBlocks
             Tags = new Tags("boss")
         };
 
-        public static EnemySpawningData TankPotato = new EnemySpawningData
+        public static readonly EnemySpawningData TankPotato = new()
         {
             GroupType = EnemyGroupType.Hibernate,
             Difficulty = (uint)Enemy.TankPotato,
+            Points = 10,
             Tags = new Tags("boss")
         };
 
