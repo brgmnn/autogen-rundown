@@ -284,10 +284,10 @@ namespace AutogenRundown
         /// </summary>
         public static void GenerateTimeSeed()
         {
-            DateTime utcNow = DateTime.UtcNow;
-
-            TimeZoneInfo tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
-            DateTime pst = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
+            var utcNow = DateTime.UtcNow;
+            // var utcNow = new DateTime(2025, 3, 8, 10, 0, 0); // Debugging specific months
+            var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            var pst = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
 
             var now = pst.ToString("yyyy_MM_dd");
             var display = pst.ToString("MM/dd");
@@ -320,7 +320,7 @@ namespace AutogenRundown
         public static void SetWeeklySeed()
         {
             var utcNow = DateTime.UtcNow;
-            // var utcNow = new DateTime(2025, 2, 3, 10, 0, 0); // Debugging specific months
+            // var utcNow = new DateTime(2025, 3, 8, 10, 0, 0); // Debugging specific months
             var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             var pst = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
 
