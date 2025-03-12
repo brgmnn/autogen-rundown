@@ -132,7 +132,7 @@ public class ComplexResourceSet
         // > "assets/geo_64x64_mining_dig_site_t_dak_01_nospawn.prefab"
         resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Objective_1x1", new Prefab()
         {
-            Asset = "assets/geo_64x64_mining_dig_site_t_dak_01.prefab",
+            Asset = "Assets/geo_64x64_mining_dig_site_t_dak_01.prefab",
             SubComplex = SubComplex.DigSite
             // Shard = "2"
         });
@@ -144,7 +144,7 @@ public class ComplexResourceSet
         // > spawnpoints called "assets/geo_64x64_dig_site_i_dak_01_nospawn.prefab"
         resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Objective_1x1", new Prefab()
         {
-            Asset = "assets/geo_64x64_dig_site_i_dak_01.prefab",
+            Asset = "Assets/geo_64x64_dig_site_i_dak_01.prefab",
             SubComplex = SubComplex.DigSite
             // Shard = "2"
         });
@@ -157,13 +157,13 @@ public class ComplexResourceSet
         // > Use the dead end tile if you don't want to be forced into a forward evac.
         resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Exit_1x1", new Prefab()
         {
-            Asset = "assets/geo_64x64_dig_site_exit_dak_01.prefab",
+            Asset = "Assets/geo_64x64_dig_site_exit_dak_01.prefab",
             SubComplex = SubComplex.DigSite
             // Shard = "2"
         });
         resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Objective_1x1", new Prefab()
         {
-            Asset = "assets/geo_64x64_dig_site_dead_end_dak_01.prefab",
+            Asset = "Assets/geo_64x64_dig_site_dead_end_dak_01.prefab",
             SubComplex = SubComplex.DigSite
             // Shard = "2"
         });
