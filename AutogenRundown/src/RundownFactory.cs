@@ -549,12 +549,17 @@ public static class RundownFactory
 
             var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
 
+            var withUnlocks = true;
+            #if DEBUG
+            withUnlocks = false;
+            #endif
+
             var weekly = BuildRundown(new Rundown
             {
                 PersistentId = Rundown.R_Weekly,
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>WEEKLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
-            }, false);
+            }, false, withUnlocks);
 
             Bins.Rundowns.AddBlock(weekly);
         }
