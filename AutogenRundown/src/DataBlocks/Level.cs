@@ -84,7 +84,12 @@ namespace AutogenRundown.DataBlocks
                 RelativeDirection.Global_Forward,
                 RelativeDirection.Global_Left,
                 RelativeDirection.Global_Right,
-                RelativeDirection.Global_Backward
+
+                // TODO: This needs some work. For now we just do forward/left/right
+
+                // // Seems like using global backwards is generally a bad idea.
+                // // We need to either have a distant
+                // RelativeDirection.Global_Backward
             };
 
         /// <summary>
@@ -630,18 +635,21 @@ namespace AutogenRundown.DataBlocks
             {
                 direction = Generator.Draw(RelativeDirections);
 
-                // We also want to remove the reverse direction of what we have selected for Main.
-                // The rationale is we don't want Extreme/Overload to attempt to build backwards
-                // along the same direction as Main is heading, but instead to branch off.
-                var removeBackwards = direction.Forward switch
-                {
-                    ZoneExpansion.Forward => RelativeDirection.Global_Backward,
-                    ZoneExpansion.Left => RelativeDirection.Global_Right,
-                    ZoneExpansion.Right => RelativeDirection.Global_Left,
-                    ZoneExpansion.Backward => RelativeDirection.Global_Forward,
-                };
+                // TODO: I don't think we actually need to do this for the more simpler approach
+                //       of now just selecting forward/left/right
 
-                RelativeDirections.Remove(removeBackwards);
+                // // We also want to remove the reverse direction of what we have selected for Main.
+                // // The rationale is we don't want Extreme/Overload to attempt to build backwards
+                // // along the same direction as Main is heading, but instead to branch off.
+                // var removeBackwards = direction.Forward switch
+                // {
+                //     ZoneExpansion.Forward => RelativeDirection.Global_Backward,
+                //     ZoneExpansion.Left => RelativeDirection.Global_Right,
+                //     ZoneExpansion.Right => RelativeDirection.Global_Left,
+                //     ZoneExpansion.Backward => RelativeDirection.Global_Forward,
+                // };
+                //
+                // RelativeDirections.Remove(removeBackwards);
             }
             else if (bulkhead == Bulkhead.Extreme || bulkhead == Bulkhead.Overload)
             {
