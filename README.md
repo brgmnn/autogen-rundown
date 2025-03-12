@@ -19,9 +19,22 @@ TODO:
   * Don't allow small item pickup to have so many extras that we don't need to do all the zones
   * Make giants blood door a bit harder? B-tier was easy
   * Rework lights on zone to load into lightsettings and let us set our own light settings
+  * Make extract scan short if there's no extract alarm (Don't do it just based on level tier)
+
+Weekly 9-A1 bug:
+  * Doesn't seem to be the chained puzzles.. Unclear for now
+  * Disappears if I disable EITHER overload or secondary
+  * It appears to be the map layout. I suspect it's the door not having a place to place though
 
 Monthly Feb
   * Double cargo B1 -- Not sure why?
+  * March
+    [ ] A1 - Reactor shutdown main no exit trickle
+    [ ] B2 - Overload: need to add time for doing king of the hill. it's not possible with how much time it takes to not get bonus time
+              See if we can use AWO for setting the timer with additional objectives?
+    [ ] B2 - Extreme: Survival timer still doesn't add time, instead resets time with new value and then is reset back to starting time
+    [ ] B2 - Survival timer: On B-tier at least it seems like a tiny bit more ammo would be good.
+    [ ] C1 - Overload: got the mega mother room for the terminal uplink. - Getting hubs for uplink rooms is no good
   * Reactor D2
     [ ] Need to ensure resources spawn. Flat mining reactor doesn't have enoug spawn points, no tool spawned?
     [ ] Possibly reduce the number of waves but up the difficulty. First 3-4 waves were easy and a bit of nothing
@@ -210,8 +223,10 @@ Follow the installation instructions again, check yes to overwrite all files.
 
 * Alarms
   * [x] Secret Alarms — *Appear to be free but aren't*
+  * [x] Events on/during Alarms - *Alarms can have events such as lights out or fog flood during the alarm*
 * Challenges
   * [x] Reactor terminals can be locked just like regular terminals
+  * [x] Secret Reactor Shutdown - *Secret alarm but for the reactor shutdown*
 * Cosmetic
   * Glowsticks — *All colors available to spawn*
     * [x] Green (normal)
