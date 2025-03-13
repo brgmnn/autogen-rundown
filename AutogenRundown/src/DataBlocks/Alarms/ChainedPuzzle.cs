@@ -103,7 +103,7 @@ public record ChainedPuzzle : DataBlock
     /// Determines the count and types of scans.
     /// </summary>
     [JsonProperty("ChainedPuzzle")]
-    public List<PuzzleComponent> Puzzle { get; set; } = new List<PuzzleComponent>();
+    public List<PuzzleComponent> Puzzle { get; set; } = new();
 
     /// <summary>
     /// If set to true, the HUD won't show up if you are a certain distance (seems to be 25m)
@@ -125,6 +125,29 @@ public record ChainedPuzzle : DataBlock
     public UInt32 AlarmSoundStart = 3339129407u;
     public UInt32 AlarmSoundStop = 42633153u;
     #endregion
+
+    // public virtual bool Equals(ChainedPuzzle? other)
+    // {
+    //     if (ReferenceEquals(this, other))
+    //         return true;
+    //     if (other is null || GetType() != other.GetType())
+    //         return false;
+    //
+    //     return PersistentId == other.PersistentId &&
+    //            TriggerAlarmOnActivate == other.TriggerAlarmOnActivate &&
+    //            Settings == other.Settings &&
+    //            Population == other.Population &&
+    //            Puzzle.SequenceEqual(other.Puzzle) &&
+    //            DisableSurvivalWaveOnComplete == other.DisableSurvivalWaveOnComplete &&
+    //            UseRandomPositions == other.UseRandomPositions &&
+    //            Utils.Math.Approximately(WantedDistanceFromStartPos, other.WantedDistanceFromStartPos) &&
+    //            Utils.Math.Approximately(WantedDistanceBetweenPuzzleComponents,
+    //                other.WantedDistanceBetweenPuzzleComponents) &&
+    //            OnlyShowHUDWhenPlayerIsClose == other.OnlyShowHUDWhenPlayerIsClose &&
+    //            SurvivalWaveAreaDistance == other.SurvivalWaveAreaDistance &&
+    //            AlarmSoundStart == other.AlarmSoundStart &&
+    //            AlarmSoundStart == other.AlarmSoundStop;
+    // }
 
     public override string ToString()
         => $"ChainedPuzzle {{ PublicAlarmName = {PublicAlarmName}, Population = {Population}, Settings = {Settings} }}";
