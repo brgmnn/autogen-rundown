@@ -151,6 +151,9 @@ jobs:
           mv deps/Inas07-EOSExt_Reactor/plugins build/AutogenRundown_GTFO/BepInEx/plugins/Inas07-EOSExt_Reactor
           mv deps/Inas07-EOSExt_Reactor/* build/AutogenRundown_GTFO/BepInEx/plugins/Inas07-EOSExt_Reactor/
 
+          mv deps/Inas07-EOSExt_SecuritySensor/plugins build/AutogenRundown_GTFO/BepInEx/plugins/Inas07-EOSExt_SecuritySensor
+          mv deps/Inas07-EOSExt_SecuritySensor/Assets/AssetBundles/* build/AutogenRundown_GTFO/BepInEx/Assets/AssetBundles/
+          mv deps/Inas07-EOSExt_SecuritySensor/* build/AutogenRundown_GTFO/BepInEx/plugins/Inas07-EOSExt_Reactor/
 
           # --- LocalProgression
           mv deps/Inas07-LocalProgression/plugins build/AutogenRundown_GTFO/BepInEx/plugins/Inas07-LocalProgression
