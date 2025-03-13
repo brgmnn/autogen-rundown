@@ -1,6 +1,32 @@
-﻿namespace AutogenRundown.Extensions;
+﻿using AutogenRundown.DataBlocks.Objectives;
 
-public class WardenObjectiveEventCollections
+namespace AutogenRundown.Extensions;
+
+public static class WardenObjectiveEventCollections
 {
-    
+    /// <summary>
+    /// Adds a security sensor toggle event
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="sensorIndex"></param>
+    /// <param name="delay"></param>
+    /// <param name="enabled"></param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddSecuritySensors(
+        this ICollection<WardenObjectiveEvent> events,
+        bool enabled,
+        int sensorIndex,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ToggleSecuritySensor,
+                Enabled = enabled,
+                Count = sensorIndex,
+                Delay = delay
+            });
+
+        return events;
+    }
 }

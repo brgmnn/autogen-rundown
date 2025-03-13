@@ -41,6 +41,13 @@ public enum WardenObjectiveEventType : uint
     EventBreak = 999,
 
 
+    #region MOD: EOSExt_SecuritySensor
+    /// <summary>
+    /// Toggle a security sensor group state
+    /// </summary>
+    ToggleSecuritySensor = 400,
+    #endregion
+
     #region MOD: AdvancedWardenObjective
     /**
      * This region covers AWO (AdvancedWardenObjective) events. These give a plethora of new events

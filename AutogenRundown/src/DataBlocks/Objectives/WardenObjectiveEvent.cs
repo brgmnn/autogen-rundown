@@ -73,8 +73,18 @@ public record class WardenObjectiveEvent
 
     public Vector3 Position { get; set; } = new Vector3();
 
+    /// <summary>
+    /// Vanilla: Enemy wave data count
+    ///     - OR -
+    /// EOSExt_SecuritySensor: Sensor group index
+    /// </summary>
     public int Count { get; set; } = 0;
 
+    /// <summary>
+    /// Vanilla: Enemy wave data count
+    ///     - OR -
+    /// EOSExt_SecuritySensor: enable / disable sensor
+    /// </summary>
     public bool Enabled { get; set; } = false;
     #endregion
 
