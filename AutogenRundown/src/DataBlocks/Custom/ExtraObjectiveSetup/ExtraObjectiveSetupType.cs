@@ -14,6 +14,7 @@ public enum ExtraObjectiveSetupType
     ObjectiveCounter,
     ReactorShutdown,
     ReactorStartup,
+    SecuritySensor,
     TerminalPosition,
     TerminalUplink,
 }

@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
+using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup.ExtensionSecuritySensor;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
@@ -138,6 +139,15 @@ namespace AutogenRundown.DataBlocks
         public LayoutDefinitions EOS_ReactorShutdown { get; private set; } = new()
         {
             Type = ExtraObjectiveSetupType.ReactorShutdown
+        };
+
+        /// <summary>
+        /// Reactor Shutdown LayoutDefinitions
+        /// </summary>
+        [JsonIgnore]
+        public LayoutDefinitions EOS_SecuritySensor { get; private set; } = new()
+        {
+            Type = ExtraObjectiveSetupType.SecuritySensor
         };
         #endregion
         #endregion
@@ -660,6 +670,36 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
+        /// Saves all of the EOS definitions
+        /// </summary>
+        private void FinalizeExtraObjectiveSetup()
+        {
+            /*
+             * We need to make sure the ExtraObjectiveSetup layout definitions are set up with the
+             * correct main level layout persistent id and that they are saved if we added any
+             * definitions to them.
+             */
+
+            EOS_IndividualGenerator.Name = $"{Tier}{Index}_{Name.Replace(" ", "_")}";
+            EOS_IndividualGenerator.MainLevelLayout = LevelLayoutData;
+
+            EOS_ReactorShutdown.Name = $"{Tier}{Index}_{Name.Replace(" ", "_")}";
+            EOS_ReactorShutdown.MainLevelLayout = LevelLayoutData;
+
+            EOS_SecuritySensor.Name = $"{Tier}{Index}_{Name.Replace(" ", "_")}";
+            EOS_SecuritySensor.MainLevelLayout = LevelLayoutData;
+
+            if (EOS_IndividualGenerator.Definitions.Any())
+                EOS_IndividualGenerator.Save();
+
+            if (EOS_ReactorShutdown.Definitions.Any())
+                EOS_ReactorShutdown.Save();
+
+            if (EOS_SecuritySensor.Definitions.Any())
+                EOS_SecuritySensor.Save();
+        }
+
+        /// <summary>
         /// Builds a specific bulkhead layout
         /// </summary>
         /// <param name="bulkhead"></param>
@@ -850,24 +890,7 @@ namespace AutogenRundown.DataBlocks
             #endregion
 
             #region Finalize -- ExtraObjectiveSetup
-            /*
-             * We need to make sure the ExtraObjectiveSetup layout definitions are set up with the
-             * correct main level layout persistent id and that they are saved if we added any
-             * definitions to them.
-             */
-
-            level.EOS_IndividualGenerator.Name = $"{level.Tier}{level.Index}_{level.Name.Replace(" ", "_")}";
-            level.EOS_IndividualGenerator.MainLevelLayout = level.LevelLayoutData;
-
-            level.EOS_ReactorShutdown.Name = $"{level.Tier}{level.Index}_{level.Name.Replace(" ", "_")}";
-            level.EOS_ReactorShutdown.MainLevelLayout = level.LevelLayoutData;
-
-            if (level.EOS_IndividualGenerator.Definitions.Any())
-                level.EOS_IndividualGenerator.Save();
-
-            if (level.EOS_ReactorShutdown.Definitions.Any())
-                level.EOS_ReactorShutdown.Save();
-
+            level.FinalizeExtraObjectiveSetup();
             #endregion
 
             Plugin.Logger.LogDebug($"Level={level.Tier}{level.Index} level plan: {level.Planner}");
@@ -949,12 +972,16 @@ namespace AutogenRundown.DataBlocks
                         BuildFromLocalIndex = 0
                     });
 
+                layout.AddSecuritySensors((0, 1));
+
                 Bins.LevelLayouts.AddBlock(layout);
             }
             catch (Exception err)
             {
                 Plugin.Logger.LogError($"OH NO: {err}");
             }
+
+            level.FinalizeExtraObjectiveSetup();
 
             return level;
         }

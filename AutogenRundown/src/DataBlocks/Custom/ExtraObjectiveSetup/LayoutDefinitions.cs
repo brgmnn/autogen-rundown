@@ -57,6 +57,7 @@ public class LayoutDefinitions
             ExtraObjectiveSetupType.ObjectiveCounter => "ObjectiveCounter",
             ExtraObjectiveSetupType.ReactorShutdown => "ReactorShutdown",
             ExtraObjectiveSetupType.ReactorStartup => "ReactorStartup",
+            ExtraObjectiveSetupType.SecuritySensor => "SecuritySensor",
             ExtraObjectiveSetupType.TerminalPosition => "TerminalPosition",
             ExtraObjectiveSetupType.TerminalUplink => "TerminalUplink"
         };
