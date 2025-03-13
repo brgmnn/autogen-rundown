@@ -732,7 +732,8 @@ namespace AutogenRundown.DataBlocks
             if (objective.Type == WardenObjectiveType.RetrieveBigItems)
                 Plugin.Logger.LogDebug($" -- Retrieve Item(s) = {objective.RetrieveItems.First()}");
 
-            BuildStartingArea(level, director);
+            if (director.Bulkhead == Bulkhead.Main)
+                layout.BuildStartingArea(level, director);
 
             #region Set the right directions
             /*

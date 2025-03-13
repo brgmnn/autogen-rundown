@@ -78,7 +78,7 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         /// <param name="level"></param>
         /// <param name="director"></param>
-        public static void BuildStartingArea(Level level, BuildDirector director)
+        public void BuildStartingArea(Level level, BuildDirector director)
         {
             // Return early if we should not be building this.
             if (!director.Bulkhead.HasFlag(Bulkhead.Main))
@@ -118,10 +118,10 @@ namespace AutogenRundown.DataBlocks
 
             // 2 bulkhead objectives
             if (bulkheads.HasFlag(Bulkhead.Extreme) ^ bulkheads.HasFlag(Bulkhead.Overload))
-                options.Add((1.0, "2x_bulkhead_hub"));
+                options.Add((2.0, "2x_bulkhead_hub"));
             // All 3 bulkhead objectives
             else if (bulkheads.HasFlag(Bulkhead.PrisonerEfficiency))
-                options.Add((1.0, "3x_bulkhead_hub"));
+                options.Add((2.0, "3x_bulkhead_hub"));
             // Any other option
             else
                 options.Add((1.0, "default"));
@@ -218,7 +218,7 @@ namespace AutogenRundown.DataBlocks
         /**
          * Generates compact starting areas for 2x bulkhead entrances from the same zone.
          */
-        static void BuildStartingArea_2xBulkheadHub(Level level, BuildDirector director)
+        private void BuildStartingArea_2xBulkheadHub(Level level, BuildDirector director)
         {
             // Add the first zone.
             var elevatorDrop = new ZoneNode(
@@ -246,6 +246,8 @@ namespace AutogenRundown.DataBlocks
             var secondBulkhead = level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme) ?
                 Bulkhead.Extreme : Bulkhead.Overload;
 
+            // AddSecuritySensors((0, 1));
+
             // Place both bulkheads in the first zone
             InitializeBulkheadArea(level, Bulkhead.Main, elevatorDrop);
             InitializeBulkheadArea(level, secondBulkhead, elevatorDrop);
@@ -254,7 +256,7 @@ namespace AutogenRundown.DataBlocks
         /**
          * Generates compact starting areas for 3x bulkhead entrances from the same zone.
          */
-        static void BuildStartingArea_3xBulkheadHub(Level level, BuildDirector director)
+        private void BuildStartingArea_3xBulkheadHub(Level level, BuildDirector director)
         {
             // Add the first zone.
             var elevatorDrop = new ZoneNode(
@@ -295,6 +297,8 @@ namespace AutogenRundown.DataBlocks
 
             level.Planner.Connect(elevatorDrop);
             level.Planner.AddZone(elevatorDrop, elevatorDropZone);
+
+            // AddSecuritySensors((0, 1));
 
             // Place all bulkheads in the first zone
             InitializeBulkheadArea(level, Bulkhead.Main, elevatorDrop);
