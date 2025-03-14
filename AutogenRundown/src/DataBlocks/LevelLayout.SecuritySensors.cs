@@ -21,10 +21,12 @@ public partial record LevelLayout
             .AddSound(Sound.LightsOff)
             .AddSpawnWave(GenericWave.SinglePouncer, 2.0);
 
+        var resetTime = Generator.Between(8, 15);
+
         if (resets)
             sensorEvents
-                .AddToggleSecuritySensors(true, 0, 9.0)
-                .AddSound(Sound.LightsOn_Vol4, 8.6);
+                .AddToggleSecuritySensors(true, 0, resetTime)
+                .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
 
         var sensor = new SecuritySensor
         {
@@ -37,7 +39,7 @@ public partial record LevelLayout
             "C" => 10,
             "D" => 12,
             "E" => 15,
-            _ => 0,
+            _ => 10
         };
 
         Plugin.Logger.LogDebug($"{Name} -- Rolled Security Sensors: quadrant = {quadrant}, count = {count}");
@@ -45,5 +47,18 @@ public partial record LevelLayout
         sensor.AddInQuadrant(quadrant, count);
 
         level.EOS_SecuritySensor.Definitions.Add(sensor);
+
+        #region Warden Intel Messages
+        /*
+         * HSU Find Sample specific warden intel messages
+         */
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        {
+            ">... [distorted static]\r\n>... There's that broken scan again.\r\n<size=200%><color=red>>... Step away from it!</color></size>",
+            ">... <size=200%><color=red>Careful!</color></size>\r\n>... The corrupted scan just re-initialized.\r\n>... No telling what it summons.",
+            ">... <size=200%><color=red>Don't stand on that scanner!</color></size>\r\n>... Last time, we barely escaped.\r\n>... It calls forth... something.",
+            ">... <size=200%><color=red>The scan just reset!</color></size>\r\n>... It's only a matter of time.\r\n>... Brace yourselves."
+        }))!);
+        #endregion
     }
 }
