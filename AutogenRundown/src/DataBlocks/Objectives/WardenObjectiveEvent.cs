@@ -10,6 +10,24 @@ using Newtonsoft.Json.Linq;
  */
 namespace AutogenRundown.DataBlocks.Objectives;
 
+public record ProgressEvent
+{
+    public double Progress { get; set; } = 0.0;
+
+    public List<WardenObjectiveEvent> Events { get; set; } = new();
+}
+
+public record WardenObjectiveEventCountdown
+{
+    public string TitleText { get; set; } = "";
+
+    public string TimerColor { get; set; } = "red";
+
+    public List<ProgressEvent> EventsOnProgress { get; set; } = new();
+
+    public List<WardenObjectiveEvent> EventsOnDone { get; set; } = new();
+}
+
 public record class WardenObjectiveEvent
 {
     public WardenObjectiveEventType Type { get; set; } = WardenObjectiveEventType.None;
@@ -128,5 +146,10 @@ public record class WardenObjectiveEvent
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
     public EventLoop? EventLoop { get; set; }
 
+    /// <summary>
+    ///
+    /// </summary>
+    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    public WardenObjectiveEventCountdown Countdown { get; set; } = new();
     #endregion
 }

@@ -17,6 +17,19 @@
         /// </summary>
         KdsDeepVentilationProcedure = 2591647810,
 
+        #region Alarms
+        Alarms_MissingItem = 2200133294, // decon_unit_missing_alarm
+
+        /// <summary>
+        /// This is also the error alarm loop noise played when dropping into R2C2 ???
+        /// </summary>
+        Alarms_Error_AmbientLoop = 1190355274,   // alarm_ambient_loop
+
+        Alarms_AmbientMix = 42582178,
+        Alarms_AmbientStereo = 439388169, // Sounds like nothing?
+        Alarms_AmbientStop = 560124168,
+        #endregion
+
         #region Atmosphere and mood
         /// <summary>
         /// This is a tense deep ominous sound. Played when you enter the R3B2 mother room
@@ -31,9 +44,6 @@
         Environment_DoorLoosen = 836335444,
 
         Environment_DistantFan = 3164826086,
-
-        Alarms_Error = 2200133294,
-        Alarms_ErrorOff = 1190355274,
 
         // Sounds like a fuse blowing
         Environment_PowerdownFailure = 3655606696,

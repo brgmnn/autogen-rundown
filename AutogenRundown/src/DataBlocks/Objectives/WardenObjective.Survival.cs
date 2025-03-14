@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -40,15 +41,13 @@ public partial record WardenObjective : DataBlock
         return total;
     }
 
-    public void PreBuild_Survival(BuildDirector director, Level level) { }
-
     public void Build_Survival(BuildDirector director, Level level)
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
         var exitZone = level.Planner.GetZones(director.Bulkhead, "exit").First();
         var exitNumber = layout.ZoneAliasStart + exitZone.ZoneNumber;
-        var exitZoneString = $"<color=orange>ZONE {exitNumber}</color>";
+        var exitZoneString = Lore.Zone(exitNumber);
 
         MainObjective = $"Find a way to stay alive during Warden Protocol DECOY, and make your way to {exitZoneString} for extraction";
         Survival_TimerTitle = "Time until allowed extraction:";
@@ -60,41 +59,74 @@ public partial record WardenObjective : DataBlock
         // Put a relatively short exit scan time as we will hit them hard on times up
         ChainedPuzzleAtExitScanSpeedMultiplier = GenExitScanTime(30, 40);
 
-        // Set the base times. Give 60s to begin and calculate and add the additional times for survival
-        Survival_TimeToActivate = 60.0;
-        Survival_TimeToSurvive = Survival_CalculateTime(director, level);
+        // WavesOnElevatorLand.Add(GenericWave.ExitTrickle);
 
-        //==================== Events ====================
-        EventsOnActivate.Add(
-            new WardenObjectiveEvent
+        //================== AWO version ================
+        // var onProgress = new List<ProgressEvent>()
+        // {
+        //     new ProgressEvent()
+        //     {
+        //         Progress = 0.75,
+        //         Events = new List<WardenObjectiveEvent>().AddMessage("EventsOnProgress fired at 75%").ToList()
+        //     }
+        // };
+
+        // Start of survival events
+        var onStart = new List<WardenObjectiveEvent>();
+
+        onStart.Add(new WardenObjectiveEvent
             {
                 Type = WardenObjectiveEventType.PlaySound,
-                Trigger = WardenObjectiveEventTrigger.OnStart,
-                SoundId = Sound.Alarms_Error,
-                Delay = 0.0
+                Trigger = WardenObjectiveEventTrigger.None,
+                SoundId = Sound.Alarms_Error_AmbientLoop
             });
-        EventBuilder.AddSpawnEnemies(
-            EventsOnActivate,
-            GenericWave.Survival_ErrorAlarm,
-            0.0,
-            ":://WARNING - SECTOR ALARM ACTIVATED");
+        onStart
+            .AddGenericWave(GenericWave.Survival_ErrorAlarm)
+            .AddMessage(":://WARNING - SECTOR ALARM ACTIVATED");
 
-        // Unlock the exit
-        // TODO: This didn't work again
-        // Update: was it perhaps the layer number?
-        EventBuilder.AddUnlockDoor(
-            EventsOnGotoWin,
-            director.Bulkhead,
-            exitZone.ZoneNumber,
-            $"Extraction zone {exitZoneString} unlocked");
+        // Finish events
+        var onDone = new List<WardenObjectiveEvent>();
 
-        // Ending events
-        // On end, start the tank
-        EventBuilder.AddSpawnEnemies(
-            EventsOnGotoWin,
-            GenericWave.Survival_Impossible_TankPotato,
-            4.0,
-            ":://CRITICAL ERROR - LARGE B!OM4SS Ð!$_†URß@И¢€");
+        onDone
+            .AddUnlockDoor(
+                director.Bulkhead,
+                exitZone.ZoneNumber,
+                $"Extraction zone {exitZoneString} unlocked",
+                WardenObjectiveEventTrigger.None)
+            .AddGenericWave(GenericWave.Survival_Impossible_TankPotato, 4.0)
+            .AddSound(Sound.TankRoar, 7.0)
+            .AddMessage(":://CRITICAL ERROR - LARGE B!OM4SS Ð!$_†URß@И¢€");
+
+        var mainCountdown = new WardenObjectiveEvent
+        {
+            Type = WardenObjectiveEventType.Countdown,
+            Delay = 0.0,
+            Duration = Survival_CalculateTime(director, level),
+            Countdown = new WardenObjectiveEventCountdown
+            {
+                TitleText = "Time until allowed extraction:",
+                TimerColor = "red",
+                EventsOnDone = onDone
+            }
+        };
+
+        // Ensure we add the main countdown event
+        onStart.Add(mainCountdown);
+
+        var setupCountdown = new WardenObjectiveEvent
+        {
+            Type = WardenObjectiveEventType.Countdown,
+            Delay = 3.5,
+            Duration = 20.0,
+            Countdown = new WardenObjectiveEventCountdown
+            {
+                TitleText = "<color=red>WARNING!</color> Warden Protocol <color=orange>DECOY</color> will commence in:",
+                TimerColor = "#ffaa00",
+                EventsOnDone = onStart
+            }
+        };
+
+        EventsOnElevatorLand.Add(setupCountdown);
     }
 
     /// <summary>
@@ -104,50 +136,42 @@ public partial record WardenObjective : DataBlock
     /// <param name="level"></param>
     public void PostBuild_Survival(BuildDirector director, Level level)
     {
+        // We change it to be a Clear Path
+        // This should allow the core part of the objective which is the same as clear path work,
+        // but let's us use the AWO timer instead of the base game which is more flexible for
+        // adjusting the timer.
+        Type = WardenObjectiveType.ClearPath;
+
+        // Add additional time for clearing extreme
         if (level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme))
         {
-            ///
-            /// For extreme we grant extra time to complete the objective
-            ///
-            var (extremeDataLayer, extremeLayout) = GetObjectiveLayerAndLayout(level.SecondaryDirector, level);
-
-            var extremeTimeAdd = Survival_CalculateTime(level.SecondaryDirector, level);
+            var extremeClearTime = Survival_CalculateTime(level.SecondaryDirector, level);
 
             var node = level.Planner.GetZones(Bulkhead.Extreme, null).First();
             var zone = level.Planner.GetZone(node)!;
 
-            EventBuilder.AddMessage(
-                zone.EventsOnApproachDoor,
-                "SECONDARY OBJECTIVES PRIORITIZED, EXTENDS LOCKDOWN TIME",
-                5.0);
+            zone.EventsOnApproachDoor
+                .AddMessage("SECONDARY OBJECTIVES PRIORITIZED, EXTENDS LOCKDOWN TIME ON OPEN", 5.0);
 
-            // This sets a new survival timer?
-            EventBuilder.SetSurvivalTimer(zone.EventsOnOpenDoor, extremeTimeAdd, "LOCKDOWN TIME EXTENDED");
+            zone.EventsOnOpenDoor
+                .AddAdjustTimer(extremeClearTime)
+                .AddMessage("LOCKDOWN TIME EXTENDED");
         }
 
+        // Add additional time for clearing overload
         if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload))
         {
-            ///
-            /// No additional time is granted for overload objectives in survival. They just
-            /// have to be that hard.
-            ///
-            /// The overload objectives in survival are set to be much shorter, specifically to
-            /// allow them to still be completed in time
-            ///
-            /// We could actually use the add to timer here now that it works correctly
-            ///
+            var overloadClearTime = Survival_CalculateTime(level.OverloadDirector, level);
+
             var node = level.Planner.GetZones(Bulkhead.Overload, null).First();
             var zone = level.Planner.GetZone(node)!;
 
-            // Add extra resources to the overload zone to help reward doing it
-            zone.AmmoPacks *= 2.0;
-            zone.ToolPacks *= 2.0;
-            zone.HealthPacks *= 2.0;
+            zone.EventsOnApproachDoor
+                .AddMessage("OVERLOAD OBJECTIVES PRIORITIZED, EXTENDS LOCKDOWN TIME ON OPEN", 5.0);
 
-            EventBuilder.AddMessage(
-                zone.EventsOnApproachDoor,
-                "OVERLOAD OBJECTIVES NOT PRIORITIZED, NO ADDITIONAL TIME",
-                5.0);
+            zone.EventsOnOpenDoor
+                .AddAdjustTimer(overloadClearTime)
+                .AddMessage("LOCKDOWN TIME EXTENDED");
         }
     }
 }

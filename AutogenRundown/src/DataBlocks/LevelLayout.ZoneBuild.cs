@@ -82,7 +82,7 @@ public partial record LevelLayout
         ZoneNode baseNode,
         int zoneCount,
         string branch = "primary",
-        Action<Zone>? zoneCallback = null)
+        Action<ZoneNode, Zone>? zoneCallback = null)
     {
         var prev = baseNode;
 
@@ -110,7 +110,7 @@ public partial record LevelLayout
 
             insertedNodes.Add(next);
 
-            zoneCallback?.Invoke(nextZone);
+            zoneCallback?.Invoke(next, nextZone);
 
             prev = next;
         }
@@ -166,7 +166,7 @@ public partial record LevelLayout
             firstError,
             errorZones - 1,
             "primary",
-            zone => zone.SetMainResourceMulti(value => value * 3)).Last();
+            (_, zone) => zone.SetMainResourceMulti(value => value * 3)).Last();
         planner.UpdateNode(penultimate with { MaxConnections = 2 });
 
         // Add the ending zone that will be returned
@@ -179,7 +179,7 @@ public partial record LevelLayout
             penultimate,
             sideKeycardZones,
             "keycard",
-            zone => zone.SetMainResourceMulti(value => value * 3)).Last();
+            (_, zone) => zone.SetMainResourceMulti(value => value * 3)).Last();
 
         // Lock the end zone
         AddKeycardPuzzle(end, keycard);
@@ -190,7 +190,7 @@ public partial record LevelLayout
             end,
             terminalTurnoffZones,
             "error_turnoff",
-            zone => zone.SetMainResourceMulti(value => value * 3)).Last();
+            (_, zone) => zone.SetMainResourceMulti(value => value * 3)).Last();
 
         var population = WavePopulation.Baseline;
 
@@ -267,7 +267,7 @@ public partial record LevelLayout
             firstError,
             errorZones - 1,
             "primary",
-            zone => zone.SetMainResourceMulti(value => value * 3)).Last();
+            (_, zone) => zone.SetMainResourceMulti(value => value * 3)).Last();
         planner.UpdateNode(penultimate with { MaxConnections = 2 });
 
         // Add the ending zone that will be returned
@@ -284,7 +284,7 @@ public partial record LevelLayout
             end,
             terminalTurnoffZones,
             "error_turnoff",
-            zone => zone.SetMainResourceMulti(value => value * 3)).Last();
+            (_, zone) => zone.SetMainResourceMulti(value => value * 3)).Last();
 
         var population = WavePopulation.Baseline;
 

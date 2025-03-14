@@ -56,7 +56,11 @@ public enum WardenObjectiveEventType : uint
 
     SetLightDataInZone = 10016,
 
+    Countdown = 10010,
+
     StartEventLoop = 20001,
     StopEventLoop = 20002,
+
+    AdjustAwoTimer = 20007,
     #endregion
 }
