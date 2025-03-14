@@ -31,7 +31,7 @@ public class SecuritySensor : Definition
         {
             SensorGroups.Add(new Sensor()
             {
-                Position = new()
+                Position = new SensorPosition
                 {
                     X = quadrantX*64 - 32 + Generator.Between(4, 60),
                     Z = quadrantZ*64 - 32 + Generator.Between(4, 60),
