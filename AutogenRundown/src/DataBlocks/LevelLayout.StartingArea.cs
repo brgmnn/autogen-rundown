@@ -246,7 +246,18 @@ namespace AutogenRundown.DataBlocks
             var secondBulkhead = level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme) ?
                 Bulkhead.Extreme : Bulkhead.Overload;
 
-            // AddSecuritySensors((0, 1));
+            var sensorChance = this.level.Tier switch
+            {
+                "A" => 0.00,
+                "B" => 0.05,
+                "C" => 0.15,
+                "D" => 0.45,
+                "E" => 0.70,
+                _ => 0.0
+            };
+
+            if (Generator.Flip(sensorChance))
+                AddSecuritySensors_SinglePouncer((0, 1));
 
             // Place both bulkheads in the first zone
             InitializeBulkheadArea(level, Bulkhead.Main, elevatorDrop);
@@ -298,7 +309,18 @@ namespace AutogenRundown.DataBlocks
             level.Planner.Connect(elevatorDrop);
             level.Planner.AddZone(elevatorDrop, elevatorDropZone);
 
-            // AddSecuritySensors((0, 1));
+            var sensorChance = this.level.Tier switch
+            {
+                "A" => 0.00,
+                "B" => 0.05,
+                "C" => 0.15,
+                "D" => 0.45,
+                "E" => 0.70,
+                _ => 0.0
+            };
+
+            if (Generator.Flip(sensorChance))
+                AddSecuritySensors_SinglePouncer((0, 1));
 
             // Place all bulkheads in the first zone
             InitializeBulkheadArea(level, Bulkhead.Main, elevatorDrop);

@@ -84,7 +84,9 @@ namespace AutogenRundown
         /// <summary>
         /// Coin flip with a true/false outcome. Optional chance param
         /// </summary>
-        /// <param name="chance"></param>
+        /// <param name="chance">
+        /// Chance of event occuring. 0.2 = 20% chance to return true. 0.6 = 60% chance to return true
+        /// </param>
         /// <returns></returns>
         public static bool Flip(double chance = 0.5)
             => Random.NextDouble() < chance;

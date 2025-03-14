@@ -972,7 +972,7 @@ namespace AutogenRundown.DataBlocks
                         BuildFromLocalIndex = 0
                     });
 
-                layout.AddSecuritySensors((0, 1));
+                layout.AddSecuritySensors_SinglePouncer((0, 1));
 
                 Bins.LevelLayouts.AddBlock(layout);
             }

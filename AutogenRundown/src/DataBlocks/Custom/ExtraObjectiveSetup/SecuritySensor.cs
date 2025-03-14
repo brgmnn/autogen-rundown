@@ -21,15 +21,15 @@ public class SecuritySensor : Definition
     /// <param name="quadrant">
     /// (X, Y) tuple. Each quadrant is a 64x64 block square on the map. Elevator is a (0, 0).
     /// </param>
+    /// <param name="baseSensor"></param>
     /// <param name="count"></param>
     public void AddInQuadrant((int, int) quadrant, int count = 10)
     {
-        //quadrant;
         var (quadrantX, quadrantZ) = quadrant;
 
         for (var i = 0; i < count; i++)
         {
-            SensorGroups.Add(new Sensor
+            SensorGroups.Add(new Sensor()
             {
                 Position = new()
                 {

@@ -4,6 +4,7 @@ namespace AutogenRundown.Extensions;
 
 public static class WardenObjectiveEventCollections
 {
+    #region Security Sensors
     /// <summary>
     /// Adds a security sensor toggle event
     /// </summary>
@@ -12,7 +13,7 @@ public static class WardenObjectiveEventCollections
     /// <param name="delay"></param>
     /// <param name="enabled"></param>
     /// <returns></returns>
-    public static ICollection<WardenObjectiveEvent> AddSecuritySensors(
+    public static ICollection<WardenObjectiveEvent> AddToggleSecuritySensors(
         this ICollection<WardenObjectiveEvent> events,
         bool enabled,
         int sensorIndex,
@@ -29,4 +30,5 @@ public static class WardenObjectiveEventCollections
 
         return events;
     }
+    #endregion
 }
