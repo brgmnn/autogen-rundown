@@ -234,7 +234,7 @@ public static class RundownFactory
 
         #region D-Tier Levels
         #region Survival Fixed
-        #if DEBUG
+        // #if DEBUG
         #if true
         if (withFixed)
         {
@@ -288,7 +288,7 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
         #endif
-        #endif
+        // #endif
         #endregion
 
         // D levels
