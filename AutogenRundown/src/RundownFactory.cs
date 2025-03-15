@@ -243,7 +243,7 @@ public static class RundownFactory
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = Complex.Tech,
-                Tier = "D",
+                Tier = "B",
                 Objective = objective
             };
             mainDirector.GenPoints();
@@ -253,36 +253,36 @@ public static class RundownFactory
                 Bulkhead = Bulkhead.Extreme,
                 Complex = Complex.Tech,
                 Complexity = Complexity.Low,
-                Tier = "C",
+                Tier = "B",
                 Objective = WardenObjectiveType.SpecialTerminalCommand,
             };
             extremeDirector.GenPoints();
 
-            var overloadDirector = new BuildDirector
-            {
-                Bulkhead = Bulkhead.Overload,
-                Complex = Complex.Tech,
-                Complexity = Complexity.Low,
-                Tier = "C",
-                Objective = WardenObjectiveType.SpecialTerminalCommand,
-            };
-            overloadDirector.GenPoints();
+            // var overloadDirector = new BuildDirector
+            // {
+            //     Bulkhead = Bulkhead.Overload,
+            //     Complex = Complex.Tech,
+            //     Complexity = Complexity.Low,
+            //     Tier = "C",
+            //     Objective = WardenObjectiveType.SpecialTerminalCommand,
+            // };
+            // overloadDirector.GenPoints();
 
-            var settings = new LevelSettings("D");
-            settings.Modifiers.Add(LevelModifiers.Chargers);
+            var settings = new LevelSettings("B");
+            // settings.Modifiers.Add(LevelModifiers.Chargers);
             var description = new DataBlocks.Text(DescriptionHeader(objective) +
                                                   DataBlocks.WardenObjective.GenLevelDescription(objective));
             var level = Level.Build(
-                new("D")
+                new("B")
                 {
-                    Prefix = $"<color=orange>X</color><color=#444444>:</color>D",
+                    Prefix = $"<color=orange>X</color><color=#444444>:</color>B",
                     Description = description.PersistentId,
                     Complex = Complex.Tech,
                     MainDirector = mainDirector,
                     SecondaryDirector = extremeDirector,
-                    OverloadDirector = overloadDirector,
+                    // OverloadDirector = overloadDirector,
                     Settings = settings,
-                    Index = 1
+                    Index = rundown.TierB_Count
                 });
 
             rundown.AddLevel(level);
@@ -509,25 +509,25 @@ public static class RundownFactory
             var buildPools = new Dictionary<string, List<int>>
             {
                 {
-                    "2025_02", new()
-                    {
-                        1, 1,       // Tier A - y,y
-                        1, 1, 1,    // Tier B - y,y,y
-                        1, 1, 1, 1, // Tier C - y,y,y,y
-                        1, 1, 1, 1, // Tier D - y,y,y,y
-                        1, 1, 1     // Tier E - y,y,y
-                    }
-                },
-                {
                     "2025_03", new()
                     {
                         1,          // Tier A - y
                         1, 1, 1,    // Tier B - y,y,y
                         1, 1, 1, 1, // Tier C - y,y,y,y
-                        1, 1, 2,    // Tier D - y,y,y
-                        1, 1, 3     // Tier E - y,y,y
+                        1, 1, 1,    // Tier D - y,y,y
+                        1, 1, 1     // Tier E - y,y,y
                     }
-                }
+                },
+                {
+                    "2025_04", new()
+                    {
+                        1, 1,       // Tier A - ?
+                        1, 1, 1,    // Tier B - ?
+                        1, 1, 1, 1, // Tier C - ?
+                        1, 1, 1, 1, // Tier D - ?
+                        1, 1,       // Tier E - ?
+                    }
+                },
             };
 
             buildPools.TryGetValue(Generator.Seed, out var buildSeeds);

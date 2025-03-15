@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Enemies;
+using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks.Alarms
 {
@@ -40,6 +41,15 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// Cost: 2.0
         /// </summary>
         public Enemy WaveRoleBoss { get; set; }
+
+        /// <summary>
+        /// Difficulty factor of this enemy population.
+        ///
+        /// This is really so we can adjust the difficulty of Nightmare enemies which are
+        /// significantly harder than other enemy types.
+        /// </summary>
+        [JsonIgnore]
+        public double DifficultyFactor { get; set; } = 1.0;
         #endregion
 
         public WavePopulation(PidOffsets offsets = PidOffsets.WavePopulation)
