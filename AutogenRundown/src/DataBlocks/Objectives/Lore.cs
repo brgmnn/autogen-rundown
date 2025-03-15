@@ -19,6 +19,9 @@
 
         public static string KeycardZone = "[KEYCARD_ZONE]";
 
+        public static string LockedDoorMessage =
+            "<color=red>://ERROR: Door in emergency lockdown, unable to operate.</color>";
+
         public static string Zone(int zoneNumber) => $"<color=orange>ZONE {zoneNumber}</color>";
     }
 }

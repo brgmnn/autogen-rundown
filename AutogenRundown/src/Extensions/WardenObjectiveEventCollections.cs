@@ -4,6 +4,61 @@ namespace AutogenRundown.Extensions;
 
 public static class WardenObjectiveEventCollections
 {
+    private static int GetLayerFromBulkhead(Bulkhead bulkhead)
+        => bulkhead switch
+        {
+            Bulkhead.Main => 0,
+            Bulkhead.Extreme => 1,
+            Bulkhead.Overload => 2,
+        };
+
+    #region Doors
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="bulkhead"></param>
+    /// <param name="zoneIndex"></param>
+    /// <param name="delay"></param>
+    /// <param name="trigger"></param>
+    /// <param name="lockMessage"></param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddLockDoor(
+        this ICollection<WardenObjectiveEvent> events,
+        Bulkhead bulkhead,
+        int zoneIndex,
+        double delay = 0.0,
+        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
+        string? lockMessage = null)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.LockSecurityDoor,
+                DimensionIndex = 0,
+                Layer = GetLayerFromBulkhead(bulkhead),
+                LocalIndex = zoneIndex,
+                SpecialText = lockMessage ?? Lore.LockedDoorMessage
+            });
+
+        return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> AddLockExtreme(
+        this ICollection<WardenObjectiveEvent> events,
+        double delay = 0.0,
+        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
+        string? lockMessage = null)
+        => events.AddLockDoor(Bulkhead.Extreme, 0, delay, trigger, lockMessage);
+
+    public static ICollection<WardenObjectiveEvent> AddLockOverload(
+        this ICollection<WardenObjectiveEvent> events,
+        double delay = 0.0,
+        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
+        string? lockMessage = null)
+        => events.AddLockDoor(Bulkhead.Overload, 0, delay, trigger, lockMessage);
+    #endregion
+
     #region Event Loops
     /// <summary>
     /// Disable an event loop

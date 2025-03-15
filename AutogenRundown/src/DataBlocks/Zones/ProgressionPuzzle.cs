@@ -1,4 +1,6 @@
-﻿namespace AutogenRundown.DataBlocks.Zones;
+﻿using AutogenRundown.DataBlocks.Objectives;
+
+namespace AutogenRundown.DataBlocks.Zones;
 
 /// <summary>
 /// Defines puzzles required to open security doors.
@@ -10,7 +12,7 @@ public class ProgressionPuzzle
     public static readonly ProgressionPuzzle Locked = new()
     {
         PuzzleType = ProgressionPuzzleType.Locked,
-        CustomText = "<color=red>://ERROR: Door in emergency lockdown, unable to operate.</color>"
+        CustomText = Lore.LockedDoorMessage
     };
 
     /// <summary>

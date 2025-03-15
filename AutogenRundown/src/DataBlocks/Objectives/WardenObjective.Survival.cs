@@ -41,6 +41,44 @@ public partial record WardenObjective : DataBlock
         return total;
     }
 
+    /// <summary>
+    /// Calcualtes the time granted to do all the zones with the force open doors command
+    /// </summary>
+    /// <param name="director"></param>
+    /// <param name="level"></param>
+    /// <returns></returns>
+    public double Survival_CalculateSkipTime(BuildDirector director, Level level)
+    {
+        var nodes = level.Planner.GetZones(director.Bulkhead, "survival_arena");
+
+        // remove the first zone, as they will (should) have cleared it already
+        nodes.RemoveAt(0);
+
+        // Add the exit zone which we want to include
+        var exit = level.Planner.GetZones(director.Bulkhead, "exit").First();
+        nodes.Add(exit);
+
+        // Give a fixed buffer for getting together and extracting
+        var total = 15.0;
+
+        foreach (var node in nodes)
+        {
+            var zone = level.Planner.GetZone(node)!;
+            var zoneTotal = zone.ClearTime_AreaCoverage() +
+                            zone.ClearTime_Enemies() +
+                            zone.ClearTime_Bosses() +
+                            zone.ClearTime_BloodDoor();
+
+            // Add the total zone time to the time to survive
+            total += zoneTotal;
+
+            Plugin.Logger.LogDebug($"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead} -- "
+                                   + $"Survival: Zone {node.ZoneNumber} skip time budget: total={zoneTotal}s");
+        }
+
+        return total;
+    }
+
     public void Build_Survival(BuildDirector director, Level level)
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
@@ -58,8 +96,6 @@ public partial record WardenObjective : DataBlock
 
         // Put a relatively short exit scan time as we will hit them hard on times up
         ChainedPuzzleAtExitScanSpeedMultiplier = GenExitScanTime(30, 40);
-
-        // WavesOnElevatorLand.Add(GenericWave.ExitTrickle);
 
         //================== AWO version ================
         // var onProgress = new List<ProgressEvent>()
@@ -117,7 +153,7 @@ public partial record WardenObjective : DataBlock
         {
             Type = WardenObjectiveEventType.Countdown,
             Delay = 3.5,
-            Duration = 20.0,
+            Duration = 60.0,
             Countdown = new WardenObjectiveEventCountdown
             {
                 TitleText = "<color=red>WARNING!</color> Warden Protocol <color=orange>DECOY</color> will commence in:",
@@ -127,6 +163,43 @@ public partial record WardenObjective : DataBlock
         };
 
         EventsOnElevatorLand.Add(setupCountdown);
+
+        #region Side objective
+
+        var alarmSkipOnDone = new List<WardenObjectiveEvent>();
+        alarmSkipOnDone.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.StopEventLoop,
+                Count = SecurityControlEventLoopIndex
+            });
+
+        alarmSkipOnDone
+            .AddStopLoop(SecurityControlEventLoopIndex)
+            .AddAllLightsOff(1.0, WardenObjectiveEventTrigger.None)
+            .AddSound(Sound.LightsOff, 0.0, WardenObjectiveEventTrigger.None)
+            .AddMessage("://CRITICAL FAILURE - SECURITY SYSTEMS OFFLINE", 0.0)
+            .AddGenericWave(GenericWave.Survival_Impossible_TankPotato, 9.0)
+            .AddSound(Sound.TankRoar, 12.0)
+            .AddMessage(":://CRITICAL ERROR - LARGE B!OM4SS Ð!$_†URß@И¢€", 5.0);
+
+        var duration = 0.0;
+
+        SecurityControlEvents.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.Countdown,
+                Delay = 0.0,
+                // Duration = Survival_CalculateSkipTime(director, level),
+                Duration = 60,
+                Countdown = new WardenObjectiveEventCountdown
+                {
+                    TitleText = "<color=red>SECURITY OVERRIDE!</color>: Time until full security shutdown:",
+                    TimerColor = "red",
+                    EventsOnDone = alarmSkipOnDone
+                }
+            });
+        #endregion
     }
 
     /// <summary>
@@ -156,6 +229,10 @@ public partial record WardenObjective : DataBlock
             zone.EventsOnOpenDoor
                 .AddAdjustTimer(extremeClearTime)
                 .AddMessage("LOCKDOWN TIME EXTENDED");
+
+            // TODO: do we even need this? I think no in the current setup.
+            // // Lock extreme for skip security control events as it grants extra time.
+            // SecurityControlEvents.AddLockExtreme();
         }
 
         // Add additional time for clearing overload
@@ -172,6 +249,10 @@ public partial record WardenObjective : DataBlock
             zone.EventsOnOpenDoor
                 .AddAdjustTimer(overloadClearTime)
                 .AddMessage("LOCKDOWN TIME EXTENDED");
+
+            // TODO: do we even need this? I think no in the current setup.
+            // // Lock extreme for skip security control events as it grants extra time.
+            // SecurityControlEvents.AddLockOverload();
         }
     }
 }

@@ -118,6 +118,11 @@ public record class WardenObjectiveEvent
     #endregion
 
     #region ====== MODS: AWO AdvancedWardenObjective ======
+    /// <summary>
+    ///
+    /// </summary>
+    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    public string SpecialText { get; set; } = null;
 
     /// <summary>
     /// Used in conjunction with EventType.SetLightDataInZone (10016) to update the lights in a

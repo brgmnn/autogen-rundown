@@ -22,7 +22,7 @@ public enum WardenObjectiveEventType : uint
     SetNavMarker = 17,
     StepProgressionObjective = 18,
     SetWorldEventCondition = 19,
-    LockSecurityDoor = 20,
+    LockSecurityDoor_Base = 20,
     SetTerminalCommand = 21,
     ActivateChainedPuzzle = 22,
     LightOnWorldEventObjective = 23,
@@ -53,6 +53,8 @@ public enum WardenObjectiveEventType : uint
      * This region covers AWO (AdvancedWardenObjective) events. These give a plethora of new events
      * to use in the rundown giving a lot of fun flexibility in designing levels.
      */
+
+    LockSecurityDoor = 10001,
 
     SetLightDataInZone = 10016,
 

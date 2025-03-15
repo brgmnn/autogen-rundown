@@ -804,6 +804,14 @@ namespace AutogenRundown.DataBlocks
         public double Survival_TimeToActivate { get; set; } = 0.0;
 
         public double Survival_TimeToSurvive { get; set; } = 0.0;
+
+        /// <summary>
+        /// Used exclusively to modify the terminal warden objective event list
+        /// </summary>
+        [JsonIgnore]
+        public List<WardenObjectiveEvent> SecurityControlEvents { get; set; } = new List<WardenObjectiveEvent>();
+
+        [JsonIgnore] public int SecurityControlEventLoopIndex { get; set; } = 0;
         #endregion
 
         #region Type=15: Timed terminal sequence
