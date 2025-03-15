@@ -5,11 +5,11 @@ namespace AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup.ExtensionSecurity
 public class SensorPosition
 {
     [JsonProperty("x")]
-    public int X { get; set; }
+    public double X { get; set; }
 
     [JsonProperty("y")]
-    public int Y { get; set; }
+    public double Y { get; set; }
 
     [JsonProperty("z")]
-    public int Z { get; set; }
+    public double Z { get; set; }
 }
