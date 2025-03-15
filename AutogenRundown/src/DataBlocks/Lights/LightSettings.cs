@@ -103,43 +103,43 @@ public record LightSettings : DataBlock
     };
     #endregion
 
-    // public static readonly LightSettings LightsOff = new()
-    // {
-    //     PersistentId = Generator.GetPersistentId(),
-    //     CategorySettings = new List<LightCategorySetting>()
-    //     {
-    //         LightCategorySetting.Off(LightCategory.General),
-    //         LightCategorySetting.Off(LightCategory.Special),
-    //         LightCategorySetting.Off(LightCategory.Emergency),
-    //         LightCategorySetting.Off(LightCategory.Independent),
-    //         LightCategorySetting.Off(LightCategory.Door),
-    //         LightCategorySetting.Off(LightCategory.Sign),
-    //         LightCategorySetting.Off(LightCategory.DoorImportant),
-    //     }
-    // };
-    //
-    // public static readonly LightSettings ErrorFlashOn = new()
-    // {
-    //     PersistentId = Generator.GetPersistentId(),
-    //     CategorySettings = new List<LightCategorySetting>()
-    //     {
-    //         new()
-    //         {
-    //             Color = new() { Red = 1.0, Green = 0.27, Blue = 0.27 },
-    //             Category = LightCategory.General,
-    //             Chance = 1.0,
-    //             Intensity = 0.9,
-    //             On = true
-    //         },
-    //
-    //         LightCategorySetting.Off(LightCategory.Special),
-    //         LightCategorySetting.Off(LightCategory.Emergency),
-    //         LightCategorySetting.Off(LightCategory.Independent),
-    //         LightCategorySetting.Off(LightCategory.Door),
-    //         LightCategorySetting.Off(LightCategory.Sign),
-    //         LightCategorySetting.Off(LightCategory.DoorImportant),
-    //     }
-    // };
+    public static readonly LightSettings LightsOff = new()
+    {
+        PersistentId = Generator.GetPersistentId(),
+        CategorySettings = new List<LightCategorySetting>()
+        {
+            LightCategorySetting.Off(LightCategory.General),
+            LightCategorySetting.Off(LightCategory.Special),
+            LightCategorySetting.Off(LightCategory.Emergency),
+            LightCategorySetting.Off(LightCategory.Independent),
+            LightCategorySetting.Off(LightCategory.Door),
+            LightCategorySetting.Off(LightCategory.Sign),
+            LightCategorySetting.Off(LightCategory.DoorImportant),
+        }
+    };
+
+    public static readonly LightSettings ErrorFlashOn = new()
+    {
+        PersistentId = Generator.GetPersistentId(),
+        CategorySettings = new List<LightCategorySetting>()
+        {
+            new()
+            {
+                Color = new() { Red = 1.0, Green = 0.27, Blue = 0.27 },
+                Category = LightCategory.General,
+                Chance = 1.0,
+                Intensity = 0.9,
+                On = true
+            },
+
+            LightCategorySetting.Off(LightCategory.Special),
+            LightCategorySetting.Off(LightCategory.Emergency),
+            LightCategorySetting.Off(LightCategory.Independent),
+            LightCategorySetting.Off(LightCategory.Door),
+            LightCategorySetting.Off(LightCategory.Sign),
+            LightCategorySetting.Off(LightCategory.DoorImportant),
+        }
+    };
     //
     // public static readonly LightSettings RedZoneDoor = new()
     // {
@@ -161,9 +161,9 @@ public record LightSettings : DataBlock
     {
         AuxiliaryPower.Persist();
 
-        // LightsOff.Persist();
-        // ErrorFlashOn.Persist();
-        //
+        LightsOff.Persist();
+        ErrorFlashOn.Persist();
+
         // RedZoneDoor.Persist();
     }
 

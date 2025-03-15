@@ -4,6 +4,58 @@ namespace AutogenRundown.Extensions;
 
 public static class WardenObjectiveEventCollections
 {
+    #region Event Loops
+    /// <summary>
+    /// Disable an event loop
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="loopId"></param>
+    /// <param name="delay"></param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddStopLoop(
+        this ICollection<WardenObjectiveEvent> events,
+        int loopId,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.StopEventLoop,
+                Count = loopId,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    #endregion
+
+    #region Lights
+    /// <summary>
+    /// Add all lights off. Turns off all lights in all zones
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="delay"></param>
+    /// <param name="trigger"></param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddAllLightsOff(
+        this ICollection<WardenObjectiveEvent> events,
+        double delay = 0.0,
+        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.AllLightsOff,
+                Trigger = trigger,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    #endregion
+
     #region Security Sensors
     /// <summary>
     /// Adds a security sensor toggle event
@@ -33,7 +85,6 @@ public static class WardenObjectiveEventCollections
     #endregion
 
     #region Timers
-
     /// <summary>
     /// Adjusts the current AWO timer time. Can accept both positive and negative duration
     /// adjustments. The value of `duration` will be added to the current timer. So calling
@@ -60,6 +111,5 @@ public static class WardenObjectiveEventCollections
 
         return events;
     }
-
     #endregion
 }

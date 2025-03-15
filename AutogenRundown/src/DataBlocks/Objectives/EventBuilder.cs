@@ -148,13 +148,14 @@ namespace AutogenRundown.DataBlocks.Objectives
         public static ICollection<WardenObjectiveEvent> AddSound(
             this ICollection<WardenObjectiveEvent> events,
             Sound sound,
-            double delay = 0.0)
+            double delay = 0.0,
+            WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart)
         {
             events.Add(
                 new WardenObjectiveEvent
                 {
                     Type = WardenObjectiveEventType.PlaySound,
-                    Trigger = WardenObjectiveEventTrigger.OnStart,
+                    Trigger = trigger,
                     Delay = delay,
                     SoundId = sound
                 });
