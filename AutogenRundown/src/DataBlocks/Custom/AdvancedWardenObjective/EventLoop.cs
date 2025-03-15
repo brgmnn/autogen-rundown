@@ -14,6 +14,9 @@ public record EventLoop
 {
     public int LoopIndex { get; set; } = 0;
 
+    /// <summary>
+    /// How often it repeats
+    /// </summary>
     public double LoopDelay { get; set; } = 1.0;
 
     public int LoopCount { get; set; } = -1;

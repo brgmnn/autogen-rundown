@@ -1065,7 +1065,80 @@ namespace AutogenRundown.DataBlocks
         }
         #endregion
 
-        #region Time Calculation
+        #region Clear Time Calculation
+        // Clear time is the time taken to clear and get through the zone.
+        // Most components have a scale factor associated with them to allow fine-tuning of time
+        // grants to give as accurate an estimate as possible.
+        //
+        // Time estimates are supposed to be as accurate as possible for a team to quickly and
+        // efficiently clear a zone.
+
+        private const double clearTimeFactor_AlarmsTime     = 1.20; // Time factor for duration of each scan
+        private const double clearTimeFactor_AlarmsTraverse = 1.20; // Distance factor for walking between scans
+        private const double clearTimeFactor_AreaCoverage   = 1.30; // Map area factor for size of zone
+        private const double clearTimeFactor_EnemyPoints    = 2.40; // Points factor for each enemy point
+        private const double clearTimeFactor_Bosses         = 1.00; // Per boss factor
+
+        /// <summary>
+        /// Estimates the time (in seconds) to clear a zone based on it's Area coverage.
+        /// </summary>
+        /// <returns></returns>
+        public double ClearTime_AreaCoverage()
+            => Coverage.Max * clearTimeFactor_AreaCoverage;
+
+        /// <summary>
+        /// Time based on door alarms
+        /// We sum for the component durations, the distance from start pos, and the distance
+        /// between the alarm components
+        /// </summary>
+        /// <returns></returns>
+        public double ClearTime_Alarm()
+            => 10.0 + Alarm.Puzzle.Sum(component => component.Duration)
+                        * clearTimeFactor_AlarmsTime
+                    + Alarm.WantedDistanceFromStartPos
+                        * clearTimeFactor_AlarmsTraverse
+                    + (Alarm.Puzzle.Count - 1)
+                        * Alarm.WantedDistanceBetweenPuzzleComponents
+                        * clearTimeFactor_AlarmsTraverse;
+
+        /// <summary>
+        /// Estimates the time (in seconds) to clear a zone only of the enemies marked as bosses.
+        /// </summary>
+        /// <returns></returns>
+        public double ClearTime_Bosses()
+            => EnemySpawningInZone
+                .Where(spawn => spawn.Tags.Contains("boss"))
+                .Sum(spawn =>
+                    (Enemy)spawn.Difficulty switch
+                    {
+                        Enemy.Mother => 60.0 * (spawn.Points / 10.0),
+                        Enemy.PMother => 75.0 * (spawn.Points / 10.0),
+                        Enemy.Tank => 45.0 * (spawn.Points / 10.0),
+                        Enemy.TankPotato => 30.0 * (spawn.Points / 10.0),
+
+                        // Some unknown enemy, we won't add time for unknowns
+                        _ => 0.0
+                    })
+                * clearTimeFactor_Bosses;
+
+        /// <summary>
+        /// TODO: this needs to be improved
+        /// </summary>
+        /// <returns></returns>
+        public double ClearTime_BloodDoor()
+            => BloodDoor != BloodDoor.None ? 20.0 : 0.0;
+
+        /// <summary>
+        /// Estimates the time (in seconds) to clear a zones hibernating enemies
+        ///
+        /// Note that this will add points based on bosses, but there's a separate extra
+        /// factor for clearing bosses due to their points not being very high
+        /// </summary>
+        /// <returns></returns>
+        public double ClearTime_Enemies()
+            => EnemySpawningInZone.Sum(spawn => spawn.Points)
+               * clearTimeFactor_EnemyPoints;
+
         /// <summary>
         /// Estimate the time it would take to clear this zone. This tries to give a close estimate
         /// for expedient clearing of the area. There are scale factors to adjust the times which
@@ -1358,7 +1431,7 @@ namespace AutogenRundown.DataBlocks
         public bool ForceBigPickupsAllocation { get; set; } = false;
         public uint BigPickupDistributionInZone { get; set; } = 0;
 
-        public List<TerminalPlacement> TerminalPlacements { get; set; } = new List<TerminalPlacement>();
+        public List<TerminalPlacement> TerminalPlacements { get; set; } = new();
 
         public bool ForbidTerminalsInZone { get; set; } = false;
         public JArray DisinfectionStationPlacements { get; set; } = new JArray();
