@@ -12,5 +12,5 @@ public record CustomTerminalCommand
 
     public List<WardenObjectiveEvent> CommandEvents { get; set; } = new();
 
-    public int SpecialCommandRule { get; set; } = 0;
+    public CommandRule SpecialCommandRule { get; set; } = CommandRule.Normal;
 }
