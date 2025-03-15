@@ -114,7 +114,7 @@ public static class RundownFactory
 
         #region Geomorph Debugging test level
         #if DEBUG
-        #if false
+        #if true
         if (withFixed)
         {
             var settings = new LevelSettings("A");
@@ -235,7 +235,7 @@ public static class RundownFactory
         #region D-Tier Levels
         #region Survival Fixed
         #if DEBUG
-        #if false
+        #if true
         if (withFixed)
         {
             var objective = WardenObjectiveType.Survival;
@@ -248,6 +248,26 @@ public static class RundownFactory
             };
             mainDirector.GenPoints();
 
+            var extremeDirector = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Extreme,
+                Complex = Complex.Tech,
+                Complexity = Complexity.Low,
+                Tier = "C",
+                Objective = WardenObjectiveType.SpecialTerminalCommand,
+            };
+            extremeDirector.GenPoints();
+
+            var overloadDirector = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Overload,
+                Complex = Complex.Tech,
+                Complexity = Complexity.Low,
+                Tier = "C",
+                Objective = WardenObjectiveType.SpecialTerminalCommand,
+            };
+            overloadDirector.GenPoints();
+
             var settings = new LevelSettings("D");
             settings.Modifiers.Add(LevelModifiers.Chargers);
             var description = new DataBlocks.Text(DescriptionHeader(objective) +
@@ -259,6 +279,8 @@ public static class RundownFactory
                     Description = description.PersistentId,
                     Complex = Complex.Tech,
                     MainDirector = mainDirector,
+                    SecondaryDirector = extremeDirector,
+                    OverloadDirector = overloadDirector,
                     Settings = settings,
                     Index = 1
                 });
