@@ -36,8 +36,7 @@ namespace AutogenRundown.DataBlocks
             = new BlocksBin<WardenObjective>();
         public static BlocksBin<WavePopulation> WavePopulations { get; private set; }
             = new BlocksBin<WavePopulation>();
-        public static BlocksBin<WaveSettings> WaveSettings { get; private set; }
-            = new BlocksBin<WaveSettings>();
+        public static LazyBlocksBin<WaveSettings> WaveSettings { get; private set; } = new();
 
         /// <summary>
         /// Primarily used to load and set up vanilla data within custom data blocks.

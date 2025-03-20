@@ -7,6 +7,7 @@ using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -851,6 +852,13 @@ namespace AutogenRundown.DataBlocks
             {
                 var population = Generator.DrawSelect(wavePopulationPack)!;
                 var settings = Generator.DrawSelect(waveSettingsPack)!;
+
+                // Rescale settings by difficulty factor
+                if (!population.DifficultyFactor.ApproxEqual(1.0))
+                {
+                    settings = settings.ScaleDownFor(population.DifficultyFactor).FindOrPersist();
+                    Plugin.Logger.LogDebug($"Rescaling wave settings! difficulty={population.DifficultyFactor}, settings={settings}");
+                }
 
                 puzzle = puzzle with { Population = population, Settings = settings };
                 Plugin.Logger.LogDebug($"Zone {LocalIndex} alarm(rolled): {puzzle}");

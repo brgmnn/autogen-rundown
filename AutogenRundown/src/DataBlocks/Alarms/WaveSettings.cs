@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AutogenRundown.Extensions;
+using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks.Alarms
 {
@@ -193,12 +194,46 @@ namespace AutogenRundown.DataBlocks.Alarms
             : base(Generator.GetPersistentId(offsets))
         { }
 
-        /*public static void Setup()
-            => Setup<GameDataWaveSettings, WaveSettings>(Bins.WaveSettings, "SurvivalWaveSettings");*/
+        public virtual bool Equals(WaveSettings? other)
+        {
+            if (ReferenceEquals(this, other))
+                return true;
+            if (other is null || GetType() != other.GetType())
+                return false;
+
+            return PersistentId == other.PersistentId && RecordEqual(other);
+        }
+
+        public bool RecordEqual(WaveSettings? other)
+        {
+            if (other is null || GetType() != other.GetType())
+                return false;
+
+            return PauseBeforeStart.ApproxEqual(other.PauseBeforeStart) &&
+                PauseBetweenGroups.ApproxEqual(other.PauseBetweenGroups) &&
+                WavePauseMin_atCost.ApproxEqual(other.WavePauseMin_atCost) &&
+                WavePauseMax_atCost.ApproxEqual(other.WavePauseMax_atCost) &&
+                WavePauseMin.ApproxEqual(other.WavePauseMin) &&
+                WavePauseMax.ApproxEqual(other.WavePauseMax) &&
+                PopulationFilter.SequenceEqual(other.PopulationFilter) &&
+                FilterType == other.FilterType &&
+                ChanceToRandomizeSpawnDirectionPerWave.ApproxEqual(other.ChanceToRandomizeSpawnDirectionPerWave) &&
+                ChanceToRandomizeSpawnDirectionPerGroup.ApproxEqual(other.ChanceToRandomizeSpawnDirectionPerGroup) &&
+                OverrideWaveSpawnType == other.OverrideWaveSpawnType &&
+                SurvivalWaveSpawnType == other.SurvivalWaveSpawnType &&
+                PopulationPointsTotal.ApproxEqual(other.PopulationPointsTotal) &&
+                PopulationPointsPerWaveStart.ApproxEqual(other.PopulationPointsPerWaveStart) &&
+                PopulationPointsPerWaveEnd.ApproxEqual(other.PopulationPointsPerWaveEnd) &&
+                PopulationPointsMinPerGroup.ApproxEqual(other.PopulationPointsMinPerGroup) &&
+                PopulationPointsPerGroupStart.ApproxEqual(other.PopulationPointsPerGroupStart) &&
+                PopulationPointsPerGroupEnd.ApproxEqual(other.PopulationPointsPerGroupEnd) &&
+                PopulationRampOverTime.ApproxEqual(other.PopulationRampOverTime);
+        }
+
         public static void Setup() { }
 
         public override string ToString()
-            => $"WaveSettings {{ Name = {Name}, PersistentId = {PersistentId} }}";
+            => $"WaveSettings {{ Name = {Name}, PersistentId = {PersistentId}, PointsPerWaveStart = {PopulationPointsPerWaveStart} }}";
 
         public void Persist(BlocksBin<WaveSettings>? bin = null)
         {
@@ -217,7 +252,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             if (settings == None)
                 return None;
 
-            var existing = Bins.WaveSettings.GetBlock(settings);
+            var existing = Bins.WaveSettings.GetBlock(settings.RecordEqual);
 
             if (existing != null)
                 return existing;
@@ -235,6 +270,27 @@ namespace AutogenRundown.DataBlocks.Alarms
         /// </summary>
         /// <returns></returns>
         public WaveSettings FindOrPersist() => FindOrPersist(this);
+
+        /// <summary>
+        /// Scales down the wave settings for the given difficulty.
+        /// </summary>
+        /// <param name="difficulty">Numeric difficulty</param>
+        /// <returns></returns>
+        public WaveSettings ScaleDownFor(double difficulty)
+        {
+            if (difficulty.ApproxEqual(1.0))
+                return this;
+
+            return this with
+            {
+                PersistentId = 0,
+                PopulationPointsTotal = PopulationPointsTotal > 0.0 ?
+                    PopulationPointsTotal / difficulty :
+                    PopulationPointsTotal,
+                PopulationPointsPerWaveStart = PopulationPointsPerWaveStart / difficulty,
+                PopulationPointsPerWaveEnd = PopulationPointsPerWaveEnd / difficulty
+            };
+        }
 
         /// <summary>
         /// Return a DrawSelect list of wave settings to attach on alarms. Pack is for one LevelLayout. So we need probably

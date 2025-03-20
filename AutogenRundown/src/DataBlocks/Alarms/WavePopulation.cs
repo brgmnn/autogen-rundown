@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.Extensions;
 using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks.Alarms
@@ -47,6 +48,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         ///
         /// This is really so we can adjust the difficulty of Nightmare enemies which are
         /// significantly harder than other enemy types.
+        ///
+        /// Default = 1.0
         /// </summary>
         [JsonIgnore]
         public double DifficultyFactor { get; set; } = 1.0;
@@ -57,7 +60,9 @@ namespace AutogenRundown.DataBlocks.Alarms
         { }
 
         public override string ToString()
-            => $"WavePopulation {{ Name = {Name}, PersistentId = {PersistentId} }}";
+            => DifficultyFactor.ApproxEqual(1.0) ?
+                $"WavePopulation {{ Name = {Name}, PersistentId = {PersistentId} }}" :
+                $"WavePopulation {{ Name = {Name}, PersistentId = {PersistentId}, Difficulty = {DifficultyFactor} }}";
 
         public static void Setup()
             => Setup<GameDataWavePopulation, WavePopulation>(Bins.WavePopulations, "SurvivalWavePopulation");
@@ -270,7 +275,9 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleSpecial = Enemy.NightmareShooter,
             WaveRoleMiniBoss = Enemy.NightmareShooter,
             WaveRoleBoss = Enemy.NightmareShooter,
-            //WaveRoleMiniBoss = Enemy.ShooterGiant_Infected,
+            // TODO: change back to 1.2 or something
+            // DifficultyFactor = 1.20,
+            DifficultyFactor = 10.0,
             Name = "OnlyNightmares"
         };
 
