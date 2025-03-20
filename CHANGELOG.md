@@ -3,6 +3,29 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.52.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.52.0) — March 15, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Added limited support for Security Sensors in some of the starting zones
+  * Includes new dependency on: [EOSExt_SecuritySensor](https://thunderstore.io/c/gtfo/p/Inas07/EOSExt_SecuritySensor)
+* Added optional "Skip" for Survival objectives
+  *  Side zone with terminal command to force open all security doors to the extract. However survival time is cut short.
+
+### Changes
+
+* Fixed typo in ComplexResourceSet for dakgeos
+  *  Causes crashes on level startup, fixes https://github.com/brgmnn/autogen-rundown/issues/16#issuecomment-2691918752
+* Removed global backwards direction for layout generation
+  * Fixes https://github.com/brgmnn/autogen-rundown/issues/16#issuecomment-2697541679
+* Fixed Survival Timer for Secondary/Overload
+* Changed "ZONE_123" intel messages to "ZONE 123"
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.51.0...v0.52.0
+
+
 ## [v0.51.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.51.0) — February 25, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
