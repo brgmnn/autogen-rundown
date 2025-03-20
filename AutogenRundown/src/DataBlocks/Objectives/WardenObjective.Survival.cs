@@ -190,8 +190,7 @@ public partial record WardenObjective : DataBlock
             {
                 Type = WardenObjectiveEventType.Countdown,
                 Delay = 0.0,
-                // Duration = Survival_CalculateSkipTime(director, level),
-                Duration = 60,
+                Duration = Survival_CalculateSkipTime(director, level),
                 Countdown = new WardenObjectiveEventCountdown
                 {
                     TitleText = "<color=red>SECURITY OVERRIDE!</color>: Time until full security shutdown:",
