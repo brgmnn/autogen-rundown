@@ -275,9 +275,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleSpecial = Enemy.NightmareShooter,
             WaveRoleMiniBoss = Enemy.NightmareShooter,
             WaveRoleBoss = Enemy.NightmareShooter,
-            // TODO: change back to 1.2 or something
-            // DifficultyFactor = 1.20,
-            DifficultyFactor = 10.0,
+            DifficultyFactor = 1.20,
             Name = "OnlyNightmares"
         };
 
