@@ -3,6 +3,18 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.53.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.53.0) — March 20, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Balance: Reduce points of most nightmare alarms to account for their difficulty
+* Fixed survival skip zones timer being hard coded at 60s
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.52.0...v0.53.0
+
+
 ## [v0.52.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.52.0) — March 15, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
