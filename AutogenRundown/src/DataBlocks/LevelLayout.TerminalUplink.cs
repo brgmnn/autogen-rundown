@@ -27,11 +27,7 @@ public partial record LevelLayout : DataBlock
             {
                 var last = BuildBranch((ZoneNode)start,
                     GenNumZones(director.Tier, director.Bulkhead, SizeFactor.Large));
-                var uplinkZoneNode = BuildBranch(last, 1, "uplink_terminals");
-
-                // We can have a fun terminal uplink zone
-                var zone = planner.GetZone(uplinkZoneNode);
-                zone.GenKingOfTheHillGeomorph(director.Complex);
+                BuildBranch(last, 1, "uplink_terminals");
 
                 break;
             }
