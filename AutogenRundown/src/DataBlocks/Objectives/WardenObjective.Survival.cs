@@ -166,13 +166,14 @@ public partial record WardenObjective : DataBlock
 
         #region Side objective
 
-        var alarmSkipOnDone = new List<WardenObjectiveEvent>();
-        alarmSkipOnDone.Add(
-            new WardenObjectiveEvent
+        var alarmSkipOnDone = new List<WardenObjectiveEvent>
+        {
+            new()
             {
                 Type = WardenObjectiveEventType.StopEventLoop,
                 Count = SecurityControlEventLoopIndex
-            });
+            }
+        };
 
         alarmSkipOnDone
             .AddStopLoop(SecurityControlEventLoopIndex)
@@ -228,10 +229,6 @@ public partial record WardenObjective : DataBlock
             zone.EventsOnOpenDoor
                 .AddAdjustTimer(extremeClearTime)
                 .AddMessage("LOCKDOWN TIME EXTENDED");
-
-            // TODO: do we even need this? I think no in the current setup.
-            // // Lock extreme for skip security control events as it grants extra time.
-            // SecurityControlEvents.AddLockExtreme();
         }
 
         // Add additional time for clearing overload
@@ -248,10 +245,6 @@ public partial record WardenObjective : DataBlock
             zone.EventsOnOpenDoor
                 .AddAdjustTimer(overloadClearTime)
                 .AddMessage("LOCKDOWN TIME EXTENDED");
-
-            // TODO: do we even need this? I think no in the current setup.
-            // // Lock extreme for skip security control events as it grants extra time.
-            // SecurityControlEvents.AddLockOverload();
         }
 
         #region Warden Intel Messages
