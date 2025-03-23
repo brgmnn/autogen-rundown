@@ -26,7 +26,19 @@ public partial record LevelLayout : DataBlock
             throw new Exception("No zone node returned");
         }
 
-        var arenaNodes = AddBranch((ZoneNode)start, director.ZoneCount, "survival_arena");
+        var arenaNodes = AddBranch(
+            (ZoneNode)start,
+            director.ZoneCount,
+            "survival_arena",
+            (node, zone) =>
+            {
+                zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+
+                // Add extra resources to survival arena zones
+                zone.AmmoPacks += 3;
+                zone.ToolPacks += 2;
+                zone.HealthPacks += 3;
+            });
 
         var first = arenaNodes.First();
         var last = arenaNodes.Last();
@@ -165,52 +177,5 @@ public partial record LevelLayout : DataBlock
             });
         }
         #endregion
-
-        level.Planner.GetZones(director.Bulkhead, null).ForEach(node =>
-        {
-            var zone = level.Planner.GetZone(node)!;
-
-            switch (level.Tier)
-            {
-                case "A":
-                {
-                    zone.AmmoPacks *= 2.0;
-                    zone.ToolPacks *= 2.0;
-                    zone.HealthPacks *= 2.0;
-                    break;
-                }
-
-                case "B":
-                {
-                    zone.AmmoPacks *= 1.6;
-                    zone.ToolPacks *= 1.6;
-                    zone.HealthPacks *= 1.6;
-                    break;
-                }
-
-                case "C":
-                {
-                    // TODO: change all of these so we can assign actual numbers of ammo / health / tool use
-                    zone.AmmoPacks *= 1.4;
-                    zone.ToolPacks *= 1.4;
-                    zone.HealthPacks *= 1.4;
-                    break;
-                }
-
-                case "D":
-                {
-                    zone.AmmoPacks *= 1.2;
-                    zone.ToolPacks *= 1.2;
-                    zone.HealthPacks *= 1.2;
-                    break;
-                }
-
-                case "E":
-                {
-                    // No extra resources in E
-                    break;
-                }
-            }
-        });
     }
 }
