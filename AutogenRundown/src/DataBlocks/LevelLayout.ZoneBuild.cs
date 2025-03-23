@@ -106,7 +106,7 @@ public partial record LevelLayout
             nextZone.RollFog(level);
 
             level.Planner.Connect(prev, next);
-            level.Planner.AddZone(next, nextZone);
+            nextZone = level.Planner.AddZone(next, nextZone);
 
             insertedNodes.Add(next);
 
