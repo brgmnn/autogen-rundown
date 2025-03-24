@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup.ExtensionSecuritySensor;
+using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
@@ -123,6 +124,15 @@ namespace AutogenRundown.DataBlocks
 
         #region === MODS ===
         #region ExtraObjectiveSetup Definitions
+        /// <summary>
+        /// Individual Generator LayoutDefinitions
+        /// </summary>
+        [JsonIgnore]
+        public LayoutDefinitions EOS_EventsOnScoutScream { get; private set; } = new()
+        {
+            Type = ExtraObjectiveSetupType.EventsOnScoutScream
+        };
+
         /// <summary>
         /// Individual Generator LayoutDefinitions
         /// </summary>
@@ -680,6 +690,9 @@ namespace AutogenRundown.DataBlocks
              * definitions to them.
              */
 
+            EOS_EventsOnScoutScream.Name = $"{Tier}{Index}_{Name.Replace(" ", "_")}";
+            EOS_EventsOnScoutScream.MainLevelLayout = LevelLayoutData;
+
             EOS_IndividualGenerator.Name = $"{Tier}{Index}_{Name.Replace(" ", "_")}";
             EOS_IndividualGenerator.MainLevelLayout = LevelLayoutData;
 
@@ -688,6 +701,9 @@ namespace AutogenRundown.DataBlocks
 
             EOS_SecuritySensor.Name = $"{Tier}{Index}_{Name.Replace(" ", "_")}";
             EOS_SecuritySensor.MainLevelLayout = LevelLayoutData;
+
+            if (EOS_EventsOnScoutScream.Definitions.Any())
+                EOS_EventsOnScoutScream.Save();
 
             if (EOS_IndividualGenerator.Definitions.Any())
                 EOS_IndividualGenerator.Save();
@@ -959,6 +975,22 @@ namespace AutogenRundown.DataBlocks
 
                 // elevatorDropZone.EnemySpawningInZone.Add(
                 //     EnemySpawningData.TankPotato_AlignedSpawn with { Points = 10 });
+
+                var events = new List<WardenObjectiveEvent>().AddGenericWave(GenericWave.SingleMother).ToList();
+
+                level.EOS_EventsOnScoutScream.Definitions.Add(
+                    new EventsOnScoutScream
+                    {
+                        ZoneNumber = -1,
+                        Bulkhead = Bulkhead.All,
+                        DimensionIndex = null,
+
+                        SuppressVanillaScoutWave = true,
+                        Events = events
+                    });
+
+                elevatorDropZone.EnemySpawningInZone.Add(
+                    EnemySpawningData.Scout with { Points = 5 });
 
                 level.Planner.AddZone(elevatorDrop, elevatorDropZone);
                 layout.Zones.Add(elevatorDropZone);
