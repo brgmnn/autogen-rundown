@@ -16,27 +16,15 @@ public class Ability
 
     #endregion
 
-    #region Filesystem
     /// <summary>
-    /// Primarily cleans the directories
+    ///
     /// </summary>
     public void Setup()
     {
-        // Replace with Plugin.GameRevision to avoid interop dependency
-        var revision = CellBuildData.GetRevision();
 
-        try
-        {
-            Directory.Delete(
-                Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}", "Custom", "ExtraEnemyCustomization"),
-                recursive: true);
-        }
-        catch (DirectoryNotFoundException)
-        {
-            Plugin.Logger.LogWarning("LayoutDefinitions.Setup(): Could not delete ExtraEnemyCustomization dir.");
-        }
     }
 
+    #region Filesystem
     /// <summary>
     /// We only have one instance of the file, so we will use a singleton pattern for this class
     /// </summary>

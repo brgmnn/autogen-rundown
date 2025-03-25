@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks;
+using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
@@ -120,12 +121,12 @@ public static class RundownFactory
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/Bundles/RLC_Tech/geo_64x64_tech_datacenter_I_RLC_01.prefab",
+                "Assets/geo_64x64_service_floodways_boss_hub_DS_01.prefab",
                 new Level("A")
                 {
                     Tier = "A",
                     Name = "Debug Test",
-                    Complex = Complex.Tech,
+                    Complex = Complex.Service,
                     Settings = settings,
                     Index = rundown.TierA_Count + 1,
                     IsTest = true
@@ -475,6 +476,12 @@ public static class RundownFactory
         ComplexResourceSet.Setup();
         LayoutDefinitions.Setup();
 
+        #region MOD: ExtraEnemyCustomization (EEC)
+        EnemyCustomization.Setup();
+        EnemyCustomization.Ability.Setup();
+        EnemyCustomization.Model.Setup();
+        #endregion
+
         var gameSetup = new GameSetup()
         {
             PersistentId = 1,
@@ -622,6 +629,9 @@ public static class RundownFactory
         Bins.GameSetups.AddBlock(gameSetup);
 
         Bins.Save();
+
+        EnemyCustomization.Ability.Save();
+        EnemyCustomization.Model.Save();
 
         // Write the rundown local progression config
         LocalProgression.WriteConfig();
