@@ -6,4 +6,9 @@ public static class EnemyCustomization
     ///
     /// </summary>
     public static Ability Ability { get; private set; } = new();
+
+    /// <summary>
+    ///
+    /// </summary>
+    public static Model Model { get; private set; } = new();
 }
