@@ -24,6 +24,13 @@
         public static readonly EnemyInfo Hybrid        = new() { Role = EnemyRole.PureSneak, Enemy = Enemy.Hybrid, Points = 3.0 };
         public static readonly EnemyInfo Hybrid_Hunter = new() { Role = EnemyRole.Hunter,    Enemy = Enemy.Hybrid, Points = 4.0 };
 
+        public static readonly EnemyInfo NightmareShooter      = new() { Role = EnemyRole.Ranged, Enemy = Enemy.NightmareShooter,      Points = 1.0  };
+        public static readonly EnemyInfo NightmareStriker      = new() { Role = EnemyRole.Melee,  Enemy = Enemy.NightmareStriker,      Points = 1.0  };
+        public static readonly EnemyInfo NightmareStrikerGiant = new() { Role = EnemyRole.Ranged, Enemy = Enemy.NightmareStrikerGiant, Points = 10.0 };
+
+        public static readonly EnemyInfo Flyer    = new() { Role = EnemyRole.Ranged, Enemy = Enemy.Flyer,    Points = 1.0  };
+        public static readonly EnemyInfo FlyerBig = new() { Role = EnemyRole.Ranged, Enemy = Enemy.FlyerBig, Points = 10.0 };
+
         public static readonly EnemyInfo Mother           = new() { Role = EnemyRole.PureSneak, Enemy = Enemy.Mother,  Points = 10.0 };
         public static readonly EnemyInfo Mother_Hunter    = new() { Role = EnemyRole.Hunter,    Enemy = Enemy.Mother,  Points = 10.0 };
         public static readonly EnemyInfo Mother_MiniBoss  = new() { Role = EnemyRole.MiniBoss,  Enemy = Enemy.Mother,  Points = 10.0 };
