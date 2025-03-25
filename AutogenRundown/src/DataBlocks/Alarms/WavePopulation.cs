@@ -168,6 +168,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WavePopulations.AddBlock(SingleEnemy_Tank);
             Bins.WavePopulations.AddBlock(SingleEnemy_TankPotato);
             Bins.WavePopulations.AddBlock(SingleEnemy_Pouncer);
+            Bins.WavePopulations.AddBlock(SingleEnemy_PouncerShadow);
         }
 
         public static WavePopulation None = new() { Name = "None", PersistentId = 0 };
@@ -305,7 +306,12 @@ namespace AutogenRundown.DataBlocks.Alarms
         public static WavePopulation SingleEnemy_Tank =       new() { WaveRoleMiniBoss = Enemy.Tank,       Name = "SingleEnemy_Tank" };
         public static WavePopulation SingleEnemy_TankPotato = new() { WaveRoleMiniBoss = Enemy.TankPotato, Name = "SingleEnemy_TankPotato" };
 
-        public static WavePopulation SingleEnemy_Pouncer =    new() { WaveRoleMiniBoss = Enemy.Pouncer, Name = "SingleEnemy_Pouncer" };
+        public static WavePopulation SingleEnemy_Pouncer =       new() { WaveRoleMiniBoss = Enemy.Pouncer, Name = "SingleEnemy_Pouncer" };
+        public static WavePopulation SingleEnemy_PouncerShadow = new()
+        {
+            WaveRoleMiniBoss = (Enemy)Enemy_New.PouncerShadow.PersistentId,
+            Name = "SingleEnemy_PouncerShadow"
+        };
         #endregion
     }
 

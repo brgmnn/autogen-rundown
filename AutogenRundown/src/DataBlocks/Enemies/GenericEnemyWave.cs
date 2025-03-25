@@ -157,6 +157,12 @@ public record GenericWave
         Settings = WaveSettings.SingleMiniBoss,
         Population = WavePopulation.SingleEnemy_Pouncer,
     };
+
+    public static readonly GenericWave SinglePouncerShadow = new()
+    {
+        Settings = WaveSettings.SingleMiniBoss,
+        Population = WavePopulation.SingleEnemy_PouncerShadow,
+    };
     #endregion
 
 

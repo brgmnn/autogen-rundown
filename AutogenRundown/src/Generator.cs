@@ -40,6 +40,7 @@ namespace AutogenRundown
         None,
         Normal,
 
+        Enemy,
         EnemyGroup,
         WavePopulation,
         WaveSettings
@@ -49,6 +50,7 @@ namespace AutogenRundown
     {
         public static PID pid = 100000;
 
+        private static PID enemyPid = 70;
         private static PID enemyGroupPid = 80;
         private static PID wavePopulationPid = 200;
         private static PID waveSettingsPid = 1;
@@ -276,6 +278,7 @@ namespace AutogenRundown
                 PidOffsets.None => 0,
                 PidOffsets.Normal => pid++,
 
+                PidOffsets.Enemy => enemyPid++,
                 PidOffsets.EnemyGroup => enemyGroupPid++,
                 PidOffsets.WavePopulation => wavePopulationPid++,
                 PidOffsets.WaveSettings => waveSettingsPid++

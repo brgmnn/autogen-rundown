@@ -476,12 +476,6 @@ public static class RundownFactory
         ComplexResourceSet.Setup();
         LayoutDefinitions.Setup();
 
-        #region MOD: ExtraEnemyCustomization (EEC)
-        EnemyCustomization.Setup();
-        EnemyCustomization.Ability.Setup();
-        EnemyCustomization.Model.Setup();
-        #endregion
-
         var gameSetup = new GameSetup()
         {
             PersistentId = 1,

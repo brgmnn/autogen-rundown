@@ -14,6 +14,8 @@ namespace AutogenRundown.DataBlocks
             = new LazyBlocksBin<ChainedPuzzle>();
         public static BlocksBin<ConsumableDistribution> ConsumableDistributions { get; private set; }
             = new BlocksBin<ConsumableDistribution>();
+        public static BlocksBin<Enemy_New> Enemy { get; private set; }
+            = new BlocksBin<Enemy_New>();
         public static BlocksBin<EnemyGroup> EnemyGroups { get; private set; }
             = new BlocksBin<EnemyGroup>();
         public static BlocksBin<EnemyPopulation> EnemyPopulations { get; private set; }
@@ -48,6 +50,7 @@ namespace AutogenRundown.DataBlocks
             Text.Setup();
             Text.SaveStatic();
 
+            Enemy_New.Setup();
             EnemyGroup.Setup();
             EnemyPopulation.Setup();
             WavePopulation.Setup();
@@ -75,6 +78,7 @@ namespace AutogenRundown.DataBlocks
             BigPickupDistributions.Save("BigPickupDistribution");
             ChainedPuzzles.Save("ChainedPuzzle");
             ConsumableDistributions.Save("ConsumableDistribution");
+            Enemy.Save("Enemy");
             EnemyGroups.Save("EnemyGroup");
             EnemyPopulations.Save("EnemyPopulation");
             ExpeditionBalances.Save("ExpeditionBalance");

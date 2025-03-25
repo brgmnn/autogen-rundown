@@ -69,7 +69,7 @@
         /** Bosses */
         /**  --> Tanks */
         Tank = 29,
-        TankBoss = 47, // Immortal? 
+        TankBoss = 47, // Immortal?
         TankPotato = NightmareStrikerGiant,
 
         /**  --> Mothers */
