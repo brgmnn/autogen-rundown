@@ -11,6 +11,43 @@ namespace AutogenRundown.DataBlocks
 {
     public partial record LevelLayout
     {
+        #region Private: Zone Mood
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="zone"></param>
+        /// <param name="eggSacks"></param>
+        private static void SetMotherVibe(Zone zone, int eggSacks = 200)
+        {
+            // Pick some mother like lights
+            zone.LightSettings = Generator.Pick(new List<Lights.Light>
+            {
+                Lights.Light.Monochrome_Red,
+                Lights.Light.RedToYellow_1,
+                Lights.Light.OrangeToBrown_1,
+                Lights.Light.OrangeToYellow_1,
+                Lights.Light.YellowToOrange_1,
+                Lights.Light.Monochrome_Orange_Flickering,
+                Lights.Light.WashedOutRed_1
+            });
+
+            // Add mother egg sacks to the zone
+            zone.StaticSpawnDataContainers.Add(
+                new StaticSpawnDataContainer
+                {
+                    Count = eggSacks,
+                    DistributionWeightType = 0,
+                    DistributionWeight = 1.0,
+                    DistributionRandomBlend = 0.0,
+                    DistributionResultPow = 2.0,
+                    Unit = StaticSpawnUnit.EggSack,
+                    FixedSeed = 121
+                });
+        }
+
+        #endregion
+
         #region Apex Alarms
         /// <summary>
         /// Add a BIG alarm in a big room that will be challenging to beat.
@@ -87,7 +124,9 @@ namespace AutogenRundown.DataBlocks
 
         #region Sleeping Boss Zone
         /// <summary>
+        /// Adds a progressively harder sleeping boss fight to the zone.
         ///
+        /// Note: This excludes the MegaMom boss fight. There's a separate method if you want mega mom
         /// </summary>
         /// <param name="bossNode"></param>
         public void AddAlignedBossFight(ZoneNode bossNode)
@@ -98,37 +137,6 @@ namespace AutogenRundown.DataBlocks
             {
                 Plugin.Logger.LogDebug($"Skipping adding boss zone as zone is null: {bossNode}");
                 return;
-            }
-
-            /*
-             * Reusable function for us to call any time we want to set up a mother zone
-             */
-            void SetMotherVibe(Zone zone, int eggSacks = 200)
-            {
-                // Pick some mother like lights
-                zone.LightSettings = Generator.Pick(new List<Lights.Light>
-                {
-                    Lights.Light.Monochrome_Red,
-                    Lights.Light.RedToYellow_1,
-                    Lights.Light.OrangeToBrown_1,
-                    Lights.Light.OrangeToYellow_1,
-                    Lights.Light.YellowToOrange_1,
-                    Lights.Light.Monochrome_Orange_Flickering,
-                    Lights.Light.WashedOutRed_1
-                });
-
-                // Add mother egg sacks to the zone
-                zone.StaticSpawnDataContainers.Add(
-                    new StaticSpawnDataContainer
-                    {
-                        Count = eggSacks,
-                        DistributionWeightType = 0,
-                        DistributionWeight = 1.0,
-                        DistributionRandomBlend = 0.0,
-                        DistributionResultPow = 2.0,
-                        Unit = StaticSpawnUnit.EggSack,
-                        FixedSeed = 121
-                    });
             }
 
             void SetInfectionVibe(Zone zone, int spitters = 100)
@@ -332,6 +340,51 @@ namespace AutogenRundown.DataBlocks
                     break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Adds a MegaMom sleeping boss fight to the target bossNode.
+        ///
+        /// The MegaMom boss fight is probably the hardest boss fight in the game. The number of
+        /// enemies MegaMom can spawn can be _a lot_ and she also has a huge health pool.
+        /// </summary>
+        /// <param name="bossNode"></param>
+        public void AddAlignedBossFight_MegaMom(ZoneNode bossNode)
+        {
+            var zone = planner.GetZone(bossNode);
+
+            if (zone == null)
+            {
+                Plugin.Logger.LogDebug($"Skipping adding boss zone as zone is null: {bossNode}");
+                return;
+            }
+
+            zone.GenBossGeomorph(level.Complex);
+            zone.EventsOnOpenDoor.AddSound(Sound.TenseRevelation, 2.0);
+
+            // Disable any scouts on anything except E-tier
+            if (level.Tier != "E")
+                bossNode = planner.UpdateNode(bossNode with { Tags = bossNode.Tags.Extend("no_scouts") });
+
+            // Disable blood doors and don't roll enemies
+            // We still add some enemies later
+            planner.UpdateNode(bossNode with
+            {
+                Tags = bossNode.Tags.Extend("no_blood_door", "no_enemies", "boss_megamom")
+            });
+
+            zone.EnemySpawningInZone.Add(EnemySpawningData.MegaMother_AlignedSpawn with { Points = 40 });
+
+            // Some small enemies
+            zone.EnemySpawningInZone.Add(EnemySpawningData.Baby with { Points = 10 });
+            zone.EnemySpawningInZone.Add(EnemySpawningData.Striker with { Points = 5 });
+            zone.EnemySpawningInZone.Add(EnemySpawningData.Shooter with { Points = 5 });
+
+            SetMotherVibe(zone, 300);
+
+            // We need more resources
+            zone.AmmoPacks += 10;
+            zone.ToolPacks += 4;
         }
         #endregion
 
