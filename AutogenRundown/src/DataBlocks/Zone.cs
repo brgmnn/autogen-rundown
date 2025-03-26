@@ -807,7 +807,6 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Alarms
-
         private void AlarmModifier_LightsOff()
         {
             EventsOnDoorScanStart.AddLightsOff(3.0);
@@ -968,6 +967,12 @@ namespace AutogenRundown.DataBlocks
                         // Small chance to disable lights during the alarm
                         if (Generator.Flip(0.08))
                             AlarmModifier_LightsOff();
+
+                        if (Generator.Flip(0.005))
+                            EventsOnApproachDoor.AddSpawnWave(
+                                GenericWave.SinglePouncer,
+                                Generator.Between(1, 6));
+
                         break;
                     }
 
@@ -976,6 +981,13 @@ namespace AutogenRundown.DataBlocks
                         // Small chance to disable lights during the alarm
                         if (Generator.Flip(0.1))
                             AlarmModifier_LightsOff();
+
+                        // Tiny chance for bait door approach pouncer
+                        if (Generator.Flip(0.01))
+                            EventsOnApproachDoor.AddSpawnWave(
+                                GenericWave.SinglePouncer,
+                                Generator.Between(1, 6));
+
                         break;
                     }
 
@@ -983,7 +995,23 @@ namespace AutogenRundown.DataBlocks
                     {
                         // Small chance to disable lights during the alarm
                         if (Generator.Flip(0.12))
+                        {
                             AlarmModifier_LightsOff();
+
+                            // Shadow pouncer with the lights off!
+                            if (Generator.Flip(0.1))
+                                EventsOnDoorScanStart.AddSpawnWave(
+                                    GenericWave.SinglePouncerShadow,
+                                    Generator.Between(4, 16));
+                        }
+
+                        // Tiny chance for bait door approach pouncer
+                        if (Generator.Flip(0.01))
+                            EventsOnApproachDoor.AddSpawnWave(
+                                Generator.Flip() ?
+                                    GenericWave.SinglePouncerShadow :
+                                    GenericWave.SinglePouncer,
+                                Generator.Between(1, 6));
 
                         // "Fun" single enemies on start wave
                         if (Generator.Flip(0.05))
@@ -995,7 +1023,28 @@ namespace AutogenRundown.DataBlocks
                     {
                         // Small chance to disable lights during the alarm
                         if (Generator.Flip(0.3))
+                        {
                             AlarmModifier_LightsOff();
+
+                            // Shadow pouncer with the lights off!
+                            if (Generator.Flip(0.1))
+                                EventsOnDoorScanStart.AddSpawnWave(
+                                    GenericWave.SinglePouncerShadow,
+                                    Generator.Between(4, 16));
+                        }
+
+                        // Tiny chance to be pouncered when opening the door or
+                        // approaching the door
+                        if (Generator.Flip(0.02))
+                            EventsOnOpenDoor.AddSpawnWave(
+                                GenericWave.SinglePouncerShadow,
+                                Generator.Between(4, 16));
+                        else if (Generator.Flip(0.01))
+                            EventsOnApproachDoor.AddSpawnWave(
+                                Generator.Flip(0.7) ?
+                                    GenericWave.SinglePouncerShadow :
+                                    GenericWave.SinglePouncer,
+                                Generator.Between(1, 6));
 
                         // Single enemies on wave start
                         if (Generator.Flip(0.05))
