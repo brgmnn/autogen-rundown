@@ -317,7 +317,6 @@ public record ChainedPuzzle : DataBlock
                 };
             }
 
-            // TODO: balance this
             case "E":
                 return new List<(double, int, ChainedPuzzle)>
                 {
