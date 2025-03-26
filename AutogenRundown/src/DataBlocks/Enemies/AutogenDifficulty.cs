@@ -14,6 +14,8 @@
         // Boss aligned spawned bosses
         BossAlignedSpawn = 0x0020,
 
+        MegaMotherSpawn = 0x0040,
+
         // Tiers of difficulty
         TierA = 0x0100,
         TierB = 0x0200,

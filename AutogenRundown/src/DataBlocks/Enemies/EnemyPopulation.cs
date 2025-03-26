@@ -30,8 +30,10 @@ namespace AutogenRundown.DataBlocks.Enemies
             {
                 EnemyInfo.Striker,
                 EnemyInfo.StrikerGiant,
+                EnemyInfo.Striker_Wave,
                 EnemyInfo.Shooter,
                 EnemyInfo.ShooterGiant,
+                EnemyInfo.Shooter_Wave,
                 EnemyInfo.Charger,
                 EnemyInfo.ChargerGiant,
                 EnemyInfo.Shadow,
@@ -85,6 +87,25 @@ namespace AutogenRundown.DataBlocks.Enemies
                     Cost = bossInfo.Points,
                 });
             }
+            #endregion
+
+            #region MegaMother spawn
+
+            var megaMotherSpawnEnemies = new List<(EnemyInfo, double)>
+            {
+                (EnemyInfo.Striker_Wave, 2.0),
+                (EnemyInfo.BirtherChild, 1.0)
+            };
+
+            foreach (var (info, points) in megaMotherSpawnEnemies)
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)EnemyRole.BirtherChild,
+                    Difficulty = (uint)AutogenDifficulty.MegaMotherSpawn,
+                    Enemy = info.Enemy,
+                    Cost = points,
+                });
+
             #endregion
 
             #region Level Tier populations

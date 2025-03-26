@@ -385,6 +385,8 @@ namespace AutogenRundown.DataBlocks
             // We need more resources
             zone.AmmoPacks += 10;
             zone.ToolPacks += 4;
+
+            // >... A nest?  \r\n>... We have no choice. <color=red><size=200%>She's waiting. </size></color>\n>... Why... why?
         }
         #endregion
 

@@ -33,8 +33,15 @@ namespace AutogenRundown.DataBlocks.Enemies
 
     public record EnemyGroup : DataBlock
     {
+        #region Properties
+        /// <summary>
+        ///
+        /// </summary>
         public EnemyGroupType Type { get; set; } = EnemyGroupType.Hibernate;
 
+        /// <summary>
+        ///
+        /// </summary>
         public uint Difficulty { get; set; } = 0;
 
         /// <summary>
@@ -43,6 +50,9 @@ namespace AutogenRundown.DataBlocks.Enemies
         /// </summary>
         public SpawnPlacementType SpawnPlacementType { get; set; } = SpawnPlacementType.Default;
 
+        /// <summary>
+        ///
+        /// </summary>
         public double MaxScore { get; set; } = 1.0;
 
         /// <summary>
@@ -50,13 +60,30 @@ namespace AutogenRundown.DataBlocks.Enemies
         /// </summary>
         public double ScoreInAreaPaddingMulti { get; set; } = 3.0;
 
+        /// <summary>
+        ///
+        /// </summary>
         public double RelativeWeight { get; set; } = 1.0;
 
-        public List<EnemyGroupRole> Roles { get; set; } = new List<EnemyGroupRole>();
+        /// <summary>
+        ///
+        /// </summary>
+        public List<EnemyGroupRole> Roles { get; set; } = new();
+        #endregion
 
         public EnemyGroup(PidOffsets offsets = PidOffsets.EnemyGroup)
             : base(Generator.GetPersistentId(offsets))
         { }
+
+        public void Persist(BlocksBin<EnemyGroup>? bin = null)
+        {
+            bin ??= Bins.EnemyGroups;
+
+            if (PersistentId == 0)
+                PersistentId = Generator.GetPersistentId(PidOffsets.EnemyGroup);
+
+            bin.AddBlock(this);
+        }
 
         public static void Setup()
         {
@@ -72,7 +99,7 @@ namespace AutogenRundown.DataBlocks.Enemies
             }
         }
 
-        public static new void SaveStatic()
+        public new static void SaveStatic()
         {
             // Assign groups for hibernating enemy spawns. EnemyRole and Enemy will select the
             // enemy to pick from, the double specifies the max score for that group. Multiple

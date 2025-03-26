@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
+using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Abilities;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models;
 using Newtonsoft.Json.Linq;
 
@@ -226,6 +227,50 @@ public record Enemy_New : DataBlock
         EnemyCustomization.Setup();
         EnemyCustomization.Ability.Setup();
         EnemyCustomization.Model.Setup();
+        #endregion
+
+        #region Base game enemy customization
+        #region --- Mega Mother ---
+        // This is to customize the MegaMom birthing ability, as by default it
+        // is set up to spawn chargers, and it's extremely hard. This configures
+        // it to be more like the R8 MegaMom fight
+        //
+        // For now we have it birthing both strikers and babies. 5 strikers, 7 babies per birth
+
+        var group = new EnemyGroup
+        {
+            Type = EnemyGroupType.Awake,
+            Difficulty = (uint)AutogenDifficulty.MegaMotherSpawn,
+            MaxScore = 12.0,
+            Roles = new List<EnemyGroupRole>()
+            {
+                new() { Role = EnemyRole.BirtherChild, Distribution = EnemyRoleDistribution.Rel100 }
+            }
+        };
+        group.Persist();
+
+        // Striker births
+        EnemyCustomization.Ability.Birthings.Add(
+            new Birthing
+            {
+                Target = new Target
+                {
+                    Mode = Mode.PersistentId,
+                    PersistentIds = new() { MegaMother.PersistentId }
+                },
+                EnemyGroupToSpawn = group.PersistentId,
+                ChildrenCost = 1.0,
+                ChildrenMax = 16,
+                ChildrenPerBirth = 12,
+                ChildrenPerBirthMin = 6,
+                MaxDelayUntilNextBirth = 6,
+                MinDelayUntilNextBirth = 1,
+            });
+
+        // Remove the vanilla baby births. We override it with our own settings
+        MegaMother.AI_Abilities.RemoveAt(0);
+
+        #endregion
         #endregion
 
         #region Custom enemy configuration
