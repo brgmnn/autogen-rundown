@@ -1386,7 +1386,7 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Puzzle settings
-        public ProgressionPuzzle ProgressionPuzzleToEnter { get; set; } = new ProgressionPuzzle();
+        public ProgressionPuzzle ProgressionPuzzleToEnter { get; set; } = new();
 
         /// <summary>
         /// Reference to the alarm we are using for the chained puzzle

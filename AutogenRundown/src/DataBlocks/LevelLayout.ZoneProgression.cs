@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
+using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
@@ -349,7 +350,9 @@ namespace AutogenRundown.DataBlocks
         /// enemies MegaMom can spawn can be _a lot_ and she also has a huge health pool.
         /// </summary>
         /// <param name="bossNode"></param>
-        public void AddAlignedBossFight_MegaMom(ZoneNode bossNode)
+        public void AddAlignedBossFight_MegaMom(
+            ZoneNode bossNode,
+            ICollection<WardenObjectiveEvent>? onDeathEvents = null)
         {
             var zone = planner.GetZone(bossNode);
 
@@ -368,7 +371,7 @@ namespace AutogenRundown.DataBlocks
 
             // Disable blood doors and don't roll enemies
             // We still add some enemies later
-            planner.UpdateNode(bossNode with
+            bossNode = planner.UpdateNode(bossNode with
             {
                 Tags = bossNode.Tags.Extend("no_blood_door", "no_enemies", "boss_megamom")
             });
@@ -383,8 +386,21 @@ namespace AutogenRundown.DataBlocks
             SetMotherVibe(zone, 300);
 
             // We need more resources
-            zone.AmmoPacks += 10;
+            zone.AmmoPacks += 12;
             zone.ToolPacks += 4;
+
+            if (onDeathEvents is not null)
+                level.EOS_EventsOnBossDeath.Definitions.Add(
+                    new EventsOnBossDeath
+                    {
+                        ZoneNumber = bossNode.ZoneNumber,
+                        Bulkhead = bossNode.Bulkhead,
+                        PersistentIds = new()
+                        {
+                            Enemy_New.MegaMother.PersistentId
+                        },
+                        Events = onDeathEvents.ToList()
+                    });
 
             // >... A nest?  \r\n>... We have no choice. <color=red><size=200%>She's waiting. </size></color>\n>... Why... why?
         }
