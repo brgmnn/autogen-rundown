@@ -96,17 +96,19 @@ public partial record LevelLayout
         // Generate the zones for this branch
         for (var i = 0; i < zoneCount; i++)
         {
-            var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-            var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
-            var nextZone = new Zone
-            {
-                Coverage = CoverageMinMax.GenNormalSize(),
-                LightSettings = Lights.GenRandomLight(),
-            };
-            nextZone.RollFog(level);
+            // var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
+            // var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
+            // var nextZone = new Zone
+            // {
+            //     Coverage = CoverageMinMax.GenNormalSize(),
+            //     LightSettings = Lights.GenRandomLight(),
+            // };
+            // nextZone.RollFog(level);
+            //
+            // level.Planner.Connect(prev, next);
+            // nextZone = level.Planner.AddZone(next, nextZone);
 
-            level.Planner.Connect(prev, next);
-            nextZone = level.Planner.AddZone(next, nextZone);
+            var (next, nextZone) = AddZone(prev, branch);
 
             insertedNodes.Add(next);
 
@@ -117,10 +119,33 @@ public partial record LevelLayout
 
         return insertedNodes;
     }
+
+    /// <summary>
+    /// Basic function to add a new zone onto a base zone node. Returns the
+    /// newly created ZoneNode and Zone as a tuple for further use
+    /// </summary>
+    /// <param name="baseNode"></param>
+    /// <param name="branch"></param>
+    /// <returns></returns>
+    public (ZoneNode, Zone) AddZone(ZoneNode baseNode, string branch = "primary")
+    {
+        var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
+        var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
+        var nextZone = new Zone
+        {
+            Coverage = CoverageMinMax.GenNormalSize(),
+            LightSettings = Lights.GenRandomLight(),
+        };
+        nextZone.RollFog(level);
+
+        level.Planner.Connect(baseNode, next);
+        nextZone = level.Planner.AddZone(next, nextZone);
+
+        return (next, nextZone);
+    }
     #endregion
 
     #region General layout building blocks
-
     /// <summary>
     /// Constructs a challenge layout that consists of:
     /// 1. Error alarm door

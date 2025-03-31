@@ -144,6 +144,8 @@ jobs:
           # --- MTFO
           mv deps/dakkhuza-MTFO build/AutogenRundown_GTFO/BepInEx/plugins/
 
+          # --- Extra Enemy Customization
+
           # --- Extra Objective Setup and friends
           mv deps/Inas07-ExtraObjectiveSetup/plugins build/AutogenRundown_GTFO/BepInEx/plugins/Inas07-ExtraObjectiveSetup
           mv deps/Inas07-ExtraObjectiveSetup/* build/AutogenRundown_GTFO/BepInEx/plugins/Inas07-ExtraObjectiveSetup/

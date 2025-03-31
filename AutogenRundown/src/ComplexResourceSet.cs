@@ -158,6 +158,7 @@ public class ComplexResourceSet
         resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Exit_1x1", new Prefab()
         {
             Asset = "Assets/geo_64x64_dig_site_exit_dak_01.prefab",
+            // Asset = "ASSETS/GEO_64X64_DIG_SITE_EXIT_DAK_01.PREFAB",
             SubComplex = SubComplex.DigSite
             // Shard = "2"
         });

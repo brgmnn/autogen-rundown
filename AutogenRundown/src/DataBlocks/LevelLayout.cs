@@ -785,9 +785,9 @@ namespace AutogenRundown.DataBlocks
                  * */
                 case WardenObjectiveType.ClearPath:
                 {
-                    var start = level.Planner.GetLastZone(director.Bulkhead)!;
+                    var start = level.Planner.GetLastZone(director.Bulkhead);
 
-                    layout.BuildLayout_ClearPath(director, objective, (ZoneNode)start);
+                    layout.BuildLayout_ClearPath(director, objective, start);
                     break;
                 }
 

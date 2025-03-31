@@ -27,6 +27,15 @@ Weekly 9-A1 bug:
   * Disappears if I disable EITHER overload or secondary
   * It appears to be the map layout. I suspect it's the door not having a place to place though
 
+Monthly March
+  * March 27th
+    * E2
+      * Time maybe too generous, finished with 2:30 left
+      *
+  * Yoshi Feedback
+    [ ] May want to look in to making it so error alarm terminals don't cancel others. Many instances of trivialized scans because of error turnoff.
+    [ ]
+
 Monthly Feb
   * Double cargo B1 -- Not sure why?
   * March
@@ -36,6 +45,7 @@ Monthly Feb
     [ ] B2 - Extreme: Survival timer still doesn't add time, instead resets time with new value and then is reset back to starting time
     [ ] B2 - Survival timer: On B-tier at least it seems like a tiny bit more ammo would be good.
     [ ] C1 - Overload: got the mega mother room for the terminal uplink. - Getting hubs for uplink rooms is no good
+
   * Reactor D2
     [ ] Need to ensure resources spawn. Flat mining reactor doesn't have enoug spawn points, no tool spawned?
     [ ] Possibly reduce the number of waves but up the difficulty. First 3-4 waves were easy and a bit of nothing

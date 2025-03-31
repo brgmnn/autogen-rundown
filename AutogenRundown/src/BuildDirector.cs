@@ -30,6 +30,7 @@ namespace AutogenRundown
         public WardenObjectiveType Objective { get; set; } = WardenObjectiveType.GatherSmallItems;
 
         #region Zones
+        [Obsolete("Prefer specifying the number of zones in each objective layout")]
         public int ZoneCount { get; set; } = 0;
 
         /// <summary>
@@ -133,7 +134,10 @@ namespace AutogenRundown
         /// all loaded into a single level layout.
         ///
         /// Max seems to be 20 zones for one layout.
+        ///
+        /// We probably want to deprecate this in the end
         /// </summary>
+        [Obsolete("Prefer specifying the number of zones in each objective layout")]
         public void GenZones()
         {
             ZoneCount = (Tier, Bulkhead) switch

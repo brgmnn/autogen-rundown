@@ -220,7 +220,7 @@ namespace AutogenRundown.DataBlocks
                 case Complex.Mining:
                     (SubComplex, CustomGeomorph) = Generator.Pick(new List<(SubComplex, string)>
                     {
-                        (SubComplex.All,        "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_exit_01.prefab"),
+                        (SubComplex.All,     "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_exit_01.prefab"),
 
                         // --- MOD Geomorphs ---
                         // DakGeos

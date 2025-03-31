@@ -20,7 +20,6 @@ public partial record WardenObjective
 
         // Find the exit zone
         var exit = level.Planner.GetZonesByTag(director.Bulkhead, "exit_elevator").First();
-        var exitZone = level.Planner.GetZone(exit)!;
         var exitZoneNumber = layout.ZoneAliasStart + exit.ZoneNumber;
 
         MainObjective = $"Clear a path to the exit point in {Lore.Zone(exitZoneNumber)}";
@@ -28,15 +27,5 @@ public partial record WardenObjective
         GoToWinCondition_CustomGeo = $"Go to the forward exit point in {Lore.Zone(exitZoneNumber)}";
 
         dataLayer.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
-
-        // Ensure there's a nice spicy hoard at the end
-        exitZone.EnemySpawningInZone.Add(
-            // These will be predominately strikers / shooters
-            new EnemySpawningData()
-            {
-                GroupType = EnemyGroupType.Hibernate,
-                Difficulty = (uint)EnemyRoleDifficulty.Easy,
-                Points = 75, // 25pts is 1.0 distribution, this is quite a lot
-            });
     }
 }
