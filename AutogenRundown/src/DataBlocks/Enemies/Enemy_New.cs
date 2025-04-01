@@ -241,8 +241,8 @@ public record Enemy_New : DataBlock
         {
             Type = EnemyGroupType.Awake,
             Difficulty = (uint)AutogenDifficulty.MegaMotherSpawn,
-            MaxScore = 12.0,
-            Roles = new List<EnemyGroupRole>()
+            MaxScore = 18.0,
+            Roles = new List<EnemyGroupRole>
             {
                 new() { Role = EnemyRole.BirtherChild, Distribution = EnemyRoleDistribution.Rel100 }
             }
