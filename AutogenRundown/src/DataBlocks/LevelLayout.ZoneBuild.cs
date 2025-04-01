@@ -29,9 +29,33 @@ public partial record LevelLayout
         nextZone.RollFog(level);
 
         level.Planner.Connect(source, next);
-        var zone = level.Planner.AddZone(next, nextZone);
+        Zone zone = level.Planner.AddZone(next, nextZone)!;
 
         return (next, zone);
+    }
+
+    /// <summary>
+    /// Basic function to add a new zone onto a base zone node. Returns the
+    /// newly created ZoneNode and Zone as a tuple for further use
+    /// </summary>
+    /// <param name="baseNode"></param>
+    /// <param name="branch"></param>
+    /// <returns></returns>
+    public (ZoneNode, Zone) AddZone(ZoneNode baseNode, string branch = "primary")
+    {
+        var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
+        var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
+        var nextZone = new Zone
+        {
+            Coverage = CoverageMinMax.GenNormalSize(),
+            LightSettings = Lights.GenRandomLight(),
+        };
+        nextZone.RollFog(level);
+
+        level.Planner.Connect(baseNode, next);
+        nextZone = level.Planner.AddZone(next, nextZone);
+
+        return (next, nextZone);
     }
 
     /// <summary>
@@ -96,22 +120,9 @@ public partial record LevelLayout
         // Generate the zones for this branch
         for (var i = 0; i < zoneCount; i++)
         {
-            // var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-            // var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
-            // var nextZone = new Zone
-            // {
-            //     Coverage = CoverageMinMax.GenNormalSize(),
-            //     LightSettings = Lights.GenRandomLight(),
-            // };
-            // nextZone.RollFog(level);
-            //
-            // level.Planner.Connect(prev, next);
-            // nextZone = level.Planner.AddZone(next, nextZone);
-
             var (next, nextZone) = AddZone(prev, branch);
 
             insertedNodes.Add(next);
-
             zoneCallback?.Invoke(next, nextZone);
 
             prev = next;
@@ -121,31 +132,125 @@ public partial record LevelLayout
     }
 
     /// <summary>
-    /// Basic function to add a new zone onto a base zone node. Returns the
-    /// newly created ZoneNode and Zone as a tuple for further use
+    /// Wraps AddBranch() with an automatic callback to set the zone expansion
+    /// to the bulkheads forward direction.
     /// </summary>
     /// <param name="baseNode"></param>
+    /// <param name="zoneCount"></param>
     /// <param name="branch"></param>
+    /// <param name="zoneCallback"></param>
     /// <returns></returns>
-    public (ZoneNode, Zone) AddZone(ZoneNode baseNode, string branch = "primary")
-    {
-        var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-        var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
-        var nextZone = new Zone
-        {
-            Coverage = CoverageMinMax.GenNormalSize(),
-            LightSettings = Lights.GenRandomLight(),
-        };
-        nextZone.RollFog(level);
+    public ICollection<ZoneNode> AddBranch_Forward(
+        ZoneNode baseNode,
+        int zoneCount,
+        string branch = "primary",
+        Action<ZoneNode, Zone>? zoneCallback = null)
+        => AddBranch(baseNode, zoneCount, branch,
+            (node, zone) =>
+            {
+                var direction = level.Settings.GetDirections(director.Bulkhead).Forward;
+                zone.ZoneExpansion = direction;
+                zone.StartExpansion = direction switch
+                {
+                    ZoneExpansion.Forward => ZoneBuildExpansion.Forward,
+                    ZoneExpansion.Backward => ZoneBuildExpansion.Backward,
+                    ZoneExpansion.Left => ZoneBuildExpansion.Left,
+                    ZoneExpansion.Right => ZoneBuildExpansion.Right,
+                    _ => zone.StartExpansion
+                };
 
-        level.Planner.Connect(baseNode, next);
-        nextZone = level.Planner.AddZone(next, nextZone);
-
-        return (next, nextZone);
-    }
+                zoneCallback?.Invoke(node, zone);
+            });
     #endregion
 
-    #region General layout building blocks
+    #region --- General layout building blocks ---
+    /// <summary>
+    /// Sets start to a hub zone with the next zone locked behind a powered down door that
+    /// requires a generator to be powered. Cell is in a side zone from the hub. Layout:
+    ///
+    ///     start(hub) -> end
+    ///                -> power_cell[0,...]
+    ///
+    /// Note that the start zone will be set to a hub wwith 4 connections
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="sideCellZones"></param>
+    /// <returns></returns>
+    public (ZoneNode, Zone) BuildChallenge_GeneratorCellInSide(
+        ZoneNode start,
+        int sideCellZones = 1)
+    {
+        start = planner.UpdateNode(start with { MaxConnections = 3 });
+        var startZone = planner.GetZone(start)!;
+        startZone.GenHubGeomorph(level.Complex);
+
+        var (end, endZone) = AddZone(start, new ZoneNode());
+        var keycardNodes = AddBranch(start, sideCellZones, "power_cell");
+
+        AddGeneratorPuzzle(end, keycardNodes.Last());
+
+        return (end, endZone);
+    }
+
+    /// <summary>
+    /// Adds a hub zone with a locked keycard going to the next zone. Keycard is in a side zone(s)
+    ///
+    /// Layout:
+    ///   start(hub) -> end
+    ///              -> keycard[0,...]
+    ///
+    /// Note that the start zone will be set to a hub with 4 connections
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="sideKeycardZones"></param>
+    /// <returns></returns>
+    public (ZoneNode, Zone) BuildChallenge_KeycardInSide(
+        ZoneNode start,
+        int sideKeycardZones = 1)
+    {
+        start = planner.UpdateNode(start with { MaxConnections = 3 });
+        var startZone = planner.GetZone(start)!;
+        startZone.GenHubGeomorph(level.Complex);
+
+        var (end, endZone) = AddZone(start, new ZoneNode());
+        var keycardNodes = AddBranch(start, sideKeycardZones, "keycard");
+
+        AddKeycardPuzzle(end, keycardNodes.Last());
+
+        return (end, endZone);
+    }
+
+    /// <summary>
+    /// Mostly just a wrapper around `AddApexAlarm()` but with the conveniences of returning the
+    /// node/zone from the alarm
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="population"></param>
+    /// <param name="settings"></param>
+    /// <returns></returns>
+    public (ZoneNode, Zone) BuildChallenge_ApexAlarm(
+        ZoneNode start,
+        WavePopulation population,
+        WaveSettings settings)
+    {
+        start = planner.UpdateNode(start with { MaxConnections = 3 });
+        var startZone = planner.GetZone(start)!;
+        startZone.GenHubGeomorph(level.Complex);
+
+        var (end, endZone) = AddZone(start, new ZoneNode());
+
+        startZone.AmmoPacks += 3.0;
+        startZone.ToolPacks += 2.0;
+
+        // TODO: consider adding a disinfect station somewhere for this
+        if (startZone.InFog)
+            startZone.ConsumableDistributionInZone = ConsumableDistribution.Alarms_FogRepellers.PersistentId;
+
+        AddApexAlarm(end, population, settings);
+
+        return (end, endZone);
+    }
+
     /// <summary>
     /// Constructs a challenge layout that consists of:
     /// 1. Error alarm door

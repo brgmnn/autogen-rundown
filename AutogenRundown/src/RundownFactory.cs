@@ -197,7 +197,7 @@ public static class RundownFactory
                 Bulkhead = Bulkhead.Main,
                 Complex = Complex.Mining,
                 Complexity = Complexity.Low,
-                Tier = "C",
+                Tier = "D",
                 Objective = WardenObjectiveType.ClearPath,
             };
             mainDirector.GenPoints();
@@ -212,13 +212,13 @@ public static class RundownFactory
             // };
             // extremeDirector.GenPoints();
 
-            var settings = new LevelSettings("C");
+            var settings = new LevelSettings("D");
             //settings.Modifiers.Add(LevelModifiers.Fog);
 
             var testLevel = Level.Build(
-                new Level("C")
+                new Level("D")
                 {
-                    Tier = "C",
+                    Tier = "D",
                     Name = "Clear Path",
                     Complex = Complex.Mining,
                     MainDirector = mainDirector,

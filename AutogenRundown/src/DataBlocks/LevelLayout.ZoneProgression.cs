@@ -92,7 +92,7 @@ namespace AutogenRundown.DataBlocks
                 setupNode,
                 new ZoneNode
                 {
-                    Branch = "koth_spawn",
+                    Branch = "apex_spawn",
                     MaxConnections = 0,
                     Tags = new Tags("no_enemies")
                 });
@@ -389,7 +389,8 @@ namespace AutogenRundown.DataBlocks
             zone.AmmoPacks += 12;
             zone.ToolPacks += 4;
 
-            if (onDeathEvents is not null)
+            // if (onDeathEvents is not null)
+            if (onDeathEvents is not null && onDeathEvents.Any())
                 level.EOS_EventsOnBossDeath.Definitions.Add(
                     new EventsOnBossDeath
                     {
@@ -402,7 +403,12 @@ namespace AutogenRundown.DataBlocks
                         Events = onDeathEvents.ToList()
                     });
 
-            // >... A nest?  \r\n>... We have no choice. <color=red><size=200%>She's waiting. </size></color>\n>... Why... why?
+            #region Warden Intel Messages
+            level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+            {
+                ">... A nest?\r\n>... We have no choice. <color=red><size=200%>She's waiting.</size></color>\n>... Why... why?"
+            }))!);
+            #endregion
         }
         #endregion
 

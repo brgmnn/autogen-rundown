@@ -1,6 +1,8 @@
-﻿using AutogenRundown.DataBlocks.Enemies;
+﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Utils;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -29,23 +31,196 @@ public partial record LevelLayout
         // This whole objective can only be done on main
         switch (level.Tier)
         {
-            #region Tier: A, B, C
-            // case "A":
-            // case "B":
+            case "A":
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Straight shot
+                    (0.2, () =>
+                    {
+                        var nodes = AddBranch(start, Generator.Between(2, 4));
+
+                        exit = nodes.Last();
+                        exitZone = planner.GetZone(exit)!;
+                    }),
+
+                    // Single generator
+                    (0.35, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                        (exit, exitZone) = BuildChallenge_GeneratorCellInSide(nodes.Last());
+                    }),
+
+                    // Single keycard mid
+                    (0.25, () =>
+                    {
+                        var next = AddBranch_Forward(start, 1).Last();
+                        (next, _) = BuildChallenge_KeycardInSide(next);
+                        var nodes = AddBranch_Forward(next, Generator.Between(1, 2));
+
+                        exit = nodes.Last();
+                        exitZone = planner.GetZone(exit)!;
+                    }),
+
+                    // Single keycard end
+                    (0.2, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                        (exit, exitZone) = BuildChallenge_KeycardInSide(nodes.Last());
+                    })
+                });
+                break;
+            }
+
+            case "B":
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Apex Alarm end
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(3, 4));
+                        exit = nodes.Last();
+                        exitZone = planner.GetZone(exit)!;
+
+                        var hub = nodes.ElementAt(nodes.Count - 2);
+                        var hubZone = planner.GetZone(hub)!;
+
+                        hubZone.AmmoPacks += 3.0;
+                        hubZone.ToolPacks += 2.0;
+
+                        var population = WavePopulation.Baseline;
+                        var settings = WaveSettings.Baseline_Normal;
+
+                        AddApexAlarm(exit, population, settings);
+                    }),
+
+                    // Straight shot
+                    (0.10, () =>
+                    {
+                        var nodes = AddBranch(start, Generator.Between(2, 4));
+
+                        exit = nodes.Last();
+                        exitZone = planner.GetZone(exit)!;
+                    }),
+
+                    // Single generator
+                    (0.30, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                        (exit, exitZone) = BuildChallenge_GeneratorCellInSide(nodes.Last());
+                    }),
+
+                    // Single keycard mid
+                    (0.15, () =>
+                    {
+                        var next = AddBranch_Forward(start, 1).Last();
+                        (next, _) = BuildChallenge_KeycardInSide(next);
+                        var nodes = AddBranch_Forward(next, Generator.Between(1, 2));
+
+                        exit = nodes.Last();
+                        exitZone = planner.GetZone(exit)!;
+                    }),
+
+                    // Single keycard end
+                    (0.20, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                        (exit, exitZone) = BuildChallenge_KeycardInSide(nodes.Last());
+
+                    })
+                });
+                break;
+            }
+
+            // TODO
             case "C":
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // // Straight shot
-                    // (0.4, () => { }),
+                    // (0.4, () =>
+                    // {
+                    //     var nodes = AddBranch(start, director.ZoneCount, "primary",
+                    //         (node, zone) => zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward);
+                    //
+                    //     exit = nodes.Last();
+                    //     exitZone = planner.GetZone(exit)!;
+                    // }),
 
-                    // Boss Fight: Mega Mother
+                    // Build keycard locked puzzle
                     (0.4, () =>
                     {
-                        var nodes = AddBranch(start, Generator.Between(1, 2), "primary",
-                            (node, zone) => zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward);
+                        var nodes = AddBranch_Forward(start, Generator.Between(3, 4));
+                        exit = nodes.Last();
+                        exitZone = planner.GetZone(exit)!;
 
-                        var (boss, bossZone) = AddZone(nodes.Last(), "boss_fight");
+                        var hub = nodes.ElementAt(nodes.Count - 2);
+                        var hubZone = planner.GetZone(hub)!;
+
+                        hubZone.AmmoPacks += 3.0;
+                        hubZone.ToolPacks += 2.0;
+
+                        var population = WavePopulation.Baseline;
+                        var settings = WaveSettings.Baseline_Normal;
+
+                        AddApexAlarm(exit, population, settings);
+                    }),
+                });
+                break;
+            }
+
+            // TODO
+            case "D":
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Boss Fight: Mega Mother
+                    // We also do some interesting prelude zones to get to megamom
+                    (0.4, () =>
+                    {
+                        // var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                        var bossStart = start;
+
+                        // Have some choices on arriving at the mega mom
+                        Generator.SelectRun(new List<(double, Action)>
+                        {
+                            // Generator access
+                            (0.35, () =>
+                            {
+                                var nodes = AddBranch_Forward(start, 2);
+                                (bossStart, _) = BuildChallenge_GeneratorCellInSide(
+                                    nodes.Last(),
+                                    Generator.Between(1, 2));
+                            }),
+
+                            // Keycard access
+                            (0.45, () =>
+                            {
+                                var nodes = AddBranch_Forward(start, 2);
+                                (bossStart, _) = BuildChallenge_KeycardInSide(
+                                    nodes.Last(),
+                                    Generator.Between(1, 2));
+                            }),
+
+                            // Apex alarm
+                            (0.20, () =>
+                            {
+                                var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                                (bossStart, _) = BuildChallenge_ApexAlarm(
+                                    nodes.Last(),
+                                    WavePopulation.Baseline_Hybrids,
+                                    WaveSettings.Baseline_Hard);
+                            })
+                        });
+
+                        var (boss, bossZone) = AddZone(
+                            bossStart,
+                            new ZoneNode
+                            {
+                                Branch = "boss_fight",
+                                Tags = new Tags("no_blood_door")
+                            });
                         (exit, exitZone) = AddZone(boss, "exit");
 
                         exitZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
@@ -59,9 +234,6 @@ public partial record LevelLayout
                 break;
             }
 
-            case "A":
-            case "B":
-            case "D":
             case "E":
             {
                 var nodes = AddBranch(start, director.ZoneCount, "primary",
@@ -71,33 +243,10 @@ public partial record LevelLayout
                 exitZone = planner.GetZone(exit)!;
                 break;
             }
-            #endregion
-
-            // #region Tier: D
-            // case "D":
-            // {
-            //     Generator.SelectRun(new List<(double, Action)>
-            //     {
-            //         // Straight shot
-            //         (0.4, () => { }),
-            //
-            //         // Mega Mom
-            //         (0.4, () => { })
-            //     });
-            //     break;
-            // }
-            // #endregion
-            //
-            // #region Tier: E
-            // case "E":
-            // {
-            //     break;
-            // }
-            // #endregion
         }
 
         // Configure the exit zone
-        exit = planner.UpdateNode(exit with { Tags = exit.Tags.Extend("exit_elevator") });
+        exit = planner.UpdateNode(exit with { Branch = "exit", Tags = exit.Tags.Extend("exit_elevator") });
         exitZone.GenExitGeomorph(level.Complex);
         exitZone.Coverage = new() { Min = 64, Max = 64 };
 
@@ -110,48 +259,5 @@ public partial record LevelLayout
                 Difficulty = (uint)EnemyRoleDifficulty.Easy,
                 Points = 75, // 25pts is 1.0 distribution, this is quite a lot
             });
-
-        // var prev = start;
-        //
-        // for (var i = 1; i < director.ZoneCount; i++)
-        // {
-        //     var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-        //     var next = new ZoneNode(director.Bulkhead, zoneIndex);
-        //     var nextZone = new Zone
-        //     {
-        //         Coverage = CoverageMinMax.GenNormalSize(),
-        //         LightSettings = Lights.GenRandomLight(),
-        //     };
-        //
-        //     nextZone.RollFog(level);
-        //
-        //     // This means it is the last zone
-        //     if (i == director.ZoneCount - 1)
-        //         next.Tags.Add("exit_elevator");
-        //
-        //     level.Planner.Connect(prev, next);
-        //     level.Planner.AddZone(next, nextZone);
-        //
-        //     prev = next;
-        // }
-        //
-        // var last = prev;
-        // var lastZone = level.Planner.GetZone(last)!;
-        //
-        // var secondLast = (ZoneNode)level.Planner.GetBuildFrom(last)!;
-        // var secondLastZone = level.Planner.GetZone(secondLast)!;
-        //
-        // var subcomplex = GenSubComplex(level.Complex);
-        //
-        // // Some adjustments to try and reduce the chance of the exit geo not
-        // // spawning due to being trapped by a small penultimate zone
-        // secondLastZone.ZoneExpansion = ZoneExpansion.Expansional;
-        // secondLastZone.Coverage = new CoverageMinMax { Min = 35, Max = 45 };
-        // lastZone.StartPosition = ZoneEntranceBuildFrom.Furthest;
-        //
-        // // The final zone is the extraction zone
-        // lastZone.Coverage = new CoverageMinMax { Min = 50, Max = 50 };
-        // lastZone.SubComplex = subcomplex;
-        // lastZone.GenExitGeomorph(level.Complex);
     }
 }

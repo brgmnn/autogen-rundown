@@ -20,7 +20,7 @@ TODO:
   * Make giants blood door a bit harder? B-tier was easy
   * Rework lights on zone to load into lightsettings and let us set our own light settings
   * Make extract scan short if there's no extract alarm (Don't do it just based on level tier)
-  * Reduce weight for Onion enemies. They're very hard
+  * Add a way to automatically install deps?
 
 Weekly 9-A1 bug:
   * Doesn't seem to be the chained puzzles.. Unclear for now

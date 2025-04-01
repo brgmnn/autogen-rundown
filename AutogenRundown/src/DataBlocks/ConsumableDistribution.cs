@@ -40,6 +40,20 @@ namespace AutogenRundown.DataBlocks
         };
 
         /// <summary>
+        /// Spawns a lot of fog repellers. We need this for certain alarm zones
+        /// </summary>
+        public static ConsumableDistribution Alarms_FogRepellers = new()
+        {
+            SpawnsPerZone = 12,
+            SpawnData = Collections.Flatten(
+                ItemSpawn.GlowSticks(),
+                new List<ItemSpawn> {
+                    new() { Weight = 8.0, Item = Items.Item.FogRepeller }
+                }
+            )
+        };
+
+        /// <summary>
         /// Baseline with heavy weighting to fog repellers. Averages to 4 repellers, 2 glowsticks,
         /// and 1 lock melter per zone.
         /// </summary>
@@ -58,6 +72,8 @@ namespace AutogenRundown.DataBlocks
         {
             Bins.ConsumableDistributions.AddBlock(Baseline);
             Bins.ConsumableDistributions.AddBlock(Baseline_FogRepellers);
+
+            Bins.ConsumableDistributions.AddBlock(Alarms_FogRepellers);
 
             Bins.ConsumableDistributions.AddBlock(Reactor_FogRepellers);
         }

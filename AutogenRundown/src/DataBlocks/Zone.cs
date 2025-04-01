@@ -867,6 +867,7 @@ namespace AutogenRundown.DataBlocks
                 Plugin.Logger.LogDebug($"Zone {LocalIndex} alarm(fixed): {puzzle}");
             }
 
+            // TODO: check these are working
             EventsOnApproachDoor.AddRange(puzzle.EventsOnApproachDoor);
             EventsOnUnlockDoor.AddRange(puzzle.EventsOnUnlockDoor);
             EventsOnOpenDoor.AddRange(puzzle.EventsOnOpenDoor);
@@ -874,88 +875,6 @@ namespace AutogenRundown.DataBlocks
             EventsOnDoorScanDone.AddRange(puzzle.EventsOnDoorScanDone);
 
             var parent = level.Planner.GetBuildFrom(new ZoneNode { Bulkhead = Bulkhead.Extreme, ZoneNumber = LocalIndex });
-
-            // // Flashing alarm test code
-            // if (level.Tier == "A")
-            // {
-            //     EventsOnDoorScanStart.Add(
-            //         new WardenObjectiveEvent()
-            //         {
-            //             Type = WardenObjectiveEventType.SetLightDataInZone,
-            //             Trigger = WardenObjectiveEventTrigger.OnStart,
-            //             LocalIndex = parent?.ZoneNumber ?? 0,
-            //             Layer = 0,
-            //             Delay = 0.0,
-            //             Duration = 0.1,
-            //             SetZoneLight = new()
-            //             {
-            //                 LightSettings = Light.LightSettings.RedZoneDoor,
-            //                 Duration = 0.1,
-            //                 Seed = 1,
-            //             }
-            //         });
-            //     EventsOnDoorScanDone.Add(
-            //         new WardenObjectiveEvent()
-            //         {
-            //             Type = WardenObjectiveEventType.SetLightDataInZone,
-            //             Trigger = WardenObjectiveEventTrigger.OnStart,
-            //             LocalIndex = parent?.ZoneNumber ?? 0,
-            //             Layer = 0,
-            //             Delay = 0.0,
-            //             Duration = 0.1,
-            //             SetZoneLight = new()
-            //             {
-            //                 Duration = 0.1,
-            //                 Seed = 1,
-            //                 SetLight = SetZoneLightType.Revert
-            //             }
-            //         });
-            // }
-
-
-            // if (level.Tier == "A")
-            //     EventsOnDoorScanStart.Add(
-            //         new WardenObjectiveEvent()
-            //         {
-            //             Type = WardenObjectiveEventType.StartEventLoop,
-            //             EventLoop = new()
-            //             {
-            //                 LoopIndex = 0,
-            //                 LoopDelay = 1.0,
-            //                 LoopCount = 100,
-            //                 EventsToActivate = new List<WardenObjectiveEvent>()
-            //                 {
-            //                     new WardenObjectiveEvent()
-            //                     {
-            //                         Type = WardenObjectiveEventType.SetLightDataInZone,
-            //                         LocalIndex = parent?.ZoneNumber ?? 0,
-            //                         Layer = 1,
-            //                         Delay = 0.0,
-            //                         Duration = 0.1,
-            //                         SetZoneLight = new()
-            //                         {
-            //                             LightSettings = Light.LightSettings.LightsOff,
-            //                             Duration = 0.1,
-            //                             Seed = 1,
-            //                         }
-            //                     },
-            //                     new WardenObjectiveEvent()
-            //                     {
-            //                         Type = WardenObjectiveEventType.SetLightDataInZone,
-            //                         LocalIndex = parent?.ZoneNumber ?? 0,
-            //                         Layer = 1,
-            //                         Delay = 0.5,
-            //                         Duration = 0.1,
-            //                         SetZoneLight = new()
-            //                         {
-            //                             LightSettings = Light.LightSettings.ErrorFlashOn,
-            //                             Duration = 0.1,
-            //                             Seed = 2,
-            //                         }
-            //                     }
-            //                 }
-            //             }
-            //         });
 
             // Add custom events on alarms
             if (!puzzle.FixedAlarm)

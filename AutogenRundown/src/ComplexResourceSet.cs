@@ -155,10 +155,10 @@ public class ComplexResourceSet
         // > left and right of the evac point. There is a variation of this configured as a regular
         // > dead end tile, "ASSETS/GEO_64X64_DIG_SITE_DEAD_END_DAK_01.PREFAB"
         // > Use the dead end tile if you don't want to be forced into a forward evac.
+        // Seems to fail?
         resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Exit_1x1", new Prefab()
         {
             Asset = "Assets/geo_64x64_dig_site_exit_dak_01.prefab",
-            // Asset = "ASSETS/GEO_64X64_DIG_SITE_EXIT_DAK_01.PREFAB",
             SubComplex = SubComplex.DigSite
             // Shard = "2"
         });
@@ -194,6 +194,7 @@ public class ComplexResourceSet
 
         // Non-destroyed elevator exit.
         // TODO: not totally convinced on keeping this one
+        // Seems to fail?
         resourceSet.AddPrefab(Complex.Mining, "CustomGeomorphs_Exit_1x1", new Prefab()
         {
             Asset = "Assets/Bundles/RLC_Mining/geo_64x64_mining_storage_exit_hub_RLC_01.prefab",
