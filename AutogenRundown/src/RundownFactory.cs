@@ -468,6 +468,244 @@ public static class RundownFactory
     }
 
     /// <summary>
+    /// Dedicated method for building the monthly rundown
+    /// </summary>
+    /// <param name="rundown"></param>
+    /// <returns></returns>
+    public static Rundown BuildMonthlyRundown(Rundown newRundown)
+    {
+        var rundown = Rundown.Build(newRundown);
+        var levelNames = Words.NewLevelNamesPack();
+
+        //
+        // Use the seed pool to re-roll levels. Start by setting these at 1 and incrementing each time
+        // there's a level lockup
+        // "2025_01" - January  2025:
+        // "2025_02" - February 2025:
+        //
+        var buildPools = new Dictionary<string, List<List<int>>>
+        {
+            {
+                "2025_04", new List<List<int>>
+                {
+                    new() { 2, 1 },       // Tier A - ?
+                    new() { 1, 1, 1 },    // Tier B - ?
+                    new() { 1, 1, 1, 1 }, // Tier C - ?
+                    new() { 2, 1, 1, 1 }, // Tier D - ?
+                    new() { 1, 1 }        // Tier E - ?
+                }
+            }
+        };
+
+        #region Cross-level specific setup
+
+        buildPools.TryGetValue(Generator.Seed, out var buildSeeds);
+
+        // Set a default list of build seeds for months we don't roll
+        if (buildSeeds is null)
+            buildSeeds = new List<List<int>>
+            {
+                /* Tier A */ new() { 2, 1 },
+                /* Tier B */ new() { 1, 1, 1 },
+                /* Tier C */ new() { 1, 1, 1, 1 },
+                /* Tier D */ new() { 2, 1, 1, 1 },
+                /* Tier E */ new() { 1, 1 }
+            };
+
+        // Define a rundown global pool of objectives for the main objective.
+        // This is to help us high rolling one particular objective over
+        // another. So we avoid having a rundown with only ReactorStartup
+        var mainObjectivesPool = new List<(double, int, WardenObjectiveType)>
+        {
+            (1.0, 3, WardenObjectiveType.HsuFindSample),
+            (1.0, 3, WardenObjectiveType.ReactorStartup),
+            (1.0, 3, WardenObjectiveType.ReactorShutdown),
+            (1.0, 2, WardenObjectiveType.GatherSmallItems),
+            (1.0, 2, WardenObjectiveType.ClearPath),
+            (0.7, 1, WardenObjectiveType.SpecialTerminalCommand),
+            (1.0, 3, WardenObjectiveType.RetrieveBigItems),
+            (1.0, 2, WardenObjectiveType.PowerCellDistribution),
+            (1.0, 3, WardenObjectiveType.TerminalUplink),
+            (1.0, 3, WardenObjectiveType.Survival),
+            (1.0, 2, WardenObjectiveType.TimedTerminalSequence),
+        };
+        var complexPool = new List<(double, int, Complex)>
+        {
+            (1.0, 10, Complex.Mining),
+            (1.0, 10, Complex.Tech),
+            (0.8, 10, Complex.Service)
+        };
+
+        rundown.TierA_Count = buildSeeds[0].Count;
+        rundown.TierB_Count = buildSeeds[1].Count;
+        rundown.TierC_Count = buildSeeds[2].Count;
+        rundown.TierD_Count = buildSeeds[3].Count;
+        rundown.TierE_Count = buildSeeds[4].Count;
+
+        #endregion
+
+        // --- A-Tier Levels ---
+        for (var i = 0; i < rundown.TierA_Count; i++)
+        {
+            var buildSeed = buildSeeds[0][i];
+            Generator.AdvanceSequence(buildSeed);
+
+            var complex = Generator.DrawSelect(complexPool);
+            var objective = Generator.DrawSelect(mainObjectivesPool);
+            var director = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Main,
+                Complex = complex,
+                Tier = "A",
+                Objective = objective,
+            };
+
+            var level = Level.Build(
+                new Level("A")
+                {
+                    Name = Generator.Draw(levelNames)!,
+                    Index = i + 1,
+                    Complex = complex,
+                    MainDirector = director,
+                    BuildSeed = buildSeed
+                });
+
+            rundown.AddLevel(level);
+        }
+
+        // --- B-Tier Levels ---
+        for (var i = 0; i < rundown.TierB_Count; i++)
+        {
+            var buildSeed = buildSeeds[1][i];
+            Generator.AdvanceSequence(buildSeed);
+
+            var complex = Generator.DrawSelect(complexPool);
+            var objective = Generator.DrawSelect(mainObjectivesPool);
+            var director = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Main,
+                Complex = complex,
+                Tier = "B",
+                Objective = objective,
+            };
+
+            var level = Level.Build(
+                new Level("B")
+                {
+                    Name = Generator.Draw(levelNames)!,
+                    Index = i + 1,
+                    Complex = complex,
+                    MainDirector = director,
+                    BuildSeed = buildSeed
+                });
+
+            rundown.AddLevel(level);
+        }
+
+        // --- C-Tier Levels ---
+        for (var i = 0; i < rundown.TierC_Count; i++)
+        {
+            var buildSeed = buildSeeds[2][i];
+            Generator.AdvanceSequence(buildSeed);
+
+            var complex = Generator.DrawSelect(complexPool);
+            var objective = Generator.DrawSelect(mainObjectivesPool);
+            var director = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Main,
+                Complex = complex,
+                Tier = "C",
+                Objective = objective,
+            };
+
+            var level = Level.Build(
+                new Level("C")
+                {
+                    Name = Generator.Draw(levelNames)!,
+                    Index = i + 1,
+                    Complex = complex,
+                    MainDirector = director,
+                    BuildSeed = buildSeed
+                });
+
+            rundown.AddLevel(level);
+        }
+
+        // --- D-Tier Levels ---
+        for (var i = 0; i < rundown.TierD_Count; i++)
+        {
+            var buildSeed = buildSeeds[3][i];
+            Generator.AdvanceSequence(buildSeed);
+
+            var complex = Generator.DrawSelect(complexPool);
+            var objective = Generator.DrawSelect(mainObjectivesPool);
+            var director = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Main,
+                Complex = complex,
+                Tier = "D",
+                Objective = objective,
+            };
+
+            var level = Level.Build(
+                new Level("D")
+                {
+                    Name = Generator.Draw(levelNames)!,
+                    Index = i + 1,
+                    Complex = complex,
+                    MainDirector = director,
+                    BuildSeed = buildSeed
+                });
+
+            rundown.AddLevel(level);
+        }
+
+        // --- E-Tier Levels ---
+        for (var i = 0; i < rundown.TierE_Count; i++)
+        {
+            var buildSeed = buildSeeds[4][i];
+            Generator.AdvanceSequence(buildSeed);
+
+            var complex = Generator.DrawSelect(complexPool);
+            var objective = Generator.DrawSelect(mainObjectivesPool);
+            var director = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Main,
+                Complex = complex,
+                Tier = "E",
+                Objective = objective,
+            };
+
+            var level = Level.Build(
+                new Level("E")
+                {
+                    Name = Generator.Draw(levelNames)!,
+                    Index = i + 1,
+                    Complex = complex,
+                    MainDirector = director,
+                    BuildSeed = buildSeed
+                });
+
+            rundown.AddLevel(level);
+        }
+
+        // Add progression requirements if unlocks are needed
+        // Only add this for the non-debug build
+        #if !DEBUG
+        rundown.UseTierUnlockRequirements = true;
+
+        rundown.ReqToReachTierB.MainSectors = Math.Max(1, rundown.TierA.Count - 1);
+        rundown.ReqToReachTierC.MainSectors = Math.Max(0, rundown.ReqToReachTierB.MainSectors + rundown.TierB.Count - 1);
+        rundown.ReqToReachTierD.MainSectors = Math.Max(0, rundown.ReqToReachTierC.MainSectors + rundown.TierC.Count - 1);
+        rundown.ReqToReachTierE.MainSectors = Math.Max(0, rundown.ReqToReachTierD.MainSectors + rundown.TierD.Count - 1);
+        #endif
+
+        rundown.VisualsETier = Color.MenuVisuals_MonthlyE;
+
+        return rundown;
+    }
+
+    /// <summary>
     /// Entrypoint to build a new rundown
     /// </summary>
     public static void Build(string dailySeed)
@@ -499,55 +737,12 @@ public static class RundownFactory
             Generator.Reload();
 
             var name = Words.RundownNameMonthly();
-
-            ///
-            /// Use the seed pool to re-roll levels. Start by setting these at 1 and incrementing each time
-            /// there's a level lockup
-            /// TODO: Clear Path objectives seem to fail to place the exit zone often
-            /// "2025_01" - January  2025:
-            /// "2025_02" - February 2025:
-            ///
-            var buildPools = new Dictionary<string, List<int>>
-            {
-                {
-                    "2025_04", new()
-                    {
-                        2, 1,       // Tier A - ?
-                        1, 1, 1,    // Tier B - ?
-                        1, 1, 1, 1, // Tier C - ?
-                        2, 1, 1, 1, // Tier D - ?
-                        1, 1,       // Tier E - ?
-                    }
-                }
-            };
-
-            buildPools.TryGetValue(Generator.Seed, out var buildSeeds);
-
-            var withUnlocks = true;
-            #if DEBUG
-            withUnlocks = false;
-            #endif
-
-            var monthly = BuildRundown(new Rundown
+            var monthly = BuildMonthlyRundown(new Rundown
             {
                 PersistentId = Rundown.R_Monthly,
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>MONTHLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
-
-                TierA_Count = Generator.Seed == "2025_03" ? 1 : 2,
-                TierB_Count = 3,
-                TierC_Count = 4,
-                TierD_Count = Generator.Seed == "2025_03" ? 3 : 4,
-                TierE_Count = 3,
-
-                ///
-                /// Use the seed pool to re-roll levels. Start by setting these at 1 and incrementing each time
-                /// there's a level lockup
-                ///
-                BuildSeedPool = buildSeeds ?? new List<int>()
-            }, false, withUnlocks);
-
-            monthly.VisualsETier = Color.MenuVisuals_MonthlyE;
+            });
 
             Bins.Rundowns.AddBlock(monthly);
         }

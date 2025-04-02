@@ -17,7 +17,7 @@ namespace AutogenRundown
     {
         public int Points { get; set; } = 0;
 
-        public Complexity Complexity { get; set; } = Complexity.Medium;
+        public Complexity Complexity { get; set; } = Complexity.Low;
 
         public string Tier { get; set; } = "A";
 
