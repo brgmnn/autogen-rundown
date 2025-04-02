@@ -35,6 +35,8 @@ Working exit geos
 
   Note: It may well be a space issue. The two failed tiles are quite large, so when they don't spawn it might just be that there isn't space for them.
 
+Monthly April
+  * Find HSU seems like it needs re-rolling occasionally. May be some of the levels can't place well
 
 Monthly March
   * March 27th
