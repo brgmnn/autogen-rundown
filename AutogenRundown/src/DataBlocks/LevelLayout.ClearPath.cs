@@ -176,7 +176,7 @@ public partial record LevelLayout
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Keycard to Apex alarm
-                    (0.00, () =>
+                    (0.20, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
                         var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last(), Generator.Between(1, 2));
@@ -194,7 +194,7 @@ public partial record LevelLayout
                     }),
 
                     // Boss fight to Apex
-                    (0.10, () =>
+                    (0.20, () =>
                     {
                         var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
 
@@ -213,7 +213,7 @@ public partial record LevelLayout
                     }),
 
                     // Error with off + cell carry
-                    (0.00, () =>
+                    (0.20, () =>
                     {
                         var (mid, _) = BuildChallenge_ErrorWithOff_GeneratorCellCarry(
                             start,
@@ -224,7 +224,7 @@ public partial record LevelLayout
                     }),
 
                     // Error with off + key card
-                    (0.00, () =>
+                    (0.20, () =>
                     {
                         var (mid, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
                             start,
@@ -237,7 +237,7 @@ public partial record LevelLayout
 
                     // Boss Fight: Mega Mother
                     // We also do some interesting prelude zones to get to megamom
-                    (0.00, () =>
+                    (0.20, () =>
                     {
                         // var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
                         var bossStart = start;
@@ -298,9 +298,69 @@ public partial record LevelLayout
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
+                    // Keycard to Apex alarm
+                    (0.10, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last(), Generator.Between(1, 2));
+
+                        midZone.GenCorridorGeomorph(level.Complex);
+
+                        var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+                        mid2Zone.SetStartExpansionFromExpansion();
+
+                        (exit, exitZone) = BuildChallenge_ApexAlarm(
+                            mid2,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                    }),
+
+                    // Boss fight to Apex
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+
+                        var (mid, midZone) = BuildChallenge_BossFight(nodes.Last());
+
+                        midZone.GenCorridorGeomorph(level.Complex);
+
+                        var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+                        mid2Zone.SetStartExpansionFromExpansion();
+
+                        (exit, exitZone) = BuildChallenge_ApexAlarm(
+                            mid2,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                    }),
+
+                    // Error with off + cell carry
+                    (0.25, () =>
+                    {
+                        var (mid, _) = BuildChallenge_ErrorWithOff_GeneratorCellCarry(
+                            start,
+                            Generator.Between(2, 4),
+                            1);
+
+                        (exit, exitZone) = AddZone(mid, new ZoneNode { Branch = "exit" });
+                    }),
+
+                    // Error with off + key card
+                    (0.15, () =>
+                    {
+                        var (mid, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
+                            start,
+                            Generator.Between(1, 3),
+                            Generator.Between(1, 2),
+                            1);
+
+                        (exit, exitZone) = AddZone(mid, new ZoneNode { Branch = "exit" });
+                    }),
+
                     // Boss Fight: Mega Mother
                     // We also do some interesting prelude zones to get to megamom
-                    (0.4, () =>
+                    (0.25, () =>
                     {
                         // var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
                         var bossStart = start;
@@ -333,11 +393,13 @@ public partial record LevelLayout
                                 (bossStart, _) = BuildChallenge_ApexAlarm(
                                     nodes.Last(),
                                     WavePopulation.Baseline_Hybrids,
-                                    WaveSettings.Baseline_VeryHard);
+                                    WaveSettings.Baseline_Hard);
                             })
                         });
 
-                        var (boss, _) = AddZone(bossStart, new ZoneNode
+                        var (boss, bossZone) = AddZone(
+                            bossStart,
+                            new ZoneNode
                             {
                                 Branch = "boss_fight",
                                 Tags = new Tags("no_blood_door")
