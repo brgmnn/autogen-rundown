@@ -175,9 +175,69 @@ public partial record LevelLayout
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
+                    // Keycard to Apex alarm
+                    (0.00, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last(), Generator.Between(1, 2));
+
+                        midZone.GenCorridorGeomorph(level.Complex);
+
+                        var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+                        mid2Zone.SetStartExpansionFromExpansion();
+
+                        (exit, exitZone) = BuildChallenge_ApexAlarm(
+                            mid2,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                    }),
+
+                    // Boss fight to Apex
+                    (0.10, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+
+                        var (mid, midZone) = BuildChallenge_BossFight(nodes.Last());
+
+                        midZone.GenCorridorGeomorph(level.Complex);
+
+                        var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+                        mid2Zone.SetStartExpansionFromExpansion();
+
+                        (exit, exitZone) = BuildChallenge_ApexAlarm(
+                            mid2,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                    }),
+
+                    // Error with off + cell carry
+                    (0.00, () =>
+                    {
+                        var (mid, _) = BuildChallenge_ErrorWithOff_GeneratorCellCarry(
+                            start,
+                            Generator.Between(2, 4),
+                            1);
+
+                        (exit, exitZone) = AddZone(mid, new ZoneNode { Branch = "exit" });
+                    }),
+
+                    // Error with off + key card
+                    (0.00, () =>
+                    {
+                        var (mid, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
+                            start,
+                            Generator.Between(1, 3),
+                            Generator.Between(1, 2),
+                            1);
+
+                        (exit, exitZone) = AddZone(mid, new ZoneNode { Branch = "exit" });
+                    }),
+
                     // Boss Fight: Mega Mother
                     // We also do some interesting prelude zones to get to megamom
-                    (0.4, () =>
+                    (0.00, () =>
                     {
                         // var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
                         var bossStart = start;
@@ -236,11 +296,62 @@ public partial record LevelLayout
 
             case "E":
             {
-                var nodes = AddBranch(start, director.ZoneCount, "primary",
-                    (node, zone) => zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward);
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Boss Fight: Mega Mother
+                    // We also do some interesting prelude zones to get to megamom
+                    (0.4, () =>
+                    {
+                        // var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                        var bossStart = start;
 
-                exit = nodes.Last();
-                exitZone = planner.GetZone(exit)!;
+                        // Have some choices on arriving at the mega mom
+                        Generator.SelectRun(new List<(double, Action)>
+                        {
+                            // Generator access
+                            (0.35, () =>
+                            {
+                                var nodes = AddBranch_Forward(start, 2);
+                                (bossStart, _) = BuildChallenge_GeneratorCellInSide(
+                                    nodes.Last(),
+                                    Generator.Between(1, 2));
+                            }),
+
+                            // Keycard access
+                            (0.45, () =>
+                            {
+                                var nodes = AddBranch_Forward(start, 2);
+                                (bossStart, _) = BuildChallenge_KeycardInSide(
+                                    nodes.Last(),
+                                    Generator.Between(1, 2));
+                            }),
+
+                            // Apex alarm
+                            (0.20, () =>
+                            {
+                                var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                                (bossStart, _) = BuildChallenge_ApexAlarm(
+                                    nodes.Last(),
+                                    WavePopulation.Baseline_Hybrids,
+                                    WaveSettings.Baseline_VeryHard);
+                            })
+                        });
+
+                        var (boss, _) = AddZone(bossStart, new ZoneNode
+                            {
+                                Branch = "boss_fight",
+                                Tags = new Tags("no_blood_door")
+                            });
+                        (exit, exitZone) = AddZone(boss, "exit");
+
+                        exitZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
+
+                        var bossClearEvents = new List<WardenObjectiveEvent>()
+                            .AddUnlockDoor(director.Bulkhead, exit.ZoneNumber);
+
+                        AddAlignedBossFight_MegaMom(boss, bossClearEvents);
+                    })
+                });
                 break;
             }
         }

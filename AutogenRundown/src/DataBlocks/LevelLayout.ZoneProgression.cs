@@ -305,26 +305,6 @@ namespace AutogenRundown.DataBlocks
                                 new StaticSpawnDataContainer { Count = 50, Unit = StaticSpawnUnit.Corpses });
                         }),
 
-                        // MegaMother, with some chaff
-                        // Probably the hardest boss fight on offer
-                        (0.15, () =>
-                        {
-                            zone.EnemySpawningInZone.Add(EnemySpawningData.MegaMother_AlignedSpawn with { Points = 40 });
-
-                            // Some small enemies
-                            zone.EnemySpawningInZone.Add(EnemySpawningData.Baby with { Points = 10 });
-                            zone.EnemySpawningInZone.Add(EnemySpawningData.Striker with { Points = 5 });
-                            zone.EnemySpawningInZone.Add(EnemySpawningData.Shooter with { Points = 5 });
-
-                            // Set the zone to be excluded from enemy rolls
-                            planner.UpdateNode(bossNode with { Tags = bossNode.Tags.Extend("no_enemies") });
-
-                            SetMotherVibe(zone, 300);
-
-                            zone.AmmoPacks += 10;
-                            zone.ToolPacks += 4;
-                        }),
-
                         // Tank & PMother
                         (0.25, () =>
                         {
@@ -336,7 +316,7 @@ namespace AutogenRundown.DataBlocks
 
                             zone.AmmoPacks += 6;
                             zone.ToolPacks += 2;
-                        }),
+                        })
                     });
                     break;
                 }

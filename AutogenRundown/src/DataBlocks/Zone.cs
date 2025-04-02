@@ -206,6 +206,18 @@ namespace AutogenRundown.DataBlocks
                     }
             }
         }
+
+        public void SetStartExpansionFromExpansion()
+        {
+            StartExpansion = ZoneExpansion switch
+            {
+                ZoneExpansion.Forward => ZoneBuildExpansion.Forward,
+                ZoneExpansion.Backward => ZoneBuildExpansion.Backward,
+                ZoneExpansion.Left => ZoneBuildExpansion.Left,
+                ZoneExpansion.Right => ZoneBuildExpansion.Right,
+                _ => StartExpansion
+            };
+        }
         #endregion
 
         #region Custom geomorph settings
