@@ -33,6 +33,8 @@ Exit Geo failures to spawn:
 Working exit geos
   * Assets/Prefabs/Geomorph/Mining/geo_storage_FA_dead_end_01.prefab
 
+  Note: It may well be a space issue. The two failed tiles are quite large, so when they don't spawn it might just be that there isn't space for them.
+
 
 Monthly March
   * March 27th

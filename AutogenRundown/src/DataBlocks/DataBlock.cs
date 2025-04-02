@@ -32,6 +32,12 @@ public record DataBlock
     public string Name { get; set; }
 
     /// <summary>
+    /// Mainly so we can debug blocks easier
+    /// </summary>
+    [JsonProperty("_comment", NullValueHandling = NullValueHandling.Ignore)]
+    public string? Comment { get; set; }
+
+    /// <summary>
     /// Whether the data block is read by the game or not. Disabled blocks are ignored
     /// </summary>
     [JsonProperty("internalEnabled")]

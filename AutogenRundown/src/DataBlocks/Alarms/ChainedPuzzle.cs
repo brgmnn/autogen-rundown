@@ -1,4 +1,4 @@
-﻿using AutogenRundown.DataBlocks.Enemies;
+﻿ using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using Newtonsoft.Json;
 
@@ -150,7 +150,9 @@ public record ChainedPuzzle : DataBlock
     // }
 
     public override string ToString()
-        => $"ChainedPuzzle {{ PublicAlarmName = {PublicAlarmName}, Population = {Population}, Settings = {Settings} }}";
+        => Comment is not null ?
+            $"ChainedPuzzle {{ PublicAlarmName = {PublicAlarmName}, Population = {Population}, Settings = {Settings}, Comment = {Comment} }}" :
+            $"ChainedPuzzle {{ PublicAlarmName = {PublicAlarmName}, Population = {Population}, Settings = {Settings} }}";
 
     /// <summary>
     /// Resaves the datablock with a new persistent Id. Very useful for modifying the alarm
@@ -215,7 +217,7 @@ public record ChainedPuzzle : DataBlock
 
                     // Stealth and Surprise scans. Secret scans are grouped with their regular
                     // counterpart
-                    (0.2, 1, Secret_TeamScan_EasyBaseline),
+                    (1.0, 1, Secret_TeamScan_EasyBaseline),
 
                     // Moderate
                     (1.0, 1, AlarmClass2),
@@ -238,7 +240,7 @@ public record ChainedPuzzle : DataBlock
                     // counterpart
                     (0.4, 1, Secret_TeamScan_EasyBaseline),
                     (1.0, 1, StealthScan4),
-                    (0.4, 1, Secret_StealthScan4_NormalBaseline),
+                    (0.8, 1, Secret_StealthScan4_NormalBaseline),
 
                     // Moderate
                     (1.0, 1, AlarmClass3),
@@ -260,9 +262,9 @@ public record ChainedPuzzle : DataBlock
 
                     // Stealth and Surprise scans. Secret scans are grouped with their regular
                     // counterpart
-                    (0.4, 1, Secret_TeamScan_EasyBaseline),
+                    (0.5, 1, Secret_TeamScan_EasyBaseline),
                     (1.0, 1, StealthScan4),
-                    (0.3, 2, Secret_StealthScan4_NormalBaseline),
+                    (0.5, 2, Secret_StealthScan4_NormalBaseline),
 
                     // Moderate
                     // (1.0, 2, AlarmClass3),
@@ -1041,6 +1043,9 @@ public record ChainedPuzzle : DataBlock
     /******************** Autogen Special Alarms ********************/
     public static readonly ChainedPuzzle Secret_TeamScan_EasyBaseline = TeamScan with
     {
+        PersistentId = 0,
+        Comment = "Secret Alarm: Secret_TeamScan_EasyBaseline",
+        FixedAlarm = true,
         EventsOnDoorScanStart = new List<WardenObjectiveEvent>
         {
             new WardenObjectiveEvent
@@ -1078,8 +1083,9 @@ public record ChainedPuzzle : DataBlock
 
     public static readonly ChainedPuzzle Secret_StealthScan4_NormalBaseline = StealthScan4 with
     {
-        FixedAlarm = false,
-
+        PersistentId = 0,
+        Comment = "Secret Alarm: Secret_StealthScan4_NormalBaseline",
+        FixedAlarm = true,
         EventsOnDoorScanStart = new List<WardenObjectiveEvent>
         {
             new WardenObjectiveEvent
@@ -1115,11 +1121,11 @@ public record ChainedPuzzle : DataBlock
         }
     };
 
-    public static readonly ChainedPuzzle Secret_SpawnTank = new()
+    public static readonly ChainedPuzzle Secret_SpawnTank = TeamScan with
     {
         PersistentId = 0,
+        Comment = "Secret Alarm: Secret_SpawnTank",
         FixedAlarm = true,
-        TriggerAlarmOnActivate = false,
         EventsOnOpenDoor = new List<WardenObjectiveEvent>
         {
             new WardenObjectiveEvent
@@ -1152,21 +1158,11 @@ public record ChainedPuzzle : DataBlock
         }
     };
 
-    public static readonly ChainedPuzzle Secret_StealthScan4_WithChargers = new()
+    public static readonly ChainedPuzzle Secret_StealthScan4_WithChargers = StealthScan4 with
     {
-        PublicAlarmName = "Class IV Scan",
+        PersistentId = 0,
+        Comment = "Secret Alarm: Secret_StealthScan4_WithChargers",
         FixedAlarm = true,
-        TriggerAlarmOnActivate = false,
-        WantedDistanceFromStartPos = 0.0,
-        WantedDistanceBetweenPuzzleComponents = 35.0,
-        Puzzle = new List<PuzzleComponent>
-        {
-            PuzzleComponent.ScanLarge,
-            PuzzleComponent.ClusterSmall,
-            PuzzleComponent.Cluster,
-            PuzzleComponent.ClusterSmall
-        },
-
         EventsOnDoorScanStart = new List<WardenObjectiveEvent>
         {
             new WardenObjectiveEvent

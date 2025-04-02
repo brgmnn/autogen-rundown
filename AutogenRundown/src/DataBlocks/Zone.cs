@@ -879,7 +879,9 @@ namespace AutogenRundown.DataBlocks
                 Plugin.Logger.LogDebug($"Zone {LocalIndex} alarm(fixed): {puzzle}");
             }
 
-            // TODO: check these are working
+            if (puzzle.Comment != null)
+                Plugin.Logger.LogWarning($"Zone {LocalIndex} alarm(secret): EventsOnDoorScanStart={puzzle.EventsOnDoorScanStart.Count} EventsOnDoorOpen={puzzle.EventsOnOpenDoor.Count}");
+
             EventsOnApproachDoor.AddRange(puzzle.EventsOnApproachDoor);
             EventsOnUnlockDoor.AddRange(puzzle.EventsOnUnlockDoor);
             EventsOnOpenDoor.AddRange(puzzle.EventsOnOpenDoor);
