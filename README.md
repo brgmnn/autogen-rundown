@@ -27,6 +27,13 @@ Weekly 9-A1 bug:
   * Disappears if I disable EITHER overload or secondary
   * It appears to be the map layout. I suspect it's the door not having a place to place though
 
+Exit Geo failures to spawn:
+  * Assets/Bundles/RLC_Mining/geo_64x64_mining_storage_exit_hub_RLC_01.prefab
+  * Assets/geo_64x64_dig_site_exit_dak_01.prefab
+Working exit geos
+  * Assets/Prefabs/Geomorph/Mining/geo_storage_FA_dead_end_01.prefab
+
+
 Monthly March
   * March 27th
     * E2
