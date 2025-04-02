@@ -36,7 +36,7 @@ public partial record LevelLayout
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Straight shot
-                    (0.2, () =>
+                    (0.20, () =>
                     {
                         var nodes = AddBranch(start, Generator.Between(2, 4));
 
@@ -63,7 +63,7 @@ public partial record LevelLayout
                     }),
 
                     // Single keycard end
-                    (0.2, () =>
+                    (0.20, () =>
                     {
                         var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
                         (exit, exitZone) = BuildChallenge_KeycardInSide(nodes.Last());
@@ -133,44 +133,63 @@ public partial record LevelLayout
                 break;
             }
 
-            // TODO
             case "C":
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // // Straight shot
-                    // (0.4, () =>
-                    // {
-                    //     var nodes = AddBranch(start, director.ZoneCount, "primary",
-                    //         (node, zone) => zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward);
-                    //
-                    //     exit = nodes.Last();
-                    //     exitZone = planner.GetZone(exit)!;
-                    // }),
-
-                    // Build keycard locked puzzle
-                    (0.4, () =>
+                    // Keycard to Apex alarm
+                    (0.25, () =>
                     {
-                        var nodes = AddBranch_Forward(start, Generator.Between(3, 4));
-                        exit = nodes.Last();
-                        exitZone = planner.GetZone(exit)!;
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last());
 
-                        var hub = nodes.ElementAt(nodes.Count - 2);
-                        var hubZone = planner.GetZone(hub)!;
+                        midZone.GenCorridorGeomorph(level.Complex);
 
-                        hubZone.AmmoPacks += 3.0;
-                        hubZone.ToolPacks += 2.0;
+                        var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+                        mid2Zone.SetStartExpansionFromExpansion();
 
-                        var population = WavePopulation.Baseline;
-                        var settings = WaveSettings.Baseline_Normal;
+                        (exit, exitZone) = BuildChallenge_ApexAlarm(
+                            mid2,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Normal);
+                    }),
 
-                        AddApexAlarm(exit, population, settings);
+                    // Double generator
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, _) = BuildChallenge_GeneratorCellInSide(nodes.Last());
+
+                        var nodes2 = AddBranch_Forward(mid, 1);
+                        (exit, exitZone) = BuildChallenge_GeneratorCellInSide(nodes2.Last());
+                    }),
+
+                    // Generator to boss
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, _) = BuildChallenge_GeneratorCellInSide(nodes.Last());
+
+                        var nodes2 = AddBranch_Forward(mid, 1);
+                        (exit, exitZone) = BuildChallenge_BossFight(nodes2.Last());
+                    }),
+
+                    // Error with off + key card
+                    (0.25, () =>
+                    {
+                        var (mid, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
+                            start,
+                            Generator.Between(2, 3),
+                            1,
+                            1);
+
+                        (exit, exitZone) = AddZone(mid, new ZoneNode { Branch = "exit" });
                     }),
                 });
                 break;
             }
 
-            // TODO
             case "D":
             {
                 Generator.SelectRun(new List<(double, Action)>
@@ -313,7 +332,7 @@ public partial record LevelLayout
                         (exit, exitZone) = BuildChallenge_ApexAlarm(
                             mid2,
                             WavePopulation.Baseline_Hybrids,
-                            WaveSettings.Baseline_Hard);
+                            WaveSettings.Baseline_VeryHard);
                     }),
 
                     // Boss fight to Apex
@@ -332,7 +351,7 @@ public partial record LevelLayout
                         (exit, exitZone) = BuildChallenge_ApexAlarm(
                             mid2,
                             WavePopulation.Baseline_Hybrids,
-                            WaveSettings.Baseline_Hard);
+                            WaveSettings.Baseline_VeryHard);
                     }),
 
                     // Error with off + cell carry
@@ -393,7 +412,7 @@ public partial record LevelLayout
                                 (bossStart, _) = BuildChallenge_ApexAlarm(
                                     nodes.Last(),
                                     WavePopulation.Baseline_Hybrids,
-                                    WaveSettings.Baseline_Hard);
+                                    WaveSettings.Baseline_VeryHard);
                             })
                         });
 
