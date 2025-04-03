@@ -65,7 +65,7 @@ public partial record WardenObjective : DataBlock
         {
             var zone = level.Planner.GetZone(node)!;
             var zoneTotal = zone.ClearTime_AreaCoverage() +
-                            zone.ClearTime_Enemies() +
+                            zone.ClearTime_Enemies() * 0.9 +
                             zone.ClearTime_Bosses() +
                             zone.ClearTime_BloodDoor();
 
