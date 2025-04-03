@@ -248,6 +248,12 @@ The Terminal Command objective, also known as Input Command, is an objective tha
 
 Players can use the auto-complete function of terminals (TAB key by default) to quickly input commands. 
 
+## Power Cell Distribution
+
+A mission with the goal of bringing Power Cells to multiple Generators around the map. 
+
+The goal of this mission is to bring power cells, which are given to you at the start of the mission in a cargo container, to different generators around the map. These generators will be spread out across multiple zones, making terminals very helpful in locating them. The cells must be carried to the generators, which will reduce your movement speed greatly. Due to this, it is a good idea to bring them along with you throughout the mission as you clear zones, keeping in mind where you ultimately need to bring them, instead of going back to the beginning every time you need to place a cell into a generator. Placing the cells into the generators does not typically cause any alarms or mission complications on its own. 
+
 ## Clear Path
 
 Clear a Path is the simplest objective in GTFO, and requires the prisoners to reach an extraction point. Often, prisoners will encounter complications, such as alarms, restoring power to generators, and finding keys, which all combine to make this seemingly simple task more challenging. 

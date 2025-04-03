@@ -146,28 +146,43 @@ namespace AutogenRundown.DataBlocks
             {
                 WardenObjectiveType.HsuFindSample => Generator.Pick(new List<string>
                     {
-                        "Security clearance for section <color=red>-REDACTED-</color> needed. DNA sample will suffice. Prisoners sent to locate Administrator in stasis unit."
+                        // Vanilla
+                        "Security clearance for section <color=red>-REDACTED-</color> needed. DNA sample will suffice. Prisoners sent to locate Administrator in stasis unit.",
+
+                        // Autogen
+                        $"Sample retrieval authorized. Prisoners to locate HSU and extract biological material. Specimen integrity mandatory. {IntelCasualtyWarning()}",
+                        "Hydro-Stasis Unit signal acquired. DNA sample required for higher-access clearance. Prisoners dispatched to recover.",
+                        $"HSU location unknown. Prisoners will identify, access, and extract tissue sample from designated unit. {IntelCasualtyWarning()}",
+                        "Biological match necessary for system authentication. Prisoners to retrieve tissue from dormant subject.",
+                        "Administrator genetic profile located within inactive HSU. Prisoners to extract viable sample and transmit.",
+                        $"Old blood. Cold cell. Prisoners must reach the unit and pull what's left. Sample must be intact. {IntelCasualtyWarning()}",
+                        "Warden directive: isolate correct unit and perform sample collection. Cross-contamination will not be tolerated.",
+                        "Link to security sector dependent on specimen match. Prisoners to obtain biological imprint from assigned HSU.",
+                        "Subject dormant for years. Tissue degradation likely. Immediate extraction required. Prisoners to comply.",
+                        $"Warden access protocol blocked. Genetic override needed. Prisoners to secure sample from flagged hydro-stasis unit. {IntelCasualtyWarning()}",
                     })!,
+
                 WardenObjectiveType.ReactorStartup => Generator.Pick(new List<string>
                     {
-                        // Vanilla lore descriptions
+                        // Vanilla
                         $"Bypass required in forward Security Zone. Prisoners sent to overload grid.",
-                        $"WARNING: Cold storage bulkhead filtration system offline. Grid reboot required. {IntelCasualtyWarning()}",
+                        $"<color=orange>WARNING</color>: Cold storage bulkhead filtration system offline. Grid reboot required. {IntelCasualtyWarning()}",
                         "Power out in neighboring sector. Reactor to be brought online at any cost of prisoners.",
                         $"Power grid manager reports system errors in primary reactor. Prisoners dispatched to execute quadrant generator reboot. {IntelCasualtyWarning()}",
                         $"Essential systems offline. Prisoners to perform system reboot in central quadrant. {IntelCasualtyWarning()}",
                         "Protocol requiring additional power. Prisoners dispatched to sector.",
                         "Insufficient power supply for PGD decryption. Prisoners sent to activate quadrant reactor."
 
-                        // New lore descriptions
+                        // Autogen
                     })!,
+
                 WardenObjectiveType.ReactorShutdown => Generator.Pick(new List<string>
                     {
-                        // Actual vanilla game lore descriptions
-                        $"A pathway out of section D has been located. Prisoners spent to gain access by powergrid shutdown. {IntelCasualtyWarning()}",
+                        // Vanilla
+                        $"A pathway out of section D has been located. Prisoners spent to gain access by power-grid shutdown. {IntelCasualtyWarning()}",
                         $"Security protocol prohibiting sub-level exploration. Prisoners sent to install override executable in local reactor. {IntelCasualtyWarning()}",
 
-                        // New lore descriptions
+                        // Autogen
                         $"Pathway to the reactor core identified. Prisoners dispatched for core isolation procedures. {IntelCasualtyWarning()}",
                         $"Restricted access to lower levels enforced. Prisoners tasked with initiating reactor shutdown sequence. {IntelCasualtyWarning()}",
                         $"Entrance to sector B uncovered. Prisoners assigned to disable reactor's failsafe mechanisms. {IntelCasualtyWarning()}",
@@ -182,21 +197,69 @@ namespace AutogenRundown.DataBlocks
 
                 WardenObjectiveType.ClearPath => Generator.Pick(new List<string>
                     {
-                        "Unknown hostile lifeform readings in subjacent quadrant. Expendable prisoners sent to survey threat severity."
+                        // Vanilla
+                        "Unknown hostile lifeform readings in adjacent quadrant. Expendable prisoners sent to survey threat severity.",
+
+                        // Autogen
+                        $"Obstruction in access route detected. Prisoners to eliminate all resistance and secure route for future activity. {IntelCasualtyWarning()}",
+                        "Route must remain operational for asset transfer. Prisoners instructed to clear hostile presence and ensure path integrity.",
+                        $"Prisoners dispatched to prepare corridor for Warden deployment. Resistance expected. Suppress all threats. {IntelCasualtyWarning()}",
+                        "Expedition requires uninterrupted passage. Prisoners ordered to neutralize localized threat cluster.",
+                        $"Staging area compromised by biohazards. Area to be purged. Prisoners will proceed through and report exit status. {IntelCasualtyWarning()}",
+                        "Opening vector for deeper incursions. Path must be cleared. Prisoners will verify structural viability en route.",
+                        $"This zone must be made passable. Future operations depend on a secured transit line. Eliminate all opposition. {IntelCasualtyWarning()}",
+                        "Diversionary objective initiated. Prisoners deployed to create movement corridor. Maintain pace and push through resistance.",
+                        "Transit corridor compromised. Pathway must be purged and left navigable. Prisoners deployed accordingly.",
+                        $"Advance directive: ensure zone access for secondary team. Prisoners to proceed through resistance and reach extraction intact. {IntelCasualtyWarning()}",
                     })!,
 
-                /*WardenObjectiveType.SpecialTerminalCommand => Generator.Pick(new List<string>
+                WardenObjectiveType.SpecialTerminalCommand => Generator.Pick(new List<string>
                     {
-                        ""
-                    }) ?? "",
+                        $"Terminal override required. Prisoners must execute input command to proceed. Environmental shift likely. {IntelCasualtyWarning()}",
+                        $"Access protocol stalled. Terminal command authorization transferred to prisoners. Manual input necessary. {IntelCasualtyWarning()}",
+                        "Command link compromised. Prisoners dispatched to restore function via terminal instruction. Anomalous activity expected.",
+                        $"Warden directive updated. Prisoners to trigger system event by direct terminal execution. Prepare for instability. {IntelCasualtyWarning()}",
+                        $"System requires localized authentication. Terminal input will result in cascading system behavior. {IntelCasualtyWarning()}",
+                        "Root-level intrusion anticipated. Manual intervention necessary. Execute terminal command when ready.",
+                        "Prisoners granted temporary command authority. Bypass security restrictions through targeted terminal input.",
+                        $"Unexpected protocol stack detected. Initiating failsafe. Input command to stabilize sector. {IntelCasualtyWarning()}",
+                        "System awaiting final instruction. Command to be entered by active field units. Resultant conditions unpredictable.",
+                        $"Command chain interrupted. Prisoners to restore control via legacy terminal instruction set. Residual defenses active. {IntelCasualtyWarning()}",
+                    })!,
+
                 WardenObjectiveType.PowerCellDistribution => Generator.Pick(new List<string>
                     {
-                        ""
-                    }) ?? "",*/
+                        // Vanilla
+                        $"Power interruptions compromising grid integrity. Prisoners sent to link cells to local grid through the [Z085] power cluster. Power grid stability imperative. {IntelCasualtyWarning()}",
+                        $"Prisoners sent to install power cells to local grid. Motile biomass detected. {IntelCasualtyWarning()}",
+
+                        // Autogen
+                        $"Power cells located. Distribution protocol initiated. Prisoners instructed to deliver payloads to designated generator units. {IntelCasualtyWarning()}",
+                        "Multiple zones offline. Prisoners will carry power modules to local generators. Movement penalties expected.",
+                        $"Energy delivery required to reactivate core systems. Prisoners must transport power cells across operational zones. {IntelCasualtyWarning()}",
+                        "Generator matrix offline. Prisoners to retrieve and distribute energy units manually. Heavy resistance expected.",
+                        $"Displacement of high-density power objects authorized. Prisoners tasked with strategic deployment to grid nodes. {IntelCasualtyWarning()}",
+                        "Energy routing compromised. Prisoners instructed to secure corridors and restore network via manual cell placement.",
+                        $"Cargo units must reach active generators. Prisoners are expendable; cells are not. Proceed accordingly. {IntelCasualtyWarning()}",
+                        "Unpowered sectors identified. Prisoners dispatched with containment-grade energy cells. Maintain route security.",
+                        $"Generator grid inert. Initiating fallback procedure. Prisoners to act as mobile power couriers. {IntelCasualtyWarning()}",
+                        "Critical energy transmission deferred to field agents. Prisoners responsible for direct insertion of cells into site power units.",
+                    })!,
+
                 WardenObjectiveType.TerminalUplink => Generator.Pick(new List<string>
                     {
-                        $"Network link required to obtain control over quadrant maintenance systems. Prisoners sent to establish terminal uplink. {IntelCasualtyWarning()}"
-                    }) ?? "",
+                        $"Network link required to obtain control over quadrant maintenance systems. Prisoners sent to establish terminal uplink. {IntelCasualtyWarning()}",
+                        $"Local uplink required for remote system control. Prisoners sent to initiate terminal link. {IntelCasualtyWarning()}",
+                        "Isolated data node discovered. Prisoners tasked with securing terminal access for Warden's upload.",
+                        $"Access node integrity failing. Prisoners deployed to stabilize link and transmit priority data. {IntelCasualtyWarning()}",
+                        $"Warden requires access to obsolete mainframe. Prisoners ordered to perform uplink at secured terminal. {IntelCasualtyWarning()}",
+                        "Unauthorized local systems online. Terminal lockdown initiated. Prisoners sent to override encryption and establish data link.",
+                        $"Signal relay compromised. Prisoners to uplink through regional access terminal before link collapse. {IntelCasualtyWarning()}",
+                        "Command uplink needed. Prisoners instructed to input credentials and hold position through transfer.",
+                        "Warden-mandated upload scheduled. Manual terminal confirmation required. Prisoners dispatched to initiate uplink.",
+                        $"High-priority data package ready. Prisoners assigned to enter codes at terminal and confirm transmission. {IntelCasualtyWarning()}",
+                        $"Terminal located in volatile zone. Prisoners must maintain connection during critical data transfer window. {IntelCasualtyWarning()}",
+                    })!,
 
                 WardenObjectiveType.GatherSmallItems => item switch
                 {
@@ -204,16 +267,46 @@ namespace AutogenRundown.DataBlocks
                     WardenObjectiveItem.Glp_2 => "Conduit genetic code compromised. Prisoners to collect DNA sample from HSU facility.",
                     _ => "Prisoners to collect items from storage facility. High asset fatality rate expected."
                 },
+
                 WardenObjectiveType.Survival => Generator.Pick(new List<string>
                 {
                     $"Prisoners expended for diversion to clear adjacent sectors. Local power grid unstable. {IntelCasualtyWarning()}",
-                    "Prisoners will act as decoy for undiscolsed parallel objective. Surviving prisoners will return for extraction once undisclosed objective has been completed."
+                    "Prisoners will act as decoy for undisclosed parallel objective. Surviving prisoners will return for extraction once undisclosed objective has been completed.",
+
+                    $"Biomass detected in critical zone. Prisoners will hold ground until extraction window becomes viable. {IntelCasualtyWarning()}",
+                    $"Stabilization protocol in progress. Prisoners must remain in designated zone until system confirms lock. {IntelCasualtyWarning()}",
+                    "Prisoners required to maintain presence in conflict zone. Extraction contingent on external task completion.",
+                    "Warden-ordered delay in retrieval. Prisoners instructed to endure hostile conditions until recall is authorized.",
+                    $"Hold position directive issued. Prisoners will await extraction signal amidst escalating environmental threats. {IntelCasualtyWarning()}",
+                    $"Decoy initiative active. Enemy redirection underway. Prisoners expected to endure contact duration. {IntelCasualtyWarning()}",
+                    "Prisoners deployed to obstruct local adversaries. Extraction not available until uplink confirms clearance.",
+                    $"Area containment required. Surviving prisoners will proceed to exit zone upon conclusion of external protocol. {IntelCasualtyWarning()}",
+                    "Hostile suppression requested. Prisoners tasked with absorbing attention while secondary teams mobilize.",
+                    "Temporal window for safe egress pending. Prisoners instructed to engage threat deterrence protocol until Warden grants withdrawal.",
                 })!,
+
                 WardenObjectiveType.TimedTerminalSequence => Generator.Pick(new List<string>
                 {
-                    "Timed terminal input sequence"
+                    "System handshake protocol failed. Manual verification required at linked terminals. Prisoners dispatched to execute timed input sequence.",
+                    $"Redundant encryption detected. Terminal relay must be verified through simultaneous prisoner input. {IntelCasualtyWarning()}",
+                    "Timed sequence required for data authentication. Two prisoner units to coordinate across sector. Expect hostile interference.",
+                    $"Access to archived system blocked. Manual override initiated. Terminal sequence must be completed within time limit. {IntelCasualtyWarning()}",
+                    "Sequence protocol: <color=orange>INIT</color> – <color=orange>VERIFY</color> – <color=orange>CONFIRM</color>. Prisoners instructed to synchronize terminal access or risk hostile resurgence.",
+                    "Warden connection unstable. Input terminals require prisoner verification before data loss becomes permanent.",
+                    $"Countdown-based protocol initiated. Expect interference. Prisoners must locate and confirm secondary terminal ID before uplink failure. {IntelCasualtyWarning()}",
+                    $"Timed command relay engaged. Error tolerance: zero. Terminal pair must be activated in correct order. Consequences severe. {IntelCasualtyWarning()}",
+                    "System requires human presence to execute critical data bridge. Failure to complete in time will reset sequence and escalate threat response.",
+                    $"Terminal sync required. Prisoners ordered to perform chained input across network before countdown expires. {IntelCasualtyWarning()}",
                 })!,
-                _ => "",
+
+                // WardenObjectiveType.RetrieveBigItems => expr,
+                // WardenObjectiveType.CentralGeneratorCluster => expr,
+                // WardenObjectiveType.HsuActivateSmall => expr,
+                // WardenObjectiveType.GatherTerminal => expr,
+                // WardenObjectiveType.CorruptedTerminalUplink => expr,
+                // WardenObjectiveType.Empty => expr,
+
+                _ => "<color=red>-INTEL REDACTED-</color>"
             };
 
         public static List<(WardenObjectiveItem, string, string)> BuildSmallPickupPack(string tier)
