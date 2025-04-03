@@ -1,10 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
-using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
-using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Abilities;
-using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
-using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup.ExtensionSecuritySensor;
-using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;

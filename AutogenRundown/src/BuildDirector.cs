@@ -60,6 +60,7 @@ namespace AutogenRundown
                 WardenObjectiveType.PowerCellDistribution,
                 WardenObjectiveType.TerminalUplink,
                 WardenObjectiveType.Survival,
+                WardenObjectiveType.TimedTerminalSequence,
 
                 // TODO: Would love to enable this, but central generator cluster spawning is just
                 // too broken. Probably we wait for either a fix from 10Chambers or we have to
