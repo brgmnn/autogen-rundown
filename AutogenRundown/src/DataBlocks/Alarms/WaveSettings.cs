@@ -16,7 +16,7 @@ namespace AutogenRundown.DataBlocks.Alarms
     /// Enemy costs per type are the following: 0.75 1 1 2 2.
     ///     - Weakling = 0.75
     ///     - Standard = 1
-    ///     - Special  = 1
+    ///     - Special  = 1 (1.2?)
     ///     - MiniBoss = 2
     ///     - Boss     = 2
     ///
@@ -32,6 +32,11 @@ namespace AutogenRundown.DataBlocks.Alarms
     /// </summary>
     public record WaveSettings : DataBlock
     {
+        public static readonly double Points_Weakling = 0.75;
+        public static readonly double Points_Standard = 1.0;
+        public static readonly double Points_Special = 1.2;
+        public static readonly double Points_MiniBoss = 2.0;
+
         #region Properties
         /// <summary>
         /// Delay before waves start spawning after alarm start.
@@ -353,6 +358,9 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WaveSettings.AddBlock(Error_Hard);
             Bins.WaveSettings.AddBlock(Error_VeryHard);
 
+            Bins.WaveSettings.AddBlock(Error_Specials_Hard);
+            Bins.WaveSettings.AddBlock(Error_Specials_VeryHard);
+
             // Exit
             Bins.WaveSettings.AddBlock(Exit_Baseline);
             Bins.WaveSettings.AddBlock(Exit_Objective_Easy);
@@ -584,8 +592,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             {
                 Enemies.EnemyType.Standard,
                 Enemies.EnemyType.Special,
-                Enemies.EnemyType.MiniBoss,
-                Enemies.EnemyType.Boss
+                Enemies.EnemyType.MiniBoss
             },
             FilterType = PopulationFilterType.Include,
 
@@ -607,6 +614,70 @@ namespace AutogenRundown.DataBlocks.Alarms
             WavePauseMax_atCost = 10.0,
 
             Name = "Error_VeryHard"
+        };
+
+        /// <summary>
+        /// Error alarm for spawning 3x special enemies. This should feel quite hard.
+        /// </summary>
+        public static readonly WaveSettings Error_Specials_Hard = new()
+        {
+            PopulationFilter = new()
+            {
+                Enemies.EnemyType.Special,
+                Enemies.EnemyType.MiniBoss
+            },
+            FilterType = PopulationFilterType.Include,
+
+            PauseBeforeStart = 3.0,
+            PauseBetweenGroups = 37,
+
+            PopulationPointsPerGroupStart = 3.6,
+            PopulationPointsPerGroupEnd = 3.6,
+            PopulationPointsPerWaveStart = 3.6,
+            PopulationPointsPerWaveEnd = 3.6,
+
+            PopulationRampOverTime = 1,
+            ChanceToRandomizeSpawnDirectionPerGroup = 0.8,
+            ChanceToRandomizeSpawnDirectionPerWave = 1.0,
+
+            WavePauseMin = 1.0,
+            WavePauseMax = 20.0,
+            WavePauseMin_atCost = 1.0,
+            WavePauseMax_atCost = 10.0,
+
+            Name = "Error_Specials_Hard"
+        };
+
+        /// <summary>
+        /// Harder than easy. This shouldn't feel relaxed to deal with
+        /// </summary>
+        public static readonly WaveSettings Error_Specials_VeryHard = new()
+        {
+            PopulationFilter = new()
+            {
+                Enemies.EnemyType.Special,
+                Enemies.EnemyType.MiniBoss
+            },
+            FilterType = PopulationFilterType.Include,
+
+            PauseBeforeStart = 3.0,
+            PauseBetweenGroups = 30,
+
+            PopulationPointsPerGroupStart = 4.0,
+            PopulationPointsPerGroupEnd = 4.0,
+            PopulationPointsPerWaveStart = 4.0,
+            PopulationPointsPerWaveEnd = 4.0,
+
+            PopulationRampOverTime = 0,
+            ChanceToRandomizeSpawnDirectionPerGroup = 0.8,
+            ChanceToRandomizeSpawnDirectionPerWave = 1.0,
+
+            WavePauseMin = 1.0,
+            WavePauseMax = 20.0,
+            WavePauseMin_atCost = 1.0,
+            WavePauseMax_atCost = 10.0,
+
+            Name = "Error_Specials_VeryHard"
         };
         #endregion
 
@@ -832,8 +903,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             {
                 Enemies.EnemyType.Standard,
                 Enemies.EnemyType.Special,
-                Enemies.EnemyType.MiniBoss,
-                Enemies.EnemyType.Boss
+                Enemies.EnemyType.MiniBoss
             },
 
             PopulationPointsTotal = 50,

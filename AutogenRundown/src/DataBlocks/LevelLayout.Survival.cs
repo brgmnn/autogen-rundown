@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
+using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Terminals;
 using AutogenRundown.DataBlocks.ZoneData;
@@ -158,6 +159,26 @@ public partial record LevelLayout : DataBlock
                     Type = WardenObjectiveEventType.StartEventLoop,
                     EventLoop = lightsEventLoop
                 });
+
+            // Ramp up the difficulty of the survival waves
+            // They will now get hybrids
+            securityControlEvents.AddGenericWave(level.Tier switch
+            {
+                "E" => new GenericWave
+                {
+                    SpawnDelay = 15.0,
+                    Settings = WaveSettings.Error_Specials_VeryHard,
+                    Population = WavePopulation.OnlyHybrids
+                },
+
+                _ => new GenericWave
+                {
+                    SpawnDelay = 20.0,
+                    Settings = WaveSettings.Error_Specials_Hard,
+                    Population = WavePopulation.OnlyHybrids
+                }
+            });
+            securityControlEvents.AddMessage(Lore.UnknownError_Any(), 12.0);
 
             objective.SecurityControlEvents = securityControlEvents;
 
