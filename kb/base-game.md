@@ -227,3 +227,58 @@ Sleepers are resilient, being able to live without their heads and all their top
 * Running away is not always bad, but be careful with your stamina.
 * Utilize your environment.
 * Communicate.
+
+# Mission Objectives
+
+## HSU Find Sample
+
+Retrieving an "HSU" or Hydro Stasis Unit, a containment pod that contains a human specimen, that the players must venture into the Complex to retrieve a tissue sample off one specific unit. 
+
+The goal of an HSU mission is to explore the level and navigate through the numerous zones dotted around the map and obtain clues on where the pod is located. It can't just be any Hydro Stasis Unit, you will be informed of what specific unit you must look for in the "Warden Objective" located at the top-left of your screen, the objective will look something like HSU_123.
+
+A terminal must be located for you to pinpoint where the general area the HSU is located, when found the following command QUERY HSU_NUMBERS (ex: QUERY HSU_123) will compile a search for the objective, and when done successfully the specific zone will be displayed on where the HSU is stored at (ex: HSU_123 is at ZONE 21).
+
+A mandatory second objective common in HSU missions are keys that are required to access certain areas, even ones that contain the objective, these must be sought in order for you to complete the mission.
+
+When the player reaches their objective, they must hold 'E' to obtain a tissue sample by standing near the pod, complete a scan which will trigger an alarm, and the whole team must fight their way back to the starting point of the mission and complete a final scan for extraction. As long as one player completes the final scan and lives the team wins. 
+
+## Special Terminal Command
+
+The Terminal Command objective, also known as Input Command, is an objective that requires players to input a specific command into one or more terminals, and occasionally, complete a bioscan. Completing executing the commands (and completing the scan where necessary) can have a variety of effects depending on the expedition — such as cutting power to the lights, filling the area with infectious fog, opening security doors, and spawning enemy waves.
+
+Players can use the auto-complete function of terminals (TAB key by default) to quickly input commands. 
+
+## Clear Path
+
+Clear a Path is the simplest objective in GTFO, and requires the prisoners to reach an extraction point. Often, prisoners will encounter complications, such as alarms, restoring power to generators, and finding keys, which all combine to make this seemingly simple task more challenging. 
+
+### Background
+
+Within the lore, the purpose of the objective can be a number of things, such as to distract a troublesome biomass from interfering in another expedition, or to open the zone for some unknown future purpose. 
+
+## Survival
+
+The Survive Warden Protocol objective is one of the most varied challenges in GTFO and first appeared in Rundown 005. To complete this objective, prisoners must survive for the duration of the "Warden Protocol" before they are able to extract.
+
+Prisoners are given a short preparation time before the protocol activates. Afterwhich, waves of enemies will spawn at set intervals throughout the countdown. In addition, the environment may also change: security doors may open, lights may turn on or off, and fog may rise or lower. These changes occur with specific phases of the protocol (e.g. after ten minutes in ALT://R5B4.)
+
+Both the preparation time and the actual countdown are displayed for all players at the top of the screen. 
+
+## Timed Terminal Sequence
+
+The Timed Sequence objective is an objective that requires players to input specific commands into two terminals in quick succession. This objective was introduced in R7D1.
+TimedSequence
+
+HUD displaying the second terminal ID and countdown
+
+The sequence order is as follows:
+
+* To start the timed sequence, players need to find the correct terminal and enter the command INIT_TIMED_CONNECTION. Entering this command will keep spawning in various enemies until the sequence is completed. This will also display the ID of another terminal on both the initial terminal as well as each players HUD and will start a countdown.
+* Players will have to locate this second terminal and enter the command VERIFY_TIMED_CONNECTION. This will start a second, shorter countdown.
+* Players then have to enter the command CONFIRM_TIMED_CONNECTION into the initial terminal to complete the sequence.
+
+Should the players fail to input the commands within the time limit, enemies will be spawned in and the sequence will restart. It is helpful to take note of nearby terminal IDs and their location to quickly navigate to them once the sequence is initiated.
+
+Players can use the auto-complete function of terminals (TAB key by default) to quickly input commands.
+
+Because of the short time frame between the second and third command input, this objective can be impossible to complete when playing alone or with only bots depending on the distance between the objective terminals. 
