@@ -50,12 +50,12 @@ Monthly March
 Monthly Feb
   * Double cargo B1 -- Not sure why?
   * March
-    [ ] A1 - Reactor shutdown main no exit trickle
-    [ ] B2 - Overload: need to add time for doing king of the hill. it's not possible with how much time it takes to not get bonus time
+    [x] A1 - Reactor shutdown main no exit trickle
+    [x] B2 - Overload: need to add time for doing king of the hill. it's not possible with how much time it takes to not get bonus time
               See if we can use AWO for setting the timer with additional objectives?
-    [ ] B2 - Extreme: Survival timer still doesn't add time, instead resets time with new value and then is reset back to starting time
-    [ ] B2 - Survival timer: On B-tier at least it seems like a tiny bit more ammo would be good.
-    [ ] C1 - Overload: got the mega mother room for the terminal uplink. - Getting hubs for uplink rooms is no good
+    [x] B2 - Extreme: Survival timer still doesn't add time, instead resets time with new value and then is reset back to starting time
+    [x] B2 - Survival timer: On B-tier at least it seems like a tiny bit more ammo would be good.
+    [x] C1 - Overload: got the mega mother room for the terminal uplink. - Getting hubs for uplink rooms is no good
 
   * Reactor D2
     [ ] Need to ensure resources spawn. Flat mining reactor doesn't have enoug spawn points, no tool spawned?

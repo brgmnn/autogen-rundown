@@ -782,9 +782,22 @@ public partial record class WardenObjective : DataBlock
                 Type = WardenObjectiveEventType.ForceCompleteObjective,
                 Layer = EventBuilder.GetLayerFromBulkhead(director.Bulkhead)
             });
+
+        // Add exit trickle events on completing the reactor
+        if (director.Bulkhead == Bulkhead.Main)
+            reactorDefinition.EventsOnComplete.AddGenericWave(
+                level.Tier switch
+                {
+                    "A" => GenericWave.Exit_Objective_Easy,
+                    "B" => GenericWave.Exit_Objective_Easy,
+                    "C" => GenericWave.Exit_Objective_Medium,
+                    "D" => GenericWave.Exit_Objective_Hard,
+                    "E" => GenericWave.Exit_Objective_VeryHard,
+                    _ => GenericWave.Exit_Objective_Easy
+                });
     }
 
-    public void PostBuild_ReactorShutdown(BuildDirector director, Level level)
+    public void PostBuild_ReactorShutdown(BuildDirector _, Level level)
     {
         // EOS needs this to be set to empty to work
         Type = WardenObjectiveType.Empty;
