@@ -37,6 +37,7 @@ Working exit geos
 
 Monthly April
   * Find HSU seems like it needs re-rolling occasionally. May be some of the levels can't place well
+  * Need to take another look at balance for reactor shutdown. D/E looks to either be way too hard or way too easy.
 
 Monthly March
   * March 27th
@@ -45,7 +46,6 @@ Monthly March
       *
   * Yoshi Feedback
     [ ] May want to look in to making it so error alarm terminals don't cancel others. Many instances of trivialized scans because of error turnoff.
-    [ ]
 
 Monthly Feb
   * Double cargo B1 -- Not sure why?
@@ -85,17 +85,7 @@ Seed: 2024_12_19
 Seed: 2024_12_18
 * Still too many zones in A retrieve big items
 
-Seed: 201
-* D3, Main bulkhead door spawned with secret tank and it looks buggy.
-  Showed stealth door
-
 Probably need to rework enemy sleeper spawning now with level planner
-
-Seed: 2024_12_11
-* C2: Consider adding more disposable fog repellers for fog areas
-
-Seed: 2024_07_14
-* D2: Error alarm turnoff in 775 does not unlock
 
 Seed: 2024_07_08
 * Boosters confirmed not working for modded rundowns

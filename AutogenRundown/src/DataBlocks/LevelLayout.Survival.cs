@@ -72,6 +72,7 @@ public partial record LevelLayout : DataBlock
         // zone as they walk to the players.
         //
         // High risk, high reward?
+        // TODO: don't make this always spawn
         if (true)
         {
             var securityControlNode = new ZoneNode(
@@ -84,7 +85,7 @@ public partial record LevelLayout : DataBlock
             {
                 Coverage = CoverageMinMax.Nano,
                 LightSettings = Lights.GenRandomLight(),
-                AliasPrefix = "Security Controls, ZONE"
+                AliasPrefix = "Security, ZONE"
             };
             securityControlZone.RollFog(level);
 
@@ -92,7 +93,7 @@ public partial record LevelLayout : DataBlock
             level.Planner.AddZone(securityControlNode, securityControlZone);
 
             securityControlZone.EventsOnApproachDoor.AddMessage(
-                "SECURITY DOOR CONTROL ZONE");
+                "SECURITY CONTROL ZONE");
 
             objective.SecurityControlEventLoopIndex = (int)Generator.GetPersistentId();
             var lightsEventLoop = new EventLoop()
@@ -190,8 +191,8 @@ public partial record LevelLayout : DataBlock
                 {
                     new()
                     {
-                        Command = "MANUAL_OVERRIDE_SECURITY_PROTOCOLS",
-                        CommandDesc = "Manual override for security systems on floor, force open all security doors",
+                        Command = "MANUAL_OVERRIDE_LOCKDOWN_PROTOCOLS",
+                        CommandDesc = "Manual override for security systems on floor, force open all security doors to exit",
                         CommandEvents = objective.SecurityControlEvents
                     }
                 }
