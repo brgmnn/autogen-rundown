@@ -369,6 +369,7 @@ public class ComplexResourceSet
         });
 
         #region MODDER: donan3967
+        #region geo_pack_1
         // Floodways hub with tower at the top. Plenty of verticality, it may be hard with some
         // scans going up/down. Modder notes:
         //
@@ -396,6 +397,41 @@ public class ComplexResourceSet
             SubComplex = SubComplex.Floodways,
             // Shard = "10"
         });
+        #endregion
+
+        #region geo_pack_2
+        // Open, symmetrical hub tile focused around a big central marker (the one with the deep
+        // hole). Feel of the tile can change a lot based on the marker rolled, but it stays
+        // relatively flat.
+        resourceSet.AddPrefab(Complex.Service, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/geo_64x64_service_floodways_hub_ds_02.prefab",
+            SubComplex = SubComplex.Floodways
+        });
+
+        // {
+        //     "Prefab": "Assets/geo_64x64_service_floodways_hub_ds_02_gen.prefab",
+        //     "SubComplex": "Floodways",
+        //     "Shard": 10
+        // }
+
+        // Floodways Reactor! Based on the R8 tile (geo_64x64_service_floodways_I_HA_04) with some
+        // added resource markers and reactor functionality. Still an I tile though. Retains the
+        // World event for flyer spawns, as well as WE T-scan from that tile.
+        resourceSet.AddPrefab(Complex.Service, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/geo_64x64_service_floodways_reactor_ds_01.prefab",
+            SubComplex = SubComplex.Floodways
+        });
+
+        // Unique bridge tile. Has a funky pipe in the middle you can cross above and below.
+        // Comes with flyer spawns and a Tscan path around the bridges.
+        resourceSet.AddPrefab(Complex.Service, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/geo_64x64_service_floodways_i_bridge_ds_01.prefab",
+            SubComplex = SubComplex.Floodways
+        });
+        #endregion
         #endregion
 
         #region MODDER: Floweria

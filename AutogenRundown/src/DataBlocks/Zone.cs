@@ -341,6 +341,7 @@ namespace AutogenRundown.DataBlocks
                         // --- MOD Geomorphs ---
                         // donan3967
                         (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_hub_DS_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                        (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_hub_ds_02.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     });
                     break;
             }
@@ -460,6 +461,10 @@ namespace AutogenRundown.DataBlocks
                         (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_I_HA_02.prefab", new CoverageMinMax { Min = 25, Max = 40 }),
 
                         (SubComplex.Gardens, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_I_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
+
+                        // --- MOD Geomorphs ---
+                        // donan3967
+                        (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_i_bridge_ds_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                     });
                     break;
             }
@@ -546,6 +551,8 @@ namespace AutogenRundown.DataBlocks
 
         /// <summary>
         /// Picks an appropriate geomorph for the corridor to a reactor
+        ///
+        /// TODO: improve this. Maybe just remove it entirely and use the regular corridor
         /// </summary>
         /// <param name="complex"></param>
         public void GenReactorCorridorGeomorph(Complex complex)

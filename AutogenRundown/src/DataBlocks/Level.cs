@@ -988,8 +988,8 @@ namespace AutogenRundown.DataBlocks
                     CustomGeomorph = geo
                 };
 
-                elevatorDropZone.EnemySpawningInZone.Add(
-                    EnemySpawningData.MegaMother_AlignedSpawn);
+                // elevatorDropZone.EnemySpawningInZone.Add(
+                //     EnemySpawningData.MegaMother_AlignedSpawn);
 
                 // EnemyCustomization.Model.Shadows.Add(
                 //     new Shadow()
@@ -1027,7 +1027,7 @@ namespace AutogenRundown.DataBlocks
 
                 // elevatorDrop = layout.BuildBranch(elevatorDrop, 2);
 
-                layout.AddAlignedBossFight_MegaMom(elevatorDrop);
+                // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
 
                 for (var z = 0; z < forwardZones; z++)
                     layout.Zones.Add(new Zone
@@ -1038,7 +1038,7 @@ namespace AutogenRundown.DataBlocks
                         BuildFromLocalIndex = 0
                     });
 
-                layout.AddSecuritySensors_SinglePouncer((0, 1));
+                // layout.AddSecuritySensors_SinglePouncer((0, 1));
 
                 Bins.LevelLayouts.AddBlock(layout);
             }

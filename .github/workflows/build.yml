@@ -145,6 +145,7 @@ jobs:
           mv deps/dakkhuza-MTFO build/AutogenRundown_GTFO/BepInEx/plugins/
 
           # --- Extra Enemy Customization
+          mv deps/hirnukuono-EEC_H build/AutogenRundown_GTFO/BepInEx/plugins/
 
           # --- Extra Objective Setup and friends
           mv deps/Inas07-ExtraObjectiveSetup/plugins build/AutogenRundown_GTFO/BepInEx/plugins/Inas07-ExtraObjectiveSetup
@@ -172,6 +173,11 @@ jobs:
           mkdir build/AutogenRundown_GTFO/BepInEx/plugins/donan3967-donan3967_geo_pack_1
           mv deps/donan3967-donan3967_geo_pack_1/Assets/AssetBundles/* build/AutogenRundown_GTFO/BepInEx/Assets/AssetBundles/
           mv deps/donan3967-donan3967_geo_pack_1/* build/AutogenRundown_GTFO/BepInEx/plugins/donan3967-donan3967_geo_pack_1/
+
+          # --- donan3967 geo pack 2
+          mkdir build/AutogenRundown_GTFO/BepInEx/plugins/donan3967-donan3967_geo_pack_2
+          mv deps/donan3967-donan3967_geo_pack_2/Assets/AssetBundles/* build/AutogenRundown_GTFO/BepInEx/Assets/AssetBundles/
+          mv deps/donan3967-donan3967_geo_pack_2/* build/AutogenRundown_GTFO/BepInEx/plugins/donan3967-donan3967_geo_pack_2/
 
           # --- FlowGeos
           mv deps/Flowaria-FlowGeos/plugins build/AutogenRundown_GTFO/BepInEx/plugins/Flowaria-FlowGeos
