@@ -3,6 +3,27 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.54.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.54.0) — April 01, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Add boss fight tiles
+* Add new enemy
+* Disinfect packs can now spawn in some very specific zones!
+* Reworked ClearPath objective level layout
+
+### Changes
+
+* Balanced Survival Objective zones to always have a fixed number of extra resources
+* Updated Survival Objective to build zones forward
+* Fixed a bug where some zone settings would not be applied - https://github.com/brgmnn/autogen-rundown/commit/f165600e26ca9e8f9cd6c4048bb230d7e74a404e
+* Fixed a bug where Terminal Uplink objectives would sometimes happen in a single giant zone - https://github.com/brgmnn/autogen-rundown/commit/3025ec09671f43162274a138129a35b386dfd78d
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.53.0...v0.54.0
+
+
 ## [v0.53.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.53.0) — March 20, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
