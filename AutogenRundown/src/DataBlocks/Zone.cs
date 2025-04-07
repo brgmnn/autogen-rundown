@@ -448,7 +448,8 @@ namespace AutogenRundown.DataBlocks
                         (SubComplex.DataCenter, "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_I_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
 
                         // Red_Leicester_Cheese
-                        (SubComplex.Lab, "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
+                        // TODO: Probably disable this
+                        // (SubComplex.Lab, "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
                         // TODO: This tile seems to not have enough room to spawn items like cells and bulkhead keys
                         // (SubComplex.DataCenter, "Assets/Bundles/RLC_Tech/geo_64x64_tech_datacenter_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
                     });
@@ -516,7 +517,7 @@ namespace AutogenRundown.DataBlocks
                     // reactor_open_HA_01 does not work for reactor shutdown without mods. EOS does allow this though.
                     CustomGeomorph = Generator.Pick(new List<string>
                     {
-                        "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_open_HA_01.prefab",
+                        // "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_open_HA_01.prefab",
                         "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_reactor_HA_02.prefab"
                     });
                     SubComplex = SubComplex.Refinery;
@@ -527,14 +528,17 @@ namespace AutogenRundown.DataBlocks
 
                 case Complex.Tech:
                 {
-                    CustomGeomorph = Generator.Pick(new List<string>
+                    (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
                     {
-                        "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_01.prefab",
-                        "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_02.prefab"
+                        (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_01.prefab", new CoverageMinMax { Min = 40, Max = 40 }),
+                        (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_02.prefab", new CoverageMinMax { Min = 40, Max = 40 }),
+
+                        // --- MOD Geomorphs ---
+                        // donan3967
+                        (SubComplex.DataCenter, "Assets/geo_64x64_data_center_reactor_DS_01.prefab", new CoverageMinMax { Min = 40, Max = 40 })
                     });
-                    SubComplex = SubComplex.Lab;
+
                     IgnoreRandomGeomorphRotation = true;
-                    Coverage = new CoverageMinMax { Min = 40.0, Max = 40.0 };
                     break;
                 }
 

@@ -280,6 +280,15 @@ public class ComplexResourceSet
             SubComplex = SubComplex.DataCenter
             // "Shard": 10
         });
+
+        // A tech reactor in the datacenter style. Two sets of double bridges, with a lower area
+        // on both sides. Relatively cramped for a reactor.
+        resourceSet.AddPrefab(Complex.Tech, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/geo_64x64_data_center_reactor_DS_01.prefab",
+            SubComplex = SubComplex.DataCenter
+            // "Shard": 10
+        });
         #endregion
 
         #region MODDER: Floweria
@@ -321,6 +330,7 @@ public class ComplexResourceSet
         // Lab Corridor
         // NOTE: they have a weird stair railing on the way to the bottom level. It goes
         // into the ground
+        // TODO: Saw a big empty hole in the ground for this. Probably disable it.
         resourceSet.AddPrefab(Complex.Tech, "CustomGeomorphs_Objective_1x1", new Prefab()
         {
             Asset = "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_I_RLC_01.prefab",
