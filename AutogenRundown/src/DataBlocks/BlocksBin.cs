@@ -14,6 +14,8 @@ namespace AutogenRundown.DataBlocks
             = new LazyBlocksBin<ChainedPuzzle>();
         public static BlocksBin<ConsumableDistribution> ConsumableDistributions { get; private set; }
             = new BlocksBin<ConsumableDistribution>();
+        public static BlocksBin<Dimension> Dimensions { get; private set; }
+            = new BlocksBin<Dimension>();
         public static BlocksBin<Enemy_New> Enemy { get; private set; }
             = new BlocksBin<Enemy_New>();
         public static BlocksBin<EnemyGroup> EnemyGroups { get; private set; }
@@ -59,6 +61,7 @@ namespace AutogenRundown.DataBlocks
             BigPickupDistribution.SaveStatic();
             ChainedPuzzle.SaveStatic();
             ConsumableDistribution.SaveStatic();
+            Dimension.SaveStatic();
             EnemyGroup.SaveStatic();
             EnemyPopulation.SaveStatic();
             ExpeditionBalance.SaveStatic();
@@ -78,6 +81,7 @@ namespace AutogenRundown.DataBlocks
             BigPickupDistributions.Save("BigPickupDistribution");
             ChainedPuzzles.Save("ChainedPuzzle");
             ConsumableDistributions.Save("ConsumableDistribution");
+            Dimensions.Save("Dimension");
             Enemy.Save("Enemy");
             EnemyGroups.Save("EnemyGroup");
             EnemyPopulations.Save("EnemyPopulation");
@@ -99,14 +103,14 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// Not sure what this is for yet
         /// </summary>
-        public List<JObject> Headers { get; set; } = new List<JObject>();
+        public List<JObject> Headers { get; set; } = new();
 
-        public List<T> Blocks { get; set; } = new List<T> { };
+        public List<T> Blocks { get; set; } = new();
 
         [JsonProperty("LastPersistentID")]
         public uint LastPersistentId { get; set; } = 0;
 
-        internal HashSet<uint> persistentIds = new HashSet<uint>();
+        internal HashSet<uint> persistentIds = new();
 
         /// <summary>
         ///
