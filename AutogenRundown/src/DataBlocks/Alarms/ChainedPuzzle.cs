@@ -257,6 +257,7 @@ public record ChainedPuzzle : DataBlock
                 return new List<(double, int, ChainedPuzzle)>
                 {
                     // Easy scans
+                    // TODO: probably should reduce a bit
                     (1.0, 1, None),
                     (1.0, 2, TeamScan),
 

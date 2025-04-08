@@ -155,11 +155,19 @@ namespace AutogenRundown.DataBlocks
             for (var b = 0; b < fetchCount; b++)
             {
                 var branch = $"reactor_code_{b}";
-
                 var baseNode = b < 3 ? reactor : (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, $"reactor_code_{b - 3}")!;
 
-                var last = BuildBranch(baseNode, Generator.Random.Next(branchMin, branchMax), branch);
-                var branchNodes = level.Planner.GetZones(director.Bulkhead, branch);
+                var branchNodes = AddBranch(
+                    baseNode,
+                    Generator.Random.Next(branchMin, branchMax),
+                    branch,
+                    (_, zone) =>
+                    {
+                        zone.AmmoPacks += 5;
+                        zone.HealthPacks += 4;
+                        zone.ToolPacks += 3;
+                    });
+                var last = branchNodes.Last();
 
                 var lastZone = level.Planner.GetZone(last)!;
                 var firstZone = level.Planner.GetZone(branchNodes.First())!;
@@ -172,7 +180,7 @@ namespace AutogenRundown.DataBlocks
                 lastZone.TerminalPlacements = new List<TerminalPlacement>();
                 var terminalCount = Generator.Random.Next(2, 3);
 
-                for (int i = 0; i < terminalCount; i++)
+                for (var i = 0; i < terminalCount; i++)
                     lastZone.TerminalPlacements.Add(
                         new TerminalPlacement
                         {

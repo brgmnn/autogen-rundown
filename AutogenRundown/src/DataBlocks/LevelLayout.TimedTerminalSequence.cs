@@ -65,6 +65,7 @@ public partial record LevelLayout : DataBlock
             };
             endZone.Coverage = new CoverageMinMax() { Min = 32, Max = 64 };
 
+            // TODO: don't always do triple error alarms
             // Trial error alarm of baseline enemies
             var puzzle = ChainedPuzzle.AlarmError_Baseline with
             {
@@ -72,6 +73,8 @@ public partial record LevelLayout : DataBlock
                 Population = Generator.DrawSelect(errorPopulation)
             };
             endZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
+
+            // TODO: maybe some more resources
             endZone.AmmoPacks *= 2;
             endZone.ToolPacks *= 2;
             endZone.HealthPacks *= 2;
