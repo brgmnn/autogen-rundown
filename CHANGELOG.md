@@ -3,6 +3,22 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.56.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.56.0) — April 07, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Add donan3967 data center reactor tile
+* Added support for peer mod [Arsenality](https://thunderstore.io/c/gtfo/p/W33B/Arsenality/)
+
+### Changes
+
+* Disable `geo_64x64_mining_reactor_open_HA_01.prefab` from reactor tile list
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.55.0...v0.56.0
+
+
 ## [v0.55.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.55.0) — April 03, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
