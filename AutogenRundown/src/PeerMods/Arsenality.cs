@@ -18,6 +18,9 @@ public static class Arsenality
         var revision = CellBuildData.GetRevision();
         var gameData = Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}");
 
+        // Ensure the mccad00 dir exists
+        Directory.CreateDirectory(Path.Combine(gameData, "Custom", "mccad00"));
+
         var paths = new List<string>
         {
             Path.Combine("Custom", "mccad00", "GearPartTransform.json"),
