@@ -616,7 +616,7 @@ namespace AutogenRundown.DataBlocks
                     planner.Connect(baseNode, turnOff);
                     planner.AddZone(
                         turnOff,
-                        new Zone
+                        new Zone(level.Tier)
                         {
                             Coverage = new CoverageMinMax(Generator.NextDouble(40, 80)),
                             LightSettings = Lights.GenRandomLight(),
@@ -834,7 +834,7 @@ namespace AutogenRundown.DataBlocks
                         var hub = new ZoneNode(director.Bulkhead, hubIndex);
                         hub.MaxConnections = 3;
 
-                        var zone = new Zone { LightSettings = Lights.GenRandomLight() };
+                        var zone = new Zone(level.Tier) { LightSettings = Lights.GenRandomLight() };
                         zone.GenHubGeomorph(director.Complex);
                         zone.RollFog(level);
 
@@ -853,7 +853,7 @@ namespace AutogenRundown.DataBlocks
                             {
                                 var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
                                 var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
-                                var nextZone = new Zone
+                                var nextZone = new Zone(level.Tier)
                                 {
                                     Coverage = CoverageMinMax.GenNormalSize(),
                                     LightSettings = Lights.GenRandomLight(),
@@ -907,7 +907,7 @@ namespace AutogenRundown.DataBlocks
                                 var hub2 = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead));
                                 hub2.MaxConnections = 3;
 
-                                var zoneHub2 = new Zone { LightSettings = Lights.GenRandomLight() };
+                                var zoneHub2 = new Zone(level.Tier) { LightSettings = Lights.GenRandomLight() };
                                 zoneHub2.GenHubGeomorph(director.Complex);
                                 zoneHub2.RollFog(level);
 
@@ -945,7 +945,7 @@ namespace AutogenRundown.DataBlocks
                             level.Planner.Connect(prev, next);
                             level.Planner.AddZone(
                                 next,
-                                new Zone
+                                new Zone(level.Tier)
                                 {
                                     Coverage = CoverageMinMax.GenNormalSize(),
                                     LightSettings = Lights.GenRandomLight(),

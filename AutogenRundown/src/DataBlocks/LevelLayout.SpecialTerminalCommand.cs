@@ -51,7 +51,7 @@ public partial record LevelLayout : DataBlock
                 var node = new ZoneNode(director.Bulkhead, zoneIndex, branch, 0);
                 node.Tags.Add("no_enemies");
 
-                var zone = new Zone
+                var zone = new Zone(level.Tier)
                 {
                     LightSettings = Lights.GenRandomLight(),
                 };

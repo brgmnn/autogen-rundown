@@ -23,7 +23,7 @@ namespace AutogenRundown.DataBlocks
 
             level.Planner.AddZone(
                 bulkheadNode,
-                zone ?? new Zone
+                zone ?? new Zone(level.Tier)
                 {
                     Coverage = CoverageMinMax.GenNormalSize(),
                     LightSettings = Lights.GenRandomLight(),
@@ -149,7 +149,7 @@ namespace AutogenRundown.DataBlocks
                     var elevatorDrop = new ZoneNode(
                         Bulkhead.Main | Bulkhead.StartingArea,
                         level.Planner.NextIndex(Bulkhead.Main));
-                    var elevatorDropZone = new Zone
+                    var elevatorDropZone = new Zone(level.Tier)
                     {
                         Coverage = new CoverageMinMax { Min = 25, Max = 35 },
                         LightSettings = Lights.GenRandomLight(),
@@ -180,7 +180,7 @@ namespace AutogenRundown.DataBlocks
                     {
                         var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
                         var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
-                        nextZone = new Zone
+                        nextZone = new Zone(level.Tier)
                         {
                             Coverage = CoverageMinMax.GenNormalSize(),
                             LightSettings = Lights.GenRandomLight(),
@@ -224,7 +224,7 @@ namespace AutogenRundown.DataBlocks
             var elevatorDrop = new ZoneNode(
                 Bulkhead.Main | Bulkhead.StartingArea,
                 level.Planner.NextIndex(Bulkhead.Main));
-            var elevatorDropZone = new Zone
+            var elevatorDropZone = new Zone(level.Tier)
             {
                 Coverage = new CoverageMinMax { Min = 25, Max = 35 },
                 LightSettings = Lights.GenRandomLight(),
@@ -273,7 +273,7 @@ namespace AutogenRundown.DataBlocks
             var elevatorDrop = new ZoneNode(
                 Bulkhead.Main | Bulkhead.StartingArea,
                 level.Planner.NextIndex(Bulkhead.Main));
-            var elevatorDropZone = new Zone
+            var elevatorDropZone = new Zone(level.Tier)
             {
                 Coverage = new CoverageMinMax { Min = 25, Max = 35 },
                 LightSettings = Lights.GenRandomLight(),

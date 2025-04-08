@@ -48,7 +48,7 @@ public partial record LevelLayout : DataBlock
         // We need an exit zone as prisoners have to run to the exit
         var exitIndex = level.Planner.NextIndex(director.Bulkhead);
         var exitNode = new ZoneNode(director.Bulkhead, exitIndex, "exit");
-        var exitZone = new Zone
+        var exitZone = new Zone(level.Tier)
         {
             Coverage = CoverageMinMax.Tiny,
             LightSettings = Lights.GenRandomLight()
@@ -81,7 +81,7 @@ public partial record LevelLayout : DataBlock
                 "arena_security_control");
             securityControlNode.Tags.Add("no_enemies");
 
-            var securityControlZone = new Zone
+            var securityControlZone = new Zone(level.Tier)
             {
                 Coverage = CoverageMinMax.Nano,
                 LightSettings = Lights.GenRandomLight(),

@@ -26,7 +26,7 @@ public partial record LevelLayout : DataBlock
         var hub = new ZoneNode(director.Bulkhead, hubIndex, "timed_terminal_hub");
         hub.MaxConnections = 3;
 
-        var zone = new Zone { LightSettings = Lights.GenRandomLight() };
+        var zone = new Zone(level.Tier) { LightSettings = Lights.GenRandomLight() };
         zone.GenHubGeomorph(director.Complex);
         zone.SetOutOfFog(level);
 
@@ -102,7 +102,7 @@ public partial record LevelLayout : DataBlock
 
         // Add turnoff zone
         var turnOff = new ZoneNode(director.Bulkhead, planner.NextIndex(director.Bulkhead), $"timed_terminal_error_off");
-        var turnOffZone = new Zone
+        var turnOffZone = new Zone(level.Tier)
         {
             Coverage = new() { Min = 3.0, Max = 3.0 },
             LightSettings = Lights.GenRandomLight(),

@@ -21,7 +21,7 @@ public partial record LevelLayout
         if (next.Tags == null)
             next.Tags = new Tags();
 
-        var nextZone = new Zone
+        var nextZone = new Zone(level.Tier)
         {
             Coverage = CoverageMinMax.GenNormalSize(),
             LightSettings = Lights.GenRandomLight(),
@@ -45,7 +45,7 @@ public partial record LevelLayout
     {
         var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
         var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
-        var nextZone = new Zone
+        var nextZone = new Zone(level.Tier)
         {
             Coverage = CoverageMinMax.GenNormalSize(),
             LightSettings = Lights.GenRandomLight(),
@@ -78,7 +78,7 @@ public partial record LevelLayout
         {
             var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
             var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
-            var nextZone = new Zone
+            var nextZone = new Zone(level.Tier)
             {
                 Coverage = CoverageMinMax.GenNormalSize(),
                 LightSettings = Lights.GenRandomLight(),

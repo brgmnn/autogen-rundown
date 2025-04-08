@@ -25,7 +25,7 @@ public partial record class LevelLayout : DataBlock
         {
             var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
             var next = new ZoneNode(director.Bulkhead, zoneIndex);
-            var nextZone = new Zone
+            var nextZone = new Zone(level.Tier)
             {
                 Coverage = CoverageMinMax.GenNormalSize(),
                 LightSettings = Lights.GenRandomLight(),
@@ -43,7 +43,7 @@ public partial record class LevelLayout : DataBlock
         var corridor = new ZoneNode(director.Bulkhead, corridorIndex);
         corridor.MaxConnections = 1;
 
-        var corridorZone = new Zone { LightSettings = Lights.GenRandomLight() };
+        var corridorZone = new Zone(level.Tier) { LightSettings = Lights.GenRandomLight() };
         corridorZone.GenCorridorGeomorph(director.Complex);
         corridorZone.RollFog(level);
 
@@ -55,7 +55,7 @@ public partial record class LevelLayout : DataBlock
         var mwp = new ZoneNode(director.Bulkhead, mwpIndex);
         mwp.MaxConnections = 3;
 
-        var mwpZone = new Zone { LightSettings = Lights.GenRandomLight() };
+        var mwpZone = new Zone(level.Tier) { LightSettings = Lights.GenRandomLight() };
         mwpZone.GenMatterWaveProjectorGeomorph(director.Complex);
         mwpZone.RollFog(level);
 
@@ -209,7 +209,7 @@ public partial record class LevelLayout : DataBlock
         var hub2 = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead));
         hub2.MaxConnections = 3;
 
-        var zoneHub2 = new Zone { LightSettings = Lights.GenRandomLight() };
+        var zoneHub2 = new Zone(level.Tier) { LightSettings = Lights.GenRandomLight() };
         zoneHub2.GenHubGeomorph(director.Complex);
         zoneHub2.RollFog(level);
 

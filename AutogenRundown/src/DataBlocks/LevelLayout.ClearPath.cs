@@ -26,7 +26,7 @@ public partial record LevelLayout
         var startZone = planner.GetZone(start)!;
 
         var exit = new ZoneNode();
-        var exitZone = new Zone();
+        var exitZone = new Zone(level.Tier);
 
         // This whole objective can only be done on main
         switch (level.Tier)

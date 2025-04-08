@@ -48,7 +48,7 @@ namespace AutogenRundown.DataBlocks
                 "reactor");
             reactorNode.Tags.Add("reactor");
 
-            var reactor = new Zone
+            var reactor = new Zone(level.Tier)
             {
                 LightSettings = light,
                 StartPosition = ZoneEntranceBuildFrom.Furthest,

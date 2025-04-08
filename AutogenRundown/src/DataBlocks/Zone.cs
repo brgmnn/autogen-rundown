@@ -1493,10 +1493,18 @@ namespace AutogenRundown.DataBlocks
         }
         #endregion
 
-        public Zone()
+        public Zone(string tier)
         {
             // Always ensure a terminal is placed in the zone
             TerminalPlacements.Add(new TerminalPlacement());
+
+            // Grant additional ammo for D and E tier levels
+            AmmoPacks = tier switch
+            {
+                "D" => 5,
+                "E" => 6,
+                _ => 4
+            };
         }
     }
 }
