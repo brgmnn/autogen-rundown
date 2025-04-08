@@ -1077,7 +1077,7 @@ namespace AutogenRundown.DataBlocks
         private const double clearTimeFactor_AlarmsTime     = 1.20; // Time factor for duration of each scan
         private const double clearTimeFactor_AlarmsTraverse = 1.20; // Distance factor for walking between scans
         private const double clearTimeFactor_AreaCoverage   = 1.30; // Map area factor for size of zone
-        private const double clearTimeFactor_EnemyPoints    = 2.40; // Points factor for each enemy point
+        private const double clearTimeFactor_EnemyPoints    = 1.80; // Points factor for each enemy point
         private const double clearTimeFactor_Bosses         = 1.00; // Per boss factor
 
         /// <summary>
@@ -1157,35 +1157,39 @@ namespace AutogenRundown.DataBlocks
             const double factorEnemyPoints = 2.40;
 
             // Add time based on the zone size
-            var timeCoverage = Coverage.Max * factorCoverage;
+            var timeCoverage = ClearTime_AreaCoverage();
+            // var timeCoverage = Coverage.Max * factorCoverage;
 
             // Time based on enemy points in zones
-            var timeEnemyPoints = EnemySpawningInZone
-                .Sum(spawn => spawn.Points) * factorEnemyPoints;
+            var timeEnemyPoints = ClearTime_Enemies();
+            // var timeEnemyPoints = EnemySpawningInZone
+            //     .Sum(spawn => spawn.Points) * factorEnemyPoints;
 
             // Find and add extra time for bosses. These are generally quite hard to deal with.
-            var timeBosses = EnemySpawningInZone
-                .Where(spawn => spawn.Tags.Contains("boss"))
-                .Sum(spawn =>
-                    (Enemy)spawn.Difficulty switch
-                    {
-                        Enemy.Mother => 60.0 * (spawn.Points / 10.0),
-                        Enemy.PMother => 75.0 * (spawn.Points / 10.0),
-                        Enemy.Tank => 45.0 * (spawn.Points / 10.0),
-                        Enemy.TankPotato => 30.0 * (spawn.Points / 10.0),
-
-                        // Some unknown enemy, we won't add time for unknowns
-                        _ => 0.0
-                    });
-            timeBosses *= factorBoss;
+            var timeBosses = ClearTime_Bosses();
+            // var timeBosses = EnemySpawningInZone
+            //     .Where(spawn => spawn.Tags.Contains("boss"))
+            //     .Sum(spawn =>
+            //         (Enemy)spawn.Difficulty switch
+            //         {
+            //             Enemy.Mother => 60.0 * (spawn.Points / 10.0),
+            //             Enemy.PMother => 75.0 * (spawn.Points / 10.0),
+            //             Enemy.Tank => 45.0 * (spawn.Points / 10.0),
+            //             Enemy.TankPotato => 30.0 * (spawn.Points / 10.0),
+            //
+            //             // Some unknown enemy, we won't add time for unknowns
+            //             _ => 0.0
+            //         });
+            // timeBosses *= factorBoss;
 
             // Time based on door alarms
             // We sum for the component durations, the distance from start pos, and the distance
             // between the alarm components
-            var timeAlarms = 10.0 + Alarm.Puzzle.Sum(component => component.Duration)
-                                + Alarm.WantedDistanceFromStartPos
-                                + (Alarm.Puzzle.Count - 1) * Alarm.WantedDistanceBetweenPuzzleComponents;
-            timeAlarms *= factorAlarms;
+            var timeAlarms = ClearTime_Alarm();
+            // var timeAlarms = 10.0 + Alarm.Puzzle.Sum(component => component.Duration)
+            //                     + Alarm.WantedDistanceFromStartPos
+            //                     + (Alarm.Puzzle.Count - 1) * Alarm.WantedDistanceBetweenPuzzleComponents;
+            // timeAlarms *= factorAlarms;
 
             // Give +20s for a blood door.
             // TODO: adjust based on spawns in the blood door.

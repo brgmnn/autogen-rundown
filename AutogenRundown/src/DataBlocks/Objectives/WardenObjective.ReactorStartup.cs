@@ -350,33 +350,35 @@ public partial record class WardenObjective : DataBlock
                                          .OfType<Zone>()
                                          .ToList();
 
-            // First add time based on the total area of the zones to be traversed
-            var coverageSum = branchZones.Sum(zone => zone.Coverage.Max);
+            foreach (var zone in branchZones)
+                wave.Verify += zone.GetClearTimeEstimate();
 
-            // Second, add time based on the total enemy points across the zones
-            var enemyPointsSum = branchZones.Sum(zone => zone.EnemySpawningInZone.Sum(spawn => spawn.Points));
-
-            // Next, add time based on door alarms. Factor the scan time for each scan, time for the first scan
-            // to appear, and time between each scan to reach that next scan.
-            var alarmSum = branchZones.Sum(
-                zone => 10 + zone.Alarm.Puzzle.Sum(component => component.Duration)
-                           + zone.Alarm.WantedDistanceFromStartPos
-                           + (zone.Alarm.Puzzle.Count - 1) * zone.Alarm.WantedDistanceBetweenPuzzleComponents);
-
-            // Finally, add time based on blood doors. Flat +20s per blood door to be opened.
-            var bloodSum = branchZones.Sum(zone => zone.BloodDoor != BloodDoor.None ? 20 : 0);
-
-            wave.Verify += alarmSum * alarmMultiplier;
-            wave.Verify += bloodSum;
-            wave.Verify += coverageSum * coverageMultiplier;
-            wave.Verify += enemyPointsSum * enemyMultiplier;
+            // // First add time based on the total area of the zones to be traversed
+            // var coverageSum = branchZones.Sum(zone => zone.Coverage.Max);
+            //
+            // // Second, add time based on the total enemy points across the zones
+            // var enemyPointsSum = branchZones.Sum(zone => zone.EnemySpawningInZone.Sum(spawn => spawn.Points));
+            //
+            // // Next, add time based on door alarms. Factor the scan time for each scan, time for the first scan
+            // // to appear, and time between each scan to reach that next scan.
+            // var alarmSum = branchZones.Sum(
+            //     zone => 10 + zone.Alarm.Puzzle.Sum(component => component.Duration)
+            //                + zone.Alarm.WantedDistanceFromStartPos
+            //                + (zone.Alarm.Puzzle.Count - 1) * zone.Alarm.WantedDistanceBetweenPuzzleComponents);
+            //
+            // // Finally, add time based on blood doors. Flat +20s per blood door to be opened.
+            // var bloodSum = branchZones.Sum(zone => zone.BloodDoor != BloodDoor.None ? 20 : 0);
+            //
+            // wave.Verify += alarmSum * alarmMultiplier;
+            // wave.Verify += bloodSum;
+            // wave.Verify += coverageSum * coverageMultiplier;
+            // wave.Verify += enemyPointsSum * enemyMultiplier;
 
             // Add some grace time for failures on large branches
             wave.VerifyFail = Math.Max(30, wave.Verify / 2);
 
             Plugin.Logger.LogDebug($"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead} -- "
-                + $"ReactorStartup: Fetch wave {b} has {wave.Verify}s time -- "
-                + $"coverage: {coverageSum}, enemies: {enemyPointsSum}, alarms: {alarmSum}");
+                + $"ReactorStartup: Fetch wave {b} has {wave.Verify}s time");
         }
     }
 }
