@@ -195,10 +195,10 @@ public static class RundownFactory
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
-                Complex = Complex.Mining,
+                Complex = Complex.Tech,
                 Complexity = Complexity.Low,
                 Tier = "C",
-                Objective = WardenObjectiveType.ClearPath,
+                Objective = WardenObjectiveType.ReactorShutdown,
             };
             mainDirector.GenPoints();
 
@@ -220,7 +220,7 @@ public static class RundownFactory
                 {
                     Tier = "C",
                     Name = "Clear Path",
-                    Complex = Complex.Mining,
+                    Complex = Complex.Tech,
                     MainDirector = mainDirector,
                     // SecondaryDirector = extremeDirector,
                     Settings = settings,
@@ -812,8 +812,8 @@ public static class RundownFactory
         EnemyCustomization.Ability.Save();
         EnemyCustomization.Model.Save();
 
-        // Write the rundown local progression config
-        LocalProgression.WriteConfig();
+        // Configure any peer mods
+        Peers.Configure();
     }
 }
 

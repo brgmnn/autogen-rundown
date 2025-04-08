@@ -21,7 +21,6 @@ namespace AutogenRundown;
 [BepInProcess("GTFO.exe")]
 [BepInDependency("com.dak.MTFO")]
 [BepInDependency("dev.gtfomodding.gtfo-api")]
-[BepInDependency("FlowGeos")]
 public class Plugin : BasePlugin
 {
     public const string Version = "0.56.0";
@@ -49,6 +48,8 @@ public class Plugin : BasePlugin
 
         if (regenerateOnStartup.Value)
         {
+            Peers.Init();
+
             RundownFactory.Build(seedConfig.Value);
             Log.LogInfo($"Rundown generated, Seed=\"{Generator.Seed}\"");
         }
