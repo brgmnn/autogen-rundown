@@ -3,6 +3,25 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.57.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.57.0) — April 08, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Balance: D-tier default per zone ammo increased from 4 to 5 ammo packs
+* Balance: E-tier default per zone ammo increased from 4 to 6 ammo packs
+* Add resources in `ReactorStartup` fetch code zones: +5 ammo packs, +4 health packs, +3 tool packs
+* Fixed `ReactorStartup` resources not being distributed to the entrance corridor
+* Reworked resource spawning in reactor area
+* Fixed first time startup bug with Arsenality
+* Fixed `ReactorStartup` fog waves to return level fog to it's normal state at end of the wave instead of clearing it
+* `ReactorStartup` fog waves are now infectious if the level fog is infectious
+* Change resource packs to allow 1-use packs to spawn
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.56.0...v0.57.0
+
+
 ## [v0.56.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.56.0) — April 07, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
