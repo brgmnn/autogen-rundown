@@ -338,11 +338,11 @@ public partial record WardenObjective
         // Min tool packs required to clear _all_ points
         var toolPacks = reactorWavePoints * healthPerPoint / toolMaxDamagePerRefill;
 
-        // Grant an extra 20% of the min ammo required to clear all waves. This is for missed
+        // Grant an extra 30% of the min ammo required to clear all waves. This is for missed
         // shots. Given there's enough tool to clear potentially 35% of the enemy points, combined
         // this should be a good amount to clear everything
-        entrance.AmmoPacks += 1.2 * ammoPacks * 0.33;
-        reactor.AmmoPacks += 1.2 * ammoPacks * 0.66;
+        entrance.AmmoPacks += 1.3 * ammoPacks * 0.33;
+        reactor.AmmoPacks += 1.3 * ammoPacks * 0.66;
 
         // Flat health per wave, in this case 3 uses per wave
         entrance.HealthPacks += 1 * ReactorWaves.Count;
