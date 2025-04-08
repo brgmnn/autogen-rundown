@@ -22,7 +22,7 @@ namespace AutogenRundown.DataBlocks;
  *
  *  - Exit Alarms?
  */
-public partial record class WardenObjective : DataBlock
+public partial record WardenObjective
 {
     public void Build_ReactorStartup(BuildDirector director, Level level)
     {
@@ -304,22 +304,54 @@ public partial record class WardenObjective : DataBlock
         }
 
         // Spread resources to do the waves within the reactor area
-        var zones = level.Planner.GetZones(director.Bulkhead, "reactor_area")
-                                 .Select(node => level.Planner.GetZone(node))
-                                 .OfType<Zone>()
-                                 .ToList();
-        var baseResourcesMulti = reactorWavePoints / (35.0 * zones.Count);
+        var entrance = level.Planner.GetZone(
+                level.Planner.GetZones(director.Bulkhead, "reactor_entrance").First())!;
+        var reactor = level.Planner.GetZone(
+            level.Planner.GetZones(director.Bulkhead, "reactor").First())!;
 
-        foreach (var zone in zones)
-        {
-            // We don't give as much health
-            zone.HealthPacks = 3 * baseResourcesMulti;
-            zone.AmmoPacks = 5 * baseResourcesMulti;
-            zone.ToolPacks = 5 * baseResourcesMulti;
-        }
+        var baseResourcesMulti = reactorWavePoints / 35.0;
+
+        // Approximately how many health points per point of enemies do we expect to get.
+        // Smalls are 20 health
+        const double healthPerPoint = 30.0;
+
+        // Median refill damage for main weapons
+        const double mainMaxDamagePerRefill = 139.0;
+
+        // median refill damage for special weapons
+        const double specialMaxDamagePerRefill = 270.0;
+
+        // Quite imbalanced, shotgun and hel auto only do 176 and 106 per refill. But instead we
+        // balance this towards the Burst and Sniper sentries which do 325 and 322 per refill.
+        const double toolMaxDamagePerRefill = 322.0;
+
+        // Min ammo packs required to clear _all_ points
+        var ammoPacks = reactorWavePoints * healthPerPoint /
+                        (mainMaxDamagePerRefill + specialMaxDamagePerRefill);
+
+        // Min tool packs required to clear _all_ points
+        var toolPacks = reactorWavePoints * healthPerPoint / toolMaxDamagePerRefill;
+
+        // Grant an extra 20% of the min ammo required to clear all waves. This is for missed
+        // shots. Given there's enough tool to clear potentially 35% of the enemy points, combined
+        // this should be a good amount to clear everything
+        entrance.AmmoPacks += 1.2 * ammoPacks * 0.33;
+        reactor.AmmoPacks += 1.2 * ammoPacks * 0.66;
+
+        // Flat health per wave, in this case 3 uses per wave
+        entrance.HealthPacks += 1 * ReactorWaves.Count;
+        reactor.HealthPacks += 2 * ReactorWaves.Count;
+
+        // We don't give enough tool to clear everything, enough to clear 35% of the points
+        entrance.ToolPacks += 0.35 * toolPacks * 0.33;
+        reactor.ToolPacks += 0.35 * toolPacks * 0.66;
 
         Plugin.Logger.LogDebug($"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead} -- "
-                + $"ReactorStartup: {ReactorWaves.Count} waves, {reactorWavePoints}pts of enemies, assigned {baseResourcesMulti} resources, {zones.Count} reactor area zones");
+                + $"ReactorStartup: {ReactorWaves.Count} waves, {reactorWavePoints}pts of enemies, assigned {baseResourcesMulti} resources "
+                + $"New ammo metric = {ammoPacks}, new tool metric = {toolPacks} "
+                + $"ammo packs = {entrance.AmmoPacks + reactor.AmmoPacks}, "
+                + $"tool packs = {entrance.ToolPacks + reactor.ToolPacks}, "
+                + $"health packs = {entrance.HealthPacks + reactor.HealthPacks}, ");
 
         // Multipliers to adjust the verify time
         // In general this is quite sensitive and the calculations actually get
