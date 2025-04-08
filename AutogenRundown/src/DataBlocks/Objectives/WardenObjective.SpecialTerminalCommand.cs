@@ -2,6 +2,7 @@
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 

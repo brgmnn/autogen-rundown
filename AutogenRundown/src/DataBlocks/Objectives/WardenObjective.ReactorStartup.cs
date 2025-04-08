@@ -1,7 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
-using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
-using AutogenRundown.DataBlocks.ZoneData;
+using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -284,18 +283,25 @@ public partial record WardenObjective
 
             wave.RecalculateWaveSpawnTimes();
 
+            var fog = level.FogSettings;
+            var isInfectious = level.FogSettings.Infection > 0.01;
+
             // Add wave fog flood for funsies
-            // TODO: don't hard code this in every D-tier wave
-            if (director.Tier == "D" && (w == 0 || w == ReactorWaves.Count - 1))
+            // TODO: don't hard code this, use the random generator
+            if (director.Tier == "C" && (w == 1) ||
+                director.Tier == "D" && (w == 0 || w == ReactorWaves.Count - 1) ||
+                director.Tier == "E" && (w == 1 || w == ReactorWaves.Count - 1))
             {
-                EventBuilder.AddFillFog(
-                    wave.Events,
-                    wave.Warmup + 13.0,
-                    wave.Warmup + wave.Wave - 15.0);
-                EventBuilder.AddClearFog(
-                    wave.Events,
-                    wave.Warmup + wave.Wave + 12.0,
-                    20.0);
+                wave.Events
+                    .AddSetFog(
+                        isInfectious ? Fog.FullFog_Infectious : Fog.FullFog,
+                        wave.Warmup + 13.0,
+                        wave.Warmup + wave.Wave - 15.0)
+                    .AddSetFog(
+                        fog,
+                        wave.Warmup + wave.Wave + 12.0,
+                        21.0,
+                        "VENTILATION SYSTEM REBOOTED - SYSTEMS ONLINE");
             }
 
             // Calculate how many points of enemies will be spawned in total.
@@ -353,6 +359,7 @@ public partial record WardenObjective
                 + $"tool packs = {entrance.ToolPacks + reactor.ToolPacks}, "
                 + $"health packs = {entrance.HealthPacks + reactor.HealthPacks}, ");
 
+        // TODO: Clean up the old resourcing code
         // Multipliers to adjust the verify time
         // In general this is quite sensitive and the calculations actually get
         // quite close to a good number for a fun and challenging time. So the

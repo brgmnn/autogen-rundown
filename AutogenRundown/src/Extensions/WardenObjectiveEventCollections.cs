@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Objectives;
+﻿using AutogenRundown.DataBlocks;
+using AutogenRundown.DataBlocks.Objectives;
 
 namespace AutogenRundown.Extensions;
 
@@ -78,6 +79,73 @@ public static class WardenObjectiveEventCollections
                 Type = WardenObjectiveEventType.StopEventLoop,
                 Count = loopId,
                 Delay = delay
+            });
+
+        return events;
+    }
+
+    #endregion
+
+    #region Fog
+
+    /// <summary>
+    /// Floods the level with fog on event start.
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="delay"></param>
+    /// <param name="duration"></param>
+    /// <param name="message"></param>
+    public static ICollection<WardenObjectiveEvent> AddFillFog(
+        this ICollection<WardenObjectiveEvent> events,
+        double delay = 5.0,
+        double duration = 20.0,
+        string? message = ":://CRITICAL FAILURE - VENTILATION SYSTEMS OFFLINE")
+        => events.AddSetFog(Fog.FullFog, delay, duration, message);
+
+    /// <summary>
+    /// Sets the fog in the level to the specified fog
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="fogSettings"></param>
+    /// <param name="delay"></param>
+    /// <param name="duration"></param>
+    /// <param name="message"></param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddSetFog(
+        this ICollection<WardenObjectiveEvent> events,
+        Fog fogSettings,
+        double delay = 5.0,
+        double duration = 20.0,
+        string? message = ":://CRITICAL FAILURE - VENTILATION SYSTEMS OFFLINE")
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SetFogSettings,
+                Trigger = WardenObjectiveEventTrigger.OnStart,
+                FogSetting = fogSettings.PersistentId,
+                FogTransitionDuration = duration,
+                Delay = delay + 0.7,
+            });
+
+        // Don't play the sound or show the message if message is null.
+        if (message == null) return events;
+
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.PlaySound,
+                Trigger = WardenObjectiveEventTrigger.OnStart,
+                SoundId = Sound.KdsDeepVentilationProcedure,
+                Delay = delay
+            });
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.None,
+                Trigger = WardenObjectiveEventTrigger.OnStart,
+                Delay = delay + 4.0,
+                WardenIntel = message
             });
 
         return events;

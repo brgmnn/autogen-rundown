@@ -182,17 +182,6 @@ namespace AutogenRundown.DataBlocks.Objectives
 
             return events;
         }
-
-        public static ICollection<WardenObjectiveEvent> AddFillFog(
-            this ICollection<WardenObjectiveEvent> events,
-            double delay = 5.0,
-            double duration = 20.0,
-            string? message = ":://CRITICAL FAILURE - VENTILATION SYSTEMS OFFLINE")
-        {
-            EventBuilder.AddFillFog(events, delay, duration, message);
-
-            return events;
-        }
     }
 
     public class EventBuilder
