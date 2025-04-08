@@ -38,6 +38,10 @@ Working exit geos
 Monthly April
   * Find HSU seems like it needs re-rolling occasionally. May be some of the levels can't place well
   * Need to take another look at balance for reactor shutdown. D/E looks to either be way too hard or way too easy.
+  [ ] Check if we can use a mod like https://thunderstore.io/c/gtfo/p/W33B/Arsenality/
+    * Seems like it adds datablock files directly
+  * Try using fixed bioscan points for room wide scans?
+  [ ] B1 Secondary (Cryo) - No exit alarm
 
 Monthly March
   * March 27th
@@ -61,16 +65,11 @@ Monthly Feb
     [ ] Need to ensure resources spawn. Flat mining reactor doesn't have enoug spawn points, no tool spawned?
     [ ] Possibly reduce the number of waves but up the difficulty. First 3-4 waves were easy and a bit of nothing
     [x] Increase time granted for clearing zones. Maybe double the time granted per point of eneies? Feels like they need a tiny bit more.
-    [ ] Increase resources in side rooms. Requires a lot of shooting and hard to find any resources in larger rooms
+    [x] Increase resources in side rooms. Requires a lot of shooting and hard to find any resources in larger rooms
     [ ] May consider reducing the number of zones?
     [ ] Mother wave had good amount of time. DONT CHANGE
 Monthly Feb 0.49.0
   * Secondary or otherwise key seems to always spawn in the elevator
-  * C2 Extreme
-    * Bug: Bulkhead Key spawned in the elevator drop?????!!!!
-      * It was in the Cheese Geos hub
-    * Bug: No power cells spawned in secondary
-    * All of these bugs seem to be from that Cheese Geos tile!!!!
   * C2 Main
     * Keycard spawned deep in zone instead of in side zone
   * D4 Main
@@ -81,14 +80,6 @@ Missing tiles to add
 
 Seed: 2024_12_19
 * Monthly: B1 Extreme: reactor startup zone unlocks and intel aren't quite right. Use Intel instead
-
-Seed: 2024_12_18
-* Still too many zones in A retrieve big items
-
-Probably need to rework enemy sleeper spawning now with level planner
-
-Seed: 2024_07_08
-* Boosters confirmed not working for modded rundowns
 
 -->
 
