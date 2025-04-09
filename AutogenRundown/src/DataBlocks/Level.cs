@@ -1070,8 +1070,6 @@ namespace AutogenRundown.DataBlocks
 
                 // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
 
-                elevatorDropZone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer);
-
                 // elevatorDropZone.EnemySpawningInZone.Add(EnemySpawningData.PouncerShadow);
 
                 for (var z = 0; z < forwardZones; z++)
@@ -1095,8 +1093,7 @@ namespace AutogenRundown.DataBlocks
                     layout.Zones.Add(zone);
                 }
 
-
-                layout.AddSecuritySensors_SinglePouncerShadow((0, 1));
+                // layout.AddSecuritySensors_SinglePouncerShadow((0, 1));
 
                 Bins.LevelLayouts.AddBlock(layout);
             }
