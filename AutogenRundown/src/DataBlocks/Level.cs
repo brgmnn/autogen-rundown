@@ -1072,6 +1072,8 @@ namespace AutogenRundown.DataBlocks
 
                 elevatorDropZone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer);
 
+                // elevatorDropZone.EnemySpawningInZone.Add(EnemySpawningData.PouncerShadow);
+
                 for (var z = 0; z < forwardZones; z++)
                 {
                     var zone = new Zone(level.Tier)
@@ -1094,7 +1096,7 @@ namespace AutogenRundown.DataBlocks
                 }
 
 
-                layout.AddSecuritySensors_SinglePouncer((0, 1));
+                layout.AddSecuritySensors_SinglePouncerShadow((0, 1));
 
                 Bins.LevelLayouts.AddBlock(layout);
             }

@@ -287,6 +287,14 @@ namespace AutogenRundown.DataBlocks
             Points = 4,
             Tags = new Tags("boss")
         };
+
+        public static readonly EnemySpawningData PouncerShadow = new()
+        {
+            GroupType = EnemyGroupType.Hibernate,
+            Difficulty = Enemy_New.PouncerShadow.PersistentId,
+            Points = 4,
+            Tags = new Tags("boss")
+        };
         #endregion
 
         #region Bosses (Spawn Aligned)

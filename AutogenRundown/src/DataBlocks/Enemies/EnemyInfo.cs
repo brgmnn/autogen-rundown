@@ -52,6 +52,10 @@
 
         public static readonly EnemyInfo Pouncer       = new() { Role = EnemyRole.Hunter,    Enemy = Enemy.Pouncer, Points = 4.0 };
         public static readonly EnemyInfo Pouncer_Sneak = new() { Role = EnemyRole.PureSneak, Enemy = Enemy.Pouncer, Points = 4.0 };
+
+        // TODO: these don't work for some reason
+        public static readonly EnemyInfo PouncerShadow       = new() { Role = EnemyRole.Hunter,    Enemy = (Enemy)Enemy_New.PouncerShadow.PersistentId, Points = 4.0 };
+        public static readonly EnemyInfo PouncerShadow_Sneak = new() { Role = EnemyRole.PureSneak, Enemy = (Enemy)Enemy_New.PouncerShadow.PersistentId, Points = 4.0 };
         #endregion
 
         // These are enemies that can be spawn aligned

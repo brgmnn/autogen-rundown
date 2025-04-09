@@ -143,6 +143,8 @@ namespace AutogenRundown.DataBlocks.Enemies
                 (EnemyRole.PureSneak, Enemy.Mother,     10.0),
                 (EnemyRole.PureSneak, Enemy.PMother,    10.0),
                 (EnemyRole.PureSneak, Enemy.Pouncer,    4.0),
+
+                (EnemyRole.PureSneak, (Enemy)Enemy_New.PouncerShadow.PersistentId, 4.0),
             };
 
             foreach (var (role, enemy, maxScore) in hibernatingGroups)
