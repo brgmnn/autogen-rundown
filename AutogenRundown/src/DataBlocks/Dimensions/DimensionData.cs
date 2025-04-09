@@ -1,19 +1,22 @@
-﻿namespace AutogenRundown.DataBlocks.Dimensions;
+﻿using Newtonsoft.Json.Linq;
 
-public class DimensionData
+namespace AutogenRundown.DataBlocks.Dimensions;
+
+public record DimensionData
 {
     #region Properties
 
-    public int LevelLayoutData { get; set; } = 193;
+    public int LevelLayoutData { get; set; } = 0;
 
     public string DimensionGeomorph { get; set; } =
-        "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_32x32_elevator_shaft_tech_transition_01.prefab";
+        "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_01.prefab";
 
     public double VerticalExtentsUp { get; set; } = 50.0;
 
     public double VerticalExtentsDown { get; set; } = 50.0;
 
     public int DimensionResourceSetID { get; set; } = 51;
+    // public int DimensionResourceSetID { get; set; } = 47; // 51;
 
     public int DimensionFogData { get; set; } = 81;
 
@@ -69,6 +72,8 @@ public class DimensionData
 
     public double StaticDisinfectionMulti { get; set; } = 0.0;
 
+    public JArray StaticTerminalPlacements { get; set; } = new();
+
     public bool ForbidTerminalsInDimension { get; set; } = false;
 
     public bool IsOutside { get; set; } = false;
@@ -90,25 +95,44 @@ public class DimensionData
     public int AtmosphereData { get; set; } = 0;
 
     public double AtmosphereDensity { get; set; } = 1.0;
-    // "Exposure": 1.0,
-    // "AerialScale": 10.0,
-    // "MieScattering": 1.0,
-    // "MieG": 0.8,
-    // "MultipleScattering": 1.0,
-    // "CloudsData": 0,
-    // "CloudsCoverage": 1.0,
-    // "CloudsDensity": 0.5,
-    // "CloudsSharpness": 0.0,
-    // "CloudsShadowOpacity": 1.0,
-    // "CloudsTimescale": 0.1,
-    // "CloudsCrawling": 0.1,
-    // "CloudsFade": 0.1,
-    // "Sandstorm": false,
-    // "SandstormEdgeA": 0.4,
-    // "SandstormEdgeB": 0.6,
-    // "SandstormMinFog": 0.01,
-    // "ObjectiveType": 2,
-    // "LinkedToLayer": 0
+
+    public double Exposure { get; set; } = 1.0;
+
+    public double AerialScale { get; set; } = 10.0;
+
+    public double MieScattering { get; set; } = 1.0;
+
+    public double MieG { get; set; } = 0.8;
+
+    public double MultipleScattering { get; set; } = 1.0;
+
+    public int CloudsData { get; set; } = 0;
+
+    public double CloudsCoverage { get; set; } = 1.0;
+
+    public double CloudsDensity { get; set; } = 0.5;
+
+    public double CloudsSharpness { get; set; } = 0.0;
+
+    public double CloudsShadowOpacity { get; set; } = 1.0;
+
+    public double CloudsTimescale { get; set; } = 0.1;
+
+    public double CloudsCrawling { get; set; } = 0.1;
+
+    public double CloudsFade { get; set; } = 0.1;
+
+    public bool Sandstorm { get; set; } = false;
+
+    public double SandstormEdgeA { get; set; } = 0.4;
+
+    public double SandstormEdgeB { get; set; } = 0.6;
+
+    public double SandstormMinFog { get; set; } = 0.01;
+
+    public int ObjectiveType { get; set; } = 2;
+
+    public int LinkedToLayer { get; set; } = 0;
 
     #endregion
 }

@@ -45,15 +45,39 @@ public record Color
         };
     #endregion
 
+    #region Properties
+
+    /// <summary>
+    /// Alpha channel. Range 0.0 to 1.0
+    ///
+    /// Default = 1.0
+    /// </summary>
     [JsonProperty("a")]
     public double Alpha { get; set; } = 1.0;
 
+    /// <summary>
+    /// Red channel. Range 0.0 to 1.0
+    ///
+    /// Default = 1.0
+    /// </summary>
     [JsonProperty("r")]
     public double Red { get; set; } = 1.0;
 
+    /// <summary>
+    /// Green channel. Range 0.0 to 1.0
+    ///
+    /// Default = 1.0
+    /// </summary>
     [JsonProperty("g")]
     public double Green { get; set; } = 1.0;
 
+    /// <summary>
+    /// Blue channel. Range 0.0 to 1.0
+    ///
+    /// Default = 1.0
+    /// </summary>
     [JsonProperty("b")]
     public double Blue { get; set; } = 1.0;
+
+    #endregion
 }

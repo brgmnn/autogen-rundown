@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
+using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
@@ -28,8 +29,6 @@ namespace AutogenRundown.DataBlocks
         public bool HasExternalStyle = false;
         public bool HasStoryStyle = false;
         public bool UseGearPicker = false;
-        public JArray DimensionDatas = new JArray();
-        public int SoundEventOnWarpToReality = 0;
         #endregion
 
         #region Internal settings for us
@@ -407,6 +406,20 @@ namespace AutogenRundown.DataBlocks
             LayerType = 0,
             Zone = 0
         };
+        #endregion
+
+        #region Dimension Data
+
+        /// <summary>
+        /// Set's up dimension data?
+        /// </summary>
+        public List<Levels.DimensionData> DimensionDatas { get; set; } = new();
+
+        /// <summary>
+        /// Sound for warping?
+        /// </summary>
+        public int SoundEventOnWarpToReality = 0;
+
         #endregion
 
         #region Modifiers
@@ -978,6 +991,22 @@ namespace AutogenRundown.DataBlocks
 
                 #endregion
 
+
+                // var dimension = new Dimension
+                // {
+                //     Data = new Dimensions.DimensionData
+                //     {
+                //         IsStaticDimension = true
+                //     }
+                // };
+                // dimension.FindOrPersist();
+                //
+                // level.DimensionDatas.Add(new Levels.DimensionData
+                // {
+                //     Dimension = DimensionIndex.Dimension1,
+                //     DataPid = dimension.PersistentId,
+                // });
+
                 // The zones
                 var elevatorDrop = new ZoneNode(Bulkhead.Main, level.Planner.NextIndex(Bulkhead.Main));
                 var elevatorDropZone = new Zone(level.Tier)
@@ -990,6 +1019,8 @@ namespace AutogenRundown.DataBlocks
 
                 // elevatorDropZone.EnemySpawningInZone.Add(
                 //     EnemySpawningData.MegaMother_AlignedSpawn);
+
+                elevatorDropZone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer);
 
                 // EnemyCustomization.Model.Shadows.Add(
                 //     new Shadow()
@@ -1030,15 +1061,28 @@ namespace AutogenRundown.DataBlocks
                 // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
 
                 for (var z = 0; z < forwardZones; z++)
-                    layout.Zones.Add(new Zone(level.Tier)
+                {
+                    var zone = new Zone(level.Tier)
                     {
                         Coverage = new CoverageMinMax { Min = 5, Max = 10 },
                         LightSettings = Lights.GenRandomLight(),
                         LocalIndex = z + 1,
                         BuildFromLocalIndex = 0
-                    });
+                    };
 
-                // layout.AddSecuritySensors_SinglePouncer((0, 1));
+                    // zone.EventsOnOpenDoor.Add(
+                    //     new WardenObjectiveEvent
+                    //     {
+                    //         Type = WardenObjectiveEventType.DimensionWarpTeam,
+                    //         DimensionIndex = (int)DimensionIndex.Dimension1,
+                    //         Layer = (int)Bulkhead.Main
+                    //     });
+
+                    layout.Zones.Add(zone);
+                }
+
+
+                layout.AddSecuritySensors_SinglePouncer((0, 1));
 
                 Bins.LevelLayouts.AddBlock(layout);
             }

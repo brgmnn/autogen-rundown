@@ -121,12 +121,12 @@ public static class RundownFactory
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/geo_64x64_service_floodways_reactor_ds_01.prefab",
+                "Assets/geo_64x64_tech_data_center_hub_DS_01.prefab",
                 new Level("A")
                 {
                     Tier = "A",
                     Name = "Debug Test",
-                    Complex = Complex.Service,
+                    Complex = Complex.Tech,
                     Settings = settings,
                     Index = rundown.TierA_Count + 1,
                     IsTest = true

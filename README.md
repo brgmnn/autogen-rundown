@@ -42,6 +42,7 @@ Monthly April
     * Seems like it adds datablock files directly
   * Try using fixed bioscan points for room wide scans?
   [ ] B1 Secondary (Cryo) - No exit alarm
+  [ ] C4 - Security sensors spawn LOADS of snatchers
 
 Monthly March
   * March 27th
@@ -70,8 +71,6 @@ Monthly Feb
     [ ] Mother wave had good amount of time. DONT CHANGE
 Monthly Feb 0.49.0
   * Secondary or otherwise key seems to always spawn in the elevator
-  * C2 Main
-    * Keycard spawned deep in zone instead of in side zone
   * D4 Main
     * _Very_ difficult first room scan: tbd if we should fix this somehow? No doors to hold or anything
 
