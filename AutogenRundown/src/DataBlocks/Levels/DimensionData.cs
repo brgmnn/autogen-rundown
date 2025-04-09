@@ -5,6 +5,7 @@ namespace AutogenRundown.DataBlocks.Levels;
 
 public class DimensionData
 {
+    [JsonProperty("DimensionIndex")]
     public DimensionIndex Dimension { get; set; } = DimensionIndex.Reality;
 
     [JsonProperty("DimensionData")]
