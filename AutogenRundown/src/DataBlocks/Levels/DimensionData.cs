@@ -8,7 +8,14 @@ public class DimensionData
     public DimensionIndex Dimension { get; set; } = DimensionIndex.Reality;
 
     [JsonProperty("DimensionData")]
-    public uint DataPid { get; set; } = 0;
+    public uint DataPersistentId
+    {
+        get => Data.PersistentId;
+        private set { }
+    }
+
+    [JsonIgnore]
+    public Dimension Data { get; set; } = DataBlocks.Dimension.None;
 
     public bool Enabled { get; set; } = true;
 }

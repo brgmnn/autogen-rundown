@@ -16,7 +16,6 @@ public record DimensionData
     public double VerticalExtentsDown { get; set; } = 50.0;
 
     public int DimensionResourceSetID { get; set; } = 51;
-    // public int DimensionResourceSetID { get; set; } = 47; // 51;
 
     public int DimensionFogData { get; set; } = 81;
 
@@ -51,6 +50,8 @@ public record DimensionData
     public int StaticLightSettings { get; set; } =  0;
 
     public int StaticAliasOverride { get; set; } =  -1;
+
+    public JArray StaticEnemySpawningInZone { get; set; } = new();
 
     public bool StaticAllowResourceContainerAllocation { get; set; } = false;
 

@@ -411,9 +411,19 @@ namespace AutogenRundown.DataBlocks
         #region Dimension Data
 
         /// <summary>
-        /// Set's up dimension data?
+        /// Dimensions used in this level
+        ///
+        /// By default we always add the pouncer arena to the level, even if a level doesn't use
+        /// it. This is simpler than trying to conditionally add it to each level.
         /// </summary>
-        public List<Levels.DimensionData> DimensionDatas { get; set; } = new();
+        public List<Levels.DimensionData> DimensionDatas { get; set; } = new()
+        {
+            new Levels.DimensionData
+            {
+                Dimension = DimensionIndex.Arena,
+                Data = Dimension.PouncerArena
+            }
+        };
 
         /// <summary>
         /// Sound for warping?
@@ -1059,6 +1069,8 @@ namespace AutogenRundown.DataBlocks
                 // elevatorDrop = layout.BuildBranch(elevatorDrop, 2);
 
                 // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
+
+                elevatorDropZone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer);
 
                 for (var z = 0; z < forwardZones; z++)
                 {
