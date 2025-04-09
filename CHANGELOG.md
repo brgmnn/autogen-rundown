@@ -3,6 +3,18 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.58.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.58.0) — April 09, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fix Pouncers/Snatchers crashing the game due to missing dimension arena
+* Rerolled and checked monthly seeds
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.57.0...v0.58.0
+
+
 ## [v0.57.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.57.0) — April 08, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
