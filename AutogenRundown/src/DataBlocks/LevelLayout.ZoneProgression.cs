@@ -602,8 +602,8 @@ namespace AutogenRundown.DataBlocks
                 var last = BuildBranch(branchBase, branchLength, branch);
 
                 var branchFirstNode = level.Planner.GetZones(director.Bulkhead, branch).First();
-                var firstZone = level.Planner.GetZone(branchFirstNode);
-                var branchBaseZone = level.Planner.GetZone(branchBase);
+                var firstZone = level.Planner.GetZone(branchFirstNode)!;
+                var branchBaseZone = level.Planner.GetZone(branchBase)!;
 
                 // Try and set the first zone branch to actually pick a direction that can work
                 firstZone.SetExpansionAsBranchOfZone(branchBaseZone,

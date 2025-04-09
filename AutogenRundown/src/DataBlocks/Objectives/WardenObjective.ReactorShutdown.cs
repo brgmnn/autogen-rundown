@@ -242,7 +242,8 @@ public partial record class WardenObjective : DataBlock
                     {
                         Bulkhead.Main => WaveSettings.Exit_Objective_Medium,
                         Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy,
-                        Bulkhead.Overload => WaveSettings.Exit_Objective_Easy
+                        Bulkhead.Overload => WaveSettings.Exit_Objective_Easy,
+                        _ => WaveSettings.Exit_Objective_Easy,
                     },
                     Population = WavePopulation.Baseline,
                     TriggerAlarm = true
@@ -351,7 +352,8 @@ public partial record class WardenObjective : DataBlock
                     {
                         Bulkhead.Main => WaveSettings.Exit_Objective_Medium,
                         Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy,
-                        Bulkhead.Overload => WaveSettings.Exit_Objective_Easy
+                        Bulkhead.Overload => WaveSettings.Exit_Objective_Easy,
+                        _ => WaveSettings.Exit_Objective_Easy
                     },
                     Population = WavePopulation.Baseline,
                     TriggerAlarm = true
@@ -473,7 +475,8 @@ public partial record class WardenObjective : DataBlock
                     {
                         Bulkhead.Main => WaveSettings.Exit_Objective_Hard,
                         Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy,
-                        Bulkhead.Overload => WaveSettings.Exit_Objective_Medium
+                        Bulkhead.Overload => WaveSettings.Exit_Objective_Medium,
+                        _ => WaveSettings.Exit_Objective_Easy
                     },
                     Population = WavePopulation.Baseline,
                     TriggerAlarm = true
@@ -612,7 +615,8 @@ public partial record class WardenObjective : DataBlock
                     {
                         Bulkhead.Main => WaveSettings.Exit_Objective_VeryHard,
                         Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy,
-                        Bulkhead.Overload => WaveSettings.Exit_Objective_Medium
+                        Bulkhead.Overload => WaveSettings.Exit_Objective_Medium,
+                        _ => WaveSettings.Exit_Objective_Easy
                     },
                     Population = WavePopulation.Baseline,
                     TriggerAlarm = true
@@ -755,7 +759,8 @@ public partial record class WardenObjective : DataBlock
                     {
                         Bulkhead.Main => WaveSettings.Exit_Objective_VeryHard,
                         Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy,
-                        Bulkhead.Overload => WaveSettings.Exit_Objective_Medium
+                        Bulkhead.Overload => WaveSettings.Exit_Objective_Medium,
+                        _ => WaveSettings.Exit_Objective_Easy
                     },
                     Population = WavePopulation.Baseline,
                     TriggerAlarm = true
@@ -803,7 +808,7 @@ public partial record class WardenObjective : DataBlock
         Type = WardenObjectiveType.Empty;
 
         // This always needs to be the main level layout
-        LayoutDefinitions.MainLevelLayout = level.GetLevelLayout(Bulkhead.Main)!.PersistentId;
+        LayoutDefinitions!.MainLevelLayout = level.GetLevelLayout(Bulkhead.Main)!.PersistentId;
         LayoutDefinitions.Save();
     }
 }

@@ -7,6 +7,6 @@ public enum EnemyType : uint
     Special = 2,
     MiniBoss = 3,
 
-    [Obsolete("Do not use this as it doesn't spawn anything but uses up points")]
+    // Do not use this as it doesn't spawn anything but uses up points
     Boss = 4
 }
