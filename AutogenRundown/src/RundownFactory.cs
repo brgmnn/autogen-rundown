@@ -491,7 +491,7 @@ public static class RundownFactory
                     new() { 2, 1 },       // Tier A - ?
                     new() { 1, 1, 1 },    // Tier B - ?
                     new() { 1, 1, 1, 1 }, // Tier C - ?
-                    new() { 2, 1, 1, 1 }, // Tier D - ?
+                    new() { 2, 1, 2, 1 }, // Tier D - ?
                     new() { 1, 1 }        // Tier E - ?
                 }
             }
