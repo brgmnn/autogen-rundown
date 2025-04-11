@@ -1,38 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
-namespace AutogenRundown.DataBlocks
+namespace AutogenRundown.DataBlocks;
+
+public class ObjectiveLayerData
 {
-    public class ObjectiveLayerData
+    /// <summary>
+    /// Local zone index where the bulkhead entrace will be
+    /// </summary>
+    public List<int> ZonesWithBulkheadEntrance { get; set; } = new();
+
+    public List<BulkheadDoorPlacementData> BulkheadDoorControllerPlacements { get; set; } = new();
+
+    public List<List<ZonePlacementData>> BulkheadKeyPlacements { get; set; } = new();
+
+    public WardenObjectiveLayerData ObjectiveData { get; set; } = new();
+
+    // TODO: Can we have multiple objectives chained in one zone? :hmm:
+    public List<WardenObjectiveLayerData> ChainedObjectiveData { get; set; } = new();
+
+    // We don't set artifacts
+    public JObject ArtifactData = new JObject
     {
-        /// <summary>
-        /// Local zone index where the bulkhead entrace will be
-        /// </summary>
-        public List<int> ZonesWithBulkheadEntrance { get; set; } = new List<int>();
-
-        public List<BulkheadDoorPlacementData> BulkheadDoorControllerPlacements { get; set; }
-            = new List<BulkheadDoorPlacementData>();
-
-        public List<List<ZonePlacementData>> BulkheadKeyPlacements { get; set; }
-            = new List<List<ZonePlacementData>>();
-
-        public WardenObjectiveLayerData ObjectiveData { get; set; }
-            = new WardenObjectiveLayerData();
-
-        // TODO: Can we have multiple objectives chained in one zone? :hmm:
-        public List<WardenObjectiveLayerData> ChainedObjectiveData { get; set; }
-            = new List<WardenObjectiveLayerData>();
-
-        // We don't set artifacts
-        public JObject ArtifactData = new JObject
-        {
-            ["ArtifactAmountMulti"] = 1.0,
-            ["ArtifactLayerDistributionDataID"] = 1,
-            ["ArtifactZoneDistributions"] = new JArray()
-        };
-    }
+        ["ArtifactAmountMulti"] = 1.0,
+        ["ArtifactLayerDistributionDataID"] = 1,
+        ["ArtifactZoneDistributions"] = new JArray()
+    };
 }
