@@ -893,6 +893,9 @@ namespace AutogenRundown.DataBlocks
         public JArray CentralPowerGenClustser_FogDataSteps = new JArray();
         #endregion
 
+        #region Type=10: HsuActivateSmall (Bring Neonate/Datasphere to depressurizer)
+        #endregion
+
         #region Type=11: Survival
         public double Survival_TimeToActivate { get; set; } = 0.0;
 
@@ -905,6 +908,12 @@ namespace AutogenRundown.DataBlocks
         public List<WardenObjectiveEvent> SecurityControlEvents { get; set; } = new List<WardenObjectiveEvent>();
 
         [JsonIgnore] public int SecurityControlEventLoopIndex { get; set; } = 0;
+        #endregion
+
+        #region Type=12: Gather Terminal
+        #endregion
+
+        #region Type=13: Corrupted Terminal Uplink
         #endregion
 
         #region Type=15: Timed terminal sequence

@@ -22,9 +22,9 @@
         CentralGeneratorCluster = 9, // TODO: Generator cluster spawn is bugged
 
         // Not yet implemented
-        HsuActivateSmall = 10,
-        GatherTerminal = 12,
-        CorruptedTerminalUplink = 13,
+        HsuActivateSmall = 10, // Seems to be like bring data sphere or neonate
+        GatherTerminal = 12, // Unsure
+        CorruptedTerminalUplink = 13, // Seems similar to timed terminal sequence?
         Empty = 14
     }
 }

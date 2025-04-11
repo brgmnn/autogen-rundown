@@ -43,6 +43,7 @@ Monthly April
   * Try using fixed bioscan points for room wide scans?
   [ ] B1 Secondary (Cryo) - No exit alarm
   [ ] C4 - Security sensors spawn LOADS of snatchers
+  [ ] E1 - Maybe a bit too easy?
 
 Monthly March
   * March 27th

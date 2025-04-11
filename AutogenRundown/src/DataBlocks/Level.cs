@@ -1002,20 +1002,25 @@ namespace AutogenRundown.DataBlocks
                 #endregion
 
 
-                // var dimension = new Dimension
-                // {
-                //     Data = new Dimensions.DimensionData
-                //     {
-                //         IsStaticDimension = true
-                //     }
-                // };
+                var dimension = new Dimension
+                {
+                    Data = new Dimensions.DimensionData
+                    {
+                        // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_01.prefab",
+                        DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab",
+                        DimensionResourceSetID = 47,
+                        IsStaticDimension = true
+                    },
+                    PersistentId = 2,
+                };
                 // dimension.FindOrPersist();
-                //
-                // level.DimensionDatas.Add(new Levels.DimensionData
-                // {
-                //     Dimension = DimensionIndex.Dimension1,
-                //     DataPid = dimension.PersistentId,
-                // });
+                dimension.Persist();
+
+                level.DimensionDatas.Add(new Levels.DimensionData
+                {
+                    Dimension = DimensionIndex.Dimension1,
+                    Data = dimension
+                });
 
                 // The zones
                 var elevatorDrop = new ZoneNode(Bulkhead.Main, level.Planner.NextIndex(Bulkhead.Main));
@@ -1082,13 +1087,13 @@ namespace AutogenRundown.DataBlocks
                         BuildFromLocalIndex = 0
                     };
 
-                    // zone.EventsOnOpenDoor.Add(
-                    //     new WardenObjectiveEvent
-                    //     {
-                    //         Type = WardenObjectiveEventType.DimensionWarpTeam,
-                    //         DimensionIndex = (int)DimensionIndex.Dimension1,
-                    //         Layer = (int)Bulkhead.Main
-                    //     });
+                    zone.EventsOnOpenDoor.Add(
+                        new WardenObjectiveEvent
+                        {
+                            Type = WardenObjectiveEventType.DimensionWarpTeam,
+                            DimensionIndex = (int)DimensionIndex.Dimension1,
+                            Layer = (int)Bulkhead.Main
+                        });
 
                     layout.Zones.Add(zone);
                 }
