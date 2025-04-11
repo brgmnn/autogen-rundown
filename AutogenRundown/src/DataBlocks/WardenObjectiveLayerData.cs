@@ -1,19 +1,17 @@
-﻿namespace AutogenRundown.DataBlocks
+﻿namespace AutogenRundown.DataBlocks;
+
+public enum WardenObjectiveWinCondition
 {
-    public enum WardenObjectiveWinCondition
-    {
-        GoToElevator = 0,
-        GoToExitGeo = 1,
-    }
+    GoToElevator = 0,
+    GoToExitGeo = 1,
+}
 
-    public class WardenObjectiveLayerData
-    {
-        public UInt32 DataBlockId { get; set; }
+public class WardenObjectiveLayerData
+{
+    public uint DataBlockId { get; set; }
 
-        public WardenObjectiveWinCondition WinCondition { get; set; }
-            = WardenObjectiveWinCondition.GoToElevator;
+    public WardenObjectiveWinCondition WinCondition { get; set; }
+        = WardenObjectiveWinCondition.GoToElevator;
 
-        public List<List<ZonePlacementData>> ZonePlacementDatas { get; set; }
-            = new List<List<ZonePlacementData>>();
-    }
+    public List<List<ZonePlacementData>> ZonePlacementDatas { get; set; } = new();
 }
