@@ -2,16 +2,16 @@
 
 namespace AutogenRundown.DataBlocks;
 
-public partial record LevelLayout : DataBlock
+public partial record LevelLayout
 {
     /// <summary>
     ///
     /// </summary>
     /// <param name="director"></param>
-    /// <param name="objective"></param>
+    /// <param name="_"></param>
     /// <param name="startish"></param>
     /// <exception cref="Exception"></exception>
-    public void BuildLayout_GatherSmallItems(BuildDirector director, WardenObjective objective, ZoneNode? startish)
+    public void BuildLayout_GatherSmallItems(BuildDirector director, WardenObjective _, ZoneNode? startish)
     {
         if (startish == null)
         {
@@ -21,6 +21,6 @@ public partial record LevelLayout : DataBlock
 
         var start = (ZoneNode)startish;
 
-        BuildBranch(start, director.ZoneCount, "find_items");
+        AddBranch(start, director.ZoneCount, "find_items");
     }
 }
