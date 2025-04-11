@@ -13,13 +13,37 @@ public partial record LevelLayout
         }
 
         var start = (ZoneNode)startish;
-        var startZone = planner.GetZone(start)!;
+        // var startZone = planner.GetZone(start)!;
         var layerData = level.GetObjectiveLayerData(director.Bulkhead);
 
-        var nodes = AddBranch_Forward(start, 2);
 
-        var (end, endZone) = AddZone(nodes.Last(), new ZoneNode { Branch = "activate_item" });
+        var end = new ZoneNode();
+        var endZone = new Zone(level.Tier);
 
+        // Level generation
+        switch (level.Tier)
+        {
+            // case "A":
+            // {
+            //     Generator.SelectRun(new List<(double, Action)>
+            //     {
+            //     });
+            //     break;
+            // }
+
+            default:
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    (1.0, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 2);
+                        (end, endZone) = AddZone(nodes.Last(), new ZoneNode { Branch = "activate_item" });
+                    })
+                });
+                break;
+            }
+        }
 
         // Set up the end zone
         switch (level.Complex)
@@ -28,7 +52,8 @@ public partial record LevelLayout
             {
                 // Works with:
                 //  - Data Sphere
-                endZone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_dead_end_HA_01.prefab";
+                endZone.CustomGeomorph =
+                    "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_dead_end_HA_01.prefab";
                 break;
             }
 
@@ -39,7 +64,8 @@ public partial record LevelLayout
 
                 // Works with:
                 //  - Data Sphere
-                endZone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_Lab_dead_end_room_01.prefab";
+                endZone.CustomGeomorph =
+                    "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_Lab_dead_end_room_01.prefab";
                 break;
             }
 
@@ -47,7 +73,8 @@ public partial record LevelLayout
             {
                 // Works with:
                 //  -
-                endZone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_I_01.prefab";
+                endZone.CustomGeomorph =
+                    "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_I_01.prefab";
                 break;
             }
         }
