@@ -195,10 +195,10 @@ public static class RundownFactory
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
-                Complex = Complex.Tech,
+                Complex = Complex.Mining,
                 Complexity = Complexity.Low,
                 Tier = "C",
-                Objective = WardenObjectiveType.ReactorShutdown,
+                Objective = WardenObjectiveType.HsuActivateSmall,
             };
             mainDirector.GenPoints();
 
@@ -219,8 +219,8 @@ public static class RundownFactory
                 new Level("C")
                 {
                     Tier = "C",
-                    Name = "Clear Path",
-                    Complex = Complex.Tech,
+                    Name = "Hsu Activate Small",
+                    Complex = Complex.Mining,
                     MainDirector = mainDirector,
                     // SecondaryDirector = extremeDirector,
                     Settings = settings,

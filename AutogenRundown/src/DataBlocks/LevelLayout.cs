@@ -985,6 +985,14 @@ namespace AutogenRundown.DataBlocks
                     break;
                 }
 
+                case WardenObjectiveType.HsuActivateSmall:
+                {
+                    var start = level.Planner.GetLastZone(director.Bulkhead);
+
+                    layout.BuildLayout_HsuActivateSmall(director, objective, start);
+                    break;
+                }
+
                 /**
                  * Terminal Uplink
                  */

@@ -16,13 +16,13 @@
         RetrieveBigItems = 6,       // B
         PowerCellDistribution = 7,  // C
         TerminalUplink = 8,         // U
+        HsuActivateSmall = 10,      // N
         Survival = 11,              // X
         TimedTerminalSequence = 15, // W
 
         CentralGeneratorCluster = 9, // TODO: Generator cluster spawn is bugged
 
         // Not yet implemented
-        HsuActivateSmall = 10, // Seems to be like bring data sphere or neonate
         GatherTerminal = 12, // Unsure
         CorruptedTerminalUplink = 13, // Seems similar to timed terminal sequence?
         Empty = 14

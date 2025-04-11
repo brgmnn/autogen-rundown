@@ -468,6 +468,10 @@ namespace AutogenRundown.DataBlocks
                     break;
                 }
 
+                case WardenObjectiveType.HsuActivateSmall:
+                    objective.PreBuild_HsuActivateSmall(director, level);
+                    break;
+
                 case WardenObjectiveType.TimedTerminalSequence:
                     objective.PreBuild_TimedTerminalSequence(director, level);
                     break;
@@ -674,6 +678,12 @@ namespace AutogenRundown.DataBlocks
                     break;
                 }
 
+                case WardenObjectiveType.HsuActivateSmall:
+                {
+                    Build_HsuActivateSmall(director, level);
+                    break;
+                }
+
                 /**
                  * Survival missions
                  */
@@ -807,13 +817,19 @@ namespace AutogenRundown.DataBlocks
         #region Type=0: Find HSU sample
         public bool ActivateHSU_BringItemInElevator { get; set; } = true;
 
-        public int ActivateHSU_ItemFromStart = 0;
-        public int ActivateHSU_ItemAfterActivation = 0;
-        public bool ActivateHSU_MarkItemInElevatorAsWardenObjective = false;
-        public bool ActivateHSU_StopEnemyWavesOnActivation = false;
-        public bool ActivateHSU_ObjectiveCompleteAfterInsertion = false;
-        public bool ActivateHSU_RequireItemAfterActivationInExitScan = false;
-        public JArray ActivateHSU_Events = new JArray();
+        public Items.Item ActivateHSU_ItemFromStart { get; set; } = Items.Item.None;
+
+        public Items.Item ActivateHSU_ItemAfterActivation { get; set; } = Items.Item.None;
+
+        public bool ActivateHSU_MarkItemInElevatorAsWardenObjective { get; set; } = false;
+
+        public bool ActivateHSU_StopEnemyWavesOnActivation { get; set; } = false;
+
+        public bool ActivateHSU_ObjectiveCompleteAfterInsertion { get; set; } = false;
+
+        public bool ActivateHSU_RequireItemAfterActivationInExitScan { get; set; } = false;
+
+        public List<WardenObjectiveEvent> ActivateHSU_Events { get; set; } = new();
         #endregion
 
         #region Type=1 & 2: Reactor startup/shutdown
