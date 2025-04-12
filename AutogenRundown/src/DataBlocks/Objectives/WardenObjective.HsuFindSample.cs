@@ -117,7 +117,7 @@ public partial record WardenObjective
         /*
          * HSU Find Sample specific warden intel messages
          */
-        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {
             /*
              * All these intel messages end with the highlighted portion at the end

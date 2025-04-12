@@ -717,6 +717,10 @@ namespace AutogenRundown.DataBlocks
                     PostBuild_ReactorShutdown(director, level);
                     break;
 
+                case WardenObjectiveType.HsuActivateSmall:
+                    PostBuild_HsuActivateSmall(director, level);
+                    break;
+
                 case WardenObjectiveType.Survival:
                     PostBuild_Survival(director, level);
                     break;

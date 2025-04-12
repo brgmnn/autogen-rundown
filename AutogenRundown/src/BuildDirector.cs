@@ -56,9 +56,10 @@ namespace AutogenRundown
                 WardenObjectiveType.GatherSmallItems,
                 WardenObjectiveType.ClearPath,
                 WardenObjectiveType.SpecialTerminalCommand,
-                WardenObjectiveType.RetrieveBigItems, // TODO: This seems to be throwing errors
+                WardenObjectiveType.RetrieveBigItems,
                 WardenObjectiveType.PowerCellDistribution,
                 WardenObjectiveType.TerminalUplink,
+                WardenObjectiveType.HsuActivateSmall,
                 WardenObjectiveType.Survival,
                 WardenObjectiveType.TimedTerminalSequence,
 
@@ -74,6 +75,7 @@ namespace AutogenRundown
             // These objectives are incompatible with non-Main bulkheads.
             if (!Bulkhead.HasFlag(Bulkhead.Main))
             {
+                objectives.Remove(WardenObjectiveType.HsuActivateSmall);
                 objectives.Remove(WardenObjectiveType.ClearPath);
                 objectives.Remove(WardenObjectiveType.Survival);
             }

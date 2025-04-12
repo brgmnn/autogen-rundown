@@ -248,7 +248,7 @@ public partial record WardenObjective : DataBlock
         }
 
         #region Warden Intel Messages
-        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {
             ">... [alarm blaring] Move it!\r\n>... The clock's ticking.\r\n>... <size=200%><color=red>We can't die here!</color></size>",
             ">... Get to that bulkhead.\r\n>... It only opens when time's up.\r\n>... <size=200%><color=red>Keep them off our backs!</color></size>",
