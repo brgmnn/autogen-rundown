@@ -220,7 +220,7 @@ public static class RundownFactory
                 new Level("C")
                 {
                     Tier = "C",
-                    Name = $"{Lore.TitlePrefix_LevelErrorAlarm}Hsu Activate Small",
+                    Name = "Hsu Activate Small",
                     Complex = Complex.Tech,
                     MainDirector = mainDirector,
                     // SecondaryDirector = extremeDirector,

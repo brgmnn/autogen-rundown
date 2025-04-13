@@ -599,6 +599,38 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
+        ///
+        /// </summary>
+        public void MarkAsErrorAlarm()
+        {
+            Name = $"{Lore.TitlePrefix_LevelErrorAlarm}{Name}";
+
+            ElevatorDropWardenIntel.Add((Generator.Between(1, 4), Generator.Draw(new List<string>
+            {
+                ">... That alarm started the moment we dropped.\r\n>... [static crackle]\r\n>... <size=200%><color=red>There's no way to turn it off!</color></size>",
+                ">... [warning siren blares]\r\n>... Everything's already awake.\r\n>... <size=200%><color=red>We push forward regardless!</color></size>",
+                ">... <size=200%><color=red>This alarm won't shut down!</color></size>\r\n>... The terminal is locked.\r\n>... We'll just have to fight through.",
+                ">... The lights won't stop flashing.\r\n>... My head's pounding.\r\n>... <size=200%><color=red>It's an error we can't fix!</color></size>",
+                ">... [heavy footsteps closing in]\r\n>... They know we're here.\r\n>... <size=200%><color=red>No silent approach now.</color></size>",
+                ">... <size=200%><color=red>The alarm won't stop!</color></size>\r\n>... That means they won't stop coming.\r\n>... We must keep moving!",
+                ">... The siren's at full volume.\r\n>... It's drawing them from everywhere!\r\n>... <size=200%><color=red>No way to cut power.</color></size>",
+                ">... [console flickering]\r\n>... Everything's jammed.\r\n>... <size=200%><color=red>We can't override this alarm!</color></size>",
+                ">... <size=200%><color=red>Speed is our only option!</color></size>\r\n>... The alarm is permanent.\r\n>... Let's not waste time here.",
+                ">... [gunfire in the distance]\r\n>... They keep coming.\r\n>... <size=200%><color=red>Brace for constant assault!</color></size>",
+                ">... The Warden must've locked it.\r\n>... <size=200%><color=red>There's no off switch now.</color></size>\r\n>... We get in, do the job, get out.",
+                ">... <size=200%><color=red>This is madness!</color></size>\r\n>... That alarm is unstoppable.\r\n>... We'll be swarmed every minute.",
+                ">... [metal clanking]\r\n>... No time to plan carefully.\r\n>... <size=200%><color=red>Just move and shoot!</color></size>",
+                ">... <size=200%><color=red>We'll have to fight on the run!</color></size>\r\n>... Standing still is suicide.\r\n>... Keep each other covered!",
+                ">... The alarm won't pause.\r\n>... [heavy breathing]\r\n>... <size=200%><color=red>We do the mission under fire!</color></size>",
+                ">... [sensor reading spikes]\r\n>... More and more signals.\r\n>... <size=200%><color=red>No choice but to hold them off!</color></size>",
+                ">... <size=200%><color=red>We can't silence the siren!</color></size>\r\n>... Maybe it's intentional.\r\n>... The Warden wants us in chaos.",
+                ">... Keep reloading on the move.\r\n>... <size=200%><color=red>We won't find any quiet corners!</color></size>\r\n>... The alarm reaches everywhere.",
+                ">... [desperate breathing]\r\n>... It's an endless onslaught.\r\n>... <size=200%><color=red>Stay alive; there's no shutoff!</color></size>",
+                ">... <size=200%><color=red>Eyes up, stay mobile!</color></size>\r\n>... This error alarm never ends.\r\n>... We finish or we die trying."
+            }))!);
+        }
+
+        /// <summary>
         /// Gets the right layer data given the objective being asked for
         /// </summary>
         /// <param name="variant"></param>

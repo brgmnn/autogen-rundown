@@ -414,6 +414,7 @@ public partial record LevelLayout
                     (0.05, () =>
                     {
                         objective.WavesOnElevatorLand.Add(GenericWave.ErrorAlarm_Normal);
+                        level.MarkAsErrorAlarm();
 
                         var last = BuildBranch(start, Generator.Between(2, 3));
                         planner.UpdateNode(last with { Branch = "hsu_sample" });
@@ -637,6 +638,7 @@ public partial record LevelLayout
                         {
                             Population = population
                         });
+                        level.MarkAsErrorAlarm();
 
                         var last = BuildBranch(start, Generator.Between(2, 3));
                         planner.UpdateNode(last with { Branch = "hsu_sample" });
@@ -865,6 +867,7 @@ public partial record LevelLayout
                         {
                             Population = population
                         });
+                        level.MarkAsErrorAlarm();
 
                         var last = BuildBranch(start, Generator.Between(2, 3));
                         planner.UpdateNode(last with { Branch = "hsu_sample" });

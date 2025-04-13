@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Utils;
@@ -151,7 +152,7 @@ public partial record LevelLayout
                     }),
 
                     // Double generator
-                    (0.25, () =>
+                    (0.20, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
                         var (mid, _) = BuildChallenge_GeneratorCellInSide(nodes.Last());
@@ -181,6 +182,19 @@ public partial record LevelLayout
 
                         (end, endZone) = AddZone(mid);
                     }),
+
+                    // Straight to Machine... with error alarm active
+                    // No turning it off
+                    (0.05, () =>
+                    {
+                        objective.WavesOnElevatorLand.Add(GenericWave.ErrorAlarm_Normal);
+                        level.MarkAsErrorAlarm();
+
+                        var nodes = AddBranch_Forward(start, 3);
+
+                        end = nodes.Last();
+                        endZone = planner.GetZone(end)!;
+                    })
                 });
                 break;
             }

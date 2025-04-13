@@ -24,6 +24,8 @@
 
         public static string TitlePrefix_LevelErrorAlarm = "<color=red>?!</color><color=#444444>-</color>";
 
+        public static string TitlePrefix_LevelBossErrorAlarm = "<color=red>!!!</color><color=#444444>-</color>";
+
         /// <summary>
         /// Pulls a random variant of the string "Unknown Error"
         /// </summary>
