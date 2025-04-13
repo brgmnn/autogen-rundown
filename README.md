@@ -178,7 +178,7 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] Power Cell Distribution — *Distributing cells to individual generators*
   * [x] Terminal Uplink
   * [x] ~~Central Generator Cluster~~ — *Fetching cells for a central generator cluster*. **Unreliable cluster spawns**
-  * [ ] HSU Activate Small - *Bring Neonate to depressurizer*
+  * [x] HSU Activate Small - *Bring Neonate to depressurizer*
   * [x] Survival - *Timed survival*
   * [ ] Gather Terminal
   * [ ] Corrupted Terminal Uplink
