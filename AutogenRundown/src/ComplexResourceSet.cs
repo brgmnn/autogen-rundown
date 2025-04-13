@@ -441,6 +441,17 @@ public class ComplexResourceSet
             Asset = "Assets/geo_64x64_service_floodways_i_bridge_ds_01.prefab",
             SubComplex = SubComplex.Floodways
         });
+
+        // An armory tile that actually looks like an armory instead of just a storage space,
+        // Floodways theme. Keep in mind it is small and a dead end. Has a marker for a terminal
+        // at the back and a mini terminal on the left side. Weapon lockers are purely for
+        // decoration, they can't be accessed.
+        resourceSet.AddPrefab(Complex.Service, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/geo_64x64_service_floodways_armory_DS_01.prefab",
+            SubComplex = SubComplex.Floodways,
+            // Shard = 10
+        });
         #endregion
         #endregion
 

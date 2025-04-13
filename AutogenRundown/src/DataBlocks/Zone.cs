@@ -781,6 +781,10 @@ namespace AutogenRundown.DataBlocks
                     {
                         (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_dead_end_HA_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
                         (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_dead_end_HA_02.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
+
+                        // --- MOD Geomorphs ---
+                        // donan3976
+                        (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_armory_DS_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
                     });
                     break;
             }
