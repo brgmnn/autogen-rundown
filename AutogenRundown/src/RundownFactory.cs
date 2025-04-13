@@ -196,7 +196,7 @@ public static class RundownFactory
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
-                Complex = Complex.Mining,
+                Complex = Complex.Service,
                 Complexity = Complexity.Low,
                 Tier = "C",
                 Objective = WardenObjectiveType.HsuActivateSmall,
@@ -220,8 +220,8 @@ public static class RundownFactory
                 new Level("C")
                 {
                     Tier = "C",
-                    Name = "Hsu Activate Small",
-                    Complex = Complex.Mining,
+                    Name = "<color=red>???</color> Hsu Activate Small",
+                    Complex = Complex.Service,
                     MainDirector = mainDirector,
                     // SecondaryDirector = extremeDirector,
                     Settings = settings,

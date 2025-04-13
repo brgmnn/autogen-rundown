@@ -14,31 +14,41 @@ public partial record WardenObjective
 {
     public void PreBuild_HsuActivateSmall(BuildDirector director, Level level)
     {
-        ActivateHSU_ItemFromStart = Items.Item.DataSphere;
-        ActivateHSU_ItemAfterActivation = Items.Item.DataSphere;
+        var item = Generator.Pick(new List<Items.Item>
+        {
+            Items.Item.DataSphere,
+            Items.Item.NeonateHsu_Stage1
+        });
 
-        // ActivateHSU_ItemFromStart = Items.Item.NeonateHsu;
-        // ActivateHSU_ItemAfterActivation = Items.Item.NeonateHsu;
+        // ActivateHSU_ItemFromStart = Items.Item.NeonateHsu_Stage1;
+        // ActivateHSU_ItemAfterActivation = Items.Item.NeonateHsu_Stage2;
+
+        ActivateHSU_ItemFromStart = item;
+        ActivateHSU_ItemAfterActivation = item == Items.Item.NeonateHsu_Stage1 ? Items.Item.NeonateHsu_Stage2 : item;
         ActivateHSU_RequireItemAfterActivationInExitScan = true;
     }
 
     public void Build_HsuActivateSmall(BuildDirector director, Level level)
     {
-        var machine = "Neural Frame";
+        switch (ActivateHSU_ItemFromStart)
+        {
+            case Items.Item.DataSphere:
+            {
+                MainObjective = "Bring the Data sphere to [ITEM_SERIAL] to unlock its data encryption";
+                SolveItem = $"Insert Data Sphere into {HsuActivateSmall_MachineName} [ITEM_SERIAL]";
+                GoToWinCondition_Elevator = "Return the Data Sphere to the point of entrance in [EXTRACTION_ZONE]";
+                GoToWinCondition_CustomGeo = "Bring the Data Sphere to the forward exit in [EXTRACTION_ZONE]";
 
-        if (ActivateHSU_ItemFromStart == Items.Item.DataSphere)
-        {
-            MainObjective = "Bring the Data sphere to [ITEM_SERIAL] to retrieve its data";
-            SolveItem = "Insert Data Sphere into Neural Frame [ITEM_SERIAL]";
-            GoToWinCondition_Elevator = "Return the Data Sphere to the point of entrance in [EXTRACTION_ZONE]";
-            GoToWinCondition_CustomGeo = "Bring the Data Sphere to the forward exit in [EXTRACTION_ZONE]";
-        }
-        else if (ActivateHSU_ItemFromStart == Items.Item.NeonateHsu)
-        {
-            MainObjective = "Bring the Neonate to [ITEM_SERIAL] to resuscitate it";
-            SolveItem = "Insert Neonate into Neural Frame [ITEM_SERIAL]";
-            GoToWinCondition_Elevator = "Return the Neonate to the point of entrance in [EXTRACTION_ZONE]";
-            GoToWinCondition_CustomGeo = "Bring the Neonate to the forward exit in [EXTRACTION_ZONE]";
+                break;
+            }
+            case Items.Item.NeonateHsu_Stage1:
+            {
+                MainObjective = "Bring the Neonate to [ITEM_SERIAL] to reactivate it";
+                SolveItem = $"Insert Neonate into {HsuActivateSmall_MachineName} [ITEM_SERIAL]";
+                GoToWinCondition_Elevator = "Return the Neonate to the point of entrance in [EXTRACTION_ZONE]";
+                GoToWinCondition_CustomGeo = "Bring the Neonate to the forward exit in [EXTRACTION_ZONE]";
+                break;
+            }
         }
 
         FindLocationInfo = "Gather information about the location of [ITEM_SERIAL]";
@@ -119,7 +129,7 @@ public partial record WardenObjective
                 break;
             }
 
-            case Items.Item.NeonateHsu:
+            case Items.Item.NeonateHsu_Stage1:
             {
                 level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
                 {

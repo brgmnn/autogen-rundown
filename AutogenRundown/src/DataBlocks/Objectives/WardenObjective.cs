@@ -914,6 +914,13 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Type=10: HsuActivateSmall (Bring Neonate/Datasphere to depressurizer)
+
+        /// <summary>
+        /// Lets us dynamically set the machine name based on the geomorph.
+        /// </summary>
+        [JsonIgnore]
+        public string HsuActivateSmall_MachineName { get; set; } = "";
+
         #endregion
 
         #region Type=11: Survival

@@ -13,8 +13,40 @@
         FogTurbine = 133,
 
         // Objective big items
-        NeonateHsu = 137,
+
+        #region Objectives
+
+        // --- Neonate HSU ---
+        /// <summary>
+        /// Fully sealed and powered off
+        /// </summary>
+        NeonateHsu_Stage1 = 137,
+
+        /// <summary>
+        /// Fully enclosed, like stage 1 but the window is visible with glowing activated text on it
+        /// </summary>
+        NeonateHsu_Stage2 = 141,
+
+        /// <summary>
+        /// Opened up, but the baby is still vacuum sealed and not moving
+        /// </summary>
+        NeonateHsu_Stage3 = 143,
+
+        /// <summary>
+        /// You can clearly see the baby here
+        /// </summary>
+        NeonateHsu_Stage4 = 170,
+
+        // --- Data Sphere ---
         DataSphere = 151,
+
+        #endregion
+
+
+        Crate1 = 154,
+        Crate2 = 175,
+        Data2 = 181,
+
         MatterWaveProjector = 166,
         CargoCrate = 138,
         CargoCrateHighSecurity = 154,

@@ -13,7 +13,6 @@ public partial record LevelLayout
         }
 
         var start = (ZoneNode)startish;
-        // var startZone = planner.GetZone(start)!;
         var layerData = level.GetObjectiveLayerData(director.Bulkhead);
 
 
@@ -45,6 +44,7 @@ public partial record LevelLayout
             }
         }
 
+        #region End zone machine setup
         // Set up the end zone
         switch (level.Complex)
         {
@@ -52,8 +52,13 @@ public partial record LevelLayout
             {
                 // Works with:
                 //  - Data Sphere
+
+                // Machine -> UNS = Unsealer Machine
+                endZone.Coverage = new CoverageMinMax { Min = 16.0, Max = 32.0 };
                 endZone.CustomGeomorph =
                     "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_dead_end_HA_01.prefab";
+
+                objective.HsuActivateSmall_MachineName = "Unsealer Machine";
                 break;
             }
 
@@ -64,8 +69,15 @@ public partial record LevelLayout
 
                 // Works with:
                 //  - Data Sphere
+
+                // Machine -> NCR = Neurogenic Cardiac Resuscitator
+                endZone.Coverage = new CoverageMinMax { Min = 16.0, Max = 32.0 };
                 endZone.CustomGeomorph =
                     "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_Lab_dead_end_room_01.prefab";
+
+
+                // We give it a more generic name that will work for the Data Sphere
+                objective.HsuActivateSmall_MachineName = "Neural Command Relay";
                 break;
             }
 
@@ -73,8 +85,12 @@ public partial record LevelLayout
             {
                 // Works with:
                 //  -
+
+                endZone.Coverage = new CoverageMinMax { Min = 16.0, Max = 32.0 };
                 endZone.CustomGeomorph =
                     "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_I_01.prefab";
+
+                objective.HsuActivateSmall_MachineName = "Unsealer Machine";
                 break;
             }
         }
@@ -87,5 +103,6 @@ public partial record LevelLayout
                 LocalIndex = end.ZoneNumber
             }
         });
+        #endregion
     }
 }
