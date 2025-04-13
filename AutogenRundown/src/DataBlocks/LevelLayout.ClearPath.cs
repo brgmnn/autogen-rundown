@@ -300,7 +300,7 @@ public partial record LevelLayout
                                 Branch = "boss_fight",
                                 Tags = new Tags("no_blood_door")
                             });
-                        (exit, exitZone) = AddZone(boss, "exit");
+                        (exit, exitZone) = AddZone(boss, new ZoneNode { Branch = "exit" });
 
                         exitZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
 
@@ -423,7 +423,7 @@ public partial record LevelLayout
                                 Branch = "boss_fight",
                                 Tags = new Tags("no_blood_door")
                             });
-                        (exit, exitZone) = AddZone(boss, "exit");
+                        (exit, exitZone) = AddZone(boss, new ZoneNode { Branch = "exit" });
 
                         exitZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
 

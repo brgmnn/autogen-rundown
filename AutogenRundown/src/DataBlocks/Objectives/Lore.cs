@@ -22,6 +22,8 @@
         public static string LockedDoorMessage =
             "<color=red>://ERROR: Door in emergency lockdown, unable to operate.</color>";
 
+        public static string TitlePrefix_LevelErrorAlarm = "<color=red>?!</color><color=#444444>-</color>";
+
         /// <summary>
         /// Pulls a random variant of the string "Unknown Error"
         /// </summary>

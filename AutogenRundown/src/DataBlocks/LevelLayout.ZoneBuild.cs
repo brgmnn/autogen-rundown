@@ -11,10 +11,14 @@ public partial record LevelLayout
     /// Adds a new zone onto the source zone node
     /// </summary>
     /// <param name="source"></param>
-    /// <param name="node"></param>
+    /// <param name="newNode"></param>
     /// <returns></returns>
-    public (ZoneNode, Zone) AddZone(ZoneNode source, ZoneNode node)
+    public (ZoneNode, Zone) AddZone(ZoneNode source, ZoneNode? newNode = null)
     {
+        if (newNode is null)
+            newNode = new ZoneNode();
+
+        var node = (ZoneNode)newNode;
         var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
         var next = node with { Bulkhead = director.Bulkhead, ZoneNumber = zoneIndex };
 
@@ -32,30 +36,6 @@ public partial record LevelLayout
         Zone zone = level.Planner.AddZone(next, nextZone)!;
 
         return (next, zone);
-    }
-
-    /// <summary>
-    /// Basic function to add a new zone onto a base zone node. Returns the
-    /// newly created ZoneNode and Zone as a tuple for further use
-    /// </summary>
-    /// <param name="baseNode"></param>
-    /// <param name="branch"></param>
-    /// <returns></returns>
-    public (ZoneNode, Zone) AddZone(ZoneNode baseNode, string branch = "primary")
-    {
-        var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-        var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
-        var nextZone = new Zone(level.Tier)
-        {
-            Coverage = CoverageMinMax.GenNormalSize(),
-            LightSettings = Lights.GenRandomLight(),
-        };
-        nextZone.RollFog(level);
-
-        level.Planner.Connect(baseNode, next);
-        nextZone = level.Planner.AddZone(next, nextZone);
-
-        return (next, nextZone);
     }
 
     /// <summary>
@@ -120,7 +100,7 @@ public partial record LevelLayout
         // Generate the zones for this branch
         for (var i = 0; i < zoneCount; i++)
         {
-            var (next, nextZone) = AddZone(prev, branch);
+            var (next, nextZone) = AddZone(prev, new ZoneNode { Branch = branch });
 
             insertedNodes.Add(next);
             zoneCallback?.Invoke(next, nextZone);
