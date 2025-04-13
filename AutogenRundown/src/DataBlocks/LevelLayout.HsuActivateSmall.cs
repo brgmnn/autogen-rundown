@@ -23,7 +23,6 @@ public partial record LevelLayout
         var endZone = new Zone(level.Tier);
 
         #region Level zone layout
-
         // Level generation
         switch (level.Tier)
         {
@@ -432,7 +431,6 @@ public partial record LevelLayout
                 break;
             }
         }
-
         #endregion
 
         #region End zone machine setup

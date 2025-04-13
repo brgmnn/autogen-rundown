@@ -1,4 +1,7 @@
-﻿namespace AutogenRundown.DataBlocks;
+﻿using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Objectives;
+
+namespace AutogenRundown.DataBlocks;
 
 /*
  * This objective is bringing a large item like Neonate or Data Sphere to a machine and then
@@ -65,6 +68,21 @@ public partial record WardenObjective
         ActivateHSU_StopEnemyWavesOnActivation = false;
         ActivateHSU_ObjectiveCompleteAfterInsertion = false;
         ActivateHSU_RequireItemAfterActivationInExitScan = false;
+
+        #region Exit alarm setup
+        // Add exit trickle events on completing the reactor
+        if (director.Bulkhead == Bulkhead.Main)
+            ActivateHSU_Events.AddGenericWave(
+                level.Tier switch
+                {
+                    "A" => GenericWave.Exit_Objective_Easy,
+                    "B" => GenericWave.Exit_Objective_Easy,
+                    "C" => GenericWave.Exit_Objective_Medium,
+                    "D" => GenericWave.Exit_Objective_Hard,
+                    "E" => GenericWave.Exit_Objective_VeryHard,
+                    _ => GenericWave.Exit_Objective_Easy
+                });
+        #endregion
     }
 
     public void PostBuild_HsuActivateSmall(BuildDirector director, Level level)
