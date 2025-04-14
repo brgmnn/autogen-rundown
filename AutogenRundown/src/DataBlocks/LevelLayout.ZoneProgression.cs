@@ -637,6 +637,10 @@ namespace AutogenRundown.DataBlocks
 
         #region Resourcing
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="start"></param>
         public void AddResourceZone(ZoneNode start)
         {
             var (node, zone) = AddZone(start, new ZoneNode { MaxConnections = 0 });
@@ -653,6 +657,8 @@ namespace AutogenRundown.DataBlocks
                     break;
             }
 
+            zone.AliasPrefix = "Armory, ZONE";
+
             zone.AmmoPacks += 10;
             zone.HealthPacks += 10;
             zone.ToolPacks += 6;
@@ -664,7 +670,7 @@ namespace AutogenRundown.DataBlocks
         /// <param name="start">ZoneNode to build the side disinfection station from</param>
         public void AddDisinfectionZone(ZoneNode start)
         {
-            var (node, zone) = AddZone(start, new ZoneNode { MaxConnections = 0 });
+            var (_, zone) = AddZone(start, new ZoneNode { MaxConnections = 0 });
 
             switch (level.Complex)
             {

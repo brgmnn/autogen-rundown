@@ -330,7 +330,7 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public uint LevelLayoutData
         {
-            get => Layouts[Bulkhead.Main].PersistentId;
+            get => Layouts.TryGetValue(Bulkhead.Main, out var val) ? val?.PersistentId ?? 0 : 0;
             private set { }
         }
 
@@ -356,13 +356,13 @@ namespace AutogenRundown.DataBlocks
 
         public bool SecondaryLayerEnabled
         {
-            get => SecondaryLayout > 0;
+            get => Layouts.ContainsKey(Bulkhead.Extreme);
             private set { }
         }
 
         public uint SecondaryLayout
         {
-            get => Layouts[Bulkhead.Extreme].PersistentId;
+            get => Layouts.TryGetValue(Bulkhead.Extreme, out var val) ? val?.PersistentId ?? 0 : 0;
             private set { }
         }
 
@@ -385,13 +385,13 @@ namespace AutogenRundown.DataBlocks
 
         public bool ThirdLayerEnabled
         {
-            get => ThirdLayout > 0;
+            get => Layouts.ContainsKey(Bulkhead.Overload);
             private set { }
         }
 
         public uint ThirdLayout
         {
-            get => Layouts[Bulkhead.Overload].PersistentId;
+            get => Layouts.TryGetValue(Bulkhead.Overload, out var val) ? val?.PersistentId ?? 0 : 0;
             private set { }
         }
 
@@ -911,21 +911,6 @@ namespace AutogenRundown.DataBlocks
 
             if (selectedBulkheads.HasFlag(Bulkhead.Overload))
                 level.BuildLayout(Bulkhead.Overload);
-
-            //
-            var numberOfFogZones = level.Planner.GetZones(Bulkhead.All, null)
-                .Select(node => level.Planner.GetZone(node))
-                .Where(zone => zone != null ? zone.InFog : false)
-                .Count();
-
-            if (numberOfFogZones > 0)
-            {
-                var open = level.Planner.GetOpenZones(Bulkhead.All, null).Take(4);
-                var from = Generator.Pick(open);
-
-                level.Layouts[Bulkhead.Main].AddDisinfectionZone(from);
-            }
-
             #endregion
 
             #region Bulkhead Keys

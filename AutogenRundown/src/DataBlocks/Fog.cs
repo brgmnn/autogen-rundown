@@ -151,6 +151,8 @@ namespace AutogenRundown.DataBlocks
         };
         #endregion
 
+        #region Properties
+
         /// <summary>
         /// Determine the color of the fog. This can affect the lighting of the entire level and
         /// create some preferable visual effect.
@@ -226,5 +228,12 @@ namespace AutogenRundown.DataBlocks
         /// DensityHeightAltitude
         /// </summary>
         public double Infection { get; set; } = 0.0;
+
+        #endregion
+
+        /// <summary>
+        /// True if the fog is infectious
+        /// </summary>
+        public bool IsInfectious => Infection > 0.01;
     }
 }

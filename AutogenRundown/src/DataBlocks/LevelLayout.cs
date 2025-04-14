@@ -1064,6 +1064,21 @@ namespace AutogenRundown.DataBlocks
 
             Plugin.Logger.LogDebug($"{layout.Name} -- Number of in-fog zones: {numberOfFogZones}");
 
+            var disinfectChance = level.Tier switch
+            {
+                "D" => 0.6,
+                "E" => 0.4,
+                _ => 0.9
+            };
+
+            if (director.Bulkhead == Bulkhead.Main && numberOfFogZones > 0 && level.FogSettings.IsInfectious)
+            {
+                var open = level.Planner.GetOpenZones(Bulkhead.All, null).Take(4);
+                var from = Generator.Pick(open);
+
+                layout.AddDisinfectionZone(from);
+            }
+
             // Write the zones
             foreach (var node in level.Planner.GetZones(director.Bulkhead, null))
             {
