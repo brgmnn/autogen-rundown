@@ -625,6 +625,38 @@ namespace AutogenRundown.DataBlocks
         }
 
         /// <summary>
+        /// Marks the level as having a boss error alarm in it
+        /// </summary>
+        public void MarkAsBossErrorAlarm()
+        {
+            Name = $"<color=red>!!!</color><color=#444444>/</color><s>{Name}</s>";
+
+            ElevatorDropWardenIntel.Add((Generator.Between(6, 12), Generator.Draw(new List<string>
+            {
+                ">... [distant rumbling]\r\n>... Feels like something massive is nearby.\r\n>... <size=200%><color=red>We can't face it unprepared!</color></size>",
+                ">... There's a lull right now.\r\n>... Could be gathering strength.\r\n>... <size=200%><color=red>When it comes, be ready.</color></size>",
+                ">... [ominous vibration]\r\n>... That alarm won't hush.\r\n>... <size=200%><color=red>A greater threat stirs in the dark!</color></size>",
+                ">... <size=200%><color=red>Hold your breath!</color></size>\r\n>... Something big roams these halls.\r\n>... We only have minutes to prepare.",
+                ">... [faint roar in distance]\r\n>... Everyone felt that, right?\r\n>... <size=200%><color=red>It's heading our way eventually!</color></size>",
+                ">... The alarm's quiet... for now.\r\n>... But that won't last long.\r\n>... <size=200%><color=red>It always returns, bigger each time!</color></size>",
+                ">... <size=200%><color=red>Whatever that thing is...</color></size>\r\n>... We heard it tearing steel.\r\n>... Pray we're not next.",
+                ">... [slow metallic scrape]\r\n>... It's out there, hunting.\r\n>... <size=200%><color=red>We must fortify while we can!</color></size>",
+                ">... This alarm doesn't wake sleepers.\r\n>... It's more... selective.\r\n>... <size=200%><color=red>And far more dangerous.</color></size>",
+                ">... <size=200%><color=red>Everyone stay quiet!</color></size>\r\n>... That presence won't be fooled easily.\r\n>... We have a small window, mere minutes.",
+                ">... [thudding footsteps echo]\r\n>... It's heavier than any normal foe.\r\n>... <size=200%><color=red>We can't fight carelessly!</color></size>",
+                ">... The alarm intervals are longer.\r\n>... But each time, it returns.\r\n>... <size=200%><color=red>Ready or not, it's coming.</color></size>",
+                ">... <size=200%><color=red>Something huge is stirring!</color></size>\r\n>... My gut tells me it's unstoppable.\r\n>... We have to work fast.",
+                ">... [nervous shuffling]\r\n>... The last one nearly crushed us.\r\n>... <size=200%><color=red>Next time, no mistakes!</color></size>",
+                ">... <size=200%><color=red>Hurry!</color></size>\r\n>... We only have moments before it shows.\r\n>... Gather ammo and regroup!",
+                ">... It's an odd alarm cycle.\r\n>... Brings forth something massive.\r\n>... <size=200%><color=red>We can't outrun it forever!</color></size>",
+                ">... [deep growl resonates]\r\n>... It's marking its territory.\r\n>... <size=200%><color=red>We are trespassing!</color></size>",
+                ">... <size=200%><color=red>That howl again...</color></size>\r\n>... Means the next round is near.\r\n>... We have to brace ourselves.",
+                ">... The floor vibrated under its weight.\r\n>... It's biding time.\r\n>... <size=200%><color=red>We must strike first, or hide!</color></size>",
+                ">... [alarm hum fades, then restarts]\r\n>... This cycle is never-ending.\r\n>... <size=200%><color=red>Each time, a greater terror arrives!</color></size>"
+            }))!);
+        }
+
+        /// <summary>
         /// Gets the right layer data given the objective being asked for
         /// </summary>
         /// <param name="variant"></param>

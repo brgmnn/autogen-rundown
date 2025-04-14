@@ -85,6 +85,14 @@ public record GenericWave
         SpawnDelay = 4.0,
         TriggerAlarm = true
     };
+
+    public static readonly GenericWave ErrorAlarm_Boss_Hard_Tank = new()
+    {
+        Settings = WaveSettings.Error_Boss_Hard,
+        Population = WavePopulation.SingleEnemy_Tank,
+        SpawnDelay = 0.0,
+        TriggerAlarm = true
+    };
     #endregion
 
     #region Uplink Waves

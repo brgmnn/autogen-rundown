@@ -361,6 +361,8 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WaveSettings.AddBlock(Error_Specials_Hard);
             Bins.WaveSettings.AddBlock(Error_Specials_VeryHard);
 
+            Bins.WaveSettings.AddBlock(Error_Boss_Hard);
+
             // Exit
             Bins.WaveSettings.AddBlock(Exit_Baseline);
             Bins.WaveSettings.AddBlock(Exit_Objective_Easy);
@@ -477,7 +479,8 @@ namespace AutogenRundown.DataBlocks.Alarms
         };
         #endregion
 
-        #region Error Alarms
+        #region --- Error Alarms ---
+        #region Standard error alarms
         /// <summary>
         /// Somewhat equavlent to PersistentId=32 "Trickle 3-52 SSpB"
         ///
@@ -615,7 +618,9 @@ namespace AutogenRundown.DataBlocks.Alarms
 
             Name = "Error_VeryHard"
         };
+        #endregion
 
+        #region Special error alarms
         /// <summary>
         /// Error alarm for spawning 3x special enemies. This should feel quite hard.
         /// </summary>
@@ -679,6 +684,45 @@ namespace AutogenRundown.DataBlocks.Alarms
 
             Name = "Error_Specials_VeryHard"
         };
+        #endregion
+
+        #region Boss error alarms
+        /// <summary>
+        /// Normal boss error alarm. Modelled after the R4E1 tank error alarm
+        ///
+        /// 10s before start, 4 minutes between tanks
+        ///
+        ///
+        /// </summary>
+        public static readonly WaveSettings Error_Boss_Hard = new()
+        {
+            PopulationFilter = new List<Enemies.EnemyType> {
+                Enemies.EnemyType.MiniBoss
+            },
+            FilterType = PopulationFilterType.Include,
+
+            PauseBeforeStart = 10,
+            PauseBetweenGroups = 240, // 4 minutes
+            WavePauseMin = 1,
+            WavePauseMax = 20,
+            WavePauseMin_atCost = 1.0,
+            WavePauseMax_atCost = 10.0,
+
+            PopulationPointsTotal = -1,
+
+            PopulationPointsMinPerGroup = 1,
+            PopulationPointsPerGroupStart = 1,
+            PopulationPointsPerGroupEnd = 1,
+            PopulationPointsPerWaveStart = 1,
+            PopulationPointsPerWaveEnd = 1,
+
+            PopulationRampOverTime = 0,
+            ChanceToRandomizeSpawnDirectionPerGroup = 0.1,
+            ChanceToRandomizeSpawnDirectionPerWave = 1.0,
+
+            Name = "Error_Specials_VeryHard"
+        };
+        #endregion
         #endregion
 
         #region Objective/Exit Error Alarms

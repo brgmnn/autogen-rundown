@@ -636,9 +636,8 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Resourcing
-
         /// <summary>
-        ///
+        /// TODO: use
         /// </summary>
         /// <param name="start"></param>
         public void AddResourceZone(ZoneNode start)
@@ -701,7 +700,6 @@ namespace AutogenRundown.DataBlocks
                 PlacementWeights = ZonePlacementWeights.NotAtStart
             });
         }
-
         #endregion
     }
 }

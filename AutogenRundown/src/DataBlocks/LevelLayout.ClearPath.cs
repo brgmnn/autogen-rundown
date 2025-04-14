@@ -317,7 +317,7 @@ public partial record LevelLayout
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // Keycard to Apex alarm
+                    // Keycard to Apex alarm, with Level Error alarm (Boss Tank)
                     (0.10, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
@@ -325,9 +325,12 @@ public partial record LevelLayout
 
                         midZone.GenCorridorGeomorph(level.Complex);
 
-                        var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
+                        var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
                         mid2Zone.SetStartExpansionFromExpansion();
+
+                        objective.WavesOnElevatorLand.Add(GenericWave.ErrorAlarm_Boss_Hard_Tank);
+                        level.MarkAsBossErrorAlarm();
 
                         (exit, exitZone) = BuildChallenge_ApexAlarm(
                             mid2,
