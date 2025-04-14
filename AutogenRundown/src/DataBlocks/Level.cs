@@ -204,8 +204,8 @@ namespace AutogenRundown.DataBlocks
         /// Allows easy access to the directors without having to switch
         /// </summary>
         [JsonIgnore]
-        public Dictionary<Bulkhead, ObjectiveLayerData> ObjectiveLayer { get; private set; }
-            = new Dictionary<Bulkhead, ObjectiveLayerData>
+        public Dictionary<Bulkhead, ObjectiveLayerData> ObjectiveLayer { get; }
+            = new()
             {
                 { Bulkhead.Main, new ObjectiveLayerData() },
                 { Bulkhead.Extreme, new ObjectiveLayerData() },
@@ -216,19 +216,13 @@ namespace AutogenRundown.DataBlocks
         /// Tracking of other objectives
         /// </summary>
         [JsonIgnore]
-        public Dictionary<Bulkhead, WardenObjective> Objective { get; set; } = new();
+        public Dictionary<Bulkhead, WardenObjective> Objective { get; } = new();
 
         /// <summary>
         /// Allows easy access to the directors without having to switch
         /// </summary>
         [JsonIgnore]
-        public Dictionary<Bulkhead, uint> LayoutRef { get; private set; }
-            = new Dictionary<Bulkhead, uint>
-            {
-                { Bulkhead.Main, 0 },
-                { Bulkhead.Extreme, 0 },
-                { Bulkhead.Overload, 0 }
-            };
+        private Dictionary<Bulkhead, LevelLayout> Layouts { get; } = new();
         #endregion
 
         /// <summary>
@@ -336,8 +330,8 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public uint LevelLayoutData
         {
-            get => LayoutRef[Bulkhead.Main];
-            set => LayoutRef[Bulkhead.Main] = value;
+            get => Layouts[Bulkhead.Main].PersistentId;
+            private set { }
         }
 
         /// <summary>
@@ -368,8 +362,8 @@ namespace AutogenRundown.DataBlocks
 
         public uint SecondaryLayout
         {
-            get => LayoutRef[Bulkhead.Extreme];
-            set => LayoutRef[Bulkhead.Extreme] = value;
+            get => Layouts[Bulkhead.Extreme].PersistentId;
+            private set { }
         }
 
         public BuildFrom BuildSecondaryFrom = new BuildFrom
@@ -397,8 +391,8 @@ namespace AutogenRundown.DataBlocks
 
         public uint ThirdLayout
         {
-            get => LayoutRef[Bulkhead.Overload];
-            set => LayoutRef[Bulkhead.Overload] = value;
+            get => Layouts[Bulkhead.Overload].PersistentId;
+            private set { }
         }
 
         public BuildFrom BuildThirdFrom = new BuildFrom
@@ -795,7 +789,7 @@ namespace AutogenRundown.DataBlocks
             var objective = Objective[bulkhead];
 
             var layout = LevelLayout.Build(this, director, objective);
-            LayoutRef[bulkhead] = layout.PersistentId;
+            Layouts[bulkhead] = layout;
 
             objective.Build(director, this);
 
@@ -917,6 +911,21 @@ namespace AutogenRundown.DataBlocks
 
             if (selectedBulkheads.HasFlag(Bulkhead.Overload))
                 level.BuildLayout(Bulkhead.Overload);
+
+            //
+            var numberOfFogZones = level.Planner.GetZones(Bulkhead.All, null)
+                .Select(node => level.Planner.GetZone(node))
+                .Where(zone => zone != null ? zone.InFog : false)
+                .Count();
+
+            if (numberOfFogZones > 0)
+            {
+                var open = level.Planner.GetOpenZones(Bulkhead.All, null).Take(4);
+                var from = Generator.Pick(open);
+
+                level.Layouts[Bulkhead.Main].AddDisinfectionZone(from);
+            }
+
             #endregion
 
             #region Bulkhead Keys
@@ -1022,7 +1031,7 @@ namespace AutogenRundown.DataBlocks
                 // var layout = LevelLayout.Build(this, director, objective, direction);
                 var layout = new LevelLayout(level, director, level.Settings, level.Planner);
 
-                level.LayoutRef[Bulkhead.Main] = layout.PersistentId;
+                level.Layouts[Bulkhead.Main] = layout;
 
                 // objective.Build(director, this);
 

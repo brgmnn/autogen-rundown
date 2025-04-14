@@ -1443,7 +1443,6 @@ namespace AutogenRundown.DataBlocks
         public List<TerminalPlacement> TerminalPlacements { get; set; } = new();
 
         public bool ForbidTerminalsInZone { get; set; } = false;
-        public JArray DisinfectionStationPlacements { get; set; } = new JArray();
         public JArray DumbwaiterPlacements { get; set; } = new JArray();
 
         #region Resources and items
@@ -1484,6 +1483,8 @@ namespace AutogenRundown.DataBlocks
         public double DisinfectPacks { get; set; } = 0; // Default is 5 in base game
 
         public Placement DisinfectionPlacement { get; set; } = new();
+
+        public List<FunctionPlacementData> DisinfectionStationPlacements { get; set; } = new();
 
         /// <summary>
         /// Takes an input function and applies it to each of the three major resource multiples.

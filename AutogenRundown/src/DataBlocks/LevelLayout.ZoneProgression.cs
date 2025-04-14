@@ -634,5 +634,68 @@ namespace AutogenRundown.DataBlocks
             };
         }
         #endregion
+
+        #region Resourcing
+
+        public void AddResourceZone(ZoneNode start)
+        {
+            var (node, zone) = AddZone(start, new ZoneNode { MaxConnections = 0 });
+
+            switch (level.Complex)
+            {
+                case Complex.Mining:
+                    break;
+
+                case Complex.Tech:
+                    break;
+
+                case Complex.Service:
+                    break;
+            }
+
+            zone.AmmoPacks += 10;
+            zone.HealthPacks += 10;
+            zone.ToolPacks += 6;
+        }
+
+        /// <summary>
+        /// Add a small side zone which contains a disinfection station in it
+        /// </summary>
+        /// <param name="start">ZoneNode to build the side disinfection station from</param>
+        public void AddDisinfectionZone(ZoneNode start)
+        {
+            var (node, zone) = AddZone(start, new ZoneNode { MaxConnections = 0 });
+
+            switch (level.Complex)
+            {
+                case Complex.Mining:
+                    zone.SubComplex = SubComplex.Storage;
+                    zone.CustomGeomorph = "Assets/Prefabs/Geomorph/Mining/geo_storage_FA_dead_end_01.prefab";
+                    zone.Coverage = new CoverageMinMax { Min = 5, Max = 10 };
+                    break;
+
+                case Complex.Tech:
+                    zone.SubComplex = SubComplex.Lab;
+                    zone.CustomGeomorph = "Assets/Prefabs/Geomorph/Tech/geo_lab_FA_dead_end_01.prefab";
+                    zone.Coverage = new CoverageMinMax { Min = 5, Max = 10 };
+                    break;
+
+                case Complex.Service:
+                    zone.SubComplex = SubComplex.Floodways;
+                    zone.CustomGeomorph = "Assets/geo_64x64_service_floodways_armory_DS_01.prefab";
+                    zone.Coverage = new CoverageMinMax { Min = 5, Max = 10 };
+                    break;
+            }
+
+            // Also add some disinfection packs
+            zone.DisinfectPacks += 6;
+
+            zone.DisinfectionStationPlacements.Add(new FunctionPlacementData
+            {
+                PlacementWeights = ZonePlacementWeights.NotAtStart
+            });
+        }
+
+        #endregion
     }
 }
