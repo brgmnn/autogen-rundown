@@ -1057,10 +1057,10 @@ namespace AutogenRundown.DataBlocks
             // Attempt to reduce the chance of generation locking where zones cannot be placed
             level.Planner.PlanBulkheadPlacements(director.Bulkhead, direction);
 
-            var numberOfFogZones = level.Planner.GetZones(director.Bulkhead, null)
+            var numberOfFogZones = level.Planner
+                .GetZones(director.Bulkhead, null)
                 .Select(node => level.Planner.GetZone(node))
-                .Where(zone => zone != null ? zone.InFog : false)
-                .Count();
+                .Count(zone => zone is { InFog: true });
 
             Plugin.Logger.LogDebug($"{layout.Name} -- Number of in-fog zones: {numberOfFogZones}");
 
@@ -1071,7 +1071,10 @@ namespace AutogenRundown.DataBlocks
                 _ => 0.9
             };
 
-            if (director.Bulkhead == Bulkhead.Main && numberOfFogZones > 0 && level.FogSettings.IsInfectious)
+            if (director.Bulkhead == Bulkhead.Main &&
+                numberOfFogZones > 0 &&
+                level.FogSettings.IsInfectious &&
+                Generator.Flip(disinfectChance))
             {
                 var open = level.Planner.GetOpenZones(Bulkhead.All, null).Take(4);
                 var from = Generator.Pick(open);
