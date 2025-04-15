@@ -296,9 +296,19 @@ public record Enemy_New : DataBlock
             });
         #endregion
 
-        #region Infection Hybrid
+        #region Infected Hybrid
         /*
-         * Infection Hybrids are hybrids that deal infection damage and are themed green.
+         * Infected Hybrids are hybrids that deal infection damage and are themed with
+         * more green and infection
+         *
+         * Compared with normal hybrids:
+         *  - Similar ranged attacks: 14 projectile burst, similar speed/spread/homing
+         *  - 2.1% damage projectiles from infected hybrids vs 3.57% damage from hybrids
+         *      - Full barrage from infected = 30% damage
+         *      - Full barrage from hybrid = 50% damage
+         *  - 2% infection per projectile from infected hybrids
+         *      - Full barrage applies 28% infection
+         *  - Melee attacks are the same, with infected hybrids dealing 8% infection per hit
          */
         {
             var hybridInfected = new Target
@@ -328,28 +338,28 @@ public record Enemy_New : DataBlock
                 {
                     Target = hybridInfected,
                     DefaultColor = "black",
-                    HeartbeatColor = activeColor,
+                    HeartbeatColor = $"{activeColor} * 1.5",
                     DetectionColor = activeColor,
                     SelfWakeupColor = "red",
                     PropagateWakeupColor = "red",
                     TentacleAttackColor = "red",
-                    ShooterFireColor = activeColor,
+                    ShooterFireColor = $"{activeColor} * 2.0",
                     PulseEffects = new List<PuseEffect>
                     {
-                        new()
-                        {
-                            Target = "Hibernate",
-                            Duration = 1.75,
-                            GlowPattern = "04",
-                            GlowColor = $"{activeColor} * 10.0"
-                        },
-                        new()
-                        {
-                            Target = "Combat | Scout",
-                            Duration = 5.0,
-                            GlowPattern = "0+6+0+6+060606",
-                            GlowColor = $"{activeColor} * 10.0"
-                        }
+                        // new()
+                        // {
+                        //     Target = "Hibernate",
+                        //     Duration = 1.75,
+                        //     GlowPattern = "08",
+                        //     GlowColor = $"{activeColor} * 10.0"
+                        // },
+                        // new()
+                        // {
+                        //     Target = "Combat | Scout",
+                        //     Duration = 5.0,
+                        //     GlowPattern = "0+6+0+6+060606",
+                        //     GlowColor = $"{activeColor} * 10.0"
+                        // }
                     }
                 });
 
@@ -369,7 +379,7 @@ public record Enemy_New : DataBlock
                     TrailWidth = "100%",
                     GlowColor = activeColor,
                     GlowRange = 0.8,
-                    Damage = 1.6
+                    Damage = 2.1
                 });
             EnemyCustomization.Projectile.ShooterFires.Add(
                 new ShooterFire

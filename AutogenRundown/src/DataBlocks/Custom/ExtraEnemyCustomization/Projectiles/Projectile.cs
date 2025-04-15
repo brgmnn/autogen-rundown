@@ -83,8 +83,18 @@ public record Projectile : CustomRecord
 
     /// <summary>
     /// BasedValue: (Based on PlayerDataBlock.health, Has original Value): Damage to deal
+    ///
+    /// For us, we use a double mapping to percentage:
+    /// 1.0 => 1%
+    /// 40 => 40%
+    ///
+    /// And then convert to a string in DamageValue which is what get's printed as Damage
     /// </summary>
+    [JsonIgnore]
     public double Damage { get; set; } = 1.0;
+
+    [JsonProperty("Damage")]
+    public string DamageValue => $"{Damage}%";
 
     /// <summary>
     /// BasedValue: (Based on 1.0, Has Original Value): Add Infection On Hit

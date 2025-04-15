@@ -1134,9 +1134,9 @@ namespace AutogenRundown.DataBlocks
                 // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
 
                 elevatorDropZone.EnemySpawningInZone.Add(
-                    EnemySpawningData.HybridInfected with { Points = 8 });
+                    EnemySpawningData.HybridInfected with { Points = 4 });
                 elevatorDropZone.EnemySpawningInZone.Add(
-                    EnemySpawningData.Hybrid with { Points = 8 });
+                    EnemySpawningData.Hybrid with { Points = 4 });
 
                 for (var z = 0; z < forwardZones; z++)
                 {
