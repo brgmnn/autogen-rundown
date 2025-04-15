@@ -56,7 +56,8 @@ namespace AutogenRundown.DataBlocks.Enemies
                 EnemyInfo.Tank_Hunter,
                 EnemyInfo.Tank_MiniBoss,
                 EnemyInfo.Pouncer,
-                EnemyInfo.PouncerShadow
+                EnemyInfo.PouncerShadow,
+                EnemyInfo.HybridInfected
             };
 
             foreach (var info in fixedEnemies)

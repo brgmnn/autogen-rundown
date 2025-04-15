@@ -9,20 +9,23 @@ public class Model
     #region Properties
 
     /// <summary>
-    /// Mother birthing abilities customization
+    /// Shadow (invisible) enemy customization
     /// </summary>
     [JsonProperty("ShadowCustom")]
     public ICollection<Shadow> Shadows { get; set; } = new List<Shadow>();
+
+    /// <summary>
+    /// Allows configuring enemy materials
+    /// </summary>
+    [JsonProperty("MaterialCustom")]
+    public ICollection<Material> Materials { get; set; } = new List<Material>();
 
     #endregion
 
     /// <summary>
     ///
     /// </summary>
-    public void Setup()
-    {
-
-    }
+    public void Setup() { }
 
     #region Filesystem
     /// <summary>

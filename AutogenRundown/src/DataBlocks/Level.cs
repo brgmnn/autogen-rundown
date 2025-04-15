@@ -1133,7 +1133,7 @@ namespace AutogenRundown.DataBlocks
 
                 // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
 
-                // elevatorDropZone.EnemySpawningInZone.Add(EnemySpawningData.PouncerShadow);
+                elevatorDropZone.EnemySpawningInZone.Add(EnemySpawningData.HybridInfected);
 
                 for (var z = 0; z < forwardZones; z++)
                 {

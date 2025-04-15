@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Abilities;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models;
+using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models.Materials;
 using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.Enemies;
@@ -138,6 +139,11 @@ public record Enemy_New : DataBlock
     /// </summary>
     public static Enemy_New PouncerShadow { get; set; } = new() { PersistentId = 0 };
 
+    /// <summary>
+    /// Infection hybrid
+    /// </summary>
+    public static Enemy_New HybridInfected { get; set; } = new() { PersistentId = 0 };
+
     #endregion
     #endregion
 
@@ -171,7 +177,6 @@ public record Enemy_New : DataBlock
         Setup<GameDataEnemy, Enemy_New>(Bins.Enemy, "Enemy");
 
         #region --- Reference the base game enemies ---
-
         Shooter_Wave = Find(11);
         Striker_Wave = Find(13);
         StrikerGiant_Wave = Find(16);
@@ -218,10 +223,10 @@ public record Enemy_New : DataBlock
         FlyerBig = Find(45);
 
         Cocoon = Find(22);
-
         #endregion
 
         PouncerShadow = Duplicate(Pouncer);
+        HybridInfected = Duplicate(Hybrid);
 
         #region MOD: ExtraEnemyCustomization (EEC)
         EnemyCustomization.Setup();
@@ -278,7 +283,7 @@ public record Enemy_New : DataBlock
         #region Shadow Pouncer
         // Shadow Pouncer
         EnemyCustomization.Model.Shadows.Add(
-            new Shadow()
+            new Shadow
             {
                 Target = new Target
                 {
@@ -291,7 +296,24 @@ public record Enemy_New : DataBlock
 
         #region Infection Hybrid
 
-
+        EnemyCustomization.Model.Materials.Add(
+            new Material
+            {
+                Target = new Target
+                {
+                    Mode = Mode.PersistentId,
+                    PersistentIds = new() { HybridInfected.PersistentId }
+                },
+                MaterialSets = new List<MaterialSet>
+                {
+                    new()
+                    {
+                        From = MaterialType.ShooterRapidFire,
+                        To = MaterialType.MtrCocoon,
+                        SkinNoise = "KeepOriginal"
+                    }
+                }
+            });
 
         #endregion
 

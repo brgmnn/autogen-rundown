@@ -18,12 +18,12 @@
         TerminalUplink = 8,         // U
         HsuActivateSmall = 10,      // N
         Survival = 11,              // X
+        GatherTerminal = 12,        // ..
         TimedTerminalSequence = 15, // W
 
         CentralGeneratorCluster = 9, // TODO: Generator cluster spawn is bugged
 
         // Not yet implemented
-        GatherTerminal = 12, // Unsure
         CorruptedTerminalUplink = 13, // Seems similar to timed terminal sequence?
         Empty = 14
     }

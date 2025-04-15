@@ -145,6 +145,8 @@ namespace AutogenRundown.DataBlocks.Enemies
                 (EnemyRole.PureSneak, Enemy.Pouncer,    4.0),
 
                 (EnemyRole.PureSneak, (Enemy)Enemy_New.PouncerShadow.PersistentId, 4.0),
+
+                (EnemyRole.PureSneak, (Enemy)Enemy_New.HybridInfected.PersistentId, 4.0),
             };
 
             foreach (var (role, enemy, maxScore) in hibernatingGroups)
