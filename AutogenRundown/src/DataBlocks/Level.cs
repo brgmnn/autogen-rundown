@@ -1093,7 +1093,7 @@ namespace AutogenRundown.DataBlocks
                 // elevatorDropZone.EnemySpawningInZone.Add(
                 //     EnemySpawningData.MegaMother_AlignedSpawn);
 
-                elevatorDropZone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer);
+                // elevatorDropZone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer);
 
                 // EnemyCustomization.Model.Shadows.Add(
                 //     new Shadow()
@@ -1133,7 +1133,10 @@ namespace AutogenRundown.DataBlocks
 
                 // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
 
-                elevatorDropZone.EnemySpawningInZone.Add(EnemySpawningData.HybridInfected);
+                elevatorDropZone.EnemySpawningInZone.Add(
+                    EnemySpawningData.HybridInfected with { Points = 8 });
+                elevatorDropZone.EnemySpawningInZone.Add(
+                    EnemySpawningData.Hybrid with { Points = 8 });
 
                 for (var z = 0; z < forwardZones; z++)
                 {

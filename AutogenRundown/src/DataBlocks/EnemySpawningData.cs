@@ -202,6 +202,12 @@ namespace AutogenRundown.DataBlocks
             Difficulty = (uint)Enemy.Shooter
         };
 
+        public static EnemySpawningData Hybrid = new()
+        {
+            GroupType = EnemyGroupType.Hibernate,
+            Difficulty = Enemy_New.Hybrid.PersistentId
+        };
+
         public static EnemySpawningData HybridInfected = new()
         {
             GroupType = EnemyGroupType.Hibernate,

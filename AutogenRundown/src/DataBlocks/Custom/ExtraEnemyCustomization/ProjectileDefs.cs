@@ -1,31 +1,26 @@
-﻿using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Abilities;
+﻿using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Projectiles;
 using BepInEx;
 using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
 
-public class Ability
+public class ProjectileDefs
 {
     #region Properties
 
     /// <summary>
-    /// Mother birthing abilities customization
+    /// Shadow (invisible) enemy customization
     /// </summary>
-    [JsonProperty("BirthingCustom")]
-    public ICollection<Birthing> Birthings { get; set; } = new List<Birthing>();
+    [JsonProperty("ShooterFireCustom")]
+    public ICollection<ShooterFire> ShooterFires { get; set; } = new List<ShooterFire>();
 
     /// <summary>
-    /// Customizing attacks to deal infection
+    /// Allows configuring enemy materials
     /// </summary>
-    [JsonProperty("InfectionAttackCustom")]
-    public ICollection<InfectionAttack> InfectionAttacks { get; set; } = new List<InfectionAttack>();
+    [JsonProperty("ProjectileDefinitions")]
+    public ICollection<Projectiles.Projectile> Projectiles { get; set; } = new List<Projectiles.Projectile>();
 
     #endregion
-
-    /// <summary>
-    ///
-    /// </summary>
-    public void Setup() { }
 
     #region Filesystem
     /// <summary>
@@ -39,7 +34,7 @@ public class Ability
         var revision = CellBuildData.GetRevision();
 
         var dir = Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}", "Custom", "ExtraEnemyCustomization");
-        var path = Path.Combine(dir, "Ability.json");
+        var path = Path.Combine(dir, "Projectile.json");
 
         // Ensure the directory exists
         Directory.CreateDirectory(dir);

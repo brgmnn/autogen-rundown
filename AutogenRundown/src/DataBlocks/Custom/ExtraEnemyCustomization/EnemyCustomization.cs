@@ -15,6 +15,11 @@ public static class EnemyCustomization
     public static Model Model { get; private set; } = new();
 
     /// <summary>
+    ///
+    /// </summary>
+    public static ProjectileDefs Projectile { get; private set; } = new();
+
+    /// <summary>
     /// Cleans the EEC directory
     /// </summary>
     public static void Setup()

@@ -3,6 +3,7 @@ using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Abilities;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models.Glows;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models.Materials;
+using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Projectiles;
 using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.Enemies;
@@ -296,9 +297,11 @@ public record Enemy_New : DataBlock
         #endregion
 
         #region Infection Hybrid
-
+        /*
+         * Infection Hybrids are hybrids that deal infection damage and are themed green.
+         */
         {
-            var target = new Target
+            var hybridInfected = new Target
             {
                 Mode = Mode.PersistentId,
                 PersistentIds = new() { HybridInfected.PersistentId }
@@ -309,7 +312,7 @@ public record Enemy_New : DataBlock
             EnemyCustomization.Model.Materials.Add(
                 new Material
                 {
-                    Target = target,
+                    Target = hybridInfected,
                     MaterialSets = new List<MaterialSet>
                     {
                         new()
@@ -323,7 +326,7 @@ public record Enemy_New : DataBlock
             EnemyCustomization.Model.Glows.Add(
                 new Glow
                 {
-                    Target = target,
+                    Target = hybridInfected,
                     DefaultColor = "black",
                     HeartbeatColor = activeColor,
                     DetectionColor = activeColor,
@@ -345,8 +348,63 @@ public record Enemy_New : DataBlock
                             Target = "Combat | Scout",
                             Duration = 5.0,
                             GlowPattern = "0+6+0+6+060606",
-                            GlowColor = activeColor,
+                            GlowColor = $"{activeColor} * 10.0"
                         }
+                    }
+                });
+
+            EnemyCustomization.Projectile.Projectiles.Add(
+                new Custom.ExtraEnemyCustomization.Projectiles.Projectile
+                {
+                    Name = "Small-Cyan-HighHoming",
+                    Id = 50,
+                    BaseProjectile = "Targetingtiny",
+                    Speed = 16,
+                    CheckEvasiveDistance = 4.0,
+                    HomingDelay = 0.0,
+                    HomingStrength = 12.0,
+                    LifeTime = "100%",
+                    TrailColor = activeColor,
+                    TrailTime = 1.0,
+                    TrailWidth = "100%",
+                    GlowColor = activeColor,
+                    GlowRange = 0.8,
+                    Damage = 1.6
+                });
+            EnemyCustomization.Projectile.ShooterFires.Add(
+                new ShooterFire
+                {
+                    Target = hybridInfected,
+                    FireSettings = new List<FireSetting>
+                    {
+                        new()
+                        {
+                            FromDistance = -1.0,
+                            ProjectileType = 50,
+                            BurstCount = 14,
+                            BurstDelay = 3.0,
+                            ShotDelayMin = 0.12,
+                            ShotDelayMax = 0.21,
+                            InitialFireDelay = 0.8,
+                            ShotSpreadXMin = -70.0,
+                            ShotSpreadXMax = 70.0,
+                            ShotSpreadYMin = -20.0,
+                            ShotSpreadYMax = 80.0
+                        }
+                    }
+                });
+
+            EnemyCustomization.Ability.InfectionAttacks.Add(
+                new InfectionAttack
+                {
+                    Target = hybridInfected,
+                    MeleeData = new InfectionAttackData
+                    {
+                        Infection = 0.08
+                    },
+                    ProjectileData = new InfectionAttackData
+                    {
+                        Infection = 0.02
                     }
                 });
         }

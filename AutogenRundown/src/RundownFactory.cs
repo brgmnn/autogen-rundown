@@ -814,6 +814,7 @@ public static class RundownFactory
 
         EnemyCustomization.Ability.Save();
         EnemyCustomization.Model.Save();
+        EnemyCustomization.Projectile.Save();
 
         // Configure any peer mods
         Peers.Configure();
