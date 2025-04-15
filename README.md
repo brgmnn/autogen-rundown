@@ -81,6 +81,8 @@ Missing tiles to add
 Seed: 2024_12_19
 * Monthly: B1 Extreme: reactor startup zone unlocks and intel aren't quite right. Use Intel instead
 
+EEC_H will be updated to: 1.8.8
+
 -->
 
 Automatic Rundown generation, using procedural seed based generation. Three active rundowns to choose from: the daily, weekly, and monthly. Play with friends with zero configuration of seeds.

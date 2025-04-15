@@ -199,7 +199,7 @@ public static class RundownFactory
                 Complex = Complex.Tech,
                 Complexity = Complexity.Low,
                 Tier = "C",
-                Objective = WardenObjectiveType.HsuActivateSmall,
+                Objective = WardenObjectiveType.GatherTerminal,
             };
             mainDirector.GenPoints();
 
@@ -220,7 +220,7 @@ public static class RundownFactory
                 new Level("C")
                 {
                     Tier = "C",
-                    Name = "Hsu Activate Small",
+                    Name = "Gather Terminal",
                     Complex = Complex.Tech,
                     MainDirector = mainDirector,
                     // SecondaryDirector = extremeDirector,

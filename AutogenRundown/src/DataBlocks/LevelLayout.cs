@@ -985,6 +985,9 @@ namespace AutogenRundown.DataBlocks
                     break;
                 }
 
+                /*
+                 *
+                 */
                 case WardenObjectiveType.HsuActivateSmall:
                 {
                     var start = level.Planner.GetLastZone(director.Bulkhead);
@@ -1001,6 +1004,14 @@ namespace AutogenRundown.DataBlocks
                     var start = level.Planner.GetLastZone(director.Bulkhead);
 
                     layout.BuildLayout_TerminalUplink(director, objective, start);
+                    break;
+                }
+
+                case WardenObjectiveType.GatherTerminal:
+                {
+                    var start = level.Planner.GetLastZone(director.Bulkhead);
+
+                    layout.BuildLayout_GatherTerminal(director, objective, start);
                     break;
                 }
 

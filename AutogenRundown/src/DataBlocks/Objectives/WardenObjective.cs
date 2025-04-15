@@ -463,13 +463,15 @@ namespace AutogenRundown.DataBlocks
                 }
 
                 case WardenObjectiveType.TerminalUplink:
-                {
                     objective.PreBuild_TerminalUplink(director, level);
                     break;
-                }
 
                 case WardenObjectiveType.HsuActivateSmall:
                     objective.PreBuild_HsuActivateSmall(director, level);
+                    break;
+
+                case WardenObjectiveType.GatherTerminal:
+                    objective.PreBuild_GatherTerminal(director, level);
                     break;
 
                 case WardenObjectiveType.TimedTerminalSequence:
@@ -693,6 +695,12 @@ namespace AutogenRundown.DataBlocks
                     break;
                 }
 
+                case WardenObjectiveType.GatherTerminal:
+                {
+                    Build_GatherTerminal(director, level);
+                    break;
+                }
+
                 /**
                  * Timed terminal missions
                  */
@@ -756,13 +764,19 @@ namespace AutogenRundown.DataBlocks
         public string GoToWinCondition_CustomGeo { get; set; } = "";
         public string GoToWinConditionHelp_CustomGeo { get; set; } = "";
         public string GoToWinCondition_ToMainLayer { get; set; } = "";
-        public string GoToWinConditionHelp_ToMainLayer { get; set; } = "";
+
+        /// <summary>
+        /// Default = "Go back to the main objective and complete the expedition."
+        /// </summary>
+        public string GoToWinConditionHelp_ToMainLayer { get; set; } = "Go back to the main objective and complete the expedition.";
+
         public string WaveOnElevatorWardenIntel { get; set; } = "";
         public string Survival_TimerTitle { get; set; } = "";
         public string Survival_TimerToActivateTitle { get; set; } = "";
-        public string GatherTerminal_CommandHelp { get; set; } = "";
-        public string GatherTerminal_DownloadingText { get; set; } = "";
-        public string GatherTerminal_DownloadCompleteText { get; set; } = "";
+
+        /// <summary>
+        /// Default = 180
+        /// </summary>
         public double ShowHelpDelay { get; set; } = 180.0;
         #endregion
         #endregion
@@ -938,6 +952,21 @@ namespace AutogenRundown.DataBlocks
         #endregion
 
         #region Type=12: Gather Terminal
+
+        public int GatherTerminal_SpawnCount { get; set; } = 0;
+
+        public int GatherTerminal_RequiredCount { get; set; } = 0;
+
+        public string GatherTerminal_Command { get; set; } = "";
+
+        public string GatherTerminal_CommandHelp { get; set; } = "";
+
+        public string GatherTerminal_DownloadingText { get; set; } = "";
+
+        public string GatherTerminal_DownloadCompleteText { get; set; } = "";
+
+        public double GatherTerminal_DownloadTime { get; set; } = -1.0;
+
         #endregion
 
         #region Type=13: Corrupted Terminal Uplink
@@ -995,10 +1024,7 @@ namespace AutogenRundown.DataBlocks
         public bool DoNotSolveObjectiveOnReactorComplete = false;
         public JArray PostCommandOutput = new JArray();
         public int SpecialCommandRule = 0;
-        public int GatherTerminal_SpawnCount = 0;
-        public int GatherTerminal_RequiredCount = 0;
-        public string GatherTerminal_Command = "";
-        public double GatherTerminal_DownloadTime = -1.0;
+
         #endregion
 
         #region Unused fields

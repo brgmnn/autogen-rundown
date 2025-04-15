@@ -19,7 +19,6 @@ public partial record LevelLayout
         var start = (ZoneNode)startish;
         var layerData = level.GetObjectiveLayerData(director.Bulkhead);
 
-
         var end = new ZoneNode();
         var endZone = new Zone(level.Tier);
 
