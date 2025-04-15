@@ -61,6 +61,7 @@ namespace AutogenRundown
                 WardenObjectiveType.TerminalUplink,
                 WardenObjectiveType.HsuActivateSmall,
                 WardenObjectiveType.Survival,
+                WardenObjectiveType.GatherTerminal,
                 WardenObjectiveType.TimedTerminalSequence,
 
                 // TODO: Would love to enable this, but central generator cluster spawning is just
