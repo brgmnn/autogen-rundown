@@ -97,7 +97,7 @@ namespace AutogenRundown.DataBlocks
                     Tags = new Tags("no_enemies")
                 });
 
-            sideSpawnZone.GenKingOfTheHillSpawnGeomorph(level.Complex);
+            sideSpawnZone.GenDeadEndGeomorph(level.Complex);
             sideSpawnZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
 
             var puzzle = director.Tier switch

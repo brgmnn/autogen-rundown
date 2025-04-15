@@ -744,7 +744,7 @@ namespace AutogenRundown.DataBlocks
         /// Dead end geos
         /// </summary>
         /// <param name="complex"></param>
-        public void GenKingOfTheHillSpawnGeomorph(Complex complex)
+        public void GenDeadEndGeomorph(Complex complex)
         {
             switch (complex)
             {

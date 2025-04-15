@@ -56,7 +56,7 @@ public partial record LevelLayout : DataBlock
                     LightSettings = Lights.GenRandomLight(),
                 };
                 zone.RollFog(level);
-                zone.GenKingOfTheHillSpawnGeomorph(director.Complex);
+                zone.GenDeadEndGeomorph(director.Complex);
 
                 // No terminals needed in the spawn zones
                 zone.TerminalPlacements = new List<TerminalPlacement>();

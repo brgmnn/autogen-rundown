@@ -275,6 +275,7 @@ public record Enemy_New : DataBlock
 
         #region Custom enemy configuration
 
+        #region Shadow Pouncer
         // Shadow Pouncer
         EnemyCustomization.Model.Shadows.Add(
             new Shadow()
@@ -286,6 +287,13 @@ public record Enemy_New : DataBlock
                 },
                 Type = "NewShadows"
             });
+        #endregion
+
+        #region Infection Hybrid
+
+
+
+        #endregion
 
         #endregion
     }
