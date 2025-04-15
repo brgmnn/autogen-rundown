@@ -20,6 +20,12 @@ public class Model
     [JsonProperty("MaterialCustom")]
     public ICollection<Material> Materials { get; set; } = new List<Material>();
 
+    /// <summary>
+    /// Allows configuring enemy materials
+    /// </summary>
+    [JsonProperty("GlowCustom")]
+    public ICollection<Glow> Glows { get; set; } = new List<Glow>();
+
     #endregion
 
     /// <summary>

@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Abilities;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models;
+using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models.Glows;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models.Materials;
 using Newtonsoft.Json.Linq;
 
@@ -296,25 +297,59 @@ public record Enemy_New : DataBlock
 
         #region Infection Hybrid
 
-        EnemyCustomization.Model.Materials.Add(
-            new Material
+        {
+            var target = new Target
             {
-                Target = new Target
-                {
-                    Mode = Mode.PersistentId,
-                    PersistentIds = new() { HybridInfected.PersistentId }
-                },
-                MaterialSets = new List<MaterialSet>
-                {
-                    new()
-                    {
-                        From = MaterialType.ShooterRapidFire,
-                        To = MaterialType.MtrCocoon,
-                        SkinNoise = "KeepOriginal"
-                    }
-                }
-            });
+                Mode = Mode.PersistentId,
+                PersistentIds = new() { HybridInfected.PersistentId }
+            };
+            // Green infection color
+            var activeColor = "#5bff8b";
 
+            EnemyCustomization.Model.Materials.Add(
+                new Material
+                {
+                    Target = target,
+                    MaterialSets = new List<MaterialSet>
+                    {
+                        new()
+                        {
+                            From = MaterialType.ShooterRapidFire,
+                            To = MaterialType.MtrCocoon,
+                            SkinNoise = SkinNoise.KeepOriginal
+                        }
+                    }
+                });
+            EnemyCustomization.Model.Glows.Add(
+                new Glow
+                {
+                    Target = target,
+                    DefaultColor = "black",
+                    HeartbeatColor = activeColor,
+                    DetectionColor = activeColor,
+                    SelfWakeupColor = "red",
+                    PropagateWakeupColor = "red",
+                    TentacleAttackColor = "red",
+                    ShooterFireColor = activeColor,
+                    PulseEffects = new List<PuseEffect>
+                    {
+                        new()
+                        {
+                            Target = "Hibernate",
+                            Duration = 1.75,
+                            GlowPattern = "04",
+                            GlowColor = $"{activeColor} * 10.0"
+                        },
+                        new()
+                        {
+                            Target = "Combat | Scout",
+                            Duration = 5.0,
+                            GlowPattern = "0+6+0+6+060606",
+                            GlowColor = activeColor,
+                        }
+                    }
+                });
+        }
         #endregion
 
         #endregion
