@@ -524,11 +524,12 @@ public static class RundownFactory
             (1.0, 2, WardenObjectiveType.GatherSmallItems),
             (1.0, 2, WardenObjectiveType.ClearPath),
             (1.0, 1, WardenObjectiveType.SpecialTerminalCommand),
-            (1.0, 3, WardenObjectiveType.RetrieveBigItems),
+            (1.0, 2, WardenObjectiveType.RetrieveBigItems),
             (1.0, 2, WardenObjectiveType.PowerCellDistribution),
             (1.0, 3, WardenObjectiveType.TerminalUplink),
             (1.0, 3, WardenObjectiveType.HsuActivateSmall),
             (1.0, 3, WardenObjectiveType.Survival),
+            (1.0, 2, WardenObjectiveType.GatherTerminal),
             (1.0, 2, WardenObjectiveType.TimedTerminalSequence),
         };
         var complexPool = new List<(double, int, Complex)>

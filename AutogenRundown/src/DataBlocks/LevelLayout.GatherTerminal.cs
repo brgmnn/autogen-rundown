@@ -105,6 +105,7 @@ public partial record LevelLayout
 
                         SetGatherTerminal(end1.ZoneNumber);
                         SetGatherTerminal(end2.ZoneNumber);
+                        SetGatherTerminal(end3.ZoneNumber);
                     }),
                 });
                 break;
