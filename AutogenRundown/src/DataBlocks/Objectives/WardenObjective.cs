@@ -965,6 +965,12 @@ namespace AutogenRundown.DataBlocks
 
         public string GatherTerminal_DownloadCompleteText { get; set; } = "";
 
+        /// <summary>
+        /// How long should the command take to execute (seconds). Defaults to -1 which signifies
+        /// the command should execute as fast as any other command on the terminal
+        ///
+        /// Default = -1.0
+        /// </summary>
         public double GatherTerminal_DownloadTime { get; set; } = -1.0;
 
         #endregion
