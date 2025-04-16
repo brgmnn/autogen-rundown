@@ -213,28 +213,27 @@ public record ChainedPuzzle : DataBlock
                 {
                     // Easy / free
                     (1.0, 1, None),
-                    (1.0, 3, TeamScan),
+                    (1.0, 1, TeamScan),
 
                     // Stealth and Surprise scans. Secret scans are grouped with their regular
                     // counterpart
                     (1.0, 1, Secret_TeamScan_EasyBaseline),
 
                     // Moderate
-                    (1.0, 1, AlarmClass2),
-                    (1.0, 2, AlarmClass3),
-                    (1.0, 4, AlarmClass4),
+                    (1.0, 2, AlarmClass2),
+                    (1.0, 4, AlarmClass3),
+                    (1.0, 6, AlarmClass4),
 
                     // Hard
                     (1.0, 3, AlarmClass5),
-                    (1.0, 1, AlarmClass5_Cluster),
+                    (1.0, 2, AlarmClass5_Cluster),
                 };
 
             case "B":
                 return new List<(double, int, ChainedPuzzle)>
                 {
                     // Easy / free
-                    (1.0, 2, None),
-                    (1.0, 2, TeamScan),
+                    (1.0, 1, TeamScan),
 
                     // Stealth and Surprise scans. Secret scans are grouped with their regular
                     // counterpart
@@ -244,9 +243,9 @@ public record ChainedPuzzle : DataBlock
 
                     // Moderate
                     (1.0, 1, AlarmClass3),
-                    (1.0, 2, AlarmClass4),
+                    (1.0, 4, AlarmClass4),
                     (1.0, 5, AlarmClass5),
-                    (1.0, 2, AlarmClass5_Mixed),
+                    (1.0, 3, AlarmClass5_Mixed),
                     (1.0, 2, AlarmClass6),
 
                     // Hard
@@ -257,25 +256,21 @@ public record ChainedPuzzle : DataBlock
                 return new List<(double, int, ChainedPuzzle)>
                 {
                     // Easy scans
-                    // TODO: probably should reduce a bit
-                    (1.0, 1, None),
-                    (1.0, 2, TeamScan),
+                    (1.0, 1, TeamScan),
 
                     // Stealth and Surprise scans. Secret scans are grouped with their regular
                     // counterpart
-                    (0.5, 1, Secret_TeamScan_EasyBaseline),
-                    (1.0, 1, StealthScan4),
-                    (0.5, 2, Secret_StealthScan4_NormalBaseline),
+                    (1.0, 1, Secret_TeamScan_EasyBaseline),
+                    (0.2, 1, StealthScan4),
+                    (1.0, 2, Secret_StealthScan4_NormalBaseline),
 
                     // Moderate
-                    // (1.0, 2, AlarmClass3),
-                    // (1.0, 4, AlarmClass4),
                     (1.0, 2, AlarmClass4_Cluster),
                     (1.0, 2, AlarmClass4_Mixed),
                     (1.0, 3, AlarmClass5),
-                    (1.0, 1, AlarmClass5_Cluster),
-                    (1.0, 2, AlarmClass5_Mixed),
-                    (1.0, 2, AlarmClass6),
+                    (1.0, 2, AlarmClass5_Cluster),
+                    (1.0, 3, AlarmClass5_Mixed),
+                    (1.0, 3, AlarmClass6),
                     (1.0, 2, AlarmClass6_Mixed),
 
                     // Hard
@@ -289,14 +284,13 @@ public record ChainedPuzzle : DataBlock
                 return new List<(double, int, ChainedPuzzle)>
                 {
                     // Easy scans
-                    (1.0, 2, TeamScan),
+                    (0.4, 1, TeamScan),
 
                     // Stealth and Surprise scans. Secret scans are grouped with their regular
                     // counterpart
                     (1.0, 1, StealthScan4),
                     (1.0, 1, Secret_StealthScan4_WithChargers),
-                    (1.0, 1, None),
-                    (1.0, 1, Secret_SpawnTank),
+                    (1.0, 2, Secret_SpawnTank),
 
                     // Moderate
                     (1.0, 1, AlarmClass5),
@@ -323,15 +317,10 @@ public record ChainedPuzzle : DataBlock
             case "E":
                 return new List<(double, int, ChainedPuzzle)>
                 {
-                    // Easy
-                    (1.0, 1, TeamScan),
-                    (1.0, 2, AlarmClass4),
-
                     // Stealth and Surprise scans. Secret scans are grouped with their regular
                     // counterpart
-                    (1.0, 1, StealthScan4),
+                    (0.2, 1, StealthScan4),
                     (1.0, 1, Secret_StealthScan4_WithChargers),
-                    (1.0, 1, None),
                     (1.0, 1, Secret_SpawnTank),
 
                     // Moderate
@@ -343,15 +332,13 @@ public record ChainedPuzzle : DataBlock
                     (1.0, 2, AlarmClass6_Cluster),
 
                     // Difficult
-                    (1.0, 2, AlarmClass7),
-                    (1.0, 2, AlarmClass7_Mixed),
-                    (1.0, 2, AlarmClass8),
-                    (1.0, 1, AlarmClass9),
-                    (1.0, 1, AlarmClass10),
+                    (1.0, 3, AlarmClass7),
+                    (1.0, 3, AlarmClass7_Mixed),
+                    (1.0, 3, AlarmClass8),
 
                     // Pure pain scans, TODO: this might be too much
-                    (1.0, 2, AlarmClass3_Surge),
-                    (1.0, 1, AlarmClass4_Surge), // !!! Is this possible? We think yes (have cleared)
+                    (1.0, 3, AlarmClass3_Surge),
+                    (0.7, 1, AlarmClass4_Surge), // !!! Is this possible? We think yes (have cleared)
 
                     // Sustained
                     (1.0, 3, AlarmClass1_Sustained),
