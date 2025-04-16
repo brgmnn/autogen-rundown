@@ -544,7 +544,18 @@ namespace AutogenRundown.DataBlocks
                                 "E" => (uint)(AutogenDifficulty.TierE | group),
                                 _ => (uint)(AutogenDifficulty.TierC | group)
                             },
-                            Points = points / groups.Count()
+                            // We manually do some point adjustment, as some enemy spawns
+                            // (nightmares) are far harder than others. And others are easier
+                            Points = (int)((group, level.Tier) switch
+                            {
+                                (AutogenDifficulty.Nightmares, "C") => points / 2.0,
+                                (AutogenDifficulty.Nightmares, "D") => points / 1.5,
+                                (AutogenDifficulty.Nightmares, "E") => points / 1.2,
+
+                                (AutogenDifficulty.Shadows, "E") => points * 1.2,
+
+                                _ => points
+                            } / groups.Count)
                         });
             }
         }
