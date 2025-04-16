@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Alarms;
+﻿using System.Text.RegularExpressions;
+using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
@@ -597,7 +598,7 @@ namespace AutogenRundown.DataBlocks
         /// </summary>
         public void MarkAsErrorAlarm()
         {
-            Name = $"{Lore.TitlePrefix_LevelErrorAlarm}{Name}";
+            Name = $"<color=red>?!</color><color=#444444>-</color>{Name}";
 
             ElevatorDropWardenIntel.Add((Generator.Between(1, 4), Generator.Draw(new List<string>
             {
@@ -780,19 +781,25 @@ namespace AutogenRundown.DataBlocks
              * definitions to them.
              */
 
-            EOS_EventsOnBossDeath.Name = $"{Tier}{Index}_{Name.Replace(" ", "_")}";
+            var fsName = Regex.Replace(
+                Name,
+                @"<color(\s*=\s*[^>]+)?>|</color>|<s>|</s>|/|\?|!",
+                string.Empty,
+                RegexOptions.IgnoreCase);
+
+            EOS_EventsOnBossDeath.Name = $"{Tier}{Index}_{fsName}";
             EOS_EventsOnBossDeath.MainLevelLayout = LevelLayoutData;
 
-            EOS_EventsOnScoutScream.Name = $"{Tier}{Index}_{Name.Replace(" ", "_")}";
+            EOS_EventsOnScoutScream.Name = $"{Tier}{Index}_{fsName}";
             EOS_EventsOnScoutScream.MainLevelLayout = LevelLayoutData;
 
-            EOS_IndividualGenerator.Name = $"{Tier}{Index}_{Name.Replace(" ", "_")}";
+            EOS_IndividualGenerator.Name = $"{Tier}{Index}_{fsName}";
             EOS_IndividualGenerator.MainLevelLayout = LevelLayoutData;
 
-            EOS_ReactorShutdown.Name = $"{Tier}{Index}_{Name.Replace(" ", "_")}";
+            EOS_ReactorShutdown.Name = $"{Tier}{Index}_{fsName}";
             EOS_ReactorShutdown.MainLevelLayout = LevelLayoutData;
 
-            EOS_SecuritySensor.Name = $"{Tier}{Index}_{Name.Replace(" ", "_")}";
+            EOS_SecuritySensor.Name = $"{Tier}{Index}_{fsName}";
             EOS_SecuritySensor.MainLevelLayout = LevelLayoutData;
 
             if (EOS_EventsOnBossDeath.Definitions.Any())
