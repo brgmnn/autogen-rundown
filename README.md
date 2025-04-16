@@ -64,24 +64,12 @@ Monthly Feb
     [x] C1 - Overload: got the mega mother room for the terminal uplink. - Getting hubs for uplink rooms is no good
 
   * Reactor D2
-    [ ] Need to ensure resources spawn. Flat mining reactor doesn't have enoug spawn points, no tool spawned?
     [ ] Possibly reduce the number of waves but up the difficulty. First 3-4 waves were easy and a bit of nothing
-    [x] Increase time granted for clearing zones. Maybe double the time granted per point of eneies? Feels like they need a tiny bit more.
-    [x] Increase resources in side rooms. Requires a lot of shooting and hard to find any resources in larger rooms
     [ ] May consider reducing the number of zones?
     [ ] Mother wave had good amount of time. DONT CHANGE
-Monthly Feb 0.49.0
-  * Secondary or otherwise key seems to always spawn in the elevator
-  * D4 Main
-    * _Very_ difficult first room scan: tbd if we should fix this somehow? No doors to hold or anything
 
 Missing tiles to add
   * Add R8A1 garden hub tile to hubs
-
-Seed: 2024_12_19
-* Monthly: B1 Extreme: reactor startup zone unlocks and intel aren't quite right. Use Intel instead
-
-EEC_H will be updated to: 1.8.8
 
 -->
 
