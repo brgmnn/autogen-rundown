@@ -3,6 +3,35 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.59.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.59.0) — April 16, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* 🌟 Added `HsuActivateSmall` objective! This is bringing the neonate / data sphere etc. to the depressurization room and optionally returning with it. See [R3A1](https://gtfo.fandom.com/wiki/ALT://R3A1) for an example in vanilla.
+* 🌟 Added `GatherTerminal` objective! Players must find terminals and execute commands on them to download encryption keys. See [R6D2](https://gtfo.fandom.com/wiki/ALT://R6D2) for an example in vanilla.
+* Added new `Service` complex armory dead end title from [donan3967 geo pack 2](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_2/)
+* Added chance for disinfection zone to spawn in infected fog maps
+* 🌟 New error alarm: boss error alarms.
+  * See See [R4E1](https://gtfo.fandom.com/wiki/ALT://R4E1) for a vanilla example
+* 🌟 New enemy: Infection Hybrid
+  * Added to D/E tier blood doors pool
+
+### Changes
+
+* Balance: increased door alarm difficulty floor. D-tier and E-tier levels have fewer easy scans now.
+* Fixed missing weekly E-tier visual menu color
+* Fixed several missing enemy spawns. Chargers and nightmares now spawn on C-tier and below
+* Balance: Shadow giants added to hibernating enemy pool for shadow enabled D-tier
+* Balance: Reduced hibernation points for Nightmares
+* Balance: Slightly increased hibernating spawn points for shadows on E-tier
+* Balance: Increased and reworked boss spawns
+  * Added pouncers and shadow pouncers into boss spawns
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.58.1...v0.59.0
+
+
 ## [v0.58.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.58.1) — April 09, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
