@@ -155,6 +155,23 @@ public record ChainedPuzzle : DataBlock
             $"ChainedPuzzle {{ PublicAlarmName = {PublicAlarmName}, Population = {Population}, Settings = {Settings} }}";
 
     /// <summary>
+    /// Time to complete the alarm
+    /// We sum for the component durations, the distance from start pos, and the distance
+    /// between the alarm components
+    /// </summary>
+    /// <param name="timeFactor">
+    ///     Adjustment factor for time components.
+    /// </param>
+    /// <param name="traverseFactor">
+    ///     Adjustment factor for traversing to the next puzzle coponent
+    /// </param>
+    /// <returns>Time to clear the alarm</returns>
+    public double ClearTime(double timeFactor = 1.20, double traverseFactor = 1.20)
+        => Puzzle.Sum(component => component.Duration) * timeFactor +
+           WantedDistanceFromStartPos * traverseFactor +
+           (Puzzle.Count - 1) * WantedDistanceBetweenPuzzleComponents * traverseFactor;
+
+    /// <summary>
     /// Resaves the datablock with a new persistent Id. Very useful for modifying the alarm
     /// </summary>
     public void Persist(LazyBlocksBin<ChainedPuzzle>? bin = null)

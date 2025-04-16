@@ -65,6 +65,9 @@ namespace AutogenRundown.DataBlocks
 
         /// <summary>
         /// Roll for blood doors
+        ///
+        /// TODO: rework with custom enemy groups
+        /// TODO: increase difficulty, these are generally just too easy
         /// </summary>
         public void RollBloodDoors()
         {

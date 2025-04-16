@@ -156,6 +156,7 @@ namespace AutogenRundown.DataBlocks.Alarms
             // Single enemy variant population
             Bins.WavePopulations.AddBlock(OnlyChargers);
             Bins.WavePopulations.AddBlock(OnlyHybrids);
+            Bins.WavePopulations.AddBlock(OnlyInfectedHybrids);
             Bins.WavePopulations.AddBlock(OnlyShadows);
             Bins.WavePopulations.AddBlock(OnlyNightmares);
 
@@ -256,6 +257,15 @@ namespace AutogenRundown.DataBlocks.Alarms
             WaveRoleSpecial = Enemy.Hybrid,
             WaveRoleMiniBoss = Enemy.Hybrid,
             WaveRoleBoss = Enemy.Hybrid,
+            Name = "OnlyHybrids"
+        };
+
+        public static WavePopulation OnlyInfectedHybrids = new()
+        {
+            WaveRoleWeakling = Enemy.Shooter_Wave,
+            WaveRoleStandard = Enemy.Shooter_Wave,
+            WaveRoleSpecial = (Enemy)Enemy_New.HybridInfected.PersistentId,
+            WaveRoleMiniBoss = (Enemy)Enemy_New.HybridInfected.PersistentId,
             Name = "OnlyHybrids"
         };
 
