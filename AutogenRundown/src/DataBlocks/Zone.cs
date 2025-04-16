@@ -904,6 +904,14 @@ namespace AutogenRundown.DataBlocks
             EventsOnDoorScanDone.AddRange(puzzle.EventsOnDoorScanDone);
 
             var parent = level.Planner.GetBuildFrom(new ZoneNode { Bulkhead = Bulkhead.Extreme, ZoneNumber = LocalIndex });
+            var isInfection = level.FogSettings.IsInfectious;
+
+            // [Error  :     Unity] ERROR: Tried to add enemyType: 106 into WaveID: 1. This enemyType is not Linked to an ENEMY_TYPE in EnemyGroup.cs/TryGetAKSwitchIDFromEnemyType
+            // [Error  :     Unity] ERROR: Tried to add enemyType: 106 into WaveID: 1. This enemyType is not Linked to an ENEMY_TYPE in EnemyGroup.cs/TryGetAKSwitchIDFromEnemyType
+            // [Error  :     Unity] ERROR: Tried to add enemyType: 106 into WaveID: 1. This enemyType is not Linked to an ENEMY_TYPE in EnemyGroup.cs/TryGetAKSwitchIDFromEnemyType
+            // [Message:     Unity] <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: True, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData
+            // [Message:     Unity] WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
+            // [Error  :     Unity] ERROR: Tried to add enemyType: 106 into WaveID: 2. This enemyType is not Linked to an ENEMY_TYPE in EnemyGroup.cs/TryGetAKSwitchIDFromEnemyType
 
             // Add custom events on alarms
             if (!puzzle.FixedAlarm)
@@ -926,6 +934,18 @@ namespace AutogenRundown.DataBlocks
 
                     case "C":
                     {
+                        // Infection hybrids during wave, lower the chance if it's in fog
+                        if (isInfection && !InFog && Generator.Flip(0.2) )
+                            EventsOnDoorScanStart.AddGenericWave(new GenericWave
+                            {
+                                Population = WavePopulation.OnlyInfectedHybrids,
+                                Settings = Generator.Select(new List<(double, WaveSettings)>
+                                {
+                                    (0.35, WaveSettings.SingleWave_MiniBoss_4pts),
+                                    (0.65, WaveSettings.SingleWave_MiniBoss_8pts)
+                                })
+                            }, puzzle.ClearTime() * Generator.NextDouble(0.2, 0.6));
+
                         // Small chance to disable lights during the alarm
                         if (Generator.Flip(0.1))
                             AlarmModifier_LightsOff();
@@ -941,6 +961,19 @@ namespace AutogenRundown.DataBlocks
 
                     case "D":
                     {
+                        // Infection hybrids during wave, lower the chance if it's in fog
+                        if (isInfection && Generator.Flip(InFog ? 0.2 : 0.4) )
+                            EventsOnDoorScanStart.AddGenericWave(new GenericWave
+                            {
+                                Population = WavePopulation.OnlyInfectedHybrids,
+                                Settings = Generator.Select(new List<(double, WaveSettings)>
+                                {
+                                    (0.35, WaveSettings.SingleWave_MiniBoss_4pts),
+                                    (0.60, WaveSettings.SingleWave_MiniBoss_8pts),
+                                    (0.05, WaveSettings.SingleWave_MiniBoss_12pts)
+                                })
+                            }, puzzle.ClearTime() * Generator.NextDouble(0.2, 0.6));
+
                         // Small chance to disable lights during the alarm
                         if (Generator.Flip(0.12))
                         {
@@ -969,6 +1002,19 @@ namespace AutogenRundown.DataBlocks
 
                     case "E":
                     {
+                        // Infection hybrids during wave, lower the chance if it's in fog
+                        if (isInfection && Generator.Flip(InFog ? 0.4 : 0.6) )
+                            EventsOnDoorScanStart.AddGenericWave(new GenericWave
+                                {
+                                    Population = WavePopulation.OnlyInfectedHybrids,
+                                    Settings = Generator.Select(new List<(double, WaveSettings)>
+                                    {
+                                        (0.2, WaveSettings.SingleWave_MiniBoss_4pts),
+                                        (0.6, WaveSettings.SingleWave_MiniBoss_8pts),
+                                        (0.2, WaveSettings.SingleWave_MiniBoss_12pts)
+                                    })
+                                }, puzzle.ClearTime() * Generator.NextDouble(0.2, 0.6));
+
                         // Small chance to disable lights during the alarm
                         if (Generator.Flip(0.3))
                         {
@@ -987,7 +1033,7 @@ namespace AutogenRundown.DataBlocks
                             EventsOnOpenDoor.AddSpawnWave(
                                 GenericWave.SinglePouncerShadow,
                                 Generator.Between(4, 16));
-                        else if (Generator.Flip(0.01))
+                        else if (Generator.Flip(0.03))
                             EventsOnApproachDoor.AddSpawnWave(
                                 Generator.Flip(0.7) ?
                                     GenericWave.SinglePouncerShadow :

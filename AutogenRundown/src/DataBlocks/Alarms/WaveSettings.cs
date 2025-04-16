@@ -402,6 +402,12 @@ namespace AutogenRundown.DataBlocks.Alarms
             Bins.WaveSettings.AddBlock(SingleWave_28pts);
             Bins.WaveSettings.AddBlock(SingleWave_35pts);
 
+            SingleWave_MiniBoss_4pts.Persist();
+            SingleWave_MiniBoss_8pts.Persist();
+            SingleWave_MiniBoss_12pts.Persist();
+            SingleWave_MiniBoss_16pts.Persist();
+            SingleWave_MiniBoss_24pts.Persist();
+
             // Single enemy spawn
             Bins.WaveSettings.AddBlock(SingleMiniBoss);
         }
@@ -1083,6 +1089,63 @@ namespace AutogenRundown.DataBlocks.Alarms
         #endregion
 
         #region Single wave spawns
+        #region Miniboss only single waves
+        /// <summary>
+        /// 2 minibosses
+        /// </summary>
+        public static WaveSettings SingleWave_MiniBoss_4pts = new WaveSettings
+        {
+            PopulationFilter = { Enemies.EnemyType.MiniBoss },
+            FilterType = PopulationFilterType.Include,
+
+            PopulationPointsTotal = 4,
+        };
+
+        /// <summary>
+        /// 4 minibosses
+        /// </summary>
+        public static WaveSettings SingleWave_MiniBoss_8pts = new WaveSettings
+        {
+            PopulationFilter = { Enemies.EnemyType.MiniBoss },
+            FilterType = PopulationFilterType.Include,
+
+            PopulationPointsTotal = 8,
+        };
+
+        /// <summary>
+        /// 6 minibosses
+        /// </summary>
+        public static WaveSettings SingleWave_MiniBoss_12pts = new WaveSettings
+        {
+            PopulationFilter = { Enemies.EnemyType.MiniBoss },
+            FilterType = PopulationFilterType.Include,
+
+            PopulationPointsTotal = 12,
+        };
+
+        /// <summary>
+        /// 8 minibosses
+        /// </summary>
+        public static WaveSettings SingleWave_MiniBoss_16pts = new WaveSettings
+        {
+            PopulationFilter = { Enemies.EnemyType.MiniBoss },
+            FilterType = PopulationFilterType.Include,
+
+            PopulationPointsTotal = 16,
+        };
+
+        /// <summary>
+        /// 12 minibosses
+        /// </summary>
+        public static WaveSettings SingleWave_MiniBoss_24pts = new WaveSettings
+        {
+            PopulationFilter = { Enemies.EnemyType.MiniBoss },
+            FilterType = PopulationFilterType.Include,
+
+            PopulationPointsTotal = 24,
+        };
+        #endregion
+
         public static WaveSettings SingleWave_8pts = new WaveSettings
         {
             PopulationFilter = {
