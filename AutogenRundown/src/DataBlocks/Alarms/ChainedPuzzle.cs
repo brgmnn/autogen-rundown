@@ -348,64 +348,6 @@ public record ChainedPuzzle : DataBlock
                 return new List<(double, int, ChainedPuzzle)>();
         };
     }
-
-    // TODO: We need to finish this with the new system
-    public static List<ChainedPuzzle> BuildReactorShutdownPack(string tier)
-    {
-        switch (tier)
-        {
-            case "A":
-                return new List<ChainedPuzzle> { AlarmClass2, AlarmClass3, AlarmClass3 };
-
-            case "B":
-                return new List<ChainedPuzzle> { AlarmClass3, AlarmClass4, AlarmClass4, AlarmClass5, AlarmClass5 };
-
-            case "C":
-                {
-                    // Now we get spicy
-                    return new List<ChainedPuzzle>
-                    {
-                        // Class 8 alarm
-                        new ChainedPuzzle
-                        {
-                            PublicAlarmName = "Class VIII",
-                            //SurvivalWaveSettings = (uint)VanillaWaveSettings.ApexIncreased,
-                            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-                            SurvivalWavePopulation = (uint)VanillaWavePopulation.ReactorBaselineHybrid,
-                            Puzzle = new List<PuzzleComponent>
-                            {
-                                PuzzleComponent.AllLarge,
-                                PuzzleComponent.ClusterSmall,
-                                PuzzleComponent.ClusterSmall,
-                                PuzzleComponent.ScanLarge,
-                                PuzzleComponent.ClusterSmall,
-                                PuzzleComponent.ClusterLarge,
-                                PuzzleComponent.ClusterSmall,
-                                PuzzleComponent.AllLarge,
-                            }
-                        },
-
-                        // S-class Hybrids
-                        new ChainedPuzzle
-                        {
-                            PublicAlarmName = AlarmClass1_Sustained.PublicAlarmName,
-                            //SurvivalWaveSettings = (uint)VanillaWaveSettings.ApexIncreased,
-                            SurvivalWaveSettings = WaveSettings.Baseline_Hard.PersistentId,
-                            SurvivalWavePopulation = (uint)VanillaWavePopulation.ReactorBaselineHybrid,
-                            WantedDistanceFromStartPos = 6.0,
-                            WantedDistanceBetweenPuzzleComponents = 2.0,
-                            Puzzle = new List<PuzzleComponent>()
-                            {
-                                PuzzleComponent.Sustained
-                            }
-                        }
-                    };
-                }
-
-            default:
-                return new List<ChainedPuzzle>() { AlarmClass2 };
-        }
-    }
     #endregion
 
     /*************************************** Presets ***************************************/
