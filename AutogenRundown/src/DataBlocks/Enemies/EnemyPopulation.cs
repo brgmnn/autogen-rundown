@@ -58,6 +58,7 @@ namespace AutogenRundown.DataBlocks.Enemies
                 EnemyInfo.Pouncer,
 
                 EnemyInfo.PouncerShadow,
+                EnemyInfo.PouncerShadow_Sneak,
                 EnemyInfo.HybridInfected,
                 EnemyInfo.HybridInfected_Hunter,
             };
