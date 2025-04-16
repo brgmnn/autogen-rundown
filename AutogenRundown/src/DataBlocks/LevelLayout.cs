@@ -313,9 +313,9 @@ namespace AutogenRundown.DataBlocks
             };
             var bossChance = director.Tier switch
             {
-                "C" => 0.2,
-                "D" => 0.2,
-                "E" => 0.3,
+                "C" => 0.15,
+                "D" => 0.20,
+                "E" => 0.25,
                 _ => 0.0
             };
 
@@ -412,7 +412,7 @@ namespace AutogenRundown.DataBlocks
                 // TODO: don't have totally independent of zone points
                 if (Generator.Flip(bossChance) && settings.EnemyBossPack.Any())
                 {
-                    var boss = Generator.Draw(settings.EnemyBossPack);
+                    var boss = Generator.DrawSelect(settings.EnemyBossPack);
 
                     if (boss != null)
                     {

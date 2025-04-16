@@ -98,7 +98,7 @@ namespace AutogenRundown.DataBlocks
         /// <summary>
         /// A pack of enemies that will be drawn for placing bosses in the level.
         /// </summary>
-        public List<EnemySpawningData> EnemyBossPack { get; set; } = new();
+        public List<(double, int, EnemySpawningData)> EnemyBossPack { get; set; } = new();
 
         /// <summary>
         /// Enemy hibernation packs for the whole level
@@ -287,15 +287,12 @@ namespace AutogenRundown.DataBlocks
                                 new WeightedModifier { Modifier = LevelModifiers.Fog,   Weight = 0.4 },
                             }).Modifier);
 
-                        EnemyBossPack = Generator.Select(
-                            new List<(double, List<EnemySpawningData>)>
+                        EnemyBossPack = new List<(double, int, EnemySpawningData)>
                             {
-                                (0.8, new List<EnemySpawningData>()),
-                                (0.2, new List<EnemySpawningData>
-                                {
-                                    EnemySpawningData.Mother with { Points = 10 }
-                                })
-                            });
+                                (0.65, 2, EnemySpawningData.Pouncer with { Points = 4 }),
+                                (0.65, 1, EnemySpawningData.Tank with { Points = 10 }),
+                                (0.35, 1, EnemySpawningData.Mother with { Points = 10 })
+                            };
                         break;
                     }
 
@@ -341,27 +338,15 @@ namespace AutogenRundown.DataBlocks
                                 new WeightedModifier { Modifier = LevelModifiers.HeavyFog, Weight = 0.1 },
                             }).Modifier);
 
-                        EnemyBossPack = Generator.Select(
-                            new List<(double, List<EnemySpawningData>)>
+                        EnemyBossPack = new List<(double, int, EnemySpawningData)>
                             {
-                                (1.0, new List<EnemySpawningData>()),
-                                (1.0, new List<EnemySpawningData>
-                                {
-                                    EnemySpawningData.Mother with { Points = 10 }
-                                }),
-                                (1.0, new List<EnemySpawningData>
-                                {
-                                    EnemySpawningData.Mother with { Points = 20 }
-                                }),
-                                (1.0, new List<EnemySpawningData>
-                                {
-                                    EnemySpawningData.Tank with { Points = 10 }
-                                }),
-                                (1.0, new List<EnemySpawningData>
-                                {
-                                    EnemySpawningData.Tank with { Points = 20 }
-                                })
-                            });
+                                (0.15, 2, EnemySpawningData.Pouncer with { Points = 8 }),
+                                (0.05, 1, EnemySpawningData.PouncerShadow with { Points = 4 }),
+                                (0.30, 1, EnemySpawningData.Mother with { Points = 10 }),
+                                (0.10, 1, EnemySpawningData.Mother with { Points = 20 }),
+                                (0.35, 1, EnemySpawningData.Tank with { Points = 10 }),
+                                (0.25, 1, EnemySpawningData.Tank with { Points = 20 })
+                            };
                         break;
                     }
 
@@ -407,28 +392,15 @@ namespace AutogenRundown.DataBlocks
                                 new WeightedModifier { Modifier = LevelModifiers.HeavyFog, Weight = 0.2 },
                             }).Modifier);
 
-                        EnemyBossPack = Generator.Select(
-                            new List<(double, List<EnemySpawningData>)>
+                        EnemyBossPack = new List<(double, int, EnemySpawningData)>
                             {
-                                (1.0, new List<EnemySpawningData>()),
-                                (1.0, new List<EnemySpawningData>
-                                {
-                                    EnemySpawningData.Mother with { Points = 10 }
-                                }),
-                                (1.0, new List<EnemySpawningData>
-                                {
-                                    EnemySpawningData.Tank with { Points = 10 }
-                                }),
-                                (1.0, new List<EnemySpawningData>
-                                {
-                                    EnemySpawningData.Mother with { Points = 20 }
-                                }),
-                                (1.0, new List<EnemySpawningData>
-                                {
-                                    EnemySpawningData.Mother with { Points = 20 },
-                                    EnemySpawningData.Tank with { Points = 10 }
-                                })
-                            });
+                                (0.10, 2, EnemySpawningData.Pouncer with { Points = 12 }),
+                                (0.10, 1, EnemySpawningData.PouncerShadow with { Points = 4 }),
+                                (0.20, 2, EnemySpawningData.Mother with { Points = 10 }),
+                                (0.30, 2, EnemySpawningData.Tank with { Points = 10 }),
+                                (0.20, 1, EnemySpawningData.Mother with { Points = 20 }),
+                                (0.10, 1, EnemySpawningData.Tank with { Points = 20 })
+                            };
                         break;
                     }
             }
