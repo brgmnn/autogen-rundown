@@ -197,6 +197,24 @@ namespace AutogenRundown.DataBlocks.Enemies
                 Cost = EnemyInfo.Charger.Points,
                 Weight = 1.0
             });
+
+            var nightmaresTierC = new List<(EnemyInfo, double)>
+            {
+                (EnemyInfo.NightmareStriker, 1.0),
+                (EnemyInfo.NightmareShooter, 1.0)
+            };
+
+            foreach (var (info, weight) in nightmaresTierC)
+            {
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)info.Role,
+                    Difficulty = (uint)(AutogenDifficulty.TierC | AutogenDifficulty.Nightmares),
+                    Enemy = info.Enemy,
+                    Cost = info.Points,
+                    Weight = weight
+                });
+            }
             #endregion
 
             #region Tier-D
@@ -244,6 +262,7 @@ namespace AutogenRundown.DataBlocks.Enemies
             var shadowsTierD = new List<(EnemyInfo, double)>
             {
                 (EnemyInfo.Shadow, 1.0),
+                (EnemyInfo.ShadowGiant, 0.4)
             };
 
             foreach (var (info, weight) in shadowsTierD)
@@ -269,6 +288,24 @@ namespace AutogenRundown.DataBlocks.Enemies
                 {
                     Role = (uint)info.Role,
                     Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Hybrids),
+                    Enemy = info.Enemy,
+                    Cost = info.Points,
+                    Weight = weight
+                });
+            }
+
+            var nightmaresTierD = new List<(EnemyInfo, double)>
+            {
+                (EnemyInfo.NightmareStriker, 1.0),
+                (EnemyInfo.NightmareShooter, 1.0)
+            };
+
+            foreach (var (info, weight) in nightmaresTierD)
+            {
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)info.Role,
+                    Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Nightmares),
                     Enemy = info.Enemy,
                     Cost = info.Points,
                     Weight = weight
@@ -347,6 +384,24 @@ namespace AutogenRundown.DataBlocks.Enemies
                 {
                     Role = (uint)info.Role,
                     Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Hybrids),
+                    Enemy = info.Enemy,
+                    Cost = info.Points,
+                    Weight = weight
+                });
+            }
+
+            var nightmaresTierE = new List<(EnemyInfo, double)>
+            {
+                (EnemyInfo.NightmareStriker, 1.0),
+                (EnemyInfo.NightmareShooter, 1.0)
+            };
+
+            foreach (var (info, weight) in nightmaresTierE)
+            {
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)info.Role,
+                    Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Nightmares),
                     Enemy = info.Enemy,
                     Cost = info.Points,
                     Weight = weight
