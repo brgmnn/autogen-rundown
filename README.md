@@ -49,7 +49,6 @@ Monthly March
   * March 27th
     * E2
       * Time maybe too generous, finished with 2:30 left
-      *
   * Yoshi Feedback
     [ ] May want to look in to making it so error alarm terminals don't cancel others. Many instances of trivialized scans because of error turnoff.
 
