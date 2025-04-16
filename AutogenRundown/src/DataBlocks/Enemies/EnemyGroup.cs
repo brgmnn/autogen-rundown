@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.Enemies
 {
@@ -51,7 +52,7 @@ namespace AutogenRundown.DataBlocks.Enemies
         public SpawnPlacementType SpawnPlacementType { get; set; } = SpawnPlacementType.Default;
 
         /// <summary>
-        ///
+        /// This is actually the number of points to use
         /// </summary>
         public double MaxScore { get; set; } = 1.0;
 
@@ -84,6 +85,22 @@ namespace AutogenRundown.DataBlocks.Enemies
 
             bin.AddBlock(this);
         }
+
+        #region Blood Door groups
+
+        public static EnemyGroup BloodDoor_HybridInfected_Hard = new()
+        {
+            Type = EnemyGroupType.Hunter,
+            Difficulty = Enemy_New.HybridInfected.PersistentId,
+            MaxScore = 24,
+            ScoreInAreaPaddingMulti = 1.0,
+            Roles = new List<EnemyGroupRole>
+            {
+                new() { Role = EnemyRole.Hunter, Distribution = EnemyRoleDistribution.Rel100 }
+            }
+        };
+
+        #endregion
 
         public static void Setup()
         {
@@ -163,6 +180,14 @@ namespace AutogenRundown.DataBlocks.Enemies
                         }
                     });
             }
+
+            #region Blood Doors
+
+            // BloodDoor_Easy.Persist();
+
+            BloodDoor_HybridInfected_Hard.Persist();
+
+            #endregion
 
             #region Boss aligned spawn bosses
             // These bosses are set up to spawn in boss aligned spawn points

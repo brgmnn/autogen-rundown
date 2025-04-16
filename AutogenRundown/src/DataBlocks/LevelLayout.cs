@@ -79,6 +79,8 @@ namespace AutogenRundown.DataBlocks
                 _ => (-1, 0.2, 0.7)
             };
 
+            var withInfection = level.FogSettings.IsInfectious;
+
             // Ensure that there are at least as many groups as 2x the max number of blood doors
             // that can spawn. For unlimited cap tiers (D and E) this is 2x the number of zones.
             // Door pack is used to select enemies that spawn behind the door.
@@ -118,11 +120,14 @@ namespace AutogenRundown.DataBlocks
                     (1.0, 1, VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy),
                     (1.0, 2, VanillaEnemyGroup.BloodDoor_Hybrids_Medium),
                     (1.0, 1, VanillaEnemyGroup.BloodDoor_Shadows_Easy),
-                    (1.0, 2, VanillaEnemyGroup.BloodDoor_BossMother)
+                    (1.0, 2, VanillaEnemyGroup.BloodDoor_BossMother),
+
+                    (withInfection ? 10.0 : 0.0, 3, (VanillaEnemyGroup)EnemyGroup.BloodDoor_HybridInfected_Hard.PersistentId)
                 },
 
                 _ => new List<(double, int, VanillaEnemyGroup)>()
             };
+
 
             // Area pack picks enemies to spawn further back, if we successfully roll to add them.
             var areaPack = director.Tier switch
@@ -153,7 +158,9 @@ namespace AutogenRundown.DataBlocks
                     (1.0, 2, VanillaEnemyGroup.BloodDoor_Hybrids_Medium),
                     (1.0, 1, VanillaEnemyGroup.BloodDoor_Shadows_Easy),
                     (1.0, 1, VanillaEnemyGroup.BloodDoor_BossMother),
-                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Pouncers)
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Pouncers),
+
+                    (withInfection ? 5.0 : 0.0, 1, (VanillaEnemyGroup)EnemyGroup.BloodDoor_HybridInfected_Hard.PersistentId)
                 },
 
                 "E" => new List<(double, int, VanillaEnemyGroup)>
@@ -165,7 +172,9 @@ namespace AutogenRundown.DataBlocks
                     (1.0, 2, VanillaEnemyGroup.BloodDoor_Hybrids_Medium),
                     (1.0, 1, VanillaEnemyGroup.BloodDoor_Shadows_Easy),
                     (1.0, 1, VanillaEnemyGroup.BloodDoor_BossMother),
-                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Pouncers)
+                    (1.0, 1, VanillaEnemyGroup.BloodDoor_Pouncers),
+
+                    (withInfection ? 10.0 : 0.0, 2, (VanillaEnemyGroup)EnemyGroup.BloodDoor_HybridInfected_Hard.PersistentId)
                 },
 
                 _ => new List<(double, int, VanillaEnemyGroup)>()

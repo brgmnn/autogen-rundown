@@ -149,7 +149,8 @@ namespace AutogenRundown.DataBlocks
         public EnemyZoneDistribution Distribution { get; set; } = EnemyZoneDistribution.RelValue;
 
         /// <summary>
-        ///
+        /// This actually determins how many enemies get spawned by the game. We use Points
+        /// internally but know that distribution value then multiplies up by a points factor.
         /// </summary>
         public double DistributionValue
         {
