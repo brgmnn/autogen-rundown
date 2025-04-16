@@ -754,7 +754,7 @@ public static class RundownFactory
         // Weekly Rundown -- Rundown 5 replacement
         #region Weekly Rundown
         {
-            // Set the monthly seed
+            // Set the weekly seed
             Generator.SetWeeklySeed();
             Generator.Reload();
 
@@ -771,6 +771,8 @@ public static class RundownFactory
                 Title = $"{name.ToUpper()}",
                 StoryTitle = $"<color=green>RND://</color>WEEKLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
             }, false, withUnlocks);
+
+            weekly.VisualsETier = Color.MenuVisuals_WeeklyE;
 
             Bins.Rundowns.AddBlock(weekly);
         }

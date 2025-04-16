@@ -21,6 +21,14 @@ public record Color
         Blue = 0.858823538,
     };
 
+    public static readonly Color MenuVisuals_WeeklyE = new()
+    {
+        Alpha = 1.0,
+        Green = 0.8509804,
+        Blue = 0.4190196,
+        Red = 0.158823538,
+    };
+
     public static readonly Color MenuVisuals_DailyE = new()
     {
         Alpha = 1.0,
