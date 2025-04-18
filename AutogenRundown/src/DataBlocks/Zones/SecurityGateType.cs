@@ -1,8 +1,7 @@
-﻿namespace AutogenRundown.DataBlocks.Zones
+﻿namespace AutogenRundown.DataBlocks.Zones;
+
+public enum SecurityGateType : uint
 {
-    public enum SecurityGateType : uint
-    {
-        Security = 0,
-        Apex = 1
-    }
+    Security = 0,
+    Apex = 1
 }

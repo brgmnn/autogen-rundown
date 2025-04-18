@@ -1,8 +1,7 @@
-﻿namespace AutogenRundown.DataBlocks.Alarms
+﻿namespace AutogenRundown.DataBlocks.Alarms;
+
+public enum PopulationFilterType : uint
 {
-    public enum PopulationFilterType : uint
-    {
-        Include = 0,
-        Exclude = 1,
-    }
+    Include = 0,
+    Exclude = 1,
 }

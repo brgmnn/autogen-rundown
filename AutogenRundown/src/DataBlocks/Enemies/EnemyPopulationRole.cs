@@ -1,27 +1,27 @@
-﻿namespace AutogenRundown.DataBlocks.Enemies
+﻿namespace AutogenRundown.DataBlocks.Enemies;
+
+/// <summary>
+/// Maps Role/Difficulty matches to enemies using persistentIDs from EnemyDataBlock.
+///
+/// Largely the game randomly picks from all matches in this list that have the same
+/// Role/Difficulty.
+/// </summary>
+public record class EnemyPopulationRole
 {
+    public uint Role { get; set; }
+
+    public uint Difficulty { get; set; }
+
+    public Enemy Enemy { get; set; }
+
+    public double Cost { get; set; }
+
+    public double Weight { get; set; } = 1.0;
+
     /// <summary>
-    /// Maps Role/Difficulty matches to enemies using persistentIDs from EnemyDataBlock.
-    ///
-    /// Largely the game randomly picks from all matches in this list that have the same
-    /// Role/Difficulty.
+    /// File: GameData_EnemyPopulationDataBlock_bin.json
     /// </summary>
-    public record class EnemyPopulationRole
-    {
-        public uint Role { get; set; }
-
-        public uint Difficulty { get; set; }
-
-        public Enemy Enemy { get; set; }
-
-        public double Cost { get; set; }
-
-        public double Weight { get; set; } = 1.0;
-
-        /// <summary>
-        /// File: GameData_EnemyPopulationDataBlock_bin.json
-        /// </summary>
-        public const string VanillaData = @"[
+    public const string VanillaData = @"[
         {
           ""Role"": 0,
           ""Difficulty"": 0,
@@ -345,5 +345,4 @@
           ""Weight"": 1.0
         }
       ]";
-    }
 }

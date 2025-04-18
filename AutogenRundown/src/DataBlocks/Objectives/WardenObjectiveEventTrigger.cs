@@ -1,10 +1,9 @@
-﻿namespace AutogenRundown.DataBlocks.Objectives
+﻿namespace AutogenRundown.DataBlocks.Objectives;
+
+public enum WardenObjectiveEventTrigger
 {
-    public enum WardenObjectiveEventTrigger
-    {
-        None = 0,
-        OnStart = 1,
-        OnMid = 2,
-        OnEnd = 3,
-    }
+    None = 0,
+    OnStart = 1,
+    OnMid = 2,
+    OnEnd = 3,
 }
