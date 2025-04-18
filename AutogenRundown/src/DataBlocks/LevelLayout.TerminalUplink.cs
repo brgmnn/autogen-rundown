@@ -2,7 +2,7 @@
 
 namespace AutogenRundown.DataBlocks;
 
-public partial record LevelLayout : DataBlock
+public partial record LevelLayout
 {
     /// <summary>
     /// Builds an uplink terminal objective layout

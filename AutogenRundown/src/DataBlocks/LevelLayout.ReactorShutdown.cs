@@ -5,7 +5,7 @@ using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
-public partial record LevelLayout : DataBlock
+public partial record LevelLayout
 {
     /// <summary>
     /// There is a chance to lock the reactor itself and require the team to get a code for it

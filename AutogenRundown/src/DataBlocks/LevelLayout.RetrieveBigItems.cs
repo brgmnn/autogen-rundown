@@ -3,7 +3,7 @@ using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
-public partial record class LevelLayout : DataBlock
+public partial record LevelLayout
 {
     /// <summary>
     /// Builds the level layout for the Matter Wave Projector big item retrieval objective.

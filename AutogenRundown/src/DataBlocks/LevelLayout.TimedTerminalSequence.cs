@@ -5,7 +5,7 @@ using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
-public partial record LevelLayout : DataBlock
+public partial record LevelLayout
 {
     public void BuildLayout_TimedTerminalSequence(
         BuildDirector director,
