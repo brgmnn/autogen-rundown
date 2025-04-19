@@ -6,6 +6,11 @@ namespace AutogenRundown.DataBlocks.Enemies;
 public record GenericWave
 {
     /// <summary>
+    /// Mostly so we can assign a none generic wave and then ignore it in places
+    /// </summary>
+    public static readonly GenericWave None = new();
+
+    /// <summary>
     /// Exit trickle alarm for running to extraction at the end of the level.
     /// </summary>
     public static readonly GenericWave ExitTrickle = new()
@@ -53,6 +58,17 @@ public record GenericWave
     #endregion
 
     #region Error Alarms
+    /// <summary>
+    /// Base error alarm
+    /// </summary>
+    public static readonly GenericWave ErrorAlarm_Easy = new()
+    {
+        Settings = WaveSettings.Error_Easy,
+        Population = WavePopulation.Baseline,
+        SpawnDelay = 4.0,
+        TriggerAlarm = true
+    };
+
     /// <summary>
     /// Base error alarm
     /// </summary>

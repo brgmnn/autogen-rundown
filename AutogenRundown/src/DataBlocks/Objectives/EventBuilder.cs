@@ -60,6 +60,9 @@ public static class EventCollectionExtensions
         GenericWave wave,
         double delay = 0.0)
     {
+        if (wave == GenericWave.None)
+            return events;
+
         events.Add(
             new WardenObjectiveEvent
             {
@@ -84,6 +87,9 @@ public static class EventCollectionExtensions
         GenericWave wave,
         double delay = 0.0)
     {
+        if (wave == GenericWave.None)
+            return events;
+
         events.Add(
             new WardenObjectiveEvent
             {

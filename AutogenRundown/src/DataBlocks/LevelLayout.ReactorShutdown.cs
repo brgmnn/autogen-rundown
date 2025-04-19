@@ -48,15 +48,15 @@ public partial record LevelLayout
                 ("A", Bulkhead.Main) => 0.2,
                 ("A", _) => 0.0,
 
-                ("B", Bulkhead.Main) => 0.4,
+                ("B", Bulkhead.Main) => 0.75,
 
-                ("C", Bulkhead.Main) => 0.5,
+                ("C", Bulkhead.Main) => 1.0,
                 ("C", Bulkhead.Extreme) => 0.4,
 
-                ("D", Bulkhead.Main) => 0.7,
+                ("D", Bulkhead.Main) => 1.0,
                 ("D", Bulkhead.Extreme) => 0.5,
 
-                ("E", Bulkhead.Main) => 0.9,
+                ("E", Bulkhead.Main) => 1.0,
                 ("E", Bulkhead.Extreme) => 0.6,
                 ("E", Bulkhead.Overload) => 0.4,
 
@@ -72,10 +72,10 @@ public partial record LevelLayout
             //      Reactor_blue_to_White_R2E1 (but red)
             reactorZone.LightSettings = Lights.Light.Monochrome_Red_R7D1;
 
-            var codeTerminal = BuildBranch(
+            var codeTerminal = AddBranch(
                 reactor,
                 Generator.Between(1, 2),
-                "reactor_password");
+                "reactor_password").Last();
 
             reactorDefinition.Password.PasswordProtected = true;
             reactorDefinition.Password.TerminalZoneSelectionDatas = new()

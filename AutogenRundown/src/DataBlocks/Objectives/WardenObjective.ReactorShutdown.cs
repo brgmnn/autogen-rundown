@@ -5,7 +5,7 @@ using AutogenRundown.DataBlocks.Objectives;
 
 namespace AutogenRundown.DataBlocks;
 
-public partial record class WardenObjective : DataBlock
+public partial record WardenObjective
 {
     #region Custom Reactor Shutdown Alarm bases
     //
@@ -130,7 +130,7 @@ public partial record class WardenObjective : DataBlock
     /// </summary>
     /// <param name="director"></param>
     /// <param name="level"></param>
-    public void PreBuild_ReactorShutdown(BuildDirector director, Level level)
+    private void PreBuild_ReactorShutdown(BuildDirector director, Level level)
     {
         // We have to set the persistent ID later
         LayoutDefinitions = new LayoutDefinitions()
@@ -148,7 +148,7 @@ public partial record class WardenObjective : DataBlock
     /// </summary>
     /// <param name="director"></param>
     /// <param name="level"></param>
-    public void Build_ReactorShutdown(BuildDirector director, Level level)
+    private void Build_ReactorShutdown(BuildDirector director, Level level)
     {
         FindLocationInfo = "Make sure the Reactor is fully shut down before leaving";
         GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
@@ -235,19 +235,6 @@ public partial record class WardenObjective : DataBlock
                         WantedDistanceBetweenPuzzleComponents = 50,
                     };
                 }
-
-                reactorDefinition.EventsOnComplete.AddGenericWave(new GenericWave
-                {
-                    Settings = director.Bulkhead switch
-                    {
-                        Bulkhead.Main => WaveSettings.Exit_Objective_Medium,
-                        Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy,
-                        Bulkhead.Overload => WaveSettings.Exit_Objective_Easy,
-                        _ => WaveSettings.Exit_Objective_Easy,
-                    },
-                    Population = WavePopulation.Baseline,
-                    TriggerAlarm = true
-                });
                 break;
             }
 
@@ -346,18 +333,6 @@ public partial record class WardenObjective : DataBlock
                 }
 
                 reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(events);
-                reactorDefinition.EventsOnComplete.AddGenericWave(new GenericWave
-                {
-                    Settings = director.Bulkhead switch
-                    {
-                        Bulkhead.Main => WaveSettings.Exit_Objective_Medium,
-                        Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy,
-                        Bulkhead.Overload => WaveSettings.Exit_Objective_Easy,
-                        _ => WaveSettings.Exit_Objective_Easy
-                    },
-                    Population = WavePopulation.Baseline,
-                    TriggerAlarm = true
-                });
                 break;
             }
 
@@ -469,18 +444,6 @@ public partial record class WardenObjective : DataBlock
                 }
 
                 reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(events);
-                reactorDefinition.EventsOnComplete.AddGenericWave(new GenericWave
-                {
-                    Settings = director.Bulkhead switch
-                    {
-                        Bulkhead.Main => WaveSettings.Exit_Objective_Hard,
-                        Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy,
-                        Bulkhead.Overload => WaveSettings.Exit_Objective_Medium,
-                        _ => WaveSettings.Exit_Objective_Easy
-                    },
-                    Population = WavePopulation.Baseline,
-                    TriggerAlarm = true
-                });
                 break;
             }
 
@@ -609,18 +572,6 @@ public partial record class WardenObjective : DataBlock
                 }
 
                 reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(events);
-                reactorDefinition.EventsOnComplete.AddGenericWave(new GenericWave
-                {
-                    Settings = director.Bulkhead switch
-                    {
-                        Bulkhead.Main => WaveSettings.Exit_Objective_VeryHard,
-                        Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy,
-                        Bulkhead.Overload => WaveSettings.Exit_Objective_Medium,
-                        _ => WaveSettings.Exit_Objective_Easy
-                    },
-                    Population = WavePopulation.Baseline,
-                    TriggerAlarm = true
-                });
                 break;
             }
 
@@ -661,7 +612,7 @@ public partial record class WardenObjective : DataBlock
                 {
                     (new List<WardenObjectiveEvent>())
                         .AddGenericWave(GenericWave.SinglePMother, surpriseBossDelay)
-                        .AddGenericWave(GenericWave.SinglePMother, surpriseBossDelay)
+                        .AddGenericWave(GenericWave.SingleTank, surpriseBossDelay)
                         .AddSound(Sound.Enemies_DistantLowRoar, surpriseBossDelay)
                         .AddMessage(":://WARNING - BIOMASS SIGNATURE", surpriseBossDelay - 2)
                         .ToList(),
@@ -669,7 +620,7 @@ public partial record class WardenObjective : DataBlock
                     (new List<WardenObjectiveEvent>())
                         .AddGenericWave(GenericWave.SingleMother, surpriseBossDelay)
                         .AddGenericWave(GenericWave.SingleMother, surpriseBossDelay)
-                        .AddGenericWave(GenericWave.SingleMother, surpriseBossDelay)
+                        .AddGenericWave(GenericWave.SinglePouncerShadow, surpriseBossDelay)
                         .AddSound(Sound.Enemies_DistantLowRoar, surpriseBossDelay)
                         .AddMessage(":://WARNING - BIOMASS SIGNATURE", surpriseBossDelay - 2)
                         .ToList(),
@@ -678,7 +629,7 @@ public partial record class WardenObjective : DataBlock
                         .AddGenericWave(GenericWave.SingleTank, surpriseBossDelay)
                         .AddGenericWave(GenericWave.SingleTank, surpriseBossDelay)
                         .AddGenericWave(GenericWave.SingleTank, surpriseBossDelay)
-                        .AddGenericWave(GenericWave.SinglePouncer, surpriseBossDelay + Generator.Between(10, 15))
+                        .AddGenericWave(GenericWave.SinglePouncerShadow, surpriseBossDelay + Generator.Between(10, 15))
                         .AddSound(Sound.Enemies_DistantLowRoar, surpriseBossDelay)
                         .AddMessage(":://WARNING - BIOMASS SIGNATURE", surpriseBossDelay - 2)
                         .ToList(),
@@ -687,7 +638,7 @@ public partial record class WardenObjective : DataBlock
                         .AddGenericWave(GenericWave.SingleTankPotato, surpriseBossDelay)
                         .AddGenericWave(GenericWave.SingleTankPotato, surpriseBossDelay)
                         .AddGenericWave(GenericWave.SingleTankPotato, surpriseBossDelay)
-                        .AddGenericWave(GenericWave.SinglePouncer, surpriseBossDelay + Generator.Between(10, 15))
+                        .AddGenericWave(GenericWave.SinglePouncerShadow, surpriseBossDelay + Generator.Between(10, 15))
                         .AddSound(Sound.Enemies_DistantLowRoar, surpriseBossDelay)
                         .AddMessage(":://WARNING - BIOMASS SIGNATURE", surpriseBossDelay - 2)
                         .ToList(),
@@ -753,18 +704,6 @@ public partial record class WardenObjective : DataBlock
                 }
 
                 reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(events);
-                reactorDefinition.EventsOnComplete.AddGenericWave(new GenericWave
-                {
-                    Settings = director.Bulkhead switch
-                    {
-                        Bulkhead.Main => WaveSettings.Exit_Objective_VeryHard,
-                        Bulkhead.Extreme => WaveSettings.Exit_Objective_Easy,
-                        Bulkhead.Overload => WaveSettings.Exit_Objective_Medium,
-                        _ => WaveSettings.Exit_Objective_Easy
-                    },
-                    Population = WavePopulation.Baseline,
-                    TriggerAlarm = true
-                });
                 break;
             }
         }
@@ -788,21 +727,45 @@ public partial record class WardenObjective : DataBlock
                 Layer = EventBuilder.GetLayerFromBulkhead(director.Bulkhead)
             });
 
-        // Add exit trickle events on completing the reactor
-        if (director.Bulkhead == Bulkhead.Main)
-            reactorDefinition.EventsOnComplete.AddGenericWave(
-                level.Tier switch
+        // Add varying exit alarms on completing the reactor. Some easy tiers have no alarm
+        reactorDefinition.EventsOnComplete.AddGenericWave(
+            (level.Tier, director.Bulkhead) switch
+            {
+                ("A", Bulkhead.Main) => GenericWave.Exit_Objective_Easy,
+                ("A", Bulkhead.Extreme) => GenericWave.None,
+                ("A", Bulkhead.Overload) => new GenericWave
                 {
-                    "A" => GenericWave.Exit_Objective_Easy,
-                    "B" => GenericWave.Exit_Objective_Easy,
-                    "C" => GenericWave.Exit_Objective_Medium,
-                    "D" => GenericWave.Exit_Objective_Hard,
-                    "E" => GenericWave.Exit_Objective_VeryHard,
-                    _ => GenericWave.Exit_Objective_Easy
-                });
+                    Settings = WaveSettings.SingleWave_MiniBoss_6pts,
+                    Population = WavePopulation.OnlyHybrids
+                },
+
+                ("B", Bulkhead.Main) => GenericWave.Exit_Objective_Medium,
+                ("B", Bulkhead.Extreme) => new GenericWave
+                {
+                    Settings = WaveSettings.SingleWave_MiniBoss_8pts,
+                    Population = WavePopulation.OnlyHybrids
+                },
+                ("B", Bulkhead.Overload) => GenericWave.ErrorAlarm_Easy,
+
+                ("C", Bulkhead.Main) => GenericWave.Exit_Objective_Medium,
+                ("C", Bulkhead.Extreme) => new GenericWave
+                {
+                    Settings = WaveSettings.SingleWave_MiniBoss_12pts,
+                    Population = WavePopulation.OnlyHybrids
+                },
+                ("C", Bulkhead.Overload) => GenericWave.ErrorAlarm_Normal,
+
+                ("D", Bulkhead.Main) => GenericWave.Exit_Objective_Hard,
+                ("D", Bulkhead.Extreme) => GenericWave.ErrorAlarm_Easy,
+                ("D", Bulkhead.Overload) => GenericWave.ErrorAlarm_Normal,
+
+                ("E", Bulkhead.Main) => GenericWave.Exit_Objective_VeryHard,
+                ("E", Bulkhead.Extreme) => GenericWave.ErrorAlarm_Normal,
+                ("E", Bulkhead.Overload) => GenericWave.ErrorAlarm_Hard,
+            });
     }
 
-    public void PostBuild_ReactorShutdown(BuildDirector _, Level level)
+    private void PostBuild_ReactorShutdown(BuildDirector _, Level level)
     {
         // EOS needs this to be set to empty to work
         Type = WardenObjectiveType.Empty;

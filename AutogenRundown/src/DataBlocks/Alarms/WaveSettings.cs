@@ -403,6 +403,7 @@ public record WaveSettings : DataBlock
         Bins.WaveSettings.AddBlock(SingleWave_35pts);
 
         SingleWave_MiniBoss_4pts.Persist();
+        SingleWave_MiniBoss_6pts.Persist();
         SingleWave_MiniBoss_8pts.Persist();
         SingleWave_MiniBoss_12pts.Persist();
         SingleWave_MiniBoss_16pts.Persist();
@@ -792,15 +793,15 @@ public record WaveSettings : DataBlock
         PopulationPointsMinPerGroup = 3,
         PopulationPointsPerGroupStart = 3,
         PopulationPointsPerGroupEnd = 5,
-        PopulationRampOverTime = 180,
+        PopulationRampOverTime = 150,
     };
 
     public static WaveSettings Exit_Objective_VeryHard = new()
     {
-        PopulationFilter = { Enemies.EnemyType.Weakling },
+        PopulationFilter = { Enemies.EnemyType.Weakling, Enemies.EnemyType.Boss },
         FilterType = PopulationFilterType.Exclude,
 
-        PauseBeforeStart = 2.0,
+        PauseBeforeStart = 1.0,
         PauseBetweenGroups = 12.0,
 
         PopulationPointsPerWaveStart = 6.0,
@@ -808,7 +809,7 @@ public record WaveSettings : DataBlock
         PopulationPointsMinPerGroup = 3,
         PopulationPointsPerGroupStart = 4,
         PopulationPointsPerGroupEnd = 6,
-        PopulationRampOverTime = 180,
+        PopulationRampOverTime = 120,
     };
     #endregion
 
@@ -1099,6 +1100,17 @@ public record WaveSettings : DataBlock
         FilterType = PopulationFilterType.Include,
 
         PopulationPointsTotal = 4,
+    };
+
+    /// <summary>
+    /// 3 minibosses
+    /// </summary>
+    public static WaveSettings SingleWave_MiniBoss_6pts = new WaveSettings
+    {
+        PopulationFilter = { Enemies.EnemyType.MiniBoss },
+        FilterType = PopulationFilterType.Include,
+
+        PopulationPointsTotal = 6,
     };
 
     /// <summary>
