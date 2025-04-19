@@ -489,11 +489,11 @@ public static class RundownFactory
             {
                 "2025_04", new List<List<int>>
                 {
-                    new() { 2, 1 },       // Tier A - ?
+                    new() { 1, 2 },       // Tier A - ?
                     new() { 1, 1, 1 },    // Tier B - ?
                     new() { 1, 1, 1, 1 }, // Tier C - ?
-                    new() { 2, 2, 2, 1 }, // Tier D - ?
-                    new() { 1, 2 }        // Tier E - ?
+                    new() { 1, 1, 1, 2 }, // Tier D - ?
+                    new() { 1, 1 }        // Tier E - ?
                 }
             }
         };
