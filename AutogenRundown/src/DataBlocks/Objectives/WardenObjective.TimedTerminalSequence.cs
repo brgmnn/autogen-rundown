@@ -106,7 +106,7 @@ public partial record WardenObjective : DataBlock
         };
 
         // Add waves etc. on each round
-        for (int round = 0; round < TimedTerminalSequence_NumberOfRounds; round++)
+        for (var round = 0; round < TimedTerminalSequence_NumberOfRounds; round++)
         {
             var onStart = Generator.DrawSelect(eventPool).ToList();
             TimedTerminalSequence_EventsOnSequenceDone.Add(new());
@@ -115,7 +115,7 @@ public partial record WardenObjective : DataBlock
             // Unlock all the terminal zone doors on round start
             if (round == 0)
             {
-                for (int t = 0; t < TimedTerminalSequence_NumberOfTerminals; t++)
+                for (var t = 0; t < TimedTerminalSequence_NumberOfTerminals; t++)
                 {
                     var first = level.Planner.GetZones(director.Bulkhead, $"timed_terminal_{t}").First();
                     EventBuilder.AddUnlockDoor(onStart, director.Bulkhead, first.ZoneNumber);
@@ -132,12 +132,14 @@ public partial record WardenObjective : DataBlock
             TimedTerminalSequence_EventsOnSequenceStart.Add(onStart);
         }
 
-        // Add event to unlock error alarm disable
-        var turnOff = level.Planner.GetZones(director.Bulkhead, "timed_terminal_error_off").First()!;
-        EventsOnGotoWin.Add(new WardenObjectiveEvent
-            {
-                Type = WardenObjectiveEventType.UnlockSecurityDoor,
-                LocalIndex = turnOff.ZoneNumber
-            });
+        var turnOff = level.Planner.GetZones(director.Bulkhead, "timed_terminal_error_off");
+
+        // Add event to unlock error alarm disable (if we have the timed terminal error off zone)
+        if (turnOff.Any())
+            EventsOnGotoWin.Add(new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.UnlockSecurityDoor,
+                    LocalIndex = turnOff.First().ZoneNumber
+                });
     }
 }

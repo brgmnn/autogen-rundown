@@ -34,7 +34,7 @@ public partial record LevelLayout
         layerData.ObjectiveData.ZonePlacementDatas.Add(
             new List<ZonePlacementData>
             {
-                new ZonePlacementData()
+                new()
                 {
                     LocalIndex = hubIndex,
                     Weights = ZonePlacementWeights.EvenlyDistributed
@@ -44,6 +44,12 @@ public partial record LevelLayout
         level.Planner.Connect(start, hub);
         level.Planner.AddZone(hub, zone);
 
+        var hasAllErrorAlarms = level.Tier switch
+        {
+            "D" => Generator.Flip(0.4),
+            "E" => Generator.Flip(0.8),
+            _ => false
+        };
         var errorPopulation = new List<(double, int, WavePopulation)>
         {
             (1.0, 2, WavePopulation.Baseline),
@@ -53,7 +59,7 @@ public partial record LevelLayout
         // Now we build the zones for the codes
         for (var i = 0; i < objective.TimedTerminalSequence_NumberOfTerminals; i++)
         {
-            var end = BuildBranch(hub, 1, $"timed_terminal_{i}");
+            var end = AddBranch(hub, 1, $"timed_terminal_{i}").Last();
             var endZone = planner.GetZone(end)!;
 
             // Place 3 terminals in the zone
@@ -67,23 +73,26 @@ public partial record LevelLayout
 
             // TODO: don't always do triple error alarms
             // Trial error alarm of baseline enemies
-            var puzzle = ChainedPuzzle.AlarmError_Baseline with
-            {
-                Settings = WaveSettings.Error_Normal,
-                Population = Generator.DrawSelect(errorPopulation)
-            };
-            endZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
 
-            // TODO: maybe some more resources
-            endZone.AmmoPacks *= 2;
-            endZone.ToolPacks *= 2;
-            endZone.HealthPacks *= 2;
+            if (hasAllErrorAlarms)
+            {
+                var puzzle = ChainedPuzzle.AlarmError_Baseline with
+                {
+                    Settings = WaveSettings.Error_Normal,
+                    Population = Generator.DrawSelect(errorPopulation)
+                };
+                endZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
+            }
+
+            endZone.AmmoPacks += 4;
+            endZone.ToolPacks += 3;
+            endZone.HealthPacks += 5;
 
             // Mark the zone for the objective
             layerData.ObjectiveData.ZonePlacementDatas.Add(
                 new List<ZonePlacementData>()
                 {
-                    new ZonePlacementData()
+                    new()
                     {
                         LocalIndex = end.ZoneNumber,
                         Weights = ZonePlacementWeights.NotAtStart
@@ -100,34 +109,37 @@ public partial record LevelLayout
         var selectedIndex = Generator.Between(0, objective.TimedTerminalSequence_NumberOfTerminals - 1);
         var selected = planner.GetZones(director.Bulkhead, $"timed_terminal_{selectedIndex}").First();
 
-        // Add turnoff zone
-        var turnOff = new ZoneNode(director.Bulkhead, planner.NextIndex(director.Bulkhead), $"timed_terminal_error_off");
-        var turnOffZone = new Zone(level.Tier)
+        if (hasAllErrorAlarms)
         {
-            Coverage = new() { Min = 3.0, Max = 3.0 },
-            LightSettings = Lights.GenRandomLight(),
-            ProgressionPuzzleToEnter = ProgressionPuzzle.Locked,
-            AliasPrefix = "Alarm Control, ZONE",
-            AliasPrefixShortOverride = "Alarm Control, Z",
-            TerminalPlacements = new()
+            // Add turnoff zone
+            var turnOff = new ZoneNode(director.Bulkhead, planner.NextIndex(director.Bulkhead), $"timed_terminal_error_off");
+            var turnOffZone = new Zone(level.Tier)
             {
-                new()
+                Coverage = new() { Min = 3.0, Max = 3.0 },
+                LightSettings = Lights.GenRandomLight(),
+                ProgressionPuzzleToEnter = ProgressionPuzzle.Locked,
+                AliasPrefix = "Alarm Control, ZONE",
+                AliasPrefixShortOverride = "Alarm Control, Z",
+                TerminalPlacements = new()
                 {
-                    PlacementWeights = ZonePlacementWeights.AtEnd,
-                    UniqueCommands = new()
+                    new()
                     {
-                        new()
+                        PlacementWeights = ZonePlacementWeights.AtEnd,
+                        UniqueCommands = new()
                         {
-                            Command = "DEACTIVATE_ALARMS",
-                            CommandDesc = "Turn off all active alarms",
-                            CommandEvents = new List<WardenObjectiveEvent>().AddTurnOffAlarms().ToList(),
+                            new()
+                            {
+                                Command = "DEACTIVATE_ALARMS",
+                                CommandDesc = "Turn off all active alarms",
+                                CommandEvents = new List<WardenObjectiveEvent>().AddTurnOffAlarms().ToList(),
+                            }
                         }
                     }
                 }
-            }
-        };
+            };
 
-        planner.Connect(selected, turnOff);
-        planner.AddZone(turnOff, turnOffZone);
+            planner.Connect(selected, turnOff);
+            planner.AddZone(turnOff, turnOffZone);
+        }
     }
 }
