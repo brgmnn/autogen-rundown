@@ -14,6 +14,8 @@ public record struct ZoneNode(
     /// </summary>
     public Tags Tags { get; set; } = new();
 
+    public ZoneNode() : this(Bulkhead.Main, 0, "primary", 2) { }
+
     /// <summary>
     /// Two zones are equal if they are in the same bulkhead and have the same zone number.
     /// All other properties are extra and we want to consider them equal with them.
@@ -486,24 +488,5 @@ public class LayoutPlanner
                 zone.Coverage.Max += 20.0;
             }
         }
-
-        // Next we attempt to go through and space the level a bit. We find all open zones
-        // with no custom geomorphs set and try to have them expand directionally so any
-        // future hubs get more space
-        // TODO: does this actually help?
-        /*var openZones = GetOpenZones(bulkhead, null);
-
-        foreach (var node in openZones)
-        {
-            var zone = GetZone(node);
-
-            if (zone != null && zone.CustomGeomorph == null)
-            {
-                if (zone.ZoneExpansion == ZoneExpansion.Random)
-                {
-                    zone.ZoneExpansion = ZoneExpansion.DirectionalRandom;
-                }
-            }
-        }*/
     }
 }

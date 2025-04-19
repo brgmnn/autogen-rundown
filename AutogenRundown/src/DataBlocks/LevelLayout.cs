@@ -38,7 +38,7 @@ public partial record LevelLayout : DataBlock
 
     public int ZoneAliasStart { get; set; }
 
-    public List<Zone> Zones { get; set; } = new List<Zone>();
+    public List<Zone> Zones { get; set; } = new();
 
     public LevelLayout(Level level, BuildDirector director, LevelSettings settings, LayoutPlanner planner)
     {
@@ -663,30 +663,6 @@ public partial record LevelLayout : DataBlock
         }
     }
 
-    public static SubComplex GenSubComplex(Complex complex)
-        => complex switch
-        {
-            Complex.Mining => Generator.Pick(new List<SubComplex>
-            {
-                SubComplex.DigSite,
-                SubComplex.Refinery,
-                SubComplex.Storage
-            }),
-            Complex.Tech => Generator.Pick(new List<SubComplex>
-            {
-                SubComplex.DataCenter,
-                SubComplex.Lab
-            }),
-            Complex.Service => Generator.Pick(new List<SubComplex>
-            {
-                SubComplex.Floodways,
-                SubComplex.Gardens
-            }),
-
-            _ => SubComplex.All
-        };
-
-
     /// <summary>
     /// Generates a number to be used for level layout generation based on size factors for the inputs
     /// </summary>
@@ -719,6 +695,39 @@ public partial record LevelLayout : DataBlock
 
             (_, _, _) => 1
         };
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="level"></param>
+    /// <param name="director"></param>
+    /// <param name="objective"></param>
+    /// <returns></returns>
+    public static LevelLayout PreBuild(Level level,
+        BuildDirector director,
+        WardenObjective objective)
+    {
+        var direction = level.Settings.GetDirections(director.Bulkhead);
+        var layout = new LevelLayout(level, director, level.Settings, level.Planner)
+        {
+            Name = $"{level.Tier}{level.Index} {level.Name} {director.Bulkhead}",
+            ZoneAliasStart = level.GetZoneAliasStart(director.Bulkhead),
+            direction = direction
+        };
+
+        director.GenZones();
+
+        var puzzlePack = ChainedPuzzle.BuildPack(level.Tier, level.Settings);
+        var wavePopulationPack = WavePopulation.BuildPack(level.Tier, level.Settings);
+        var waveSettingsPack = WaveSettings.BuildPack(level.Tier);
+
+        Plugin.Logger.LogDebug($"Building layout ({layout.Name}), Objective = {objective.Type}");
+
+        if (objective.Type == WardenObjectiveType.RetrieveBigItems)
+            Plugin.Logger.LogDebug($" -- Retrieve Item(s) = {objective.RetrieveItems.First()}");
+
+        return layout;
+    }
 
     /// <summary>
     /// Builds the main level
@@ -758,15 +767,16 @@ public partial record LevelLayout : DataBlock
         if (director.Bulkhead == Bulkhead.Main)
             layout.BuildStartingArea(level, director);
 
+        // Use the helper method to get the first starting zone. This will also initialize it if
+        // the first zone hasn't been set up yet
+        var (start, startZone) = layout.StartingArea_GetBuildStart(director.Bulkhead);
+
         #region Set the right directions
         /*
          * Attempt to set the very first zones build expansion and direction
          */
-        var bulkheadFirstNode = level.Planner.GetExactZones(director.Bulkhead).First();
-        var bulkheadFirstZone = level.Planner.GetZone(bulkheadFirstNode)!;
-
-        bulkheadFirstZone.ZoneExpansion = direction.Forward;
-        bulkheadFirstZone.StartExpansion = direction.Forward switch
+        startZone.ZoneExpansion = direction.Forward;
+        startZone.StartExpansion = direction.Forward switch
         {
             ZoneExpansion.Forward => ZoneBuildExpansion.Forward,
             ZoneExpansion.Backward => ZoneBuildExpansion.Backward,
@@ -782,12 +792,10 @@ public partial record LevelLayout : DataBlock
              * */
             case WardenObjectiveType.ReactorStartup:
                 {
-                    var entrance = level.Planner.GetExactZones(director.Bulkhead).First();
-
-                    if (objective.ReactorStartupGetCodes == true)
-                        layout.BuildLayout_ReactorStartup_FetchCodes(director, objective, entrance);
+                    if (objective.ReactorStartupGetCodes)
+                        layout.BuildLayout_ReactorStartup_FetchCodes(director, objective, start);
                     else
-                        layout.BuildLayout_ReactorStartup_Simple(director, objective, entrance);
+                        layout.BuildLayout_ReactorStartup_Simple(director, objective, start);
 
                     break;
                 }
@@ -797,8 +805,6 @@ public partial record LevelLayout : DataBlock
              * */
             case WardenObjectiveType.ReactorShutdown:
             {
-                var start = level.Planner.GetLastZone(director.Bulkhead);
-
                 layout.BuildLayout_ReactorShutdown(director, objective, start);
                 break;
             }
@@ -808,8 +814,6 @@ public partial record LevelLayout : DataBlock
              * */
             case WardenObjectiveType.ClearPath:
             {
-                var start = level.Planner.GetLastZone(director.Bulkhead);
-
                 layout.BuildLayout_ClearPath(director, objective, start);
                 break;
             }
@@ -820,8 +824,6 @@ public partial record LevelLayout : DataBlock
              */
             case WardenObjectiveType.SpecialTerminalCommand:
             {
-                var start = level.Planner.GetLastZone(director.Bulkhead);
-
                 layout.BuildLayout_SpecialTerminalCommand(director, objective, start);
                 break;
             }
@@ -832,8 +834,6 @@ public partial record LevelLayout : DataBlock
              * */
             case WardenObjectiveType.RetrieveBigItems:
                 {
-                    var start = level.Planner.GetLastZone(director.Bulkhead);
-
                     layout.BuildLayout_RetrieveBigItems(director, objective, start);
                     break;
                 }
@@ -844,13 +844,10 @@ public partial record LevelLayout : DataBlock
             case WardenObjectiveType.PowerCellDistribution:
                 {
                     // Zone 1 is an entrance I-geo
-                    var entrance = level.Planner.GetExactZones(director.Bulkhead).First();
-
-                    var entranceZone = level.Planner.GetZone(entrance)!;
-                    entranceZone.GenCorridorGeomorph(director.Complex);
-                    entranceZone.RollFog(level);
-                    entrance.MaxConnections = 1;
-                    level.Planner.UpdateNode(entrance);
+                    startZone.GenCorridorGeomorph(director.Complex);
+                    startZone.RollFog(level);
+                    start.MaxConnections = 1;
+                    level.Planner.UpdateNode(start);
 
                     // Zone 2 is a hub zone for branches where generators live
                     var hubIndex = level.Planner.NextIndex(director.Bulkhead);
@@ -861,7 +858,7 @@ public partial record LevelLayout : DataBlock
                     zone.GenHubGeomorph(director.Complex);
                     zone.RollFog(level);
 
-                    level.Planner.Connect(entrance, hub);
+                    level.Planner.Connect(start, hub);
                     level.Planner.AddZone(hub, zone);
 
                     // Builds a branch with a generator in it. Reused for a lot of places.
@@ -953,7 +950,7 @@ public partial record LevelLayout : DataBlock
              * */
             case WardenObjectiveType.CentralGeneratorCluster:
                 {
-                    var prev = level.Planner.GetExactZones(director.Bulkhead).First();
+                    var prev = start;
 
                     // Place the generator cluster in the first zone
                     var firstZone = level.Planner.GetZone(prev)!;
@@ -1002,8 +999,6 @@ public partial record LevelLayout : DataBlock
              */
             case WardenObjectiveType.Survival:
             {
-                var start = level.Planner.GetLastZone(director.Bulkhead);
-
                 layout.BuildLayout_Survival(director, objective, start);
                 break;
             }
@@ -1013,8 +1008,6 @@ public partial record LevelLayout : DataBlock
              */
             case WardenObjectiveType.HsuActivateSmall:
             {
-                var start = level.Planner.GetLastZone(director.Bulkhead);
-
                 layout.BuildLayout_HsuActivateSmall(director, objective, start);
                 break;
             }
@@ -1024,16 +1017,12 @@ public partial record LevelLayout : DataBlock
              */
             case WardenObjectiveType.TerminalUplink:
             {
-                var start = level.Planner.GetLastZone(director.Bulkhead);
-
                 layout.BuildLayout_TerminalUplink(director, objective, start);
                 break;
             }
 
             case WardenObjectiveType.GatherTerminal:
             {
-                var start = level.Planner.GetLastZone(director.Bulkhead);
-
                 layout.BuildLayout_GatherTerminal(director, objective, start);
                 break;
             }
@@ -1043,8 +1032,6 @@ public partial record LevelLayout : DataBlock
              */
             case WardenObjectiveType.TimedTerminalSequence:
             {
-                var start = level.Planner.GetLastZone(director.Bulkhead)!;
-
                 layout.BuildLayout_TimedTerminalSequence(director, objective, (ZoneNode)start);
                 break;
             }
@@ -1054,8 +1041,6 @@ public partial record LevelLayout : DataBlock
              */
             case WardenObjectiveType.HsuFindSample:
             {
-                var start = level.Planner.GetLastZone(director.Bulkhead)!;
-
                 layout.BuildLayout_HsuFindSample(director, objective, (ZoneNode)start);
                 break;
             }
@@ -1065,8 +1050,6 @@ public partial record LevelLayout : DataBlock
              */
             case WardenObjectiveType.GatherSmallItems:
             {
-                var start = level.Planner.GetLastZone(director.Bulkhead)!;
-
                 layout.BuildLayout_GatherSmallItems(director, objective, (ZoneNode)start);
                 break;
             }
@@ -1074,16 +1057,7 @@ public partial record LevelLayout : DataBlock
             // Something has gone wrong if we are reaching this
             default:
             {
-                var start = level.Planner.GetLastZone(director.Bulkhead);
-
-                if (start == null)
-                {
-                    Plugin.Logger.LogError($"No node returned when calling Planner.GetLastZone({director.Bulkhead})");
-                    throw new Exception("No zone node returned");
-                }
-
                 layout.BuildBranch((ZoneNode)start, director.ZoneCount, "find_items");
-
                 break;
             }
         }
@@ -1105,15 +1079,22 @@ public partial record LevelLayout : DataBlock
             _ => 0.9
         };
 
-        if (director.Bulkhead == Bulkhead.Main &&
-            numberOfFogZones > 0 &&
-            level.FogSettings.IsInfectious &&
-            Generator.Flip(disinfectChance))
+        // Fog level specific settings
+        if (director.Bulkhead == Bulkhead.Main && numberOfFogZones > 0)
         {
-            var open = level.Planner.GetOpenZones(Bulkhead.All, null).Take(4);
-            var from = Generator.Pick(open);
+            // Add the fog turbine to the last starting area
+            var lastNode = level.Planner.GetZones(Bulkhead.StartingArea, null).Last();
+            var lastZone = level.Planner.GetZone(lastNode)!;
+            lastZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
 
-            layout.AddDisinfectionZone(from);
+            // TODO: move this somewhere else? Currently it will only apply in main
+            if (level.FogSettings.IsInfectious && Generator.Flip(disinfectChance))
+            {
+                var open = level.Planner.GetOpenZones(Bulkhead.All, null).Take(4);
+                var from = Generator.Pick(open);
+
+                layout.AddDisinfectionZone(from);
+            }
         }
 
         // Write the zones

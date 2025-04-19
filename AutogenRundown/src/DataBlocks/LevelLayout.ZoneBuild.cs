@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Utils;
 
@@ -163,6 +164,52 @@ public partial record LevelLayout
 
                 zoneCallback?.Invoke(node, zone);
             });
+    }
+
+    /// <summary>
+    /// Creates the very first zone in the level, which is the elevator zone. This zone doesn't
+    /// lead from anywhere, so there's no source.
+    /// </summary>
+    /// <param name="newNode"></param>
+    /// <returns></returns>
+    public (ZoneNode, Zone) CreateElevatorZone(ZoneNode? newNode = null)
+    {
+        if (newNode is null)
+            newNode = new ZoneNode
+            {
+                Bulkhead = Bulkhead.Main | Bulkhead.StartingArea,
+                Branch = "primary",
+                MaxConnections = 2
+            };
+
+        var node = (ZoneNode)newNode;
+        var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
+
+        if (zoneIndex != 0)
+        {
+            Plugin.Logger.LogError($"Tried to create elevator node when one already exists! zoneIndex = {zoneIndex}");
+            throw new Exception("Tried to create elevator node when one already exists!");
+        }
+
+        var elevator = node with
+        {
+            Bulkhead = Bulkhead.Main | Bulkhead.StartingArea,
+            ZoneNumber = zoneIndex
+        };
+        elevator.Tags ??= new Tags();
+
+        var elevatorZone = new Zone(level.Tier)
+        {
+            Coverage = new CoverageMinMax { Min = 25, Max = 35 },
+            LightSettings = Lights.GenRandomLight(),
+            EnemyPointsMultiplier = 0.6
+        };
+        elevatorZone.RollFog(level);
+
+        level.Planner.Connect(elevator);
+        Zone zone = level.Planner.AddZone(elevator, elevatorZone)!;
+
+        return (elevator, zone);
     }
     #endregion
 }

@@ -1,11 +1,15 @@
 ﻿using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
+using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks;
 
 public partial record LevelLayout
 {
+    [JsonIgnore]
+    private string Strategy { get; set; } = "default";
+
     /// <summary>
     /// Connects the first bulkhead zone to a zone in this layout
     /// </summary>
@@ -113,23 +117,24 @@ public partial record LevelLayout
 
         // Options for starting areas
         // TODO: add default in always as an option after we test
-        //var options = new List<(double, string)> { (1.0, "default") };
-        var options = new List<(double, string)>();
+        var options = new List<(double, string)>
+        {
+            // (1.0, "default_start_area"),
+            (1.0, "single_chain")
+            // (1.0, "3x_bulkhead_hub")
+        };
 
-        // 2 bulkhead objectives
-        if (bulkheads.HasFlag(Bulkhead.Extreme) ^ bulkheads.HasFlag(Bulkhead.Overload))
-            options.Add((2.0, "2x_bulkhead_hub"));
-        // All 3 bulkhead objectives
-        else if (bulkheads.HasFlag(Bulkhead.PrisonerEfficiency))
-            options.Add((2.0, "3x_bulkhead_hub"));
-        // Any other option
-        else
-            options.Add((1.0, "default"));
+        // if (bulkheads.HasFlag(Bulkhead.Extreme) ^ bulkheads.HasFlag(Bulkhead.Overload))
+        //     options.Add((2.0, "2x_bulkhead_hub"));
+        // else if (bulkheads.HasFlag(Bulkhead.PrisonerEfficiency))
+        //     options.Add((2.0, "3x_bulkhead_hub"));
+        // else
+        //     options.Add((1.0, "default"));
 
-        var strategy = Generator.Select(options);
-        Plugin.Logger.LogDebug($"StartingArea strategy = {strategy}");
+        Strategy = Generator.Select(options);
+        Plugin.Logger.LogDebug($"StartingArea strategy = {Strategy}");
 
-        switch (strategy)
+        switch (Strategy)
         {
             case "2x_bulkhead_hub":
             {
@@ -142,6 +147,10 @@ public partial record LevelLayout
                 BuildStartingArea_3xBulkheadHub(level, director);
                 break;
             }
+
+            case "single_chain":
+                BuildStartingArea_SingleChain(level, director);
+                break;
 
             default:
             {
@@ -203,16 +212,63 @@ public partial record LevelLayout
                 break;
             }
         }
+    }
 
-        // Add a fog turbine to the last start area if we have fog
-        if (level.Settings.Modifiers.Contains(LevelModifiers.Fog) ||
-            level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
+    /// <summary>
+    /// Get's the first starting zone
+    /// </summary>
+    /// <param name="bulkhead"></param>
+    /// <returns></returns>
+    private (ZoneNode, Zone) StartingArea_GetBuildStart(Bulkhead bulkhead)
+    {
+        var existing = level.Planner.GetLastZone(director.Bulkhead);
+
+        if (existing is not null)
+            return ((ZoneNode)existing, level.Planner.GetZone((ZoneNode)existing)!);
+
+        // There just isn't any zone for this bulkhead, so we must add the first zone
+        switch (Strategy)
         {
-            var lastNode = level.Planner.GetZones(Bulkhead.StartingArea).Last();
-            var lastZone = level.Planner.GetZone(lastNode)!;
+            case "single_chain":
+            {
+                var sourceBulkhead = bulkhead switch
+                {
+                    Bulkhead.Main => Bulkhead.Main,
+                    Bulkhead.Extreme => Bulkhead.Main,
+                    Bulkhead.Overload => Bulkhead.Extreme
+                };
 
-            lastZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
+                var candidates = level.Planner.GetOpenZones(sourceBulkhead, null);
+
+                // Fall back to adding the area in main
+                if (!candidates.Any())
+                {
+                    Plugin.Logger.LogDebug($"No open zones for bulkhead {bulkhead}, planner = {level.Planner}");
+                    candidates = level.Planner.GetOpenZones(Bulkhead.Main, null);
+                }
+
+                var from = Generator.Pick(candidates);
+
+                InitializeBulkheadArea(level, bulkhead, from);
+                break;
+            }
+
+            default:
+            {
+                // By default, we will just try to place this in the main starting area
+                var from = Generator.Pick(
+                    level.Planner.GetOpenZones(Bulkhead.Main | Bulkhead.StartingArea, null));
+
+                InitializeBulkheadArea(level, bulkhead, from);
+                break;
+            }
         }
+
+        // We know this isn't null now
+        var node = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead)!;
+        var zone = level.Planner.GetZone(node)!;
+
+        return (node, zone);
     }
 
     /**
@@ -326,5 +382,45 @@ public partial record LevelLayout
         InitializeBulkheadArea(level, Bulkhead.Main, elevatorDrop);
         InitializeBulkheadArea(level, Bulkhead.Extreme, elevatorDrop);
         InitializeBulkheadArea(level, Bulkhead.Overload, elevatorDrop);
+    }
+
+    /// <summary>
+    /// Single chain placement:
+    ///
+    ///     Main -> Extreme -> Overload
+    ///
+    /// Always in that order, unfortunately it's just easier than trying to swap the order of
+    /// overload / extreme. Probably makes a bit more sense lore wise to always have overload
+    /// last.
+    ///
+    /// The bulkhead for each next zone can be placed _anywhere_ in the preceding bulkhead.
+    /// </summary>
+    /// <param name="level"></param>
+    /// <param name="director"></param>
+    private void BuildStartingArea_SingleChain(Level level, BuildDirector director)
+    {
+        var (elevator, elevatorZone) = CreateElevatorZone();
+
+        var requiredOpenZones = level.Settings.Bulkheads switch
+        {
+            Bulkhead.Main => 0,
+            Bulkhead.Main | Bulkhead.Extreme => 1,
+            Bulkhead.Main | Bulkhead.Overload => 1,
+            Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => 2,
+            _ => 0
+        };
+
+        switch (level.Tier)
+        {
+            default:
+            {
+                var nodes = AddBranch_Forward(elevator, requiredOpenZones);
+
+                // Set all of these nodes as starting area nodes
+                foreach (var node in nodes)
+                    level.Planner.UpdateNode(node with { Bulkhead = Bulkhead.Main | Bulkhead.StartingArea });
+                break;
+            }
+        }
     }
 }
