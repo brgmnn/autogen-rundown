@@ -3,6 +3,28 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.60.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.60.0) — April 19, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Added new variations for level starting area and bulkhead placements
+* Added infection hybrids to be able to spawn on blood doors on non-infection levels
+* Added 200 new predefined level names
+
+### Changes
+
+* Balance: `ReactorShutdown` objective exit alarms reduced for non-main objectives
+  * Extreme and Overload reactor shutdown missions now trigger either error alarms, finite point fixed waves, or for A tier extreme: no waves.
+* Balance: `ReactorShutdown` removed stealth boss double PMother alarm and triple Mother stealth alarm. Replaced with PMother/Tank and double mother/shadow pouncer
+* Balance: `ReactorShutdown` replaced E-tier pouncer bosses with shadow pouncers
+* Balance: `ReactorShutdown` removed all completely free shutdown scans (stealth scans are now always boss bait)
+* Balance: `TimedTerminalSequence` all zone error alarms moved to only D and E tier levels (chance based).
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.59.0...v0.60.0
+
+
 ## [v0.59.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.59.0) — April 16, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
