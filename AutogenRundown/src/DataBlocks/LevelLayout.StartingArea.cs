@@ -150,6 +150,7 @@ public partial record LevelLayout
         // There just isn't any zone for this bulkhead, so we must add the first zone
         switch (level.Settings.BulkheadStrategy)
         {
+            // TODO: do we want to place a main bulkhead dc?
             case "single_chain":
             {
                 var sourceBulkhead = bulkhead switch
@@ -394,19 +395,12 @@ public partial record LevelLayout
     /// last.
     ///
     /// The bulkhead for each next zone can be placed _anywhere_ in the preceding bulkhead.
+    ///
+    /// For now, we don't place a main bulkhead door
     /// </summary>
     private void BuildStartingArea_SingleChain()
     {
-        var (elevator, elevatorZone) = CreateElevatorZone();
-
-        // var requiredOpenZones = level.Settings.Bulkheads switch
-        // {
-        //     Bulkhead.Main => 0,
-        //     Bulkhead.Main | Bulkhead.Extreme => 1,
-        //     Bulkhead.Main | Bulkhead.Overload => 1,
-        //     Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => 2,
-        //     _ => 1
-        // };
+        var (elevator, _) = CreateElevatorZone();
 
         switch (level.Tier)
         {
