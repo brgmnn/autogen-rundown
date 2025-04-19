@@ -79,35 +79,11 @@ public partial record LevelLayout
     /// </summary>
     /// <param name="level"></param>
     /// <param name="director"></param>
-    public void BuildStartingArea(Level level, BuildDirector director)
+    public void BuildStartingArea(BuildDirector director)
     {
         // Return early if we should not be building this.
         if (!director.Bulkhead.HasFlag(Bulkhead.Main))
             return;
-
-        // Bulkheads that need to be placed
-        var toPlace = level.Settings.Bulkheads switch
-        {
-            Bulkhead.Main => new List<Bulkhead> { Bulkhead.Main },
-            Bulkhead.Main | Bulkhead.Extreme => new List<Bulkhead>
-            {
-                Bulkhead.Main,
-                Bulkhead.Extreme
-            },
-            Bulkhead.Main | Bulkhead.Overload => new List<Bulkhead>
-            {
-                Bulkhead.Main,
-                Bulkhead.Overload
-            },
-            Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => new List<Bulkhead>
-            {
-                Bulkhead.Main,
-                Bulkhead.Extreme,
-                Bulkhead.Overload
-            },
-
-            _ => new List<Bulkhead>()
-        };
 
         // Options for starting areas
         var options = level.Settings.Bulkheads switch
@@ -142,80 +118,20 @@ public partial record LevelLayout
         switch (level.Settings.BulkheadStrategy)
         {
             case "2x_bulkhead_hub":
-            {
-                BuildStartingArea_2xBulkheadHub(level, director);
+                BuildStartingArea_2xBulkheadHub();
                 break;
-            }
 
             case "3x_bulkhead_hub":
-            {
-                BuildStartingArea_3xBulkheadHub(level, director);
+                BuildStartingArea_3xBulkheadHub();
                 break;
-            }
 
             case "single_chain":
-                BuildStartingArea_SingleChain(level, director);
+                BuildStartingArea_SingleChain();
                 break;
 
             default:
-            {
-                // Add the first zone.
-                var elevatorDrop = new ZoneNode(
-                    Bulkhead.Main | Bulkhead.StartingArea,
-                    level.Planner.NextIndex(Bulkhead.Main));
-                var elevatorDropZone = new Zone(level.Tier)
-                {
-                    Coverage = new CoverageMinMax { Min = 25, Max = 35 },
-                    LightSettings = Lights.GenRandomLight(),
-                };
-
-                // Add fog repellers in the first zone if there's fog in the level.
-                if (level.Settings.Modifiers.Contains(LevelModifiers.Fog) ||
-                    level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
-                    elevatorDropZone.ConsumableDistributionInZone
-                        = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
-
-                level.Planner.Connect(elevatorDrop);
-                level.Planner.AddZone(elevatorDrop, elevatorDropZone);
-
-                var minimumZones = level.Settings.Bulkheads switch
-                {
-                    Bulkhead.Main => 0,
-                    Bulkhead.Main | Bulkhead.Extreme => 1,
-                    Bulkhead.Main | Bulkhead.Overload => 1,
-                    Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => 2,
-                    _ => 1
-                };
-
-                var prev = elevatorDrop;
-                Zone nextZone = elevatorDropZone;
-
-                for (int i = 0; i < minimumZones; i++)
-                {
-                    var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
-                    var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
-                    nextZone = new Zone(level.Tier)
-                    {
-                        Coverage = CoverageMinMax.GenNormalSize(),
-                        LightSettings = Lights.GenRandomLight(),
-                    };
-                    nextZone.RollFog(level);
-
-                    level.Planner.Connect(prev, next);
-                    nextZone = level.Planner.AddZone(next, nextZone);
-
-                    // Place the first zones of the connecting bulkhead zones, so we can build from
-                    // them later.
-                    InitializeBulkheadArea(level, Generator.Draw(toPlace), next);
-
-                    prev = next;
-                }
-
-                // The final area also needs to be placed
-                InitializeBulkheadArea(level, Generator.Draw(toPlace), prev);
-
+                BuildStartingArea_Default();
                 break;
-            }
         }
     }
 
@@ -280,16 +196,85 @@ public partial record LevelLayout
     /// <summary>
     ///
     /// </summary>
-    /// <param name="level"></param>
-    private void BuildStartingArea_Default(Level level)
+    private void BuildStartingArea_Default()
     {
+        // Add the first zone.
+        var (elevatorDrop, elevatorDropZone) = CreateElevatorZone();
+
+        // Add fog repellers in the first zone if there's fog in the level.
+        if (level.Settings.Modifiers.Contains(LevelModifiers.Fog) ||
+            level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
+            elevatorDropZone.ConsumableDistributionInZone
+                = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
+
+        level.Planner.Connect(elevatorDrop);
+        level.Planner.AddZone(elevatorDrop, elevatorDropZone);
+
+        var minimumZones = level.Settings.Bulkheads switch
+        {
+            Bulkhead.Main => 0,
+            Bulkhead.Main | Bulkhead.Extreme => 1,
+            Bulkhead.Main | Bulkhead.Overload => 1,
+            Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => 2,
+            _ => 1
+        };
+
+        // Bulkheads that need to be placed
+        var toPlace = level.Settings.Bulkheads switch
+        {
+            Bulkhead.Main => new List<Bulkhead> { Bulkhead.Main },
+            Bulkhead.Main | Bulkhead.Extreme => new List<Bulkhead>
+            {
+                Bulkhead.Main,
+                Bulkhead.Extreme
+            },
+            Bulkhead.Main | Bulkhead.Overload => new List<Bulkhead>
+            {
+                Bulkhead.Main,
+                Bulkhead.Overload
+            },
+            Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => new List<Bulkhead>
+            {
+                Bulkhead.Main,
+                Bulkhead.Extreme,
+                Bulkhead.Overload
+            },
+
+            _ => new List<Bulkhead>()
+        };
+
+        var prev = elevatorDrop;
+        Zone nextZone = elevatorDropZone;
+
+        for (int i = 0; i < minimumZones; i++)
+        {
+            var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
+            var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
+            nextZone = new Zone(level.Tier)
+            {
+                Coverage = CoverageMinMax.GenNormalSize(),
+                LightSettings = Lights.GenRandomLight(),
+            };
+            nextZone.RollFog(level);
+
+            level.Planner.Connect(prev, next);
+            nextZone = level.Planner.AddZone(next, nextZone);
+
+            // Place the first zones of the connecting bulkhead zones, so we can build from
+            // them later.
+            InitializeBulkheadArea(level, Generator.Draw(toPlace), next);
+
+            prev = next;
+        }
+
+        // The final area also needs to be placed
+        InitializeBulkheadArea(level, Generator.Draw(toPlace), prev);
     }
 
     /// <summary>
     /// Generates compact starting areas for 2x bulkhead entrances from the same zone.
     /// </summary>
-    /// <param name="level"></param>
-    private void BuildStartingArea_2xBulkheadHub(Level level)
+    private void BuildStartingArea_2xBulkheadHub()
     {
         // Add the first zone.
         var elevatorDrop = new ZoneNode(
@@ -338,8 +323,7 @@ public partial record LevelLayout
     /// <summary>
     /// Generates compact starting areas for 3x bulkhead entrances from the same zone.
     /// </summary>
-    /// <param name="level"></param>
-    private void BuildStartingArea_3xBulkheadHub(Level level)
+    private void BuildStartingArea_3xBulkheadHub()
     {
         // Add the first zone.
         var elevatorDrop = new ZoneNode(
@@ -411,8 +395,7 @@ public partial record LevelLayout
     ///
     /// The bulkhead for each next zone can be placed _anywhere_ in the preceding bulkhead.
     /// </summary>
-    /// <param name="level"></param>
-    private void BuildStartingArea_SingleChain(Level level)
+    private void BuildStartingArea_SingleChain()
     {
         var (elevator, elevatorZone) = CreateElevatorZone();
 

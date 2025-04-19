@@ -765,7 +765,7 @@ public partial record LevelLayout : DataBlock
             Plugin.Logger.LogDebug($" -- Retrieve Item(s) = {objective.RetrieveItems.First()}");
 
         if (director.Bulkhead == Bulkhead.Main)
-            layout.BuildStartingArea(level, director);
+            layout.BuildStartingArea(director);
 
         // Use the helper method to get the first starting zone. This will also initialize it if
         // the first zone hasn't been set up yet
