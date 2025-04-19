@@ -697,39 +697,6 @@ public partial record LevelLayout : DataBlock
         };
 
     /// <summary>
-    ///
-    /// </summary>
-    /// <param name="level"></param>
-    /// <param name="director"></param>
-    /// <param name="objective"></param>
-    /// <returns></returns>
-    public static LevelLayout PreBuild(Level level,
-        BuildDirector director,
-        WardenObjective objective)
-    {
-        var direction = level.Settings.GetDirections(director.Bulkhead);
-        var layout = new LevelLayout(level, director, level.Settings, level.Planner)
-        {
-            Name = $"{level.Tier}{level.Index} {level.Name} {director.Bulkhead}",
-            ZoneAliasStart = level.GetZoneAliasStart(director.Bulkhead),
-            direction = direction
-        };
-
-        director.GenZones();
-
-        var puzzlePack = ChainedPuzzle.BuildPack(level.Tier, level.Settings);
-        var wavePopulationPack = WavePopulation.BuildPack(level.Tier, level.Settings);
-        var waveSettingsPack = WaveSettings.BuildPack(level.Tier);
-
-        Plugin.Logger.LogDebug($"Building layout ({layout.Name}), Objective = {objective.Type}");
-
-        if (objective.Type == WardenObjectiveType.RetrieveBigItems)
-            Plugin.Logger.LogDebug($" -- Retrieve Item(s) = {objective.RetrieveItems.First()}");
-
-        return layout;
-    }
-
-    /// <summary>
     /// Builds the main level
     ///
     /// Objective is not a fully initialized objective, it is a pre-built objective with just
