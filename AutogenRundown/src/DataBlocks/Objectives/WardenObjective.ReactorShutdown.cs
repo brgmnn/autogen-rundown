@@ -208,10 +208,7 @@ public partial record WardenObjective
                     }),
 
                     // This is the boss bait scan
-                    (1.0, ChainedPuzzle.StealthScan5),
-
-                    // Tiny chance they get a free scan instead of the boss bait
-                    (0.25, ChainedPuzzle.StealthScan4)
+                    (1.0, ChainedPuzzle.StealthScan5)
                 });
 
                 // We only append the boss events if it's the boss scan
@@ -304,10 +301,7 @@ public partial record WardenObjective
                     }),
 
                     // This is the boss bait scan
-                    (1.0, ChainedPuzzle.StealthScan5),
-
-                    // Tiny chance they get a free scan instead of the boss bait
-                    (0.25, ChainedPuzzle.StealthScan4)
+                    (1.0, ChainedPuzzle.StealthScan5)
                 });
 
                 // We only append the boss events if it's the boss scan
@@ -415,10 +409,7 @@ public partial record WardenObjective
                     }),
 
                     // This is the boss bait scan
-                    (1.0, ChainedPuzzle.StealthScan5),
-
-                    // Tiny chance they get a free scan instead of the boss bait
-                    (0.25, ChainedPuzzle.StealthScan4)
+                    (1.0, ChainedPuzzle.StealthScan5)
                 });
 
                 // We only append the boss events if it's the boss scan
@@ -543,10 +534,7 @@ public partial record WardenObjective
                     }),
 
                     // This is the boss bait scan
-                    (1.0, ChainedPuzzle.StealthScan5),
-
-                    // Tiny chance they get a free scan instead of the boss bait
-                    (0.25, ChainedPuzzle.StealthScan4)
+                    (1.0, ChainedPuzzle.StealthScan5)
                 });
 
                 // We only append the boss events if it's the boss scan
@@ -676,9 +664,6 @@ public partial record WardenObjective
 
                     // This is the boss bait scan
                     (1.0, ChainedPuzzle.StealthScan5),
-
-                    // Tiny chance they get a free scan instead of the boss bait
-                    (0.25, ChainedPuzzle.StealthScan4)
                 });
 
                 // We only append the boss events if it's the boss scan
