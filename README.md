@@ -44,6 +44,8 @@ Monthly April
   [ ] B1 Secondary (Cryo) - No exit alarm
   [ ] C4 - Security sensors spawn LOADS of snatchers
   [ ] E1 - Maybe a bit too easy?
+  [ ] D1 - Activate small HSU doesn't require the objective to exit
+      - Can we exclude double mother / double tank from first zone
 
 Monthly March
   * March 27th
@@ -69,6 +71,27 @@ Monthly Feb
 
 Missing tiles to add
   * Add R8A1 garden hub tile to hubs
+
+
+Enemies:
+  A:
+    * Baseline
+  B:
+    * Baseline
+  C:
+    * Baseline
+    * Chargers
+    * Nightmares
+  D:
+    * Baseline
+    * Chargers
+    * Shadows
+    * Nightmares
+  E:
+    * Baseline
+    * Chargers
+    * Shadows
+    * Nightmares
 
 -->
 

@@ -90,6 +90,8 @@ public class LevelSettings
     /// </summary>
     public Bulkhead Bulkheads { get; set; } = Bulkhead.Main;
 
+    public string BulkheadStrategy { get; set; } = "default";
+
     public Dictionary<Bulkhead, ZoneBuildExpansion> Directions { get; private set; }
         = new Dictionary<Bulkhead, ZoneBuildExpansion>();
 

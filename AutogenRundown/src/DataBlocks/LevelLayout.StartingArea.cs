@@ -7,9 +7,6 @@ namespace AutogenRundown.DataBlocks;
 
 public partial record LevelLayout
 {
-    [JsonIgnore]
-    private string Strategy { get; set; } = "default";
-
     /// <summary>
     /// Connects the first bulkhead zone to a zone in this layout
     /// </summary>
@@ -112,29 +109,37 @@ public partial record LevelLayout
             _ => new List<Bulkhead>()
         };
 
-        // What bulkheads this level has
-        var bulkheads = level.Settings.Bulkheads;
-
         // Options for starting areas
-        // TODO: add default in always as an option after we test
-        var options = new List<(double, string)>
+        var options = level.Settings.Bulkheads switch
         {
-            // (1.0, "default_start_area"),
-            (1.0, "single_chain")
-            // (1.0, "3x_bulkhead_hub")
+            Bulkhead.Main => new List<(double, string)>
+            {
+                (0.5, "default")
+            },
+
+            Bulkhead.Main | Bulkhead.Extreme => new List<(double, string)>
+            {
+                (0.5, "default"),
+                (0.5, "2x_bulkhead_hub")
+            },
+            Bulkhead.Main | Bulkhead.Overload => new List<(double, string)>
+            {
+                (0.5, "default"),
+                (0.5, "2x_bulkhead_hub")
+            },
+
+            Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => new List<(double, string)>
+            {
+                (0.1, "default"),
+                (0.2, "3x_bulkhead_hub"),
+                (0.7, "single_chain")
+            },
         };
 
-        // if (bulkheads.HasFlag(Bulkhead.Extreme) ^ bulkheads.HasFlag(Bulkhead.Overload))
-        //     options.Add((2.0, "2x_bulkhead_hub"));
-        // else if (bulkheads.HasFlag(Bulkhead.PrisonerEfficiency))
-        //     options.Add((2.0, "3x_bulkhead_hub"));
-        // else
-        //     options.Add((1.0, "default"));
+        level.Settings.BulkheadStrategy = Generator.Select(options);
+        Plugin.Logger.LogDebug($"StartingArea strategy = {level.Settings.BulkheadStrategy}");
 
-        Strategy = Generator.Select(options);
-        Plugin.Logger.LogDebug($"StartingArea strategy = {Strategy}");
-
-        switch (Strategy)
+        switch (level.Settings.BulkheadStrategy)
         {
             case "2x_bulkhead_hub":
             {
@@ -215,7 +220,7 @@ public partial record LevelLayout
     }
 
     /// <summary>
-    /// Get's the first starting zone
+    /// Gets the first starting zone
     /// </summary>
     /// <param name="bulkhead"></param>
     /// <returns></returns>
@@ -227,7 +232,7 @@ public partial record LevelLayout
             return ((ZoneNode)existing, level.Planner.GetZone((ZoneNode)existing)!);
 
         // There just isn't any zone for this bulkhead, so we must add the first zone
-        switch (Strategy)
+        switch (level.Settings.BulkheadStrategy)
         {
             case "single_chain":
             {
@@ -271,10 +276,20 @@ public partial record LevelLayout
         return (node, zone);
     }
 
-    /**
-     * Generates compact starting areas for 2x bulkhead entrances from the same zone.
-     */
-    private void BuildStartingArea_2xBulkheadHub(Level level, BuildDirector director)
+    #region Area builders
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="level"></param>
+    private void BuildStartingArea_Default(Level level)
+    {
+    }
+
+    /// <summary>
+    /// Generates compact starting areas for 2x bulkhead entrances from the same zone.
+    /// </summary>
+    /// <param name="level"></param>
+    private void BuildStartingArea_2xBulkheadHub(Level level)
     {
         // Add the first zone.
         var elevatorDrop = new ZoneNode(
@@ -320,10 +335,11 @@ public partial record LevelLayout
         InitializeBulkheadArea(level, secondBulkhead, elevatorDrop);
     }
 
-    /**
-     * Generates compact starting areas for 3x bulkhead entrances from the same zone.
-     */
-    private void BuildStartingArea_3xBulkheadHub(Level level, BuildDirector director)
+    /// <summary>
+    /// Generates compact starting areas for 3x bulkhead entrances from the same zone.
+    /// </summary>
+    /// <param name="level"></param>
+    private void BuildStartingArea_3xBulkheadHub(Level level)
     {
         // Add the first zone.
         var elevatorDrop = new ZoneNode(
@@ -396,25 +412,24 @@ public partial record LevelLayout
     /// The bulkhead for each next zone can be placed _anywhere_ in the preceding bulkhead.
     /// </summary>
     /// <param name="level"></param>
-    /// <param name="director"></param>
-    private void BuildStartingArea_SingleChain(Level level, BuildDirector director)
+    private void BuildStartingArea_SingleChain(Level level)
     {
         var (elevator, elevatorZone) = CreateElevatorZone();
 
-        var requiredOpenZones = level.Settings.Bulkheads switch
-        {
-            Bulkhead.Main => 0,
-            Bulkhead.Main | Bulkhead.Extreme => 1,
-            Bulkhead.Main | Bulkhead.Overload => 1,
-            Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => 2,
-            _ => 0
-        };
+        // var requiredOpenZones = level.Settings.Bulkheads switch
+        // {
+        //     Bulkhead.Main => 0,
+        //     Bulkhead.Main | Bulkhead.Extreme => 1,
+        //     Bulkhead.Main | Bulkhead.Overload => 1,
+        //     Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => 2,
+        //     _ => 1
+        // };
 
         switch (level.Tier)
         {
             default:
             {
-                var nodes = AddBranch_Forward(elevator, requiredOpenZones);
+                var nodes = AddBranch_Forward(elevator, 1);
 
                 // Set all of these nodes as starting area nodes
                 foreach (var node in nodes)
@@ -423,4 +438,5 @@ public partial record LevelLayout
             }
         }
     }
+    #endregion
 }

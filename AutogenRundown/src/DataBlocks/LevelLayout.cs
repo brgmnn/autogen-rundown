@@ -125,7 +125,7 @@ public partial record LevelLayout : DataBlock
                 (1.0, 1, VanillaEnemyGroup.BloodDoor_Shadows_Easy),
                 (1.0, 2, VanillaEnemyGroup.BloodDoor_BossMother),
 
-                (withInfection ? 10.0 : 0.0, 3, (VanillaEnemyGroup)EnemyGroup.BloodDoor_HybridInfected_Hard.PersistentId)
+                (withInfection ? 10.0 : 1.0, 2, (VanillaEnemyGroup)EnemyGroup.BloodDoor_HybridInfected_Hard.PersistentId)
             },
 
             _ => new List<(double, int, VanillaEnemyGroup)>()
@@ -163,7 +163,7 @@ public partial record LevelLayout : DataBlock
                 (1.0, 1, VanillaEnemyGroup.BloodDoor_BossMother),
                 (1.0, 1, VanillaEnemyGroup.BloodDoor_Pouncers),
 
-                (withInfection ? 5.0 : 0.0, 1, (VanillaEnemyGroup)EnemyGroup.BloodDoor_HybridInfected_Hard.PersistentId)
+                (withInfection ? 5.0 : 1.0, 1, (VanillaEnemyGroup)EnemyGroup.BloodDoor_HybridInfected_Hard.PersistentId)
             },
 
             "E" => new List<(double, int, VanillaEnemyGroup)>
@@ -177,7 +177,7 @@ public partial record LevelLayout : DataBlock
                 (1.0, 1, VanillaEnemyGroup.BloodDoor_BossMother),
                 (1.0, 1, VanillaEnemyGroup.BloodDoor_Pouncers),
 
-                (withInfection ? 10.0 : 0.0, 2, (VanillaEnemyGroup)EnemyGroup.BloodDoor_HybridInfected_Hard.PersistentId)
+                (withInfection ? 10.0 : 1.0, 2, (VanillaEnemyGroup)EnemyGroup.BloodDoor_HybridInfected_Hard.PersistentId)
             },
 
             _ => new List<(double, int, VanillaEnemyGroup)>()
