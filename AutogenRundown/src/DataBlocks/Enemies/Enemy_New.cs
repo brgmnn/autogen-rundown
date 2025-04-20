@@ -146,6 +146,12 @@ public record Enemy_New : DataBlock
     /// </summary>
     public static Enemy_New HybridInfected { get; set; } = new() { PersistentId = 0 };
 
+
+    /// <summary>
+    /// Giant nightmare striker
+    /// </summary>
+    public static Enemy_New NightmareGiant { get; set; } = new() { PersistentId = 0 };
+
     #endregion
     #endregion
 
@@ -229,6 +235,7 @@ public record Enemy_New : DataBlock
 
         PouncerShadow = Duplicate(Pouncer);
         HybridInfected = Duplicate(Hybrid);
+        NightmareGiant = Duplicate(NightmareStriker);
 
         #region MOD: ExtraEnemyCustomization (EEC)
         EnemyCustomization.Setup();
@@ -418,6 +425,12 @@ public record Enemy_New : DataBlock
                     }
                 });
         }
+        #endregion
+
+        #region Nightmare Striker
+
+
+
         #endregion
 
         #endregion

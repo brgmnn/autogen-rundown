@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
+using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
@@ -1141,9 +1142,14 @@ public class Level
             // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
 
             elevatorDropZone.EnemySpawningInZone.Add(
-                EnemySpawningData.HybridInfected with { Points = 4 });
-            elevatorDropZone.EnemySpawningInZone.Add(
-                EnemySpawningData.Hybrid with { Points = 4 });
+                EnemySpawningData.NightmareGiant with { Points = 4 });
+
+            elevatorDropZone.EnemySpawningInZone.Add(new EnemySpawningData
+            {
+                GroupType = EnemyGroupType.Hibernate,
+                Difficulty = (uint)Enemy.ChargerGiant,
+                Points = 4
+            });
 
             for (var z = 0; z < forwardZones; z++)
             {
