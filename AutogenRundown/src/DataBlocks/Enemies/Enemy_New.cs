@@ -482,7 +482,7 @@ public record Enemy_New : DataBlock
                     ChestScale = new Vector3 { X = 1.05, Y = 1.05, Z = 1.05 },
                     ArmScale = new Vector3 { X = 1.0, Y = 1.0, Z = 1.0 },
                     LegScale = new Vector3 { X = 1.05, Y = 1.05, Z = 1.05 },
-                    SizeRange = new Vector2 { X = 1.9, Y = 1.9 }
+                    SizeRange = new Vector2 { X = 1.9, Y = 2.0 }
                 }
             };
         }
