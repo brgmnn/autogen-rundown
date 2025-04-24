@@ -26,6 +26,8 @@ public static class Bins
         = new BlocksBin<EnemyMovement>();
     public static BlocksBin<EnemyPopulation> EnemyPopulations { get; private set; }
         = new BlocksBin<EnemyPopulation>();
+    public static BlocksBin<EnemySFX> EnemySFXs { get; private set; }
+        = new BlocksBin<EnemySFX>();
     public static BlocksBin<ExpeditionBalance> ExpeditionBalances { get; private set; }
         = new BlocksBin<ExpeditionBalance>();
     public static BlocksBin<Fog> Fogs { get; private set; }
@@ -58,6 +60,7 @@ public static class Bins
 
         Enemies.EnemyBalancing.Setup();
         EnemyMovement.Setup();
+        EnemySFX.Setup();
         Enemy_New.Setup();
         EnemyGroup.Setup();
         EnemyPopulation.Setup();
@@ -93,6 +96,7 @@ public static class Bins
         EnemyGroups.Save("EnemyGroup");
         EnemyMovements.Save("EnemyMovement");
         EnemyPopulations.Save("EnemyPopulation");
+        EnemySFXs.Save("EnemySFX");
         ExpeditionBalances.Save("ExpeditionBalance");
         Fogs.Save("FogSettings");
         GameSetups.Save("GameSetup");

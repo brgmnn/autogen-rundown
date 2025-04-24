@@ -28,7 +28,7 @@ public record Enemy_New : DataBlock
     public int BehaviorDataId { get; set; }
     public uint MovementDataId { get; set; }
     public uint BalancingDataId { get; set; }
-    public int SFXDataId { get; set; }
+    public uint SFXDataId { get; set; }
     public JArray ArenaDimensions { get; set; } = new();
     public JArray LinkedSlaveModels { get; set; } = new();
     public int InternalMaterial { get; set; }
@@ -448,6 +448,7 @@ public record Enemy_New : DataBlock
             NightmareGiant.MovementDataId = EnemyMovement.NightmareGiant.PersistentId;
             NightmareGiant.BalancingDataId = EnemyBalancing.NightmareGiant.PersistentId;
             NightmareGiant.BehaviorDataId = 28; // Giant / Giant Charger
+            NightmareGiant.SFXDataId = EnemySFX.NightmareGiant.PersistentId;
             NightmareGiant.Abilities = new List<AiAbility>
             {
                 new ()
