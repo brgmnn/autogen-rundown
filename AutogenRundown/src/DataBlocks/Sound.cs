@@ -68,5 +68,9 @@ public enum Sound : uint
 
     PouncerSpawnGrowl = 3503733109,
     TankRoar = 106273434,
+
+    EnemyHeartbeat = 2209321909,
+    EnemyHeartbeatLarge = 3978814126
+
     #endregion
 }

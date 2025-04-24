@@ -94,7 +94,7 @@ public record EnemySFX : DataBlock
         Walk = 1201976284,
         Run = 1727064594,
         ClimbLadder = 1923878719,
-        HeartbeatPulse = 2209321909,
+        HeartbeatPulse = (uint)Sound.EnemyHeartbeatLarge, // 2209321909, // From Giant Striker
         HibernateIdle = 36402231,
         HibernateWakeUp = 3595781181,
         HibernateDie = 3356588661,
