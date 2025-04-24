@@ -1,9 +1,11 @@
 ﻿using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Abilities;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models;
+using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models.Bones;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models.Glows;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models.Materials;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Projectiles;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.Enemies;
@@ -21,18 +23,20 @@ public record Enemy_New : DataBlock
     public int AssetBundle { get; set; }
     public int BundleShard { get; set; }
     public List<string> BasePrefabs { get; set; } = new();
-    public JArray ModelDatas { get; set; } = new();
+    public List<ModelData> ModelDatas { get; set; } = new();
     public int DetectionDataId { get; set; }
     public int BehaviorDataId { get; set; }
-    public int MovementDataId { get; set; }
-    public int BalancingDataId { get; set; }
+    public uint MovementDataId { get; set; }
+    public uint BalancingDataId { get; set; }
     public int SFXDataId { get; set; }
     public JArray ArenaDimensions { get; set; } = new();
     public JArray LinkedSlaveModels { get; set; } = new();
     public int InternalMaterial { get; set; }
     public bool isCoccoon { get; set; }
     public int EnemySpottedDialogId { get; set; }
-    public JArray AI_Abilities { get; set; } = new();
+
+    [JsonProperty("AI_Abilities")]
+    public List<AiAbility> Abilities { get; set; } = new();
 
     #endregion
 
@@ -159,10 +163,14 @@ public record Enemy_New : DataBlock
         : base(Generator.GetPersistentId(offsets))
     { }
 
+    // TODO: this doesn't seem to properly duplicate. ModelData's seem shared
     public static Enemy_New Duplicate(Enemy_New other)
     {
         var dupe = other with
         {
+            BasePrefabs = new List<string>(other.BasePrefabs),
+            ModelDatas = new List<ModelData>(other.ModelDatas),
+            Abilities = new List<AiAbility>(other.Abilities),
             PersistentId = Generator.GetPersistentId(PidOffsets.Enemy)
         };
 
@@ -234,8 +242,13 @@ public record Enemy_New : DataBlock
         #endregion
 
         PouncerShadow = Duplicate(Pouncer);
+        PouncerShadow.Name = "Shadow_Pouncer";
+
         HybridInfected = Duplicate(Hybrid);
+        HybridInfected.Name = "Hybrid_Infected";
+
         NightmareGiant = Duplicate(NightmareStriker);
+        NightmareGiant.Name = "Nightmare_Giant2";
 
         #region MOD: ExtraEnemyCustomization (EEC)
         EnemyCustomization.Setup();
@@ -282,7 +295,7 @@ public record Enemy_New : DataBlock
             });
 
         // Remove the vanilla baby births. We override it with our own settings
-        MegaMother.AI_Abilities.RemoveAt(0);
+        MegaMother.Abilities.RemoveAt(0);
 
         #endregion
         #endregion
@@ -428,9 +441,50 @@ public record Enemy_New : DataBlock
         #endregion
 
         #region Nightmare Striker
-
-
-
+        /*
+         *
+         */
+        {
+            NightmareGiant.MovementDataId = EnemyMovement.NightmareGiant.PersistentId;
+            NightmareGiant.BalancingDataId = EnemyBalancing.NightmareGiant.PersistentId;
+            NightmareGiant.BehaviorDataId = 28; // Giant / Giant Charger
+            NightmareGiant.Abilities = new List<AiAbility>
+            {
+                new ()
+                {
+                    AbilityPrefab = "Assets/AssetPrefabs/Characters/Enemies/Abilities/EAB_StrikerMelee.prefab",
+                    AbilityType = 1,
+                    Cooldown = 0.8
+                },
+                new()
+                {
+                    AbilityPrefab = "Assets/AssetPrefabs/Characters/Enemies/Abilities/EAB_DoorBreakerStriker.prefab",
+                    AbilityType = 8,
+                    Cooldown = 1.0
+                },
+                new()
+                {
+                    AbilityPrefab = "Assets/AssetPrefabs/Characters/Enemies/Abilities/EAB_StrikerBigTentacle.prefab",
+                    AbilityType = 2,
+                    Cooldown = 10.0
+                }
+            };
+            NightmareGiant.ModelDatas = new List<ModelData>
+            {
+                new()
+                {
+                    ModelFile = "Assets/AssetPrefabs/CharacterBuilder/Enemies/Striker/Striker_Berserk_CB.prefab",
+                    ModelCustomization =
+                        "Assets/AssetPrefabs/CharacterBuilder/Enemies/Striker/Customization_StrikerBerserk.prefab",
+                    NeckScale = Vector3.Zero(),
+                    HeadScale = Vector3.Zero(),
+                    ChestScale = new Vector3 { X = 1.05, Y = 1.05, Z = 1.05 },
+                    ArmScale = new Vector3 { X = 1.0, Y = 1.0, Z = 1.0 },
+                    LegScale = new Vector3 { X = 1.05, Y = 1.05, Z = 1.05 },
+                    SizeRange = new Vector2 { X = 1.9, Y = 1.9 }
+                }
+            };
+        }
         #endregion
 
         #endregion

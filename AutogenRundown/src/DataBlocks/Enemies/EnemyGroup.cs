@@ -131,6 +131,7 @@ public record EnemyGroup : DataBlock
             (EnemyRole.Ranged, Enemy.Shooter, 6.0),
             (EnemyRole.Ranged, Enemy.Shooter, 10.0),
 
+            // Chargers
             (EnemyRole.Lurker, Enemy.Charger, 4.0),
             (EnemyRole.Lurker, Enemy.Charger, 8.0),
             (EnemyRole.Lurker, Enemy.Charger, 10.0),
@@ -139,6 +140,9 @@ public record EnemyGroup : DataBlock
             (EnemyRole.Melee, Enemy.Shadow, 4.0),
             (EnemyRole.Melee, Enemy.Shadow, 6.0),
             (EnemyRole.Melee, Enemy.Shadow, 10.0),
+
+            // Nightmares
+            (EnemyRole.Melee, Enemy.NightmareStriker, 4.0),
 
             // Giants always spawn in pairs
             (EnemyRole.Melee,  Enemy.StrikerGiant, 8.0),

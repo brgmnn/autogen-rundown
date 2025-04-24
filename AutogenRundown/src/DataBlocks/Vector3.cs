@@ -4,7 +4,7 @@ namespace AutogenRundown.DataBlocks;
 
 public class Vector3
 {
-    private System.Numerics.Vector3 vec = new System.Numerics.Vector3 { X = 0.0f, Y = 0.0f, Z = 0.0f };
+    private System.Numerics.Vector3 vec = new() { X = 0.0f, Y = 0.0f, Z = 0.0f };
 
     #region Input values
     [JsonProperty("x")]
@@ -24,4 +24,8 @@ public class Vector3
     [JsonProperty("sqrMagnitude")]
     public double SqrMagnitude { get => vec.LengthSquared(); }
     #endregion
+
+    public static Vector3 Zero() => new() { X = 0, Y = 0, Z = 0 };
+
+    public static Vector3 One() => new() { X = 0, Y = 0, Z = 0 };
 }

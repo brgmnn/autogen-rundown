@@ -26,6 +26,12 @@ public class Model
     [JsonProperty("GlowCustom")]
     public ICollection<Glow> Glows { get; set; } = new List<Glow>();
 
+    /// <summary>
+    /// Body part transformation
+    /// </summary>
+    [JsonProperty("BoneCustom")]
+    public ICollection<BoneCustom> Bones { get; set; } = new List<BoneCustom>();
+
     #endregion
 
     /// <summary>

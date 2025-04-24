@@ -26,7 +26,7 @@ public class CoverageMinMax
         (double)CoverageSize.Huge
     };
 
-    private Vector2 vec = new Vector2 { X = 0.0f, Y = 0.0f };
+    private System.Numerics.Vector2 vec = new() { X = 0.0f, Y = 0.0f };
 
     #region Input values
     /// <summary>
@@ -50,7 +50,7 @@ public class CoverageMinMax
     {
         get
         {
-            var normal = Vector2.Normalize(vec);
+            var normal = System.Numerics.Vector2.Normalize(vec);
 
             return new JObject
             {

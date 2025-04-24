@@ -18,8 +18,12 @@ public static class Bins
         = new BlocksBin<Dimension>();
     public static BlocksBin<Enemy_New> Enemy { get; private set; }
         = new BlocksBin<Enemy_New>();
+    public static BlocksBin<EnemyBalancing> EnemyBalancing { get; private set; }
+        = new BlocksBin<EnemyBalancing>();
     public static BlocksBin<EnemyGroup> EnemyGroups { get; private set; }
         = new BlocksBin<EnemyGroup>();
+    public static BlocksBin<EnemyMovement> EnemyMovements { get; private set; }
+        = new BlocksBin<EnemyMovement>();
     public static BlocksBin<EnemyPopulation> EnemyPopulations { get; private set; }
         = new BlocksBin<EnemyPopulation>();
     public static BlocksBin<ExpeditionBalance> ExpeditionBalances { get; private set; }
@@ -52,6 +56,8 @@ public static class Bins
         Text.Setup();
         Text.SaveStatic();
 
+        Enemies.EnemyBalancing.Setup();
+        EnemyMovement.Setup();
         Enemy_New.Setup();
         EnemyGroup.Setup();
         EnemyPopulation.Setup();
@@ -83,7 +89,9 @@ public static class Bins
         ConsumableDistributions.Save("ConsumableDistribution");
         Dimensions.Save("Dimension");
         Enemy.Save("Enemy");
+        EnemyBalancing.Save("EnemyBalancing");
         EnemyGroups.Save("EnemyGroup");
+        EnemyMovements.Save("EnemyMovement");
         EnemyPopulations.Save("EnemyPopulation");
         ExpeditionBalances.Save("ExpeditionBalance");
         Fogs.Save("FogSettings");
