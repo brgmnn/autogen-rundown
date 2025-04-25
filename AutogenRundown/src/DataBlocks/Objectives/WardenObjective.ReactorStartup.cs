@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
 using AutogenRundown.Extensions;
 
@@ -23,6 +24,66 @@ namespace AutogenRundown.DataBlocks;
  */
 public partial record WardenObjective
 {
+    public void PreBuild_ReactorStartup(BuildDirector director, Level level)
+    {
+        ReactorStartupGetCodes = true;
+
+        // TODO: reduce
+        // Probably no more than 9 or 10 waves max. Base game doesn't do more than 10 and that's main only
+        var waveCount = (director.Tier, director.Bulkhead, level.Settings.Bulkheads) switch
+        {
+            // ("A", Bulkhead.Main, _                          ) => Generator.Random.Next(4, 5),
+            // ("A", _,             Bulkhead.PrisonerEfficiency) => Generator.Random.Next(3, 4),
+            // ("A", _,             _                          ) => Generator.Random.Next(3, 4),
+            ("A", Bulkhead.Main,     Bulkhead.Main              ) => 5,
+            ("A", Bulkhead.Main,     Bulkhead.PrisonerEfficiency) => 3,
+            ("A", Bulkhead.Main,     _                          ) => Generator.Between(4, 5),
+            ("A", Bulkhead.Extreme,  Bulkhead.PrisonerEfficiency) => 2,
+            ("A", Bulkhead.Extreme,  _                          ) => Generator.Between(2, 3),
+            ("A", Bulkhead.Overload, Bulkhead.PrisonerEfficiency) => 2,
+            ("A", Bulkhead.Overload, _                          ) => Generator.Between(2, 3),
+
+            ("B", Bulkhead.Main,     Bulkhead.Main              ) => Generator.Between(6, 7),
+            ("B", Bulkhead.Main,     Bulkhead.PrisonerEfficiency) => 4,
+            ("B", Bulkhead.Main,     _                          ) => Generator.Between(7, 8),
+            ("B", Bulkhead.Extreme,  Bulkhead.PrisonerEfficiency) => Generator.Between(8, 12),
+            ("B", Bulkhead.Extreme,  _                          ) => Generator.Between(8, 12),
+            ("B", Bulkhead.Overload, Bulkhead.PrisonerEfficiency) => Generator.Between(8, 12),
+            ("B", Bulkhead.Overload, _                          ) => Generator.Between(8, 12),
+
+            ("C", Bulkhead.Main,     Bulkhead.Main              ) => Generator.Between(7, 8),
+            ("C", Bulkhead.Main,     Bulkhead.PrisonerEfficiency) => 5,
+            ("C", Bulkhead.Main,     _                          ) => Generator.Between(7, 8),
+            ("C", Bulkhead.Extreme,  Bulkhead.PrisonerEfficiency) => Generator.Between(8, 12),
+            ("C", Bulkhead.Extreme,  _                          ) => Generator.Between(8, 12),
+            ("C", Bulkhead.Overload, Bulkhead.PrisonerEfficiency) => Generator.Between(8, 12),
+            ("C", Bulkhead.Overload, _                          ) => Generator.Between(8, 12),
+
+            ("D", Bulkhead.Main,     Bulkhead.Main              ) => Generator.Between(9, 10),
+            ("D", Bulkhead.Main,     Bulkhead.PrisonerEfficiency) => 6,
+            ("D", Bulkhead.Main,     _                          ) => Generator.Between(7, 8),
+            ("D", Bulkhead.Extreme,  Bulkhead.PrisonerEfficiency) => Generator.Between(8, 12),
+            ("D", Bulkhead.Extreme,  _                          ) => Generator.Between(8, 12),
+            ("D", Bulkhead.Overload, Bulkhead.PrisonerEfficiency) => Generator.Between(8, 12),
+            ("D", Bulkhead.Overload, _                          ) => Generator.Between(8, 12),
+
+
+            ("E", Bulkhead.Main,     Bulkhead.Main              ) => 10,
+            ("E", Bulkhead.Main,     Bulkhead.PrisonerEfficiency) => 5,
+            ("E", Bulkhead.Main,     _                          ) => Generator.Between(6, 7),
+            ("E", Bulkhead.Extreme,  Bulkhead.PrisonerEfficiency) => Generator.Between(3, 4),
+            ("E", Bulkhead.Extreme,  _                          ) => Generator.Between(4, 5),
+            ("E", Bulkhead.Overload, Bulkhead.PrisonerEfficiency) => Generator.Between(3, 4),
+            ("E", Bulkhead.Overload, _                          ) => Generator.Between(4, 5),
+            _ => 1
+        };
+
+        // Initialize the reactor Waves with the correct number of waves, these
+        // will be updated as we go.
+        for (var i = 0; i < waveCount; ++i)
+            ReactorWaves.Add(new ReactorWave());
+    }
+
     public void Build_ReactorStartup(BuildDirector director, Level level)
     {
         MainObjective = "Find the main reactor for the floor and make sure it is back online.";

@@ -62,7 +62,7 @@ public record class EnemyInfo
     public static readonly EnemyInfo HybridInfected        = new() { Role = EnemyRole.PureSneak, Enemy = (Enemy)Enemy_New.HybridInfected.PersistentId, Points = 4.0 };
     public static readonly EnemyInfo HybridInfected_Hunter = new() { Role = EnemyRole.Hunter,    Enemy = (Enemy)Enemy_New.HybridInfected.PersistentId, Points = 4.0 };
 
-    public static readonly EnemyInfo NightmareGiant      = new() { Role = EnemyRole.Melee, Enemy = (Enemy)Enemy_New.NightmareGiant.PersistentId, Points = 4.0  };
+    public static readonly EnemyInfo NightmareGiant      = new() { Role = EnemyRole.Melee, Enemy = (Enemy)Enemy_New.NightmareGiant.PersistentId, Points = 6.0  };
 
     #endregion
     #endregion

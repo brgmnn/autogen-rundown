@@ -368,23 +368,7 @@ public partial record class WardenObjective : DataBlock
         {
             case WardenObjectiveType.ReactorStartup:
             {
-                objective.ReactorStartupGetCodes = true;
-
-                var waveCount = director.Tier switch
-                {
-                    "A" => Generator.Random.Next(3, 4),
-                    "B" => Generator.Random.Next(4, 6),
-                    "C" => Generator.Random.Next(5, 7),
-                    "D" => Generator.Random.Next(8, 10),
-                    "E" => Generator.Random.Next(8, 12),
-                    _ => 1
-                };
-
-                // Initialize the reactor Waves with the correct number of waves, these
-                // will be updated as we go.
-                for (var i = 0; i < waveCount; ++i)
-                    objective.ReactorWaves.Add(new ReactorWave());
-
+                objective.PreBuild_ReactorStartup(director, level);
                 break;
             }
 

@@ -299,7 +299,8 @@ public record EnemyPopulation : DataBlock
         var nightmaresTierD = new List<(EnemyInfo, double)>
         {
             (EnemyInfo.NightmareStriker, 1.0),
-            (EnemyInfo.NightmareShooter, 1.0)
+            (EnemyInfo.NightmareShooter, 1.0),
+            (EnemyInfo.NightmareGiant, 0.2)
         };
 
         foreach (var (info, weight) in nightmaresTierD)
@@ -395,7 +396,8 @@ public record EnemyPopulation : DataBlock
         var nightmaresTierE = new List<(EnemyInfo, double)>
         {
             (EnemyInfo.NightmareStriker, 1.0),
-            (EnemyInfo.NightmareShooter, 1.0)
+            (EnemyInfo.NightmareShooter, 1.0),
+            (EnemyInfo.NightmareGiant, 0.2)
         };
 
         foreach (var (info, weight) in nightmaresTierE)
