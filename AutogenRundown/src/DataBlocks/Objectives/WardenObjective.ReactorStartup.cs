@@ -26,55 +26,50 @@ public partial record WardenObjective
 {
     public void PreBuild_ReactorStartup(BuildDirector director, Level level)
     {
-        ReactorStartupGetCodes = true;
+        // Determine if we should make the users get codes
+        ReactorStartupGetCodes = (director.Tier, director.Bulkhead, level.Settings.Bulkheads) switch
+        {
+            (_, _, _) => true,
+        };
 
         // TODO: reduce
         // Probably no more than 9 or 10 waves max. Base game doesn't do more than 10 and that's main only
         var waveCount = (director.Tier, director.Bulkhead, level.Settings.Bulkheads) switch
         {
-            // ("A", Bulkhead.Main, _                          ) => Generator.Random.Next(4, 5),
-            // ("A", _,             Bulkhead.PrisonerEfficiency) => Generator.Random.Next(3, 4),
-            // ("A", _,             _                          ) => Generator.Random.Next(3, 4),
             ("A", Bulkhead.Main,     Bulkhead.Main              ) => 5,
             ("A", Bulkhead.Main,     Bulkhead.PrisonerEfficiency) => 3,
             ("A", Bulkhead.Main,     _                          ) => Generator.Between(4, 5),
-            ("A", Bulkhead.Extreme,  Bulkhead.PrisonerEfficiency) => 2,
-            ("A", Bulkhead.Extreme,  _                          ) => Generator.Between(2, 3),
-            ("A", Bulkhead.Overload, Bulkhead.PrisonerEfficiency) => 2,
-            ("A", Bulkhead.Overload, _                          ) => Generator.Between(2, 3),
+            ("A", _,                 Bulkhead.PrisonerEfficiency) => 2,
+            ("A", _,                 _                          ) => 3,
 
             ("B", Bulkhead.Main,     Bulkhead.Main              ) => Generator.Between(6, 7),
             ("B", Bulkhead.Main,     Bulkhead.PrisonerEfficiency) => 4,
-            ("B", Bulkhead.Main,     _                          ) => Generator.Between(7, 8),
-            ("B", Bulkhead.Extreme,  Bulkhead.PrisonerEfficiency) => Generator.Between(8, 12),
-            ("B", Bulkhead.Extreme,  _                          ) => Generator.Between(8, 12),
-            ("B", Bulkhead.Overload, Bulkhead.PrisonerEfficiency) => Generator.Between(8, 12),
-            ("B", Bulkhead.Overload, _                          ) => Generator.Between(8, 12),
+            ("B", Bulkhead.Main,     _                          ) => Generator.Between(5, 6),
+            ("B", _,                 Bulkhead.PrisonerEfficiency) => 3,
+            ("B", Bulkhead.Overload, _                          ) => 4,
+            ("B", _,                 _                          ) => 3,
 
             ("C", Bulkhead.Main,     Bulkhead.Main              ) => Generator.Between(7, 8),
             ("C", Bulkhead.Main,     Bulkhead.PrisonerEfficiency) => 5,
-            ("C", Bulkhead.Main,     _                          ) => Generator.Between(7, 8),
-            ("C", Bulkhead.Extreme,  Bulkhead.PrisonerEfficiency) => Generator.Between(8, 12),
-            ("C", Bulkhead.Extreme,  _                          ) => Generator.Between(8, 12),
-            ("C", Bulkhead.Overload, Bulkhead.PrisonerEfficiency) => Generator.Between(8, 12),
-            ("C", Bulkhead.Overload, _                          ) => Generator.Between(8, 12),
+            ("C", Bulkhead.Main,     _                          ) => Generator.Between(6, 7),
+
+            ("C", Bulkhead.Extreme,  Bulkhead.PrisonerEfficiency) => Generator.Between(3, 4),
+            ("C", Bulkhead.Extreme,  _                          ) => Generator.Between(4, 5),
+            ("C", Bulkhead.Overload, Bulkhead.PrisonerEfficiency) => 4,
+            ("C", Bulkhead.Overload, _                          ) => 5,
 
             ("D", Bulkhead.Main,     Bulkhead.Main              ) => Generator.Between(9, 10),
-            ("D", Bulkhead.Main,     Bulkhead.PrisonerEfficiency) => 6,
+            ("D", Bulkhead.Main,     Bulkhead.PrisonerEfficiency) => 5,
             ("D", Bulkhead.Main,     _                          ) => Generator.Between(7, 8),
-            ("D", Bulkhead.Extreme,  Bulkhead.PrisonerEfficiency) => Generator.Between(8, 12),
-            ("D", Bulkhead.Extreme,  _                          ) => Generator.Between(8, 12),
-            ("D", Bulkhead.Overload, Bulkhead.PrisonerEfficiency) => Generator.Between(8, 12),
-            ("D", Bulkhead.Overload, _                          ) => Generator.Between(8, 12),
-
+            ("D", _,                 Bulkhead.PrisonerEfficiency) => 3,
+            ("D", Bulkhead.Extreme,  _                          ) => Generator.Between(3, 4),
+            ("D", Bulkhead.Overload, _                          ) => Generator.Between(4, 5),
 
             ("E", Bulkhead.Main,     Bulkhead.Main              ) => 10,
             ("E", Bulkhead.Main,     Bulkhead.PrisonerEfficiency) => 5,
             ("E", Bulkhead.Main,     _                          ) => Generator.Between(6, 7),
-            ("E", Bulkhead.Extreme,  Bulkhead.PrisonerEfficiency) => Generator.Between(3, 4),
-            ("E", Bulkhead.Extreme,  _                          ) => Generator.Between(4, 5),
-            ("E", Bulkhead.Overload, Bulkhead.PrisonerEfficiency) => Generator.Between(3, 4),
-            ("E", Bulkhead.Overload, _                          ) => Generator.Between(4, 5),
+            ("E", _,                 Bulkhead.PrisonerEfficiency) => Generator.Between(3, 4),
+            ("E", _,                 _                          ) => Generator.Between(4, 5),
             _ => 1
         };
 
