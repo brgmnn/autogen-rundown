@@ -92,6 +92,35 @@ public partial record WardenObjective
             _ => 1
         };
 
+        var fetchCount = (director.Tier, director.Bulkhead, waveCount) switch
+        {
+            ("A", Bulkhead.Main, >= 4) => 2,
+
+            ("B", Bulkhead.Main, >= 5) => 3,
+            ("B", Bulkhead.Main,  < 5) => 2,
+            ("B", _,             >= 4) => 2,
+            ("B", _,              < 4) => 1,
+
+            ("C", Bulkhead.Main, >= 7) => 4,
+            ("C", Bulkhead.Main,  < 7) => 3,
+            ("C", _,             >= 5) => 3,
+            ("C", _,              < 5) => 2,
+
+            ("D", Bulkhead.Main, >= 9) => 6,
+            ("D", Bulkhead.Main, >= 7) => 5,
+            ("D", Bulkhead.Main,  < 7) => 3,
+            ("D", _,             >= 4) => 2,
+            ("D", _,              < 4) => 1,
+
+            ("E", Bulkhead.Main,   10) => 6,
+            ("E", Bulkhead.Main, >= 6) => 4,
+            ("E", Bulkhead.Main,  < 6) => 3,
+            ("E", _,             >= 4) => 2,
+            ("E", _,              < 4) => 1,
+
+            _ => 1
+        };
+
         // Initialize the reactor Waves with the correct number of waves, these
         // will be updated as we go.
         for (var i = 0; i < waveCount; ++i)
