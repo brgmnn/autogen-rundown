@@ -29,11 +29,30 @@ public partial record WardenObjective
         // Determine if we should make the users get codes
         ReactorStartupGetCodes = (director.Tier, director.Bulkhead, level.Settings.Bulkheads) switch
         {
-            (_, _, _) => true,
+            ("A", Bulkhead.Main,     Bulkhead.Main              ) => true,
+            ("A", _,                 _                          ) => false,
+
+            ("B", _,                 Bulkhead.PrisonerEfficiency) => false,
+            ("B", Bulkhead.Main,     Bulkhead.Main              ) => true,
+            ("B", Bulkhead.Overload, _                          ) => Generator.Flip(0.6),
+            ("B", _,                 _                          ) => false,
+
+            ("C", _,                 Bulkhead.PrisonerEfficiency) => false,
+            ("C", Bulkhead.Main,     _                          ) => true,
+            ("C", Bulkhead.Extreme,  _                          ) => false,
+            ("C", Bulkhead.Overload, _                          ) => true,
+
+            ("D", Bulkhead.Main,     _                          ) => true,
+            ("D", _,                 Bulkhead.PrisonerEfficiency) => false,
+            ("D", Bulkhead.Extreme,  _                          ) => Generator.Flip(0.4),
+            ("D", Bulkhead.Overload, _                          ) => true,
+
+            // Always have codes on E-tier.
+            ("E", _, _) => true,
+
+            _ => false,
         };
 
-        // TODO: reduce
-        // Probably no more than 9 or 10 waves max. Base game doesn't do more than 10 and that's main only
         var waveCount = (director.Tier, director.Bulkhead, level.Settings.Bulkheads) switch
         {
             ("A", Bulkhead.Main,     Bulkhead.Main              ) => 5,

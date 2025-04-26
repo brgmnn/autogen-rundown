@@ -2,6 +2,14 @@
 
 public class ReactorWave
 {
+    #region Internal Properties
+
+    internal bool IsFetchWave { get; set; } = false;
+
+    #endregion
+
+    #region Properties
+
     public double Warmup { get; set; } = 90.0;
 
     public double WarmupFail { get; set; } = 20.0;
@@ -28,6 +36,8 @@ public class ReactorWave
     public List<ReactorEnemyWave> EnemyWaves { get; set; } = new();
 
     public List<WardenObjectiveEvent> Events { get; set; } = new();
+
+    #endregion
 
     /// <summary>
     /// Recalculates the wave duration as well as rel spawn times for waves.
