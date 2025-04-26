@@ -22,6 +22,10 @@ TODO:
   * Make extract scan short if there's no extract alarm (Don't do it just based on level tier)
   * Add a way to automatically install deps?
 
+2025_04_25
+  * E1: ~Error alarm turn off zone also disables the survival alarm?!~
+    * Edit: Actually it just hides the countdown
+
 Weekly 9-A1 bug:
   * Doesn't seem to be the chained puzzles.. Unclear for now
   * Disappears if I disable EITHER overload or secondary

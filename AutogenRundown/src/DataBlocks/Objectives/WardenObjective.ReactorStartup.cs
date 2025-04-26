@@ -496,7 +496,7 @@ public partial record WardenObjective
             _ => (1.4, 1.4, 1.4)
         };
 
-        var fetchWaves = ReactorWaves.TakeLast(ReactorStartup_FetchWaves).ToList();
+        var fetchWaves = ReactorWaves.Where(wave => wave.IsFetchWave).ToList();
 
         // Adjust verify time for reactor waves that require fetching codes.
         for (var b = 0; b < fetchWaves.Count; b++)

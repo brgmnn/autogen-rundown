@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Objectives.Reactor;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 
@@ -31,8 +32,8 @@ public partial record LevelLayout
             _ => 2
         };
 
-        var last = BuildBranch(start, preludeCount);
-        var reactor = BuildReactor(last);
+        var last = AddBranch(start, preludeCount).Last();
+        BuildReactor(last);
     }
 
     /// <summary>
@@ -46,15 +47,7 @@ public partial record LevelLayout
     {
         var reactor = BuildReactor(start);
 
-        var fetchCount = director.Tier switch
-        {
-            "A" => 1,
-            "B" => 2,
-            "C" => Generator.Random.Next(3, 4),
-            "D" => Generator.Random.Next(3, 5),
-            "E" => Generator.Random.Next(4, 6),
-            _ => 1
-        };
+        var fetchCount = objective.ReactorWaves.Count(wave => wave.IsFetchWave);
         var (branchMin, branchMax) = (director.Tier, fetchCount) switch
         {
             ("A", _) => (1, 1),
@@ -85,9 +78,7 @@ public partial record LevelLayout
         };
 
         objective.ReactorStartup_FetchWaves = fetchCount;
-        var fetchWaves = objective.ReactorWaves
-            .TakeLast(fetchCount)
-            .ToList();
+        var fetchWaves = objective.ReactorWaves.Where(wave => wave.IsFetchWave).ToList();
 
         for (var b = 0; b < fetchCount; b++)
         {

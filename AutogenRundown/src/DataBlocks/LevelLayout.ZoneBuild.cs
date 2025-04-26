@@ -46,7 +46,7 @@ public partial record LevelLayout
     /// <param name="zoneCount"></param>
     /// <param name="branch"></param>
     /// <returns>The last zone node in the branch</returns>
-    [Obsolete("Use and rename AddBranch instead")]
+    [Obsolete("Use AddBranch(base, count, branch) instead")]
     public ZoneNode BuildBranch(ZoneNode baseNode, int zoneCount, string branch = "primary")
     {
         var prev = baseNode;
