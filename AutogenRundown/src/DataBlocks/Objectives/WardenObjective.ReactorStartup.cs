@@ -125,6 +125,23 @@ public partial record WardenObjective
         // will be updated as we go.
         for (var i = 0; i < waveCount; ++i)
             ReactorWaves.Add(new ReactorWave());
+
+        if (!ReactorStartupGetCodes) return;
+
+        var candidateWaves = ReactorWaves.Skip(1).Take(ReactorWaves.Count - 2).ToList();
+
+        // Always assign the last reactor wave to be a fetch wave
+        ReactorWaves.Last().IsFetchWave = true;
+
+        for (var i = 0; i < fetchCount - 1; i++)
+        {
+            var wave = Generator.Draw(candidateWaves);
+
+            if (wave != null)
+                wave.IsFetchWave = true;
+        }
+
+        Plugin.Logger.LogWarning($"What are my reactor waves: [" + string.Join(", ", ReactorWaves.Select(wave => $"Wave {{ IsFetchWave = {wave.IsFetchWave} }}")) + "]");
     }
 
     public void Build_ReactorStartup(BuildDirector director, Level level)
