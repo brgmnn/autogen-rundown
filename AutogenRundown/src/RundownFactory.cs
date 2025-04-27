@@ -760,7 +760,7 @@ public static class RundownFactory
 
             var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
 
-            var withUnlocks = true;
+            var withUnlocks = false;
             #if DEBUG
             withUnlocks = false;
             #endif
