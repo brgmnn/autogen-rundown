@@ -8,7 +8,7 @@ public enum ReactorWaveSpawnType
     InElevatorZone = 1,
 }
 
-public record class ReactorEnemyWave
+public record ReactorEnemyWave
 {
     #region Preset waves
     public static ReactorEnemyWave Baseline_Easy = new()
