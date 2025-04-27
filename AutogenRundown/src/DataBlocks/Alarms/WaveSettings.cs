@@ -380,6 +380,12 @@ public record WaveSettings : DataBlock
         Bins.WaveSettings.AddBlock(Reactor_Easy);
         Bins.WaveSettings.AddBlock(Reactor_Medium);
         Bins.WaveSettings.AddBlock(Reactor_Hard);
+        Bins.WaveSettings.AddBlock(Reactor_VeryHard);
+
+        Bins.WaveSettings.AddBlock(Reactor_Surge_50pts);
+        Bins.WaveSettings.AddBlock(Reactor_Surge_80pts);
+        Bins.WaveSettings.AddBlock(Reactor_Surge_110pts);
+
         Bins.WaveSettings.AddBlock(ReactorChargers_Easy);
         Bins.WaveSettings.AddBlock(ReactorChargers_Hard);
         Bins.WaveSettings.AddBlock(ReactorHybrids_Medium);
@@ -927,6 +933,7 @@ public record WaveSettings : DataBlock
         PopulationPointsMinPerGroup = 5,
         PopulationPointsPerGroupStart = 5,
         PopulationPointsPerGroupEnd = 10,
+        WavePauseMax = 24,
         PopulationRampOverTime = 40
     };
 
@@ -945,6 +952,7 @@ public record WaveSettings : DataBlock
         PopulationPointsMinPerGroup = 5,
         PopulationPointsPerGroupStart = 5,
         PopulationPointsPerGroupEnd = 15,
+        WavePauseMax = 18,
         PopulationRampOverTime = 40
     };
 
@@ -963,8 +971,104 @@ public record WaveSettings : DataBlock
         PopulationPointsMinPerGroup = 5,
         PopulationPointsPerGroupStart = 5,
         PopulationPointsPerGroupEnd = 20,
+        WavePauseMax = 13,
         PopulationRampOverTime = 30
     };
+
+    public static WaveSettings Reactor_VeryHard = new WaveSettings
+    {
+        PopulationFilter =
+        {
+            Enemies.EnemyType.Standard,
+            Enemies.EnemyType.Special,
+            Enemies.EnemyType.MiniBoss
+        },
+
+        PopulationPointsTotal = 65,
+        PopulationPointsPerWaveStart = 30,
+        PopulationPointsPerWaveEnd = 35,
+        PopulationPointsMinPerGroup = 5,
+        PopulationPointsPerGroupStart = 5,
+        PopulationPointsPerGroupEnd = 20,
+        WavePauseMax = 9,
+        PopulationRampOverTime = 20
+    };
+    #endregion
+
+    #region Reactor Waves - Surge wave
+
+    public static WaveSettings Reactor_Surge_50pts = new WaveSettings
+    {
+        PopulationFilter =
+        {
+            Enemies.EnemyType.Standard,
+            Enemies.EnemyType.Special,
+            Enemies.EnemyType.MiniBoss
+        },
+        FilterType = PopulationFilterType.Include,
+
+        PopulationPointsTotal = 50,
+
+        PauseBeforeStart = 1.0,
+        PauseBetweenGroups = 3.0,
+        PopulationPointsPerWaveStart = 10_000,
+        PopulationPointsPerWaveEnd = 10_000,
+        PopulationPointsMinPerGroup = 2,
+        PopulationPointsPerGroupStart = 4,
+        PopulationPointsPerGroupEnd = 7,
+        PopulationRampOverTime = 0,
+
+        Name = "Surge"
+    };
+
+    public static WaveSettings Reactor_Surge_80pts = new WaveSettings
+    {
+        PopulationFilter =
+        {
+            Enemies.EnemyType.Standard,
+            Enemies.EnemyType.Special,
+            Enemies.EnemyType.MiniBoss
+        },
+        FilterType = PopulationFilterType.Include,
+
+        PopulationPointsTotal = 80,
+
+        PauseBeforeStart = 1.0,
+        PauseBetweenGroups = 3.0,
+        PopulationPointsPerWaveStart = 10_000,
+        PopulationPointsPerWaveEnd = 10_000,
+        PopulationPointsMinPerGroup = 2,
+        PopulationPointsPerGroupStart = 4,
+        PopulationPointsPerGroupEnd = 7,
+        PopulationRampOverTime = 0,
+
+        Name = "Surge"
+    };
+
+    public static WaveSettings Reactor_Surge_110pts = new WaveSettings
+    {
+        PopulationFilter =
+        {
+            Enemies.EnemyType.Standard,
+            Enemies.EnemyType.Special,
+            Enemies.EnemyType.MiniBoss
+        },
+        FilterType = PopulationFilterType.Include,
+
+        PopulationPointsTotal = 110,
+
+        PauseBeforeStart = 1.0,
+        PauseBetweenGroups = 3.0,
+        PopulationPointsPerWaveStart = 10_000,
+        PopulationPointsPerWaveEnd = 10_000,
+        PopulationPointsMinPerGroup = 2,
+        PopulationPointsPerGroupStart = 4,
+        PopulationPointsPerGroupEnd = 7,
+        PopulationRampOverTime = 0,
+
+        Name = "Surge"
+    };
+
     #endregion
 
     #region Reactor Waves -- Hybrids

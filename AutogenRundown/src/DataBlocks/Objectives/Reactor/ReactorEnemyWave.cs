@@ -103,6 +103,9 @@ public record ReactorEnemyWave
     };
     #endregion
 
+    #region Nightmare waves
+    #endregion
+
     #region Boss waves
     public static ReactorEnemyWave SingleMother = new()
     {

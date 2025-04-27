@@ -179,19 +179,21 @@ public partial record WardenObjective
             {
                 // First wave is always a softball wave
                 ("D", 0) => new() { ReactorEnemyWave.Baseline_Medium },
-                ("E", 0) => new() { ReactorEnemyWave.Baseline_Hard },
-                (_, 0) => new() { ReactorEnemyWave.Baseline_Easy },
+                // ("E", 0) => new() { ReactorEnemyWave.Baseline_Hard },
 
                 // TODO: BaselineMedium / Easy are far too easy alone
 
                 // A-Tier
                 // Should be relatively easy so the rest of the waves are medium.
-                ("A", >= 1) => new() { ReactorEnemyWave.Baseline_Medium },
 
-                // B-Tier
-                //
+                #region A-Tier
+                ("A", >= 1) => new() { ReactorEnemyWave.Baseline_Medium },
+                #endregion
+
+                #region B-Tier
                 ("B", >= 1 and < 4) => new() { ReactorEnemyWave.Baseline_Medium },
                 ("B", >= 4) => new() { ReactorEnemyWave.Baseline_Hard },
+                #endregion
 
                 #region C-Tier
                 ("C", >= 1 and < 3) => new() { ReactorEnemyWave.Baseline_Medium },
@@ -320,6 +322,19 @@ public partial record WardenObjective
                 #endregion
 
                 #region E-Tier
+                ("E", 0) => Generator.Select(new List<(double, List<ReactorEnemyWave>)>
+                    {
+                        (0.5, new()
+                        {
+                            new ()
+                            {
+                                WaveSettings = WaveSettings.Reactor_Surge_50pts.PersistentId,
+                                WavePopulation = WavePopulation.Baseline.PersistentId,
+                                Duration = 60
+                            }
+                        })
+                    }),
+
                 ("E", >= 1 and < 4) => Generator.Select(
                     new List<(double, List<ReactorEnemyWave>)>
                     {
@@ -398,6 +413,20 @@ public partial record WardenObjective
                         }),
                     }),
                 #endregion
+
+                // (_, 0) => new() { ReactorEnemyWave.Baseline_Hard },
+                (_, 0) => Generator.Select(new List<(double, List<ReactorEnemyWave>)>
+                {
+                    (0.5, new()
+                    {
+                        new ()
+                        {
+                            WaveSettings = WaveSettings.Reactor_Surge_50pts.PersistentId,
+                            WavePopulation = WavePopulation.Baseline.PersistentId,
+                            Duration = 60
+                        }
+                    })
+                }),
 
                 (_, _) => new() { ReactorEnemyWave.Baseline_Easy }
             };
