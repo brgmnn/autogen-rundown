@@ -544,10 +544,17 @@ public record Zone : DataBlock
 
             case Complex.Service:
             {
-                CustomGeomorph = "Assets/Prefabs/Geomorph/Service/geo_floodways_FA_reactor_01.prefab";
-                SubComplex = SubComplex.Floodways;
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                {
+                    // --- MOD Geomorphs ---
+                    // floweria
+                    (SubComplex.Floodways, "Assets/Prefabs/Geomorph/Service/geo_floodways_FA_reactor_01.prefab", new CoverageMinMax { Min = 40, Max = 40 }),
+
+                    // donan3967
+                    (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_reactor_ds_02.prefab", new CoverageMinMax { Min = 40, Max = 40 })
+                });
+
                 IgnoreRandomGeomorphRotation = true;
-                Coverage = new CoverageMinMax { Min = 40.0, Max = 40.0 };
                 break;
             }
         };

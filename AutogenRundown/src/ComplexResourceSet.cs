@@ -452,6 +452,21 @@ public class ComplexResourceSet
             SubComplex = SubComplex.Floodways,
             // Shard = 10
         });
+
+        // Another Floodways reactor, but a four-way hub this time. Multi-level. Also included is
+        // a version that's just a hub, with no reactor objective on it (exactly the same as
+        // below, but called geo_64x64_service_floodways_reactor_ds_02_justhub.prefab instead.)
+        resourceSet.AddPrefab(Complex.Service, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/geo_64x64_service_floodways_reactor_ds_02.prefab",
+            SubComplex = SubComplex.Floodways
+        });
+        // Just the hub version
+        resourceSet.AddPrefab(Complex.Service, "CustomGeomorphs_Objective_1x1", new Prefab()
+        {
+            Asset = "Assets/geo_64x64_service_floodways_reactor_ds_02_justhub.prefab",
+            SubComplex = SubComplex.Floodways
+        });
         #endregion
         #endregion
 
