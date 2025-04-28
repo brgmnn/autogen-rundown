@@ -328,8 +328,8 @@ public partial record WardenObjective
                         {
                             new ()
                             {
-                                WaveSettings = WaveSettings.Reactor_Surge_50pts.PersistentId,
-                                WavePopulation = WavePopulation.Baseline.PersistentId,
+                                Settings = WaveSettings.Reactor_Surge_50pts,
+                                Population = WavePopulation.Baseline,
                                 Duration = 60
                             }
                         })
@@ -421,8 +421,8 @@ public partial record WardenObjective
                     {
                         new ()
                         {
-                            WaveSettings = WaveSettings.Reactor_Surge_50pts.PersistentId,
-                            WavePopulation = WavePopulation.Baseline.PersistentId,
+                            Settings = WaveSettings.Reactor_Surge_50pts,
+                            Population = WavePopulation.Baseline,
                             Duration = 60
                         }
                     })
@@ -456,7 +456,7 @@ public partial record WardenObjective
 
             // Calculate how many points of enemies will be spawned in total.
             reactorWavePoints += wave.EnemyWaves.Sum(enemyWave
-                => (int)(Bins.WaveSettings.Find(enemyWave.WaveSettings)?.PopulationPointsTotal ?? 0));
+                => (int)enemyWave.Settings.PopulationPointsTotal);
         }
 
         // Spread resources to do the waves within the reactor area

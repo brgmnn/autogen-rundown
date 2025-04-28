@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AutogenRundown.DataBlocks.Alarms;
+using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks.Objectives.Reactor;
 
@@ -13,51 +14,51 @@ public record ReactorEnemyWave
     #region Preset waves
     public static ReactorEnemyWave Baseline_Easy = new()
     {
-        WaveSettings = Alarms.WaveSettings.Reactor_Easy.PersistentId,
-        WavePopulation = Alarms.WavePopulation.Baseline.PersistentId,
+        Settings = WaveSettings.Reactor_Easy,
+        Population = WavePopulation.Baseline,
         Duration = 40
     };
 
     public static ReactorEnemyWave Baseline_Medium = new()
     {
-        WaveSettings = Alarms.WaveSettings.Reactor_Medium.PersistentId,
-        WavePopulation = Alarms.WavePopulation.Baseline.PersistentId,
+        Settings = WaveSettings.Reactor_Medium,
+        Population = WavePopulation.Baseline,
         Duration = 50
     };
 
     public static ReactorEnemyWave Baseline_MediumMixed = new()
     {
-        WaveSettings = Alarms.WaveSettings.Reactor_Medium.PersistentId,
-        WavePopulation = Alarms.WavePopulation.Baseline.PersistentId,
+        Settings = WaveSettings.Reactor_Medium,
+        Population = WavePopulation.Baseline,
         Duration = 60
     };
 
     public static ReactorEnemyWave Baseline_Hard = new()
     {
-        WaveSettings = Alarms.WaveSettings.Reactor_Hard.PersistentId,
-        WavePopulation = Alarms.WavePopulation.Baseline_Hybrids.PersistentId,
+        Settings = WaveSettings.Reactor_Hard,
+        Population = WavePopulation.Baseline_Hybrids,
         Duration = 60
     };
 
     public static ReactorEnemyWave BaselineWithChargers_Hard = new()
     {
-        WaveSettings = Alarms.WaveSettings.Reactor_Hard.PersistentId,
-        WavePopulation = Alarms.WavePopulation.Baseline_Chargers.PersistentId,
+        Settings = WaveSettings.Reactor_Hard,
+        Population = WavePopulation.Baseline_Chargers,
         Duration = 55
     };
 
     public static ReactorEnemyWave BaselineWithNightmare_Hard = new()
     {
-        WaveSettings = Alarms.WaveSettings.Reactor_Hard.PersistentId,
-        WavePopulation = Alarms.WavePopulation.Baseline_Nightmare.PersistentId,
+        Settings = WaveSettings.Reactor_Hard,
+        Population = WavePopulation.Baseline_Nightmare,
         Duration = 60
     };
 
     #region Giant waves
     public static ReactorEnemyWave Giants_16pts = new()
     {
-        WaveSettings = Alarms.WaveSettings.ReactorPoints_Special_16pts.PersistentId,
-        WavePopulation = Alarms.WavePopulation.Special_StrikerGiants.PersistentId,
+        Settings = WaveSettings.ReactorPoints_Special_16pts,
+        Population = WavePopulation.Special_StrikerGiants,
         Duration = 20
     };
     #endregion
@@ -65,8 +66,8 @@ public record ReactorEnemyWave
     #region Hybrid waves
     public static ReactorEnemyWave OnlyHybrids_Medium = new()
     {
-        WaveSettings = Alarms.WaveSettings.ReactorHybrids_Medium.PersistentId,
-        WavePopulation = Alarms.WavePopulation.OnlyHybrids.PersistentId,
+        Settings = WaveSettings.ReactorHybrids_Medium,
+        Population = WavePopulation.OnlyHybrids,
         Duration = 50
     };
     #endregion
@@ -74,15 +75,15 @@ public record ReactorEnemyWave
     #region Charger waves
     public static ReactorEnemyWave OnlyChargers_Easy = new()
     {
-        WaveSettings = Alarms.WaveSettings.ReactorChargers_Easy.PersistentId,
-        WavePopulation = Alarms.WavePopulation.OnlyChargers.PersistentId,
+        Settings = WaveSettings.ReactorChargers_Easy,
+        Population = WavePopulation.OnlyChargers,
         Duration = 30
     };
 
     public static ReactorEnemyWave OnlyChargers_Hard = new()
     {
-        WaveSettings = Alarms.WaveSettings.ReactorChargers_Hard.PersistentId,
-        WavePopulation = Alarms.WavePopulation.OnlyChargers.PersistentId,
+        Settings = WaveSettings.ReactorChargers_Hard,
+        Population = WavePopulation.OnlyChargers,
         Duration = 50
     };
     #endregion
@@ -90,15 +91,15 @@ public record ReactorEnemyWave
     #region Shadow waves
     public static ReactorEnemyWave OnlyShadows_Easy = new()
     {
-        WaveSettings = Alarms.WaveSettings.ReactorShadows_Easy.PersistentId,
-        WavePopulation = Alarms.WavePopulation.OnlyShadows.PersistentId,
+        Settings = WaveSettings.ReactorShadows_Easy,
+        Population = WavePopulation.OnlyShadows,
         Duration = 45
     };
 
     public static ReactorEnemyWave OnlyShadows_Hard = new()
     {
-        WaveSettings = Alarms.WaveSettings.ReactorShadows_Hard.PersistentId,
-        WavePopulation = Alarms.WavePopulation.OnlyShadows.PersistentId,
+        Settings = WaveSettings.ReactorShadows_Hard,
+        Population = WavePopulation.OnlyShadows,
         Duration = 80
     };
     #endregion
@@ -109,29 +110,29 @@ public record ReactorEnemyWave
     #region Boss waves
     public static ReactorEnemyWave SingleMother = new()
     {
-        WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
-        WavePopulation = Alarms.WavePopulation.SingleEnemy_Mother.PersistentId,
+        Settings = WaveSettings.SingleMiniBoss,
+        Population = WavePopulation.SingleEnemy_Mother,
         Duration = 90
     };
 
     public static ReactorEnemyWave SingleTank = new()
     {
-        WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
-        WavePopulation = Alarms.WavePopulation.SingleEnemy_Tank.PersistentId,
+        Settings = WaveSettings.SingleMiniBoss,
+        Population = WavePopulation.SingleEnemy_Tank,
         Duration = 90
     };
 
     public static ReactorEnemyWave SingleTankPotato = new()
     {
-        WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
-        WavePopulation = Alarms.WavePopulation.SingleEnemy_TankPotato.PersistentId,
+        Settings = WaveSettings.SingleMiniBoss,
+        Population = WavePopulation.SingleEnemy_TankPotato,
         Duration = 50
     };
 
     public static ReactorEnemyWave SinglePouncer = new()
     {
-        WaveSettings = Alarms.WaveSettings.SingleMiniBoss.PersistentId,
-        WavePopulation = Alarms.WavePopulation.SingleEnemy_Pouncer.PersistentId,
+        Settings = WaveSettings.SingleMiniBoss,
+        Population = WavePopulation.SingleEnemy_Pouncer,
         Duration = 30
     };
     #endregion
@@ -144,9 +145,28 @@ public record ReactorEnemyWave
     [JsonIgnore]
     public double Duration { get; set; } = 30.0;
 
-    public uint WaveSettings { get; set; } = 0;
+    [JsonProperty("WaveSettings")]
+    public uint SurvivalWaveSettings
+    {
+        get => Settings.PersistentId;
+        private set { }
+    }
 
-    public uint WavePopulation { get; set; } = 0;
+    [JsonIgnore]
+    public WaveSettings Settings { get; set; } = WaveSettings.None;
+
+    /// <summary>
+    /// Determine what type(s) of enemy would spawn.
+    /// </summary>
+    [JsonProperty("WavePopulation")]
+    public uint SurvivalWavePopulation
+    {
+        get => Population.PersistentId;
+        private set { }
+    }
+
+    [JsonIgnore]
+    public WavePopulation Population { get; set; } = WavePopulation.None;
 
     /// <summary>
     /// Room distance, in general this should always be left at 2.
