@@ -1,7 +1,9 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
 using AutogenRundown.Extensions;
+using FluffyUnderware.DevTools.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -122,27 +124,86 @@ public partial record WardenObjective
             _ => 1
         };
 
+        var minFogWaves = 0;
+        var maxFogWaves = director.Tier switch
+        {
+            "D" => 2,
+            "E" => 3,
+            _ => 1
+        };
+
+        if (level.Settings.Modifiers.Contains(LevelModifiers.Fog))
+        {
+            minFogWaves = Generator.Between(0, 1);
+            maxFogWaves += Generator.Select(new List<(double, int)>
+            {
+                (0.2, 0),
+                (0.8, 1)
+            });
+        }
+        else if (level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
+        {
+            minFogWaves = 1;
+            maxFogWaves += Generator.Select(new List<(double, int)>
+            {
+                (0.2, 0),
+                (0.6, 1),
+                (0.2, 2)
+            });
+        }
+
+        maxFogWaves = Math.Min(maxFogWaves, waveCount - 1);
+        var fogWaveCount = Generator.Between(minFogWaves, Math.Max(minFogWaves, maxFogWaves));
+
+        Plugin.Logger.LogDebug($"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead} -- " +
+                               $"Fog Waves = {fogWaveCount} (Min = {minFogWaves}, Max = {maxFogWaves})");
+
         // Initialize the reactor Waves with the correct number of waves, these
         // will be updated as we go.
         for (var i = 0; i < waveCount; ++i)
             ReactorWaves.Add(new ReactorWave());
 
-        if (!ReactorStartupGetCodes) return;
+        #region Fog Waves
+        /*
+         * Fog waves will flood the level with fog on wave startup and then return the fog back
+         * to the level default on finish.
+         *
+         * First wave is never a fog wave. The remaining waves are randomly assigned fog.
+         */
+        var candidateFogWaves = ReactorWaves.Skip(1).ToList();
 
-        var candidateWaves = ReactorWaves.Skip(1).Take(ReactorWaves.Count - 2).ToList();
-
-        // Always assign the last reactor wave to be a fetch wave
-        ReactorWaves.Last().IsFetchWave = true;
-
-        for (var i = 0; i < fetchCount - 1; i++)
+        for (var i = 0; i < fogWaveCount - 1; i++)
         {
-            var wave = Generator.Draw(candidateWaves);
+            var wave = Generator.Draw(candidateFogWaves);
 
             if (wave != null)
-                wave.IsFetchWave = true;
+                wave.IsFogWave = true;
         }
+        #endregion
 
-        Plugin.Logger.LogWarning($"What are my reactor waves: [" + string.Join(", ", ReactorWaves.Select(wave => $"Wave {{ IsFetchWave = {wave.IsFetchWave} }}")) + "]");
+        #region Fetch Waves
+        /*
+         * Fetch waves require going to a terminal to fetch the code
+         *
+         * First wave is never a fetch wave, last wave is always a fetch wave. The remaining
+         * codes to be fetched are distributed randomly amongst the middle waves.
+         */
+        if (ReactorStartupGetCodes)
+        {
+            var candidateWaves = ReactorWaves.Skip(1).Take(ReactorWaves.Count - 2).ToList();
+
+            // Always assign the last reactor wave to be a fetch wave
+            ReactorWaves.Last().IsFetchWave = true;
+
+            for (var i = 0; i < fetchCount - 1; i++)
+            {
+                var wave = Generator.Draw(candidateWaves);
+
+                if (wave != null)
+                    wave.IsFetchWave = true;
+            }
+        }
+        #endregion
     }
 
     private void Build_ReactorStartup(BuildDirector director, Level level)
@@ -173,111 +234,11 @@ public partial record WardenObjective
             wave.Warmup = 30.0;
             wave.WarmupFail = 30.0;
             wave.Verify = 30.0;
-            wave.VerifyFail = 30; // TODO: check how other levels do it?
+            wave.VerifyFail = 30;
 
             // Set the reactor waves
             wave.EnemyWaves = (director.Tier, ReactorWaves.Count, w + 1) switch
             {
-                // // First wave is always a softball wave
-                // ("D", _, 0) => new() { ReactorEnemyWave.Baseline_Medium },
-                // // ("E", 0) => new() { ReactorEnemyWave.Baseline_Hard },
-                //
-                // // TODO: BaselineMedium / Easy are far too easy alone
-                //
-                //
-                // #region D-Tier
-                // ("D", _, >= 1 and < 3) => Generator.Select(
-                //     new List<(double, List<ReactorEnemyWave>)>
-                //     {
-                //         (2.0, new() { ReactorEnemyWave.Baseline_Hard }),
-                //         (1.0, new()
-                //         {
-                //             ReactorEnemyWave.Baseline_Hard,
-                //             ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 35 }
-                //         }),
-                //     }),
-                // ("D", _, >= 3 and < 5) => Generator.Select(
-                //     new List<(double, List<ReactorEnemyWave>)>
-                //     {
-                //         (1.0, new()
-                //         {
-                //             ReactorEnemyWave.Baseline_Hard,
-                //             ReactorEnemyWave.OnlyHybrids_Medium with { SpawnTime = 30 }
-                //         }),
-                //         (1.0, new()
-                //         {
-                //             ReactorEnemyWave.Baseline_Hard,
-                //             ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 35 }
-                //         }),
-                //     }),
-                // ("D", _, >= 5 and < 7) => Generator.Select(
-                //     new List<(double, List<ReactorEnemyWave>)>
-                //     {
-                //         (1.0, new()
-                //         {
-                //             ReactorEnemyWave.Baseline_Hard,
-                //             ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 45 }
-                //         }),
-                //         (1.0, new()
-                //         {
-                //             ReactorEnemyWave.Baseline_Hard,
-                //             ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 60 },
-                //             ReactorEnemyWave.OnlyHybrids_Medium with { SpawnTime = 45 }
-                //         }),
-                //         (1.0, new()
-                //         {
-                //             ReactorEnemyWave.Baseline_Hard,
-                //             ReactorEnemyWave.OnlyShadows_Hard with { SpawnTime = 30 }
-                //         }),
-                //         (1.0, new()
-                //         {
-                //             // TODO: Too easy
-                //             ReactorEnemyWave.BaselineWithNightmare_Hard,
-                //             ReactorEnemyWave.SingleTankPotato with { SpawnTime = 20 }
-                //         }),
-                //         (2.0, new()
-                //         {
-                //             ReactorEnemyWave.BaselineWithNightmare_Hard,
-                //             ReactorEnemyWave.BaselineWithChargers_Hard with { SpawnTime = 45 }
-                //         }),
-                //     }),
-                // ("D", _, >= 7) => Generator.Select(
-                //     new List<(double, List<ReactorEnemyWave>)>
-                //     {
-                //         (4.0, new()
-                //         {
-                //             ReactorEnemyWave.Baseline_Hard,
-                //             ReactorEnemyWave.OnlyChargers_Hard with { SpawnTime = 20 }
-                //         }),
-                //         (4.0, new()
-                //         {
-                //             ReactorEnemyWave.Baseline_Hard,
-                //             ReactorEnemyWave.BaselineWithNightmare_Hard with { SpawnTime = 45 },
-                //             ReactorEnemyWave.OnlyShadows_Hard with { SpawnTime = 60 }
-                //         }),
-                //         (3.0, new()
-                //         {
-                //             // Good :+1:
-                //             ReactorEnemyWave.Baseline_Hard,
-                //             ReactorEnemyWave.OnlyHybrids_Medium with { SpawnTime = 55 },
-                //             ReactorEnemyWave.SingleTankPotato with { SpawnTime = 20 }
-                //         }),
-                //         (1.0, new()
-                //         {
-                //             // TBD: is this good?
-                //             ReactorEnemyWave.Baseline_Hard,
-                //             ReactorEnemyWave.SingleMother with { SpawnTime = 60 },
-                //         }),
-                //         (1.0, new()
-                //         {
-                //             // TBD: Added another baseline hard. Might be quite hard
-                //             ReactorEnemyWave.Baseline_Hard,
-                //             ReactorEnemyWave.Baseline_Hard with { SpawnTime = 70 },
-                //             ReactorEnemyWave.SingleTank with { SpawnTime = 60 },
-                //         }),
-                //     }),
-                // #endregion
-
                 #region A-Tier
                 #region First wave
                 ("A", _, 1) =>
@@ -1279,11 +1240,7 @@ public partial record WardenObjective
             var fog = level.FogSettings;
             var isInfectious = level.FogSettings.Infection > 0.01;
 
-            // Add wave fog flood for funsies
-            // TODO: don't hard code this, use the random generator
-            if (director.Tier == "C" && (w == 1) ||
-                director.Tier == "D" && (w == 0 || w == ReactorWaves.Count - 1) ||
-                director.Tier == "E" && (w == 1 || w == ReactorWaves.Count - 1))
+            if (wave.IsFogWave)
             {
                 wave.Events
                     .AddSetFog(
@@ -1408,9 +1365,9 @@ public partial record WardenObjective
 
             // Add some grace time for failures on large branches
             wave.VerifyFail = Math.Max(30, wave.Verify / 2);
-
-            Plugin.Logger.LogDebug($"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead} -- "
-                + $"ReactorStartup: Fetch wave {b} has {wave.Verify}s time");
         }
+
+        Plugin.Logger.LogDebug($"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead} -- " +
+                                 $"Reactor Waves: [" + ReactorWave.ListToString(ReactorWaves, ",\n  ") + "]");
     }
 }

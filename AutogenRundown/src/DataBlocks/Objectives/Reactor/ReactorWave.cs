@@ -1,10 +1,16 @@
-﻿namespace AutogenRundown.DataBlocks.Objectives.Reactor;
+﻿using Newtonsoft.Json;
+
+namespace AutogenRundown.DataBlocks.Objectives.Reactor;
 
 public class ReactorWave
 {
     #region Internal Properties
 
+    [JsonIgnore]
     internal bool IsFetchWave { get; set; } = false;
+
+    [JsonIgnore]
+    internal bool IsFogWave { get; set; } = false;
 
     #endregion
 
@@ -65,4 +71,13 @@ public class ReactorWave
         foreach (var wave in EnemyWaves)
             wave.SpawnTimeRel = wave.SpawnTime / Wave;
     }
+
+    public double GetPoints()
+        => EnemyWaves.Select(wave => wave.Settings.PopulationPointsTotal).Sum();
+
+    public static string ListToString(IEnumerable<ReactorWave> waves, string separator = ", ")
+        => string.Join(separator, waves.Select(wave => wave.ToString()));
+
+    public new string ToString()
+        => $"ReactorWave {{ Points = {GetPoints()}, Duration = {Wave}, IsFetch = {IsFetchWave}, IsFog = {IsFogWave} }}";
 }
