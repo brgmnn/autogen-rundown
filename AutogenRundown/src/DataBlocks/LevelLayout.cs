@@ -565,27 +565,20 @@ public partial record LevelLayout : DataBlock
     /// </summary>
     public void RollErrorAlarm()
     {
-        // Rolls for alarms to add. Each successful roll adds an error alarm and rolls again
-        // with reduced chance of adding another alarm.
-        int Roll(double chance)
-        {
-            if (Generator.Flip(chance))
-                return 1 + Roll(chance - 0.4);
-
-            return 0;
-        }
-
         var alarmCount = director.Tier switch
         {
             // No error alarms for A/B
             "A" => 0,
             "B" => 0,
-            "C" => Roll(0.1),
-            "D" => Roll(0.3),
+            "C" => Generator.Flip(0.1) ? 1 : 0,
+            "D" => Generator.Flip(0.3) ? 1 : 0,
+            "E" => Generator.Select(new List<(double, int)>
+            {
+                (0.15, 0),
+                (0.50, 1),
+                (0.35, 2)
+            }),
 
-            // E-tier has a 85% chance of having one error alarm. 38% chance of having two error alarms,
-            // and a 2% chance of having three error alarms.
-            "E" => Roll(0.85),
             _ => 0
         };
 

@@ -54,15 +54,24 @@ public enum WardenObjectiveEventType : uint
      * to use in the rundown giving a lot of fun flexibility in designing levels.
      */
 
+    #region --- Modder: Flow's Events ---
+
     LockSecurityDoor = 10001,
 
     SetLightDataInZone = 10016,
 
     Countdown = 10010,
 
+    #endregion
+
+    #region --- Modder: Hirnu's Events ---
+    #endregion
+
+    #region --- Modder: Armor's Events ---
     StartEventLoop = 20001,
     StopEventLoop = 20002,
 
     AdjustAwoTimer = 20007,
+    #endregion
     #endregion
 }
