@@ -84,12 +84,11 @@ public partial record WardenObjective
             ("D", Bulkhead.Extreme,  _                          ) => Generator.Between(3, 4),
             ("D", Bulkhead.Overload, _                          ) => Generator.Between(4, 5),
 
-            // ("E", Bulkhead.Main,     Bulkhead.Main              ) => 10,
-            // ("E", Bulkhead.Main,     Bulkhead.PrisonerEfficiency) => 5,
-            // ("E", Bulkhead.Main,     _                          ) => Generator.Between(6, 7),
-            // ("E", _,                 Bulkhead.PrisonerEfficiency) => Generator.Between(3, 4),
-            // ("E", _,                 _                          ) => Generator.Between(4, 5),
-            ("E", _, _) => 5,
+            ("E", Bulkhead.Main,     Bulkhead.Main              ) => 10,
+            ("E", Bulkhead.Main,     Bulkhead.PrisonerEfficiency) => 5,
+            ("E", Bulkhead.Main,     _                          ) => Generator.Between(6, 7),
+            ("E", _,                 Bulkhead.PrisonerEfficiency) => Generator.Between(3, 4),
+            ("E", _,                 _                          ) => Generator.Between(4, 5),
 
             _ => 1
         };
@@ -1145,13 +1144,6 @@ public partial record WardenObjective
                                 Population = WavePopulation.OnlyShadows,
                                 AreaDistance = 1,
                                 SpawnTime = 50
-                            },
-                            ReactorEnemyWave.MiniBoss_4pts with
-                            {
-                                Population = WavePopulation.OnlyShadows,
-                                AreaDistance = 0,
-                                SpawnTime = 65,
-                                Duration = 10
                             }
                         }),
                         (level.FogSettings.IsInfectious ? 1.0 : 0, new List<ReactorEnemyWave>
@@ -1258,13 +1250,6 @@ public partial record WardenObjective
                                 Population = WavePopulation.OnlyShadows,
                                 AreaDistance = 1,
                                 SpawnTime = 50
-                            },
-                            ReactorEnemyWave.MiniBoss_4pts with
-                            {
-                                Population = WavePopulation.OnlyShadows,
-                                AreaDistance = 0,
-                                SpawnTime = 65,
-                                Duration = 10
                             },
                             ReactorEnemyWave.SingleShadowPouncer with { SpawnTime = 25 },
                             ReactorEnemyWave.SingleShadowPouncer with { SpawnTime = 65, Duration = 0 }
