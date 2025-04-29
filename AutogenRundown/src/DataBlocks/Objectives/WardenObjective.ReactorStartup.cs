@@ -718,9 +718,9 @@ public partial record WardenObjective
                                 SpawnTime = 45
                             }
                         }),
-                        (0.45, new List<ReactorEnemyWave>
+                        (0.20, new List<ReactorEnemyWave>
                         {
-                            ReactorEnemyWave.Baseline_Hard,
+                            ReactorEnemyWave.Baseline_SurgeMedium,
                             ReactorEnemyWave.MiniBoss_12pts with
                             {
                                 Population = WavePopulation.OnlyGiantStrikers,
