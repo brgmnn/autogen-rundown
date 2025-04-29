@@ -269,6 +269,58 @@ static public class Generator
     }
 
     /// <summary>
+    /// Draws an element from a collection. The collection is a list of:
+    ///
+    ///     (relative weighting, item count, item)
+    ///
+    /// This special method ignores the weighting and instead considers the absolute counts
+    /// of the elements. This is useful for drawing an item just based on it's frequency.
+    /// </summary>
+    /// <typeparam name="T">The element type that our collection consists of</typeparam>
+    /// <param name="collection">The collection</param>
+    /// <param name="fixedWeights">
+    ///     Whether elements total weights is the fixed frequency value passed in or if
+    ///     the total weight is the frequency multiplied by elements in the pool
+    /// </param>
+    /// <returns></returns>
+    public static T DrawSelectFrequency<T>(ICollection<(double, int, T)> collection)
+    {
+        var totalWeight = collection.Sum(x => x.Item2);
+        var rand = Random.NextDouble();
+        var randomWeight = rand * totalWeight;
+
+        double weightSum = 0;
+
+        for (var i = 0; i < collection.Count; i++)
+        {
+            var entry = collection.ElementAt(i);
+            var (_, count, item) = entry;
+            weightSum += count;
+
+            if (randomWeight <= weightSum)
+            {
+                collection.Remove(entry);
+                entry.Item2--;
+
+                if (entry.Item2 > 0)
+                    collection.Add(entry);
+
+                return item;
+            }
+        }
+
+        var entryLast = collection.Last();
+
+        collection.Remove(entryLast);
+        entryLast.Item2--;
+
+        if (entryLast.Item2 > 0)
+            collection.Add(entryLast);
+
+        return entryLast.Item3;
+    }
+
+    /// <summary>
     /// Gets a new persistent Id
     /// </summary>
     /// <returns></returns>

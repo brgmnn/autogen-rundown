@@ -227,6 +227,74 @@ public class LevelSettings
         return pack;
     }
 
+    /// <summary>
+    /// We want to run this after the other modifiers like fog and enemy types are run
+    /// </summary>
+    public List<(double, int, EnemySpawningData)> GenerateBossPack()
+    {
+        var pack = new List<(double, int, EnemySpawningData)>();
+
+        switch (Tier)
+        {
+            case "C":
+            {
+                pack = new List<(double, int, EnemySpawningData)>
+                {
+                    (0.65, 2, EnemySpawningData.Pouncer with { Points = 4 }),
+                    (0.65, 1, EnemySpawningData.Tank with { Points = 10 }),
+                    (0.35, 1, EnemySpawningData.Mother with { Points = 10 })
+                };
+                break;
+            }
+
+            case "D":
+            {
+                pack  = new List<(double, int, EnemySpawningData)>
+                {
+                    (0.15, 2, EnemySpawningData.Pouncer with { Points = 8 }),
+                    (0.05, 1, EnemySpawningData.PouncerShadow with { Points = 4 }),
+                    (0.30, 1, EnemySpawningData.Mother with { Points = 10 }),
+                    (0.10, 1, EnemySpawningData.Mother with { Points = 20 }),
+                    (0.35, 1, EnemySpawningData.Tank with { Points = 10 }),
+                    (0.25, 1, EnemySpawningData.Tank with { Points = 20 })
+                };
+
+                // Remove items from the pack until we reach the boss cap
+                while (pack.Sum(boss => boss.Item2) > 3)
+                    Generator.DrawSelectFrequency(pack);
+                break;
+            }
+
+            case "E":
+            {
+                pack = new List<(double, int, EnemySpawningData)>
+                {
+                    (0.10, 2, EnemySpawningData.Pouncer with { Points = 12 }),
+                    (0.10, 1, EnemySpawningData.PouncerShadow with { Points = 4 }),
+                    (0.20, 2, EnemySpawningData.Mother with { Points = 10 }),
+                    (0.30, 2, EnemySpawningData.Tank with { Points = 10 }),
+                    (0.20, 1, EnemySpawningData.Mother with { Points = 20 }),
+                    (0.10, 1, EnemySpawningData.Tank with { Points = 20 })
+                };
+                break;
+            }
+        }
+
+        var bossMax = Tier switch
+        {
+            "C" => 1,
+            "D" => 2,
+            "E" => 4,
+            _ => 1
+        };
+
+        // Remove items from the pack until we reach the boss cap
+        while (pack.Sum(boss => boss.Item2) > bossMax)
+            Generator.DrawSelectFrequency(pack);
+
+        return pack;
+    }
+
     public void Generate()
     {
         switch (Tier)
@@ -288,13 +356,6 @@ public class LevelSettings
                         new WeightedModifier { Modifier = LevelModifiers.NoFog, Weight = 0.6 },
                         new WeightedModifier { Modifier = LevelModifiers.Fog,   Weight = 0.4 },
                     }).Modifier);
-
-                EnemyBossPack = new List<(double, int, EnemySpawningData)>
-                {
-                    (0.65, 2, EnemySpawningData.Pouncer with { Points = 4 }),
-                    (0.65, 1, EnemySpawningData.Tank with { Points = 10 }),
-                    (0.35, 1, EnemySpawningData.Mother with { Points = 10 })
-                };
                 break;
             }
 
@@ -339,16 +400,6 @@ public class LevelSettings
                         new WeightedModifier { Modifier = LevelModifiers.Fog,      Weight = 0.5 },
                         new WeightedModifier { Modifier = LevelModifiers.HeavyFog, Weight = 0.1 },
                     }).Modifier);
-
-                EnemyBossPack = new List<(double, int, EnemySpawningData)>
-                {
-                    (0.15, 2, EnemySpawningData.Pouncer with { Points = 8 }),
-                    (0.05, 1, EnemySpawningData.PouncerShadow with { Points = 4 }),
-                    (0.30, 1, EnemySpawningData.Mother with { Points = 10 }),
-                    (0.10, 1, EnemySpawningData.Mother with { Points = 20 }),
-                    (0.35, 1, EnemySpawningData.Tank with { Points = 10 }),
-                    (0.25, 1, EnemySpawningData.Tank with { Points = 20 })
-                };
                 break;
             }
 
@@ -393,20 +444,11 @@ public class LevelSettings
                         new WeightedModifier { Modifier = LevelModifiers.Fog,      Weight = 0.5 },
                         new WeightedModifier { Modifier = LevelModifiers.HeavyFog, Weight = 0.2 },
                     }).Modifier);
-
-                EnemyBossPack = new List<(double, int, EnemySpawningData)>
-                {
-                    (0.10, 2, EnemySpawningData.Pouncer with { Points = 12 }),
-                    (0.10, 1, EnemySpawningData.PouncerShadow with { Points = 4 }),
-                    (0.20, 2, EnemySpawningData.Mother with { Points = 10 }),
-                    (0.30, 2, EnemySpawningData.Tank with { Points = 10 }),
-                    (0.20, 1, EnemySpawningData.Mother with { Points = 20 }),
-                    (0.10, 1, EnemySpawningData.Tank with { Points = 20 })
-                };
                 break;
             }
         }
 
+        EnemyBossPack = GenerateBossPack();
         EnemyHibernationPack = GenerateHibernatingEnemyPack();
     }
 }
