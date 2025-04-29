@@ -198,8 +198,8 @@ public static class RundownFactory
                 Bulkhead = Bulkhead.Main,
                 Complex = Complex.Tech,
                 Complexity = Complexity.Low,
-                Tier = "C",
-                Objective = WardenObjectiveType.GatherTerminal,
+                Tier = "A",
+                Objective = WardenObjectiveType.ReactorStartup,
             };
             mainDirector.GenPoints();
 
@@ -213,19 +213,19 @@ public static class RundownFactory
             // };
             // extremeDirector.GenPoints();
 
-            var settings = new LevelSettings("C");
+            var settings = new LevelSettings("A");
             //settings.Modifiers.Add(LevelModifiers.Fog);
 
             var testLevel = Level.Build(
-                new Level("C")
+                new Level("A")
                 {
-                    Tier = "C",
-                    Name = "Gather Terminal",
+                    Tier = "A",
+                    Name = "Reactor Startup",
                     Complex = Complex.Tech,
                     MainDirector = mainDirector,
                     // SecondaryDirector = extremeDirector,
                     Settings = settings,
-                    Index = rundown.TierC_Count + 1,
+                    Index = rundown.TierA_Count + 1,
                     IsTest = true
                 });
             rundown.AddLevel(testLevel);
@@ -420,7 +420,7 @@ public static class RundownFactory
 
         #region Test E Levels
         #if DEBUG
-        if (true && withFixed)
+        if (false && withFixed)
         {
             var mainDirectorE = new BuildDirector
             {
