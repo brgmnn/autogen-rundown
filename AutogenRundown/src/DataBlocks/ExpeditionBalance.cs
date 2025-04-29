@@ -143,8 +143,7 @@ public record ExpeditionBalance : DataBlock
     {
         0.6,
         1.0,
-        0.4,
-        0.2
+        0.4
     };
 
     public double GlueVolumeToDoorHealthConversion { get; set; } = 0.5;
