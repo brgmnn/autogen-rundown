@@ -201,6 +201,13 @@ public record ReactorEnemyWave
         Population = WavePopulation.SingleEnemy_Pouncer,
         Duration = 30
     };
+
+    public static ReactorEnemyWave SingleShadowPouncer = new()
+    {
+        Settings = WaveSettings.SingleMiniBoss,
+        Population = WavePopulation.SingleEnemy_PouncerShadow,
+        Duration = 30
+    };
     #endregion
     #endregion
 

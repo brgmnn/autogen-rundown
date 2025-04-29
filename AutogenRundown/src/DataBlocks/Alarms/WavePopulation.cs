@@ -148,6 +148,7 @@ public record WavePopulation : DataBlock
     {
         Bins.WavePopulations.AddBlock(Baseline);
         Bins.WavePopulations.AddBlock(Baseline_Hybrids);
+        Bins.WavePopulations.AddBlock(Baseline_InfectedHybrids);
         Bins.WavePopulations.AddBlock(Baseline_Chargers);
         Bins.WavePopulations.AddBlock(Baseline_Flyers);
         Bins.WavePopulations.AddBlock(Baseline_Nightmare);
@@ -157,6 +158,7 @@ public record WavePopulation : DataBlock
         Bins.WavePopulations.AddBlock(OnlyGiantStrikers);
         Bins.WavePopulations.AddBlock(OnlyGiantShooters);
         Bins.WavePopulations.AddBlock(OnlyChargers);
+        Bins.WavePopulations.AddBlock(OnlyFlyers);
         Bins.WavePopulations.AddBlock(OnlyHybrids);
         Bins.WavePopulations.AddBlock(OnlyInfectedHybrids);
         Bins.WavePopulations.AddBlock(OnlyShadows);
@@ -202,6 +204,15 @@ public record WavePopulation : DataBlock
         Name = "Baseline_Hybrids"
     };
 
+    public static WavePopulation Baseline_InfectedHybrids = new WavePopulation
+    {
+        WaveRoleWeakling = Enemy.Shadow,
+        WaveRoleStandard = Enemy.Striker_Wave,
+        WaveRoleSpecial = Enemy.Shooter_Wave,
+        WaveRoleMiniBoss = (Enemy)Enemy_New.HybridInfected.PersistentId,
+        Name = "Baseline_InfectedHybrids"
+    };
+
     public static WavePopulation Baseline_Chargers = new WavePopulation
     {
         WaveRoleWeakling = Enemy.Shadow,
@@ -237,8 +248,7 @@ public record WavePopulation : DataBlock
         WaveRoleWeakling = Enemy.Shadow,
         WaveRoleStandard = Enemy.Striker_Wave,
         WaveRoleSpecial = Enemy.Shadow,
-        WaveRoleMiniBoss = Enemy.ShooterGiant,
-        WaveRoleBoss = Enemy.ShadowGiant,
+        WaveRoleMiniBoss = Enemy.ShadowGiant,
         Name = "Baseline_Shadows"
     };
     #endregion
@@ -269,6 +279,15 @@ public record WavePopulation : DataBlock
         WaveRoleMiniBoss = Enemy.ChargerGiant,
         WaveRoleBoss = Enemy.ChargerGiant,
         Name = "OnlyChargers"
+    };
+
+    public static WavePopulation OnlyFlyers = new WavePopulation
+    {
+        WaveRoleWeakling = Enemy.Flyer,
+        WaveRoleStandard = Enemy.Flyer,
+        WaveRoleSpecial = Enemy.Flyer,
+        WaveRoleMiniBoss = Enemy.FlyerBig,
+        Name = "OnlyFlyers"
     };
 
     public static WavePopulation OnlyHybrids = new WavePopulation

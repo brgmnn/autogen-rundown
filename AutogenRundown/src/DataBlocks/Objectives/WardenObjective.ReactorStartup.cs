@@ -719,6 +719,21 @@ public partial record WardenObjective
                                 SpawnTime = 45
                             }
                         }),
+                        (0.45, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_Hard,
+                            ReactorEnemyWave.MiniBoss_12pts with
+                            {
+                                Population = WavePopulation.OnlyGiantStrikers,
+                                SpawnTime = 10
+                            },
+                            ReactorEnemyWave.MiniBoss_8pts with
+                            {
+                                Population = WavePopulation.OnlyGiantStrikers,
+                                SpawnTime = 34
+                            },
+                            ReactorEnemyWave.SingleTankPotato with { SpawnTime = 55 }
+                        }),
                         (level.Settings.HasChargers() ? 1.0 : 0, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_Hard with { Population = WavePopulation.Baseline_Chargers },
@@ -750,42 +765,232 @@ public partial record WardenObjective
                 #endregion
                 #endregion
 
-                #region D-Tier (TODO)
+                #region D-Tier
                 #region First wave
-                ("D", _, 1) => Generator.Select(new List<(double, List<ReactorEnemyWave>)>
-                {
-                    (0.33, new() { ReactorEnemyWave.Baseline_SurgeVeryHard }),
-                }),
+                ("D", _, 1) =>
+                    Generator.Select(new List<(double, List<ReactorEnemyWave>)>
+                    {
+                        (0.33, new List<ReactorEnemyWave> { ReactorEnemyWave.Baseline_SurgeHard }),
+                        (0.33, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_VeryHard,
+                            ReactorEnemyWave.MiniBoss_12pts with
+                            {
+                                Population = WavePopulation.OnlyGiantStrikers,
+                                SpawnTime = 35
+                            }
+                        }),
+                        (0.33, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_VeryHard,
+                            ReactorEnemyWave.MiniBoss_12pts with
+                            {
+                                Population = WavePopulation.OnlyGiantShooters,
+                                SpawnTime = 40
+                            }
+                        }),
+                    }),
                 #endregion
 
                 #region First half waves
-                ("D", var total, var waveNum) when waveNum <= total / 2 && waveNum > 1 => Generator.Select(new List<(double, List<ReactorEnemyWave>)>
-                {
-                    (0.4, new()
+                ("D", var total, var waveNum) when waveNum <= total / 2 && waveNum > 1 =>
+                    Generator.Select(new List<(double, List<ReactorEnemyWave>)>
                     {
-                        ReactorEnemyWave.OnlyChargers_Hard with { Duration = 20 }
+                        (1.0, new List<ReactorEnemyWave> { ReactorEnemyWave.Baseline_VeryHard }),
+                        (1.0, new List<ReactorEnemyWave> { ReactorEnemyWave.Baseline_SurgeHard }),
+                        (1.0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_Hard with { Population = WavePopulation.Baseline_Hybrids },
+                            ReactorEnemyWave.MiniBoss_12pts with
+                            {
+                                Population = WavePopulation.OnlyHybrids,
+                                SpawnTime = 35
+                            }
+                        }),
+                        (level.Settings.HasChargers() ? 1.0 : 0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_Hard with { Population = WavePopulation.Baseline_Chargers }
+                        }),
+                        (level.Settings.HasNightmares() ? 1.0 : 0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_Hard with { Population = WavePopulation.Baseline_Nightmare }
+                        }),
+                        (level.Settings.HasShadows() ? 1.0 : 0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_VeryHard with { Population = WavePopulation.Baseline_Shadows },
+                            ReactorEnemyWave.MiniBoss_12pts with
+                            {
+                                Population = WavePopulation.OnlyShadows,
+                                SpawnTime = 45
+                            }
+                        }),
+                        (level.FogSettings.IsInfectious ? 1.0 : 0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_Hard with { Population = WavePopulation.Baseline_Hybrids },
+                            ReactorEnemyWave.MiniBoss_12pts with
+                            {
+                                Population = WavePopulation.OnlyInfectedHybrids,
+                                SpawnTime = 35
+                            }
+                        })
                     }),
-                }),
                 #endregion
 
                 #region Second half waves
-                ("D", var total, var waveNum) when waveNum > total / 2 && waveNum < total => Generator.Select(new List<(double, List<ReactorEnemyWave>)>
-                {
-                    (0.4, new()
+                ("D", var total, var waveNum) when waveNum > total / 2 && waveNum < total =>
+                    Generator.Select(new List<(double, List<ReactorEnemyWave>)>
                     {
-                        ReactorEnemyWave.OnlyShadows_Easy with { Duration = 20 }
+                        (1.0, new List<ReactorEnemyWave> { ReactorEnemyWave.Baseline_SurgeHard }),
+                        (1.0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_Hard with { Population = WavePopulation.Baseline_Hybrids },
+                            ReactorEnemyWave.MiniBoss_12pts with
+                            {
+                                Population = WavePopulation.OnlyHybrids,
+                                SpawnTime = 35
+                            }
+                        }),
+                        (level.Settings.HasChargers() ? 1.0 : 0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_Hard with { Population = WavePopulation.OnlyChargers }
+                        }),
+                        (level.Settings.HasNightmares() ? 1.0 : 0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_Hard with { Population = WavePopulation.OnlyNightmares }
+                        }),
+                        (level.Settings.HasShadows() ? 1.0 : 0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_VeryHard with { Population = WavePopulation.OnlyShadows },
+                            ReactorEnemyWave.MiniBoss_12pts with
+                            {
+                                Population = WavePopulation.OnlyShadows,
+                                SpawnTime = 45
+                            },
+                            ReactorEnemyWave.MiniBoss_8pts with
+                            {
+                                Population = WavePopulation.OnlyShadows,
+                                AreaDistance = 1,
+                                SpawnTime = 60
+                            }
+                        }),
+                        (level.FogSettings.IsInfectious ? 1.0 : 0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_VeryHard with { Population = WavePopulation.Baseline_InfectedHybrids },
+                            ReactorEnemyWave.MiniBoss_12pts with
+                            {
+                                Population = WavePopulation.OnlyInfectedHybrids,
+                                SpawnTime = 35
+                            }
+                        })
                     }),
-                }),
                 #endregion
 
                 #region Last wave
-                ("D", var total, var waveNum) when waveNum == total => Generator.Select(new List<(double, List<ReactorEnemyWave>)>
-                {
-                    (0.2, new()
+                ("D", var total, var waveNum) when waveNum == total =>
+                    Generator.Select(new List<(double, List<ReactorEnemyWave>)>
                     {
-                        ReactorEnemyWave.SingleTank with { Duration = 20 }
+                        (0.35, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_VeryHard,
+                            ReactorEnemyWave.MiniBoss_8pts with
+                            {
+                                Population = WavePopulation.OnlyHybrids,
+                                SpawnTime = 10
+                            },
+                            ReactorEnemyWave.MiniBoss_8pts with
+                            {
+                                Population = WavePopulation.OnlyGiantShooters,
+                                SpawnTime = 45
+                            },
+                            ReactorEnemyWave.MiniBoss_8pts with
+                            {
+                                Population = WavePopulation.OnlyHybrids,
+                                SpawnTime = 65
+                            }
+                        }),
+                        (0.45, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_VeryHard,
+                            ReactorEnemyWave.MiniBoss_12pts with
+                            {
+                                Population = WavePopulation.OnlyGiantStrikers,
+                                SpawnTime = 15
+                            },
+                            ReactorEnemyWave.MiniBoss_8pts with
+                            {
+                                Population = WavePopulation.OnlyGiantStrikers,
+                                SpawnTime = 40
+                            },
+                            ReactorEnemyWave.SingleTankPotato with { SpawnTime = 65 }
+                        }),
+                        (level.Settings.HasChargers() ? 1.0 : 0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_Hard with { Population = WavePopulation.Baseline_Chargers },
+                            ReactorEnemyWave.MiniBoss_12pts with
+                            {
+                                Population = WavePopulation.OnlyChargers,
+                                SpawnTime = 25
+                            },
+                            ReactorEnemyWave.SingleTank with { SpawnTime = 65 }
+                        }),
+                        (level.Settings.HasNightmares() ? 1.0 : 0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_Hard with { Population = WavePopulation.Baseline_Nightmare },
+                            new()
+                            {
+                                Settings = WaveSettings.SingleWave_20pts,
+                                Population = WavePopulation.OnlyFlyers,
+                                SpawnTime = 20
+                            },
+                            ReactorEnemyWave.MiniBoss_8pts with
+                            {
+                                Population = WavePopulation.OnlyNightmareGiants,
+                                SpawnTime = 45
+                            },
+                        }),
+                        (level.Settings.HasShadows() ? 1.0 : 0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_Hard with { Population = WavePopulation.Baseline_Shadows },
+                            new()
+                            {
+                                Settings = WaveSettings.SingleWave_28pts,
+                                Population = WavePopulation.OnlyShadows,
+                                SpawnTime = 20
+                            },
+                            ReactorEnemyWave.MiniBoss_12pts with
+                            {
+                                Population = WavePopulation.OnlyShadows,
+                                SpawnTime = 45
+                            },
+                            ReactorEnemyWave.SingleShadowPouncer with { SpawnTime = 35 },
+                            ReactorEnemyWave.SingleShadowPouncer with { SpawnTime = 65, Duration = 0 }
+                        }),
+                        (level.FogSettings.IsInfectious ? 1.0 : 0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_VeryHard with
+                            {
+                                Population = WavePopulation.Baseline_InfectedHybrids
+                            },
+                            ReactorEnemyWave.MiniBoss_16pts with
+                            {
+                                Population = WavePopulation.OnlyInfectedHybrids,
+                                SpawnTime = 25
+                            }
+                        }),
+                        (level.FogSettings.IsInfectious ? 0.5 : 0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_VeryHard with
+                            {
+                                Population = WavePopulation.Baseline_InfectedHybrids
+                            },
+                            ReactorEnemyWave.MiniBoss_16pts with
+                            {
+                                Population = WavePopulation.OnlyInfectedHybrids,
+                                SpawnTime = 25
+                            },
+                            ReactorEnemyWave.SingleMother with { SpawnTime = 80 }
+                        })
                     }),
-                }),
                 #endregion
                 #endregion
 
