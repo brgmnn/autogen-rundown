@@ -16,7 +16,11 @@ public record ExpeditionBalance : DataBlock
         HealthPerZone = 0.2,
         DisinfectionPerZone = 0.2,
         WeaponAmmoPerZone = 0.2,
-        ToolAmmoPerZone = 0.2
+        ToolAmmoPerZone = 0.2,
+
+        // Allow 5x, 4x, 3x, 2x resource pack sizes.
+        // Game has a bug where it will allow +1 size more (so 6x here)
+        ResourcePackSizes = new() { 1.0, 0.8, 0.6, 0.4 }
     };
 
     /// <summary>
@@ -139,7 +143,7 @@ public record ExpeditionBalance : DataBlock
 
     public double WeakResourceContainerWithPackChanceForLocked { get; set; } = 0.75;
 
-    public JArray ResourcePackSizes { get; set; } = new()
+    public List<double> ResourcePackSizes { get; set; } = new()
     {
         0.6,
         1.0,
