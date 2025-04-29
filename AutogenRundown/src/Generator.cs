@@ -359,7 +359,7 @@ static public class Generator
     public static void SetMonthSeed()
     {
         var utcNow = DateTime.UtcNow;
-        // var utcNow = new DateTime(2025, 2, 1, 10, 0, 0); // Debugging specific months
+        // var utcNow = new DateTime(2025, 5, 1, 10, 0, 0); // Debugging specific months
         var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
         var pst = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
 
@@ -377,7 +377,7 @@ static public class Generator
     public static void SetWeeklySeed()
     {
         var utcNow = DateTime.UtcNow;
-        // var utcNow = new DateTime(2025, 3, 8, 10, 0, 0); // Debugging specific months
+        // var utcNow = new DateTime(2025, 3, 8, 10, 0, 0); // Debugging specific weeks
         var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
         var pst = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
 

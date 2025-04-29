@@ -481,8 +481,6 @@ public static class RundownFactory
         //
         // Use the seed pool to re-roll levels. Start by setting these at 1 and incrementing each time
         // there's a level lockup
-        // "2025_01" - January  2025:
-        // "2025_02" - February 2025:
         //
         var buildPools = new Dictionary<string, List<List<int>>>
         {
@@ -494,6 +492,16 @@ public static class RundownFactory
                     new() { 1, 1, 1, 1 }, // Tier C - ?
                     new() { 1, 1, 1, 2 }, // Tier D - ?
                     new() { 1, 1 }        // Tier E - ?
+                }
+            },
+            {
+                "2025_05", new List<List<int>>
+                {
+                    new() { 1, 1 },          // Tier A - ?
+                    new() { 1, 1, 3 },       // Tier B - ?
+                    new() { 1, 1, 2, 2 },    // Tier C - ?
+                    new() { 1, 1, 1, 2, 1 }, // Tier D - ?
+                    new() { 1, 1, 1, 2 }     // Tier E - ?
                 }
             }
         };
