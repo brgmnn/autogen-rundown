@@ -24,7 +24,7 @@ namespace AutogenRundown.DataBlocks;
  */
 public partial record WardenObjective
 {
-    public void PreBuild_ReactorStartup(BuildDirector director, Level level)
+    private void PreBuild_ReactorStartup(BuildDirector director, Level level)
     {
         // Determine if we should make the users get codes
         ReactorStartupGetCodes = (director.Tier, director.Bulkhead, level.Settings.Bulkheads) switch
@@ -145,7 +145,7 @@ public partial record WardenObjective
         Plugin.Logger.LogWarning($"What are my reactor waves: [" + string.Join(", ", ReactorWaves.Select(wave => $"Wave {{ IsFetchWave = {wave.IsFetchWave} }}")) + "]");
     }
 
-    public void Build_ReactorStartup(BuildDirector director, Level level)
+    private void Build_ReactorStartup(BuildDirector director, Level level)
     {
         MainObjective = "Find the main reactor for the floor and make sure it is back online.";
         FindLocationInfo = "Gather information about the location of the Reactor";

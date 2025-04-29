@@ -453,7 +453,7 @@ public record WaveSettings : DataBlock
     /// <summary>
     /// Harder choice, all enemy types can be included here. Will ramp up much faster than the others
     /// </summary>
-    public static WaveSettings Baseline_Hard = new WaveSettings
+    public static WaveSettings Baseline_Hard = new()
     {
         PopulationFilter = { Enemies.EnemyType.Weakling },
         FilterType = PopulationFilterType.Exclude,
@@ -466,7 +466,7 @@ public record WaveSettings : DataBlock
     /// <summary>
     /// Harder choice, all enemy types can be included here. Will ramp up much faster than the others
     /// </summary>
-    public static WaveSettings Baseline_VeryHard = new WaveSettings
+    public static WaveSettings Baseline_VeryHard = new()
     {
         PopulationFilter = { Enemies.EnemyType.Weakling },
         FilterType = PopulationFilterType.Exclude,
@@ -481,7 +481,7 @@ public record WaveSettings : DataBlock
     /// <summary>
     /// This is a hard miniboss (and special) only wave
     /// </summary>
-    public static WaveSettings MiniBoss_Hard = new WaveSettings
+    public static WaveSettings MiniBoss_Hard = new()
     {
         PopulationFilter = { Enemies.EnemyType.Special, Enemies.EnemyType.MiniBoss },
         FilterType = PopulationFilterType.Include,
@@ -739,7 +739,7 @@ public record WaveSettings : DataBlock
     #endregion
 
     #region Objective/Exit Error Alarms
-    public static WaveSettings Exit_Baseline = new WaveSettings
+    public static WaveSettings Exit_Baseline = new()
     {
         PopulationFilter =
         {
@@ -820,7 +820,7 @@ public record WaveSettings : DataBlock
     #endregion
 
     #region Finite points value
-    public static WaveSettings Finite_35pts_Hard = new WaveSettings
+    public static WaveSettings Finite_35pts_Hard = new()
     {
         PopulationFilter = { Enemies.EnemyType.Weakling },
         FilterType = PopulationFilterType.Exclude,
@@ -854,7 +854,7 @@ public record WaveSettings : DataBlock
     /// to clear enemies. Further scans can be cleared if the geomorphs allow strategies such
     /// as C-Foam holding of doors
     /// </summary>
-    public static WaveSettings Surge = new WaveSettings
+    public static WaveSettings Surge = new()
     {
         PopulationFilter =
         {
@@ -882,7 +882,7 @@ public record WaveSettings : DataBlock
     ///
     /// Quite an easy error alarm.
     /// </summary>
-    public static WaveSettings Scout_Easy = new WaveSettings
+    public static WaveSettings Scout_Easy = new()
     {
         PopulationFilter =
         {
@@ -919,7 +919,7 @@ public record WaveSettings : DataBlock
     /// Can be a fairly gentle reactor wave depending on the population selected.
     /// Only spawns standard and specials.
     /// </summary>
-    public static WaveSettings Reactor_Easy = new WaveSettings
+    public static WaveSettings Reactor_Easy = new()
     {
         PopulationFilter =
         {
@@ -937,7 +937,7 @@ public record WaveSettings : DataBlock
         PopulationRampOverTime = 40
     };
 
-    public static WaveSettings Reactor_Medium = new WaveSettings
+    public static WaveSettings Reactor_Medium = new()
     {
         PopulationFilter =
         {
@@ -956,7 +956,7 @@ public record WaveSettings : DataBlock
         PopulationRampOverTime = 40
     };
 
-    public static WaveSettings Reactor_Hard = new WaveSettings
+    public static WaveSettings Reactor_Hard = new()
     {
         PopulationFilter =
         {
@@ -975,7 +975,7 @@ public record WaveSettings : DataBlock
         PopulationRampOverTime = 30
     };
 
-    public static WaveSettings Reactor_VeryHard = new WaveSettings
+    public static WaveSettings Reactor_VeryHard = new()
     {
         PopulationFilter =
         {
@@ -997,7 +997,7 @@ public record WaveSettings : DataBlock
 
     #region Reactor Waves - Surge wave
 
-    public static WaveSettings Reactor_Surge_50pts = new WaveSettings
+    public static WaveSettings Reactor_Surge_50pts = new()
     {
         PopulationFilter =
         {
@@ -1021,7 +1021,7 @@ public record WaveSettings : DataBlock
         Name = "Surge"
     };
 
-    public static WaveSettings Reactor_Surge_80pts = new WaveSettings
+    public static WaveSettings Reactor_Surge_80pts = new()
     {
         PopulationFilter =
         {
@@ -1045,7 +1045,7 @@ public record WaveSettings : DataBlock
         Name = "Surge"
     };
 
-    public static WaveSettings Reactor_Surge_110pts = new WaveSettings
+    public static WaveSettings Reactor_Surge_110pts = new()
     {
         PopulationFilter =
         {
@@ -1072,7 +1072,7 @@ public record WaveSettings : DataBlock
     #endregion
 
     #region Reactor Waves -- Hybrids
-    public static WaveSettings ReactorHybrids_Medium = new WaveSettings
+    public static WaveSettings ReactorHybrids_Medium = new()
     {
         PopulationFilter = { Enemies.EnemyType.Special },
 
@@ -1085,7 +1085,7 @@ public record WaveSettings : DataBlock
         PopulationRampOverTime = 50
     };
 
-    public static WaveSettings ReactorHybrids_Group = new WaveSettings
+    public static WaveSettings ReactorHybrids_Group = new()
     {
         PopulationFilter = { Enemies.EnemyType.Special },
 
@@ -1100,7 +1100,7 @@ public record WaveSettings : DataBlock
     #endregion
 
     #region Reactor Waves -- Points Groups
-    public static WaveSettings ReactorPoints_Special_16pts = new WaveSettings
+    public static WaveSettings ReactorPoints_Special_16pts = new()
     {
         PopulationFilter = { Enemies.EnemyType.Special },
 
@@ -1115,7 +1115,7 @@ public record WaveSettings : DataBlock
     #endregion
 
     #region Reactor Waves -- Chargers
-    public static WaveSettings ReactorChargers_Easy = new WaveSettings
+    public static WaveSettings ReactorChargers_Easy = new()
     {
         PopulationFilter = { Enemies.EnemyType.Standard },
         PopulationPointsTotal = 14,
@@ -1127,7 +1127,7 @@ public record WaveSettings : DataBlock
         PopulationRampOverTime = 40
     };
 
-    public static WaveSettings ReactorChargers_Hard = new WaveSettings
+    public static WaveSettings ReactorChargers_Hard = new()
     {
         PopulationFilter =
         {
@@ -1145,7 +1145,7 @@ public record WaveSettings : DataBlock
     #endregion
 
     #region Reactor Waves -- Shadows
-    public static WaveSettings ReactorShadows_Easy = new WaveSettings
+    public static WaveSettings ReactorShadows_Easy = new()
     {
         PopulationFilter = { Enemies.EnemyType.Standard },
         PopulationPointsTotal = 20,
@@ -1157,7 +1157,7 @@ public record WaveSettings : DataBlock
         PopulationRampOverTime = 50
     };
 
-    public static WaveSettings ReactorShadows_Hard = new WaveSettings
+    public static WaveSettings ReactorShadows_Hard = new()
     {
         PopulationFilter =
         {
@@ -1198,7 +1198,7 @@ public record WaveSettings : DataBlock
     /// <summary>
     /// 2 minibosses
     /// </summary>
-    public static WaveSettings SingleWave_MiniBoss_4pts = new WaveSettings
+    public static WaveSettings SingleWave_MiniBoss_4pts = new()
     {
         PopulationFilter = { Enemies.EnemyType.MiniBoss },
         FilterType = PopulationFilterType.Include,
@@ -1209,7 +1209,7 @@ public record WaveSettings : DataBlock
     /// <summary>
     /// 3 minibosses
     /// </summary>
-    public static WaveSettings SingleWave_MiniBoss_6pts = new WaveSettings
+    public static WaveSettings SingleWave_MiniBoss_6pts = new()
     {
         PopulationFilter = { Enemies.EnemyType.MiniBoss },
         FilterType = PopulationFilterType.Include,
@@ -1220,7 +1220,7 @@ public record WaveSettings : DataBlock
     /// <summary>
     /// 4 minibosses
     /// </summary>
-    public static WaveSettings SingleWave_MiniBoss_8pts = new WaveSettings
+    public static WaveSettings SingleWave_MiniBoss_8pts = new()
     {
         PopulationFilter = { Enemies.EnemyType.MiniBoss },
         FilterType = PopulationFilterType.Include,
@@ -1231,7 +1231,7 @@ public record WaveSettings : DataBlock
     /// <summary>
     /// 6 minibosses
     /// </summary>
-    public static WaveSettings SingleWave_MiniBoss_12pts = new WaveSettings
+    public static WaveSettings SingleWave_MiniBoss_12pts = new()
     {
         PopulationFilter = { Enemies.EnemyType.MiniBoss },
         FilterType = PopulationFilterType.Include,
@@ -1242,7 +1242,7 @@ public record WaveSettings : DataBlock
     /// <summary>
     /// 8 minibosses
     /// </summary>
-    public static WaveSettings SingleWave_MiniBoss_16pts = new WaveSettings
+    public static WaveSettings SingleWave_MiniBoss_16pts = new()
     {
         PopulationFilter = { Enemies.EnemyType.MiniBoss },
         FilterType = PopulationFilterType.Include,
@@ -1253,7 +1253,7 @@ public record WaveSettings : DataBlock
     /// <summary>
     /// 12 minibosses
     /// </summary>
-    public static WaveSettings SingleWave_MiniBoss_24pts = new WaveSettings
+    public static WaveSettings SingleWave_MiniBoss_24pts = new()
     {
         PopulationFilter = { Enemies.EnemyType.MiniBoss },
         FilterType = PopulationFilterType.Include,
@@ -1262,7 +1262,7 @@ public record WaveSettings : DataBlock
     };
     #endregion
 
-    public static WaveSettings SingleWave_8pts = new WaveSettings
+    public static WaveSettings SingleWave_8pts = new()
     {
         PopulationFilter = {
             Enemies.EnemyType.Standard,
@@ -1274,7 +1274,7 @@ public record WaveSettings : DataBlock
         PopulationPointsTotal = 8,
     };
 
-    public static WaveSettings SingleWave_12pts = new WaveSettings
+    public static WaveSettings SingleWave_12pts = new()
     {
         PopulationFilter = {
             Enemies.EnemyType.Standard,
@@ -1286,7 +1286,7 @@ public record WaveSettings : DataBlock
         PopulationPointsTotal = 12,
     };
 
-    public static WaveSettings SingleWave_16pts = new WaveSettings
+    public static WaveSettings SingleWave_16pts = new()
     {
         PopulationFilter = {
             Enemies.EnemyType.Standard,
@@ -1298,7 +1298,7 @@ public record WaveSettings : DataBlock
         PopulationPointsTotal = 16,
     };
 
-    public static WaveSettings SingleWave_20pts = new WaveSettings
+    public static WaveSettings SingleWave_20pts = new()
     {
         PopulationFilter = {
             Enemies.EnemyType.Standard,
@@ -1310,7 +1310,7 @@ public record WaveSettings : DataBlock
         PopulationPointsTotal = 20,
     };
 
-    public static WaveSettings SingleWave_28pts = new WaveSettings
+    public static WaveSettings SingleWave_28pts = new()
     {
         PopulationFilter = {
             Enemies.EnemyType.Standard,
@@ -1322,7 +1322,7 @@ public record WaveSettings : DataBlock
         PopulationPointsTotal = 28,
     };
 
-    public static WaveSettings SingleWave_35pts = new WaveSettings
+    public static WaveSettings SingleWave_35pts = new()
     {
         PopulationFilter = {
             Enemies.EnemyType.Standard,
@@ -1336,7 +1336,7 @@ public record WaveSettings : DataBlock
     #endregion
 
     #region Single enemy spawns
-    public static WaveSettings SingleMiniBoss = new WaveSettings
+    public static WaveSettings SingleMiniBoss = new()
     {
         PopulationFilter = { Enemies.EnemyType.MiniBoss },
         PauseBeforeStart = 1.0,
