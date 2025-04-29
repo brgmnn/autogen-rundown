@@ -26,13 +26,6 @@ public record ReactorEnemyWave
         Duration = 60
     };
 
-    // public static readonly ReactorEnemyWave Baseline_MediumMixed = new()
-    // {
-    //     Settings = WaveSettings.Reactor_Medium,
-    //     Population = WavePopulation.Baseline,
-    //     Duration = 60
-    // };
-
     public static readonly ReactorEnemyWave Baseline_Hard = new()
     {
         Settings = WaveSettings.Reactor_Hard,
@@ -47,20 +40,6 @@ public record ReactorEnemyWave
         Duration = 80
     };
 
-    public static readonly ReactorEnemyWave BaselineWithChargers_Hard = new()
-    {
-        Settings = WaveSettings.Reactor_Hard,
-        Population = WavePopulation.Baseline_Chargers,
-        Duration = 55
-    };
-
-    public static readonly ReactorEnemyWave BaselineWithNightmare_Hard = new()
-    {
-        Settings = WaveSettings.Reactor_Hard,
-        Population = WavePopulation.Baseline_Nightmare,
-        Duration = 60
-    };
-
     public static readonly ReactorEnemyWave Baseline_SurgeMedium = new()
     {
         Settings = WaveSettings.Reactor_Surge_50pts,
@@ -70,14 +49,14 @@ public record ReactorEnemyWave
 
     public static readonly ReactorEnemyWave Baseline_SurgeHard = new()
     {
-        Settings = WaveSettings.Reactor_Surge_80pts,
+        Settings = WaveSettings.Reactor_Surge_60pts,
         Population = WavePopulation.Baseline,
         Duration = 90
     };
 
     public static readonly ReactorEnemyWave Baseline_SurgeVeryHard = new()
     {
-        Settings = WaveSettings.Reactor_Surge_110pts,
+        Settings = WaveSettings.Reactor_Surge_70pts,
         Population = WavePopulation.Baseline,
         Duration = 120
     };
@@ -120,89 +99,36 @@ public record ReactorEnemyWave
     };
     #endregion
 
-    #region Giant waves
-    public static ReactorEnemyWave Giants_16pts = new()
-    {
-        Settings = WaveSettings.ReactorPoints_Special_16pts,
-        Population = WavePopulation.Special_StrikerGiants,
-        Duration = 20
-    };
-    #endregion
-
-    #region Hybrid waves
-    public static ReactorEnemyWave OnlyHybrids_Medium = new()
-    {
-        Settings = WaveSettings.ReactorHybrids_Medium,
-        Population = WavePopulation.OnlyHybrids,
-        Duration = 50
-    };
-    #endregion
-
-    #region Charger waves
-    public static ReactorEnemyWave OnlyChargers_Easy = new()
-    {
-        Settings = WaveSettings.ReactorChargers_Easy,
-        Population = WavePopulation.OnlyChargers,
-        Duration = 30
-    };
-
-    public static ReactorEnemyWave OnlyChargers_Hard = new()
-    {
-        Settings = WaveSettings.ReactorChargers_Hard,
-        Population = WavePopulation.OnlyChargers,
-        Duration = 50
-    };
-    #endregion
-
-    #region Shadow waves
-    public static ReactorEnemyWave OnlyShadows_Easy = new()
-    {
-        Settings = WaveSettings.ReactorShadows_Easy,
-        Population = WavePopulation.OnlyShadows,
-        Duration = 45
-    };
-
-    public static ReactorEnemyWave OnlyShadows_Hard = new()
-    {
-        Settings = WaveSettings.ReactorShadows_Hard,
-        Population = WavePopulation.OnlyShadows,
-        Duration = 80
-    };
-    #endregion
-
-    #region Nightmare waves
-    #endregion
-
     #region Boss waves
-    public static ReactorEnemyWave SingleMother = new()
+    public static readonly ReactorEnemyWave SingleMother = new()
     {
         Settings = WaveSettings.SingleMiniBoss,
         Population = WavePopulation.SingleEnemy_Mother,
         Duration = 90
     };
 
-    public static ReactorEnemyWave SingleTank = new()
+    public static readonly ReactorEnemyWave SingleTank = new()
     {
         Settings = WaveSettings.SingleMiniBoss,
         Population = WavePopulation.SingleEnemy_Tank,
         Duration = 90
     };
 
-    public static ReactorEnemyWave SingleTankPotato = new()
+    public static readonly ReactorEnemyWave SingleTankPotato = new()
     {
         Settings = WaveSettings.SingleMiniBoss,
         Population = WavePopulation.SingleEnemy_TankPotato,
         Duration = 50
     };
 
-    public static ReactorEnemyWave SinglePouncer = new()
+    public static readonly ReactorEnemyWave SinglePouncer = new()
     {
         Settings = WaveSettings.SingleMiniBoss,
         Population = WavePopulation.SingleEnemy_Pouncer,
         Duration = 30
     };
 
-    public static ReactorEnemyWave SingleShadowPouncer = new()
+    public static readonly ReactorEnemyWave SingleShadowPouncer = new()
     {
         Settings = WaveSettings.SingleMiniBoss,
         Population = WavePopulation.SingleEnemy_PouncerShadow,

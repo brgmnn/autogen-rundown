@@ -383,8 +383,8 @@ public record WaveSettings : DataBlock
         Bins.WaveSettings.AddBlock(Reactor_VeryHard);
 
         Bins.WaveSettings.AddBlock(Reactor_Surge_50pts);
-        Bins.WaveSettings.AddBlock(Reactor_Surge_80pts);
-        Bins.WaveSettings.AddBlock(Reactor_Surge_110pts);
+        Bins.WaveSettings.AddBlock(Reactor_Surge_60pts);
+        Bins.WaveSettings.AddBlock(Reactor_Surge_70pts);
 
         Bins.WaveSettings.AddBlock(ReactorChargers_Easy);
         Bins.WaveSettings.AddBlock(ReactorChargers_Hard);
@@ -927,7 +927,7 @@ public record WaveSettings : DataBlock
             Enemies.EnemyType.Special,
         },
 
-        PopulationPointsTotal = 45,
+        PopulationPointsTotal = 40,
         PopulationPointsPerWaveStart = 25,
         PopulationPointsPerWaveEnd = 25,
         PopulationPointsMinPerGroup = 5,
@@ -946,7 +946,7 @@ public record WaveSettings : DataBlock
             Enemies.EnemyType.MiniBoss
         },
 
-        PopulationPointsTotal = 60,
+        PopulationPointsTotal = 50,
         PopulationPointsPerWaveStart = 25,
         PopulationPointsPerWaveEnd = 25,
         PopulationPointsMinPerGroup = 5,
@@ -965,7 +965,7 @@ public record WaveSettings : DataBlock
             Enemies.EnemyType.MiniBoss
         },
 
-        PopulationPointsTotal = 75,
+        PopulationPointsTotal = 60,
         PopulationPointsPerWaveStart = 25,
         PopulationPointsPerWaveEnd = 25,
         PopulationPointsMinPerGroup = 5,
@@ -984,7 +984,7 @@ public record WaveSettings : DataBlock
             Enemies.EnemyType.MiniBoss
         },
 
-        PopulationPointsTotal = 90,
+        PopulationPointsTotal = 70,
         PopulationPointsPerWaveStart = 30,
         PopulationPointsPerWaveEnd = 35,
         PopulationPointsMinPerGroup = 5,
@@ -1021,7 +1021,7 @@ public record WaveSettings : DataBlock
         Name = "Surge"
     };
 
-    public static WaveSettings Reactor_Surge_80pts = new()
+    public static WaveSettings Reactor_Surge_60pts = new()
     {
         PopulationFilter =
         {
@@ -1031,7 +1031,7 @@ public record WaveSettings : DataBlock
         },
         FilterType = PopulationFilterType.Include,
 
-        PopulationPointsTotal = 80,
+        PopulationPointsTotal = 60,
 
         PauseBeforeStart = 1.0,
         PauseBetweenGroups = 3.0,
@@ -1045,7 +1045,7 @@ public record WaveSettings : DataBlock
         Name = "Surge"
     };
 
-    public static WaveSettings Reactor_Surge_110pts = new()
+    public static WaveSettings Reactor_Surge_70pts = new()
     {
         PopulationFilter =
         {
@@ -1055,7 +1055,7 @@ public record WaveSettings : DataBlock
         },
         FilterType = PopulationFilterType.Include,
 
-        PopulationPointsTotal = 110,
+        PopulationPointsTotal = 70,
 
         PauseBeforeStart = 1.0,
         PauseBetweenGroups = 3.0,
