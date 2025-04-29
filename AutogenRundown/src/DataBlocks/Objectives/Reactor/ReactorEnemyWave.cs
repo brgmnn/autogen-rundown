@@ -12,47 +12,113 @@ public enum ReactorWaveSpawnType
 public record ReactorEnemyWave
 {
     #region Preset waves
-    public static ReactorEnemyWave Baseline_Easy = new()
+    public static readonly ReactorEnemyWave Baseline_Easy = new()
     {
         Settings = WaveSettings.Reactor_Easy,
-        Population = WavePopulation.Baseline,
-        Duration = 40
-    };
-
-    public static ReactorEnemyWave Baseline_Medium = new()
-    {
-        Settings = WaveSettings.Reactor_Medium,
         Population = WavePopulation.Baseline,
         Duration = 50
     };
 
-    public static ReactorEnemyWave Baseline_MediumMixed = new()
+    public static readonly ReactorEnemyWave Baseline_Medium = new()
     {
         Settings = WaveSettings.Reactor_Medium,
         Population = WavePopulation.Baseline,
         Duration = 60
     };
 
-    public static ReactorEnemyWave Baseline_Hard = new()
+    // public static readonly ReactorEnemyWave Baseline_MediumMixed = new()
+    // {
+    //     Settings = WaveSettings.Reactor_Medium,
+    //     Population = WavePopulation.Baseline,
+    //     Duration = 60
+    // };
+
+    public static readonly ReactorEnemyWave Baseline_Hard = new()
     {
         Settings = WaveSettings.Reactor_Hard,
         Population = WavePopulation.Baseline_Hybrids,
-        Duration = 60
+        Duration = 70
     };
 
-    public static ReactorEnemyWave BaselineWithChargers_Hard = new()
+    public static readonly ReactorEnemyWave Baseline_VeryHard = new()
+    {
+        Settings = WaveSettings.Reactor_VeryHard,
+        Population = WavePopulation.Baseline_Hybrids,
+        Duration = 80
+    };
+
+    public static readonly ReactorEnemyWave BaselineWithChargers_Hard = new()
     {
         Settings = WaveSettings.Reactor_Hard,
         Population = WavePopulation.Baseline_Chargers,
         Duration = 55
     };
 
-    public static ReactorEnemyWave BaselineWithNightmare_Hard = new()
+    public static readonly ReactorEnemyWave BaselineWithNightmare_Hard = new()
     {
         Settings = WaveSettings.Reactor_Hard,
         Population = WavePopulation.Baseline_Nightmare,
         Duration = 60
     };
+
+    public static readonly ReactorEnemyWave Baseline_SurgeMedium = new()
+    {
+        Settings = WaveSettings.Reactor_Surge_50pts,
+        Population = WavePopulation.Baseline,
+        Duration = 60
+    };
+
+    public static readonly ReactorEnemyWave Baseline_SurgeHard = new()
+    {
+        Settings = WaveSettings.Reactor_Surge_80pts,
+        Population = WavePopulation.Baseline,
+        Duration = 90
+    };
+
+    public static readonly ReactorEnemyWave Baseline_SurgeVeryHard = new()
+    {
+        Settings = WaveSettings.Reactor_Surge_110pts,
+        Population = WavePopulation.Baseline,
+        Duration = 120
+    };
+
+    #region MiniBoss single wave -- needs pop set
+    public static readonly ReactorEnemyWave MiniBoss_4pts = new()
+    {
+        Settings = WaveSettings.SingleWave_MiniBoss_4pts,
+        Duration = 40,
+    };
+
+    public static readonly ReactorEnemyWave MiniBoss_6pts = new()
+    {
+        Settings = WaveSettings.SingleWave_MiniBoss_6pts,
+        Duration = 40,
+    };
+
+    public static readonly ReactorEnemyWave MiniBoss_8pts = new()
+    {
+        Settings = WaveSettings.SingleWave_MiniBoss_8pts,
+        Duration = 40,
+    };
+
+    public static readonly ReactorEnemyWave MiniBoss_12pts = new()
+    {
+        Settings = WaveSettings.SingleWave_MiniBoss_12pts,
+        Duration = 40,
+    };
+
+    public static readonly ReactorEnemyWave MiniBoss_16pts = new()
+    {
+        Settings = WaveSettings.SingleWave_MiniBoss_16pts,
+        Duration = 40,
+    };
+
+    public static readonly ReactorEnemyWave MiniBoss_24pts = new()
+    {
+        Settings = WaveSettings.SingleWave_MiniBoss_24pts,
+        Duration = 40,
+    };
+    #endregion
 
     #region Giant waves
     public static ReactorEnemyWave Giants_16pts = new()
@@ -166,7 +232,7 @@ public record ReactorEnemyWave
     }
 
     [JsonIgnore]
-    public WavePopulation Population { get; set; } = WavePopulation.None;
+    public WavePopulation Population { get; set; } = WavePopulation.Baseline;
 
     /// <summary>
     /// Room distance, in general this should always be left at 2.

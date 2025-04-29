@@ -420,35 +420,35 @@ public static class RundownFactory
 
         #region Test E Levels
         #if DEBUG
-        // if (false && withFixed)
-        // {
-        //     var mainDirectorE = new BuildDirector
-        //     {
-        //         Bulkhead = Bulkhead.Main,
-        //         Complex = Complex.Mining,
-        //         Complexity = Complexity.Low,
-        //         Tier = "E",
-        //         Objective = WardenObjectiveType.TerminalUplink,
-        //     };
-        //     mainDirectorE.GenPoints();
-        //
-        //     var settingsE = new LevelSettings("E");
-        //     settingsE.Modifiers.Add(LevelModifiers.ManyChargers);
-        //     settingsE.Modifiers.Add(LevelModifiers.ManyShadows);
-        //
-        //     var testLevelE = Level.Build(
-        //         new Level
-        //         {
-        //             Tier = "E",
-        //             Name = "Terminal Command",
-        //             Complex = Complex.Tech,
-        //             MainDirector = mainDirectorE,
-        //             Settings = settingsE,
-        //             Index = eMax + 1,
-        //             IsTest = true
-        //         });
-        //     rundown.AddLevel(testLevelE);
-        // }
+        if (true && withFixed)
+        {
+            var mainDirectorE = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Main,
+                Complex = Complex.Mining,
+                Complexity = Complexity.Low,
+                Tier = "E",
+                Objective = WardenObjectiveType.ReactorStartup,
+            };
+            mainDirectorE.GenPoints();
+
+            var settingsE = new LevelSettings("E");
+            settingsE.Modifiers.Add(LevelModifiers.ManyChargers);
+            settingsE.Modifiers.Add(LevelModifiers.ManyShadows);
+
+            var testLevelE = Level.Build(
+                new Level("E")
+                {
+                    Tier = "E",
+                    Name = "Terminal Command",
+                    Complex = Complex.Tech,
+                    MainDirector = mainDirectorE,
+                    Settings = settingsE,
+                    Index = rundown.TierE_Count + 1,
+                    IsTest = true
+                });
+            rundown.AddLevel(testLevelE);
+        }
         #endif
         #endregion
         #endregion

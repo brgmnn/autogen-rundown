@@ -144,7 +144,7 @@ public record WavePopulation : DataBlock
         return pack;
     }
 
-    public static new void SaveStatic()
+    public new static void SaveStatic()
     {
         Bins.WavePopulations.AddBlock(Baseline);
         Bins.WavePopulations.AddBlock(Baseline_Hybrids);
@@ -154,6 +154,8 @@ public record WavePopulation : DataBlock
         Bins.WavePopulations.AddBlock(Baseline_Shadows);
 
         // Single enemy variant population
+        Bins.WavePopulations.AddBlock(OnlyGiantStrikers);
+        Bins.WavePopulations.AddBlock(OnlyGiantShooters);
         Bins.WavePopulations.AddBlock(OnlyChargers);
         Bins.WavePopulations.AddBlock(OnlyHybrids);
         Bins.WavePopulations.AddBlock(OnlyInfectedHybrids);
@@ -239,6 +241,24 @@ public record WavePopulation : DataBlock
         Name = "Baseline_Shadows"
     };
     #endregion
+
+    public static WavePopulation OnlyGiantStrikers = new()
+    {
+        WaveRoleWeakling = Enemy.StrikerGiant_Wave,
+        WaveRoleStandard = Enemy.StrikerGiant_Wave,
+        WaveRoleSpecial = Enemy.StrikerGiant_Wave,
+        WaveRoleMiniBoss = Enemy.StrikerGiant_Wave,
+        Name = "OnlyGiantShooters"
+    };
+
+    public static WavePopulation OnlyGiantShooters = new()
+    {
+        WaveRoleWeakling = Enemy.ShooterGiant,
+        WaveRoleStandard = Enemy.ShooterGiant,
+        WaveRoleSpecial = Enemy.ShooterGiant,
+        WaveRoleMiniBoss = Enemy.ShooterGiant,
+        Name = "OnlyGiantShooters"
+    };
 
     public static WavePopulation OnlyChargers = new WavePopulation
     {
