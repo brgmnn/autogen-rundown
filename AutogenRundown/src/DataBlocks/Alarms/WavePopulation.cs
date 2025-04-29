@@ -161,6 +161,7 @@ public record WavePopulation : DataBlock
         Bins.WavePopulations.AddBlock(OnlyInfectedHybrids);
         Bins.WavePopulations.AddBlock(OnlyShadows);
         Bins.WavePopulations.AddBlock(OnlyNightmares);
+        Bins.WavePopulations.AddBlock(OnlyNightmareGiants);
 
         // Shadows
         Bins.WavePopulations.AddBlock(Shadows_WithHybrids);
@@ -308,6 +309,16 @@ public record WavePopulation : DataBlock
         WaveRoleBoss = Enemy.NightmareShooter,
         DifficultyFactor = 1.20,
         Name = "OnlyNightmares"
+    };
+
+    public static WavePopulation OnlyNightmareGiants = new WavePopulation
+    {
+        WaveRoleWeakling = Enemy.NightmareStriker,
+        WaveRoleStandard = Enemy.NightmareStriker,
+        WaveRoleSpecial = (Enemy)Enemy_New.NightmareGiant.PersistentId,
+        WaveRoleMiniBoss = (Enemy)Enemy_New.NightmareGiant.PersistentId,
+        DifficultyFactor = 1.20,
+        Name = "OnlyNightmareGiants"
     };
 
     public static WavePopulation Shadows_WithHybrids = new WavePopulation
