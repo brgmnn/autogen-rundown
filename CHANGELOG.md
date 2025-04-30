@@ -3,6 +3,37 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.61.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.61.0) — April 29, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* New enemy: Giant Nightmare Striker
+  * Functions very similar to a Giant Charger, but with higher health and slightly increased crit multiplier on chest: 2.25x crit, 180hp
+
+### Changes
+
+* Adjusted number of reactor waves, in general most levels should have fewer reactor waves total now
+* Reworked reactor wave difficulty. Waves are generally harder with fewer easy starting waves
+  * Waves are broadly generated based on four groups: first wave, first half of waves, second half of waves, last wave
+  * Added reactor surge waves (points are continually spawned until wave points total is reached)
+* Reactor levels requiring fetching codes now have the following logic:
+  * First wave code is always given for free
+  * Last wave code always requires fetching from terminal
+  * Remaining number of fetching code waves are randomly distributed between the first and last waves
+* Removed progression requirements from weekly rundown
+* Removed single use resource packs
+* Reduced max rolled error alarms in E-tier level layout from 3 to 2.
+  * Chance of getting 3 was already very low (~3%) but now it's fixed at 2. A level can still have more than 2 error alarms (bulkheads are rolled independently and manually placed alarms are not counted).
+* Reduced max bosses that can spawn per bulkhead level layout:
+  * C-tier: max 1 boss per bulkhead
+  * D-tier: max 2 bosses per bulkhead
+  * E-tier: max 4 boss per bulkhead
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.60.0...v0.61.0
+
+
 ## [v0.60.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.60.0) — April 19, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
