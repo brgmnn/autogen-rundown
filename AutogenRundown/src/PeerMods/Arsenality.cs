@@ -2,9 +2,14 @@
 
 namespace AutogenRundown.PeerMods;
 
-public static class Arsenality
+public class Arsenality : SupportedMod
 {
     public static string MOD_NAME = "W33B-Arsenality";
+
+    public Arsenality()
+    {
+        ModName = "W33B-Arsenality";
+    }
 
     public static void Configure()
     {

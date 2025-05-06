@@ -820,14 +820,14 @@ public static class RundownFactory
         };
         Bins.GameSetups.AddBlock(gameSetup);
 
+        // Configure any peer mods
+        Peers.Configure();
+
         Bins.Save();
 
         EnemyCustomization.Ability.Save();
         EnemyCustomization.Model.Save();
         EnemyCustomization.Projectile.Save();
-
-        // Configure any peer mods
-        Peers.Configure();
     }
 }
 
