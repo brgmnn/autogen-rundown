@@ -59,6 +59,7 @@ public partial record LevelLayout
             ("D", 5) => (1, 2),
             ("D", 4) => (1, 3),
             ("D", _) => (2, 3),
+            // TODO: Add for more than 5, and make conditions <4 and >5
 
             ("E", 6) => (1, 2),
             ("E", 5) => (1, 3),

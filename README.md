@@ -22,6 +22,20 @@ TODO:
   * Make extract scan short if there's no extract alarm (Don't do it just based on level tier)
   * Add a way to automatically install deps?
 
+2025_04_29
+  * D1: Error alarm with no turn off is quite a bit harder
+    * Need to ban garden tiles on timed sections
+    * Probably we need a few less alarms
+    * Might want to have fewer enemies on reactor fetch code tiles
+    * D1 had A LOT of zones to run through, may want to not have multiple zones of fetch codes and do single zone fetch codes
+    * For fetch codes that have zones not starting at reactor, need to factor traverse time to get there and back
+  * D1 (or D2?)
+    * Need to fix the zone count for layout for reactors
+      * Maybe consider using a different layout for it?
+    * Consider if we reduce number of fetch codes from 6 to 5
+    * May need to BUFF the reactor waves a little
+
+
 2025_04_25
   * E1: ~Error alarm turn off zone also disables the survival alarm?!~
     * Edit: Actually it just hides the countdown
