@@ -17,7 +17,16 @@ public class ArsenalityRebalance : SupportedMod
         Plugin.Logger.LogInfo($"Configuring peer mod: {mod.ModName}");
 
         mod.CopyGameDataJson();
-        mod.CopyCustomMccad00();
-        mod.CopyGearPartTransform();
+
+        var pluginPath = Path.Combine(mod.PluginFolder, "GearPartTransform.json");
+        var gameDataPath = Path.Combine(mod.GameDataFolder, "Custom", "mccad00", "GearPartTransform.json");
+
+        if (!File.Exists(pluginPath))
+            return;
+
+        Directory.CreateDirectory(Path.GetDirectoryName(gameDataPath));
+        File.Copy(pluginPath, gameDataPath, overwrite: true);
+
+        Plugin.Logger.LogDebug($"{mod.ModName}: Copied -> GearPartTransform.json");
     }
 }
