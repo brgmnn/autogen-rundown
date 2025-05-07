@@ -3,6 +3,17 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.61.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.61.1) — May 07, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Added support for mod: [ArsenalityRebalance](https://thunderstore.io/c/gtfo/p/leezurli/ArsenalityRebalance/)
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.61.0...v0.61.1
+
+
 ## [v0.61.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.61.0) — April 29, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
