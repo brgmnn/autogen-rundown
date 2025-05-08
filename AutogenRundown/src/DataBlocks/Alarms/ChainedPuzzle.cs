@@ -315,14 +315,13 @@ public record ChainedPuzzle : DataBlock
                     (1.0, 1, AlarmClass5_Mixed),
 
                     // Hard
-                    (1.0, 2, AlarmClass6),
+                    (1.0, 3, AlarmClass6),
                     (1.0, 2, AlarmClass6_Mixed),
                     (1.0, 3, AlarmClass7),
                     (1.0, 3, AlarmClass7_Mixed),
                     (1.0, 1, AlarmClass8),
-                    (0.5, 1, AlarmClass9),
 
-                    // Surge (very challenging)
+                    // Surge
                     (1.0, 1, AlarmClass2_Surge),
                     (1.0, 1, AlarmClass3_Surge),
 
@@ -353,9 +352,9 @@ public record ChainedPuzzle : DataBlock
                     (1.0, 3, AlarmClass7_Mixed),
                     (1.0, 3, AlarmClass8),
 
-                    // Pure pain scans, TODO: this might be too much
+                    // Surge alarms
                     (1.0, 3, AlarmClass3_Surge),
-                    (0.7, 1, AlarmClass4_Surge), // !!! Is this possible? We think yes (have cleared)
+                    (0.7, 1, AlarmClass4_Surge),
 
                     // Sustained
                     (1.0, 3, AlarmClass1_Sustained),
