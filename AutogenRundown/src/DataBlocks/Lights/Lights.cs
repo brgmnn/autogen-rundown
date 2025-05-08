@@ -173,7 +173,7 @@ public static class Lights
         //Light.Reactor_green_all_on_1_R5C1_ALT,
         //Light.Reactor_green_all_on_1,
         Light.RedToCyan_1,
-        Light.RedToWhite_1_Flickering,
+        //Light.RedToWhite_1_Flickering, // Aggressively flickering light
         //Light.RedToWhite_1_R5A2_L1,
         Light.RedToWhite_1,
         Light.RedToYellow_1,
