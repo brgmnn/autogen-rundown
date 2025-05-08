@@ -21,6 +21,20 @@ TODO:
   * Rework lights on zone to load into lightsettings and let us set our own light settings
   * Make extract scan short if there's no extract alarm (Don't do it just based on level tier)
   * Add a way to automatically install deps?
+  * Rising fog?
+  * Objective: Distribute Power Cells
+    * Needs something to happen when completing all the cells ideally
+    * Would be good if the fog could rise or lower when inserting the cells
+
+2025_05_06
+  * Consider reducing the occurence of nightmare enemies
+  * Giant Onion error alarm? Probably close to boss tier
+  * Giant Onions feel a little squishy? May be due to high overbalance of Arsenality
+    * Maybe we up them to 200 health?
+  * Remove light from D4 (the one we completed), or was it D2? The strobe red light
+  * Probably we should not have class 9 alarms on non-Apex doors
+    * In general the high end of alarm rolls for regular doors should come down a tiny bit
+  * Again, we need to ban garden tiles from occuring as often
 
 2025_04_29
   * D1: Error alarm with no turn off is quite a bit harder
@@ -74,17 +88,7 @@ Monthly March
 
 Monthly Feb
   * Double cargo B1 -- Not sure why?
-  * March
-    [x] A1 - Reactor shutdown main no exit trickle
-    [x] B2 - Overload: need to add time for doing king of the hill. it's not possible with how much time it takes to not get bonus time
-              See if we can use AWO for setting the timer with additional objectives?
-    [x] B2 - Extreme: Survival timer still doesn't add time, instead resets time with new value and then is reset back to starting time
-    [x] B2 - Survival timer: On B-tier at least it seems like a tiny bit more ammo would be good.
-    [x] C1 - Overload: got the mega mother room for the terminal uplink. - Getting hubs for uplink rooms is no good
-
   * Reactor D2
-    [ ] Possibly reduce the number of waves but up the difficulty. First 3-4 waves were easy and a bit of nothing
-    [ ] May consider reducing the number of zones?
     [ ] Mother wave had good amount of time. DONT CHANGE
 
 Missing tiles to add

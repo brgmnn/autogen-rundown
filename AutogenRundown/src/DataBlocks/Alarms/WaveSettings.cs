@@ -363,8 +363,7 @@ public record WaveSettings : DataBlock
 
         Bins.WaveSettings.AddBlock(Error_Boss_Hard);
 
-        // Exit
-        Bins.WaveSettings.AddBlock(Exit_Baseline);
+        // Objective Exit
         Bins.WaveSettings.AddBlock(Exit_Objective_Easy);
         Bins.WaveSettings.AddBlock(Exit_Objective_Medium);
         Bins.WaveSettings.AddBlock(Exit_Objective_Hard);
@@ -739,20 +738,6 @@ public record WaveSettings : DataBlock
     #endregion
 
     #region Objective/Exit Error Alarms
-    public static WaveSettings Exit_Baseline = new()
-    {
-        PopulationFilter =
-        {
-            Enemies.EnemyType.Standard,
-            Enemies.EnemyType.Special,
-        },
-        FilterType = PopulationFilterType.Include,
-        PauseBeforeStart = 4.0,
-        PauseBetweenGroups = 8.0,
-
-        Name = "Exit_Baseline"
-    };
-
     public static WaveSettings Exit_Objective_Easy = new()
     {
         PopulationFilter = { Enemies.EnemyType.Standard },

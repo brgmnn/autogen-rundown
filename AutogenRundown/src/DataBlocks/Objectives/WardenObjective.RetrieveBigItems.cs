@@ -304,7 +304,7 @@ public partial record WardenObjective
             {
                 var zoneIndex = dataLayer.ObjectiveData.ZonePlacementDatas[0][0].LocalIndex;
 
-                WavesOnGotoWin.Add(GenericWave.ExitTrickle);
+                WavesOnGotoWin.Add(GenericWave.Exit_Objective_Easy);
 
                 // Manually set the zones as the inbuilt ITEM_ZONE doesn't seem to
                 // work correctly for MWP

@@ -10,25 +10,6 @@ public record GenericWave
     /// </summary>
     public static readonly GenericWave None = new();
 
-    /// <summary>
-    /// Exit trickle alarm for running to extraction at the end of the level.
-    /// </summary>
-    public static readonly GenericWave ExitTrickle = new()
-    {
-        Settings = WaveSettings.Exit_Baseline,
-        Population = WavePopulation.Baseline,
-        SpawnDelay = 4.0,
-        TriggerAlarm = true,
-    };
-
-    /// <summary>
-    ///
-    /// </summary>
-    public static readonly GenericWave Exit_Surge = new()
-    {
-        Settings = WaveSettings.Exit_Baseline,
-    };
-
     #region Objective Exit
 
     public static readonly GenericWave Exit_Objective_Easy = new()
