@@ -183,6 +183,10 @@ public record ComplexResourceSet : DataBlock
         Tech = Find(Tech.PersistentId);
         Service = Find(Service.PersistentId);
 
+        // Use .Insert(0, ...) instead of .Add(). For some reason appending the blocks to the end
+        // of the list causes problems
+
+        // TODO: we can probably remove this
         Bins.ComplexResources.Headers = new List<JObject>
         {
             new()
