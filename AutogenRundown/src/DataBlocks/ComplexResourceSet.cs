@@ -489,18 +489,91 @@ public record ComplexResourceSet : DataBlock
         /// Service (Floodways / Gardens) custom geomorph updates
         ///
 
-        // Base game
-        Service.CustomGeomorphs.Insert(0, new Prefab()
+        #region Base game
+        // We want to have a mix between Complex=27 and Complex=53. 27 is just Floodways and
+        // 53 is Floodways with garden tiles. The garden tiles are particularly hard to balance
+        // so the custom version we use doesn't have the garden tiles in the regular random roll
+        // list, but instead can be placed as custom geos
+
+        Service.CustomGeomorphs.Insert(0, new Prefab
         {
             Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_dead_end_HA_02.prefab",
             SubComplex = SubComplex.Floodways
         });
-        Service.CustomGeomorphs.Insert(0, new Prefab()
+        Service.CustomGeomorphs.Insert(0, new Prefab
         {
             // Mega Nightmare mother room
             Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03_V2.prefab",
             SubComplex = SubComplex.Floodways
         });
+
+        #region Garden GeomorphTiles_1x1 -> CustomGeomorphs_Objectives_1x1
+        Service.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_HA_01.prefab",
+            Shard = 7,
+            SubComplex = SubComplex.Gardens
+        });
+        Service.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_HA_02.prefab",
+            Shard = 8,
+            SubComplex = SubComplex.Gardens
+        });
+        Service.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_SF_01.prefab",
+            Shard = 7,
+            SubComplex = SubComplex.Gardens
+        });
+        Service.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_AW_01.prefab",
+            Shard = 9,
+            SubComplex = SubComplex.Gardens
+        });
+        Service.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_JG_01.prefab",
+            Shard = 10,
+            SubComplex = SubComplex.Gardens
+        });
+
+        Service.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_JG_02.prefab",
+            Shard = 11,
+            SubComplex = SubComplex.Gardens
+        });
+        Service.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_HA_03.prefab",
+            Shard = 8,
+            SubComplex = SubComplex.Gardens
+        });
+        #endregion
+
+        #region Garden Wall Caps
+        Service.SmallWallCaps.Add(new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Gates/4x4/gate_4x4_gardens_cap_wall_01.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 15
+        });
+        Service.SmallDestroyedCaps.Add(new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Gates/4x4/gate_4x4_gardens_cap_destroyed_01.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 15
+        });
+        Service.SmallWallAndDestroyedCaps.Add(new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Gates/4x4/gate_4x4_gardens_cap_destroyed_wall_01.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 15
+        });
+        #endregion
+        #endregion
 
         #region MODDER: donan3967
         #region geo_pack_1
