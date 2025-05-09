@@ -19,5 +19,5 @@ public record Prefab
     /// <summary>
     ///
     /// </summary>
-    public string Shard { get; set; } = "S1";
+    public int Shard { get; set; } = 1;
 }

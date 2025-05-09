@@ -12,6 +12,8 @@ public static class Bins
         = new BlocksBin<BigPickupDistribution>();
     public static LazyBlocksBin<ChainedPuzzle> ChainedPuzzles { get; private set; }
         = new LazyBlocksBin<ChainedPuzzle>();
+    public static BlocksBin<ComplexResourceSet> ComplexResources { get; private set; }
+        = new BlocksBin<ComplexResourceSet>();
     public static BlocksBin<ConsumableDistribution> ConsumableDistributions { get; private set; }
         = new BlocksBin<ConsumableDistribution>();
     public static BlocksBin<Dimension> Dimensions { get; private set; }
@@ -53,6 +55,7 @@ public static class Bins
     /// </summary>
     public static void Setup()
     {
+        ComplexResourceSet.Setup();
         Light.LightSettings.Setup();
         Light.LightSettings.SaveStatic();
         Text.Setup();
@@ -69,6 +72,7 @@ public static class Bins
 
         BigPickupDistribution.SaveStatic();
         ChainedPuzzle.SaveStatic();
+        ComplexResourceSet.SaveStatic();
         ConsumableDistribution.SaveStatic();
         Dimension.SaveStatic();
         EnemyGroup.SaveStatic();
@@ -89,6 +93,7 @@ public static class Bins
     {
         BigPickupDistributions.Save("BigPickupDistribution");
         ChainedPuzzles.Save("ChainedPuzzle");
+        ComplexResources.Save("ComplexResourceSet");
         ConsumableDistributions.Save("ConsumableDistribution");
         Dimensions.Save("Dimension");
         Enemy.Save("Enemy");

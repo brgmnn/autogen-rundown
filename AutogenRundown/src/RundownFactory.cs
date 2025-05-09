@@ -722,7 +722,7 @@ public static class RundownFactory
     public static void Build(string dailySeed)
     {
         Bins.Setup();
-        ComplexResourceSet.Setup();
+        // ComplexResource.Setup();
         LayoutDefinitions.Setup();
 
         var gameSetup = new GameSetup()

@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown;
 
-public class ComplexResourceSet
+public class ComplexResource
 {
     private const string FileName = "GameData_ComplexResourceSetDataBlock_bin.json";
 
@@ -15,7 +15,7 @@ public class ComplexResourceSet
     ///
     /// </summary>
     /// <exception cref="Exception"></exception>
-    public ComplexResourceSet()
+    public ComplexResource()
     {
         var from = Path.Combine(Paths.PluginPath, Plugin.Name, FileName);
 
@@ -100,7 +100,7 @@ public class ComplexResourceSet
     /// </summary>
     public static void Setup()
     {
-        var resourceSet = new ComplexResourceSet();
+        var resourceSet = new ComplexResource();
 
         #region Mining
         ///
