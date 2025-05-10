@@ -371,6 +371,24 @@ public record ComplexResourceSet : DataBlock
         ///
 
         #region Base game
+        // Remove problem tile
+        //
+        // geo_64x64_tech_data_center_HA_05 is a large two-level tile, however we _often_ see
+        // failed map generations because it has a side door that leads to the under side of it
+        // with no way to connect to other tiles. This often manifests with odd tiny rooms and
+        // then the rest of the level spawning not off the correct tile
+        Tech.GeomorphTiles_1x1.RemoveAll(prefab =>
+            prefab.Asset == "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_data_center_HA_05.prefab");
+
+        // Add the problem tile to the Custom Geomorphs so we can still use it, because it is
+        // still a cool tile
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_data_center_HA_05.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 4
+        });
+
         // Rundown 7 tiles
 
         // Rundown 8 tiles
