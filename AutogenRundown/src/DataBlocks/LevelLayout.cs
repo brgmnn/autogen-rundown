@@ -1082,10 +1082,10 @@ public partial record LevelLayout : DataBlock
         }
 
         // TODO: most or all of these need to be moved
+        layout.RollErrorAlarm();
         layout.RollAlarms(puzzlePack, wavePopulationPack, waveSettingsPack);
         layout.RollBloodDoors();
         layout.RollEnemies(director);
-        layout.RollErrorAlarm();
 
         Bins.LevelLayouts.AddBlock(layout);
 
