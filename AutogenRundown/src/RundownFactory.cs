@@ -131,7 +131,7 @@ public static class RundownFactory
                     Settings = settings,
                     Index = rundown.TierA_Count + 1,
                     IsTest = true
-                }, 3);
+                }, 0);
 
             rundown.AddLevel(testLevel);
         }

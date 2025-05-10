@@ -252,8 +252,11 @@ public record Zone : DataBlock
                 break;
 
             case Complex.Service:
-                CustomGeomorph = "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_floodways_exit_01.prefab";
-                SubComplex = SubComplex.Floodways;
+                (SubComplex, CustomGeomorph) = Generator.Pick(new List<(SubComplex, string)>
+                {
+                    (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_floodways_exit_01.prefab"),
+                    (SubComplex.Gardens,   "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_elevator_Gardens_exit_01.prefab")
+                });
                 break;
         };
 
