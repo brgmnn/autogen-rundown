@@ -554,6 +554,7 @@ public record ComplexResourceSet : DataBlock
         #endregion
 
         #region Garden Wall Caps
+        // Small
         Service.SmallWallCaps.Add(new Prefab
         {
             Asset = "Assets/AssetPrefabs/Complex/Service/Gates/4x4/gate_4x4_gardens_cap_wall_01.prefab",
@@ -572,6 +573,150 @@ public record ComplexResourceSet : DataBlock
             SubComplex = SubComplex.Gardens,
             Shard = 15
         });
+
+        // Medium
+        Service.MediumWallCaps.Add(new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Gates/8x4/gate_8x4_floodways_cap_wall_01.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 15
+        });
+        Service.MediumDestroyedCaps.Add(new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Gates/8x4/gate_8x4_floodways_cap_destroyed_01.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 15
+        });
+        Service.MediumWallAndDestroyedCaps.Add(new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Gates/8x4/gate_8x4_floodways_cap_destroyed_wall_01.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 15
+        });
+
+        // Large
+        Service.LargeWallCaps.Add(new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Generic/Gates/8x8/gate_8x8_cap_wall_01.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 16
+        });
+        Service.LargeDestroyedCaps.Add(new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Generic/Gates/8x8/gate_8x8_cap_wall_01.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 16
+        });
+        Service.LargeWallAndDestroyedCaps.Add(new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Generic/Gates/8x8/gate_8x8_cap_wall_01.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 16
+        });
+
+        // Plug Caps
+        Service.PlugCaps.Add(new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Plugs/env_plug_8mheight_cap_gardens_01.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 15
+        });
+        Service.PlugCaps.Add(new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Plugs/env_plug_8mheight_cap_gardens_02.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 15
+        });
+        Service.PlugCaps.Add(new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Plugs/env_plug_8mheight_cap_gardens_03.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 15
+        });
+        #endregion
+
+        #region Custom Geomorphs
+        Service.ElevatorShafts_1x1.Add(new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_elevator_shaft_Gardens_01.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 7
+        });
+
+        Service.CustomGeomorphs_Exit_1x1.Add(new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_elevator_Gardens_exit_01.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 4
+        });
+
+        Service.CustomGeomorphs.Add(new Prefab
+        {
+          Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_I_01.prefab",
+          SubComplex = SubComplex.Gardens,
+          Shard = 8
+        });
+        Service.CustomGeomorphs.Add(new Prefab
+        {
+          Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_X_01.prefab",
+          SubComplex = SubComplex.Gardens,
+          Shard = 9
+        });
+        Service.CustomGeomorphs.Add(new Prefab
+        {
+          Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_Lab_HSU_Womb.prefab",
+          SubComplex = SubComplex.Gardens,
+          Shard = 8
+        });
+        Service.CustomGeomorphs.Add(new Prefab
+        {
+          Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_I_HA_01_R7D1.prefab",
+          SubComplex = SubComplex.All,
+          Shard = 5
+        });
+        Service.CustomGeomorphs.Add(new Prefab
+        {
+          Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_Lab_HSU_Prep.prefab",
+          SubComplex = SubComplex.Gardens,
+          Shard = 9
+        });
+        Service.CustomGeomorphs.Add(new Prefab
+        {
+          Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_Lab_HSU_Prep_TestingFunc.prefab",
+          SubComplex = SubComplex.All,
+          Shard = 9
+        });
+        Service.CustomGeomorphs.Add(new Prefab
+        {
+          Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_Lab_HSU_Prep_Timur.prefab",
+          SubComplex = SubComplex.Gardens,
+          Shard = 9
+        });
+        Service.CustomGeomorphs.Add(new Prefab
+        {
+          Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_hub_SF_01.prefab",
+          SubComplex = SubComplex.Gardens,
+          Shard = 9
+        });
+        Service.CustomGeomorphs.Add(new Prefab
+        {
+          Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_I_02_SF.prefab",
+          SubComplex = SubComplex.Gardens,
+          Shard = 8
+        });
+        Service.CustomGeomorphs.Add(new Prefab
+        {
+          Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_dead_end_SF.prefab",
+          SubComplex = SubComplex.Gardens,
+          Shard = 8
+        });
+        Service.CustomGeomorphs.Add(new Prefab
+        {
+          Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_VS_01.prefab",
+          SubComplex = SubComplex.Gardens,
+          Shard = 8
+        });
+
         #endregion
         #endregion
 
