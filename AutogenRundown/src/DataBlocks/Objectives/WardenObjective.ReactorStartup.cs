@@ -109,8 +109,8 @@ public partial record WardenObjective
             ("C", _,             >= 5) => 3,
             ("C", _,              < 5) => 2,
 
-            ("D", Bulkhead.Main, >= 9) => 6,
-            ("D", Bulkhead.Main, >= 7) => 5,
+            ("D", Bulkhead.Main, >= 9) => 5,
+            ("D", Bulkhead.Main, >= 7) => 4,
             ("D", Bulkhead.Main,  < 7) => 3,
             ("D", _,             >= 4) => 2,
             ("D", _,              < 4) => 1,

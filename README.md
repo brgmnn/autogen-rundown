@@ -26,6 +26,12 @@ TODO:
     * Needs something to happen when completing all the cells ideally
     * Would be good if the fog could rise or lower when inserting the cells
 
+2025_05_09
+  [ ] Don't give error alarm doors for free all the time
+  [ ] Fix item zone for cargo pickup
+  [ ] Increase distance between scans on harder levels
+  [ ] Null error thrown at end of D2
+
 2025_05_06
   [ ] Consider reducing the occurence of nightmare enemies
   [ ] Giant Onion error alarm? Probably close to boss tier
