@@ -3,6 +3,38 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.62.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.62.0) — May 10, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Added R8A1 third zone as hub tile for Service complex
+* Added R8A1 exit elevator garden tile
+* Added harder and a variety of scout waves
+
+### Changes
+
+* Balance: Removed Class 9 alarms from regular security doors (Apex security doors can still have Class 9 alarms)
+* Balance: Reduced difficulty of Matter Wave Projector exit scan
+* Balance: Reduced chance of Nightmare enemies by 10% on C/D/E tiers.
+  * C-tier: 50% to 40%
+  * D-tier: 60% to 50%
+  * E-tier: 70% to 60%
+* Balance: Slightly reduced number of fetch codes for `ReactorStartup` objectives on D/E tier as well as number of zones to search 
+* Balance: Increased Giant Beserker health from `180` to `200`, weakspot multiplier also increased from `2.25` to `2.5`
+  * Sniper will still 1-shot Giant Beserker
+* Balance: Increased Giant Beserker stagger threshold from `45` to `50`
+* Fixed some error alarms turnoff zones not having alarms to open them
+* Fixed `RetrieveBigItem` intel message prompt when entering the item zone to correctly display the zone number
+* Removed `geo_64x64_tech_data_center_HA_05` tile from regular map generation pool due to consistent level generation failures due to it's layout
+* Removed garden tiles from general Service complex tile pool. They can still be placed as part of specific level generation, but they should be less common now
+  * Garden tiles added on chance basis for the last 3 final zones on `ReactorStartup` code fetching and `ReactorShutdown` password retrieval
+* Removed red strobe light seen in a few levels 
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.61.1...v0.62.0
+
+
 ## [v0.61.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.61.1) — May 07, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
