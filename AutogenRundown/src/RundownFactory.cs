@@ -122,7 +122,7 @@ public static class RundownFactory
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/geo_64x64_service_floodways_reactor_ds_02.prefab",
+                "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_elevator_Gardens_exit_01.prefab",
                 new Level("A")
                 {
                     Tier = "A",

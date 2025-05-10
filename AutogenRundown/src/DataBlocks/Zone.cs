@@ -332,11 +332,10 @@ public record Zone : DataBlock
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_01.prefab", new CoverageMinMax { Min = 50, Max = 75 }),
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_02.prefab", new CoverageMinMax { Min = 40, Max = 45 }),
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03.prefab", new CoverageMinMax { Min = 30, Max = 50 }),
-
-                    // TODO: Remove this perhaps, it's quite hard in bulkhead
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_SF_02.prefab", new CoverageMinMax { Min = 30, Max = 50 }),
 
                     (SubComplex.Gardens, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_X_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.Gardens, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_hub_SF_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
 
                     // --- MOD Geomorphs ---
                     // donan3967
@@ -572,7 +571,7 @@ public record Zone : DataBlock
         {
             case Complex.Mining:
             {
-                var (subcomplex, geomorph) = Generator.Pick(Zones.Geomorphs.Mining_I_Tile);
+                var (subcomplex, geomorph) = Generator.Pick(Geomorphs.Mining_I_Tile);
                 CustomGeomorph = geomorph;
                 SubComplex = subcomplex;
 
@@ -837,6 +836,35 @@ public record Zone : DataBlock
                 });
                 break;
         }
+    }
+
+    /// <summary>
+    /// Sets a generic geomorph tile to be one of the generic garden geomorphs. This lets us
+    /// still use these tiles without having them in the random pool. We can call this method
+    /// only when we want to have the tile be a garden during level generation, instead of
+    /// letting the level gen randomly assign it
+    ///
+    /// Does nothing if complex != Service.
+    /// </summary>
+    /// <param name="complex"></param>
+    public void GenGardenGeomorph(Complex complex)
+    {
+        if (complex != Complex.Service)
+            return;
+
+        (CustomGeomorph, Coverage) = Generator.Pick(new List<(string, CoverageMinMax)>
+        {
+            ("Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_HA_01.prefab", new CoverageMinMax { Min = 50, Max = 75 }),
+            ("Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_HA_02.prefab", new CoverageMinMax { Min = 50, Max = 75 }),
+            ("Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_SF_01.prefab", new CoverageMinMax { Min = 50, Max = 75 }),
+            ("Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_AW_01.prefab", new CoverageMinMax { Min = 50, Max = 75 }),
+            ("Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_JG_01.prefab", new CoverageMinMax { Min = 50, Max = 75 }),
+            ("Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_JG_02.prefab", new CoverageMinMax { Min = 50, Max = 75 }),
+            ("Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_HA_03.prefab", new CoverageMinMax { Min = 50, Max = 75 })
+
+            // --- MOD Geomorphs ---
+        });
+        SubComplex = SubComplex.Gardens;
     }
     #endregion
 

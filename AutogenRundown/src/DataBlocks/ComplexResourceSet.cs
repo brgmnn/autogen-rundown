@@ -538,7 +538,6 @@ public record ComplexResourceSet : DataBlock
             Shard = 10,
             SubComplex = SubComplex.Gardens
         });
-
         Service.CustomGeomorphs.Insert(0, new Prefab
         {
             Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_JG_02.prefab",
@@ -668,12 +667,13 @@ public record ComplexResourceSet : DataBlock
           SubComplex = SubComplex.Gardens,
           Shard = 8
         });
-        Service.CustomGeomorphs.Add(new Prefab
-        {
-          Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_I_HA_01_R7D1.prefab",
-          SubComplex = SubComplex.All,
-          Shard = 5
-        });
+        // TODO: what is this tile?
+        // Service.CustomGeomorphs.Add(new Prefab
+        // {
+        //   Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_I_HA_01_R7D1.prefab",
+        //   SubComplex = SubComplex.All,
+        //   Shard = 5
+        // });
         Service.CustomGeomorphs.Add(new Prefab
         {
           Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_Lab_HSU_Prep.prefab",
@@ -686,12 +686,12 @@ public record ComplexResourceSet : DataBlock
           SubComplex = SubComplex.All,
           Shard = 9
         });
-        Service.CustomGeomorphs.Add(new Prefab
-        {
-          Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_Lab_HSU_Prep_Timur.prefab",
-          SubComplex = SubComplex.Gardens,
-          Shard = 9
-        });
+        // Service.CustomGeomorphs.Add(new Prefab
+        // {
+        //   Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_Lab_HSU_Prep_Timur.prefab",
+        //   SubComplex = SubComplex.Gardens,
+        //   Shard = 9
+        // });
         Service.CustomGeomorphs.Add(new Prefab
         {
           Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_hub_SF_01.prefab",
