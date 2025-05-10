@@ -374,6 +374,9 @@ public record WaveSettings : DataBlock
 
         // Scout
         Bins.WaveSettings.AddBlock(Scout_Easy);
+        Bins.WaveSettings.AddBlock(Scout_Normal);
+        Bins.WaveSettings.AddBlock(Scout_Hard);
+        Bins.WaveSettings.AddBlock(Scout_VeryHard);
 
         // Reactor
         Bins.WaveSettings.AddBlock(Reactor_Easy);
@@ -894,6 +897,93 @@ public record WaveSettings : DataBlock
         WavePauseMax_atCost = 10.0,
 
         Name = "Scout_Easy"
+    };
+
+    public static WaveSettings Scout_Normal = new()
+    {
+        PopulationFilter =
+        {
+            Enemies.EnemyType.Standard,
+            Enemies.EnemyType.Special,
+            Enemies.EnemyType.MiniBoss,
+        },
+        FilterType = PopulationFilterType.Include,
+
+        PauseBeforeStart = 1.0,
+        PauseBetweenGroups = 3.0,
+
+        PopulationPointsPerGroupStart = 5.0,
+        PopulationPointsPerGroupEnd = 5.0,
+        PopulationPointsMinPerGroup = 3.0,
+
+        PopulationPointsPerWaveStart = 15,
+        PopulationPointsPerWaveEnd = 15,
+        PopulationPointsTotal = 15,
+
+        WavePauseMin = 1.0,
+        WavePauseMax = 20.0,
+        WavePauseMin_atCost = 1.0,
+        WavePauseMax_atCost = 10.0,
+
+        Name = "Scout_Easy"
+    };
+
+    public static WaveSettings Scout_Hard = new()
+    {
+        PopulationFilter =
+        {
+            Enemies.EnemyType.Standard,
+            Enemies.EnemyType.Special,
+            Enemies.EnemyType.MiniBoss,
+        },
+        FilterType = PopulationFilterType.Include,
+
+        PauseBeforeStart = 1.0,
+        PauseBetweenGroups = 3.0,
+
+        PopulationPointsPerGroupStart = 5.0,
+        PopulationPointsPerGroupEnd = 5.0,
+        PopulationPointsMinPerGroup = 3.0,
+
+        PopulationPointsPerWaveStart = 18,
+        PopulationPointsPerWaveEnd = 18,
+        PopulationPointsTotal = 18,
+
+        WavePauseMin = 1.0,
+        WavePauseMax = 20.0,
+        WavePauseMin_atCost = 1.0,
+        WavePauseMax_atCost = 10.0,
+
+        Name = "Scout_Easy"
+    };
+
+    public static WaveSettings Scout_VeryHard = new()
+    {
+        PopulationFilter =
+        {
+            Enemies.EnemyType.Standard,
+            Enemies.EnemyType.Special,
+            Enemies.EnemyType.MiniBoss,
+        },
+        FilterType = PopulationFilterType.Include,
+
+        PauseBeforeStart = 1.0,
+        PauseBetweenGroups = 3.0,
+
+        PopulationPointsPerGroupStart = 5.0,
+        PopulationPointsPerGroupEnd = 5.0,
+        PopulationPointsMinPerGroup = 3.0,
+
+        PopulationPointsPerWaveStart = 24,
+        PopulationPointsPerWaveEnd = 24,
+        PopulationPointsTotal = 24,
+
+        WavePauseMin = 1.0,
+        WavePauseMax = 20.0,
+        WavePauseMin_atCost = 1.0,
+        WavePauseMax_atCost = 10.0,
+
+        Name = "Scout_VeryHard"
     };
     #endregion
 

@@ -314,8 +314,11 @@ public class Level
             ["ExpeditionBalance"] = ExpeditionBalance.DefaultBalance.PersistentId,
 
             // TODO: Replace these with actual wave settings / populations
-            ["ScoutWaveSettings"] = ScoutWaveSettings.PersistentId,
-            ["ScoutWavePopulation"] = ScoutWavePopulation.PersistentId,
+            // Use ExtraObjectiveSetup for scout waves
+            // ["ScoutWaveSettings"] = ScoutWaveSettings.PersistentId,
+            // ["ScoutWavePopulation"] = ScoutWavePopulation.PersistentId,
+            ["ScoutWaveSettings"] = 0,
+            ["ScoutWavePopulation"] = 0,
 
             ["EnvironmentWetness"] = 0.0,
             ["DustColor"] = JObject.FromObject(
@@ -820,6 +823,124 @@ public class Level
     }
 
     /// <summary>
+    /// Sets the default scout wave screaming behavior. Other layouts can override this with more
+    /// specific settings in the "EventsOnScoutScream" settings.
+    /// </summary>
+    private void BuildDefaultScoutWaves()
+    {
+        var events = new List<WardenObjectiveEvent>();
+        var wave = new GenericWave
+        {
+            Population = WavePopulation.Baseline,
+            Settings = WaveSettings.Scout_Easy,
+            TriggerAlarm = false
+        };
+
+        if (Settings.Modifiers.Contains(LevelModifiers.Shadows))
+            wave.Population = WavePopulation.Baseline_Shadows;
+        else if (Settings.Modifiers.Contains(LevelModifiers.ManyShadows))
+            wave.Population = WavePopulation.OnlyShadows;
+        else if (Settings.Modifiers.Contains(LevelModifiers.Chargers))
+            wave.Population = WavePopulation.Baseline_Shadows;
+        else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers))
+            wave.Population = WavePopulation.OnlyShadows;
+
+        switch (Tier)
+        {
+            case "A":
+            case "B":
+            {
+                wave.Settings = WaveSettings.Scout_Easy;
+                break;
+            }
+
+            case "C":
+            {
+                wave.Settings = WaveSettings.Scout_Normal;
+
+                if (Settings.Modifiers.Contains(LevelModifiers.ManyShadows) && Generator.Flip())
+                    wave = new GenericWave
+                    {
+                        Population = WavePopulation.OnlyShadows,
+                        Settings = WaveSettings.SingleWave_MiniBoss_6pts,
+                        AreaDistance = 1
+                    };
+                else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers) && Generator.Flip())
+                    wave = new GenericWave
+                    {
+                        Population = WavePopulation.OnlyChargers,
+                        Settings = WaveSettings.SingleWave_MiniBoss_6pts,
+                    };
+                break;
+            }
+
+            case "D":
+            {
+                wave.Settings = WaveSettings.Scout_Hard;
+
+                if (Settings.Modifiers.Contains(LevelModifiers.ManyNightmares) && Generator.Flip())
+                    wave = new GenericWave
+                    {
+                        Population = WavePopulation.OnlyNightmareGiants,
+                        Settings = WaveSettings.SingleWave_MiniBoss_8pts
+                    };
+                else if (Settings.Modifiers.Contains(LevelModifiers.ManyShadows) && Generator.Flip())
+                    wave = new GenericWave
+                    {
+                        Population = WavePopulation.OnlyShadows,
+                        Settings = WaveSettings.SingleWave_MiniBoss_8pts
+                    };
+                else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers) && Generator.Flip())
+                    wave = new GenericWave
+                    {
+                        Population = WavePopulation.OnlyChargers,
+                        Settings = WaveSettings.SingleWave_MiniBoss_8pts,
+                    };
+                break;
+            }
+
+            case "E":
+            {
+                wave.Settings = WaveSettings.Scout_VeryHard;
+
+                if (Settings.Modifiers.Contains(LevelModifiers.ManyNightmares) && Generator.Flip())
+                    wave = new GenericWave
+                    {
+                        Population = WavePopulation.OnlyNightmareGiants,
+                        Settings = WaveSettings.SingleWave_MiniBoss_12pts
+                    };
+                else if (Settings.Modifiers.Contains(LevelModifiers.ManyShadows) && Generator.Flip())
+                    wave = new GenericWave
+                    {
+                        Population = WavePopulation.OnlyShadows,
+                        Settings = WaveSettings.SingleWave_MiniBoss_12pts,
+                        AreaDistance = 1
+                    };
+                else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers) && Generator.Flip())
+                    wave = new GenericWave
+                    {
+                        Population = WavePopulation.OnlyChargers,
+                        Settings = WaveSettings.SingleWave_MiniBoss_12pts,
+                    };
+                break;
+            }
+        }
+
+        events.AddSpawnWave(wave);
+
+        EOS_EventsOnScoutScream.Definitions.Add(
+            new EventsOnScoutScream
+            {
+                ZoneNumber = -1,
+                Bulkhead = Bulkhead.All,
+                DimensionIndex = null,
+
+                SuppressVanillaScoutWave = true,
+                Events = events
+            });
+    }
+
+    /// <summary>
     /// Builds a specific bulkhead layout
     /// </summary>
     /// <param name="bulkhead"></param>
@@ -933,6 +1054,10 @@ public class Level
 
         if (selectedBulkheads.HasFlag(Bulkhead.Overload))
             level.PreBuildObjective(Bulkhead.Overload);
+        #endregion
+
+        #region Scout Waves
+        level.BuildDefaultScoutWaves();
         #endregion
 
         #region Layout generation
@@ -1065,6 +1190,8 @@ public class Level
 
             Bins.WardenObjectives.AddBlock(objective);
 
+            level.BuildDefaultScoutWaves();
+
             #endregion
 
 
@@ -1130,8 +1257,8 @@ public class Level
             //         Events = events
             //     });
             //
-            // elevatorDropZone.EnemySpawningInZone.Add(
-            //     EnemySpawningData.Scout with { Points = 5 });
+            elevatorDropZone.EnemySpawningInZone.Add(
+                EnemySpawningData.Scout with { Points = 5 });
             #endregion
 
             level.Planner.AddZone(elevatorDrop, elevatorDropZone);
