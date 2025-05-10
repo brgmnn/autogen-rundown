@@ -89,6 +89,13 @@ public partial record LevelLayout
                     }
                 }
             };
+
+            // Set the code terminal to a garden tile
+            if (Generator.Flip(0.66))
+            {
+                var codeTerminalZone = level.Planner.GetZone(codeTerminal)!;
+                codeTerminalZone.GenGardenGeomorph(level.Complex);
+            }
         }
 
         // Some objective texts
