@@ -342,8 +342,8 @@ public class LevelSettings
                 Modifiers.Add(
                     Generator.Select(new List<(double, LevelModifiers)>
                     {
-                        (0.5, LevelModifiers.NoNightmares),
-                        (0.4, LevelModifiers.Nightmares),
+                        (0.6, LevelModifiers.NoNightmares),
+                        (0.3, LevelModifiers.Nightmares),
                         (0.1, LevelModifiers.ManyNightmares),
                     }));
 
