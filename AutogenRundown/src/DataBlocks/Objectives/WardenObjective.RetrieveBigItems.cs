@@ -16,6 +16,7 @@ public partial record WardenObjective
         MainObjective = "Find [ALL_ITEMS] and bring it to the extraction scan in [EXTRACTION_ZONE]";
         FindLocationInfo = "Gather information about the location of [ALL_ITEMS]";
         FindLocationInfoHelp = "Access more data in the terminal maintenance system";
+        InZoneFindItem = "Find [ALL_ITEMS] somewhere inside [ITEM_ZONE]";
 
         if (RetrieveItems.Count == 1)
         {
@@ -26,6 +27,7 @@ public partial record WardenObjective
 
                 GoToZone = $"Navigate to {zone} and find [ALL_ITEMS]";
                 GoToZoneHelp = $"Use information in the environment to find {zone}";
+                InZoneFindItem = $"Find [ALL_ITEMS] somewhere inside {zone}";
             }
             else
             {
@@ -43,9 +45,8 @@ public partial record WardenObjective
             GoToZoneHelp = "Use information in the environment to find each item zone";
         }
 
-        InZoneFindItem = "Find [ALL_ITEMS] somewhere inside [ITEM_ZONE]";
-        InZoneFindItemHelp = "Use maintenance terminal command PING to find [ALL_ITEMS]";
         SolveItem = "WARNING - Hisec Cargo misplaced - ENGAGING SECURITY PROTOCOLS";
+        InZoneFindItemHelp = "Use maintenance terminal command PING to find [ALL_ITEMS]";
 
         if (RetrieveItems.Count() > 1)
         {
