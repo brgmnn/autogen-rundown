@@ -27,7 +27,7 @@ TODO:
     * Would be good if the fog could rise or lower when inserting the cells
 
 2025_05_09
-  [ ] Don't give error alarm doors for free all the time
+  [x] Don't give error alarm doors for free all the time
   [ ] Fix item zone for cargo pickup
   [ ] Increase distance between scans on harder levels
   [ ] Null error thrown at end of D2

@@ -64,10 +64,10 @@ public record EnemyBalancing : DataBlock
     {
         Health = new()
         {
-            HealthMax = 180,
-            DamageUntilHitreact = 45,
-            BodypartHealth = 180,
-            WeakspotDamageMulti = 2.25,
+            HealthMax = 200,
+            DamageUntilHitreact = 50,
+            BodypartHealth = 200,
+            WeakspotDamageMulti = 2.5,
             ArmorDamageMulti = 0.25
         },
         GlueTolerance = 20,
