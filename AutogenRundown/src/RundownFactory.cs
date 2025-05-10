@@ -485,23 +485,13 @@ public static class RundownFactory
         var buildPools = new Dictionary<string, List<List<int>>>
         {
             {
-                "2025_04", new List<List<int>>
-                {
-                    new() { 1, 1 },       // Tier A - ?
-                    new() { 1, 1, 1 },    // Tier B - ?
-                    new() { 1, 1, 1, 1 }, // Tier C - ?
-                    new() { 1, 1, 1, 1 }, // Tier D - ?
-                    new() { 1, 1 }        // Tier E - ?
-                }
-            },
-            {
                 "2025_05", new List<List<int>>
                 {
                     new() { 1, 1 },          // Tier A - ?
-                    new() { 1, 1, 3 },       // Tier B - ?
-                    new() { 1, 1, 2, 2 },    // Tier C - ?
-                    new() { 1, 1, 1, 2, 1 }, // Tier D - ?
-                    new() { 1, 1, 1, 2 }     // Tier E - ?
+                    new() { 1, 1, 1 },       // Tier B - ?
+                    new() { 1, 1, 2, 1 },    // Tier C - ? // Failed C3=1 (data sphere)
+                    new() { 1, 2, 1, 1, 1 }, // Tier D - ? // Failed D2=1 (Clear path)
+                    new() { 1, 1, 3, 1 }     // Tier E - ?
                 }
             }
         };
