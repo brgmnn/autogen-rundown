@@ -378,13 +378,13 @@ public record ComplexResourceSet : DataBlock
         // with no way to connect to other tiles. This often manifests with odd tiny rooms and
         // then the rest of the level spawning not off the correct tile
         Tech.GeomorphTiles_1x1.RemoveAll(prefab =>
-            prefab.Asset == "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_data_center_HA_05.prefab");
+            prefab.Asset == "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_HA_05.prefab");
 
         // Add the problem tile to the Custom Geomorphs so we can still use it, because it is
         // still a cool tile
         Tech.CustomGeomorphs.Insert(0, new Prefab
         {
-            Asset = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_data_center_HA_05.prefab",
+            Asset = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_HA_05.prefab",
             SubComplex = SubComplex.DataCenter,
             Shard = 4
         });
