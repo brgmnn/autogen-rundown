@@ -31,7 +31,7 @@ public partial record LevelLayout
         // We have a special flow for KingOfTheHill
         if (objective.SpecialTerminalCommand_Type == SpecialCommand.KingOfTheHill)
         {
-            var hill = BuildBranch(start, 2, "special_terminal");
+            var hill = AddBranch_Forward(start, 2, "special_terminal").Last();
             var hillZone = planner.GetZone(hill)!;
 
             hillZone.GenKingOfTheHillGeomorph(director.Complex);
