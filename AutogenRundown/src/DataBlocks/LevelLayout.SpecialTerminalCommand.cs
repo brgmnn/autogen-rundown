@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Custom.AutogenRundown.TerminalPlacements;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
@@ -39,6 +40,20 @@ public partial record LevelLayout
             {
                 new() { PlacementWeights = ZonePlacementWeights.AtMiddle }
             };
+
+            level.TerminalPlacements.Placements.Add(new TerminalPosition
+            {
+                Layer = director.Bulkhead switch
+                {
+                    Bulkhead.Main => "MainLayer",
+                    Bulkhead.Extreme => "SecondaryLayer",
+                    Bulkhead.Overload => "ThirdLayer",
+                },
+                LocalIndex = hill.ZoneNumber,
+                Area = "A",
+                Position = new Vector3 { X = 0, Y = 0, Z = 0 },
+                Rotation = new Vector3 { X = 0, Y = 180, Z = 0 },
+            });
 
             var spawnZoneCount = 3;
 

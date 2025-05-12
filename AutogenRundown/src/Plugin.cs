@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿using AutogenRundown.Patches;
+using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
@@ -62,6 +63,9 @@ public class Plugin : BasePlugin
 
         // EventAPI.OnManagersSetup += LocalProgressionManager.Current.Init;
         // AssetAPI.OnAssetBundlesLoaded += Assets.Init;
+
+        Patch_LG_ComputerTerminal_Setup.Setup();
+        Patch_LG_Layer_CreateZone.Setup();
 
         // Apply patches
         var harmony = new Harmony("the_tavern-AutogenRundown");

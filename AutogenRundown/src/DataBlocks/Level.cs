@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
@@ -122,6 +123,11 @@ public class Level
     #endregion
 
     #region === MODS ===
+    #region Autogen Custom Definitions
+    [JsonIgnore]
+    public LevelTerminalPlacements TerminalPlacements { get; private set; } = new();
+    #endregion
+
     #region ExtraObjectiveSetup Definitions
     /// <summary>
     /// Events on boss death definitions
@@ -791,6 +797,9 @@ public class Level
             string.Empty,
             RegexOptions.IgnoreCase);
 
+        TerminalPlacements.Name = $"{Tier}{Index}_{fsName}";
+        TerminalPlacements.MainLevelLayout = LevelLayoutData;
+
         EOS_EventsOnBossDeath.Name = $"{Tier}{Index}_{fsName}";
         EOS_EventsOnBossDeath.MainLevelLayout = LevelLayoutData;
 
@@ -805,6 +814,8 @@ public class Level
 
         EOS_SecuritySensor.Name = $"{Tier}{Index}_{fsName}";
         EOS_SecuritySensor.MainLevelLayout = LevelLayoutData;
+
+        TerminalPlacements.Save();
 
         if (EOS_EventsOnBossDeath.Definitions.Any())
             EOS_EventsOnBossDeath.Save();
