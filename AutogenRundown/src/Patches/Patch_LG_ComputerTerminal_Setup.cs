@@ -20,7 +20,6 @@ internal static class Patch_LG_ComputerTerminal_Setup
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(LG_ComputerTerminal), nameof(LG_ComputerTerminal.Setup))]
-    [HarmonyAfter("Inas.ExtraObjectiveSetup")]
     private static void Post_LG_ComputerTerminal_Setup(LG_ComputerTerminal __instance)
     {
         var mainLayoutId = RundownManager.ActiveExpedition?.LevelLayoutData ?? 0;

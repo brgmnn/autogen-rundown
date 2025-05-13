@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
+using AutogenRundown.DataBlocks.Custom.AutogenRundown.TerminalPlacements;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
@@ -666,29 +667,28 @@ public record Zone : DataBlock
     /// Creates a Geomorph used as a primary objective point
     /// </summary>
     /// <param name="complex"></param>
-    public void GenKingOfTheHillGeomorph(Complex complex)
+    public void GenKingOfTheHillGeomorph(Level level, BuildDirector director)
     {
-        switch (complex)
+        switch (director.Complex)
         {
             case Complex.Mining:
                 (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
                 {
+                    // --- Validated and positioned spawns ---
+                    // Tower uplink tile
+                    // (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04_test.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    // Central tile, but it might roll to different things. We will see
+                    // (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
                     // // Doesn't place the terminal right. It always places it off to the side which causes the scan
                     // // to be very goofy
                     // (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
 
-                    // No good either
-                    // (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_02.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
 
-                    // // Tower uplink tile
-                    (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04_test.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
-
-                    // Standard good hubs for this
-                    (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    // // Standard good hubs for this
                     (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_VS_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
 
                     // TODO: check these or other tiles for good candidates for "The Hill"
-                    // (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 70 }),
                     // (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_02.prefab", new CoverageMinMax { Min = 15, Max = 20 }),
                     // (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_03.prefab", new CoverageMinMax { Min = 25, Max = 35 }),
                     //
@@ -704,47 +704,74 @@ public record Zone : DataBlock
             case Complex.Tech:
                 (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
                 {
-                    // --- Bad ---
-                    // (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 60 }),
-
-                    // --- Maybe (terminal spawn seems no good) ---
-                    // (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_02.prefab", new CoverageMinMax { Min = 15, Max = 30 }),
+                    // --- Validated and positioned spawns ---
+                    (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_02.prefab", new CoverageMinMax { Min = 15, Max = 30 }),
                     // Very fun looking
-                    // (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_01_V3_LF.prefab", new CoverageMinMax { Min = 25, Max = 40 }),
+                    (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_01_V3_LF.prefab", new CoverageMinMax { Min = 25, Max = 40 }),
                     // The "Monster" room
-                    // (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_SF_02.prefab", new CoverageMinMax { Min = 30, Max = 45 }),
-
-                    // --- Missing from resource ---
-                    // (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_data_center_hub_SF_01.prefab", new CoverageMinMax { Min = 35, Max = 55 }),
-
-
-                    // --- Good ---
+                    (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_SF_02.prefab", new CoverageMinMax { Min = 30, Max = 45 }),
+                    // Data center tower
+                    (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_data_center_hub_SF_01.prefab", new CoverageMinMax { Min = 35, Max = 55 }),
                     // The OG pillar room!
                     (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_01_V2.prefab", new CoverageMinMax { Min = 25, Max = 30 }),
-
-                    // TODO: check
-                    // (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_data_center_hub_JG_01.prefab", new CoverageMinMax { Min = 25, Max = 40 }),
-                    // (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_node_transition_06_JG.prefab", new CoverageMinMax { Min = 32, Max = 45 }),
-                    //
-                    // (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_03.prefab", new CoverageMinMax { Min = 30, Max = 50 }),
-                    // (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_04_V3.prefab", new CoverageMinMax { Min = 25, Max = 35 }),
-                    // (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_SF_02.prefab", new CoverageMinMax { Min = 30, Max = 45 }),
+                    (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_04_V3.prefab", new CoverageMinMax { Min = 25, Max = 35 }),
                 });
                 break;
 
             case Complex.Service:
                 (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
                 {
-                    // --- Good ---
+                    // --- Validated and positioned spawns ---
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_01.prefab", new CoverageMinMax { Min = 50, Max = 60 }),
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03.prefab", new CoverageMinMax { Min = 30, Max = 50 }),
-
                     // Mega Nightmare Mother room
-                    // TODO: do we actually want it for this? Seems cool
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03_V2.prefab", new CoverageMinMax { Min = 50, Max = 60 }),
                 });
                 break;
         }
+
+        // Position terminal
+        // X -> +left/-right
+        // Y -> +up/-down
+        // Z -> +backward/-forward
+        // Rotate Y -> -right/+left
+        var (position, rotation) = CustomGeomorph switch
+        {
+            // Mining - TODO: still more to do
+            "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04_test.prefab" => (new Vector3 { X =  0.00, Y = 7.3, Z = 2.0 }, new Vector3 { Y = 180.0 }),
+            "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab" =>      (new Vector3 { X = -0.35, Y = 0.0, Z = 0.0 }, new Vector3 { Y = -90.0 }),
+            "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_VS_01.prefab" =>      (new Vector3 { X = 0, Y = 0.0, Z = -2.5 }, new Vector3 { Y = -15.0 }),
+
+            // Tech
+            "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_01_V2.prefab" =>      (new Vector3 { X =  0.00, Y =  0.0, Z = 0.0 }, new Vector3 { Y = 180 }),
+            "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_SF_02.prefab" =>         (new Vector3 { X =  0.00, Y = -2.1, Z = 2.0 }, new Vector3 { Y =   0 }),
+            "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_02.prefab" =>       (new Vector3 { X = 10.00, Y = -4.0, Z = 3.5 }, new Vector3 { Y = 180 }),
+            "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_01_V3_LF.prefab" =>   (new Vector3 { X =  0.00, Y =  0.0, Z = 1.0 }, new Vector3 { Y =   0 }),
+            "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_data_center_hub_SF_01.prefab" => (new Vector3 { X =  0.25, Y =  8.6, Z = 4.3 }, new Vector3 { Y = 180 }),
+            "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_04_V3.prefab" =>      (new Vector3 { X = -3.80, Y =  0.0, Z = 6.0 }, new Vector3 { Y =  90 }),
+
+            // Service
+            "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_01.prefab" =>    (new Vector3 { X = -0.6, Y = -0.4, Z = -6.30 }, new Vector3 { Y = 170.0 }),
+            "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03.prefab" =>    (new Vector3 { X =  0.0, Y =  0.0, Z = -0.20 }, new Vector3 { Y = 180.0 }),
+            "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03_V2.prefab" => (new Vector3 { X = -0.4, Y =  0.0, Z =  3.95 }, new Vector3 { Y = 110.0 }),
+
+            _ => (new Vector3(), new Vector3())
+        };
+
+        if (CustomGeomorph is not null)
+            level.TerminalPlacements.Placements.Add(new TerminalPosition
+            {
+                Layer = director.Bulkhead switch
+                {
+                    Bulkhead.Main => "MainLayer",
+                    Bulkhead.Extreme => "SecondaryLayer",
+                    Bulkhead.Overload => "ThirdLayer",
+                },
+                LocalIndex = LocalIndex,
+                Geomorph = CustomGeomorph ?? "",
+                Position = position,
+                Rotation = rotation
+            });
     }
 
     /// <summary>

@@ -84,7 +84,7 @@ public partial record LevelLayout
         }
 
         planner.UpdateNode(setupNode with { MaxConnections = 3 });
-        setupZone.GenKingOfTheHillGeomorph(level.Complex);
+        setupZone.GenKingOfTheHillGeomorph(level, level.Director[setupNode.Bulkhead]);
 
         // We want a side spawn room to make it basically impossible to C-foam hold this alarm
         // NOTE: the side spawn room CAN have blood doors roll on it!

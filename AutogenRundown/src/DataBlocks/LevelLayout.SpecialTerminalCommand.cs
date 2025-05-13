@@ -42,7 +42,7 @@ public partial record LevelLayout
             }).Last();
             var hillZone = planner.GetZone(hill)!;
 
-            hillZone.GenKingOfTheHillGeomorph(director.Complex);
+            hillZone.GenKingOfTheHillGeomorph(level, director);
             hillZone.TerminalPlacements = new List<TerminalPlacement>
             {
                 new() { PlacementWeights = ZonePlacementWeights.AtEnd }
@@ -50,19 +50,19 @@ public partial record LevelLayout
 
             hillZone.Altitude = new Altitude { AllowedZoneAltitude = Height.OnlyHigh };
 
-            level.TerminalPlacements.Placements.Add(new TerminalPosition
-            {
-                Layer = director.Bulkhead switch
-                {
-                    Bulkhead.Main => "MainLayer",
-                    Bulkhead.Extreme => "SecondaryLayer",
-                    Bulkhead.Overload => "ThirdLayer",
-                },
-                LocalIndex = hill.ZoneNumber,
-                Geomorph = hillZone.CustomGeomorph,
-                Position = new Vector3 { X = 0, Y = 0, Z = 0 },
-                Rotation = new Vector3 { X = 0, Y = 180, Z = 0 },
-            });
+            // level.TerminalPlacements.Placements.Add(new TerminalPosition
+            // {
+            //     Layer = director.Bulkhead switch
+            //     {
+            //         Bulkhead.Main => "MainLayer",
+            //         Bulkhead.Extreme => "SecondaryLayer",
+            //         Bulkhead.Overload => "ThirdLayer",
+            //     },
+            //     LocalIndex = hill.ZoneNumber,
+            //     Geomorph = hillZone.CustomGeomorph,
+            //     Position = new Vector3 { X = 0, Y = 0, Z = 0 },
+            //     Rotation = new Vector3 { X = 0, Y = 180, Z = 0 },
+            // });
 
             var spawnZoneCount = 3;
 
