@@ -65,7 +65,6 @@ public class Plugin : BasePlugin
         // AssetAPI.OnAssetBundlesLoaded += Assets.Init;
 
         Patch_LG_ComputerTerminal_Setup.Setup();
-        // Patch_LG_Layer_CreateZone.Setup();
 
         // Apply patches
         var harmony = new Harmony("the_tavern-AutogenRundown");
