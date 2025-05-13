@@ -32,14 +32,23 @@ public partial record LevelLayout
         // We have a special flow for KingOfTheHill
         if (objective.SpecialTerminalCommand_Type == SpecialCommand.KingOfTheHill)
         {
-            var hill = AddBranch_Forward(start, 2, "special_terminal").Last();
+            // var hill = AddBranch_Forward(start, 2, "special_terminal").Last();
+            var hill = AddBranch(start, 4, "special_terminal", (node, zone) =>
+            {
+                // var direction = level.Settings.GetDirections(director.Bulkhead).Forward;
+                // zone.ZoneExpansion = direction;
+                zone.ZoneExpansion = ZoneExpansion.Backward;
+                zone.SetStartExpansionFromExpansion();
+            }).Last();
             var hillZone = planner.GetZone(hill)!;
 
             hillZone.GenKingOfTheHillGeomorph(director.Complex);
             hillZone.TerminalPlacements = new List<TerminalPlacement>
             {
-                new() { PlacementWeights = ZonePlacementWeights.AtMiddle }
+                new() { PlacementWeights = ZonePlacementWeights.AtEnd }
             };
+
+            hillZone.Altitude = new Altitude { AllowedZoneAltitude = Height.OnlyHigh };
 
             level.TerminalPlacements.Placements.Add(new TerminalPosition
             {
@@ -50,7 +59,7 @@ public partial record LevelLayout
                     Bulkhead.Overload => "ThirdLayer",
                 },
                 LocalIndex = hill.ZoneNumber,
-                Area = "A",
+                Geomorph = hillZone.CustomGeomorph,
                 Position = new Vector3 { X = 0, Y = 0, Z = 0 },
                 Rotation = new Vector3 { X = 0, Y = 180, Z = 0 },
             });
