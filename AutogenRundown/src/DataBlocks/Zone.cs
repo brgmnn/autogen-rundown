@@ -676,28 +676,12 @@ public record Zone : DataBlock
                 {
                     // --- Validated and positioned spawns ---
                     // Tower uplink tile
-                    // (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04_test.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04_test.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     // Central tile, but it might roll to different things. We will see
-                    // (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
-
-                    // // Doesn't place the terminal right. It always places it off to the side which causes the scan
-                    // // to be very goofy
-                    // (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
-
-
-                    // // Standard good hubs for this
+                    (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_VS_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
-
-                    // TODO: check these or other tiles for good candidates for "The Hill"
-                    // (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_02.prefab", new CoverageMinMax { Min = 15, Max = 20 }),
-                    // (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_03.prefab", new CoverageMinMax { Min = 25, Max = 35 }),
-                    //
-                    // (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_01.prefab", new CoverageMinMax { Min = 25, Max = 35 }),
-                    // (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_02.prefab", new CoverageMinMax { Min = 50, Max = 60 }),
-                    // (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_03.prefab", new CoverageMinMax { Min = 20, Max = 40 }),
-                    // (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04.prefab", new CoverageMinMax { Min = 30, Max = 45 }),
-                    // (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_05.prefab", new CoverageMinMax { Min = 30, Max = 70 }),
-                    // (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_06.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+                    (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04.prefab", new CoverageMinMax { Min = 30, Max = 45 }),
+                    (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_06.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                 });
                 break;
 
@@ -726,6 +710,10 @@ public record Zone : DataBlock
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03.prefab", new CoverageMinMax { Min = 30, Max = 50 }),
                     // Mega Nightmare Mother room
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03_V2.prefab", new CoverageMinMax { Min = 50, Max = 60 }),
+
+                    // --- MOD Geomorphs ---
+                    // donan3967
+                    (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_hub_DS_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                 });
                 break;
         }
@@ -737,10 +725,11 @@ public record Zone : DataBlock
         // Rotate Y -> -right/+left
         var (position, rotation) = CustomGeomorph switch
         {
-            // Mining - TODO: still more to do
-            "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04_test.prefab" => (new Vector3 { X =  0.00, Y = 7.3, Z = 2.0 }, new Vector3 { Y = 180.0 }),
-            "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab" =>      (new Vector3 { X = -0.35, Y = 0.0, Z = 0.0 }, new Vector3 { Y = -90.0 }),
-            "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_VS_01.prefab" =>      (new Vector3 { X = 0, Y = 0.0, Z = -2.5 }, new Vector3 { Y = -15.0 }),
+            "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04_test.prefab" => (new Vector3 { X =  0.00, Y =  7.3, Z =   2.0 }, new Vector3 { Y = 180.0 }),
+            "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab" =>      (new Vector3 { X = -0.35, Y =  0.0, Z =   0.0 }, new Vector3 { Y = -90.0 }),
+            "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_VS_01.prefab" =>      (new Vector3 { X =  0.00, Y =  0.0, Z =  -2.5 }, new Vector3 { Y = -15.0 }),
+            "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04.prefab" =>      (new Vector3 { X =  0.00, Y =  0.0, Z =  -4.5 }, new Vector3 { Y = 180.0 }),
+            "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_06.prefab" =>      (new Vector3 { X =  0.10, Y = -2.1, Z =  11.2 }, new Vector3 { Y = 180.0 }),
 
             // Tech
             "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_01_V2.prefab" =>      (new Vector3 { X =  0.00, Y =  0.0, Z = 0.0 }, new Vector3 { Y = 180 }),
@@ -751,9 +740,10 @@ public record Zone : DataBlock
             "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_04_V3.prefab" =>      (new Vector3 { X = -3.80, Y =  0.0, Z = 6.0 }, new Vector3 { Y =  90 }),
 
             // Service
-            "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_01.prefab" =>    (new Vector3 { X = -0.6, Y = -0.4, Z = -6.30 }, new Vector3 { Y = 170.0 }),
-            "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03.prefab" =>    (new Vector3 { X =  0.0, Y =  0.0, Z = -0.20 }, new Vector3 { Y = 180.0 }),
-            "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03_V2.prefab" => (new Vector3 { X = -0.4, Y =  0.0, Z =  3.95 }, new Vector3 { Y = 110.0 }),
+            "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_01.prefab" =>    (new Vector3 { X = -0.6, Y = -0.40, Z = -6.30 }, new Vector3 { Y = 170.0 }),
+            "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03.prefab" =>    (new Vector3 { X =  0.0, Y =  0.00, Z = -0.20 }, new Vector3 { Y = 180.0 }),
+            "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03_V2.prefab" => (new Vector3 { X = -0.4, Y =  0.00, Z =  3.95 }, new Vector3 { Y = 110.0 }),
+            "Assets/geo_64x64_service_floodways_hub_DS_01.prefab" =>                                                       (new Vector3 { X =  0.6, Y =  3.85, Z =  2.15 }, new Vector3 { Y =   0.0 }),
 
             _ => (new Vector3(), new Vector3())
         };
@@ -761,12 +751,7 @@ public record Zone : DataBlock
         if (CustomGeomorph is not null)
             level.TerminalPlacements.Placements.Add(new TerminalPosition
             {
-                Layer = director.Bulkhead switch
-                {
-                    Bulkhead.Main => "MainLayer",
-                    Bulkhead.Extreme => "SecondaryLayer",
-                    Bulkhead.Overload => "ThirdLayer",
-                },
+                Bulkhead = director.Bulkhead,
                 LocalIndex = LocalIndex,
                 Geomorph = CustomGeomorph ?? "",
                 Position = position,

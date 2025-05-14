@@ -5,11 +5,17 @@ using UnityEngine;
 
 namespace AutogenRundown.Patches;
 
+/// <summary>
+/// Known issues:
+///     * If the terminal is moved from an area that isn't the desired geomorph zone, it doesn't
+///       render properly. I think it's being culled? Likely the solution would be to just spawn
+///       our own terminal.
+///
+/// const string terminalPrefab = "assets/assetprefabs/complex/generic/functionmarkers/terminal_floor.prefab";
+/// </summary>
 [HarmonyPatch]
 internal static class Patch_LG_ComputerTerminal_Setup
 {
-    const string terminalPrefab = "assets/assetprefabs/complex/generic/functionmarkers/terminal_floor.prefab";
-
     private static List<LevelTerminalPlacements> _levelPlacements = new();
 
     // private

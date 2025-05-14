@@ -1,8 +1,18 @@
-﻿namespace AutogenRundown.DataBlocks.Custom.AutogenRundown.TerminalPlacements;
+﻿using AutogenRundown.DataBlocks.Objectives;
+
+namespace AutogenRundown.DataBlocks.Custom.AutogenRundown.TerminalPlacements;
 
 public record TerminalPosition
 {
-    public string Layer { get; set; } = "MainLayer";
+    public Bulkhead Bulkhead { get; set; } = Bulkhead.Main;
+
+    public string Layer => Bulkhead switch
+    {
+        Bulkhead.Main => "MainLayer",
+        Bulkhead.Extreme => "SecondaryLayer",
+        Bulkhead.Overload => "ThirdLayer",
+        _ => "MainLayer"
+    };
 
     public int LocalIndex { get; set; } = 0;
 
