@@ -812,50 +812,10 @@ public partial record LevelLayout : DataBlock
              * This objective is completely bugged
              * */
             case WardenObjectiveType.CentralGeneratorCluster:
-                {
-                    var prev = start;
-
-                    // Place the generator cluster in the first zone
-                    var firstZone = level.Planner.GetZone(prev)!;
-                    firstZone.GenGeneratorClusterGeomorph(director.Complex);
-
-                    // Place out some cell zones
-                    for (int i = 1; i < director.ZoneCount; i++)
-                    {
-                        var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-                        var next = new ZoneNode(director.Bulkhead, zoneIndex);
-
-                        level.Planner.Connect(prev, next);
-                        level.Planner.AddZone(
-                            next,
-                            new Zone(level.Tier)
-                            {
-                                Coverage = CoverageMinMax.GenNormalSize(),
-                                LightSettings = Lights.GenRandomLight(),
-                            });
-
-                        prev = next;
-                    }
-
-                    // Distribute cells
-                    var pickup = new BigPickupDistribution
-                    {
-                        SpawnsPerZone = 2,
-                        SpawnData = new List<ItemSpawn>
-                            {
-                                new ItemSpawn { Item = Items.Item.PowerCell },
-                                new ItemSpawn { Item = Items.Item.PowerCell }
-                            }
-                    };
-                    Bins.BigPickupDistributions.AddBlock(pickup);
-
-                    var last = prev;
-                    var lastZone = (Zone)level.Planner.GetZone(last)!;
-
-                    lastZone.BigPickupDistributionInZone = pickup.PersistentId;
-
-                    break;
-                }
+            {
+                layout.BuildLayout_CentralGeneratorCluster(director, objective, start);
+                break;
+            }
 
             /**
              * Survival is a very custom objective
