@@ -26,6 +26,13 @@ TODO:
     * Needs something to happen when completing all the cells ideally
     * Would be good if the fog could rise or lower when inserting the cells
 
+2025_05_14
+  * E3
+    [ ] Scout Waves not spawning
+    [ ] Main / mega mom should be set back to default spawns. Double all spawns and maybe increase spawn rate
+    [ ] Extract not checking for the item
+    [ ] No extract alarm
+
 2025_05_09
   [x] Don't give error alarm doors for free all the time
   [ ] Fix item zone for cargo pickup
