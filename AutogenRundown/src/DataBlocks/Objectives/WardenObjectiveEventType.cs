@@ -60,6 +60,8 @@ public enum WardenObjectiveEventType : uint
 
     SetLightDataInZone = 10016,
 
+    AlertEnemiesInZone = 10017,
+
     Countdown = 10010,
 
     #endregion

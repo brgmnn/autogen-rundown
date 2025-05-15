@@ -6,7 +6,9 @@ using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Extensions;
 using AutogenRundown.Utils;
+using RootMotion.FinalIK;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -342,8 +344,27 @@ public partial record LevelLayout
             return;
         }
 
-        zone.GenBossGeomorph(level.Complex);
-        zone.EventsOnOpenDoor.AddSound(Sound.TenseRevelation, 2.0);
+        // We pick the specific tiles we want ourselves
+        (zone.SubComplex, zone.CustomGeomorph, zone.Coverage) = level.Complex switch
+        {
+            Complex.Mining => (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_06.prefab", new CoverageMinMax { Min = 30, Max = 70 }),
+            Complex.Tech => (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_01_R3D1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+            Complex.Service => Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+            {
+                (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03_V2.prefab", new CoverageMinMax { Min = 50, Max = 75 }),
+
+                // --- MOD Geomorphs ---
+                // donan3967
+                (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_boss_hub_DS_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+            }),
+        };
+
+        // Only allow connecting forwards
+        bossNode = planner.UpdateNode(bossNode with { MaxConnections = 1 });
+
+        zone.EventsOnOpenDoor
+            .AddSound(Sound.TenseRevelation, 2.0)
+            .AddAlertEnemies(bossNode.Bulkhead, bossNode.ZoneNumber, Generator.Between(10, 12));
 
         // Disable any scouts on anything except E-tier
         if (level.Tier != "E")

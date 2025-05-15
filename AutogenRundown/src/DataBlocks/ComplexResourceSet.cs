@@ -389,6 +389,14 @@ public record ComplexResourceSet : DataBlock
             Shard = 4
         });
 
+        // Add the boss pillar room for mega mom / other bosses
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_01_R3D1.prefab",
+            SubComplex = SubComplex.All,
+            Shard = 18
+        });
+
         // Rundown 7 tiles
 
         // Rundown 8 tiles

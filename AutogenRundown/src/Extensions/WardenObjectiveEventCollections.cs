@@ -60,6 +60,44 @@ public static class WardenObjectiveEventCollections
         => events.AddLockDoor(Bulkhead.Overload, 0, delay, trigger, lockMessage);
     #endregion
 
+    #region Enemies
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="bulkhead"></param>
+    /// <param name="zoneIndex"></param>
+    /// <param name="delay"></param>
+    /// <param name="trigger"></param>
+    /// <param name="alertMessage"></param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddAlertEnemies(
+        this ICollection<WardenObjectiveEvent> events,
+        Bulkhead bulkhead,
+        int zoneIndex,
+        double delay = 0.0,
+        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
+        string? alertMessage = null)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.AlertEnemiesInZone,
+                DimensionIndex = 0,
+                Layer = GetLayerFromBulkhead(bulkhead),
+                LocalIndex = zoneIndex,
+                Enabled = true,
+                Delay = delay,
+                Trigger = trigger,
+                WardenIntel = alertMessage
+            });
+
+        return events;
+    }
+
+    #endregion
+
     #region Event Loops
     /// <summary>
     /// Disable an event loop
