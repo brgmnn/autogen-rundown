@@ -268,7 +268,7 @@ public record Enemy_New : DataBlock
         {
             Type = EnemyGroupType.Awake,
             Difficulty = (uint)AutogenDifficulty.MegaMotherSpawn,
-            MaxScore = 18.0,
+            MaxScore = 30.0,
             Roles = new List<EnemyGroupRole>
             {
                 new() { Role = EnemyRole.BirtherChild, Distribution = EnemyRoleDistribution.Rel100 }
@@ -287,9 +287,9 @@ public record Enemy_New : DataBlock
                 },
                 EnemyGroupToSpawn = group.PersistentId,
                 ChildrenCost = 1.0,
-                ChildrenMax = 16,
-                ChildrenPerBirth = 12,
-                ChildrenPerBirthMin = 6,
+                ChildrenMax = 32,
+                ChildrenPerBirth = 30,
+                ChildrenPerBirthMin = 12,
                 MaxDelayUntilNextBirth = 6,
                 MinDelayUntilNextBirth = 1,
             });
