@@ -153,8 +153,11 @@ public record WavePopulation : DataBlock
         Bins.WavePopulations.AddBlock(Baseline_Flyers);
         Bins.WavePopulations.AddBlock(Baseline_Nightmare);
         Bins.WavePopulations.AddBlock(Baseline_Shadows);
+        Bins.WavePopulations.AddBlock(Baseline_Chargers_Hard);
+        Bins.WavePopulations.AddBlock(Baseline_Nightmare_Hard);
 
         // Single enemy variant population
+        Bins.WavePopulations.AddBlock(OnlyStrikers);
         Bins.WavePopulations.AddBlock(OnlyGiantStrikers);
         Bins.WavePopulations.AddBlock(OnlyGiantShooters);
         Bins.WavePopulations.AddBlock(OnlyChargers);
@@ -223,6 +226,16 @@ public record WavePopulation : DataBlock
         Name = "Baseline_Chargers"
     };
 
+    public static WavePopulation Baseline_Chargers_Hard = new WavePopulation
+    {
+        WaveRoleWeakling = Enemy.Shadow,
+        WaveRoleStandard = Enemy.Striker_Wave,
+        WaveRoleSpecial = Enemy.Charger,
+        WaveRoleMiniBoss = Enemy.ChargerGiant,
+        WaveRoleBoss = Enemy.ChargerGiant,
+        Name = "Baseline_Chargers"
+    };
+
     public static WavePopulation Baseline_Flyers = new WavePopulation
     {
         WaveRoleWeakling = Enemy.Shadow,
@@ -243,6 +256,16 @@ public record WavePopulation : DataBlock
         Name = "Baseline_Nightmare"
     };
 
+    public static WavePopulation Baseline_Nightmare_Hard = new WavePopulation
+    {
+        WaveRoleWeakling = Enemy.Shadow,
+        WaveRoleStandard = Enemy.Striker_Wave,
+        WaveRoleSpecial = Enemy.NightmareStriker,
+        WaveRoleMiniBoss = (Enemy)Enemy_New.NightmareGiant.PersistentId,
+        WaveRoleBoss = Enemy.NightmareShooter,
+        Name = "Baseline_Nightmare"
+    };
+
     public static WavePopulation Baseline_Shadows = new WavePopulation
     {
         WaveRoleWeakling = Enemy.Shadow,
@@ -252,6 +275,15 @@ public record WavePopulation : DataBlock
         Name = "Baseline_Shadows"
     };
     #endregion
+
+    public static WavePopulation OnlyStrikers = new()
+    {
+        WaveRoleWeakling = Enemy.Striker_Wave,
+        WaveRoleStandard = Enemy.Striker_Wave,
+        WaveRoleSpecial = Enemy.Striker_Wave,
+        WaveRoleMiniBoss = Enemy.Striker_Wave,
+        Name = "OnlyStrikers"
+    };
 
     public static WavePopulation OnlyGiantStrikers = new()
     {

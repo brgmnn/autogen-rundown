@@ -888,7 +888,7 @@ public record ChainedPuzzle : DataBlock
     {
         PublicAlarmName = "Class II Surge Alarm",
         Settings = WaveSettings.Surge,
-        Population = WavePopulation.Baseline,
+        Population = WavePopulation.OnlyStrikers,
         WantedDistanceFromStartPos = 10.0,
         WantedDistanceBetweenPuzzleComponents = 20.0,
         FixedAlarm = true,
@@ -903,7 +903,7 @@ public record ChainedPuzzle : DataBlock
     {
         PublicAlarmName = "Class III Surge Alarm",
         Settings = WaveSettings.Surge,
-        Population = WavePopulation.Baseline,
+        Population = WavePopulation.OnlyStrikers,
         WantedDistanceFromStartPos = 10.0,
         WantedDistanceBetweenPuzzleComponents = 20.0,
         FixedAlarm = true,
@@ -922,7 +922,7 @@ public record ChainedPuzzle : DataBlock
     {
         PublicAlarmName = "Class IV Surge Alarm",
         Settings = WaveSettings.Surge,
-        Population = WavePopulation.Baseline,
+        Population = WavePopulation.OnlyStrikers,
         WantedDistanceFromStartPos = 10.0,
         WantedDistanceBetweenPuzzleComponents = 20.0,
         FixedAlarm = true,
@@ -934,6 +934,42 @@ public record ChainedPuzzle : DataBlock
             PuzzleComponent.AllLarge
         }
     };
+
+    #region Extreme Surge Alarms
+    public static readonly ChainedPuzzle AlarmClass3_Surge_Extreme = new()
+    {
+        PublicAlarmName = "Class III Surge <color=orange>[EXTREME]</color> Alarm",
+        Settings = WaveSettings.Surge,
+        Population = WavePopulation.Baseline_Chargers_Hard,
+        WantedDistanceFromStartPos = 20.0,
+        WantedDistanceBetweenPuzzleComponents = 30.0,
+        FixedAlarm = true,
+        Puzzle = new List<PuzzleComponent>()
+        {
+            PuzzleComponent.AllLarge,
+            PuzzleComponent.AllLarge,
+            PuzzleComponent.AllLarge
+        }
+    };
+    #endregion
+
+    #region Overload Surge Alarms
+    public static readonly ChainedPuzzle AlarmClass3_Surge_Overload = new()
+    {
+        PublicAlarmName = "Class III Surge <color=purple>[OVERLOAD]</color> Alarm",
+        Settings = WaveSettings.Surge,
+        Population = WavePopulation.Baseline_Nightmare_Hard,
+        WantedDistanceFromStartPos = 20.0,
+        WantedDistanceBetweenPuzzleComponents = 30.0,
+        FixedAlarm = true,
+        Puzzle = new List<PuzzleComponent>()
+        {
+            PuzzleComponent.AllLarge,
+            PuzzleComponent.AllLarge,
+            PuzzleComponent.AllLarge
+        }
+    };
+    #endregion
     #endregion
 
     #region Alarms: Sustained

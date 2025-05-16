@@ -848,6 +848,7 @@ public record WaveSettings : DataBlock
         {
             Enemies.EnemyType.Standard,
             Enemies.EnemyType.Special,
+            Enemies.EnemyType.MiniBoss
         },
         FilterType = PopulationFilterType.Include,
 
