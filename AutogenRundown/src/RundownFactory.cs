@@ -9,9 +9,9 @@ namespace AutogenRundown;
 
 public static class RundownFactory
 {
-    static string DescriptionHeader(WardenObjectiveType objectiveType)
+    private static string DescriptionHeader(WardenObjectiveType objectiveType)
     {
-        var prefix = "<color=#444444>Objective Dispatch:</color> ";
+        const string prefix = "<color=#444444>Objective Dispatch:</color> ";
 
         return objectiveType switch
         {
@@ -24,9 +24,13 @@ public static class RundownFactory
             WardenObjectiveType.RetrieveBigItems => prefix + "<color=orange>Package Extraction</color>\n",
             WardenObjectiveType.PowerCellDistribution => prefix + "<color=orange>Power Cell Distribution</color>\n",
             WardenObjectiveType.TerminalUplink => prefix + "<color=orange>Network Uplink</color>\n",
+            WardenObjectiveType.CentralGeneratorCluster => prefix + "<color=orange>Generator Cluster</color>\n",
             WardenObjectiveType.HsuActivateSmall => prefix + "<color=orange>Activate Item</color>\n",
             WardenObjectiveType.Survival => prefix + "<color=orange>Diversion Protocol</color>\n",
+            WardenObjectiveType.GatherTerminal => prefix + "<color=orange>Extract Terminal Keys</color>\n",
+            WardenObjectiveType.CorruptedTerminalUplink => prefix + "<color=orange>Dual Network Uplink</color>\n",
             WardenObjectiveType.TimedTerminalSequence => prefix + "<color=orange>Timed Sequence</color>\n",
+
             _ => ""
         };
     }

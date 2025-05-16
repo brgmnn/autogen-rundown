@@ -24,6 +24,6 @@ public enum WardenObjectiveType
     CentralGeneratorCluster = 9, // TODO: Generator cluster spawn is bugged
 
     // Not yet implemented
-    CorruptedTerminalUplink = 13, // Seems similar to timed terminal sequence?
+    CorruptedTerminalUplink = 13, // 2 // Terminal uplink but the codes get sent to a second terminal
     Empty = 14
 }
