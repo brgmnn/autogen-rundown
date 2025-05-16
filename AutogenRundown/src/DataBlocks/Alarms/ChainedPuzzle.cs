@@ -223,146 +223,141 @@ public record ChainedPuzzle : DataBlock
     /// <returns></returns>
     public static List<(double, int, ChainedPuzzle)> BuildPack(string tier, LevelSettings settings)
     {
-        switch (tier)
+        var pack = tier switch
         {
-            case "A":
-                return new List<(double, int, ChainedPuzzle)>
-                {
-                    // Easy / free
-                    (1.0, 1, None),
-                    (1.0, 1, TeamScan),
-
-                    // Stealth and Surprise scans. Secret scans are grouped with their regular
-                    // counterpart
-                    (1.0, 1, Secret_TeamScan_EasyBaseline),
-
-                    // Moderate
-                    (1.0, 2, AlarmClass2),
-                    (1.0, 4, AlarmClass3),
-                    (1.0, 6, AlarmClass4),
-
-                    // Hard
-                    (1.0, 3, AlarmClass5),
-                    (1.0, 2, AlarmClass5_Cluster),
-                };
-
-            case "B":
-                return new List<(double, int, ChainedPuzzle)>
-                {
-                    // Easy / free
-                    (1.0, 1, TeamScan),
-
-                    // Stealth and Surprise scans. Secret scans are grouped with their regular
-                    // counterpart
-                    (0.4, 1, Secret_TeamScan_EasyBaseline),
-                    (1.0, 1, StealthScan4),
-                    (0.8, 1, Secret_StealthScan4_NormalBaseline),
-
-                    // Moderate
-                    (1.0, 1, AlarmClass3),
-                    (1.0, 4, AlarmClass4),
-                    (1.0, 5, AlarmClass5),
-                    (1.0, 3, AlarmClass5_Mixed),
-                    (1.0, 2, AlarmClass6),
-
-                    // Hard
-                    (1.0, 1, AlarmClass1_Sustained)
-                };
-
-            case "C":
-                return new List<(double, int, ChainedPuzzle)>
-                {
-                    // Easy scans
-                    (1.0, 1, TeamScan),
-
-                    // Stealth and Surprise scans. Secret scans are grouped with their regular
-                    // counterpart
-                    (1.0, 1, Secret_TeamScan_EasyBaseline),
-                    (0.2, 1, StealthScan4),
-                    (1.0, 2, Secret_StealthScan4_NormalBaseline),
-
-                    // Moderate
-                    (1.0, 2, AlarmClass4_Cluster),
-                    (1.0, 2, AlarmClass4_Mixed),
-                    (1.0, 3, AlarmClass5),
-                    (1.0, 2, AlarmClass5_Cluster),
-                    (1.0, 3, AlarmClass5_Mixed),
-                    (1.0, 3, AlarmClass6),
-                    (1.0, 2, AlarmClass6_Mixed),
-
-                    // Hard
-                    (1.0, 2, AlarmClass7),
-                    (1.0, 1, AlarmClass2_Surge),
-                    (1.0, 1, AlarmClass1_Sustained),
-                };
-
-            case "D":
+            "A" => new List<(double, int, ChainedPuzzle)>
             {
-                return new List<(double, int, ChainedPuzzle)>
-                {
-                    // Easy scans
-                    (0.4, 1, TeamScan),
+                // Easy / free
+                (1.0, 1, None),
+                (1.0, 1, TeamScan),
 
-                    // Stealth and Surprise scans. Secret scans are grouped with their regular
-                    // counterpart
-                    (1.0, 1, StealthScan4),
-                    (1.0, 1, Secret_StealthScan4_WithChargers),
-                    (1.0, 2, Secret_SpawnTank),
+                // Stealth and Surprise scans. Secret scans are grouped with their regular
+                // counterpart
+                (1.0, 1, Secret_TeamScan_EasyBaseline),
 
-                    // Moderate
-                    (1.0, 1, AlarmClass5),
-                    (1.0, 1, AlarmClass5_Cluster),
-                    (1.0, 1, AlarmClass5_Mixed),
+                // Moderate
+                (1.0, 2, AlarmClass2),
+                (1.0, 4, AlarmClass3),
+                (1.0, 6, AlarmClass4),
 
-                    // Hard
-                    (1.0, 3, AlarmClass6),
-                    (1.0, 2, AlarmClass6_Mixed),
-                    (1.0, 3, AlarmClass7),
-                    (1.0, 3, AlarmClass7_Mixed),
-                    (1.0, 1, AlarmClass8),
+                // Hard
+                (1.0, 3, AlarmClass5),
+                (1.0, 2, AlarmClass5_Cluster),
+            },
+            "B" => new List<(double, int, ChainedPuzzle)>
+            {
+                // Easy / free
+                (1.0, 1, TeamScan),
 
-                    // Surge
-                    (1.0, 1, AlarmClass2_Surge),
-                    (1.0, 1, AlarmClass3_Surge),
+                // Stealth and Surprise scans. Secret scans are grouped with their regular
+                // counterpart
+                (0.4, 1, Secret_TeamScan_EasyBaseline),
+                (1.0, 1, StealthScan4),
+                (0.8, 1, Secret_StealthScan4_NormalBaseline),
 
-                    // Sustained
-                    (1.0, 3, AlarmClass1_Sustained),
-                };
-            }
+                // Moderate
+                (1.0, 1, AlarmClass3),
+                (1.0, 4, AlarmClass4),
+                (1.0, 5, AlarmClass5),
+                (1.0, 3, AlarmClass5_Mixed),
+                (1.0, 2, AlarmClass6),
 
-            case "E":
-                return new List<(double, int, ChainedPuzzle)>
-                {
-                    // Stealth and Surprise scans. Secret scans are grouped with their regular
-                    // counterpart
-                    (0.2, 1, StealthScan4),
-                    (1.0, 1, Secret_StealthScan4_WithChargers),
-                    (1.0, 1, Secret_SpawnTank),
+                // Hard
+                (1.0, 1, AlarmClass1_Sustained)
+            },
+            "C" => new List<(double, int, ChainedPuzzle)>
+            {
+                // Easy scans
+                (1.0, 1, TeamScan),
 
-                    // Moderate
-                    (1.0, 1, AlarmClass5),
-                    (1.0, 1, AlarmClass5_Cluster),
-                    (1.0, 1, AlarmClass5_Mixed),
-                    (1.0, 2, AlarmClass6),
-                    (1.0, 2, AlarmClass6_Mixed),
-                    (1.0, 2, AlarmClass6_Cluster),
+                // Stealth and Surprise scans. Secret scans are grouped with their regular
+                // counterpart
+                (1.0, 1, Secret_TeamScan_EasyBaseline),
+                (0.2, 1, StealthScan4),
+                (1.0, 2, Secret_StealthScan4_NormalBaseline),
 
-                    // Difficult
-                    (1.0, 3, AlarmClass7),
-                    (1.0, 3, AlarmClass7_Mixed),
-                    (1.0, 3, AlarmClass8),
+                // Moderate
+                (1.0, 2, AlarmClass4_Cluster),
+                (1.0, 2, AlarmClass4_Mixed),
+                (1.0, 3, AlarmClass5),
+                (1.0, 2, AlarmClass5_Cluster),
+                (1.0, 3, AlarmClass5_Mixed),
+                (1.0, 3, AlarmClass6),
+                (1.0, 2, AlarmClass6_Mixed),
 
-                    // Surge alarms
-                    (1.0, 3, AlarmClass3_Surge),
-                    (0.7, 1, AlarmClass4_Surge),
+                // Hard
+                (1.0, 2, AlarmClass7),
+                (1.0, 1, AlarmClass2_Surge),
+                (1.0, 1, AlarmClass1_Sustained),
+            },
+            "D" => new List<(double, int, ChainedPuzzle)>
+            {
+                // Easy scans
+                (0.4, 1, TeamScan),
 
-                    // Sustained
-                    (1.0, 3, AlarmClass1_Sustained),
-                };
+                // Stealth and Surprise scans. Secret scans are grouped with their regular
+                // counterpart
+                (1.0, 1, StealthScan4),
+                (1.0, 1, Secret_StealthScan4_WithChargers),
+                (1.0, 2, Secret_SpawnTank),
 
-            default:
-                return new List<(double, int, ChainedPuzzle)>();
+                // Moderate
+                (1.0, 1, AlarmClass5),
+                (1.0, 1, AlarmClass5_Cluster),
+                (1.0, 1, AlarmClass5_Mixed),
+
+                // Hard
+                (1.0, 3, AlarmClass6),
+                (1.0, 2, AlarmClass6_Mixed),
+                (1.0, 3, AlarmClass7),
+                (1.0, 3, AlarmClass7_Mixed),
+                (1.0, 1, AlarmClass8),
+
+                // Surge
+                (1.0, 1, AlarmClass2_Surge),
+                (1.0, 1, AlarmClass3_Surge),
+
+                // Sustained
+                (1.0, 3, AlarmClass1_Sustained),
+            },
+            "E" => new List<(double, int, ChainedPuzzle)>
+            {
+                // Stealth and Surprise scans. Secret scans are grouped with their regular
+                // counterpart
+                (0.2, 1, StealthScan4),
+                (1.0, 1, Secret_StealthScan4_WithChargers),
+                (1.0, 1, Secret_SpawnTank),
+
+                // Moderate
+                (1.0, 1, AlarmClass5),
+                (1.0, 1, AlarmClass5_Cluster),
+                (1.0, 1, AlarmClass5_Mixed),
+                (1.0, 2, AlarmClass6),
+                (1.0, 2, AlarmClass6_Mixed),
+                (1.0, 2, AlarmClass6_Cluster),
+
+                // Difficult
+                (1.0, 3, AlarmClass7),
+                (1.0, 3, AlarmClass7_Mixed),
+                (1.0, 3, AlarmClass8),
+
+                // Surge alarms
+                (1.0, 3, AlarmClass3_Surge),
+                (0.7, 1, AlarmClass4_Surge),
+
+                // Sustained
+                (1.0, 3, AlarmClass1_Sustained),
+            },
+            _ => new List<(double, int, ChainedPuzzle)>()
         };
+
+        if (settings.HasChargers() && tier is "D" or "E")
+            pack.Add((1.0, 1, AlarmClass3_Surge_Extreme));
+
+        if (settings.HasNightmares() && tier is "D" or "E")
+            pack.Add((tier == "E" ? 1.0 : 0.7, 1, AlarmClass3_Surge_Overload));
+
+        return pack;
     }
     #endregion
 
@@ -942,7 +937,7 @@ public record ChainedPuzzle : DataBlock
         Settings = WaveSettings.Surge,
         Population = WavePopulation.Baseline_Chargers_Hard,
         WantedDistanceFromStartPos = 20.0,
-        WantedDistanceBetweenPuzzleComponents = 30.0,
+        WantedDistanceBetweenPuzzleComponents = 50.0,
         FixedAlarm = true,
         Puzzle = new List<PuzzleComponent>()
         {
@@ -960,7 +955,7 @@ public record ChainedPuzzle : DataBlock
         Settings = WaveSettings.Surge,
         Population = WavePopulation.Baseline_Nightmare_Hard,
         WantedDistanceFromStartPos = 20.0,
-        WantedDistanceBetweenPuzzleComponents = 30.0,
+        WantedDistanceBetweenPuzzleComponents = 50.0,
         FixedAlarm = true,
         Puzzle = new List<PuzzleComponent>()
         {
