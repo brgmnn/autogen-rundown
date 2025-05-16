@@ -214,7 +214,6 @@ public record ChainedPuzzle : DataBlock
     {}
 
     #region Pack builders
-
     /// <summary>
     /// Chained puzzle pack builders. Generates a pack of alarms that can be Pick()ed from
     /// for building levels.
@@ -500,7 +499,7 @@ public record ChainedPuzzle : DataBlock
         },
     };
 
-    public static ChainedPuzzle AlarmClass2 = new()
+    public static readonly ChainedPuzzle AlarmClass2 = new()
     {
         PublicAlarmName = "Class II Alarm",
         Settings = WaveSettings.Baseline_Easy,
@@ -544,6 +543,8 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class V Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
+        WantedDistanceFromStartPos = 15,
+        WantedDistanceBetweenPuzzleComponents = 30.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -559,7 +560,8 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class VI Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 15.0,
+        WantedDistanceFromStartPos = 20,
+        WantedDistanceBetweenPuzzleComponents = 30.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -576,7 +578,8 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class VII Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 15.0,
+        WantedDistanceFromStartPos = 20,
+        WantedDistanceBetweenPuzzleComponents = 35.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -594,7 +597,8 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class VIII Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 15.0,
+        WantedDistanceFromStartPos = 20,
+        WantedDistanceBetweenPuzzleComponents = 35.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -618,7 +622,8 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class IX Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 15.0,
+        WantedDistanceFromStartPos = 20,
+        WantedDistanceBetweenPuzzleComponents = 35.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -646,6 +651,7 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class X Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
+        WantedDistanceFromStartPos = 20,
         WantedDistanceBetweenPuzzleComponents = 35.0,
         Puzzle = new List<PuzzleComponent>
         {
@@ -675,6 +681,7 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class XI Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
+        WantedDistanceFromStartPos = 20,
         WantedDistanceBetweenPuzzleComponents = 35.0,
         Puzzle = new List<PuzzleComponent>
         {
@@ -702,6 +709,7 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class XII Alarm",
         Settings = WaveSettings.Baseline_VeryHard,
         Population = WavePopulation.Baseline,
+        WantedDistanceFromStartPos = 20,
         WantedDistanceBetweenPuzzleComponents = 35.0,
         Puzzle = new List<PuzzleComponent>
         {
