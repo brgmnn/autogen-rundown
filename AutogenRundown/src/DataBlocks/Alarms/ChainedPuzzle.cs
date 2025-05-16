@@ -263,7 +263,8 @@ public record ChainedPuzzle : DataBlock
                 (1.0, 2, AlarmClass6),
 
                 // Hard
-                (1.0, 1, AlarmClass1_Sustained)
+                (1.0, 1, AlarmClass1_Sustained),
+                (0.6, 1, AlarmClass2_Surge)
             },
             "C" => new List<(double, int, ChainedPuzzle)>
             {
@@ -288,6 +289,7 @@ public record ChainedPuzzle : DataBlock
                 // Hard
                 (1.0, 2, AlarmClass7),
                 (1.0, 1, AlarmClass2_Surge),
+                (1.0, 1, AlarmClass3_Surge),
                 (1.0, 1, AlarmClass1_Sustained),
             },
             "D" => new List<(double, int, ChainedPuzzle)>
