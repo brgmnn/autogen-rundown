@@ -63,55 +63,7 @@ public partial record WardenObjective
             _ => 1
         };
 
-        // Extraction waves. These are progressively harder
-        // Overload is balanced to get harder error waves when getting the sample
-        switch (level.Tier, director.Bulkhead)
-        {
-            case ("A", Bulkhead.Main):
-                WavesOnGotoWin.Add(GenericWave.Exit_Objective_Easy);
-                break;
-            case ("A", _):
-                // No exits for the A-tier side objectives
-                break;
-
-            case ("B", Bulkhead.Extreme):
-                // Extreme is easier so it doesn't get one
-                break;
-            case ("B", _):
-                // Always get an exit trickle on Main/Overload for B
-                WavesOnGotoWin.Add(GenericWave.Exit_Objective_Easy);
-                break;
-
-            case ("C", Bulkhead.Main):
-                WavesOnGotoWin.Add(GenericWave.Exit_Objective_Medium);
-                break;
-            case ("C", Bulkhead.Extreme):
-                // No exit still on C extreme
-                break;
-            case ("C", Bulkhead.Overload):
-                WavesOnGotoWin.Add(GenericWave.Exit_Objective_Easy);
-                break;
-
-            case ("D", Bulkhead.Main):
-                WavesOnGotoWin.Add(GenericWave.Exit_Objective_Hard);
-                break;
-            case ("D", Bulkhead.Extreme):
-                WavesOnGotoWin.Add(GenericWave.Exit_Objective_Easy);
-                break;
-            case ("D", Bulkhead.Overload):
-                WavesOnGotoWin.Add(GenericWave.Exit_Objective_Medium);
-                break;
-
-            case ("E", Bulkhead.Main):
-                WavesOnGotoWin.Add(GenericWave.Exit_Objective_VeryHard);
-                break;
-            case ("E", Bulkhead.Extreme):
-                WavesOnGotoWin.Add(GenericWave.Exit_Objective_Medium);
-                break;
-            case ("E", Bulkhead.Overload):
-                WavesOnGotoWin.Add(GenericWave.Exit_Objective_Hard);
-                break;
-        }
+        AddCompletedObjectiveWaves(level, director);
 
         #region Warden Intel Messages
         /*

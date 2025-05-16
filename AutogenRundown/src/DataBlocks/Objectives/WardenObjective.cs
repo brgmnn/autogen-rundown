@@ -349,6 +349,54 @@ public partial record class WardenObjective : DataBlock
         => CalculateExitScanSpeedMultiplier(Generator.Random.Next(min, max + 1));
 
     /// <summary>
+    /// Add's default exit/completion waves for an objective. Often we want
+    /// these but want to adjust them based on difficulty and what objective
+    /// we are on.
+    /// </summary>
+    public void AddCompletedObjectiveWaves(Level level, BuildDirector director)
+    {
+        // Extraction waves. These are progressively harder
+        // Overload is balanced to get harder error waves when getting the sample
+        switch (level.Tier, director.Bulkhead)
+        {
+            case ("A", Bulkhead.Main):
+                WavesOnGotoWin.Add(GenericWave.Exit_Objective_Easy);
+                break;
+
+            case ("B", Bulkhead.Main):
+                WavesOnGotoWin.Add(GenericWave.Exit_Objective_Medium);
+                break;
+
+            case ("C", Bulkhead.Main):
+                WavesOnGotoWin.Add(GenericWave.Exit_Objective_Medium);
+                break;
+            case ("C", Bulkhead.Overload):
+                WavesOnGotoWin.Add(GenericWave.ErrorAlarm_Easy);
+                break;
+
+            case ("D", Bulkhead.Main):
+                WavesOnGotoWin.Add(GenericWave.Exit_Objective_Hard);
+                break;
+            case ("D", Bulkhead.Extreme):
+                WavesOnGotoWin.Add(GenericWave.ErrorAlarm_Easy);
+                break;
+            case ("D", Bulkhead.Overload):
+                WavesOnGotoWin.Add(GenericWave.ErrorAlarm_Normal);
+                break;
+
+            case ("E", Bulkhead.Main):
+                WavesOnGotoWin.Add(GenericWave.Exit_Objective_VeryHard);
+                break;
+            case ("E", Bulkhead.Extreme):
+                WavesOnGotoWin.Add(GenericWave.ErrorAlarm_Normal);
+                break;
+            case ("E", Bulkhead.Overload):
+                WavesOnGotoWin.Add(GenericWave.ErrorAlarm_Hard);
+                break;
+        }
+    }
+
+    /// <summary>
     /// Some settings from the objective are needed for level generation. However plenty of
     /// layout information is needed for the objective. Objective building is split into two
     /// phases. PreBuild() is called first to generate the objective and then Build() is called

@@ -66,23 +66,10 @@ public partial record WardenObjective
         ActivateHSU_BringItemInElevator = true;
         ActivateHSU_MarkItemInElevatorAsWardenObjective = false;
         ActivateHSU_StopEnemyWavesOnActivation = false;
-        ActivateHSU_ObjectiveCompleteAfterInsertion = false;
-        ActivateHSU_RequireItemAfterActivationInExitScan = false;
+        ActivateHSU_ObjectiveCompleteAfterInsertion = true; // true fixes the double item in exit scan bug
+        ActivateHSU_RequireItemAfterActivationInExitScan = true;
 
-        #region Exit alarm setup
-        // Add exit trickle events on completing the reactor
-        if (director.Bulkhead == Bulkhead.Main)
-            ActivateHSU_Events.AddGenericWave(
-                level.Tier switch
-                {
-                    "A" => GenericWave.Exit_Objective_Easy,
-                    "B" => GenericWave.Exit_Objective_Easy,
-                    "C" => GenericWave.Exit_Objective_Medium,
-                    "D" => GenericWave.Exit_Objective_Hard,
-                    "E" => GenericWave.Exit_Objective_VeryHard,
-                    _ => GenericWave.Exit_Objective_Easy
-                });
-        #endregion
+        AddCompletedObjectiveWaves(level, director);
     }
 
     public void PostBuild_HsuActivateSmall(BuildDirector director, Level level)
