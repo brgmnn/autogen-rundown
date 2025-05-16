@@ -31,13 +31,13 @@ TODO:
     [ ] Scout Waves not spawning
       * Couldn't reproduce though? :eyes:
     [x] Main / mega mom should be set back to default spawns. Double all spawns and maybe increase spawn rate
-    [ ] Extract not checking for the item
-    [ ] No extract alarm
+    [x] Extract not checking for the item
+    [x] No extract alarm
 
 2025_05_09
   [x] Don't give error alarm doors for free all the time
-  [ ] Fix item zone for cargo pickup
-  [ ] Increase distance between scans on harder levels
+  [x] Fix item zone for cargo pickup
+  [x] Increase distance between scans on harder levels
   [ ] Null error thrown at end of D2
 
 2025_05_06

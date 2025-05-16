@@ -606,39 +606,7 @@ public partial record class WardenObjective : DataBlock
              * */
             case WardenObjectiveType.GatherSmallItems:
             {
-                var (itemId, name, description) = Generator.Pick(BuildSmallPickupPack(level.Tier));
-                var strategy = Generator.Pick(new List<DistributionStrategy>
-                {
-                    DistributionStrategy.Random,
-                    DistributionStrategy.SingleZone,
-                    DistributionStrategy.EvenlyAcrossZones
-                });
-
-                MainObjective = description;
-                FindLocationInfo = $"Look for {name}s in the complex";
-                FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
-
-                GatherRequiredCount = level.Tier switch
-                {
-                    "A" => Generator.Random.Next(4, 8),
-                    "B" => Generator.Random.Next(6, 10),
-                    "C" => Generator.Random.Next(7, 12),
-                    "D" => Generator.Random.Next(8, 13),
-                    "E" => Generator.Random.Next(9, 16),
-                    _ => 1,
-                };
-
-                GatherItemId = (uint)itemId;
-                GatherSpawnCount = Generator.Random.Next(
-                    GatherRequiredCount,
-                    GatherRequiredCount + 6);
-
-                DistributeObjectiveItems(level, director.Bulkhead, strategy);
-
-                var zoneSpawns = dataLayer.ObjectiveData.ZonePlacementDatas[0].Count;
-
-                GatherMaxPerZone = GatherSpawnCount / zoneSpawns + GatherSpawnCount % zoneSpawns;
-
+                Build_GatherSmallItems(director, level);
                 break;
             }
 
@@ -655,9 +623,6 @@ public partial record class WardenObjective : DataBlock
             }
 
             /**
-             * TODO: It would be nice to add special commands other than just lights off that do other modifiers.
-             *       Such as fog, error alarm, etc.
-             *
              *       Ideas:
              *          1. Spawn boss
              *          2. Flood with fog
