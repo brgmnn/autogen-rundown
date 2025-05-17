@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Objectives;
+﻿using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 
 namespace AutogenRundown.DataBlocks;
@@ -107,6 +108,15 @@ public partial record WardenObjective
         }
 
         dataLayer.ObjectiveData.ZonePlacementDatas.Add(placements);
+
+        // Alarms do indeed get canceled after completing the uplink
+        var waves = level.Tier switch
+        {
+            "A" => GenericWave.Uplink_Easy,
+            "B" => GenericWave.Uplink_Easy,
+            _ => GenericWave.Uplink_Medium,
+        };
+        WavesOnActivate.Add(waves);
 
         AddCompletedObjectiveWaves(level, director);
     }
