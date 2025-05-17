@@ -22,16 +22,16 @@ public partial record class WardenObjective : DataBlock
         {
             ("A", _) => 1,
 
-            ("B", _) => Generator.Random.Next(1, 2),
+            ("B", _) => Generator.Between(1, 2),
 
-            ("C", Bulkhead.Main) => Generator.Random.Next(1, 3),
-            ("C", _) => Generator.Random.Next(1, 2),
+            ("C", Bulkhead.Main) => Generator.Between(1, 3),
+            ("C", _) => Generator.Between(1, 2),
 
-            ("D", Bulkhead.Main) => Generator.Random.Next(1, 3),
-            ("D", _) => Generator.Random.Next(1, 3),
+            ("D", Bulkhead.Main) => Generator.Between(1, 3),
+            ("D", _) => Generator.Between(1, 3),
 
-            ("E", Bulkhead.Main) => Generator.Random.Next(2, 4),
-            ("E", _) => Generator.Random.Next(1, 3),
+            ("E", Bulkhead.Main) => Generator.Between(2, 4),
+            ("E", _) => Generator.Between(1, 3),
 
             (_, _) => 1
         };
@@ -39,18 +39,18 @@ public partial record class WardenObjective : DataBlock
         {
             ("A", _) => 3,
 
-            ("B", _) => Generator.Random.Next(3, 4),
+            ("B", _) => Generator.Between(3, 4),
 
-            ("C", 1) => Generator.Random.Next(4, 6),
-            ("C", 2) => Generator.Random.Next(4, 5),
-            ("C", 3) => Generator.Random.Next(3, 4),
+            ("C", 1) => Generator.Between(4, 6),
+            ("C", 2) => Generator.Between(4, 5),
+            ("C", 3) => Generator.Between(3, 4),
 
-            ("D", 1) => Generator.Random.Next(5, 6),
-            ("D", 2) => Generator.Random.Next(4, 6),
+            ("D", 1) => Generator.Between(5, 6),
+            ("D", 2) => Generator.Between(4, 6),
             ("D", 3) => 4,
 
-            ("E", 1) => Generator.Random.Next(8, 12),
-            ("E", 2) => Generator.Random.Next(5, 6),
+            ("E", 1) => Generator.Between(8, 12),
+            ("E", 2) => Generator.Between(5, 6),
             ("E", 3) => 5,
             ("E", 4) => 5,
 
