@@ -3,6 +3,32 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.63.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.63.0) — May 16, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* 🌟 Added `CorruptedTerminalUplink` objective!
+  * See [R5C3 Main](https://gtfo.fandom.com/wiki/ALT://R5C3) objective for an example of this objective in the base game
+* Added 2 new surge alarms (surprise)
+
+### Changes
+
+* Fixed `SpecialTerminalCommand` King of the Hill scans to have curated terminal placements on all tiles so no more terminals spawning in side zones
+* Fixed `TerminalUplink` having 1 fewer terminals and terminal rounds than it should have in it's max range for random rolls
+* Fixed several extract alarms not being correct
+* Balance: Increased distance between many scan puzzle components for Class 5 and above alarm scans
+* Balance: Enabled Class 2 Surge alarm on B-tier and Class 3 Surge alarm on C-tier
+* Balance: Increase spawns for Mega Mother to match base game
+* Balance: Change Mega Mother Tech boss tile to be the R3D1 boss tile
+* Balance: Mega Mother room auto alerts shortly after opening door
+* Balance: Changed Surge Alarms to only spawn strikers
+* Enable stuck flyer fix from EEC
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.62.0...v0.63.0
+
+
 ## [v0.62.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.62.0) — May 10, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
