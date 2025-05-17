@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.ZoneData;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -20,37 +21,33 @@ public partial record WardenObjective
             ("C", Bulkhead.Main) => Generator.Between(1, 2),
             ("C", _) => 1,
 
-            ("D", Bulkhead.Main) => Generator.Between(2, 3),
-            ("D", _) => 2,
+            ("D", Bulkhead.Main) => 2,
+            ("D", _) => Generator.Between(1, 2),
 
-            ("E", Bulkhead.Main) => Generator.Between(2, 4),
+            ("E", Bulkhead.Main) => 3,
             ("E", _) => 2,
 
             (_, _) => 1
         };
         Uplink_NumberOfVerificationRounds = (level.Tier, Uplink_NumberOfTerminals) switch
         {
-            ("A", _) => 3,
+            ("A", _) => 2,
 
-            ("B", _) => Generator.Between(3, 4),
+            ("B", _) => 3,
 
-            ("C", 1) => Generator.Between(4, 6),
-            ("C", 2) => Generator.Between(4, 5),
-            ("C", 3) => Generator.Between(3, 4),
+            ("C", 1) => 4,
+            ("C", 2) => 2,
 
-            ("D", 1) => Generator.Between(5, 6),
-            ("D", 2) => Generator.Between(4, 6),
-            ("D", 3) => 4,
+            ("D", 1) => 4,
+            ("D", 2) => 3,
 
-            ("E", 1) => Generator.Between(8, 12),
-            ("E", 2) => Generator.Between(5, 6),
+            ("E", 2) => 4,
             ("E", 3) => 5,
-            ("E", 4) => 5,
 
             (_, _) => 1,
         };
 
-        Uplink_NumberOfTerminals = 1;
+        Uplink_NumberOfTerminals = 2;
         Uplink_NumberOfVerificationRounds = 2;
     }
 
@@ -58,8 +55,17 @@ public partial record WardenObjective
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
-        MainObjective = "Find the <u>Uplink Terminals</u> [ALL_ITEMS] and establish an external uplink from each terminal";
-        FindLocationInfo = "Gather information about the location of the terminals";
+        if (Uplink_NumberOfTerminals > 1)
+        {
+            MainObjective = "Find the <u>Uplink Terminals</u> [ALL_ITEMS] and establish an external uplink from each terminal";
+            FindLocationInfo = "Gather information about the location of the terminals";
+        }
+        else
+        {
+            MainObjective = "Find the <u>Uplink Terminal</u> [ALL_ITEMS] and establish an external uplink";
+            FindLocationInfo = "Gather information about the location of the terminal";
+        }
+
         FindLocationInfoHelp = "Access more data in the terminal maintenance system";
         GoToZone = "Navigate to [ITEM_ZONE] and find [ALL_ITEMS]";
         GoToZoneHelp = "Use information in the environment to find [ITEM_ZONE]";
@@ -77,14 +83,21 @@ public partial record WardenObjective
         GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition";
 
         var placements = new List<ZonePlacementData>();
-        var zones = level.Planner.GetZones(director.Bulkhead, "uplink_terminals")
+        var nodes = level.Planner.GetZonesByTag(director.Bulkhead, "uplink_terminal")
             .TakeLast(Uplink_NumberOfTerminals);
 
-        foreach (var zone in zones)
+        foreach (var node in nodes)
         {
+            var zone = level.Planner.GetZone(node);
+
+            // Add 3 extra terminal placements for the verification codes
+            zone.TerminalPlacements.Add(new TerminalPlacement());
+            zone.TerminalPlacements.Add(new TerminalPlacement());
+            zone.TerminalPlacements.Add(new TerminalPlacement());
+
             placements.Add(new ZonePlacementData
             {
-                LocalIndex = zone.ZoneNumber,
+                LocalIndex = node.ZoneNumber,
                 Weights = ZonePlacementWeights.NotAtStart
             });
         }

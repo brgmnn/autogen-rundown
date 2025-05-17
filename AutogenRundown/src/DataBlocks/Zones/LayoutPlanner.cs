@@ -214,6 +214,13 @@ public class LayoutPlanner
     }
 
     /// <summary>
+    /// Returns a nodes parent node
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
+    public ZoneNode? GetParent(ZoneNode node) => graph.First(pair => pair.Value.Contains(node)).Key;
+
+    /// <summary>
     /// Gets a zone node by its index.
     /// </summary>
     /// <param name="index"></param>
