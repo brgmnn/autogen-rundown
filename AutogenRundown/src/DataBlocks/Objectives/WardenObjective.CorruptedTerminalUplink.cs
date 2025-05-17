@@ -46,9 +46,6 @@ public partial record WardenObjective
 
             (_, _) => 1,
         };
-
-        Uplink_NumberOfTerminals = 2;
-        Uplink_NumberOfVerificationRounds = 2;
     }
 
     public void Build_CorruptedTerminalUplink(BuildDirector director, Level level)
@@ -84,16 +81,23 @@ public partial record WardenObjective
 
         var placements = new List<ZonePlacementData>();
         var nodes = level.Planner.GetZonesByTag(director.Bulkhead, "uplink_terminal")
-            .TakeLast(Uplink_NumberOfTerminals);
+            .TakeLast(Uplink_NumberOfTerminals).ToList();
 
-        foreach (var node in nodes)
+        for (var i = 0; i < Uplink_NumberOfTerminals; i++)
         {
+            var node = nodes[i % nodes.Count];
             var zone = level.Planner.GetZone(node);
 
-            // Add 3 extra terminal placements for the verification codes
+            // Always add another terminal for the uplink
             zone.TerminalPlacements.Add(new TerminalPlacement());
-            zone.TerminalPlacements.Add(new TerminalPlacement());
-            zone.TerminalPlacements.Add(new TerminalPlacement());
+
+            if (i < nodes.Count)
+            {
+                // Add extra terminal placements for the verification codes
+                // This is only if we didn't add them yet
+                zone.TerminalPlacements.Add(new TerminalPlacement());
+                zone.TerminalPlacements.Add(new TerminalPlacement());
+            }
 
             placements.Add(new ZonePlacementData
             {
