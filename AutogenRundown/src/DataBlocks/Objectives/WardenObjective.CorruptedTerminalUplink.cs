@@ -109,6 +109,7 @@ public partial record WardenObjective
 
         dataLayer.ObjectiveData.ZonePlacementDatas.Add(placements);
 
+        // TODO: add more interesting waves
         // Alarms do indeed get canceled after completing the uplink
         var waves = level.Tier switch
         {

@@ -195,7 +195,7 @@ public static class RundownFactory
 
         #region Test C Levels
         #if DEBUG
-        if (withFixed)
+        if (withFixed && false)
         {
             var mainDirector = new BuildDirector
             {
@@ -493,9 +493,9 @@ public static class RundownFactory
                 {
                     new() { 1, 1 },          // Tier A - ?
                     new() { 1, 1, 1 },       // Tier B - ?
-                    new() { 1, 1, 2, 1 },    // Tier C - ? // Failed C3=1 (data sphere)
-                    new() { 1, 2, 1, 1, 1 }, // Tier D - ? // Failed D2=1 (Clear path)
-                    new() { 1, 1, 3, 1 }     // Tier E - ?
+                    new() { 1, 1, 1, 1 },    // Tier C - ?
+                    new() { 1, 1, 1, 2, 1 }, // Tier D - ? // D4=1 failed, clear path: Assets/geo_64x64_dig_site_exit_dak_01.prefab
+                    new() { 1, 2, 1, 2 }     // Tier E - ? // E2=1 failed to find starting zone
                 }
             }
         };
