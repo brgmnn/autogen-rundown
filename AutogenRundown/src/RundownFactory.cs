@@ -195,7 +195,7 @@ public static class RundownFactory
 
         #region Test C Levels
         #if DEBUG
-        if (withFixed && false)
+        if (withFixed)
         {
             var mainDirector = new BuildDirector
             {

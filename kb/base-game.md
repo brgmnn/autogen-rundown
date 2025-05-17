@@ -287,4 +287,38 @@ Should the players fail to input the commands within the time limit, enemies wil
 
 Players can use the auto-complete function of terminals (TAB key by default) to quickly input commands.
 
-Because of the short time frame between the second and third command input, this objective can be impossible to complete when playing alone or with only bots depending on the distance between the objective terminals. 
+Because of the short time frame between the second and third command input, this objective can be impossible to complete when playing alone or with only bots depending on the distance between the objective terminals.
+
+## Terminal Uplink
+
+Establish Uplink is an objective where players must find specified terminals and use special-purpose commands to establish a network uplink or uplinks to the provided IP addresses.
+
+The rules for enemies spawning during an uplink sequence is slightly different than a regular alarm, this is covered in the Enemy Spawning page.
+
+An uplink consists of using both the `UPLINK_CONNECT` and `UPLINK_VERIFY` commands on specific terminals.
+
+The `UPLINK_CONNECT` command starts the uplink, which will also initiate an alarm that persists whilst the uplink is in progress. `UPLINK_CONNECT` can only be used on the IP address provided, i.e.:
+
+```terminal
+UPLINK_CONNECT 123.345.567.78
+```
+
+Once connected, the terminal go through a number of verification stages. Each will present a three-letter verification code, which corresponds to the four-letter verification words shown on the player's HUD. The player must enter the corresponding word with the UPLINK_VERIFY command. For instance, if the terminal requests Y09 and the HUD contains:
+
+(Y03-HELP) (Z09-BEAT) (X02-CELL) (X04-HEAR) (Z03-NEAT) (Y09-TRAP)
+
+The player should enter TRAP:
+
+```terminal
+UPLINK_VERIFY TRAP
+```
+
+* As the player cannot see their HUD whilst using the terminal, the player will need to dismiss the terminal to retrieve the verification word or have it communicated by another player.
+* Entering the wrong verification word will reset the current stage
+* A player must always be adjacent the terminal or the process will stop. It is recommended that the other players prioritise defending the terminal user to avoid interruption.
+
+In some expeditions, after all uplinks have been established, an error alarm may begin, which generally cannot be deactivated, forcing the prisoners to fight their way to extraction. 
+
+## Corrupted Terminal Uplink
+
+Corrupted Terminal Uplink is a modified version of the Terminal Uplink objective where the uplink terminals will send the codes to a log file in another terminal, as opposed to displaying the codes on screen for the whole team. To start the uplink on these missions, the command `UPLINK_CONFIRM` must be entered on the second terminal. This requires the team to cooperate more actively to establish the uplink, as the terminals may be spread out across different zones, making it much more efficient to split up into two teams, with one person from each team working on the objective while the other defends.
