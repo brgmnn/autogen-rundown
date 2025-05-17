@@ -26,13 +26,10 @@ public partial record LevelLayout
         }
 
         var start = (ZoneNode)startish;
-
-        AddBranch(start, objective.Uplink_NumberOfTerminals, "uplink_terminals",
-            (_, zone) => { zone.TerminalPlacements.Add(new TerminalPlacement()); });
-
         var end = new ZoneNode();
         var endZone = new Zone(level.Tier);
 
+        // TODO: flesh out D/E tier a bit more. Especially E-tier with 3 terminals
         switch (level.Tier, objective.Uplink_NumberOfTerminals)
         {
             case ("A", _):

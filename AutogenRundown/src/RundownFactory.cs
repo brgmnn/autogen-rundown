@@ -202,7 +202,7 @@ public static class RundownFactory
                 Bulkhead = Bulkhead.Main,
                 Complex = Complex.Tech,
                 Complexity = Complexity.Low,
-                Tier = "A",
+                Tier = "E",
                 Objective = WardenObjectiveType.CorruptedTerminalUplink,
             };
             mainDirector.GenPoints();
@@ -217,19 +217,19 @@ public static class RundownFactory
             // };
             // extremeDirector.GenPoints();
 
-            var settings = new LevelSettings("C");
+            var settings = new LevelSettings("E");
             //settings.Modifiers.Add(LevelModifiers.Fog);
 
             var testLevel = Level.Build(
-                new Level("C")
+                new Level("E")
                 {
-                    Tier = "C",
+                    Tier = "E",
                     Name = "Corrupted Uplink",
                     Complex = Complex.Tech,
                     MainDirector = mainDirector,
                     // SecondaryDirector = extremeDirector,
                     Settings = settings,
-                    Index = rundown.TierA_Count + 1,
+                    Index = rundown.TierE_Count + 1,
                     IsTest = true
                 });
             rundown.AddLevel(testLevel);

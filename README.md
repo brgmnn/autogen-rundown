@@ -22,6 +22,7 @@ TODO:
   * Make extract scan short if there's no extract alarm (Don't do it just based on level tier)
   * Add a way to automatically install deps?
   * Rising fog?
+  * GIGA Infection Hybrid blood door might be _too_ much, it's like 12 hybrids
   * Objective: Distribute Power Cells
     * Needs something to happen when completing all the cells ideally
     * Would be good if the fog could rise or lower when inserting the cells
