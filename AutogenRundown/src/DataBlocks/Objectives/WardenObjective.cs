@@ -506,6 +506,10 @@ public partial record class WardenObjective : DataBlock
                 objective.PreBuild_GatherTerminal(director, level);
                 break;
 
+            case WardenObjectiveType.CorruptedTerminalUplink:
+                objective.PreBuild_CorruptedTerminalUplink(director, level);
+                break;
+
             case WardenObjectiveType.TimedTerminalSequence:
                 objective.PreBuild_TimedTerminalSequence(director, level);
                 break;
@@ -695,6 +699,12 @@ public partial record class WardenObjective : DataBlock
             case WardenObjectiveType.GatherTerminal:
             {
                 Build_GatherTerminal(director, level);
+                break;
+            }
+
+            case WardenObjectiveType.CorruptedTerminalUplink:
+            {
+                Build_CorruptedTerminalUplink(director, level);
                 break;
             }
 

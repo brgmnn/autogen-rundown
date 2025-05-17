@@ -223,8 +223,8 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] ~~Central Generator Cluster~~ — *Fetching cells for a central generator cluster*. **Unreliable cluster spawns**
   * [x] HSU Activate Small - *Bring Neonate to depressurizer*
   * [x] Survival - *Timed survival*
-  * [ ] Gather Terminal
-  * [ ] Corrupted Terminal Uplink
+  * [x] Gather Terminal
+  * [x] Corrupted Terminal Uplink
   * [x] Timed Terminal Sequence
 * Enemies
   * [x] Basic hybernation

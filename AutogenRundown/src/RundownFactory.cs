@@ -203,7 +203,7 @@ public static class RundownFactory
                 Complex = Complex.Tech,
                 Complexity = Complexity.Low,
                 Tier = "A",
-                Objective = WardenObjectiveType.ReactorStartup,
+                Objective = WardenObjectiveType.CorruptedTerminalUplink,
             };
             mainDirector.GenPoints();
 
@@ -217,14 +217,14 @@ public static class RundownFactory
             // };
             // extremeDirector.GenPoints();
 
-            var settings = new LevelSettings("A");
+            var settings = new LevelSettings("C");
             //settings.Modifiers.Add(LevelModifiers.Fog);
 
             var testLevel = Level.Build(
-                new Level("A")
+                new Level("C")
                 {
-                    Tier = "A",
-                    Name = "Reactor Startup",
+                    Tier = "C",
+                    Name = "Corrupted Uplink",
                     Complex = Complex.Tech,
                     MainDirector = mainDirector,
                     // SecondaryDirector = extremeDirector,
@@ -532,6 +532,7 @@ public static class RundownFactory
             (1.0, 3, WardenObjectiveType.HsuActivateSmall),
             (1.0, 3, WardenObjectiveType.Survival),
             (1.0, 2, WardenObjectiveType.GatherTerminal),
+            (1.0, 2, WardenObjectiveType.CorruptedTerminalUplink),
             (1.0, 2, WardenObjectiveType.TimedTerminalSequence),
         };
         var complexPool = new List<(double, int, Complex)>

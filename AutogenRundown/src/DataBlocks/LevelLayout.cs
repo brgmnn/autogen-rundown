@@ -850,6 +850,12 @@ public partial record LevelLayout : DataBlock
                 break;
             }
 
+            case WardenObjectiveType.CorruptedTerminalUplink:
+            {
+                layout.BuildLayout_CorruptedTerminalUplink(director, objective, start);
+                break;
+            }
+
             /**
              * Survival is a very custom objective
              */
