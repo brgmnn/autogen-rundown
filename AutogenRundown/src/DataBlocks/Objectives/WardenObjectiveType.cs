@@ -18,12 +18,12 @@ public enum WardenObjectiveType
     TerminalUplink = 8,         // U
     HsuActivateSmall = 10,      // N
     Survival = 11,              // X
-    GatherTerminal = 12,        // ..
+    GatherTerminal = 12,        // G
     TimedTerminalSequence = 15, // W
 
     CentralGeneratorCluster = 9, // TODO: Generator cluster spawn is bugged
 
     // Not yet implemented
-    CorruptedTerminalUplink = 13, // 2 // Terminal uplink but the codes get sent to a second terminal
+    CorruptedTerminalUplink = 13, // Y // Terminal uplink but the codes get sent to a second terminal
     Empty = 14
 }
