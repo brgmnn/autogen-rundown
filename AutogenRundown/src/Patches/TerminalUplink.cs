@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using GameData;
+using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using LevelGeneration;
 using Localization;
@@ -309,6 +310,12 @@ public static class TerminalUplink
 
     /// <summary>
     /// Reworks the display string both on screen and in logs to wrap for longer length codes
+    ///
+    /// For log files, the text will be automaticall wrapped at 43 chars.
+    /// So make sure we wrap the logs appropriately to fit how we want
+    /// for the terminal. Hence why we have separate logic for when it's
+    /// on a log file. Below is the divider surrounding the codes:
+    ///     -------------------------------------------
     /// </summary>
     /// <param name="__result"></param>
     /// <param name="round"></param>
@@ -319,26 +326,66 @@ public static class TerminalUplink
     public static bool TerminalUplinkPuzzle_GetCodesString(ref string __result, TerminalUplinkPuzzleRound round, bool newLine = false)
     {
         var tier = RundownManager.GetActiveExpeditionData().tier;
-        var perLine = tier switch
+        var perLineDisplay = tier switch
         {
             eRundownTier.TierC => 4,
             eRundownTier.TierD => 4,
             eRundownTier.TierE => 5,
             _ => 3,
         };
+        var perLineLogFile = tier switch
+        {
+            // eRundownTier.TierC => 4,
+            // eRundownTier.TierD => 4,
+            // eRundownTier.TierE => 5,
+            _ => 3,
+        };
+        var isLogfile = newLine;
 
-        var text = "\n";
+        var text = !isLogfile ? "\n" : "";
         for (var index = 0; index < round.Codes.Length; index++)
         {
             text += $"<color=orange>{round.Prefixes[index]}</color>:{round.Codes[index]}";
 
-            if (index < round.Codes.Length - 1)
-                text += (index + 1) % perLine != 0 ? " - " : "\n";
+            if (index >= round.Codes.Length - 1)
+                continue;
+
+            if (isLogfile)
+                text += (index + 1) % perLineLogFile != 0 ? "  " : "\n";
+            else
+                text += (index + 1) % perLineDisplay != 0 ? " - " : "\n";
         }
 
         __result = text;
         return false;
     }
+
+    // [HarmonyPatch(typeof(TerminalUplinkPuzzle), nameof(TerminalUplinkPuzzle.SendLogsToCorruptedUplinkReceiver))]
+    // [HarmonyPrefix]
+    // public static bool TerminalUplinkPuzzle_SendLogsToCorruptedUplinkReceiver(TerminalUplinkPuzzle __instance, int roundIndex)
+    // {
+    //     if (__instance.m_terminal.CorruptedUplinkReceiver != (UnityEngine.Object)null)
+    //     {
+    //         string codesString = TerminalUplinkPuzzle.GetCodesString(__instance.m_rounds[roundIndex], true);
+    //         __instance.m_terminal.CorruptedUplinkReceiver.AddLocalLog(new TerminalLogFileData()
+    //         {
+    //             FileName = "UplinkCodes_" + (roundIndex + 1).ToString("D2") + ".LOG",
+    //             FileContent = new LocalizedText
+    //             {
+    //                 Id = 0u,
+    //                 UntranslatedText = "-------------------------------------------\n" +
+    //                                    codesString +
+    //                                    "\n-------------------------------------------"
+    //             }
+    //         });
+    //         __instance.m_terminal.AddLine(TerminalLineType.ProgressWait, "SENDNING UPLINK VERIFICATION CODES TO " + __instance.m_terminal.CorruptedUplinkReceiver.PublicName.ToUpper() + " AS LOG FILES", 2f);
+    //         __instance.m_terminal.CorruptedUplinkReceiver.AddLine(TerminalLineType.ProgressWait, "RECEIVING UPLINK VERIFICATION CODES FROM " + __instance.m_terminal.PublicName.ToUpper() + " AS LOG FILES", 2f);
+    //     }
+    //     else
+    //         Plugin.Logger.LogError($"{__instance.m_terminal.PublicName} tried to send log file to its CorruptedUplinkReceiver terminal, but it was null!");
+    //
+    //     return false;
+    // }
     #endregion
 
 	// [HarmonyPatch(typeof(SerialGenerator), "Setup")]
@@ -400,8 +447,8 @@ public static class TerminalUplink
 		return false;
 	}
 
-    public static char ReturnRandomChar()
-	{
-		return System.Convert.ToChar(Builder.SessionSeedRandom.Range(97, 122, "NO_TAG"));
-	}
+ //    public static char ReturnRandomChar()
+	// {
+	// 	return System.Convert.ToChar(Builder.SessionSeedRandom.Range(97, 122, "NO_TAG"));
+	// }
 }
