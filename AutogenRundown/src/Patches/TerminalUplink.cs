@@ -274,6 +274,40 @@ public static class TerminalUplink
 
     #region TerminalUplinkPuzzle
     /// <summary>
+    /// Patches the terminal uplink puzzle to have a configurable number of
+    /// code words per round. Currently, this is just set by tier, with harder
+    /// tiers having more code words per round.
+    /// </summary>
+    /// <param name="__instance"></param>
+    [HarmonyPatch(typeof(TerminalUplinkPuzzle), nameof(TerminalUplinkPuzzle.Setup))]
+    [HarmonyPostfix]
+    public static void TerminalUplinkPuzzle_Setup(TerminalUplinkPuzzle __instance)
+    {
+        var tier = RundownManager.GetActiveExpeditionData().tier;
+        var codesCount = tier switch
+        {
+            <= eRundownTier.TierB => 6,
+            eRundownTier.TierC => 8,
+            eRundownTier.TierD => 12,
+            eRundownTier.TierE => 15,
+            _ => 6,
+        };
+
+        foreach (var round in __instance.m_rounds)
+        {
+            round.CorrectIndex = Builder.SessionSeedRandom.Range(0, codesCount);
+            round.Prefixes = new string[codesCount];
+            round.Codes = new string[codesCount];
+
+            for (var i = 0; i < codesCount; i++)
+            {
+                round.Codes[i] = SerialGenerator.GetCodeWord();
+                round.Prefixes[i] = SerialGenerator.GetCodeWordPrefix();
+            }
+        }
+    }
+
+    /// <summary>
     /// Reworks the display string both on screen and in logs to wrap for longer length codes
     /// </summary>
     /// <param name="__result"></param>
@@ -304,40 +338,6 @@ public static class TerminalUplink
 
         __result = text;
         return false;
-    }
-
-    /// <summary>
-    /// Patches the terminal uplink puzzle to have a configurable number of
-    /// code words per round. Currently this is just set by tier, with harder
-    /// tiers having more code words per round.
-    /// </summary>
-    /// <param name="__instance"></param>
-    [HarmonyPatch(typeof(TerminalUplinkPuzzle), nameof(TerminalUplinkPuzzle.Setup))]
-    [HarmonyPostfix]
-    public static void TerminalUplinkPuzzle_Setup(TerminalUplinkPuzzle __instance)
-    {
-        var tier = RundownManager.GetActiveExpeditionData().tier;
-        var codesCount = tier switch
-        {
-            <= eRundownTier.TierB => 6,
-            eRundownTier.TierC => 8,
-            eRundownTier.TierD => 12,
-            eRundownTier.TierE => 15,
-            _ => 6,
-        };
-
-        foreach (var round in __instance.m_rounds)
-        {
-            round.CorrectIndex = Builder.SessionSeedRandom.Range(0, codesCount);
-            round.Prefixes = new string[codesCount];
-            round.Codes = new string[codesCount];
-
-            for (var i = 0; i < codesCount; i++)
-            {
-                round.Codes[i] = SerialGenerator.GetCodeWord();
-                round.Prefixes[i] = SerialGenerator.GetCodeWordPrefix();
-            }
-        }
     }
     #endregion
 
