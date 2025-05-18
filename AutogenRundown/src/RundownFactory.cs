@@ -197,12 +197,13 @@ public static class RundownFactory
         #if DEBUG
         if (withFixed)
         {
+            const string tier = "D";
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = Complex.Tech,
                 Complexity = Complexity.Low,
-                Tier = "E",
+                Tier = tier,
                 Objective = WardenObjectiveType.CorruptedTerminalUplink,
             };
             mainDirector.GenPoints();
@@ -217,19 +218,19 @@ public static class RundownFactory
             // };
             // extremeDirector.GenPoints();
 
-            var settings = new LevelSettings("E");
+            var settings = new LevelSettings(tier);
             //settings.Modifiers.Add(LevelModifiers.Fog);
 
             var testLevel = Level.Build(
-                new Level("E")
+                new Level(tier)
                 {
-                    Tier = "E",
+                    Tier = tier,
                     Name = "Corrupted Uplink",
                     Complex = Complex.Tech,
                     MainDirector = mainDirector,
                     // SecondaryDirector = extremeDirector,
                     Settings = settings,
-                    Index = rundown.TierE_Count + 1,
+                    Index = rundown.TierA_Count + 1,
                     IsTest = true
                 });
             rundown.AddLevel(testLevel);
