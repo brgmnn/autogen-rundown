@@ -3,6 +3,22 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.65.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.65.0) — May 18, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Added seven letter codes for E-tier
+* Added IPv6 uplink addresses for D-tier and E-tier
+
+### Changes
+
+* Adjusted `CorruptedTerminalUplink` code per line in log files
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.64.0...v0.65.0
+
+
 ## [v0.64.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.64.0) — May 17, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
