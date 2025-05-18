@@ -3,6 +3,18 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.64.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.64.0) — May 17, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Added longer, and more uplink codes for uplink and corrupted uplink objectives at higher difficulties
+* Added longer codes for harder reactor levels
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.63.0...v0.64.0
+
+
 ## [v0.63.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.63.0) — May 16, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
