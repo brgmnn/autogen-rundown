@@ -836,11 +836,7 @@ public static class TerminalUplink
         if (tier < eRundownTier.TierD)
             return;
 
-        // Ip6Prefixes
-
         SerialGenerator.m_ips = new string[99];
-
-        Plugin.Logger.LogInfo($"IPv6 addresses:");
 
         for (var ip = 0; ip < SerialGenerator.m_ips.Length; ip++)
         {
@@ -912,21 +908,9 @@ public static class TerminalUplink
                                      .Replace(":::", "::");
 
             SerialGenerator.m_ips[ip] = address;
-
-            Plugin.Logger.LogInfo($"    {address}");
         }
 
-        // for (int i = 0; i < ((Il2CppArrayBase<string>)(object)SerialGenerator.m_ips).Length; i++)
-        // {
-        //     int num = 2001;
-        //     string text = ReturnRandomChar().ToString() + ReturnRandomChar() + Builder.SessionSeedRandom.Range(1, 9, "NO_TAG");
-        //     string text2 = Builder.SessionSeedRandom.Range(10, 99, "NO_TAG").ToString() + ReturnRandomChar() + Builder.SessionSeedRandom.Range(1, 9, "NO_TAG");
-        //     string text3 = Builder.SessionSeedRandom.Range(10, 99, "NO_TAG").ToString() + ReturnRandomChar() + ReturnRandomChar();
-        //     string text4 = ReturnRandomChar().ToString() + Builder.SessionSeedRandom.Range(10, 99, "NO_TAG");
-        //     ((Il2CppArrayBase<string>)(object)SerialGenerator.m_ips)[i] = num + ":0:" + text + ":" + text2 + ":" + text3 + ":" + text4;
-        // }
-        //
-        // Plugin.Logger.LogError($"We got SerialGenerator.Setup()!");
+        Plugin.Logger.LogInfo($"Replaced SerialGenerator m_ips with IPv6 addresses");
     }
     #endregion
 
@@ -1090,9 +1074,4 @@ public static class TerminalUplink
 		}
 		return false;
 	}
-
- //    public static char ReturnRandomChar()
-	// {
-	// 	return System.Convert.ToChar(Builder.SessionSeedRandom.Range(97, 122, "NO_TAG"));
-	// }
 }
