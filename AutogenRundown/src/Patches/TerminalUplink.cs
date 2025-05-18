@@ -7,6 +7,10 @@ namespace AutogenRundown.Patches;
 /// <summary>
 /// Patches the Terminal Uplink code words to be longer, and for there to be
 /// more code words for harder tiers
+///
+/// Ideas:
+///   * Make CorruptedUplink log files with codes harder to type. Add some
+///     random characters to the filename.
 /// </summary>
 [HarmonyPatch]
 public static class TerminalUplink
@@ -1043,19 +1047,19 @@ public static class TerminalUplink
 			Plugin.Logger.LogDebug("TerminalCorruptedUplinkConnect() critical failure because terminal does not have a CorruptedUplinkReceiver.");
 			return false;
 		}
-		if (LG_ComputerTerminalManager.OngoingUplinkConnectionTerminalId != 0 && LG_ComputerTerminalManager.OngoingUplinkConnectionTerminalId != __instance.m_terminal.SyncID)
+
+        if (LG_ComputerTerminalManager.OngoingUplinkConnectionTerminalId != 0 && LG_ComputerTerminalManager.OngoingUplinkConnectionTerminalId != __instance.m_terminal.SyncID)
 		{
 			__instance.AddOngoingUplinkOutput();
 			return false;
 		}
-		LG_ComputerTerminalManager.OngoingUplinkConnectionTerminalId = __instance.m_terminal.SyncID;
-		// Plugin.Logger.LogDebug(Object.op_Implicit("TerminalCorruptedUplinkConnect, param1: " + param1 + " TerminalUplink: " + ((Object)__instance.m_terminal.UplinkPuzzle).ToString()));
+
+        LG_ComputerTerminalManager.OngoingUplinkConnectionTerminalId = __instance.m_terminal.SyncID;
+
 		if (param1 == __instance.m_terminal.UplinkPuzzle.TerminalUplinkIP)
 		{
 			if (__instance.m_terminal.CorruptedUplinkReceiver.m_command.HasRegisteredCommand((TERM_Command)27))
-			{
 				__instance.AddUplinkCorruptedOutput();
-			}
 			else
 			{
 				__instance.AddUplinkCorruptedOutput();
@@ -1069,9 +1073,8 @@ public static class TerminalUplink
 			}
 		}
 		else
-		{
 			__instance.AddUplinkWrongAddressError(param1);
-		}
+
 		return false;
 	}
 }
