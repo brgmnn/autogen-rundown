@@ -43,5 +43,6 @@ public static class Peers
         // --- Supported Peers ---
         Arsenality.Configure();
         ArsenalityRebalance.Configure();
+        VanillaReloaded.Configure();
     }
 }
