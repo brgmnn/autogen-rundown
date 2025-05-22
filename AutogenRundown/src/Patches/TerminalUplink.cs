@@ -211,7 +211,9 @@ public static class TerminalUplink
         "wrath", "wreak", "wrong", "years", "yield", "yoked", "yolks", "young", "yours"
     };
 
-    // About 2000 words
+    /// <summary>
+    /// About 2000 words
+    /// </summary>
     private static string[] SixLetterWords => new[]
     {
         "bourns", "upkeep", "sewage", "lucida", "undyed", "faster", "bidder", "salada",
