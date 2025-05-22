@@ -3,6 +3,17 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.66.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.66.1) — May 21, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fixed incorrect release version
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.66.0...v0.66.1
+
+
 ## [v0.66.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.66.0) — May 21, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
