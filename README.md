@@ -27,6 +27,10 @@ TODO:
     * Needs something to happen when completing all the cells ideally
     * Would be good if the fog could rise or lower when inserting the cells
 
+Requests:
+  * Add support for VanillaReloaded mod
+    * https://discord.com/channels/782438773690597389/1342735255009755227/1373594263019061281
+
 2025_05_14
   * E3
     [ ] Scout Waves not spawning
