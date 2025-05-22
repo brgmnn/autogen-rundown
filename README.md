@@ -35,9 +35,6 @@ Requests:
   * E3
     [ ] Scout Waves not spawning
       * Couldn't reproduce though? :eyes:
-    [x] Main / mega mom should be set back to default spawns. Double all spawns and maybe increase spawn rate
-    [x] Extract not checking for the item
-    [x] No extract alarm
 
 2025_05_09
   [x] Don't give error alarm doors for free all the time
