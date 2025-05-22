@@ -3,6 +3,17 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.66.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.66.0) — May 21, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Added support for mod [VanillaReloaded](https://thunderstore.io/c/gtfo/p/tru0067/VanillaReloaded/)
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.65.0...v0.66.0
+
+
 ## [v0.65.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.65.0) — May 18, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
