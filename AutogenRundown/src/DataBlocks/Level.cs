@@ -1218,7 +1218,7 @@ public class Level
 
             // The zones
             var elevatorDrop = new ZoneNode(Bulkhead.Main, level.Planner.NextIndex(Bulkhead.Main));
-            var elevatorDropZone = new Zone(level.Tier)
+            var elevatorDropZone = new Zone(level)
             {
                 Coverage = new CoverageMinMax { Min = 25, Max = 35 },
                 LightSettings = Lights.GenRandomLight(),
@@ -1302,7 +1302,7 @@ public class Level
 
             for (var z = 0; z < forwardZones; z++)
             {
-                var zone = new Zone(level.Tier)
+                var zone = new Zone(level)
                 {
                     Coverage = new CoverageMinMax { Min = 5, Max = 10 },
                     LightSettings = Lights.GenRandomLight(),

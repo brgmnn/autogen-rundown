@@ -27,7 +27,7 @@ public partial record LevelLayout
 
         var start = (ZoneNode)startish;
         var end = new ZoneNode();
-        var endZone = new Zone(level.Tier);
+        var endZone = new Zone(level);
 
         // TODO: flesh out D/E tier a bit more. Especially E-tier with 3 terminals
         switch (level.Tier, objective.Uplink_NumberOfTerminals)

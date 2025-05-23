@@ -5,6 +5,7 @@ using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Terminals;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Utils;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -47,8 +48,15 @@ public partial record LevelLayout
         #region Exit Zone
         // We need an exit zone as prisoners have to run to the exit
         var exitIndex = level.Planner.NextIndex(director.Bulkhead);
-        var exitNode = new ZoneNode(director.Bulkhead, exitIndex, "exit");
-        var exitZone = new Zone(level.Tier)
+        var exitNode = new ZoneNode()
+        {
+            Bulkhead = director.Bulkhead,
+            ZoneNumber = exitIndex,
+            Branch = "exit",
+            Tags = new Tags("exit_elevator"),
+            MaxConnections = 0
+        };
+        var exitZone = new Zone(level)
         {
             Coverage = CoverageMinMax.Tiny,
             LightSettings = Lights.GenRandomLight()
@@ -81,7 +89,7 @@ public partial record LevelLayout
                 "arena_security_control");
             securityControlNode.Tags.Add("no_enemies");
 
-            var securityControlZone = new Zone(level.Tier)
+            var securityControlZone = new Zone(level)
             {
                 Coverage = CoverageMinMax.Nano,
                 LightSettings = Lights.GenRandomLight(),

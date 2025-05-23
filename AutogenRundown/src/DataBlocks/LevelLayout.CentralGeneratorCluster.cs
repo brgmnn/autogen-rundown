@@ -37,7 +37,7 @@ public partial record LevelLayout
             level.Planner.Connect(prev, next);
             level.Planner.AddZone(
                 next,
-                new Zone(level.Tier)
+                new Zone(level)
                 {
                     Coverage = CoverageMinMax.GenNormalSize(),
                     LightSettings = Lights.GenRandomLight(),

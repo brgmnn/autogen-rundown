@@ -32,7 +32,7 @@ public partial record LevelLayout
         var hub = new ZoneNode(director.Bulkhead, hubIndex);
         hub.MaxConnections = 3;
 
-        var zone = new Zone(level.Tier) { LightSettings = Lights.GenRandomLight() };
+        var zone = new Zone(level) { LightSettings = Lights.GenRandomLight() };
         zone.GenHubGeomorph(director.Complex);
         zone.RollFog(level);
 
@@ -51,7 +51,7 @@ public partial record LevelLayout
             {
                 var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
                 var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
-                var nextZone = new Zone(level.Tier)
+                var nextZone = new Zone(level)
                 {
                     Coverage = CoverageMinMax.GenNormalSize(),
                     LightSettings = Lights.GenRandomLight(),
@@ -105,7 +105,7 @@ public partial record LevelLayout
                 var hub2 = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead));
                 hub2.MaxConnections = 3;
 
-                var zoneHub2 = new Zone(level.Tier) { LightSettings = Lights.GenRandomLight() };
+                var zoneHub2 = new Zone(level) { LightSettings = Lights.GenRandomLight() };
                 zoneHub2.GenHubGeomorph(director.Complex);
                 zoneHub2.RollFog(level);
 

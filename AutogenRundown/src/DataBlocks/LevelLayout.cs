@@ -632,7 +632,7 @@ public partial record LevelLayout : DataBlock
                 planner.Connect(baseNode, turnOff);
                 planner.AddZone(
                     turnOff,
-                    new Zone(level.Tier)
+                    new Zone(level)
                     {
                         Coverage = new CoverageMinMax(Generator.NextDouble(40, 80)),
                         LightSettings = Lights.GenRandomLight(),

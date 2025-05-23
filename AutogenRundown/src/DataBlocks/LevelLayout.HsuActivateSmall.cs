@@ -20,7 +20,7 @@ public partial record LevelLayout
         var layerData = level.GetObjectiveLayerData(director.Bulkhead);
 
         var end = new ZoneNode();
-        var endZone = new Zone(level.Tier);
+        var endZone = new Zone(level);
 
         #region Level zone layout
         // Level generation

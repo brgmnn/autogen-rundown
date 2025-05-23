@@ -1327,6 +1327,9 @@ public record Zone : DataBlock
     #endregion
 
     #region Internal plugin properties
+    [JsonIgnore]
+    internal Level level { get; init; }
+
     /// <summary>
     /// Flags whether the zone is in fog or not.
     /// </summary>
@@ -1594,13 +1597,15 @@ public record Zone : DataBlock
     }
     #endregion
 
-    public Zone(string tier)
+    public Zone(Level level)
     {
+        this.level = level;
+
         // Always ensure a terminal is placed in the zone
         TerminalPlacements.Add(new TerminalPlacement());
 
         // Grant additional ammo for D and E tier levels
-        AmmoPacks = tier switch
+        AmmoPacks = level.Tier switch
         {
             "D" => 5,
             "E" => 6,

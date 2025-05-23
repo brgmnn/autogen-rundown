@@ -26,7 +26,7 @@ public partial record LevelLayout
         var startZone = planner.GetZone(start)!;
 
         var exit = new ZoneNode();
-        var exitZone = new Zone(level.Tier);
+        var exitZone = new Zone(level);
 
         // This whole objective can only be done on main
         switch (level.Tier)
@@ -441,7 +441,12 @@ public partial record LevelLayout
         }
 
         // Configure the exit zone
-        exit = planner.UpdateNode(exit with { Branch = "exit", Tags = exit.Tags.Extend("exit_elevator") });
+        exit = planner.UpdateNode(exit with
+        {
+            Branch = "exit",
+            MaxConnections = 0,
+            Tags = exit.Tags.Extend("exit_elevator")
+        });
         exitZone.GenExitGeomorph(level.Complex);
         exitZone.Coverage = new() { Min = 64, Max = 64 };
 
