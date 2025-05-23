@@ -27,6 +27,17 @@ TODO:
     * Needs something to happen when completing all the cells ideally
     * Would be good if the fog could rise or lower when inserting the cells
 
+Level Lockup:
+  ```
+  [Error  :     Unity] WARNING : Zone1 (Zone_1 - 224): Failed to find any good StartAreas in zone 0 (223) expansionType:Towards_Random m_buildFromZone.m_areas: 0 scoredCount:0 dim: Reality
+  [Error  :     Unity] WARNING : Zone1 (Zone_1 - 224): Failed to find any good StartAreas in zone 0 (223) expansionType:Towards_Random m_buildFromZone.m_areas: 0 scoredCount:0 dim: Reality
+  [Error  :     Unity] WARNING : Zone1 (Zone_1 - 224): Failed to find any good StartAreas in zone 0 (223) expansionType:Towards_Random m_buildFromZone.m_areas: 0 scoredCount:0 dim: Reality
+  [Error  :     Unity] WARNING : Zone1 (Zone_1 - 224): Failed to find any good StartAreas in zone 0 (223) expansionType:Towards_Random m_buildFromZone.m_areas: 0 scoredCount:0 dim: Reality
+  [Error  :     Unity] WARNING : Zone1 (Zone_1 - 224): Failed to find any good StartAreas in zone 0 (223) expansionType:Towards_Random m_buildFromZone.m_areas: 0 scoredCount:0 dim: Reality
+  ```
+  Happens in:
+    LG_ZoneJob_CreateExpandFromData
+
 Requests:
   * Add support for VanillaReloaded mod
     * https://discord.com/channels/782438773690597389/1342735255009755227/1373594263019061281
