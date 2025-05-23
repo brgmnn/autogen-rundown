@@ -319,12 +319,10 @@ public class Level
             ["EnemyPopulation"] = 1,
             ["ExpeditionBalance"] = ExpeditionBalance.DefaultBalance.PersistentId,
 
-            // TODO: Replace these with actual wave settings / populations
-            // Use ExtraObjectiveSetup for scout waves
-            // ["ScoutWaveSettings"] = ScoutWaveSettings.PersistentId,
-            // ["ScoutWavePopulation"] = ScoutWavePopulation.PersistentId,
-            ["ScoutWaveSettings"] = 0,
-            ["ScoutWavePopulation"] = 0,
+            // ExtraObjectiveSetup will override these in some cases. But by
+            // default we use the inbuilt scout wave spawning
+            ["ScoutWaveSettings"] = ScoutWaveSettings.PersistentId,
+            ["ScoutWavePopulation"] = ScoutWavePopulation.PersistentId,
 
             ["EnvironmentWetness"] = 0.0,
             ["DustColor"] = JObject.FromObject(
@@ -839,116 +837,108 @@ public class Level
     /// </summary>
     private void BuildDefaultScoutWaves()
     {
-        var events = new List<WardenObjectiveEvent>();
-        var wave = new GenericWave
-        {
-            Population = WavePopulation.Baseline,
-            Settings = WaveSettings.Scout_Easy,
-            TriggerAlarm = false
-        };
+        var population = WavePopulation.Baseline;
+        var settings = WaveSettings.Scout_Easy;
 
         if (Settings.Modifiers.Contains(LevelModifiers.Shadows))
-            wave.Population = WavePopulation.Baseline_Shadows;
+            population = WavePopulation.Baseline_Shadows;
         else if (Settings.Modifiers.Contains(LevelModifiers.ManyShadows))
-            wave.Population = WavePopulation.OnlyShadows;
+            population = WavePopulation.OnlyShadows;
         else if (Settings.Modifiers.Contains(LevelModifiers.Chargers))
-            wave.Population = WavePopulation.Baseline_Shadows;
+            population = WavePopulation.Baseline_Shadows;
         else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers))
-            wave.Population = WavePopulation.OnlyShadows;
+            population = WavePopulation.OnlyShadows;
 
         switch (Tier)
         {
             case "A":
             case "B":
             {
-                wave.Settings = WaveSettings.Scout_Easy;
+                settings = WaveSettings.Scout_Easy;
                 break;
             }
 
             case "C":
             {
-                wave.Settings = WaveSettings.Scout_Normal;
+                settings = WaveSettings.Scout_Normal;
 
                 if (Settings.Modifiers.Contains(LevelModifiers.ManyShadows) && Generator.Flip())
-                    wave = new GenericWave
-                    {
-                        Population = WavePopulation.OnlyShadows,
-                        Settings = WaveSettings.SingleWave_MiniBoss_6pts,
-                        AreaDistance = 1
-                    };
+                {
+                    population = WavePopulation.OnlyShadows;
+                    settings = WaveSettings.SingleWave_MiniBoss_6pts;
+                }
                 else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers) && Generator.Flip())
-                    wave = new GenericWave
-                    {
-                        Population = WavePopulation.OnlyChargers,
-                        Settings = WaveSettings.SingleWave_MiniBoss_6pts,
-                    };
+                {
+                    population = WavePopulation.OnlyChargers;
+                    settings = WaveSettings.SingleWave_MiniBoss_6pts;
+                }
                 break;
             }
 
             case "D":
             {
-                wave.Settings = WaveSettings.Scout_Hard;
+                settings = WaveSettings.Scout_Hard;
 
                 if (Settings.Modifiers.Contains(LevelModifiers.ManyNightmares) && Generator.Flip())
-                    wave = new GenericWave
-                    {
-                        Population = WavePopulation.OnlyNightmareGiants,
-                        Settings = WaveSettings.SingleWave_MiniBoss_8pts
-                    };
+                {
+                    population = WavePopulation.OnlyNightmareGiants;
+                    settings = WaveSettings.SingleWave_MiniBoss_8pts;
+                }
                 else if (Settings.Modifiers.Contains(LevelModifiers.ManyShadows) && Generator.Flip())
-                    wave = new GenericWave
-                    {
-                        Population = WavePopulation.OnlyShadows,
-                        Settings = WaveSettings.SingleWave_MiniBoss_8pts
-                    };
+                {
+                    population = WavePopulation.OnlyShadows;
+                    settings = WaveSettings.SingleWave_MiniBoss_6pts;
+                }
                 else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers) && Generator.Flip())
-                    wave = new GenericWave
-                    {
-                        Population = WavePopulation.OnlyChargers,
-                        Settings = WaveSettings.SingleWave_MiniBoss_8pts,
-                    };
+                {
+                    population = WavePopulation.OnlyChargers;
+                    settings = WaveSettings.SingleWave_MiniBoss_8pts;
+                }
                 break;
             }
 
             case "E":
             {
-                wave.Settings = WaveSettings.Scout_VeryHard;
+                settings = WaveSettings.Scout_VeryHard;
 
                 if (Settings.Modifiers.Contains(LevelModifiers.ManyNightmares) && Generator.Flip())
-                    wave = new GenericWave
-                    {
-                        Population = WavePopulation.OnlyNightmareGiants,
-                        Settings = WaveSettings.SingleWave_MiniBoss_12pts
-                    };
+                {
+                    population = WavePopulation.OnlyNightmareGiants;
+                    settings = WaveSettings.SingleWave_MiniBoss_12pts;
+                }
                 else if (Settings.Modifiers.Contains(LevelModifiers.ManyShadows) && Generator.Flip())
-                    wave = new GenericWave
-                    {
-                        Population = WavePopulation.OnlyShadows,
-                        Settings = WaveSettings.SingleWave_MiniBoss_12pts,
-                        AreaDistance = 1
-                    };
+                {
+                    population = WavePopulation.OnlyShadows;
+                    settings = WaveSettings.SingleWave_MiniBoss_12pts;
+                }
                 else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers) && Generator.Flip())
-                    wave = new GenericWave
-                    {
-                        Population = WavePopulation.OnlyChargers,
-                        Settings = WaveSettings.SingleWave_MiniBoss_12pts,
-                    };
+                {
+                    population = WavePopulation.OnlyChargers;
+                    settings = WaveSettings.SingleWave_MiniBoss_12pts;
+                }
                 break;
             }
         }
 
-        events.AddSpawnWave(wave);
+        ScoutWavePopulation = population;
+        ScoutWaveSettings = settings;
 
-        EOS_EventsOnScoutScream.Definitions.Add(
-            new EventsOnScoutScream
-            {
-                ZoneNumber = -1,
-                Bulkhead = Bulkhead.All,
-                DimensionIndex = null,
-
-                SuppressVanillaScoutWave = true,
-                Events = events
-            });
+        // TODO: just doesn't quite seem to be working right. I think it's the target definition.
+        // So what layer it's targeting
+        // if (wave is not null)
+        //     events.AddSpawnWave(wave);
+        //
+        // if (events.Any())
+        //     EOS_EventsOnScoutScream.Definitions.Add(
+        //         new EventsOnScoutScream
+        //         {
+        //             ZoneNumber = -1,
+        //             Bulkhead = Bulkhead.All,
+        //             DimensionIndex = null,
+        //
+        //             SuppressVanillaScoutWave = true,
+        //             Events = events
+        //         });
     }
 
     /// <summary>
