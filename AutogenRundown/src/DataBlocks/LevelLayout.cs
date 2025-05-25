@@ -616,14 +616,17 @@ public partial record LevelLayout : DataBlock
             // Give a flat chance of being able to turn off the alarm.
             if (Generator.Flip(0.5))
             {
-                zone.TurnOffAlarmOnTerminal = true;
-
                 var node = planner.GetZoneNode(zone.LocalIndex);
                 var branchOpenZones = planner.GetOpenZones(director.Bulkhead, node.Branch);
 
                 // Fallback if there's no open zones in this branch. This will be _hard_.
                 if (branchOpenZones.Count < 1)
                     branchOpenZones = planner.GetOpenZones(director.Bulkhead);
+
+                // There's no open zones anywhere on this bulkhead. So bad luck this alarm can't be turned off.
+                // TODO: we could fall back to setting the turnoff in an existing forward zone?
+                if (!branchOpenZones.Any())
+                    continue;
 
                 var baseNode = Generator.Pick(branchOpenZones);
 
@@ -649,6 +652,7 @@ public partial record LevelLayout : DataBlock
 
                 // For now set the alarm to be in the next zone.
                 zone.TerminalPuzzleZone.LocalIndex = turnOff.ZoneNumber;
+                zone.TurnOffAlarmOnTerminal = true;
 
                 // TODO: remove when we move roll alarms to use planner entirely.
                 Zones.Add(turnOffZone);

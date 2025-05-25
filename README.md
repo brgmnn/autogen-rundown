@@ -28,15 +28,21 @@ TODO:
     * Would be good if the fog could rise or lower when inserting the cells
 
 Level Lockup:
+  Double check logs on any of the old versions for this:
   ```
-  [Error  :     Unity] WARNING : Zone1 (Zone_1 - 224): Failed to find any good StartAreas in zone 0 (223) expansionType:Towards_Random m_buildFromZone.m_areas: 0 scoredCount:0 dim: Reality
-  [Error  :     Unity] WARNING : Zone1 (Zone_1 - 224): Failed to find any good StartAreas in zone 0 (223) expansionType:Towards_Random m_buildFromZone.m_areas: 0 scoredCount:0 dim: Reality
-  [Error  :     Unity] WARNING : Zone1 (Zone_1 - 224): Failed to find any good StartAreas in zone 0 (223) expansionType:Towards_Random m_buildFromZone.m_areas: 0 scoredCount:0 dim: Reality
-  [Error  :     Unity] WARNING : Zone1 (Zone_1 - 224): Failed to find any good StartAreas in zone 0 (223) expansionType:Towards_Random m_buildFromZone.m_areas: 0 scoredCount:0 dim: Reality
+  ZoneNode { Bulkhead = None, ZoneNumber = 0, Branch = , MaxConnections = 0, Tags =  }
+  ```
+  There was a bug in the error alarm turnoff code where it would try and place a turnoff alarm from a nonexistent zone 
+  ```
   [Error  :     Unity] WARNING : Zone1 (Zone_1 - 224): Failed to find any good StartAreas in zone 0 (223) expansionType:Towards_Random m_buildFromZone.m_areas: 0 scoredCount:0 dim: Reality
   ```
   Happens in:
     LG_ZoneJob_CreateExpandFromData
+  Second error:
+  ```
+  [Error  :     Unity] NullReferenceException: Object reference not set to an instance of an object.
+  [Error  :     Unity] <b>LG_ZoneJob_CreateExpandFromData:</b> sourceExpander is null for New Game Object[SubSeed:24(24)] | zone dim: Reality | job dim: Reality!
+  ```
 
 Requests:
   * Add support for VanillaReloaded mod
