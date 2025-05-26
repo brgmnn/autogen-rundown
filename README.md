@@ -48,6 +48,9 @@ Requests:
   * Add support for VanillaReloaded mod
     * https://discord.com/channels/782438773690597389/1342735255009755227/1373594263019061281
 
+2025_05_26
+  * Make the Hex codes upper case
+
 2025_05_14
   * E3
     [ ] Scout Waves not spawning
@@ -147,6 +150,11 @@ Enemies:
 
 Automatic Rundown generation, using procedural seed based generation. Three active rundowns to choose from: the daily, weekly, and monthly. Play with friends with zero configuration of seeds.
 
+* [Installation](#installation)
+* [Base game features](#base-game-features)
+* [Additional vanilla-like features](#additional-vanilla-like-features)
+* [3rd Party Mod Support](#3rd-party-mod-support)
+
 ![Rundown Selection](https://github.com/brgmnn/autogen-rundown/blob/03583187a757755e486623da73d4712e00187be7/docs/rundown_selection.jpg?raw=true "Rundown Selection")
 
 Track your progression in each rundown separately from the base game and other modded rundowns, see if you can clear them "Unaugmented"! (Without boosters)
@@ -154,6 +162,7 @@ Track your progression in each rundown separately from the base game and other m
 ![Monthly Rundown Preview](https://github.com/brgmnn/autogen-rundown/blob/03583187a757755e486623da73d4712e00187be7/docs/monthly_rundown.jpg?raw=true "Monthly Rundown Preview")
 
 Levels and rundowns are designed to be similar and in the spirit of vanilla GTFO. The largest difference is in the addition of new tilesets (geomorphs) to add more variety to the existing games set of tiles.
+
 
 ## Installation
 
@@ -219,14 +228,14 @@ Follow the installation instructions again, check yes to overwrite all files.
       * [x] Class 10+ alarm room
       * [x] King of the hill room
     * [ ] Specialized bulkhead geomorphs and layouts
-    * [ ] Bulkheads behind bulkheads
+    * [x] Bulkheads behind bulkheads
   * Challenges
     * [x] Key to unlock doors
     * [x] Cell to power generator to unlock doors
     * [x] Locked terminals
     * [x] Fog
     * [x] Infectious fog
-    * [ ] Security Sensors
+    * [x] Security Sensors
   * [ ] Dimensions
 * Objectives
   * [x] Clear Path — *Navigate through the zones to a separate extraction elevator*
@@ -261,10 +270,10 @@ Follow the installation instructions again, check yes to overwrite all files.
       * [x] Shadow
       * [x] Charger
       * [x] Beserker
-    * [-] Mothers
+    * [x] Mothers
       * [x] Mother
       * [x] P-Mother
-      * [ ] Nightmare Mother
+      * [x] Nightmare Mother
     * [-] Tanks
       * [x] Tank
       * [ ] Immortal Tank
@@ -274,7 +283,7 @@ Follow the installation instructions again, check yes to overwrite all files.
     * [ ] Balanced default spawns (in progress)
     * [x] Charger only zones
     * [x] Shadow only zones
-    * [ ] Beserker only zones
+    * [x] Beserker only zones
 * Alarms
   * [x] Basic alarms
   * [x] Blood doors
@@ -288,10 +297,11 @@ Follow the installation instructions again, check yes to overwrite all files.
 
 * Alarms
   * [x] Secret Alarms — *Appear to be free but aren't*
-  * [x] Events on/during Alarms - *Alarms can have events such as lights out or fog flood during the alarm*
+  * [x] Events on/during Alarms — *Alarms can have events such as lights out or fog flood during the alarm*
+  * [ ] Extreme/Overload Surge Alarms — Surge alarms with chargers / beserkers
 * Challenges
   * [x] Reactor terminals can be locked just like regular terminals
-  * [x] Secret Reactor Shutdown - *Secret alarm but for the reactor shutdown*
+  * [x] Secret Reactor Shutdown — *Secret alarm but for the reactor shutdown*
 * Cosmetic
   * Glowsticks — *All colors available to spawn*
     * [x] Green (normal)
@@ -308,6 +318,16 @@ Follow the installation instructions again, check yes to overwrite all files.
       * [ ] Reactor Startup
       * [ ] Reactor Shutdown
       * [ ] Distribute Power Cells
+
+
+## 3rd Party Mod Support
+
+AutogenRundown supports the following 3rd party peer mods. You can install them along side AutogenRundown. Note that several of these mods conflict with each other such as the weapon modification mods. 
+
+* [Arsenality](https://thunderstore.io/c/gtfo/p/W33B/Arsenality)
+* [ArsenalityRebalance](https://thunderstore.io/c/gtfo/p/leezurli/ArsenalityRebalance)
+* [VanillaReloaded](https://thunderstore.io/c/gtfo/p/tru0067/VanillaReloaded)
+
 
 ## Acknowledgements
 
