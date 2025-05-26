@@ -567,7 +567,7 @@ public static class TerminalUplink
         "erratum", "escuela", "estates", "eulalia", "eurasia", "eustace", "evacuee",
         "evaders", "evasion", "eveline", "evoking", "evolved", "examine", "example",
         "excises", "exciter", "excites", "excreta", "exempts", "existed", "explain",
-        "exploit", "exports", "expunge", "faculty", "faggots", "faintly", "fairies",
+        "exploit", "exports", "expunge", "faculty", "zeroing", "faintly", "fairies",
         "falcons", "familia", "fangled", "farmers", "farming", "farther", "fascias",
         "fastest", "fatally", "fateful", "fathers", "favored", "fawning", "federal",
         "feeders", "feelers", "felidae", "females", "femoral", "fetched", "fibroid",
@@ -767,8 +767,7 @@ public static class TerminalUplink
         "windsor", "winfred", "wingate", "winging", "winking", "winless", "winsome",
         "wiretap", "wisdoms", "wiseman", "wishful", "wishing", "without", "wizards",
         "wobbler", "wooster", "working", "workmen", "wrapper", "wreaths", "wriggle",
-        "written", "xenopus", "xylitol", "yankees", "yankton", "yiddish", "yoghurt",
-        "zeroing"
+        "written", "xenopus", "xylitol", "yankees", "yankton", "yiddish", "yoghurt"
     };
 
 	public static LocalizedText StringToLocalized(string stringConvert)
