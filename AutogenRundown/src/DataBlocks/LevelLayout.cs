@@ -940,6 +940,7 @@ public partial record LevelLayout : DataBlock
                 // Crude way to force the direction of zones for now
                 // TODO: This should live in the zone node building process. We should be able to set the direction
                 //       of these more dynamically
+                // TODO: we probably want to remove this
                 if (node.Branch == "primary")
                     zone.ZoneExpansion = direction.Forward;
 

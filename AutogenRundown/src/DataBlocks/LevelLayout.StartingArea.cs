@@ -1,7 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
-using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -85,47 +84,17 @@ public partial record LevelLayout
         if (!director.Bulkhead.HasFlag(Bulkhead.Main))
             return;
 
-        // Options for starting areas
-        var options = level.Settings.Bulkheads switch
-        {
-            Bulkhead.Main => new List<(double, string)>
-            {
-                (0.5, "default")
-            },
-
-            Bulkhead.Main | Bulkhead.Extreme => new List<(double, string)>
-            {
-                (0.5, "default"),
-                (0.5, "2x_bulkhead_hub")
-            },
-            Bulkhead.Main | Bulkhead.Overload => new List<(double, string)>
-            {
-                (0.5, "default"),
-                (0.5, "2x_bulkhead_hub")
-            },
-
-            Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => new List<(double, string)>
-            {
-                (0.1, "default"),
-                (0.2, "3x_bulkhead_hub"),
-                (0.7, "single_chain")
-            },
-        };
-
-        level.Settings.BulkheadStrategy = Generator.Select(options);
-        Plugin.Logger.LogDebug($"StartingArea strategy = {level.Settings.BulkheadStrategy}");
-
         switch (level.Settings.BulkheadStrategy)
         {
-            case "2x_bulkhead_hub":
+            case BukheadStrategy.CentralHub_x2:
                 BuildStartingArea_2xBulkheadHub();
                 break;
 
-            case "3x_bulkhead_hub":
+            case BukheadStrategy.CentralHub_x3:
                 BuildStartingArea_3xBulkheadHub();
                 break;
 
-            case "single_chain":
+            case BukheadStrategy.SingleChain:
                 BuildStartingArea_SingleChain();
                 break;
 
@@ -142,7 +111,7 @@ public partial record LevelLayout
     /// <returns></returns>
     private (ZoneNode, Zone) StartingArea_GetBuildStart(Bulkhead bulkhead)
     {
-        var existing = level.Planner.GetLastZone(director.Bulkhead);
+        var existing = level.Planner.GetLastZoneExact(director.Bulkhead);
 
         if (existing is not null)
             return ((ZoneNode)existing, level.Planner.GetZone((ZoneNode)existing)!);
@@ -150,8 +119,7 @@ public partial record LevelLayout
         // There just isn't any zone for this bulkhead, so we must add the first zone
         switch (level.Settings.BulkheadStrategy)
         {
-            // TODO: do we want to place a main bulkhead dc?
-            case "single_chain":
+            case BukheadStrategy.SingleChain:
             {
                 var sourceBulkhead = bulkhead switch
                 {
@@ -244,10 +212,12 @@ public partial record LevelLayout
             _ => new List<Bulkhead>()
         };
 
+        Plugin.Logger.LogWarning($"what are the minimum zones required? {minimumZones}");
+
         var prev = elevatorDrop;
         Zone nextZone = elevatorDropZone;
 
-        for (int i = 0; i < minimumZones; i++)
+        for (var i = 0; i < minimumZones; i++)
         {
             var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
             var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
@@ -327,9 +297,12 @@ public partial record LevelLayout
     private void BuildStartingArea_3xBulkheadHub()
     {
         // Add the first zone.
-        var elevatorDrop = new ZoneNode(
-            Bulkhead.Main | Bulkhead.StartingArea,
-            level.Planner.NextIndex(Bulkhead.Main));
+        var elevatorDrop = new ZoneNode
+        {
+            Bulkhead = Bulkhead.Main | Bulkhead.StartingArea,
+            ZoneNumber = level.Planner.NextIndex(Bulkhead.Main),
+            MaxConnections = 3
+        };
         var elevatorDropZone = new Zone(level)
         {
             Coverage = new CoverageMinMax { Min = 25, Max = 35 },

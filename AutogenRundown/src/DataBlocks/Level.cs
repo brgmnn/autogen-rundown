@@ -86,12 +86,7 @@ public class Level
         RelativeDirection.Global_Forward,
         RelativeDirection.Global_Left,
         RelativeDirection.Global_Right,
-
-        // TODO: This needs some work. For now we just do forward/left/right
-
-        // // Seems like using global backwards is generally a bad idea.
-        // // We need to either have a distant
-        // RelativeDirection.Global_Backward
+        RelativeDirection.Global_Backward
     };
 
     /// <summary>
@@ -750,32 +745,89 @@ public class Level
     {
         var direction = RelativeDirection.Global_Forward;
 
+        // We assume this must be called first so we can manipulate the list of directions
         if (bulkhead == Bulkhead.Main)
         {
+            RelativeDirections = new List<RelativeDirection>
+            {
+                RelativeDirection.Global_Forward,
+                RelativeDirection.Global_Left,
+                RelativeDirection.Global_Right
+            };
+
             direction = Generator.Draw(RelativeDirections);
 
-            // TODO: I don't think we actually need to do this for the more simpler approach
-            //       of now just selecting forward/left/right
-
-            // // We also want to remove the reverse direction of what we have selected for Main.
-            // // The rationale is we don't want Extreme/Overload to attempt to build backwards
-            // // along the same direction as Main is heading, but instead to branch off.
-            // var removeBackwards = direction.Forward switch
-            // {
-            //     ZoneExpansion.Forward => RelativeDirection.Global_Backward,
-            //     ZoneExpansion.Left => RelativeDirection.Global_Right,
-            //     ZoneExpansion.Right => RelativeDirection.Global_Left,
-            //     ZoneExpansion.Backward => RelativeDirection.Global_Forward,
-            // };
-            //
-            // RelativeDirections.Remove(removeBackwards);
+            // Allow global backwards to be selected by another bulkhead
+            RelativeDirections.Add(RelativeDirection.Global_Backward);
         }
         else if (bulkhead == Bulkhead.Extreme || bulkhead == Bulkhead.Overload)
         {
-            direction = Generator.Draw(RelativeDirections);
+            // Set the single chain method to branch the overload bulkhead forwards as well
+            if (Settings.BulkheadStrategy == BukheadStrategy.SingleChain && bulkhead == Bulkhead.Overload)
+                direction = Settings.GetDirections(Bulkhead.Main);
+            else
+                direction = Generator.Draw(RelativeDirections);
         }
 
         Settings.SetDirections(bulkhead, direction);
+    }
+
+    /// <summary>
+    /// Options for bulkhead keys and bulkhead DCs:
+    ///
+    /// </summary>
+    private void BuildBulkheads()
+    {
+        // Randomly select which bulkheads to use
+        Settings.Bulkheads = Generator.Select(new List<(double, Bulkhead)>
+        {
+            (0.25, Bulkhead.Main),
+            (0.4, Bulkhead.Main | Bulkhead.Extreme),
+            (0.2, Bulkhead.Main | Bulkhead.Overload),
+            (0.15, Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload)
+        });
+
+        // Options for starting areas
+        var options = Settings.Bulkheads switch
+        {
+            Bulkhead.Main => new List<(double, BukheadStrategy)>
+            {
+                (0.5, BukheadStrategy.Default)
+            },
+            Bulkhead.Main | Bulkhead.Extreme => new List<(double, BukheadStrategy)>
+            {
+                (0.5, BukheadStrategy.Default),
+                (0.5, BukheadStrategy.CentralHub_x2)
+            },
+            Bulkhead.Main | Bulkhead.Overload => new List<(double, BukheadStrategy)>
+            {
+                (0.5, BukheadStrategy.Default),
+                (0.5, BukheadStrategy.CentralHub_x2)
+            },
+            Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => new List<(double, BukheadStrategy)>
+            {
+                (0.1, BukheadStrategy.Default),
+                (0.2, BukheadStrategy.CentralHub_x3),
+                (0.7, BukheadStrategy.SingleChain)
+            },
+
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        Settings.BulkheadStrategy = Generator.Select(options);
+        Plugin.Logger.LogDebug($"StartingArea strategy = {Settings.BulkheadStrategy}");
+
+        /*
+         * We must select the relative directions we want to try and build each of the bulkhead
+         * zones upfront as it has an impact on the other areas of level generation.
+         * */
+        SelectDirection(Bulkhead.Main);
+
+        if (Settings.Bulkheads.HasFlag(Bulkhead.Extreme))
+            SelectDirection(Bulkhead.Extreme);
+
+        if (Settings.Bulkheads.HasFlag(Bulkhead.Overload))
+            SelectDirection(Bulkhead.Overload);
     }
 
     /// <summary>
@@ -974,18 +1026,7 @@ public class Level
 
         level.GenerateDepth();
         level.GenerateZoneAliasStarts();
-
-        // Randomly select which bulkheads to use
-        var selectedBulkheads = Generator.Select(new List<(double, Bulkhead)>
-        {
-            (0.25, Bulkhead.Main),
-            (0.4, Bulkhead.Main | Bulkhead.Extreme),
-            (0.2, Bulkhead.Main | Bulkhead.Overload),
-            (0.15, Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload)
-        });
-
-        // Assign bulkheads
-        level.Settings.Bulkheads = selectedBulkheads;
+        level.BuildBulkheads();
 
         #region Fog settings
         var lowFog = level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)
@@ -1006,43 +1047,6 @@ public class Level
 
         Plugin.Logger.LogDebug($"{logLevelId} ({level.Complex}) - Modifiers: {level.Settings.Modifiers}, Fog: {level.FogSettings.Name}");
 
-        /*
-         * Options for bulkhead keys and bulkhead DCs:
-         *
-         *  * All unlocked: main, extreme, overload
-         *    Each bulkhead is unlocked, no keys required
-         *
-         *  * Chained: main -> extreme -> overload -> END
-         *    Each bulkhead is locked behind the previous one with one key in each.
-         *    Main has extreme DC, extreme has overload DC.
-         *
-         *  * Choice: main -> overload -> END
-         *                 -> extreme -> overload -> END
-         *    Main has extreme/overload DC, extreme has extra key for overload DC.
-         * */
-        var bulkheadKeys = Generator.Select(new List<(double, string)>
-        {
-            (1.0, "chained"),
-
-            // TODO: implement these
-            // (1.0, "all"),
-            // (1.0, "choice"), // TODO: implement
-        });
-
-        #region Bulkhead direction selection
-        /*
-         * We must select the relative directions we want to try and build each of the bulkhead
-         * zones upfront as it has an impact on the other areas of level generation.
-         * */
-        level.SelectDirection(Bulkhead.Main);
-
-        if (selectedBulkheads.HasFlag(Bulkhead.Extreme))
-            level.SelectDirection(Bulkhead.Extreme);
-
-        if (selectedBulkheads.HasFlag(Bulkhead.Overload))
-            level.SelectDirection(Bulkhead.Overload);
-        #endregion
-
         #region Objective prebuild
         /* We prebuild the objectives as certain objectives have components that affect level
          * generation. For example the "distribute cells to generator cluster" objective
@@ -1050,10 +1054,10 @@ public class Level
          * distributed to. */
         level.PreBuildObjective(Bulkhead.Main);
 
-        if (selectedBulkheads.HasFlag(Bulkhead.Extreme))
+        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme))
             level.PreBuildObjective(Bulkhead.Extreme);
 
-        if (selectedBulkheads.HasFlag(Bulkhead.Overload))
+        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload))
             level.PreBuildObjective(Bulkhead.Overload);
         #endregion
 
@@ -1072,10 +1076,10 @@ public class Level
          * */
         level.BuildLayout(Bulkhead.Main);
 
-        if (selectedBulkheads.HasFlag(Bulkhead.Extreme))
+        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme))
             level.BuildLayout(Bulkhead.Extreme);
 
-        if (selectedBulkheads.HasFlag(Bulkhead.Overload))
+        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload))
             level.BuildLayout(Bulkhead.Overload);
         #endregion
 
@@ -1090,14 +1094,14 @@ public class Level
                 new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
             });
 
-        if (selectedBulkheads.HasFlag(Bulkhead.Extreme))
+        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme))
             level.SecondaryLayerData.BulkheadKeyPlacements.Add(
                 new List<ZonePlacementData>
                 {
                     new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
                 });
 
-        if (selectedBulkheads.HasFlag(Bulkhead.Overload))
+        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload))
             level.ThirdLayerData.BulkheadKeyPlacements.Add(
                 new List<ZonePlacementData>
                 {
@@ -1128,10 +1132,10 @@ public class Level
         #region Finalize -- WardenObjective.PostBuild()
         level.GetObjective(Bulkhead.Main)!.PostBuild(level.MainDirector, level);
 
-        if (selectedBulkheads.HasFlag(Bulkhead.Extreme) && level.GetObjective(Bulkhead.Extreme) != null)
+        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme) && level.GetObjective(Bulkhead.Extreme) != null)
             level.GetObjective(Bulkhead.Extreme)!.PostBuild(level.SecondaryDirector, level);
 
-        if (selectedBulkheads.HasFlag(Bulkhead.Overload) && level.GetObjective(Bulkhead.Overload) != null)
+        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload) && level.GetObjective(Bulkhead.Overload) != null)
             level.GetObjective(Bulkhead.Overload)!.PostBuild(level.OverloadDirector, level);
         #endregion
 

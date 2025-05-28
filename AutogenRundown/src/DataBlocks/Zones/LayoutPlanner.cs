@@ -192,7 +192,7 @@ public class LayoutPlanner
         {
             blocks.Add(node, updatedZone);
         }
-        catch (System.ArgumentException _)
+        catch (ArgumentException _)
         {
             Plugin.Logger.LogWarning($"Planner.AddZone() did not add zone as it already exists: node = ${node}");
         }
@@ -353,6 +353,18 @@ public class LayoutPlanner
     public ZoneNode? GetLastZone(Bulkhead bulkhead = Bulkhead.Main, string? branch = "primary")
     {
         var zones = GetZones(bulkhead, branch);
+
+        return zones.Count == 0 ? null : zones.Last();
+    }
+
+    public ZoneNode? GetLastZoneExact(Bulkhead bulkhead = Bulkhead.Main, string? branch = "primary")
+    {
+        var zones = graph
+            .Where(node =>
+                node.Key.Bulkhead == bulkhead && (branch == null || node.Key.Branch == branch))
+            .Select(node => node.Key)
+            .OrderBy(zone => zone.ZoneNumber)
+            .ToList();
 
         return zones.Count == 0 ? null : zones.Last();
     }
