@@ -5,7 +5,7 @@ namespace AutogenRundown.DataBlocks;
 
 public partial record LevelLayout
 {
-    public void BuildLayout_GatherTerminal(BuildDirector director, WardenObjective objective, ZoneNode? startish)
+    private void BuildLayout_GatherTerminal(BuildDirector director, WardenObjective objective, ZoneNode? startish)
     {
         if (startish == null)
         {
@@ -16,20 +16,6 @@ public partial record LevelLayout
         var start = (ZoneNode)startish;
         var startZone = planner.GetZone(start)!;
         var layerData = level.GetObjectiveLayerData(director.Bulkhead);
-
-        // Helper function to wrap adding the zone placement data
-        void SetGatherTerminal(int zoneNumber)
-        {
-            layerData.ObjectiveData.ZonePlacementDatas.Add(new List<ZonePlacementData>
-            {
-                new()
-                {
-                    DimensionIndex = 0,
-                    LocalIndex = zoneNumber,
-                    Weights = ZonePlacementWeights.EvenlyDistributed
-                }
-            });
-        }
 
         switch (level.Tier, director.Bulkhead)
         {
@@ -94,14 +80,17 @@ public partial record LevelLayout
 
                         SetGatherTerminal(hub.ZoneNumber);
 
-                        var (end1, end1Zone) = AddZone(hub);
+                        var (end1, end1Zone) =
+                            AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_1" });
                         end1Zone.GenDeadEndGeomorph(level.Complex);
 
-                        var (end2, end2Zone) = AddZone(hub);
+                        var (end2, end2Zone) =
+                            AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_2" });
                         end2Zone.GenDeadEndGeomorph(level.Complex);
 
-                        var (end3, end3Zone) = AddZone(hub);
-                        end2Zone.GenDeadEndGeomorph(level.Complex);
+                        var (end3, end3Zone) =
+                            AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_3" });
+                        end3Zone.GenDeadEndGeomorph(level.Complex);
 
                         SetGatherTerminal(end1.ZoneNumber);
                         SetGatherTerminal(end2.ZoneNumber);
@@ -131,6 +120,22 @@ public partial record LevelLayout
                 });
                 break;
             }
+        }
+
+        return;
+
+        // Helper function to wrap adding the zone placement data
+        void SetGatherTerminal(int zoneNumber)
+        {
+            layerData.ObjectiveData.ZonePlacementDatas.Add(new List<ZonePlacementData>
+            {
+                new()
+                {
+                    DimensionIndex = 0,
+                    LocalIndex = zoneNumber,
+                    Weights = ZonePlacementWeights.EvenlyDistributed
+                }
+            });
         }
     }
 }
