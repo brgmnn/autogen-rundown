@@ -121,6 +121,23 @@ public class LevelSettings
         => bulkheadDirections[bulkhead] = direction;
     #endregion
 
+    #region Error Alarms
+
+    /// <summary>
+    /// The zones which contain error alarms
+    ///
+    /// We want to track this across the entire level
+    /// </summary>
+    public List<ZoneNode> ErrorAlarmZones { get; set; } = new();
+
+    /// <summary>
+    /// Used for the random error alarm rolls. Does _not_ apply to the
+    /// specific level layout error alarms that get rolled.
+    /// </summary>
+    public int MaxErrorAlarms { get; set; } = -1;
+
+    #endregion
+
     public LevelSettings(string? tier = null)
     {
         if (tier != null)
@@ -301,6 +318,8 @@ public class LevelSettings
         {
             case "A":
             {
+                MaxErrorAlarms = 0;
+
                 Modifiers.Add(LevelModifiers.NoChargers);
                 Modifiers.Add(LevelModifiers.NoFlyers);
                 Modifiers.Add(LevelModifiers.NoNightmares);
@@ -310,6 +329,8 @@ public class LevelSettings
 
             case "B":
             {
+                MaxErrorAlarms = 0;
+
                 Modifiers.Add(LevelModifiers.NoChargers);
                 Modifiers.Add(LevelModifiers.NoFlyers);
                 Modifiers.Add(LevelModifiers.NoNightmares);
@@ -331,6 +352,8 @@ public class LevelSettings
 
             case "C":
             {
+                MaxErrorAlarms = 2;
+
                 Modifiers.Add(LevelModifiers.NoShadows);
                 Modifiers.Add(
                     Generator.Select(new List<WeightedModifier>
@@ -361,6 +384,8 @@ public class LevelSettings
 
             case "D":
             {
+                MaxErrorAlarms = 3;
+
                 Modifiers.Add(
                     Generator.Select(new List<WeightedModifier>
                     {
@@ -405,6 +430,8 @@ public class LevelSettings
 
             case "E":
             {
+                MaxErrorAlarms = 5;
+
                 Modifiers.Add(
                     Generator.Select(new List<WeightedModifier>
                     {

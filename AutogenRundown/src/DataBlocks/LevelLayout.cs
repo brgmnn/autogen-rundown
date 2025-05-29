@@ -588,6 +588,10 @@ public partial record LevelLayout : DataBlock
 
         for (int i = 0; i < alarmCount; i++)
         {
+            // Return early as soon as we hit the error alarm max for this level
+            if (level.Settings.ErrorAlarmZones.Count >= level.Settings.MaxErrorAlarms)
+                return;
+
             var puzzle = ChainedPuzzle.AlarmError_Baseline;
 
             // First try and find a zone in the middle without an alarm already.
@@ -611,12 +615,14 @@ public partial record LevelLayout : DataBlock
                 return;
             }
 
+            var node = planner.GetZoneNode(zone.LocalIndex);
             zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
+
+            level.Settings.ErrorAlarmZones.Add(node);
 
             // Give a flat chance of being able to turn off the alarm.
             if (Generator.Flip(0.5))
             {
-                var node = planner.GetZoneNode(zone.LocalIndex);
                 var branchOpenZones = planner.GetOpenZones(director.Bulkhead, node.Branch);
 
                 // Fallback if there's no open zones in this branch. This will be _hard_.

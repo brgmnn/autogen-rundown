@@ -89,9 +89,9 @@ public class LayoutPlanner
     private int indexExtreme = 0;
     private int indexOverload = 0;
 
-    private readonly Dictionary<ZoneNode, List<ZoneNode>> graph = new Dictionary<ZoneNode, List<ZoneNode>>();
+    private readonly Dictionary<ZoneNode, List<ZoneNode>> graph = new();
 
-    private readonly Dictionary<ZoneNode, Zone> blocks = new Dictionary<ZoneNode, Zone>();
+    private readonly Dictionary<ZoneNode, Zone> blocks = new();
 
     private IEnumerable<KeyValuePair<ZoneNode, List<ZoneNode>>> GetSubgraph(
         Bulkhead bulkhead = Bulkhead.All,
@@ -227,6 +227,14 @@ public class LayoutPlanner
     /// <returns></returns>
     public ZoneNode GetZoneNode(int index)
         => graph.Keys.First(node => node.ZoneNumber == index);
+
+    /// <summary>
+    /// Gets the ZoneNode for a given Zone
+    /// </summary>
+    /// <param name="zone"></param>
+    /// <returns></returns>
+    public ZoneNode GetZoneNode(Zone zone)
+        => blocks.First(entry => entry.Value.Equals(zone)).Key;
 
     /// <summary>
     ///

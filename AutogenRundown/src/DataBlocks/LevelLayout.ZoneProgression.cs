@@ -446,6 +446,7 @@ public partial record LevelLayout
 
         // Set the alarm
         lockedZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle ?? ChainedPuzzle.AlarmError_Baseline);
+        level.Settings.ErrorAlarmZones.Add(lockedNode);
 
         // Set the turnoff code (if we have it)
         if (terminalish == null)
