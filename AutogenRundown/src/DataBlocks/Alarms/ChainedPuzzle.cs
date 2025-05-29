@@ -1019,8 +1019,6 @@ public record ChainedPuzzle : DataBlock
 
         Settings = WaveSettings.Error_Easy,
         Population = WavePopulation.Baseline,
-        // SurvivalWaveSettings = (uint)VanillaWaveSettings.Trickle_352_SSpB,
-        // SurvivalWavePopulation = (uint)VanillaWavePopulation.Baseline,
 
         Puzzle = new List<PuzzleComponent>() { PuzzleComponent.AllLarge }
     };

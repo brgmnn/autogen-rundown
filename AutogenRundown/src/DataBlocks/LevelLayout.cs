@@ -586,24 +586,54 @@ public partial record LevelLayout : DataBlock
         if (alarmCount < 1)
             return;
 
-        for (int i = 0; i < alarmCount; i++)
+        for (var i = 0; i < alarmCount; i++)
         {
             // Return early as soon as we hit the error alarm max for this level
             if (level.Settings.ErrorAlarmZones.Count >= level.Settings.MaxErrorAlarms)
                 return;
 
-            var puzzle = ChainedPuzzle.AlarmError_Baseline;
+            // Error wave settings
+            var settings = level.Tier switch
+            {
+                "C" => Generator.Flip() ? WaveSettings.Error_Easy : WaveSettings.Error_Normal,
+                "D" => Generator.Flip() ? WaveSettings.Error_Normal : WaveSettings.Error_Hard,
+                "E" => Generator.Flip() ? WaveSettings.Error_Hard : WaveSettings.Error_VeryHard,
 
+                _ => WaveSettings.Error_Easy,
+            };
+
+            var population = WavePopulation.Baseline;
+
+            // First set shadows if we have them
+            if (level.Settings.HasShadows())
+                population = Generator.Flip(0.4) ? WavePopulation.OnlyShadows : WavePopulation
+                    .Baseline_Shadows;
+
+            // Next check and set chargers first, then flyers
+            if (level.Settings.HasChargers())
+                population = WavePopulation.Baseline_Chargers;
+            else if (level.Settings.HasFlyers())
+                population = WavePopulation.Baseline_Flyers;
+
+            var puzzle = ChainedPuzzle.AlarmError_Baseline with
+            {
+                PersistentId = 0,
+                Population = population,
+                Settings = settings
+            };
+
+            // TODO: rework candidates to use planner
+            //
             // First try and find a zone in the middle without an alarm already.
             var candidates = Zones.Where(z => z.LocalIndex != 0 && z.Alarm == ChainedPuzzle.None && z.LocalIndex != Zones.Count - 1);
 
             // If no candidates, search for any zone in the middle (we will overwrite the alarm)
-            if (candidates.Count() == 0)
+            if (!candidates.Any())
                 candidates = Zones.Where(z => z.LocalIndex != 0 && z.LocalIndex != Zones.Count - 1);
 
             // If there's still no candidates, include the last zone. Note this probably never
             // gets called as all levels have at least 3 zones.
-            if (candidates.Count() == 0)
+            if (!candidates.Any())
                 candidates = Zones.Where(z => z.LocalIndex != 0);
 
             // Pick from all zones without alarms already that aren't the first zone
@@ -621,7 +651,7 @@ public partial record LevelLayout : DataBlock
             level.Settings.ErrorAlarmZones.Add(node);
 
             // Give a flat chance of being able to turn off the alarm.
-            if (Generator.Flip(0.5))
+            if (Generator.Flip(0.7))
             {
                 var branchOpenZones = planner.GetOpenZones(director.Bulkhead, node.Branch);
 
