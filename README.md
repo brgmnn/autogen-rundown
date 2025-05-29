@@ -26,6 +26,7 @@ TODO:
   * Objective: Distribute Power Cells
     * Needs something to happen when completing all the cells ideally
     * Would be good if the fog could rise or lower when inserting the cells
+  * Add more disinfection options for infection levels and hybrids
 
 Level Lockup:
   Double check logs on any of the old versions for this:
