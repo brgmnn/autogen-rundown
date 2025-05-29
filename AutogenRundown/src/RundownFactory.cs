@@ -498,6 +498,16 @@ public static class RundownFactory
                     new() { 1, 1, 1, 2, 1 }, // Tier D - ? // D4=1 failed, clear path: Assets/geo_64x64_dig_site_exit_dak_01.prefab
                     new() { 1, 2, 1, 2 }     // Tier E - ? // E2=1 failed to find starting zone
                 }
+            },
+            {
+                "2025_06", new List<List<int>>
+                {
+                    new() { 1, 1 },
+                    new() { 1 },
+                    new() { 1, 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 2, 1, 2, 1 }
+                }
             }
         };
 
