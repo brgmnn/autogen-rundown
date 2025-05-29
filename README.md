@@ -50,6 +50,9 @@ Requests:
 
 2025_05_26
   * Make the Hex codes upper case
+  * Reduce number of error alarms in E-tier
+    * IF we want to keep them hard make the error alarms harder variants. Seems the random roll ones are just easy error alarms?
+  * Can't have multiple timer objectives
 
 2025_05_14
   * E3
@@ -326,6 +329,7 @@ AutogenRundown supports the following 3rd party peer mods. You can install them 
 
 * [Arsenality](https://thunderstore.io/c/gtfo/p/W33B/Arsenality)
 * [ArsenalityRebalance](https://thunderstore.io/c/gtfo/p/leezurli/ArsenalityRebalance)
+<!-- * [LobbyExpansion](https://thunderstore.io/c/gtfo/p/Cactus/LobbyExpansion) -->
 * [VanillaReloaded](https://thunderstore.io/c/gtfo/p/tru0067/VanillaReloaded)
 
 
