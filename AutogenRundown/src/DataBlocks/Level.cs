@@ -711,6 +711,16 @@ public class Level
         if (Director.ContainsKey(Bulkhead.Overload))
             existing.Add(Director[Bulkhead.Overload].Objective);
 
+        // All objectives that make use of the timer can't work together
+        if (existing.Contains(WardenObjectiveType.ReactorStartup) ||
+            existing.Contains(WardenObjectiveType.Survival) ||
+            existing.Contains(WardenObjectiveType.TimedTerminalSequence))
+        {
+            existing.Add(WardenObjectiveType.ReactorStartup);
+            existing.Add(WardenObjectiveType.Survival);
+            existing.Add(WardenObjectiveType.TimedTerminalSequence);
+        }
+
         if (!Director.ContainsKey(bulkhead))
         {
             Director[bulkhead] = new BuildDirector
