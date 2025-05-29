@@ -62,6 +62,7 @@ public class BuildDirector
             WardenObjectiveType.HsuActivateSmall,
             WardenObjectiveType.Survival,
             WardenObjectiveType.GatherTerminal,
+            WardenObjectiveType.CorruptedTerminalUplink,
             WardenObjectiveType.TimedTerminalSequence,
 
             // TODO: Would love to enable this, but central generator cluster spawning is just
@@ -83,9 +84,7 @@ public class BuildDirector
 
         // These objectives are really intended as side quests.
         if (Bulkhead.HasFlag(Bulkhead.Main))
-        {
             objectives.Remove(WardenObjectiveType.SpecialTerminalCommand);
-        }
 
         // Only Mining and Tech complexes have geomorphs for these objectives
         if (Complex != Complex.Mining || Complex != Complex.Tech)
