@@ -956,6 +956,36 @@ public partial record LevelLayout : DataBlock
             _ => 0.9
         };
 
+        // Add disinfect packs
+        if (level.Settings.HasFog() && level.FogSettings.IsInfectious)
+        {
+            foreach (var zone in level.Planner
+                         .GetZones(director.Bulkhead, null)
+                         .Select(zone => level.Planner.GetZone(zone))
+                         .Where(zone => zone is { InFog: true })
+                         .Cast<Zone>())
+            {
+                var (min, max) = level.Tier switch
+                {
+                    "D" => Generator.Select(new List<(double weight, (int min, int max))>
+                    {
+                        (0.66, (3, 4)),
+                        (0.33, (0, 3))
+                    }),
+                    "E" => Generator.Select(new List<(double weight, (int min, int max))>
+                    {
+                        (0.5, (2, 3)),
+                        (0.3, (1, 2)),
+                        (0.2, (0, 0))
+                    }),
+
+                    _ => (3, 4)
+                };
+
+                zone.DisinfectPacks += Generator.Between(min, max);
+            }
+        }
+
         // Fog level specific settings
         if (director.Bulkhead == Bulkhead.Main && numberOfFogZones > 0)
         {
