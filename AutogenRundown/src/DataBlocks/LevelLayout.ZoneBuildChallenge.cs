@@ -216,12 +216,7 @@ public partial record LevelLayout
         };
 
         // Lock the first zone with the error alarm
-        AddErrorAlarm(firstError, terminal, ChainedPuzzle.AlarmError_Baseline with
-        {
-            PersistentId = 0,
-            Population = population,
-            Settings = settings
-        });
+        AddErrorAlarm(firstError, terminal, settings, population);
 
         return (end, endZone);
     }
@@ -316,12 +311,7 @@ public partial record LevelLayout
         };
 
         // Lock the first zone with the error alarm
-        AddErrorAlarm(firstError, terminal, ChainedPuzzle.AlarmError_Baseline with
-        {
-            PersistentId = 0,
-            Population = population,
-            Settings = settings
-        });
+        AddErrorAlarm(firstError, terminal, settings, population);
 
         return (end, endZone);
     }

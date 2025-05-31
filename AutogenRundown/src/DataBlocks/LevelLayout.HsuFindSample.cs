@@ -140,12 +140,7 @@ public partial record LevelLayout
                             : WavePopulation.Baseline;
 
                         // Lock the first zone
-                        AddErrorAlarm(locked, terminal, ChainedPuzzle.AlarmError_Baseline with
-                        {
-                            PersistentId = 0,
-                            Population = population,
-                            Settings = WaveSettings.Error_Easy
-                        });
+                        AddErrorAlarm(locked, terminal, WaveSettings.Error_Easy, population);
 
                         startZone.Coverage = CoverageMinMax.Tiny;
                     }),
@@ -290,12 +285,7 @@ public partial record LevelLayout
                             : WavePopulation.Baseline;
 
                         // Lock the first zone
-                        AddErrorAlarm(locked, terminal, ChainedPuzzle.AlarmError_Baseline with
-                        {
-                            PersistentId = 0,
-                            Population = population,
-                            Settings = WaveSettings.Error_Normal
-                        });
+                        AddErrorAlarm(locked, terminal, WaveSettings.Error_Normal, population);
 
                         startZone.Coverage = CoverageMinMax.Tiny;
                     }),
@@ -498,12 +488,7 @@ public partial record LevelLayout
                             : WavePopulation.Baseline;
 
                         // Lock the first zone
-                        AddErrorAlarm(locked, terminal, ChainedPuzzle.AlarmError_Baseline with
-                        {
-                            PersistentId = 0,
-                            Population = population,
-                            Settings = WaveSettings.Error_Normal
-                        });
+                        AddErrorAlarm(locked, terminal, WaveSettings.Error_Normal, population);
 
                         startZone.Coverage = CoverageMinMax.Tiny;
                     }),
@@ -724,12 +709,7 @@ public partial record LevelLayout
                             population = WavePopulation.Baseline_Flyers;
 
                         // Lock the first zone
-                        AddErrorAlarm(locked, terminal, ChainedPuzzle.AlarmError_Baseline with
-                        {
-                            PersistentId = 0,
-                            Population = population,
-                            Settings = WaveSettings.Error_Hard
-                        });
+                        AddErrorAlarm(locked, terminal, WaveSettings.Error_Hard, population);
 
                         startZone.Coverage = CoverageMinMax.Tiny;
                     }),
@@ -955,12 +935,7 @@ public partial record LevelLayout
                             population = WavePopulation.Baseline_Nightmare;
 
                         // Lock the first zone
-                        AddErrorAlarm(locked, terminal, ChainedPuzzle.AlarmError_Baseline with
-                        {
-                            PersistentId = 0,
-                            Population = population,
-                            Settings = WaveSettings.Error_VeryHard
-                        });
+                        AddErrorAlarm(locked, terminal, WaveSettings.Error_VeryHard, population);
 
                         startZone.Coverage = CoverageMinMax.Tiny;
                     }),

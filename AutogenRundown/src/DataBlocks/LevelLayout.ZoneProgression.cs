@@ -436,7 +436,8 @@ public partial record LevelLayout
     public void AddErrorAlarm(
         ZoneNode lockedNode,
         ZoneNode? terminalish,
-        ChainedPuzzle? puzzle)
+        WaveSettings? settings,
+        WavePopulation? population)
     {
         var lockedZone = planner.GetZone(lockedNode);
         var setupish = planner.GetBuildFrom(lockedNode);
@@ -464,8 +465,8 @@ public partial record LevelLayout
             .AddSound(Sound.Alarms_Error_AmbientLoop, 1.0)
             .AddSpawnWave(new GenericWave
             {
-                Settings = WaveSettings.Error_Easy,
-                Population = WavePopulation.Baseline,
+                Settings = settings ?? WaveSettings.Error_Easy,
+                Population = population ?? WavePopulation.Baseline,
                 TriggerAlarm = true
             }, 1.0, "error_alarms");
 
@@ -504,6 +505,135 @@ public partial record LevelLayout
             {
                 Command = "DEACTIVATE_ALARMS",
                 CommandDesc = "Terminates any active error alarms linked to this terminal",
+                CommandEvents = commandEvents,
+                PostCommandOutputs = new List<TerminalOutput>
+                {
+                    new()
+                    {
+                        Output = "Executing alarm-shutdown protocol...",
+                        Type = LineType.SpinningWaitNoDone,
+                        Time = 2.5
+                    },
+                    new()
+                    {
+                        Output = "Connecting to active error alarm systems",
+                        Type = LineType.Normal,
+                        Time = 2.0
+                    },
+                    new()
+                    {
+                        Output = "Confirming valid terminal ID",
+                        Type = LineType.Normal,
+                        Time = 1.5
+                    },
+                    new()
+                    {
+                        Output = "Shutting down alarms",
+                        Type = LineType.SpinningWaitDone,
+                        Time = 3.0
+                    },
+                    new()
+                    {
+                        Output = "Alarms shut down.",
+                        Type = LineType.Normal,
+                        Time = 1.0
+                    },
+                },
+            });
+
+        // TODO: support other dimensions
+        var terminalSerial = Lore.TerminalSerial("Reality", terminalNode.Bulkhead, terminalNode.ZoneNumber);
+
+        customDoor.InteractionMessage += $"<color=red> DEACTIVATE ALARM ON {terminalSerial}</color>";
+        lockedZone.EventsOnDoorScanStart.AddCustomHudText($"<color=red>Deactivate alarm on {terminalSerial}</color>");
+
+        level.SecurityDoors.Doors.Add(customDoor);
+
+        // Unlock the turn-off zone door when the alarm door has opened.
+        lockedZone.EventsOnDoorScanDone.AddUnlockDoor(director.Bulkhead, terminalNode.ZoneNumber);
+    }
+
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="lockedNode"></param>
+    /// <param name="terminalish"></param>
+    /// <param name="settings"></param>
+    /// <param name="population"></param>
+    public void AddApexErrorAlarm(ZoneNode lockedNode,
+        ZoneNode? terminalish,
+        WaveSettings? settings,
+        WavePopulation? population)
+    {
+        var lockedZone = planner.GetZone(lockedNode);
+        var setupish = planner.GetBuildFrom(lockedNode);
+
+        if (setupish == null)
+        {
+            Plugin.Logger.LogWarning($"AddGeneratorPuzzle() returned early due to missing zones: locked={lockedNode} terminal={terminalish}");
+            return;
+        }
+
+        var setupNode = (ZoneNode)setupish;
+        var setupZone = planner.GetZone(setupNode);
+
+        if (lockedZone == null || setupZone == null)
+        {
+            Plugin.Logger.LogWarning($"AddGeneratorPuzzle() returned early due to missing zones: locked={lockedZone} terminal={terminalish}");
+            return;
+        }
+
+        // We use a template error alarm to provide the correct scan, but it doesn't trigger any waves
+        lockedZone.Alarm = ChainedPuzzle.AlarmError_Template;
+        lockedZone.SecurityGateToEnter = SecurityGate.Apex;
+        level.Settings.ErrorAlarmZones.Add(lockedNode);
+
+        lockedZone.EventsOnDoorScanStart
+            .AddSound(Sound.Alarms_Error_AmbientLoop, 1.0)
+            .AddSpawnWave(new GenericWave
+            {
+                Settings = settings ?? WaveSettings.Error_Boss_Hard,
+                Population = population ?? WavePopulation.SingleEnemy_Tank,
+                TriggerAlarm = true
+            }, 1.0, "apex_error_alarms");
+
+        // Custom door message
+        var customDoor = new Custom.AutogenRundown.SecurityDoors.SecurityDoor()
+        {
+            Bulkhead = director.Bulkhead,
+            ZoneNumber = lockedNode.ZoneNumber,
+            InteractionMessage = "START SECURITY SCAN SEQUENCE <color=red>[WARNING:<color=purple>[APEX OVERLOAD]</color> ://ERROR! ALARM DETECTED]</color>"
+        };
+
+        Plugin.Logger.LogDebug($"Overriding the normal error alarm logic for this special zone: {lockedNode}");
+
+        // Set the turnoff code (if we have it)
+        if (terminalish == null)
+        {
+            level.SecurityDoors.Doors.Add(customDoor);
+            return;
+        }
+
+        var terminalNode = (ZoneNode)terminalish;
+        var terminalZone = planner.GetZone(terminalNode);
+        var terminalPlacement = new TerminalPlacement { PlacementWeights = ZonePlacementWeights.NotAtStart };
+
+        if (terminalZone.TerminalPlacements.Any())
+            terminalPlacement = terminalZone.TerminalPlacements.First();
+
+        var commandEvents = new List<WardenObjectiveEvent>()
+            .AddTurnOffAlarms(9.5, "apex_error_alarms")
+            .AddTurnOffAlarms(9.5, "error_alarms")
+            .AddSound(Sound.Alarms_Error_AmbientStop, 10)
+            .RemoveCustomHudText(10)
+            .ToList();
+
+        terminalPlacement.UniqueCommands.Add(
+            new CustomTerminalCommand
+            {
+                Command = "FORCE_DEACTIVATE_ALARMS",
+                CommandDesc = "Admin override for deactivating all error/apex alarms",
                 CommandEvents = commandEvents,
                 PostCommandOutputs = new List<TerminalOutput>
                 {
