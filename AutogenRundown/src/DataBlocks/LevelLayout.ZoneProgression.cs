@@ -456,29 +456,25 @@ public partial record LevelLayout
             return;
         }
 
-        // Set the alarm
-        // lockedZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle ?? ChainedPuzzle.AlarmError_Baseline);
-
         // We use a template error alarm to provide the correct scan, but it doesn't trigger any waves
         lockedZone.Alarm = ChainedPuzzle.AlarmError_Template;
         level.Settings.ErrorAlarmZones.Add(lockedNode);
 
         lockedZone.EventsOnDoorScanStart
-            .AddSound(Sound.Alarms_MissingItem)
             .AddSound(Sound.Alarms_Error_AmbientLoop, 1.0)
             .AddSpawnWave(new GenericWave
             {
                 Settings = WaveSettings.Error_Easy,
                 Population = WavePopulation.Baseline,
                 TriggerAlarm = true
-            }, 0.0, "error_alarm");
+            }, 1.0, "error_alarms");
 
         // Custom door message
         var customDoor = new Custom.AutogenRundown.SecurityDoors.SecurityDoor()
         {
             Bulkhead = director.Bulkhead,
             ZoneNumber = lockedNode.ZoneNumber,
-            InteractionMessage = "START SECURITY SCAN SEQUENCE <color=red>[WARNING:CLASS <color=purple>APEX</color> ://ERROR! ALARM DETECTED]</color>"
+            InteractionMessage = "START SECURITY SCAN SEQUENCE <color=red>[WARNING:<color=purple>[OVERLOAD]</color> ://ERROR! ALARM DETECTED]</color>"
         };
 
         Plugin.Logger.LogDebug($"Overriding the normal error alarm logic for this special zone: {lockedNode}");
@@ -492,28 +488,56 @@ public partial record LevelLayout
 
         var terminalNode = (ZoneNode)terminalish;
         var terminalZone = planner.GetZone(terminalNode);
-
-        // lockedZone.TurnOffAlarmOnTerminal = true;
-        // lockedZone.TerminalPuzzleZone.LocalIndex = terminalNode.ZoneNumber;
-
-        var terminalPlacement = new TerminalPlacement
-        {
-            PlacementWeights = ZonePlacementWeights.NotAtStart
-        };
+        var terminalPlacement = new TerminalPlacement { PlacementWeights = ZonePlacementWeights.NotAtStart };
 
         if (terminalZone.TerminalPlacements.Any())
             terminalPlacement = terminalZone.TerminalPlacements.First();
 
-        var commandEvents = new List<WardenObjectiveEvent>();
-
-        commandEvents.AddTurnOffAlarms(0.5, "error_alarm");
+        var commandEvents = new List<WardenObjectiveEvent>()
+            .AddTurnOffAlarms(9.5, "error_alarms")
+            .AddSound(Sound.Alarms_Error_AmbientStop, 10)
+            .RemoveCustomHudText(10)
+            .ToList();
 
         terminalPlacement.UniqueCommands.Add(
             new CustomTerminalCommand
             {
-                Command = "DEACTIVATE_ERROR_ALARMS",
+                Command = "DEACTIVATE_ALARMS",
                 CommandDesc = "Terminates any active error alarms linked to this terminal",
-                CommandEvents = new()
+                CommandEvents = commandEvents,
+                PostCommandOutputs = new List<TerminalOutput>
+                {
+                    new()
+                    {
+                        Output = "Executing alarm-shutdown protocol...",
+                        Type = LineType.SpinningWaitNoDone,
+                        Time = 2.5
+                    },
+                    new()
+                    {
+                        Output = "Connecting to active error alarm systems",
+                        Type = LineType.Normal,
+                        Time = 2.0
+                    },
+                    new()
+                    {
+                        Output = "Confirming valid terminal ID",
+                        Type = LineType.Normal,
+                        Time = 1.5
+                    },
+                    new()
+                    {
+                        Output = "Shutting down alarms",
+                        Type = LineType.SpinningWaitDone,
+                        Time = 3.0
+                    },
+                    new()
+                    {
+                        Output = "Alarms shut down.",
+                        Type = LineType.Normal,
+                        Time = 1.0
+                    },
+                },
             });
 
         // TODO: support other dimensions

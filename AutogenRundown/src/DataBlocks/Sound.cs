@@ -22,12 +22,19 @@ public enum Sound : uint
 
     /// <summary>
     /// This is also the error alarm loop noise played when dropping into R2C2 ???
+    ///
+    /// This sound will loop. Play the `Alarms_Error_AmbientStop` to turn off this loop noise
     /// </summary>
     Alarms_Error_AmbientLoop = 1190355274,   // alarm_ambient_loop
 
+    /// <summary>
+    /// Play this sound to stop Alarms_Error_AmbientLoop
+    /// </summary>
+    Alarms_Error_AmbientStop = 560124168,
+
     Alarms_AmbientMix = 42582178,
     Alarms_AmbientStereo = 439388169, // Sounds like nothing?
-    Alarms_AmbientStop = 560124168,
+
     #endregion
 
     #region Atmosphere and mood

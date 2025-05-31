@@ -273,7 +273,8 @@ public static class WardenObjectiveEventCollections
 
     public static ICollection<WardenObjectiveEvent> AddCustomHudText(
         this ICollection<WardenObjectiveEvent> events,
-        string text)
+        string text,
+        double delay = 0.0)
     {
         events.Add(
             new WardenObjectiveEvent
@@ -284,6 +285,20 @@ public static class WardenObjectiveEventCollections
                 {
                     Title = text
                 }
+            });
+
+        return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> RemoveCustomHudText(
+        this ICollection<WardenObjectiveEvent> events,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.CustomHudText,
+                Enabled = false,
             });
 
         return events;

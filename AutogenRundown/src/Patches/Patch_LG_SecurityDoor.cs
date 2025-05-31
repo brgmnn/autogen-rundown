@@ -135,12 +135,8 @@ public static class Patch_LG_SecurityDoor
         }
         catch (Exception e)
         {
-            Plugin.Logger.LogError($"[SerialLookupManager] We had to exit early because an error occured:\n{e}");
+            Plugin.Logger.LogError($"Building map failed with error:\n{e}");
         }
-
-        Plugin.Logger.LogDebug($"Serial map:\n{PrintMap()}");
-
-        Plugin.Logger.LogInfo($"[SerialLookupManager] On build done, collected {count} serial numbers");
     }
 
     public static string ReplaceAll(string input)
