@@ -4,11 +4,11 @@ using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Terminals;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
 using AutogenRundown.Utils;
-using RootMotion.FinalIK;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -416,7 +416,19 @@ public partial record LevelLayout
     #region Error alarms
     /// <summary>
     /// Adds an error alarm (or desired otherwise alarm) to the locked node and also sets up
-    /// the turn off alarms terminal if it's passed in
+    /// the turn-off alarms terminal if it's passed in
+    ///
+    /// This is now a manually set up process
+    ///
+    /// Error alarm door text should read:
+    /// ```
+    /// START SECURITY SCAN SEQUENCE <color=red>[WARNING:CLASS ://ERROR! ALARM DETECTED] DEACTIVATE ALARM ON <color=orange>TERMINAL_123</color></color>
+    /// ```
+    ///
+    /// Command to turn off alarms:
+    /// ```
+    /// DEACTIVATE_ALARMS    Terminates any active alarms linked to this terminal.
+    /// ```
     /// </summary>
     /// <param name="lockedNode"></param>
     /// <param name="terminalNode"></param>
@@ -445,17 +457,72 @@ public partial record LevelLayout
         }
 
         // Set the alarm
-        lockedZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle ?? ChainedPuzzle.AlarmError_Baseline);
+        // lockedZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle ?? ChainedPuzzle.AlarmError_Baseline);
+
+        // We use a template error alarm to provide the correct scan, but it doesn't trigger any waves
+        lockedZone.Alarm = ChainedPuzzle.AlarmError_Template;
         level.Settings.ErrorAlarmZones.Add(lockedNode);
+
+        lockedZone.EventsOnDoorScanStart
+            .AddSound(Sound.Alarms_MissingItem)
+            .AddSound(Sound.Alarms_Error_AmbientLoop, 1.0)
+            .AddSpawnWave(new GenericWave
+            {
+                Settings = WaveSettings.Error_Easy,
+                Population = WavePopulation.Baseline,
+                TriggerAlarm = true
+            }, 0.0, "error_alarm");
+
+        // Custom door message
+        var customDoor = new Custom.AutogenRundown.SecurityDoors.SecurityDoor()
+        {
+            Bulkhead = director.Bulkhead,
+            ZoneNumber = lockedNode.ZoneNumber,
+            InteractionMessage = "START SECURITY SCAN SEQUENCE <color=red>[WARNING:CLASS <color=purple>APEX</color> ://ERROR! ALARM DETECTED]</color>"
+        };
+
+        Plugin.Logger.LogDebug($"Overriding the normal error alarm logic for this special zone: {lockedNode}");
 
         // Set the turnoff code (if we have it)
         if (terminalish == null)
+        {
+            level.SecurityDoors.Doors.Add(customDoor);
             return;
+        }
 
         var terminalNode = (ZoneNode)terminalish;
+        var terminalZone = planner.GetZone(terminalNode);
 
-        lockedZone.TurnOffAlarmOnTerminal = true;
-        lockedZone.TerminalPuzzleZone.LocalIndex = terminalNode.ZoneNumber;
+        // lockedZone.TurnOffAlarmOnTerminal = true;
+        // lockedZone.TerminalPuzzleZone.LocalIndex = terminalNode.ZoneNumber;
+
+        var terminalPlacement = new TerminalPlacement
+        {
+            PlacementWeights = ZonePlacementWeights.NotAtStart
+        };
+
+        if (terminalZone.TerminalPlacements.Any())
+            terminalPlacement = terminalZone.TerminalPlacements.First();
+
+        var commandEvents = new List<WardenObjectiveEvent>();
+
+        commandEvents.AddTurnOffAlarms(0.5, "error_alarm");
+
+        terminalPlacement.UniqueCommands.Add(
+            new CustomTerminalCommand
+            {
+                Command = "DEACTIVATE_ERROR_ALARMS",
+                CommandDesc = "Terminates any active error alarms linked to this terminal",
+                CommandEvents = new()
+            });
+
+        // TODO: support other dimensions
+        var terminalSerial = Lore.TerminalSerial("Reality", terminalNode.Bulkhead, terminalNode.ZoneNumber);
+
+        customDoor.InteractionMessage += $"<color=red> DEACTIVATE ALARM ON {terminalSerial}</color>";
+        lockedZone.EventsOnDoorScanStart.AddCustomHudText($"<color=red>Deactivate alarm on {terminalSerial}</color>");
+
+        level.SecurityDoors.Doors.Add(customDoor);
 
         // Unlock the turn-off zone door when the alarm door has opened.
         lockedZone.EventsOnDoorScanDone.AddUnlockDoor(director.Bulkhead, terminalNode.ZoneNumber);

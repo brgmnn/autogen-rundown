@@ -1,15 +1,21 @@
 ﻿using System.Text.RegularExpressions;
+using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using BepInEx;
 using GTFO.API;
 using HarmonyLib;
 using LevelGeneration;
+using static LevelGeneration.eDoorStatus;
 
 namespace AutogenRundown.Patches;
 
 [HarmonyPatch]
 public static class Patch_LG_SecurityDoor
 {
+    private static List<LevelSecurityDoors> _levelDoors = new();
+
     public static readonly Dictionary<(string item, int dimension, int layer, int zone), List<string>> map = new();
+    private static bool _isReady = false;
+    private static readonly List<Action> _deferredActions = new();
 
     private const string Pattern = @"\[(?<ItemName>[A-Z_]+?)_(?:(?:[^\d_]*)(?<Dimension>\d+))_(?:(?:[^\d_]*)(?<Layer>\d+))_(?:(?:[^\d_]*)(?<Zone>\d+))(?:_(?<InstanceIndex>\d+))?\]";
     private const string Terminal = "TERMINAL";
@@ -17,8 +23,32 @@ public static class Patch_LG_SecurityDoor
 
     internal static void Setup()
     {
-        LevelAPI.OnBuildDone += BuildMap;
-        LevelAPI.OnLevelCleanup += () => map.Clear();
+        _levelDoors = LevelSecurityDoors.LoadAll();
+
+        LevelAPI.OnBuildDone += () =>
+        {
+            BuildMap();
+            _isReady = true;
+            _deferredActions.ForEach(action => action());
+            _deferredActions.Clear();
+        };
+        LevelAPI.OnLevelCleanup += () =>
+        {
+            _isReady = false;
+            _deferredActions.Clear();
+            map.Clear();
+        };
+    }
+
+    public static LevelSecurityDoors? GetDoors()
+    {
+        var mainLayoutId = RundownManager.ActiveExpedition?.LevelLayoutData ?? 0;
+        var levelSecurityDoors = _levelDoors.Find(lsd => lsd.MainLevelLayout == mainLayoutId);
+
+        if (levelSecurityDoors is null)
+            return null;
+
+        return !levelSecurityDoors.Doors.Any() ? null : levelSecurityDoors;
     }
 
     public static List<string> Find((string name, int dimension, int layer, int zone) key)
@@ -108,6 +138,8 @@ public static class Patch_LG_SecurityDoor
             Plugin.Logger.LogError($"[SerialLookupManager] We had to exit early because an error occured:\n{e}");
         }
 
+        Plugin.Logger.LogDebug($"Serial map:\n{PrintMap()}");
+
         Plugin.Logger.LogInfo($"[SerialLookupManager] On build done, collected {count} serial numbers");
     }
 
@@ -137,8 +169,6 @@ public static class Patch_LG_SecurityDoor
         int zone = int.Parse(match.Groups["Zone"].Value);
         int instanceIndex = match.Groups["InstanceIndex"].Success ? int.Parse(match.Groups["InstanceIndex"].Value) : 0;
 
-
-
         // if (map.TryGetValue(itemName, out var localSerialMap) &&
         //     localSerialMap.TryGetValue((dimension, layer, zone), out var serialList))
         if (map.TryGetValue((itemName, dimension, layer, zone), out var serialList))
@@ -154,7 +184,7 @@ public static class Patch_LG_SecurityDoor
         }
 
         serialStr = match.Value;
-        Plugin.Logger.LogError($"[SerialLookupManager] No match found for TerminalItem: '{itemName}' in (D{dimension}, L{layer}, Z{zone}) at instance #{instanceIndex}");
+        Plugin.Logger.LogError($"[SerialLookupManager] No match found (map size = {map.Count}) for TerminalItem: '{itemName}' in (D{dimension}, L{layer}, Z{zone}) at instance #{instanceIndex}");
         return false;
     }
 
@@ -165,61 +195,45 @@ public static class Patch_LG_SecurityDoor
             .Join(null, "\n");
     }
 
-    [HarmonyPatch(typeof(LG_SecurityDoor), nameof(LG_SecurityDoor.Setup))]
-    [HarmonyFinalizer]
-    // [HarmonyAfter("Inas.EOSExt.SecDoor")]
-    private static void Post_LG_SecurityDoor_Setup(LG_SecurityDoor __instance)
+    [HarmonyPatch(typeof(LG_SecurityDoor_Locks), nameof(LG_SecurityDoor_Locks.OnDoorState))]
+    [HarmonyPostfix]
+    private static void Post_LG_SecurityDoor_Locks_OnDoorState(LG_SecurityDoor_Locks __instance, pDoorState state, bool isDropinState = false)
     {
-        var intOpenDoor = __instance.m_locks.Cast<LG_SecurityDoor_Locks>()?.m_intOpenDoor;
+        var level = GetDoors();
 
-        if (intOpenDoor == null)
+        if (level is null)
             return;
 
-        Plugin.Logger.LogDebug($"What is the interaction text: {intOpenDoor.InteractionMessage}");
+        var dim = __instance.m_door.Gate.DimensionIndex;
+        var layer = __instance.m_door.LinksToLayerType;
+        var localIndex = __instance.m_door.LinkedToZoneData.LocalIndex;
 
-        // Plugin.Logger.LogDebug($"Ok what is this? {res}");
+        // TODO: add dimension check
+        var door = level.Doors.Find(door => door.Layer == (int)layer &&
+                                            door.ZoneNumber == (int)localIndex);
 
+        if (door?.InteractionMessage is null)
+            return;
 
-        var door = __instance;
-        // var dim = door.Gate.DimensionIndex;
-        // var layer = door.LinksToLayerType;
-        // var localIndex = door.LinkedToZoneData.LocalIndex;
-        // var def = SecDoorIntTextOverrideManager.Current.GetDefinition(dim, layer, localIndex);
-
-        // Interact_Timed intOpenDoor = __instance.m_locks.Cast<LG_SecurityDoor_Locks>()?.m_intOpenDoor;
-
-        // if (intOpenDoor == null)
-        //     return;
-
-        //if (state.status != eDoorStatus.Unlocked && state.status != eDoorStatus.Closed_LockedWithChainedPuzzle) return;
-        door.m_sync.add_OnDoorStateChange(new Action<pDoorState, bool>((state, isRecall) =>
+        switch (state.status)
         {
-            //EOSLogger.Warning($"OnSyncDoorStatusChange: {state.status}");
+            case Closed_LockedWithChainedPuzzle_Alarm:
+            case Closed_LockedWithChainedPuzzle:
+            case Closed_LockedWithPowerGenerator:
+            case Closed_LockedWithNoKey:
+            {
+                if (_isReady)
+                    SetMessage();
+                else
+                    _deferredActions.Add(SetMessage);
 
-            // string textToReplace = string.IsNullOrEmpty(def.TextToReplace) ? intOpenDoor.InteractionMessage : def.TextToReplace; ;
+                break;
 
-            // StringBuilder sb = new();
-            // if (!string.IsNullOrEmpty(def.Prefix))
-            // {
-                // sb.Append(def.Prefix).AppendLine();
-            // }
-
-            // sb.Append(textToReplace);
-
-            // if (!string.IsNullOrEmpty(def.Postfix))
-            // {
-            //     sb.AppendLine().Append(def.Postfix);
-            // }
-
-            // intOpenDoor.InteractionMessage = sb.ToString();
-
-            Plugin.Logger.LogWarning($"Got door message: {intOpenDoor.InteractionMessage}");
-
-            Plugin.Logger.LogDebug($"Map is:\n{PrintMap()}");
-
-            intOpenDoor.InteractionMessage = ReplaceAll(intOpenDoor.InteractionMessage);
-
-            // EOSLogger.Debug($"SecDoorIntTextOverride: Override IntText. {def.LocalIndex}, {def.LayerType}, {def.DimensionIndex}");
-        }));
+                void SetMessage()
+                {
+                    __instance.m_intOpenDoor.InteractionMessage = ReplaceAll(door.InteractionMessage);
+                }
+            }
+        }
     }
 }

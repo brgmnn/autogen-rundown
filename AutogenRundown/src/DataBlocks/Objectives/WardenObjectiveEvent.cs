@@ -28,7 +28,14 @@ public record WardenObjectiveEventCountdown
     public List<WardenObjectiveEvent> EventsOnDone { get; set; } = new();
 }
 
-public record class WardenObjectiveEvent
+public record WardenObjectiveEventCustomHudText
+{
+    public string Title { get; set; }
+
+    public string Body { get; set; }
+}
+
+public record WardenObjectiveEvent
 {
     public WardenObjectiveEventType Type { get; set; } = WardenObjectiveEventType.None;
 
@@ -117,6 +124,16 @@ public record class WardenObjectiveEvent
     public uint DialogueID = 0;
     #endregion
 
+    #region Filtering
+
+    /// <summary>
+    ///
+    /// </summary>
+    [JsonProperty("WorldEventObjectFilter", NullValueHandling = NullValueHandling.Ignore)]
+    public string? Identifier { get; set; }
+
+    #endregion
+
     #region ====== MODS: AWO AdvancedWardenObjective ======
     /// <summary>
     ///
@@ -156,5 +173,12 @@ public record class WardenObjectiveEvent
     /// </summary>
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
     public WardenObjectiveEventCountdown Countdown { get; set; } = new();
+
+    /// <summary>
+    ///
+    /// </summary>
+    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    public WardenObjectiveEventCustomHudText CustomHudText { get; set; }
+
     #endregion
 }

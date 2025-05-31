@@ -1022,6 +1022,16 @@ public record ChainedPuzzle : DataBlock
 
         Puzzle = new List<PuzzleComponent>() { PuzzleComponent.AllLarge }
     };
+
+    public static readonly ChainedPuzzle AlarmError_Template = new()
+    {
+        PublicAlarmName = "Class ://ERROR! Alarm",
+        AlarmSoundStart = 2200133294,
+        AlarmSoundStop = 1190355274,
+        TriggerAlarmOnActivate = false,
+        FixedAlarm = true,
+        Puzzle = new List<PuzzleComponent>() { PuzzleComponent.AllLarge }
+    };
     #endregion
 
     #region Alarms: Secret alarms
@@ -1253,6 +1263,8 @@ public record ChainedPuzzle : DataBlock
         Scan.Persist();
         TeamScan.Persist();
         TeamScan_Slow.Persist();
+
+        AlarmError_Template.Persist();
 
         // Several objectives use the exit alarm
         ExitAlarm.Persist();

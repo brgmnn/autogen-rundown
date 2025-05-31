@@ -25,6 +25,31 @@ public class Lore
     public static string TitlePrefix_LevelErrorAlarm = "<color=red>?!</color><color=#444444>-</color>";
 
     /// <summary>
+    ///
+    /// </summary>
+    /// <param name="dimension"></param>
+    /// <param name="bulkhead"></param>
+    /// <param name="zoneNumber"></param>
+    /// <param name="itemIndex"></param>
+    /// <returns></returns>
+    public static string TerminalSerial(string dimension, Bulkhead bulkhead, int zoneNumber, int itemIndex = 0)
+    {
+        var dimensionIndex = dimension switch
+        {
+            _ => 0
+        };
+        var layer = bulkhead switch
+        {
+            Bulkhead.Main => 0,
+            Bulkhead.Extreme => 1,
+            Bulkhead.Overload => 2,
+            _ => 0
+        };
+
+        return $"[TERMINAL_{dimensionIndex}_{layer}_{zoneNumber}_{itemIndex}]";
+    }
+
+    /// <summary>
     /// Pulls a random variant of the string "Unknown Error"
     /// </summary>
     /// <returns></returns>

@@ -119,8 +119,19 @@ public class Level
 
     #region === MODS ===
     #region Autogen Custom Definitions
+
+    /// <summary>
+    /// For customizing security doors
+    /// </summary>
+    [JsonIgnore]
+    public LevelSecurityDoors SecurityDoors { get; private set; } = new();
+
+    /// <summary>
+    /// For performing custom terminal placement in a zone/area
+    /// </summary>
     [JsonIgnore]
     public LevelTerminalPlacements TerminalPlacements { get; private set; } = new();
+
     #endregion
 
     #region ExtraObjectiveSetup Definitions
@@ -163,7 +174,7 @@ public class Level
     };
 
     /// <summary>
-    /// Reactor Shutdown LayoutDefinitions
+    /// Security Sensors definitions
     /// </summary>
     [JsonIgnore]
     public LayoutDefinitions EOS_SecuritySensor { get; private set; } = new()
@@ -857,6 +868,9 @@ public class Level
             string.Empty,
             RegexOptions.IgnoreCase);
 
+        SecurityDoors.Name = $"{Tier}{Index}_{fsName}";
+        SecurityDoors.MainLevelLayout = LevelLayoutData;
+
         TerminalPlacements.Name = $"{Tier}{Index}_{fsName}";
         TerminalPlacements.MainLevelLayout = LevelLayoutData;
 
@@ -875,6 +889,7 @@ public class Level
         EOS_SecuritySensor.Name = $"{Tier}{Index}_{fsName}";
         EOS_SecuritySensor.MainLevelLayout = LevelLayoutData;
 
+        SecurityDoors.Save();
         TerminalPlacements.Save();
 
         if (EOS_EventsOnBossDeath.Definitions.Any())

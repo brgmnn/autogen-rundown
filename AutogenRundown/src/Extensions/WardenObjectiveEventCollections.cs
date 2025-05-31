@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks;
+using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 
 namespace AutogenRundown.Extensions;
@@ -91,6 +92,57 @@ public static class WardenObjectiveEventCollections
                 Delay = delay,
                 Trigger = trigger,
                 WardenIntel = alertMessage
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Turn's off alarms. Optionally with a given identifier
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="delay"></param>
+    /// <param name="identifier"></param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddTurnOffAlarms(
+        this ICollection<WardenObjectiveEvent> events,
+        double delay = 0.0,
+        string? identifier = null)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.StopEnemyWaves,
+                Identifier = identifier,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Adds a spawn wave event
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="wave"></param>
+    /// <param name="delay"></param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddSpawnWave(
+        this ICollection<WardenObjectiveEvent> events,
+        GenericWave wave,
+        double delay = 0.0,
+        string? identifier = null)
+    {
+        if (wave == GenericWave.None)
+            return events;
+
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SpawnEnemyWave,
+                Delay = delay,
+                Identifier = identifier,
+                EnemyWaveData = wave
             });
 
         return events;
@@ -210,6 +262,28 @@ public static class WardenObjectiveEventCollections
                 Type = WardenObjectiveEventType.AllLightsOff,
                 Trigger = trigger,
                 Delay = delay
+            });
+
+        return events;
+    }
+
+    #endregion
+
+    #region Messaging
+
+    public static ICollection<WardenObjectiveEvent> AddCustomHudText(
+        this ICollection<WardenObjectiveEvent> events,
+        string text)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.CustomHudText,
+                Enabled = true,
+                CustomHudText = new WardenObjectiveEventCustomHudText
+                {
+                    Title = text
+                }
             });
 
         return events;

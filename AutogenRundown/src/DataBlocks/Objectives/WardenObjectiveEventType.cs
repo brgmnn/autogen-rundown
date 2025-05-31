@@ -74,6 +74,8 @@ public enum WardenObjectiveEventType : uint
     StopEventLoop = 20002,
 
     AdjustAwoTimer = 20007,
+
+    CustomHudText = 20017,
     #endregion
     #endregion
 }
