@@ -474,7 +474,7 @@ public partial record LevelLayout
         {
             Bulkhead = director.Bulkhead,
             ZoneNumber = lockedNode.ZoneNumber,
-            InteractionMessage = "START SECURITY SCAN SEQUENCE <color=red>[WARNING:<color=purple>[OVERLOAD]</color> ://ERROR! ALARM DETECTED]</color>"
+            InteractionMessage = "START SECURITY SCAN SEQUENCE <color=red>[WARNING:CLASS ://ERROR! ALARM DETECTED]</color>"
         };
 
         Plugin.Logger.LogDebug($"Overriding the normal error alarm logic for this special zone: {lockedNode}");
