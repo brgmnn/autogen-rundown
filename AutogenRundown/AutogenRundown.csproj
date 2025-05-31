@@ -9,6 +9,7 @@
 
     <Deps>$(SolutionDir)\deps</Deps>
     <Interop>$(SolutionDir)\AutogenRundown\interop</Interop>
+    <Plugins>$(SolutionDir)\AutogenRundown\plugins</Plugins>
     <BepInEx>$(Deps)\BepInEx-BepInExPack_GTFO\BepInExPack_GTFO\BepInEx</BepInEx>
     <OutputPath>$(SolutionDir)\build</OutputPath>
 
@@ -38,6 +39,9 @@
     <Reference Include="$(Interop)\*.dll" Private="false" />
     <Reference Remove="$(Interop)\netstandard.dll" />
     <Reference Remove="$(Interop)\Newtonsoft.Json.dll" />
+
+    <!-- Thunderstore Plugins -->
+    <Reference Include="$(Plugins)\GTFO-API.dll" />
 
     <Compile Remove="Blocks\**" />
     <EmbeddedResource Remove="Blocks\**" />

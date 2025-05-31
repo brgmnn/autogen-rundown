@@ -66,6 +66,8 @@ public class Plugin : BasePlugin
 
         Patch_LG_ComputerTerminal_Setup.Setup();
 
+        Patch_LG_SecurityDoor.Setup();
+
         // Apply patches
         var harmony = new Harmony("the_tavern-AutogenRundown");
         harmony.PatchAll();
