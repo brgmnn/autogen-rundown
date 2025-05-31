@@ -615,38 +615,38 @@ public partial record LevelLayout : DataBlock
             else if (level.Settings.HasFlyers())
                 population = WavePopulation.Baseline_Flyers;
 
-            var puzzle = ChainedPuzzle.AlarmError_Baseline with
-            {
-                PersistentId = 0,
-                Population = population,
-                Settings = settings
-            };
-
-            // TODO: rework candidates to use planner
-            //
             // First try and find a zone in the middle without an alarm already.
-            var candidates = Zones.Where(z => z.LocalIndex != 0 && z.Alarm == ChainedPuzzle.None && z.LocalIndex != Zones.Count - 1);
+            var candidates = Zones
+                .Where(z => z.LocalIndex != 0 &&
+                            z.Alarm == ChainedPuzzle.None &&
+                            z.LocalIndex != Zones.Count - 1 &&
+                            z.ProgressionPuzzleToEnter != ProgressionPuzzle.Locked &&
+                            z.SecurityGateToEnter != SecurityGate.Apex);
 
             // If no candidates, search for any zone in the middle (we will overwrite the alarm)
             if (!candidates.Any())
-                candidates = Zones.Where(z => z.LocalIndex != 0 && z.LocalIndex != Zones.Count - 1);
+                candidates = Zones.Where(z => z.LocalIndex != 0 &&
+                                              z.LocalIndex != Zones.Count - 1 &&
+                                              z.ProgressionPuzzleToEnter != ProgressionPuzzle.Locked &&
+                                              z.SecurityGateToEnter != SecurityGate.Apex);
 
             // If there's still no candidates, include the last zone. Note this probably never
             // gets called as all levels have at least 3 zones.
             if (!candidates.Any())
-                candidates = Zones.Where(z => z.LocalIndex != 0);
+                candidates = Zones.Where(z => z.LocalIndex != 0 &&
+                                              z.ProgressionPuzzleToEnter != ProgressionPuzzle.Locked &&
+                                              z.SecurityGateToEnter != SecurityGate.Apex);
 
             // Pick from all zones without alarms already that aren't the first zone
             var zone = Generator.Pick(candidates);
 
+            // Something's gone wrong if this is the case and there were no zones to pick from.
             if (zone == null)
-            {
-                // Something's gone wrong if this is the case and there were no zones to pick from.
                 return;
-            }
 
             var node = planner.GetZoneNode(zone.LocalIndex);
-            zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
+            var terminal = (ZoneNode?)null;
+            // zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
 
             level.Settings.ErrorAlarmZones.Add(node);
 
@@ -665,7 +665,6 @@ public partial record LevelLayout : DataBlock
                     continue;
 
                 var baseNode = Generator.Pick(branchOpenZones);
-
                 var turnOff = new ZoneNode(director.Bulkhead, planner.NextIndex(director.Bulkhead), $"error_off_{i}");
 
                 planner.Connect(baseNode, turnOff);
@@ -680,19 +679,23 @@ public partial record LevelLayout : DataBlock
                 var turnOffZone = planner.GetZone(turnOff)!;
 
                 // Unlock the turn-off zone door when the alarm door has opened.
-                zone.EventsOnDoorScanDone.AddUnlockDoor(director.Bulkhead, turnOff.ZoneNumber);
+                // zone.EventsOnDoorScanDone.AddUnlockDoor(director.Bulkhead, turnOff.ZoneNumber);
 
                 turnOffZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
 
                 Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} error alarm can be disable in: Zone {turnOff.ZoneNumber}");
 
                 // For now set the alarm to be in the next zone.
-                zone.TerminalPuzzleZone.LocalIndex = turnOff.ZoneNumber;
-                zone.TurnOffAlarmOnTerminal = true;
+                // zone.TerminalPuzzleZone.LocalIndex = turnOff.ZoneNumber;
+                // zone.TurnOffAlarmOnTerminal = true;
 
                 // TODO: remove when we move roll alarms to use planner entirely.
                 Zones.Add(turnOffZone);
+
+                terminal = turnOff;
             }
+
+            AddErrorAlarm(node, terminal, settings, population);
         }
     }
 

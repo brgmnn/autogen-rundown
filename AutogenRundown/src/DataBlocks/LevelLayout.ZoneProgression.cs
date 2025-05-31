@@ -459,6 +459,7 @@ public partial record LevelLayout
 
         // We use a template error alarm to provide the correct scan, but it doesn't trigger any waves
         lockedZone.Alarm = ChainedPuzzle.AlarmError_Template;
+        lockedZone.SecurityGateToEnter = SecurityGate.Security;
         level.Settings.ErrorAlarmZones.Add(lockedNode);
 
         lockedZone.EventsOnDoorScanStart
