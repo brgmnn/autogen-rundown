@@ -36,6 +36,24 @@ public partial record LevelLayout
         return (end, endZone);
     }
 
+    public (ZoneNode, Zone) BuildChallenge_GeneratorCellInZone(ZoneNode start)
+    {
+        var (end, endZone) = AddZone(start, new ZoneNode());
+
+        AddGeneratorPuzzle(end, start);
+
+        return (end, endZone);
+    }
+
+    public (ZoneNode, Zone) BuildChallenge_KeycardInZone(ZoneNode start)
+    {
+        var (end, endZone) = AddZone(start, new ZoneNode());
+
+        AddKeycardPuzzle(end, start);
+
+        return (end, endZone);
+    }
+
     /// <summary>
     /// Adds a hub zone with a locked keycard going to the next zone. Keycard is in a side zone(s)
     ///

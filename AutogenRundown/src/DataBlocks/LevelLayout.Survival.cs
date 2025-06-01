@@ -20,27 +20,106 @@ public partial record LevelLayout
     public void BuildLayout_Survival(
         BuildDirector director,
         WardenObjective objective,
-        ZoneNode? start)
+        ZoneNode? startish)
     {
-        if (start == null)
+        if (startish == null)
         {
             Plugin.Logger.LogError($"No node returned when calling Planner.GetLastZone({director.Bulkhead})");
             throw new Exception("No zone node returned");
         }
 
-        var arenaNodes = AddBranch(
-            (ZoneNode)start,
-            director.ZoneCount,
-            "survival_arena",
-            (node, zone) =>
-            {
-                zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+        var start = (ZoneNode)startish;
+        var arenaNodes = new List<ZoneNode>();
 
-                // Add extra resources to survival arena zones
-                zone.AmmoPacks += 3;
-                zone.ToolPacks += 2;
-                zone.HealthPacks += 3;
-            });
+        switch (level.Tier)
+        {
+            #region Tier: E
+            case "E":
+            {
+                // Boss error with some puzzles in the middle
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    (0.20, () =>
+                    {
+                        var (mid1, mid1Zone) = AddZone(start, new ZoneNode { Branch = "survival_arena" });
+
+                        var population = Generator.Flip()
+                            ? WavePopulation.SingleEnemy_Tank
+                            : WavePopulation.SingleEnemy_Mother;
+
+                        AddApexErrorAlarm(mid1, null, WaveSettings.Error_Boss_VeryHard, population);
+
+                        arenaNodes.Add(mid1);
+
+                        // Options for the mid puzzles
+                        Generator.SelectRun(new List<(double, Action)>
+                        {
+                            // 1 generator
+                            (0.50, () =>
+                            {
+                                var nodes = AddBranch_Forward(
+                                    mid1,
+                                    Generator.Between(2, 3),
+                                    "survival_arena",
+                                    (_, zone) =>
+                                    {
+                                        // Add extra resources to survival arena zones
+                                        zone.AmmoPacks += 3;
+                                        zone.ToolPacks += 2;
+                                        zone.HealthPacks += 3;
+                                    });
+
+                                var (mid2, _) = BuildChallenge_GeneratorCellInZone(nodes.Last());
+
+                                arenaNodes.AddRange(nodes);
+                                arenaNodes.Add(mid2);
+                            }),
+
+                            // 1 key
+                            (0.50, () =>
+                            {
+                                var nodes = AddBranch_Forward(
+                                    mid1,
+                                    Generator.Between(2, 3),
+                                    "survival_arena",
+                                    (_, zone) =>
+                                    {
+                                        // Add extra resources to survival arena zones
+                                        zone.AmmoPacks += 4;
+                                        zone.ToolPacks += 2;
+                                        zone.HealthPacks += 3;
+                                    });
+
+                                var (mid2, _) = BuildChallenge_KeycardInZone(nodes.Last());
+
+                                arenaNodes.AddRange(nodes);
+                                arenaNodes.Add(mid2);
+                            }),
+                        });
+                    })
+                });
+                break;
+            }
+            #endregion
+
+            default:
+            {
+                arenaNodes = AddBranch(
+                    start,
+                    director.ZoneCount,
+                    "survival_arena",
+                    (node, zone) =>
+                    {
+                        zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+
+                        // Add extra resources to survival arena zones
+                        zone.AmmoPacks += 3;
+                        zone.ToolPacks += 2;
+                        zone.HealthPacks += 3;
+                    }).ToList();
+                break;
+            }
+        }
 
         var first = arenaNodes.First();
         var last = arenaNodes.Last();
@@ -199,7 +278,7 @@ public partial record LevelLayout
                 {
                     new()
                     {
-                        Command = "MANUAL_OVERRIDE_LOCKDOWN_PROTOCOLS",
+                        Command = "OVERRIDE_LOCKDOWN_PROTOCOL",
                         CommandDesc = "Manual override for security systems on floor, force open all security doors to exit",
                         CommandEvents = objective.SecurityControlEvents
                     }

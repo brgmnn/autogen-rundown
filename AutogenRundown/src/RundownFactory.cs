@@ -197,14 +197,14 @@ public static class RundownFactory
         #if DEBUG
         if (withFixed)
         {
-            const string tier = "D";
+            const string tier = "E";
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = Complex.Tech,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.CorruptedTerminalUplink,
+                Objective = WardenObjectiveType.Survival,
             };
             mainDirector.GenPoints();
 
@@ -728,7 +728,6 @@ public static class RundownFactory
     public static void Build(string dailySeed)
     {
         Bins.Setup();
-        // ComplexResource.Setup();
         LayoutDefinitions.Setup();
 
         var gameSetup = new GameSetup()
