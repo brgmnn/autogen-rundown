@@ -88,9 +88,7 @@ public static class Patch_LG_SecurityDoor
                 int dimension = (int)serial.Value.SpawnNode.m_dimension.DimensionIndex;
                 int layer = (int)serial.Value.SpawnNode.LayerType;
                 int zone = (int)serial.Value.SpawnNode.m_zone.LocalIndex;
-                // var globalIndex = (dimension, layer, zone);
 
-                // map.GetOrAddNew(itemName).GetOrAddNew(globalIndex).Add(serialNumber);
                 Find((itemName, dimension, layer, zone)).Add(serialNumber);
 
                 count++;
@@ -99,9 +97,6 @@ public static class Patch_LG_SecurityDoor
             // collect all terminals and zone alias numbers
             foreach (var zone in Builder.CurrentFloor.allZones)
             {
-                // var globalIndex = ((int)zone.DimensionIndex, (int)zone.Layer.m_type, (int)zone.LocalIndex);
-
-                // map.GetOrAddNew(Zone).GetOrAddNew(globalIndex).Add(zone.Alias.ToString());
                 Find((Zone, (int)zone.DimensionIndex, (int)zone.Layer.m_type, (int)zone.LocalIndex))
                     .Add(zone.Alias.ToString());
 
@@ -119,7 +114,6 @@ public static class Patch_LG_SecurityDoor
 
                     string serialNumber = term.m_terminalItem.TerminalItemKey.Substring(split + 1);
 
-                    // map.GetOrAddNew(Terminal).GetOrAddNew(globalIndex).Add(serialNumber);
                     Find((Terminal, (int)zone.DimensionIndex, (int)zone.Layer.m_type, (int)zone.LocalIndex))
                         .Add(serialNumber);
                     count++;
@@ -165,8 +159,6 @@ public static class Patch_LG_SecurityDoor
         int zone = int.Parse(match.Groups["Zone"].Value);
         int instanceIndex = match.Groups["InstanceIndex"].Success ? int.Parse(match.Groups["InstanceIndex"].Value) : 0;
 
-        // if (map.TryGetValue(itemName, out var localSerialMap) &&
-        //     localSerialMap.TryGetValue((dimension, layer, zone), out var serialList))
         if (map.TryGetValue((itemName, dimension, layer, zone), out var serialList))
         {
             Plugin.Logger.LogInfo($"[SerialLookupManager] Got to first part: {serialList}");

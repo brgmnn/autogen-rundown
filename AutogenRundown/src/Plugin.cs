@@ -65,7 +65,6 @@ public class Plugin : BasePlugin
         // AssetAPI.OnAssetBundlesLoaded += Assets.Init;
 
         Patch_LG_ComputerTerminal_Setup.Setup();
-
         Patch_LG_SecurityDoor.Setup();
 
         // Apply patches

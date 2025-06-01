@@ -600,14 +600,15 @@ public partial record LevelLayout
             }, 1.0, "apex_error_alarms");
 
         // Custom door message
-        var customDoor = new Custom.AutogenRundown.SecurityDoors.SecurityDoor()
+        var customDoor = new Custom.AutogenRundown.SecurityDoors.SecurityDoor
         {
             Bulkhead = director.Bulkhead,
             ZoneNumber = lockedNode.ZoneNumber,
-            InteractionMessage = "START SECURITY SCAN SEQUENCE <color=red>[WARNING:<color=purple>[APEX OVERLOAD]</color> ://ERROR! ALARM DETECTED]</color>"
+            // <color=purple>[</color><color=#ff00ffff>APEX</color><color=purple>]</color>
+            InteractionMessage = "START SECURITY SCAN SEQUENCE <color=red>[WARNING:<color=#ff00ffff>[APEX]</color> ://ERROR! ALARM DETECTED]</color>"
         };
 
-        Plugin.Logger.LogDebug($"Overriding the normal error alarm logic for this special zone: {lockedNode}");
+        Plugin.Logger.LogDebug($"Adding Apex Error alarm for: {lockedNode} (terminal = {terminalish})");
 
         // Set the turnoff code (if we have it)
         if (terminalish == null)
