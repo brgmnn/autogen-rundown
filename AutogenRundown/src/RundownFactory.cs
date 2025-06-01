@@ -225,7 +225,7 @@ public static class RundownFactory
                 new Level(tier)
                 {
                     Tier = tier,
-                    Name = "Corrupted Uplink",
+                    Name = "Survival",
                     Complex = Complex.Tech,
                     MainDirector = mainDirector,
                     // SecondaryDirector = extremeDirector,
@@ -806,8 +806,8 @@ public static class RundownFactory
                 StoryTitle = $"<color=green>RND://</color>DAILY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
 
                 TierA_Count = 1,
-                TierD_Count = 2,
-                TierE_Count = Generator.Between(0, 2),
+                TierD_Count = 3,
+                TierE_Count = 1
             }, true, false);
 
             daily.VisualsETier = Color.MenuVisuals_DailyE;
