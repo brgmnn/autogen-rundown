@@ -3,6 +3,31 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.67.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.67.0) — June 01, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Added Apex Error alarm doors (boss error alarms)
+
+### Changes
+
+* Balance: Infectious fog levels now roll to spawn disinfection packs in fog zones
+* Balance: Error alarm turn-off commands now _only_ deactivate all current error alarms. Door alarms, objective exit alarms etc. are no longer deactivated.
+* Balance: Added cap to number of randomly placed error alarms in the level. In general there should not be levels with _too_ many error alarms now
+* Balance: Rolled error alarms now scale in difficulty with level tier. D and E tier error alarms will be noticeably harder.
+* Balance: Rolled error alarms can now roll different enemy populations based on level settings.
+* Balance: Rolled error alarms turnoff chance increased from `50%` to `70%`
+* Change: IPv6 addresses are displayed in upper case to avoid confusing when inputting into terminals
+* Fix level objective selection to exclude objectives that use a timer if an existing objective already uses a timer
+  * Level timers such as survival timers do not work well together it seems
+* Fix survival objectives to not have error alarms, also due to survival timers and terminal turnoff messages conflicting
+* Fix for some level generation lockups
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.66.2...v0.67.0
+
+
 ## [v0.66.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.66.2) — May 22, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
