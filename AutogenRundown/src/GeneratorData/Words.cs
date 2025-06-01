@@ -73,8 +73,9 @@ static public class Words
             // June
             6 => Generator.Pick(new List<string>
             {
-                "Cinderdeep", "Molded Pit", "Charfall", "Blightbarrow", "Grimwarren", "Gorecliff", "Dusthusk",
-                "Marrow Reach", "Wraith Fane", "Hollow Thorn"
+                "Cinderdeep", /*"Charfall", "Blightbarrow", "Grimwarren", "Gorecliff", "Dusthusk",
+                "Marrow Reach", "Wraith Fane", "Hollow Thorn"*/
+                // "Molded Pit",
             }),
             // July
             7 => Generator.Pick(new List<string>
