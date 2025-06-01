@@ -567,8 +567,11 @@ public partial record LevelLayout : DataBlock
     {
         // Skip adding any rolled error alarms if the main objective is a survival map
         // The error turnoff code message doesn't play well with the survival counter
-        if (level.GetObjective(Bulkhead.Main)?.Type == WardenObjectiveType.Survival)
+        if (level.Director[Bulkhead.Main].Objective == WardenObjectiveType.Survival)
+        {
+            Plugin.Logger.LogDebug("Skipping rolled error alarms");
             return;
+        }
 
         var alarmCount = director.Tier switch
         {

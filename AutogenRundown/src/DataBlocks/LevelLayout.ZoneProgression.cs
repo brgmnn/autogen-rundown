@@ -608,6 +608,8 @@ public partial record LevelLayout
             InteractionMessage = "START SECURITY SCAN SEQUENCE <color=red>[WARNING:<color=#ff00ffff>[APEX]</color> ://ERROR! ALARM DETECTED]</color>"
         };
 
+        level.MarkAsBossErrorAlarm();
+
         Plugin.Logger.LogDebug($"Adding Apex Error alarm for: {lockedNode} (terminal = {terminalish})");
 
         // Set the turnoff code (if we have it)
