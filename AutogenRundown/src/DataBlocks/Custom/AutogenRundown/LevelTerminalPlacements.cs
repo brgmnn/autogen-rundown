@@ -30,22 +30,30 @@ public record LevelTerminalPlacements
     public static List<LevelTerminalPlacements> LoadAll()
     {
         var results = new List<LevelTerminalPlacements>();
-        var files = Directory.GetFiles(
-            Folder,
-            "*.json",
-            SearchOption.AllDirectories).ToList();
 
-        files.ForEach(path =>
+        try
         {
-            var filename = Path.GetFileName(path);
-            var data = JObject.Parse(File.ReadAllText(path));
-            var levelTerminalPlacements = data.ToObject<LevelTerminalPlacements>();
+            var files = Directory.GetFiles(
+                Folder,
+                "*.json",
+                SearchOption.AllDirectories).ToList();
 
-            Plugin.Logger.LogDebug($"Copied datablock -> {filename}");
+            files.ForEach(path =>
+            {
+                var filename = Path.GetFileName(path);
+                var data = JObject.Parse(File.ReadAllText(path));
+                var levelTerminalPlacements = data.ToObject<LevelTerminalPlacements>();
 
-            if (levelTerminalPlacements is not null)
-                results.Add(levelTerminalPlacements);
-        });
+                Plugin.Logger.LogDebug($"Copied datablock -> {filename}");
+
+                if (levelTerminalPlacements is not null)
+                    results.Add(levelTerminalPlacements);
+            });
+        }
+        catch (Exception error)
+        {
+            Plugin.Logger.LogError($"Unable to load LevelTerminalPlacement files: {error.Message}");
+        }
 
         return results;
     }

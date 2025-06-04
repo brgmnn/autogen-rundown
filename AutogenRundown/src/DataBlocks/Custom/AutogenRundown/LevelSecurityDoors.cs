@@ -30,22 +30,30 @@ public record LevelSecurityDoors
     public static List<LevelSecurityDoors> LoadAll()
     {
         var results = new List<LevelSecurityDoors>();
-        var files = Directory.GetFiles(
-            Folder,
-            "*.json",
-            SearchOption.AllDirectories).ToList();
 
-        files.ForEach(path =>
+        try
         {
-            var filename = Path.GetFileName(path);
-            var data = JObject.Parse(File.ReadAllText(path));
-            var levelSecurityDoors = data.ToObject<LevelSecurityDoors>();
+            var files = Directory.GetFiles(
+                Folder,
+                "*.json",
+                SearchOption.AllDirectories).ToList();
 
-            Plugin.Logger.LogDebug($"Copied datablock -> {filename}");
+            files.ForEach(path =>
+            {
+                var filename = Path.GetFileName(path);
+                var data = JObject.Parse(File.ReadAllText(path));
+                var levelSecurityDoors = data.ToObject<LevelSecurityDoors>();
 
-            if (levelSecurityDoors is not null)
-                results.Add(levelSecurityDoors);
-        });
+                Plugin.Logger.LogDebug($"Copied datablock -> {filename}");
+
+                if (levelSecurityDoors is not null)
+                    results.Add(levelSecurityDoors);
+            });
+        }
+        catch (Exception error)
+        {
+            Plugin.Logger.LogError($"Unable to load LevelSecurityDoors files: {error.Message}");
+        }
 
         return results;
     }
