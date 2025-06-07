@@ -529,8 +529,37 @@ public partial record LevelLayout : DataBlock
 
 
             var groups = Generator.Select(groupChoices);
+            var displayGroups = groups.Select(difficulty => difficulty.ToString()).ToList();
 
-            Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} has {points}pts for enemies. Groups: {string.Join(", ", groups)}");
+            if (Generator.Flip(infectionHybridChance))
+            {
+                zone.EnemySpawningInZone.Add(
+                    new EnemySpawningData
+                    {
+                        GroupType = EnemyGroupType.Hibernate,
+                        Difficulty = (uint)EnemyInfo.HybridInfected.Enemy,
+                        Points = level.Tier switch
+                        {
+                            "D" => Generator.Select(new List<(double chance, int points)>
+                            {
+                                (0.5, 8),
+                                (0.3, 12),
+                                (0.1, 16)
+                            }),
+                            "E" => Generator.Select(new List<(double chance, int points)>
+                            {
+                                (0.5, 8),
+                                (0.2, 12),
+                                (0.3, 16)
+                            }),
+
+                            _ => 8
+                        },
+                    });
+                displayGroups.Add("HybridInfected");
+            }
+
+            Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} has {points}pts for enemies. Groups: {string.Join(", ", displayGroups)}");
 
             // By default we will just let the spawning data allocate out groups. If there
             // are multiple groups we just spawn equal numbers of them and let the game

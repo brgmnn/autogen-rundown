@@ -1304,7 +1304,7 @@ public class Level
             elevatorDropZone.EnemySpawningInZone.Add(
                 new EnemySpawningData
                 {
-                    Difficulty = (uint)Enemy.NightmareStriker,
+                    Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Hybrids),
                     Points = 1,
                     GroupType = EnemyGroupType.Hibernate
                 });
@@ -1315,18 +1315,18 @@ public class Level
                 //     Points = 1
                 // });
 
-            elevatorDropZone.EnemySpawningInZone.Add(new EnemySpawningData
-            {
-                GroupType = EnemyGroupType.Hibernate,
-                Difficulty = (uint)Enemy.ChargerGiant,
-                Points = 4
-            });
-            elevatorDropZone.EnemySpawningInZone.Add(new EnemySpawningData
-            {
-                GroupType = EnemyGroupType.Hibernate,
-                Difficulty = (uint)Enemy.Charger,
-                Points = 1
-            });
+            // elevatorDropZone.EnemySpawningInZone.Add(new EnemySpawningData
+            // {
+            //     GroupType = EnemyGroupType.Hibernate,
+            //     Difficulty = (uint)Enemy.ChargerGiant,
+            //     Points = 4
+            // });
+            // elevatorDropZone.EnemySpawningInZone.Add(new EnemySpawningData
+            // {
+            //     GroupType = EnemyGroupType.Hibernate,
+            //     Difficulty = (uint)Enemy.Charger,
+            //     Points = 1
+            // });
 
 
             for (var z = 0; z < forwardZones; z++)
