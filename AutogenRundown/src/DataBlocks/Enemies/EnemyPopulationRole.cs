@@ -6,7 +6,7 @@
 /// Largely the game randomly picks from all matches in this list that have the same
 /// Role/Difficulty.
 /// </summary>
-public record class EnemyPopulationRole
+public record EnemyPopulationRole
 {
     public uint Role { get; set; }
 
@@ -20,6 +20,18 @@ public record class EnemyPopulationRole
 
     /// <summary>
     /// File: GameData_EnemyPopulationDataBlock_bin.json
+    ///
+    /// TODO: this is old, can we just remove it?
+    ///
+    /// Removed values:
+    ///     // SquidBoss_big
+    /// {
+    ///     ""Role"": 4,
+    ///     ""Difficulty"": 4,
+    ///     ""Enemy"": 44,
+    ///     ""Cost"": 10.0,
+    ///     ""Weight"": 1.0
+    /// },
     /// </summary>
     public const string VanillaData = @"[
         {
@@ -188,13 +200,6 @@ public record class EnemyPopulationRole
           ""Difficulty"": 6,
           ""Enemy"": 33,
           ""Cost"": 3.0,
-          ""Weight"": 1.0
-        },
-        {
-          ""Role"": 4,
-          ""Difficulty"": 4,
-          ""Enemy"": 44,
-          ""Cost"": 10.0,
           ""Weight"": 1.0
         },
         {

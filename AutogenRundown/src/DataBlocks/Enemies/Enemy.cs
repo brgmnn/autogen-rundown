@@ -42,7 +42,6 @@ public enum Enemy : uint
     ShooterGiant_Infected = 34,
     #endregion
 
-
     #region Nightmare enemies
     /** Beserkers / Nightmare */
     /// <summary>
@@ -81,14 +80,12 @@ public enum Enemy : uint
     /**  --> Pouncer */
     Pouncer = 46,
 
-
     /** Scouts */
     Scout = 20,
     ScoutShadow = 40,
     ScoutCharger = 41,
     ScoutZoomer = 54, // tbd verify
     ScoutNightmare = 56, // tbd verify
-
 
     /** Flyers */
     Flyer = 42,
