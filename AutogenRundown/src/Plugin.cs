@@ -30,10 +30,13 @@ public class Plugin : BasePlugin
 
     public static ManualLogSource Logger { get; private set; } = new("AutogenRundown");
 
+    public static bool Config_UsePlayerColoredGlowsticks { get; set; }
+
     public override void Load()
     {
         Logger = Log;
 
+        #region Configuration
         var seedConfig = Config.Bind(
             new ConfigDefinition("AutogenRundown", "Seed"),
             "",
@@ -43,6 +46,16 @@ public class Plugin : BasePlugin
             new ConfigDefinition("AutogenRundown", "RegenerateOnStartup"),
             true,
             new ConfigDescription("Should datablocks be regenerated on game startup."));
+
+        var usePlayerColorGlowsticks = Config.Bind(
+            new ConfigDefinition("AutogenRundown", "UsePlayerColorGlowsticks"),
+            false,
+            new ConfigDescription("Use per player color glow sticks. Client side only."));
+
+        Config_UsePlayerColoredGlowsticks = usePlayerColorGlowsticks.Value;
+
+        #endregion
+
 
         Log.LogInfo($"ConfigSeed=\"{seedConfig.Value}\"");
         Log.LogInfo($"RegenerateOnStartup={regenerateOnStartup.Value}");
