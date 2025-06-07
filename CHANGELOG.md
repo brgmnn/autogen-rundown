@@ -3,6 +3,27 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.68.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.68.0) — June 07, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Infection Hybrids can now spawn hibernating
+* Boosters are no longer consumed when used in levels
+* Glow stick colors can now be configured to show as player colors
+
+### Changes
+
+* Balance: Increased glow stick fade in duration from `2` to `6` seconds
+* Balance: Increased glow stick fade out duration from `3` to `12` seconds
+* Balance: Increased glow stick lifetime duration from `60` to `75` seconds
+* Fix: hybrids will now roll to spawn as hibernating enemies
+* Fix: Errors thrown from attempting to spawn hibernating SquidBoss
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.67.0...v0.68.0
+
+
 ## [v0.67.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.67.0) — June 01, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
