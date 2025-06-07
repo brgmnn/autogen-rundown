@@ -51,5 +51,6 @@ public enum LevelModifiers
     OnlyShadows,
 
     Hybrids,
+    InfectionHybrids
     #endregion
 }

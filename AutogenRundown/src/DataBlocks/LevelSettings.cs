@@ -418,6 +418,14 @@ public class LevelSettings
                 if (Generator.Flip(0.5))
                     Modifiers.Add(LevelModifiers.FogIsInfectious);
 
+                // Roll infection hybrids
+                if (Modifiers.Contains(LevelModifiers.FogIsInfectious) && Generator.Flip(0.3))
+                    Modifiers.Add(LevelModifiers.InfectionHybrids);
+
+                // Roll regular hybrids
+                if (Generator.Flip(0.4))
+                    Modifiers.Add(LevelModifiers.Hybrids);
+
                 Modifiers.Add(
                     Generator.Select(new List<WeightedModifier>
                     {
@@ -463,6 +471,14 @@ public class LevelSettings
 
                 if (Generator.Flip(0.9))
                     Modifiers.Add(LevelModifiers.FogIsInfectious);
+
+                // Roll infection hybrids
+                if (Modifiers.Contains(LevelModifiers.FogIsInfectious) && Generator.Flip(0.65))
+                    Modifiers.Add(LevelModifiers.InfectionHybrids);
+
+                // Roll regular hybrids
+                if (Generator.Flip(0.7))
+                    Modifiers.Add(LevelModifiers.Hybrids);
 
                 Modifiers.Add(
                     Generator.Select(new List<WeightedModifier>

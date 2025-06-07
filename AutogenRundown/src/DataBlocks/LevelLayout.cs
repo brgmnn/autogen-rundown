@@ -396,6 +396,11 @@ public partial record LevelLayout : DataBlock
 
             if (settings.Modifiers.Contains(LevelModifiers.Hybrids))
                 hybridChance = 0.2;
+
+            var infectionHybridChance = 0.0;
+
+            if (settings.Modifiers.Contains(LevelModifiers.InfectionHybrids))
+                infectionHybridChance = zone.InFog ? 0.4 : 0.15;
             #endregion
 
             #region Nightmares roll check
@@ -421,7 +426,7 @@ public partial record LevelLayout : DataBlock
                 }
             }
 
-            var groupChoices = new List<(double, List<AutogenDifficulty>)>
+            var groupChoices = new List<(double chance, List<AutogenDifficulty> groups)>
             {
                 (1.0, new List<AutogenDifficulty> { AutogenDifficulty.Base }),
 
