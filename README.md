@@ -231,7 +231,7 @@ Follow the installation instructions again, check yes to overwrite all files.
     * Curated event layouts
       * [x] Class 10+ alarm room
       * [x] King of the hill room
-    * [ ] Specialized bulkhead geomorphs and layouts
+    * [x] Specialized bulkhead geomorphs and layouts
     * [x] Bulkheads behind bulkheads
   * Challenges
     * [x] Key to unlock doors
@@ -284,7 +284,7 @@ Follow the installation instructions again, check yes to overwrite all files.
       * [x] Potato Tank
     * [x] Pouncers (Snatchers)
   * Custom enemy spawning
-    * [ ] Balanced default spawns (in progress)
+    * [x] Balanced default spawns (in progress)
     * [x] Charger only zones
     * [x] Shadow only zones
     * [x] Beserker only zones
@@ -302,7 +302,7 @@ Follow the installation instructions again, check yes to overwrite all files.
 * Alarms
   * [x] Secret Alarms — *Appear to be free but aren't*
   * [x] Events on/during Alarms — *Alarms can have events such as lights out or fog flood during the alarm*
-  * [ ] Extreme/Overload Surge Alarms — Surge alarms with chargers / beserkers
+  * [x] Extreme/Overload Surge Alarms — Surge alarms with chargers / beserkers
 * Challenges
   * [x] Reactor terminals can be locked just like regular terminals
   * [x] Secret Reactor Shutdown — *Secret alarm but for the reactor shutdown*
@@ -312,6 +312,7 @@ Follow the installation instructions again, check yes to overwrite all files.
     * [x] Yellow
     * [x] Halloween (orange)
     * [x] Christmas (red)
+    * [x] Player colored glowsticks (client side)
   * Inserting generator cells turns on emergency lights
 * Lore
   * Custom Warden intel messages
