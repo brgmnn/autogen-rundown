@@ -330,8 +330,8 @@ AutogenRundown supports the following 3rd party peer mods. You can install them 
 
 * [Arsenality](https://thunderstore.io/c/gtfo/p/W33B/Arsenality)
 * [ArsenalityRebalance](https://thunderstore.io/c/gtfo/p/leezurli/ArsenalityRebalance)
-<!-- * [LobbyExpansion](https://thunderstore.io/c/gtfo/p/Cactus/LobbyExpansion) -->
 * [VanillaReloaded](https://thunderstore.io/c/gtfo/p/tru0067/VanillaReloaded)
+<!-- * [LobbyExpansion](https://thunderstore.io/c/gtfo/p/Cactus/LobbyExpansion) -->
 
 
 ## Acknowledgements
