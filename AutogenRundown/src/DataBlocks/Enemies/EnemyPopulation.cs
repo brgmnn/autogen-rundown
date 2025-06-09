@@ -10,16 +10,16 @@ public record EnemyPopulation : DataBlock
 
     public static void Setup()
     {
-        JArray array = JArray.Parse(EnemyPopulationRole.VanillaData);
-        var vanillaRoles = array.ToObject<List<EnemyPopulationRole>>();
-
-        if (vanillaRoles == null)
-            throw new JsonException("Failed to parse vanilla enemy population data");
-
-        foreach (var popRole in vanillaRoles)
-        {
-            Roles.Add(popRole);
-        }
+        // JArray array = JArray.Parse(EnemyPopulationRole.VanillaData);
+        // var vanillaRoles = array.ToObject<List<EnemyPopulationRole>>();
+        //
+        // if (vanillaRoles == null)
+        //     throw new JsonException("Failed to parse vanilla enemy population data");
+        //
+        // foreach (var popRole in vanillaRoles)
+        // {
+        //     Roles.Add(popRole);
+        // }
     }
 
     public new static void SaveStatic()
@@ -77,6 +77,30 @@ public record EnemyPopulation : DataBlock
                 Cost = info.Points,
             });
         }
+        #endregion
+
+        #region Scouts
+
+        var scouts = new List<(uint, Enemy)>
+        {
+            (EnemySpawningData.Scout.Difficulty,          Enemy.Scout),
+            (EnemySpawningData.ScoutCharger.Difficulty,   Enemy.ScoutCharger),
+            (EnemySpawningData.ScoutShadow.Difficulty,    Enemy.ScoutShadow),
+            (EnemySpawningData.ScoutNightmare.Difficulty, Enemy.ScoutNightmare),
+            (EnemySpawningData.ScoutZoomer.Difficulty,    Enemy.ScoutZoomer)
+        };
+
+        foreach (var (difficulty, enemy) in scouts)
+        {
+            Roles.Add(new EnemyPopulationRole
+            {
+                Role = 5u,
+                Difficulty = difficulty,
+                Enemy = enemy,
+                Cost = 5,
+            });
+        }
+
         #endregion
 
         #region Boss Aligned spawns
