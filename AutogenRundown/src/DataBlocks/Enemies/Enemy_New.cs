@@ -510,32 +510,15 @@ public record Enemy_New : DataBlock
                 PersistentIds = new() { StrikerInfested.PersistentId }
             };
 
-            // Green infection color
-            // var activeColor = "#edcae2";
-
-            var heartbeatColor = "#ffffff";
+            var heartbeatColor = "#f9a448";
             var sleepColor = "#ec3970";
 
-            EnemyCustomization.Model.Materials.Add(
-                new Material
-                {
-                    Target = strikerInfested,
-                    MaterialSets = new List<MaterialSet>
-                    {
-                        new()
-                        {
-                            From = MaterialType.MtrStriker,
-                            To = MaterialType.MtrStrikerChild,
-                            SkinNoise = SkinNoise.KeepOriginal
-                        }
-                    }
-                });
             EnemyCustomization.Model.Glows.Add(
                 new Glow
                 {
                     Target = strikerInfested,
                     DefaultColor = $"{sleepColor}",
-                    HeartbeatColor = $"{heartbeatColor} * 6.0",
+                    HeartbeatColor = $"{heartbeatColor} * 9.0",
                     DetectionColor = $"{heartbeatColor} * 8.0",
                     SelfWakeupColor = "red",
                     PropagateWakeupColor = "red",
@@ -549,6 +532,13 @@ public record Enemy_New : DataBlock
                             Duration = 7,
                             GlowPattern = "48394706",
                             GlowColor = $"{sleepColor} * 3.5"
+                        },
+                        new()
+                        {
+                            Target = "Combat",
+                            Duration = 1.8,
+                            GlowPattern = "6f",
+                            GlowColor = $"{heartbeatColor} * 3.9"
                         }
                     }
                 });
