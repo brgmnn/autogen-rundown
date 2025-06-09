@@ -220,6 +220,12 @@ public record EnemySpawningData
         GroupType = EnemyGroupType.Hibernate,
         Difficulty = Enemy_New.NightmareGiant.PersistentId
     };
+
+    public static EnemySpawningData StrikerInfested = new()
+    {
+        GroupType = EnemyGroupType.Hibernate,
+        Difficulty = Enemy_New.StrikerInfested.PersistentId
+    };
     #endregion
 
     #region Scouts

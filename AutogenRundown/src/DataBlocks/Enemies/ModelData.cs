@@ -27,7 +27,7 @@ public record ModelData
     public Vector3 HeadScale { get; set; } = new();
 
     /// <summary>
-    ///
+    /// X = height direction
     /// </summary>
     public Vector3 ChestScale { get; set; } = new();
 

@@ -1287,8 +1287,8 @@ public class Level
             //         Events = events
             //     });
             //
-            elevatorDropZone.EnemySpawningInZone.Add(
-                EnemySpawningData.Scout with { Points = 5 });
+            // elevatorDropZone.EnemySpawningInZone.Add(
+            //     EnemySpawningData.Scout with { Points = 5 });
             #endregion
 
             level.Planner.AddZone(elevatorDrop, elevatorDropZone);
@@ -1299,15 +1299,15 @@ public class Level
             // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
 
             elevatorDropZone.EnemySpawningInZone.Add(
-                EnemySpawningData.NightmareGiant with { Points = 4 });
+                EnemySpawningData.StrikerInfested with { Points = 20 });
 
-            elevatorDropZone.EnemySpawningInZone.Add(
-                new EnemySpawningData
-                {
-                    Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Hybrids),
-                    Points = 1,
-                    GroupType = EnemyGroupType.Hibernate
-                });
+            // elevatorDropZone.EnemySpawningInZone.Add(
+            //     new EnemySpawningData
+            //     {
+            //         Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Hybrids),
+            //         Points = 1,
+            //         GroupType = EnemyGroupType.Hibernate
+            //     });
 
                 // EnemySpawningData.NightmareGiant with
                 // {

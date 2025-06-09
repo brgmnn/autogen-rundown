@@ -168,7 +168,9 @@ public record EnemyGroup : DataBlock
             (EnemyRole.PureSneak, (Enemy)Enemy_New.PouncerShadow.PersistentId, 4.0),
             (EnemyRole.PureSneak, (Enemy)Enemy_New.HybridInfected.PersistentId, 4.0),
 
-            (EnemyRole.Melee, (Enemy)Enemy_New.NightmareGiant.PersistentId, 4.0)
+            (EnemyRole.Melee, (Enemy)Enemy_New.NightmareGiant.PersistentId, 4.0),
+
+            (EnemyRole.Melee, (Enemy)Enemy_New.StrikerInfested.PersistentId, 1.0)
         };
 
         foreach (var (role, enemy, maxScore) in hibernatingGroups)

@@ -62,6 +62,7 @@ public record EnemyPopulation : DataBlock
             EnemyInfo.HybridInfected,
             EnemyInfo.HybridInfected_Hunter,
             EnemyInfo.NightmareGiant,
+            EnemyInfo.StrikerInfested,
         };
 
         foreach (var info in fixedEnemies)

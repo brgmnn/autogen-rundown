@@ -27,5 +27,5 @@ public class Vector3
 
     public static Vector3 Zero() => new() { X = 0, Y = 0, Z = 0 };
 
-    public static Vector3 One() => new() { X = 0, Y = 0, Z = 0 };
+    public static Vector3 One() => new() { X = 1, Y = 1, Z = 1 };
 }

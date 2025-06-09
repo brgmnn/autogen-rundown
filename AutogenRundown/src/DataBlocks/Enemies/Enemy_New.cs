@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Abilities;
+using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.EnemyAbilities;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models.Bones;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models.Glows;
@@ -156,6 +157,11 @@ public record Enemy_New : DataBlock
     /// </summary>
     public static Enemy_New NightmareGiant { get; set; } = new() { PersistentId = 0 };
 
+    /// <summary>
+    ///
+    /// </summary>
+    public static Enemy_New StrikerInfested { get; set; } = new() { PersistentId = 0 };
+
     #endregion
     #endregion
 
@@ -249,6 +255,9 @@ public record Enemy_New : DataBlock
 
         NightmareGiant = Duplicate(NightmareStriker);
         NightmareGiant.Name = "Nightmare_Giant2";
+
+        StrikerInfested = Duplicate(Striker);
+        StrikerInfested.Name = "Striker_Infested";
 
         #region MOD: ExtraEnemyCustomization (EEC)
         EnemyCustomization.Setup();
@@ -483,6 +492,145 @@ public record Enemy_New : DataBlock
                     ArmScale = new Vector3 { X = 1.0, Y = 1.0, Z = 1.0 },
                     LegScale = new Vector3 { X = 1.05, Y = 1.05, Z = 1.05 },
                     SizeRange = new Vector2 { X = 1.9, Y = 2.0 }
+                }
+            };
+        }
+        #endregion
+
+        #region Striker Infested
+        /*
+         * Infested strikers are like normal strikers, except they spawn two babies upon death
+         *
+         * Compared with normal hybrids:
+         */
+        {
+            var strikerInfested = new Target
+            {
+                Mode = Mode.PersistentId,
+                PersistentIds = new() { StrikerInfested.PersistentId }
+            };
+
+            // Green infection color
+            // var activeColor = "#edcae2";
+
+            var heartbeatColor = "#ffffff";
+            var sleepColor = "#ec3970";
+
+            EnemyCustomization.Model.Materials.Add(
+                new Material
+                {
+                    Target = strikerInfested,
+                    MaterialSets = new List<MaterialSet>
+                    {
+                        new()
+                        {
+                            From = MaterialType.MtrStriker,
+                            To = MaterialType.MtrStrikerChild,
+                            SkinNoise = SkinNoise.KeepOriginal
+                        }
+                    }
+                });
+            EnemyCustomization.Model.Glows.Add(
+                new Glow
+                {
+                    Target = strikerInfested,
+                    DefaultColor = $"{sleepColor}",
+                    HeartbeatColor = $"{heartbeatColor} * 6.0",
+                    DetectionColor = $"{heartbeatColor} * 8.0",
+                    SelfWakeupColor = "red",
+                    PropagateWakeupColor = "red",
+                    TentacleAttackColor = "red",
+                    ShooterFireColor = $"{sleepColor} * 2.0",
+                    PulseEffects = new List<PuseEffect>
+                    {
+                        new()
+                        {
+                            Target = "Hibernate",
+                            Duration = 7,
+                            GlowPattern = "48394706",
+                            GlowColor = $"{sleepColor} * 3.5"
+                        }
+                    }
+                });
+            EnemyCustomization.EnemyAbility.SpawnEnemyAbilities.Add(new SpawnEnemyAbility
+            {
+                EnemyId = Baby.PersistentId,
+                AgentMode = "Agressive",
+                TotalCount = 2,
+                CountPerSpawn = 2,
+                Name = "Spawn_two_baby"
+            });
+            EnemyCustomization.EnemyAbility.FogSphereAbilities.Add(new FogSphereAbility
+            {
+                ColorMin = "#00000099",
+                ColorMax = "#00000099",
+                RangeMin = 0.2,
+                RangeMax = 4.0,
+                DensityMin = 0.8,
+                DensityMax = 0.8,
+                DensityAmountMin = 0.7,
+                DensityAmountMax = 1.0,
+                IntensityMin = 0.5,
+                IntensityMax = 0.5,
+                Duration = 1,
+                Name = "Foggy_boi_fog_explode"
+            });
+            EnemyCustomization.EnemyAbility.FogSphereAbilities.Add(new FogSphereAbility
+            {
+                ColorMin = "#00000099",
+                ColorMax = "#00000066",
+                RangeMin = 4.0,
+                RangeMax = 5.0,
+                DensityMin = 0.8,
+                DensityMax = 0.4,
+                DensityAmountMin = 1.0,
+                DensityAmountMax = 0.7,
+                IntensityMin = 0.5,
+                IntensityMax = 0.4,
+                Duration = 35,
+                Name = "Foggy_boi_fog_linger"
+            });
+            EnemyCustomization.EnemyAbility.DeathAbilities.Add(new DeathAbility
+            {
+                Target = strikerInfested,
+                Abilities = new List<AbilityReference>
+                {
+                    new()
+                    {
+                        AbilityName = "Spawn_two_baby",
+                        Delay = 0.1,
+                        AllowedMode = "Hibernate | Agressive"
+                    },
+                    new()
+                    {
+                        AbilityName = "Foggy_boi_fog_explode",
+                        Delay = 0.0,
+                        AllowedMode = "Hibernate | Agressive"
+                    },
+                    new()
+                    {
+                        AbilityName = "Foggy_boi_fog_linger",
+                        Delay = 0.90,
+                        AllowedMode = "Hibernate | Agressive"
+                    }
+                }
+            });
+
+            StrikerInfested.ModelDatas = new List<ModelData>
+            {
+                new()
+                {
+                    ModelFile = "Assets/AssetPrefabs/CharacterBuilder/Enemies/Striker/Striker_CB.prefab",
+                    ModelCustomization =
+                        "Assets/AssetPrefabs/CharacterBuilder/Enemies/Striker/Customization_StrikerHibernate.prefab",
+                    PositionOffset = Vector3.Zero(),
+                    RotationOffset = Vector3.Zero(),
+                    NeckScale = Vector3.One(),
+                    HeadScale = new Vector3 { X = 0, Y = 0, Z = 0 },
+                    ChestScale = new Vector3 { X = 1.0, Y = 1.0, Z = 1.3 },
+                    ArmScale = new Vector3 { X = 0.8, Y = 0.8, Z = 0.8 },
+                    LegScale = Vector3.One(),
+                    SizeRange = new Vector2 { X = 0.9, Y = 1.1 }
                 }
             };
         }

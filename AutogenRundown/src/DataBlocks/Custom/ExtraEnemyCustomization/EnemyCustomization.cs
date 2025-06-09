@@ -12,6 +12,11 @@ public static class EnemyCustomization
     /// <summary>
     ///
     /// </summary>
+    public static EnemyAbility EnemyAbility { get; private set; } = new();
+
+    /// <summary>
+    ///
+    /// </summary>
     public static Model Model { get; private set; } = new();
 
     /// <summary>
