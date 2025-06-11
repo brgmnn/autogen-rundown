@@ -945,7 +945,7 @@ public record ChainedPuzzle : DataBlock
     {
         PublicAlarmName = "Class III Surge <color=orange>[EXTREME]</color> Alarm",
         Settings = WaveSettings.Surge,
-        Population = WavePopulation.Baseline_Chargers_Hard,
+        Population = WavePopulation.OnlyChargers,
         WantedDistanceFromStartPos = 20.0,
         WantedDistanceBetweenPuzzleComponents = 50.0,
         FixedAlarm = true,
@@ -963,7 +963,7 @@ public record ChainedPuzzle : DataBlock
     {
         PublicAlarmName = "Class III Surge <color=purple>[OVERLOAD]</color> Alarm",
         Settings = WaveSettings.Surge,
-        Population = WavePopulation.Baseline_Nightmare_Hard,
+        Population = WavePopulation.OnlyNightmares,
         WantedDistanceFromStartPos = 20.0,
         WantedDistanceBetweenPuzzleComponents = 50.0,
         FixedAlarm = true,

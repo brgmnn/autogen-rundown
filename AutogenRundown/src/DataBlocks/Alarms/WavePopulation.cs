@@ -366,8 +366,8 @@ public record WavePopulation : DataBlock
         WaveRoleWeakling = Enemy.NightmareStriker,
         WaveRoleStandard = Enemy.NightmareStriker,
         WaveRoleSpecial = Enemy.NightmareShooter,
-        WaveRoleMiniBoss = Enemy.NightmareShooter,
-        WaveRoleBoss = Enemy.NightmareShooter,
+        WaveRoleMiniBoss = (Enemy)Enemy_New.NightmareGiant.PersistentId,
+        WaveRoleBoss = (Enemy)Enemy_New.NightmareGiant.PersistentId,
         DifficultyFactor = 1.20,
         Name = "OnlyNightmares"
     };
