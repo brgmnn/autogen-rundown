@@ -20,6 +20,8 @@ namespace AutogenRundown.DataBlocks.Alarms;
 ///     - MiniBoss = 2
 ///     - Boss     = 2
 ///
+/// Score Boundary refers to the total number of points of enemies alive currently.
+///
 /// Soft cap (MaxAllowedCost) is 25.
 ///
 /// All aggressive enemies count towards cap. If the remaining allowed cost is lower than the
@@ -890,6 +892,7 @@ public record WaveSettings : DataBlock
         PopulationPointsPerGroupStart = 4,
         PopulationPointsPerGroupEnd = 7,
         PopulationRampOverTime = 0,
+        WavePauseMax = 1,
 
         Name = "Surge"
     };
@@ -1039,8 +1042,9 @@ public record WaveSettings : DataBlock
         PopulationPointsMinPerGroup = 5,
         PopulationPointsPerGroupStart = 5,
         PopulationPointsPerGroupEnd = 10,
-        WavePauseMax = 24,
-        PopulationRampOverTime = 40
+        WavePauseMin = 16,
+        WavePauseMax = 16,
+        PopulationRampOverTime = 20
     };
 
     public static WaveSettings Reactor_Medium = new()
@@ -1058,8 +1062,9 @@ public record WaveSettings : DataBlock
         PopulationPointsMinPerGroup = 5,
         PopulationPointsPerGroupStart = 5,
         PopulationPointsPerGroupEnd = 15,
-        WavePauseMax = 18,
-        PopulationRampOverTime = 40
+        WavePauseMin = 12,
+        WavePauseMax = 12,
+        PopulationRampOverTime = 15
     };
 
     public static WaveSettings Reactor_Hard = new()
@@ -1077,8 +1082,9 @@ public record WaveSettings : DataBlock
         PopulationPointsMinPerGroup = 5,
         PopulationPointsPerGroupStart = 5,
         PopulationPointsPerGroupEnd = 20,
-        WavePauseMax = 13,
-        PopulationRampOverTime = 30
+        WavePauseMin = 9,
+        WavePauseMax = 9,
+        PopulationRampOverTime = 10
     };
 
     public static WaveSettings Reactor_VeryHard = new()
@@ -1096,8 +1102,9 @@ public record WaveSettings : DataBlock
         PopulationPointsMinPerGroup = 5,
         PopulationPointsPerGroupStart = 5,
         PopulationPointsPerGroupEnd = 20,
-        WavePauseMax = 9,
-        PopulationRampOverTime = 20
+        WavePauseMin = 6,
+        WavePauseMax = 6,
+        PopulationRampOverTime = 5
     };
     #endregion
 
@@ -1123,6 +1130,7 @@ public record WaveSettings : DataBlock
         PopulationPointsPerGroupStart = 4,
         PopulationPointsPerGroupEnd = 7,
         PopulationRampOverTime = 0,
+        WavePauseMax = 1,
 
         Name = "Surge"
     };
@@ -1147,6 +1155,7 @@ public record WaveSettings : DataBlock
         PopulationPointsPerGroupStart = 4,
         PopulationPointsPerGroupEnd = 7,
         PopulationRampOverTime = 0,
+        WavePauseMax = 1,
 
         Name = "Surge"
     };
@@ -1171,6 +1180,7 @@ public record WaveSettings : DataBlock
         PopulationPointsPerGroupStart = 4,
         PopulationPointsPerGroupEnd = 7,
         PopulationRampOverTime = 0,
+        WavePauseMax = 1,
 
         Name = "Surge"
     };
@@ -1216,7 +1226,9 @@ public record WaveSettings : DataBlock
         PopulationPointsMinPerGroup = 16,
         PopulationPointsPerGroupStart = 16,
         PopulationPointsPerGroupEnd = 16,
-        PopulationRampOverTime = 10
+        PopulationRampOverTime = 10,
+        WavePauseMin = 1,
+        WavePauseMax = 1,
     };
     #endregion
 
@@ -1376,6 +1388,8 @@ public record WaveSettings : DataBlock
             Enemies.EnemyType.MiniBoss
         },
         FilterType = PopulationFilterType.Include,
+        WavePauseMin = 1,
+        WavePauseMax = 1,
 
         PopulationPointsTotal = 8,
     };
@@ -1388,6 +1402,8 @@ public record WaveSettings : DataBlock
             Enemies.EnemyType.MiniBoss
         },
         FilterType = PopulationFilterType.Include,
+        WavePauseMin = 1,
+        WavePauseMax = 1,
 
         PopulationPointsTotal = 12,
     };
@@ -1400,6 +1416,8 @@ public record WaveSettings : DataBlock
             Enemies.EnemyType.MiniBoss
         },
         FilterType = PopulationFilterType.Include,
+        WavePauseMin = 1,
+        WavePauseMax = 1,
 
         PopulationPointsTotal = 16,
     };
@@ -1412,6 +1430,8 @@ public record WaveSettings : DataBlock
             Enemies.EnemyType.MiniBoss
         },
         FilterType = PopulationFilterType.Include,
+        WavePauseMin = 1,
+        WavePauseMax = 1,
 
         PopulationPointsTotal = 20,
     };
@@ -1424,6 +1444,8 @@ public record WaveSettings : DataBlock
             Enemies.EnemyType.MiniBoss
         },
         FilterType = PopulationFilterType.Include,
+        WavePauseMin = 1,
+        WavePauseMax = 1,
 
         PopulationPointsTotal = 28,
     };
@@ -1436,6 +1458,8 @@ public record WaveSettings : DataBlock
             Enemies.EnemyType.MiniBoss
         },
         FilterType = PopulationFilterType.Include,
+        WavePauseMin = 1,
+        WavePauseMax = 1,
 
         PopulationPointsTotal = 35,
     };
