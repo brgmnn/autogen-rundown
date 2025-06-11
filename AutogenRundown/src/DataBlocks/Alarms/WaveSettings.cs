@@ -101,7 +101,7 @@ public record WaveSettings : DataBlock
     /// Default = 10.0
     /// </summary>
     [JsonProperty("m_wavePauseMax_atCost")]
-    public double WavePauseMax_atCost { get; set; } = 10.0;
+    public double WavePauseMax_atCost { get; set; } = 20.0;
 
     /// <summary>
     /// Delay between waves at or below minimum score boundary.
@@ -890,7 +890,7 @@ public record WaveSettings : DataBlock
         WavePauseMin = 1.0,
         WavePauseMax = 20.0,
         WavePauseMin_atCost = 1.0,
-        WavePauseMax_atCost = 10.0,
+        WavePauseMax_atCost = 25.0,
 
         Name = "Finite_35pts_Hard"
     };
@@ -957,7 +957,7 @@ public record WaveSettings : DataBlock
         WavePauseMin = 1.0,
         WavePauseMax = 20.0,
         WavePauseMin_atCost = 1.0,
-        WavePauseMax_atCost = 10.0,
+        WavePauseMax_atCost = 25.0,
 
         Name = "Scout_Easy"
     };
@@ -986,7 +986,7 @@ public record WaveSettings : DataBlock
         WavePauseMin = 1.0,
         WavePauseMax = 20.0,
         WavePauseMin_atCost = 1.0,
-        WavePauseMax_atCost = 10.0,
+        WavePauseMax_atCost = 25.0,
 
         Name = "Scout_Easy"
     };
@@ -1015,7 +1015,7 @@ public record WaveSettings : DataBlock
         WavePauseMin = 1.0,
         WavePauseMax = 20.0,
         WavePauseMin_atCost = 1.0,
-        WavePauseMax_atCost = 10.0,
+        WavePauseMax_atCost = 25.0,
 
         Name = "Scout_Easy"
     };
@@ -1044,7 +1044,7 @@ public record WaveSettings : DataBlock
         WavePauseMin = 1.0,
         WavePauseMax = 20.0,
         WavePauseMin_atCost = 1.0,
-        WavePauseMax_atCost = 10.0,
+        WavePauseMax_atCost = 25.0,
 
         Name = "Scout_VeryHard"
     };
