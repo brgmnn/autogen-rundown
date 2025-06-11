@@ -147,6 +147,7 @@ public record WavePopulation : DataBlock
     public new static void SaveStatic()
     {
         Bins.WavePopulations.AddBlock(Baseline);
+        Bins.WavePopulations.AddBlock(Baseline_Infested);
         Bins.WavePopulations.AddBlock(Baseline_Hybrids);
         Bins.WavePopulations.AddBlock(Baseline_InfectedHybrids);
         Bins.WavePopulations.AddBlock(Baseline_Chargers);
@@ -195,6 +196,15 @@ public record WavePopulation : DataBlock
         WaveRoleSpecial = Enemy.Shooter_Wave,
         WaveRoleMiniBoss = Enemy.StrikerGiant_Wave,
         WaveRoleBoss = Enemy.ShooterGiant,
+        Name = "Baseline"
+    };
+
+    public static WavePopulation Baseline_Infested = new WavePopulation
+    {
+        WaveRoleWeakling = Enemy.Shadow,
+        WaveRoleStandard = Enemy.Striker_Wave,
+        WaveRoleSpecial = (Enemy)Enemy_New.StrikerInfested.PersistentId,
+        WaveRoleMiniBoss = Enemy.ShooterGiant,
         Name = "Baseline"
     };
 
