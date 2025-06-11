@@ -31,7 +31,36 @@ namespace AutogenRundown.DataBlocks.Alarms;
 /// The enemy type for wave population point cost is determined by wave settings.
 ///
 /// https://gtfo-modding.gitbook.io/wiki/reference/datablocks/main/survivalwavesettings
-/// </summary>
+///
+///
+/// Just checked the logic:
+/// m_wavePauseMin_atCost and m_wavePauseMax_atCost determine the cost range
+/// in which the wave cooldown ticks down. Notably, the next wave will not
+/// begin to count down while the total enemy cost is bigger than
+/// m_wavePauseMax_atCost. Remember that cost is dependent on enemy type.
+/// By default, weaklings are 0.75, standards/specials are 1, minibosses are 2.
+/// If enemy cost is below the max, then the logic gets a bit more mathy.
+/// Basically, it uses the (fraction) position of the cost between
+/// Min/Max_atCost to lerp the pause time from m_wavePauseMax to m_wavePauseMin.
+/// For example, if the cost is halfway between Min/Max_atCost, then the next
+/// wave will take the time halfway between m_wavePauseMin/Max to appear.
+/// Likewise, if the cost is below  m_wavePauseMin_atCost, then the
+/// pause will be m_wavePauseMin.
+///
+/// In short:
+///     * m_wavePauseMax_atCost is the maximum enemy cost that the next wave
+///       timer will begin ticking down at. At this cost, the next wave takes
+///       m_wavePauseMax time to show up.
+///     * m_wavePauseMin_atCost is the minimum enemy cost at or below which
+///       the next wave takes m_wavePauseMin time to show up. If enemy cost
+///       is between Min and Max, the time is interpolated accordingly.
+///
+/// None of this applies while there are still groups spawning.
+///
+/// I believe vanilla typically uses a significantly lower m_wavePauseMin vs
+/// m_wavePauseMax to decrease the downtime if you wipe out the alarm wave.
+/// This does, of course, mean you fight more enemies the faster you kill them.
+///</summary>
 public record WaveSettings : DataBlock
 {
     public static readonly double Points_Weakling = 0.75;
