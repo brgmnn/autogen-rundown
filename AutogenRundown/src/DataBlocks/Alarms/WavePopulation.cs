@@ -189,7 +189,7 @@ public record WavePopulation : DataBlock
     /// <summary>
     /// Same as vanilla baseline
     /// </summary>
-    public static WavePopulation Baseline = new WavePopulation
+    public static WavePopulation Baseline = new()
     {
         WaveRoleWeakling = Enemy.Shadow,
         WaveRoleStandard = Enemy.Striker_Wave,
@@ -199,7 +199,7 @@ public record WavePopulation : DataBlock
         Name = "Baseline"
     };
 
-    public static WavePopulation Baseline_Infested = new WavePopulation
+    public static WavePopulation Baseline_Infested = new()
     {
         WaveRoleWeakling = Enemy.Shadow,
         WaveRoleStandard = Enemy.Striker_Wave,
@@ -208,7 +208,7 @@ public record WavePopulation : DataBlock
         Name = "Baseline"
     };
 
-    public static WavePopulation Baseline_Hybrids = new WavePopulation
+    public static WavePopulation Baseline_Hybrids = new()
     {
         WaveRoleWeakling = Enemy.Shadow,
         WaveRoleStandard = Enemy.Striker_Wave,
@@ -218,7 +218,7 @@ public record WavePopulation : DataBlock
         Name = "Baseline_Hybrids"
     };
 
-    public static WavePopulation Baseline_InfectedHybrids = new WavePopulation
+    public static WavePopulation Baseline_InfectedHybrids = new()
     {
         WaveRoleWeakling = Enemy.Shadow,
         WaveRoleStandard = Enemy.Striker_Wave,
@@ -227,7 +227,7 @@ public record WavePopulation : DataBlock
         Name = "Baseline_InfectedHybrids"
     };
 
-    public static WavePopulation Baseline_Chargers = new WavePopulation
+    public static WavePopulation Baseline_Chargers = new()
     {
         WaveRoleWeakling = Enemy.Shadow,
         WaveRoleStandard = Enemy.Striker_Wave,
@@ -237,7 +237,7 @@ public record WavePopulation : DataBlock
         Name = "Baseline_Chargers"
     };
 
-    public static WavePopulation Baseline_Chargers_Hard = new WavePopulation
+    public static WavePopulation Baseline_Chargers_Hard = new()
     {
         WaveRoleWeakling = Enemy.Shadow,
         WaveRoleStandard = Enemy.Striker_Wave,
@@ -247,7 +247,7 @@ public record WavePopulation : DataBlock
         Name = "Baseline_Chargers"
     };
 
-    public static WavePopulation Baseline_Flyers = new WavePopulation
+    public static WavePopulation Baseline_Flyers = new()
     {
         WaveRoleWeakling = Enemy.Shadow,
         WaveRoleStandard = Enemy.Striker_Wave,
@@ -257,7 +257,7 @@ public record WavePopulation : DataBlock
         Name = "Baseline_Flyers"
     };
 
-    public static WavePopulation Baseline_Nightmare = new WavePopulation
+    public static WavePopulation Baseline_Nightmare = new()
     {
         WaveRoleWeakling = Enemy.Shadow,
         WaveRoleStandard = Enemy.Striker_Wave,
@@ -267,7 +267,7 @@ public record WavePopulation : DataBlock
         Name = "Baseline_Nightmare"
     };
 
-    public static WavePopulation Baseline_Nightmare_Hard = new WavePopulation
+    public static WavePopulation Baseline_Nightmare_Hard = new()
     {
         WaveRoleWeakling = Enemy.Shadow,
         WaveRoleStandard = Enemy.Striker_Wave,
@@ -277,7 +277,7 @@ public record WavePopulation : DataBlock
         Name = "Baseline_Nightmare"
     };
 
-    public static WavePopulation Baseline_Shadows = new WavePopulation
+    public static WavePopulation Baseline_Shadows = new()
     {
         WaveRoleWeakling = Enemy.Shadow,
         WaveRoleStandard = Enemy.Striker_Wave,
@@ -323,7 +323,7 @@ public record WavePopulation : DataBlock
         Name = "OnlyGiantShooters"
     };
 
-    public static WavePopulation OnlyChargers = new WavePopulation
+    public static WavePopulation OnlyChargers = new()
     {
         WaveRoleWeakling = Enemy.Charger,
         WaveRoleStandard = Enemy.Charger,
@@ -333,7 +333,7 @@ public record WavePopulation : DataBlock
         Name = "OnlyChargers"
     };
 
-    public static WavePopulation OnlyFlyers = new WavePopulation
+    public static WavePopulation OnlyFlyers = new()
     {
         WaveRoleWeakling = Enemy.Flyer,
         WaveRoleStandard = Enemy.Flyer,
@@ -342,7 +342,7 @@ public record WavePopulation : DataBlock
         Name = "OnlyFlyers"
     };
 
-    public static WavePopulation OnlyHybrids = new WavePopulation
+    public static WavePopulation OnlyHybrids = new()
     {
         WaveRoleWeakling = Enemy.Shooter_Wave,
         WaveRoleStandard = Enemy.Shooter_Wave,
@@ -361,7 +361,7 @@ public record WavePopulation : DataBlock
         Name = "OnlyHybrids"
     };
 
-    public static WavePopulation OnlyShadows = new WavePopulation
+    public static WavePopulation OnlyShadows = new()
     {
         WaveRoleWeakling = Enemy.Shadow,
         WaveRoleStandard = Enemy.Shadow,
@@ -371,7 +371,7 @@ public record WavePopulation : DataBlock
         Name = "OnlyShadows"
     };
 
-    public static WavePopulation OnlyNightmares = new WavePopulation
+    public static WavePopulation OnlyNightmares = new()
     {
         WaveRoleWeakling = Enemy.NightmareStriker,
         WaveRoleStandard = Enemy.NightmareStriker,
@@ -382,7 +382,7 @@ public record WavePopulation : DataBlock
         Name = "OnlyNightmares"
     };
 
-    public static WavePopulation OnlyNightmareGiants = new WavePopulation
+    public static WavePopulation OnlyNightmareGiants = new()
     {
         WaveRoleWeakling = Enemy.NightmareStriker,
         WaveRoleStandard = Enemy.NightmareStriker,
@@ -392,7 +392,7 @@ public record WavePopulation : DataBlock
         Name = "OnlyNightmareGiants"
     };
 
-    public static WavePopulation Shadows_WithHybrids = new WavePopulation
+    public static WavePopulation Shadows_WithHybrids = new()
     {
         WaveRoleWeakling = Enemy.Shadow,
         WaveRoleStandard = Enemy.Shadow,
@@ -404,7 +404,7 @@ public record WavePopulation : DataBlock
     #endregion
 
     #region Specific enemies for custom waves
-    public static WavePopulation Special_StrikerGiants = new WavePopulation
+    public static WavePopulation Special_StrikerGiants = new()
     {
         WaveRoleSpecial = Enemy.StrikerGiant_Wave,
         Name = "Special_StrikerGiants"
