@@ -50,27 +50,12 @@ Requests:
     * https://discord.com/channels/782438773690597389/1342735255009755227/1373594263019061281
 
 2025_05_26
-  * Make the Hex codes upper case
-  * Reduce number of error alarms in E-tier
-    * IF we want to keep them hard make the error alarms harder variants. Seems the random roll ones are just easy error alarms?
   * Can't have multiple timer objectives
 
 2025_05_14
   * E3
     [ ] Scout Waves not spawning
       * Couldn't reproduce though? :eyes:
-
-2025_05_09
-  [x] Don't give error alarm doors for free all the time
-  [x] Fix item zone for cargo pickup
-  [x] Increase distance between scans on harder levels
-  [ ] Null error thrown at end of D2
-
-2025_05_06
-  [ ] Consider reducing the occurence of nightmare enemies
-  [ ] Giant Onion error alarm? Probably close to boss tier
-  [ ] Giant Onions feel a little squishy? May be due to high overbalance of Arsenality
-    [ ] Maybe we up them to 200 health?
 
 2025_04_29
   * D1: Error alarm with no turn off is quite a bit harder
@@ -83,11 +68,6 @@ Requests:
       * Maybe consider using a different layout for it?
     * Consider if we reduce number of fetch codes from 6 to 5
     * May need to BUFF the reactor waves a little
-
-
-2025_04_25
-  * E1: ~Error alarm turn off zone also disables the survival alarm?!~
-    * Edit: Actually it just hides the countdown
 
 Weekly 9-A1 bug:
   * Doesn't seem to be the chained puzzles.. Unclear for now
