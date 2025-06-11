@@ -3,6 +3,26 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.69.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.69.0) — June 11, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* 🌟 New enemy: Infested Strikers
+  * Glowing weaker version of a striker, that on death spawns two babies and a tiny fog cloud. Be careful not to get swarmed!
+
+### Changes
+
+* Balance: Updated `Extreme` and `Overload` Surge Alarms to spawn only chargers / nightmares instead of mixed populations
+* Balance: Updated `OnlyNightmares` wave populations to include Nightmare Giants
+* Balance: Infested strikers now available on Reactor waves and Door rolled population alarms
+* Balance: Reactor waves should have shorter delays between spawns
+* Balance: Increased wave pause max enemy cost for many waves. In general waves should feel faster.
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.68.0...v0.69.0
+
+
 ## [v0.68.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.68.0) — June 07, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
