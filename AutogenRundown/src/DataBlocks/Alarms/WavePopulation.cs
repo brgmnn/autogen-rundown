@@ -67,9 +67,9 @@ public record WavePopulation : DataBlock
     public static void Setup()
         => Setup<GameDataWavePopulation, WavePopulation>(Bins.WavePopulations, "SurvivalWavePopulation");
 
-    public static List<(double, int, WavePopulation)> BuildPack(string tier, LevelSettings settings)
+    public static List<(double chance, int count, WavePopulation population)> BuildPack(string tier, LevelSettings settings)
     {
-        var pack = new List<(double, int, WavePopulation)>();
+        var pack = new List<(double chance, int count, WavePopulation population)>();
 
         // Chargers
         if (!settings.Modifiers.Contains(Levels.LevelModifiers.NoChargers))
@@ -123,6 +123,7 @@ public record WavePopulation : DataBlock
             {
                 pack.Add((1.0, 25, Baseline));
                 pack.Add((1.0, 5, Baseline_Hybrids));
+                pack.Add((1.5, 2, Baseline_Infested));
                 break;
             }
 
@@ -130,6 +131,7 @@ public record WavePopulation : DataBlock
             {
                 pack.Add((1.0, 25, Baseline));
                 pack.Add((1.0, 5, Baseline_Hybrids));
+                pack.Add((1.5, 3, Baseline_Infested));
                 break;
             }
 
@@ -137,6 +139,7 @@ public record WavePopulation : DataBlock
             {
                 pack.Add((1.0, 25, Baseline));
                 pack.Add((1.0, 5, Baseline_Hybrids));
+                pack.Add((2.0, 5, Baseline_Infested));
                 break;
             }
         }
