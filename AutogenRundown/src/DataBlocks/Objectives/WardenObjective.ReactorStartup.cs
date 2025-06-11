@@ -767,6 +767,15 @@ public partial record WardenObjective
                                 SpawnTime = 35
                             }
                         }),
+                        (1.0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_SurgeHard with { Population = WavePopulation.Baseline_Infested },
+                            ReactorEnemyWave.Baseline_Easy with
+                            {
+                                Population = WavePopulation.OnlyInfestedStrikers,
+                                SpawnTime = 35
+                            }
+                        }),
                         (level.Settings.HasChargers() ? 1.0 : 0, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_Hard with { Population = WavePopulation.Baseline_Chargers }
@@ -808,6 +817,20 @@ public partial record WardenObjective
                             {
                                 Population = WavePopulation.OnlyHybrids,
                                 SpawnTime = 35
+                            }
+                        }),
+                        (1.0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_SurgeHard with { Population = WavePopulation.Baseline_Infested },
+                            ReactorEnemyWave.Baseline_Medium with
+                            {
+                                Population = WavePopulation.OnlyInfestedStrikers,
+                                SpawnTime = 25
+                            },
+                            ReactorEnemyWave.MiniBoss_8pts with
+                            {
+                                Population = WavePopulation.OnlyHybrids,
+                                SpawnTime = 60
                             }
                         }),
                         (level.Settings.HasChargers() ? 1.0 : 0, new List<ReactorEnemyWave>
@@ -1020,6 +1043,15 @@ public partial record WardenObjective
                                 SpawnTime = 65
                             }
                         }),
+                        (1.0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_SurgeHard with { Population = WavePopulation.Baseline_Infested },
+                            ReactorEnemyWave.Baseline_Medium with
+                            {
+                                Population = WavePopulation.OnlyInfestedStrikers,
+                                SpawnTime = 35
+                            }
+                        }),
                         (level.Settings.HasChargers() ? 1.0 : 0, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_VeryHard with { Population = WavePopulation.Baseline_Chargers }
@@ -1056,6 +1088,20 @@ public partial record WardenObjective
                         (1.0, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_SurgeHard with { Population = WavePopulation.Baseline_Hybrids },
+                            ReactorEnemyWave.MiniBoss_12pts with
+                            {
+                                Population = WavePopulation.OnlyHybrids,
+                                SpawnTime = 55
+                            }
+                        }),
+                        (1.0, new List<ReactorEnemyWave>
+                        {
+                            ReactorEnemyWave.Baseline_SurgeHard with { Population = WavePopulation.Baseline_Infested },
+                            ReactorEnemyWave.Baseline_Medium with
+                            {
+                                Population = WavePopulation.OnlyInfestedStrikers,
+                                SpawnTime = 25
+                            },
                             ReactorEnemyWave.MiniBoss_12pts with
                             {
                                 Population = WavePopulation.OnlyHybrids,
