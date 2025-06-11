@@ -500,8 +500,6 @@ public record Enemy_New : DataBlock
         #region Striker Infested
         /*
          * Infested strikers are like normal strikers, except they spawn two babies upon death
-         *
-         * Compared with normal hybrids:
          */
         {
             var strikerInfested = new Target
@@ -510,19 +508,40 @@ public record Enemy_New : DataBlock
                 PersistentIds = new() { StrikerInfested.PersistentId }
             };
 
-            var heartbeatColor = "#f9a448";
-            var sleepColor = "#ec3970";
+            // Set up balancing
+            StrikerInfested.BalancingDataId = EnemyBalancing.StrikerInfested.PersistentId;
+
+            const string heartbeatColor = "#f9a448";
+            const string sleepColor = "#ec3970";
+            const string attackColor = "#ff6600";
+            const string fogColor = "#0a0600";
+
+            EnemyCustomization.Model.Materials.Add(
+                new Material
+                {
+                    Target = strikerInfested,
+                    MaterialSets = new List<MaterialSet>
+                    {
+                        new()
+                        {
+                            // Keep original looks good
+                            From = MaterialType.MtrStrikerHibernate,
+                            To = MaterialType.MtrStomacheFix,
+                            SkinNoise = SkinNoise.KeepOriginal
+                        },
+                    }
+                });
 
             EnemyCustomization.Model.Glows.Add(
                 new Glow
                 {
                     Target = strikerInfested,
                     DefaultColor = $"{sleepColor}",
-                    HeartbeatColor = $"{heartbeatColor} * 9.0",
-                    DetectionColor = $"{heartbeatColor} * 8.0",
+                    HeartbeatColor = $"{heartbeatColor} * 4.0",
+                    DetectionColor = $"{heartbeatColor} * 4.0",
                     SelfWakeupColor = "red",
                     PropagateWakeupColor = "red",
-                    TentacleAttackColor = "red",
+                    TentacleAttackColor = $"{attackColor} * 2.0",
                     ShooterFireColor = $"{sleepColor} * 2.0",
                     PulseEffects = new List<PuseEffect>
                     {
@@ -530,15 +549,15 @@ public record Enemy_New : DataBlock
                         {
                             Target = "Hibernate",
                             Duration = 7,
-                            GlowPattern = "48394706",
-                            GlowColor = $"{sleepColor} * 3.5"
+                            GlowPattern = "4809",
+                            GlowColor = $"{sleepColor} * 2.0"
                         },
                         new()
                         {
                             Target = "Combat",
                             Duration = 1.8,
                             GlowPattern = "6f",
-                            GlowColor = $"{heartbeatColor} * 3.9"
+                            GlowColor = $"{heartbeatColor} * 2.0"
                         }
                     }
                 });
@@ -552,8 +571,8 @@ public record Enemy_New : DataBlock
             });
             EnemyCustomization.EnemyAbility.FogSphereAbilities.Add(new FogSphereAbility
             {
-                ColorMin = "#00000099",
-                ColorMax = "#00000099",
+                ColorMin = $"{fogColor}99",
+                ColorMax = $"{fogColor}aa",
                 RangeMin = 0.2,
                 RangeMax = 4.0,
                 DensityMin = 0.8,
@@ -567,8 +586,8 @@ public record Enemy_New : DataBlock
             });
             EnemyCustomization.EnemyAbility.FogSphereAbilities.Add(new FogSphereAbility
             {
-                ColorMin = "#00000099",
-                ColorMax = "#00000066",
+                ColorMin = $"{fogColor}aa",
+                ColorMax = $"{fogColor}66",
                 RangeMin = 4.0,
                 RangeMax = 5.0,
                 DensityMin = 0.8,
@@ -615,12 +634,12 @@ public record Enemy_New : DataBlock
                         "Assets/AssetPrefabs/CharacterBuilder/Enemies/Striker/Customization_StrikerHibernate.prefab",
                     PositionOffset = Vector3.Zero(),
                     RotationOffset = Vector3.Zero(),
-                    NeckScale = Vector3.One(),
-                    HeadScale = new Vector3 { X = 0, Y = 0, Z = 0 },
-                    ChestScale = new Vector3 { X = 1.0, Y = 1.0, Z = 1.3 },
-                    ArmScale = new Vector3 { X = 0.8, Y = 0.8, Z = 0.8 },
+                    NeckScale = Vector3.Zero(),
+                    HeadScale = Vector3.Zero(),
+                    ChestScale = new Vector3 { X = 1.0, Y = 1.0, Z = 1.0 },
+                    ArmScale = new Vector3 { X = 0.05, Y = 0.05, Z = 0.05 },
                     LegScale = Vector3.One(),
-                    SizeRange = new Vector2 { X = 0.9, Y = 1.1 }
+                    SizeRange = new Vector2 { X = 1.0, Y = 1.2 }
                 }
             };
         }

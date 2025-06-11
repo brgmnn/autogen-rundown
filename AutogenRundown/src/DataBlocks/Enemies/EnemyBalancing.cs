@@ -81,12 +81,34 @@ public record EnemyBalancing : DataBlock
         EnemyCollisionMinimumMoveSpeedModifier = 0.3
     };
 
+    /// <summary>
+    /// Infested strikers are weaker than normal strikers (12 vs 20 health)
+    /// but hit harder (4 vs 3 damage tentacle attack) to emphasise prioritizing
+    /// them but at the expense of letting the babies build up in numbers and
+    /// flooding with more fog
+    /// </summary>
+    public static readonly EnemyBalancing StrikerInfested = new()
+    {
+        Health = new()
+        {
+            HealthMax = 12,
+            DamageUntilHitreact = 5,
+            BodypartHealth = 10,
+        },
+        GlueTolerance = 4,
+        GlueFadeOutTime = 8,
+        CanBePushed = true,
+        TentacleAttackDamage = 4.0,
+        MeleeAttackDamage = 3.0
+    };
+
     public static void Setup()
     {
         // Loads the base game balancing
         Setup<GameDataEnemyBalancing, EnemyBalancing>(Bins.EnemyBalancing, "EnemyBalancing");
 
         NightmareGiant.Persist();
+        StrikerInfested.Persist();
     }
 }
 

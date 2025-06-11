@@ -158,6 +158,7 @@ public record WavePopulation : DataBlock
 
         // Single enemy variant population
         Bins.WavePopulations.AddBlock(OnlyStrikers);
+        Bins.WavePopulations.AddBlock(OnlyInfestedStrikers);
         Bins.WavePopulations.AddBlock(OnlyGiantStrikers);
         Bins.WavePopulations.AddBlock(OnlyGiantShooters);
         Bins.WavePopulations.AddBlock(OnlyChargers);
@@ -283,6 +284,15 @@ public record WavePopulation : DataBlock
         WaveRoleSpecial = Enemy.Striker_Wave,
         WaveRoleMiniBoss = Enemy.Striker_Wave,
         Name = "OnlyStrikers"
+    };
+
+    public static WavePopulation OnlyInfestedStrikers = new()
+    {
+        WaveRoleWeakling = (Enemy)Enemy_New.StrikerInfested.PersistentId,
+        WaveRoleStandard = (Enemy)Enemy_New.StrikerInfested.PersistentId,
+        WaveRoleSpecial = (Enemy)Enemy_New.StrikerInfested.PersistentId,
+        WaveRoleMiniBoss = (Enemy)Enemy_New.StrikerInfested.PersistentId,
+        Name = "OnlyInfestedStrikers"
     };
 
     public static WavePopulation OnlyGiantStrikers = new()

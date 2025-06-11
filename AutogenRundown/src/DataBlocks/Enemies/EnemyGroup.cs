@@ -123,6 +123,7 @@ public record EnemyGroup : DataBlock
         // entries will be randomly picked between.
         var hibernatingGroups = new List<(EnemyRole, Enemy, double)>
         {
+            // Strikers
             (EnemyRole.Melee, Enemy.Striker, 4.0),
             (EnemyRole.Melee, Enemy.Striker, 6.0),
             (EnemyRole.Melee, Enemy.Striker, 10.0),
@@ -165,12 +166,19 @@ public record EnemyGroup : DataBlock
             (EnemyRole.PureSneak, Enemy.PMother,    10.0),
             (EnemyRole.PureSneak, Enemy.Pouncer,    4.0),
 
+            #region Custom enemies
+
             (EnemyRole.PureSneak, (Enemy)Enemy_New.PouncerShadow.PersistentId, 4.0),
+
             (EnemyRole.PureSneak, (Enemy)Enemy_New.HybridInfected.PersistentId, 4.0),
 
             (EnemyRole.Melee, (Enemy)Enemy_New.NightmareGiant.PersistentId, 4.0),
 
-            (EnemyRole.Melee, (Enemy)Enemy_New.StrikerInfested.PersistentId, 1.0)
+            (EnemyRole.Melee, (Enemy)Enemy_New.StrikerInfested.PersistentId, 4.0),
+            (EnemyRole.Melee, (Enemy)Enemy_New.StrikerInfested.PersistentId, 6.0),
+            (EnemyRole.Melee, (Enemy)Enemy_New.StrikerInfested.PersistentId, 10.0)
+
+            #endregion
         };
 
         foreach (var (role, enemy, maxScore) in hibernatingGroups)

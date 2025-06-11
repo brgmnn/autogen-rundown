@@ -35,6 +35,10 @@ public enum MaterialType
     MtrStomacheFix,
     MtrStrikerBullrush,
     MtrStrikerBullrushHead,
+
+    /// <summary>
+    /// Hibernating striker material
+    /// </summary>
     MtrStrikerHibernate,
     MtrStrikerWave,
     Striker,
