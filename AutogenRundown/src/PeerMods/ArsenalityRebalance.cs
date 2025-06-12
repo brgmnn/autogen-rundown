@@ -24,7 +24,7 @@ public class ArsenalityRebalance : SupportedMod
         if (!File.Exists(pluginPath))
             return;
 
-        Directory.CreateDirectory(Path.GetDirectoryName(gameDataPath));
+        Directory.CreateDirectory(Path.GetDirectoryName(gameDataPath)!);
         File.Copy(pluginPath, gameDataPath, overwrite: true);
 
         Plugin.Logger.LogDebug($"{mod.ModName}: Copied -> GearPartTransform.json");

@@ -184,8 +184,6 @@ public partial record WardenObjective : DataBlock
             .AddSound(Sound.TankRoar, 12.0)
             .AddMessage(":://CRITICAL ERROR - LARGE B!OM4SS Ð!$_†URß@И¢€", 5.0);
 
-        var duration = 0.0;
-
         SecurityControlEvents.Add(
             new WardenObjectiveEvent
             {

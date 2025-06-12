@@ -15,6 +15,7 @@ public class ZoneSelectionData
             Bulkhead.Main => "MainLayer",
             Bulkhead.Extreme => "SecondaryLayer",
             Bulkhead.Overload => "ThirdLayer",
+            _ => "MainLayer",
         };
         private set { }
     }

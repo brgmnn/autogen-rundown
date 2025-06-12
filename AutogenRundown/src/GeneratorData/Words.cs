@@ -113,9 +113,10 @@ static public class Words
                 "Night Shiver", "Bone Whisper", "Gloom Fane", "Cinderhusk", "Riftgloom", "Soul Hollow",
                 "Midnightfen", "Plague Claw", "Umbral Crypt", "Bleakharrow"
             }),
+            _ => "Schaeffer's Bane"
         };
 
-        return noun;
+        return noun ?? string.Empty;
     }
 
     /// <summary>

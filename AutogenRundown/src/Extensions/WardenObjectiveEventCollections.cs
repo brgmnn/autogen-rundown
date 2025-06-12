@@ -91,7 +91,7 @@ public static class WardenObjectiveEventCollections
                 Enabled = true,
                 Delay = delay,
                 Trigger = trigger,
-                WardenIntel = alertMessage
+                WardenIntel = alertMessage ?? string.Empty
             });
 
         return events;

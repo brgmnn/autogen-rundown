@@ -60,7 +60,7 @@ public class RundownNames
             {
                 var rundownData = Bins.Rundowns.Find(Rundown.R_Daily);
 
-                rundown.m_rundownText.text = $"<size=70%><color=orange>DAILY</color><color=#444444>:</color> {rundownData.Title}</size>";
+                rundown.m_rundownText.text = $"<size=70%><color=orange>DAILY</color><color=#444444>:</color> {rundownData?.Title}</size>";
             }
             ///
             /// Weekly
@@ -70,7 +70,7 @@ public class RundownNames
             {
                 var rundownData = Bins.Rundowns.Find(Rundown.R_Weekly);
 
-                rundown.m_rundownText.text = $"<size=70%><color=green>WEEK #{Generator.WeekNumber}</color><color=#444444>:</color> {rundownData.Title}</size>";
+                rundown.m_rundownText.text = $"<size=70%><color=green>WEEK #{Generator.WeekNumber}</color><color=#444444>:</color> {rundownData?.Title}</size>";
             }
             // Rundown 4
             ///
@@ -81,7 +81,7 @@ public class RundownNames
             {
                 var rundownData = Bins.Rundowns.Find(Rundown.R_Monthly);
 
-                rundown.m_rundownText.text = $"<size=70%><color=#58fcee>MONTHLY</color><color=#444444>:</color> {rundownData.Title}</size>";
+                rundown.m_rundownText.text = $"<size=70%><color=#58fcee>MONTHLY</color><color=#444444>:</color> {rundownData?.Title}</size>";
             }
 
             num++;
