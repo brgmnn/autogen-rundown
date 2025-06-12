@@ -30,9 +30,9 @@ public record WardenObjectiveEventCountdown
 
 public record WardenObjectiveEventCustomHudText
 {
-    public string Title { get; set; }
+    public string Title { get; set; } = "";
 
-    public string Body { get; set; }
+    public string Body { get; set; } = "";
 }
 
 public record WardenObjectiveEvent
@@ -160,6 +160,7 @@ public record WardenObjectiveEvent
     /// }
     /// ```
     /// </summary>
+    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
     public SetZoneLight SetZoneLight { get; set; } = new();
 
     /// <summary>

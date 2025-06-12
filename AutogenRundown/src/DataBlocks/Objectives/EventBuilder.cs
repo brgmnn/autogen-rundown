@@ -198,6 +198,7 @@ public class EventBuilder
             Bulkhead.Main => 0,
             Bulkhead.Extreme => 1,
             Bulkhead.Overload => 2,
+            _ => 0
         };
 
     #region Doors

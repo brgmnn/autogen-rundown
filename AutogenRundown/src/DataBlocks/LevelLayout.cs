@@ -826,7 +826,8 @@ public partial record LevelLayout : DataBlock
             ZoneExpansion.Forward => ZoneBuildExpansion.Forward,
             ZoneExpansion.Backward => ZoneBuildExpansion.Backward,
             ZoneExpansion.Left => ZoneBuildExpansion.Left,
-            ZoneExpansion.Right => ZoneBuildExpansion.Right
+            ZoneExpansion.Right => ZoneBuildExpansion.Right,
+            _ => startZone.StartExpansion
         };
         #endregion
 

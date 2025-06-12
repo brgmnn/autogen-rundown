@@ -489,7 +489,7 @@ public partial record LevelLayout
         }
 
         var terminalNode = (ZoneNode)terminalish;
-        var terminalZone = planner.GetZone(terminalNode);
+        var terminalZone = planner.GetZone(terminalNode)!;
         var terminalPlacement = new TerminalPlacement { PlacementWeights = ZonePlacementWeights.NotAtStart };
 
         if (terminalZone.TerminalPlacements.Any())

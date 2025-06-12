@@ -333,7 +333,9 @@ static public class Generator
             PidOffsets.Enemy => enemyPid++,
             PidOffsets.EnemyGroup => enemyGroupPid++,
             PidOffsets.WavePopulation => wavePopulationPid++,
-            PidOffsets.WaveSettings => waveSettingsPid++
+            PidOffsets.WaveSettings => waveSettingsPid++,
+
+            _ => throw new ArgumentOutOfRangeException(nameof(offset), offset, null)
         };
 
     /// <summary>
