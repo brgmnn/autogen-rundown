@@ -39,28 +39,28 @@ public record EnemyPopulation : DataBlock
             EnemyInfo.Shadow,
             EnemyInfo.ShadowGiant,
             EnemyInfo.Hybrid,
-            EnemyInfo.Hybrid_Hunter,
+            // EnemyInfo.Hybrid_Hunter,
             EnemyInfo.NightmareShooter,
             EnemyInfo.NightmareStriker,
             EnemyInfo.NightmareStrikerGiant,
             EnemyInfo.Flyer,
             EnemyInfo.FlyerBig,
             EnemyInfo.Mother,
-            EnemyInfo.Mother_Hunter,
+            // EnemyInfo.Mother_Hunter,
             EnemyInfo.Mother_MiniBoss,
             EnemyInfo.PMother,
-            EnemyInfo.PMother_Hunter,
+            // EnemyInfo.PMother_Hunter,
             EnemyInfo.PMother_MiniBoss,
             EnemyInfo.BirtherChild,
             EnemyInfo.Tank,
-            EnemyInfo.Tank_Hunter,
+            // EnemyInfo.Tank_Hunter,
             EnemyInfo.Tank_MiniBoss,
             EnemyInfo.Pouncer,
 
             EnemyInfo.PouncerShadow,
             EnemyInfo.PouncerShadow_Sneak,
             EnemyInfo.HybridInfected,
-            EnemyInfo.HybridInfected_Hunter,
+            // EnemyInfo.HybridInfected_Hunter,
             EnemyInfo.NightmareGiant,
             EnemyInfo.StrikerInfested,
         };
@@ -77,6 +77,16 @@ public record EnemyPopulation : DataBlock
                 Enemy = info.Enemy,
                 Cost = info.Points,
             });
+
+            // // This is specifically for blood doors. It lets us specify any of the enemy
+            // // populations to spawn behind the blood door.
+            // Roles.Add(new EnemyPopulationRole
+            // {
+            //     Role = (uint)EnemyRole.Hunter,
+            //     Difficulty = (uint)info.Enemy,
+            //     Enemy = info.Enemy,
+            //     Cost = info.Points,
+            // });
         }
         #endregion
 
@@ -102,6 +112,28 @@ public record EnemyPopulation : DataBlock
             });
         }
 
+        #endregion
+
+        #region Blood Doors
+        {
+            var enemiesBase = new List<(EnemyInfo, double)>
+            {
+                (EnemyInfo.Striker, 1.0),
+                (EnemyInfo.Shooter, 1.0),
+                (EnemyInfo.StrikerGiant, 0.5),
+                (EnemyInfo.ShooterGiant, 0.25)
+            };
+
+            foreach (var (info, weight) in enemiesBase)
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)info.Role,
+                    Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Base),
+                    Enemy = info.Enemy,
+                    Cost = info.Points,
+                    Weight = weight
+                });
+        }
         #endregion
 
         #region Boss Aligned spawns
@@ -158,7 +190,7 @@ public record EnemyPopulation : DataBlock
             Roles.Add(new EnemyPopulationRole
             {
                 Role = (uint)info.Role,
-                Difficulty = (uint)AutogenDifficulty.TierA,
+                Difficulty = (uint)(AutogenDifficulty.TierA | AutogenDifficulty.Base),
                 Enemy = info.Enemy,
                 Cost = info.Points,
                 Weight = weight
@@ -183,7 +215,7 @@ public record EnemyPopulation : DataBlock
             Roles.Add(new EnemyPopulationRole
             {
                 Role = (uint)info.Role,
-                Difficulty = (uint)AutogenDifficulty.TierB,
+                Difficulty = (uint)(AutogenDifficulty.TierB | AutogenDifficulty.Base),
                 Enemy = info.Enemy,
                 Cost = info.Points,
                 Weight = weight
@@ -208,7 +240,7 @@ public record EnemyPopulation : DataBlock
             Roles.Add(new EnemyPopulationRole
             {
                 Role = (uint)info.Role,
-                Difficulty = (uint)AutogenDifficulty.TierC,
+                Difficulty = (uint)(AutogenDifficulty.TierC | AutogenDifficulty.Base),
                 Enemy = info.Enemy,
                 Cost = info.Points,
                 Weight = weight
@@ -261,7 +293,7 @@ public record EnemyPopulation : DataBlock
             Roles.Add(new EnemyPopulationRole
             {
                 Role = (uint)info.Role,
-                Difficulty = (uint)AutogenDifficulty.TierD,
+                Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Base),
                 Enemy = info.Enemy,
                 Cost = info.Points,
                 Weight = weight
@@ -358,7 +390,7 @@ public record EnemyPopulation : DataBlock
             Roles.Add(new EnemyPopulationRole
             {
                 Role = (uint)info.Role,
-                Difficulty = (uint)AutogenDifficulty.TierE,
+                Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Base),
                 Enemy = info.Enemy,
                 Cost = info.Points,
                 Weight = weight

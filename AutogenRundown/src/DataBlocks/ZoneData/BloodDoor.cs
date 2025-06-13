@@ -25,49 +25,56 @@ BloodDoor_Pouncers = 75,
 
 public class BloodDoor
 {
+    #region Properties
+
     [JsonProperty("HasActiveEnemyWave")]
     public bool Enabled { get; set; } = true;
 
     /// <summary>
     /// Can pick between VanillaEnemyGroup or a custom one
     /// </summary>
-    public uint EnemyGroupInfrontOfDoor { get; set; } = 0;
+    public EnemyGroup GroupBehindDoor { get; set; } = EnemyGroup.None;
 
-    public uint EnemyGroupInArea { get; set; } = 0;
+    [JsonProperty("EnemyGroupInfrontOfDoor")]
+    public uint EnemyGroupInfrontOfDoor => GroupBehindDoor.PersistentId;
 
-    public int EnemyGroupsInArea { get; set; } = 0;
+    public EnemyGroup GroupInArea { get; set; } = EnemyGroup.None;
 
-    static public BloodDoor None = new BloodDoor { Enabled = false };
+    [JsonProperty("EnemyGroupInArea")]
+    public uint EnemyGroupInArea => GroupInArea.PersistentId;
 
-    static public BloodDoor Easy = new BloodDoor
+    [JsonProperty("EnemyGroupsInArea")]
+    public int AreaGroups { get; set; } = 0;
+
+    #endregion
+
+    public static readonly BloodDoor None = new() { Enabled = false };
+
+    public static readonly BloodDoor Easy = new BloodDoor
     {
         Enabled = true,
-        EnemyGroupInfrontOfDoor = (uint)VanillaEnemyGroup.BloodDoor_Easy,
-        EnemyGroupInArea = (uint)VanillaEnemyGroup.BloodDoor_Easy,
-        EnemyGroupsInArea = 1
+        GroupBehindDoor = EnemyGroup.BloodDoor_Baseline_Easy,
+        // AreaGroups = 1
     };
 
-    static public BloodDoor Medium = new BloodDoor
+    public static readonly BloodDoor Medium = new BloodDoor
     {
         Enabled = true,
-        EnemyGroupInfrontOfDoor = (uint)VanillaEnemyGroup.BloodDoor_Medium,
-        EnemyGroupInArea = (uint)VanillaEnemyGroup.BloodDoor_Medium,
-        EnemyGroupsInArea = 1
+        GroupBehindDoor = EnemyGroup.BloodDoor_Baseline_Easy,
+        // AreaGroups = 1
     };
 
-    static public BloodDoor HybridsEasy = new BloodDoor
+    public static readonly BloodDoor HybridsEasy = new BloodDoor
     {
         Enabled = true,
-        EnemyGroupInfrontOfDoor = (uint)VanillaEnemyGroup.BloodDoor_Hybrids_Easy,
-        EnemyGroupInArea = 0,
-        EnemyGroupsInArea = 1
+        GroupBehindDoor = EnemyGroup.BloodDoor_Baseline_Easy,
+        // AreaGroups = 1
     };
 
-    static public BloodDoor Easy_2x = new BloodDoor
+    public static readonly BloodDoor Easy_2x = new BloodDoor
     {
         Enabled = true,
-        EnemyGroupInfrontOfDoor = (uint)VanillaEnemyGroup.BloodDoor_Easy,
-        EnemyGroupInArea = (uint)VanillaEnemyGroup.BloodDoor_Easy,
-        EnemyGroupsInArea = 1
+        GroupBehindDoor = EnemyGroup.BloodDoor_Baseline_Easy,
+        // AreaGroups = 1
     };
 }

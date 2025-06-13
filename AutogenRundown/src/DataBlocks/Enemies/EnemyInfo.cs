@@ -24,7 +24,7 @@ public record class EnemyInfo
     public static readonly EnemyInfo Shadow       = new() { Role = EnemyRole.Melee, Enemy = Enemy.Shadow,      Points = 1.0 };
     public static readonly EnemyInfo ShadowGiant  = new() { Role = EnemyRole.Melee, Enemy = Enemy.ShadowGiant, Points = 4.0 };
 
-    public static readonly EnemyInfo Hybrid        = new() { Role = EnemyRole.PureSneak, Enemy = Enemy.Hybrid, Points = 3.0 };
+    public static readonly EnemyInfo Hybrid        = new() { Role = EnemyRole.PureSneak, Enemy = Enemy.Hybrid, Points = 4.0 };
     public static readonly EnemyInfo Hybrid_Hunter = new() { Role = EnemyRole.Hunter,    Enemy = Enemy.Hybrid, Points = 4.0 };
 
     public static readonly EnemyInfo NightmareShooter      = new() { Role = EnemyRole.Ranged, Enemy = Enemy.NightmareShooter,      Points = 1.0  };

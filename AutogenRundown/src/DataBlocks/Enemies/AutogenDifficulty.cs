@@ -1,25 +1,43 @@
 ﻿namespace AutogenRundown.DataBlocks.Enemies;
 
+/// <summary>
+/// Max value:
+///     0xff
+///
+///     0b_1111_1111
+///
+/// 100 => 0b110_0100
+/// 127 => 0b111_1111
+/// We should stick to that as the max as this goes over the network, and it
+/// seems like it has to be below a short int type in size.
+///
+/// Difficulty has a max of 255. 0xff
+/// </summary>
 [Flags]
 public enum AutogenDifficulty : uint
 {
-    // Enemy variants
-    Base       = 0x0000,
-    Chargers   = 0x0001,
-    Shadows    = 0x0002,
-    Hybrids    = 0x0004,
-    Flyers     = 0x0008,
-    Nightmares = 0x0010,
+    // Specific enemy variations are assigned
+    //  0x00xx
+    // 0xff is max
+    // This gives 256 different enemy variant types.
 
-    // Boss aligned spawned bosses
-    BossAlignedSpawn = 0x0020,
+    // Enemy categories
+    Base             = 0x10, // 0001_0000
+    Chargers         = 0x20, // 0010_0000
+    Shadows          = 0x30, // 0011_0000
+    Hybrids          = 0x40, // 0100_0000
+    Flyers           = 0x50, // 0101_0000
+    Nightmares       = 0x60, // 0110_0000
 
-    MegaMotherSpawn = 0x0040,
+    // Types of specific spawns
+    BloodDoors       = 0x70, // 0111_0000
+    BossAlignedSpawn = 0x80, // 1000_0000
+    MegaMotherSpawn  = 0x90, // 1001_0000
 
     // Tiers of difficulty
-    TierA = 0x0100,
-    TierB = 0x0200,
-    TierC = 0x0400,
-    TierD = 0x0800,
-    TierE = 0x1000,
+    TierA            = 0xa0, // 1010_0000
+    TierB            = 0xb0, // 1011_0000
+    TierC            = 0xc0, // 1100_0000
+    TierD            = 0xd0, // 1101_0000
+    TierE            = 0xe0, // 1110_0000
 }

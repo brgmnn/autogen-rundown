@@ -194,12 +194,16 @@ public partial record LevelLayout : DataBlock
             {
                 var withArea = Generator.Flip(inAreaChance);
 
-                zone.BloodDoor = new BloodDoor
-                {
-                    EnemyGroupInfrontOfDoor = (uint)Generator.DrawSelect(doorPack),
-                    EnemyGroupInArea = withArea ? (uint)Generator.DrawSelect(areaPack) : 0,
-                    EnemyGroupsInArea = withArea ? 1 : 0,
-                };
+                Plugin.Logger.LogInfo($"Spawned blood door on {zone.LocalIndex}");
+
+                zone.BloodDoor = BloodDoor.Easy;
+
+                // zone.BloodDoor = new BloodDoor
+                // {
+                //     EnemyGroupInfrontOfDoor = (uint)Generator.DrawSelect(doorPack),
+                //     EnemyGroupInArea = withArea ? (uint)Generator.DrawSelect(areaPack) : 0,
+                //     EnemyGroupsInArea = withArea ? 1 : 0,
+                // };
             }
     }
 

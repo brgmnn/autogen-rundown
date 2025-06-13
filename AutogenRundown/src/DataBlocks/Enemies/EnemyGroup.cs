@@ -86,7 +86,31 @@ public record EnemyGroup : DataBlock
         bin.AddBlock(this);
     }
 
+    public static readonly EnemyGroup None = new() { PersistentId = 0 };
+
     #region Blood Door groups
+
+    public static readonly EnemyGroup BloodDoor = new()
+    {
+        Type = EnemyGroupType.Hunter,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.Hunter, Distribution = EnemyRoleDistribution.Rel100 }
+        }
+    };
+
+    public static readonly EnemyGroup BloodDoor_Baseline_Easy = new()
+    {
+        Type = EnemyGroupType.Hunter,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 },
+            new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel100 }
+        },
+        Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Base),
+        MaxScore = 8,
+        RelativeWeight = 1.0,
+    };
 
     public static EnemyGroup BloodDoor_HybridInfected_Hard = new()
     {
@@ -104,20 +128,22 @@ public record EnemyGroup : DataBlock
 
     public static void Setup()
     {
-        JArray array = JArray.Parse(VanillaData);
-        var groups = array.ToObject<List<GameDataEnemyGroup>>();
-
-        if (groups == null)
-            throw new Exception("Failed to parse vanilla enemy groups data");
-
-        foreach (var group in groups)
-        {
-            Bins.EnemyGroups.AddBlock(group);
-        }
+        // JArray array = JArray.Parse(VanillaData);
+        // var groups = array.ToObject<List<GameDataEnemyGroup>>();
+        //
+        // if (groups == null)
+        //     throw new Exception("Failed to parse vanilla enemy groups data");
+        //
+        // foreach (var group in groups)
+        // {
+        //     Bins.EnemyGroups.AddBlock(group);
+        // }
     }
 
     public new static void SaveStatic()
     {
+        #region Fixed enemies
+
         // Assign groups for hibernating enemy spawns. EnemyRole and Enemy will select the
         // enemy to pick from, the double specifies the max score for that group. Multiple
         // entries will be randomly picked between.
@@ -196,9 +222,11 @@ public record EnemyGroup : DataBlock
                 });
         }
 
+        #endregion
+
         #region Blood Doors
 
-        // BloodDoor_Easy.Persist();
+        BloodDoor_Baseline_Easy.Persist();
 
         BloodDoor_HybridInfected_Hard.Persist();
 
@@ -229,11 +257,11 @@ public record EnemyGroup : DataBlock
         // just filling with enemies.
         var baseDifficulties = new List<AutogenDifficulty>
         {
-            AutogenDifficulty.TierA,
-            AutogenDifficulty.TierB,
-            AutogenDifficulty.TierC,
-            AutogenDifficulty.TierD,
-            AutogenDifficulty.TierE,
+            AutogenDifficulty.TierA | AutogenDifficulty.Base,
+            AutogenDifficulty.TierB | AutogenDifficulty.Base,
+            AutogenDifficulty.TierC | AutogenDifficulty.Base,
+            AutogenDifficulty.TierD | AutogenDifficulty.Base,
+            AutogenDifficulty.TierE | AutogenDifficulty.Base
         };
 
         foreach (var difficulty in baseDifficulties)
@@ -255,7 +283,7 @@ public record EnemyGroup : DataBlock
                 new EnemyGroup
                 {
                     Type = EnemyGroupType.Hibernate,
-                    Difficulty = (uint)AutogenDifficulty.TierA,
+                    Difficulty = (uint)difficulty,
                     MaxScore = 5,
                     Roles = new List<EnemyGroupRole>
                     {
@@ -323,7 +351,7 @@ public record EnemyGroup : DataBlock
             new EnemyGroup
             {
                 Type = EnemyGroupType.Hibernate,
-                Difficulty = (uint)AutogenDifficulty.TierC,
+                Difficulty = (uint)(AutogenDifficulty.TierC | AutogenDifficulty.Base),
                 MaxScore = 6,
                 Roles = new List<EnemyGroupRole>
                 {
@@ -335,7 +363,7 @@ public record EnemyGroup : DataBlock
             new EnemyGroup
             {
                 Type = EnemyGroupType.Hibernate,
-                Difficulty = (uint)AutogenDifficulty.TierC,
+                Difficulty = (uint)(AutogenDifficulty.TierC | AutogenDifficulty.Base),
                 MaxScore = 12,
                 Roles = new List<EnemyGroupRole>
                 {
@@ -388,7 +416,7 @@ public record EnemyGroup : DataBlock
             new EnemyGroup
             {
                 Type = EnemyGroupType.Hibernate,
-                Difficulty = (uint)AutogenDifficulty.TierD,
+                Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Base),
                 MaxScore = 6,
                 Roles = new List<EnemyGroupRole>
                 {
@@ -400,7 +428,7 @@ public record EnemyGroup : DataBlock
             new EnemyGroup
             {
                 Type = EnemyGroupType.Hibernate,
-                Difficulty = (uint)AutogenDifficulty.TierD,
+                Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Base),
                 MaxScore = 12,
                 Roles = new List<EnemyGroupRole>
                 {
@@ -468,7 +496,7 @@ public record EnemyGroup : DataBlock
             new EnemyGroup
             {
                 Type = EnemyGroupType.Hibernate,
-                Difficulty = (uint)AutogenDifficulty.TierE,
+                Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Base),
                 MaxScore = 6,
                 Roles = new List<EnemyGroupRole>
                 {
@@ -480,7 +508,7 @@ public record EnemyGroup : DataBlock
             new EnemyGroup
             {
                 Type = EnemyGroupType.Hibernate,
-                Difficulty = (uint)AutogenDifficulty.TierE,
+                Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Base),
                 MaxScore = 12,
                 Roles = new List<EnemyGroupRole>
                 {
