@@ -49,32 +49,4 @@ public class BloodDoor
     #endregion
 
     public static readonly BloodDoor None = new() { Enabled = false };
-
-    public static readonly BloodDoor Easy = new BloodDoor
-    {
-        Enabled = true,
-        GroupBehindDoor = EnemyGroup.BloodDoor_Baseline_Easy,
-        // AreaGroups = 1
-    };
-
-    public static readonly BloodDoor Medium = new BloodDoor
-    {
-        Enabled = true,
-        GroupBehindDoor = EnemyGroup.BloodDoor_Baseline_Easy,
-        // AreaGroups = 1
-    };
-
-    public static readonly BloodDoor HybridsEasy = new BloodDoor
-    {
-        Enabled = true,
-        GroupBehindDoor = EnemyGroup.BloodDoor_Baseline_Easy,
-        // AreaGroups = 1
-    };
-
-    public static readonly BloodDoor Easy_2x = new BloodDoor
-    {
-        Enabled = true,
-        GroupBehindDoor = EnemyGroup.BloodDoor_Baseline_Easy,
-        // AreaGroups = 1
-    };
 }

@@ -196,7 +196,11 @@ public partial record LevelLayout : DataBlock
 
                 Plugin.Logger.LogInfo($"Spawned blood door on {zone.LocalIndex}");
 
-                zone.BloodDoor = BloodDoor.Easy;
+                zone.BloodDoor = new BloodDoor
+                {
+                    Enabled = true,
+                    GroupBehindDoor = EnemyGroup.BloodDoor_Pouncer_Hard,
+                };
 
                 // zone.BloodDoor = new BloodDoor
                 // {

@@ -90,29 +90,98 @@ public record EnemyGroup : DataBlock
 
     #region Blood Door groups
 
-    public static readonly EnemyGroup BloodDoor = new()
-    {
-        Type = EnemyGroupType.Hunter,
-        Roles = new List<EnemyGroupRole>
-        {
-            new() { Role = EnemyRole.Hunter, Distribution = EnemyRoleDistribution.Rel100 }
-        }
-    };
-
     public static readonly EnemyGroup BloodDoor_Baseline_Easy = new()
     {
         Type = EnemyGroupType.Hunter,
         Roles = new List<EnemyGroupRole>
         {
-            new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 },
-            new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel100 }
+            new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel75 },
+            new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
         },
         Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Base),
-        MaxScore = 8,
+        MaxScore = 10,
         RelativeWeight = 1.0,
     };
 
-    public static EnemyGroup BloodDoor_HybridInfected_Hard = new()
+    public static readonly EnemyGroup BloodDoor_Baseline_Normal = new()
+    {
+        Type = EnemyGroupType.Hunter,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel75 },
+            new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
+        },
+        Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Base),
+        MaxScore = 16,
+        RelativeWeight = 1.0,
+    };
+
+    public static readonly EnemyGroup BloodDoor_Baseline_Hard = new()
+    {
+        Type = EnemyGroupType.Hunter,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel75 },
+            new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
+        },
+        Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Base),
+        MaxScore = 20,
+        RelativeWeight = 1.0,
+    };
+
+    public static readonly EnemyGroup BloodDoor_Hybrids_Normal = new()
+    {
+        Type = EnemyGroupType.Hunter,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel50 },
+            new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 },
+            new() { Role = EnemyRole.PureSneak, Distribution = EnemyRoleDistribution.Rel75 }
+        },
+        Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Hybrids),
+        MaxScore = 12,
+        RelativeWeight = 1.0,
+    };
+
+    public static readonly EnemyGroup BloodDoor_Hybrids_Hard = new()
+    {
+        Type = EnemyGroupType.Hunter,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel50 },
+            new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 },
+            new() { Role = EnemyRole.PureSneak, Distribution = EnemyRoleDistribution.Rel100 }
+        },
+        Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Hybrids),
+        MaxScore = 16,
+        RelativeWeight = 1.0,
+    };
+
+    public static readonly EnemyGroup BloodDoor_Infested_Normal = new()
+    {
+        Type = EnemyGroupType.Hunter,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
+        },
+        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.StrikerInfested.PersistentId,
+        MaxScore = 10,
+        RelativeWeight = 1.0,
+    };
+
+    public static readonly EnemyGroup BloodDoor_Infested_Hard = new()
+    {
+        Type = EnemyGroupType.Hunter,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
+        },
+        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.StrikerInfested.PersistentId,
+        MaxScore = 16,
+        RelativeWeight = 1.0,
+    };
+
+    public static readonly EnemyGroup BloodDoor_HybridInfected_Hard = new()
     {
         Type = EnemyGroupType.Hunter,
         Difficulty = Enemy_New.HybridInfected.PersistentId,
@@ -122,6 +191,18 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Hunter, Distribution = EnemyRoleDistribution.Rel100 }
         }
+    };
+
+    public static readonly EnemyGroup BloodDoor_Pouncer_Hard = new()
+    {
+        Type = EnemyGroupType.Hunter,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.Hunter,  Distribution = EnemyRoleDistribution.Rel100 }
+        },
+        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Pouncer.PersistentId,
+        MaxScore = 8,
+        RelativeWeight = 1.0,
     };
 
     #endregion
@@ -227,8 +308,18 @@ public record EnemyGroup : DataBlock
         #region Blood Doors
 
         BloodDoor_Baseline_Easy.Persist();
+        BloodDoor_Baseline_Normal.Persist();
+        BloodDoor_Baseline_Hard.Persist();
+
+        BloodDoor_Hybrids_Normal.Persist();
+        BloodDoor_Hybrids_Hard.Persist();
+
+        BloodDoor_Infested_Normal.Persist();
+        BloodDoor_Infested_Hard.Persist();
 
         BloodDoor_HybridInfected_Hard.Persist();
+
+        BloodDoor_Pouncer_Hard.Persist();
 
         #endregion
 

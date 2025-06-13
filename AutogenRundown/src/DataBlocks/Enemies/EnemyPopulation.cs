@@ -116,19 +116,44 @@ public record EnemyPopulation : DataBlock
 
         #region Blood Doors
         {
-            var enemiesBase = new List<(EnemyInfo, double)>
+            var enemies = new List<(EnemyInfo info, uint difficulty, double weight)>
             {
-                (EnemyInfo.Striker, 1.0),
-                (EnemyInfo.Shooter, 1.0),
-                (EnemyInfo.StrikerGiant, 0.5),
-                (EnemyInfo.ShooterGiant, 0.25)
+                (EnemyInfo.Striker,      (uint)AutogenDifficulty.Base, 1.00),
+                (EnemyInfo.Shooter,      (uint)AutogenDifficulty.Base, 1.00),
+                (EnemyInfo.StrikerGiant, (uint)AutogenDifficulty.Base, 0.50),
+                (EnemyInfo.ShooterGiant, (uint)AutogenDifficulty.Base, 0.25),
+
+                (EnemyInfo.Charger,      (uint)AutogenDifficulty.Chargers, 1.0),
+                (EnemyInfo.ChargerGiant, (uint)AutogenDifficulty.Chargers, 0.4),
+
+                (EnemyInfo.Shadow,       (uint)AutogenDifficulty.Shadows, 1.0),
+                (EnemyInfo.ShadowGiant,  (uint)AutogenDifficulty.Shadows, 0.4),
+
+                (EnemyInfo.Striker,      (uint)AutogenDifficulty.Hybrids, 1.00),
+                (EnemyInfo.Shooter,      (uint)AutogenDifficulty.Hybrids, 0.20),
+                (EnemyInfo.Hybrid,       (uint)AutogenDifficulty.Hybrids, 0.50),
+
+                (EnemyInfo.Flyer,        (uint)AutogenDifficulty.Flyers, 1.0),
+
+                (EnemyInfo.NightmareStriker, (uint)AutogenDifficulty.Nightmares, 1.0),
+                (EnemyInfo.NightmareShooter, (uint)AutogenDifficulty.Nightmares, 1.0),
+                (EnemyInfo.NightmareGiant,   (uint)AutogenDifficulty.Nightmares, 0.2),
+
+                // Enemy specific
+                (EnemyInfo.Pouncer,         Enemy_New.Pouncer.PersistentId, 1.0),
+                (EnemyInfo.PouncerShadow,   Enemy_New.PouncerShadow.PersistentId, 1.0),
+
+                (EnemyInfo.Hybrid,          Enemy_New.Hybrid.PersistentId, 1.0),
+                (EnemyInfo.HybridInfected,  Enemy_New.HybridInfected.PersistentId, 1.0),
+
+                (EnemyInfo.StrikerInfested, Enemy_New.StrikerInfested.PersistentId, 1.0)
             };
 
-            foreach (var (info, weight) in enemiesBase)
+            foreach (var (info, difficulty, weight) in enemies)
                 Roles.Add(new EnemyPopulationRole
                 {
                     Role = (uint)info.Role,
-                    Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Base),
+                    Difficulty = (uint)AutogenDifficulty.BloodDoors | difficulty,
                     Enemy = info.Enemy,
                     Cost = info.Points,
                     Weight = weight
