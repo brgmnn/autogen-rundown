@@ -118,22 +118,22 @@ public record EnemyPopulation : DataBlock
         {
             var enemies = new List<(EnemyInfo info, uint difficulty, double weight)>
             {
-                (EnemyInfo.Striker,      (uint)AutogenDifficulty.Base, 1.00),
-                (EnemyInfo.Shooter,      (uint)AutogenDifficulty.Base, 1.00),
-                (EnemyInfo.StrikerGiant, (uint)AutogenDifficulty.Base, 0.50),
-                (EnemyInfo.ShooterGiant, (uint)AutogenDifficulty.Base, 0.25),
+                (EnemyInfo.Striker,          (uint)AutogenDifficulty.Base, 1.00),
+                (EnemyInfo.Shooter,          (uint)AutogenDifficulty.Base, 1.00),
+                (EnemyInfo.StrikerGiant,     (uint)AutogenDifficulty.Base, 0.50),
+                (EnemyInfo.ShooterGiant,     (uint)AutogenDifficulty.Base, 0.25),
 
-                (EnemyInfo.Charger,      (uint)AutogenDifficulty.Chargers, 1.0),
-                (EnemyInfo.ChargerGiant, (uint)AutogenDifficulty.Chargers, 0.4),
+                (EnemyInfo.Charger,          (uint)AutogenDifficulty.Chargers, 1.0),
+                (EnemyInfo.ChargerGiant,     (uint)AutogenDifficulty.Chargers, 0.4),
 
-                (EnemyInfo.Shadow,       (uint)AutogenDifficulty.Shadows, 1.0),
-                (EnemyInfo.ShadowGiant,  (uint)AutogenDifficulty.Shadows, 0.4),
+                (EnemyInfo.Shadow,           (uint)AutogenDifficulty.Shadows, 1.0),
+                (EnemyInfo.ShadowGiant,      (uint)AutogenDifficulty.Shadows, 0.4),
 
-                (EnemyInfo.Striker,      (uint)AutogenDifficulty.Hybrids, 1.00),
-                (EnemyInfo.Shooter,      (uint)AutogenDifficulty.Hybrids, 0.20),
-                (EnemyInfo.Hybrid,       (uint)AutogenDifficulty.Hybrids, 0.50),
+                (EnemyInfo.Striker,          (uint)AutogenDifficulty.Hybrids, 1.00),
+                (EnemyInfo.Shooter,          (uint)AutogenDifficulty.Hybrids, 0.20),
+                (EnemyInfo.Hybrid,           (uint)AutogenDifficulty.Hybrids, 0.50),
 
-                (EnemyInfo.Flyer,        (uint)AutogenDifficulty.Flyers, 1.0),
+                (EnemyInfo.Flyer,            (uint)AutogenDifficulty.Flyers, 1.0),
 
                 (EnemyInfo.NightmareStriker, (uint)AutogenDifficulty.Nightmares, 1.0),
                 (EnemyInfo.NightmareShooter, (uint)AutogenDifficulty.Nightmares, 0.6),

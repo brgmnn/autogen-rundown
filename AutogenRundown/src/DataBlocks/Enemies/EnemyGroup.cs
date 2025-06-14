@@ -481,7 +481,7 @@ public record EnemyGroup : DataBlock
         Type = EnemyGroupType.Hunter,
         Roles = new List<EnemyGroupRole>
         {
-            new() { Role = EnemyRole.Hunter, Distribution = EnemyRoleDistribution.Rel100 }
+            new() { Role = EnemyRole.PureSneak, Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = Enemy_New.HybridInfected.PersistentId,
         MaxScore = 4 * EnemyInfo.HybridInfected.Points,
@@ -493,7 +493,7 @@ public record EnemyGroup : DataBlock
         Type = EnemyGroupType.Hunter,
         Roles = new List<EnemyGroupRole>
         {
-            new() { Role = EnemyRole.Hunter, Distribution = EnemyRoleDistribution.Rel100 }
+            new() { Role = EnemyRole.PureSneak, Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = Enemy_New.HybridInfected.PersistentId,
         MaxScore = 7 * EnemyInfo.HybridInfected.Points,
