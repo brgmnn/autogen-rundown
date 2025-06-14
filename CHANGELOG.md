@@ -3,6 +3,23 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.70.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.70.0) — June 14, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Blood doors now correctly spawn many new enemies including Infested Strikers!
+
+### Changes
+
+Balance: Increased difficulty of blood doors
+Fixed: Bug with blood door groups not being available
+Fixed: Some enemy hibernation spawn groups overlapping
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.69.0...v0.70.0
+
+
 ## [v0.69.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.69.0) — June 11, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
