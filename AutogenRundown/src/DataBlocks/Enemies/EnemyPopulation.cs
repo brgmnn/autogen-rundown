@@ -156,7 +156,8 @@ public record EnemyPopulation : DataBlock
                 (EnemyInfo.Mother,          Enemy_New.Mother.PersistentId, 1.0),
                 (EnemyInfo.PMother,         Enemy_New.PMother.PersistentId, 1.0),
                 (EnemyInfo.Tank,            Enemy_New.Mother.PersistentId, 1.0),
-                (EnemyInfo.TankPotato,      Enemy_New.TankPotato.PersistentId, 1.0)
+                (EnemyInfo.TankPotato,      Enemy_New.TankPotato.PersistentId, 1.0),
+                (EnemyInfo.FlyerBig,        Enemy_New.FlyerBig.PersistentId, 1.0)
             };
 
             foreach (var (info, difficulty, weight) in enemies)

@@ -656,6 +656,18 @@ public record EnemyGroup : DataBlock
         RelativeWeight = 1.0,
     };
 
+    public static readonly EnemyGroup BloodDoor_FlyerBig = new()
+    {
+        Type = EnemyGroupType.Hunter,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.Ranged,  Distribution = EnemyRoleDistribution.Rel100 }
+        },
+        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.FlyerBig.PersistentId,
+        MaxScore = EnemyInfo.FlyerBig.Points,
+        RelativeWeight = 1.0,
+    };
+
     #endregion
 
     public static void Setup()
@@ -812,6 +824,7 @@ public record EnemyGroup : DataBlock
         BloodDoor_Tank_x2.Persist();
         BloodDoor_TankPotato.Persist();
         BloodDoor_TankPotato_x3.Persist();
+        BloodDoor_FlyerBig.Persist();
 
         #endregion
 

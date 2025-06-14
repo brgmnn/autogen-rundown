@@ -75,11 +75,11 @@ public partial record LevelLayout : DataBlock
         var count = 0;
         var (max, chance, inAreaChance) = director.Tier switch
         {
-            "A" => (0, 0.0, 0.0),
-            "B" => (1, 0.2, 0.3),
-            "C" => (2, 0.15, 0.5),
-            "D" => (3, 0.15, 0.5),
-            _ => (-1, 0.2, 0.7)
+            "A" => ( 0, 0.00, 0.00),
+            "B" => ( 1, 0.20, 0.45),
+            "C" => ( 2, 0.15, 0.55),
+            "D" => ( 3, 0.15, 0.65),
+            _ =>   (-1, 0.20, 0.80)
         };
 
         // Ensure that there are at least as many groups as 2x the max number of blood doors
@@ -113,6 +113,7 @@ public partial record LevelLayout : DataBlock
                 (1.0, 1, EnemyGroup.BloodDoor_GiantStrikers_Hard),
                 (1.0, 1, EnemyGroup.BloodDoor_GiantShooter_Hard),
                 (1.0, 2, EnemyGroup.BloodDoor_Baseline_Hybrids_Hard),
+                (1.0, 1, EnemyGroup.BloodDoor_Hybrid_Normal),
 
                 (1.0, 1, EnemyGroup.BloodDoor_Infested_Normal),
                 (0.3, 1, EnemyGroup.BloodDoor_Infested_Hard),
@@ -128,6 +129,7 @@ public partial record LevelLayout : DataBlock
                 (1.0, 2, EnemyGroup.BloodDoor_GiantStrikers_Hard),
                 (1.0, 1, EnemyGroup.BloodDoor_GiantShooter_Hard),
                 (1.0, 2, EnemyGroup.BloodDoor_Baseline_Hybrids_VeryHard),
+                (1.0, 1, EnemyGroup.BloodDoor_Hybrid_Hard),
 
                 (0.7, 2, EnemyGroup.BloodDoor_Infested_Hard),
 
@@ -248,6 +250,12 @@ public partial record LevelLayout : DataBlock
                         (1.0, 2, EnemyGroup.BloodDoor_NightmareGiants_Normal)
                     });
 
+                if (level.Settings.HasFlyers())
+                    areaPack.AddRange(new List<(double, int, EnemyGroup)>
+                    {
+                        (1.5, 1, EnemyGroup.BloodDoor_FlyerBig)
+                    });
+
                 if (level.Settings.HasFog() && level.FogSettings.IsInfectious)
                     doorPack.AddRange(new List<(double, int, EnemyGroup)>
                     {
@@ -290,6 +298,12 @@ public partial record LevelLayout : DataBlock
                         (3.0, 2, EnemyGroup.BloodDoor_NightmareGiants_Hard)
                     });
 
+                if (level.Settings.HasFlyers())
+                    areaPack.AddRange(new List<(double, int, EnemyGroup)>
+                    {
+                        (2.0, 2, EnemyGroup.BloodDoor_FlyerBig)
+                    });
+
                 if (level.Settings.HasFog() && level.FogSettings.IsInfectious)
                     doorPack.AddRange(new List<(double, int, EnemyGroup)>
                     {
@@ -308,13 +322,19 @@ public partial record LevelLayout : DataBlock
                 Generator.Flip(chance) &&
                 (count++ < max || max == -1))
             {
-                var withArea = Generator.Flip(inAreaChance);
+                // var withArea =  // Generator.Flip(inAreaChance);
+                // var withArea = true;
+                // var group = Generator.DrawSelect(doorPack);
+                var areaGroup = EnemyGroup.BloodDoor_FlyerBig;
+                var group = EnemyGroup.BloodDoor_Pouncer_x3;
 
                 zone.BloodDoor = new BloodDoor
                 {
-                    GroupBehindDoor = Generator.DrawSelect(doorPack),
-                    GroupInArea = withArea ? Generator.DrawSelect(areaPack) : EnemyGroup.None,
-                    AreaGroups = withArea ? 1 : 0
+                    GroupBehindDoor = group,
+                    GroupInArea = areaGroup,
+                    AreaGroups = 1
+                    // GroupInArea = withArea ? Generator.DrawSelect(areaPack) : EnemyGroup.None,
+                    // AreaGroups = withArea ? 1 : 0
                 };
 
                 Plugin.Logger.LogInfo($"Blood Door in to Zone={zone.LocalIndex}, " +
