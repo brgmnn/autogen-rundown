@@ -303,7 +303,7 @@ public record EnemyGroup : DataBlock
         Type = EnemyGroupType.Hunter,
         Roles = new List<EnemyGroupRole>
         {
-            new() { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 }
+            new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.ShadowGiant.PersistentId,
         MaxScore = 5 * EnemyInfo.ShadowGiant.Points,
@@ -315,7 +315,7 @@ public record EnemyGroup : DataBlock
         Type = EnemyGroupType.Hunter,
         Roles = new List<EnemyGroupRole>
         {
-            new() { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 }
+            new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.ShadowGiant.PersistentId,
         MaxScore = 7 * EnemyInfo.ShadowGiant.Points,
@@ -428,6 +428,30 @@ public record EnemyGroup : DataBlock
         RelativeWeight = 1.0,
     };
 
+    public static readonly EnemyGroup BloodDoor_Hybrid_Normal = new()
+    {
+        Type = EnemyGroupType.Hunter,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.PureSneak, Distribution = EnemyRoleDistribution.Rel100 }
+        },
+        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Hybrid.PersistentId,
+        MaxScore = 4 * EnemyInfo.Hybrid.Points,
+        RelativeWeight = 1.0,
+    };
+
+    public static readonly EnemyGroup BloodDoor_Hybrid_Hard = new()
+    {
+        Type = EnemyGroupType.Hunter,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.PureSneak, Distribution = EnemyRoleDistribution.Rel100 }
+        },
+        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Hybrid.PersistentId,
+        MaxScore = 7 * EnemyInfo.Hybrid.Points,
+        RelativeWeight = 1.0,
+    };
+
     public static readonly EnemyGroup BloodDoor_Infested_Normal = new()
     {
         Type = EnemyGroupType.Hunter,
@@ -449,18 +473,6 @@ public record EnemyGroup : DataBlock
         },
         Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.StrikerInfested.PersistentId,
         MaxScore = 16 * EnemyInfo.StrikerInfested.Points,
-        RelativeWeight = 1.0,
-    };
-
-    public static readonly EnemyGroup BloodDoor_Hybrid_Normal = new()
-    {
-        Type = EnemyGroupType.Hunter,
-        Roles = new List<EnemyGroupRole>
-        {
-            new() { Role = EnemyRole.Hunter, Distribution = EnemyRoleDistribution.Rel100 }
-        },
-        Difficulty = Enemy_New.Hybrid.PersistentId,
-        MaxScore = 4 * EnemyInfo.Hybrid.Points,
         RelativeWeight = 1.0,
     };
 
@@ -496,7 +508,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.Hunter,  Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Pouncer.PersistentId,
-        MaxScore = 4,
+        MaxScore = EnemyInfo.Pouncer.Points,
         RelativeWeight = 1.0,
     };
 
@@ -508,7 +520,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.Hunter,  Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Pouncer.PersistentId,
-        MaxScore = 8,
+        MaxScore = 2 * EnemyInfo.Pouncer.Points,
         RelativeWeight = 1.0,
     };
 
@@ -520,7 +532,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.Hunter,  Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Pouncer.PersistentId,
-        MaxScore = 12,
+        MaxScore = 3 * EnemyInfo.Pouncer.Points,
         RelativeWeight = 1.0,
     };
 
@@ -532,7 +544,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.Hunter,  Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.PouncerShadow.PersistentId,
-        MaxScore = 4,
+        MaxScore = EnemyInfo.PouncerShadow.Points,
         RelativeWeight = 1.0,
     };
 
@@ -544,7 +556,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.Hunter,  Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.PouncerShadow.PersistentId,
-        MaxScore = 8,
+        MaxScore = 2 * EnemyInfo.PouncerShadow.Points,
         RelativeWeight = 1.0,
     };
 
@@ -556,7 +568,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.Hunter,  Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.PouncerShadow.PersistentId,
-        MaxScore = 12,
+        MaxScore = 3 * EnemyInfo.PouncerShadow.Points,
         RelativeWeight = 1.0,
     };
 
@@ -568,7 +580,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Mother.PersistentId,
-        MaxScore = 10,
+        MaxScore = EnemyInfo.Mother.Points,
         RelativeWeight = 1.0,
     };
 
@@ -580,7 +592,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Mother.PersistentId,
-        MaxScore = 20,
+        MaxScore = 2 * EnemyInfo.Mother.Points,
         RelativeWeight = 1.0,
     };
 
@@ -592,7 +604,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.PMother.PersistentId,
-        MaxScore = 10,
+        MaxScore = EnemyInfo.PMother.Points,
         RelativeWeight = 1.0,
     };
 
@@ -604,7 +616,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Tank.PersistentId,
-        MaxScore = 10,
+        MaxScore = EnemyInfo.Tank.Points,
         RelativeWeight = 1.0,
     };
 
@@ -616,7 +628,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Tank.PersistentId,
-        MaxScore = 20,
+        MaxScore = 2 * EnemyInfo.Tank.Points,
         RelativeWeight = 1.0,
     };
 
@@ -628,7 +640,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.TankPotato.PersistentId,
-        MaxScore = 10,
+        MaxScore = EnemyInfo.TankPotato.Points,
         RelativeWeight = 1.0,
     };
 
@@ -640,7 +652,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
         },
         Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.TankPotato.PersistentId,
-        MaxScore = 30,
+        MaxScore = 3 * EnemyInfo.TankPotato.Points,
         RelativeWeight = 1.0,
     };
 
@@ -775,8 +787,11 @@ public record EnemyGroup : DataBlock
 
         BloodDoor_Baseline_Hybrids_Easy.Persist();
         BloodDoor_Baseline_Hybrids_Normal.Persist();
+        BloodDoor_Baseline_Hybrids_Hard.Persist();
+        BloodDoor_Baseline_Hybrids_VeryHard.Persist();
 
         BloodDoor_Hybrid_Normal.Persist();
+        BloodDoor_Hybrid_Hard.Persist();
 
         BloodDoor_Infested_Normal.Persist();
         BloodDoor_Infested_Hard.Persist();
@@ -784,15 +799,15 @@ public record EnemyGroup : DataBlock
         BloodDoor_HybridInfected_Normal.Persist();
         BloodDoor_HybridInfected_Hard.Persist();
 
-        BloodDoor_Mother.Persist();
-        BloodDoor_Mother_x2.Persist();
-        BloodDoor_PMother.Persist();
         BloodDoor_Pouncer.Persist();
         BloodDoor_Pouncer_x2.Persist();
         BloodDoor_Pouncer_x3.Persist();
         BloodDoor_PouncerShadow.Persist();
         BloodDoor_PouncerShadow_x2.Persist();
         BloodDoor_PouncerShadow_x3.Persist();
+        BloodDoor_Mother.Persist();
+        BloodDoor_Mother_x2.Persist();
+        BloodDoor_PMother.Persist();
         BloodDoor_Tank.Persist();
         BloodDoor_Tank_x2.Persist();
         BloodDoor_TankPotato.Persist();
