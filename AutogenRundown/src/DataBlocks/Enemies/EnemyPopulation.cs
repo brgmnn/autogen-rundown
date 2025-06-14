@@ -136,12 +136,21 @@ public record EnemyPopulation : DataBlock
                 (EnemyInfo.Flyer,        (uint)AutogenDifficulty.Flyers, 1.0),
 
                 (EnemyInfo.NightmareStriker, (uint)AutogenDifficulty.Nightmares, 1.0),
-                (EnemyInfo.NightmareShooter, (uint)AutogenDifficulty.Nightmares, 1.0),
-                (EnemyInfo.NightmareGiant,   (uint)AutogenDifficulty.Nightmares, 0.2),
+                (EnemyInfo.NightmareShooter, (uint)AutogenDifficulty.Nightmares, 0.6),
+                (EnemyInfo.NightmareGiant,   (uint)AutogenDifficulty.Nightmares, 0.4),
 
                 // Enemy specific
+                (EnemyInfo.StrikerGiant,    Enemy_New.StrikerGiant_Wave.PersistentId, 1.0),
+                (EnemyInfo.ChargerGiant,    Enemy_New.ChargerGiant.PersistentId, 1.0),
+                (EnemyInfo.ShadowGiant,     Enemy_New.ShadowGiant.PersistentId, 1.0),
+                (EnemyInfo.NightmareGiant,  Enemy_New.NightmareGiant.PersistentId, 1.0),
+
+                (EnemyInfo.Mother,          Enemy_New.Mother.PersistentId, 1.0),
+                (EnemyInfo.PMother,         Enemy_New.PMother.PersistentId, 1.0),
                 (EnemyInfo.Pouncer,         Enemy_New.Pouncer.PersistentId, 1.0),
                 (EnemyInfo.PouncerShadow,   Enemy_New.PouncerShadow.PersistentId, 1.0),
+                (EnemyInfo.Tank,            Enemy_New.Mother.PersistentId, 1.0),
+                (EnemyInfo.TankPotato,      Enemy_New.TankPotato.PersistentId, 1.0),
 
                 (EnemyInfo.Hybrid,          Enemy_New.Hybrid.PersistentId, 1.0),
                 (EnemyInfo.HybridInfected,  Enemy_New.HybridInfected.PersistentId, 1.0),

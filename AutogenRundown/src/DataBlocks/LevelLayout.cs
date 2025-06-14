@@ -65,16 +65,16 @@ public partial record LevelLayout : DataBlock
 
     /// <summary>
     /// Roll for blood doors
-    ///
-    /// TODO: rework with custom enemy groups
-    /// TODO: increase difficulty, these are generally just too easy
     /// </summary>
     public void RollBloodDoors()
     {
+        // We don't add blood doors for A-tier
+        if (level.Tier == "A")
+            return;
+
         var count = 0;
         var (max, chance, inAreaChance) = director.Tier switch
         {
-            // No blood doors for A
             "A" => (0, 0.0, 0.0),
             "B" => (1, 0.2, 0.3),
             "C" => (2, 0.15, 0.5),
@@ -82,106 +82,222 @@ public partial record LevelLayout : DataBlock
             _ => (-1, 0.2, 0.7)
         };
 
-        var withInfection = level.FogSettings.IsInfectious;
-
         // Ensure that there are at least as many groups as 2x the max number of blood doors
         // that can spawn. For unlimited cap tiers (D and E) this is 2x the number of zones.
         // Door pack is used to select enemies that spawn behind the door.
         var doorPack = director.Tier switch
         {
-            "B" => new List<(double, int, VanillaEnemyGroup)>
+            "B" => new List<(double, int, EnemyGroup)>
             {
-                (1.0, 2, VanillaEnemyGroup.BloodDoor_Easy),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Medium)
+                (1.0, 2, EnemyGroup.BloodDoor_Baseline_Easy),
+                (1.0, 1, EnemyGroup.BloodDoor_Baseline_Normal),
+                (0.8, 1, EnemyGroup.BloodDoor_Baseline_Hybrids_Easy)
             },
 
-            "C" => new List<(double, int, VanillaEnemyGroup)>
+            "C" => new List<(double, int, EnemyGroup)>
             {
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Easy),
-                (1.0, 2, VanillaEnemyGroup.BloodDoor_Medium),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Bigs),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Hybrids_Easy),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Hybrids_Medium)
+                (1.0, 3, EnemyGroup.BloodDoor_Baseline_Normal),
+                (0.8, 1, EnemyGroup.BloodDoor_GiantStrikers_Normal),
+                (1.0, 2, EnemyGroup.BloodDoor_Baseline_Hybrids_Normal),
+
+                (0.2, 1, EnemyGroup.BloodDoor_Infested_Normal),
+
+                (0.5, 1, EnemyGroup.BloodDoor_Tank),
+                (0.8, 1, EnemyGroup.BloodDoor_TankPotato),
             },
 
-            "D" => new List<(double, int, VanillaEnemyGroup)>
+            "D" => new List<(double, int, EnemyGroup)>
             {
-                (1.0, 3, VanillaEnemyGroup.BloodDoor_Medium),
-                (1.0, 2, VanillaEnemyGroup.BloodDoor_Bigs),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Chargers_Easy),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy),
-                (1.0, 2, VanillaEnemyGroup.BloodDoor_Hybrids_Medium),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Shadows_Easy),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_BossMother)
+                (1.0, 3, EnemyGroup.BloodDoor_Baseline_Hard),
+                (1.0, 1, EnemyGroup.BloodDoor_GiantStrikers_Normal),
+                (1.0, 1, EnemyGroup.BloodDoor_GiantStrikers_Hard),
+                (1.0, 1, EnemyGroup.BloodDoor_GiantShooter_Hard),
+                (1.0, 2, EnemyGroup.BloodDoor_Baseline_Hybrids_Hard),
+
+                (1.0, 1, EnemyGroup.BloodDoor_Infested_Normal),
+                (0.3, 1, EnemyGroup.BloodDoor_Infested_Hard),
+
+                (0.5, 1, EnemyGroup.BloodDoor_Mother),
+                (0.7, 1, EnemyGroup.BloodDoor_Tank),
+                (0.2, 1, EnemyGroup.BloodDoor_TankPotato_x3),
             },
 
-            "E" => new List<(double, int, VanillaEnemyGroup)>
+            "E" => new List<(double, int, EnemyGroup)>
             {
-                (1.0, 2, VanillaEnemyGroup.BloodDoor_Medium),
-                (1.0, 2, VanillaEnemyGroup.BloodDoor_Bigs),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Chargers_Easy),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy),
-                (1.0, 2, VanillaEnemyGroup.BloodDoor_Hybrids_Medium),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Shadows_Easy),
-                (1.0, 2, VanillaEnemyGroup.BloodDoor_BossMother),
+                (1.0, 3, EnemyGroup.BloodDoor_Baseline_VeryHard),
+                (1.0, 2, EnemyGroup.BloodDoor_GiantStrikers_Hard),
+                (1.0, 1, EnemyGroup.BloodDoor_GiantShooter_Hard),
+                (1.0, 2, EnemyGroup.BloodDoor_Baseline_Hybrids_VeryHard),
 
-                (withInfection ? 10.0 : 1.0, 2, (VanillaEnemyGroup)EnemyGroup.BloodDoor_HybridInfected_Hard.PersistentId)
+                (0.7, 2, EnemyGroup.BloodDoor_Infested_Hard),
+
+                (0.7, 1, EnemyGroup.BloodDoor_Mother),
+                (0.7, 1, EnemyGroup.BloodDoor_Tank),
+                (0.7, 1, EnemyGroup.BloodDoor_TankPotato_x3),
+
+                (0.20, 1, EnemyGroup.BloodDoor_PMother),
+                (0.15, 1, EnemyGroup.BloodDoor_Tank_x2),
             },
 
-            _ => new List<(double, int, VanillaEnemyGroup)>()
+            _ => new List<(double, int, EnemyGroup)>()
         };
-
 
         // Area pack picks enemies to spawn further back, if we successfully roll to add them.
         var areaPack = director.Tier switch
         {
-            "B" => new List<(double, int, VanillaEnemyGroup)>
+            "B" => new List<(double, int, EnemyGroup)>
             {
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Easy),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Medium)
+                (1.0, 2, EnemyGroup.BloodDoor_Baseline_Easy),
+                (1.0, 1, EnemyGroup.BloodDoor_Baseline_Normal),
             },
 
-            "C" => new List<(double, int, VanillaEnemyGroup)>
+            "C" => new List<(double, int, EnemyGroup)>
             {
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Easy),
-                (1.0, 2, VanillaEnemyGroup.BloodDoor_Medium),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Bigs),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Chargers_Easy),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Hybrids_Easy),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Shadows_Easy),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Pouncers)
+                (1.0, 3, EnemyGroup.BloodDoor_Baseline_Easy),
+                (1.0, 2, EnemyGroup.BloodDoor_Baseline_Hybrids_Easy),
+
+                (0.2, 1, EnemyGroup.BloodDoor_Pouncer),
+
+                (0.1, 1, EnemyGroup.BloodDoor_Tank),
+                (0.8, 1, EnemyGroup.BloodDoor_TankPotato),
             },
 
-            "D" => new List<(double, int, VanillaEnemyGroup)>
+            "D" => new List<(double, int, EnemyGroup)>
             {
-                (1.0, 3, VanillaEnemyGroup.BloodDoor_Medium),
-                (1.0, 2, VanillaEnemyGroup.BloodDoor_Bigs),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Chargers_Easy),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy),
-                (1.0, 2, VanillaEnemyGroup.BloodDoor_Hybrids_Medium),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Shadows_Easy),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_BossMother),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Pouncers),
+                (1.0, 5, EnemyGroup.BloodDoor_Baseline_Normal),
+                (1.0, 2, EnemyGroup.BloodDoor_Baseline_Hybrids_Normal),
 
-                (withInfection ? 5.0 : 1.0, 1, (VanillaEnemyGroup)EnemyGroup.BloodDoor_HybridInfected_Hard.PersistentId)
+                (1.0, 1, EnemyGroup.BloodDoor_TankPotato),
+                (0.7, 1, EnemyGroup.BloodDoor_Infested_Normal),
+
+                (1.0, 2, EnemyGroup.BloodDoor_Pouncer),
+                (0.7, 1, EnemyGroup.BloodDoor_Pouncer_x2),
+
+                (0.3, 1, EnemyGroup.BloodDoor_Mother),
+                (0.2, 1, EnemyGroup.BloodDoor_Tank),
             },
 
-            "E" => new List<(double, int, VanillaEnemyGroup)>
+            "E" => new List<(double, int, EnemyGroup)>
             {
-                (1.0, 3, VanillaEnemyGroup.BloodDoor_Medium),
-                (1.0, 2, VanillaEnemyGroup.BloodDoor_Bigs),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Chargers_Easy),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_ChargersGiant_Easy),
-                (1.0, 2, VanillaEnemyGroup.BloodDoor_Hybrids_Medium),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Shadows_Easy),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_BossMother),
-                (1.0, 1, VanillaEnemyGroup.BloodDoor_Pouncers),
+                (1.0, 4, EnemyGroup.BloodDoor_Baseline_Hard),
+                (1.0, 1, EnemyGroup.BloodDoor_GiantShooter_Hard),
+                (1.0, 1, EnemyGroup.BloodDoor_Baseline_Hybrids_Hard),
 
-                (withInfection ? 10.0 : 1.0, 2, (VanillaEnemyGroup)EnemyGroup.BloodDoor_HybridInfected_Hard.PersistentId)
+                (1.0, 2, EnemyGroup.BloodDoor_TankPotato),
+                (0.7, 2, EnemyGroup.BloodDoor_Infested_Hard),
+
+                (1.0, 2, EnemyGroup.BloodDoor_Pouncer_x2),
+                (0.5, 1, EnemyGroup.BloodDoor_Pouncer_x3),
+
+                (0.5, 1, EnemyGroup.BloodDoor_Mother),
+                (0.4, 1, EnemyGroup.BloodDoor_Tank),
             },
 
-            _ => new List<(double, int, VanillaEnemyGroup)>()
+            _ => new List<(double, int, EnemyGroup)>()
         };
+
+        switch (level.Tier)
+        {
+            case "C":
+            {
+                if (level.Settings.HasChargers())
+                    doorPack.AddRange(new List<(double, int, EnemyGroup)>
+                    {
+                        (2.0, 1, EnemyGroup.BloodDoor_Chargers_Easy),
+                        (2.0, 2, EnemyGroup.BloodDoor_Chargers_Normal)
+                    });
+
+                if (level.Settings.HasNightmares())
+                    doorPack.AddRange(new List<(double, int, EnemyGroup)>
+                    {
+                        (2.0, 2, EnemyGroup.BloodDoor_Nightmares_Normal)
+                    });
+                break;
+            }
+
+            case "D":
+            {
+                if (level.Settings.HasChargers())
+                    doorPack.AddRange(new List<(double, int, EnemyGroup)>
+                    {
+                        (2.0, 1, EnemyGroup.BloodDoor_Chargers_Normal),
+                        (2.0, 2, EnemyGroup.BloodDoor_Chargers_Hard),
+                        (2.0, 2, EnemyGroup.BloodDoor_GiantChargers_Normal)
+                    });
+
+                if (level.Settings.HasShadows())
+                {
+                    doorPack.AddRange(new List<(double, int, EnemyGroup)>
+                    {
+                        (1.0, 1, EnemyGroup.BloodDoor_Shadows_Normal),
+                        (2.0, 2, EnemyGroup.BloodDoor_Shadows_Hard),
+                        (2.0, 2, EnemyGroup.BloodDoor_ShadowGiant_Normal),
+                    });
+                    areaPack.AddRange(new List<(double, int, EnemyGroup)>
+                    {
+                        (2.0, 3, EnemyGroup.BloodDoor_PouncerShadow),
+                        (1.5, 2, EnemyGroup.BloodDoor_PouncerShadow_x2)
+                    });
+                }
+
+                if (level.Settings.HasNightmares())
+                    doorPack.AddRange(new List<(double, int, EnemyGroup)>
+                    {
+                        (2.0, 2, EnemyGroup.BloodDoor_Nightmares_Normal),
+                        (1.0, 1, EnemyGroup.BloodDoor_Nightmares_Hard),
+                        (1.0, 2, EnemyGroup.BloodDoor_NightmareGiants_Normal)
+                    });
+
+                if (level.Settings.HasFog() && level.FogSettings.IsInfectious)
+                    doorPack.AddRange(new List<(double, int, EnemyGroup)>
+                    {
+                        (2.0, 1, EnemyGroup.BloodDoor_HybridInfected_Normal),
+                        (2.0, 1, EnemyGroup.BloodDoor_HybridInfected_Hard)
+                    });
+                break;
+            }
+
+            case "E":
+            {
+                if (level.Settings.HasChargers())
+                    doorPack.AddRange(new List<(double, int, EnemyGroup)>
+                    {
+                        (2.0, 1, EnemyGroup.BloodDoor_Chargers_Hard),
+                        (2.0, 2, EnemyGroup.BloodDoor_Chargers_VeryHard),
+                        (2.0, 2, EnemyGroup.BloodDoor_GiantChargers_Hard)
+                    });
+
+                if (level.Settings.HasShadows())
+                {
+                    doorPack.AddRange(new List<(double, int, EnemyGroup)>
+                    {
+                        (1.0, 1, EnemyGroup.BloodDoor_Shadows_Hard),
+                        (2.0, 2, EnemyGroup.BloodDoor_Shadows_VeryHard),
+                        (2.0, 2, EnemyGroup.BloodDoor_ShadowGiant_Hard),
+                    });
+                    areaPack.AddRange(new List<(double, int, EnemyGroup)>
+                    {
+                        (2.0, 2, EnemyGroup.BloodDoor_PouncerShadow),
+                        (1.5, 2, EnemyGroup.BloodDoor_PouncerShadow_x2),
+                        (1.0, 1, EnemyGroup.BloodDoor_PouncerShadow_x3)
+                    });
+                }
+
+                if (level.Settings.HasNightmares())
+                    doorPack.AddRange(new List<(double, int, EnemyGroup)>
+                    {
+                        (2.0, 2, EnemyGroup.BloodDoor_Nightmares_Hard),
+                        (3.0, 2, EnemyGroup.BloodDoor_NightmareGiants_Hard)
+                    });
+
+                if (level.Settings.HasFog() && level.FogSettings.IsInfectious)
+                    doorPack.AddRange(new List<(double, int, EnemyGroup)>
+                    {
+                        (3.0, 2, EnemyGroup.BloodDoor_HybridInfected_Hard)
+                    });
+                break;
+            }
+        }
 
         // Do not add blood doors to Zone 0, these are always either the elevator or bulkhead doors.
         // Do not add blood doors to Apex security doors
@@ -194,20 +310,16 @@ public partial record LevelLayout : DataBlock
             {
                 var withArea = Generator.Flip(inAreaChance);
 
-                Plugin.Logger.LogInfo($"Spawned blood door on {zone.LocalIndex}");
-
                 zone.BloodDoor = new BloodDoor
                 {
-                    Enabled = true,
-                    GroupBehindDoor = EnemyGroup.BloodDoor_Pouncer_Hard,
+                    GroupBehindDoor = Generator.DrawSelect(doorPack),
+                    GroupInArea = withArea ? Generator.DrawSelect(areaPack) : EnemyGroup.None,
+                    AreaGroups = withArea ? 1 : 0
                 };
 
-                // zone.BloodDoor = new BloodDoor
-                // {
-                //     EnemyGroupInfrontOfDoor = (uint)Generator.DrawSelect(doorPack),
-                //     EnemyGroupInArea = withArea ? (uint)Generator.DrawSelect(areaPack) : 0,
-                //     EnemyGroupsInArea = withArea ? 1 : 0,
-                // };
+                Plugin.Logger.LogInfo($"Blood Door in to Zone={zone.LocalIndex}, " +
+                                      $"EnemyGroup={zone.BloodDoor.GroupBehindDoor}, " +
+                                      $"AreaGroup={zone.BloodDoor.GroupInArea}");
             }
     }
 
