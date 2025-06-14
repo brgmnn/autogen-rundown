@@ -165,7 +165,7 @@ public record Enemy_New : DataBlock
     #endregion
     #endregion
 
-    public Enemy_New(PidOffsets offsets = PidOffsets.Enemy)
+    public Enemy_New(PidOffsets offsets = PidOffsets.None)
         : base(Generator.GetPersistentId(offsets))
     { }
 

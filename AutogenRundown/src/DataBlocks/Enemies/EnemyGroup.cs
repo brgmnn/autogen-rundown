@@ -149,7 +149,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.StrikerGiant_Wave.PersistentId,
+        Difficulty = Enemy_New.StrikerGiant_Wave.PersistentId,
         MaxScore = 4 * EnemyInfo.StrikerGiant.Points,
         RelativeWeight = 1.0,
     };
@@ -161,7 +161,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.StrikerGiant_Wave.PersistentId,
+        Difficulty = Enemy_New.StrikerGiant_Wave.PersistentId,
         MaxScore = 7 * EnemyInfo.StrikerGiant.Points,
         RelativeWeight = 1.0,
     };
@@ -173,7 +173,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Ranged,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.ShooterGiant.PersistentId,
+        Difficulty = Enemy_New.ShooterGiant.PersistentId,
         MaxScore = 7 * EnemyInfo.ShooterGiant.Points,
         RelativeWeight = 1.0,
     };
@@ -233,7 +233,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.ChargerGiant.PersistentId,
+        Difficulty = Enemy_New.ChargerGiant.PersistentId,
         MaxScore = 4 * EnemyInfo.ChargerGiant.Points,
         RelativeWeight = 1.0,
     };
@@ -245,7 +245,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.ChargerGiant.PersistentId,
+        Difficulty = Enemy_New.ChargerGiant.PersistentId,
         MaxScore = 6 * EnemyInfo.ChargerGiant.Points,
         RelativeWeight = 1.0,
     };
@@ -305,7 +305,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.ShadowGiant.PersistentId,
+        Difficulty = Enemy_New.ShadowGiant.PersistentId,
         MaxScore = 5 * EnemyInfo.ShadowGiant.Points,
         RelativeWeight = 1.0,
     };
@@ -317,7 +317,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.ShadowGiant.PersistentId,
+        Difficulty = Enemy_New.ShadowGiant.PersistentId,
         MaxScore = 7 * EnemyInfo.ShadowGiant.Points,
         RelativeWeight = 1.0,
     };
@@ -341,7 +341,7 @@ public record EnemyGroup : DataBlock
         Roles = new List<EnemyGroupRole>
         {
             new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel75 },
-            new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel25 }
+            new() { Role = EnemyRole.Ranged,  Distribution = EnemyRoleDistribution.Rel25 }
         },
         Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Nightmares),
         MaxScore = 21,
@@ -355,7 +355,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.NightmareGiant.PersistentId,
+        Difficulty = Enemy_New.NightmareGiant.PersistentId,
         MaxScore = 3 * EnemyInfo.NightmareGiant.Points,
         RelativeWeight = 1.0,
     };
@@ -367,7 +367,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.NightmareGiant.PersistentId,
+        Difficulty = Enemy_New.NightmareGiant.PersistentId,
         MaxScore = 5 * EnemyInfo.NightmareGiant.Points,
         RelativeWeight = 1.0,
     };
@@ -381,7 +381,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 },
             new() { Role = EnemyRole.PureSneak, Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Hybrids),
+        Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Base),
         MaxScore = 12,
         RelativeWeight = 1.0,
     };
@@ -395,7 +395,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 },
             new() { Role = EnemyRole.PureSneak, Distribution = EnemyRoleDistribution.Rel75 }
         },
-        Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Hybrids),
+        Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Base),
         MaxScore = 16,
         RelativeWeight = 1.0,
     };
@@ -409,7 +409,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 },
             new() { Role = EnemyRole.PureSneak, Distribution = EnemyRoleDistribution.Rel75 }
         },
-        Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Hybrids),
+        Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Base),
         MaxScore = 21,
         RelativeWeight = 1.0,
     };
@@ -423,7 +423,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 },
             new() { Role = EnemyRole.PureSneak, Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Hybrids),
+        Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Base),
         MaxScore = 28,
         RelativeWeight = 1.0,
     };
@@ -435,7 +435,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.PureSneak, Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Hybrid.PersistentId,
+        Difficulty = Enemy_New.Hybrid.PersistentId,
         MaxScore = 4 * EnemyInfo.Hybrid.Points,
         RelativeWeight = 1.0,
     };
@@ -447,7 +447,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.PureSneak, Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Hybrid.PersistentId,
+        Difficulty = Enemy_New.Hybrid.PersistentId,
         MaxScore = 7 * EnemyInfo.Hybrid.Points,
         RelativeWeight = 1.0,
     };
@@ -459,7 +459,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.StrikerInfested.PersistentId,
+        Difficulty = Enemy_New.StrikerInfested.PersistentId,
         MaxScore = 10,
         RelativeWeight = 1.0,
     };
@@ -471,7 +471,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.StrikerInfested.PersistentId,
+        Difficulty = Enemy_New.StrikerInfested.PersistentId,
         MaxScore = 16 * EnemyInfo.StrikerInfested.Points,
         RelativeWeight = 1.0,
     };
@@ -507,7 +507,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Hunter,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Pouncer.PersistentId,
+        Difficulty = Enemy_New.Pouncer.PersistentId,
         MaxScore = EnemyInfo.Pouncer.Points,
         RelativeWeight = 1.0,
     };
@@ -519,7 +519,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Hunter,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Pouncer.PersistentId,
+        Difficulty = Enemy_New.Pouncer.PersistentId,
         MaxScore = 2 * EnemyInfo.Pouncer.Points,
         RelativeWeight = 1.0,
     };
@@ -531,7 +531,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Hunter,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Pouncer.PersistentId,
+        Difficulty = Enemy_New.Pouncer.PersistentId,
         MaxScore = 3 * EnemyInfo.Pouncer.Points,
         RelativeWeight = 1.0,
     };
@@ -543,7 +543,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Hunter,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.PouncerShadow.PersistentId,
+        Difficulty = Enemy_New.PouncerShadow.PersistentId,
         MaxScore = EnemyInfo.PouncerShadow.Points,
         RelativeWeight = 1.0,
     };
@@ -555,7 +555,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Hunter,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.PouncerShadow.PersistentId,
+        Difficulty = Enemy_New.PouncerShadow.PersistentId,
         MaxScore = 2 * EnemyInfo.PouncerShadow.Points,
         RelativeWeight = 1.0,
     };
@@ -567,7 +567,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Hunter,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.PouncerShadow.PersistentId,
+        Difficulty = Enemy_New.PouncerShadow.PersistentId,
         MaxScore = 3 * EnemyInfo.PouncerShadow.Points,
         RelativeWeight = 1.0,
     };
@@ -579,7 +579,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Mother.PersistentId,
+        Difficulty = Enemy_New.Mother.PersistentId,
         MaxScore = EnemyInfo.Mother.Points,
         RelativeWeight = 1.0,
     };
@@ -591,7 +591,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Mother.PersistentId,
+        Difficulty = Enemy_New.Mother.PersistentId,
         MaxScore = 2 * EnemyInfo.Mother.Points,
         RelativeWeight = 1.0,
     };
@@ -603,7 +603,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.PMother.PersistentId,
+        Difficulty = Enemy_New.PMother.PersistentId,
         MaxScore = EnemyInfo.PMother.Points,
         RelativeWeight = 1.0,
     };
@@ -615,7 +615,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Tank.PersistentId,
+        Difficulty = Enemy_New.Tank.PersistentId,
         MaxScore = EnemyInfo.Tank.Points,
         RelativeWeight = 1.0,
     };
@@ -627,7 +627,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.Tank.PersistentId,
+        Difficulty = Enemy_New.Tank.PersistentId,
         MaxScore = 2 * EnemyInfo.Tank.Points,
         RelativeWeight = 1.0,
     };
@@ -639,7 +639,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.TankPotato.PersistentId,
+        Difficulty = Enemy_New.TankPotato.PersistentId,
         MaxScore = EnemyInfo.TankPotato.Points,
         RelativeWeight = 1.0,
     };
@@ -651,7 +651,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.TankPotato.PersistentId,
+        Difficulty = Enemy_New.TankPotato.PersistentId,
         MaxScore = 3 * EnemyInfo.TankPotato.Points,
         RelativeWeight = 1.0,
     };
@@ -663,7 +663,7 @@ public record EnemyGroup : DataBlock
         {
             new() { Role = EnemyRole.Ranged,  Distribution = EnemyRoleDistribution.Rel100 }
         },
-        Difficulty = (uint)AutogenDifficulty.BloodDoors | Enemy_New.FlyerBig.PersistentId,
+        Difficulty = Enemy_New.FlyerBig.PersistentId,
         MaxScore = EnemyInfo.FlyerBig.Points,
         RelativeWeight = 1.0,
     };
@@ -824,7 +824,7 @@ public record EnemyGroup : DataBlock
         BloodDoor_Tank_x2.Persist();
         BloodDoor_TankPotato.Persist();
         BloodDoor_TankPotato_x3.Persist();
-        BloodDoor_FlyerBig.Persist();
+        // BloodDoor_FlyerBig.Persist();
 
         #endregion
 

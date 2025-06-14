@@ -51,7 +51,7 @@ static public class Generator
     public static PID pid = 100000;
 
     private static PID enemyPid = 70;
-    private static PID enemyGroupPid = 80;
+    private static PID enemyGroupPid = 63;
     private static PID wavePopulationPid = 200;
     private static PID waveSettingsPid = 1;
 

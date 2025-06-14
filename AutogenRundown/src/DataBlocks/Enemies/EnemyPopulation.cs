@@ -39,28 +39,24 @@ public record EnemyPopulation : DataBlock
             EnemyInfo.Shadow,
             EnemyInfo.ShadowGiant,
             EnemyInfo.Hybrid,
-            // EnemyInfo.Hybrid_Hunter,
             EnemyInfo.NightmareShooter,
             EnemyInfo.NightmareStriker,
-            EnemyInfo.NightmareStrikerGiant,
+            // EnemyInfo.NightmareStrikerGiant,
             EnemyInfo.Flyer,
             EnemyInfo.FlyerBig,
             EnemyInfo.Mother,
-            // EnemyInfo.Mother_Hunter,
             EnemyInfo.Mother_MiniBoss,
             EnemyInfo.PMother,
-            // EnemyInfo.PMother_Hunter,
             EnemyInfo.PMother_MiniBoss,
             EnemyInfo.BirtherChild,
             EnemyInfo.Tank,
-            // EnemyInfo.Tank_Hunter,
+            EnemyInfo.TankPotato,
             EnemyInfo.Tank_MiniBoss,
             EnemyInfo.Pouncer,
 
             EnemyInfo.PouncerShadow,
             EnemyInfo.PouncerShadow_Sneak,
             EnemyInfo.HybridInfected,
-            // EnemyInfo.HybridInfected_Hunter,
             EnemyInfo.NightmareGiant,
             EnemyInfo.StrikerInfested,
         };
@@ -77,16 +73,6 @@ public record EnemyPopulation : DataBlock
                 Enemy = info.Enemy,
                 Cost = info.Points,
             });
-
-            // // This is specifically for blood doors. It lets us specify any of the enemy
-            // // populations to spawn behind the blood door.
-            // Roles.Add(new EnemyPopulationRole
-            // {
-            //     Role = (uint)EnemyRole.Hunter,
-            //     Difficulty = (uint)info.Enemy,
-            //     Enemy = info.Enemy,
-            //     Cost = info.Points,
-            // });
         }
         #endregion
 
@@ -116,12 +102,15 @@ public record EnemyPopulation : DataBlock
 
         #region Blood Doors
         {
+            // We only need to add the groups of enemies. Specific enemies
+            // should be spawned using the individual enemy population
             var enemies = new List<(EnemyInfo info, uint difficulty, double weight)>
             {
                 (EnemyInfo.Striker,          (uint)AutogenDifficulty.Base, 1.00),
-                (EnemyInfo.Shooter,          (uint)AutogenDifficulty.Base, 1.00),
+                (EnemyInfo.Shooter,          (uint)AutogenDifficulty.Base, 0.80),
                 (EnemyInfo.StrikerGiant,     (uint)AutogenDifficulty.Base, 0.50),
                 (EnemyInfo.ShooterGiant,     (uint)AutogenDifficulty.Base, 0.25),
+                (EnemyInfo.Hybrid,           (uint)AutogenDifficulty.Base, 1.00),
 
                 (EnemyInfo.Charger,          (uint)AutogenDifficulty.Chargers, 1.0),
                 (EnemyInfo.ChargerGiant,     (uint)AutogenDifficulty.Chargers, 0.4),
@@ -129,35 +118,11 @@ public record EnemyPopulation : DataBlock
                 (EnemyInfo.Shadow,           (uint)AutogenDifficulty.Shadows, 1.0),
                 (EnemyInfo.ShadowGiant,      (uint)AutogenDifficulty.Shadows, 0.4),
 
-                (EnemyInfo.Striker,          (uint)AutogenDifficulty.Hybrids, 1.00),
-                (EnemyInfo.Shooter,          (uint)AutogenDifficulty.Hybrids, 0.20),
-                (EnemyInfo.Hybrid,           (uint)AutogenDifficulty.Hybrids, 0.50),
-
                 (EnemyInfo.Flyer,            (uint)AutogenDifficulty.Flyers, 1.0),
 
                 (EnemyInfo.NightmareStriker, (uint)AutogenDifficulty.Nightmares, 1.0),
                 (EnemyInfo.NightmareShooter, (uint)AutogenDifficulty.Nightmares, 0.6),
                 (EnemyInfo.NightmareGiant,   (uint)AutogenDifficulty.Nightmares, 0.4),
-
-                // Enemy specific
-                (EnemyInfo.StrikerGiant,    Enemy_New.StrikerGiant_Wave.PersistentId, 1.0),
-                (EnemyInfo.ShooterGiant,    Enemy_New.ShooterGiant.PersistentId, 1.0),
-                (EnemyInfo.ChargerGiant,    Enemy_New.ChargerGiant.PersistentId, 1.0),
-                (EnemyInfo.ShadowGiant,     Enemy_New.ShadowGiant.PersistentId, 1.0),
-                (EnemyInfo.NightmareGiant,  Enemy_New.NightmareGiant.PersistentId, 1.0),
-
-                (EnemyInfo.Hybrid,          Enemy_New.Hybrid.PersistentId, 1.0),
-                (EnemyInfo.HybridInfected,  Enemy_New.HybridInfected.PersistentId, 1.0),
-
-                (EnemyInfo.StrikerInfested, Enemy_New.StrikerInfested.PersistentId, 1.0),
-
-                (EnemyInfo.Pouncer,         Enemy_New.Pouncer.PersistentId, 1.0),
-                (EnemyInfo.PouncerShadow,   Enemy_New.PouncerShadow.PersistentId, 1.0),
-                (EnemyInfo.Mother,          Enemy_New.Mother.PersistentId, 1.0),
-                (EnemyInfo.PMother,         Enemy_New.PMother.PersistentId, 1.0),
-                (EnemyInfo.Tank,            Enemy_New.Mother.PersistentId, 1.0),
-                (EnemyInfo.TankPotato,      Enemy_New.TankPotato.PersistentId, 1.0),
-                (EnemyInfo.FlyerBig,        Enemy_New.FlyerBig.PersistentId, 1.0)
             };
 
             foreach (var (info, difficulty, weight) in enemies)

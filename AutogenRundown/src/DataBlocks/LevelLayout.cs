@@ -250,11 +250,12 @@ public partial record LevelLayout : DataBlock
                         (1.0, 2, EnemyGroup.BloodDoor_NightmareGiants_Normal)
                     });
 
-                if (level.Settings.HasFlyers())
-                    areaPack.AddRange(new List<(double, int, EnemyGroup)>
-                    {
-                        (1.5, 1, EnemyGroup.BloodDoor_FlyerBig)
-                    });
+                // TODO: they get stuck?
+                // if (level.Settings.HasFlyers())
+                //     areaPack.AddRange(new List<(double, int, EnemyGroup)>
+                //     {
+                //         (1.5, 1, EnemyGroup.BloodDoor_FlyerBig)
+                //     });
 
                 if (level.Settings.HasFog() && level.FogSettings.IsInfectious)
                     doorPack.AddRange(new List<(double, int, EnemyGroup)>
@@ -298,11 +299,12 @@ public partial record LevelLayout : DataBlock
                         (3.0, 2, EnemyGroup.BloodDoor_NightmareGiants_Hard)
                     });
 
-                if (level.Settings.HasFlyers())
-                    areaPack.AddRange(new List<(double, int, EnemyGroup)>
-                    {
-                        (2.0, 2, EnemyGroup.BloodDoor_FlyerBig)
-                    });
+                // TODO: they get stuck?
+                // if (level.Settings.HasFlyers())
+                //     areaPack.AddRange(new List<(double, int, EnemyGroup)>
+                //     {
+                //         (2.0, 2, EnemyGroup.BloodDoor_FlyerBig)
+                //     });
 
                 if (level.Settings.HasFog() && level.FogSettings.IsInfectious)
                     doorPack.AddRange(new List<(double, int, EnemyGroup)>
@@ -322,19 +324,13 @@ public partial record LevelLayout : DataBlock
                 Generator.Flip(chance) &&
                 (count++ < max || max == -1))
             {
-                // var withArea =  // Generator.Flip(inAreaChance);
-                // var withArea = true;
-                // var group = Generator.DrawSelect(doorPack);
-                var areaGroup = EnemyGroup.BloodDoor_FlyerBig;
-                var group = EnemyGroup.BloodDoor_Pouncer_x3;
+                var withArea = Generator.Flip(inAreaChance);
 
                 zone.BloodDoor = new BloodDoor
                 {
-                    GroupBehindDoor = group,
-                    GroupInArea = areaGroup,
-                    AreaGroups = 1
-                    // GroupInArea = withArea ? Generator.DrawSelect(areaPack) : EnemyGroup.None,
-                    // AreaGroups = withArea ? 1 : 0
+                    GroupBehindDoor = Generator.DrawSelect(doorPack),
+                    GroupInArea = withArea ? Generator.DrawSelect(areaPack) : EnemyGroup.None,
+                    AreaGroups = withArea ? 1 : 0
                 };
 
                 Plugin.Logger.LogInfo($"Blood Door in to Zone={zone.LocalIndex}, " +
