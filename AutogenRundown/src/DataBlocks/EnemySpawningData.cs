@@ -347,7 +347,7 @@ public record EnemySpawningData
     public static readonly EnemySpawningData MegaMother_AlignedSpawn = new()
     {
         GroupType = EnemyGroupType.PureSneak,
-        Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)Enemy.MegaMother,
+        Difficulty = Enemy_New.MegaMother.PersistentId,
         Points = 40,
         Tags = new Tags("boss")
     };

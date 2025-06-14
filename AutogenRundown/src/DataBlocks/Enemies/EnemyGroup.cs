@@ -99,7 +99,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
         },
         Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Base),
-        MaxScore = 10,
+        MaxScore = 14,
         RelativeWeight = 1.0,
     };
 
@@ -112,7 +112,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
         },
         Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Base),
-        MaxScore = 16,
+        MaxScore = 18,
         RelativeWeight = 1.0,
     };
 
@@ -125,7 +125,7 @@ public record EnemyGroup : DataBlock
             new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
         },
         Difficulty = (uint)(AutogenDifficulty.BloodDoors | AutogenDifficulty.Base),
-        MaxScore = 20,
+        MaxScore = 22,
         RelativeWeight = 1.0,
     };
 
@@ -845,6 +845,19 @@ public record EnemyGroup : DataBlock
                     }
                 });
         }
+
+        Bins.EnemyGroups.AddBlock(
+            new EnemyGroup
+            {
+                Type = EnemyGroupType.PureSneak,
+                Difficulty = Enemy_New.MegaMother.PersistentId,
+                MaxScore = EnemyInfo.MegaMother.Points,
+                SpawnPlacementType = SpawnPlacementType.CycleAllAligns,
+                Roles = new List<EnemyGroupRole>
+                {
+                    new() { Role = EnemyRole.PureSneak, Distribution = EnemyRoleDistribution.Rel100 }
+                }
+            });
         #endregion
 
         #region AutoDiff, common groups

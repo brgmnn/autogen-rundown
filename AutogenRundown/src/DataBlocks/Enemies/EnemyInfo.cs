@@ -77,7 +77,7 @@ public record class EnemyInfo
         Tank,
         TankPotato,
 
-        MegaMother,
+        // MegaMother,
         Pouncer_Sneak,
     };
 }

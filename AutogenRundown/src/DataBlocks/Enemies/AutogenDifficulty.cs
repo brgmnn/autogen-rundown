@@ -43,6 +43,7 @@ public enum AutogenDifficulty : uint
     // --
     // hybrid          33       0010_0001
     // hybrid infect   108      0110_1100
+    // mega mom         55      0011_0111
 
     // Enemy categories
     // Some are the same, because we don't have enough bits

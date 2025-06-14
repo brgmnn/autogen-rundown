@@ -44,17 +44,22 @@ public record EnemyPopulation : DataBlock
             // EnemyInfo.NightmareStrikerGiant,
             EnemyInfo.Flyer,
             EnemyInfo.FlyerBig,
+
+            EnemyInfo.Pouncer,
+            EnemyInfo.PouncerShadow,
+
             EnemyInfo.Mother,
             EnemyInfo.Mother_MiniBoss,
             EnemyInfo.PMother,
             EnemyInfo.PMother_MiniBoss,
+            EnemyInfo.MegaMother,
+
             EnemyInfo.BirtherChild,
+
             EnemyInfo.Tank,
             EnemyInfo.TankPotato,
             EnemyInfo.Tank_MiniBoss,
-            EnemyInfo.Pouncer,
 
-            EnemyInfo.PouncerShadow,
             EnemyInfo.PouncerShadow_Sneak,
             EnemyInfo.HybridInfected,
             EnemyInfo.NightmareGiant,

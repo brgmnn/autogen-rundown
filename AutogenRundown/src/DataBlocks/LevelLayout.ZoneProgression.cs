@@ -179,6 +179,8 @@ public partial record LevelLayout
         if (level.Tier != "D" && level.Tier != "E")
             bossNode = planner.UpdateNode(bossNode with { Tags = bossNode.Tags.Extend("no_blood_door") });
 
+        Plugin.Logger.LogInfo($"Added aligned boss fight, Zone = {bossNode}");
+
         switch (level.Tier)
         {
             case "A":
@@ -403,6 +405,8 @@ public partial record LevelLayout
                     },
                     Events = onDeathEvents.ToList()
                 });
+
+        Plugin.Logger.LogInfo($"Added megamom fight, Zone = {bossNode}");
 
         #region Warden Intel Messages
         level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
