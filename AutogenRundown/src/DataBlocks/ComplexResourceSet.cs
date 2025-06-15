@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.ComplexResourceSets;
+using AutogenRundown.DataBlocks.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

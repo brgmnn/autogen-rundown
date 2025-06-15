@@ -1,4 +1,5 @@
 using AutogenRundown.DataBlocks;
+using AutogenRundown.DataBlocks.Enums;
 using BepInEx;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

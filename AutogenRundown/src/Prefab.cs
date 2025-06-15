@@ -1,4 +1,5 @@
 using AutogenRundown.DataBlocks;
+using AutogenRundown.DataBlocks.Enums;
 using Newtonsoft.Json;
 
 namespace AutogenRundown;

@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
+using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.GeneratorData;
