@@ -509,6 +509,16 @@ public static class RundownFactory
                     new() { 2, 2, 1, 2 },
                     new() { 2, 1, 6, 1, 3 }
                 }
+            },
+            {
+                "2025_07", new List<List<int>>
+                {
+                    new() { 1, 1 },
+                    new() { 1, 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 1 }
+                }
             }
         };
 
