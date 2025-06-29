@@ -670,6 +670,70 @@ public record EnemyGroup : DataBlock
 
     #endregion
 
+    #region Scouts
+
+    private static readonly EnemyGroup Scout = new()
+    {
+        Type = EnemyGroupType.Scout,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.Scout,  Distribution = EnemyRoleDistribution.Rel100 }
+        },
+        Difficulty = (uint)EnemyRoleDifficulty.Easy,
+        MaxScore = 6,
+        RelativeWeight = 1.0,
+    };
+
+    private static readonly EnemyGroup Scout_Charger = new()
+    {
+        Type = EnemyGroupType.Scout,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.Scout,  Distribution = EnemyRoleDistribution.Rel100 }
+        },
+        Difficulty = (uint)EnemyRoleDifficulty.MiniBoss,
+        MaxScore = 6,
+        RelativeWeight = 1.0,
+    };
+
+    private static readonly EnemyGroup Scout_Shadow = new()
+    {
+        Type = EnemyGroupType.Scout,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.Scout,  Distribution = EnemyRoleDistribution.Rel100 }
+        },
+        Difficulty = (uint)EnemyRoleDifficulty.Boss,
+        MaxScore = 6,
+        RelativeWeight = 1.0,
+    };
+
+    private static readonly EnemyGroup Scout_Nightmare = new()
+    {
+        Type = EnemyGroupType.Scout,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.Scout,  Distribution = EnemyRoleDistribution.Rel100 }
+        },
+        Difficulty = (uint)EnemyRoleDifficulty.Biss,
+        MaxScore = 6,
+        RelativeWeight = 1.0,
+    };
+
+    private static readonly EnemyGroup Scout_Zoomer = new()
+    {
+        Type = EnemyGroupType.Scout,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.Scout,  Distribution = EnemyRoleDistribution.Rel100 }
+        },
+        Difficulty = (uint)EnemyRoleDifficulty.Tank,
+        MaxScore = 6,
+        RelativeWeight = 1.0,
+    };
+
+    #endregion
+
     public static void Setup()
     {
         // JArray array = JArray.Parse(VanillaData);
@@ -858,6 +922,16 @@ public record EnemyGroup : DataBlock
                     new() { Role = EnemyRole.PureSneak, Distribution = EnemyRoleDistribution.Rel100 }
                 }
             });
+        #endregion
+
+        #region Scouts
+
+        Scout.Persist();
+        Scout_Charger.Persist();
+        Scout_Shadow.Persist();
+        Scout_Nightmare.Persist();
+        Scout_Zoomer.Persist();
+
         #endregion
 
         #region AutoDiff, common groups
