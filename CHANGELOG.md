@@ -3,6 +3,18 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.71.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.71.0) — June 29, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fix scouts not spawning
+* Fix Terminal Uplinks with IPv6 codes not being recognized when input by the player. Fixes #18  
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.70.0...v0.71.0
+
+
 ## [v0.70.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.70.0) — June 14, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
