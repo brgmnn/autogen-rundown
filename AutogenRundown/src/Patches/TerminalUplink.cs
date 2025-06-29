@@ -909,6 +909,10 @@ public static class TerminalUplink
                 i++;
             }
 
+            // Force all these as lower case. It seems the string checking
+            // happens as lower case even though the display on the terminal
+            // is all upper case. Forcing this to upper case makes users unable
+            // to input the IP address.
             var address = parts.Join(part => part.ToLowerInvariant(), ":")
                                      .Replace(":::", "::");
 
