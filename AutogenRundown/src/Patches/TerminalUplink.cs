@@ -909,7 +909,7 @@ public static class TerminalUplink
                 i++;
             }
 
-            var address = parts.Join(part => part.ToUpperInvariant(), ":")
+            var address = parts.Join(part => part.ToLowerInvariant(), ":")
                                      .Replace(":::", "::");
 
             SerialGenerator.m_ips[ip] = address;
