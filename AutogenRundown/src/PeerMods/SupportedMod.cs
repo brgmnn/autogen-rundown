@@ -4,7 +4,7 @@ namespace AutogenRundown.PeerMods;
 
 public class SupportedMod
 {
-    protected string ModName;
+    protected string ModName = "";
 
     protected string PluginFolder => Path.Combine(Paths.BepInExRootPath, "plugins", ModName);
 
