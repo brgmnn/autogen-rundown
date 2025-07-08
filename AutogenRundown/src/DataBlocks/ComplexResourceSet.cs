@@ -187,46 +187,6 @@ public record ComplexResourceSet : DataBlock
         // Use .Insert(0, ...) instead of .Add(). For some reason appending the blocks to the end
         // of the list causes problems
 
-        // TODO: we can probably remove this
-        Bins.ComplexResources.Headers = new List<JObject>
-        {
-            new()
-            {
-                ["AboveBlockID"] = 1,
-                ["LabelText"] = "Mining"
-            },
-            new()
-            {
-                ["AboveBlockID"] = 3,
-                ["LabelText"] = "Tech"
-            },
-            new()
-            {
-                ["AboveBlockID"] = 22,
-                ["LabelText"] = "Test"
-            },
-            new()
-            {
-                ["AboveBlockID"] = 40,
-                ["LabelText"] = "Geo Test Sets"
-            },
-            new()
-            {
-                ["AboveBlockID"] = 47,
-                ["LabelText"] = "Dimensions"
-            },
-            new()
-            {
-                ["AboveBlockID"] = 27,
-                ["LabelText"] = "Service"
-            },
-            new()
-            {
-                ["AboveBlockID"] = 60,
-                ["LabelText"] = "Rundoown002"
-            }
-        };
-
         #region Mining
         ///
         /// Mining (Storage / Refinery / Digsite) custom geomorphs
