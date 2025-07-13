@@ -15,8 +15,9 @@ public record class EnemyInfo
     public static readonly EnemyInfo Shooter      = new() { Role = EnemyRole.Ranged, Enemy = Enemy.Shooter,      Points = 1.0 };
     public static readonly EnemyInfo ShooterGiant = new() { Role = EnemyRole.Ranged, Enemy = Enemy.ShooterGiant, Points = 4.0 };
 
-    public static readonly EnemyInfo Striker_Wave = new() { Role = EnemyRole.Melee,  Enemy = Enemy.Striker_Wave, Points = 1.0 };
-    public static readonly EnemyInfo Shooter_Wave = new() { Role = EnemyRole.Ranged, Enemy = Enemy.Shooter_Wave, Points = 1.0 };
+    public static readonly EnemyInfo Striker_Wave      = new() { Role = EnemyRole.Melee,  Enemy = Enemy.Striker_Wave,      Points = 1.0 };
+    public static readonly EnemyInfo Shooter_Wave      = new() { Role = EnemyRole.Ranged, Enemy = Enemy.Shooter_Wave,      Points = 1.0 };
+    public static readonly EnemyInfo StrikerGiant_Wave = new() { Role = EnemyRole.Melee,  Enemy = Enemy.StrikerGiant_Wave, Points = 4.0 };
 
     public static readonly EnemyInfo Charger      = new() { Role = EnemyRole.Lurker, Enemy = Enemy.Charger,      Points = 2.0 };
     public static readonly EnemyInfo ChargerGiant = new() { Role = EnemyRole.Lurker, Enemy = Enemy.ChargerGiant, Points = 4.0 };

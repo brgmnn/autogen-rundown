@@ -30,6 +30,7 @@ public record EnemyPopulation : DataBlock
         {
             EnemyInfo.Striker,
             EnemyInfo.StrikerGiant,
+            EnemyInfo.StrikerGiant_Wave,
             EnemyInfo.Striker_Wave,
             EnemyInfo.Shooter,
             EnemyInfo.ShooterGiant,

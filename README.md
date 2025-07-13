@@ -14,6 +14,7 @@ Check Alarm Persistent IDs for levellayout
 
 
 TODO:
+  * Use https://thunderstore.io/c/gtfo/p/randomguy0753/ZoneScan/ for full room scanning
   * Use Zone Prefix Override to alert to specific tiles.
   * Enable unit tests again after fixing chained puzzles.
   * Don't allow small item pickup to have so many extras that we don't need to do all the zones
