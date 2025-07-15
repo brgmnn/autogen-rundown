@@ -3,6 +3,18 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.71.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.71.1) — July 15, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fixed issue with blood doors not spawning Giant Strikers #19 
+* Update mod dependencies
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.71.0...v0.71.1
+
+
 ## [v0.71.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.71.0) — June 29, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
