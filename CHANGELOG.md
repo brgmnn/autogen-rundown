@@ -3,6 +3,21 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.72.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.72.0) — July 31, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+_No user facing changes in this release_
+
+### Other
+
+* Rolled seeds for August monthly rundown.
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.71.1...v0.72.0
+
+
 ## [v0.71.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.71.1) — July 15, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
@@ -37,9 +52,9 @@ See more at https://github.com/brgmnn/autogen-rundown
 
 ### Changes
 
-Balance: Increased difficulty of blood doors
-Fixed: Bug with blood door groups not being available
-Fixed: Some enemy hibernation spawn groups overlapping
+* Balance: Increased difficulty of blood doors
+* Fixed: Bug with blood door groups not being available
+* Fixed: Some enemy hibernation spawn groups overlapping
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.69.0...v0.70.0
 
