@@ -30,6 +30,9 @@ TODO:
   * Add more disinfection options for infection levels and hybrids
   * Special Terminal Command:
     * REROUTE_POWER - Should probably have more severe consequences then just turning the lights off?
+  * Try and fix reactor start prefix for further zones (not next immediate), when 2 or more away
+  * Add more points of enemies
+  * Matter Wave Projector - Needs slightly less zones to go through. Very linear
 
 Level Lockup:
   Double check logs on any of the old versions for this:

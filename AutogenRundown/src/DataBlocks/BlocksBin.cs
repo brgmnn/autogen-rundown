@@ -49,6 +49,8 @@ public static class Bins
     public static BlocksBin<WavePopulation> WavePopulations { get; private set; }
         = new BlocksBin<WavePopulation>();
     public static LazyBlocksBin<WaveSettings> WaveSettings { get; private set; } = new();
+    public static BlocksBin<GlobalWaveSettings> GlobalWaveSettings { get; private set; }
+        = new BlocksBin<GlobalWaveSettings>();
 
     /// <summary>
     /// Primarily used to load and set up vanilla data within custom data blocks.
@@ -84,6 +86,9 @@ public static class Bins
         WardenObjective.SaveStatic();
         WavePopulation.SaveStatic();
         Alarms.WaveSettings.SaveStatic();
+
+        // Mods
+        Alarms.GlobalWaveSettings.SaveStatic();
     }
 
     /// <summary>
@@ -112,6 +117,15 @@ public static class Bins
         WardenObjectives.Save("WardenObjective");
         WavePopulations.Save("SurvivalWavePopulation");
         WaveSettings.Save("SurvivalWaveSettings");
+
+        // Mods
+        GlobalWaveSettings.Save(
+            Path.Combine(
+                Paths.BepInExRootPath,
+                "plugins",
+                "PersistentData",
+                "ConfigurableGlobalWaveSettings"),
+            "GlobalWaveSettingsDataBlock.json");
     }
 }
 
@@ -175,6 +189,28 @@ public class BlocksBin<T> where T : DataBlock
 
         var dir = Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}");
         var path = Path.Combine(dir, $"GameData_{name}DataBlock_bin.json");
+
+        // Ensure the directory exists
+        Directory.CreateDirectory(dir);
+
+        using StreamWriter stream = new StreamWriter(path);
+        using JsonWriter writer = new JsonTextWriter(stream);
+
+        serializer.Serialize(writer, this);
+        stream.Flush();
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="dir"></param>
+    /// <param name="filename"></param>
+    public void Save(string dir, string filename)
+    {
+        JsonSerializer serializer = new JsonSerializer();
+        serializer.Formatting = Formatting.Indented;
+
+        var path = Path.Combine(dir, filename);
 
         // Ensure the directory exists
         Directory.CreateDirectory(dir);
