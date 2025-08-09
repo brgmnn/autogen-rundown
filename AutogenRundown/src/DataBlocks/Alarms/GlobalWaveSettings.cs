@@ -115,14 +115,17 @@ public record GlobalWaveSettings : DataBlock
     /// <summary>
     /// These should match the base games settings
     /// </summary>
-    private static readonly GlobalWaveSettings Default = new()
+    public static readonly GlobalWaveSettings Default = new() { PersistentId = 1 };
+
+    public static readonly GlobalWaveSettings HighCap = new()
     {
-        // MaxCost = 50,
-        PersistentId = 1
+        PersistentId = 2
     };
 
     public new static void SaveStatic()
     {
         Bins.GlobalWaveSettings.AddBlock(Default);
+
+        Bins.GlobalWaveSettings.AddBlock(HighCap);
     }
 }

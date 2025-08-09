@@ -1104,8 +1104,6 @@ public record Zone : DataBlock
             Plugin.Logger.LogInfo($"Zone {LocalIndex} alarm reassigned: {puzzle}");
 
         Alarm = ChainedPuzzle.FindOrPersist(puzzle);
-
-        Alarm = ChainedPuzzle.AlarmClass3_Surge;
     }
     #endregion
 

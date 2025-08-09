@@ -182,6 +182,13 @@ public class Level
         Type = ExtraObjectiveSetupType.SecuritySensor
     };
     #endregion
+
+    #region GlobalWaveSettings
+
+    [JsonIgnore]
+    public GlobalWaveSettings GlobalWaveSettings { get; set; } = GlobalWaveSettings.Default;
+
+    #endregion
     #endregion
 
     #region Build directors
@@ -277,6 +284,7 @@ public class Level
             ["ProgressionVisualStyle"] = IsTest ? 1 : 0,
             ["ExpeditionDepth"] = Depth,
             ["EstimatedDuration"] = 930,
+            ["DevInfo"] = $"globalwavesettings_{GlobalWaveSettings.PersistentId}",
 
             // Description shows up in menu
             ["ExpeditionDescription"] = Description,

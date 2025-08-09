@@ -98,10 +98,12 @@ public record WaveSettings : DataBlock
     /// Above this threshold, the timer for a new wave doesn't move.
     /// Anywhere in-between min and max, the timer speed is lerped.
     ///
-    /// Default = 10.0
+    /// This functions as a soft cap on enemy units.
+    ///
+    /// Default = 25.0
     /// </summary>
     [JsonProperty("m_wavePauseMax_atCost")]
-    public double WavePauseMax_atCost { get; set; } = 20.0;
+    public double WavePauseMax_atCost { get; set; } = 25.0;
 
     /// <summary>
     /// Delay between waves at or below minimum score boundary.
@@ -890,7 +892,6 @@ public record WaveSettings : DataBlock
         WavePauseMin = 1.0,
         WavePauseMax = 20.0,
         WavePauseMin_atCost = 1.0,
-        WavePauseMax_atCost = 25.0,
 
         Name = "Finite_35pts_Hard"
     };
@@ -957,7 +958,6 @@ public record WaveSettings : DataBlock
         WavePauseMin = 1.0,
         WavePauseMax = 20.0,
         WavePauseMin_atCost = 1.0,
-        WavePauseMax_atCost = 25.0,
 
         Name = "Scout_Easy"
     };
@@ -986,7 +986,6 @@ public record WaveSettings : DataBlock
         WavePauseMin = 1.0,
         WavePauseMax = 20.0,
         WavePauseMin_atCost = 1.0,
-        WavePauseMax_atCost = 25.0,
 
         Name = "Scout_Easy"
     };
@@ -1015,7 +1014,6 @@ public record WaveSettings : DataBlock
         WavePauseMin = 1.0,
         WavePauseMax = 20.0,
         WavePauseMin_atCost = 1.0,
-        WavePauseMax_atCost = 25.0,
 
         Name = "Scout_Easy"
     };
@@ -1044,7 +1042,6 @@ public record WaveSettings : DataBlock
         WavePauseMin = 1.0,
         WavePauseMax = 20.0,
         WavePauseMin_atCost = 1.0,
-        WavePauseMax_atCost = 25.0,
 
         Name = "Scout_VeryHard"
     };
@@ -1336,7 +1333,6 @@ public record WaveSettings : DataBlock
         WavePauseMin = 1,
         WavePauseMax = 25,
         WavePauseMin_atCost = 1,
-        WavePauseMax_atCost = 25,
     };
     #endregion
 
@@ -1508,7 +1504,6 @@ public record WaveSettings : DataBlock
         WavePauseMin = 1,
         WavePauseMax = 25,
         WavePauseMin_atCost = 1,
-        WavePauseMax_atCost = 25,
     };
     #endregion
 }
