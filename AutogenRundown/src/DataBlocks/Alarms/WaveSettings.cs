@@ -1062,7 +1062,7 @@ public record WaveSettings : DataBlock
             Enemies.EnemyType.Special,
         },
 
-        PopulationPointsTotal = 40,
+        PopulationPointsTotal = 50,
         PopulationPointsPerWaveStart = 25,
         PopulationPointsPerWaveEnd = 25,
         PopulationPointsMinPerGroup = 5,
@@ -1082,7 +1082,7 @@ public record WaveSettings : DataBlock
             Enemies.EnemyType.MiniBoss
         },
 
-        PopulationPointsTotal = 50,
+        PopulationPointsTotal = 60,
         PopulationPointsPerWaveStart = 25,
         PopulationPointsPerWaveEnd = 25,
         PopulationPointsMinPerGroup = 5,
@@ -1102,7 +1102,7 @@ public record WaveSettings : DataBlock
             Enemies.EnemyType.MiniBoss
         },
 
-        PopulationPointsTotal = 60,
+        PopulationPointsTotal = 70,
         PopulationPointsPerWaveStart = 25,
         PopulationPointsPerWaveEnd = 25,
         PopulationPointsMinPerGroup = 5,
@@ -1122,7 +1122,7 @@ public record WaveSettings : DataBlock
             Enemies.EnemyType.MiniBoss
         },
 
-        PopulationPointsTotal = 70,
+        PopulationPointsTotal = 80,
         PopulationPointsPerWaveStart = 30,
         PopulationPointsPerWaveEnd = 35,
         PopulationPointsMinPerGroup = 5,

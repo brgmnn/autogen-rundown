@@ -65,37 +65,37 @@ public record ReactorEnemyWave
     public static readonly ReactorEnemyWave MiniBoss_4pts = new()
     {
         Settings = WaveSettings.SingleWave_MiniBoss_4pts,
-        Duration = 40,
+        Duration = 10,
     };
 
     public static readonly ReactorEnemyWave MiniBoss_6pts = new()
     {
         Settings = WaveSettings.SingleWave_MiniBoss_6pts,
-        Duration = 40,
+        Duration = 10,
     };
 
     public static readonly ReactorEnemyWave MiniBoss_8pts = new()
     {
         Settings = WaveSettings.SingleWave_MiniBoss_8pts,
-        Duration = 40,
+        Duration = 15,
     };
 
     public static readonly ReactorEnemyWave MiniBoss_12pts = new()
     {
         Settings = WaveSettings.SingleWave_MiniBoss_12pts,
-        Duration = 40,
+        Duration = 20,
     };
 
     public static readonly ReactorEnemyWave MiniBoss_16pts = new()
     {
         Settings = WaveSettings.SingleWave_MiniBoss_16pts,
-        Duration = 40,
+        Duration = 25,
     };
 
     public static readonly ReactorEnemyWave MiniBoss_24pts = new()
     {
         Settings = WaveSettings.SingleWave_MiniBoss_24pts,
-        Duration = 40,
+        Duration = 35,
     };
     #endregion
 
