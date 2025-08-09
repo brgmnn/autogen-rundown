@@ -62,8 +62,7 @@ public class ReactorWave
         // Give 30s base time, plus additional time per wave, plus the max wave duration. This
         // should be a good amount of time to complete the wave.
         // Add a small random amount of time to throw off people trying to guess the enemies
-        Wave = 30 +
-               (EnemyWaves.Count * 10) +
+        Wave = (EnemyWaves.Count * 10) +
                EnemyWaves.Max(wave => wave.Duration + wave.SpawnTime) +
                Generator.Random.Next(-3, 9);
 
