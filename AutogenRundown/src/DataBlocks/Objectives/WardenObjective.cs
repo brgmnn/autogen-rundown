@@ -29,97 +29,6 @@ public enum DistributionStrategy
 public partial record class WardenObjective : DataBlock
 {
     /// <summary>
-    /// Places objective items in the level as needed
-    /// </summary>
-    /// <param name="level"></param>
-    /// <param name="bulkhead"></param>
-    /// <param name="strategy"></param>
-    public void DistributeObjectiveItems(
-        Level level,
-        Bulkhead bulkhead,
-        DistributionStrategy strategy)
-    {
-        var data = level.GetObjectiveLayerData(bulkhead);
-        var layout = level.GetLevelLayout(bulkhead);
-
-        if (layout == null)
-        {
-            Plugin.Logger.LogError($"Missing level layout: {level.Tier}{level.Index}, Bulkhead={bulkhead}");
-            return;
-        }
-
-        var nodes = level.Planner.GetZones(bulkhead, "find_items");
-
-        switch (strategy)
-        {
-            ///
-            /// We want to place all the items into a single zone within the area.
-            ///
-            case DistributionStrategy.SingleZone:
-            {
-                var node = Generator.Pick(nodes);
-
-                data.ObjectiveData.ZonePlacementDatas.Add(
-                    new List<ZonePlacementData>()
-                    {
-                        new()
-                        {
-                            LocalIndex = node.ZoneNumber,
-                            Weights = ZonePlacementWeights.EvenlyDistributed
-                        }
-                    });
-
-                break;
-            }
-
-            ///
-            /// We want to distribute the items evenly across all the zones. This will only
-            /// appear different for GatherSmallItems objectives. The HSU and Terminal command
-            /// objectives this will appear just the same as SingleZone strategy.
-            ///
-            case DistributionStrategy.EvenlyAcrossZones:
-            {
-                var placement = new List<ZonePlacementData>();
-
-                foreach (var node in nodes)
-                    placement.Add(new()
-                    {
-                        LocalIndex = node.ZoneNumber,
-                        Weights = ZonePlacementWeights.EvenlyDistributed
-                    });
-
-                data.ObjectiveData.ZonePlacementDatas.Add(placement);
-
-                break;
-            }
-
-            ///
-            /// Place the elements evenly in some random subset of the placement zones.
-            ///
-            case DistributionStrategy.Random:
-            {
-                var placement = new List<ZonePlacementData>();
-                var toDraw = Generator.Random.Next(1, nodes.Count);
-
-                for (var i = 0; i < toDraw; i++)
-                {
-                    var node = Generator.Draw(nodes);
-
-                    placement.Add(new()
-                    {
-                        LocalIndex = node.ZoneNumber,
-                        Weights = ZonePlacementWeights.GenRandom()
-                    });
-                }
-
-                data.ObjectiveData.ZonePlacementDatas.Add(placement);
-
-                break;
-            }
-        }
-    }
-
-    /// <summary>
     /// Returns a random casualty warning for lore strings
     /// </summary>
     /// <returns></returns>
@@ -473,11 +382,13 @@ public partial record class WardenObjective : DataBlock
                 break;
             }
 
+            case WardenObjectiveType.GatherSmallItems:
+                objective.PreBuild_GatherSmallItems(director, level);
+                break;
+
             case WardenObjectiveType.SpecialTerminalCommand:
-            {
                 objective.PreBuild_SpecialTerminalCommand(director, level);
                 break;
-            }
 
             case WardenObjectiveType.PowerCellDistribution:
             {
