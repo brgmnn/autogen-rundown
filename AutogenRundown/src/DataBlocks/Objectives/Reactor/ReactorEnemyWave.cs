@@ -44,21 +44,21 @@ public record ReactorEnemyWave
     {
         Settings = WaveSettings.Reactor_Surge_50pts,
         Population = WavePopulation.Baseline,
-        Duration = 60
+        Duration = 50
     };
 
     public static readonly ReactorEnemyWave Baseline_SurgeHard = new()
     {
         Settings = WaveSettings.Reactor_Surge_60pts,
         Population = WavePopulation.Baseline,
-        Duration = 90
+        Duration = 60
     };
 
     public static readonly ReactorEnemyWave Baseline_SurgeVeryHard = new()
     {
         Settings = WaveSettings.Reactor_Surge_70pts,
         Population = WavePopulation.Baseline,
-        Duration = 120
+        Duration = 70
     };
 
     #region MiniBoss single wave -- needs pop set
