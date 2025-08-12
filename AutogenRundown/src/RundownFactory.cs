@@ -198,7 +198,7 @@ public static class RundownFactory
         #if DEBUG
         if (withFixed)
         {
-            const string tier = "C";
+            const string tier = "B";
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
@@ -209,17 +209,20 @@ public static class RundownFactory
             };
             mainDirector.GenPoints();
 
-            // var extremeDirector = new BuildDirector
-            // {
-            //     Bulkhead = Bulkhead.Extreme,
-            //     Complex = Complex.Mining,
-            //     Complexity = Complexity.Low,
-            //     Tier = "C",
-            //     Objective = WardenObjectiveType.PowerCellDistribution,
-            // };
-            // extremeDirector.GenPoints();
+            var secondDirector = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Overload,
+                Complex = Complex.Mining,
+                Complexity = Complexity.Low,
+                Tier = tier,
+                Objective = WardenObjectiveType.GatherSmallItems,
+            };
+            secondDirector.GenPoints();
 
-            var settings = new LevelSettings(tier);
+            var settings = new LevelSettings(tier)
+            {
+                Bulkheads = Bulkhead.Main | Bulkhead.Overload
+            };
             //settings.Modifiers.Add(LevelModifiers.Fog);
 
             var testLevel = Level.Build(
@@ -229,7 +232,8 @@ public static class RundownFactory
                     Name = "Gather",
                     Complex = Complex.Tech,
                     MainDirector = mainDirector,
-                    // SecondaryDirector = extremeDirector,
+                    // SecondaryDirector = secondDirector,
+                    OverloadDirector = secondDirector,
                     Settings = settings,
                     Index = rundown.TierC_Count + 1,
                     IsTest = true
@@ -728,6 +732,8 @@ public static class RundownFactory
     /// </summary>
     public static void Build(string dailySeed)
     {
+        // TODO: Clean custom directory
+
         Bins.Setup();
         LayoutDefinitions.Setup();
 

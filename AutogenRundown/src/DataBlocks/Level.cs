@@ -808,13 +808,14 @@ public class Level
     private void BuildBulkheads()
     {
         // Randomly select which bulkheads to use
-        Settings.Bulkheads = Generator.Select(new List<(double, Bulkhead)>
-        {
-            (0.25, Bulkhead.Main),
-            (0.4, Bulkhead.Main | Bulkhead.Extreme),
-            (0.2, Bulkhead.Main | Bulkhead.Overload),
-            (0.15, Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload)
-        });
+        if (!IsTest)
+            Settings.Bulkheads = Generator.Select(new List<(double, Bulkhead)>
+            {
+                (0.25, Bulkhead.Main),
+                (0.4, Bulkhead.Main | Bulkhead.Extreme),
+                (0.2, Bulkhead.Main | Bulkhead.Overload),
+                (0.15, Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload)
+            });
 
         // Options for starting areas
         var options = Settings.Bulkheads switch

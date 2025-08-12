@@ -233,8 +233,18 @@ public class LayoutPlanner
     /// </summary>
     /// <param name="zone"></param>
     /// <returns></returns>
-    public ZoneNode GetZoneNode(Zone zone)
+    public ZoneNode GetNode(Zone zone)
         => blocks.First(entry => entry.Value.Equals(zone)).Key;
+
+    /// <summary>
+    /// Gets the last ZoneNode in the branch for a given bulkhead / branch
+    /// </summary>
+    /// <param name="bulkhead"></param>
+    /// <param name="branch"></param>
+    /// <returns></returns>
+    public ZoneNode GetLastNode(Bulkhead bulkhead, string branch)
+        => blocks.Last(entry => entry.Key.Bulkhead == bulkhead &&
+                                entry.Key.Branch == branch).Key;
 
     /// <summary>
     ///

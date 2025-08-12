@@ -50,12 +50,6 @@ public partial record WardenObjective
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
         var (itemId, name, description) = Generator.Pick(BuildSmallPickupPack(level.Tier));
-        var strategy = Generator.Pick(new List<DistributionStrategy>
-        {
-            DistributionStrategy.Random,
-            DistributionStrategy.SingleZone,
-            DistributionStrategy.EvenlyAcrossZones
-        });
 
         MainObjective = description;
         FindLocationInfo = $"Look for {name}s in the complex";
@@ -67,8 +61,7 @@ public partial record WardenObjective
          * We want to distribute the items evenly across all the zones marked as `find_items`.
          * The LevelLayout code will generate an interesting layout for these
          */
-        var placements = level.Planner
-            .GetZones(director.Bulkhead, "find_items")
+        var placements = Gather_PlacementNodes
             .Select(node => new ZonePlacementData()
             {
                 LocalIndex = node.ZoneNumber,

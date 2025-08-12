@@ -3,6 +3,7 @@ using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
+using AutogenRundown.DataBlocks.Zones;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -784,6 +785,12 @@ public partial record class WardenObjective : DataBlock
 
     [JsonProperty("Gather_MaxPerZone")]
     public int GatherMaxPerZone { get; set; } = 0;
+
+    /// <summary>
+    /// Add the zone nodes which will have the items to this list
+    /// </summary>
+    [JsonIgnore]
+    public List<ZoneNode> Gather_PlacementNodes { get; set; } = new();
     #endregion
 
     #region Type=4: Clear a path

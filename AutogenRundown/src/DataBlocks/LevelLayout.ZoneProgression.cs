@@ -49,6 +49,17 @@ public partial record LevelLayout
             });
     }
 
+    private static void SetInfestedVibe(Zone zone)
+    {
+        zone.LightSettings = Generator.Pick(new List<Lights.Light>
+        {
+            Lights.Light.OrangeToBrown_1,
+            Lights.Light.OrangeToYellow_1,
+            Lights.Light.YellowToOrange_1,
+            Lights.Light.Monochrome_Orange_Flickering,
+        });
+    }
+
     #endregion
 
     #region Apex Alarms
@@ -428,13 +439,52 @@ public partial record LevelLayout
     }
     #endregion
 
+    #region Sleeping Enemy Zone
+
+    /// <summary>
+    /// Adds a tough infested sleeper hub zone
+    /// </summary>
+    /// <param name="node"></param>
+    public ZoneNode AddStealth_Infested(ZoneNode node)
+    {
+        var zone = planner.GetZone(node);
+
+        if (zone == null)
+        {
+            Plugin.Logger.LogDebug($"Skipping adding infested sleeper zone as zone is null: {node}");
+            return node;
+        }
+
+        node = planner.UpdateNode(node with { Tags = node.Tags.Extend("no_enemies")});
+
+        SetInfestedVibe(zone);
+
+        zone.EnemySpawningInZone.Add(EnemySpawningData.StrikerInfested with
+        {
+            Points = level.Tier switch
+            {
+                "A" => 15,
+                "B" => 20,
+                "C" => 25,
+                "D" => 30,
+                "E" => 35,
+
+                _ => 15
+            }
+        });
+
+        return node;
+    }
+
+    #endregion
+
     #region Scout Zones
 
     /// <summary>
     /// Sets up a zone to spawn a bunch of scouts that must be cleared
     /// </summary>
     /// <param name="zone"></param>
-    public ZoneNode AddScoutRoom_Normal(ZoneNode node)
+    public ZoneNode AddScoutRoom(ZoneNode node)
     {
         var zone = planner.GetZone(node);
 
