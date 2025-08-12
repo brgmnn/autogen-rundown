@@ -123,6 +123,15 @@ public partial record LevelLayout
         // Force open the side room
         lockedZone.EventsOnDoorScanStart.AddOpenDoor(director.Bulkhead, sideSpawn.ZoneNumber);
     }
+
+    /// <summary>
+    /// Works somewhat like adding an Apex alarm except here we look to add a pretty difficult
+    /// alarm from the scan list
+    /// </summary>
+    public void AddHardAlarm()
+    {
+
+    }
     #endregion
 
     #region Sleeping Boss Zone
@@ -417,6 +426,45 @@ public partial record LevelLayout
         }))!);
         #endregion
     }
+    #endregion
+
+    #region Scout Zones
+
+    /// <summary>
+    /// Sets up a zone to spawn a bunch of scouts that must be cleared
+    /// </summary>
+    /// <param name="zone"></param>
+    public ZoneNode AddScoutRoom_Normal(ZoneNode node)
+    {
+        var zone = planner.GetZone(node);
+
+        if (zone == null)
+        {
+            Plugin.Logger.LogDebug($"Skipping adding boss zone as zone is null: {node}");
+            return node;
+        }
+
+        // Prevent normal enemy spawning
+        node = planner.UpdateNode(node with { Tags = node.Tags.Extend("no_enemies", "no_scouts") });
+
+        // Set a big open geomorph
+        zone.GenHubGeomorph(level.Complex);
+
+        zone.EnemySpawningInZone.Add(EnemySpawningData.Scout with
+        {
+            Points = level.Tier switch
+            {
+                "A" => 15,
+                "B" => 20,
+                "C" => 25,
+                "D" => 30,
+                "E" => 40
+            }
+        });
+
+        return node;
+    }
+
     #endregion
 
     #region Error alarms

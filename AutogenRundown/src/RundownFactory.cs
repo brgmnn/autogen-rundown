@@ -198,14 +198,14 @@ public static class RundownFactory
         #if DEBUG
         if (withFixed)
         {
-            const string tier = "E";
+            const string tier = "C";
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = Complex.Tech,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.Survival,
+                Objective = WardenObjectiveType.GatherSmallItems,
             };
             mainDirector.GenPoints();
 
@@ -226,12 +226,12 @@ public static class RundownFactory
                 new Level(tier)
                 {
                     Tier = tier,
-                    Name = "Survival",
+                    Name = "Gather",
                     Complex = Complex.Tech,
                     MainDirector = mainDirector,
                     // SecondaryDirector = extremeDirector,
                     Settings = settings,
-                    Index = rundown.TierA_Count + 1,
+                    Index = rundown.TierC_Count + 1,
                     IsTest = true
                 });
             rundown.AddLevel(testLevel);

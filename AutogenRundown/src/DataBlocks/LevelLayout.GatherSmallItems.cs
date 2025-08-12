@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Zones;
+﻿using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
