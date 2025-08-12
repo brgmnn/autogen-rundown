@@ -198,10 +198,11 @@ public partial record LevelLayout
                         SetMotherVibe(zone, 150);
                     }),
 
-                    // Single pouncer
+                    // Double pouncer
                     (0.6, () =>
                     {
                         zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer_AlignedSpawn with { Points = 4 });
+                        zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
                     }),
                 });
                 break;
@@ -220,10 +221,11 @@ public partial record LevelLayout
                         SetMotherVibe(zone);
                     }),
 
-                    // Double pouncer
+                    // Triple pouncer
                     (0.4, () =>
                     {
                         zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer_AlignedSpawn with { Points = 4 });
+                        zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
                         zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
                     }),
                 });
