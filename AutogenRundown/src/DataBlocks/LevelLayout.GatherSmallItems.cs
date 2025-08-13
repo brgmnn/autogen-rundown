@@ -307,12 +307,145 @@ public partial record LevelLayout
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    (0.2, () =>
+                    // Hub to dead ends
+                    // TODO
+                    (0.30, () =>
+                    {
+                        if (objective.GatherRequiredCount < 10)
+                        {
+                            startZone.GenHubGeomorph(level.Complex);
+
+                            var (end1, end1Zone) = AddZone(start);
+                            end1Zone.GenDeadEndGeomorph(level.Complex);
+
+                            var (end2, end2Zone) = AddZone(start);
+                            end2Zone.GenDeadEndGeomorph(level.Complex);
+
+                            objective.Gather_PlacementNodes.Add(end1);
+                            objective.Gather_PlacementNodes.Add(end2);
+                        }
+                        else
+                        {
+                            startZone.GenCorridorGeomorph(level.Complex);
+
+                            var (hub, hubZone) = AddZone(start);
+                            hubZone.GenHubGeomorph(level.Complex);
+
+                            var (end1, end1Zone) = AddZone(hub);
+                            end1Zone.GenDeadEndGeomorph(level.Complex);
+
+                            var (end2, end2Zone) = AddZone(hub);
+                            end2Zone.GenDeadEndGeomorph(level.Complex);
+
+                            var (end3, end3Zone) = AddZone(hub);
+                            end3Zone.GenDeadEndGeomorph(level.Complex);
+
+                            objective.Gather_PlacementNodes.Add(end1);
+                            objective.Gather_PlacementNodes.Add(end2);
+                            objective.Gather_PlacementNodes.Add(end3);
+                        }
+                    }),
+
+                    // Single generator
+                    // Items distributed between first zone and the locked zone
+                    (0.28, () =>
+                    {
+                        startZone.Coverage = CoverageMinMax.Medium;
+                        objective.Gather_PlacementNodes.Add(start);
+
+                        if (objective.GatherRequiredCount >= 10)
+                        {
+                            (start, startZone) = AddZone(start);
+
+                            startZone.Coverage = CoverageMinMax.Medium;
+                            objective.Gather_PlacementNodes.Add(start);
+                        }
+
+                        (last, lastZone) = BuildChallenge_GeneratorCellInSide(start);
+
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
+
+                    // Single keycard, double end zone items
+                    (0.15, () =>
+                    {
+                        var (mid, _) = BuildChallenge_KeycardInSide(start);
+                        (last, _) = AddZone(mid);
+
+                        objective.Gather_PlacementNodes.Add(mid);
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
+
+                    // Single keycard, split items
+                    (0.19, () =>
+                    {
+                        (last, lastZone) = BuildChallenge_KeycardInSide(start, 3);
+
+                        var keycard = planner.GetLastNode(director.Bulkhead, "keycard");
+                        var (second, _) = AddZone(keycard);
+
+                        objective.Gather_PlacementNodes.Add(last);
+                        objective.Gather_PlacementNodes.Add(keycard);
+                    }),
+
+                    // Single boss fight
+                    (0.08, () =>
+                    {
+                        (last, lastZone) = BuildChallenge_BossFight(start);
+                        lastZone.Coverage = objective.GatherRequiredCount > 5 ? CoverageMinMax.Huge : CoverageMinMax.Large;
+
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
+                });
+                break;
+            }
+
+            case ("C", Bulkhead.Extreme, _):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Easy grab items
+                    (0.20, () =>
                     {
                         AddBranch(start, Generator.Between(1, 2), "find_items", (node, _) =>
                         {
                             objective.Gather_PlacementNodes.Add(node);
                         });
+                    }),
+
+                    // Single generator
+                    // Items distributed between first zone and the locked zone
+                    (0.20, () =>
+                    {
+                        (last, lastZone) = BuildChallenge_GeneratorCellInSide(
+                            start,
+                            level.Settings.Bulkheads == Bulkhead.PrisonerEfficiency ? 1 : 2);
+
+                        objective.Gather_PlacementNodes.Add(start);
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
+                });
+                break;
+            }
+
+            case ("C", Bulkhead.Overload, _):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // (0.2, () =>
+                    // {
+                    //     AddBranch(start, Generator.Between(1, 2), "find_items", (node, _) =>
+                    //     {
+                    //         objective.Gather_PlacementNodes.Add(node);
+                    //     });
+                    // }),
+
+                    // Agro boss in first zone
+                    (0.10, () =>
+                    {
+                        start = AddAlignedBoss_WakeOnOpen(start);
+                        objective.Gather_PlacementNodes.Add(start);
+                        // startZone.ZoneExpansion = ZoneExpansion.Expansional;
                     })
                 });
                 break;

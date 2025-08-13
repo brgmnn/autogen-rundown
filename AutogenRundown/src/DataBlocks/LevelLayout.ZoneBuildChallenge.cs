@@ -120,9 +120,9 @@ public partial record LevelLayout
     /// <returns></returns>
     public (ZoneNode, Zone) BuildChallenge_BossFight(ZoneNode start)
     {
-        AddAlignedBossFight(start);
+        start = AddAlignedBoss_Hibernate(start);
 
-        var (end, endZone) = AddZone(start, new ZoneNode { Branch = "primary" });
+        var (end, endZone) = AddZone(start);
 
         return (end, endZone);
     }

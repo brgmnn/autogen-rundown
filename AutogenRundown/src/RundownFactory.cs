@@ -198,7 +198,7 @@ public static class RundownFactory
         #if DEBUG
         if (withFixed)
         {
-            const string tier = "B";
+            const string tier = "C";
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,

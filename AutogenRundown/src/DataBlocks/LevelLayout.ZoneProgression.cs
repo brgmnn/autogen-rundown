@@ -49,6 +49,32 @@ public partial record LevelLayout
             });
     }
 
+    private static void SetInfectionVibe(Zone zone, int spitters = 100)
+    {
+        // Pick some mother like lights
+        zone.LightSettings = Generator.Pick(new List<Lights.Light>
+        {
+            Lights.Light.Monochrome_Green,
+            Lights.Light.Monochrome_YellowToGreen,
+            Lights.Light.DarkGreenToRed_1,
+            Lights.Light.camo_green_R4E1,
+            Lights.Light.BlueToGreen_1
+        });
+
+        // Add mother egg sacks to the zone
+        zone.StaticSpawnDataContainers.Add(
+            new StaticSpawnDataContainer
+            {
+                Count = spitters,
+                DistributionWeightType = 0,
+                DistributionWeight = 1.0,
+                DistributionRandomBlend = 0.0,
+                DistributionResultPow = 2.0,
+                Unit = StaticSpawnUnit.Spitter,
+                FixedSeed = Generator.Between(10, 150)
+            });
+    }
+
     private static void SetInfestedVibe(Zone zone)
     {
         zone.LightSettings = Generator.Pick(new List<Lights.Light>
@@ -145,51 +171,24 @@ public partial record LevelLayout
     }
     #endregion
 
-    #region Sleeping Boss Zone
+    #region Boss Zone
     /// <summary>
-    /// Adds a progressively harder sleeping boss fight to the zone.
+    /// Adds a progressively harder boss fight to a room
     ///
     /// Note: This excludes the MegaMom boss fight. There's a separate method if you want mega mom
     /// </summary>
     /// <param name="bossNode"></param>
-    public void AddAlignedBossFight(ZoneNode bossNode)
+    public ZoneNode AddAlignedBoss(ZoneNode bossNode)
     {
         var zone = planner.GetZone(bossNode);
 
         if (zone == null)
         {
             Plugin.Logger.LogDebug($"Skipping adding boss zone as zone is null: {bossNode}");
-            return;
-        }
-
-        void SetInfectionVibe(Zone zone, int spitters = 100)
-        {
-            // Pick some mother like lights
-            zone.LightSettings = Generator.Pick(new List<Lights.Light>
-            {
-                Lights.Light.Monochrome_Green,
-                Lights.Light.Monochrome_YellowToGreen,
-                Lights.Light.DarkGreenToRed_1,
-                Lights.Light.camo_green_R4E1,
-                Lights.Light.BlueToGreen_1
-            });
-
-            // Add mother egg sacks to the zone
-            zone.StaticSpawnDataContainers.Add(
-                new StaticSpawnDataContainer
-                {
-                    Count = spitters,
-                    DistributionWeightType = 0,
-                    DistributionWeight = 1.0,
-                    DistributionRandomBlend = 0.0,
-                    DistributionResultPow = 2.0,
-                    Unit = StaticSpawnUnit.Spitter,
-                    FixedSeed = Generator.Between(10, 150)
-                });
+            return bossNode;
         }
 
         zone.GenBossGeomorph(level.Complex);
-        zone.EventsOnOpenDoor.AddSound(Sound.TenseRevelation, 2.0);
 
         // Disable any scouts on anything except E-tier
         if (level.Tier != "E")
@@ -260,28 +259,28 @@ public partial record LevelLayout
                     // Single mother
                     (0.4, () =>
                     {
-                        zone.EnemySpawningInZone.Add(EnemySpawningData.Mother_AlignedSpawn with { Points = 10 });
+                        zone.EnemySpawningInZone.Add(EnemySpawningData.Mother with { Points = 10 });
 
                         SetMotherVibe(zone);
                     }),
 
-                    // Mother and Pouncer
-                    (0.2, () =>
-                    {
-                        zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
-                        zone.EnemySpawningInZone.Add(EnemySpawningData.Mother_AlignedSpawn with { Points = 10 });
+                    // // Mother and Pouncer
+                    // (0.2, () =>
+                    // {
+                    //     zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
+                    //     zone.EnemySpawningInZone.Add(EnemySpawningData.Mother_AlignedSpawn with { Points = 10 });
+                    //
+                    //     SetMotherVibe(zone);
+                    // }),
 
-                        SetMotherVibe(zone);
-                    }),
-
-                    // Tank + pouncer with lots of spitters
-                    (0.4, () =>
-                    {
-                        zone.EnemySpawningInZone.Add(EnemySpawningData.Tank_AlignedSpawn with { Points = 10 });
-                        zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
-
-                        SetInfectionVibe(zone, 200);
-                    }),
+                    // // Tank + pouncer with lots of spitters
+                    // (0.4, () =>
+                    // {
+                    //     zone.EnemySpawningInZone.Add(EnemySpawningData.Tank_AlignedSpawn with { Points = 10 });
+                    //     zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
+                    //
+                    //     SetInfectionVibe(zone, 200);
+                    // }),
                 });
                 break;
             }
@@ -347,6 +346,42 @@ public partial record LevelLayout
                 break;
             }
         }
+
+        return bossNode;
+    }
+
+    /// <summary>
+    /// Higher level method for AddAlignedBoss(). This sets up the fight for being hibernation
+    /// </summary>
+    /// <param name="bossNode"></param>
+    /// <returns></returns>
+    public ZoneNode AddAlignedBoss_Hibernate(ZoneNode bossNode)
+    {
+        bossNode = AddAlignedBoss(bossNode);
+
+        var zone = planner.GetZone(bossNode)!;
+
+        zone.EventsOnOpenDoor.AddSound(Sound.TenseRevelation, 2.0);
+
+        return bossNode;
+    }
+
+    /// <summary>
+    /// This wakes up the room on opening the door
+    /// </summary>
+    /// <param name="bossNode"></param>
+    /// <returns></returns>
+    public ZoneNode AddAlignedBoss_WakeOnOpen(ZoneNode bossNode)
+    {
+        bossNode = AddAlignedBoss(bossNode);
+
+        var zone = planner.GetZone(bossNode)!;
+
+        zone.EventsOnOpenDoor
+            .AddAlertEnemies(bossNode.Bulkhead, bossNode.ZoneNumber, 1.0)
+            .AddSound(Sound.TankRoar, 2.0);
+
+        return bossNode;
     }
 
     /// <summary>
