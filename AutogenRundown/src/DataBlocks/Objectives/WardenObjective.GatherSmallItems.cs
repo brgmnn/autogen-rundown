@@ -70,5 +70,13 @@ public partial record WardenObjective
         dataLayer.ObjectiveData.ZonePlacementDatas.Add(placements);
 
         GatherMaxPerZone = GatherSpawnCount / placements.Count + GatherSpawnCount % placements.Count;
+
+        // TODO: AddCompletedObjectiveWaves(level, director);
+
+        #region Warden Intel Messages
+
+        // TODO: fill this in
+
+        #endregion
     }
 }

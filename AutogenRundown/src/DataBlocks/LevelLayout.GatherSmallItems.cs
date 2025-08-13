@@ -308,7 +308,6 @@ public partial record LevelLayout
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Hub to dead ends
-                    // TODO
                     (0.30, () =>
                     {
                         if (objective.GatherRequiredCount < 10)
@@ -361,7 +360,7 @@ public partial record LevelLayout
                             objective.Gather_PlacementNodes.Add(start);
                         }
 
-                        (last, lastZone) = BuildChallenge_GeneratorCellInSide(start);
+                        (last, lastZone) = BuildChallenge_GeneratorCellInSide(start, Generator.Between(1, 2));
 
                         objective.Gather_PlacementNodes.Add(last);
                     }),
@@ -393,6 +392,20 @@ public partial record LevelLayout
                     {
                         (last, lastZone) = BuildChallenge_BossFight(start);
                         lastZone.Coverage = objective.GatherRequiredCount > 5 ? CoverageMinMax.Huge : CoverageMinMax.Large;
+
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
+
+                    // Double generator
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, _) = BuildChallenge_GeneratorCellInSide(nodes.Last());
+
+                        objective.Gather_PlacementNodes.Add(mid);
+
+                        var nodes2 = AddBranch_Forward(mid, 1);
+                        (last, _) = BuildChallenge_GeneratorCellInSide(nodes2.Last());
 
                         objective.Gather_PlacementNodes.Add(last);
                     }),
@@ -432,20 +445,22 @@ public partial record LevelLayout
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // (0.2, () =>
-                    // {
-                    //     AddBranch(start, Generator.Between(1, 2), "find_items", (node, _) =>
-                    //     {
-                    //         objective.Gather_PlacementNodes.Add(node);
-                    //     });
-                    // }),
+                    (0.2, () =>
+                    {
+                        AddBranch(start, Generator.Between(1, 2), "find_items", (node, _) =>
+                        {
+                            objective.Gather_PlacementNodes.Add(node);
+                        });
+                    }),
 
                     // Agro boss in first zone
                     (0.10, () =>
                     {
-                        start = AddAlignedBoss_WakeOnOpen(start);
-                        objective.Gather_PlacementNodes.Add(start);
-                        // startZone.ZoneExpansion = ZoneExpansion.Expansional;
+                        // Add extra zone
+                        (start, startZone) = AddZone(start);
+                        last = AddAlignedBoss_WakeOnOpen(start);
+
+                        objective.Gather_PlacementNodes.Add(last);
                     })
                 });
                 break;
@@ -454,6 +469,88 @@ public partial record LevelLayout
 
             #region Tier: D
             case ("D", Bulkhead.Main, _):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Boss fight to Apex
+                    (0.20, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                        var (mid, midZone) = BuildChallenge_BossFight(nodes.Last());
+
+                        objective.Gather_PlacementNodes.Add(nodes.Last());
+
+                        midZone.GenCorridorGeomorph(level.Complex);
+
+                        var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+                        mid2Zone.SetStartExpansionFromExpansion();
+
+                        objective.Gather_PlacementNodes.Add(mid2);
+
+                        var (last, lastZone) = BuildChallenge_ApexAlarm(
+                            mid2,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
+
+                    // Keycard to Apex alarm
+                    (0.20, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last(), Generator.Between(1, 2));
+
+                        objective.Gather_PlacementNodes.Add(nodes.Last());
+
+                        midZone.GenCorridorGeomorph(level.Complex);
+
+                        var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+                        mid2Zone.SetStartExpansionFromExpansion();
+
+                        objective.Gather_PlacementNodes.Add(mid2);
+
+                        var (last, _) = BuildChallenge_ApexAlarm(
+                            mid2,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
+
+                    // Error with off + cell carry
+                    (0.20, () =>
+                    {
+                        var (mid, _) = BuildChallenge_ErrorWithOff_GeneratorCellCarry(
+                            start,
+                            Generator.Between(2, 4),
+                            1);
+
+                        (last, _) = AddZone(mid);
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
+                });
+                break;
+            }
+
+            case ("D", Bulkhead.Extreme, _):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    (0.2, () =>
+                    {
+                        AddBranch(start, Generator.Between(1, 2), "find_items", (node, _) =>
+                        {
+                            objective.Gather_PlacementNodes.Add(node);
+                        });
+                    })
+                });
+                break;
+            }
+
+            case ("D", Bulkhead.Overload, _):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {

@@ -171,6 +171,27 @@ public partial record LevelLayout
     }
     #endregion
 
+    #region Extract forward
+
+    /// <summary>
+    /// Adds a branch going forward with the last zone being a forward extract
+    /// </summary>
+    /// <param name="start"></param>
+    /// <returns></returns>
+    public ZoneNode AddForwardExtract(ZoneNode start, int preludeZones = 0)
+    {
+        var nodes = AddBranch_Forward(start, 1 + preludeZones);
+
+        var exit = nodes.Last();
+        var exitZone = planner.GetZone(exit)!;
+
+        exitZone.GenExitGeomorph(level.Complex);
+
+        return exit;
+    }
+
+    #endregion
+
     #region Boss Zone
     /// <summary>
     /// Adds a progressively harder boss fight to a room

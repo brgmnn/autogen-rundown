@@ -199,10 +199,12 @@ public static class RundownFactory
         if (withFixed)
         {
             const string tier = "C";
+            const Complex complex = Complex.Tech;
+
             var mainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
-                Complex = Complex.Tech,
+                Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
                 Objective = WardenObjectiveType.GatherSmallItems,
@@ -211,30 +213,37 @@ public static class RundownFactory
 
             var secondDirector = new BuildDirector
             {
-                Bulkhead = Bulkhead.Overload,
-                Complex = Complex.Mining,
+                Bulkhead = Bulkhead.Extreme,
+                Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
                 Objective = WardenObjectiveType.GatherSmallItems,
             };
             secondDirector.GenPoints();
 
-            var settings = new LevelSettings(tier)
+            var thirdDirector = new BuildDirector
             {
-                Bulkheads = Bulkhead.Main | Bulkhead.Overload
+                Bulkhead = Bulkhead.Overload,
+                Complex = complex,
+                Complexity = Complexity.Low,
+                Tier = tier,
+                Objective = WardenObjectiveType.GatherSmallItems,
             };
-            //settings.Modifiers.Add(LevelModifiers.Fog);
+            secondDirector.GenPoints();
 
             var testLevel = Level.Build(
                 new Level(tier)
                 {
                     Tier = tier,
                     Name = "Gather",
-                    Complex = Complex.Tech,
+                    Complex = complex,
                     MainDirector = mainDirector,
-                    // SecondaryDirector = secondDirector,
-                    OverloadDirector = secondDirector,
-                    Settings = settings,
+                    SecondaryDirector = secondDirector,
+                    OverloadDirector = thirdDirector,
+                    Settings = new LevelSettings(tier)
+                    {
+                        Bulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload
+                    },
                     Index = rundown.TierC_Count + 1,
                     IsTest = true
                 });
