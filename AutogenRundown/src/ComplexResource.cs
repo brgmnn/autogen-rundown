@@ -338,12 +338,13 @@ public class ComplexResource
             SubComplex = SubComplex.Lab
         });
 
-        // Hub tile
-        resourceSet.AddPrefab(Complex.Tech, "CustomGeomorphs_Objective_1x1", new Prefab()
-        {
-            Asset = "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_Hub_RLC_01.prefab",
-            SubComplex = SubComplex.Lab
-        });
+        // // Hub tile
+        // // Disabled as there is an NCR machine that breaks any activate small objective
+        // resourceSet.AddPrefab(Complex.Tech, "CustomGeomorphs_Objective_1x1", new Prefab()
+        // {
+        //     Asset = "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_Hub_RLC_01.prefab",
+        //     SubComplex = SubComplex.Lab
+        // });
 
         // Hub tile
         resourceSet.AddPrefab(Complex.Tech, "CustomGeomorphs_Objective_1x1", new Prefab()

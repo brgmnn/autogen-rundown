@@ -448,12 +448,13 @@ public record ComplexResourceSet : DataBlock
             SubComplex = SubComplex.Lab
         });
 
-        // Hub tile
-        Tech.CustomGeomorphs.Insert(0, new Prefab()
-        {
-            Asset = "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_Hub_RLC_01.prefab",
-            SubComplex = SubComplex.Lab
-        });
+        // // Hub tile
+        // // Disabled as there's a NCR machine that breaks ActivateSmallHSU objectives
+        // Tech.CustomGeomorphs.Insert(0, new Prefab()
+        // {
+        //     Asset = "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_Hub_RLC_01.prefab",
+        //     SubComplex = SubComplex.Lab
+        // });
 
         // Hub tile
         Tech.CustomGeomorphs.Insert(0, new Prefab()
