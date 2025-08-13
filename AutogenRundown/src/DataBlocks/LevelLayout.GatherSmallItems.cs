@@ -1,6 +1,8 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -539,13 +541,26 @@ public partial record LevelLayout
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    (0.2, () =>
+                    // Easy grab items
+                    (0.20, () =>
                     {
                         AddBranch(start, Generator.Between(1, 2), "find_items", (node, _) =>
                         {
                             objective.Gather_PlacementNodes.Add(node);
                         });
-                    })
+                    }),
+
+                    // Single generator
+                    // Items distributed between first zone and the locked zone
+                    (0.20, () =>
+                    {
+                        (last, lastZone) = BuildChallenge_GeneratorCellInSide(
+                            start,
+                            level.Settings.Bulkheads == Bulkhead.PrisonerEfficiency ? 1 : 2);
+
+                        objective.Gather_PlacementNodes.Add(start);
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
                 });
                 break;
             }
@@ -560,6 +575,16 @@ public partial record LevelLayout
                         {
                             objective.Gather_PlacementNodes.Add(node);
                         });
+                    }),
+
+                    // Agro boss in first zone
+                    (0.10, () =>
+                    {
+                        // Add extra zone
+                        (start, startZone) = AddZone(start);
+                        last = AddAlignedBoss_WakeOnOpen(start);
+
+                        objective.Gather_PlacementNodes.Add(last);
                     })
                 });
                 break;
@@ -571,12 +596,176 @@ public partial record LevelLayout
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
+                    // Error alarm and keycard. Zone layout is as follows:
+                    //   start -> node2 -> [0-1] -> end -> hsu     -> error
+                    //                                  -> keycard
+                    (0.15, () =>
+                    {
+                        var (mid, midZone) = BuildChallenge_ErrorWithOff_KeycardInSide(
+                            start,
+                            Generator.Between(2, 3),
+                            1,
+                            Generator.Between(1, 2)
+                        );
+
+                        midZone.Coverage = CoverageMinMax.Medium;
+
+                        objective.Gather_PlacementNodes.Add(mid);
+                        objective.Gather_PlacementNodes.Add(
+                            planner.GetZones(director.Bulkhead, null)
+                                .Where(node => node != mid)
+                                .PickRandom());
+                    }),
+
+                    // Error alarm with generator lock
+                    //      start (cell) -> node2 -> [0-1] -> end (generator) -> hsu -> error_turnoff
+                    (0.20, () =>
+                    {
+                        var (mid, midZone) = BuildChallenge_ErrorWithOff_GeneratorCellCarry(
+                            start,
+                            Generator.Between(2, 3),
+                            1);
+
+                        midZone.Coverage = CoverageMinMax.Medium;
+
+                        objective.Gather_PlacementNodes.Add(mid);
+                        objective.Gather_PlacementNodes.Add(
+                            planner.GetZones(director.Bulkhead, null)
+                                .Where(node => node != mid)
+                                .PickRandom());
+                    }),
+
+                    // 1 generator lock
+                    (0.13, () =>
+                    {
+                        var (prelude, preludeZone) = AddZone(start, new ZoneNode
+                        {
+                            Branch = "primary",
+                            MaxConnections = 3
+                        });
+                        preludeZone.GenTGeomorph(level.Complex);
+
+                        var (locked, _) = AddZone(prelude);
+                        var cellZones = AddBranch_Side(prelude, 3, "power_cell");
+
+                        // Lock the first zone
+                        AddGeneratorPuzzle(locked, cellZones.Last());
+
+                        objective.Gather_PlacementNodes.Add(cellZones.Take(2).PickRandom());
+                        objective.Gather_PlacementNodes.Add(locked);
+                    }),
+
+                    // 2 keycards
+                    (0.40, () =>
+                    {
+                        // Update number of connections for hub zone
+                        planner.UpdateNode(start with { MaxConnections = 3 });
+                        startZone.GenHubGeomorph(level.Complex);
+
+                        // Second area, with also a locked zone
+                        var (items1, items1Zone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
+                        items1Zone.GenHubGeomorph(level.Complex);
+
+                        var keycard1 = AddBranch(start, 1, "keycard_1").Last();
+
+                        // Lock the first zone
+                        AddKeycardPuzzle(items1, keycard1);
+
+                        // Build the second keycard zone and
+                        var keycard2 = AddBranch(items1, 1, "keycard_2").Last();
+                        var (items2, items2Zone) = AddZone(items1);
+
+                        items2Zone.Coverage = CoverageMinMax.Medium;
+
+                        // Lock the first zone
+                        AddKeycardPuzzle(items2, keycard2);
+
+                        objective.Gather_PlacementNodes.Add(items1);
+                        objective.Gather_PlacementNodes.Add(items2);
+                        objective.Gather_PlacementNodes.Add(keycard2);
+                    }),
+
+                    // Level-wide error alarm
+                    (0.12, () =>
+                    {
+                        var population = WavePopulation.Baseline;
+
+                        // First set shadows if we have them
+                        if (level.Settings.HasShadows())
+                            population = Generator.Flip(0.6) ? WavePopulation.OnlyShadows : WavePopulation
+                                .Baseline_Shadows;
+
+                        // Next check and set chargers first, then flyers
+                        if (level.Settings.HasChargers())
+                            population = WavePopulation.Baseline_Chargers;
+                        else if (level.Settings.HasFlyers())
+                            population = WavePopulation.Baseline_Flyers;
+                        else if (level.Settings.HasNightmares())
+                            population = WavePopulation.Baseline_Nightmare;
+
+                        objective.WavesOnElevatorLand.Add(GenericWave.ErrorAlarm_Hard with
+                        {
+                            Population = population
+                        });
+                        level.MarkAsErrorAlarm();
+
+                        AddBranch(start, 3, "primary", (node, _) =>
+                            {
+                                objective.Gather_PlacementNodes.Add(node);
+                            });
+                    })
+                });
+                break;
+            }
+
+            case ("E", Bulkhead.Extreme, _):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Easy grab items
+                    (0.20, () =>
+                    {
+                        AddBranch(start, Generator.Between(1, 2), "find_items", (node, _) =>
+                        {
+                            objective.Gather_PlacementNodes.Add(node);
+                        });
+                    }),
+
+                    // Single generator
+                    // Items distributed between first zone and the locked zone
+                    (0.20, () =>
+                    {
+                        (last, lastZone) = BuildChallenge_GeneratorCellInSide(
+                            start,
+                            level.Settings.Bulkheads == Bulkhead.PrisonerEfficiency ? 1 : 2);
+
+                        objective.Gather_PlacementNodes.Add(start);
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
+                });
+                break;
+            }
+
+            case ("E", Bulkhead.Overload, _):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
                     (0.2, () =>
                     {
                         AddBranch(start, Generator.Between(1, 2), "find_items", (node, _) =>
                         {
                             objective.Gather_PlacementNodes.Add(node);
                         });
+                    }),
+
+                    // Agro boss in first zone
+                    (0.10, () =>
+                    {
+                        // Add extra zone
+                        (start, startZone) = AddZone(start);
+                        last = AddAlignedBoss_WakeOnOpen(start);
+
+                        objective.Gather_PlacementNodes.Add(last);
                     })
                 });
                 break;

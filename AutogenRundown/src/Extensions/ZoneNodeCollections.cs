@@ -21,4 +21,12 @@ public static class ZoneNodeCollections
     /// <returns></returns>
     public static string ToString(this List<ZoneNode> nodes)
         => string.Join(Environment.NewLine, nodes.Select(n => n.ToString()));
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="nodes"></param>
+    /// <returns></returns>
+    public static ZoneNode PickRandom(this IEnumerable<ZoneNode> nodes)
+        => Generator.Pick(nodes);
 }
