@@ -198,7 +198,7 @@ public static class RundownFactory
         #if DEBUG
         if (withFixed)
         {
-            const string tier = "C";
+            const string tier = "D";
             const Complex complex = Complex.Tech;
 
             var mainDirector = new BuildDirector
@@ -229,7 +229,7 @@ public static class RundownFactory
                 Tier = tier,
                 Objective = WardenObjectiveType.GatherSmallItems,
             };
-            secondDirector.GenPoints();
+            thirdDirector.GenPoints();
 
             var testLevel = Level.Build(
                 new Level(tier)
@@ -238,11 +238,12 @@ public static class RundownFactory
                     Name = "Gather",
                     Complex = complex,
                     MainDirector = mainDirector,
-                    // SecondaryDirector = secondDirector,
-                    // OverloadDirector = thirdDirector,
+                    SecondaryDirector = secondDirector,
+                    OverloadDirector = thirdDirector,
                     Settings = new LevelSettings(tier)
                     {
                         Bulkheads = Bulkhead.Main
+                        // Bulkheads = Bulkhead.Main | Bulkhead.Overload
                         // Bulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload
                     },
                     Index = rundown.TierC_Count + 1,

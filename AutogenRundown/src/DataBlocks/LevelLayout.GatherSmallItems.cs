@@ -1,6 +1,8 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Terminals;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
 
@@ -224,13 +226,17 @@ public partial record LevelLayout
                     // Terminal locked door, terminal password locked
                     (0.20, () =>
                     {
-                        (last, lastZone) = BuildChallenge_LockedTerminalPasswordInSide(start);
-                        objective.Gather_PlacementNodes.Add(last);
+                        (last, lastZone) = BuildChallenge_LockedTerminalPasswordInSide(
+                            start,
+                            (node) =>
+                            {
+                                var (password, passwordZone) = AddZone(node, new ZoneNode { Branch = "terminal_password" });
 
-                        var passwordNodes = planner.GetZones(
-                            director.Bulkhead,
-                            "terminal_password");
-                        objective.Gather_PlacementNodes.Add(passwordNodes.Last());
+                                objective.Gather_PlacementNodes.Add(password);
+
+                                return (password, passwordZone);
+                            });
+                        objective.Gather_PlacementNodes.Add(last);
 
                         if (Generator.Flip(0.4))
                             lastZone.GenDeadEndGeomorph(level.Complex);
@@ -563,7 +569,6 @@ public partial record LevelLayout
             #endregion
 
             #region Tier: D
-            // TODO: more
             case ("D", Bulkhead.Main, _):
             {
                 Generator.SelectRun(new List<(double, Action)>
@@ -590,6 +595,27 @@ public partial record LevelLayout
                             WaveSettings.Baseline_Hard);
 
                         objective.Gather_PlacementNodes.Add(last);
+                    }),
+
+                    // Locked end zone, terminal password, password keycard
+                    (0.20, () =>
+                    {
+                        (last, lastZone) = BuildChallenge_LockedTerminalPasswordInSide(
+                            start,
+                            (passwordStart) =>
+                            {
+                                var midNodes = AddBranch_Forward(passwordStart, 2);
+                                var corridor = planner.GetZone(midNodes.First())!;
+                                corridor.GenCorridorGeomorph(level.Complex);
+
+                                var (password, passwordZone) = BuildChallenge_KeycardInSide(midNodes.Last());
+                                objective.Gather_PlacementNodes.Add(password);
+
+                                return (password, passwordZone);
+                            });
+
+                        objective.Gather_PlacementNodes.Add(last);
+                        lastZone.GenDeadEndGeomorph(level.Complex);
                     }),
 
                     // Keycard to Apex alarm
