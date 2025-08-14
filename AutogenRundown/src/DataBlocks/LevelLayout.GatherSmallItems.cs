@@ -37,7 +37,7 @@ public partial record LevelLayout
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Double dead end
-                    (0.30, () =>
+                    (0.12, () =>
                     {
                         startZone.GenHubGeomorph(level.Complex);
 
@@ -70,7 +70,7 @@ public partial record LevelLayout
                     }),
 
                     // Locked door, side terminal
-                    (0.10, () =>
+                    (0.20, () =>
                     {
                         (last, lastZone) = BuildChallenge_LockedTerminalDoor(
                             start,
@@ -81,7 +81,7 @@ public partial record LevelLayout
                     }),
 
                     // Single boss fight
-                    (0.08, () =>
+                    (0.06, () =>
                     {
                         (last, lastZone) = BuildChallenge_BossFight(start);
 
