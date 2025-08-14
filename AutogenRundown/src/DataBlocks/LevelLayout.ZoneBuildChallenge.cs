@@ -47,6 +47,14 @@ public partial record LevelLayout
         return (end, endZone);
     }
 
+    /// <summary>
+    /// Very simple puzzle. Creates:
+    ///     start (keycard) -> end (locked by key)
+    ///
+    /// Simple wrapper call around AddKeycardPuzzle
+    /// </summary>
+    /// <param name="start"></param>
+    /// <returns></returns>
     public (ZoneNode, Zone) BuildChallenge_KeycardInZone(ZoneNode start)
     {
         var (end, endZone) = AddZone(start, new ZoneNode());

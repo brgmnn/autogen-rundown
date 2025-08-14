@@ -347,6 +347,15 @@ public partial record LevelLayout
                         }
                     }),
 
+                    // Single terminal locked zone
+                    (0.34, () =>
+                    {
+                        (last, lastZone) = BuildChallenge_KeycardInSide(start);
+
+                        objective.Gather_PlacementNodes.Add(last);
+                        lastZone.Coverage = objective.GatherRequiredCount > 5 ? CoverageMinMax.Huge : CoverageMinMax.Large;
+                    }),
+
                     // Single generator
                     // Items distributed between first zone and the locked zone
                     (0.28, () =>
@@ -415,15 +424,14 @@ public partial record LevelLayout
                 break;
             }
 
-            // TODO: some more
             case ("C", Bulkhead.Extreme, _):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // Easy grab items
-                    (0.20, () =>
+                    // Simple straight fetch with mid-point locked on in zone
+                    (0.25, () =>
                     {
-                        var nodes = AddBranch(start, Generator.Between(1, 2), "find_items", (node, _) =>
+                        var nodes = AddBranch(start, 2, "primary", (node, _) =>
                         {
                             objective.Gather_PlacementNodes.Add(node);
                         });
@@ -431,17 +439,43 @@ public partial record LevelLayout
                         AddTerminalUnlockPuzzle(nodes.First(), start);
                     }),
 
-                    // // Single generator
-                    // // Items distributed between first zone and the locked zone
-                    // (0.20, () =>
-                    // {
-                    //     (last, lastZone) = BuildChallenge_GeneratorCellInSide(
-                    //         start,
-                    //         level.Settings.Bulkheads == Bulkhead.PrisonerEfficiency ? 1 : 2);
-                    //
-                    //     objective.Gather_PlacementNodes.Add(start);
-                    //     objective.Gather_PlacementNodes.Add(last);
-                    // }),
+                    // End zone locked on terminal in side zone
+                    (0.25, () =>
+                    {
+                        (last, lastZone) = BuildChallenge_LockedTerminalDoor(start, 1);
+
+                        objective.Gather_PlacementNodes.Add(last);
+                        lastZone.Coverage = CoverageMinMax.Large;
+                    }),
+
+                    // Single generator
+                    // Items distributed between first zone and the locked zone
+                    (0.25, () =>
+                    {
+                        (last, lastZone) = BuildChallenge_GeneratorCellInSide(start);
+
+                        objective.Gather_PlacementNodes.Add(start);
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
+
+                    // Single keycard
+                    // Items distributed between first zone and the locked zone
+                    (0.25, () =>
+                    {
+                        (last, lastZone) = BuildChallenge_KeycardInZone(start);
+
+                        if (level.Settings.Bulkheads != Bulkhead.PrisonerEfficiency)
+                        {
+                            objective.Gather_PlacementNodes.Add(last);
+
+                            (last, lastZone) = AddZone(last);
+
+                            lastZone.Coverage = CoverageMinMax.Nano;
+                        }
+
+                        objective.Gather_PlacementNodes.Add(start);
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
                 });
                 break;
             }
