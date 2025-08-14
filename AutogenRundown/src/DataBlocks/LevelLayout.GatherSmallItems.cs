@@ -597,7 +597,7 @@ public partial record LevelLayout
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Error alarm and keycard. Zone layout is as follows:
-                    //   start -> node2 -> [0-1] -> end -> hsu     -> error
+                    //   start -> node2 -> [0-1] -> end -> items   -> error
                     //                                  -> keycard
                     (0.15, () =>
                     {
@@ -618,7 +618,7 @@ public partial record LevelLayout
                     }),
 
                     // Error alarm with generator lock
-                    //      start (cell) -> node2 -> [0-1] -> end (generator) -> hsu -> error_turnoff
+                    //      start (cell) -> node2 -> [0-1] -> end (generator) -> items -> error_turnoff
                     (0.20, () =>
                     {
                         var (mid, midZone) = BuildChallenge_ErrorWithOff_GeneratorCellCarry(
@@ -750,12 +750,24 @@ public partial record LevelLayout
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    (0.2, () =>
+                    // Apex alarm (infested)
+                    (0.20, () =>
                     {
-                        AddBranch(start, Generator.Between(1, 2), "find_items", (node, _) =>
-                        {
-                            objective.Gather_PlacementNodes.Add(node);
-                        });
+                        (last, lastZone) = BuildChallenge_ApexAlarm(start,
+                            WavePopulation.Baseline_Infested,
+                            WaveSettings.Baseline_VeryHard);
+
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
+
+                    // Apex alarm (chargers)
+                    (0.10, () =>
+                    {
+                        (last, lastZone) = BuildChallenge_ApexAlarm(start,
+                            WavePopulation.OnlyChargers,
+                            WaveSettings.Baseline_Hard);
+
+                        objective.Gather_PlacementNodes.Add(last);
                     }),
 
                     // Agro boss in first zone
