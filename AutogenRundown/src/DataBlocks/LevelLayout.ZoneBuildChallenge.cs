@@ -84,6 +84,40 @@ public partial record LevelLayout
         return (end, endZone);
     }
 
+    /// <summary>
+    /// Adds a locked door that must be unlocked on a terminal. Optionally specify number of side
+    /// zones to build out to place the terminal at the end of. If no side zones are specified the
+    /// terminal is placed in the source zone.
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="sideZones"></param>
+    /// <returns></returns>
+    public (ZoneNode, Zone) BuildChallenge_LockedTerminalDoor(ZoneNode start, int sideZones = 0)
+    {
+        var (end, endZone) = AddZone(start, new ZoneNode());
+        var terminal = start;
+
+        if (sideZones > 0)
+        {
+            start = planner.UpdateNode(start with { MaxConnections = 3 });
+            planner.GetZone(start)!.Coverage = CoverageMinMax.Small;
+
+            terminal = AddBranch(start, sideZones, "terminal_door_unlock").Last();
+        }
+
+        AddTerminalUnlockPuzzle(end, terminal);
+
+        return (end, endZone);
+    }
+
+    /// <summary>
+    /// Adds a locked door that must be unlocked on a terminal. The terminal is in the start zone
+    /// but is password locked. The password is fetched from another terminal in a side zone.
+    /// At least 1 side zone must be specified.
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="sidePasswordZones"></param>
+    /// <returns></returns>
     public (ZoneNode, Zone) BuildChallenge_LockedTerminalPasswordInSide(
         ZoneNode start,
         int sidePasswordZones = 1)
