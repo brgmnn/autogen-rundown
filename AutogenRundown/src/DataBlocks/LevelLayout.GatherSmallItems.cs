@@ -423,23 +423,25 @@ public partial record LevelLayout
                     // Easy grab items
                     (0.20, () =>
                     {
-                        AddBranch(start, Generator.Between(1, 2), "find_items", (node, _) =>
+                        var nodes = AddBranch(start, Generator.Between(1, 2), "find_items", (node, _) =>
                         {
                             objective.Gather_PlacementNodes.Add(node);
                         });
+
+                        AddTerminalUnlockPuzzle(nodes.First(), start);
                     }),
 
-                    // Single generator
-                    // Items distributed between first zone and the locked zone
-                    (0.20, () =>
-                    {
-                        (last, lastZone) = BuildChallenge_GeneratorCellInSide(
-                            start,
-                            level.Settings.Bulkheads == Bulkhead.PrisonerEfficiency ? 1 : 2);
-
-                        objective.Gather_PlacementNodes.Add(start);
-                        objective.Gather_PlacementNodes.Add(last);
-                    }),
+                    // // Single generator
+                    // // Items distributed between first zone and the locked zone
+                    // (0.20, () =>
+                    // {
+                    //     (last, lastZone) = BuildChallenge_GeneratorCellInSide(
+                    //         start,
+                    //         level.Settings.Bulkheads == Bulkhead.PrisonerEfficiency ? 1 : 2);
+                    //
+                    //     objective.Gather_PlacementNodes.Add(start);
+                    //     objective.Gather_PlacementNodes.Add(last);
+                    // }),
                 });
                 break;
             }

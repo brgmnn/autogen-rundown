@@ -1108,4 +1108,87 @@ public partial record LevelLayout
         });
     }
     #endregion
+
+    #region Terminal Puzzles
+
+    /// <summary>
+    /// Works similar to a keycard or generator puzzle. Except here the players must activate the
+    /// door from a terminal command on a terminal.
+    /// </summary>
+    /// <param name="lockedNode"></param>
+    /// <param name="terminalNode"></param>
+    public void AddTerminalUnlockPuzzle(ZoneNode lockedNode, ZoneNode terminalNode)
+    {
+        var lockedZone = level.Planner.GetZone(lockedNode);
+        var terminalZone = level.Planner.GetZone(terminalNode);
+
+        if (lockedZone == null || terminalZone == null)
+        {
+            Plugin.Logger.LogWarning($"AddKeycardPuzzle() returned early due to missing zones: locked={lockedZone} terminal={terminalZone}");
+            return;
+        }
+
+        terminalZone.TerminalPlacements.Add(new TerminalPlacement()
+        {
+            UniqueCommands = new List<CustomTerminalCommand>
+            {
+                new()
+                {
+                    Command = "ACTIVATE_DOOR",
+                    CommandDesc = "Activates and unlocks the security door controlled by this terminal.",
+                    CommandEvents = new List<WardenObjectiveEvent>()
+                        .AddUnlockDoor(
+                            lockedNode.Bulkhead,
+                            lockedNode.ZoneNumber,
+                            null,
+                            WardenObjectiveEventTrigger.OnStart,
+                            10)
+                        .ToList(),
+                    PostCommandOutputs = new List<TerminalOutput>
+                    {
+                        // 3 for starting command
+                        new()
+                        {
+                            Output = "Connecting to door control plane...",
+                            Type = LineType.SpinningWaitNoDone,
+                            Time = 2.5
+                        },
+                        new()
+                        {
+                            Output = "Confirming valid terminal ID",
+                            Type = LineType.Normal,
+                            Time = 1.5
+                        },
+                        new()
+                        {
+                            Output = "Activating door servo motor systems...",
+                            Type = LineType.SpinningWaitDone,
+                            Time = 3.0
+                        },
+                        new()
+                        {
+                            Output = "Door unlocked.",
+                            Type = LineType.Normal,
+                            Time = 1.0
+                        },
+                    },
+                }
+            }
+        });
+
+        var terminalSerial = Lore.TerminalSerial(
+            "Reality",
+            terminalNode.Bulkhead,
+            terminalNode.ZoneNumber,
+            terminalZone.TerminalPlacements.Count - 1);
+
+        // Lock the locked node
+        lockedZone.ProgressionPuzzleToEnter = new ProgressionPuzzle
+        {
+            PuzzleType = ProgressionPuzzleType.Locked,
+            CustomText = $"<color=grey>DOOR LOCKED, ACTIVATE DOOR SYSTEMS ON {terminalSerial}</color>"
+        };
+    }
+
+    #endregion
 }
