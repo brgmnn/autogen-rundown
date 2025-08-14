@@ -415,6 +415,7 @@ public partial record LevelLayout
                 break;
             }
 
+            // TODO: some more
             case ("C", Bulkhead.Extreme, _):
             {
                 Generator.SelectRun(new List<(double, Action)>
@@ -443,6 +444,7 @@ public partial record LevelLayout
                 break;
             }
 
+            // TODO: more
             case ("C", Bulkhead.Overload, _):
             {
                 Generator.SelectRun(new List<(double, Action)>
@@ -470,6 +472,7 @@ public partial record LevelLayout
             #endregion
 
             #region Tier: D
+            // TODO: more
             case ("D", Bulkhead.Main, _):
             {
                 Generator.SelectRun(new List<(double, Action)>
@@ -537,6 +540,7 @@ public partial record LevelLayout
                 break;
             }
 
+            // TODO: more
             case ("D", Bulkhead.Extreme, _):
             {
                 Generator.SelectRun(new List<(double, Action)>
@@ -565,6 +569,7 @@ public partial record LevelLayout
                 break;
             }
 
+            // TODO: more
             case ("D", Bulkhead.Overload, _):
             {
                 Generator.SelectRun(new List<(double, Action)>
@@ -718,6 +723,7 @@ public partial record LevelLayout
                 break;
             }
 
+            // TODO: more
             case ("E", Bulkhead.Extreme, _):
             {
                 Generator.SelectRun(new List<(double, Action)>
@@ -746,6 +752,7 @@ public partial record LevelLayout
                 break;
             }
 
+            // TODO: some more
             case ("E", Bulkhead.Overload, _):
             {
                 Generator.SelectRun(new List<(double, Action)>
