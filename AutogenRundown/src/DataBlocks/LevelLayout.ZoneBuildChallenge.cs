@@ -124,18 +124,22 @@ public partial record LevelLayout
     /// At least 1 side zone must be specified.
     /// </summary>
     /// <param name="start"></param>
-    /// <param name="sidePasswordZones"></param>
+    /// <param name="passwordBuilder"></param>
     /// <returns></returns>
     public (ZoneNode, Zone) BuildChallenge_LockedTerminalPasswordInSide(
         ZoneNode start,
-        int sidePasswordZones = 1)
+        Func<ZoneNode, (ZoneNode end, Zone endZone)>? passwordBuilder = null)
     {
         start = planner.UpdateNode(start with { MaxConnections = 3 });
         var startZone = planner.GetZone(start)!;
         startZone.GenHubGeomorph(level.Complex);
 
-        var (end, endZone) = AddZone(start, new ZoneNode());
-        var passwordNodes = AddBranch(start, sidePasswordZones, "terminal_password");
+        var (end, endZone) = AddZone(start);
+
+        // Build the side zone of passwords
+        passwordBuilder ??= (node) => AddZone(node, new ZoneNode { Branch = "terminal_password" });
+        var (password, _) = passwordBuilder(start);
+
         var terminalState = new TerminalStartingState
         {
             PasswordProtected = true,
@@ -146,8 +150,8 @@ public partial record LevelLayout
                 {
                     new ZoneSelectionData
                     {
-                        ZoneNumber = passwordNodes.Last().ZoneNumber,
-                        Bulkhead = passwordNodes.Last().Bulkhead,
+                        ZoneNumber = password.ZoneNumber,
+                        Bulkhead = password.Bulkhead,
                     }
                 }
             }
