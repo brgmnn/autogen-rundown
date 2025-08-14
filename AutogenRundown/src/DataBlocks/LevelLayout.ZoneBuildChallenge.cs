@@ -1,4 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
+using AutogenRundown.DataBlocks.Terminals;
 using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
@@ -78,6 +80,38 @@ public partial record LevelLayout
         var keycardNodes = AddBranch(start, sideKeycardZones, "keycard");
 
         AddKeycardPuzzle(end, keycardNodes.Last());
+
+        return (end, endZone);
+    }
+
+    public (ZoneNode, Zone) BuildChallenge_LockedTerminalPasswordInSide(
+        ZoneNode start,
+        int sidePasswordZones = 1)
+    {
+        start = planner.UpdateNode(start with { MaxConnections = 3 });
+        var startZone = planner.GetZone(start)!;
+        startZone.GenHubGeomorph(level.Complex);
+
+        var (end, endZone) = AddZone(start, new ZoneNode());
+        var passwordNodes = AddBranch(start, sidePasswordZones, "terminal_password");
+        var terminalState = new TerminalStartingState
+        {
+            PasswordProtected = true,
+            GeneratePassword = true,
+            TerminalZoneSelectionDatas = new()
+            {
+                new()
+                {
+                    new ZoneSelectionData
+                    {
+                        ZoneNumber = passwordNodes.Last().ZoneNumber,
+                        Bulkhead = passwordNodes.Last().Bulkhead,
+                    }
+                }
+            }
+        };
+
+        AddTerminalUnlockPuzzle(end, start, terminalState);
 
         return (end, endZone);
     }

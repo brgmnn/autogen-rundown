@@ -1,0 +1,19 @@
+﻿namespace AutogenRundown.DataBlocks.Terminals;
+
+public enum TerminalState
+{
+    Sleeping = 0,
+    Awake = 1,
+    PlayerInteracting = 2,
+    DataMining = 3,
+    Hacked = 4,
+    CodePuzzle = 5,
+    InputTest = 6,
+    ReactorError = 7,
+    AskToPlayLogAudio = 8,
+    DoPlayAudioFile = 9,
+    AudioLoopError = 10,
+    Ping = 11,
+    PasswordProtected = 12,
+    EnterPassword = 13,
+}

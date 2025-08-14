@@ -1117,7 +1117,11 @@ public partial record LevelLayout
     /// </summary>
     /// <param name="lockedNode"></param>
     /// <param name="terminalNode"></param>
-    public void AddTerminalUnlockPuzzle(ZoneNode lockedNode, ZoneNode terminalNode)
+    /// <param name="startingState"></param>
+    public void AddTerminalUnlockPuzzle(
+        ZoneNode lockedNode,
+        ZoneNode terminalNode,
+        TerminalStartingState? startingState = null)
     {
         var lockedZone = level.Planner.GetZone(lockedNode);
         var terminalZone = level.Planner.GetZone(terminalNode);
@@ -1130,6 +1134,7 @@ public partial record LevelLayout
 
         terminalZone.TerminalPlacements.Add(new TerminalPlacement()
         {
+            StartingStateData = startingState ?? new TerminalStartingState(),
             UniqueCommands = new List<CustomTerminalCommand>
             {
                 new()
