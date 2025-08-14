@@ -238,11 +238,12 @@ public static class RundownFactory
                     Name = "Gather",
                     Complex = complex,
                     MainDirector = mainDirector,
-                    SecondaryDirector = secondDirector,
-                    OverloadDirector = thirdDirector,
+                    // SecondaryDirector = secondDirector,
+                    // OverloadDirector = thirdDirector,
                     Settings = new LevelSettings(tier)
                     {
-                        Bulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload
+                        Bulkheads = Bulkhead.Main
+                        // Bulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload
                     },
                     Index = rundown.TierC_Count + 1,
                     IsTest = true

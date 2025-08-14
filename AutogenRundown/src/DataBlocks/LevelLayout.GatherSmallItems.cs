@@ -69,6 +69,17 @@ public partial record LevelLayout
                         lastZone.Coverage = objective.GatherRequiredCount > 5 ? CoverageMinMax.Huge : CoverageMinMax.Large;
                     }),
 
+                    // Locked door, side terminal
+                    (0.10, () =>
+                    {
+                        (last, lastZone) = BuildChallenge_LockedTerminalDoor(
+                            start,
+                            level.Settings.Bulkheads == Bulkhead.Main ? 2 : 1);
+
+                        objective.Gather_PlacementNodes.Add(last);
+                        lastZone.Coverage = CoverageMinMax.Medium;
+                    }),
+
                     // Single boss fight
                     (0.08, () =>
                     {
