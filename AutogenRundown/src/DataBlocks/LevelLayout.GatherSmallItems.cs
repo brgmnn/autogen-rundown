@@ -152,7 +152,7 @@ public partial record LevelLayout
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Hub to dead ends
-                    (0.30, () =>
+                    (0.20, () =>
                     {
                         if (objective.GatherRequiredCount <= 7)
                         {
@@ -191,7 +191,7 @@ public partial record LevelLayout
 
                     // Single generator
                     // Items distributed between first zone and the locked zone
-                    (0.28, () =>
+                    (0.18, () =>
                     {
                         (last, lastZone) = BuildChallenge_GeneratorCellInSide(start, 2);
 
@@ -221,11 +221,28 @@ public partial record LevelLayout
                         objective.Gather_PlacementNodes.Add(keycard);
                     }),
 
+                    // Terminal locked door, terminal password locked
+                    (0.20, () =>
+                    {
+                        (last, lastZone) = BuildChallenge_LockedTerminalPasswordInSide(start);
+                        objective.Gather_PlacementNodes.Add(last);
+
+                        var passwordNodes = planner.GetZones(
+                            director.Bulkhead,
+                            "terminal_password");
+                        objective.Gather_PlacementNodes.Add(passwordNodes.Last());
+
+                        if (Generator.Flip(0.4))
+                            lastZone.GenDeadEndGeomorph(level.Complex);
+                    }),
+
                     // Single boss fight
                     (0.08, () =>
                     {
                         (last, lastZone) = BuildChallenge_BossFight(start);
-                        lastZone.Coverage = objective.GatherRequiredCount > 5 ? CoverageMinMax.Huge : CoverageMinMax.Large;
+                        lastZone.Coverage = objective.GatherRequiredCount > 5
+                            ? CoverageMinMax.Huge
+                            : CoverageMinMax.Large;
 
                         objective.Gather_PlacementNodes.Add(last);
                     }),
@@ -238,11 +255,21 @@ public partial record LevelLayout
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Just fetch from the first zone
-                    (0.2, () =>
+                    (0.5, () =>
                     {
                         startZone.Coverage = CoverageMinMax.Huge;
 
                         objective.Gather_PlacementNodes.Add(last);
+                    }),
+
+                    // Terminal locked
+                    (0.3, () =>
+                    {
+                        (last, lastZone) = BuildChallenge_LockedTerminalDoor(start);
+                        objective.Gather_PlacementNodes.Add(last);
+
+                        if (Generator.Flip(0.4))
+                            lastZone.GenDeadEndGeomorph(level.Complex);
                     }),
 
                     // Fetch from the second room, but it's a dead end
