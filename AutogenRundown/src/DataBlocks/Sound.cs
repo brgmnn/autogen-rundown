@@ -74,7 +74,14 @@ public enum Sound : uint
     Enemies_DistantLowRoar = 3344868585,
 
     PouncerSpawnGrowl = 3503733109,
-    TankRoar = 106273434,
+    // TankRoar = 106273434,
+    // TankRoar = 1641625378,
+    TankRoar = 2134610730,
+
+    /// <summary>
+    /// A relatively high-pitched long roar
+    /// </summary>
+    BossRoar = 2134610730,
 
     EnemyHeartbeat = 2209321909,
     EnemyHeartbeatLarge = 3978814126

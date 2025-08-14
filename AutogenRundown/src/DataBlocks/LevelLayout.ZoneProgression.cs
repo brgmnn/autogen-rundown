@@ -399,8 +399,8 @@ public partial record LevelLayout
         var zone = planner.GetZone(bossNode)!;
 
         zone.EventsOnOpenDoor
-            .AddAlertEnemies(bossNode.Bulkhead, bossNode.ZoneNumber, 1.0)
-            .AddSound(Sound.TankRoar, 2.0);
+            .AddAlertEnemies(bossNode.Bulkhead, bossNode.ZoneNumber, 0.2)
+            .AddSound(Sound.BossRoar);
 
         return bossNode;
     }
