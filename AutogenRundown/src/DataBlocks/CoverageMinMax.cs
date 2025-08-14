@@ -85,6 +85,13 @@ public class CoverageMinMax
     public static readonly CoverageMinMax Large = new() { Min = (double)CoverageSize.Large, Max = (double)CoverageSize.Large };
     public static readonly CoverageMinMax Huge = new() { Min = (double)CoverageSize.Huge, Max = (double)CoverageSize.Huge };
 
+    public static readonly CoverageMinMax Small_10  = new() { Min = 10.0, Max = 10.0 };
+    public static readonly CoverageMinMax Small_16  = new() { Min = 16.0, Max = 16.0 };
+    public static readonly CoverageMinMax Small_24  = new() { Min = 24.0, Max = 24.0 };
+    public static readonly CoverageMinMax Medium_32 = new() { Min = 32.0, Max = 32.0 };
+    public static readonly CoverageMinMax Medium_40 = new() { Min = 40.0, Max = 40.0 };
+    public static readonly CoverageMinMax Medium_56 = new() { Min = 56.0, Max = 56.0 };
+
     /// <summary>
     /// Generates a randomly picked size
     /// </summary>

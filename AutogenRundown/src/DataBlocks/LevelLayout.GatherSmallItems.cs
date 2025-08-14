@@ -388,7 +388,14 @@ public partial record LevelLayout
                     // Single terminal locked zone
                     (0.34, () =>
                     {
-                        (last, lastZone) = BuildChallenge_KeycardInSide(start);
+                        (last, lastZone) = BuildChallenge_KeycardInSide(
+                            start,
+                            level.Settings.Bulkheads switch
+                            {
+                                Bulkhead.Main => 2,
+                                Bulkhead.PrisonerEfficiency => 1,
+                                _ => Generator.Between(1, 2)
+                            });
 
                         objective.Gather_PlacementNodes.Add(last);
                         lastZone.Coverage = objective.GatherRequiredCount > 5 ? CoverageMinMax.Huge : CoverageMinMax.Large;
@@ -518,12 +525,11 @@ public partial record LevelLayout
                 break;
             }
 
-            // TODO: more
             case ("C", Bulkhead.Overload, _):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    (0.2, () =>
+                    (0.50, () =>
                     {
                         AddBranch(start, Generator.Between(1, 2), "find_items", (node, _) =>
                         {
@@ -531,12 +537,23 @@ public partial record LevelLayout
                         });
                     }),
 
-                    // Agro boss in first zone
-                    (0.10, () =>
+                    // stealth big hub full of infected enemies
+                    (0.30, () =>
+                    {
+                        startZone.GenHubGeomorph(level.Complex);
+                        start = AddStealth_Infested(start);
+
+                        objective.Gather_PlacementNodes.Add(start);
+                    }),
+
+                    // Agro boss in second zone
+                    (0.20, () =>
                     {
                         // Add extra zone
                         (start, startZone) = AddZone(start);
                         last = AddAlignedBoss_WakeOnOpen(start);
+
+                        startZone.Coverage = CoverageMinMax.Small_16;
 
                         objective.Gather_PlacementNodes.Add(last);
                     })
