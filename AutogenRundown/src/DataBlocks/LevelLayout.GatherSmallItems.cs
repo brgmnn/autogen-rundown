@@ -31,10 +31,10 @@ public partial record LevelLayout
         var last = new ZoneNode();
         var lastZone = new Zone(level);
 
-        switch (level.Tier, director.Bulkhead, objective.GatherRequiredCount)
+        switch (level.Tier, director.Bulkhead)
         {
             #region Tier: A
-            case ("A", Bulkhead.Main, _):
+            case ("A", Bulkhead.Main):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -94,7 +94,7 @@ public partial record LevelLayout
                 break;
             }
 
-            case ("A", Bulkhead.Extreme, _):
+            case ("A", Bulkhead.Extreme):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -116,7 +116,7 @@ public partial record LevelLayout
                 break;
             }
 
-            case ("A", Bulkhead.Overload, _):
+            case ("A", Bulkhead.Overload):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -149,7 +149,7 @@ public partial record LevelLayout
             #endregion
 
             #region Tier: B
-            case ("B", Bulkhead.Main, _):
+            case ("B", Bulkhead.Main):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -256,7 +256,7 @@ public partial record LevelLayout
                 break;
             }
 
-            case ("B", Bulkhead.Extreme, _):
+            case ("B", Bulkhead.Extreme):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -290,7 +290,7 @@ public partial record LevelLayout
                 break;
             }
 
-            case ("B", Bulkhead.Overload, _):
+            case ("B", Bulkhead.Overload):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -349,7 +349,7 @@ public partial record LevelLayout
             #endregion
 
             #region Tier: C
-            case ("C", Bulkhead.Main, _):
+            case ("C", Bulkhead.Main):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -475,7 +475,7 @@ public partial record LevelLayout
                 break;
             }
 
-            case ("C", Bulkhead.Extreme, _):
+            case ("C", Bulkhead.Extreme):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -531,7 +531,7 @@ public partial record LevelLayout
                 break;
             }
 
-            case ("C", Bulkhead.Overload, _):
+            case ("C", Bulkhead.Overload):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -569,7 +569,7 @@ public partial record LevelLayout
             #endregion
 
             #region Tier: D
-            case ("D", Bulkhead.Main, _):
+            case ("D", Bulkhead.Main):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -657,8 +657,7 @@ public partial record LevelLayout
                 break;
             }
 
-            // TODO: more
-            case ("D", Bulkhead.Extreme, _):
+            case ("D", Bulkhead.Extreme):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -669,6 +668,15 @@ public partial record LevelLayout
                         {
                             objective.Gather_PlacementNodes.Add(node);
                         });
+                    }),
+
+                    // End zone locked on terminal in side zone
+                    (0.25, () =>
+                    {
+                        (last, lastZone) = BuildChallenge_LockedTerminalDoor(start, 1);
+
+                        objective.Gather_PlacementNodes.Add(last);
+                        lastZone.Coverage = CoverageMinMax.Large;
                     }),
 
                     // Single generator
@@ -686,8 +694,7 @@ public partial record LevelLayout
                 break;
             }
 
-            // TODO: more
-            case ("D", Bulkhead.Overload, _):
+            case ("D", Bulkhead.Overload):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -744,7 +751,7 @@ public partial record LevelLayout
             #endregion
 
             #region Tier: E
-            case ("E", Bulkhead.Main, _):
+            case ("E", Bulkhead.Main):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -870,18 +877,26 @@ public partial record LevelLayout
                 break;
             }
 
-            // TODO: more
-            case ("E", Bulkhead.Extreme, _):
+            case ("E", Bulkhead.Extreme):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // Easy grab items
-                    (0.20, () =>
+                    // End zone locked on terminal in side zone
+                    (0.30, () =>
                     {
-                        AddBranch(start, Generator.Between(1, 2), "find_items", (node, _) =>
-                        {
-                            objective.Gather_PlacementNodes.Add(node);
-                        });
+                        (last, lastZone) = BuildChallenge_LockedTerminalDoor(start, 1);
+
+                        objective.Gather_PlacementNodes.Add(last);
+                        lastZone.Coverage = CoverageMinMax.Large;
+                    }),
+
+                    // End zone keycard
+                    (0.30, () =>
+                    {
+                        (last, lastZone) = BuildChallenge_KeycardInSide(start, 1);
+
+                        objective.Gather_PlacementNodes.Add(last);
+                        lastZone.Coverage = CoverageMinMax.Large;
                     }),
 
                     // Single generator
@@ -895,12 +910,20 @@ public partial record LevelLayout
                         objective.Gather_PlacementNodes.Add(start);
                         objective.Gather_PlacementNodes.Add(last);
                     }),
+
+                    // Boss fight
+                    (0.20, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (end, _) = BuildChallenge_BossFight(nodes.Last());
+
+                        objective.Gather_PlacementNodes.Add(end);
+                    }),
                 });
                 break;
             }
 
-            // TODO: some more
-            case ("E", Bulkhead.Overload, _):
+            case ("E", Bulkhead.Overload):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -922,6 +945,35 @@ public partial record LevelLayout
                             WaveSettings.Baseline_Hard);
 
                         objective.Gather_PlacementNodes.Add(last);
+                    }),
+
+                    // Fill level with infectious fog slowly over time
+                    (!level.Settings.HasFog() ? 0.0 : 0.50, () =>
+                    {
+                        // Make the zone size small
+                        startZone.Coverage = CoverageMinMax.Small_10;
+
+                        // Fog duration in seconds. It takes about 2/3'rds of the time to be over
+                        // the head of players at mid-height level. So even though these are at
+                        // 60mins+ players will be in fog by 40 mins or so
+                        var fogRiseDuration = 60.0 * level.Settings.Bulkheads switch
+                        {
+                            Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
+                            _ => Generator.Between(60, 75)
+                        };
+
+                        // Ensure there's a fog turbine
+                        startZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
+                        startZone.EventsOnOpenDoor
+                            .AddSetFog(Fog.HeavyFullFog_Infectious, 2.0, fogRiseDuration, null)
+                            .AddSound(Sound.Environment_DistantFan, 6.0);
+
+                        // Add resources to deal with the infectious fog
+                        startZone.ConsumableDistributionInZone
+                            = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
+                        startZone.DisinfectPacks += 2.0;
+
+                        objective.Gather_PlacementNodes.Add(start);
                     }),
 
                     // Agro boss in first zone
