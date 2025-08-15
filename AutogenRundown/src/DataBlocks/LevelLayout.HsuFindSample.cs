@@ -762,7 +762,6 @@ public partial record LevelLayout
                             Generator.Between(1, 2)
                         );
 
-                        // TODO: this doesn't work
                         planner.UpdateNode(hsu with { Branch = "hsu_sample" });
 
                         hsuZone.Coverage = CoverageMinMax.Medium;

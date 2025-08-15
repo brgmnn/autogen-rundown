@@ -35,9 +35,14 @@ TODO:
   * Add more points of enemies
   * Matter Wave Projector - Needs slightly less zones to go through. Very linear
   * Add monthly / weekly rundown seed settings
+  * Bring big pickup for scan
 
 Idea:
   * Secondary survival that procs on door open
+  * Bring big pickup for scan on door
+
+# Datasphere color pack
+https://thunderstore.io/c/gtfo/p/ProjectZaero/Data_Sphere_Flavor_Pack/
 
 Level Lockup:
   Double check logs on any of the old versions for this:

@@ -55,6 +55,10 @@ static public class Generator
     private static PID wavePopulationPid = 200;
     private static PID waveSettingsPid = 1;
 
+    public static string InputDailySeed { get; set; } = "";
+    public static string InputWeeklySeed { get; set; } = "";
+    public static string InputMonthlySeed { get; set; } = "";
+
     public static int MonthNumber { get; set; } = -1;
 
     public static int WeekNumber { get; set; } = -1;
@@ -358,8 +362,29 @@ static public class Generator
     /// <summary>
     /// Used for the monthly rundown seed
     /// </summary>
-    public static void SetMonthSeed()
+    public static void SetMonthSeed(string seed = "")
     {
+        if (!string.IsNullOrWhiteSpace(seed))
+        {
+            // Expect "yyyy_MM"
+            var parts = seed.Trim().Split('_');
+
+            if (parts.Length == 2 &&
+                int.TryParse(parts[0], out var y) &&
+                int.TryParse(parts[1], out var m) &&
+                m >= 1 && m <= 12)
+            {
+                var dt = new DateTime(y, m, 1);
+                Seed = dt.ToString("yyyy_MM"); // normalize
+                DisplaySeed = $"<color=orange>{dt.ToString("MMMM", CultureInfo.CurrentCulture)}</color>";
+                MonthNumber = dt.Month;
+
+                return;
+            }
+
+            // If seed is invalid, fall back to "now" logic below
+        }
+
         var utcNow = DateTime.UtcNow;
         // var utcNow = new DateTime(2025, 8, 1, 10, 0, 0); // Debugging specific months
         var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
@@ -376,19 +401,38 @@ static public class Generator
     /// <summary>
     /// Used for the weekly rundown seed
     /// </summary>
-    public static void SetWeeklySeed()
+    public static void SetWeeklySeed(string seed = "")
     {
         var utcNow = DateTime.UtcNow;
         // var utcNow = new DateTime(2025, 3, 8, 10, 0, 0); // Debugging specific weeks
         var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
-        var pst = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
+        var date = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
+
+        var manualSeed = false;
+
+        if (!string.IsNullOrWhiteSpace(seed))
+        {
+            if (DateTime.TryParseExact(seed.Trim(),
+                    "yyyy_MM_dd",
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out date))
+            {
+                InputWeeklySeed = seed.Trim();
+                manualSeed = true;
+            }
+            else
+            {
+                Plugin.Logger.LogWarning($"Unable to parse monthly seed: \"{seed}\"");
+            }
+        }
 
         var week = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
-            pst,
+            date,
             CalendarWeekRule.FirstFullWeek,
             DayOfWeek.Tuesday);
 
-        var now = $"{pst:yyyy}_{week}";
+        var now = $"{date:yyyy}_{week}";
         var display = $"Week {week}";
 
         Seed = now;

@@ -37,10 +37,26 @@ public class Plugin : BasePlugin
         Logger = Log;
 
         #region Configuration
+
         var seedConfig = Config.Bind(
-            new ConfigDefinition("AutogenRundown", "Seed"),
+            new ConfigDefinition("AutogenRundown", "DailySeed"),
             "",
             new ConfigDescription("Specify a seed to override rundown generation"));
+
+        var seedWeeklyConfig = Config.Bind(
+            new ConfigDefinition("AutogenRundown", "WeeklySeed"),
+            "",
+            new ConfigDescription("Specify a seed for the Weekly Rundown.\nExpected format is " +
+                                  "\"YYYY_MM_DD\" where YYYY is the year, MM is the month, and " +
+                                  "DD is the day. e.g 2025_08_03 for August 3rd 2025.\n" +
+                                  "Week number is automatically calculated from the date."));
+
+        var seedMonthlyConfig = Config.Bind(
+            new ConfigDefinition("AutogenRundown", "MonthlySeed"),
+            "",
+            new ConfigDescription("Specify a seed for the Monthly Rundown.\nExpected format is " +
+                                  "\"YYYY_MM\" where YYYY is the year (e.g 2025) and MM is the " +
+                                  "month (e.g 03 for March)"));
 
         var regenerateOnStartup = Config.Bind(
             new ConfigDefinition("AutogenRundown", "RegenerateOnStartup"),
@@ -64,7 +80,7 @@ public class Plugin : BasePlugin
         {
             Peers.Init();
 
-            RundownFactory.Build(seedConfig.Value);
+            RundownFactory.Build(seedConfig.Value, seedWeeklyConfig.Value, seedMonthlyConfig.Value);
             Log.LogInfo($"Rundown generated, Seed=\"{Generator.Seed}\"");
         }
         else

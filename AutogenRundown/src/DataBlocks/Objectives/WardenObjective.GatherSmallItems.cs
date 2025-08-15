@@ -260,7 +260,6 @@ public partial record WardenObjective
             $">... Long shelf run ahead.\r\n>... <size=200%><color=red>Scan barcode rows quickly.</color></size>\r\n>... Read aloud.",
             $">... Final sweep.\r\n>... <size=200%><color=red>Any {itemName}'s left—now or never.</color></size>\r\n>... Close it out."
         }))!);
-
         #endregion
     }
 }

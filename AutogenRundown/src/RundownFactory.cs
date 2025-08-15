@@ -198,7 +198,7 @@ public static class RundownFactory
         #if DEBUG
         if (withFixed)
         {
-            const string tier = "D";
+            const string tier = "E";
             const Complex complex = Complex.Tech;
 
             var mainDirector = new BuildDirector
@@ -207,7 +207,7 @@ public static class RundownFactory
                 Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.GatherSmallItems,
+                Objective = WardenObjectiveType.HsuFindSample,
             };
             mainDirector.GenPoints();
 
@@ -235,15 +235,15 @@ public static class RundownFactory
                 new Level(tier)
                 {
                     Tier = tier,
-                    Name = "Gather",
+                    Name = "Test HSU",
                     Complex = complex,
                     MainDirector = mainDirector,
                     SecondaryDirector = secondDirector,
                     OverloadDirector = thirdDirector,
                     Settings = new LevelSettings(tier)
                     {
-                        // Bulkheads = Bulkhead.Main
-                        Bulkheads = Bulkhead.Main | Bulkhead.Overload
+                        Bulkheads = Bulkhead.Main
+                        // Bulkheads = Bulkhead.Main | Bulkhead.Overload
                         // Bulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload
                     },
                     Index = rundown.TierC_Count + 1,
@@ -741,7 +741,7 @@ public static class RundownFactory
     /// <summary>
     /// Entrypoint to build a new rundown
     /// </summary>
-    public static void Build(string dailySeed)
+    public static void Build(string dailySeed, string weeklySeed, string monthlySeed)
     {
         // TODO: Clean custom directory
 
@@ -767,7 +767,7 @@ public static class RundownFactory
             ///
 
             // Set the monthly seed
-            Generator.SetMonthSeed();
+            Generator.SetMonthSeed(monthlySeed);
             Generator.Reload();
 
             var name = Words.RundownNameMonthly();
@@ -786,7 +786,7 @@ public static class RundownFactory
         #region Weekly Rundown
         {
             // Set the weekly seed
-            Generator.SetWeeklySeed();
+            Generator.SetWeeklySeed(weeklySeed);
             Generator.Reload();
 
             var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
