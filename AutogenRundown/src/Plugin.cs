@@ -39,7 +39,7 @@ public class Plugin : BasePlugin
 
         #region Configuration
 
-        var seedConfig = Config.Bind(
+        var seedDailyConfig = Config.Bind(
             new ConfigDefinition("AutogenRundown.Seeds", "DailySeed"),
             "Todays date, YYYY_MM_DD",
             new ConfigDescription("Specify a seed for the Daily Rundown generation. Any string " +
@@ -76,20 +76,10 @@ public class Plugin : BasePlugin
 
         #endregion
 
-
-        Log.LogInfo($"ConfigSeed=\"{seedConfig.Value}\"");
-        Log.LogInfo($"RegenerateOnStartup={regenerateOnStartup.Value}");
-
         if (regenerateOnStartup.Value)
         {
             Peers.Init();
-
-            RundownFactory.Build(seedConfig.Value, seedWeeklyConfig.Value, seedMonthlyConfig.Value);
-            Log.LogInfo($"Rundown generated, Seed=\"{Generator.Seed}\"");
-        }
-        else
-        {
-            Log.LogInfo($"Rundown not generated, Seed=\"{Generator.Seed}\"");
+            RundownFactory.Build(seedDailyConfig.Value, seedWeeklyConfig.Value, seedMonthlyConfig.Value);
         }
 
         PlayFabManager.add_OnTitleDataUpdated((Action)RundownNames.OnTitleDataUpdated);
