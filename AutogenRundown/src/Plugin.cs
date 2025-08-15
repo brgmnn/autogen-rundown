@@ -41,14 +41,14 @@ public class Plugin : BasePlugin
 
         var seedConfig = Config.Bind(
             new ConfigDefinition("AutogenRundown.Seeds", "DailySeed"),
-            "Today's date, YYYY_MM_DD",
+            "Todays date, YYYY_MM_DD",
             new ConfigDescription("Specify a seed for the Daily Rundown generation. Any string " +
                                   "can be used here, this defaults to today's date. " +
                                   "E.g. 2025_08_15 for August 15th 2025."));
 
         var seedWeeklyConfig = Config.Bind(
             new ConfigDefinition("AutogenRundown.Seeds", "WeeklySeed"),
-            "Today's date, YYYY_MM_DD",
+            "Todays date, YYYY_MM_DD",
             new ConfigDescription("Specify a seed for the Weekly Rundown.\nExpected format is " +
                                   "\"YYYY_MM_DD\" where YYYY is the year, MM is the month, and " +
                                   "DD is the day.\ne.g 2025_08_03 for August 3rd 2025.\n" +
@@ -56,7 +56,7 @@ public class Plugin : BasePlugin
 
         var seedMonthlyConfig = Config.Bind(
             new ConfigDefinition("AutogenRundown.Seeds", "MonthlySeed"),
-            "Today's month, YYYY_MM",
+            "Todays month, YYYY_MM",
             new ConfigDescription("Specify a seed for the Monthly Rundown.\nExpected format is " +
                                   "\"YYYY_MM\" where YYYY is the year (e.g 2025) and MM is the " +
                                   "month (e.g 03 for March)"));

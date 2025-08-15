@@ -58,9 +58,6 @@ static public class Generator
     public static string InputDailySeed { get; set; } = "";
     public static string InputWeeklySeed { get; set; } = "";
     public static string InputMonthlySeed { get; set; } = "";
-    public static string DailySeed { get; set; } = "";
-    public static string WeeklySeed { get; set; } = "";
-    public static string MonthlySeed { get; set; } = "";
 
     public static int MonthNumber { get; set; } = -1;
 
@@ -355,8 +352,8 @@ static public class Generator
         var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
         var pst = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
 
-        var now = pst.ToString("yyyy_MM_dd");
-        var display = pst.ToString("MM/dd");
+        var now = $"{pst:yyyy_MM_dd}";
+        var display = $"{pst:MM/dd}";
 
         Seed = now;
         DisplaySeed = $"<color=orange>{display}</color>";
@@ -373,11 +370,10 @@ static public class Generator
         var date = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
         var manualSeed = false;
 
+        InputMonthlySeed = $"{date:yyyy_MM}";
+
         if (!string.IsNullOrWhiteSpace(seed))
         {
-            // Expect "yyyy_MM"
-            var parts = seed.Trim().Split('_');
-
             if (DateTime.TryParseExact(seed.Trim(),
                     "yyyy_MM",
                     CultureInfo.InvariantCulture,
@@ -399,7 +395,6 @@ static public class Generator
         var display = $"{date:MMMM}";
 
         Seed = now;
-        MonthlySeed = now;
         DisplaySeed = $"<color=orange>{display}</color>";
         MonthNumber = date.Month;
     }
@@ -414,6 +409,8 @@ static public class Generator
         var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
         var date = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
         var manualSeed = false;
+
+        InputWeeklySeed = $"{date:yyyy_MM_dd}";
 
         if (!string.IsNullOrWhiteSpace(seed))
         {
@@ -437,11 +434,10 @@ static public class Generator
             CalendarWeekRule.FirstFullWeek,
             DayOfWeek.Tuesday);
 
-        var now = $"{date:yyyy}_{week}";
+        var now = $"{date:yyyy}_W{week}";
         var display = $"Week {week}";
 
         Seed = now;
-        WeeklySeed = now;
         DisplaySeed = $"<color=orange>{display}</color>";
         WeekNumber = week;
     }
@@ -469,7 +465,7 @@ static public class Generator
 
         GenerateTimeSeed();
 
-        DailySeed = Seed;
+        InputDailySeed = Seed;
     }
 
     /// <summary>
