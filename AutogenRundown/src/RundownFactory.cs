@@ -242,8 +242,8 @@ public static class RundownFactory
                     OverloadDirector = thirdDirector,
                     Settings = new LevelSettings(tier)
                     {
-                        Bulkheads = Bulkhead.Main
-                        // Bulkheads = Bulkhead.Main | Bulkhead.Overload
+                        // Bulkheads = Bulkhead.Main
+                        Bulkheads = Bulkhead.Main | Bulkhead.Overload
                         // Bulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload
                     },
                     Index = rundown.TierC_Count + 1,

@@ -17,6 +17,8 @@ public enum Sound : uint
     /// </summary>
     KdsDeepVentilationProcedure = 2591647810,
 
+    ReactorShutdown = 2741402798,
+
     #region Alarms
     Alarms_MissingItem = 2200133294, // decon_unit_missing_alarm
 
@@ -47,10 +49,17 @@ public enum Sound : uint
     #region Environment noises
     Environment_DistantMetalImpacts = 3865016528,
 
+    /// <summary>
+    /// Sounds like a big loud power generator starting
+    /// </summary>
+    Environment_KdsDeepHsuPowerup = 2081519152,
+
     Environment_DoorUnstuck = 104566516,
     Environment_DoorLoosen = 836335444,
 
     Environment_DistantFan = 3164826086,
+
+    Environment_MetalFanDeepCreak_04 = 207117837,
 
     // Sounds like a fuse blowing
     Environment_PowerdownFailure = 3655606696,

@@ -2,17 +2,25 @@
 
 namespace AutogenRundown.DataBlocks;
 
-public record class Fog : DataBlock
+public record Fog : DataBlock
 {
     public static double DENSITY_CLEAR = 0.00008;
     public static double DENSITY_LOW   = 0.0007;
     public static double DENSITY_MED   = 0.005;
     public static double DENSITY_HIGH  = 0.015;
+
+    /// <summary>
+    /// Value = 0.045
+    /// </summary>
     public static double DENSITY_FULL  = 0.045;
 
     public static double HEIGHT_LOW  = -4.0;
     public static double HEIGHT_MED  =  0.0;
     public static double HEIGHT_HIGH =  4.0;
+    public static double HEIGHT_MAX  = 12.0;
+
+    public static double INFECTION_SLOW = 0.015;
+    public static double INFECTION_FAST = 0.030;
 
     public static Fog None = new Fog { PersistentId = 0 };
 
@@ -74,7 +82,7 @@ public record class Fog : DataBlock
     public static Fog FullFog = new Fog
     {
         Name = "Fog_Full",
-        DensityHeightAltitude = 4.0,
+        DensityHeightAltitude = 16.0,
         DensityHeightRange = 10,
         FogColor = new() { Red = 1.4, Green = 1.4, Blue = 1.4, Alpha = 0.0 },
 
@@ -89,6 +97,20 @@ public record class Fog : DataBlock
             Height.LowHigh
         },
         NoFogLevels = { }
+    };
+
+    public static Fog HeavyFullFog = FullFog with
+    {
+        Name = "Fog_HeavyFull",
+        PersistentId = Generator.GetPersistentId(),
+
+        FogDensity = DENSITY_LOW,
+        DensityHeightMaxBoost = DENSITY_HIGH,
+        DensityHeightAltitude = HEIGHT_MAX,
+        DensityHeightRange = 0.2,
+        DensityNoiseSpeed = 0.074,
+        DensityNoiseScale = 0.131,
+        DensityNoiseDirection = new Vector3 { X = 0.0, Y = -1.0, Z = 0.0 },
     };
 
     public static Fog LowFog_Infectious = LowFog with
@@ -114,6 +136,20 @@ public record class Fog : DataBlock
         FogColor = Color.InfectiousFog_R8D1,
         Infection = 0.03
     };
+
+    public static Fog HeavyFullFog_Infectious = HeavyFullFog with
+    {
+        Name = "Fog_Full_Infectious",
+        PersistentId = Generator.GetPersistentId(),
+        FogColor = new()
+        {
+            Red = 0.356862754,
+            Green = 1.2,
+            Blue = 0.545098066,
+            Alpha = 0.03137255
+        },
+        Infection = INFECTION_SLOW,
+    };
     #endregion
 
     public new static void SaveStatic()
@@ -122,10 +158,12 @@ public record class Fog : DataBlock
 
         Bins.Fogs.AddBlock(LowFog);
         Bins.Fogs.AddBlock(FullFog);
+        Bins.Fogs.AddBlock(HeavyFullFog);
 
         Bins.Fogs.AddBlock(LowFog_Infectious);
         Bins.Fogs.AddBlock(LowMidFog_Infectious);
         Bins.Fogs.AddBlock(FullFog_Infectious);
+        Bins.Fogs.AddBlock(HeavyFullFog_Infectious);
     }
 
     #region Internal properties not exposed in the data block

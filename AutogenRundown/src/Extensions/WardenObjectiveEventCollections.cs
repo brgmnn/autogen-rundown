@@ -213,6 +213,7 @@ public static class WardenObjectiveEventCollections
             new WardenObjectiveEvent
             {
                 Type = WardenObjectiveEventType.SetFogSettings,
+                DimensionIndex = 0, // TODO: support dimensions
                 Trigger = WardenObjectiveEventTrigger.OnStart,
                 FogSetting = fogSettings.PersistentId,
                 FogTransitionDuration = duration,
