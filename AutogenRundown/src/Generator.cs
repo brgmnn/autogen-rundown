@@ -364,38 +364,40 @@ static public class Generator
     /// </summary>
     public static void SetMonthSeed(string seed = "")
     {
+        var utcNow = DateTime.UtcNow;
+        // var utcNow = new DateTime(2025, 8, 1, 10, 0, 0); // Debugging specific months
+        var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+        var date = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
+        var manualSeed = false;
+
         if (!string.IsNullOrWhiteSpace(seed))
         {
             // Expect "yyyy_MM"
             var parts = seed.Trim().Split('_');
 
-            if (parts.Length == 2 &&
-                int.TryParse(parts[0], out var y) &&
-                int.TryParse(parts[1], out var m) &&
-                m >= 1 && m <= 12)
+            if (DateTime.TryParseExact(seed.Trim(),
+                    "yyyy_MM",
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out date))
             {
-                var dt = new DateTime(y, m, 1);
-                Seed = dt.ToString("yyyy_MM"); // normalize
-                DisplaySeed = $"<color=orange>{dt.ToString("MMMM", CultureInfo.CurrentCulture)}</color>";
-                MonthNumber = dt.Month;
-
-                return;
+                InputWeeklySeed = seed.Trim();
+                manualSeed = true;
             }
-
-            // If seed is invalid, fall back to "now" logic below
+            else
+            {
+                Plugin.Logger.LogWarning($"Unable to parse monthly seed: \"{seed}\"");
+            }
         }
 
-        var utcNow = DateTime.UtcNow;
-        // var utcNow = new DateTime(2025, 8, 1, 10, 0, 0); // Debugging specific months
-        var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
-        var pst = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
+        Plugin.Logger.LogDebug($"Monthly date seed: {date}");
 
-        var now = pst.ToString("yyyy_MM");
-        var display = pst.ToString("MMMM");
+        var now = $"{date:yyyy_MM}";
+        var display = $"{date:MMMM}";
 
         Seed = now;
         DisplaySeed = $"<color=orange>{display}</color>";
-        MonthNumber = pst.Month;
+        MonthNumber = date.Month;
     }
 
     /// <summary>
@@ -407,7 +409,6 @@ static public class Generator
         // var utcNow = new DateTime(2025, 3, 8, 10, 0, 0); // Debugging specific weeks
         var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
         var date = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
-
         var manualSeed = false;
 
         if (!string.IsNullOrWhiteSpace(seed))
@@ -423,7 +424,7 @@ static public class Generator
             }
             else
             {
-                Plugin.Logger.LogWarning($"Unable to parse monthly seed: \"{seed}\"");
+                Plugin.Logger.LogWarning($"Unable to parse weekly seed: \"{seed}\"");
             }
         }
 
