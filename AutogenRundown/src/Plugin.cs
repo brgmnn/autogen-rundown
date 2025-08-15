@@ -3,6 +3,7 @@ using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
+using GTFO.API;
 using HarmonyLib;
 
 namespace AutogenRundown;
@@ -39,21 +40,23 @@ public class Plugin : BasePlugin
         #region Configuration
 
         var seedConfig = Config.Bind(
-            new ConfigDefinition("AutogenRundown", "DailySeed"),
-            "",
-            new ConfigDescription("Specify a seed to override rundown generation"));
+            new ConfigDefinition("AutogenRundown.Seeds", "DailySeed"),
+            "Today's date, YYYY_MM_DD",
+            new ConfigDescription("Specify a seed for the Daily Rundown generation. Any string " +
+                                  "can be used here, this defaults to today's date. " +
+                                  "E.g. 2025_08_15 for August 15th 2025."));
 
         var seedWeeklyConfig = Config.Bind(
-            new ConfigDefinition("AutogenRundown", "WeeklySeed"),
-            "",
+            new ConfigDefinition("AutogenRundown.Seeds", "WeeklySeed"),
+            "Today's date, YYYY_MM_DD",
             new ConfigDescription("Specify a seed for the Weekly Rundown.\nExpected format is " +
                                   "\"YYYY_MM_DD\" where YYYY is the year, MM is the month, and " +
-                                  "DD is the day. e.g 2025_08_03 for August 3rd 2025.\n" +
+                                  "DD is the day.\ne.g 2025_08_03 for August 3rd 2025.\n" +
                                   "Week number is automatically calculated from the date."));
 
         var seedMonthlyConfig = Config.Bind(
-            new ConfigDefinition("AutogenRundown", "MonthlySeed"),
-            "",
+            new ConfigDefinition("AutogenRundown.Seeds", "MonthlySeed"),
+            "Today's month, YYYY_MM",
             new ConfigDescription("Specify a seed for the Monthly Rundown.\nExpected format is " +
                                   "\"YYYY_MM\" where YYYY is the year (e.g 2025) and MM is the " +
                                   "month (e.g 03 for March)"));
@@ -61,7 +64,8 @@ public class Plugin : BasePlugin
         var regenerateOnStartup = Config.Bind(
             new ConfigDefinition("AutogenRundown", "RegenerateOnStartup"),
             true,
-            new ConfigDescription("Should datablocks be regenerated on game startup."));
+            new ConfigDescription("Should datablocks be regenerated on game startup. " +
+                                  "Applies to all rundowns."));
 
         var usePlayerColorGlowsticks = Config.Bind(
             new ConfigDefinition("AutogenRundown", "UsePlayerColorGlowsticks"),
@@ -88,7 +92,9 @@ public class Plugin : BasePlugin
             Log.LogInfo($"Rundown not generated, Seed=\"{Generator.Seed}\"");
         }
 
-        PlayFabManager.add_OnTitleDataUpdated((Action)Patches.RundownNames.OnTitleDataUpdated);
+        PlayFabManager.add_OnTitleDataUpdated((Action)RundownNames.OnTitleDataUpdated);
+
+        // GTFO.API.EventAPI.OnManagersSetup
 
         // EventAPI.OnManagersSetup += LocalProgressionManager.Current.Init;
         // AssetAPI.OnAssetBundlesLoaded += Assets.Init;

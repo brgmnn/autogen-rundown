@@ -58,6 +58,9 @@ static public class Generator
     public static string InputDailySeed { get; set; } = "";
     public static string InputWeeklySeed { get; set; } = "";
     public static string InputMonthlySeed { get; set; } = "";
+    public static string DailySeed { get; set; } = "";
+    public static string WeeklySeed { get; set; } = "";
+    public static string MonthlySeed { get; set; } = "";
 
     public static int MonthNumber { get; set; } = -1;
 
@@ -381,7 +384,7 @@ static public class Generator
                     DateTimeStyles.None,
                     out date))
             {
-                InputWeeklySeed = seed.Trim();
+                InputMonthlySeed = seed.Trim();
                 manualSeed = true;
             }
             else
@@ -396,6 +399,7 @@ static public class Generator
         var display = $"{date:MMMM}";
 
         Seed = now;
+        MonthlySeed = now;
         DisplaySeed = $"<color=orange>{display}</color>";
         MonthNumber = date.Month;
     }
@@ -437,6 +441,7 @@ static public class Generator
         var display = $"Week {week}";
 
         Seed = now;
+        WeeklySeed = now;
         DisplaySeed = $"<color=orange>{display}</color>";
         WeekNumber = week;
     }
@@ -457,11 +462,14 @@ static public class Generator
         {
             Seed = seed;
             DisplaySeed = $"<color=orange>{seed}</color>";
+            InputDailySeed = seed.Trim();
 
             return;
         }
 
         GenerateTimeSeed();
+
+        DailySeed = Seed;
     }
 
     /// <summary>

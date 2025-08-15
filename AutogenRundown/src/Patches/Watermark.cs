@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using AutogenRundown.Managers;
+using HarmonyLib;
 
 namespace AutogenRundown.Patches;
 
@@ -8,6 +9,6 @@ public class Watermark
     [HarmonyAfter("com.dak.MTFO")]
     public static void Postfix(PUI_Watermark __instance)
     {
-        __instance.m_watermarkText.SetText($"<size=14>Seed <color=orange>{Generator.Seed}</color>\nAR v{Plugin.Version}</size>");
+        WatermarkManager.SetInstance(__instance);
     }
 }
