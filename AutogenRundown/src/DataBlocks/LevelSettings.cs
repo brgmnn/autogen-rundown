@@ -130,7 +130,7 @@ public class LevelSettings
             (1.0, 1, WardenObjectiveItem.PlantSample),
             (0.4, 1, WardenObjectiveItem.DataCube),
             (0.4, 1, WardenObjectiveItem.DataCubeBackup),
-            (0.4, 1, WardenObjectiveItem.DataCubeTampered),
+            (0.4, 1, WardenObjectiveItem.DataCubeTampered)
         };
 
     #region Build directions
