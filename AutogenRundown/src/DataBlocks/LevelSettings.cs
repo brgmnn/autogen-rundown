@@ -107,6 +107,32 @@ public class LevelSettings
     /// </summary>
     public List<EnemySpawningData> EnemyHibernationPack { get; set; } = new();
 
+    /// <summary>
+    /// Used for adding new GatherSmallItem pickup packs. This is so we don't have multiple
+    /// objectives all using the same item. The items count towards all objectives which is
+    /// not desired.
+    /// </summary>
+    public List<(double weight, int count, WardenObjectiveItem item)> SmallPickupPack { get; set; } =
+        new()
+        {
+            // Currently disabled items.
+            //  * MemoryStick: The model is quite small and hard to see especially in boxes.
+            //    Removed until some other pickup spot can be used
+
+            // (1.0, 1, WardenObjectiveItem.MemoryStick),
+
+            (1.0, 1, WardenObjectiveItem.PersonnelId),
+            (1.0, 1, WardenObjectiveItem.PartialDecoder),
+            (1.0, 1, WardenObjectiveItem.Harddrive),
+            (0.7, 1, WardenObjectiveItem.Glp_1),
+            (0.7, 1, WardenObjectiveItem.Glp_2),
+            (1.0, 1, WardenObjectiveItem.Osip),
+            (1.0, 1, WardenObjectiveItem.PlantSample),
+            (0.4, 1, WardenObjectiveItem.DataCube),
+            (0.4, 1, WardenObjectiveItem.DataCubeBackup),
+            (0.4, 1, WardenObjectiveItem.DataCubeTampered),
+        };
+
     #region Build directions
     /// <summary>
     /// We need to store the relative directions of each of the bulkheads so we can use them

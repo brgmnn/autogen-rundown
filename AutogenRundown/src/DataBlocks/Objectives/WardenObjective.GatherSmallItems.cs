@@ -49,9 +49,50 @@ public partial record WardenObjective
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
-        var (itemId, name, description) = Generator.Pick(BuildSmallPickupPack(level.Tier));
+        // Pulls a new item and description from the small pickup pack
+        var itemId = Generator.DrawSelect(level.Settings.SmallPickupPack);
 
-        MainObjective = description;
+        var name = itemId switch
+        {
+            WardenObjectiveItem.MemoryStick      => "Memory stick",
+            WardenObjectiveItem.PersonnelId      => "Personnel ID",
+            WardenObjectiveItem.PartialDecoder   => "Partial Decoder",
+            WardenObjectiveItem.Harddrive        => "Hard drive",
+            WardenObjectiveItem.Glp_1            => "GLP-1 canister",
+            WardenObjectiveItem.Glp_2            => "GLP-2 canister",
+            WardenObjectiveItem.Osip             => "OSIP vial",
+            WardenObjectiveItem.PlantSample      => "Plant sample",
+            WardenObjectiveItem.DataCube         => "Data cube",
+            WardenObjectiveItem.DataCubeBackup   => "Backup data cube",
+            WardenObjectiveItem.DataCubeTampered => "Tampered data cube",
+            _ => "item"
+        };
+        MainObjective = itemId switch
+        {
+            WardenObjectiveItem.MemoryStick =>
+                "Gather [COUNT_REQUIRED] Memory sticks and return the memory sticks for analysis.",
+            WardenObjectiveItem.PersonnelId =>
+                "Gather [COUNT_REQUIRED] Personnel IDs and return the data to be processed.",
+            WardenObjectiveItem.PartialDecoder =>
+                "Gather [COUNT_REQUIRED] Partial Decoders and return the data to be processed.",
+            WardenObjectiveItem.Harddrive =>
+                "Gather [COUNT_REQUIRED] Hard Drives and return the drives for data archival.",
+            WardenObjectiveItem.Glp_1 =>
+                "Gather [COUNT_REQUIRED] GLP-1 canisters and return the canisters for genome sequencing.",
+            WardenObjectiveItem.Glp_2 =>
+                "Gather [COUNT_REQUIRED] GLP-2 canisters and return the canisters for genome sequencing.",
+            WardenObjectiveItem.Osip =>
+                "Gather [COUNT_REQUIRED] OSIP vials and return the vials for chemical analysis.",
+            WardenObjectiveItem.PlantSample =>
+                "Gather [COUNT_REQUIRED] Plant samples and return the samples for analysis.",
+            WardenObjectiveItem.DataCube =>
+                "Gather [COUNT_REQUIRED] Data cubes and return the cubes for data extraction.",
+            WardenObjectiveItem.DataCubeBackup =>
+                "Gather [COUNT_REQUIRED] Backup Data cubes and return the cubes for data archival.",
+            WardenObjectiveItem.DataCubeTampered =>
+                "Gather [COUNT_REQUIRED] Data cubes and return the cubes for inspection.",
+            _ => "Gather items"
+        };
         FindLocationInfo = $"Look for {name}s in the complex";
         FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
 

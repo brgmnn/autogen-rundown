@@ -198,7 +198,7 @@ public static class RundownFactory
         #if DEBUG
         if (withFixed)
         {
-            const string tier = "E";
+            const string tier = "C";
             const Complex complex = Complex.Tech;
 
             var mainDirector = new BuildDirector
@@ -207,7 +207,7 @@ public static class RundownFactory
                 Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.HsuFindSample,
+                Objective = WardenObjectiveType.GatherSmallItems,
             };
             mainDirector.GenPoints();
 
