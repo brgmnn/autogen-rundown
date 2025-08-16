@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown;
 
+[Obsolete("Use ComplexResourceSet")]
 public class ComplexResource
 {
     // private const string FileName = "GameData_ComplexResourceSetDataBlock_bin.json";
