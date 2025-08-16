@@ -2,7 +2,7 @@
 
 public class WatermarkManager
 {
-    private const string EmptySeed = "<color=#444444>---</color>";
+    private const string EmptySeed = "<color=#444444>-</color>";
 
     private static PUI_Watermark? puiWatermark = null;
 
