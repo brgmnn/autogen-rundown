@@ -17,7 +17,7 @@ public partial record LevelLayout
         ZoneNode start)
     {
         var objectiveLayerData = level.GetObjectiveLayerData(director.Bulkhead);
-        var branchZoneCount = Generator.Random.Next(3, 4);
+        var branchZoneCount = 2;
         var prev = start;
 
         // Generate some zones leading to the objective
