@@ -503,6 +503,8 @@ public static class RundownFactory
         // Use the seed pool to re-roll levels. Start by setting these at 1 and incrementing each time
         // there's a level lockup
         //
+        // TODO: how would we cover this on longer time scales
+        //
         var buildPools = new Dictionary<string, List<List<int>>>
         {
             {
@@ -521,8 +523,8 @@ public static class RundownFactory
                     new() { 1, 1 },
                     new() { 1, 1 },
                     new() { 1, 2, 1, 1 },
-                    new() { 1, 1, 1, 1 },
-                    new() { 1, 1, 1 }
+                    new() { 1, 2, 1, 2 },
+                    new() { 1, 2, 1 }
                 }
             }
         };
