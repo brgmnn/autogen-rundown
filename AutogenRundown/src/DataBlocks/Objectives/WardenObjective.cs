@@ -1135,6 +1135,7 @@ public partial record WardenObjective : DataBlock
     #endregion
 
     #region Fields not yet implemented
+
     public int WardenObjectiveSpecialUpdateType = 0;
     public int GenericItemFromStart = 0;
     public bool DoNotMarkPickupItemsAsWardenObjectives = false;
