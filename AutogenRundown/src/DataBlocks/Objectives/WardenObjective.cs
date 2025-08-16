@@ -27,7 +27,7 @@ public enum DistributionStrategy
     EvenlyAcrossZones
 }
 
-public partial record class WardenObjective : DataBlock
+public partial record WardenObjective : DataBlock
 {
     /// <summary>
     /// Returns a random casualty warning for lore strings
@@ -445,7 +445,7 @@ public partial record class WardenObjective : DataBlock
     /// <param name="max"></param>
     /// <returns></returns>
     public static double GenExitScanTime(int min, int max)
-        => CalculateExitScanSpeedMultiplier(Generator.Random.Next(min, max + 1));
+        => CalculateExitScanSpeedMultiplier(Generator.Between(min, max));
 
     /// <summary>
     /// Add's default exit/completion waves for an objective. Often we want
@@ -492,6 +492,20 @@ public partial record class WardenObjective : DataBlock
             case ("E", Bulkhead.Overload):
                 WavesOnGotoWin.Add(GenericWave.ErrorAlarm_Hard);
                 break;
+        }
+
+        if (director.Bulkhead == Bulkhead.Main)
+        {
+            // Set a longer extract scan then the default flat rate time
+            ChainedPuzzleAtExitScanSpeedMultiplier = director.Tier switch
+            {
+                "A" => GenExitScanTime(25, 35),
+                "B" => GenExitScanTime(35, 45),
+                "C" => GenExitScanTime(45, 80),
+                "D" => GenExitScanTime(90, 120),
+                "E" => GenExitScanTime(100, 140),
+                _ => 1.0,
+            };
         }
     }
 
@@ -666,18 +680,6 @@ public partial record class WardenObjective : DataBlock
 
             level.Description = new Text(text).PersistentId;
         }
-
-        // Set the exit scan speed multiplier. Generally we want easier levels to be faster.
-        // For some objectives this will be overridden.
-        ChainedPuzzleAtExitScanSpeedMultiplier = director.Tier switch
-        {
-            "A" => GenExitScanTime(20, 30),
-            "B" => GenExitScanTime(30, 45),
-            "C" => GenExitScanTime(45, 80),
-            "D" => GenExitScanTime(90, 120),
-            "E" => GenExitScanTime(100, 140),
-            _ => 1.0,
-        };
 
         switch (director.Objective)
         {
@@ -1129,7 +1131,7 @@ public partial record class WardenObjective : DataBlock
     /// Multiplier to use for the exit scan speed. This is calculated from the exit scan time
     /// which by default is 20 seconds
     /// </summary>
-    public double ChainedPuzzleAtExitScanSpeedMultiplier { get; set; } = 1.0;
+    public double ChainedPuzzleAtExitScanSpeedMultiplier { get; set; } = GenExitScanTime(20, 25);
     #endregion
 
     #region Fields not yet implemented
