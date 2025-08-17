@@ -41,14 +41,14 @@ public class Plugin : BasePlugin
 
         var seedDailyConfig = Config.Bind(
             new ConfigDefinition("AutogenRundown.Seeds", "DailySeed"),
-            "Todays date, YYYY_MM_DD",
+            "",
             new ConfigDescription("Specify a seed for the Daily Rundown generation. Any string " +
                                   "can be used here, this defaults to today's date. " +
                                   "E.g. 2025_08_15 for August 15th 2025."));
 
         var seedWeeklyConfig = Config.Bind(
             new ConfigDefinition("AutogenRundown.Seeds", "WeeklySeed"),
-            "Todays date, YYYY_MM_DD",
+            "",
             new ConfigDescription("Specify a seed for the Weekly Rundown.\nExpected format is " +
                                   "\"YYYY_MM_DD\" where YYYY is the year, MM is the month, and " +
                                   "DD is the day.\ne.g 2025_08_03 for August 3rd 2025.\n" +
@@ -56,7 +56,7 @@ public class Plugin : BasePlugin
 
         var seedMonthlyConfig = Config.Bind(
             new ConfigDefinition("AutogenRundown.Seeds", "MonthlySeed"),
-            "Todays month, YYYY_MM",
+            "",
             new ConfigDescription("Specify a seed for the Monthly Rundown.\nExpected format is " +
                                   "\"YYYY_MM\" where YYYY is the year (e.g 2025) and MM is the " +
                                   "month (e.g 03 for March)"));
@@ -73,6 +73,17 @@ public class Plugin : BasePlugin
             new ConfigDescription("Use per player color glow sticks. Client side only."));
 
         Config_UsePlayerColoredGlowsticks = usePlayerColorGlowsticks.Value;
+
+        // Reset any broken save configs from 0.73.0
+        // TODO: remove probably after a year? 2026/08/16
+        if (seedDailyConfig.Value == "Todays date, YYYY_MM_DD")
+            seedDailyConfig.Value = "";
+        if (seedWeeklyConfig.Value == "Todays date, YYYY_MM_DD")
+            seedWeeklyConfig.Value = "";
+        if (seedMonthlyConfig.Value == "Todays month, YYYY_MM")
+            seedMonthlyConfig.Value = "";
+
+        Config.Save();
 
         #endregion
 
