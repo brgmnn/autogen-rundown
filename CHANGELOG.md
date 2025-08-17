@@ -3,6 +3,35 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.73.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.73.0) — August 15, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Reworked level generation for `GatherSmallItems` objective
+* Added new door puzzle: unlock door from terminal
+
+### Changes
+
+* Reactor Startup waves
+  * Slightly increased all difficulty reactor wave points by +10pts 
+  * Adjusted wave duration calculation
+  * Fixed all miniboss waves having fixed 40s duration (most are reduced to much shorter durations)
+* Reduced zone length by 1 for `RetrieveBigItem` objective layout for Matter Wave Projector
+* Changed extract exit scan time, now it's a flat 20-25s by default and is only adjusted up when there are exit alarms that must be defended against
+* Fixed possible softlock with ActivateSmallHSU missions due to certain tiles having functioning NCR machines
+* Fixed levels with multiple `GatherSmallItems` objectives to use different items
+
+### Other
+
+* Weekly and Monthly rundown seeds can now be set in addition to Daily seed
+* Watermark now updates to show the seed for the currently active expedition and which rundown it's from
+  * This seed can be easily copied and set for replaying past rundowns
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.72.0...v0.73.0
+
+
 ## [v0.72.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.72.0) — July 31, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
