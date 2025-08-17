@@ -3,6 +3,17 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.73.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.73.1) — August 16, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fixed issue where invalid defaults were written to config file for seeds
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.73.0...v0.73.1
+
+
 ## [v0.73.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.73.0) — August 15, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
