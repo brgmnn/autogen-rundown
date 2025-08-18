@@ -812,6 +812,20 @@ public record ComplexResourceSet : DataBlock
             SubComplex = SubComplex.Floodways
         });
         #endregion
+
+        #region MODDER: SamDB
+
+        // A massive room with walkways and platforms that span up to 4 floors. Terminals can
+        // spawn at the bottom as well as resource boxes. This tile also has spawn-points for flyers.
+        // Note: This is the biggest tile in the game and can sometimes cause some FPS drops.
+        //
+        // This is a HUGE tile. Probably it can't be placed in any hub as balancing may be a problem?
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Floodways_x_tile_4/floodway_x_tile_4.prefab",
+            SubComplex = SubComplex.Floodways
+        });
+        #endregion
         #endregion
     }
 }
