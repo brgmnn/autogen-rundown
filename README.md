@@ -37,6 +37,8 @@ TODO:
   * Add monthly / weekly rundown seed settings
   * Bring big pickup for scan
 
+
+
 Idea:
   * Secondary survival that procs on door open
   * Bring big pickup for scan on door
@@ -64,6 +66,10 @@ Level Lockup:
 Requests:
   * Add support for VanillaReloaded mod
     * https://discord.com/channels/782438773690597389/1342735255009755227/1373594263019061281
+
+2025_08_17
+  * Reduce number of gather so we have to do all objectives
+  * Why does D2 only have onion shooters on first alarm door in extreme
 
 2025_05_26
   * Can't have multiple timer objectives

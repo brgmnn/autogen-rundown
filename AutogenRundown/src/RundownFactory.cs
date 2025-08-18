@@ -121,7 +121,7 @@ public static class RundownFactory
 
         #region Geomorph Debugging test level
         #if DEBUG
-        #if true
+        #if false
         if (withFixed)
         {
             var settings = new LevelSettings("A");
@@ -199,6 +199,7 @@ public static class RundownFactory
         if (withFixed)
         {
             const string tier = "C";
+            const string title = "Cluster";
             const Complex complex = Complex.Tech;
 
             var mainDirector = new BuildDirector
@@ -207,7 +208,7 @@ public static class RundownFactory
                 Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.GatherSmallItems,
+                Objective = WardenObjectiveType.CentralGeneratorCluster,
             };
             mainDirector.GenPoints();
 
@@ -235,7 +236,7 @@ public static class RundownFactory
                 new Level(tier)
                 {
                     Tier = tier,
-                    Name = "Test HSU",
+                    Name = title,
                     Complex = complex,
                     MainDirector = mainDirector,
                     SecondaryDirector = secondDirector,

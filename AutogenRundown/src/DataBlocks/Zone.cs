@@ -277,6 +277,9 @@ public record Zone : DataBlock
             case Complex.Mining:
                 (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
                 {
+                    // -- the problem
+                    // Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_dig_site_04.prefab
+
                     (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 70 }),
                     (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_02.prefab", new CoverageMinMax { Min = 15, Max = 20 }),
                     (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_03.prefab", new CoverageMinMax { Min = 25, Max = 35 }),
@@ -1031,6 +1034,7 @@ public record Zone : DataBlock
                         AlarmModifier_LightsOff();
 
                         // Shadow pouncer with the lights off!
+                        // TODO: spawn later in the wave?
                         if (Generator.Flip(0.1))
                             EventsOnDoorScanStart.AddSpawnWave(
                                 GenericWave.SinglePouncerShadow,

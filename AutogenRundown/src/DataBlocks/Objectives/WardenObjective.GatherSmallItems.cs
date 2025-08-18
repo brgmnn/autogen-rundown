@@ -37,11 +37,10 @@ public partial record WardenObjective
 
         GatherSpawnCount = GatherRequiredCount switch
         {
-            < 4  => Generator.Between(GatherRequiredCount, GatherRequiredCount + 1),
-            < 6  => Generator.Between(GatherRequiredCount, GatherRequiredCount + 2),
-            < 9  => Generator.Between(GatherRequiredCount, GatherRequiredCount + 4),
-            < 12 => Generator.Between(GatherRequiredCount, GatherRequiredCount + 6),
-            _    => Generator.Between(GatherRequiredCount, GatherRequiredCount + 8)
+            < 6  => GatherRequiredCount, // 2, 3, 4, 5
+            < 9  => Generator.Between(GatherRequiredCount, GatherRequiredCount + 1), // 6, 7, 8
+            < 12 => Generator.Between(GatherRequiredCount, GatherRequiredCount + 2), // 9, 10, 11
+            _    => Generator.Between(GatherRequiredCount, GatherRequiredCount + 3)  // 12, 13, 14, 15, 16
         };
     }
 
@@ -110,7 +109,8 @@ public partial record WardenObjective
             }).ToList();
         dataLayer.ObjectiveData.ZonePlacementDatas.Add(placements);
 
-        GatherMaxPerZone = GatherSpawnCount / placements.Count + GatherSpawnCount % placements.Count;
+        // We only need to divide up the spawn count. Nothing fancy
+        GatherMaxPerZone = GatherSpawnCount / placements.Count;
 
         // TODO: AddCompletedObjectiveWaves(level, director);
 
