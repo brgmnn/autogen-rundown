@@ -18,7 +18,6 @@ namespace AutogenRundown.Patches;
 /// why re-rolling seeds eventually yields a working generator cluster.
 ///
 /// Why It Fails Intermittently?
-///
 ///     * Area availability not checked: Selected area may have 0 `GeneratorCluster` spawners.
 ///       With no fallback, the item is lost.
 ///     * Zero-weight groups: Marker data (`FunctionPotential`) can sum to 0, so
@@ -26,18 +25,36 @@ namespace AutogenRundown.Patches;
 ///     * Seed coupling: `MarkerSubseed` drives per-zone spawner selection, but not the area/node
 ///       choice. Changing it can land on a different spawner/area path and "fix" the run.
 ///
+/// Validation Steps
+///     * A sample layout was generated with a valid generator cluster geomorph in Zone_1.
+///     * A large coverage was set for Zone_0 (the elevator drop zone) to get the security door
+///       to Zone_1 to spawn in the middle of another tile.
+///     * The generator cluster was verified to be in Area B of Zone_1.
+///     * The function LG_DistributionJobUtils.GetRandomNodeFromZoneForFunction() was instrumented
+///       to print out which area was selected when picking a node for the generator cluster job
+///     * A failed seed was found and loading into the level verified that no cluster spawned
+///     * GetRandomNodeFromZoneForFunction() was observed selecting Area A to try and spawn the
+///       generator cluster.
+///     * APPLIED FIX: when re-running the exact same level with this patch, we observe that
+///       Area B is correctly selected, and the generator cluster spawns correctly.
+///
 /// How we attempt to fix it
 ///
 /// Prefer areas that actually have generator spawners
 ///     * Target: `LevelGeneration.LG_DistributionJobUtils.GetRandomNodeFromZoneForFunction(LG_Zone, ExpeditionFunction, float, float)`
-///     * Prefix: for `GeneratorCluster`, filter `zone.m_areas` to those with `area.GetMarkerSpawnerCount(GeneratorCluster) > 0`, then pick deterministically by `randomValue`.
+///     * Prefix: for `GeneratorCluster`, filter `zone.m_areas` to those with
+///       `area.GetMarkerSpawnerCount(GeneratorCluster) > 0`, then pick deterministically by `randomValue`.
 /// </summary>
 [HarmonyPatch]
 public class Patch_LG_DistributionJobUtils
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(LG_DistributionJobUtils), nameof(LG_DistributionJobUtils.GetRandomNodeFromZoneForFunction))]
-    public static bool FixGenerator(LG_Zone zone, ExpeditionFunction func, float randomValue, ref AIG_CourseNode __result)
+    public static bool FixGeneratorClusterSpawn(
+        LG_Zone zone,
+        ExpeditionFunction func,
+        float randomValue,
+        ref AIG_CourseNode __result)
     {
         // Skip patching for all other functions
         if (func != ExpeditionFunction.GeneratorCluster)
@@ -61,7 +78,7 @@ public class Patch_LG_DistributionJobUtils
         var index = Mathf.Clamp((int)(randomValue * candidates.Count), 0, candidates.Count - 1);
         var area = candidates[index];
 
-        Plugin.Logger.LogInfo($"Selected area for generator cluster: {area.m_navInfo.m_suffix}");
+        Plugin.Logger.LogDebug($"Selected area for generator cluster: {area.m_navInfo.m_suffix}");
 
         __result = area.m_courseNode;
 
