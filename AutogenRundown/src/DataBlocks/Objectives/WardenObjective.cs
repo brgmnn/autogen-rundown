@@ -2,6 +2,7 @@
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Objectives.CentralGeneratorCluster;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
 using AutogenRundown.DataBlocks.Zones;
 using Newtonsoft.Json;
@@ -613,6 +614,10 @@ public partial record WardenObjective : DataBlock
                 objective.PreBuild_TerminalUplink(director, level);
                 break;
 
+            case WardenObjectiveType.CentralGeneratorCluster:
+                objective.PreBuild_CentralGeneratorCluster(director, level);
+                break;
+
             case WardenObjectiveType.HsuActivateSmall:
                 objective.PreBuild_HsuActivateSmall(director, level);
                 break;
@@ -1040,14 +1045,33 @@ public partial record WardenObjective : DataBlock
     public SurvivalWaveSpawnType Uplink_WaveSpawnType { get; set; } = SurvivalWaveSpawnType.InSuppliedCourseNodeZone;
     #endregion
 
-    #region Type=9: Central generator cluster --BROKEN--
+    #region Type=9: Central generator cluster
+    /// <summary>
+    /// How many cells to distribute
+    /// </summary>
+    [JsonProperty("PowerCellsToDistribute")]
     public int PowerCellsToDistribute { get; set; } = 0;
 
-    public int CentralPowerGenClustser_NumberOfGenerators { get; set; } = 0;
+    /// <summary>
+    /// Number of generators to spawn. Max is 8 for normal single generator tiles. Some tiles do
+    /// have room for more but 8 is the practical limit for it to work with all geos.
+    ///
+    /// Max = 8
+    /// </summary>
+    [JsonProperty("CentralPowerGenClustser_NumberOfGenerators")]
+    public int CentralGeneratorCluster_NumberOfGenerators { get; set; } = 0;
 
-    public int CentralPowerGenClustser_NumberOfPowerCells { get; set; } = 4;
+    /// <summary>
+    /// How many power cells
+    /// </summary>
+    [JsonProperty("CentralPowerGenClustser_NumberOfPowerCells")]
+    public int CentralGeneratorCluster_NumberOfPowerCells { get; set; } = 4;
 
-    public JArray CentralPowerGenClustser_FogDataSteps = new JArray();
+    /// <summary>
+    /// How the fog should change after inserting each cell
+    /// </summary>
+    [JsonProperty("CentralPowerGenClustser_FogDataSteps")]
+    public List<GeneralFogStep> CentralGeneratorCluster_FogDataSteps { get; set; } = new();
     #endregion
 
     #region Type=10: HsuActivateSmall (Bring Neonate/Datasphere to depressurizer)

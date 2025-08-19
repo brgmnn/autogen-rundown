@@ -6,15 +6,19 @@ namespace AutogenRundown.DataBlocks;
  * Objective: CentralGeneratorCluster
  *
  *
- * TODO: Broken! Currently spawning the geomorph doesn't reliably get a generator
- *       cluster to appear.
- *
  * Discord says getting the generator cluster to spawn can be tricky and require
  * re-rolls with the zone seed. Still waiting on seeing if this is a problem.
  */
-public partial record class WardenObjective : DataBlock
+public partial record WardenObjective
 {
-    public void Build_CentralGeneratorCluster(BuildDirector director, Level level)
+    private void PreBuild_CentralGeneratorCluster(BuildDirector director, Level level)
+    {
+        PowerCellsToDistribute = 5;
+        CentralGeneratorCluster_NumberOfGenerators = 5;
+        CentralGeneratorCluster_NumberOfPowerCells = 5;
+    }
+
+    private void Build_CentralGeneratorCluster(BuildDirector director, Level level)
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
@@ -29,10 +33,5 @@ public partial record class WardenObjective : DataBlock
 
         MidPuzzle = ChainedPuzzle.FindOrPersist(ChainedPuzzle.AlarmClass1);
         //"ChainedPuzzleAtExit": 11,
-
-        PowerCellsToDistribute = 3;
-        CentralPowerGenClustser_NumberOfGenerators = 2;
-        CentralPowerGenClustser_NumberOfPowerCells = 2;
-
     }
 }
