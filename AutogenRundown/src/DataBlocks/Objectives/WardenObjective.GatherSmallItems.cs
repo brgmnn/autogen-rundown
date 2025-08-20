@@ -109,6 +109,9 @@ public partial record WardenObjective
             }).ToList();
         dataLayer.ObjectiveData.ZonePlacementDatas.Add(placements);
 
+        // I think we could do something like:
+        //      GatherMaxPerZone = GatherSpawnCount / placements.Count + Generator.Between(0, GatherSpawnCount / placements.Count);
+
         // We only need to divide up the spawn count. Nothing fancy
         GatherMaxPerZone = GatherSpawnCount / placements.Count;
 

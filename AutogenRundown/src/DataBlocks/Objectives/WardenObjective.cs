@@ -1048,6 +1048,8 @@ public partial record WardenObjective : DataBlock
     #region Type=9: Central generator cluster
     /// <summary>
     /// How many cells to distribute
+    ///
+    /// Seems this may be unused?
     /// </summary>
     [JsonProperty("PowerCellsToDistribute")]
     public int PowerCellsToDistribute { get; set; } = 0;

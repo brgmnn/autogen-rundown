@@ -749,11 +749,14 @@ public record ComplexResourceSet : DataBlock
             SubComplex = SubComplex.Floodways
         });
 
-        // {
-        //     "Prefab": "Assets/geo_64x64_service_floodways_hub_ds_02_gen.prefab",
-        //     "SubComplex": "Floodways",
-        //     "Shard": 10
-        // }
+        // Same as previous tile, but instead of rolling a big marker (with many submarkers) in
+        // the middle, it only has the new FW gencluster marker. Designed to make it easier to
+        // roll gencluster objective.
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/geo_64x64_service_floodways_hub_ds_02_gen.prefab",
+            SubComplex = SubComplex.Floodways
+        });
 
         // Floodways Reactor! Based on the R8 tile (geo_64x64_service_floodways_I_HA_04) with some
         // added resource markers and reactor functionality. Still an I tile though. Retains the

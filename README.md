@@ -67,6 +67,8 @@ Requests:
   * Add support for VanillaReloaded mod
     * https://discord.com/channels/782438773690597389/1342735255009755227/1373594263019061281
 
+Check: https://discord.com/channels/782438773690597389/783918553626836992/1407457297889890530
+
 2025_08_17
   * Reduce number of gather so we have to do all objectives
   * Why does D2 only have onion shooters on first alarm door in extreme

@@ -21,7 +21,9 @@ public record GeneralFogStep
 
     /// <summary>
     /// How long it should take to transition between the fog levels
+    ///
+    /// Default = 14.0
     /// </summary>
     [JsonProperty("m_transitionToTime")]
-    public double TransitionTime { get; set; } = 5.0;
+    public double TransitionTime { get; set; } = 14.0;
 }
