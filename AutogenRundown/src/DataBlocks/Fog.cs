@@ -39,6 +39,151 @@ public record Fog : DataBlock
     };
 
     #region Preset fogs
+
+    #region By level
+
+    public static readonly Fog NormalFog = DefaultFog with
+    {
+        Name = "Normal_Fog",
+        FogDensity = DENSITY_LOW,
+        DensityHeightMaxBoost = DENSITY_HIGH,
+        DensityHeightAltitude = HEIGHT_MAX,
+        DensityHeightRange = 0.2,
+        DensityNoiseSpeed = 0.074,
+        DensityNoiseScale = 0.131,
+        DensityNoiseDirection = new Vector3 { X = 0.0, Y = -1.0, Z = 0.0 },
+    };
+
+    public static readonly Fog InvertedFog = DefaultFog with
+    {
+        Name = "Inverted_Fog",
+        FogDensity = DENSITY_HIGH,
+        DensityHeightMaxBoost = DENSITY_LOW,
+        DensityHeightAltitude = HEIGHT_MAX,
+        DensityHeightRange = 0.2,
+        DensityNoiseSpeed = 0.074,
+        DensityNoiseScale = 0.131,
+        DensityNoiseDirection = new Vector3 { X = 0.0, Y = -1.0, Z = 0.0 },
+    };
+
+    #region Normal
+
+    public static readonly Fog Normal_Altitude_minus8 = NormalFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = -8.0,
+    };
+
+    public static readonly Fog Normal_Altitude_minus6 = NormalFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = -6.0,
+    };
+
+    public static readonly Fog Normal_Altitude_minus4 = NormalFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = -4.0,
+    };
+
+    public static readonly Fog Normal_Altitude_minus2 = NormalFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = -2.0,
+    };
+
+    public static readonly Fog Normal_Altitude_0 = NormalFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 0.0,
+    };
+
+    public static readonly Fog Normal_Altitude_2 = NormalFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 2.0,
+    };
+
+    public static readonly Fog Normal_Altitude_4 = NormalFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 4.0,
+    };
+
+    public static readonly Fog Normal_Altitude_6 = NormalFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 6.0,
+    };
+
+    public static readonly Fog Normal_Altitude_8 = NormalFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 8.0,
+    };
+
+    #endregion
+
+    #region Inverted
+
+    public static readonly Fog Inverted_Altitude_minus8 = InvertedFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = -8.0,
+    };
+
+    public static readonly Fog Inverted_Altitude_minus6 = InvertedFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = -6.0,
+    };
+
+    public static readonly Fog Inverted_Altitude_minus4 = InvertedFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = -4.0,
+    };
+
+    public static readonly Fog Inverted_Altitude_minus2 = InvertedFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = -2.0,
+    };
+
+    public static readonly Fog Inverted_Altitude_0 = InvertedFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 0.0,
+    };
+
+    public static readonly Fog Inverted_Altitude_2 = InvertedFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 2.0,
+    };
+
+    public static readonly Fog Inverted_Altitude_4 = InvertedFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 4.0,
+    };
+
+    public static readonly Fog Inverted_Altitude_6 = InvertedFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 6.0,
+    };
+
+    public static readonly Fog Inverted_Altitude_8 = InvertedFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 8.0,
+    };
+
+    #endregion
+    #endregion
+
+
     /// <summary>
     /// Fully submerged low levels, mid/high are clear of fog (low density).
     /// </summary>
@@ -152,6 +297,12 @@ public record Fog : DataBlock
     };
     #endregion
 
+    public void Persist(BlocksBin<Fog>? bin = null)
+    {
+        bin ??= Bins.Fogs;
+        bin.AddBlock(this);
+    }
+
     public new static void SaveStatic()
     {
         Bins.Fogs.AddBlock(DefaultFog);
@@ -164,6 +315,26 @@ public record Fog : DataBlock
         Bins.Fogs.AddBlock(LowMidFog_Infectious);
         Bins.Fogs.AddBlock(FullFog_Infectious);
         Bins.Fogs.AddBlock(HeavyFullFog_Infectious);
+
+        Normal_Altitude_minus8.Persist();
+        Normal_Altitude_minus6.Persist();
+        Normal_Altitude_minus4.Persist();
+        Normal_Altitude_minus2.Persist();
+        Normal_Altitude_0.Persist();
+        Normal_Altitude_2.Persist();
+        Normal_Altitude_4.Persist();
+        Normal_Altitude_6.Persist();
+        Normal_Altitude_8.Persist();
+
+        Inverted_Altitude_minus8.Persist();
+        Inverted_Altitude_minus6.Persist();
+        Inverted_Altitude_minus4.Persist();
+        Inverted_Altitude_minus2.Persist();
+        Inverted_Altitude_0.Persist();
+        Inverted_Altitude_2.Persist();
+        Inverted_Altitude_4.Persist();
+        Inverted_Altitude_6.Persist();
+        Inverted_Altitude_8.Persist();
     }
 
     #region Internal properties not exposed in the data block

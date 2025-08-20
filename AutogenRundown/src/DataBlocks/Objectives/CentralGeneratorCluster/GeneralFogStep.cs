@@ -10,8 +10,14 @@ public record GeneralFogStep
     /// <summary>
     /// Which fog setting to use
     /// </summary>
-    [JsonProperty("m_fogDataId")]
+    [JsonIgnore]
     public Fog Fog { get; set; } = Fog.None;
+
+    /// <summary>
+    /// This is what the datablocks read for the fog id
+    /// </summary>
+    [JsonProperty("m_fogDataId")]
+    public uint FogId => Fog.PersistentId;
 
     /// <summary>
     /// How long it should take to transition between the fog levels
