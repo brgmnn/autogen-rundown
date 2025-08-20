@@ -1,4 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Objectives.CentralGeneratorCluster;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -13,9 +15,27 @@ public partial record WardenObjective
 {
     private void PreBuild_CentralGeneratorCluster(BuildDirector director, Level level)
     {
-        PowerCellsToDistribute = 5;
-        CentralGeneratorCluster_NumberOfGenerators = 5;
-        CentralGeneratorCluster_NumberOfPowerCells = 5;
+        CentralGeneratorCluster_NumberOfGenerators = (level.Tier, director.Bulkhead) switch
+        {
+            ("A", Bulkhead.Main) => 3,
+            ("A", _) => 2,
+
+            ("B", Bulkhead.Main) => 3,
+            ("B", _) => 2,
+
+            ("C", Bulkhead.Main) => Generator.Between(3, 4),
+            ("C", Bulkhead.Extreme) => 3,
+            ("C", Bulkhead.Overload) => 3,
+
+            ("D", Bulkhead.Main) => Generator.Between(4, 5),
+            ("D", Bulkhead.Extreme) => Generator.Between(3, 4),
+            ("D", Bulkhead.Overload) => 3,
+
+            ("E", Bulkhead.Main) => Generator.Between(4, 5),
+            ("E", Bulkhead.Extreme) => Generator.Between(3, 4),
+            ("E", Bulkhead.Overload) => 3,
+        };
+        CentralGeneratorCluster_NumberOfPowerCells = CentralGeneratorCluster_NumberOfGenerators;
     }
 
     private void Build_CentralGeneratorCluster(BuildDirector director, Level level)

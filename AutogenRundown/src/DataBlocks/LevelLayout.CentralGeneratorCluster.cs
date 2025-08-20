@@ -1,4 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Items;
+using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Objectives.CentralGeneratorCluster;
 using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
@@ -22,45 +24,146 @@ public partial record LevelLayout
         var start = (ZoneNode)startish;
         var startZone = planner.GetZone(start)!;
 
-        var prev = start;
 
-        // Place the generator cluster in the first zone
-        var firstZone = level.Planner.GetZone(prev)!;
-        firstZone.GenGeneratorClusterGeomorph(director.Complex);
-
-        // Place out some cell zones
-        for (int i = 1; i < director.ZoneCount; i++)
+        switch (level.Tier, director.Bulkhead)
         {
-            var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-            var next = new ZoneNode(director.Bulkhead, zoneIndex);
+            #region Tier: A
 
-            level.Planner.Connect(prev, next);
-            level.Planner.AddZone(
-                next,
-                new Zone(level)
-                {
-                    Coverage = CoverageMinMax.GenNormalSize(),
-                    LightSettings = Lights.GenRandomLight(),
-                });
-
-            prev = next;
-        }
-
-        // Distribute cells
-        var pickup = new BigPickupDistribution
-        {
-            SpawnsPerZone = 2,
-            SpawnData = new List<ItemSpawn>
+            // Always has 3 cells
+            // case ("A", Bulkhead.Main):
+            case ("C", Bulkhead.Main):
             {
-                new() { Item = Items.Item.PowerCell },
-                new() { Item = Items.Item.PowerCell }
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Single center with three branches off. Each branch at a different altitude
+                    // and we let the fog rise during scan
+                    (0.12, () =>
+                    {
+                        startZone.GenGeneratorClusterGeomorph(director.Complex);
+                        startZone.Altitude = Altitude.OnlyMid;
+
+                        var (cell1, cellZone1) = AddZone(start);
+                        var (cell2, cellZone2) = AddZone(start);
+                        var (cell3, cellZone3) = AddZone(start);
+
+                        cellZone1.Altitude = Altitude.OnlyLow;
+                        cellZone2.Altitude = Altitude.OnlyMid;
+                        cellZone3.Altitude = Altitude.OnlyHigh;
+
+                        cellZone1.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
+                        cellZone2.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
+                        cellZone3.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
+
+                        level.FogSettings = Fog.Normal_Altitude_minus4;
+
+                        objective.CentralGeneratorCluster_FogDataSteps = new List<GeneralFogStep>
+                        {
+                            new() { Fog = Fog.Normal_Altitude_0 },
+                            new() { Fog = Fog.Normal_Altitude_4 }
+                        };
+                    }),
+                });
+                break;
             }
-        };
-        Bins.BigPickupDistributions.AddBlock(pickup);
 
-        var last = prev;
-        var lastZone = level.Planner.GetZone(last)!;
+            case ("A", _):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // TODO: add
+                    (0.12, () => { }),
+                });
+                break;
+            }
+            #endregion
 
-        lastZone.BigPickupDistributionInZone = pickup.PersistentId;
+            #region Tier: B
+            case ("B", Bulkhead.Main):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // TODO: add
+                    (0.12, () => { }),
+                });
+                break;
+            }
+
+            case ("B", _):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // TODO: add
+                    (0.12, () => { }),
+                });
+                break;
+            }
+            #endregion
+
+            #region Tier: C
+            // case ("C", Bulkhead.Main):
+            // {
+            //     Generator.SelectRun(new List<(double, Action)>
+            //     {
+            //         // TODO: add
+            //         (0.12, () => { }),
+            //     });
+            //     break;
+            // }
+
+            case ("C", _):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // TODO: add
+                    (0.12, () => { }),
+                });
+                break;
+            }
+            #endregion
+
+            #region Tier: D
+            case ("D", Bulkhead.Main):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // TODO: add
+                    (0.12, () => { }),
+                });
+                break;
+            }
+
+            case ("D", _):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // TODO: add
+                    (0.12, () => { }),
+                });
+                break;
+            }
+            #endregion
+
+            #region Tier: E
+            case ("E", Bulkhead.Main):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // TODO: add
+                    (0.12, () => { }),
+                });
+                break;
+            }
+
+            case ("E", _):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // TODO: add
+                    (0.12, () => { }),
+                });
+                break;
+            }
+            #endregion
+        }
     }
 }
