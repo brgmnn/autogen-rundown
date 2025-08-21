@@ -651,7 +651,7 @@ public record Zone : DataBlock
             {
                 (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
                 {
-                    (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_hub_ds_02.prefab", CoverageMinMax.Medium_40)
+                    (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_hub_ds_02_gen.prefab", CoverageMinMax.Medium_40)
                 });
 
                 break;

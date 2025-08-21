@@ -19,8 +19,9 @@ public record Fog : DataBlock
     public static double HEIGHT_HIGH =  4.0;
     public static double HEIGHT_MAX  = 12.0;
 
-    public static double INFECTION_SLOW = 0.015;
-    public static double INFECTION_FAST = 0.030;
+    public static double INFECTION_SLOW   = 0.015;
+    public static double INFECTION_MEDIUM = 0.022;
+    public static double INFECTION_FAST   = 0.030;
 
     public static Fog None = new Fog { PersistentId = 0 };
 
@@ -41,6 +42,8 @@ public record Fog : DataBlock
     #region Preset fogs
 
     #region By level
+
+    #region Bases
 
     public static readonly Fog NormalFog = DefaultFog with
     {
@@ -65,6 +68,38 @@ public record Fog : DataBlock
         DensityNoiseScale = 0.131,
         DensityNoiseDirection = new Vector3 { X = 0.0, Y = -1.0, Z = 0.0 },
     };
+
+    public static readonly Fog NormalInfectiousFog = DefaultFog with
+    {
+        Name = "NormalInfectious_Fog",
+        FogDensity = DENSITY_LOW,
+        DensityHeightMaxBoost = DENSITY_HIGH,
+        DensityHeightAltitude = HEIGHT_MAX,
+        DensityHeightRange = 0.2,
+        DensityNoiseSpeed = 0.074,
+        DensityNoiseScale = 0.131,
+        DensityNoiseDirection = new Vector3 { X = 0.0, Y = -1.0, Z = 0.0 },
+
+        FogColor = Color.InfectiousFog_R8D1,
+        Infection = INFECTION_MEDIUM,
+    };
+
+    public static readonly Fog InvertedInfectiousFog = DefaultFog with
+    {
+        Name = "InvertedInfectious_Fog",
+        FogDensity = DENSITY_HIGH,
+        DensityHeightMaxBoost = DENSITY_LOW,
+        DensityHeightAltitude = HEIGHT_MAX,
+        DensityHeightRange = 0.2,
+        DensityNoiseSpeed = 0.074,
+        DensityNoiseScale = 0.131,
+        DensityNoiseDirection = new Vector3 { X = 0.0, Y = -1.0, Z = 0.0 },
+
+        FogColor = Color.InfectiousFog_R8D1,
+        Infection = INFECTION_MEDIUM,
+    };
+
+    #endregion
 
     #region Normal
 
@@ -175,6 +210,122 @@ public record Fog : DataBlock
     };
 
     public static readonly Fog Inverted_Altitude_8 = InvertedFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 8.0,
+    };
+
+    #endregion
+
+    #region Normal Infectious
+
+    public static readonly Fog NormalInfectious_Altitude_minus8 = NormalInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = -8.0,
+    };
+
+    public static readonly Fog NormalInfectious_Altitude_minus6 = NormalInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = -6.0,
+    };
+
+    public static readonly Fog NormalInfectious_Altitude_minus4 = NormalInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = -4.0,
+    };
+
+    public static readonly Fog NormalInfectious_Altitude_minus2 = NormalInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = -2.0,
+    };
+
+    public static readonly Fog NormalInfectious_Altitude_0 = NormalInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 0.0,
+    };
+
+    public static readonly Fog NormalInfectious_Altitude_2 = NormalInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 2.0,
+    };
+
+    public static readonly Fog NormalInfectious_Altitude_4 = NormalInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 4.0,
+    };
+
+    public static readonly Fog NormalInfectious_Altitude_6 = NormalInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 6.0,
+    };
+
+    public static readonly Fog NormalInfectious_Altitude_8 = NormalInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 8.0,
+    };
+
+    #endregion
+
+    #region Inverted Infectious
+
+    public static readonly Fog InvertedInfectious_Altitude_minus8 = InvertedInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = -8.0,
+    };
+
+    public static readonly Fog InvertedInfectious_Altitude_minus6 = InvertedInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = -6.0,
+    };
+
+    public static readonly Fog InvertedInfectious_Altitude_minus4 = InvertedInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = -4.0,
+    };
+
+    public static readonly Fog InvertedInfectious_Altitude_minus2 = InvertedInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = -2.0,
+    };
+
+    public static readonly Fog InvertedInfectious_Altitude_0 = InvertedInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 0.0,
+    };
+
+    public static readonly Fog InvertedInfectious_Altitude_2 = InvertedInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 2.0,
+    };
+
+    public static readonly Fog InvertedInfectious_Altitude_4 = InvertedInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 4.0,
+    };
+
+    public static readonly Fog InvertedInfectious_Altitude_6 = InvertedInfectiousFog with
+    {
+        PersistentId = Generator.GetPersistentId(),
+        DensityHeightAltitude = 6.0,
+    };
+
+    public static readonly Fog InvertedInfectious_Altitude_8 = InvertedInfectiousFog with
     {
         PersistentId = Generator.GetPersistentId(),
         DensityHeightAltitude = 8.0,
@@ -335,6 +486,26 @@ public record Fog : DataBlock
         Inverted_Altitude_4.Persist();
         Inverted_Altitude_6.Persist();
         Inverted_Altitude_8.Persist();
+
+        NormalInfectious_Altitude_minus8.Persist();
+        NormalInfectious_Altitude_minus6.Persist();
+        NormalInfectious_Altitude_minus4.Persist();
+        NormalInfectious_Altitude_minus2.Persist();
+        NormalInfectious_Altitude_0.Persist();
+        NormalInfectious_Altitude_2.Persist();
+        NormalInfectious_Altitude_4.Persist();
+        NormalInfectious_Altitude_6.Persist();
+        NormalInfectious_Altitude_8.Persist();
+
+        InvertedInfectious_Altitude_minus8.Persist();
+        InvertedInfectious_Altitude_minus6.Persist();
+        InvertedInfectious_Altitude_minus4.Persist();
+        InvertedInfectious_Altitude_minus2.Persist();
+        InvertedInfectious_Altitude_0.Persist();
+        InvertedInfectious_Altitude_2.Persist();
+        InvertedInfectious_Altitude_4.Persist();
+        InvertedInfectious_Altitude_6.Persist();
+        InvertedInfectious_Altitude_8.Persist();
     }
 
     #region Internal properties not exposed in the data block

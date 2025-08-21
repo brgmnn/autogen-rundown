@@ -5,15 +5,59 @@ using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
+public enum GeneratorFogShape
+{
+    Ascending,
+    Descending
+}
+
 public partial record LevelLayout
 {
     /// <summary>
-    /// When building the power cell distribution layout, here we are modelling a hub with offshoot zones.
+    /// Also sets the level fog settings
+    /// </summary>
+    /// <param name="objective"></param>
+    /// <param name="shape"></param>
+    /// <returns></returns>
+    private List<GeneralFogStep> CentralGeneratorCluster_BuildFogSteps(
+        WardenObjective objective,
+        GeneratorFogShape shape,
+        int numberOfSteps)
+    {
+        var defaultAltitude = level.FogSettings.DensityHeightAltitude;
+        var infectious = level.FogSettings.IsInfectious;
+
+        var steps = new List<GeneralFogStep>();
+        var generators = objective.CentralGeneratorCluster_NumberOfGenerators;
+
+        switch (shape)
+        {
+            case GeneratorFogShape.Ascending:
+                if (generators)
+
+                break;
+
+            case GeneratorFogShape.Descending:
+                break;
+        }
+
+        return steps;
+    }
+
+    /// <summary>
+    /// Central Generator Cluster objective
+    ///
+    /// Number of cells to distribute can be between 2 and 5
+    ///
+    /// I think we want to only allow a single Central Generator Cluster objective per level
     /// </summary>
     /// <param name="director"></param>
     /// <param name="objective"></param>
     /// <param name="startish"></param>
-    public void BuildLayout_CentralGeneratorCluster(BuildDirector director, WardenObjective objective, ZoneNode? startish)
+    private void BuildLayout_CentralGeneratorCluster(
+        BuildDirector director,
+        WardenObjective objective,
+        ZoneNode? startish)
     {
         if (startish == null)
         {
@@ -24,18 +68,23 @@ public partial record LevelLayout
         var start = (ZoneNode)startish;
         var startZone = planner.GetZone(start)!;
 
+        // We need to check Fog.DensityHeightAltitude to see how high the fog is
+        //  -4 = low
+        //   0 = mid
+        //   4 = high
+
+        // if (level.FogSettings.DensityHeightAltitude)
 
         switch (level.Tier, director.Bulkhead)
         {
             #region Tier: A
 
             // Always has 3 cells
-            // case ("A", Bulkhead.Main):
-            case ("C", Bulkhead.Main):
+            case ("A", Bulkhead.Main):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // Single center with three branches off. Each branch at a different altitude
+                    // Single center with three branches off. Each branch at a different altitude,
                     // and we let the fog rise during scan
                     (0.12, () =>
                     {
@@ -56,11 +105,16 @@ public partial record LevelLayout
 
                         level.FogSettings = Fog.Normal_Altitude_minus4;
 
-                        objective.CentralGeneratorCluster_FogDataSteps = new List<GeneralFogStep>
-                        {
-                            new() { Fog = Fog.Normal_Altitude_0 },
-                            new() { Fog = Fog.Normal_Altitude_4 }
-                        };
+                        objective.CentralGeneratorCluster_FogDataSteps = CentralGeneratorCluster_BuildFogSteps(
+                            objective,
+                            GeneratorFogShape.Ascending,
+                            3);
+
+                        // objective.CentralGeneratorCluster_FogDataSteps = new List<GeneralFogStep>
+                        // {
+                        //     new() { Fog = Fog.Normal_Altitude_0 },
+                        //     new() { Fog = Fog.Normal_Altitude_4 }
+                        // };
                     }),
                 });
                 break;
@@ -100,15 +154,15 @@ public partial record LevelLayout
             #endregion
 
             #region Tier: C
-            // case ("C", Bulkhead.Main):
-            // {
-            //     Generator.SelectRun(new List<(double, Action)>
-            //     {
-            //         // TODO: add
-            //         (0.12, () => { }),
-            //     });
-            //     break;
-            // }
+            case ("C", Bulkhead.Main):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // TODO: add
+                    (0.12, () => { }),
+                });
+                break;
+            }
 
             case ("C", _):
             {

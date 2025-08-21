@@ -697,6 +697,8 @@ public partial record LevelLayout : DataBlock
 
             Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} has {points}pts for enemies. Groups: {string.Join(", ", displayGroups)}");
 
+            // TODO: reduce number of groups
+
             // By default we will just let the spawning data allocate out groups. If there
             // are multiple groups we just spawn equal numbers of them and let the game
             // divide that up into portions.

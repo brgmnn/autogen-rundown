@@ -198,9 +198,9 @@ public static class RundownFactory
         #if DEBUG
         if (withFixed)
         {
-            const string tier = "C";
+            const string tier = "A";
             const string title = "Cluster";
-            const Complex complex = Complex.Tech;
+            const Complex complex = Complex.Mining;
 
             var mainDirector = new BuildDirector
             {
@@ -218,7 +218,7 @@ public static class RundownFactory
                 Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.GatherSmallItems,
+                Objective = WardenObjectiveType.CentralGeneratorCluster,
             };
             secondDirector.GenPoints();
 
@@ -228,7 +228,7 @@ public static class RundownFactory
                 Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.GatherSmallItems,
+                Objective = WardenObjectiveType.CentralGeneratorCluster,
             };
             thirdDirector.GenPoints();
 
@@ -243,8 +243,8 @@ public static class RundownFactory
                     OverloadDirector = thirdDirector,
                     Settings = new LevelSettings(tier)
                     {
-                        Bulkheads = Bulkhead.Main
-                        // Bulkheads = Bulkhead.Main | Bulkhead.Overload
+                        // Bulkheads = Bulkhead.Main
+                        Bulkheads = Bulkhead.Main | Bulkhead.Overload
                         // Bulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload
                     },
                     Index = rundown.TierC_Count + 1,
