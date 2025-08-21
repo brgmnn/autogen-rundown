@@ -901,6 +901,20 @@ public partial record WardenObjective : DataBlock
     /// </summary>
     public double ShowHelpDelay { get; set; } = 180.0;
     #endregion
+
+    #region Fog related
+
+    /// <summary>
+    ///
+    /// </summary>
+    [JsonIgnore]
+    public Fog FogOnGotoWin { get; set; } = Fog.None;
+
+    public uint FogTransitionDataOnGotoWin => FogOnGotoWin.PersistentId;
+
+    public double FogTransitionDurationOnGotoWin { get; set; } = 0.0;
+
+    #endregion
     #endregion
 
     #region Events
@@ -1172,8 +1186,6 @@ public partial record WardenObjective : DataBlock
     public bool StopAllWavesBeforeGotoWin = false;
     public int WaveOnGotoWinTrigger = 0;
     public int EventsOnGotoWinTrigger = 0;
-    public int FogTransitionDataOnGotoWin = 0;
-    public double FogTransitionDurationOnGotoWin = 0.0;
     public bool LightsOnFromBeginning = false;
     public bool LightsOnDuringIntro = false;
     public bool LightsOnWhenStartupComplete = false;

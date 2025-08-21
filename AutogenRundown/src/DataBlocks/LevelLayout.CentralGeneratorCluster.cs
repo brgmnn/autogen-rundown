@@ -33,8 +33,6 @@ public partial record LevelLayout
         switch (shape)
         {
             case GeneratorFogShape.Ascending:
-                if (generators)
-
                 break;
 
             case GeneratorFogShape.Descending:
@@ -110,11 +108,14 @@ public partial record LevelLayout
                             GeneratorFogShape.Ascending,
                             3);
 
-                        // objective.CentralGeneratorCluster_FogDataSteps = new List<GeneralFogStep>
-                        // {
-                        //     new() { Fog = Fog.Normal_Altitude_0 },
-                        //     new() { Fog = Fog.Normal_Altitude_4 }
-                        // };
+                        objective.CentralGeneratorCluster_FogDataSteps = new List<GeneralFogStep>
+                        {
+                            new() { Fog = Fog.Normal_Altitude_0 },
+                            new() { Fog = Fog.Normal_Altitude_4 }
+                        };
+
+                        objective.FogOnGotoWin = Fog.Normal_Altitude_minus6;
+                        objective.FogTransitionDurationOnGotoWin = 6.0;
                     }),
                 });
                 break;
