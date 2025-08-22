@@ -95,11 +95,6 @@ public class Plugin : BasePlugin
 
         PlayFabManager.add_OnTitleDataUpdated((Action)RundownNames.OnTitleDataUpdated);
 
-        // GTFO.API.EventAPI.OnManagersSetup
-
-        // EventAPI.OnManagersSetup += LocalProgressionManager.Current.Init;
-        // AssetAPI.OnAssetBundlesLoaded += Assets.Init;
-
         Patch_LG_ComputerTerminal_Setup.Setup();
         Patch_LG_SecurityDoor.Setup();
 
