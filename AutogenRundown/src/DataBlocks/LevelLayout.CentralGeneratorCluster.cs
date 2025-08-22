@@ -15,6 +15,8 @@ public partial record LevelLayout
 {
     /// <summary>
     /// Also sets the level fog settings
+    ///
+    /// The level gets picked after that cell goes in
     /// </summary>
     /// <param name="objective"></param>
     /// <param name="shape"></param>
@@ -26,20 +28,70 @@ public partial record LevelLayout
     {
         var defaultAltitude = level.FogSettings.DensityHeightAltitude;
         var infectious = level.FogSettings.IsInfectious;
-
-        var steps = new List<GeneralFogStep>();
         var generators = objective.CentralGeneratorCluster_NumberOfGenerators;
 
-        switch (shape)
+        return (shape, generators) switch
         {
-            case GeneratorFogShape.Ascending:
-                break;
+            // Ascending fog
+            (GeneratorFogShape.Ascending, 2) => new List<GeneralFogStep>
+            {
+                new() { Fog = Fog.Normal_Altitude_2 },
+                new() { Fog = Fog.Normal_Altitude_8 } // completion scan
+            },
+            (GeneratorFogShape.Ascending, 3) => new List<GeneralFogStep>
+            {
+                new() { Fog = Fog.Normal_Altitude_0 },
+                new() { Fog = Fog.Normal_Altitude_4 },
+                new() { Fog = Fog.Normal_Altitude_8 } // completion scan
+            },
+            (GeneratorFogShape.Ascending, 4) => new List<GeneralFogStep>
+            {
+                new() { Fog = Fog.Normal_Altitude_minus2 },
+                new() { Fog = Fog.Normal_Altitude_2 },
+                new() { Fog = Fog.Normal_Altitude_6 },
+                new() { Fog = Fog.Normal_Altitude_8 } // completion scan
+            },
+            (GeneratorFogShape.Ascending, 5) => new List<GeneralFogStep>
+            {
+                new() { Fog = Fog.Normal_Altitude_minus2 },
+                new() { Fog = Fog.Normal_Altitude_2 },
+                new() { Fog = Fog.Normal_Altitude_4 },
+                new() { Fog = Fog.Normal_Altitude_6 },
+                new() { Fog = Fog.Normal_Altitude_8 } // completion scan
+            },
 
-            case GeneratorFogShape.Descending:
-                break;
-        }
+            // Descending fog
+            (GeneratorFogShape.Descending, 2) => new List<GeneralFogStep>
+            {
+                new() { Fog = Fog.Inverted_Altitude_2 },
+                new() { Fog = Fog.Inverted_Altitude_minus4 } // completion scan
+            },
+            (GeneratorFogShape.Descending, 3) => new List<GeneralFogStep>
+            {
+                new() { Fog = Fog.Inverted_Altitude_4 },
+                new() { Fog = Fog.Inverted_Altitude_0 },
+                new() { Fog = Fog.Inverted_Altitude_minus4 } // completion scan
+            },
+            (GeneratorFogShape.Descending, 4) => new List<GeneralFogStep>
+            {
+                new() { Fog = Fog.Inverted_Altitude_6 },
+                new() { Fog = Fog.Inverted_Altitude_2 },
+                new() { Fog = Fog.Inverted_Altitude_minus2 },
+                new() { Fog = Fog.Inverted_Altitude_minus8 } // completion scan
+            },
+            (GeneratorFogShape.Descending, 5) => new List<GeneralFogStep>
+            {
+                new() { Fog = Fog.Inverted_Altitude_8 },
+                new() { Fog = Fog.Inverted_Altitude_4 },
+                new() { Fog = Fog.Inverted_Altitude_0 },
+                new() { Fog = Fog.Inverted_Altitude_minus4 },
+                new() { Fog = Fog.Inverted_Altitude_minus8 } // completion scan
+            },
 
-        return steps;
+            _ => new List<GeneralFogStep>()
+        };
+
+        // return steps;
     }
 
     /// <summary>
@@ -78,42 +130,46 @@ public partial record LevelLayout
             #region Tier: A
 
             // Always has 3 cells
-            case ("A", Bulkhead.Main):
+            // case ("A", Bulkhead.Main):
+            case ("A", _):
             {
+                // For now, we just use the single layout on tier A all objectives and reduce the number of generators
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Single center with three branches off. Each branch at a different altitude,
                     // and we let the fog rise during scan
-                    (0.12, () =>
+                    (1.0, () =>
                     {
                         startZone.GenGeneratorClusterGeomorph(director.Complex);
                         startZone.Altitude = Altitude.OnlyMid;
 
-                        var (cell1, cellZone1) = AddZone(start);
-                        var (cell2, cellZone2) = AddZone(start);
-                        var (cell3, cellZone3) = AddZone(start);
-
-                        cellZone1.Altitude = Altitude.OnlyLow;
-                        cellZone2.Altitude = Altitude.OnlyMid;
-                        cellZone3.Altitude = Altitude.OnlyHigh;
-
-                        cellZone1.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
-                        cellZone2.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
-                        cellZone3.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
-
-                        level.FogSettings = Fog.Normal_Altitude_minus4;
-
-                        objective.CentralGeneratorCluster_FogDataSteps = CentralGeneratorCluster_BuildFogSteps(
-                            objective,
-                            GeneratorFogShape.Ascending,
-                            3);
-
-                        objective.CentralGeneratorCluster_FogDataSteps = new List<GeneralFogStep>
+                        var altitudes = new List<Altitude>
                         {
-                            new() { Fog = Fog.Normal_Altitude_0 },
-                            new() { Fog = Fog.Normal_Altitude_4 }
+                            Altitude.OnlyLow,
+                            Altitude.OnlyMid,
+                            Altitude.OnlyHigh
                         };
 
+                        var longerBranch = director.Bulkhead == Bulkhead.Main;
+
+                        for (var c = 0; c < objective.CentralGeneratorCluster_NumberOfGenerators; c++)
+                        {
+                            var zone = planner.GetZone(AddBranch(start, longerBranch ? 2 : 1).Last());
+
+                            longerBranch = false;
+
+                            zone.Altitude = Generator.Draw(altitudes)!;
+                            zone.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
+                        }
+
+                        // level.FogSettings = Fog.Normal_Altitude_minus4;
+                        level.FogSettings = Fog.Inverted_Altitude_8;
+                        objective.CentralGeneratorCluster_FogDataSteps = CentralGeneratorCluster_BuildFogSteps(
+                            objective,
+                            GeneratorFogShape.Descending,
+                            objective.CentralGeneratorCluster_NumberOfGenerators);
+
+                        // objective.FogOnGotoWin = Generator.Flip() ? Fog.Inverted_Altitude_6 : Fog.Normal_Altitude_minus6;
                         objective.FogOnGotoWin = Fog.Normal_Altitude_minus6;
                         objective.FogTransitionDurationOnGotoWin = 6.0;
                     }),
@@ -121,15 +177,17 @@ public partial record LevelLayout
                 break;
             }
 
-            case ("A", _):
-            {
-                Generator.SelectRun(new List<(double, Action)>
-                {
-                    // TODO: add
-                    (0.12, () => { }),
-                });
-                break;
-            }
+            // TODO: when we have more layouts to make for generator cluster
+            // case ("A", _):
+            // {
+            //     Generator.SelectRun(new List<(double, Action)>
+            //     {
+            //         (1.0, () =>
+            //         {
+            //         }),
+            //     });
+            //     break;
+            // }
             #endregion
 
             #region Tier: B
