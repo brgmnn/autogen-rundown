@@ -123,7 +123,9 @@ public partial record LevelLayout
         //   0 = mid
         //   4 = high
 
-        // if (level.FogSettings.DensityHeightAltitude)
+        // Always ensure we have a fog turbine in the start zone and repellers
+        startZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
+        startZone.ConsumableDistributionInZone = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
 
         switch (level.Tier, director.Bulkhead)
         {
@@ -162,15 +164,15 @@ public partial record LevelLayout
                             zone.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
                         }
 
-                        // level.FogSettings = Fog.Normal_Altitude_minus4;
-                        level.FogSettings = Fog.Inverted_Altitude_8;
+                        var invertedFog = Generator.Flip();
+
+                        level.FogSettings = invertedFog ? Fog.Inverted_Altitude_8 : Fog.Normal_Altitude_minus4;
                         objective.CentralGeneratorCluster_FogDataSteps = CentralGeneratorCluster_BuildFogSteps(
                             objective,
-                            GeneratorFogShape.Descending,
+                            invertedFog ? GeneratorFogShape.Descending : GeneratorFogShape.Ascending,
                             objective.CentralGeneratorCluster_NumberOfGenerators);
 
-                        // objective.FogOnGotoWin = Generator.Flip() ? Fog.Inverted_Altitude_6 : Fog.Normal_Altitude_minus6;
-                        objective.FogOnGotoWin = Fog.Normal_Altitude_minus6;
+                        objective.FogOnGotoWin = invertedFog ? Fog.Normal_Altitude_minus6 : Fog.Inverted_Altitude_6;
                         objective.FogTransitionDurationOnGotoWin = 6.0;
                     }),
                 });
