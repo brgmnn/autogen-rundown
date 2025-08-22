@@ -46,7 +46,7 @@ namespace AutogenRundown.Patches;
 ///       `area.GetMarkerSpawnerCount(GeneratorCluster) > 0`, then pick deterministically by `randomValue`.
 /// </summary>
 [HarmonyPatch]
-public class Patch_LG_DistributionJobUtils
+public class Patch_CentralGeneratorCluster
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(LG_DistributionJobUtils), nameof(LG_DistributionJobUtils.GetRandomNodeFromZoneForFunction))]
@@ -83,5 +83,36 @@ public class Patch_LG_DistributionJobUtils
         __result = area.m_courseNode;
 
         return false;
+    }
+
+    /// <summary>
+    /// This method sets up the ServiceMarker data blocks to add the extra marker needed for the
+    /// Service Complex geomorphs to be able to spawn the generator cluster marker
+    ///
+    /// It can be called multiple times, but once after the datablocks are loaded is sufficient
+    /// </summary>
+    public static void Setup()
+    {
+        var block = ServiceMarkerDataBlock.GetBlock(11);
+
+        var alreadySetup = false;
+
+        foreach (var composition in block.CommonData.Compositions)
+            if (composition.prefab == "Assets/GameObject/Floodways_open_1400x1000x1000_V09.prefab")
+                alreadySetup = true;
+
+        if (alreadySetup)
+            return;
+
+        block.CommonData.Compositions.Add(new MarkerComposition
+        {
+            weight = 0.0f,
+            preppedInstance = null,
+            prefab = "Assets/GameObject/Floodways_open_1400x1000x1000_V09.prefab",
+            function = ExpeditionFunction.GeneratorCluster,
+            Shard = AssetBundleShard.S5
+        });
+
+        Plugin.Logger.LogDebug($"Patched ServiceMarkerDataBlock for Generator Cluster in Complex=Service");
     }
 }

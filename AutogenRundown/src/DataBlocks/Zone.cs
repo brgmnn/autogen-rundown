@@ -651,8 +651,22 @@ public record Zone : DataBlock
             {
                 (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
                 {
-                    (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_hub_ds_02_gen.prefab", CoverageMinMax.Medium_40)
+                    // Confirmed working
+                    (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_hub_ds_02_gen.prefab", CoverageMinMax.Medium_40),
+                    // (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_I_HA_02.prefab", CoverageMinMax.Medium_40)
+
+                    // Probably Broken
+                    // (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_HA_08.prefab", CoverageMinMax.Medium_40),
+                    // (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_HA_07.prefab", CoverageMinMax.Medium_40),
+                    // (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_HA_06.prefab", CoverageMinMax.Medium_40),
+                    // (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_HA_05_V2.prefab", CoverageMinMax.Medium_40),
+                    // (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_HA_05.prefab", CoverageMinMax.Medium_40),
+                    // (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_HA_02.prefab", CoverageMinMax.Medium_40)
+                    // (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_SF_01.prefab", CoverageMinMax.Medium_40)
+                    // (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_HA_04.prefab", CoverageMinMax.Medium_40),
                 });
+
+                GeneratorClustersInZone = 1;
 
                 break;
             }
