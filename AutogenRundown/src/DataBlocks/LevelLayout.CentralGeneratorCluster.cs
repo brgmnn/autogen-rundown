@@ -98,8 +98,8 @@ public partial record LevelLayout
     ///
     /// </summary>
     /// <param name="objective"></param>
-    /// <returns></returns>
-    private ZoneNode CentralGeneratorCluster_AddCellBranch(ZoneNode start, WardenObjective objective, Altitude? altitude = null)
+    /// <returns>The node where the cell is located.</returns>
+    private ZoneNode CentralGeneratorCluster_AddCellBranch(ZoneNode start, Altitude? altitude = null)
     {
         var cellNode = new ZoneNode();
         var cellZone = new Zone(level);
@@ -107,49 +107,81 @@ public partial record LevelLayout
         switch (level.Tier, director.Bulkhead)
         {
             #region Tier: A
-            case ("A", Bulkhead.Main):
+            case ("A", _):
             {
-                cellNode = AddBranch(start, Generator.Flip(0.2) ? 2 : 1).Last();
+                var zoneCount = director.Bulkhead == Bulkhead.Main && Generator.Flip(0.2)
+                    ? 2
+                    : 1;
+
+                cellNode = AddBranch(start, zoneCount).Last();
                 cellZone = planner.GetZone(cellNode);
+
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Single zone to cell
+                    (4.0, () => { (cellNode, cellZone) = AddZone(start); }),
+
+                    // Single zone to cell, guarded by keycard
+                    (2.0, () => { (cellNode, cellZone) = BuildChallenge_KeycardInZone(start); }),
+
+                    // Single zone to cell, door locked down in source zone
+                    (2.0, () => { (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(start, 0); }),
+
+                    // --- Main only ---
+                    // 2 zones
+                    (director.Bulkhead == Bulkhead.Main ? 0.5 : 0.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+
+                        if (altitude != null)
+                            midZone.Altitude = altitude;
+
+                        (cellNode, cellZone) = AddZone(mid);
+                    }),
+
+                    // 2 zones, with cell behind keycard
+                    (director.Bulkhead == Bulkhead.Main ? 0.5 : 0.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+
+                        if (altitude != null)
+                            midZone.Altitude = altitude;
+
+                        (cellNode, cellZone) = BuildChallenge_KeycardInZone(mid);
+                    }),
+
+                    // 2 zones, with locked second door on terminal
+                    (director.Bulkhead == Bulkhead.Main ? 0.5 : 0.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+
+                        if (altitude != null)
+                            midZone.Altitude = altitude;
+
+                        (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(mid, 0);
+                    }),
+                });
 
                 if (altitude != null)
                     cellZone.Altitude = altitude;
 
-                break;
-            }
-
-            case ("A", _):
-            {
-                var (node, zone) = AddZone(start);
-
-                if (altitude != null)
-                    zone.Altitude = altitude;
-
-                cellNode = node;
                 break;
             }
             #endregion
 
             #region Tier: B
-            case ("B", Bulkhead.Main):
+            case ("B", _):
             {
-                cellNode = AddBranch(start, Generator.Flip(0.2) ? 2 : 1).Last();
+                var zoneCount = director.Bulkhead == Bulkhead.Main && Generator.Flip(0.2)
+                    ? 2
+                    : 1;
+
+                cellNode = AddBranch(start, zoneCount).Last();
                 cellZone = planner.GetZone(cellNode);
 
                 if (altitude != null)
                     cellZone.Altitude = altitude;
 
-                break;
-            }
-
-            case ("B", _):
-            {
-                var (node, zone) = AddZone(start);
-
-                if (altitude != null)
-                    zone.Altitude = altitude;
-
-                cellNode = node;
                 break;
             }
             #endregion
@@ -229,6 +261,9 @@ public partial record LevelLayout
 
         cellZone.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
 
+        // Add the node to the objective placement list
+        objective.PlacementNodes.Add(cellNode);
+
         return cellNode;
     }
 
@@ -255,6 +290,22 @@ public partial record LevelLayout
 
         var start = (ZoneNode)startish;
         var startZone = planner.GetZone(start)!;
+
+        if (Generator.Flip(0.7))
+            startZone.GenCorridorGeomorph(director.Complex);
+        else
+            startZone.Coverage = CoverageMinMax.Large_80;
+
+        startZone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+        startZone.StartExpansion = ZoneBuildExpansion.Random;
+
+        (start, startZone) = AddZone_Forward(
+            start,
+            new ZoneNode
+            {
+                Branch = "generator_cluster",
+                MaxConnections = 3
+            });
 
         // We need to check Fog.DensityHeightAltitude to see how high the fog is
         //  -4 = low
@@ -292,7 +343,7 @@ public partial record LevelLayout
 
                         for (var c = 0; c < objective.CentralGeneratorCluster_NumberOfGenerators; c++)
                         {
-                            CentralGeneratorCluster_AddCellBranch(start, objective, Generator.Draw(altitudes)!);
+                            CentralGeneratorCluster_AddCellBranch(start, Generator.Draw(altitudes)!);
                         }
 
                         var invertedFog = Generator.Flip();
@@ -348,7 +399,7 @@ public partial record LevelLayout
 
                         for (var c = 0; c < objective.CentralGeneratorCluster_NumberOfGenerators; c++)
                         {
-                            CentralGeneratorCluster_AddCellBranch(start, objective, Generator.Draw(altitudes)!);
+                            CentralGeneratorCluster_AddCellBranch(start, Generator.Draw(altitudes)!);
                         }
 
                         var invertedFog = Generator.Flip();
@@ -407,7 +458,7 @@ public partial record LevelLayout
                         for (var c = 0; c < objective.CentralGeneratorCluster_NumberOfGenerators; c++)
                         {
                             var branchStart = c < 3 ? start : Generator.Draw(cellEnds)!;
-                            var node = CentralGeneratorCluster_AddCellBranch(branchStart, objective, Generator.Pick(altitudes)!);
+                            var node = CentralGeneratorCluster_AddCellBranch(branchStart, Generator.Pick(altitudes)!);
 
                             cellEnds.Add(node);
                         }
@@ -467,7 +518,7 @@ public partial record LevelLayout
                         for (var c = 0; c < objective.CentralGeneratorCluster_NumberOfGenerators; c++)
                         {
                             var branchStart = c < 3 ? start : Generator.Draw(cellEnds)!;
-                            var node = CentralGeneratorCluster_AddCellBranch(branchStart, objective, Generator.Pick(altitudes)!);
+                            var node = CentralGeneratorCluster_AddCellBranch(branchStart, Generator.Pick(altitudes)!);
 
                             cellEnds.Add(node);
                         }
@@ -527,7 +578,7 @@ public partial record LevelLayout
                         for (var c = 0; c < objective.CentralGeneratorCluster_NumberOfGenerators; c++)
                         {
                             var branchStart = c < 3 ? start : Generator.Draw(cellEnds)!;
-                            var node = CentralGeneratorCluster_AddCellBranch(branchStart, objective, Generator.Pick(altitudes)!);
+                            var node = CentralGeneratorCluster_AddCellBranch(branchStart, Generator.Pick(altitudes)!);
 
                             cellEnds.Add(node);
                         }

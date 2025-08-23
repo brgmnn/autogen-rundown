@@ -40,6 +40,22 @@ public partial record LevelLayout
     }
 
     /// <summary>
+    ///
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="newNode"></param>
+    /// <returns></returns>
+    public (ZoneNode, Zone) AddZone_Forward(ZoneNode source, ZoneNode? newNode = null)
+    {
+        var (node, zone) = AddZone(source, newNode);
+
+        zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+        zone.SetStartExpansionFromExpansion();
+
+        return (node, zone);
+    }
+
+    /// <summary>
     /// Builds a branch, connecting zones and returning the last zone.
     /// </summary>
     /// <param name="baseNode"></param>

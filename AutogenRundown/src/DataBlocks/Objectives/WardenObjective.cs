@@ -863,6 +863,12 @@ public partial record WardenObjective : DataBlock
 
     [JsonIgnore]
     public int ReactorStartup_FetchWaves { get; set; } = 0;
+
+    /// <summary>
+    /// Collect the nodes where items have been placed
+    /// </summary>
+    [JsonIgnore]
+    public List<ZoneNode> PlacementNodes { get; set; } = new();
     #endregion
 
     #region General fields
