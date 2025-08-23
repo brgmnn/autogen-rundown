@@ -407,7 +407,7 @@ public partial record LevelLayout
                         for (var c = 0; c < objective.CentralGeneratorCluster_NumberOfGenerators; c++)
                         {
                             var branchStart = c < 3 ? start : Generator.Draw(cellEnds)!;
-                            var node = CentralGeneratorCluster_AddCellBranch(branchStart, objective, Generator.Draw(altitudes)!);
+                            var node = CentralGeneratorCluster_AddCellBranch(branchStart, objective, Generator.Pick(altitudes)!);
 
                             cellEnds.Add(node);
                         }
@@ -439,47 +439,123 @@ public partial record LevelLayout
             #endregion
 
             #region Tier: D
-            case ("D", Bulkhead.Main):
-            {
-                Generator.SelectRun(new List<(double, Action)>
-                {
-                    // TODO: add
-                    (0.12, () => { }),
-                });
-                break;
-            }
-
+            // case ("D", Bulkhead.Main):
             case ("D", _):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // TODO: add
-                    (0.12, () => { }),
+                    // Single center with three branches off. Each branch at a different altitude,
+                    // and we let the fog rise during scan
+                    (1.0, () =>
+                    {
+                        startZone.GenGeneratorClusterGeomorph(director.Complex);
+                        startZone.Altitude = Altitude.OnlyMid;
+
+                        var altitudes = new List<Altitude>
+                        {
+                            Altitude.OnlyLow,
+                            Altitude.OnlyMid,
+                            Altitude.OnlyHigh
+                        };
+
+                        var cellEnds = new List<ZoneNode>();
+
+                        // Slightly different approach here, build out 3 branches and any more
+                        // branches that we need get built from one of the previous branch ends.
+                        // We keep adding more end points after each piece so we can keep drawing
+                        // more start points
+                        for (var c = 0; c < objective.CentralGeneratorCluster_NumberOfGenerators; c++)
+                        {
+                            var branchStart = c < 3 ? start : Generator.Draw(cellEnds)!;
+                            var node = CentralGeneratorCluster_AddCellBranch(branchStart, objective, Generator.Pick(altitudes)!);
+
+                            cellEnds.Add(node);
+                        }
+
+                        var invertedFog = Generator.Flip();
+
+                        level.FogSettings = invertedFog ? Fog.Inverted_Altitude_8 : Fog.Normal_Altitude_minus4;
+                        objective.CentralGeneratorCluster_FogDataSteps = CentralGeneratorCluster_BuildFogSteps(
+                            objective,
+                            invertedFog ? GeneratorFogShape.Descending : GeneratorFogShape.Ascending,
+                            objective.CentralGeneratorCluster_NumberOfGenerators);
+
+                        objective.FogOnGotoWin = invertedFog ? Fog.Normal_Altitude_minus6 : Fog.Inverted_Altitude_6;
+                        objective.FogTransitionDurationOnGotoWin = 6.0;
+                    }),
                 });
                 break;
             }
+
+            // case ("D", _):
+            // {
+            //     Generator.SelectRun(new List<(double, Action)>
+            //     {
+            //         // TODO: add
+            //         (0.12, () => { }),
+            //     });
+            //     break;
+            // }
             #endregion
 
             #region Tier: E
-            case ("E", Bulkhead.Main):
-            {
-                Generator.SelectRun(new List<(double, Action)>
-                {
-                    // TODO: add
-                    (0.12, () => { }),
-                });
-                break;
-            }
-
+            // case ("E", Bulkhead.Main):
             case ("E", _):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // TODO: add
-                    (0.12, () => { }),
+                    // Single center with three branches off. Each branch at a different altitude,
+                    // and we let the fog rise during scan
+                    (1.0, () =>
+                    {
+                        startZone.GenGeneratorClusterGeomorph(director.Complex);
+                        startZone.Altitude = Altitude.OnlyMid;
+
+                        var altitudes = new List<Altitude>
+                        {
+                            Altitude.OnlyLow,
+                            Altitude.OnlyMid,
+                            Altitude.OnlyHigh
+                        };
+
+                        var cellEnds = new List<ZoneNode>();
+
+                        // Slightly different approach here, build out 3 branches and any more
+                        // branches that we need get built from one of the previous branch ends.
+                        // We keep adding more end points after each piece so we can keep drawing
+                        // more start points
+                        for (var c = 0; c < objective.CentralGeneratorCluster_NumberOfGenerators; c++)
+                        {
+                            var branchStart = c < 3 ? start : Generator.Draw(cellEnds)!;
+                            var node = CentralGeneratorCluster_AddCellBranch(branchStart, objective, Generator.Pick(altitudes)!);
+
+                            cellEnds.Add(node);
+                        }
+
+                        var invertedFog = Generator.Flip();
+
+                        level.FogSettings = invertedFog ? Fog.Inverted_Altitude_8 : Fog.Normal_Altitude_minus4;
+                        objective.CentralGeneratorCluster_FogDataSteps = CentralGeneratorCluster_BuildFogSteps(
+                            objective,
+                            invertedFog ? GeneratorFogShape.Descending : GeneratorFogShape.Ascending,
+                            objective.CentralGeneratorCluster_NumberOfGenerators);
+
+                        objective.FogOnGotoWin = invertedFog ? Fog.Normal_Altitude_minus6 : Fog.Inverted_Altitude_6;
+                        objective.FogTransitionDurationOnGotoWin = 6.0;
+                    }),
                 });
                 break;
             }
+
+            // case ("E", _):
+            // {
+            //     Generator.SelectRun(new List<(double, Action)>
+            //     {
+            //         // TODO: add
+            //         (0.12, () => { }),
+            //     });
+            //     break;
+            // }
             #endregion
         }
     }
