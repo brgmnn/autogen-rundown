@@ -8,6 +8,7 @@ public record Rundown : DataBlock
     public static readonly uint R_Daily = 1;
     public static readonly uint R_Weekly = 2;
     public static readonly uint R_Monthly = 3;
+    public static readonly uint R_Seasonal = 4;
 
     public List<Level> TierA { get; set; } = new();
     public List<Level> TierB { get; set; } = new();

@@ -162,6 +162,55 @@ public partial record LevelLayout
     }
 
     /// <summary>
+    /// Adds an Apex Alarm to a door, this does not modify the source zone at all. Good for
+    /// certain objectives where we already have the start zone setup for something else.
+    ///
+    /// TODO: replace other ApexAlarm builders with this
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="population"></param>
+    /// <param name="settings"></param>
+    /// <returns></returns>
+    public (ZoneNode, Zone) AddApexAlarmZone(
+        ZoneNode start,
+        WavePopulation? population = null,
+        WaveSettings? settings = null)
+    {
+        var startZone = planner.GetZone(start);
+
+        if (startZone == null)
+        {
+            Plugin.Logger.LogWarning($"AddApexAlarmZone() returned early due to missing zones: startZone={startZone}");
+            throw new ArgumentException("Missing zone for ZoneNode");
+        }
+
+        var (end, endZone) = AddZone(start, new ZoneNode());
+
+        startZone.AmmoPacks += 3.0;
+        startZone.ToolPacks += 2.0;
+
+        var puzzle = director.Tier switch
+        {
+            "A" => ChainedPuzzle.AlarmClass8,
+            "B" => ChainedPuzzle.AlarmClass9,
+            "C" => ChainedPuzzle.AlarmClass10,
+            "D" => ChainedPuzzle.AlarmClass11,
+            "E" => ChainedPuzzle.AlarmClass12,
+
+            _ => ChainedPuzzle.AlarmClass10,
+        };
+
+        endZone.SecurityGateToEnter = SecurityGate.Apex;
+        endZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle with
+        {
+            Population = population ?? puzzle.Population,
+            Settings = settings ?? puzzle.Settings
+        });
+
+        return (end, endZone);
+    }
+
+    /// <summary>
     /// Works somewhat like adding an Apex alarm except here we look to add a pretty difficult
     /// alarm from the scan list
     /// </summary>
