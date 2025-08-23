@@ -1218,7 +1218,7 @@ public class Level
             #region LevelLayout.Build()
 
             // var layout = LevelLayout.Build(this, director, objective, direction);
-            var layout = new LevelLayout(level, director, level.Settings, level.Planner);
+            var layout = new LevelLayout(level, director, objective, level.Settings, level.Planner);
 
             level.Layouts[Bulkhead.Main] = layout;
 

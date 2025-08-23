@@ -21,32 +21,41 @@ public partial record LevelLayout : DataBlock
 {
     #region hidden data
     [JsonIgnore]
-    private Level level;
+    private readonly Level level;
 
     [JsonIgnore]
-    private BuildDirector director;
+    private readonly BuildDirector director;
+
+    [JsonIgnore]
+    private readonly WardenObjective objective;
 
     [JsonIgnore]
     private RelativeDirection direction;
 
     [JsonIgnore]
-    private LayoutPlanner planner;
+    private readonly LayoutPlanner planner;
 
     [JsonIgnore]
-    private LevelSettings settings;
+    private readonly LevelSettings settings;
     #endregion
 
     public int ZoneAliasStart { get; set; }
 
     public List<Zone> Zones { get; set; } = new();
 
-    public LevelLayout(Level level, BuildDirector director, LevelSettings settings, LayoutPlanner planner)
+    public LevelLayout(
+        Level level,
+        BuildDirector director,
+        WardenObjective objective,
+        LevelSettings settings,
+        LayoutPlanner planner)
     {
         // Always assign a new persistent id upfront to level layout
         PersistentId = Generator.GetPersistentId();
 
         this.director = director;
         this.level = level;
+        this.objective = objective;
         this.planner = planner;
         this.settings = settings;
     }
@@ -929,7 +938,7 @@ public partial record LevelLayout : DataBlock
         WardenObjective objective)
     {
         var direction = level.Settings.GetDirections(director.Bulkhead);
-        var layout = new LevelLayout(level, director, level.Settings, level.Planner)
+        var layout = new LevelLayout(level, director, objective, level.Settings, level.Planner)
         {
             Name = $"{level.Tier}{level.Index} {level.Name} {director.Bulkhead}",
             ZoneAliasStart = level.GetZoneAliasStart(director.Bulkhead),
