@@ -95,6 +95,144 @@ public partial record LevelLayout
     }
 
     /// <summary>
+    ///
+    /// </summary>
+    /// <param name="objective"></param>
+    /// <returns></returns>
+    private ZoneNode CentralGeneratorCluster_AddCellBranch(ZoneNode start, WardenObjective objective, Altitude? altitude = null)
+    {
+        var cellNode = new ZoneNode();
+        var cellZone = new Zone(level);
+
+        switch (level.Tier, director.Bulkhead)
+        {
+            #region Tier: A
+            case ("A", Bulkhead.Main):
+            {
+                cellNode = AddBranch(start, Generator.Flip(0.2) ? 2 : 1).Last();
+                cellZone = planner.GetZone(cellNode);
+
+                if (altitude != null)
+                    cellZone.Altitude = altitude;
+
+                break;
+            }
+
+            case ("A", _):
+            {
+                var (node, zone) = AddZone(start);
+
+                if (altitude != null)
+                    zone.Altitude = altitude;
+
+                cellNode = node;
+                break;
+            }
+            #endregion
+
+            #region Tier: B
+            case ("B", Bulkhead.Main):
+            {
+                cellNode = AddBranch(start, Generator.Flip(0.2) ? 2 : 1).Last();
+                cellZone = planner.GetZone(cellNode);
+
+                if (altitude != null)
+                    cellZone.Altitude = altitude;
+
+                break;
+            }
+
+            case ("B", _):
+            {
+                var (node, zone) = AddZone(start);
+
+                if (altitude != null)
+                    zone.Altitude = altitude;
+
+                cellNode = node;
+                break;
+            }
+            #endregion
+
+            #region Tier: C
+            case ("C", Bulkhead.Main):
+            {
+                cellNode = AddBranch(start, Generator.Flip(0.2) ? 2 : 1).Last();
+                cellZone = planner.GetZone(cellNode);
+
+                if (altitude != null)
+                    cellZone.Altitude = altitude;
+
+                break;
+            }
+
+            case ("C", _):
+            {
+                var (node, zone) = AddZone(start);
+
+                if (altitude != null)
+                    zone.Altitude = altitude;
+
+                cellNode = node;
+                break;
+            }
+            #endregion
+
+            #region Tier: D
+            case ("D", Bulkhead.Main):
+            {
+                cellNode = AddBranch(start, Generator.Flip(0.2) ? 2 : 1).Last();
+                cellZone = planner.GetZone(cellNode);
+
+                if (altitude != null)
+                    cellZone.Altitude = altitude;
+
+                break;
+            }
+
+            case ("D", _):
+            {
+                var (node, zone) = AddZone(start);
+
+                if (altitude != null)
+                    zone.Altitude = altitude;
+
+                cellNode = node;
+                break;
+            }
+            #endregion
+
+            #region Tier: E
+            case ("E", Bulkhead.Main):
+            {
+                cellNode = AddBranch(start, Generator.Flip(0.2) ? 2 : 1).Last();
+                cellZone = planner.GetZone(cellNode);
+
+                if (altitude != null)
+                    cellZone.Altitude = altitude;
+
+                break;
+            }
+
+            case ("E", _):
+            {
+                var (node, zone) = AddZone(start);
+
+                if (altitude != null)
+                    zone.Altitude = altitude;
+
+                cellNode = node;
+                break;
+            }
+            #endregion
+        }
+
+        cellZone.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
+
+        return cellNode;
+    }
+
+    /// <summary>
     /// Central Generator Cluster objective
     ///
     /// Number of cells to distribute can be between 2 and 5
@@ -152,16 +290,9 @@ public partial record LevelLayout
                             Altitude.OnlyHigh
                         };
 
-                        var longerBranch = director.Bulkhead == Bulkhead.Main;
-
                         for (var c = 0; c < objective.CentralGeneratorCluster_NumberOfGenerators; c++)
                         {
-                            var zone = planner.GetZone(AddBranch(start, longerBranch ? 2 : 1).Last());
-
-                            longerBranch = false;
-
-                            zone.Altitude = Generator.Draw(altitudes)!;
-                            zone.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
+                            CentralGeneratorCluster_AddCellBranch(start, objective, Generator.Draw(altitudes)!);
                         }
 
                         var invertedFog = Generator.Flip();
@@ -217,12 +348,7 @@ public partial record LevelLayout
 
                         for (var c = 0; c < objective.CentralGeneratorCluster_NumberOfGenerators; c++)
                         {
-                            var zone = planner.GetZone(AddBranch(start, longerBranch ? 2 : 1).Last());
-
-                            longerBranch = false;
-
-                            zone.Altitude = Generator.Draw(altitudes)!;
-                            zone.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
+                            CentralGeneratorCluster_AddCellBranch(start, objective, Generator.Draw(altitudes)!);
                         }
 
                         var invertedFog = Generator.Flip();
@@ -281,13 +407,9 @@ public partial record LevelLayout
                         for (var c = 0; c < objective.CentralGeneratorCluster_NumberOfGenerators; c++)
                         {
                             var branchStart = c < 3 ? start : Generator.Draw(cellEnds)!;
-                            var node = AddBranch(branchStart, c < 3 && Generator.Flip() ? 2 : 1).Last();
-                            var zone = planner.GetZone(node);
+                            var node = CentralGeneratorCluster_AddCellBranch(branchStart, objective, Generator.Draw(altitudes)!);
 
                             cellEnds.Add(node);
-
-                            zone.Altitude = Generator.Draw(altitudes)!;
-                            zone.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
                         }
 
                         var invertedFog = Generator.Flip();
