@@ -27,7 +27,7 @@ public partial record WardenObjective
             ("C", Bulkhead.Extreme) => 2,
             ("C", Bulkhead.Overload) => 3,
 
-            ("D", Bulkhead.Main) => Generator.Between(4, 5),
+            ("D", Bulkhead.Main) => 4,
             ("D", Bulkhead.Extreme) => Generator.Between(3, 4),
             ("D", Bulkhead.Overload) => 3,
 
