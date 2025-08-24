@@ -735,7 +735,7 @@ public partial record WardenObjective
                 ("C", Bulkhead.Main) => GenericWave.Exit_Objective_Medium,
                 ("C", Bulkhead.Extreme) => new GenericWave
                 {
-                    Settings = WaveSettings.SingleWave_MiniBoss_12pts,
+                    Settings = WaveSettings.SingleWave_MiniBoss_16pts,
                     Population = WavePopulation.OnlyHybrids
                 },
                 ("C", Bulkhead.Overload) => GenericWave.ErrorAlarm_Normal,
