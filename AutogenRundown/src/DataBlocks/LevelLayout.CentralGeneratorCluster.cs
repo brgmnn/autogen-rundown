@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Alarms;
+﻿using System.Runtime.CompilerServices;
+using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Items;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.CentralGeneratorCluster;
@@ -530,8 +531,102 @@ public partial record LevelLayout
             #region Tier: D
             case ("D", Bulkhead.Main):
             {
-                cellNode = AddBranch(start, Generator.Flip(0.2) ? 2 : 1).Last();
-                cellZone = planner.GetZone(cellNode);
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Single zone to cell, guarded by keycard
+                    (0.7, () => { (cellNode, cellZone) = BuildChallenge_KeycardInZone(start); }),
+
+                    // Single zone to cell, door locked down in source zone
+                    (0.7, () => { (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(start, 0); }),
+
+                    // 2 zones
+                    (1.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+
+                        if (altitude != null)
+                            midZone.Altitude = altitude;
+
+                        (cellNode, cellZone) = AddZone(mid);
+                    }),
+
+                    // 2 zones, with boss
+                    (0.5, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+
+                        if (altitude != null)
+                            midZone.Altitude = altitude;
+
+                        (cellNode, cellZone) = BuildChallenge_BossFight(mid);
+                    }),
+
+                    // Locked terminal in side zone
+                    (1.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+
+                        if (altitude != null)
+                            midZone.Altitude = altitude;
+
+                        (cellNode, cellZone) = BuildChallenge_LockedTerminalPasswordInSide(mid);
+                    }),
+
+                    // Password in side zone
+                    (1.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+
+                        if (altitude != null)
+                            midZone.Altitude = altitude;
+
+                        (cellNode, cellZone) = BuildChallenge_KeycardInSide(mid, 1);
+                    }),
+
+                    // 2 zones, with cell behind keycard
+                    (1.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+
+                        if (altitude != null)
+                            midZone.Altitude = altitude;
+
+                        (cellNode, cellZone) = BuildChallenge_KeycardInZone(mid);
+                    }),
+
+                    // Tough enemy error alarm. 2 zones, error turnoff in cell zone
+                    (1.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+
+                        if (altitude != null)
+                            midZone.Altitude = altitude;
+
+                        (cellNode, cellZone) = AddZone(mid);
+
+                        var population = Generator.Select(new List<(double, WavePopulation)>
+                        {
+                            (2.0, WavePopulation.OnlyInfestedStrikers),
+                            (1.0, WavePopulation.Baseline_InfectedHybrids),
+                            (1.0, WavePopulation.Baseline_Hybrids),
+                            (level.Settings.HasChargers() ? 1.0 : 0.0, WavePopulation.OnlyChargers),
+                            (level.Settings.HasNightmares() ? 1.0 : 0.0, WavePopulation.OnlyNightmares),
+                        });
+
+                        AddErrorAlarm(mid, cellNode, WaveSettings.Error_Normal, population);
+                    }),
+
+                    // 2 zones, with locked second door on terminal
+                    (1.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+
+                        if (altitude != null)
+                            midZone.Altitude = altitude;
+
+                        (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(mid, 0);
+                    }),
+                });
 
                 if (altitude != null)
                     cellZone.Altitude = altitude;
@@ -539,14 +634,133 @@ public partial record LevelLayout
                 break;
             }
 
-            case ("D", _):
+            case ("D", Bulkhead.Extreme):
             {
-                var (node, zone) = AddZone(start);
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Single zone to cell
+                    (1.0, () => { (cellNode, cellZone) = AddZone(start); }),
+
+                    // Single zone to cell, guarded by keycard
+                    (1.0, () => { (cellNode, cellZone) = BuildChallenge_KeycardInZone(start); }),
+
+                    // Single zone to cell, door locked down in source zone
+                    (1.0, () => { (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(start, 0); }),
+
+                    // 2 zones, with cell behind keycard
+                    (1.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+
+                        if (altitude != null)
+                            midZone.Altitude = altitude;
+
+                        (cellNode, cellZone) = BuildChallenge_KeycardInZone(mid);
+                    }),
+
+                    // 2 zones, with locked second door on terminal
+                    (1.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+
+                        if (altitude != null)
+                            midZone.Altitude = altitude;
+
+                        (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(mid, 0);
+                    }),
+
+                    // 2 zones, with cell behind keycard
+                    (1.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+
+                        if (altitude != null)
+                            midZone.Altitude = altitude;
+
+                        (cellNode, cellZone) = BuildChallenge_KeycardInZone(mid);
+                    }),
+
+                    // 2 zones, with locked second door on side zone
+                    (1.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+
+                        if (altitude != null)
+                            midZone.Altitude = altitude;
+
+                        (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(mid, 1);
+                    }),
+                });
 
                 if (altitude != null)
-                    zone.Altitude = altitude;
+                    cellZone.Altitude = altitude;
 
-                cellNode = node;
+                break;
+            }
+
+            case ("D", Bulkhead.Overload):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Single zone to cell, door locked down in source zone
+                    (0.7, () => { (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(start, 0); }),
+
+                    // Single zone to cell, guarded by keycard
+                    (0.7, () => { (cellNode, cellZone) = BuildChallenge_KeycardInZone(start); }),
+
+                    // Single zone to cell, apex alarm
+                    (1.0, () =>
+                    {
+                        (cellNode, cellZone) = AddApexAlarmZone(
+                            start,
+                            WavePopulation.Baseline,
+                            WaveSettings.Baseline_Normal);
+                    }),
+
+                    // Single zone to cell, apex alarm
+                    (1.0, () =>
+                    {
+                        (cellNode, cellZone) = AddApexAlarmZone(
+                            start,
+                            WavePopulation.Baseline,
+                            WaveSettings.Baseline_Normal);
+                    }),
+
+                    // Tough enemy error alarm. 2 zones, error turnoff in cell zone
+                    (1.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+
+                        if (altitude != null)
+                            midZone.Altitude = altitude;
+
+                        (cellNode, cellZone) = AddZone(mid);
+
+                        var population = Generator.Select(new List<(double, WavePopulation)>
+                        {
+                            (2.0, WavePopulation.OnlyInfestedStrikers),
+                            (1.0, WavePopulation.Baseline_InfectedHybrids),
+                            (1.0, WavePopulation.OnlyChargers),
+                        });
+
+                        AddErrorAlarm(mid, cellNode, WaveSettings.Error_Normal, population);
+                    }),
+
+                    // 2 zones, with boss in one
+                    (1.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+
+                        if (altitude != null)
+                            midZone.Altitude = altitude;
+
+                        (cellNode, cellZone) = BuildChallenge_BossFight(mid);
+                    }),
+                });
+
+                if (altitude != null)
+                    cellZone.Altitude = altitude;
+
                 break;
             }
             #endregion
