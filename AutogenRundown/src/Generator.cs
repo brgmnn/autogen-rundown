@@ -218,6 +218,14 @@ static public class Generator
     }
 
     /// <summary>
+    /// TODO: implement
+    /// </summary>
+    /// <param name="collection"></param>
+    public static void DrawSelectRun_PersistedList(ICollection<(double weight, int count, Action action)> collection)
+    {
+    }
+
+    /// <summary>
     /// Draws an element from a collection. The collection is a list of:
     ///
     ///     (relative weighting, item count, item)

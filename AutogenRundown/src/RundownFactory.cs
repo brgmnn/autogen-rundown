@@ -198,9 +198,9 @@ public static class RundownFactory
         #if DEBUG
         if (withFixed)
         {
-            const string tier = "A";
+            const string tier = "D";
             const string title = "Cluster";
-            const Complex complex = Complex.Mining;
+            const Complex complex = Complex.Service;
 
             var mainDirector = new BuildDirector
             {
@@ -218,7 +218,7 @@ public static class RundownFactory
                 Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.CentralGeneratorCluster,
+                Objective = WardenObjectiveType.GatherSmallItems,
             };
             secondDirector.GenPoints();
 
@@ -228,7 +228,7 @@ public static class RundownFactory
                 Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.CentralGeneratorCluster,
+                Objective = WardenObjectiveType.GatherSmallItems,
             };
             thirdDirector.GenPoints();
 
@@ -243,8 +243,9 @@ public static class RundownFactory
                     OverloadDirector = thirdDirector,
                     Settings = new LevelSettings(tier)
                     {
-                        // Bulkheads = Bulkhead.Main
-                        Bulkheads = Bulkhead.Main | Bulkhead.Overload
+                        Bulkheads = Bulkhead.Main
+                        // Bulkheads = Bulkhead.Main | Bulkhead.Extreme
+                        // Bulkheads = Bulkhead.Main | Bulkhead.Overload
                         // Bulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload
                     },
                     Index = rundown.TierC_Count + 1,
@@ -837,12 +838,44 @@ public static class RundownFactory
         }
         #endregion
 
+        // Seasonal Rundown -- Rundown 8 replacement
+        #region Seasonal Rundown
+        {
+            // Reads or generates the seed
+            Generator.ReadOrSetSeed(dailySeed);
+            Generator.Reload();
+
+            var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
+            var seasonal = BuildRundown(new Rundown
+            {
+                PersistentId = Rundown.R_Seasonal,
+                Title = $"{name.ToUpper()}",
+                StoryTitle = $"<color=green>RND://</color>SEASON {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
+
+                TierA_Count = 1,
+                TierD_Count = 3,
+                TierE_Count = 1
+            }, true, false);
+
+            seasonal.VisualsETier = Color.MenuVisuals_DailyE;
+
+            Bins.Rundowns.AddBlock(seasonal);
+        }
+        #endregion
+
         // Only load the rundowns we want
         gameSetup.RundownIdsToLoad = new List<uint>
         {
             Rundown.R_Daily, // Rundown.R7,
             Rundown.R_Monthly, // Rundown.R4,
             Rundown.R_Weekly, // Rundown.R5,
+
+            // Rundown.R_Daily,
+            // Rundown.R_Daily,
+            // Rundown.R_Daily,
+            // Rundown.R_Daily,
+            //
+            // Rundown.R_Seasonal, // Rundown.R8,
         };
         Bins.GameSetups.AddBlock(gameSetup);
 

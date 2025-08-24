@@ -84,6 +84,13 @@ public class RundownNames
                 rundown.m_rundownText.text = $"<size=70%><color=#58fcee>MONTHLY</color><color=#444444>:</color> {rundownData?.Title}</size>";
             }
 
+            else if (num == 7)
+            {
+                // var rundownData = Bins.Rundowns.Find(Rundown.R_Monthly);
+
+                rundown.m_rundownText.text = $"<size=70%><color=#58fcee>SEASON</color><color=#444444>:</color> Fall</size>";
+            }
+
             num++;
         }
     }
