@@ -924,8 +924,15 @@ public record Zone : DataBlock
         ICollection<(double, int, WavePopulation)> wavePopulationPack,
         ICollection<(double, int, WaveSettings)> waveSettingsPack)
     {
-        if (LocalIndex == 0 || Alarm == ChainedPuzzle.SkipZone || Alarm != ChainedPuzzle.None)
+        // TODO: should we just be trying to set the alarm if there isn't already an alarm here?
+        if (LocalIndex == 0 ||
+            Alarm == ChainedPuzzle.SkipZone ||
+            Alarm == ChainedPuzzle.AlarmError_Template ||
+            Alarm.PersistentId != 0 ||
+            Alarm != ChainedPuzzle.None)
+        {
             return;
+        }
 
         // Grab a random puzzle from the puzzle pack
         var puzzle = Generator.DrawSelect(puzzlePack);

@@ -1026,6 +1026,7 @@ public record ChainedPuzzle : DataBlock
     public static readonly ChainedPuzzle AlarmError_Template = new()
     {
         PublicAlarmName = "Class ://ERROR! Alarm",
+        Comment = "Error alarm template",
         AlarmSoundStart = 2200133294,
         AlarmSoundStop = 1190355274,
         TriggerAlarmOnActivate = false,
