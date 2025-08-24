@@ -32,28 +32,28 @@ public partial record LevelLayout
         var infectious = level.FogSettings.IsInfectious;
         var generators = objective.CentralGeneratorCluster_NumberOfGenerators;
 
-        return (shape, generators) switch
+        return (shape, infectious, generators) switch
         {
-            // Ascending fog
-            (GeneratorFogShape.Ascending, 2) => new List<GeneralFogStep>
+            // Ascending fog (non-infectious)
+            (GeneratorFogShape.Ascending, false, 2) => new List<GeneralFogStep>
             {
                 new() { Fog = Fog.Normal_Altitude_2 },
                 new() { Fog = Fog.Normal_Altitude_8 } // completion scan
             },
-            (GeneratorFogShape.Ascending, 3) => new List<GeneralFogStep>
+            (GeneratorFogShape.Ascending, false, 3) => new List<GeneralFogStep>
             {
                 new() { Fog = Fog.Normal_Altitude_0 },
                 new() { Fog = Fog.Normal_Altitude_4 },
                 new() { Fog = Fog.Normal_Altitude_8 } // completion scan
             },
-            (GeneratorFogShape.Ascending, 4) => new List<GeneralFogStep>
+            (GeneratorFogShape.Ascending, false, 4) => new List<GeneralFogStep>
             {
                 new() { Fog = Fog.Normal_Altitude_minus2 },
                 new() { Fog = Fog.Normal_Altitude_2 },
                 new() { Fog = Fog.Normal_Altitude_6 },
                 new() { Fog = Fog.Normal_Altitude_8 } // completion scan
             },
-            (GeneratorFogShape.Ascending, 5) => new List<GeneralFogStep>
+            (GeneratorFogShape.Ascending, false, 5) => new List<GeneralFogStep>
             {
                 new() { Fog = Fog.Normal_Altitude_minus2 },
                 new() { Fog = Fog.Normal_Altitude_2 },
@@ -62,26 +62,26 @@ public partial record LevelLayout
                 new() { Fog = Fog.Normal_Altitude_8 } // completion scan
             },
 
-            // Descending fog
-            (GeneratorFogShape.Descending, 2) => new List<GeneralFogStep>
+            // Descending fog (non-infectious)
+            (GeneratorFogShape.Descending, false, 2) => new List<GeneralFogStep>
             {
                 new() { Fog = Fog.Inverted_Altitude_2 },
                 new() { Fog = Fog.Inverted_Altitude_minus4 } // completion scan
             },
-            (GeneratorFogShape.Descending, 3) => new List<GeneralFogStep>
+            (GeneratorFogShape.Descending, false, 3) => new List<GeneralFogStep>
             {
                 new() { Fog = Fog.Inverted_Altitude_4 },
                 new() { Fog = Fog.Inverted_Altitude_0 },
                 new() { Fog = Fog.Inverted_Altitude_minus4 } // completion scan
             },
-            (GeneratorFogShape.Descending, 4) => new List<GeneralFogStep>
+            (GeneratorFogShape.Descending, false, 4) => new List<GeneralFogStep>
             {
                 new() { Fog = Fog.Inverted_Altitude_6 },
                 new() { Fog = Fog.Inverted_Altitude_2 },
                 new() { Fog = Fog.Inverted_Altitude_minus2 },
                 new() { Fog = Fog.Inverted_Altitude_minus8 } // completion scan
             },
-            (GeneratorFogShape.Descending, 5) => new List<GeneralFogStep>
+            (GeneratorFogShape.Descending, false, 5) => new List<GeneralFogStep>
             {
                 new() { Fog = Fog.Inverted_Altitude_8 },
                 new() { Fog = Fog.Inverted_Altitude_4 },
@@ -90,10 +90,64 @@ public partial record LevelLayout
                 new() { Fog = Fog.Inverted_Altitude_minus8 } // completion scan
             },
 
+            // Ascending fog (infectious)
+            (GeneratorFogShape.Ascending, true, 2) => new List<GeneralFogStep>
+            {
+                new() { Fog = Fog.NormalInfectious_Altitude_2 },
+                new() { Fog = Fog.NormalInfectious_Altitude_8 } // completion scan
+            },
+            (GeneratorFogShape.Ascending, true, 3) => new List<GeneralFogStep>
+            {
+                new() { Fog = Fog.NormalInfectious_Altitude_0 },
+                new() { Fog = Fog.NormalInfectious_Altitude_4 },
+                new() { Fog = Fog.NormalInfectious_Altitude_8 } // completion scan
+            },
+            (GeneratorFogShape.Ascending, true, 4) => new List<GeneralFogStep>
+            {
+                new() { Fog = Fog.NormalInfectious_Altitude_minus2 },
+                new() { Fog = Fog.NormalInfectious_Altitude_2 },
+                new() { Fog = Fog.NormalInfectious_Altitude_6 },
+                new() { Fog = Fog.NormalInfectious_Altitude_8 } // completion scan
+            },
+            (GeneratorFogShape.Ascending, true, 5) => new List<GeneralFogStep>
+            {
+                new() { Fog = Fog.NormalInfectious_Altitude_minus2 },
+                new() { Fog = Fog.NormalInfectious_Altitude_2 },
+                new() { Fog = Fog.NormalInfectious_Altitude_4 },
+                new() { Fog = Fog.NormalInfectious_Altitude_6 },
+                new() { Fog = Fog.NormalInfectious_Altitude_8 } // completion scan
+            },
+
+            // Descending fog (infectious)
+            (GeneratorFogShape.Descending, true, 2) => new List<GeneralFogStep>
+            {
+                new() { Fog = Fog.InvertedInfectious_Altitude_2 },
+                new() { Fog = Fog.InvertedInfectious_Altitude_minus4 } // completion scan
+            },
+            (GeneratorFogShape.Descending, true, 3) => new List<GeneralFogStep>
+            {
+                new() { Fog = Fog.InvertedInfectious_Altitude_4 },
+                new() { Fog = Fog.InvertedInfectious_Altitude_0 },
+                new() { Fog = Fog.InvertedInfectious_Altitude_minus4 } // completion scan
+            },
+            (GeneratorFogShape.Descending, true, 4) => new List<GeneralFogStep>
+            {
+                new() { Fog = Fog.InvertedInfectious_Altitude_6 },
+                new() { Fog = Fog.InvertedInfectious_Altitude_2 },
+                new() { Fog = Fog.InvertedInfectious_Altitude_minus2 },
+                new() { Fog = Fog.InvertedInfectious_Altitude_minus8 } // completion scan
+            },
+            (GeneratorFogShape.Descending, true, 5) => new List<GeneralFogStep>
+            {
+                new() { Fog = Fog.InvertedInfectious_Altitude_8 },
+                new() { Fog = Fog.InvertedInfectious_Altitude_4 },
+                new() { Fog = Fog.InvertedInfectious_Altitude_0 },
+                new() { Fog = Fog.InvertedInfectious_Altitude_minus4 },
+                new() { Fog = Fog.InvertedInfectious_Altitude_minus8 } // completion scan
+            },
+
             _ => new List<GeneralFogStep>()
         };
-
-        // return steps;
     }
 
     /// <summary>
@@ -1069,6 +1123,36 @@ public partial record LevelLayout
         startZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
         startZone.ConsumableDistributionInZone = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
 
+        #region Fog settings for level
+        // Generally this affects more than just the central generator cluster mission, so we
+        // limit the number of generator missions to just 1 in the level.
+        // TODO: this will also affect any flood-the-map with fog objectives
+
+        var invertedFog = Generator.Flip();
+        var isInfectious = level.FogSettings.IsInfectious;
+        level.FogSettings = (isInfectious, invertedFog) switch
+        {
+            (false, false) => Fog.Normal_Altitude_minus4,
+            (false, true) => Fog.Inverted_Altitude_8,
+            (true, false) => Fog.NormalInfectious_Altitude_minus4,
+            (true, true) => Fog.InvertedInfectious_Altitude_8,
+        };
+        objective.FogOnGotoWin = (isInfectious, invertedFog) switch
+        {
+            (false, false) => Fog.Inverted_Altitude_6,
+            (false, true) => Fog.Normal_Altitude_minus6,
+            (true, false) => Fog.NormalInfectious_Altitude_6,
+            (true, true) => Fog.InvertedInfectious_Altitude_minus6,
+        };
+        objective.FogTransitionDurationOnGotoWin = 6.0;
+        objective.CentralGeneratorCluster_FogDataSteps = CentralGeneratorCluster_BuildFogSteps(
+            objective,
+            invertedFog ? GeneratorFogShape.Descending : GeneratorFogShape.Ascending,
+            objective.CentralGeneratorCluster_NumberOfGenerators);
+
+        #endregion
+
+        // Build layout
         switch (level.Tier, director.Bulkhead)
         {
             #region Tier: A
@@ -1098,17 +1182,6 @@ public partial record LevelLayout
                         {
                             CentralGeneratorCluster_AddCellBranch(start, Generator.Draw(altitudes)!);
                         }
-
-                        var invertedFog = Generator.Flip();
-
-                        level.FogSettings = invertedFog ? Fog.Inverted_Altitude_8 : Fog.Normal_Altitude_minus4;
-                        objective.CentralGeneratorCluster_FogDataSteps = CentralGeneratorCluster_BuildFogSteps(
-                            objective,
-                            invertedFog ? GeneratorFogShape.Descending : GeneratorFogShape.Ascending,
-                            objective.CentralGeneratorCluster_NumberOfGenerators);
-
-                        objective.FogOnGotoWin = invertedFog ? Fog.Normal_Altitude_minus6 : Fog.Inverted_Altitude_6;
-                        objective.FogTransitionDurationOnGotoWin = 6.0;
                     }),
                 });
                 break;
@@ -1154,17 +1227,6 @@ public partial record LevelLayout
                         {
                             CentralGeneratorCluster_AddCellBranch(start, Generator.Draw(altitudes)!);
                         }
-
-                        var invertedFog = Generator.Flip();
-
-                        level.FogSettings = invertedFog ? Fog.Inverted_Altitude_8 : Fog.Normal_Altitude_minus4;
-                        objective.CentralGeneratorCluster_FogDataSteps = CentralGeneratorCluster_BuildFogSteps(
-                            objective,
-                            invertedFog ? GeneratorFogShape.Descending : GeneratorFogShape.Ascending,
-                            objective.CentralGeneratorCluster_NumberOfGenerators);
-
-                        objective.FogOnGotoWin = invertedFog ? Fog.Normal_Altitude_minus6 : Fog.Inverted_Altitude_6;
-                        objective.FogTransitionDurationOnGotoWin = 6.0;
                     }),
                 });
                 break;
@@ -1215,17 +1277,6 @@ public partial record LevelLayout
 
                             cellEnds.Add(node);
                         }
-
-                        var invertedFog = Generator.Flip();
-
-                        level.FogSettings = invertedFog ? Fog.Inverted_Altitude_8 : Fog.Normal_Altitude_minus4;
-                        objective.CentralGeneratorCluster_FogDataSteps = CentralGeneratorCluster_BuildFogSteps(
-                            objective,
-                            invertedFog ? GeneratorFogShape.Descending : GeneratorFogShape.Ascending,
-                            objective.CentralGeneratorCluster_NumberOfGenerators);
-
-                        objective.FogOnGotoWin = invertedFog ? Fog.Normal_Altitude_minus6 : Fog.Inverted_Altitude_6;
-                        objective.FogTransitionDurationOnGotoWin = 6.0;
                     }),
                 });
                 break;
@@ -1275,17 +1326,6 @@ public partial record LevelLayout
 
                             cellEnds.Add(node);
                         }
-
-                        var invertedFog = Generator.Flip();
-
-                        level.FogSettings = invertedFog ? Fog.Inverted_Altitude_8 : Fog.Normal_Altitude_minus4;
-                        objective.CentralGeneratorCluster_FogDataSteps = CentralGeneratorCluster_BuildFogSteps(
-                            objective,
-                            invertedFog ? GeneratorFogShape.Descending : GeneratorFogShape.Ascending,
-                            objective.CentralGeneratorCluster_NumberOfGenerators);
-
-                        objective.FogOnGotoWin = invertedFog ? Fog.Normal_Altitude_minus6 : Fog.Inverted_Altitude_6;
-                        objective.FogTransitionDurationOnGotoWin = 6.0;
                     }),
                 });
                 break;
@@ -1335,17 +1375,6 @@ public partial record LevelLayout
 
                             cellEnds.Add(node);
                         }
-
-                        var invertedFog = Generator.Flip();
-
-                        level.FogSettings = invertedFog ? Fog.Inverted_Altitude_8 : Fog.Normal_Altitude_minus4;
-                        objective.CentralGeneratorCluster_FogDataSteps = CentralGeneratorCluster_BuildFogSteps(
-                            objective,
-                            invertedFog ? GeneratorFogShape.Descending : GeneratorFogShape.Ascending,
-                            objective.CentralGeneratorCluster_NumberOfGenerators);
-
-                        objective.FogOnGotoWin = invertedFog ? Fog.Normal_Altitude_minus6 : Fog.Inverted_Altitude_6;
-                        objective.FogTransitionDurationOnGotoWin = 6.0;
                     }),
                 });
                 break;
