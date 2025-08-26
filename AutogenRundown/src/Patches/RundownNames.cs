@@ -47,10 +47,6 @@ public class RundownNames
                 UnityEngine.Object.Destroy(((Component)(object)rundown.m_altText).gameObject);
             }
 
-            //CM_PageRundown_New r2;
-            // TIMER?!
-            //MainMenuGuiLayer.Current.PageRundownNew.m_rundownTimerData.
-
             // Rundown 7
             ///
             /// Daily
@@ -84,11 +80,12 @@ public class RundownNames
                 rundown.m_rundownText.text = $"<size=70%><color=#58fcee>MONTHLY</color><color=#444444>:</color> {rundownData?.Title}</size>";
             }
 
+            // Seasonal
             else if (num == 7)
             {
-                // var rundownData = Bins.Rundowns.Find(Rundown.R_Monthly);
+                var rundownData = Bins.Rundowns.Find(Rundown.R_Seasonal);
 
-                rundown.m_rundownText.text = $"<size=70%><color=#58fcee>SEASON</color><color=#444444>:</color> Fall</size>";
+                rundown.m_rundownText.text = $"<size=70%><color=#ff3311>SEASONAL</color><color=#444444>:</color> FALL '25</size>";
             }
 
             num++;

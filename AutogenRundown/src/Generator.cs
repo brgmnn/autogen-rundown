@@ -506,7 +506,7 @@ static public class Generator
     /// </summary>
     /// <param name="str"></param>
     /// <returns></returns>
-    private static int GetHashCode(this string str)
+    public static int GetHashCode(this string str)
     {
         unchecked
         {

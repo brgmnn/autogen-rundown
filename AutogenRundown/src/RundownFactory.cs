@@ -870,12 +870,13 @@ public static class RundownFactory
             Rundown.R_Monthly, // Rundown.R4,
             Rundown.R_Weekly, // Rundown.R5,
 
-            // Rundown.R_Daily,
-            // Rundown.R_Daily,
-            // Rundown.R_Daily,
-            // Rundown.R_Daily,
-            //
-            // Rundown.R_Seasonal, // Rundown.R8,
+            // These are no-ops and will be disabled
+            Rundown.R_Daily,
+            Rundown.R_Daily,
+            Rundown.R_Daily,
+            Rundown.R_Daily,
+
+            Rundown.R_Seasonal, // Rundown.R8,
         };
         Bins.GameSetups.AddBlock(gameSetup);
 
