@@ -251,7 +251,11 @@ public record Zone : DataBlock
                 (SubComplex, CustomGeomorph) = Generator.Pick(new List<(SubComplex, string)>
                 {
                     (SubComplex.All,        "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_32x32_lab_exit_01.prefab"),
-                    (SubComplex.DataCenter, "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_exit_01.prefab")
+                    (SubComplex.DataCenter, "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_exit_01.prefab"),
+
+                    // --- MOD Geomorphs ---
+                    // SamDB
+                    (SubComplex.Floodways, "Assets/Custom Geo's/Labs/lab_exit_V1/lab_exit_V1.prefab")
                 });
                 break;
 
@@ -262,6 +266,7 @@ public record Zone : DataBlock
                     (SubComplex.Gardens,   "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_elevator_Gardens_exit_01.prefab"),
 
                     // --- MOD Geomorphs ---
+                    // SamDB
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_exit/floodways_exit_tile.prefab")
                 });
                 break;
@@ -480,6 +485,9 @@ public record Zone : DataBlock
                     // (SubComplex.Lab, "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
                     // TODO: This tile seems to not have enough room to spawn items like cells and bulkhead keys
                     // (SubComplex.DataCenter, "Assets/Bundles/RLC_Tech/geo_64x64_tech_datacenter_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
+
+                    // SamDB
+                    (SubComplex.Lab, "Assets/Custom Geo's/Labs/lab_i_tile/lab_i_tile_V1.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                 });
                 break;
 
@@ -614,9 +622,14 @@ public record Zone : DataBlock
 
             case Complex.Tech:
             {
-                CustomGeomorph = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_I_HA_03_v2.prefab";
-                SubComplex = SubComplex.Lab;
-                Coverage = new CoverageMinMax { Min = 30.0, Max = 40.0 };
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                {
+                    (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_I_HA_03_v2.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
+                    // --- MOD Geomorphs ---
+                    // SamDB
+                    (SubComplex.Lab, "Assets/Custom Geo's/Labs/lab_i_tile/lab_i_tile_V1.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+                });
                 break;
             }
 
@@ -834,6 +847,9 @@ public record Zone : DataBlock
                     // --- MOD Geomorphs ---
                     // Floweria
                     (SubComplex.Lab, "Assets/Prefabs/Geomorph/Tech/geo_lab_FA_dead_end_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
+
+                    // SamDB
+                    (SubComplex.Lab, "Assets/Custom Geo's/Labs/Labs dead end neonate cargo room/Labs_Neonate_cargo.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
                 });
                 break;
 

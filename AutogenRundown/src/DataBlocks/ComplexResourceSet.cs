@@ -537,6 +537,57 @@ public record ComplexResourceSet : DataBlock
             SubComplex = SubComplex.DataCenter
         });
         #endregion
+
+        #region MODDER: SamDB
+        // A revamped labs elevator tile. It has a full 360 circular pathway as well as a
+        // lower floor.
+        Tech.ElevatorShafts_1x1.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Labs/Labs Elevator/geo_32x32_Labs_Elevator_V1.prefab",
+            SubComplex = SubComplex.Lab
+        });
+
+        // A completely remade elevator tile, multiple levels for verticality. Made to look
+        // abandoned yet still maintained.
+        Tech.ElevatorShafts_1x1.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Labs/Labs Elevator V2/Labs_elevator_V2.prefab",
+            SubComplex = SubComplex.Lab
+        });
+
+        // A big tile with three depressurizer's that are randomized every time. It is an open
+        // tile with multiple pathways and three floors.
+        //
+        // TODO: incorporate into neonate depressurization mission
+        Tech.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Labs/Labs neonate insertion room/Labs_Neonate_Insertion_room_Depressure.prefab",
+            SubComplex = SubComplex.Lab
+        });
+
+        // The normal reactor I tile except there are multiple paths that connect the tile together.
+        // The middle path has been destroyed and side paths are now present.
+        Tech.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Labs/lab_i_tile/lab_i_tile_V1.prefab",
+            SubComplex = SubComplex.Lab
+        });
+
+        // A dead end tile similar to the R7A1 variant. However, this tile now has marker spawns
+        // for objective items.
+        Tech.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Labs/Labs dead end neonate cargo room/Labs_Neonate_cargo.prefab",
+            SubComplex = SubComplex.Lab
+        });
+
+        // A big labs exit tile with a boss align spawn.
+        Tech.CustomGeomorphs_Exit_1x1.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Labs/lab_exit_V1/lab_exit_V1.prefab",
+            SubComplex = SubComplex.Lab
+        });
+        #endregion
         #endregion
 
         #region Service Floodways

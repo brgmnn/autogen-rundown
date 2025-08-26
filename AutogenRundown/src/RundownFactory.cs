@@ -127,12 +127,12 @@ public static class RundownFactory
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/Custom Geo's/Storage_neonate_room/neonate_storage.prefab",
+                "Assets/Custom Geo's/Labs/lab_exit_V1/lab_exit_V1.prefab",
                 new Level("A")
                 {
                     Tier = "A",
                     Name = "Debug Test",
-                    Complex = Complex.Mining,
+                    Complex = Complex.Tech,
                     Settings = settings,
                     Index = rundown.TierA_Count + 1,
                     IsTest = true
