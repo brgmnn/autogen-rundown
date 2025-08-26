@@ -3,6 +3,26 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.74.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.74.0) — August 26, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* 🌟 New Objective: Central Generator Cluster!
+  * Enabled on all three Complexes: Mining, Tech, and Service. Thanks to custom geomorphs from donan3967's [Geomorph Pack 2](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_2/)
+  * Includes level generation patches to fix generator cluster spawn to be reliable
+* 🌟 New Geomorph pack: SamDB's [SamGeos](https://thunderstore.io/c/gtfo/p/Sam_D_B/SamGeos/). Expect to see some new tiles.
+
+### Changes
+
+* Balance: Increased `ReactorShutdown` C-tier Extreme hybrid waves on objective completion from `12` to `16` points (from 6 to 8 hybrids)
+* Balance: Removed `GiantNightmares` tentacle attack. They will now directly charge and are more dangerous.
+* Fixed bug where error alarm doors would be stacked with regular alarm doors
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.73.1...v0.74.0
+
+
 ## [v0.73.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.73.1) — August 16, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
