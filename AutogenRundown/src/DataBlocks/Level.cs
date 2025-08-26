@@ -740,6 +740,9 @@ public class Level
             existing.Add(WardenObjectiveType.TimedTerminalSequence);
         }
 
+        // Allow multiple instances of these objectives
+        existing.Remove(WardenObjectiveType.GatherSmallItems);
+
         if (!Director.ContainsKey(bulkhead))
         {
             Director[bulkhead] = new BuildDirector

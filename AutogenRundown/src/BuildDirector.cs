@@ -60,16 +60,12 @@ public class BuildDirector
             WardenObjectiveType.RetrieveBigItems,
             WardenObjectiveType.PowerCellDistribution,
             WardenObjectiveType.TerminalUplink,
+            WardenObjectiveType.CentralGeneratorCluster,
             WardenObjectiveType.HsuActivateSmall,
             WardenObjectiveType.Survival,
             WardenObjectiveType.GatherTerminal,
             WardenObjectiveType.CorruptedTerminalUplink,
             WardenObjectiveType.TimedTerminalSequence,
-
-            // TODO: Would love to enable this, but central generator cluster spawning is just
-            // too broken. Probably we wait for either a fix from 10Chambers or we have to
-            // investigate modding the game to spawn it.
-            //WardenObjectiveType.CentralGeneratorCluster
         };
 
         // Remove any objectives that are in the exclude list.
