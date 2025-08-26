@@ -1325,19 +1325,17 @@ public class Level
             // elevatorDropZone.EnemySpawningInZone.Add(
             //     EnemySpawningData.StrikerInfested with { Points = 20 });
 
-            // elevatorDropZone.EnemySpawningInZone.Add(
-            //     new EnemySpawningData
-            //     {
-            //         Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Hybrids),
-            //         Points = 1,
-            //         GroupType = EnemyGroupType.Hibernate
-            //     });
-
-                // EnemySpawningData.NightmareGiant with
+            elevatorDropZone.EnemySpawningInZone.Add(
+                // new EnemySpawningData
                 // {
-                //     Difficulty = (uint)Enemy.NightmareStriker,
-                //     Points = 1
+                //     Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Hybrids),
+                //     Points = 1,
+                //     GroupType = EnemyGroupType.Hibernate
                 // });
+                EnemySpawningData.NightmareGiant with
+                {
+                    Points = 6
+                });
 
             // elevatorDropZone.EnemySpawningInZone.Add(new EnemySpawningData
             // {

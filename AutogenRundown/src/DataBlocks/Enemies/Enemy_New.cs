@@ -449,7 +449,7 @@ public record Enemy_New : DataBlock
         }
         #endregion
 
-        #region Nightmare Striker
+        #region Nightmare Giant Striker
         /*
          *
          */
@@ -472,12 +472,12 @@ public record Enemy_New : DataBlock
                     AbilityType = 8,
                     Cooldown = 1.0
                 },
-                new()
-                {
-                    AbilityPrefab = "Assets/AssetPrefabs/Characters/Enemies/Abilities/EAB_StrikerBigTentacle.prefab",
-                    AbilityType = 2,
-                    Cooldown = 10.0
-                }
+                // new()
+                // {
+                //     AbilityPrefab = "Assets/AssetPrefabs/Characters/Enemies/Abilities/EAB_StrikerBigTentacle.prefab",
+                //     AbilityType = 2,
+                //     Cooldown = 10.0
+                // }
             };
             NightmareGiant.ModelDatas = new List<ModelData>
             {

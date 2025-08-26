@@ -753,23 +753,13 @@ public static class RundownFactory
         var buildPools = new Dictionary<string, List<List<int>>>
         {
             {
-                "2025_07", new List<List<int>>
-                {
-                    new() { 1, 2 },
-                    new() { 1, 1, 1 },
-                    new() { 4, 1, 1, 1 },
-                    new() { 2, 1, 1, 2 },
-                    new() { 1, 1, 1 }
-                }
-            },
-            {
                 "2025_08", new List<List<int>>
                 {
                     new() { 1, 1 },
                     new() { 1, 1 },
-                    new() { 1, 2, 1, 1 },
-                    new() { 1, 2, 1, 2 },
-                    new() { 1, 2, 1 }
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 1 }
                 }
             }
         };
