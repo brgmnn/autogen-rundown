@@ -121,18 +121,18 @@ public static class RundownFactory
 
         #region Geomorph Debugging test level
         #if DEBUG
-        #if false
+        #if true
         if (withFixed)
         {
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/Custom Geo's/Floodways_exit/floodways_exit_tile.prefab",
+                "Assets/Custom Geo's/Storage_neonate_room/neonate_storage.prefab",
                 new Level("A")
                 {
                     Tier = "A",
                     Name = "Debug Test",
-                    Complex = Complex.Service,
+                    Complex = Complex.Mining,
                     Settings = settings,
                     Index = rundown.TierA_Count + 1,
                     IsTest = true

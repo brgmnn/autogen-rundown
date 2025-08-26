@@ -240,7 +240,10 @@ public record Zone : DataBlock
                     (SubComplex.DigSite, "Assets/geo_64x64_dig_site_exit_dak_01.prefab"),
 
                     // Red_Leicester_Cheese
-                    (SubComplex.Storage, "Assets/Bundles/RLC_Mining/geo_64x64_mining_storage_exit_hub_RLC_01.prefab")
+                    (SubComplex.Storage, "Assets/Bundles/RLC_Mining/geo_64x64_mining_storage_exit_hub_RLC_01.prefab"),
+
+                    // SamDB
+                    (SubComplex.Refinery, "Assets/Custom Geo's/Mining exit/Mining_exit_V1.prefab")
                 });
                 break;
 
@@ -307,6 +310,10 @@ public record Zone : DataBlock
 
                     // Red_Leicester_Cheese
                     (SubComplex.Refinery, "Assets/Bundles/RLC_Mining/geo_64x64_mining_refinery_X_RLC_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
+                    // SamDB
+                    (SubComplex.DigSite, "Assets/Custom Geo's/Digsite/digsite_x_tile_1_V3/digsite_x_tile_1_V3.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.DigSite, "Assets/Custom Geo's/Digsite/Disite generator/Digsite_X_Tile_Generator.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                 });
                 break;
 
@@ -438,6 +445,12 @@ public record Zone : DataBlock
                     // Red_Leicester_Cheese
                     (SubComplex.Storage, "Assets/Bundles/RLC_Mining/geo_64x64_mining_storage_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
                     (SubComplex.Refinery, "Assets/Bundles/RLC_Mining/geo_64x64_mining_refinery_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
+
+                    // SamDB
+                    (SubComplex.DigSite, "Assets/Custom Geo's/Digsite/disite_i_tile_1_optimized/digsite_i_tile_1_V2.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+                    (SubComplex.Refinery, "Assets/Custom Geo's/refinery/HA_1_i_tile/I_tile_V2.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+                    (SubComplex.Refinery, "Assets/Custom Geo's/refinery bridge/refinery_i_tile_bridge.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+                    (SubComplex.Storage, "Assets/Custom Geo's/Storage_neonate_room/neonate_storage.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                 });
                 break;
 
@@ -630,6 +643,10 @@ public record Zone : DataBlock
                     (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_07.prefab"),
                     (SubComplex.DigSite,  "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab"),
                     (SubComplex.DigSite,  "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_02.prefab"),
+
+                    // --- MOD Geomorphs ---
+                    // SamDB
+                    (SubComplex.DigSite, "Assets/Custom Geo's/Digsite/Disite generator/Digsite_X_Tile_Generator.prefab"),
                 });
 
                 CustomGeomorph = geo;

@@ -324,6 +324,73 @@ public record ComplexResourceSet : DataBlock
             SubComplex = SubComplex.All
         });
         #endregion
+
+        #region MODDER: SamDB
+        // I tile with multiple caves and tunnels that run deep underground. A large cave sits at
+        // the bottom with a flooded pool and a bridge connecting both ways.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Digsite/disite_i_tile_1_optimized/digsite_i_tile_1_V2.prefab",
+            SubComplex = SubComplex.DigSite
+        });
+
+        // A big room with multiple pathways and elevation. There are underground caves and a
+        // small tunnel connecting them together
+        //
+        // V3: Alternate version with one big cave... The smaller cave has been removed...
+        // Still a large tile but with less verticality...
+        //
+        // TODO: This would be quite a hard tile to get for a hub
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Digsite/digsite_x_tile_1/digsite_x_tile_1.prefab",
+            SubComplex = SubComplex.DigSite
+        });
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Digsite/digsite_x_tile_1_V3/digsite_x_tile_1_V3.prefab",
+            SubComplex = SubComplex.DigSite
+        });
+
+        // A generator tile with a large maze of corridors underneath. It has built in custom
+        // scans going up to a Tier 9.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Digsite/Disite generator/Digsite_X_Tile_Generator.prefab",
+            SubComplex = SubComplex.DigSite
+        });
+
+        // A compact tile with multiple elevation points. Multiple bridges and lots of depth in
+        // this tile.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/refinery/HA_1_i_tile/I_tile_V2.prefab",
+            SubComplex = SubComplex.Refinery
+        });
+
+        // Refinery bridge with 3 floors. This tile has a built-in scan align going up to a
+        // Tier 4 scan. The scans will start on the bottom floor, traversing to the middle and
+        // ending at the top.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/refinery bridge/refinery_i_tile_bridge.prefab",
+            SubComplex = SubComplex.Refinery
+        });
+
+        // A dilapidated bridge that the warden deems viable for an extract point
+        Mining.CustomGeomorphs_Exit_1x1.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Mining exit/Mining_exit_V1.prefab",
+            SubComplex = SubComplex.Refinery
+        });
+
+        // A dilapidated bridge that the warden deems viable for an extract point
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Storage_neonate_room/neonate_storage.prefab",
+            SubComplex = SubComplex.Storage
+        });
+        #endregion
         #endregion
 
         #region Tech
@@ -921,7 +988,7 @@ public record ComplexResourceSet : DataBlock
         });
 
         // Large exit tile with multiple scaffolding walkways, allowing full access around the room
-        Service.CustomGeomorphs.Insert(0, new Prefab()
+        Service.CustomGeomorphs_Exit_1x1.Insert(0, new Prefab()
         {
             Asset = "Assets/Custom Geo's/Floodways_exit/floodways_exit_tile.prefab",
             SubComplex = SubComplex.Floodways,
