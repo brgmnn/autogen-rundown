@@ -58,6 +58,7 @@ static public class Generator
     public static string InputDailySeed { get; set; } = "";
     public static string InputWeeklySeed { get; set; } = "";
     public static string InputMonthlySeed { get; set; } = "";
+    public static string InputSeasonalSeed { get; set; } = "";
 
     public static int MonthNumber { get; set; } = -1;
 
@@ -362,6 +363,57 @@ static public class Generator
 
         var now = $"{pst:yyyy_MM_dd}";
         var display = $"{pst:MM/dd}";
+
+        Seed = now;
+        DisplaySeed = $"<color=orange>{display}</color>";
+    }
+
+    public static string GetSeason(int month) =>
+        new[] { "Winter", "Spring", "Summer", "Fall" }[(month % 12) / 3];
+
+    public static int GetSeasonYear(DateTime date)
+        => date.Month switch
+        {
+            1 or 2 => date.Year - 1,
+            _ => date.Year,
+        };
+
+
+    /// <summary>
+    /// Used for the monthly rundown seed
+    /// </summary>
+    public static void SetSeasonSeed(string seed = "")
+    {
+        var utcNow = DateTime.UtcNow;
+        // var utcNow = new DateTime(2025, 8, 1, 10, 0, 0); // Debugging specific months
+        var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+        var date = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
+        var manualSeed = false;
+
+        // InputMonthlySeed = $"{date:yyyy_MM}";
+        InputSeasonalSeed = $"{GetSeason(date.Month)}_{GetSeasonYear(date)}";
+
+        // if (!string.IsNullOrWhiteSpace(seed))
+        // {
+        //     if (DateTime.TryParseExact(seed.Trim(),
+        //             "yyyy_MM",
+        //             CultureInfo.InvariantCulture,
+        //             DateTimeStyles.None,
+        //             out date))
+        //     {
+        //         InputSeasonalSeed = seed.Trim();
+        //         manualSeed = true;
+        //     }
+        //     else
+        //     {
+        //         Plugin.Logger.LogWarning($"Unable to parse monthly seed: \"{seed}\"");
+        //     }
+        // }
+
+        Plugin.Logger.LogDebug($"Seasonal date seed: {date}");
+
+        var now = $"{InputSeasonalSeed}";
+        var display = $"{GetSeason(date.Month)} {GetSeasonYear(date)}";
 
         Seed = now;
         DisplaySeed = $"<color=orange>{display}</color>";

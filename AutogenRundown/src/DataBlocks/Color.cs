@@ -13,6 +13,14 @@ public record Color
         Blue = 0.858823538,
     };
 
+    public static readonly Color MenuVisuals_SeasonalE = new()
+    {
+        Alpha = 1.0,
+        Red = 0.858823538,
+        Green = 0.1509804,
+        Blue = 0.1509804,
+    };
+
     public static readonly Color MenuVisuals_MonthlyE = new()
     {
         Alpha = 1.0,

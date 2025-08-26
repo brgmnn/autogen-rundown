@@ -85,7 +85,7 @@ public class RundownNames
             {
                 var rundownData = Bins.Rundowns.Find(Rundown.R_Seasonal);
 
-                rundown.m_rundownText.text = $"<size=70%><color=#ff3311>SEASONAL</color><color=#444444>:</color> FALL '25</size>";
+                rundown.m_rundownText.text = $"<size=70%><color=#ff3311>SEASONAL</color><color=#444444>:</color> {rundownData?.Title}</size>";
             }
 
             num++;
