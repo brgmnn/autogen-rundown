@@ -134,6 +134,12 @@ Missing tiles to add
   * Add R8A1 garden hub tile to hubs
 
 
+
+* 🌟 New Seasonal Rundown: Fall '25 🍂
+  * Added a new long lived rundown, the Seasonal rundown. Starting with Fall '25 this rundown is updated every 3 months and includes more levels and more PE missions.
+
+
+
 Enemies:
   A:
     * Baseline
@@ -351,3 +357,4 @@ Many thanks to the modding community for making GTFO modding possible, and a spe
 * donan3967's [Geomorph Pack 1](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_1/)
 * donan3967's [Geomorph Pack 2](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_2/)
 * Red_Leicester_Cheese's [Geomorph Pack](https://thunderstore.io/c/gtfo/p/Red_Leicester_Cheese/CheeseGeos/)
+* SamDB's [SamGeos](https://thunderstore.io/c/gtfo/p/Sam_D_B/SamGeos/)

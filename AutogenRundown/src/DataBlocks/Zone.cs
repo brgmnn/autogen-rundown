@@ -256,7 +256,10 @@ public record Zone : DataBlock
                 (SubComplex, CustomGeomorph) = Generator.Pick(new List<(SubComplex, string)>
                 {
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_floodways_exit_01.prefab"),
-                    (SubComplex.Gardens,   "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_elevator_Gardens_exit_01.prefab")
+                    (SubComplex.Gardens,   "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_elevator_Gardens_exit_01.prefab"),
+
+                    // --- MOD Geomorphs ---
+                    (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_exit/floodways_exit_tile.prefab")
                 });
                 break;
         };
@@ -348,6 +351,12 @@ public record Zone : DataBlock
                     // donan3967
                     (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_hub_DS_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_hub_ds_02.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
+                    // SamDB
+                    (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_1/floodways_x_tile_1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_2/floodways_x_tile_2.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_3/floodways_x_tile_3.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_5/Floodways_x_tile_5.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                 });
                 break;
         }
@@ -472,6 +481,10 @@ public record Zone : DataBlock
                     // --- MOD Geomorphs ---
                     // donan3967
                     (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_i_bridge_ds_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+
+                    // SamDB
+                    (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_I_tile_bridge/Floodways_I_tile_Bridge.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.Floodways, "Assets/Custom Geo's/floodways_I_tile_1/floodways_i_tile_1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                 });
                 break;
         }
@@ -816,6 +829,9 @@ public record Zone : DataBlock
                     // --- MOD Geomorphs ---
                     // donan3976
                     (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_armory_DS_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
+
+                    // SamDB
+                    (SubComplex.Floodways, "Assets/Custom Geo's/Floodways dead end spawn points/Floodways_Deadend_Spawn.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
                 });
                 break;
         }

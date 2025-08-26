@@ -818,15 +818,114 @@ public record ComplexResourceSet : DataBlock
 
         #region MODDER: SamDB
 
+        // A revamped floodways elevator tile. It has been largely extended to feature a custom
+        // spawn and revamped to look less destroyed and more abandoned. It has a full 360 pathway
+        // and a bridge with a custom exit scan aligned to it. The ladder has been removed to stop
+        // all ladder cheesing for this tile.
+        Service.ElevatorShafts_1x1.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Floodways Elevator 1/Floodways_Elevator_1.prefab",
+            SubComplex = SubComplex.Floodways
+        });
+
+        // The regular floodways bridge with an extra floor underneath for traversing. Lots of
+        // extra room and locker spawns with an underground middle section as well. A great tile
+        // for hectic scans.
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Floodways_I_tile_bridge/Floodways_I_tile_Bridge.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 10
+        });
+
+        // A long tile with walkways at the top, 3 bridges in the middle and a hole underneath.
+        // This tile has a set spawn for single scans, works best with the large S scan.
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/floodways_I_tile_1/floodways_i_tile_1.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 10
+        });
+
+        // The same as the vanilla tile except the middle has been hollowed out and a massive hole
+        // is at the top. There's also more sewer grates and flowing water on the floor. More of
+        // an aesthetic tile. This tile also comes with a scan align for an arena fight.
+        //
+        // Also comes with:
+        //  * boss aligned - "Assets/Custom Geo's/Floodways_x_tile_1_V2/floodways_x_tile_1_V2.prefab"
+        //  * flyer spawn  - "Assets/Custom Geo's/Floodways_x_tile_1_V3/floodways_x_tile_1_V3.prefab"
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Floodways_x_tile_1/floodways_x_tile_1.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 10
+        });
+
+        // A large room with a hollow middle that extends all the way down. No terminals or boxes
+        // spawn down there but enemies can.
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Floodways_x_tile_2/floodways_x_tile_2.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 10
+        });
+
+        // A big room with a large hole at the start for water storage. Can be used as a
+        // T-scan tile. Has scaffolding and platforms round the side.
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Floodways_x_tile_3/floodways_x_tile_3.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 10
+        });
+
         // A massive room with walkways and platforms that span up to 4 floors. Terminals can
         // spawn at the bottom as well as resource boxes. This tile also has spawn-points for flyers.
         // Note: This is the biggest tile in the game and can sometimes cause some FPS drops.
         //
         // This is a HUGE tile. Probably it can't be placed in any hub as balancing may be a problem?
+        // TODO: figure out a way to use it
         Service.CustomGeomorphs.Insert(0, new Prefab()
         {
             Asset = "Assets/Custom Geo's/Floodways_x_tile_4/floodway_x_tile_4.prefab",
             SubComplex = SubComplex.Floodways
+        });
+
+        // A remastered Floodways vanilla tile. Has multiple bridges and pathways and is now one
+        // zone instead of three... A long bridge sits in the middle of the tile and leads to
+        // every part of the room.
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Floodways_x_tile_5/Floodways_x_tile_5.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 10
+        });
+
+        // The big HUB room with three extra levels doing down into the depths below.
+        //
+        // TODO: figure out how to use this, same as x_tile_4
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Floodways_HUB/Floodways_hub.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 10
+        });
+
+        // A deadend tile with spawnpoints for waves. A tile with a narrow corridor for
+        // holding enemies. It has been made to look very degraded and worn.
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Floodways dead end spawn points/Floodways_Deadend_Spawn.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 10
+        });
+
+        // Large exit tile with multiple scaffolding walkways, allowing full access around the room
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Custom Geo's/Floodways_exit/floodways_exit_tile.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 10
         });
         #endregion
         #endregion
