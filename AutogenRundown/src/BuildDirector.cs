@@ -83,12 +83,6 @@ public class BuildDirector
         if (Bulkhead.HasFlag(Bulkhead.Main))
             objectives.Remove(WardenObjectiveType.SpecialTerminalCommand);
 
-        // Only Mining and Tech complexes have geomorphs for these objectives
-        if (Complex != Complex.Mining || Complex != Complex.Tech)
-        {
-            objectives.Remove(WardenObjectiveType.CentralGeneratorCluster);
-        }
-
         // In this case we need to set a very simple objective that can be completed quickly
         if (Bulkhead.HasFlag(Bulkhead.Overload) && exclude.Contains(WardenObjectiveType.Survival))
         {
