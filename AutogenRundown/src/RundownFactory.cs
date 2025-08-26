@@ -803,6 +803,7 @@ public static class RundownFactory
             (1.0, 2, WardenObjectiveType.RetrieveBigItems),
             (1.0, 2, WardenObjectiveType.PowerCellDistribution),
             (1.0, 3, WardenObjectiveType.TerminalUplink),
+            (1.0, 3, WardenObjectiveType.CentralGeneratorCluster),
             (1.0, 3, WardenObjectiveType.HsuActivateSmall),
             (1.0, 3, WardenObjectiveType.Survival),
             (1.0, 2, WardenObjectiveType.GatherTerminal),
@@ -1003,6 +1004,7 @@ public static class RundownFactory
 
         // Seasonal Rundown -- Rundown 8 replacement
         #region Seasonal Rundown
+        #if false
         {
             // Reads or generates the seed
             Generator.SetSeasonSeed();
@@ -1018,6 +1020,7 @@ public static class RundownFactory
 
             Bins.Rundowns.AddBlock(seasonal);
         }
+        #endif
         #endregion
 
         // Monthly Rundown -- Rundown 4 replacement
@@ -1107,13 +1110,13 @@ public static class RundownFactory
             Rundown.R_Monthly, // Rundown.R4,
             Rundown.R_Weekly, // Rundown.R5,
 
-            // These are no-ops and will be disabled
-            Rundown.R_Daily,
-            Rundown.R_Daily,
-            Rundown.R_Daily,
-            Rundown.R_Daily,
-
-            Rundown.R_Seasonal, // Rundown.R8,
+            // // These are no-ops and will be disabled
+            // Rundown.R_Daily,
+            // Rundown.R_Daily,
+            // Rundown.R_Daily,
+            // Rundown.R_Daily,
+            //
+            // Rundown.R_Seasonal, // Rundown.R8,
         };
         Bins.GameSetups.AddBlock(gameSetup);
 
