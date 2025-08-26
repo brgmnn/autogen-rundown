@@ -348,5 +348,6 @@ Many thanks to the modding community for making GTFO modding possible, and a spe
   * Notably [LocalProgression](https://thunderstore.io/c/gtfo/p/Inas07/LocalProgression/) and [ExtraObjectiveSetup](https://thunderstore.io/c/gtfo/p/Inas07/ExtraObjectiveSetup/)
 * Flowaria's [Geomorph Pack](https://thunderstore.io/c/gtfo/p/Flowaria/FlowGeos/)
   * Including the fantastic Floodways Reactor tile enables reactor missions in the service Complex.
-* donan3967's [Geomorph Pack](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_1/)
+* donan3967's [Geomorph Pack 1](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_1/)
+* donan3967's [Geomorph Pack 2](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_2/)
 * Red_Leicester_Cheese's [Geomorph Pack](https://thunderstore.io/c/gtfo/p/Red_Leicester_Cheese/CheeseGeos/)
