@@ -127,7 +127,7 @@ public static class RundownFactory
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/Custom Geo's/Floodways_x_tile_4/floodway_x_tile_4.prefab",
+                "Assets/Custom Geo's/Floodways_exit/floodways_exit_tile.prefab",
                 new Level("A")
                 {
                     Tier = "A",

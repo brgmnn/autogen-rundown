@@ -1264,7 +1264,7 @@ public class Level
                 Coverage = new CoverageMinMax { Min = 25, Max = 35 },
                 LightSettings = Lights.GenRandomLight(),
                 LocalIndex = 0,
-                CustomGeomorph = geo
+                // CustomGeomorph = geo
             };
 
             // elevatorDropZone.EnemySpawningInZone.Add(
@@ -1305,6 +1305,18 @@ public class Level
 
             level.Planner.AddZone(elevatorDrop, elevatorDropZone);
             layout.Zones.Add(elevatorDropZone);
+
+            var zone2 = new Zone(level)
+            {
+                Coverage = new CoverageMinMax { Min = 100, Max = 100 },
+                LightSettings = Lights.GenRandomLight(),
+                LocalIndex = 1,
+                BuildFromLocalIndex = 0,
+                CustomGeomorph = geo
+            };
+
+            level.Planner.AddZone(new ZoneNode(Bulkhead.Main, 1), zone2);
+            layout.Zones.Add(zone2);
 
             // elevatorDrop = layout.BuildBranch(elevatorDrop, 2);
 
