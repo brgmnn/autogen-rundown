@@ -45,6 +45,8 @@ public class CoverageMinMax
 
     #region Computed values
 
+    // TODO: we can dump all of these
+
     [JsonProperty("normalized")]
     public JObject Normalized
     {

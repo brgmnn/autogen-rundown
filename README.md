@@ -69,6 +69,8 @@ Requests:
 
 Check: https://discord.com/channels/782438773690597389/783918553626836992/1407457297889890530
 
+Check error alarm door first in D4
+
 2025_08_17
   * Reduce number of gather so we have to do all objectives
   * Why does D2 only have onion shooters on first alarm door in extreme

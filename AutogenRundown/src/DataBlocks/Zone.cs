@@ -1,10 +1,8 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
-using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown.TerminalPlacements;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
-using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
@@ -13,109 +11,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks;
-
-/// <summary>
-/// eZoneBuildFromExpansionType
-///
-/// What direction to try and place the entrance door for this zone
-///
-/// Direction is global and forward is looking from the drop elevator
-/// https://gtfo-modding.gitbook.io/wiki/reference/enum-types#ezonebuildfromexpansiontype
-/// </summary>
-public enum ZoneBuildExpansion
-{
-    Random = 0,
-    Forward = 1,
-    Backward = 2,
-    Right = 3,
-    Left = 4
-}
-
-/// <summary>
-/// eZoneExpansionType
-///
-/// What direction to build the zone towards
-///
-/// Direction is global and forward is looking from the drop elevator
-/// https://gtfo-modding.gitbook.io/wiki/reference/enum-types#ezoneexpansiontype
-/// </summary>
-public enum ZoneExpansion
-{
-    Random = 0,
-    Collapsed = 1,
-    Expansional = 2,
-    Forward = 3,
-    Backward = 4,
-    Right = 5,
-    Left = 6,
-    DirectionalRandom = 7
-}
-
-// ZoneExpansion = ZoneExpansion.Right;
-// StartExpansion = ZoneBuildExpansion.Right;
-// StartPosition = ZoneEntranceBuildFrom.BetweenStartAndFurthest;
-
-// "StartPosition": 0,
-// "StartExpansion": 0,
-// "ZoneExpansion": 0,
-
-/// <summary>
-/// Where in the source zone to try to make the entrance to this zone.
-/// Note that a valid gate may not generate around the set source position/area.
-/// https://gtfo-modding.gitbook.io/wiki/reference/enum-types#ezonebuildfromtype
-/// </summary>
-public enum ZoneEntranceBuildFrom
-{
-    Random = 0,
-    Start = 1,
-    AverageCenter = 2,
-    Furthest = 3,
-    BetweenStartAndFurthest = 4,
-    IndexWeight = 5
-}
-
-/// <summary>
-/// https://gtfo-modding.gitbook.io/wiki/reference/enum-types#ezonedistributionamount
-/// </summary>
-public enum DistributionAmount
-{
-    None = 0,
-
-    /// <summary>
-    /// Count = 2
-    /// </summary>
-    Pair = 1,
-
-    /// <summary>
-    /// Count = 5
-    /// </summary>
-    Few = 2,
-
-    /// <summary>
-    /// Count = 10
-    /// </summary>
-    Some = 3,
-
-    /// <summary>
-    /// Count = 15
-    /// </summary>
-    SomeMore = 4,
-
-    /// <summary>
-    /// Count = 20
-    /// </summary>
-    Many = 5,
-
-    /// <summary>
-    /// Count = 30
-    /// </summary>
-    Alot = 6,
-
-    /// <summary>
-    /// Count = 50
-    /// </summary>
-    Tons = 7
-}
 
 /// <summary>
 ///
