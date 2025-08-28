@@ -28,6 +28,10 @@ public class Patch_RundownManager
                 Managers.WatermarkManager.SetRundown(PluginRundown.Monthly, expPackage);
                 break;
 
+            case "Local_4":
+                Managers.WatermarkManager.SetRundown(PluginRundown.Seasonal, expPackage);
+                break;
+
             default:
                 Managers.WatermarkManager.ClearRundown();
                 break;

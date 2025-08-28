@@ -41,9 +41,10 @@ public class WatermarkManager
 
         SetWatermark(rundown switch
         {
-            PluginRundown.Daily   => $"<color=#6fff70>{level}</color> Daily <color=orange>{Generator.InputDailySeed}</color>",
-            PluginRundown.Weekly  => $"<color=#6fff70>{level}</color> Weekly <color=orange>{Generator.InputWeeklySeed}</color>",
-            PluginRundown.Monthly => $"<color=#6fff70>{level}</color> Monthly <color=orange>{Generator.InputMonthlySeed}</color>",
+            PluginRundown.Daily    => $"<color=#6fff70>{level}</color> Daily <color=orange>{Generator.InputDailySeed}</color>",
+            PluginRundown.Weekly   => $"<color=#6fff70>{level}</color> Weekly <color=orange>{Generator.InputWeeklySeed}</color>",
+            PluginRundown.Monthly  => $"<color=#6fff70>{level}</color> Monthly <color=orange>{Generator.InputMonthlySeed}</color>",
+            PluginRundown.Seasonal => $"<color=#6fff70>{level}</color> Season <color=orange>{Generator.SeasonalSeason} {Generator.SeasonalYear}</color>",
             _ => EmptySeed
         });
     }

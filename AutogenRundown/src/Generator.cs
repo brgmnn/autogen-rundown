@@ -394,35 +394,96 @@ static public class Generator
         var date = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
         var manualSeed = false;
 
+        // Default to current season/year if no valid user seed provided
         InputSeasonalSeed = $"{GetSeason(date.Month)}_{GetSeasonYear(date)}".ToUpperInvariant();
 
+        // Try to parse user-provided seasonal seed
         if (!string.IsNullOrWhiteSpace(seed))
         {
-            // if (DateTime.TryParseExact(seed.Trim(),
-            //         "yyyy_MM",
-            //         CultureInfo.InvariantCulture,
-            //         DateTimeStyles.None,
-            //         out date))
-            // {
-            //     InputSeasonalSeed = seed.Trim();
-            //     manualSeed = true;
-            // }
-            // else
-            // {
-            //     Plugin.Logger.LogWarning($"Unable to parse monthly seed: \"{seed}\"");
-            // }
+            if (TryParseSeasonalSeed(seed, out var parsedSeasonTitle, out var parsedYear))
+            {
+                InputSeasonalSeed = $"{parsedSeasonTitle.ToUpperInvariant()}_{parsedYear}";
+                SeasonalSeason = parsedSeasonTitle;
+                SeasonalYear = parsedYear;
+                manualSeed = true;
+            }
+            else
+            {
+                Plugin.Logger.LogWarning($"Unable to parse seasonal seed: \"{seed}\"");
+            }
+        }
+
+        if (!manualSeed)
+        {
+            SeasonalSeason = GetSeason(date.Month);
+            SeasonalYear = GetSeasonYear(date);
         }
 
         Plugin.Logger.LogDebug($"Seasonal date seed: {date}");
 
-        var now = $"{InputSeasonalSeed}";
-        var display = $"{GetSeason(date.Month)} {GetSeasonYear(date)}";
+        var now = InputSeasonalSeed;
+        var display = $"{SeasonalSeason} {SeasonalYear}";
 
         Seed = now;
-        SeasonalSeason = GetSeason(date.Month);
-        SeasonalYear = GetSeasonYear(date);
         DisplaySeed = $"<color=orange>{display}</color>";
     }
+
+    private static bool TryParseSeasonalSeed(string seed, out string seasonTitleCase, out int year)
+    {
+        seasonTitleCase = "";
+        year = 0;
+
+        if (string.IsNullOrWhiteSpace(seed))
+            return false;
+
+        // Normalize separators and casing
+        var cleaned = seed.Trim()
+            .Replace('-', ' ')
+            .Replace('_', ' ')
+            .ToUpperInvariant();
+
+        var parts = cleaned.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length != 2)
+            return false;
+
+        string? seasonToken = null;
+        string? yearToken = null;
+
+        if (IsSeasonToken(parts[0]))
+        {
+            seasonToken = parts[0];
+            yearToken = parts[1];
+        }
+        else if (IsSeasonToken(parts[1]))
+        {
+            seasonToken = parts[1];
+            yearToken = parts[0];
+        }
+        else
+        {
+            return false;
+        }
+
+        if (!int.TryParse(yearToken, out year) || year < 1 || year > 9999)
+            return false;
+
+        // Map AUTUMN to FALL and return Title Case season name
+        // var normalized = seasonToken == "AUTUMN" ? "FALL" : seasonToken;
+        seasonTitleCase = seasonToken switch
+        {
+            "WINTER" => "Winter",
+            "SPRING" => "Spring",
+            "SUMMER" => "Summer",
+            "AUTUMN" => "Fall",
+            "FALL" => "Fall",
+            _ => ""
+        };
+
+        return seasonTitleCase != "";
+    }
+
+    private static bool IsSeasonToken(string token)
+        => token is "WINTER" or "SPRING" or "SUMMER" or "FALL" or "AUTUMN";
 
     /// <summary>
     /// Used for the monthly rundown seed

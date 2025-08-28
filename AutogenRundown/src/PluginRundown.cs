@@ -7,4 +7,5 @@ public enum PluginRundown
     Daily,
     Weekly,
     Monthly,
+    Seasonal,
 }
