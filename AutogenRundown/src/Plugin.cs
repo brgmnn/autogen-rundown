@@ -61,6 +61,14 @@ public class Plugin : BasePlugin
                                   "\"YYYY_MM\" where YYYY is the year (e.g 2025) and MM is the " +
                                   "month (e.g 03 for March)"));
 
+        var seedSeasonalConfig = Config.Bind(
+            new ConfigDefinition("AutogenRundown.Seeds", "SeasonalSeed"),
+            "",
+            new ConfigDescription("Specify a seed for the Seasonal Rundown.\nExpected format is " +
+                                  "\"SEASON_YYYY\" where YYYY is the year (e.g 2025) and SEASON" +
+                                  "is one of the four seasons (Winter, Spring, Summer, Fall)." +
+                                  "e.g SPRING_2025"));
+
         var regenerateOnStartup = Config.Bind(
             new ConfigDefinition("AutogenRundown", "RegenerateOnStartup"),
             true,
@@ -90,7 +98,11 @@ public class Plugin : BasePlugin
         if (regenerateOnStartup.Value)
         {
             Peers.Init();
-            RundownFactory.Build(seedDailyConfig.Value, seedWeeklyConfig.Value, seedMonthlyConfig.Value);
+            RundownFactory.Build(
+                seedDailyConfig.Value,
+                seedWeeklyConfig.Value,
+                seedMonthlyConfig.Value,
+                seedSeasonalConfig.Value);
         }
 
         PlayFabManager.add_OnTitleDataUpdated((Action)RundownNames.OnTitleDataUpdated);

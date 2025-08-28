@@ -510,13 +510,13 @@ public static class RundownFactory
         var buildPools = new Dictionary<string, List<List<int>>>
         {
             {
-                "2025_08", new List<List<int>>
+                "FALL_2025", new List<List<int>>
                 {
-                    new() { 1, 1 },
-                    new() { 1, 1 },
-                    new() { 1, 2, 1, 1 },
-                    new() { 1, 2, 1, 2 },
-                    new() { 1, 2, 1 }
+                    new() { 1, 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1 }
                 }
             }
         };
@@ -529,11 +529,11 @@ public static class RundownFactory
         if (buildSeeds is null)
             buildSeeds = new List<List<int>>
             {
-                /* Tier A */ new() { 1, 1 },
-                /* Tier B */ new() { 1, 1, 1 },
-                /* Tier C */ new() { 1, 1, 1, 1 },
-                /* Tier D */ new() { 1, 1, 1, 1 },
-                /* Tier E */ new() { 1, 1 }
+                /* Tier A */ new() { 1, 1, 1, 1, 1 },
+                /* Tier B */ new() { 1, 1, 1, 1, 1, 1 },
+                /* Tier C */ new() { 1, 1, 1, 1, 1, 1 },
+                /* Tier D */ new() { 1, 1, 1, 1, 1, 1 },
+                /* Tier E */ new() { 1, 1, 1, 1 }
             };
 
         // Define a rundown global pool of objectives for the main objective.
@@ -561,7 +561,7 @@ public static class RundownFactory
         {
             (1.0, 10, Complex.Mining),
             (1.0, 10, Complex.Tech),
-            (0.8, 10, Complex.Service)
+            (1.0, 10, Complex.Service)
         };
 
         rundown.TierA_Count = buildSeeds[0].Count;
@@ -979,7 +979,7 @@ public static class RundownFactory
     /// <summary>
     /// Entrypoint to build a new rundown
     /// </summary>
-    public static void Build(string dailySeed, string weeklySeed, string monthlySeed)
+    public static void Build(string dailySeed, string weeklySeed, string monthlySeed, string seasonalSeed)
     {
         // TODO: Clean custom directory
 
@@ -994,23 +994,21 @@ public static class RundownFactory
 
         // Seasonal Rundown -- Rundown 8 replacement
         #region Seasonal Rundown
-        #if false
         {
             // Reads or generates the seed
-            Generator.SetSeasonSeed();
+            Generator.SetSeasonSeed(seasonalSeed);
             Generator.Reload();
 
             var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
             var seasonal = BuildSeasonalRundown(new Rundown
             {
                 PersistentId = Rundown.R_Seasonal,
-                Title = $"{name.ToUpper()}",
-                StoryTitle = $"<color=green>RND://</color>SEASON {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}"
+                Title = $"{Generator.SeasonalSeason.ToUpper()} '{Generator.SeasonalYear % 100}",
+                StoryTitle = $"SEASON {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}"
             });
 
             Bins.Rundowns.AddBlock(seasonal);
         }
-        #endif
         #endregion
 
         // Monthly Rundown -- Rundown 4 replacement
@@ -1034,7 +1032,7 @@ public static class RundownFactory
             {
                 PersistentId = Rundown.R_Monthly,
                 Title = $"{name.ToUpper()}",
-                StoryTitle = $"<color=green>RND://</color>MONTHLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
+                StoryTitle = $"MONTHLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
             });
 
             Bins.Rundowns.AddBlock(monthly);
@@ -1059,7 +1057,7 @@ public static class RundownFactory
             {
                 PersistentId = Rundown.R_Weekly,
                 Title = $"{name.ToUpper()}",
-                StoryTitle = $"<color=green>RND://</color>WEEKLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
+                StoryTitle = $"WEEKLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
             }, false, withUnlocks);
 
             weekly.VisualsETier = Color.MenuVisuals_WeeklyE;
@@ -1080,7 +1078,7 @@ public static class RundownFactory
             {
                 PersistentId = Rundown.R_Daily,
                 Title = $"{name.ToUpper()}",
-                StoryTitle = $"<color=green>RND://</color>DAILY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
+                StoryTitle = $"DAILY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
 
                 TierA_Count = 1,
                 TierD_Count = 3,
@@ -1100,13 +1098,13 @@ public static class RundownFactory
             Rundown.R_Monthly, // Rundown.R4,
             Rundown.R_Weekly, // Rundown.R5,
 
-            // // These are no-ops and will be disabled
-            // Rundown.R_Daily,
-            // Rundown.R_Daily,
-            // Rundown.R_Daily,
-            // Rundown.R_Daily,
-            //
-            // Rundown.R_Seasonal, // Rundown.R8,
+            // These are no-ops and will be disabled
+            Rundown.R_Daily,
+            Rundown.R_Daily,
+            Rundown.R_Daily,
+            Rundown.R_Daily,
+
+            Rundown.R_Seasonal, // Rundown.R8,
         };
         Bins.GameSetups.AddBlock(gameSetup);
 
