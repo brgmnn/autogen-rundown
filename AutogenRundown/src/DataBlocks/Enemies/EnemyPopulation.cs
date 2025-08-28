@@ -160,8 +160,18 @@ public record EnemyPopulation : DataBlock
         }
         #endregion
 
-        #region MegaMother spawn
+        #region Mother, PMother & MegaMother spawns
 
+        // Mother & PMother
+        Roles.Add(new EnemyPopulationRole
+        {
+            Role = (uint)EnemyRole.BirtherChild,
+            Difficulty = 0u,
+            Enemy = Enemy.Baby,
+            Cost = 1
+        });
+
+        // MegaMother
         var megaMotherSpawnEnemies = new List<(EnemyInfo, double)>
         {
             (EnemyInfo.Striker_Wave, 2.0),

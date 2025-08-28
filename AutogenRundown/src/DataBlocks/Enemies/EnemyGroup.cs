@@ -36,33 +36,39 @@ public record EnemyGroup : DataBlock
 {
     #region Properties
     /// <summary>
-    ///
+    /// Default = EnemyGroupType.Hibernate (0)
     /// </summary>
     public EnemyGroupType Type { get; set; } = EnemyGroupType.Hibernate;
 
     /// <summary>
-    ///
+    /// Default = 0
     /// </summary>
     public uint Difficulty { get; set; } = 0;
 
     /// <summary>
     /// Technically this is the following enum:
     /// https://gtfo-modding.gitbook.io/wiki/reference/enum-types#espawnplacementtype
+    ///
+    /// Default = SpawnPlacementType.Default (0)
     /// </summary>
     public SpawnPlacementType SpawnPlacementType { get; set; } = SpawnPlacementType.Default;
 
     /// <summary>
     /// This is actually the number of points to use
+    ///
+    /// Default = 1.0
     /// </summary>
     public double MaxScore { get; set; } = 1.0;
 
     /// <summary>
     /// Looks like this is almost always 3.0 except for some bosses
+    ///
+    /// Default = 3
     /// </summary>
     public double ScoreInAreaPaddingMulti { get; set; } = 3.0;
 
     /// <summary>
-    ///
+    /// Default = 1
     /// </summary>
     public double RelativeWeight { get; set; } = 1.0;
 
@@ -734,6 +740,40 @@ public record EnemyGroup : DataBlock
 
     #endregion
 
+    #region Mothers
+
+    private static readonly EnemyGroup MotherChildren = new()
+    {
+        // This ID is hard coded in the game for the Mother to use
+        PersistentId = 37,
+        Type = EnemyGroupType.Hunter,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.BirtherChild, Distribution = EnemyRoleDistribution.Rel100 }
+        },
+        Difficulty = 0u,
+        MaxScore = 20,
+        ScoreInAreaPaddingMulti = 1.0,
+        RelativeWeight = 1.0,
+    };
+
+    private static readonly EnemyGroup PMotherChildren = new()
+    {
+        // This ID is hard coded in the game for the PMother to use
+        PersistentId = 38,
+        Type = EnemyGroupType.Hunter,
+        Roles = new List<EnemyGroupRole>
+        {
+            new() { Role = EnemyRole.BirtherChild, Distribution = EnemyRoleDistribution.Rel100 }
+        },
+        Difficulty = 0u,
+        MaxScore = 30,
+        ScoreInAreaPaddingMulti = 1.0,
+        RelativeWeight = 1.0,
+    };
+
+    #endregion
+
     public static void Setup()
     {
         // JArray array = JArray.Parse(VanillaData);
@@ -931,6 +971,13 @@ public record EnemyGroup : DataBlock
         Scout_Shadow.Persist();
         Scout_Nightmare.Persist();
         Scout_Zoomer.Persist();
+
+        #endregion
+
+        #region Mothers
+
+        MotherChildren.Persist();
+        PMotherChildren.Persist();
 
         #endregion
 
