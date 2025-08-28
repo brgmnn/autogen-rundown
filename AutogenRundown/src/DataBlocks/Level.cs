@@ -1322,20 +1322,24 @@ public class Level
 
             // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
 
-            // elevatorDropZone.EnemySpawningInZone.Add(
-            //     EnemySpawningData.StrikerInfested with { Points = 20 });
+            elevatorDropZone.EnemySpawningInZone.Add(
+                EnemySpawningData.Mother with { Points = 10 });
 
             elevatorDropZone.EnemySpawningInZone.Add(
+                EnemySpawningData.PMother with { Points = 10 });
+
+
+            // elevatorDropZone.EnemySpawningInZone.Add(
                 // new EnemySpawningData
                 // {
                 //     Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Hybrids),
                 //     Points = 1,
                 //     GroupType = EnemyGroupType.Hibernate
                 // });
-                EnemySpawningData.NightmareGiant with
-                {
-                    Points = 6
-                });
+                // EnemySpawningData.NightmareGiant with
+                // {
+                //     Points = 6
+                // });
 
             // elevatorDropZone.EnemySpawningInZone.Add(new EnemySpawningData
             // {
