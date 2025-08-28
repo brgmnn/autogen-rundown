@@ -74,6 +74,18 @@ public class Level
             (0.7, Complex.Service)
         });
 
+    /// <summary>
+    /// Chances of a level selecting each combination of bulkheads
+    /// </summary>
+    [JsonIgnore]
+    public List<(double, Bulkhead)> BulkheadChanceTable { get; set; } = new()
+    {
+        (0.25, Bulkhead.Main),
+        (0.4, Bulkhead.Main | Bulkhead.Extreme),
+        (0.2, Bulkhead.Main | Bulkhead.Overload),
+        (0.15, Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload)
+    };
+
     [JsonIgnore]
     public LayoutPlanner Planner { get; set; } = new();
 
@@ -812,13 +824,7 @@ public class Level
     {
         // Randomly select which bulkheads to use
         if (!IsTest)
-            Settings.Bulkheads = Generator.Select(new List<(double, Bulkhead)>
-            {
-                (0.25, Bulkhead.Main),
-                (0.4, Bulkhead.Main | Bulkhead.Extreme),
-                (0.2, Bulkhead.Main | Bulkhead.Overload),
-                (0.15, Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload)
-            });
+            Settings.Bulkheads = Generator.Select(BulkheadChanceTable);
 
         // Options for starting areas
         var options = Settings.Bulkheads switch

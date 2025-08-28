@@ -559,9 +559,16 @@ public static class RundownFactory
         };
         var complexPool = new List<(double, int, Complex)>
         {
-            (1.0, 10, Complex.Mining),
-            (1.0, 10, Complex.Tech),
-            (1.0, 10, Complex.Service)
+            (1.0, 14, Complex.Mining),
+            (1.0, 14, Complex.Tech),
+            (1.0, 12, Complex.Service)
+        };
+        var bulkheadChances = new List<(double, Bulkhead)>
+        {
+            (0.20, Bulkhead.Main),
+            (0.30, Bulkhead.Main | Bulkhead.Extreme),
+            (0.25, Bulkhead.Main | Bulkhead.Overload),
+            (0.25, Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload)
         };
 
         rundown.TierA_Count = buildSeeds[0].Count;
@@ -595,7 +602,8 @@ public static class RundownFactory
                     Index = i + 1,
                     Complex = complex,
                     MainDirector = director,
-                    BuildSeed = buildSeed
+                    BuildSeed = buildSeed,
+                    BulkheadChanceTable = bulkheadChances
                 });
 
             rundown.AddLevel(level);
@@ -624,7 +632,8 @@ public static class RundownFactory
                     Index = i + 1,
                     Complex = complex,
                     MainDirector = director,
-                    BuildSeed = buildSeed
+                    BuildSeed = buildSeed,
+                    BulkheadChanceTable = bulkheadChances
                 });
 
             rundown.AddLevel(level);
@@ -653,7 +662,8 @@ public static class RundownFactory
                     Index = i + 1,
                     Complex = complex,
                     MainDirector = director,
-                    BuildSeed = buildSeed
+                    BuildSeed = buildSeed,
+                    BulkheadChanceTable = bulkheadChances
                 });
 
             rundown.AddLevel(level);
@@ -682,7 +692,8 @@ public static class RundownFactory
                     Index = i + 1,
                     Complex = complex,
                     MainDirector = director,
-                    BuildSeed = buildSeed
+                    BuildSeed = buildSeed,
+                    BulkheadChanceTable = bulkheadChances
                 });
 
             rundown.AddLevel(level);
@@ -711,7 +722,8 @@ public static class RundownFactory
                     Index = i + 1,
                     Complex = complex,
                     MainDirector = director,
-                    BuildSeed = buildSeed
+                    BuildSeed = buildSeed,
+                    BulkheadChanceTable = bulkheadChances
                 });
 
             rundown.AddLevel(level);
