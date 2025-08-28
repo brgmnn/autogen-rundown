@@ -71,6 +71,11 @@ Check: https://discord.com/channels/782438773690597389/783918553626836992/140745
 
 Check error alarm door first in D4
 
+2025_08_27
+  * P-Mother doesn't spawn babies
+  * Consider removing "Roll error alarms" from levels in general and just use the specific layout error alarms
+  * Generator cluster needs a little less zones
+
 2025_08_17
   * Reduce number of gather so we have to do all objectives
   * Why does D2 only have onion shooters on first alarm door in extreme

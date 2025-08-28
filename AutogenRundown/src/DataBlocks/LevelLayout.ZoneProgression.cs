@@ -688,18 +688,21 @@ public partial record LevelLayout
             InteractionMessage = "START SECURITY SCAN SEQUENCE <color=red>[WARNING:CLASS ://ERROR! ALARM DETECTED]</color>"
         };
 
-        Plugin.Logger.LogDebug($"Overriding the normal error alarm logic for this special zone: {lockedNode}");
-
         // Set the turnoff code (if we have it)
         if (terminalish == null)
         {
             level.SecurityDoors.Doors.Add(customDoor);
+
+            Plugin.Logger.LogDebug($"Custom Error Alarm: director bulkhead = {director.Bulkhead}, lockedNode = {lockedNode}");
+
             return;
         }
 
         var terminalNode = (ZoneNode)terminalish;
         var terminalZone = planner.GetZone(terminalNode)!;
         var terminalPlacement = new TerminalPlacement { PlacementWeights = ZonePlacementWeights.NotAtStart };
+
+        Plugin.Logger.LogDebug($"Custom Error Alarm: lockedNode = {lockedNode}, terminalNode = {terminalNode}");
 
         if (terminalZone.TerminalPlacements.Any())
             terminalPlacement = terminalZone.TerminalPlacements.First();
