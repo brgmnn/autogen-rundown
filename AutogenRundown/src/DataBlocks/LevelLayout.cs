@@ -744,6 +744,7 @@ public partial record LevelLayout : DataBlock
     /// <summary>
     /// Rolls for whether we should add an error alarm to this level layout.
     /// </summary>
+    [Obsolete("Prefer more curated level design")]
     public void RollErrorAlarm()
     {
         // Skip adding any rolled error alarms if the main objective is a survival map
@@ -831,7 +832,11 @@ public partial record LevelLayout : DataBlock
 
             // Something's gone wrong if this is the case and there were no zones to pick from.
             if (zone == null)
+            {
+                Plugin.Logger.LogDebug("We had a problem, ");
+
                 return;
+            }
 
             var node = planner.GetZoneNode(zone.LocalIndex);
             var terminal = (ZoneNode?)null;
@@ -1215,7 +1220,7 @@ public partial record LevelLayout : DataBlock
         }
 
         // TODO: most or all of these need to be moved
-        layout.RollErrorAlarm();
+        // layout.RollErrorAlarm(); // Deprecated
         layout.RollAlarms(puzzlePack, wavePopulationPack, waveSettingsPack);
         layout.RollBloodDoors();
         layout.RollEnemies(director);
