@@ -3,6 +3,36 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.75.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.75.0) — August 29, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* 🌟 New Seasonal Rundown: Fall '25 🍂 (released a few days early!)
+  * Added a new long lived rundown, the Seasonal rundown. Starting with Fall '25 this rundown is updated every 3 months and includes more levels and more PE missions
+  * Seasons follow meteorological seasons, so note that `Winter` starts in December and rolls into the next calendar year.
+  * Seasons throughout the year:
+    * `Spring`: March, April, May
+    * `Summer`: June, July, August
+    * `Fall`: September, October, November
+    * `Winter`: December, January, February
+
+### Changes
+
+* Balance: Adjusted hibernating enemy spawns to be more spread out across zones
+* Balance: Limited number of flavors of enemies in each zone
+  * Only Chargers and Hybrids can spawn together in a zone now, Baseline enemies can always spawn with any of the three flavors
+* Balance: Removed several point reduction chances for Nightmares on D/E tier and reduced point reduction on C-tier
+  * More Nightmares will be found sleeping in a zone now
+* Change: Updated Zone number generation system so Main/Secondary/Overload can have zone numbers closer to each other 
+* Fix: level generation is patched to avoid spawning zones in dead end rooms within existing tiles that have no outgoing connections
+  * This should reduce the chance of levels generating that have bad zones
+* Fix: Mothers & PMothers not spawning any units
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.74.0...v0.75.0
+
+
 ## [v0.74.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.74.0) — August 26, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
