@@ -1046,8 +1046,7 @@ public partial record LevelLayout : DataBlock
                 }
 
             /**
-             * --- DO NOT USE ---
-             * This objective is completely bugged
+             * Central cluster of generators with cell fetching
              * */
             case WardenObjectiveType.CentralGeneratorCluster:
             {

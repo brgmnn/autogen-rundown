@@ -774,19 +774,7 @@ public record EnemyGroup : DataBlock
 
     #endregion
 
-    public static void Setup()
-    {
-        // JArray array = JArray.Parse(VanillaData);
-        // var groups = array.ToObject<List<GameDataEnemyGroup>>();
-        //
-        // if (groups == null)
-        //     throw new Exception("Failed to parse vanilla enemy groups data");
-        //
-        // foreach (var group in groups)
-        // {
-        //     Bins.EnemyGroups.AddBlock(group);
-        // }
-    }
+    public static void Setup() { }
 
     public new static void SaveStatic()
     {
@@ -996,17 +984,20 @@ public record EnemyGroup : DataBlock
 
         foreach (var difficulty in baseDifficulties)
         {
+            // The `MaxScore` setting here determines how clumpy the groups are. By adding enemy
+            // groups with large MaxScore settings, those will spawn in a single area as one group.
+            // Using very small group sizes will allow a more spread out spawning of the enemies.
+
             // Smaller standard mixes
             Bins.EnemyGroups.AddBlock(
                 new EnemyGroup
                 {
                     Type = EnemyGroupType.Hibernate,
                     Difficulty = (uint)difficulty,
-                    MaxScore = 5,
+                    MaxScore = 4,
                     Roles = new List<EnemyGroupRole>
                     {
-                        new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel75 },
-                        new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
+                        new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
                     }
                 });
             Bins.EnemyGroups.AddBlock(
@@ -1014,25 +1005,36 @@ public record EnemyGroup : DataBlock
                 {
                     Type = EnemyGroupType.Hibernate,
                     Difficulty = (uint)difficulty,
-                    MaxScore = 5,
+                    MaxScore = 4,
                     Roles = new List<EnemyGroupRole>
                     {
-                        new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel50 },
-                        new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
+                        new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel75 },
+                        new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
+                    }
+                });
+            Bins.EnemyGroups.AddBlock(
+                new EnemyGroup
+                {
+                    Type = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)difficulty,
+                    MaxScore = 4,
+                    Roles = new List<EnemyGroupRole>
+                    {
+                        new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel50 },
+                        new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
                     }
                 });
 
-            // Larger mixes
+            // Larger standard mixes
             Bins.EnemyGroups.AddBlock(
                 new EnemyGroup
                 {
                     Type = EnemyGroupType.Hibernate,
                     Difficulty = (uint)difficulty,
-                    MaxScore = 10,
+                    MaxScore = 8,
                     Roles = new List<EnemyGroupRole>
                     {
-                        new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel75 },
-                        new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
+                        new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
                     }
                 });
             Bins.EnemyGroups.AddBlock(
@@ -1043,75 +1045,14 @@ public record EnemyGroup : DataBlock
                     MaxScore = 8,
                     Roles = new List<EnemyGroupRole>
                     {
-                        new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel50 },
-                        new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
-                    }
-                });
-
-            // Very big mixes
-            Bins.EnemyGroups.AddBlock(
-                new EnemyGroup
-                {
-                    Type = EnemyGroupType.Hibernate,
-                    Difficulty = (uint)difficulty,
-                    MaxScore = 24,
-                    Roles = new List<EnemyGroupRole>
-                    {
-                        new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel75 },
-                        new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
-                    }
-                });
-            Bins.EnemyGroups.AddBlock(
-                new EnemyGroup
-                {
-                    Type = EnemyGroupType.Hibernate,
-                    Difficulty = (uint)difficulty,
-                    MaxScore = 18,
-                    Roles = new List<EnemyGroupRole>
-                    {
-                        new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel50 },
-                        new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
+                        new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel50 },
+                        new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
                     }
                 });
         }
         #endregion
 
         #region AutoDiff, Tier C
-        Bins.EnemyGroups.AddBlock(
-            new EnemyGroup
-            {
-                Type = EnemyGroupType.Hibernate,
-                Difficulty = (uint)(AutogenDifficulty.TierC | AutogenDifficulty.Base),
-                MaxScore = 6,
-                Roles = new List<EnemyGroupRole>
-                {
-                    new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 },
-                    new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
-                }
-            });
-        Bins.EnemyGroups.AddBlock(
-            new EnemyGroup
-            {
-                Type = EnemyGroupType.Hibernate,
-                Difficulty = (uint)(AutogenDifficulty.TierC | AutogenDifficulty.Base),
-                MaxScore = 12,
-                Roles = new List<EnemyGroupRole>
-                {
-                    new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 },
-                    new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
-                }
-            });
-        Bins.EnemyGroups.AddBlock(
-            new EnemyGroup
-            {
-                Type = EnemyGroupType.Hibernate,
-                Difficulty = (uint)(AutogenDifficulty.TierC | AutogenDifficulty.Chargers),
-                MaxScore = 6,
-                Roles = new List<EnemyGroupRole>
-                {
-                    new EnemyGroupRole { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 }
-                }
-            });
 
         // Chargers
         Bins.EnemyGroups.AddBlock(
@@ -1119,10 +1060,21 @@ public record EnemyGroup : DataBlock
             {
                 Type = EnemyGroupType.Hibernate,
                 Difficulty = (uint)(AutogenDifficulty.TierC | AutogenDifficulty.Chargers),
-                MaxScore = 8,
+                MaxScore = 2,
                 Roles = new List<EnemyGroupRole>
                 {
-                    new EnemyGroupRole { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 }
+                    new() { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 }
+                }
+            });
+        Bins.EnemyGroups.AddBlock(
+            new EnemyGroup
+            {
+                Type = EnemyGroupType.Hibernate,
+                Difficulty = (uint)(AutogenDifficulty.TierC | AutogenDifficulty.Chargers),
+                MaxScore = 4,
+                Roles = new List<EnemyGroupRole>
+                {
+                    new() { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 }
                 }
             });
 
@@ -1132,51 +1084,37 @@ public record EnemyGroup : DataBlock
             {
                 Type = EnemyGroupType.Hibernate,
                 Difficulty = (uint)(AutogenDifficulty.TierC | AutogenDifficulty.Nightmares),
-                MaxScore = 6,
+                MaxScore = 4,
                 Roles = new List<EnemyGroupRole>
                 {
-                    new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel50 },
-                    new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
+                    new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 },
+                }
+            });
+        Bins.EnemyGroups.AddBlock(
+            new EnemyGroup
+            {
+                Type = EnemyGroupType.Hibernate,
+                Difficulty = (uint)(AutogenDifficulty.TierC | AutogenDifficulty.Nightmares),
+                MaxScore = 4,
+                Roles = new List<EnemyGroupRole>
+                {
+                    new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel75 },
+                    new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
                 }
             });
         #endregion
 
         #region AutoDiff, Tier D
-        Bins.EnemyGroups.AddBlock(
-            new EnemyGroup
-            {
-                Type = EnemyGroupType.Hibernate,
-                Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Base),
-                MaxScore = 6,
-                Roles = new List<EnemyGroupRole>
-                {
-                    new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 },
-                    new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
-                }
-            });
-        Bins.EnemyGroups.AddBlock(
-            new EnemyGroup
-            {
-                Type = EnemyGroupType.Hibernate,
-                Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Base),
-                MaxScore = 12,
-                Roles = new List<EnemyGroupRole>
-                {
-                    new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 },
-                    new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
-                }
-            });
-
         // Chargers
         Bins.EnemyGroups.AddBlock(
             new EnemyGroup
             {
                 Type = EnemyGroupType.Hibernate,
                 Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Chargers),
-                MaxScore = 8,
+                MaxScore = 4,
                 Roles = new List<EnemyGroupRole>
                 {
-                    new EnemyGroupRole { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 }
+                    new() { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 }
                 }
             });
 
@@ -1189,7 +1127,7 @@ public record EnemyGroup : DataBlock
                 MaxScore = 8,
                 Roles = new List<EnemyGroupRole>
                 {
-                    new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
+                    new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
                 }
             });
 
@@ -1199,10 +1137,10 @@ public record EnemyGroup : DataBlock
             {
                 Type = EnemyGroupType.Hibernate,
                 Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Hybrids),
-                MaxScore = 6,
+                MaxScore = 8,
                 Roles = new List<EnemyGroupRole>
                 {
-                    new EnemyGroupRole { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
+                    new() { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
                 }
             });
 
@@ -1212,51 +1150,37 @@ public record EnemyGroup : DataBlock
             {
                 Type = EnemyGroupType.Hibernate,
                 Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Nightmares),
-                MaxScore = 6,
+                MaxScore = 4,
                 Roles = new List<EnemyGroupRole>
                 {
-                    new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel50 },
-                    new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
+                    new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
+                }
+            });
+        Bins.EnemyGroups.AddBlock(
+            new EnemyGroup
+            {
+                Type = EnemyGroupType.Hibernate,
+                Difficulty = (uint)(AutogenDifficulty.TierD | AutogenDifficulty.Nightmares),
+                MaxScore = 4,
+                Roles = new List<EnemyGroupRole>
+                {
+                    new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel75 },
+                    new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
                 }
             });
         #endregion
 
         #region AutoDiff, Tier E
-        Bins.EnemyGroups.AddBlock(
-            new EnemyGroup
-            {
-                Type = EnemyGroupType.Hibernate,
-                Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Base),
-                MaxScore = 6,
-                Roles = new List<EnemyGroupRole>
-                {
-                    new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 },
-                    new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
-                }
-            });
-        Bins.EnemyGroups.AddBlock(
-            new EnemyGroup
-            {
-                Type = EnemyGroupType.Hibernate,
-                Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Base),
-                MaxScore = 12,
-                Roles = new List<EnemyGroupRole>
-                {
-                    new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 },
-                    new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
-                }
-            });
-
         // Chargers
         Bins.EnemyGroups.AddBlock(
             new EnemyGroup
             {
                 Type = EnemyGroupType.Hibernate,
                 Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Chargers),
-                MaxScore = 8,
+                MaxScore = 4,
                 Roles = new List<EnemyGroupRole>
                 {
-                    new EnemyGroupRole { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 }
+                    new() { Role = EnemyRole.Lurker,  Distribution = EnemyRoleDistribution.Rel100 }
                 }
             });
 
@@ -1266,10 +1190,10 @@ public record EnemyGroup : DataBlock
             {
                 Type = EnemyGroupType.Hibernate,
                 Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Shadows),
-                MaxScore = 8,
+                MaxScore = 4,
                 Roles = new List<EnemyGroupRole>
                 {
-                    new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
+                    new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
                 }
             });
 
@@ -1279,10 +1203,10 @@ public record EnemyGroup : DataBlock
             {
                 Type = EnemyGroupType.Hibernate,
                 Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Hybrids),
-                MaxScore = 6,
+                MaxScore = 8,
                 Roles = new List<EnemyGroupRole>
                 {
-                    new EnemyGroupRole { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
+                    new() { Role = EnemyRole.PureSneak,  Distribution = EnemyRoleDistribution.Rel100 }
                 }
             });
 
@@ -1292,11 +1216,22 @@ public record EnemyGroup : DataBlock
             {
                 Type = EnemyGroupType.Hibernate,
                 Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Nightmares),
-                MaxScore = 8,
+                MaxScore = 4,
                 Roles = new List<EnemyGroupRole>
                 {
-                    new EnemyGroupRole { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel50 },
-                    new EnemyGroupRole { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel50 }
+                    new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
+                }
+            });
+        Bins.EnemyGroups.AddBlock(
+            new EnemyGroup
+            {
+                Type = EnemyGroupType.Hibernate,
+                Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Nightmares),
+                MaxScore = 4,
+                Roles = new List<EnemyGroupRole>
+                {
+                    new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel75 },
+                    new() { Role = EnemyRole.Ranged, Distribution = EnemyRoleDistribution.Rel25 }
                 }
             });
         #endregion
