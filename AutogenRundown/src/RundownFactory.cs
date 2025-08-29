@@ -734,10 +734,10 @@ public static class RundownFactory
         #if !DEBUG
         rundown.UseTierUnlockRequirements = true;
 
-        rundown.ReqToReachTierB.MainSectors = Math.Max(1, rundown.TierA.Count - 1);
-        rundown.ReqToReachTierC.MainSectors = Math.Max(0, rundown.ReqToReachTierB.MainSectors + rundown.TierB.Count - 1);
-        rundown.ReqToReachTierD.MainSectors = Math.Max(0, rundown.ReqToReachTierC.MainSectors + rundown.TierC.Count - 1);
-        rundown.ReqToReachTierE.MainSectors = Math.Max(0, rundown.ReqToReachTierD.MainSectors + rundown.TierD.Count - 1);
+        rundown.ReqToReachTierB.MainSectors = Math.Max(1, rundown.TierA.Count - 3);
+        rundown.ReqToReachTierC.MainSectors = Math.Max(0, rundown.ReqToReachTierB.MainSectors + rundown.TierB.Count - 3);
+        rundown.ReqToReachTierD.MainSectors = Math.Max(0, rundown.ReqToReachTierC.MainSectors + rundown.TierC.Count - 3);
+        rundown.ReqToReachTierE.MainSectors = Math.Max(0, rundown.ReqToReachTierD.MainSectors + rundown.TierD.Count - 3);
         #endif
 
         rundown.VisualsETier = Color.MenuVisuals_SeasonalE;
@@ -772,6 +772,16 @@ public static class RundownFactory
                     new() { 1, 1, 1, 1 },
                     new() { 1, 1, 1, 1 },
                     new() { 1, 2, 1 }
+                }
+            },
+            {
+                "2025_09", new List<List<int>>
+                {
+                    new() { 1, 1, 1 },
+                    new() { 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1 }
                 }
             }
         };
