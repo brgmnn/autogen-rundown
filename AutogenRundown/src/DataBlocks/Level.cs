@@ -101,6 +101,8 @@ public class Level
         RelativeDirection.Global_Backward
     };
 
+    #region Zone Numbers
+
     /// <summary>
     /// What zone does Main start with
     /// </summary>
@@ -127,6 +129,117 @@ public class Level
             Bulkhead.Overload => ZoneAliasStart_Overload,
             _ => 0,
         };
+
+    /// <summary>
+    /// Generates the zone alias start numbers, tries to ensure there will be no collisions.
+    ///
+    /// TODO: we can probably remove this
+    /// </summary>
+    private void GenerateZoneAliasStarts()
+    {
+        var minmax = Tier switch
+        {
+            // A-Tier: 195 spread
+            "A" => new List<(int, int)>
+            {
+                (  5, 70),
+                ( 95, 135),
+                (160, 200),
+            },
+
+            "B" => new List<(int, int)>
+            {
+                ( 50, 170),  // 250 spread
+                (200, 275),
+                (300, 450),
+            },
+
+            "C" => new List<(int, int)>
+            {
+                (200, 275), // 400 spread
+                (300, 475),
+                (500, 600),
+            },
+
+            "D" => new List<(int, int)>
+            {
+                (300, 475), // 550 spread
+                (500, 680),
+                (700, 850),
+            },
+
+            "E" => new List<(int, int)>
+            {
+                (450, 570), // 500 spread
+                (600, 750),
+                (790, 950),
+            },
+
+            _ => new List<(int, int)>
+            {
+                (  5, 70),
+                ( 95, 135),
+                (160, 200),
+            }
+        };
+
+        var (min, max) = Generator.Draw(minmax);
+        ZoneAliasStart_Main = Generator.Between(min, max);
+
+        (min, max) = Generator.Draw(minmax);
+        ZoneAliasStart_Extreme = Generator.Between(min, max);
+
+        (min, max) = Generator.Draw(minmax);
+        ZoneAliasStart_Overload = Generator.Between(min, max);
+    }
+
+    /// <summary>
+    /// Recalculates the zone alias starts using the BetweenConstrained method. This lets us have
+    /// closer and more naturally selected zone numbers instead of having to bucket them into
+    /// their own groups of 100.
+    /// </summary>
+    public void RecalculateZoneAliasStarts()
+    {
+        var (min, max) = Tier switch
+        {
+            "A" => (  1, 190),
+            "B" => ( 80, 340),
+            "C" => (120, 660),
+            "D" => (170, 820),
+            "E" => (300, 950),
+
+            _ => (500, 600)
+        };
+
+        var blocked = new List<(int, int)>();
+
+        // Main
+        var mainSize = Layouts[Bulkhead.Main].Zones.Count;
+
+        ZoneAliasStart_Main = Generator.Between(min, max);
+
+        blocked.Add((ZoneAliasStart_Main, ZoneAliasStart_Main + mainSize - 1));
+
+        // Extreme
+        if (SecondaryLayerEnabled)
+        {
+            var extremeSize = Layouts[Bulkhead.Extreme].Zones.Count;
+
+            ZoneAliasStart_Extreme = Generator.BetweenConstrained(min, max, blocked, extremeSize + 5);
+
+            blocked.Add((ZoneAliasStart_Extreme, ZoneAliasStart_Extreme + extremeSize - 1));
+        }
+
+        // Overload
+        if (ThirdLayerEnabled)
+        {
+            var overloadSize = Layouts[Bulkhead.Overload].Zones.Count;
+
+            ZoneAliasStart_Overload = Generator.BetweenConstrained(min, max, blocked, overloadSize + 5);
+        }
+    }
+
+    #endregion
     #endregion
 
     #region === MODS ===
@@ -285,7 +398,7 @@ public class Level
 
     public JObject Descriptive
     {
-        get => new JObject
+        get => new()
         {
             ["Prefix"] = IsTest ? "TEST" : (Prefix ?? Tier),
             ["PublicName"] = Name,
@@ -571,60 +684,6 @@ public class Level
             "E" => Generator.Random.Next(950, 1500),
             _ => Depth
         };
-    }
-
-    /// <summary>
-    /// Generates the zone alias start numbers, tries to ensure there will be no collisions.
-    /// </summary>
-    private void GenerateZoneAliasStarts()
-    {
-        var minmax = Tier switch
-        {
-            "B" => new List<(int, int)>
-            {
-                ( 50, 170),  // 250 spread
-                (200, 275),
-                (300, 450),
-            },
-
-            "C" => new List<(int, int)>
-            {
-                (200, 275), // 400 spread
-                (300, 475),
-                (500, 600),
-            },
-
-            "D" => new List<(int, int)>
-            {
-                (300, 475), // 550 spread
-                (500, 680),
-                (700, 850),
-            },
-
-            "E" => new List<(int, int)>
-            {
-                (450, 570), // 500 spread
-                (600, 750),
-                (790, 950),
-            },
-
-            // A-Tier: 195 spread
-            _ => new List<(int, int)>
-            {
-                (  5, 70),
-                ( 95, 135),
-                (160, 200),
-            }
-        };
-
-        var (min, max) = Generator.Draw(minmax);
-        ZoneAliasStart_Main = Generator.Random.Next(min, max);
-
-        (min, max) = Generator.Draw(minmax);
-        ZoneAliasStart_Extreme = Generator.Random.Next(min, max);
-
-        (min, max) = Generator.Draw(minmax);
-        ZoneAliasStart_Overload = Generator.Random.Next(min, max);
     }
 
     /// <summary>
@@ -1184,6 +1243,12 @@ public class Level
 
         #region Finalize -- ExtraObjectiveSetup
         level.FinalizeExtraObjectiveSetup();
+        #endregion
+
+        #region Finalize -- Zone numbers
+
+        level.RecalculateZoneAliasStarts();
+
         #endregion
 
         Plugin.Logger.LogDebug($"Level={level.Tier}{level.Index} level plan: {level.Planner}");

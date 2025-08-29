@@ -93,6 +93,118 @@ static public class Generator
         => Random.Next(min, max + 1);
 
     /// <summary>
+    /// Randomly selects a number between (min, max) but excluding blocked ranges and ensuring a
+    /// minimum number of free numbers after the returned number.
+    ///
+    /// Primary use case is selecting Zone Alias Start.
+    /// </summary>
+    /// <param name="min"></param>
+    /// <param name="max"></param>
+    /// <param name="blockedRanges"></param>
+    /// <param name="freeAfter"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    public static int BetweenConstrained(
+        int min,
+        int max,
+        IEnumerable<(int start, int end)> blockedRanges,
+        int freeAfter = 1)
+    {
+        // Normalize and merge blocked ranges within [min, max]
+        var mergedBlocked = MergeRanges(
+            blockedRanges
+                .Select(r => (start: Math.Max(min, Math.Min(r.start, r.end)),
+                    end:   Math.Min(max, Math.Max(r.start, r.end))))
+                .Where(r => r.start <= r.end) // keep only ranges that intersect [min, max]
+                .OrderBy(r => r.start)
+                .ThenBy(r => r.end)
+        );
+
+        // Compute allowed segments = complement of mergedBlocked within [min, max]
+        var allowed = new List<(int start, int end)>();
+        var cursor = min;
+
+        foreach (var (blockStart, blockEnd) in mergedBlocked)
+        {
+            if (cursor < blockStart)
+                allowed.Add((cursor, blockStart - 1));
+
+            cursor = blockEnd + 1;
+
+            if (cursor > max)
+                break;
+        }
+
+        if (cursor <= max)
+            allowed.Add((cursor, max));
+
+        // For each allowed segment [s, e], valid starts v satisfy v + minFreeAfter <= e => v in [s, e - minFreeAfter]
+        var candidateSpans = new List<(int start, int count)>(); // count = number of valid starts in this span
+        var totalChoices = 0;
+
+        foreach (var (s, e) in allowed)
+        {
+            var lastStart = e - freeAfter;
+
+            if (lastStart >= s)
+            {
+                var count = lastStart - s + 1; // inclusive
+                candidateSpans.Add((s, count));
+                totalChoices += count;
+            }
+        }
+
+        if (totalChoices == 0)
+            throw new InvalidOperationException("No valid numbers available with the given constraints and tail requirement.");
+
+        // Pick a random index across all candidate starts
+        // long pick = _rng.NextInt64(totalChoices); // .NET 6+; for older .NET use custom NextInt64
+        var pick = Between(0, totalChoices);
+
+        foreach (var (s, count) in candidateSpans)
+        {
+            if (pick < count)
+                return s + pick;
+
+            pick -= count;
+        }
+
+        // Should never reach here
+        throw new InvalidOperationException("Selection failed unexpectedly.");
+    }
+
+    // Merge overlapping/adjacent inclusive ranges
+    private static List<(int start, int end)> MergeRanges(IEnumerable<(int start, int end)> ranges)
+    {
+        var result = new List<(int, int)>();
+        int? cs = null;
+        int ce = 0;
+
+        foreach (var (s, e) in ranges)
+        {
+            if (cs == null)
+            {
+                cs = s;
+                ce = e;
+            }
+            else if (s <= ce + 1) // overlap or adjacent
+            {
+                ce = Math.Max(ce, e);
+            }
+            else
+            {
+                result.Add((cs.Value, ce));
+                cs = s; ce = e;
+            }
+        }
+
+        if (cs != null)
+            result.Add((cs.Value, ce));
+
+        return result;
+    }
+
+    /// <summary>
     /// Coin flip with a true/false outcome. Optional chance param
     /// </summary>
     /// <param name="chance">

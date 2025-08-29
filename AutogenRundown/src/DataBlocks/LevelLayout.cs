@@ -1,7 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
-using AutogenRundown.DataBlocks.Items;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
@@ -39,7 +38,11 @@ public partial record LevelLayout : DataBlock
     private readonly LevelSettings settings;
     #endregion
 
-    public int ZoneAliasStart { get; set; }
+    /// <summary>
+    /// This is dynamically pulled from the level. This lets us centralize and coordinate
+    /// generating zone ranges
+    /// </summary>
+    public int ZoneAliasStart => level.GetZoneAliasStart(director.Bulkhead);
 
     public List<Zone> Zones { get; set; } = new();
 
@@ -953,7 +956,6 @@ public partial record LevelLayout : DataBlock
         var layout = new LevelLayout(level, director, objective, level.Settings, level.Planner)
         {
             Name = $"{level.Tier}{level.Index} {level.Name} {director.Bulkhead}",
-            ZoneAliasStart = level.GetZoneAliasStart(director.Bulkhead),
             direction = direction
         };
 
