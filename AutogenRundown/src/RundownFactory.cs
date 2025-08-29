@@ -1007,6 +1007,9 @@ public static class RundownFactory
         // Seasonal Rundown -- Rundown 8 replacement
         #region Seasonal Rundown
         {
+            // TODO: remove after 2025/09/01
+            seasonalSeed = "Fall_2025";
+
             // Reads or generates the seed
             Generator.SetSeasonSeed(seasonalSeed);
             Generator.Reload();

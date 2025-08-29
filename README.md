@@ -72,8 +72,6 @@ Check: https://discord.com/channels/782438773690597389/783918553626836992/140745
 Check error alarm door first in D4
 
 2025_08_27
-  * P-Mother doesn't spawn babies
-  * Consider removing "Roll error alarms" from levels in general and just use the specific layout error alarms
   * Generator cluster needs a little less zones
 
 2025_08_17
@@ -139,12 +137,6 @@ Monthly Feb
 
 Missing tiles to add
   * Add R8A1 garden hub tile to hubs
-
-
-
-* 🌟 New Seasonal Rundown: Fall '25 🍂
-  * Added a new long lived rundown, the Seasonal rundown. Starting with Fall '25 this rundown is updated every 3 months and includes more levels and more PE missions.
-
 
 
 Enemies:
