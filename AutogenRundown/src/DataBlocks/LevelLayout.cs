@@ -540,7 +540,7 @@ public partial record LevelLayout : DataBlock
             var hybridChance = 0.0;
 
             if (settings.Modifiers.Contains(LevelModifiers.Hybrids))
-                hybridChance = 0.2;
+                hybridChance = 0.3;
 
             var infectionHybridChance = 0.0;
 
@@ -607,70 +607,80 @@ public partial record LevelLayout : DataBlock
                 }),
             };
 
-            if (chargerChance > 0 && shadowChance > 0)
+            if (chargerChance > 0 && hybridChance > 0)
                 groupChoices.Add(
-                    (0.2, new List<AutogenDifficulty>
-                        {
-                            AutogenDifficulty.Base,
-                            AutogenDifficulty.Chargers,
-                            AutogenDifficulty.Shadows
-                        }));
-
-            if (chargerChance > 0 && nightmaresChance > 0)
-                groupChoices.Add(
-                    (0.2, new List<AutogenDifficulty>
+                    (0.1, new List<AutogenDifficulty>
                     {
                         AutogenDifficulty.Base,
                         AutogenDifficulty.Chargers,
-                        AutogenDifficulty.Nightmares
-                    }));
-
-            if (shadowChance > 0 && nightmaresChance > 0)
-                groupChoices.Add(
-                    (0.2, new List<AutogenDifficulty>
-                    {
-                        AutogenDifficulty.Base,
-                        AutogenDifficulty.Shadows,
-                        AutogenDifficulty.Nightmares
-                    }));
-
-            if (chargerChance > 0 && shadowChance > 0 && hybridChance > 0)
-                groupChoices.Add(
-                    (0.1, new List<AutogenDifficulty>
-                        {
-                            AutogenDifficulty.Chargers,
-                            AutogenDifficulty.Shadows,
-                            AutogenDifficulty.Hybrids
-                        }));
-
-            if (chargerChance > 0 && nightmaresChance > 0 && hybridChance > 0)
-                groupChoices.Add(
-                    (0.1, new List<AutogenDifficulty>
-                    {
-                        AutogenDifficulty.Chargers,
-                        AutogenDifficulty.Nightmares,
                         AutogenDifficulty.Hybrids
                     }));
 
-            if (shadowChance > 0 && nightmaresChance > 0 && hybridChance > 0)
-                groupChoices.Add(
-                    (0.1, new List<AutogenDifficulty>
-                    {
-                        AutogenDifficulty.Shadows,
-                        AutogenDifficulty.Nightmares,
-                        AutogenDifficulty.Hybrids
-                    }));
+            // if (chargerChance > 0 && shadowChance > 0)
+            //     groupChoices.Add(
+            //         (0.2, new List<AutogenDifficulty>
+            //             {
+            //                 AutogenDifficulty.Base,
+            //                 AutogenDifficulty.Chargers,
+            //                 AutogenDifficulty.Shadows
+            //             }));
 
-            // TODO: TBD if we like having a room with literally everything in it
-            if (chargerChance > 0 && shadowChance > 0 && nightmaresChance > 0 && hybridChance > 0)
-                groupChoices.Add(
-                    (0.1, new List<AutogenDifficulty>
-                    {
-                        AutogenDifficulty.Chargers,
-                        AutogenDifficulty.Shadows,
-                        AutogenDifficulty.Nightmares,
-                        AutogenDifficulty.Hybrids
-                    }));
+            // if (chargerChance > 0 && nightmaresChance > 0)
+            //     groupChoices.Add(
+            //         (0.2, new List<AutogenDifficulty>
+            //         {
+            //             AutogenDifficulty.Base,
+            //             AutogenDifficulty.Chargers,
+            //             AutogenDifficulty.Nightmares
+            //         }));
+
+            // if (shadowChance > 0 && nightmaresChance > 0)
+            //     groupChoices.Add(
+            //         (0.2, new List<AutogenDifficulty>
+            //         {
+            //             AutogenDifficulty.Base,
+            //             AutogenDifficulty.Shadows,
+            //             AutogenDifficulty.Nightmares
+            //         }));
+
+            // if (chargerChance > 0 && shadowChance > 0 && hybridChance > 0)
+            //     groupChoices.Add(
+            //         (0.1, new List<AutogenDifficulty>
+            //             {
+            //                 AutogenDifficulty.Chargers,
+            //                 AutogenDifficulty.Shadows,
+            //                 AutogenDifficulty.Hybrids
+            //             }));
+
+            // if (chargerChance > 0 && nightmaresChance > 0 && hybridChance > 0)
+            //     groupChoices.Add(
+            //         (0.1, new List<AutogenDifficulty>
+            //         {
+            //             AutogenDifficulty.Chargers,
+            //             AutogenDifficulty.Nightmares,
+            //             AutogenDifficulty.Hybrids
+            //         }));
+
+            // if (shadowChance > 0 && nightmaresChance > 0 && hybridChance > 0)
+            //     groupChoices.Add(
+            //         (0.1, new List<AutogenDifficulty>
+            //         {
+            //             AutogenDifficulty.Shadows,
+            //             AutogenDifficulty.Nightmares,
+            //             AutogenDifficulty.Hybrids
+            //         }));
+
+            // // TODO: TBD if we like having a room with literally everything in it
+            // // We don't
+            // if (chargerChance > 0 && shadowChance > 0 && nightmaresChance > 0 && hybridChance > 0)
+            //     groupChoices.Add(
+            //         (0.1, new List<AutogenDifficulty>
+            //         {
+            //             AutogenDifficulty.Chargers,
+            //             AutogenDifficulty.Shadows,
+            //             AutogenDifficulty.Nightmares,
+            //             AutogenDifficulty.Hybrids
+            //         }));
 
 
             var groups = Generator.Select(groupChoices);
@@ -729,10 +739,7 @@ public partial record LevelLayout : DataBlock
                         // (nightmares) are far harder than others. And others are easier
                         Points = (int)((group, level.Tier) switch
                         {
-                            (AutogenDifficulty.Nightmares, "C") => points / 2.0,
-                            (AutogenDifficulty.Nightmares, "D") => points / 1.5,
-                            (AutogenDifficulty.Nightmares, "E") => points / 1.2,
-
+                            (AutogenDifficulty.Nightmares, "C") => points / 1.2,
                             (AutogenDifficulty.Shadows, "E") => points * 1.2,
 
                             _ => points
