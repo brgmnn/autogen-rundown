@@ -36,6 +36,8 @@ public class RundownNames
         //     UTC_Target_Year = 2025
         // };
 
+        // GUI/CellUI_Camera(Clone)/MainMenuLayer/CM_PageRundown_New_CellUI_ALT(Clone)/MovingContent/Rundown/RundownSelections/
+
         while (enumerator.MoveNext())
         {
             // CM_RundownSelection rundown = enumerator.Current;
