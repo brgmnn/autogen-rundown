@@ -65,6 +65,9 @@ public enum AutogenDifficulty : uint
     // Tiers of difficulty
     // Overlaps with specific enemies, but that's fine because we only mask
     // these with the groups that sit in the higher bits
+    // TODO: We don't actually need these groups. We should instead just rely on
+    //       the population groups and then we can add "regular" / "giant" groups
+    //       to have more control over larger enemies
     TierA            = 0x01, // 0000_0001
     TierB            = 0x02, // 0000_0010
     TierC            = 0x03, // 0000_0011
