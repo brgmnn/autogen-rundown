@@ -1267,10 +1267,11 @@ public class Level
             var elevatorDrop = new ZoneNode(Bulkhead.Main, level.Planner.NextIndex(Bulkhead.Main));
             var elevatorDropZone = new Zone(level)
             {
-                Coverage = new CoverageMinMax { Min = 25, Max = 35 },
+                // Coverage = new CoverageMinMax { Min = 25, Max = 35 },
+                Coverage = CoverageMinMax.Large_150,
                 LightSettings = Lights.GenRandomLight(),
                 LocalIndex = 0,
-                CustomGeomorph = geo
+                // CustomGeomorph = geo
             };
 
             // elevatorDropZone.EnemySpawningInZone.Add(
@@ -1324,15 +1325,16 @@ public class Level
             // level.Planner.AddZone(new ZoneNode(Bulkhead.Main, 1), zone2);
             // layout.Zones.Add(zone2);
 
-            // elevatorDrop = layout.BuildBranch(elevatorDrop, 2);
+            elevatorDropZone.EnemySpawningInZone.Add(
+                EnemySpawningData.TierA with { Points = 30 });
 
             // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
 
-            elevatorDropZone.EnemySpawningInZone.Add(
-                EnemySpawningData.Mother with { Points = 10 });
-
-            elevatorDropZone.EnemySpawningInZone.Add(
-                EnemySpawningData.PMother with { Points = 10 });
+            // elevatorDropZone.EnemySpawningInZone.Add(
+            //     EnemySpawningData.Mother with { Points = 10 });
+            //
+            // elevatorDropZone.EnemySpawningInZone.Add(
+            //     EnemySpawningData.PMother with { Points = 10 });
 
 
             // elevatorDropZone.EnemySpawningInZone.Add(
