@@ -2,7 +2,7 @@
   "name": "AutogenRundown",
   "version_number": "0.75.0",
   "website_url": "https://github.com/brgmnn/autogen-rundown",
-  "description": "Rundown generation mod for GTFO. New rundowns generated daily, weekly, and monthly.",
+  "description": "Rundown generation mod for GTFO. New rundowns generated daily, weekly, monthly, and each season.",
   "dependencies": [
     "BepInEx-BepInExPack_GTFO-3.2.1",
     "dakkhuza-MTFO-4.6.2",

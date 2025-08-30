@@ -164,7 +164,7 @@ Enemies:
 
 -->
 
-Automatic Rundown generation, using procedural seed based generation. Three active rundowns to choose from: the daily, weekly, and monthly. Play with friends with zero configuration of seeds.
+Automatic Rundown generation, using procedural seed based generation. Three active rundowns to choose from: the daily, weekly, monthly, and each season. Play with friends with zero configuration of seeds.
 
 * [Installation](#installation)
 * [Base game features](#base-game-features)
@@ -264,7 +264,7 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] Retrieve Big Items — *Fog Turbine etc.*
   * [x] Power Cell Distribution — *Distributing cells to individual generators*
   * [x] Terminal Uplink
-  * [x] ~~Central Generator Cluster~~ — *Fetching cells for a central generator cluster*. **Unreliable cluster spawns**
+  * [x] Central Generator Cluster — *Fetching cells for a central generator cluster*
   * [x] HSU Activate Small - *Bring Neonate to depressurizer*
   * [x] Survival - *Timed survival*
   * [x] Gather Terminal
@@ -344,7 +344,6 @@ AutogenRundown supports the following 3rd party peer mods. You can install them 
 * [Arsenality](https://thunderstore.io/c/gtfo/p/W33B/Arsenality)
 * [ArsenalityRebalance](https://thunderstore.io/c/gtfo/p/leezurli/ArsenalityRebalance)
 * [VanillaReloaded](https://thunderstore.io/c/gtfo/p/tru0067/VanillaReloaded)
-<!-- * [LobbyExpansion](https://thunderstore.io/c/gtfo/p/Cactus/LobbyExpansion) -->
 
 
 ## Acknowledgements
