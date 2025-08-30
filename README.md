@@ -175,7 +175,7 @@ Automatic Rundown generation, using procedural seed based generation. Three acti
 
 Track your progression in each rundown separately from the base game and other modded rundowns, see if you can clear them "Unaugmented"! (Without boosters)
 
-![Monthly Rundown Preview](https://github.com/brgmnn/autogen-rundown/blob/03583187a757755e486623da73d4712e00187be7/docs/monthly_rundown.jpg?raw=true "Monthly Rundown Preview")
+![Monthly Rundown Preview](https://github.com/brgmnn/autogen-rundown/blob/main/docs/monthly_rundown.jpg?raw=true "Monthly Rundown Preview")
 
 Levels and rundowns are designed to be similar and in the spirit of vanilla GTFO. The largest difference is in the addition of new tilesets (geomorphs) to add more variety to the existing games set of tiles.
 
