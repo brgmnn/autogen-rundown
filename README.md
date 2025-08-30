@@ -71,6 +71,9 @@ Check: https://discord.com/channels/782438773690597389/783918553626836992/140745
 
 Check error alarm door first in D4
 
+2025_08_29
+  * Check zone numbers on intel messages, they reference the zone numbers before recalculating the zone alias start
+
 2025_08_27
   * Generator cluster needs a little less zones
 

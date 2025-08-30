@@ -210,6 +210,7 @@ public partial record WardenObjective
                             level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
                         {
                             // Flood the level in 30 mins
+                            // TODO: maybe this should be faster for main missions
                             if (Generator.Flip(0.5))
                                 EventsOnGotoWin.AddFillFog(10.0, 30 * 60);
                         }
