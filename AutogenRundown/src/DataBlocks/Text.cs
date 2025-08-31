@@ -34,6 +34,9 @@ public record Text : DataBlock
     public static void Setup()
         => Setup<GameDataText, Text>(Bins.Texts, "Text");
 
+    /// <summary>
+    /// Local progression text for completing a level with no boosters
+    /// </summary>
     private static GameDataText LocalProgression = new()
     {
         Value = "Unaugmented",
@@ -45,9 +48,24 @@ public record Text : DataBlock
         PersistentId = Generator.GetPersistentId()
     };
 
+    /// <summary>
+    /// Replaces the big red text on the rundown title
+    /// </summary>
+    private static Text RundownSelectionTitle = new()
+    {
+        // CLCTR\u00A0multithread processor activated\r\n\r\n",
+        Value = "RAND-GEN AUTOMATIC PROCESSOR ACTIVATED",
+        ExportVersion = 2,
+        ImportVersion = 2,
+        Name = "MainMenu.RundownPage.R1_alt_RoleplayHeader",
+        PersistentId = 1616762565
+    };
+
     public new static void SaveStatic()
     {
         Bins.Texts.AddBlock(LocalProgression);
+
+        Bins.Texts.ReplaceBlock(RundownSelectionTitle);
     }
 
     /// <summary>

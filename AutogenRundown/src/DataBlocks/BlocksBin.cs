@@ -162,6 +162,24 @@ public class BlocksBin<T> where T : DataBlock
         }
     }
 
+    public void ReplaceBlock(T? block)
+    {
+        if (block is null || block.PersistentId == 0)
+            return;
+
+        if (persistentIds.Contains(block.PersistentId))
+        {
+            var existing = Blocks.Find(b => b.PersistentId == block.PersistentId);
+
+            if (existing is not null)
+                Blocks.Remove(existing);
+        }
+
+        Blocks.Add(block);
+        persistentIds.Add(block.PersistentId);
+        LastPersistentId = Math.Max(LastPersistentId, block.PersistentId);
+    }
+
     public bool Contains(T? block) => Blocks.Contains(block);
 
     public T? GetBlock(T? block) => Blocks.Find(b => b == block);
