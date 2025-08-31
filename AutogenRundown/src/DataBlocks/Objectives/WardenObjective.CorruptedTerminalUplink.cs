@@ -55,12 +55,12 @@ public partial record WardenObjective
 
         if (Uplink_NumberOfTerminals > 1)
         {
-            MainObjective = "Find the <u>Uplink Terminals</u> [ALL_ITEMS] and establish an external uplink from each terminal";
+            MainObjective = new Text("Find the <u>Uplink Terminals</u> [ALL_ITEMS] and establish an external uplink from each terminal");
             FindLocationInfo = "Gather information about the location of the terminals";
         }
         else
         {
-            MainObjective = "Find the <u>Uplink Terminal</u> [ALL_ITEMS] and establish an external uplink";
+            MainObjective = new Text("Find the <u>Uplink Terminal</u> [ALL_ITEMS] and establish an external uplink");
             FindLocationInfo = "Gather information about the location of the terminal";
         }
 

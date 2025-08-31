@@ -36,7 +36,7 @@ public partial record class WardenObjective : DataBlock
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
-        MainObjective = "Distribute Power Cells from the elevator cargo container to [ALL_ITEMS]";
+        MainObjective = new Text("Distribute Power Cells from the elevator cargo container to [ALL_ITEMS]");
         FindLocationInfo = "Locate the Generators and bring the Power Cells to them";
         FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
         GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";

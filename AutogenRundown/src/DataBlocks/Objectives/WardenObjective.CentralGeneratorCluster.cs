@@ -42,7 +42,7 @@ public partial record WardenObjective
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
-        MainObjective = "Find [COUNT_REQUIRED] Power Cells and bring them to the Central Generator Cluster in [ITEM_ZONE]";
+        MainObjective = new Text("Find [COUNT_REQUIRED] Power Cells and bring them to the Central Generator Cluster in [ITEM_ZONE]");
         FindLocationInfo = "Locate the Power Cells and use them to power up the Generator Cluster";
         FindLocationInfoHelp = "Generators Online: [COUNT_CURRENT] / [COUNT_REQUIRED]";
         GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";

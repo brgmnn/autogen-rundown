@@ -878,7 +878,12 @@ public partial record WardenObjective : DataBlock
     public WardenObjectiveType Type { get; set; }
 
     #region Information and display strings
-    public string MainObjective { get; set; } = "";
+    [JsonIgnore]
+    public Text MainObjective { get; set; } = Text.None;
+
+    [JsonProperty("MainObjective")]
+    public uint MainObjectiveId => MainObjective.PersistentId;
+
     public string FindLocationInfo { get; set; } = "";
     public string FindLocationInfoHelp { get; set; } = "Access more data in the terminal maintenance system";
     public string GoToZone { get; set; } = "";

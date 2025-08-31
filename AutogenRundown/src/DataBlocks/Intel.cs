@@ -26,4 +26,3 @@ public class Intel
 
     public static string Zone(int number) => $"<color=orange>ZONE {number}</color>";
 }
-

@@ -396,6 +396,11 @@ public class Level
     [JsonIgnore]
     public string? Prefix { get; set; }
 
+    /// <summary>
+    /// How the level should appear in the rundown screen
+    /// </summary>
+    public Accessibility Accessibility { get; set; } = Accessibility.Normal;
+
     public JObject Descriptive
     {
         get => new()

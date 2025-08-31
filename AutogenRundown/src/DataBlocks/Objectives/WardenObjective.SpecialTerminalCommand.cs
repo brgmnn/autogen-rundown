@@ -81,7 +81,7 @@ public partial record class WardenObjective : DataBlock
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
-        MainObjective = "Find Computer terminal [ITEM_SERIAL] and input the backdoor command [SPECIAL_COMMAND]";
+        MainObjective = new Text("Find Computer terminal [ITEM_SERIAL] and input the backdoor command [SPECIAL_COMMAND]");
         FindLocationInfo = "Gather information about the location of [ITEM_SERIAL]";
         FindLocationInfoHelp = "Access more data in the terminal maintenance system";
         GoToZone = "Navigate to [ITEM_ZONE] and find [ITEM_SERIAL]";

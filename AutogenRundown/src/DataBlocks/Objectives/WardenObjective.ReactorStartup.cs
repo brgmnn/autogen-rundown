@@ -208,7 +208,7 @@ public partial record WardenObjective
 
     private void Build_ReactorStartup(BuildDirector director, Level level)
     {
-        MainObjective = "Find the main reactor for the floor and make sure it is back online.";
+        MainObjective = new Text("Find the main reactor for the floor and make sure it is back online.");
         FindLocationInfo = "Gather information about the location of the Reactor";
         FindLocationInfoHelp = "Access more data in the terminal maintenance system";
         GoToZone = "Navigate to [ITEM_ZONE] and start the Reactor";

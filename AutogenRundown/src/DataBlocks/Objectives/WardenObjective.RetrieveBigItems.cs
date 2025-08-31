@@ -13,7 +13,7 @@ public partial record WardenObjective
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
         var item = RetrieveItems.First();
 
-        MainObjective = "Find [ALL_ITEMS] and bring it to the extraction scan in [EXTRACTION_ZONE]";
+        MainObjective = new Text("Find [ALL_ITEMS] and bring it to the extraction scan in [EXTRACTION_ZONE]");
         FindLocationInfo = "Gather information about the location of [ALL_ITEMS]";
         FindLocationInfoHelp = "Access more data in the terminal maintenance system";
         InZoneFindItem = "Find [ALL_ITEMS] somewhere inside [ITEM_ZONE]";

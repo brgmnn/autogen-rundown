@@ -25,7 +25,7 @@ public partial record WardenObjective : DataBlock
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
-        MainObjective = $"Find [ITEM_SERIAL] and initiate timed sequence protocol.";
+        MainObjective = new Text("Find [ITEM_SERIAL] and initiate timed sequence protocol.");
         FindLocationInfo = "Gather information about the location of [ITEM_SERIAL]";
         FindLocationInfoHelp = "Access more data in the terminal maintenance system";
 

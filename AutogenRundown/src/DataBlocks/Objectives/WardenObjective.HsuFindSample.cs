@@ -17,7 +17,7 @@ public partial record WardenObjective
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
-        MainObjective = "Find <color=orange>[ITEM_SERIAL]</color> somewhere inside HSU Storage Zone";
+        MainObjective = new Text("Find <color=orange>[ITEM_SERIAL]</color> somewhere inside HSU Storage Zone");
 
         ActivateHSU_BringItemInElevator = true;
         GatherItemId = (uint)WardenObjectiveItem.HSU;

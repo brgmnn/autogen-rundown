@@ -37,7 +37,7 @@ public partial record WardenObjective
         {
             case Items.Item.DataSphere:
             {
-                MainObjective = "Bring the Data sphere to [ITEM_SERIAL] to unlock its data encryption";
+                MainObjective = new Text("Bring the Data sphere to [ITEM_SERIAL] to unlock its data encryption");
                 SolveItem = $"Insert Data Sphere into {HsuActivateSmall_MachineName} [ITEM_SERIAL]";
                 GoToWinCondition_Elevator = "Return the Data Sphere to the point of entrance in [EXTRACTION_ZONE]";
                 GoToWinCondition_CustomGeo = "Bring the Data Sphere to the forward exit in [EXTRACTION_ZONE]";
@@ -46,7 +46,7 @@ public partial record WardenObjective
             }
             case Items.Item.NeonateHsu_Stage1:
             {
-                MainObjective = "Bring the Neonate to [ITEM_SERIAL] to reactivate it";
+                MainObjective = new Text("Bring the Neonate to [ITEM_SERIAL] to reactivate it");
                 SolveItem = $"Insert Neonate into {HsuActivateSmall_MachineName} [ITEM_SERIAL]";
                 GoToWinCondition_Elevator = "Return the Neonate to the point of entrance in [EXTRACTION_ZONE]";
                 GoToWinCondition_CustomGeo = "Bring the Neonate to the forward exit in [EXTRACTION_ZONE]";

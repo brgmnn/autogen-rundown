@@ -143,6 +143,7 @@ public static class RundownFactory
                     Complex = Complex.Tech,
                     Settings = settings,
                     Index = rundown.TierA_Count + 1,
+                    Accessibility = Accessibility.BlockedAndScrambled,
                     IsTest = true
                 }, 0);
 

@@ -69,28 +69,28 @@ public partial record WardenObjective
         MainObjective = itemId switch
         {
             WardenObjectiveItem.MemoryStick =>
-                "Gather [COUNT_REQUIRED] Memory sticks and return the memory sticks for analysis.",
+                new Text("Gather [COUNT_REQUIRED] Memory sticks and return the memory sticks for analysis."),
             WardenObjectiveItem.PersonnelId =>
-                "Gather [COUNT_REQUIRED] Personnel IDs and return the data to be processed.",
+                new Text("Gather [COUNT_REQUIRED] Personnel IDs and return the data to be processed."),
             WardenObjectiveItem.PartialDecoder =>
-                "Gather [COUNT_REQUIRED] Partial Decoders and return the data to be processed.",
+                new Text("Gather [COUNT_REQUIRED] Partial Decoders and return the data to be processed."),
             WardenObjectiveItem.Harddrive =>
-                "Gather [COUNT_REQUIRED] Hard Drives and return the drives for data archival.",
+                new Text("Gather [COUNT_REQUIRED] Hard Drives and return the drives for data archival."),
             WardenObjectiveItem.Glp_1 =>
-                "Gather [COUNT_REQUIRED] GLP-1 canisters and return the canisters for genome sequencing.",
+                new Text("Gather [COUNT_REQUIRED] GLP-1 canisters and return the canisters for genome sequencing."),
             WardenObjectiveItem.Glp_2 =>
-                "Gather [COUNT_REQUIRED] GLP-2 canisters and return the canisters for genome sequencing.",
+                new Text("Gather [COUNT_REQUIRED] GLP-2 canisters and return the canisters for genome sequencing."),
             WardenObjectiveItem.Osip =>
-                "Gather [COUNT_REQUIRED] OSIP vials and return the vials for chemical analysis.",
+                new Text("Gather [COUNT_REQUIRED] OSIP vials and return the vials for chemical analysis."),
             WardenObjectiveItem.PlantSample =>
-                "Gather [COUNT_REQUIRED] Plant samples and return the samples for analysis.",
+                new Text("Gather [COUNT_REQUIRED] Plant samples and return the samples for analysis."),
             WardenObjectiveItem.DataCube =>
-                "Gather [COUNT_REQUIRED] Data cubes and return the cubes for data extraction.",
+                new Text("Gather [COUNT_REQUIRED] Data cubes and return the cubes for data extraction."),
             WardenObjectiveItem.DataCubeBackup =>
-                "Gather [COUNT_REQUIRED] Backup Data cubes and return the cubes for data archival.",
+                new Text("Gather [COUNT_REQUIRED] Backup Data cubes and return the cubes for data archival."),
             WardenObjectiveItem.DataCubeTampered =>
-                "Gather [COUNT_REQUIRED] Data cubes and return the cubes for inspection.",
-            _ => "Gather items"
+                new Text("Gather [COUNT_REQUIRED] Data cubes and return the cubes for inspection."),
+            _ => new Text("Gather items")
         };
         FindLocationInfo = $"Look for {name}s in the complex";
         FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";

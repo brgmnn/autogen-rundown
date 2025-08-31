@@ -87,7 +87,7 @@ public partial record WardenObjective : DataBlock
         var exitNumber = layout.ZoneAliasStart + exitZone.ZoneNumber;
         var exitZoneString = Lore.Zone(exitNumber);
 
-        MainObjective = $"Find a way to stay alive during Warden Protocol DECOY, and make your way to {exitZoneString} for extraction";
+        MainObjective = new Text($"Find a way to stay alive during Warden Protocol DECOY, and make your way to {exitZoneString} for extraction");
         Survival_TimerTitle = "Time until allowed extraction:";
         Survival_TimerToActivateTitle = "<color=red>WARNING!</color> Warden Protocol <color=orange>DECOY</color> will commence in: ";
         // Set these both as go forward as we always have an exit geo.
