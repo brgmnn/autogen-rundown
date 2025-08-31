@@ -13,6 +13,7 @@ namespace AutogenRundown;
 ///
 /// Note that we must use a GUID for the plugin that places this plugin before any of the other
 /// plugins that depend on the generated JSON files from Autogen. This includes:
+///     * com.dak.MTFO
 ///     * Inas07.ExtraObjectiveSetup
 ///     * Inas07.EOSExt.Reactor
 ///
@@ -21,7 +22,6 @@ namespace AutogenRundown;
 /// </summary>
 [BepInPlugin("000-the_tavern-AutogenRundown", "AutogenRundown", Version)]
 [BepInProcess("GTFO.exe")]
-[BepInDependency("com.dak.MTFO")]
 [BepInDependency("dev.gtfomodding.gtfo-api")]
 public class Plugin : BasePlugin
 {
