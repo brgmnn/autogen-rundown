@@ -52,7 +52,7 @@ public partial record LevelLayout
                 var node = new ZoneNode(director.Bulkhead, zoneIndex, branch, 0);
                 node.Tags.Add("no_enemies");
 
-                var zone = new Zone(level)
+                var zone = new Zone(level, this)
                 {
                     LightSettings = Lights.GenRandomLight(),
                 };

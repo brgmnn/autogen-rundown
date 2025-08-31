@@ -16,7 +16,9 @@ public partial record LevelLayout
     /// <param name="_"></param>
     /// <param name="startish"></param>
     /// <exception cref="Exception"></exception>
-    public void BuildLayout_CorruptedTerminalUplink(BuildDirector director, WardenObjective objective,
+    public void BuildLayout_CorruptedTerminalUplink(
+        BuildDirector director,
+        WardenObjective objective,
         ZoneNode? startish)
     {
         if (startish == null)
@@ -27,7 +29,7 @@ public partial record LevelLayout
 
         var start = (ZoneNode)startish;
         var end = new ZoneNode();
-        var endZone = new Zone(level);
+        var endZone = new Zone(level, this);
 
         // TODO: flesh out D/E tier a bit more. Especially E-tier with 3 terminals
         switch (level.Tier, objective.Uplink_NumberOfTerminals)

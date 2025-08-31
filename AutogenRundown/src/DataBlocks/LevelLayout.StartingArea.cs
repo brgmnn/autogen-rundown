@@ -13,7 +13,7 @@ public partial record LevelLayout
     /// <param name="level"></param>
     /// <param name="bulkhead"></param>
     /// <param name="from"></param>
-    public static void InitializeBulkheadArea(
+    public void InitializeBulkheadArea(
         Level level,
         Bulkhead bulkhead,
         ZoneNode from,
@@ -24,7 +24,7 @@ public partial record LevelLayout
 
         level.Planner.AddZone(
             bulkheadNode,
-            zone ?? new Zone(level)
+            zone ?? new Zone(level, this)
             {
                 Coverage = CoverageMinMax.GenNormalSize(),
                 LightSettings = Lights.GenRandomLight(),
@@ -222,7 +222,7 @@ public partial record LevelLayout
         {
             var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
             var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
-            nextZone = new Zone(level)
+            nextZone = new Zone(level, this)
             {
                 Coverage = CoverageMinMax.GenNormalSize(),
                 LightSettings = Lights.GenRandomLight(),
@@ -252,7 +252,7 @@ public partial record LevelLayout
         var elevatorDrop = new ZoneNode(
             Bulkhead.Main | Bulkhead.StartingArea,
             level.Planner.NextIndex(Bulkhead.Main));
-        var elevatorDropZone = new Zone(level)
+        var elevatorDropZone = new Zone(level, this)
         {
             Coverage = new CoverageMinMax { Min = 25, Max = 35 },
             LightSettings = Lights.GenRandomLight(),
@@ -304,7 +304,7 @@ public partial record LevelLayout
             ZoneNumber = level.Planner.NextIndex(Bulkhead.Main),
             MaxConnections = 3
         };
-        var elevatorDropZone = new Zone(level)
+        var elevatorDropZone = new Zone(level, this)
         {
             Coverage = new CoverageMinMax { Min = 25, Max = 35 },
             LightSettings = Lights.GenRandomLight(),

@@ -784,9 +784,10 @@ public class Level
     public LevelLayout? GetLevelLayout(Bulkhead variant) =>
         variant switch
         {
-            Bulkhead.Main => Bins.LevelLayouts.Find(LevelLayoutData),
+            Bulkhead.Main or (Bulkhead.Main | Bulkhead.StartingArea) => Bins.LevelLayouts.Find(LevelLayoutData),
             Bulkhead.Extreme => Bins.LevelLayouts.Find(SecondaryLayout),
             Bulkhead.Overload => Bins.LevelLayouts.Find(ThirdLayout),
+
             _ => Bins.LevelLayouts.Find(LevelLayoutData)
         };
 
@@ -1335,7 +1336,7 @@ public class Level
 
             // The zones
             var elevatorDrop = new ZoneNode(Bulkhead.Main, level.Planner.NextIndex(Bulkhead.Main));
-            var elevatorDropZone = new Zone(level)
+            var elevatorDropZone = new Zone(level, layout)
             {
                 // Coverage = new CoverageMinMax { Min = 25, Max = 35 },
                 Coverage = CoverageMinMax.Large_150,
@@ -1435,7 +1436,7 @@ public class Level
 
             for (var z = 0; z < forwardZones; z++)
             {
-                var zone = new Zone(level)
+                var zone = new Zone(level, layout)
                 {
                     Coverage = new CoverageMinMax { Min = 5, Max = 10 },
                     LightSettings = Lights.GenRandomLight(),

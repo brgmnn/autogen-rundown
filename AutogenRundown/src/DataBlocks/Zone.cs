@@ -1293,6 +1293,9 @@ public record Zone : DataBlock
     [JsonIgnore]
     internal Level level { get; init; }
 
+    [JsonIgnore]
+    internal LevelLayout layout { get; init; }
+
     /// <summary>
     /// Flags whether the zone is in fog or not.
     /// </summary>
@@ -1560,9 +1563,14 @@ public record Zone : DataBlock
     }
     #endregion
 
-    public Zone(Level level)
+    public Zone(Level level, Bulkhead bulkhead) : this(level, level.GetLevelLayout(bulkhead)!)
+    {
+    }
+
+    public Zone(Level level, LevelLayout layout)
     {
         this.level = level;
+        this.layout = layout;
 
         // Always ensure a terminal is placed in the zone
         TerminalPlacements.Add(new TerminalPlacement());

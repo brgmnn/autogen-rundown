@@ -29,7 +29,7 @@ public partial record LevelLayout
         var startZone = planner.GetZone(start)!;
 
         var last = new ZoneNode();
-        var lastZone = new Zone(level);
+        var lastZone = new Zone(level, this);
 
         switch (level.Tier, director.Bulkhead)
         {

@@ -135,7 +135,7 @@ public partial record LevelLayout
             Tags = new Tags("exit_elevator"),
             MaxConnections = 0
         };
-        var exitZone = new Zone(level)
+        var exitZone = new Zone(level, this)
         {
             Coverage = CoverageMinMax.Tiny,
             LightSettings = Lights.GenRandomLight()
@@ -168,7 +168,7 @@ public partial record LevelLayout
                 "arena_security_control");
             securityControlNode.Tags.Add("no_enemies");
 
-            var securityControlZone = new Zone(level)
+            var securityControlZone = new Zone(level, this)
             {
                 Coverage = CoverageMinMax.Nano,
                 LightSettings = Lights.GenRandomLight(),

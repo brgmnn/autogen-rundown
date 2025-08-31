@@ -48,7 +48,7 @@ public partial record LevelLayout
             "reactor");
         reactorNode.Tags.Add("reactor");
 
-        var reactor = new Zone(level)
+        var reactor = new Zone(level, this)
         {
             LightSettings = light,
             StartPosition = ZoneEntranceBuildFrom.Furthest,

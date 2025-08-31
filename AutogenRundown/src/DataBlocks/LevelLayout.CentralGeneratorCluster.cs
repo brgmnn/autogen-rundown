@@ -158,7 +158,7 @@ public partial record LevelLayout
     private ZoneNode CentralGeneratorCluster_AddCellBranch(ZoneNode start, Altitude? altitude = null)
     {
         var cellNode = new ZoneNode();
-        var cellZone = new Zone(level);
+        var cellZone = new Zone(level, this);
 
         switch (level.Tier, director.Bulkhead)
         {
