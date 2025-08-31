@@ -24,8 +24,9 @@ public partial record WardenObjective
             {
                 var zone = Intel.Zone(dataLayer.ObjectiveData.ZonePlacementDatas[0][0].LocalIndex +
                                       layout.ZoneAliasStart);
+                var zoneNumber = dataLayer.ObjectiveData.ZonePlacementDatas[0][0].LocalIndex;
 
-                GoToZone = $"Navigate to {zone} and find [ALL_ITEMS]";
+                GoToZone = new Text(() => $"Navigate to {Intel.Zone(layout.ZoneAliasStart + zoneNumber)} and find [ALL_ITEMS]");
                 GoToZoneHelp = $"Use information in the environment to find {zone}";
                 InZoneFindItem = $"Find [ALL_ITEMS] somewhere inside {zone}";
             }
@@ -35,13 +36,20 @@ public partial record WardenObjective
                     dataLayer.ObjectiveData.ZonePlacementDatas[0].Select(placement =>
                         Intel.Zone(placement.LocalIndex + layout.ZoneAliasStart)));
 
-                GoToZone = $"Navigate to and find [ALL_ITEMS] in one of zones {zones}";
+                GoToZone = new Text(() =>
+                {
+                    var zones = string.Join(", ",
+                        dataLayer.ObjectiveData.ZonePlacementDatas[0].Select(placement =>
+                            Intel.Zone(placement.LocalIndex + layout.ZoneAliasStart)));
+
+                    return $"Navigate to and find [ALL_ITEMS] in one of zones {zones}";
+                });
                 GoToZoneHelp = $"Use information in the environment to find {zones}";
             }
         }
         else
         {
-            GoToZone = "Navigate to and find [ALL_ITEMS]";
+            GoToZone = new Text("Navigate to and find [ALL_ITEMS]");
             GoToZoneHelp = "Use information in the environment to find each item zone";
         }
 
@@ -311,7 +319,7 @@ public partial record WardenObjective
 
                 // Manually set the zones as the inbuilt ITEM_ZONE doesn't seem to
                 // work correctly for MWP
-                GoToZone = $"Navigate to [ZONE_{zoneIndex}] and find [ALL_ITEMS]";
+                GoToZone = new Text(() => $"Navigate to {Intel.Zone(layout.ZoneAliasStart + zoneIndex)} and find [ALL_ITEMS]");
                 GoToZoneHelp = $"Use information in the environment to find [ZONE_{zoneIndex}]";
                 InZoneFindItem = $"Find [ALL_ITEMS] somewhere inside [ZONE_{zoneIndex}]";
 

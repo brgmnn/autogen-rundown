@@ -886,7 +886,13 @@ public partial record WardenObjective : DataBlock
 
     public string FindLocationInfo { get; set; } = "";
     public string FindLocationInfoHelp { get; set; } = "Access more data in the terminal maintenance system";
-    public string GoToZone { get; set; } = "";
+
+    [JsonIgnore]
+    public Text GoToZone { get; set; } = Text.None;
+
+    [JsonProperty("GoToZone")]
+    public uint GoToZoneId => GoToZone.PersistentId;
+
     public string GoToZoneHelp { get; set; } = "";
     public string InZoneFindItem { get; set; } = "";
     public string InZoneFindItemHelp { get; set; } = "";

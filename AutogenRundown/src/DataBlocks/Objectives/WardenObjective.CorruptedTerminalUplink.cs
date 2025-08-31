@@ -65,7 +65,7 @@ public partial record WardenObjective
         }
 
         FindLocationInfoHelp = "Access more data in the terminal maintenance system";
-        GoToZone = "Navigate to [ITEM_ZONE] and find [ALL_ITEMS]";
+        GoToZone = new Text("Navigate to [ITEM_ZONE] and find [ALL_ITEMS]");
         GoToZoneHelp = "Use information in the environment to find [ITEM_ZONE]";
         InZoneFindItem = "Use maintenance terminal command PING to find [ITEM_SERIAL]";
         InZoneFindItemHelp = "CORTEX INTERFACE ESTABLISHED";

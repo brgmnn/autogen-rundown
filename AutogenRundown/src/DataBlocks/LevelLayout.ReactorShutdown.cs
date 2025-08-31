@@ -101,7 +101,7 @@ public partial record LevelLayout
         // Some objective texts
         // Find the main reactor and shut it down
         objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-        objective.GoToZone = $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process";
+        objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
 
         objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
     }

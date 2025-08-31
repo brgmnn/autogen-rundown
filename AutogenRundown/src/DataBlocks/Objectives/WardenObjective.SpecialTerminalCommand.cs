@@ -84,7 +84,7 @@ public partial record class WardenObjective : DataBlock
         MainObjective = new Text("Find Computer terminal [ITEM_SERIAL] and input the backdoor command [SPECIAL_COMMAND]");
         FindLocationInfo = "Gather information about the location of [ITEM_SERIAL]";
         FindLocationInfoHelp = "Access more data in the terminal maintenance system";
-        GoToZone = "Navigate to [ITEM_ZONE] and find [ITEM_SERIAL]";
+        GoToZone = new Text("Navigate to [ITEM_ZONE] and find [ITEM_SERIAL]");
         GoToZoneHelp = "Use information in the environment to find [ITEM_ZONE]";
         InZoneFindItem = "Find [ITEM_SERIAL] somewhere inside [ITEM_ZONE]";
         InZoneFindItemHelp = "Use maintenance terminal command PING to find [ITEM_SERIAL]";

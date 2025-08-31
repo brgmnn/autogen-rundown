@@ -211,7 +211,7 @@ public partial record WardenObjective
         MainObjective = new Text("Find the main reactor for the floor and make sure it is back online.");
         FindLocationInfo = "Gather information about the location of the Reactor";
         FindLocationInfoHelp = "Access more data in the terminal maintenance system";
-        GoToZone = "Navigate to [ITEM_ZONE] and start the Reactor";
+        GoToZone = new Text("Navigate to [ITEM_ZONE] and start the Reactor");
         GoToZoneHelp = "Use information in the environment to find [ITEM_ZONE]";
         InZoneFindItem = "Find the reactor control panel and initiate the startup";
         SolveItem = "Make sure the Reactor is fully started before leaving";

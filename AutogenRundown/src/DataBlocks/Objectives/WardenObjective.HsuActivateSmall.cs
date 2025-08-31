@@ -56,7 +56,7 @@ public partial record WardenObjective
 
         FindLocationInfo = "Gather information about the location of [ITEM_SERIAL]";
         FindLocationInfoHelp = "Access more data in the terminal maintenance system";
-        GoToZone = "Navigate to [ITEM_ZONE] and find [ITEM_SERIAL]";
+        GoToZone = new Text("Navigate to [ITEM_ZONE] and find [ITEM_SERIAL]");
         GoToZoneHelp = "Use information in the environment to find [ITEM_ZONE]";
         InZoneFindItem = "Find [ITEM_SERIAL] inside [ITEM_ZONE]";
         GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
