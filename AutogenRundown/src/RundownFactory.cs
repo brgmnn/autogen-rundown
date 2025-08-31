@@ -5,6 +5,7 @@ using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.GeneratorData;
+using BepInEx;
 
 namespace AutogenRundown;
 
@@ -34,6 +35,14 @@ public static class RundownFactory
 
             _ => ""
         };
+    }
+
+    private static void CleanFolders()
+    {
+        var dir = Path.Combine(Plugin.GameDataPath, "Custom", "AutogenRundown");
+
+        if (Directory.Exists(dir))
+            Directory.Delete(dir, recursive: true);
     }
 
     /// <summary>
@@ -1003,7 +1012,7 @@ public static class RundownFactory
     /// </summary>
     public static void Build(string dailySeed, string weeklySeed, string monthlySeed, string seasonalSeed)
     {
-        // TODO: Clean custom directory
+        CleanFolders();
 
         Bins.Setup();
         LayoutDefinitions.Setup();

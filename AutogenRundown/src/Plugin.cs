@@ -29,6 +29,10 @@ public class Plugin : BasePlugin
 
     public const string Name = "the_tavern-AutogenRundown";
 
+    public static string GameRevision => CellBuildData.GetRevision().ToString();
+
+    public static string GameDataPath => Path.Combine(Paths.BepInExRootPath, "GameData", GameRevision);
+
     public static ManualLogSource Logger { get; private set; } = new("AutogenRundown");
 
     public static bool Config_UsePlayerColoredGlowsticks { get; set; }
