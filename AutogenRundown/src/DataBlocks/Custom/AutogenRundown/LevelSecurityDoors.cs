@@ -75,7 +75,7 @@ public record LevelSecurityDoors
             "Custom",
             "AutogenRundown",
             "SecurityDoors");
-        var path = Path.Combine(dir, $"{MainLevelLayout}_{Name}.json");
+        var path = Path.Combine(dir, $"{MainLevelLayout}_{Name.Replace(" ", "_")}.json");
 
         // Ensure the directory exists
         Directory.CreateDirectory(dir);
