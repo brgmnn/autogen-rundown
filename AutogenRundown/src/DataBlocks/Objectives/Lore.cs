@@ -137,6 +137,4 @@ public class Lore
 
         return text;
     }
-
-    public static string Zone(int zoneNumber) => $"<color=orange>ZONE {zoneNumber}</color>";
 }

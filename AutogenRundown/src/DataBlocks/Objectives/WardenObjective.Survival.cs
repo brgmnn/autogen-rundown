@@ -83,9 +83,9 @@ public partial record WardenObjective : DataBlock
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
+        // TODO: does this always work? I think it should
         var exitZone = level.Planner.GetZones(director.Bulkhead, "exit").First();
-        var exitNumber = layout.ZoneAliasStart + exitZone.ZoneNumber;
-        var exitZoneString = Lore.Zone(exitNumber);
+        var exitZoneString = Intel.Zone(exitZone, level.Planner);
 
         MainObjective = new Text($"Find a way to stay alive during Warden Protocol DECOY, and make your way to {exitZoneString} for extraction");
         Survival_TimerTitle = "Time until allowed extraction:";
