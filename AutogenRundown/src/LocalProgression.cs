@@ -42,7 +42,13 @@ public class LocalProgression
             ""EnableNoBoosterUsedProgressionForRundown"": true,
             ""AlwaysShowIcon"": true,
             ""Expeditions"": []
-        }}
+        }},
+        {{
+            ""RundownID"": {Rundown.R_Seasonal},
+            ""EnableNoBoosterUsedProgressionForRundown"": true,
+            ""AlwaysShowIcon"": true,
+            ""Expeditions"": []
+        }},
     ]
 }}");
         stream.Flush();

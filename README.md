@@ -71,6 +71,10 @@ Check: https://discord.com/channels/782438773690597389/783918553626836992/140745
 
 Check error alarm door first in D4
 
+2025_08_31
+  * Seasonal Fall_2025 - A4 Decaying Banishment: Pretty much perfect short A level. 26 mins, 5 zones, straight forward clear path
+    * Maybe too high scan levels? 2 class 5 and 2 class 3
+
 2025_08_29
   * Check zone numbers on intel messages, they reference the zone numbers before recalculating the zone alias start
 
