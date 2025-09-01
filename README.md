@@ -171,7 +171,7 @@ Automatic Rundown generation, using procedural seed based generation. Four activ
 * [Additional vanilla-like features](#additional-vanilla-like-features)
 * [3rd Party Mod Support](#3rd-party-mod-support)
 
-![Demo](/docs/rundown_selection_loop.apng)
+![Rundown Selection](/docs/rundown_selection_loop.apng "Rundown Selection")
 
 Track your progression in each rundown separately from the base game and other modded rundowns, see if you can clear them "Unaugmented"! (Without boosters)
 
