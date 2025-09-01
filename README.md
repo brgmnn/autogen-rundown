@@ -200,7 +200,7 @@ Download the latest version of the mods manual install zip from the [releases pa
 2. Move the contents of `AutogenRundown_GTFO` into the GTFO game folder: `<Steam Location>\steamapps\common\GTFO`.
 3. Run the game.
 
-If done correctly, after the game launches you should see a watermark in the bottom right corner of the game identifying the mod version and current seed.
+If done correctly, after the game launches you should see a watermark in the bottom right corner of the game identifying the mod version.
 
 ![GTFO Watermark](docs/watermark.jpg)
 
