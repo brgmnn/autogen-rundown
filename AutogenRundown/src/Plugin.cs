@@ -25,7 +25,7 @@ namespace AutogenRundown;
 [BepInDependency("dev.gtfomodding.gtfo-api")]
 public class Plugin : BasePlugin
 {
-    public const string Version = "0.75.1";
+    public const string Version = "0.75.2";
 
     public const string Name = "the_tavern-AutogenRundown";
 
