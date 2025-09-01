@@ -173,6 +173,8 @@ Automatic Rundown generation, using procedural seed based generation. Four activ
 
 ![Rundown Selection](https://github.com/brgmnn/autogen-rundown/blob/main/docs/rundown_selection.jpg?raw=true "Rundown Selection")
 
+![Demo](/docs/rundown_selection_loading.apng)
+
 Track your progression in each rundown separately from the base game and other modded rundowns, see if you can clear them "Unaugmented"! (Without boosters)
 
 ![Monthly Rundown Preview](https://github.com/brgmnn/autogen-rundown/blob/main/docs/monthly_rundown.jpg?raw=true "Monthly Rundown Preview")
