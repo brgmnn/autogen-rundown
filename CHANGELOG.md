@@ -3,6 +3,17 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.75.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.75.2) — August 31, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Change: Updated Thunderstore README
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.75.1...v0.75.2
+
+
 ## [v0.75.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.75.1) — August 31, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
