@@ -202,7 +202,11 @@ Download the latest version of the mods manual install zip from the [releases pa
 
 If done correctly, after the game launches you should see a watermark in the bottom right corner of the game identifying the mod version.
 
+<center>
+
 ![GTFO Watermark](docs/watermark.jpg)
+
+</center>
 
 #### Uninstalling the mod
 
