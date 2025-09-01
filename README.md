@@ -164,7 +164,7 @@ Enemies:
 
 -->
 
-Automatic Rundown generation, using procedural seed based generation. Three active rundowns to choose from: the daily, weekly, monthly, and each season. Play with friends with zero configuration of seeds.
+Automatic Rundown generation, using procedural seed based generation. Four active rundowns to choose from: the daily, weekly, monthly, and each season. Play with friends with zero configuration of seeds.
 
 * [Installation](#installation)
 * [Base game features](#base-game-features)
@@ -200,13 +200,9 @@ Download the latest version of the mods manual install zip from the [releases pa
 2. Move the contents of `AutogenRundown_GTFO` into the GTFO game folder: `<Steam Location>\steamapps\common\GTFO`.
 3. Run the game.
 
-If done correctly, after the game launches you should see a watermark in the bottom right corner of the game identifying the mod version.
-
-<center>
+If done correctly, after the game launches you should see a watermark in the bottom right corner of the game identifying the mod version `AR <version>`. If you further select a level from one of the rundowns you should also see a watermark identifying the leve, the rundown, and the seed used for that rundown.
 
 ![GTFO Watermark](docs/watermark.jpg)
-
-</center>
 
 #### Uninstalling the mod
 
