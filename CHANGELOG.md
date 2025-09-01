@@ -3,6 +3,17 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.75.3](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.75.3) — September 01, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fix: Local progression for boosterless runs will now be tracked on the seasonal rundown, after a regression to the config was introduced
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.75.2...v0.75.3
+
+
 ## [v0.75.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.75.2) — August 31, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
