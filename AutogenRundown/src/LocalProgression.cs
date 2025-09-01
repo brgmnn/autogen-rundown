@@ -48,7 +48,7 @@ public class LocalProgression
             ""EnableNoBoosterUsedProgressionForRundown"": true,
             ""AlwaysShowIcon"": true,
             ""Expeditions"": []
-        }},
+        }}
     ]
 }}");
         stream.Flush();
