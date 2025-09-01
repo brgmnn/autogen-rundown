@@ -3,6 +3,21 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.75.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.75.1) — August 31, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Change: Updated rundown selection screen title
+* Change: Removed hard coded Seasonal rundown seed
+  * Seasonal can now be set via configuration seed as well
+* Fix: Loading for the very first time on a clean profile should work correctly, instead of failing and loading the base game rundowns
+* Fix: Zone numbers in intel messages now correctly show the right zone number
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.75.0...v0.75.1
+
+
 ## [v0.75.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.75.0) — August 29, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
