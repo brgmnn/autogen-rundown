@@ -372,13 +372,6 @@ public class Level
     #endregion
 
     /// <summary>
-    /// Which zone the main bulkhead door gates. Often we want objectives to be spawned here
-    /// or later.
-    /// </summary>
-    [JsonIgnore]
-    public int MainBulkheadZone { get; set; } = 0;
-
-    /// <summary>
     /// Level description
     /// </summary>
     [JsonIgnore]
@@ -478,6 +471,13 @@ public class Level
     public JObject VanityItemsDropData = new() { ["Groups"] = new JArray() };
 
     #region Main Objective Data
+    /// <summary>
+    /// Which zone the main bulkhead door gates. Often we want objectives to be spawned here
+    /// or later.
+    /// </summary>
+    [JsonIgnore]
+    public int MainBulkheadZone { get; set; } = 0;
+
     /// <summary>
     /// Match this to the persistent ID of the Level Layout
     /// </summary>
