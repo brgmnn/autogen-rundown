@@ -857,6 +857,21 @@ public partial record WardenObjective : DataBlock
         }
     }
 
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="level"></param>
+    public void PostBuild_ForwardExtract(Level level)
+    {
+        // Return early if the level doesn't use a forward extract
+        if (level.ExtractionZone is { ZoneNumber: 0, Bulkhead: Bulkhead.Main })
+            return;
+
+        // Assign the custom geo gotowin intel to the elevator one. This ensures we always show
+        // the forward extract message
+        GoToWinCondition_Elevator = GoToWinCondition_CustomGeo;
+    }
+
     #region Internal Fields
     [JsonIgnore]
     public bool ReactorStartupGetCodes { get; set; } = false;

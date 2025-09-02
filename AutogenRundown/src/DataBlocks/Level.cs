@@ -1265,9 +1265,10 @@ public class Level
         level.FinalizeExtraObjectiveSetup();
         #endregion
 
-        #region Finalize -- Zone numbers
+        #region Finalize -- Zone numbers & Extraction Intel
 
         level.RecalculateZoneAliasStarts();
+        level.Objective[Bulkhead.Main].PostBuild_ForwardExtract(level);
 
         #endregion
 
