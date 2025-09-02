@@ -151,7 +151,6 @@ public partial record WardenObjective
     private void Build_ReactorShutdown(BuildDirector director, Level level)
     {
         FindLocationInfo = "Make sure the Reactor is fully shut down before leaving";
-        GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
         GoToWinConditionHelp_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
         LightsOnFromBeginning = true;

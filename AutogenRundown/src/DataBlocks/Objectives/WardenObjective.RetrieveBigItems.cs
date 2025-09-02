@@ -58,12 +58,14 @@ public partial record WardenObjective
 
         if (RetrieveItems.Count() > 1)
         {
-            GoToWinCondition_Elevator = "Return [ALL_ITEMS] to the extraction point in [EXTRACTION_ZONE]";
+            GoToWinCondition_Elevator = new Text(() =>
+                $"Return [ALL_ITEMS] to the extraction point in {Intel.Zone(level.ExtractionZone, level.Planner)}");
             GoToWinCondition_CustomGeo = "Return [ALL_ITEMS] to the extraction point in [EXTRACTION_ZONE]";
         }
         else
         {
-            GoToWinCondition_Elevator = "Return the [ALL_ITEMS] to the extraction point in [EXTRACTION_ZONE]";
+            GoToWinCondition_Elevator = new Text(() =>
+                $"Return the [ALL_ITEMS] to the extraction point in {Intel.Zone(level.ExtractionZone, level.Planner)}");
             GoToWinCondition_CustomGeo = "Return the [ALL_ITEMS] to the extraction point in [EXTRACTION_ZONE]";
         }
 

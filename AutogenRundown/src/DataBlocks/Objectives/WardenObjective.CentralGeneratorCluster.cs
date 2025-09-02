@@ -45,7 +45,6 @@ public partial record WardenObjective
         MainObjective = new Text("Find [COUNT_REQUIRED] Power Cells and bring them to the Central Generator Cluster in [ITEM_ZONE]");
         FindLocationInfo = "Locate the Power Cells and use them to power up the Generator Cluster";
         FindLocationInfoHelp = "Generators Online: [COUNT_CURRENT] / [COUNT_REQUIRED]";
-        GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
         GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
         GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
         GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";

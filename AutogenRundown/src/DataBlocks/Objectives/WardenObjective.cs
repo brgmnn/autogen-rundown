@@ -671,7 +671,7 @@ public partial record WardenObjective : DataBlock
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
-        GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
+        GoToWinCondition_Elevator = new Text(() => $"Return to the point of entrance in {Intel.Zone(level.ExtractionZone, level.Planner)}");
         GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
         GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition";
 
@@ -898,7 +898,16 @@ public partial record WardenObjective : DataBlock
     public string InZoneFindItemHelp { get; set; } = "";
     public string SolveItem { get; set; } = "";
     public string SolveItemHelp { get; set; } = "";
-    public string GoToWinCondition_Elevator { get; set; } = "";
+
+    /// <summary>
+    /// Default = "Return to the point of entrance in [EXTRACTION_ZONE]"
+    /// </summary>
+    [JsonIgnore]
+    public Text GoToWinCondition_Elevator { get; set; } = Text.None;
+
+    [JsonProperty("GoToWinCondition_Elevator")]
+    public uint GoToWinCondition_ElevatorId => GoToWinCondition_Elevator.PersistentId;
+
     public string GoToWinConditionHelp_Elevator { get; set; } = "";
     public string GoToWinCondition_CustomGeo { get; set; } = "";
     public string GoToWinConditionHelp_CustomGeo { get; set; } = "";

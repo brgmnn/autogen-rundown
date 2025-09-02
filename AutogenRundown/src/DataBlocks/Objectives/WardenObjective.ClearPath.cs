@@ -22,7 +22,6 @@ public partial record WardenObjective
         var exitZoneNumber = layout.ZoneAliasStart + exit.ZoneNumber;
 
         MainObjective = new Text(() => $"Clear a path to the exit point in {Intel.Zone(exit, level.Planner)}");
-        GoToWinCondition_Elevator = "";
         GoToWinCondition_CustomGeo = $"Go to the forward exit point in {Intel.Zone(exit, level.Planner)}";
 
         dataLayer.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;

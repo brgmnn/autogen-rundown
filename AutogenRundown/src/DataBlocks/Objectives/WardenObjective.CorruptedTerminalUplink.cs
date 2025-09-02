@@ -71,8 +71,9 @@ public partial record WardenObjective
         InZoneFindItemHelp = "CORTEX INTERFACE ESTABLISHED";
         SolveItem = "Use [ITEM_SERIAL] to create an uplink to [UPLINK_ADDRESS]";
         SolveItemHelp = "Use the UPLINK_CONNECT command to establish the connection";
-        GoToWinCondition_Elevator =
-            "Neural Imprinting Protocols retrieved. Return to the point of entrance in [EXTRACTION_ZONE]";
+
+        GoToWinCondition_Elevator = new Text(() =>
+            $"Neural Imprinting Protocols retrieved. Return to the point of entrance in {Intel.Zone(level.ExtractionZone, level.Planner)}");
         GoToWinConditionHelp_Elevator =
             "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
         GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";

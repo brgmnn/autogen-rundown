@@ -34,5 +34,7 @@ public partial record LevelLayout
         level.ExtractionZone = exit;
 
         exitZone.GenExitGeomorph(level.Complex);
+
+        // TODO: we should just set the messages to be the same
     }
 }

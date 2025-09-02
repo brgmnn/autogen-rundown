@@ -215,7 +215,6 @@ public partial record WardenObjective
         GoToZoneHelp = "Use information in the environment to find [ITEM_ZONE]";
         InZoneFindItem = "Find the reactor control panel and initiate the startup";
         SolveItem = "Make sure the Reactor is fully started before leaving";
-        GoToWinCondition_Elevator = "Return to the point of entrance in [EXTRACTION_ZONE]";
         GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
         GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
         GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";

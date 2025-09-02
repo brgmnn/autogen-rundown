@@ -92,7 +92,7 @@ public partial record WardenObjective : DataBlock
         Survival_TimerTitle = "Time until allowed extraction:";
         Survival_TimerToActivateTitle = "<color=red>WARNING!</color> Warden Protocol <color=orange>DECOY</color> will commence in: ";
         // Set these both as go forward as we always have an exit geo.
-        GoToWinCondition_Elevator = $"Go to the forward exit point in {exitZoneString}";
+        GoToWinCondition_Elevator = new Text(() => $"Go to the forward exit point in {Intel.Zone(exitZone, level.Planner)}");
         GoToWinCondition_CustomGeo = $"Go to the forward exit point in {exitZoneString}";
 
         // Put a relatively short exit scan time as we will hit them hard on times up
