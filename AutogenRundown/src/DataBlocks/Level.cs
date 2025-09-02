@@ -60,6 +60,11 @@ public class Level
     public int Depth { get; set; } = 1;
 
     /// <summary>
+    ///
+    /// </summary>
+    public List<(double, ZoneNode)> ForwardExtractStartCandidates { get; set; } = new();
+
+    /// <summary>
     /// Which complex type to use.
     ///
     /// By default set to a random value from the available complexes. Weight more towards
