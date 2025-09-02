@@ -207,9 +207,9 @@ public static class RundownFactory
         #if DEBUG
         if (withFixed)
         {
-            const string tier = "D";
-            const string title = "Cluster";
-            const Complex complex = Complex.Service;
+            const string tier = "A";
+            const string title = "Test";
+            const Complex complex = Complex.Mining;
 
             var mainDirector = new BuildDirector
             {
@@ -217,7 +217,7 @@ public static class RundownFactory
                 Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.CentralGeneratorCluster,
+                Objective = WardenObjectiveType.GatherTerminal,
             };
             mainDirector.GenPoints();
 
