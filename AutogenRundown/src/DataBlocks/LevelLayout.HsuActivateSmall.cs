@@ -500,11 +500,7 @@ public partial record LevelLayout
 
         layerData.ObjectiveData.ZonePlacementDatas.Add(new List<ZonePlacementData>
         {
-            new()
-            {
-                DimensionIndex = 0,
-                LocalIndex = end.ZoneNumber
-            }
+            new() { LocalIndex = end.ZoneNumber }
         });
         #endregion
     }

@@ -1,8 +1,17 @@
-﻿namespace AutogenRundown.DataBlocks;
+﻿using AutogenRundown.DataBlocks.Enums;
+using Newtonsoft.Json;
+
+namespace AutogenRundown.DataBlocks;
 
 public class ZonePlacementData
 {
-    public int DimensionIndex { get; set; } = 0;
+    /// <summary>
+    /// What dimension this zone exists in
+    ///
+    /// Default = Reality (0)
+    /// </summary>
+    [JsonProperty("DimensionIndex")]
+    public DimensionIndex Dimension { get; set; } = DimensionIndex.Reality;
 
     /// <summary>
     /// Target zone number for this placement data

@@ -77,6 +77,9 @@ public record DimensionData
 
     public bool ForbidTerminalsInDimension { get; set; } = false;
 
+    /// <summary>
+    /// Default = false
+    /// </summary>
     public bool IsOutside { get; set; } = false;
 
     public double LightAzimuth { get; set; } = 0.0;
