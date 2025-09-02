@@ -671,8 +671,8 @@ public partial record WardenObjective : DataBlock
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
-        GoToWinCondition_Elevator = new Text(() => $"Return to the point of entrance in {Intel.Zone(level.ExtractionZone, level.Planner)}");
-        GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+        GoToWinCondition_Elevator  = new Text(() => $"Return to the point of entrance in {Intel.Zone(level.ExtractionZone, level.Planner)}");
+        GoToWinCondition_CustomGeo = new Text(() => $"Go to the forward exit point in {Intel.Zone(level.ExtractionZone, level.Planner)}");
         GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition";
 
         // Set the level description if there's no description provided already
@@ -909,7 +909,16 @@ public partial record WardenObjective : DataBlock
     public uint GoToWinCondition_ElevatorId => GoToWinCondition_Elevator.PersistentId;
 
     public string GoToWinConditionHelp_Elevator { get; set; } = "";
-    public string GoToWinCondition_CustomGeo { get; set; } = "";
+
+    /// <summary>
+    /// Default = "Go to the forward exit point in [EXTRACTION_ZONE]"
+    /// </summary>
+    [JsonIgnore]
+    public Text GoToWinCondition_CustomGeo { get; set; } = Text.None;
+
+    [JsonProperty("GoToWinCondition_CustomGeo")]
+    public uint GoToWinCondition_CustomGeoId => GoToWinCondition_CustomGeo.PersistentId;
+
     public string GoToWinConditionHelp_CustomGeo { get; set; } = "";
     public string GoToWinCondition_ToMainLayer { get; set; } = "";
 

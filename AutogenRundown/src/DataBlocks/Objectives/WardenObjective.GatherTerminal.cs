@@ -60,7 +60,6 @@ public partial record WardenObjective
         SolveItem = "Use <color=orange>\"Extract_Decryption_Key\"</color> command to transfer data to portable unit.";
         SolveItemHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
         GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
-        GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
 
         GatherTerminal_Command = "Extract_Decryption_Key";
         GatherTerminal_CommandHelp = "Extract decryption key on local system and transfer to portable unit";

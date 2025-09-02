@@ -41,7 +41,8 @@ public partial record WardenObjective
                 SolveItem = $"Insert Data Sphere into {HsuActivateSmall_MachineName} [ITEM_SERIAL]";
                 GoToWinCondition_Elevator = new Text(() =>
                     $"Return the Data Sphere to the point of entrance in {Intel.Zone(level.ExtractionZone, level.Planner)}");
-                GoToWinCondition_CustomGeo = "Bring the Data Sphere to the forward exit in [EXTRACTION_ZONE]";
+                GoToWinCondition_CustomGeo = new Text(() =>
+                    $"Bring the Data Sphere to the forward exit in {Intel.Zone(level.ExtractionZone, level.Planner)}");
 
                 break;
             }
@@ -51,7 +52,8 @@ public partial record WardenObjective
                 SolveItem = $"Insert Neonate into {HsuActivateSmall_MachineName} [ITEM_SERIAL]";
                 GoToWinCondition_Elevator = new Text(() =>
                     $"Return the Neonate to the point of entrance in {Intel.Zone(level.ExtractionZone, level.Planner)}");
-                GoToWinCondition_CustomGeo = "Bring the Neonate to the forward exit in [EXTRACTION_ZONE]";
+                GoToWinCondition_CustomGeo = new Text(() =>
+                    $"Bring the Neonate to the forward exit in {Intel.Zone(level.ExtractionZone, level.Planner)}");
                 break;
             }
         }

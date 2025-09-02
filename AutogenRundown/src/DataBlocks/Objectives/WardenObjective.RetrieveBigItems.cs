@@ -60,13 +60,15 @@ public partial record WardenObjective
         {
             GoToWinCondition_Elevator = new Text(() =>
                 $"Return [ALL_ITEMS] to the extraction point in {Intel.Zone(level.ExtractionZone, level.Planner)}");
-            GoToWinCondition_CustomGeo = "Return [ALL_ITEMS] to the extraction point in [EXTRACTION_ZONE]";
+            GoToWinCondition_CustomGeo = new Text(() =>
+                $"Bring [ALL_ITEMS] to the forward exit point in {Intel.Zone(level.ExtractionZone, level.Planner)}");
         }
         else
         {
             GoToWinCondition_Elevator = new Text(() =>
                 $"Return the [ALL_ITEMS] to the extraction point in {Intel.Zone(level.ExtractionZone, level.Planner)}");
-            GoToWinCondition_CustomGeo = "Return the [ALL_ITEMS] to the extraction point in [EXTRACTION_ZONE]";
+            GoToWinCondition_CustomGeo = new Text(() =>
+                $"Bring the [ALL_ITEMS] to the forward exit point in {Intel.Zone(level.ExtractionZone, level.Planner)}");
         }
 
         GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";

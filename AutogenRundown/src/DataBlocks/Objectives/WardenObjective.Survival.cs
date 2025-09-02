@@ -91,9 +91,9 @@ public partial record WardenObjective : DataBlock
         MainObjective = new Text($"Find a way to stay alive during Warden Protocol DECOY, and make your way to {exitZoneString} for extraction");
         Survival_TimerTitle = "Time until allowed extraction:";
         Survival_TimerToActivateTitle = "<color=red>WARNING!</color> Warden Protocol <color=orange>DECOY</color> will commence in: ";
-        // Set these both as go forward as we always have an exit geo.
+
         GoToWinCondition_Elevator = new Text(() => $"Go to the forward exit point in {Intel.Zone(exitZone, level.Planner)}");
-        GoToWinCondition_CustomGeo = $"Go to the forward exit point in {exitZoneString}";
+        GoToWinCondition_CustomGeo = new Text(() => $"Go to the forward exit point in {Intel.Zone(exitZone, level.Planner)}");
 
         // Put a relatively short exit scan time as we will hit them hard on times up
         ChainedPuzzleAtExitScanSpeedMultiplier = GenExitScanTime(30, 40);

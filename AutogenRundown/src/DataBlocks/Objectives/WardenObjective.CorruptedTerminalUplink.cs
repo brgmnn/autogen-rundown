@@ -76,7 +76,8 @@ public partial record WardenObjective
             $"Neural Imprinting Protocols retrieved. Return to the point of entrance in {Intel.Zone(level.ExtractionZone, level.Planner)}");
         GoToWinConditionHelp_Elevator =
             "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
-        GoToWinCondition_CustomGeo = "Go to the forward exit point in [EXTRACTION_ZONE]";
+        GoToWinCondition_CustomGeo = new Text(() =>
+            $"Neural Imprinting Protocols retrieved. Go to the forward exit point in {Intel.Zone(level.ExtractionZone, level.Planner)}");
         GoToWinConditionHelp_CustomGeo =
             "Use the navigational beacon and the information in the surroundings to find the exit point";
         GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition";
