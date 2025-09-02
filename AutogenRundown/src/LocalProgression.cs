@@ -1,11 +1,45 @@
 ﻿using AutogenRundown.DataBlocks;
 using BepInEx;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown;
 
 public class LocalProgression
 {
+    private static readonly JObject Config = new()
+    {
+        ["Configs"] = new JArray(
+            new JObject
+            {
+                ["RundownID"] = Rundown.R_Daily,
+                ["EnableNoBoosterUsedProgressionForRundown"] = true,
+                ["AlwaysShowIcon"] = true,
+                ["Expeditions"] = new JArray()
+            },
+            new JObject
+            {
+                ["RundownID"] = Rundown.R_Weekly,
+                ["EnableNoBoosterUsedProgressionForRundown"] = true,
+                ["AlwaysShowIcon"] = true,
+                ["Expeditions"] = new JArray()
+            },
+            new JObject
+            {
+                ["RundownID"] = Rundown.R_Monthly,
+                ["EnableNoBoosterUsedProgressionForRundown"] = true,
+                ["AlwaysShowIcon"] = true,
+                ["Expeditions"] = new JArray()
+            },
+            new JObject
+            {
+                ["RundownID"] = Rundown.R_Seasonal,
+                ["EnableNoBoosterUsedProgressionForRundown"] = true,
+                ["AlwaysShowIcon"] = true,
+                ["Expeditions"] = new JArray()
+            })
+    };
+
     public static void WriteConfig()
     {
         JsonSerializer serializer = new JsonSerializer();
@@ -20,37 +54,12 @@ public class LocalProgression
         // Ensure the directory exists
         Directory.CreateDirectory(dir);
 
-        using StreamWriter stream = new StreamWriter(path);
-        // using JsonWriter writer = new JsonTextWriter(stream);
+        using var stream = new StreamWriter(path);
+        using var writer = new JsonTextWriter(stream);
+        writer.Formatting = Formatting.Indented;
 
-        stream.Write($@"{{
-    ""Configs"": [
-        {{
-            ""RundownID"": {Rundown.R_Daily},
-            ""EnableNoBoosterUsedProgressionForRundown"": true,
-            ""AlwaysShowIcon"": true,
-            ""Expeditions"": []
-        }},
-        {{
-            ""RundownID"": {Rundown.R_Weekly},
-            ""EnableNoBoosterUsedProgressionForRundown"": true,
-            ""AlwaysShowIcon"": true,
-            ""Expeditions"": []
-        }},
-        {{
-            ""RundownID"": {Rundown.R_Monthly},
-            ""EnableNoBoosterUsedProgressionForRundown"": true,
-            ""AlwaysShowIcon"": true,
-            ""Expeditions"": []
-        }},
-        {{
-            ""RundownID"": {Rundown.R_Seasonal},
-            ""EnableNoBoosterUsedProgressionForRundown"": true,
-            ""AlwaysShowIcon"": true,
-            ""Expeditions"": []
-        }}
-    ]
-}}");
-        stream.Flush();
+        Config.WriteTo(writer);
+
+        writer.Flush();
     }
 }
