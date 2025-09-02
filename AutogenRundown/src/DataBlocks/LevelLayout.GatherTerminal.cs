@@ -1,12 +1,76 @@
-﻿using AutogenRundown.DataBlocks.Objectives;
+﻿using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
 public partial record LevelLayout
 {
+    private void BuildLayout_GatherTerminal_WarpJump(
+        BuildDirector director,
+        WardenObjective objective,
+        ZoneNode? startish)
+    {
+        if (startish == null)
+        {
+            Plugin.Logger.LogError($"No node returned when calling Planner.GetLastZone({director.Bulkhead})");
+            throw new Exception("No zone node returned");
+        }
+
+        var start = (ZoneNode)startish;
+        var startZone = planner.GetZone(start)!;
+        var layerData = level.GetObjectiveLayerData(director.Bulkhead);
+
+        var (portal, portalZone) = AddZone(start);
+
+        portalZone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_portal_HA_01.prefab";
+
+        portalZone.BigPickupDistributionInZone = BigPickupDistribution.MatterWaveProjector.PersistentId;
+
+
+
+
+        var dimension = new Dimension
+        {
+            Data = new Dimensions.DimensionData
+            {
+                // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_01.prefab",
+                DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab",
+                DimensionResourceSetID = 47,
+                IsOutside = true,
+                IsStaticDimension = true,
+                // StaticTerminalPlacements = []
+            },
+            PersistentId = 2,
+        };
+        // dimension.FindOrPersist();
+        dimension.Persist();
+
+        level.DimensionDatas.Add(new Levels.DimensionData
+        {
+            Dimension = DimensionIndex.Dimension1,
+            Data = dimension
+        });
+
+        var dataLayer = level.GetObjectiveLayerData(director.Bulkhead);
+
+        dataLayer.ObjectiveData.ZonePlacementDatas.Add(new List<ZonePlacementData>
+        {
+            new()
+            {
+                Dimension = DimensionIndex.Dimension1,
+                LocalIndex = 0,
+                Weights = ZonePlacementWeights.EvenlyDistributed
+            }
+        });
+    }
+
     private void BuildLayout_GatherTerminal(BuildDirector director, WardenObjective objective, ZoneNode? startish)
     {
+        // BuildLayout_GatherTerminal_WarpJump(director, objective, startish);
+        //
+        // return;
+
         if (startish == null)
         {
             Plugin.Logger.LogError($"No node returned when calling Planner.GetLastZone({director.Bulkhead})");
@@ -123,19 +187,20 @@ public partial record LevelLayout
         }
 
         return;
+    }
 
-        // Helper function to wrap adding the zone placement data
-        void SetGatherTerminal(int zoneNumber)
+    // Helper function to wrap adding the zone placement data
+    private void SetGatherTerminal(int zoneNumber)
+    {
+        var dataLayer = level.GetObjectiveLayerData(director.Bulkhead);
+
+        dataLayer.ObjectiveData.ZonePlacementDatas.Add(new List<ZonePlacementData>
         {
-            layerData.ObjectiveData.ZonePlacementDatas.Add(new List<ZonePlacementData>
+            new()
             {
-                new()
-                {
-                    DimensionIndex = 0,
-                    LocalIndex = zoneNumber,
-                    Weights = ZonePlacementWeights.EvenlyDistributed
-                }
-            });
-        }
+                LocalIndex = zoneNumber,
+                Weights = ZonePlacementWeights.EvenlyDistributed
+            }
+        });
     }
 }
