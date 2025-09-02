@@ -1313,7 +1313,6 @@ public class Level
 
             #endregion
 
-
             var dimension = new Dimension
             {
                 Data = new Dimensions.DimensionData
