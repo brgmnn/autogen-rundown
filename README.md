@@ -69,14 +69,16 @@ Requests:
 
 Check: https://discord.com/channels/782438773690597389/783918553626836992/1407457297889890530
 
-Check error alarm door first in D4
+
+Problems:
+  - Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_portal_HA_01.prefab
+    - Has some innacessible spawn locations where boxes and big pickups can spawn.
+    - There are two side flanges next to the entry door for the portal room which are blocked but still marked as spawn locations
+
 
 2025_08_31
   * Seasonal Fall_2025 - A4 Decaying Banishment: Pretty much perfect short A level. 26 mins, 5 zones, straight forward clear path
     * Maybe too high scan levels? 2 class 5 and 2 class 3
-
-2025_08_29
-  * Check zone numbers on intel messages, they reference the zone numbers before recalculating the zone alias start
 
 2025_08_27
   * Generator cluster needs a little less zones
@@ -84,14 +86,6 @@ Check error alarm door first in D4
 2025_08_17
   * Reduce number of gather so we have to do all objectives
   * Why does D2 only have onion shooters on first alarm door in extreme
-
-2025_05_26
-  * Can't have multiple timer objectives
-
-2025_05_14
-  * E3
-    [ ] Scout Waves not spawning
-      * Couldn't reproduce though? :eyes:
 
 2025_04_29
   * D1: Error alarm with no turn off is quite a bit harder
