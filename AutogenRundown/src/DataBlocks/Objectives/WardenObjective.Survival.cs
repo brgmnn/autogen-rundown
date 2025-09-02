@@ -87,6 +87,7 @@ public partial record WardenObjective : DataBlock
         var exitZone = level.Planner.GetZones(director.Bulkhead, "exit").First();
         var exitZoneString = Intel.Zone(exitZone, level.Planner);
 
+        // TODO: fix these exit zone number strings
         MainObjective = new Text($"Find a way to stay alive during Warden Protocol DECOY, and make your way to {exitZoneString} for extraction");
         Survival_TimerTitle = "Time until allowed extraction:";
         Survival_TimerToActivateTitle = "<color=red>WARNING!</color> Warden Protocol <color=orange>DECOY</color> will commence in: ";
