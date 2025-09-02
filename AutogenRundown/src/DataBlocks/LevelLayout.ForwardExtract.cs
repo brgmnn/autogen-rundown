@@ -13,13 +13,14 @@ public partial record LevelLayout
         var mainObjective = level.GetObjective(Bulkhead.Main);
 
         // Skip objectives that already include forward extracts
-        if (mainObjective is null ||
-            mainObjective.Type is WardenObjectiveType.ClearPath or WardenObjectiveType.Survival)
+        if (director.Objective is WardenObjectiveType.ClearPath or WardenObjectiveType.Survival)
             return;
 
-        // Random chance for us to skip doing this all together
-        if (Generator.Flip(1.0 - chance))
-            return;
+        Plugin.Logger.LogInfo($"We made it!");
+
+        // // Random chance for us to skip doing this all together
+        // if (Generator.Flip(1.0 - chance))
+        //     return;
 
         var start = level.ForwardExtractStartCandidates.Any()
             ? Generator.Select(level.ForwardExtractStartCandidates)
@@ -29,6 +30,8 @@ public partial record LevelLayout
 
         var exit = nodes.Last();
         var exitZone = planner.GetZone(exit);
+
+        level.ExtractionZone = exit;
 
         exitZone.GenExitGeomorph(level.Complex);
     }

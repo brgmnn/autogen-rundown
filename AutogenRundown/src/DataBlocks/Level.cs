@@ -65,6 +65,15 @@ public class Level
     public List<(double, ZoneNode)> ForwardExtractStartCandidates { get; set; } = new();
 
     /// <summary>
+    /// Mainly used for calculating what the text should be for extract
+    /// </summary>
+    public ZoneNode ExtractionZone { get; set; } = new()
+    {
+        Bulkhead = Bulkhead.Main,
+        ZoneNumber = 0
+    };
+
+    /// <summary>
     /// Which complex type to use.
     ///
     /// By default set to a random value from the available complexes. Weight more towards
