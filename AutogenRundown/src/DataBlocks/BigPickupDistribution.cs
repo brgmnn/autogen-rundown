@@ -4,6 +4,15 @@ namespace AutogenRundown.DataBlocks;
 
 public record BigPickupDistribution : DataBlock
 {
+    public static readonly BigPickupDistribution MatterWaveProjector = new()
+    {
+        SpawnsPerZone = 1,
+        SpawnData =
+        {
+            new ItemSpawn { Item = Items.Item.MatterWaveProjector }
+        }
+    };
+
     public static readonly BigPickupDistribution FogTurbine = new()
     {
         SpawnsPerZone = 1,
@@ -45,6 +54,9 @@ public record BigPickupDistribution : DataBlock
 
     public new static void SaveStatic()
     {
+        // Objective
+        Bins.BigPickupDistributions.AddBlock(MatterWaveProjector);
+
         // Fog clearing
         Bins.BigPickupDistributions.AddBlock(FogTurbine);
 
