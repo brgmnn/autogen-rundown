@@ -34,9 +34,9 @@ TODO:
   * Try and fix reactor start prefix for further zones (not next immediate), when 2 or more away
   * Add more points of enemies
   * Matter Wave Projector - Needs slightly less zones to go through. Very linear
-  * Add monthly / weekly rundown seed settings
   * Bring big pickup for scan
-
+  * Add more variety on fog for vibes
+  * Slightly reduce scan difficulty on A/B tier
 
 
 Idea:
