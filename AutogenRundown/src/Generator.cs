@@ -158,8 +158,7 @@ static public class Generator
             throw new InvalidOperationException("No valid numbers available with the given constraints and tail requirement.");
 
         // Pick a random index across all candidate starts
-        // long pick = _rng.NextInt64(totalChoices); // .NET 6+; for older .NET use custom NextInt64
-        var pick = Between(0, totalChoices);
+        var pick = Between(0, totalChoices - 1);
 
         foreach (var (s, count) in candidateSpans)
         {
