@@ -728,7 +728,7 @@ public class Level
     /// </summary>
     public void MarkAsBossErrorAlarm()
     {
-        Name = $"<color=red>!!!</color><color=#444444>/</color><s>{Name}</s>";
+        Name = $"<color=red>!!!</color><color=#444444>/</color>{Name}";
 
         ElevatorDropWardenIntel.Add((Generator.Between(6, 12), Generator.Draw(new List<string>
         {
