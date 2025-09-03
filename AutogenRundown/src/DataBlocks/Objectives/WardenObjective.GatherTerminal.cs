@@ -56,12 +56,12 @@ public partial record WardenObjective
 
     private void Build_GatherTerminal(BuildDirector director, Level level)
     {
-        MainObjective = new Text("Download <color=orange>Decryption Keys</color> on terminals in the sector and then proceed to the exit point.");
-        SolveItem = "Use <color=orange>\"Extract_Decryption_Key\"</color> command to transfer data to portable unit.";
+        MainObjective = new Text("Download <color=orange>Decryption Keys</color> on <u>terminals</u> in the sector and then proceed to the exit point.");
+        SolveItem = "Use <color=orange>\"EXTRACT_DECRYPTION_KEY\"</color> command to transfer data to portable unit.";
         SolveItemHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
         GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
-        GatherTerminal_Command = "Extract_Decryption_Key";
+        GatherTerminal_Command = "EXTRACT_DECRYPTION_KEY";
         GatherTerminal_CommandHelp = "Extract decryption key on local system and transfer to portable unit";
         GatherTerminal_DownloadingText = "";
         GatherTerminal_DownloadCompleteText = "";

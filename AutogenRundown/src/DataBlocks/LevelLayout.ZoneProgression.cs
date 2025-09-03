@@ -1246,7 +1246,7 @@ public partial record LevelLayout
         lockedZone.ProgressionPuzzleToEnter = new ProgressionPuzzle
         {
             PuzzleType = ProgressionPuzzleType.Locked,
-            CustomText = $"<color=grey>DOOR LOCKED, ACTIVATE DOOR SYSTEMS ON {terminalSerial}</color>"
+            CustomText = $"<color=red>://ERROR:</color><color=grey> DOOR LOCKED, ACTIVATE DOOR SYSTEMS ON {terminalSerial}</color>"
         };
     }
 
