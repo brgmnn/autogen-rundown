@@ -777,7 +777,8 @@ public partial record LevelLayout
     public void AddApexErrorAlarm(ZoneNode lockedNode,
         ZoneNode? terminalish,
         WaveSettings? settings,
-        WavePopulation? population)
+        WavePopulation? population,
+        double spawnDelay = 1.0)
     {
         var lockedZone = planner.GetZone(lockedNode);
         var setupish = planner.GetBuildFrom(lockedNode);
@@ -809,7 +810,7 @@ public partial record LevelLayout
                 Settings = settings ?? WaveSettings.Error_Boss_Hard,
                 Population = population ?? WavePopulation.SingleEnemy_Tank,
                 TriggerAlarm = true
-            }, 1.0, "apex_error_alarms");
+            }, spawnDelay, "apex_error_alarms");
 
         // Custom door message
         var customDoor = new Custom.AutogenRundown.SecurityDoors.SecurityDoor

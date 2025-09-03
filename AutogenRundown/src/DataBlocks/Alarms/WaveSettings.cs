@@ -396,6 +396,7 @@ public record WaveSettings : DataBlock
 
         Bins.WaveSettings.AddBlock(Error_Boss_Hard);
         Bins.WaveSettings.AddBlock(Error_Boss_VeryHard);
+        Bins.WaveSettings.AddBlock(Error_Boss_Impossible);
 
         // Objective Exit
         Bins.WaveSettings.AddBlock(Exit_Objective_Easy);
@@ -781,6 +782,35 @@ public record WaveSettings : DataBlock
 
         PauseBeforeStart = 10,
         PauseBetweenGroups = 180, // 3 minutes
+        WavePauseMin = 1,
+        WavePauseMax = 20,
+        WavePauseMin_atCost = 1.0,
+        WavePauseMax_atCost = 10.0,
+
+        PopulationPointsTotal = -1,
+
+        PopulationPointsMinPerGroup = 1,
+        PopulationPointsPerGroupStart = 1,
+        PopulationPointsPerGroupEnd = 1,
+        PopulationPointsPerWaveStart = 1,
+        PopulationPointsPerWaveEnd = 1,
+
+        PopulationRampOverTime = 0,
+        ChanceToRandomizeSpawnDirectionPerGroup = 0.1,
+        ChanceToRandomizeSpawnDirectionPerWave = 1.0,
+
+        Name = "Error_MiniBoss_VeryHard"
+    };
+
+    public static readonly WaveSettings Error_Boss_Impossible = new()
+    {
+        PopulationFilter = new List<Enemies.EnemyType> {
+            Enemies.EnemyType.MiniBoss
+        },
+        FilterType = PopulationFilterType.Include,
+
+        PauseBeforeStart = 1,
+        PauseBetweenGroups = 60,
         WavePauseMin = 1,
         WavePauseMax = 20,
         WavePauseMin_atCost = 1.0,

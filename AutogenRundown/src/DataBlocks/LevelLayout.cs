@@ -1138,7 +1138,7 @@ public partial record LevelLayout : DataBlock
         }
 
         if (director.Bulkhead == Bulkhead.Main)
-            layout.BuildLayout_ForwardExtract();
+            layout.BuildLayout_ForwardExtract(objective);
 
         // Attempt to reduce the chance of generation locking where zones cannot be placed
         level.Planner.PlanBulkheadPlacements(director.Bulkhead, direction);

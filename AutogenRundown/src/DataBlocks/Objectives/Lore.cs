@@ -19,8 +19,10 @@ public class Lore
 
     public static string KeycardZone = "[KEYCARD_ZONE]";
 
-    public static string LockedDoorMessage =
-        "<color=red>://ERROR: Door in emergency lockdown, unable to operate.</color>";
+    /// <summary>
+    /// Message = "<color=red>://ERROR: Door in emergency lockdown, unable to operate.</color>"
+    /// </summary>
+    public const string LockedDoorMessage = "<color=red>://ERROR: Door in emergency lockdown, unable to operate.</color>";
 
     public static string TitlePrefix_LevelErrorAlarm = "<color=red>?!</color><color=#444444>-</color>";
 

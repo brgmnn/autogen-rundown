@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.CentralGeneratorCluster;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
@@ -974,6 +975,10 @@ public partial record WardenObjective : DataBlock
 
     public List<WardenObjectiveEvent> EventsOnGotoWin { get; set; } = new List<WardenObjectiveEvent>();
 
+    public ExitWaveTrigger WaveOnGotoWinTrigger { get; set; } = ExitWaveTrigger.OnObjectiveCompleted;
+
+    public ExitWaveTrigger EventsOnGotoWinTrigger { get; set; } = ExitWaveTrigger.OnObjectiveCompleted;
+
     /// <summary>
     /// This triggers waves that spawn as soon as you land
     /// </summary>
@@ -1234,8 +1239,6 @@ public partial record WardenObjective : DataBlock
     public double FogTransitionDurationOnElevatorLand = 0.0;
     public bool OnActivateOnSolveItem = false;
     public bool StopAllWavesBeforeGotoWin = false;
-    public int WaveOnGotoWinTrigger = 0;
-    public int EventsOnGotoWinTrigger = 0;
     public bool LightsOnFromBeginning = false;
     public bool LightsOnDuringIntro = false;
     public bool LightsOnWhenStartupComplete = false;
