@@ -993,6 +993,8 @@ public partial record LevelLayout
             return;
         }
 
+        Plugin.Logger.LogDebug($"What are the nodes? ZoneNode = {keycardNode}, Zone = {keycardZone.LocalIndex}");
+
         // Place the key for the locked zone
         lockedZone.ProgressionPuzzleToEnter = new ProgressionPuzzle
         {

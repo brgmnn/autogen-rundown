@@ -105,7 +105,9 @@ public partial record LevelLayout
                     {
                         startZone.GenCorridorGeomorph(level.Complex);
 
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 2 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
+
+                        level.ForwardExtractStartCandidates.Add((1.0, hub));
 
                         if (Generator.Flip(0.4))
                             hubZone.GenTGeomorph(level.Complex);

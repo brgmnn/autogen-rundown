@@ -25,16 +25,16 @@ public partial record LevelLayout
         if (!level.ForwardExtractStartCandidates.Any())
             Plugin.Logger.LogWarning($"No forward extract candidate zones were present for WardenObjective = {objective.Type}");
 
-        var start = new ZoneNode();
+        var startFrom = new ZoneNode();
 
         if (level.ForwardExtractStartCandidates.Any())
-            start = level.ForwardExtractStartCandidates.SelectRandom();
+            startFrom = level.ForwardExtractStartCandidates.SelectRandom();
         else if (planner.GetLeafZones(Bulkhead.Main).Any())
-            start = planner.GetLeafZones(Bulkhead.Main).Last();
+            startFrom = planner.GetLeafZones(Bulkhead.Main).Last();
         else if (planner.GetOpenZones(Bulkhead.Main).Any())
-            start = planner.GetOpenZones(Bulkhead.Main).PickRandom();
+            startFrom = planner.GetOpenZones(Bulkhead.Main).PickRandom();
         else
-            start = planner.GetLastNode(Bulkhead.Main, null);
+            startFrom = planner.GetLastNode(Bulkhead.Main, null);
 
         var first = new ZoneNode();
         var exit = new ZoneNode();
@@ -50,7 +50,7 @@ public partial record LevelLayout
                     // Direct path
                     (0.40, () =>
                     {
-                        var nodes = AddBranch(start, 2, "forward_extraction");
+                        var nodes = AddBranch(startFrom, 2, "forward_extraction");
 
                         first = nodes.First();
                         firstZone = planner.GetZone(first)!;
@@ -62,13 +62,15 @@ public partial record LevelLayout
                     // Terminal door unlock
                     (0.60, () =>
                     {
-                        (first, firstZone) = AddZone(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                         // Increase size a bit and ensure we have 3 terminals total after adding challenge
                         firstZone.Coverage = CoverageMinMax.Medium_56;
                         firstZone.TerminalPlacements.Add(new TerminalPlacement());
 
-                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(start, sideZones: 0);
+                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(
+                            Generator.Flip() ? startFrom : first,
+                            sideZones: 0);
                     }),
                 });
 
@@ -83,7 +85,7 @@ public partial record LevelLayout
                     // Direct path
                     (0.20, () =>
                     {
-                        var nodes = AddBranch(start, 2, "forward_extraction");
+                        var nodes = AddBranch(startFrom, 2, "forward_extraction");
 
                         first = nodes.First();
                         firstZone = planner.GetZone(first)!;
@@ -95,24 +97,26 @@ public partial record LevelLayout
                     // Terminal door unlock
                     (0.40, () =>
                     {
-                        (first, firstZone) = AddZone(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                         // Increase size a bit and ensure we have 3 terminals total after adding challenge
                         firstZone.Coverage = CoverageMinMax.Medium_56;
                         firstZone.TerminalPlacements.Add(new TerminalPlacement());
 
-                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(start, sideZones: 0);
+                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(
+                            Generator.Flip() ? startFrom : first,
+                            sideZones: 0);
                     }),
 
                     // Key door unlock
                     (0.40, () =>
                     {
-                        (first, firstZone) = AddZone(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                         // Increase size a bit and ensure we have 3 terminals total after adding challenge
                         firstZone.Coverage = CoverageMinMax.Medium_56;
 
-                        (exit, exitZone) = BuildChallenge_KeycardInZone(start);
+                        (exit, exitZone) = BuildChallenge_KeycardInZone(first);
                     }),
                 });
 
@@ -126,7 +130,7 @@ public partial record LevelLayout
                     // Direct path
                     (0.15, () =>
                     {
-                        var nodes = AddBranch(start, 2, "forward_extraction");
+                        var nodes = AddBranch_Forward(startFrom, 2, "forward_extraction");
 
                         first = nodes.First();
                         firstZone = planner.GetZone(first)!;
@@ -138,38 +142,40 @@ public partial record LevelLayout
                     // Terminal door unlock
                     (0.30, () =>
                     {
-                        (first, firstZone) = AddZone(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                         // Increase size a bit and ensure we have 3 terminals total after adding challenge
                         firstZone.Coverage = CoverageMinMax.Medium_56;
                         firstZone.TerminalPlacements.Add(new TerminalPlacement());
 
-                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(start, sideZones: 0);
+                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(
+                            Generator.Flip() ? startFrom : first,
+                            sideZones: 0);
                     }),
 
                     // Key door unlock
                     (0.25, () =>
                     {
-                        (first, firstZone) = AddZone(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                         // Increase size a bit and ensure we have 3 terminals total after adding challenge
                         firstZone.Coverage = CoverageMinMax.Medium_56;
 
-                        (exit, exitZone) = BuildChallenge_KeycardInZone(start);
+                        (exit, exitZone) = BuildChallenge_KeycardInZone(first);
                     }),
 
                     // Error alarm, no turn off
                     // Note: this will be on top of the regular extract alarm!
                     (0.30, () =>
                     {
-                        (first, firstZone) = AddZone(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone_Forward(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                         AddErrorAlarm(first, null, WaveSettings.Error_Hard, WavePopulation.Baseline);
 
                         // Error zone is large to be nasty
                         firstZone.Coverage = CoverageMinMax.Large_80;
 
-                        (exit, exitZone) = AddZone(first, new ZoneNode { Branch = "forward_extract" });
+                        (exit, exitZone) = AddZone_Forward(first, new ZoneNode { Branch = "forward_extract" });
                     }),
                 });
                 break;
@@ -183,30 +189,32 @@ public partial record LevelLayout
                     // Single zone
                     (0.15, () =>
                     {
-                        (exit, exitZone) = (first, firstZone) = AddZone(start, new ZoneNode { Branch = "forward_extract" });
+                        (exit, exitZone) = (first, firstZone) = AddZone_Forward(
+                            startFrom,
+                            new ZoneNode { Branch = "forward_extract" });
                     }),
 
                     // Terminal door unlock
                     (0.30, () =>
                     {
-                        (first, firstZone) = AddZone(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                         // Increase size a bit and ensure we have 3 terminals total after adding challenge
                         firstZone.Coverage = CoverageMinMax.Medium_56;
                         firstZone.TerminalPlacements.Add(new TerminalPlacement());
 
-                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(start, sideZones: 0);
+                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(first, sideZones: 0);
                     }),
 
                     // Key door unlock
                     (0.25, () =>
                     {
-                        (first, firstZone) = AddZone(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                         // Increase size a bit and ensure we have 3 terminals total after adding challenge
                         firstZone.Coverage = CoverageMinMax.Medium_56;
 
-                        (exit, exitZone) = BuildChallenge_KeycardInZone(start);
+                        (exit, exitZone) = BuildChallenge_KeycardInZone(first);
                     })
                 });
 
@@ -220,53 +228,53 @@ public partial record LevelLayout
                     // Terminal door with password in side zone
                     (0.20, () =>
                     {
-                        (first, firstZone) = AddZone_Forward(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone_Forward(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                         // Increase size a bit and ensure we have 3 terminals total after adding challenge
                         firstZone.Coverage = CoverageMinMax.Medium_56;
                         firstZone.TerminalPlacements.Add(new TerminalPlacement());
 
-                        (exit, exitZone) = BuildChallenge_LockedTerminalPasswordInSide(start);
+                        (exit, exitZone) = BuildChallenge_LockedTerminalPasswordInSide(first);
                     }),
 
                     // Key door unlock with key in zone
                     (0.10, () =>
                     {
-                        (first, firstZone) = AddZone_Forward(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone_Forward(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                         // Increase size a bit and ensure we have 3 terminals total after adding challenge
                         firstZone.Coverage = CoverageMinMax.Medium_56;
 
-                        (exit, exitZone) = BuildChallenge_KeycardInZone(start);
+                        (exit, exitZone) = BuildChallenge_KeycardInZone(first);
                     }),
 
                     // Key in side
                     (0.15, () =>
                     {
-                        (first, firstZone) = AddZone_Forward(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone_Forward(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                         // Increase size a bit and ensure we have 3 terminals total after adding challenge
                         firstZone.Coverage = CoverageMinMax.Medium_56;
 
-                        (exit, exitZone) = BuildChallenge_KeycardInSide(start, sideKeycardZones: 1);
+                        (exit, exitZone) = BuildChallenge_KeycardInSide(first, sideKeycardZones: 1);
                     }),
 
                     // Cell in side
                     (0.15, () =>
                     {
-                        (first, firstZone) = AddZone_Forward(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone_Forward(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                         // Increase size a bit and ensure we have 3 terminals total after adding challenge
                         firstZone.Coverage = CoverageMinMax.Medium_56;
 
-                        (exit, exitZone) = BuildChallenge_GeneratorCellInSide(start, sideCellZones: 1);
+                        (exit, exitZone) = BuildChallenge_GeneratorCellInSide(first, sideCellZones: 1);
                     }),
 
                     // Error alarm, no turn off
                     // Note: this will be on top of the regular extract alarm!
                     (0.25, () =>
                     {
-                        (first, firstZone) = AddZone_Forward(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone_Forward(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                         AddErrorAlarm(first, null, WaveSettings.Error_Hard, WavePopulation.Baseline);
 
@@ -282,7 +290,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         (first, firstZone) = AddZone_Forward(
-                            start,
+                            startFrom,
                             new ZoneNode
                             {
                                 Branch = "forward_extract",
@@ -337,35 +345,35 @@ public partial record LevelLayout
                     // Terminal door with password in side zone
                     (0.30, () =>
                     {
-                        (first, firstZone) = AddZone_Forward(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone_Forward(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                         // Giga zone size
                         firstZone.Coverage = CoverageMinMax.Large_120;
 
-                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(start);
+                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(first);
                     }),
 
                     // Key door unlock with key in zone
                     (0.25, () =>
                     {
-                        (first, firstZone) = AddZone_Forward(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone_Forward(startFrom, new ZoneNode { Branch = "forward_extract" });
 
-                        (exit, exitZone) = BuildChallenge_KeycardInZone(start);
+                        (exit, exitZone) = BuildChallenge_KeycardInZone(first);
                     }),
 
                     // Cell in zone
                     (0.25, () =>
                     {
-                        (first, firstZone) = AddZone_Forward(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone_Forward(startFrom, new ZoneNode { Branch = "forward_extract" });
 
-                        (exit, exitZone) = BuildChallenge_GeneratorCellInZone(start);
+                        (exit, exitZone) = BuildChallenge_GeneratorCellInZone(first);
                     }),
 
                     // Error alarm, no turn off
                     // Note: this will be on top of the regular extract alarm!
                     (0.12, () =>
                     {
-                        (first, firstZone) = AddZone_Forward(start, new ZoneNode { Branch = "forward_extract" });
+                        (first, firstZone) = AddZone_Forward(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                         AddErrorAlarm(first, null, WaveSettings.Error_Hard, WavePopulation.Baseline);
 
@@ -381,7 +389,7 @@ public partial record LevelLayout
                     (0.08, () =>
                     {
                         (first, firstZone) = AddZone_Forward(
-                            start,
+                            startFrom,
                             new ZoneNode
                             {
                                 Branch = "forward_extract",
@@ -425,20 +433,21 @@ public partial record LevelLayout
             case (_, Bulkhead.PrisonerEfficiency):
             case (_, _):
             {
-                (exit, exitZone) = (first, firstZone) = AddZone(start, new ZoneNode { Branch = "forward_extract" });
+                (exit, exitZone) = (first, firstZone) = AddZone(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                 break;
             }
         }
 
         // Locking the way to forward extract on main completion
-        var lockedExtractionPath = (level.Tier) switch
+        var lockedExtractionPath = level.Tier switch
         {
             "A" => false,
             "B" => Generator.Flip(0.2),
             "C" => Generator.Flip(0.6),
-            "D" => true,
-            "E" => true
+            // "D" => true,
+            // "E" => true
+            _ => true
         };
 
         if (lockedExtractionPath)
@@ -448,6 +457,7 @@ public partial record LevelLayout
         }
 
         level.ExtractionZone = exit;
+
         exitZone.GenExitGeomorph(level.Complex);
     }
 }
