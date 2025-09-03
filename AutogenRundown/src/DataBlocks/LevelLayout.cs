@@ -961,7 +961,7 @@ public partial record LevelLayout : DataBlock
 
         director.GenZones();
 
-        var puzzlePack = ChainedPuzzle.BuildPack(level.Tier, level.Settings);
+        var puzzlePack = ChainedPuzzle.BuildPack(level.Tier, director.Bulkhead, level.Settings);
         var wavePopulationPack = WavePopulation.BuildPack(level.Tier, level.Settings);
         var waveSettingsPack = WaveSettings.BuildPack(level.Tier);
 

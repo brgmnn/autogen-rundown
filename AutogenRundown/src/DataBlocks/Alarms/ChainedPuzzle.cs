@@ -225,33 +225,48 @@ public record ChainedPuzzle : DataBlock
     /// <summary>
     /// Chained puzzle pack builders. Generates a pack of alarms that can be Pick()ed from
     /// for building levels.
+    ///
+    /// We need to make sure each pack contains at least 20 alarms. A bulkhead can have up to
+    /// 20 alarms in it.
     /// </summary>
     /// <param name="tier"></param>
+    /// <param name="bulkhead"></param>
+    /// <param name="settings"></param>
     /// <returns></returns>
-    public static List<(double, int, ChainedPuzzle)> BuildPack(string tier, LevelSettings settings)
+    public static List<(double, int, ChainedPuzzle)> BuildPack(
+        string tier,
+        Bulkhead bulkhead,
+        LevelSettings settings)
     {
-        var pack = tier switch
+        var pack = (tier, bulkhead) switch
         {
-            "A" => new List<(double, int, ChainedPuzzle)>
+            ("A", _) => new List<(double, int, ChainedPuzzle)>
             {
                 // Easy / free
-                (1.0, 1, None),
+                (0.4, 1, None),
                 (1.0, 1, TeamScan),
 
                 // Stealth and Surprise scans. Secret scans are grouped with their regular
                 // counterpart
-                (1.0, 1, Secret_TeamScan_EasyBaseline),
+                (0.8, 1, Secret_TeamScan_EasyBaseline),
 
-                // Moderate
-                (1.0, 2, AlarmClass2),
+                // Easy scans
+                (0.6, 2, AlarmClass1),
+                (1.0, 3, AlarmClass2),
+                (0.8, 1, AlarmClass2_Cluster),
+
+                // Normal
                 (1.0, 4, AlarmClass3),
-                (1.0, 6, AlarmClass4),
+                (1.0, 2, AlarmClass3_Cluster),
+                (1.0, 2, AlarmClass3_Mixed),
+
+                (0.8, 3, AlarmClass4),
 
                 // Hard
-                (1.0, 3, AlarmClass5),
-                (1.0, 2, AlarmClass5_Cluster),
+                (0.3, 1, AlarmClass5)
             },
-            "B" => new List<(double, int, ChainedPuzzle)>
+
+            ("B", _) => new List<(double, int, ChainedPuzzle)>
             {
                 // Easy / free
                 (1.0, 1, TeamScan),
@@ -273,7 +288,8 @@ public record ChainedPuzzle : DataBlock
                 (1.0, 1, AlarmClass1_Sustained),
                 (0.6, 1, AlarmClass2_Surge)
             },
-            "C" => new List<(double, int, ChainedPuzzle)>
+
+            ("C", _) => new List<(double, int, ChainedPuzzle)>
             {
                 // Easy scans
                 (1.0, 1, TeamScan),
@@ -299,7 +315,8 @@ public record ChainedPuzzle : DataBlock
                 (1.0, 1, AlarmClass3_Surge),
                 (1.0, 1, AlarmClass1_Sustained),
             },
-            "D" => new List<(double, int, ChainedPuzzle)>
+
+            ("D", _) => new List<(double, int, ChainedPuzzle)>
             {
                 // Easy scans
                 (0.4, 1, TeamScan),
@@ -329,7 +346,8 @@ public record ChainedPuzzle : DataBlock
                 // Sustained
                 (1.0, 3, AlarmClass1_Sustained),
             },
-            "E" => new List<(double, int, ChainedPuzzle)>
+
+            ("E", _) => new List<(double, int, ChainedPuzzle)>
             {
                 // Stealth and Surprise scans. Secret scans are grouped with their regular
                 // counterpart
@@ -357,6 +375,7 @@ public record ChainedPuzzle : DataBlock
                 // Sustained
                 (1.0, 3, AlarmClass1_Sustained),
             },
+
             _ => new List<(double, int, ChainedPuzzle)>()
         };
 
