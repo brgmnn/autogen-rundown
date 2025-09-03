@@ -242,7 +242,7 @@ public record ChainedPuzzle : DataBlock
         {
             ("A", _) => new List<(double, int, ChainedPuzzle)>
             {
-                // Easy / free
+                // Free
                 (0.4, 1, None),
                 (1.0, 1, TeamScan),
 
@@ -250,7 +250,7 @@ public record ChainedPuzzle : DataBlock
                 // counterpart
                 (0.8, 1, Secret_TeamScan_EasyBaseline),
 
-                // Easy scans
+                // Easy
                 (0.6, 2, AlarmClass1),
                 (1.0, 3, AlarmClass2),
                 (0.8, 1, AlarmClass2_Cluster),
@@ -259,7 +259,6 @@ public record ChainedPuzzle : DataBlock
                 (1.0, 4, AlarmClass3),
                 (1.0, 2, AlarmClass3_Cluster),
                 (1.0, 2, AlarmClass3_Mixed),
-
                 (0.8, 3, AlarmClass4),
 
                 // Hard
@@ -268,21 +267,22 @@ public record ChainedPuzzle : DataBlock
 
             ("B", _) => new List<(double, int, ChainedPuzzle)>
             {
-                // Easy / free
-                (1.0, 1, TeamScan),
+                // Free
+                (0.5, 1, TeamScan),
 
-                // Stealth and Surprise scans. Secret scans are grouped with their regular
-                // counterpart
-                (0.4, 1, Secret_TeamScan_EasyBaseline),
-                (1.0, 1, StealthScan4),
-                (0.8, 1, Secret_StealthScan4_NormalBaseline),
+                // Stealth and Surprise scans
+                (0.8, 1, Generator.Flip() ? StealthScan4 : Secret_StealthScan4_NormalBaseline),
 
-                // Moderate
-                (1.0, 1, AlarmClass3),
+                // Easy
+                (0.6, 1, AlarmClass2),
+                (1.0, 3, AlarmClass3),
+                (0.8, 1, AlarmClass3_Cluster),
+
+                // Normal
                 (1.0, 4, AlarmClass4),
-                (1.0, 5, AlarmClass5),
-                (1.0, 3, AlarmClass5_Mixed),
-                (1.0, 2, AlarmClass6),
+                (1.0, 2, AlarmClass4_Cluster),
+                (1.0, 2, AlarmClass4_Mixed),
+                (0.8, 3, AlarmClass5),
 
                 // Hard
                 (1.0, 1, AlarmClass1_Sustained),
