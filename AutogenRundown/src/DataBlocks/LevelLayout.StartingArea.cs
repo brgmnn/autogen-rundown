@@ -213,8 +213,6 @@ public partial record LevelLayout
             _ => new List<Bulkhead>()
         };
 
-        Plugin.Logger.LogWarning($"what are the minimum zones required? {minimumZones}");
-
         var prev = elevatorDrop;
         Zone nextZone = elevatorDropZone;
 
