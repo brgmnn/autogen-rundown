@@ -6,6 +6,14 @@ namespace AutogenRundown.DataBlocks.Alarms;
 
 /// <summary>
 /// https://gtfo-modding.gitbook.io/wiki/reference/datablocks/main/chainedpuzzle
+///
+/// Note that the base game follows approximately the following class number averages for each tier:
+///
+///     * A-tier: Class 3
+///     * B-tier: Class 4
+///     * C-tier: Class 5
+///     * D-tier: Class 6-7
+///     * E-tier: Hardest. Class 7+
 /// </summary>
 public record ChainedPuzzle : DataBlock
 {
