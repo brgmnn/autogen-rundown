@@ -351,31 +351,37 @@ public record ChainedPuzzle : DataBlock
 
             ("E", _) => new List<(double chance, int count, ChainedPuzzle puzzle)>
             {
-                // Stealth and Surprise scans. Secret scans are grouped with their regular
-                // counterpart
-                (0.2, 1, StealthScan4),
-                (1.0, 1, Secret_StealthScan4_WithChargers),
-                (1.0, 1, Secret_SpawnTank),
+                // Free - No free alarms on E-tier. Not sorry
 
-                // Moderate
-                (1.0, 1, AlarmClass5),
-                (1.0, 1, AlarmClass5_Cluster),
-                (1.0, 1, AlarmClass5_Mixed),
-                (1.0, 2, AlarmClass6),
+                // Stealth and Surprise scans
+                (0.05, 1, StealthScan4),
+                (1.0,  1,  Secret_StealthScan4_WithChargers),
+                (0.7,  1,  Secret_SpawnTank),
+                (0.5,  1,  Secret_SpawnMother),
+
+                // Easy
+                (0.2, 1, AlarmClass5),
+                (0.4, 1, AlarmClass5_Cluster),
+                (0.7, 1, AlarmClass6),
+
+                (0.7, 1, AlarmClass1_Sustained),
+
+                // Normal
+                (1.0, 1, AlarmClass6_Cluster),
                 (1.0, 2, AlarmClass6_Mixed),
-                (1.0, 2, AlarmClass6_Cluster),
+                (1.0, 4, AlarmClass7),
+                (1.0, 2, AlarmClass7_Cluster),
+                (1.0, 2, AlarmClass7_Mixed),
 
-                // Difficult
-                (1.0, 3, AlarmClass7),
-                (1.0, 3, AlarmClass7_Mixed),
-                (1.0, 3, AlarmClass8),
+                // Hard
+                (0.8, 3, AlarmClass8),
+                (0.7, 1, AlarmClass9),
 
-                // Surge alarms
-                (1.0, 3, AlarmClass3_Surge),
+                // Hard specialty
+                (1.0, 2, AlarmClass3_Surge),
                 (0.7, 1, AlarmClass4_Surge),
-
-                // Sustained
-                (1.0, 3, AlarmClass1_Sustained),
+                (0.7, 1, AlarmClass3_Surge_Extreme),
+                (0.5, 1, AlarmClass3_Surge_Overload),
             },
 
             _ => new List<(double chance, int count, ChainedPuzzle puzzle)>
@@ -1194,6 +1200,43 @@ public record ChainedPuzzle : DataBlock
                 Type = WardenObjectiveEventType.SpawnEnemyWave,
                 Delay = 9.0,
                 EnemyWaveData = GenericWave.SingleTank
+            },
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.None,
+                Delay = 7.0,
+                WardenIntel = ":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr..."
+            },
+        }
+    };
+
+    public static readonly ChainedPuzzle Secret_SpawnMother = TeamScan with
+    {
+        PersistentId = 0,
+        Comment = "Secret Alarm: Secret_SpawnMother",
+        FixedAlarm = true,
+        EventsOnOpenDoor = new List<WardenObjectiveEvent>
+        {
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.PlaySound,
+                Trigger = WardenObjectiveEventTrigger.OnStart,
+                // TODO: this just doesn't seem to work
+                SoundId = Sound.Environment_DoorUnstuck,
+                Delay = 5.0
+            },
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.PlaySound,
+                Trigger = WardenObjectiveEventTrigger.OnStart,
+                SoundId = Sound.Enemies_DistantLowRoar,
+                Delay = 8.0
+            },
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SpawnEnemyWave,
+                Delay = 9.0,
+                EnemyWaveData = GenericWave.SingleMother
             },
             new WardenObjectiveEvent
             {
