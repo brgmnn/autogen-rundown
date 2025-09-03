@@ -325,6 +325,7 @@ public record ChainedPuzzle : DataBlock
                 (0.3, 1, StealthScan4),
                 (1.0, 1, Secret_StealthScan4_WithChargers),
                 (1.0, 1, Secret_SpawnTank),
+                (0.1, 1, Secret_SpawnMother),
 
                 // Easy
                 (0.3, 1, AlarmClass4_Mixed),
