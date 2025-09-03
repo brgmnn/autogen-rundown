@@ -362,21 +362,21 @@ public record ChainedPuzzle : DataBlock
                 (0.5,  1,  Secret_SpawnMother),
 
                 // Easy
-                (0.2, 1, AlarmClass5),
+                (0.2, 2, AlarmClass5),
                 (0.4, 1, AlarmClass5_Cluster),
-                (0.7, 1, AlarmClass6),
+                (0.7, 2, AlarmClass6),
 
                 (0.7, 1, AlarmClass1_Sustained),
 
                 // Normal
-                (1.0, 1, AlarmClass6_Cluster),
+                (1.0, 2, AlarmClass6_Cluster),
                 (1.0, 2, AlarmClass6_Mixed),
                 (1.0, 4, AlarmClass7),
                 (1.0, 2, AlarmClass7_Cluster),
                 (1.0, 2, AlarmClass7_Mixed),
 
                 // Hard
-                (0.8, 3, AlarmClass8),
+                (0.8, 1, AlarmClass8),
                 (0.7, 1, AlarmClass9),
 
                 // Hard specialty
