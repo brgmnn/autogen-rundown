@@ -18,13 +18,20 @@ public partial record LevelLayout
         if (director.Objective is WardenObjectiveType.ClearPath or WardenObjectiveType.Survival)
             return;
 
-        // // Random chance for us to skip doing this all together
-        // if (Generator.Flip(1.0 - chance))
-        //     return;
+        // Random chance for us to skip doing this all together
+        if (Generator.Flip(1.0 - chance))
+            return;
 
-        var start = level.ForwardExtractStartCandidates.Any()
-            ? Generator.Select(level.ForwardExtractStartCandidates)
-            : planner.GetLeafZones(Bulkhead.Main).PickRandom();
+        var start = new ZoneNode();
+
+        if (level.ForwardExtractStartCandidates.Any())
+            start = level.ForwardExtractStartCandidates.SelectRandom();
+        else if (planner.GetLeafZones(Bulkhead.Main).Any())
+            start = planner.GetLeafZones(Bulkhead.Main).Last();
+        else if (planner.GetOpenZones(Bulkhead.Main).Any())
+            start = planner.GetOpenZones(Bulkhead.Main).PickRandom();
+        else
+            start = planner.GetLastNode(Bulkhead.Main, null);
 
         var first = new ZoneNode();
         var exit = new ZoneNode();
@@ -35,13 +42,32 @@ public partial record LevelLayout
         {
             case ("A", Bulkhead.Main):
             {
-                var nodes = AddBranch(start, 2, "forward_extraction");
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Direct path
+                    (0.40, () =>
+                    {
+                        var nodes = AddBranch(start, 2, "forward_extraction");
 
-                first = nodes.First();
-                firstZone = planner.GetZone(first)!;
+                        first = nodes.First();
+                        firstZone = planner.GetZone(first)!;
 
-                exit = nodes.Last();
-                exitZone = planner.GetZone(exit)!;
+                        exit = nodes.Last();
+                        exitZone = planner.GetZone(exit)!;
+                    }),
+
+                    // Terminal door unlock
+                    (0.60, () =>
+                    {
+                        (first, firstZone) = AddZone(start, new ZoneNode { Branch = "forward_extract" });
+
+                        // Increase size a bit and ensure we have 3 terminals total after adding challenge
+                        firstZone.Coverage = CoverageMinMax.Medium_56;
+                        firstZone.TerminalPlacements.Add(new TerminalPlacement());
+
+                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(start, sideZones: 0);
+                    }),
+                });
 
                 break;
             }
@@ -54,7 +80,7 @@ public partial record LevelLayout
                     // Direct path
                     (0.20, () =>
                     {
-                        var nodes = AddBranch(start, Generator.Between(1, 2), "forward_extraction");
+                        var nodes = AddBranch(start, 2, "forward_extraction");
 
                         first = nodes.First();
                         firstZone = planner.GetZone(first)!;
@@ -97,7 +123,7 @@ public partial record LevelLayout
                     // Direct path
                     (0.15, () =>
                     {
-                        var nodes = AddBranch(start, Generator.Between(1, 2), "forward_extraction");
+                        var nodes = AddBranch(start, 2, "forward_extraction");
 
                         first = nodes.First();
                         firstZone = planner.GetZone(first)!;

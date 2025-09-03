@@ -242,9 +242,7 @@ public class LayoutPlanner
     /// <param name="bulkhead"></param>
     /// <param name="branch"></param>
     /// <returns></returns>
-    public ZoneNode GetLastNode(Bulkhead bulkhead, string branch)
-        => blocks.Last(entry => entry.Key.Bulkhead == bulkhead &&
-                                entry.Key.Branch == branch).Key;
+    public ZoneNode GetLastNode(Bulkhead bulkhead, string? branch) => GetSubgraph(bulkhead, branch).Last().Key;
 
     /// <summary>
     ///

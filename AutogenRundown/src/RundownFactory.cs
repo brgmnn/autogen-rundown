@@ -207,7 +207,7 @@ public static class RundownFactory
         #if DEBUG
         if (withFixed)
         {
-            const string tier = "E";
+            const string tier = "A";
             const string title = "Test";
             const Complex complex = Complex.Mining;
 

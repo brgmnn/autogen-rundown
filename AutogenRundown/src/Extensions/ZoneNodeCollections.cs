@@ -29,4 +29,7 @@ public static class ZoneNodeCollections
     /// <returns></returns>
     public static ZoneNode PickRandom(this IEnumerable<ZoneNode> nodes)
         => Generator.Pick(nodes);
+
+    public static ZoneNode SelectRandom(this ICollection<(double, ZoneNode)> nodes)
+        => Generator.Select(nodes);
 }
