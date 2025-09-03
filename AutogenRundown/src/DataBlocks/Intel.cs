@@ -26,14 +26,16 @@ public class Intel
 
     public const string Error = ":://ERROR";
 
-    public static string Zone(int number) => $"<color=orange>ZONE {number}</color>";
+    public static string Zone(int number, bool underscore = false)
+        => $"<color=orange>ZONE{(underscore ? "_" : " ")}{number}</color>";
 
-    public static string Zone(Zone zone) => Zone(zone.layout.ZoneAliasStart + zone.LocalIndex);
+    public static string Zone(Zone zone, bool underscore = false)
+        => Zone(zone.layout.ZoneAliasStart + zone.LocalIndex, underscore);
 
-    public static string Zone(ZoneNode node, LayoutPlanner planner)
+    public static string Zone(ZoneNode node, LayoutPlanner planner, bool underscore = false)
     {
         var zone = planner.GetZone(node);
 
-        return zone is not null ? Zone(zone) : "<i>No Zone</i>";
+        return zone is not null ? Zone(zone, underscore) : "<i>No Zone</i>";
     }
 }

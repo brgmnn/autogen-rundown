@@ -448,6 +448,8 @@ static public class Generator
         return entryLast.Item3;
     }
 
+    public static string ShortHexHash() => Between(10, 65535).ToString("X4");
+
     /// <summary>
     /// Gets a new persistent Id
     /// </summary>

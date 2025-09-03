@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Terminals;
 using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
@@ -94,9 +95,12 @@ public partial record LevelLayout
                     (0.25, () =>
                     {
                         SetGatherTerminal(start.ZoneNumber);
+                        objective.PlacementNodes.Add(start);
+
                         AddBranch_Forward(start, objective.GatherTerminal_SpawnCount - 1, "primary", (node, zone) =>
                         {
                             SetGatherTerminal(node.ZoneNumber);
+                            objective.PlacementNodes.Add(node);
                         });
                     }),
 
@@ -115,6 +119,7 @@ public partial record LevelLayout
                             hubZone.GenHubGeomorph(level.Complex);
 
                         SetGatherTerminal(hub.ZoneNumber);
+                        objective.PlacementNodes.Add(hub);
 
                         var (end1, end1Zone) = AddZone(hub);
                         end1Zone.GenDeadEndGeomorph(level.Complex);
@@ -124,6 +129,8 @@ public partial record LevelLayout
 
                         SetGatherTerminal(end1.ZoneNumber);
                         SetGatherTerminal(end2.ZoneNumber);
+                        objective.PlacementNodes.Add(end1);
+                        objective.PlacementNodes.Add(end2);
                     }),
                 });
                 break;
@@ -145,6 +152,7 @@ public partial record LevelLayout
                         hubZone.GenHubGeomorph(level.Complex);
 
                         SetGatherTerminal(hub.ZoneNumber);
+                        objective.PlacementNodes.Add(hub);
 
                         var (end1, end1Zone) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_1" });
@@ -161,6 +169,10 @@ public partial record LevelLayout
                         SetGatherTerminal(end1.ZoneNumber);
                         SetGatherTerminal(end2.ZoneNumber);
                         SetGatherTerminal(end3.ZoneNumber);
+
+                        objective.PlacementNodes.Add(end1);
+                        objective.PlacementNodes.Add(end2);
+                        objective.PlacementNodes.Add(end3);
                     }),
                 });
                 break;
@@ -183,12 +195,30 @@ public partial record LevelLayout
                 AddBranch(start, objective.GatherTerminal_SpawnCount - 1, "primary", (node, zone) =>
                 {
                     SetGatherTerminal(node.ZoneNumber);
+                    objective.PlacementNodes.Add(node);
                 });
                 break;
             }
         }
 
-        return;
+        startZone.TerminalPlacements.First().LogFiles.Add(new LogFile
+        {
+            FileName = $"DEC_KEY_INVENTORY-{Generator.ShortHexHash()}",
+            FileContent = new Text(() =>
+            {
+                var zones = string.Join(
+                    ", ",
+                    objective.PlacementNodes.Select(node => Intel.Zone(node, planner, underscore: true)));
+
+                // TODO: deal with how we would gather 5. It will be longer than 43 chars
+                return $"-------------------------------------------\n" +
+                       $"          Data redundancy system          \n\n" +
+                       $"Backup decryption keys stored in mirror\n" +
+                       $"terminal array. Terminal storage zones:\n\n" +
+                       $"  {zones}\n\n" +
+                       $"-------------------------------------------";
+            })
+        });
     }
 
     // Helper function to wrap adding the zone placement data

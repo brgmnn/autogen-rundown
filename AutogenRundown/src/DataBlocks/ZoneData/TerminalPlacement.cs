@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Terminals;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.ZoneData;
@@ -11,9 +12,16 @@ public class TerminalPlacement
 
     public TerminalStartingState StartingStateData { get; set; } = new();
 
+    /// <summary>
+    /// Defines the logs stored on this terminal
+    /// </summary>
+    [JsonProperty("LocalLogFiles")]
+    public List<LogFile> LogFiles { get; set; } = new();
+
     #region Less used
+
     public int AreaSeedOffset { get; set; } = 0;
     public int MarkerSeedOffset { get; set; } = 0;
-    public JArray LocalLogFiles { get; set; } = new JArray();
+
     #endregion
 }
