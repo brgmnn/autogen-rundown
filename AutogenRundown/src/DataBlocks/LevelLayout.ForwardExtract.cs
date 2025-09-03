@@ -454,6 +454,12 @@ public partial record LevelLayout
         {
             firstZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
             objective.EventsOnGotoWin.AddUnlockDoor(first.Bulkhead, first.ZoneNumber);
+
+            Plugin.Logger.LogDebug($"Locking path to forward extract. Locked zone = {first}");
+        }
+        else
+        {
+            Plugin.Logger.LogDebug($"Forward extract unlocked from start. First zone = {first}");
         }
 
         level.ExtractionZone = exit;
