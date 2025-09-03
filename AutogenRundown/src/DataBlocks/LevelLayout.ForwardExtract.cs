@@ -22,6 +22,9 @@ public partial record LevelLayout
         if (Generator.Flip(1.0 - chance))
             return;
 
+        if (!level.ForwardExtractStartCandidates.Any())
+            Plugin.Logger.LogWarning($"No forward extract candidate zones were present for WardenObjective = {objective.Type}");
+
         var start = new ZoneNode();
 
         if (level.ForwardExtractStartCandidates.Any())
