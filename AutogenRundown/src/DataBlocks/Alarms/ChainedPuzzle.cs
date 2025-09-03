@@ -318,33 +318,35 @@ public record ChainedPuzzle : DataBlock
 
             ("D", _) => new List<(double chance, int count, ChainedPuzzle puzzle)>
             {
-                // Easy scans
-                (0.4, 1, TeamScan),
+                // Free
+                (0.2, 1, TeamScan),
 
-                // Stealth and Surprise scans. Secret scans are grouped with their regular
-                // counterpart
-                (1.0, 1, StealthScan4),
+                // Stealth and Surprise scans
+                (0.3, 1, StealthScan4),
                 (1.0, 1, Secret_StealthScan4_WithChargers),
-                (1.0, 2, Secret_SpawnTank),
+                (1.0, 1, Secret_SpawnTank),
 
-                // Moderate
-                (1.0, 1, AlarmClass5),
+                // Easy
+                (0.3, 1, AlarmClass4_Mixed),
+                (0.9, 1, AlarmClass5),
                 (1.0, 1, AlarmClass5_Cluster),
                 (1.0, 1, AlarmClass5_Mixed),
 
-                // Hard
+                // Normal
                 (1.0, 3, AlarmClass6),
+                (1.0, 2, AlarmClass6_Cluster),
                 (1.0, 2, AlarmClass6_Mixed),
-                (1.0, 3, AlarmClass7),
-                (1.0, 3, AlarmClass7_Mixed),
-                (1.0, 1, AlarmClass8),
+                (0.9, 2, AlarmClass7),
 
-                // Surge
+                // Hard
+                (0.9, 2, AlarmClass7_Cluster),
+                (0.8, 1, AlarmClass7_Mixed),
+                (0.6, 1, AlarmClass8),
+
+                // Hard specialty
                 (1.0, 1, AlarmClass2_Surge),
-                (1.0, 1, AlarmClass3_Surge),
-
-                // Sustained
-                (1.0, 3, AlarmClass1_Sustained),
+                (1.0, 2, AlarmClass3_Surge),
+                (1.0, 2, AlarmClass1_Sustained),
             },
 
             ("E", _) => new List<(double chance, int count, ChainedPuzzle puzzle)>
@@ -834,6 +836,24 @@ public record ChainedPuzzle : DataBlock
             PuzzleComponent.AllBig,
         },
     };
+
+    public static readonly ChainedPuzzle AlarmClass7_Cluster = new()
+    {
+        PublicAlarmName = "Class VI Cluster Alarm",
+        Settings = WaveSettings.Baseline_Hard,
+        Population = WavePopulation.Baseline,
+        WantedDistanceBetweenPuzzleComponents = 5.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.AllBig,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.AllBig,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.Cluster,
+            PuzzleComponent.AllBig,
+        },
+    };
     #endregion
 
     #region Alarms: Mixed
@@ -908,12 +928,12 @@ public record ChainedPuzzle : DataBlock
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.SustainedSmall,
-            PuzzleComponent.SustainedSmall,
-            PuzzleComponent.SustainedSmall,
-            PuzzleComponent.ClusterLarge,
             PuzzleComponent.ClusterLarge,
             PuzzleComponent.Cluster,
+            PuzzleComponent.SustainedSmall,
+            PuzzleComponent.ClusterLarge,
             PuzzleComponent.Cluster,
+            PuzzleComponent.SustainedSmall,
         },
     };
     #endregion
