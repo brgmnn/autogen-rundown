@@ -233,14 +233,14 @@ public record ChainedPuzzle : DataBlock
     /// <param name="bulkhead"></param>
     /// <param name="settings"></param>
     /// <returns></returns>
-    public static List<(double, int, ChainedPuzzle)> BuildPack(
+    public static List<(double chance, int count, ChainedPuzzle puzzle)> BuildPack(
         string tier,
         Bulkhead bulkhead,
         LevelSettings settings)
     {
         var pack = (tier, bulkhead) switch
         {
-            ("A", _) => new List<(double, int, ChainedPuzzle)>
+            ("A", _) => new List<(double chance, int count, ChainedPuzzle puzzle)>
             {
                 // Free
                 (0.4, 1, None),
@@ -265,7 +265,7 @@ public record ChainedPuzzle : DataBlock
                 (0.3, 1, AlarmClass5)
             },
 
-            ("B", _) => new List<(double, int, ChainedPuzzle)>
+            ("B", _) => new List<(double chance, int count, ChainedPuzzle puzzle)>
             {
                 // Free
                 (0.5, 1, TeamScan),
@@ -285,38 +285,38 @@ public record ChainedPuzzle : DataBlock
                 (0.8, 3, AlarmClass5),
 
                 // Hard
-                (1.0, 1, AlarmClass1_Sustained),
+                (0.6, 1, AlarmClass1_Sustained),
                 (0.6, 1, AlarmClass2_Surge)
             },
 
-            ("C", _) => new List<(double, int, ChainedPuzzle)>
+            ("C", _) => new List<(double chance, int count, ChainedPuzzle puzzle)>
             {
-                // Easy scans
-                (1.0, 1, TeamScan),
+                // Free
+                (0.3, 1, TeamScan),
 
-                // Stealth and Surprise scans. Secret scans are grouped with their regular
-                // counterpart
-                (1.0, 1, Secret_TeamScan_EasyBaseline),
+                // Stealth and Surprise scans
                 (0.2, 1, StealthScan4),
-                (1.0, 2, Secret_StealthScan4_NormalBaseline),
+                (0.8, 1, Secret_StealthScan4_NormalBaseline),
 
-                // Moderate
-                (1.0, 2, AlarmClass4_Cluster),
-                (1.0, 2, AlarmClass4_Mixed),
-                (1.0, 3, AlarmClass5),
+                // Easy
+                (1.0, 2, AlarmClass4),
+                (0.8, 1, AlarmClass4_Cluster),
+                (0.8, 1, AlarmClass4_Mixed),
+
+                // Normal
+                (1.0, 4, AlarmClass5),
                 (1.0, 2, AlarmClass5_Cluster),
-                (1.0, 3, AlarmClass5_Mixed),
-                (1.0, 3, AlarmClass6),
-                (1.0, 2, AlarmClass6_Mixed),
+                (1.0, 2, AlarmClass5_Mixed),
+                (0.8, 2, AlarmClass6),
+                (0.7, 1, AlarmClass6_Mixed),
 
                 // Hard
-                (1.0, 2, AlarmClass7),
                 (1.0, 1, AlarmClass2_Surge),
-                (1.0, 1, AlarmClass3_Surge),
+                (0.7, 1, AlarmClass3_Surge),
                 (1.0, 1, AlarmClass1_Sustained),
             },
 
-            ("D", _) => new List<(double, int, ChainedPuzzle)>
+            ("D", _) => new List<(double chance, int count, ChainedPuzzle puzzle)>
             {
                 // Easy scans
                 (0.4, 1, TeamScan),
@@ -347,7 +347,7 @@ public record ChainedPuzzle : DataBlock
                 (1.0, 3, AlarmClass1_Sustained),
             },
 
-            ("E", _) => new List<(double, int, ChainedPuzzle)>
+            ("E", _) => new List<(double chance, int count, ChainedPuzzle puzzle)>
             {
                 // Stealth and Surprise scans. Secret scans are grouped with their regular
                 // counterpart
@@ -376,7 +376,10 @@ public record ChainedPuzzle : DataBlock
                 (1.0, 3, AlarmClass1_Sustained),
             },
 
-            _ => new List<(double, int, ChainedPuzzle)>()
+            _ => new List<(double chance, int count, ChainedPuzzle puzzle)>
+            {
+                (1.0, 20, TeamScan),
+            }
         };
 
         if (settings.HasChargers() && tier is "D" or "E")
