@@ -97,11 +97,13 @@ public partial record LevelLayout
                         SetGatherTerminal(start.ZoneNumber);
                         objective.PlacementNodes.Add(start);
 
-                        AddBranch_Forward(start, objective.GatherTerminal_SpawnCount - 1, "primary", (node, zone) =>
+                        var nodes = AddBranch_Forward(start, objective.GatherTerminal_SpawnCount - 1, "primary", (node, zone) =>
                         {
                             SetGatherTerminal(node.ZoneNumber);
                             objective.PlacementNodes.Add(node);
                         });
+
+                        AddForwardExtractStart(nodes.Last());
                     }),
 
                     // start -> Hub -> end1,end2
@@ -162,9 +164,9 @@ public partial record LevelLayout
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_2" });
                         end2Zone.GenDeadEndGeomorph(level.Complex);
 
-                        var (end3, end3Zone) =
+                        var (end3, _) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_3" });
-                        end3Zone.GenDeadEndGeomorph(level.Complex);
+                        AddForwardExtractStart(end3);
 
                         SetGatherTerminal(end1.ZoneNumber);
                         SetGatherTerminal(end2.ZoneNumber);
@@ -192,11 +194,14 @@ public partial record LevelLayout
             default:
             {
                 SetGatherTerminal(start.ZoneNumber);
-                AddBranch(start, objective.GatherTerminal_SpawnCount - 1, "primary", (node, zone) =>
+
+                var nodes = AddBranch(start, objective.GatherTerminal_SpawnCount - 1, "primary", (node, zone) =>
                 {
                     SetGatherTerminal(node.ZoneNumber);
                     objective.PlacementNodes.Add(node);
                 });
+
+                AddForwardExtractStart(nodes.Last());
                 break;
             }
         }
