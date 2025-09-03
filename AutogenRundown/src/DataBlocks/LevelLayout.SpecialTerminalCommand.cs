@@ -32,8 +32,12 @@ public partial record LevelLayout
         // We have a special flow for KingOfTheHill
         if (objective.SpecialTerminalCommand_Type == SpecialCommand.KingOfTheHill)
         {
-            var hill = AddBranch_Forward(start, 2, "special_terminal").Last();
+            var hillNodes = AddBranch_Forward(start, 2, "special_terminal");
+            var hill = hillNodes.Last();
             var hillZone = planner.GetZone(hill)!;
+
+            // Build forward extracts from the first zone
+            AddForwardExtractStart(hillNodes.First());
 
             hillZone.GenKingOfTheHillGeomorph(level, director);
             hillZone.TerminalPlacements = new List<TerminalPlacement>
@@ -91,7 +95,12 @@ public partial record LevelLayout
         }
 
         // Normal generation for this
-        var terminal = BuildBranch(start, director.ZoneCount, "special_terminal");
+        var nodes = AddBranch(start, director.ZoneCount, "special_terminal");
+        var terminal = nodes.Last();
+
+        // Adds the penultimate (or just only) zone as a forward extract candidate
+        AddForwardExtractStart(nodes.TakeLast(2).First());
+        AddForwardExtractStart(terminal, chance: 0.4);
 
         // 55% chance to attempt to lock the end zone with a key puzzle
         if (Generator.Flip(0.55))
