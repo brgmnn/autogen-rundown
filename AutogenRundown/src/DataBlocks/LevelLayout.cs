@@ -76,6 +76,19 @@ public partial record LevelLayout : DataBlock
     }
 
     /// <summary>
+    /// Helper to add forward extract candidate build zones.
+    /// </summary>
+    /// <param name="node"></param>
+    /// <param name="chance"></param>
+    public void AddForwardExtractStart(ZoneNode node, double chance = 1.0)
+    {
+        if (director.Bulkhead != Bulkhead.Main)
+            return;
+
+        level.ForwardExtractStartCandidates.Add((chance, node));
+    }
+
+    /// <summary>
     /// Roll for blood doors
     /// </summary>
     public void RollBloodDoors()

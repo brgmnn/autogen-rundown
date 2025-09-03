@@ -111,7 +111,7 @@ public partial record LevelLayout
 
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
 
-                        level.ForwardExtractStartCandidates.Add((1.0, hub));
+                        AddForwardExtractStart(hub);
 
                         if (Generator.Flip(0.4))
                             hubZone.GenTGeomorph(level.Complex);
