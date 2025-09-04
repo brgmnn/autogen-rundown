@@ -939,7 +939,7 @@ public record Zone : DataBlock
 
                 case "B":
                 {
-                    if (Generator.Flip(0.2))
+                    if (Generator.Flip(0.05))
                         puzzle.WantedDistanceFromStartPos += Generator.Between(15, 20);
 
                     // Small chance to disable lights during the alarm
@@ -956,7 +956,7 @@ public record Zone : DataBlock
 
                 case "C":
                 {
-                    if (Generator.Flip(0.4))
+                    if (Generator.Flip(0.2))
                         puzzle.WantedDistanceFromStartPos += Generator.Between(20, 25);
 
                     puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(1.0, 1.1);
@@ -988,7 +988,7 @@ public record Zone : DataBlock
 
                 case "D":
                 {
-                    if (Generator.Flip(0.6))
+                    if (Generator.Flip(0.32))
                         puzzle.WantedDistanceFromStartPos += Generator.Between(20, 25);
 
                     puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(1.0, 1.2);
@@ -1035,7 +1035,7 @@ public record Zone : DataBlock
 
                 case "E":
                 {
-                    if (Generator.Flip(0.8))
+                    if (Generator.Flip(0.45))
                         puzzle.WantedDistanceFromStartPos += Generator.Between(20, 30);
 
                     puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(1.1, 1.3);
