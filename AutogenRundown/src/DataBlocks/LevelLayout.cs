@@ -5,6 +5,7 @@ using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Extensions;
 using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks;
@@ -71,7 +72,14 @@ public partial record LevelLayout : DataBlock
         ICollection<(double, int, WavePopulation)> wavePopulationPack,
         ICollection<(double, int, WaveSettings)> waveSettingsPack)
     {
-        foreach (var zone in Zones)
+        // We want to roll the alarms on the zones in a random order. The alarm packs have
+        // weighted chances on them. This means zones rolled first have a higher chance of
+        // getting high weight alarms and later zones have a higher chance of rarer alarms.
+        // By shuffling the zone list we ensure the alarms are randomly distributed, while
+        // preserving the weightings of alarms.
+        var zones = Zones.Shuffle();
+
+        foreach (var zone in zones)
             zone.RollAlarms(level, this, puzzlePack, wavePopulationPack, waveSettingsPack);
     }
 
@@ -340,12 +348,15 @@ public partial record LevelLayout : DataBlock
             }
         }
 
+        // We shuffle for the same reason we shuffle the zones before rolling alarms. Subsequent
+        // zones have different chances of blood doors based on how many are here.
+        var zones = Zones.Shuffle();
+
         // Do not add blood doors to Zone 0, these are always either the elevator or bulkhead doors.
         // Do not add blood doors to Apex security doors
-        foreach (var zone in Zones)
+        foreach (var zone in zones)
             if (!planner.GetZoneNode(zone.LocalIndex).Tags.Contains("no_blood_door") &&
-                zone.LocalIndex > 0 &&
-                zone.SecurityGateToEnter == SecurityGate.Security &&
+                zone is { LocalIndex: > 0, SecurityGateToEnter: SecurityGate.Security } &&
                 Generator.Flip(chance) &&
                 (count++ < max || max == -1))
             {

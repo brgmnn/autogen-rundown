@@ -220,7 +220,7 @@ static public class Generator
     /// <param name="collection"></param>
     /// <returns>Returns null if no element can be picked (empty collection)</returns>
     public static T? Pick<T>(IEnumerable<T> collection)
-        => collection.Count() > 0 ? collection.ElementAt(Random.Next(collection.Count())) : default;
+        => collection.Any() ? collection.ElementAt(Random.Next(collection.Count())) : default;
 
     /// <summary>
     /// Pick()'s an item from a collection and then removes it so it may not be subsequently drawn
