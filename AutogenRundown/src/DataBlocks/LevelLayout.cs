@@ -492,7 +492,11 @@ public partial record LevelLayout : DataBlock
         };
 
         var scoutCount = 0;
-        var zoneNodes = planner.GetZones(director.Bulkhead, null);
+
+        // We want to shuffle this list for the same reason as when we roll blood doors and door
+        // alarms. It stops pack draws being weighted differently at the start and end of the
+        // layout zones.
+        var zoneNodes = planner.GetZones(director.Bulkhead, null).Shuffle();
 
         foreach (var node in zoneNodes)
         {
