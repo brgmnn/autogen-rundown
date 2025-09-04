@@ -1355,25 +1355,26 @@ public record Zone : DataBlock
     public int BuildFromLocalIndex { get; set; } = 0;
 
     #region Zone Prefix
-    public bool OverrideAliasPrefix
-    {
-        get => AliasPrefix != string.Empty;
-        private set { }
-    }
-
-    public string AliasPrefixOverride
-    {
-        get => AliasPrefix;
-        private set { }
-    }
+    /// <summary>
+    /// Computed property. If this returns true the game will use the provided alias prefixes
+    /// </summary>
+    [JsonProperty("OverrideAliasPrefix")]
+    public bool OverrideAliasPrefix => AliasPrefix != "";
 
     /// <summary>
-    /// What Zone Alias prefix to use. Leave this empty for the default `ZONE` prefix
+    /// What Zone Alias prefix to use. Leave this empty for the default `ZONE` prefix. This appears
+    /// on doors, etc.
     /// </summary>
-    [JsonIgnore]
-    public string AliasPrefix { get; set; } = string.Empty;
+    [JsonProperty("AliasPrefixOverride")]
+    public string AliasPrefix { get; set; } = "";
 
-    public string AliasPrefixShortOverride { get; set; } = "";
+    /// <summary>
+    /// The short prefix
+    ///
+    /// Default = "Z"
+    /// </summary>
+    [JsonProperty("AliasPrefixShortOverride")]
+    public string AliasPrefixShort { get; set; } = "Z";
     #endregion
 
     /// <summary>

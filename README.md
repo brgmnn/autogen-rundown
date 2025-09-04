@@ -36,7 +36,6 @@ TODO:
   * Matter Wave Projector - Needs slightly less zones to go through. Very linear
   * Bring big pickup for scan
   * Add more variety on fog for vibes
-  * Slightly reduce scan difficulty on A/B tier
 
 
 Idea:

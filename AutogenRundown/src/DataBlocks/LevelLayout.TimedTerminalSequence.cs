@@ -119,7 +119,7 @@ public partial record LevelLayout
                 LightSettings = Lights.GenRandomLight(),
                 ProgressionPuzzleToEnter = ProgressionPuzzle.Locked,
                 AliasPrefix = "Alarm Control, ZONE",
-                AliasPrefixShortOverride = "Alarm Control, Z",
+                AliasPrefixShort = "Alarm Control, Z",
                 TerminalPlacements = new()
                 {
                     new()
