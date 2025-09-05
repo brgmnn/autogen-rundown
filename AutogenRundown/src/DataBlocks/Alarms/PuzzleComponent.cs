@@ -14,58 +14,58 @@ public class PuzzleComponent
     [JsonIgnore]
     public double Duration { get; set; } = 10;
 
-    public static readonly PuzzleComponent BulkheadMain = new PuzzleComponent { PuzzleType = PuzzleType.BulkheadMain };
-    public static readonly PuzzleComponent BulkheadSecondary = new PuzzleComponent { PuzzleType = PuzzleType.BulkheadSecondary };
-    public static readonly PuzzleComponent BulkheadOverload = new PuzzleComponent { PuzzleType = PuzzleType.BulkheadOverload };
+    public static readonly PuzzleComponent BulkheadMain      = new() { PuzzleType = PuzzleType.BulkheadMain };
+    public static readonly PuzzleComponent BulkheadSecondary = new() { PuzzleType = PuzzleType.BulkheadSecondary };
+    public static readonly PuzzleComponent BulkheadOverload  = new() { PuzzleType = PuzzleType.BulkheadOverload };
 
-    public static readonly PuzzleComponent ScanSmall = new PuzzleComponent { PuzzleType = PuzzleType.Small };
-    public static readonly PuzzleComponent ScanLarge = new PuzzleComponent { PuzzleType = PuzzleType.Large };
+    public static readonly PuzzleComponent ScanSmall = new() { PuzzleType = PuzzleType.Small };
+    public static readonly PuzzleComponent ScanLarge = new() { PuzzleType = PuzzleType.Large };
 
-    public static readonly PuzzleComponent ClusterSmall = new PuzzleComponent
+    public static readonly PuzzleComponent ClusterSmall = new()
     {
         PuzzleType = PuzzleType.ClusterSmall,
         Duration = 12
     };
-    public static readonly PuzzleComponent ClusterLarge = new PuzzleComponent
+    public static readonly PuzzleComponent ClusterLarge = new()
     {
         PuzzleType = PuzzleType.ClusterLarge,
         Duration = 15
     };
-    public static readonly PuzzleComponent Cluster = new PuzzleComponent { PuzzleType = PuzzleType.Cluster };
+    public static readonly PuzzleComponent Cluster = new() { PuzzleType = PuzzleType.Cluster };
 
-    public static readonly PuzzleComponent AllBig = new PuzzleComponent { PuzzleType = PuzzleType.AllBig };
-    public static readonly PuzzleComponent AllBig_GreenActive = new PuzzleComponent { PuzzleType = PuzzleType.AllBig_GreenActive };
-    public static readonly PuzzleComponent AllLarge = new PuzzleComponent { PuzzleType = PuzzleType.AllLarge };
-    public static readonly PuzzleComponent AllLarge_Slow = new PuzzleComponent { PuzzleType = PuzzleType.AllLarge_Slow };
+    public static readonly PuzzleComponent AllBig = new() { PuzzleType = PuzzleType.AllBig };
+    public static readonly PuzzleComponent AllBig_GreenActive = new() { PuzzleType = PuzzleType.AllBig_GreenActive };
+    public static readonly PuzzleComponent AllLarge = new() { PuzzleType = PuzzleType.AllLarge };
+    public static readonly PuzzleComponent AllLarge_Slow = new() { PuzzleType = PuzzleType.AllLarge_Slow };
 
-    public static readonly PuzzleComponent StealthBig_Cluster = new PuzzleComponent { PuzzleType = PuzzleType.StealthBig_Cluster };
+    public static readonly PuzzleComponent StealthBig_Cluster = new() { PuzzleType = PuzzleType.StealthBig_Cluster };
 
-    public static readonly PuzzleComponent Sustained = new PuzzleComponent
+    public static readonly PuzzleComponent Sustained = new()
     {
         PuzzleType = PuzzleType.Sustained,
         Duration = 100
     };
-    public static readonly PuzzleComponent SustainedSmall = new PuzzleComponent
+    public static readonly PuzzleComponent SustainedSmall = new()
     {
         PuzzleType = PuzzleType.SustainedSmall,
         Duration = 12
     };
-    public static readonly PuzzleComponent SustainedMedium = new PuzzleComponent
+    public static readonly PuzzleComponent SustainedMedium = new()
     {
         PuzzleType = PuzzleType.SustainedMedium,
         Duration = 25
     };
-    public static readonly PuzzleComponent SustainedHuge = new PuzzleComponent
+    public static readonly PuzzleComponent SustainedHuge = new()
     {
         PuzzleType = PuzzleType.SustainedHuge,
         Duration = 120
     };
-    public static readonly PuzzleComponent SustainedMegaHuge = new PuzzleComponent
+    public static readonly PuzzleComponent SustainedMegaHuge = new()
     {
         PuzzleType = PuzzleType.SustainedMegaHuge,
         Duration = 300
     };
-    public static readonly PuzzleComponent SustainedBig_Cluster = new PuzzleComponent
+    public static readonly PuzzleComponent SustainedBig_Cluster = new()
     {
         PuzzleType = PuzzleType.SustainedBig_Cluster,
         Duration = 36
