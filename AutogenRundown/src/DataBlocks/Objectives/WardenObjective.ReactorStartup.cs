@@ -386,7 +386,7 @@ public partial record WardenObjective
                         (0.30, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_Easy,
-                            ReactorEnemyWave.MiniBoss_16pts with
+                            ReactorEnemyWave.MiniBoss_12pts with
                             {
                                 Population = WavePopulation.OnlyGiantShooters,
                                 SpawnTime = 35
@@ -413,7 +413,7 @@ public partial record WardenObjective
                         (0.10, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_Medium,
-                            ReactorEnemyWave.MiniBoss_12pts with
+                            ReactorEnemyWave.MiniBoss_8pts with
                             {
                                 Population = WavePopulation.OnlyGiantShooters,
                                 SpawnTime = 30
