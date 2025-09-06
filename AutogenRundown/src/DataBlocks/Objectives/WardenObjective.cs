@@ -1109,9 +1109,19 @@ public partial record WardenObjective : DataBlock
     public int Uplink_NumberOfTerminals { get; set; } = 1;
 
     /// <summary>
+    /// Determines how the uplink waves spawn should happen.
     ///
+    /// Note: The base game use `SurvivalWaveSpawnType.InSuppliedCourseNodeZone` for almost every
+    /// single uplink in the game. Almost every single alarm or otherwise outside of uplinks use
+    /// `SurvivalWaveSpawnType.InRelationToClosestAlivePlayer`. `InSuppliedCourseNodeZone` forces
+    /// the waves to spawn in the same zone as the uplink terminal. Whereas
+    /// `InRelationToClosestAlivePlayer` searches for spawn points that are two rooms away.
+    ///
+    /// For Autogen we will depart a bit from the base game and align the uplink waves to spawn
+    /// with the same behavior as almost all other alarm waves.
     /// </summary>
-    public SurvivalWaveSpawnType Uplink_WaveSpawnType { get; set; } = SurvivalWaveSpawnType.InSuppliedCourseNodeZone;
+    public SurvivalWaveSpawnType Uplink_WaveSpawnType { get; set; } =
+        SurvivalWaveSpawnType.InRelationToClosestAlivePlayer;
     #endregion
 
     #region Type=9: Central generator cluster

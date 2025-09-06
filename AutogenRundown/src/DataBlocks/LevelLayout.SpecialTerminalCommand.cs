@@ -94,6 +94,7 @@ public partial record LevelLayout
             return;
         }
 
+        // TODO: adjust this. Error should have less
         // Normal generation for this
         var nodes = AddBranch(start, director.ZoneCount, "special_terminal");
         var terminal = nodes.Last();
