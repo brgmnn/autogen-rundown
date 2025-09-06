@@ -156,39 +156,140 @@ public partial record class WardenObjective : DataBlock
                 break;
             }
 
-            ///
-            /// Triggers an error alarm on the activation of the alarm
-            ///
+            //
+            // Triggers an error alarm (except on some easier levels) on the activation of the alarm
+            //
             case SpecialCommand.ErrorAlarm:
             {
                 (SpecialTerminalCommand, SpecialTerminalCommandDesc) = Generator.Pick(new List<(string, string)>
                 {
                     ("ALARM_TEST_PROTOCOL", "Execute system-wide alarm diagnostics and test protocol."),
                     ("OPEN_LOCKDOWN_AREA", "Lift access restrictions on sealed zones, existing biomass containment will be compromised."),
-                    ("OVERRIDE_LOCKDOWN", "Bypass emergency containment protocols, initiating a continuous security alert."),
-                    ("RESTART_SECURITY_SYSTEM", "Reinitialize all security functions, broadcasting a persistent hostile threat alert."),
+                    ("OVERRIDE_LOCKDOWN", "Bypass emergency containment protocols, initiating a security alert."),
+                    ("RESTART_SECURITY_SYSTEM", "Reinitialize all security functions, broadcasting a hostile threat alert."),
                 });
 
-                switch (level.Tier, director.Bulkhead)
+                switch (level.Tier, director.Bulkhead, level.Settings.Bulkheads == Bulkhead.PrisonerEfficiency)
                 {
-                    case ("D", Bulkhead.Main):
-                        EventsOnActivate.AddSpawnWave(new()
+                    case ("A", Bulkhead.Main, _):
+                    case ("B", Bulkhead.Main, _):
+                    {
+                        EventsOnActivate.AddSpawnWave(new GenericWave
+                        {
+                            Population = WavePopulation.Baseline,
+                            Settings = WaveSettings.Exit_Objective_Easy,
+                            TriggerAlarm = true
+                        }, 2.0);
+                        break;
+                    }
+
+                    // This one isn't an error alarm
+                    case ("A", Bulkhead.Extreme, true):
+                    {
+                        EventsOnActivate
+                            .AddSpawnWave(new GenericWave
+                            {
+                                Population = WavePopulation.Baseline,
+                                Settings = WaveSettings.Finite_25pts_Normal
+                            }, 2.0)
+                            .AddSpawnWave(new GenericWave
+                            {
+                                Population = WavePopulation.OnlyGiantStrikers,
+                                Settings = WaveSettings.SingleWave_MiniBoss_12pts,
+                                TriggerAlarm = true
+                            }, 45.0);
+                        break;
+                    }
+
+                    case ("A", Bulkhead.Extreme, _):
+                    case ("A", Bulkhead.Overload, _):
+                    case ("B", Bulkhead.Extreme, false):
+                    case ("B", Bulkhead.Overload, true):
+                    {
+                        EventsOnActivate.AddSpawnWave(new GenericWave
+                        {
+                            Population = WavePopulation.Baseline,
+                            Settings = WaveSettings.Error_Diminished_Easy,
+                            TriggerAlarm = true
+                        }, 4.0);
+                        break;
+                    }
+
+                    // Technically not an error alarm either
+                    case ("B", Bulkhead.Extreme, _):
+                    {
+                        EventsOnActivate
+                            .AddSpawnWave(new GenericWave
+                            {
+                                Population = WavePopulation.Baseline,
+                                Settings = WaveSettings.Finite_35pts_Hard
+                            }, 2.0)
+                            .AddSpawnWave(new GenericWave
+                            {
+                                Population = WavePopulation.OnlyGiantShooters,
+                                Settings = WaveSettings.SingleWave_MiniBoss_16pts,
+                                TriggerAlarm = true
+                            }, 45.0);
+                        break;
+                    }
+
+                    case ("B", Bulkhead.Overload, false):
+                    {
+                        EventsOnActivate.AddSpawnWave(new GenericWave
+                        {
+                            Population = WavePopulation.Baseline,
+                            Settings = WaveSettings.Error_Diminished_Normal,
+                            TriggerAlarm = true
+                        }, 4.0);
+                        break;
+                    }
+
+                    case ("C", Bulkhead.Main, _):
+                    {
+                        EventsOnActivate.AddSpawnWave(new GenericWave
+                        {
+                            Population = WavePopulation.Baseline,
+                            Settings = WaveSettings.Exit_Objective_Medium,
+                            TriggerAlarm = true
+                        }, 5.0);
+                        break;
+                    }
+
+                    case ("C", Bulkhead.Extreme, _):
+                    {
+                        EventsOnActivate.AddSpawnWave(new GenericWave
+                        {
+                            Population = WavePopulation.Baseline,
+                            Settings = WaveSettings.Error_Diminished_Normal,
+                            TriggerAlarm = true
+                        }, 4.0);
+                        break;
+                    }
+
+                    case ("C", Bulkhead.Overload, _):
+                    case ("D", Bulkhead.Extreme, _):
+                    {
+                        EventsOnActivate.AddSpawnWave(new GenericWave
+                        {
+                            Population = WavePopulation.Baseline,
+                            Settings = WaveSettings.Error_Easy,
+                            TriggerAlarm = true
+                        }, 4.0);
+                        break;
+                    }
+
+                    case ("D", Bulkhead.Main, _):
+                        EventsOnActivate.AddSpawnWave(new GenericWave
                         {
                             Population = WavePopulation.Baseline_Hybrids,
                             Settings = WaveSettings.Exit_Objective_Hard,
                             TriggerAlarm = true
                         }, 6.0);
                         break;
-                    case ("D", Bulkhead.Extreme):
-                        EventsOnActivate.AddSpawnWave(new()
-                        {
-                            Population = WavePopulation.Baseline,
-                            Settings = WaveSettings.Exit_Objective_Medium,
-                            TriggerAlarm = true
-                        }, 10.0);
-                        break;
-                    case ("D", Bulkhead.Overload):
-                        EventsOnActivate.AddSpawnWave(new()
+
+                    case ("D", Bulkhead.Overload, false):
+                    {
+                        EventsOnActivate.AddSpawnWave(new GenericWave
                         {
                             Population = (level.Settings.HasChargers(), level.Settings.HasShadows()) switch
                             {
@@ -196,31 +297,48 @@ public partial record class WardenObjective : DataBlock
                                 (_, true) => WavePopulation.OnlyShadows,
                                 (_, _) => WavePopulation.Baseline
                             },
-                            Settings = level.Settings.HasChargers() ?
-                                WaveSettings.Exit_Objective_Medium :
-                                WaveSettings.Exit_Objective_Hard,
+                            Settings = WaveSettings.Error_Hard,
                             TriggerAlarm = true
                         }, 7.0);
                         break;
+                    }
 
-                    case ("E", Bulkhead.Main):
-                        EventsOnActivate.AddSpawnWave(new()
+                    case ("D", Bulkhead.Overload, true):
+                    {
+                        EventsOnActivate.AddSpawnWave(new GenericWave
+                        {
+                            Population = WavePopulation.Baseline,
+                            Settings = WaveSettings.Error_Normal,
+                            TriggerAlarm = true
+                        }, 4.0);
+                        break;
+                    }
+
+                    case ("E", Bulkhead.Main, _):
+                    {
+                        EventsOnActivate.AddSpawnWave(new GenericWave
                         {
                             Population = WavePopulation.Baseline_Hybrids,
                             Settings = WaveSettings.Exit_Objective_VeryHard,
                             TriggerAlarm = true
                         }, 4.0);
                         break;
-                    case ("E", Bulkhead.Extreme):
-                        EventsOnActivate.AddSpawnWave(new()
+                    }
+
+                    case ("E", Bulkhead.Extreme, _):
+                    {
+                        EventsOnActivate.AddSpawnWave(new GenericWave
                         {
                             Population = WavePopulation.Baseline,
                             Settings = WaveSettings.Exit_Objective_Medium,
                             TriggerAlarm = true
                         }, 10.0);
                         break;
-                    case ("E", Bulkhead.Overload):
-                        EventsOnActivate.AddSpawnWave(new()
+                    }
+
+                    case ("E", Bulkhead.Overload, false):
+                    {
+                        EventsOnActivate.AddSpawnWave(new GenericWave
                         {
                             Population = (level.Settings.HasChargers(), level.Settings.HasShadows()) switch
                             {
@@ -234,13 +352,25 @@ public partial record class WardenObjective : DataBlock
                             TriggerAlarm = true
                         }, 10.0);
                         break;
+                    }
+
+                    case ("E", Bulkhead.Overload, true):
+                    {
+                        EventsOnActivate.AddSpawnWave(new GenericWave
+                        {
+                            Population = WavePopulation.Baseline,
+                            Settings = WaveSettings.Error_VeryHard,
+                            TriggerAlarm = true
+                        }, 10.0);
+                        break;
+                    }
 
                     // Default case is not meant to be too hard
                     default:
                         EventsOnActivate.AddSpawnWave(new()
                         {
                             Population = WavePopulation.Baseline,
-                            Settings = WaveSettings.Exit_Objective_Easy,
+                            Settings = WaveSettings.Error_Normal,
                             TriggerAlarm = true
                         }, 12.0);
                         break;
@@ -249,9 +379,9 @@ public partial record class WardenObjective : DataBlock
                 break;
             }
 
-            ///
-            ///
-            ///
+            //
+            // Defend against waves in the center of a big tile
+            //
             case SpecialCommand.KingOfTheHill:
             {
                 (SpecialTerminalCommand, SpecialTerminalCommandDesc) = Generator.Pick(new List<(string, string)>

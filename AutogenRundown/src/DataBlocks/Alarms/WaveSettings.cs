@@ -394,6 +394,9 @@ public record WaveSettings : DataBlock
         Bins.WaveSettings.AddBlock(Error_Specials_Hard);
         Bins.WaveSettings.AddBlock(Error_Specials_VeryHard);
 
+        Bins.WaveSettings.AddBlock(Error_Diminished_Easy);
+        Bins.WaveSettings.AddBlock(Error_Diminished_Normal);
+
         Bins.WaveSettings.AddBlock(Error_Boss_Hard);
         Bins.WaveSettings.AddBlock(Error_Boss_VeryHard);
         Bins.WaveSettings.AddBlock(Error_Boss_Impossible);
@@ -436,6 +439,7 @@ public record WaveSettings : DataBlock
 
         // Fixed points (multiple waves)
         Bins.WaveSettings.AddBlock(Finite_35pts_Hard);
+        Bins.WaveSettings.AddBlock(Finite_25pts_Normal);
 
         // Single waves
         Bins.WaveSettings.AddBlock(SingleWave_8pts);
@@ -530,6 +534,82 @@ public record WaveSettings : DataBlock
     #endregion
 
     #region --- Error Alarms ---
+
+    #region Diminished error alarms
+
+    /// <summary>
+    /// Intended for A-tier or very easy error alarms. This functions like a normal error alarm
+    /// but with a significantly longer delay between waves.
+    ///
+    /// Wave = 3pts @ 186s
+    /// </summary>
+    public static readonly WaveSettings Error_Diminished_Easy = new()
+    {
+        PopulationFilter =
+        {
+            Enemies.EnemyType.Standard,
+            Enemies.EnemyType.Special
+        },
+        FilterType = PopulationFilterType.Include,
+        PauseBeforeStart = 3.0,
+        PauseBetweenGroups = 186.0, // The key property: duration between waves
+
+        PopulationPointsPerGroupStart = 3.0,
+        PopulationPointsPerGroupEnd = 3.0,
+        PopulationPointsMinPerGroup = 2.0,
+        PopulationRampOverTime = 0,
+
+        // This controls how many points of enemies. We don't want any ramping here.
+        PopulationPointsPerWaveStart = 3.0,
+        PopulationPointsPerWaveEnd = 3.0,
+
+        ChanceToRandomizeSpawnDirectionPerGroup = 0.8,
+        ChanceToRandomizeSpawnDirectionPerWave = 1.0,
+
+        WavePauseMin = 1.0,
+        WavePauseMax = 20.0,
+        WavePauseMin_atCost = 1.0,
+        WavePauseMax_atCost = 10.0,
+
+        Name = "Error_Diminished_Easy"
+    };
+
+    /// <summary>
+    /// Wave = 3pts @ 124s
+    /// </summary>
+    public static readonly WaveSettings Error_Diminished_Normal = new()
+    {
+        PopulationFilter =
+        {
+            Enemies.EnemyType.Standard,
+            Enemies.EnemyType.Special
+        },
+        FilterType = PopulationFilterType.Include,
+        PauseBeforeStart = 3.0,
+        PauseBetweenGroups = 124.0, // The key property: duration between waves
+
+        PopulationPointsPerGroupStart = 3.0,
+        PopulationPointsPerGroupEnd = 3.0,
+        PopulationPointsMinPerGroup = 2.0,
+        PopulationRampOverTime = 0,
+
+        // This controls how many points of enemies. We don't want any ramping here.
+        PopulationPointsPerWaveStart = 3.0,
+        PopulationPointsPerWaveEnd = 3.0,
+
+        ChanceToRandomizeSpawnDirectionPerGroup = 0.8,
+        ChanceToRandomizeSpawnDirectionPerWave = 1.0,
+
+        WavePauseMin = 1.0,
+        WavePauseMax = 20.0,
+        WavePauseMin_atCost = 1.0,
+        WavePauseMax_atCost = 10.0,
+
+        Name = "Error_Diminished_Easy"
+    };
+
+    #endregion
+
     #region Standard error alarms
     /// <summary>
     /// Somewhat equavlent to PersistentId=32 "Trickle 3-52 SSpB"
@@ -539,6 +619,8 @@ public record WaveSettings : DataBlock
     ///
     /// This should be very easy for one player to fully manage with just a hammer by
     /// themselves while the rest of the team continues with their objectives
+    ///
+    /// Wave = 3pts @ 52s
     /// </summary>
     public static readonly WaveSettings Error_Easy = new()
     {
@@ -573,6 +655,8 @@ public record WaveSettings : DataBlock
 
     /// <summary>
     /// Harder than easy. This shouldn't feel relaxed to deal with
+    ///
+    /// Wave = 4pts @ 45s
     /// </summary>
     public static readonly WaveSettings Error_Normal = new()
     {
@@ -605,6 +689,8 @@ public record WaveSettings : DataBlock
 
     /// <summary>
     /// Harder than easy. This shouldn't feel relaxed to deal with
+    ///
+    /// Wave = 5pts @ 37s
     /// </summary>
     public static readonly WaveSettings Error_Hard = new()
     {
@@ -638,6 +724,8 @@ public record WaveSettings : DataBlock
 
     /// <summary>
     /// Harder than easy. This shouldn't feel relaxed to deal with
+    ///
+    /// Wave = 6pts @ 30s
     /// </summary>
     public static readonly WaveSettings Error_VeryHard = new()
     {
@@ -901,6 +989,31 @@ public record WaveSettings : DataBlock
     #endregion
 
     #region Finite points value
+    public static WaveSettings Finite_25pts_Normal = new()
+    {
+        PopulationFilter = { Enemies.EnemyType.Weakling },
+        FilterType = PopulationFilterType.Exclude,
+        PauseBeforeStart = 1.0,
+
+        PopulationPointsPerGroupStart = 7,
+        PopulationPointsPerGroupEnd = 7,
+        PopulationPointsMinPerGroup = 4,
+        PopulationRampOverTime = 45.0,
+
+        PopulationPointsTotal = 25,
+        PopulationPointsPerWaveStart = 7,
+        PopulationPointsPerWaveEnd = 14,
+
+        ChanceToRandomizeSpawnDirectionPerGroup = 0.8,
+        ChanceToRandomizeSpawnDirectionPerWave = 1.0,
+
+        WavePauseMin = 1.0,
+        WavePauseMax = 20.0,
+        WavePauseMin_atCost = 1.0,
+
+        Name = "Finite_25pts_Normal"
+    };
+
     public static WaveSettings Finite_35pts_Hard = new()
     {
         PopulationFilter = { Enemies.EnemyType.Weakling },
