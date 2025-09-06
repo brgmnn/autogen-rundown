@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AutogenRundown.Extensions;
+using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -60,6 +61,20 @@ public record Color
             Alpha = 0.03137255
         };
     #endregion
+
+    public virtual bool Equals(Color? other)
+    {
+        if (ReferenceEquals(this, other))
+            return true;
+
+        if (other is null || GetType() != other.GetType())
+            return false;
+
+        return Alpha.ApproxEqual(other.Alpha) &&
+               Red.ApproxEqual(other.Red) &&
+               Green.ApproxEqual(other.Green) &&
+               Blue.ApproxEqual(other.Blue);;
+    }
 
     #region Properties
 

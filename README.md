@@ -36,11 +36,8 @@ TODO:
   * Matter Wave Projector - Needs slightly less zones to go through. Very linear
   * Bring big pickup for scan
   * Add more variety on fog for vibes
-  * Balance uplink terminal objectives to have larger uplink zones. We want to make sure they don't have enemies spawn in the zone
-    * Maybe we could fix the spawns?
-    * Definitely need to fix the spawns somehow
-  * Error alarm SPECIAL COMMAND, don't make it exit objective alarm especially on PE
-    * Probably revisit the special command error alarms, they look hard
+  * Rework the special command layout
+  * Remove artifact heat from the menus
 
 
 

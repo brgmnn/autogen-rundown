@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AutogenRundown.Extensions;
+using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -24,6 +25,17 @@ public class Vector3
     [JsonProperty("sqrMagnitude")]
     public double SqrMagnitude { get => vec.LengthSquared(); }
     #endregion
+
+    public virtual bool Equals(Vector3? other)
+    {
+        if (ReferenceEquals(this, other))
+            return true;
+
+        if (other is null || GetType() != other.GetType())
+            return false;
+
+        return X.ApproxEqual(other.X) && Y.ApproxEqual(other.Y) && Z.ApproxEqual(other.Z);
+    }
 
     public static Vector3 Zero() => new() { X = 0, Y = 0, Z = 0 };
 

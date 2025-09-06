@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AutogenRundown.Extensions;
+using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -448,10 +449,55 @@ public record Fog : DataBlock
     };
     #endregion
 
+    public virtual bool Equals(Fog? other)
+    {
+        if (ReferenceEquals(this, other))
+            return true;
+
+        if (other is null || GetType() != other.GetType())
+            return false;
+
+        return PersistentId == other.PersistentId &&
+               FogColor.Equals(other.FogColor) &&
+               FogDensity.ApproxEqual(other.FogDensity) &&
+               DensityNoiseDirection.Equals(other.DensityNoiseDirection) &&
+               DensityNoiseSpeed.ApproxEqual(other.DensityNoiseSpeed) &&
+               DensityNoiseScale.ApproxEqual(other.DensityNoiseScale) &&
+               DensityHeightAltitude.ApproxEqual(other.DensityHeightAltitude) &&
+               DensityHeightRange.ApproxEqual(other.DensityHeightRange) &&
+               DensityHeightMaxBoost.ApproxEqual(other.DensityHeightMaxBoost) &&
+               Infection.ApproxEqual(other.Infection);
+    }
+
     public void Persist(BlocksBin<Fog>? bin = null)
     {
         bin ??= Bins.Fogs;
         bin.AddBlock(this);
+    }
+
+    /// <summary>
+    /// Given a puzzle, either find it's duplicate and use that or persist this one and return that
+    /// instance.
+    /// </summary>
+    /// <param name="puzzle"></param>
+    /// <returns></returns>
+    public static Fog FindOrPersist(Fog fog)
+    {
+        // We specifically don't want to persist none, as we want to set the PersistentID to 0
+        if (fog == None)
+            return None;
+
+        var existing = Bins.Fogs.GetBlock(fog);
+
+        if (existing != null)
+            return existing;
+
+        if (fog.PersistentId == 0)
+            fog.PersistentId = Generator.GetPersistentId();
+
+        fog.Persist();
+
+        return fog;
     }
 
     public new static void SaveStatic()
@@ -564,7 +610,7 @@ public record Fog : DataBlock
     /// This field controls the floating direction of those particles / tide pattern of the
     /// fog plane.
     /// </summary>
-    public Vector3 DensityNoiseDirection { get; set; } = new Vector3 { Y = 1.0 };
+    public Vector3 DensityNoiseDirection { get; set; } = new() { Y = 1.0 };
 
     /// <summary>
     /// Controls how fast noise particles float / how uneven the tide pattern of the fog
