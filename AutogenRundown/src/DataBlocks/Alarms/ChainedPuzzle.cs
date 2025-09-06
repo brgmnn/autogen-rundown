@@ -343,7 +343,7 @@ public record ChainedPuzzle : DataBlock
 
                 // Hard
                 (0.7, 1, AlarmClass7),
-                (0.5, 1, AlarmClass7_Mixed),
+                (0.2, 1, AlarmClass7_Mixed),
 
                 // Hard specialty
                 (1.0, 1, AlarmClass2_Surge),
