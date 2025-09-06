@@ -36,6 +36,9 @@ TODO:
   * Matter Wave Projector - Needs slightly less zones to go through. Very linear
   * Bring big pickup for scan
   * Add more variety on fog for vibes
+  * Balance uplink terminal objectives to have larger uplink zones. We want to make sure they don't have enemies spawn in the zone
+    * Maybe we could fix the spawns?
+
 
 
 Idea:
