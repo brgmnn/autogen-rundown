@@ -101,7 +101,7 @@ public partial record class WardenObjective : DataBlock
         dataLayer.ObjectiveData.ZonePlacementDatas.Add(
             new List<ZonePlacementData>()
             {
-                new ZonePlacementData
+                new()
                 {
                     LocalIndex = zoneIndex,
                     Weights = ZonePlacementWeights.NotAtStart

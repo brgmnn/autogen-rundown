@@ -9,11 +9,54 @@ namespace AutogenRundown.DataBlocks;
 public partial record LevelLayout
 {
     /// <summary>
+    ///
+    /// </summary>
+    /// <param name="startish"></param>
+    public void BuildLayout_SpecialTerminalCommand_ErrorAlarm(ZoneNode start)
+    {
+        // TODO: adjust this. Error should have less
+        // Normal generation for this
+        var nodes = AddBranch(start, director.ZoneCount, "special_terminal");
+        var terminal = nodes.Last();
+
+        // Adds the penultimate (or just only) zone as a forward extract candidate
+        AddForwardExtractStart(nodes.TakeLast(2).First());
+        AddForwardExtractStart(terminal, chance: 0.4);
+
+        // 55% chance to attempt to lock the end zone with a key puzzle
+        if (Generator.Flip(0.55))
+            AddKeyedPuzzle(terminal, "special_terminal", director.Bulkhead == Bulkhead.Main ? 2 : 1);
+
+        planner.UpdateNode(terminal with { Tags = terminal.Tags.Extend("bulkhead_candidate") });
+
+        switch (level.Tier, director.Bulkhead)
+        {
+            case (_, Bulkhead.Overload):
+            {
+                if (level.Settings.Bulkheads == Bulkhead.PrisonerEfficiency)
+                {
+
+                }
+
+                break;
+            }
+
+            case ("A", _):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                });
+                break;
+            }
+        }
+    }
+
+    /// <summary>
     /// Adds a special terminal command layout
     /// </summary>
     /// <param name="director"></param>
     /// <param name="objective"></param>
-    /// <param name="start"></param>
+    /// <param name="startish"></param>
     /// <exception cref="Exception"></exception>
     public void BuildLayout_SpecialTerminalCommand(
         BuildDirector director,
@@ -28,6 +71,13 @@ public partial record LevelLayout
         }
 
         var start = (ZoneNode)startish;
+
+        // switch (objective.SpecialTerminalCommand_Type)
+        // {
+        //     case SpecialCommand.ErrorAlarm:
+        //         BuildLayout_SpecialTerminalCommand_ErrorAlarm(start);
+        //         return;
+        // }
 
         // We have a special flow for KingOfTheHill
         if (objective.SpecialTerminalCommand_Type == SpecialCommand.KingOfTheHill)
