@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -18,11 +19,14 @@ public class ObjectiveLayerData
     // TODO: Can we have multiple objectives chained in one zone? :hmm:
     public List<WardenObjectiveLayerData> ChainedObjectiveData { get; set; } = new();
 
-    // We don't set artifacts
-    public JObject ArtifactData = new JObject
+    /// <summary>
+    /// We disable artifacts
+    /// </summary>
+    [JsonProperty("ArtifactData")]
+    public static JObject Artifacts => new()
     {
-        ["ArtifactAmountMulti"] = 1.0,
-        ["ArtifactLayerDistributionDataID"] = 1,
+        ["ArtifactAmountMulti"] = 0.0,
+        ["ArtifactLayerDistributionDataID"] = 0,
         ["ArtifactZoneDistributions"] = new JArray()
     };
 }
