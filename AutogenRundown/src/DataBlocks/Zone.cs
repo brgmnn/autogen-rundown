@@ -932,7 +932,7 @@ public record Zone : DataBlock
             {
                 case "A":
                 {
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(0.8, 1.0);
+                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(0.9, 1.05);
 
                     break;
                 }
@@ -991,7 +991,12 @@ public record Zone : DataBlock
                     if (Generator.Flip(0.32))
                         puzzle.WantedDistanceFromStartPos += Generator.Between(20, 25);
 
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(1.0, 1.2);
+                    puzzle.WantedDistanceBetweenPuzzleComponents *= puzzle.Puzzle.Count switch
+                    {
+                        3 => Generator.NextDouble(1.5, 1.8),
+                        4 => Generator.NextDouble(1.2, 1.4),
+                        _ => Generator.NextDouble(1.0, 1.2)
+                    };
 
                     // Infection hybrids during wave, lower the chance if it's in fog
                     if (isInfection && Generator.Flip(InFog ? 0.2 : 0.4) )
@@ -1038,7 +1043,12 @@ public record Zone : DataBlock
                     if (Generator.Flip(0.45))
                         puzzle.WantedDistanceFromStartPos += Generator.Between(20, 30);
 
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(1.1, 1.3);
+                    puzzle.WantedDistanceBetweenPuzzleComponents *= puzzle.Puzzle.Count switch
+                    {
+                        3 => Generator.NextDouble(1.6, 2.0),
+                        4 => Generator.NextDouble(1.3, 1.5),
+                        _ => Generator.NextDouble(1.1, 1.3)
+                    };
 
                     // Infection hybrids during wave, lower the chance if it's in fog
                     if (isInfection && Generator.Flip(InFog ? 0.4 : 0.6) )
