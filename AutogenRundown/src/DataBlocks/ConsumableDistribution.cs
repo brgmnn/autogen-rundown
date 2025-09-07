@@ -15,10 +15,11 @@ public record class ConsumableDistribution : DataBlock
         SpawnData = Collections.Flatten(
             ItemSpawn.GlowSticks(8.0),
             new List<ItemSpawn> {
-                new() { Weight = 8.0, Item = Items.Item.LockMelter },
+                new() { Weight = 5.0, Item = Items.Item.LockMelter },
                 new() { Weight = 1.0, Item = Items.Item.CfoamGrenade },
                 new() { Weight = 1.0, Item = Items.Item.ExplosiveTripmine },
-                new() { Weight = 1.0, Item = Items.Item.LongRangeFlashlight }
+                new() { Weight = 1.0, Item = Items.Item.LongRangeFlashlight },
+                new() { Weight = 1.0, Item = Items.Item.FogRepeller }
             }
         ),
     };
