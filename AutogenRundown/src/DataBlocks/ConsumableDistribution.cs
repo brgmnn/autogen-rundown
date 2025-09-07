@@ -2,7 +2,7 @@
 
 namespace AutogenRundown.DataBlocks;
 
-public record class ConsumableDistribution : DataBlock
+public record ConsumableDistribution : DataBlock
 {
     /// <summary>
     /// Mostly glowsticks and lock melters, with a small chance of tripmines and c-foam. Also include long range
@@ -83,5 +83,5 @@ public record class ConsumableDistribution : DataBlock
 
     public double ChanceToSpawnInResourceContainer { get; set; } = 0.9;
 
-    public List<ItemSpawn> SpawnData { get; set; } = new List<ItemSpawn>();
+    public List<ItemSpawn> SpawnData { get; set; } = new();
 }
