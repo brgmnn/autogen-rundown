@@ -1286,11 +1286,17 @@ public partial record WardenObjective
 
             if (wave.IsFogWave)
             {
+                var inverted = fog.IsInverted;
+                var tempFog = (isInfectious, inverted) switch
+                {
+                    (false, false) => Fog.Normal_Altitude_8,
+                    (false, true ) => Fog.Inverted_Altitude_minus8,
+                    (true,  false) => Fog.NormalInfectious_Altitude_8,
+                    (true,  true ) => Fog.InvertedInfectious_Altitude_minus8
+                };
+
                 wave.Events
-                    .AddSetFog(
-                        isInfectious ? Fog.FullFog_Infectious : Fog.FullFog,
-                        wave.Warmup + 13.0,
-                        wave.Warmup + wave.Wave - 15.0)
+                    .AddSetFog(tempFog,wave.Warmup + 13.0, wave.Warmup + wave.Wave - 15.0)
                     .AddSetFog(
                         fog,
                         wave.Warmup + wave.Wave + 12.0,

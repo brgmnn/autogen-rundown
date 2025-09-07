@@ -841,8 +841,29 @@ public record Zone : DataBlock
     #region Alarms
     private void AlarmModifier_LightsOff()
     {
-        EventsOnDoorScanStart.AddLightsOff(3.0);
-        EventsOnDoorScanDone.AddLightsOn(1.0);
+        EventsOnDoorScanStart.AddLightsOff(Generator.Between(3, 8));
+        EventsOnDoorScanDone.AddLightsOn(Generator.Between(1, 9));
+    }
+
+    private void AlarmModifier_FogFlood(double duration)
+    {
+        var fog = level.FogSettings;
+        var isInfectious = level.FogSettings.Infection > 0.01;
+        var inverted = fog.IsInverted;
+        var tempFog = (isInfectious, inverted) switch
+        {
+            (false, false) => Fog.Normal_Altitude_8,
+            (false, true ) => Fog.Inverted_Altitude_minus8,
+            (true,  false) => Fog.NormalInfectious_Altitude_8,
+            (true,  true ) => Fog.InvertedInfectious_Altitude_minus8
+        };
+
+        EventsOnDoorScanStart.AddSetFog(tempFog, Generator.Between(3, 15), duration);
+        EventsOnDoorScanDone.AddSetFog(
+            fog,
+            5.0,
+            21.0,
+            "VENTILATION SYSTEM REBOOTED - SYSTEMS ONLINE");
     }
 
     /// <summary>
@@ -945,6 +966,8 @@ public record Zone : DataBlock
                     // Small chance to disable lights during the alarm
                     if (Generator.Flip(0.08))
                         AlarmModifier_LightsOff();
+                    else if (Generator.Flip(0.01))
+                        AlarmModifier_FogFlood(puzzle.ClearTime(1.2, 1.4));
 
                     if (Generator.Flip(0.005))
                         EventsOnApproachDoor.AddSpawnWave(
@@ -976,6 +999,8 @@ public record Zone : DataBlock
                     // Small chance to disable lights during the alarm
                     if (Generator.Flip(0.1))
                         AlarmModifier_LightsOff();
+                    else if (Generator.Flip(0.05))
+                        AlarmModifier_FogFlood(puzzle.ClearTime(1.2, 1.4));
 
                     // Tiny chance for bait door approach pouncer
                     if (Generator.Flip(0.01))
@@ -1023,6 +1048,9 @@ public record Zone : DataBlock
                                 GenericWave.SinglePouncerShadow,
                                 Generator.Between(4, 16));
                     }
+
+                    if (Generator.Flip(0.07))
+                        AlarmModifier_FogFlood(puzzle.ClearTime(1.1, 1.3));
 
                     // Tiny chance for bait door approach pouncer
                     if (Generator.Flip(0.01))
@@ -1074,6 +1102,9 @@ public record Zone : DataBlock
                                 GenericWave.SinglePouncerShadow,
                                 Generator.Between(4, 16));
                     }
+
+                    if (Generator.Flip(0.15))
+                        AlarmModifier_FogFlood(puzzle.ClearTime(1.1, 1.1));
 
                     // Tiny chance to be pouncered when opening the door or
                     // approaching the door

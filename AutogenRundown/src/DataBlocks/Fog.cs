@@ -661,4 +661,6 @@ public record Fog : DataBlock
     /// True if the fog is infectious
     /// </summary>
     public bool IsInfectious => Infection > 0.01;
+
+    public bool IsInverted => FogDensity > DensityHeightMaxBoost;
 }
