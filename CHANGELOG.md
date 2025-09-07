@@ -3,6 +3,59 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.76.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.76.0) — September 06, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* 🌟 Levels can now spawn with forward extraction zones
+  * Around 50% of levels will use a forward extraction zone rather than the entrance
+  * This does not include `ClearPath` or `Survival` main objectives, as these automatically use forward extraction
+* Added `Class VII Cluster` alarm
+* Added Team Scan with secret Mother spawn door puzzle
+* Added random fog settings on levels with no fog
+  * Environmental factors such as fog color, density etc. are now randomized across several pre-selected values
+* Added "Fog Flood" modifiers to alarm scans
+  * Functions very similar to "Lights Off" modifier, but floods the level with fog over the course of the alarm
+
+### Changes
+
+* Balance: Re-balanced door alarms for all tiers with the following average alarm length
+  * A-tier: Class 3 alarm average
+  * B-tier: Class 4 alarm average
+  * C-tier: Class 5 alarm average
+  * D-tier: Class 5-6 alarm average, with increased distance between scans
+  * E-tier: Class 5-6 alarm average, with largest distance between scans
+  * _Wave difficulty and population is still independently rolled from alarm class_
+* Balance: Reworked Class 7 Mixed alarm puzzle components
+  * Class 7 Mixed now is: 
+    * `Sustained Small` - Small purple S-scan
+    * `Cluster Large` - 2x large red circles, any team members
+    * `Cluster` - Cluster scan, 8x small orange circles
+    * `Sustained Small`
+    * `Cluster Large`
+    * `Cluster`
+    * `Sustained Small`
+* Balance: Added dynamic puzzle start distance and distance between components
+  * Easier tier levels should have alarms with shorter distances between components and typically no starting distance movement
+  * Harder tier levels should have longer distances between puzzle components
+* Balance: Adjusted error alarm difficulty for error alarm variants of the `SpecialTerminalCommand` objective
+  * In general reduced difficulty of some alarms when the objective is secondary/overload
+* Balance: Uplink alarm waves now follow the same logic for enemy spawning as normal alarms and will spawn 2 rooms away
+  * Previously they followed the base games logic and always spawn in zone. This led to some very difficult corrupted uplinks in small zones
+* Balance: Added fog repellers as possible small pickup spawn to most zones
+* Change: `GatherTerminal` objectives now place a log file in the first zone of the bulkhead which lists the zones where the gather terminals are placed
+* Change: Removed all artifacts from levels
+* Change: Added slight random delay to "Lights Off" alarm wave modifiers
+* Fix: Reactor fog flood waves now correctly fill up / down instead of slowly getting thicker
+* Fix: Zones are rolled in a random order for Door Alarms and Blood Doors. This fixes a probability issue where due to zones being iterated in order earlier zones were more likely to receive common alarms and blood doors than later zones
+* Fix: Resolved rare crash where zone number calculation could be out of allowed range
+* Fix: Reactor zones missing a short "Z" prefix, they will now display correctly on doors
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.75.3...v0.76.0
+
+
 ## [v0.75.3](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.75.3) — September 01, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
