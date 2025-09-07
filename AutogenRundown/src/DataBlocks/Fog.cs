@@ -487,7 +487,7 @@ public record Fog : DataBlock
         if (fog == None)
             return None;
 
-        var existing = Bins.Fogs.GetBlock(fog);
+        var existing = Bins.Fogs.GetBlock(fog.Equals);
 
         if (existing != null)
             return existing;

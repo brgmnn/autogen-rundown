@@ -95,7 +95,10 @@ public class LevelSettings
     public Dictionary<Bulkhead, ZoneBuildExpansion> Directions { get; private set; }
         = new Dictionary<Bulkhead, ZoneBuildExpansion>();
 
-    public ModifiersSet Modifiers { get; set; } = new ModifiersSet();
+    public ModifiersSet Modifiers { get; set; } = new()
+    {
+        LevelModifiers.NoFog
+    };
 
     /// <summary>
     /// A pack of enemies that will be drawn for placing bosses in the level.
