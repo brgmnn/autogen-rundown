@@ -81,14 +81,9 @@ public partial record WardenObjective : DataBlock
 
     public void Build_Survival(BuildDirector director, Level level)
     {
-        var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
-
-        // TODO: does this always work? I think it should
         var exitZone = level.Planner.GetZones(director.Bulkhead, "exit").First();
-        var exitZoneString = Intel.Zone(exitZone, level.Planner);
 
-        // TODO: fix these exit zone number strings
-        MainObjective = new Text($"Find a way to stay alive during Warden Protocol DECOY, and make your way to {exitZoneString} for extraction");
+        MainObjective = new Text(() => $"Find a way to stay alive during Warden Protocol DECOY, and make your way to {Intel.Zone(exitZone, level.Planner)} for extraction");
         Survival_TimerTitle = "Time until allowed extraction:";
         Survival_TimerToActivateTitle = "<color=red>WARNING!</color> Warden Protocol <color=orange>DECOY</color> will commence in: ";
 
@@ -128,7 +123,7 @@ public partial record WardenObjective : DataBlock
             .AddUnlockDoor(
                 director.Bulkhead,
                 exitZone.ZoneNumber,
-                $"Extraction zone {exitZoneString} unlocked",
+                $"Extraction zone unlocked",
                 WardenObjectiveEventTrigger.None)
             .AddGenericWave(GenericWave.Survival_Impossible_TankPotato, 4.0)
             .AddSound(Sound.TankRoar, 7.0)
