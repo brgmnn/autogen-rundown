@@ -4,7 +4,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "the_tavern"
 name = "AutogenRundown"
-versionNumber = "0.76.0"
+versionNumber = "0.76.1"
 description = "Rundown generation mod for GTFO. New rundowns generated daily, weekly, monthly, and each season."
 websiteUrl = "https://github.com/brgmnn/autogen-rundown"
 containsNsfwContent = false
