@@ -16,7 +16,7 @@ public enum CoverageSize : int
 
 public class CoverageMinMax
 {
-    private static List<double> Sizes = new List<double>
+    private static List<double> Sizes = new()
     {
         (double)CoverageSize.Nano,
         (double)CoverageSize.Tiny,
@@ -40,35 +40,6 @@ public class CoverageMinMax
     /// </summary>
     [JsonProperty("y")]
     public double Max { get => vec.Y; set => vec.Y = (float)value; }
-
-    #endregion
-
-    #region Computed values
-
-    // TODO: we can dump all of these
-
-    [JsonProperty("normalized")]
-    public JObject Normalized
-    {
-        get
-        {
-            var normal = System.Numerics.Vector2.Normalize(vec);
-
-            return new JObject
-            {
-                ["x"] = normal.X,
-                ["y"] = normal.Y,
-                ["magnitude"] = 1.0,
-                ["sqrMagnitude"] = 1.0
-            };
-        }
-    }
-
-    [JsonProperty("magnitude")]
-    public double Magnitude { get => vec.Length(); }
-
-    [JsonProperty("sqrMagnitude")]
-    public double SqrMagnitude { get => vec.LengthSquared(); }
 
     #endregion
 
