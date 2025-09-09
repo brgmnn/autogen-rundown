@@ -37,6 +37,6 @@ internal static class Artifacts
         __instance.m_artifactHeatText.gameObject.transform.localPosition += Vector3.down * 10_000;
 
         // Shifts up the level completion text
-        __instance.m_statusText.transform.localPosition += new Vector3(0f, 30.0f, 0f);
+        __instance.m_statusText.transform.localPosition += new Vector3(0f, 25.0f, 0f);
     }
 }
