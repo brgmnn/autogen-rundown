@@ -39,8 +39,6 @@ TODO:
   * Rework the special command layout
   * Remove artifact heat from the menus
 
-
-
 Idea:
   * Secondary survival that procs on door open
   * Bring big pickup for scan on door
