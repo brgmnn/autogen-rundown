@@ -68,9 +68,7 @@ public partial record LevelLayout
                         firstZone.Coverage = CoverageMinMax.Medium_56;
                         firstZone.TerminalPlacements.Add(new TerminalPlacement());
 
-                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(
-                            Generator.Flip() ? startFrom : first,
-                            sideZones: 0);
+                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(first, sideZones: 0);
                     }),
                 });
 
@@ -103,9 +101,7 @@ public partial record LevelLayout
                         firstZone.Coverage = CoverageMinMax.Medium_56;
                         firstZone.TerminalPlacements.Add(new TerminalPlacement());
 
-                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(
-                            Generator.Flip() ? startFrom : first,
-                            sideZones: 0);
+                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(first, sideZones: 0);
                     }),
 
                     // Key door unlock
@@ -148,9 +144,7 @@ public partial record LevelLayout
                         firstZone.Coverage = CoverageMinMax.Medium_56;
                         firstZone.TerminalPlacements.Add(new TerminalPlacement());
 
-                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(
-                            Generator.Flip() ? startFrom : first,
-                            sideZones: 0);
+                        (exit, exitZone) = BuildChallenge_LockedTerminalDoor(first, sideZones: 0);
                     }),
 
                     // Key door unlock
