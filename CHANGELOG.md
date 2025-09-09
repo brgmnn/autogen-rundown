@@ -3,6 +3,17 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.76.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.76.1) — September 08, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fix: Resolved issue with extraction zone intel showing "_No zone_" for entrance elevator extracts
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.76.0...v0.76.1
+
+
 ## [v0.76.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.76.0) — September 06, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
