@@ -18,14 +18,6 @@ public class Vector3
     public double Z { get => vec.Z; set => vec.Z = (float)value; }
     #endregion
 
-    #region Computed values
-    [JsonProperty("magnitude")]
-    public double Magnitude { get => vec.Length(); }
-
-    [JsonProperty("sqrMagnitude")]
-    public double SqrMagnitude { get => vec.LengthSquared(); }
-    #endregion
-
     public virtual bool Equals(Vector3? other)
     {
         if (ReferenceEquals(this, other))
