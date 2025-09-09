@@ -69,7 +69,7 @@ public class Level
     /// </summary>
     public ZoneNode ExtractionZone { get; set; } = new()
     {
-        Bulkhead = Bulkhead.Main,
+        Bulkhead = Bulkhead.Main | Bulkhead.StartingArea,
         ZoneNumber = 0
     };
 

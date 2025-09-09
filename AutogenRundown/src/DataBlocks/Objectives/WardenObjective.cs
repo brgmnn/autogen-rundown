@@ -865,7 +865,7 @@ public partial record WardenObjective : DataBlock
     public void PostBuild_ForwardExtract(Level level)
     {
         // Return early if the level doesn't use a forward extract
-        if (level.ExtractionZone is { ZoneNumber: 0, Bulkhead: Bulkhead.Main })
+        if (level.ExtractionZone is { ZoneNumber: 0, Bulkhead: Bulkhead.Main | Bulkhead.StartingArea })
             return;
 
         // Assign the custom geo gotowin intel to the elevator one. This ensures we always show
