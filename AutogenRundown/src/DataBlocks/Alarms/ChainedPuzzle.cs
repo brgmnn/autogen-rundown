@@ -105,7 +105,7 @@ public record ChainedPuzzle : DataBlock
     /// <summary>
     /// Default = 20.0
     /// </summary>
-    public double WantedDistanceBetweenPuzzleComponents { get; set; } = 20.0;
+    public double WantedDistanceBetweenPuzzleComponents { get; set; } = 30.0;
 
     /// <summary>
     /// Determines the count and types of scans.
@@ -657,7 +657,7 @@ public record ChainedPuzzle : DataBlock
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
         WantedDistanceFromStartPos = 20,
-        WantedDistanceBetweenPuzzleComponents = 35.0,
+        WantedDistanceBetweenPuzzleComponents = 50.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -686,7 +686,7 @@ public record ChainedPuzzle : DataBlock
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
         WantedDistanceFromStartPos = 20,
-        WantedDistanceBetweenPuzzleComponents = 35.0,
+        WantedDistanceBetweenPuzzleComponents = 50.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -716,7 +716,7 @@ public record ChainedPuzzle : DataBlock
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
         WantedDistanceFromStartPos = 20,
-        WantedDistanceBetweenPuzzleComponents = 35.0,
+        WantedDistanceBetweenPuzzleComponents = 50.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -744,7 +744,7 @@ public record ChainedPuzzle : DataBlock
         Settings = WaveSettings.Baseline_VeryHard,
         Population = WavePopulation.Baseline,
         WantedDistanceFromStartPos = 20,
-        WantedDistanceBetweenPuzzleComponents = 35.0,
+        WantedDistanceBetweenPuzzleComponents = 50.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -769,7 +769,7 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class II Cluster Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 10.0,
+        WantedDistanceBetweenPuzzleComponents = 20.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -782,7 +782,7 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class III Cluster Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 10.0,
+        WantedDistanceBetweenPuzzleComponents = 20.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -796,7 +796,7 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class IV Cluster Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 10.0,
+        WantedDistanceBetweenPuzzleComponents = 20.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -811,7 +811,7 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class V Cluster Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 10.0,
+        WantedDistanceBetweenPuzzleComponents = 20.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -827,7 +827,7 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class VI Cluster Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 10.0,
+        WantedDistanceBetweenPuzzleComponents = 20.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -844,7 +844,7 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class VI Cluster Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 10.0,
+        WantedDistanceBetweenPuzzleComponents = 20.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -864,7 +864,7 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class III M Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 20.0,
+        WantedDistanceBetweenPuzzleComponents = 30.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -878,7 +878,7 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class IV M Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 20.0,
+        WantedDistanceBetweenPuzzleComponents = 30.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -893,7 +893,7 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class V M Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 20.0,
+        WantedDistanceBetweenPuzzleComponents = 40.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -909,7 +909,7 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class VI M Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 20.0,
+        WantedDistanceBetweenPuzzleComponents = 40.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -926,7 +926,7 @@ public record ChainedPuzzle : DataBlock
         PublicAlarmName = "Class VII M Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 20.0,
+        WantedDistanceBetweenPuzzleComponents = 40.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.SustainedSmall,
@@ -1290,7 +1290,10 @@ public record ChainedPuzzle : DataBlock
         UseRandomPositions = false,
         WantedDistanceFromStartPos = 0.0,
         WantedDistanceBetweenPuzzleComponents = 1.0,
-        Puzzle = new List<PuzzleComponent>() { new PuzzleComponent { PuzzleType = PuzzleType.ExpeditionExit } }
+        Puzzle = new List<PuzzleComponent>()
+        {
+            new() { PuzzleType = PuzzleType.ExpeditionExit }
+        }
     };
 
     #region Bulkhead DC scans
@@ -1336,13 +1339,13 @@ public record ChainedPuzzle : DataBlock
 
     public new static void SaveStatic()
     {
-        ///
-        /// IMPORTANT NOTE:
-        ///
-        /// ChainedPuzzles are lazily persisted in the game, as a result you should manually assign
-        /// a persistent ID to any records persisted here, or run the risk of attempting to
-        /// reference their persistent ID in game and having it be zero.
-        ///
+        //
+        // IMPORTANT NOTE:
+        //
+        // ChainedPuzzles are lazily persisted in the game, as a result you should manually assign
+        // a persistent ID to any records persisted here, or run the risk of attempting to
+        // reference their persistent ID in game and having it be zero.
+        //
 
         // Bulkhead scans are referenced by the game
         BulkheadSelect_Main.Persist();
