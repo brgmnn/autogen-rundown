@@ -417,6 +417,7 @@ public partial record class WardenObjective : DataBlock
                 "E" => WaveSettings.Baseline_VeryHard
             };
 
+            // TODO: The Zone Sustained scan is also centered on the terminal and so doesn't work great
             MidPuzzle = ChainedPuzzle.FindOrPersist(
                 ChainedPuzzle.AlarmClass1_Sustained_MegaHuge with
                 {

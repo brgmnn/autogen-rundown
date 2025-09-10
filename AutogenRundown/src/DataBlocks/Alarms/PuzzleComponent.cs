@@ -70,4 +70,10 @@ public class PuzzleComponent
         PuzzleType = PuzzleType.SustainedBig_Cluster,
         Duration = 36
     };
+
+    public static readonly PuzzleComponent SustainedZone = new()
+    {
+        PuzzleType = PuzzleType.Sustained_Zone,
+        Duration = 120
+    };
 }

@@ -20,6 +20,30 @@ namespace AutogenRundown.DataBlocks;
 /// </summary>
 public class Intel
 {
+    // private string[] distortedStrings = new string[9]
+    // {
+    //     " %#",
+    //     "¤¤ ",
+    //     "%#%",
+    //     "###",
+    //     "#..",
+    //     "NUL",
+    //     "% &",
+    //     "¤¤¤",
+    //     "___"
+    // };
+    // private string[] correctStrings = new string[8]
+    // {
+    //     " 03",
+    //     "/16",
+    //     "/20",
+    //     "20 ",
+    //     " 04",
+    //     "/03",
+    //     "/20",
+    //     "20 "
+    // };
+
     public const string Info = ":://<color=cyan>INFO</color>";
 
     public const string Warning = ":://WARNING";

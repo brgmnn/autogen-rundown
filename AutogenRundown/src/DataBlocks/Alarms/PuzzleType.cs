@@ -80,6 +80,15 @@ public enum PuzzleType : uint
     SustainedBig_Cluster = 16,
     #endregion
 
+    #region Zone Sustain class scans
+
+    /// <summary>
+    /// R7C1 Monster zone alarm scan
+    /// </summary>
+    Sustained_Zone = 37,
+
+    #endregion
+
     // Checkpoints
     Checkpoint = 19,
 

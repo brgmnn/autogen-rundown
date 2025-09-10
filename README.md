@@ -38,6 +38,8 @@ TODO:
   * Add more variety on fog for vibes
   * Rework the special command layout
   * Remove artifact heat from the menus
+  * King of the Hill terminal spawns are... dodgy
+    * They often spawn inside things.
 
 Idea:
   * Secondary survival that procs on door open

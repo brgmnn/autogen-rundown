@@ -6,6 +6,10 @@ using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
+// Ideas:
+//
+//      EMERGENCY_ESCAPE_PROTOCOL -- From R7C1 Monster room
+
 public partial record LevelLayout
 {
     /// <summary>

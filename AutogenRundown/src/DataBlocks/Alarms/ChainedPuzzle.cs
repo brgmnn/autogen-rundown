@@ -1059,6 +1059,19 @@ public record ChainedPuzzle : DataBlock
             PuzzleComponent.SustainedMegaHuge
         }
     };
+
+    public static readonly ChainedPuzzle AlarmClass1_ZoneSustained = new()
+    {
+        PublicAlarmName = "Class S Z Alarm",
+        Settings = WaveSettings.Baseline_Hard,
+        Population = WavePopulation.Baseline,
+        WantedDistanceFromStartPos = 0.0,
+        WantedDistanceBetweenPuzzleComponents = 0.0,
+        Puzzle = new List<PuzzleComponent>()
+        {
+            PuzzleComponent.SustainedZone
+        }
+    };
     #endregion
 
     #region Alarms: Error alarms
