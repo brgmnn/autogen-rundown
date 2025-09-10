@@ -33,7 +33,7 @@ internal static class Artifacts
     [HarmonyPostfix]
     internal static void Post_CM_ExpeditionIcon_New_Setup(CM_ExpeditionIcon_New __instance)
     {
-        // "Hides" the artifact heat text by moving it off screen
+        // "Hides" the artifact heat text by moving it off-screen
         __instance.m_artifactHeatText.gameObject.transform.localPosition += Vector3.down * 10_000;
 
         // Shifts up the level completion text
