@@ -32,6 +32,8 @@ internal static class Patch_LG_ZoneJob_CreateExpandFromData
         }
     }
 
+    #region Fix: Zone expansion getting trapped in dead ends
+
     static bool HasFreePlug(LG_Area area)
     {
         if (area?.m_zoneExpanders == null)
@@ -135,4 +137,106 @@ internal static class Patch_LG_ZoneJob_CreateExpandFromData
             }
         }
     }
+
+    #endregion
+
+    #region Fix: Custom Geos failing to generate
+
+    /// <summary>
+    /// This fixed C1 Rotheart
+    /// </summary>
+    /// <param name="__instance"></param>
+    /// <param name="__result"></param>
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(LG_ZoneJob_CreateExpandFromData), nameof(LG_ZoneJob_CreateExpandFromData.Build))]
+    public static void CustomGeoPrioritizeExternal(LG_ZoneJob_CreateExpandFromData __instance, ref bool __result)
+    {
+        var zoneSettings = __instance.m_zoneSettings;
+
+        // For zones with custom geomorphs, heavily bias toward plugs (external connections)
+        if (__instance.m_mainStatus == MainStatus.ExpandFromArea &&
+            __instance.m_subStatus == SubStatus.BuildExpander &&
+            zoneSettings?.HasCustomGeomorphPrefab == true)
+        {
+            var zone = __instance.m_zone;
+            var scoredExpanders = __instance.m_scoredExpanders;
+
+            if (zone != null && scoredExpanders != null && scoredExpanders.Count > 1)
+            {
+                // Separate plugs from gates
+                var plugs = new List<LG_Scoring.Score<LG_ZoneExpander>>();
+                var gates = new List<LG_Scoring.Score<LG_ZoneExpander>>();
+
+                foreach (var scored in scoredExpanders)
+                {
+                    if (scored.item?.ExpanderType == LG_ZoneExpanderType.Plug)
+                        plugs.Add(scored);
+                    else
+                        gates.Add(scored);
+                }
+
+                if (plugs.Count > 0)
+                {
+                    // For custom geomorph zones, prioritize plugs heavily
+                    scoredExpanders.Clear();
+
+                    // Gates go first (lower priority)
+                    foreach (var score in gates)
+                        scoredExpanders.Add(score);
+
+                    // Plugs go last (higher priority - selected first)
+                    foreach (var score in plugs)
+                        scoredExpanders.Add(score);
+
+                    // scoredExpanders.AddRange(gates);      // Gates go first (lower priority)
+                    // scoredExpanders.AddRange(plugs);      // Plugs go last (higher priority - selected first)
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(LG_ZoneJob_CreateExpandFromData), nameof(LG_ZoneJob_CreateExpandFromData.Build))]
+    public static bool FixCustomGeoCoverageExhaustion(LG_ZoneJob_CreateExpandFromData __instance, ref bool __result)
+    {
+        if (__instance.m_mainStatus != MainStatus.ExpandFromArea ||
+            __instance.m_subStatus != SubStatus.SelectArea)
+            return true;
+
+        var zs = __instance.m_zoneSettings;
+
+        if (zs != null && zs.HasCustomGeomorphPrefab && !zs.HasCustomGeomorphInstance)
+        {
+            var zone = __instance.m_zone;
+
+            // Equivalent to CoverageStatus(zone) == CoverageResult.Ok:
+            var isOk = zone.m_coverage >= zs.m_minCoverage && zone.m_coverage <= zs.m_maxCoverage;
+
+            if (isOk)
+            {
+                // Mirror the non-early-exit branch: clean and retry from start area
+                __instance.BlockAndCleanFailedAreasFromZone(
+                    __instance.m_floor,
+                    zone,
+                    __instance.m_buildFromZone,
+                    __instance.m_startArea
+                );
+
+                __instance.m_mainStatus = MainStatus.FindStartArea;
+                __instance.m_subStatus = SubStatus.SelectArea;
+
+                // keep Build() running on next tick
+                __result = false;
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    #endregion
 }
