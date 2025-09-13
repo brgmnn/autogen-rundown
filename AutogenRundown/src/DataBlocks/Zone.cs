@@ -161,8 +161,11 @@ public record Zone : DataBlock
                     (SubComplex.Gardens,   "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_elevator_Gardens_exit_01.prefab"),
 
                     // --- MOD Geomorphs ---
-                    // SamDB
-                    (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_exit/floodways_exit_tile.prefab")
+                    // SamDB v1
+                    (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_exit/floodways_exit_tile.prefab"),
+
+                    // SamDB v2
+                    (SubComplex.Floodways, "Assets/SamdownGeos/Floodways Abberation Exit/Abberation_Exit_tile.prefab")
                 });
                 break;
         };
@@ -211,9 +214,12 @@ public record Zone : DataBlock
                     // Red_Leicester_Cheese
                     (SubComplex.Refinery, "Assets/Bundles/RLC_Mining/geo_64x64_mining_refinery_X_RLC_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
 
-                    // SamDB
+                    // SamDB v1
                     (SubComplex.DigSite, "Assets/Custom Geo's/Digsite/digsite_x_tile_1_V3/digsite_x_tile_1_V3.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.DigSite, "Assets/Custom Geo's/Digsite/Disite generator/Digsite_X_Tile_Generator.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
+                    // SamDB v2
+                    (SubComplex.DigSite, "Assets/SamdownGeos/Refinery_X_tile_1/Refinery_X_Tile_1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                 });
                 break;
 
@@ -259,11 +265,14 @@ public record Zone : DataBlock
                     (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_hub_DS_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_hub_ds_02.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
 
-                    // SamDB
+                    // SamDB v1
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_1/floodways_x_tile_1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_2/floodways_x_tile_2.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_3/floodways_x_tile_3.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_5/Floodways_x_tile_5.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
+                    // SamDB v2
+                    (SubComplex.Floodways, "Assets/SamdownGeos/Floodways Scaffolding HUB/Floodways_Scaffolding_HUB.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                 });
                 break;
         }
@@ -398,9 +407,12 @@ public record Zone : DataBlock
                     // donan3967
                     (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_i_bridge_ds_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
 
-                    // SamDB
+                    // SamDB v1
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_I_tile_bridge/Floodways_I_tile_Bridge.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.Floodways, "Assets/Custom Geo's/floodways_I_tile_1/floodways_i_tile_1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
+                    // SamDB v2
+                    (SubComplex.Floodways, "Assets/SamdownGeos/Floodways I Tile F1/Floodways_i_Tile_F1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                 });
                 break;
         }
@@ -418,7 +430,10 @@ public record Zone : DataBlock
         {
             case Complex.Mining:
                 SubComplex = SubComplex.DigSite;
-                CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_SF_02.prefab";
+                CustomGeomorph = Generator.Flip() ?
+                    "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_SF_02.prefab" :
+                    "Assets/SamdownGeos/T2D2 MWP room/MWP_Room.prefab";
+
                 Coverage = new CoverageMinMax { Min = 20, Max = 20 };
                 break;
 
@@ -537,7 +552,7 @@ public record Zone : DataBlock
     }
 
     /// <summary>
-    /// It seems this is fairly broken. The reliability of getting the generator cluster does not seem good.
+    /// Picks a generator cluster geo
     /// </summary>
     /// <param name="complex"></param>
     public void GenGeneratorClusterGeomorph(Complex complex)
@@ -729,6 +744,9 @@ public record Zone : DataBlock
 
                     // Red_Leicester_Cheese
                     (SubComplex.DigSite, "Assets/Bundles/RLC_Mining/geo_64x64_mining_digsite_dead_end_RLC_01.prefab", new CoverageMinMax { Min = 10, Max = 15 }),
+
+                    // SamDB v2
+                    (SubComplex.DataCenter, "Assets/SamdownGeos/Storage dead end spawn/DeadEnd_Storage.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
                 });
                 break;
 
@@ -743,8 +761,11 @@ public record Zone : DataBlock
                     // Floweria
                     (SubComplex.Lab, "Assets/Prefabs/Geomorph/Tech/geo_lab_FA_dead_end_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
 
-                    // SamDB
+                    // SamDB v1
                     (SubComplex.Lab, "Assets/Custom Geo's/Labs/Labs dead end neonate cargo room/Labs_Neonate_cargo.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
+
+                    // SamDB v2
+                    (SubComplex.DataCenter, "Assets/SamdownGeos/C2 Mainframe room/C2_Mainframe.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
                 });
                 break;
 
@@ -758,8 +779,11 @@ public record Zone : DataBlock
                     // donan3976
                     (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_armory_DS_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
 
-                    // SamDB
+                    // SamDB v1
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways dead end spawn points/Floodways_Deadend_Spawn.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
+
+                    // SamDB v2
+                    (SubComplex.Floodways, "Assets/GameObject/Floodways_Reactor_Cooling_Spawns.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
                 });
                 break;
         }

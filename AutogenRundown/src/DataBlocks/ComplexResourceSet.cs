@@ -390,6 +390,40 @@ public record ComplexResourceSet : DataBlock
             Asset = "Assets/Custom Geo's/Storage_neonate_room/neonate_storage.prefab",
             SubComplex = SubComplex.Storage
         });
+
+        #region Geos V2
+
+        // Large Digsite tile for the MWP or other large pickup objects.
+        //
+        // TODO: Add this and the other big pickup tiles for non MWP big pickups
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/SamdownGeos/T2D2 MWP room/MWP_Room.prefab",
+            SubComplex = SubComplex.DigSite
+        });
+
+        // Simple storage elevator re-imagined.
+        Mining.ElevatorShafts_1x1.Insert(0, new Prefab()
+        {
+            Asset = "Assets/SamdownGeos/Storage Elevator 1/Storage_elevator_1.prefab",
+            SubComplex = SubComplex.Refinery
+        });
+
+        // Simple storage dead end for spawning enemies.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/SamdownGeos/Storage dead end spawn/DeadEnd_Storage.prefab",
+            SubComplex = SubComplex.Storage
+        });
+
+        // Large refinery tile with multiple elevators and enemy spawnpoints.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/SamdownGeos/Refinery_X_tile_1/Refinery_X_Tile_1.prefab",
+            SubComplex = SubComplex.Refinery
+        });
+
+        #endregion
         #endregion
         #endregion
 
@@ -587,6 +621,17 @@ public record ComplexResourceSet : DataBlock
             Asset = "Assets/Custom Geo's/Labs/lab_exit_V1/lab_exit_V1.prefab",
             SubComplex = SubComplex.Lab
         });
+
+        #region Geos V2
+
+        // Extended Data Center tile with extra floors.
+        Tech.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/SamdownGeos/C2 Mainframe room/C2_Mainframe.prefab",
+            SubComplex = SubComplex.DataCenter
+        });
+
+        #endregion
         #endregion
         #endregion
 
@@ -935,7 +980,7 @@ public record ComplexResourceSet : DataBlock
         #endregion
 
         #region MODDER: SamDB
-
+        #region Geos V1
         // A revamped floodways elevator tile. It has been largely extended to feature a custom
         // spawn and revamped to look less destroyed and more abandoned. It has a full 360 pathway
         // and a bridge with a custom exit scan aligned to it. The ladder has been removed to stop
@@ -1045,6 +1090,45 @@ public record ComplexResourceSet : DataBlock
             SubComplex = SubComplex.Floodways,
             Shard = 10
         });
+        #endregion
+
+        #region Geos V2
+
+        // Very large floodways HUB tile. Multiple floors and spawn points for flyers.
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/SamdownGeos/Floodways Scaffolding HUB/Floodways_Scaffolding_HUB.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 10
+        });
+
+        // I tile with multiple floors.
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/SamdownGeos/Floodways I Tile F1/Floodways_i_Tile_F1.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 10
+        });
+
+        // Simple dead end tile that can be used to spawn enemies with custom plugins. There are
+        // invisible ladders on each sewer hole for enemies to jump down.
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/GameObject/Floodways_Reactor_Cooling_Spawns.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 10
+        });
+
+        // Floodways exit tile for arena fights. There are invisible ladders on each hole for
+        // enemies to jump down. Enemies must be spawned in using custom plugins for this to work.
+        Service.CustomGeomorphs_Exit_1x1.Insert(0, new Prefab()
+        {
+            Asset = "Assets/SamdownGeos/Floodways Abberation Exit/Abberation_Exit_tile.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 10
+        });
+
+        #endregion
         #endregion
         #endregion
     }
