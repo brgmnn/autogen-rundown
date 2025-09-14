@@ -10,6 +10,8 @@ namespace AutogenRundown.Patches;
 [HarmonyPatch]
 internal static class Artifacts
 {
+    private static CM_ExpeditionIcon_New? TopBarExpeditionIcon { get; set; }
+
     /// <summary>
     /// Fixes boosters to not be consumed upon use in levels
     /// </summary>
@@ -38,5 +40,23 @@ internal static class Artifacts
 
         // Shifts up the level completion text
         __instance.m_statusText.transform.localPosition += new Vector3(0f, 25.0f, 0f);
+    }
+
+    /// <summary>
+    /// Repositions the level icon in the top bar now that the artifact heat is gone from it
+    ///
+    /// TODO: can we add the level name where the artifact heat went?
+    /// </summary>
+    /// <param name="__instance"></param>
+    [HarmonyPatch(typeof(CM_MenuBar), nameof(CM_MenuBar.UpdateMenuOptions))]
+    [HarmonyPostfix]
+    internal static void Post_CM_MenuBar_UpdateMenuOptions(CM_MenuBar __instance)
+    {
+        // __instance.m_expIconAlign.position.y = 677.5467;
+
+        // TopBarExpeditionIcon = __instance.m_expIcon;
+        // TopBarExpeditionIcon.m_artifactHeatText.text = "Test string";
+
+        __instance.m_expIcon.SetPosition(new Vector2(-677.0f, 0f));
     }
 }
