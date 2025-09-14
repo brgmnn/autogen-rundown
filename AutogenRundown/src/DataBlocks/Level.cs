@@ -1425,7 +1425,7 @@ public class Level
                 Coverage = CoverageMinMax.Large_150,
                 LightSettings = Lights.GenRandomLight(),
                 LocalIndex = 0,
-                // CustomGeomorph = geo
+                CustomGeomorph = geo
             };
 
             // elevatorDropZone.EnemySpawningInZone.Add(
