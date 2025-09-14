@@ -30,6 +30,14 @@ public class RundownSelection
     // };
 
 
+    public static RundownTimerData? DailyTimer { get; set; }
+
+    public static RundownTimerData? WeeklyTimer { get; set; }
+
+    public static RundownTimerData? MonthlyTimer { get; set; }
+
+    public static RundownTimerData? SeasonalTimer { get; set; }
+
 
     // Daily
     public static readonly RundownSelection R1 = new()

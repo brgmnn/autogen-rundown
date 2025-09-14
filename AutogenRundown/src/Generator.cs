@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using AutogenRundown.Managers;
 using BepInEx;
 
 namespace AutogenRundown;
@@ -530,6 +531,31 @@ static public class Generator
         {
             SeasonalSeason = GetSeason(date.Month);
             SeasonalYear = GetSeasonYear(date);
+
+            var endLocal = SeasonalSeason switch
+            {
+                "Spring" => new DateTime(year: SeasonalYear    , month:  6, day: 1, hour: 0, minute: 0, second: 0),
+                "Summer" => new DateTime(year: SeasonalYear    , month:  9, day: 1, hour: 0, minute: 0, second: 0),
+                "Fall"   => new DateTime(year: SeasonalYear    , month: 12, day: 1, hour: 0, minute: 0, second: 0),
+                "Winter" => new DateTime(year: SeasonalYear + 1, month:  3, day: 1, hour: 0, minute: 0, second: 0)
+            };
+
+            var unspecified = DateTime.SpecifyKind(endLocal, DateTimeKind.Unspecified);
+            var endUtc = TimeZoneInfo.ConvertTimeToUtc(unspecified, tzi);
+
+            RundownSelection.SeasonalTimer = new RundownTimerData
+            {
+                ShowCountdownTimer = true,
+                ShowScrambledTimer = false,
+                UTC_Target_Year = endUtc.Year,
+                UTC_Target_Month = endUtc.Month,
+                UTC_Target_Day = endUtc.Day,
+                UTC_Target_Hour = endUtc.Hour,
+                UTC_Target_Minute = endUtc.Minute
+            };
+
+            Plugin.Logger.LogWarning($"Seasonal end date Pacific: {endLocal}");
+            Plugin.Logger.LogWarning($"Seasonal end date UTC: {endUtc}");
         }
 
         Plugin.Logger.LogDebug($"Seasonal date seed: {date}");
