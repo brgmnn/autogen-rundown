@@ -27,6 +27,8 @@ public static class RundownTimers
         {
             4 => RundownSelection.SeasonalTimer,
             3 => RundownSelection.MonthlyTimer,
+            2 => RundownSelection.WeeklyTimer,
+            1 => RundownSelection.DailyTimer,
 
             _ => null
         };

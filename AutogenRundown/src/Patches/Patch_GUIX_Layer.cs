@@ -28,6 +28,8 @@ internal static class Patch_GUIX_Layer
     /// Checks and disables the rundown timer if we can't view the A-tier levels layer.
     ///
     /// This should guarantee that we only show the timer on viewing the rundown screen
+    ///
+    /// TODO: move the showing of the timer to here
     /// </summary>
     /// <param name="__instance"></param>
     [HarmonyPatch(typeof(GUIX_Layer), nameof(GUIX_Layer.OnDisable))]

@@ -40,6 +40,7 @@ TODO:
   * Remove artifact heat from the menus
   * King of the Hill terminal spawns are... dodgy
     * They often spawn inside things.
+  * Uplink objectives stop ALL WAVES after completing them. Got to figure out a way to not do that.
 
 Idea:
   * Secondary survival that procs on door open

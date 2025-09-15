@@ -471,6 +471,8 @@ static public class Generator
 
     /// <summary>
     /// Sets the seed (without saving) to the
+    ///
+    /// Daily seed
     /// </summary>
     public static void GenerateTimeSeed()
     {
@@ -481,6 +483,27 @@ static public class Generator
 
         var now = $"{pst:yyyy_MM_dd}";
         var display = $"{pst:MM/dd}";
+
+        // Set the countdown timer only when auto-selecting the seed
+        var endLocal = pst.Date.AddDays(1); // midnight at local next day
+
+        // Convert local (unspecified) -> UTC via Pacific TZ to handle DST correctly
+        var unspecified = DateTime.SpecifyKind(endLocal, DateTimeKind.Unspecified);
+        var endUtc = TimeZoneInfo.ConvertTimeToUtc(unspecified, tzi);
+
+        RundownSelection.DailyTimer = new RundownTimerData
+        {
+            ShowCountdownTimer = true,
+            ShowScrambledTimer = false,
+            UTC_Target_Year = endUtc.Year,
+            UTC_Target_Month = endUtc.Month,
+            UTC_Target_Day = endUtc.Day,
+            UTC_Target_Hour = endUtc.Hour,
+            UTC_Target_Minute = endUtc.Minute
+        };
+
+        Plugin.Logger.LogWarning($"Daily end date Pacific: {endLocal}");
+        Plugin.Logger.LogWarning($"Daily end date UTC: {endUtc}");
 
         Seed = now;
         DisplaySeed = $"<color=orange>{display}</color>";
@@ -718,6 +741,37 @@ static public class Generator
             {
                 Plugin.Logger.LogWarning($"Unable to parse weekly seed: \"{seed}\"");
             }
+        }
+
+        // Set the countdown timer only when auto-selecting the seed
+        if (!manualSeed)
+        {
+            // Next Tuesday at 00:00 local (Pacific)
+            // If today is Tuesday, we still advance to the *next* Tuesday (i.e., +7 days).
+            var daysUntilNextTuesday = ((int)DayOfWeek.Tuesday - (int)date.DayOfWeek + 7) % 7;
+
+            if (daysUntilNextTuesday == 0)
+                daysUntilNextTuesday = 7;
+
+            var endLocal = date.Date.AddDays(daysUntilNextTuesday); // midnight at local next Tuesday
+
+            // Convert local (unspecified) -> UTC via Pacific TZ to handle DST correctly
+            var unspecified = DateTime.SpecifyKind(endLocal, DateTimeKind.Unspecified);
+            var endUtc = TimeZoneInfo.ConvertTimeToUtc(unspecified, tzi);
+
+            RundownSelection.WeeklyTimer = new RundownTimerData
+            {
+                ShowCountdownTimer = true,
+                ShowScrambledTimer = false,
+                UTC_Target_Year = endUtc.Year,
+                UTC_Target_Month = endUtc.Month,
+                UTC_Target_Day = endUtc.Day,
+                UTC_Target_Hour = endUtc.Hour,
+                UTC_Target_Minute = endUtc.Minute
+            };
+
+            Plugin.Logger.LogWarning($"Weekly end date Pacific: {endLocal}");
+            Plugin.Logger.LogWarning($"Weekly end date UTC: {endUtc}");
         }
 
         var week = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
