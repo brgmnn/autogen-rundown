@@ -33,6 +33,13 @@ public static class RundownTimers
     //     __instance.UpdateHeaderText();
     // }
 
+    // [HarmonyPatch(typeof(CM_PageRundown_New), nameof(CM_PageRundown_New.))]
+    // [HarmonyPostfix]
+    // static void OnRundownReset(CM_PageRundown_New __instance)
+    // {
+    //     Plugin.Logger.LogDebug($"Reset rundown selection");
+    // }
+
     /// <summary>
     /// This is the one
     /// </summary>
@@ -51,13 +58,24 @@ public static class RundownTimers
         var timerData = data.persistentID switch
         {
             4 => RundownSelection.SeasonalTimer,
+            3 => RundownSelection.MonthlyTimer,
 
             _ => null
         };
 
 
         if (timerData == null)
+        {
+            // Disable the countdown timer if one's not been set.
+            __instance.m_rundownTimerData = new RundownTimerData
+            {
+                ShowCountdownTimer = false,
+                ShowScrambledTimer = false
+            };
+            __instance.UpdateHeaderText();
+
             return;
+        }
 
         __instance.m_rundownTimerData = timerData;
 

@@ -654,6 +654,32 @@ static public class Generator
             }
         }
 
+        if (!manualSeed)
+        {
+            var endLocal = date.Month switch
+            {
+                12 => new DateTime(year: date.Year + 1, month: 1,              day: 1, hour: 0, minute: 0, second: 0),
+                _  => new DateTime(year: date.Year,     month: date.Month + 1, day: 1, hour: 0, minute: 0, second: 0)
+            };
+
+            var unspecified = DateTime.SpecifyKind(endLocal, DateTimeKind.Unspecified);
+            var endUtc = TimeZoneInfo.ConvertTimeToUtc(unspecified, tzi);
+
+            RundownSelection.MonthlyTimer = new RundownTimerData
+            {
+                ShowCountdownTimer = true,
+                ShowScrambledTimer = false,
+                UTC_Target_Year = endUtc.Year,
+                UTC_Target_Month = endUtc.Month,
+                UTC_Target_Day = endUtc.Day,
+                UTC_Target_Hour = endUtc.Hour,
+                UTC_Target_Minute = endUtc.Minute
+            };
+
+            Plugin.Logger.LogWarning($"Monthly end date Pacific: {endLocal}");
+            Plugin.Logger.LogWarning($"Monthly end date UTC: {endUtc}");
+        }
+
         Plugin.Logger.LogDebug($"Monthly date seed: {date}");
 
         var now = $"{date:yyyy_MM}";
