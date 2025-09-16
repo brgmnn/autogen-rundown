@@ -17,17 +17,22 @@ namespace AutogenRundown.DataBlocks;
  *
  *  - Interesting power cell placement requirements?
  */
-public partial record class WardenObjective : DataBlock
+public partial record WardenObjective
 {
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="director"></param>
+    /// <param name="level"></param>
     public void PreBuild_PowerCellDistribution(BuildDirector director, Level level)
     {
         PowerCellsToDistribute = director.Tier switch
         {
-            "A" => Generator.Random.Next(1, 2),
-            "B" => Generator.Random.Next(1, 2),
-            "C" => Generator.Random.Next(2, 3),
-            "D" => Generator.Random.Next(3, 4),
-            "E" => Generator.Random.Next(3, 5),
+            "A" => Generator.Between(1, 2),
+            "B" => Generator.Between(1, 3),
+            "C" => Generator.Between(2, 3),
+            "D" => Generator.Between(3, 4),
+            "E" => Generator.Between(3, 5),
             _ => 2
         };
     }

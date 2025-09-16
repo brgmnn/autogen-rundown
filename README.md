@@ -44,6 +44,9 @@ TODO:
   * Retrieve big item:
     * A-tier main only rolled no exit alarm.
 
+
+  * Any case of `Generator.Random.Next` is a bug really
+
 Idea:
   * Secondary survival that procs on door open
   * Bring big pickup for scan on door

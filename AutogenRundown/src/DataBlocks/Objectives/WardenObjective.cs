@@ -557,16 +557,7 @@ public partial record WardenObjective : DataBlock
 
             case WardenObjectiveType.PowerCellDistribution:
             {
-                objective.PowerCellsToDistribute = director.Tier switch
-                {
-                    "A" => Generator.Random.Next(1, 2),
-                    "B" => Generator.Random.Next(1, 2),
-                    "C" => Generator.Random.Next(2, 3),
-                    "D" => Generator.Random.Next(3, 4),
-                    "E" => Generator.Random.Next(3, 5),
-                    _ => 2
-                };
-
+                objective.PreBuild_PowerCellDistribution(director, level);
                 break;
             }
 
