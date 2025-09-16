@@ -41,6 +41,8 @@ TODO:
   * King of the Hill terminal spawns are... dodgy
     * They often spawn inside things.
   * Uplink objectives stop ALL WAVES after completing them. Got to figure out a way to not do that.
+  * Retrieve big item:
+    * A-tier main only rolled no exit alarm.
 
 Idea:
   * Secondary survival that procs on door open
@@ -48,6 +50,11 @@ Idea:
 
 # Datasphere color pack
 https://thunderstore.io/c/gtfo/p/ProjectZaero/Data_Sphere_Flavor_Pack/
+
+# Geo pack ideas
+https://thunderstore.io/c/gtfo/p/TheDoggyDoge/DogsTilePack/
+https://thunderstore.io/c/gtfo/p/xiaoyao/XAOYAO_developer_package/
+
 
 Level Lockup:
   Double check logs on any of the old versions for this:
