@@ -86,14 +86,14 @@ public class Plugin : BasePlugin
 
         Config_UsePlayerColoredGlowsticks = usePlayerColorGlowsticks.Value;
 
-        // Reset any broken save configs from 0.73.0
-        // TODO: remove probably after a year? 2026/08/16
-        if (seedDailyConfig.Value == "Todays date, YYYY_MM_DD")
-            seedDailyConfig.Value = "";
-        if (seedWeeklyConfig.Value == "Todays date, YYYY_MM_DD")
-            seedWeeklyConfig.Value = "";
-        if (seedMonthlyConfig.Value == "Todays month, YYYY_MM")
-            seedMonthlyConfig.Value = "";
+        // // Reset any broken save configs from 0.73.0
+        // // TODO: remove probably after a year? 2026/08/16
+        // if (seedDailyConfig.Value == "Todays date, YYYY_MM_DD")
+        //     seedDailyConfig.Value = "";
+        // if (seedWeeklyConfig.Value == "Todays date, YYYY_MM_DD")
+        //     seedWeeklyConfig.Value = "";
+        // if (seedMonthlyConfig.Value == "Todays month, YYYY_MM")
+        //     seedMonthlyConfig.Value = "";
 
         Config.Save();
 
