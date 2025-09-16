@@ -519,33 +519,31 @@ public partial record WardenObjective : DataBlock
     /// </summary>
     /// <param name="director"></param>
     /// <param name="level"></param>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     /// <returns></returns>
     public static WardenObjective PreBuild(BuildDirector director, Level level)
     {
-        var objective = new WardenObjective
-        {
-            Type = director.Objective,
-        };
+        var objective = new WardenObjective { Type = director.Objective };
 
         switch (objective.Type)
         {
+            case WardenObjectiveType.HsuFindSample:
+                break;
+
             case WardenObjectiveType.ReactorStartup:
-            {
                 objective.PreBuild_ReactorStartup(director, level);
                 break;
-            }
 
             case WardenObjectiveType.ReactorShutdown:
-            {
                 objective.PreBuild_ReactorShutdown(director, level);
                 break;
-            }
+
+            case WardenObjectiveType.ClearPath:
+                break;
 
             case WardenObjectiveType.RetrieveBigItems:
-            {
                 objective.PreBuild_RetrieveBigItems(director, level);
                 break;
-            }
 
             case WardenObjectiveType.GatherSmallItems:
                 objective.PreBuild_GatherSmallItems(director, level);
@@ -556,10 +554,8 @@ public partial record WardenObjective : DataBlock
                 break;
 
             case WardenObjectiveType.PowerCellDistribution:
-            {
                 objective.PreBuild_PowerCellDistribution(director, level);
                 break;
-            }
 
             case WardenObjectiveType.TerminalUplink:
                 objective.PreBuild_TerminalUplink(director, level);
@@ -573,6 +569,9 @@ public partial record WardenObjective : DataBlock
                 objective.PreBuild_HsuActivateSmall(director, level);
                 break;
 
+            case WardenObjectiveType.Survival:
+                break;
+
             case WardenObjectiveType.GatherTerminal:
                 objective.PreBuild_GatherTerminal(director, level);
                 break;
@@ -581,9 +580,15 @@ public partial record WardenObjective : DataBlock
                 objective.PreBuild_CorruptedTerminalUplink(director, level);
                 break;
 
+            case WardenObjectiveType.Empty:
+                break;
+
             case WardenObjectiveType.TimedTerminalSequence:
                 objective.PreBuild_TimedTerminalSequence(director, level);
                 break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(director));
         }
 
         return objective;
