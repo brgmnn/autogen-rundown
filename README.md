@@ -50,6 +50,7 @@ TODO:
 Idea:
   * Secondary survival that procs on door open
   * Bring big pickup for scan on door
+  * Add full team scan on extract instead of warden scan
 
 # Datasphere color pack
 https://thunderstore.io/c/gtfo/p/ProjectZaero/Data_Sphere_Flavor_Pack/
