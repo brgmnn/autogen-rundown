@@ -126,6 +126,14 @@ public partial record WardenObjective
         // TODO: Switch and combine with the generic exit waves objective
         switch (item)
         {
+            case WardenObjectiveItem.CryoCase:
+            {
+                if (RetrieveItems.Count == 1)
+                    AddCompletedObjectiveWaves(level, director);
+
+                break;
+            }
+
             case WardenObjectiveItem.CargoCrate:
             case WardenObjectiveItem.CargoCrateHighSecurity:
             case WardenObjectiveItem.DataSphere:
