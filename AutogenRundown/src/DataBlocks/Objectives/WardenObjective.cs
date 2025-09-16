@@ -543,48 +543,7 @@ public partial record WardenObjective : DataBlock
 
             case WardenObjectiveType.RetrieveBigItems:
             {
-                var choices = new List<(double, WardenObjectiveItem)>
-                {
-                    (1.0, WardenObjectiveItem.DataSphere),
-                    (1.0, WardenObjectiveItem.CargoCrate),
-                    (1.0, WardenObjectiveItem.CargoCrateHighSecurity),
-                    (1.0, WardenObjectiveItem.CryoCase),
-                };
-
-                // These would be main objective items only
-                if (director.Bulkhead.HasFlag(Bulkhead.Main))
-                {
-                    //choices.Add((1.0, WardenObjectiveItem.NeonateHsu));
-                    choices.Add((1.0, WardenObjectiveItem.MatterWaveProjector));
-                }
-
-                var item = Generator.Select(choices);
-
-                /**
-                 * Some interesting options here for how many items we should spawn. We
-                 * want to reduce the number of items for non Main objectives and also
-                 * want to increase the number of items for deeper levels.
-                 * */
-                var count = (item, director.Tier, director.Bulkhead & Bulkhead.Objectives) switch
-                {
-                    (WardenObjectiveItem.CryoCase, "A", Bulkhead.Main) => Generator.Random.Next(1, 2),
-                    (WardenObjectiveItem.CryoCase, "B", Bulkhead.Main) => Generator.Random.Next(1, 2),
-                    (WardenObjectiveItem.CryoCase, "C", Bulkhead.Main) => Generator.Random.Next(1, 2),
-                    (WardenObjectiveItem.CryoCase, "D", Bulkhead.Main) => Generator.Random.Next(2, 3),
-                    (WardenObjectiveItem.CryoCase, "E", Bulkhead.Main) => Generator.Random.Next(2, 4),
-                    (WardenObjectiveItem.CryoCase, "D", _) => Generator.Random.Next(1, 2),
-                    (WardenObjectiveItem.CryoCase, "E", _) => 2,
-
-                    (WardenObjectiveItem.CargoCrateHighSecurity, "D", Bulkhead.Main) => Generator.Random.Next(1, 2),
-                    (WardenObjectiveItem.CargoCrateHighSecurity, "E", Bulkhead.Main) => 2,
-
-                    (_, _, _) => 1
-
-                };
-
-                for (var i = 0; i < count; ++i)
-                    objective.RetrieveItems.Add(item);
-
+                objective.PreBuild_RetrieveBigItems(director, level);
                 break;
             }
 

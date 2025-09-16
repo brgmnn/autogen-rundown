@@ -8,6 +8,56 @@ namespace AutogenRundown.DataBlocks;
 
 public partial record WardenObjective
 {
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="director"></param>
+    /// <param name="level"></param>
+    private void PreBuild_RetrieveBigItems(BuildDirector director, Level level)
+    {
+        var choices = new List<(double, WardenObjectiveItem)>
+        {
+            (1.0, WardenObjectiveItem.DataSphere),
+            (1.0, WardenObjectiveItem.CargoCrate),
+            (1.0, WardenObjectiveItem.CargoCrateHighSecurity),
+            (1.0, WardenObjectiveItem.CryoCase),
+        };
+
+        // These would be main objective items only
+        if (director.Bulkhead.HasFlag(Bulkhead.Main))
+        {
+            //choices.Add((1.0, WardenObjectiveItem.NeonateHsu));
+            choices.Add((1.0, WardenObjectiveItem.MatterWaveProjector));
+        }
+
+        var item = Generator.Select(choices);
+
+        /*
+         * Some interesting options here for how many items we should spawn. We
+         * want to reduce the number of items for non Main objectives and also
+         * want to increase the number of items for deeper levels.
+         * */
+        var count = (item, director.Tier, director.Bulkhead & Bulkhead.Objectives) switch
+        {
+            (WardenObjectiveItem.CryoCase, "A", Bulkhead.Main) => Generator.Between(1, 2),
+            (WardenObjectiveItem.CryoCase, "B", Bulkhead.Main) => Generator.Between(1, 2),
+            (WardenObjectiveItem.CryoCase, "C", Bulkhead.Main) => Generator.Between(1, 2),
+            (WardenObjectiveItem.CryoCase, "D", Bulkhead.Main) => Generator.Between(2, 3),
+            (WardenObjectiveItem.CryoCase, "E", Bulkhead.Main) => Generator.Between(2, 4),
+            (WardenObjectiveItem.CryoCase, "D", _) => Generator.Between(1, 2),
+            (WardenObjectiveItem.CryoCase, "E", _) => 2,
+
+            (WardenObjectiveItem.CargoCrateHighSecurity, "D", Bulkhead.Main) => Generator.Between(1, 2),
+            (WardenObjectiveItem.CargoCrateHighSecurity, "E", Bulkhead.Main) => 2,
+
+            (_, _, _) => 1
+
+        };
+
+        for (var i = 0; i < count; ++i)
+            RetrieveItems.Add(item);
+    }
+
     public void Build_RetrieveBigItems(BuildDirector director, Level level)
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
