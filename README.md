@@ -44,6 +44,7 @@ TODO:
   * Retrieve big item:
     * A-tier main only rolled no exit alarm.
 
+ * Add "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_AW_01.prefab", the giant HSU pit. Technically an I-tile
 
   * Any case of `Generator.Random.Next` is a bug really
 
@@ -51,6 +52,7 @@ Idea:
   * Secondary survival that procs on door open
   * Bring big pickup for scan on door
   * Add full team scan on extract instead of warden scan
+  * "Archivist", like "Unaugmented" but for finding all the D-Lock Cipher logs in a level?
 
 # Datasphere color pack
 https://thunderstore.io/c/gtfo/p/ProjectZaero/Data_Sphere_Flavor_Pack/

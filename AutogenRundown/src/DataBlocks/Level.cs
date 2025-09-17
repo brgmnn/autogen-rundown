@@ -5,6 +5,7 @@ using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
+using AutogenRundown.DataBlocks.Logs;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.GeneratorData;
@@ -1481,6 +1482,8 @@ public class Level
 
             elevatorDropZone.EnemySpawningInZone.Add(
                 EnemySpawningData.TierA with { Points = 30 });
+
+            elevatorDropZone.TerminalPlacements[0].LogFiles.Add(DLockDecipherer.R7A1_Z49_1);
 
             // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
 
