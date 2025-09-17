@@ -214,6 +214,114 @@ public class DLockDecipherer
 
     #region Rundown 3
 
+    public static readonly LogFile R3A1_Z251 = new LogFile
+    {
+        FileName = "7GY-HYP-SDW",
+        FileContent = new Text { PersistentId = 2601516214u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R3A1_Z254 = new LogFile
+    {
+        FileName = "EBD-T34-DG1",
+        FileContent = new Text { PersistentId = 2714516313u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R3A2_Z126 = new LogFile
+    {
+        FileName = "DTE-110-111",
+        FileContent = new Text { PersistentId = 4115774219u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R3A3_Z433 = new LogFile
+    {
+        FileName = "21M-CEW-49B",
+        FileContent = new Text { PersistentId = 882979268u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R3B1_Z235 = new LogFile
+    {
+        FileName = "57H-K78-EVR",
+        FileContent = new Text { PersistentId = 3919432281u },
+        AttachedAudioFile = (Sound)3415375661,
+        AttachedAudioByteSize = 73446,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R3B2_Z506 = new LogFile
+    {
+        FileName = "MAL-7CD-378",
+        FileContent = new Text { PersistentId = 1986026191u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R3B2_Z511 = new LogFile
+    {
+        FileName = "76H-S3Q-156",
+        FileContent = new Text { PersistentId = 2518464736u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R3C1_Z10 = new LogFile
+    {
+        FileName = "B94-E5W-52K",
+        FileContent = new Text { PersistentId = 3899268189u },
+        AttachedAudioFile = (Sound)3325727238,
+        AttachedAudioByteSize = 97322,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R3C1_Z11 = new LogFile
+    {
+        FileName = "21W-SOL-9NY",
+        FileContent = new Text { PersistentId = 1921629421u },
+        AttachedAudioFile = (Sound)181263579,
+        AttachedAudioByteSize = 53552,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R3D1_Z388 = new LogFile
+    {
+        FileName = "STA-B26-078",
+        FileContent = new Text { PersistentId = 1794210895u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R3D1_Z389 = new LogFile
+    {
+        FileName = "POI-M7Y-THE",
+        FileContent = new Text { PersistentId = 2831084690u },
+        AttachedAudioFile = (Sound)3929856436,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R3D1_Z397 = new LogFile
+    {
+        FileName = "HW5-BI7-120",
+        FileContent = new Text { PersistentId = 606542306u },
+        AttachedAudioFile = (Sound)1750714890,
+        AttachedAudioByteSize = 7756,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
     #endregion
 
     #region Rundown 4
@@ -464,6 +572,18 @@ public class DLockDecipherer
         R2E1_Z606,
 
         // Rundown 3
+        R3A1_Z251,
+        R3A1_Z254,
+        R3A2_Z126,
+        R3A3_Z433,
+        R3B1_Z235,
+        R3B2_Z506,
+        R3B2_Z511,
+        R3C1_Z10,
+        R3C1_Z11,
+        R3D1_Z388,
+        R3D1_Z389,
+        R3D1_Z397,
 
         // Rundown 4
 
