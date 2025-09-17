@@ -326,6 +326,177 @@ public class DLockDecipherer
 
     #region Rundown 4
 
+    public static readonly LogFile R4A1_Z34 = new LogFile
+    {
+        FileName = "VN8-5DF-BM6",
+        FileContent = new Text { PersistentId = 1606512465u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4A2_Z45 = new LogFile
+    {
+        FileName = "FCL-K5E-2BG",
+        FileContent = new Text { PersistentId = 751637944u },
+        AttachedAudioFile = (Sound)4274483288,
+        AttachedAudioByteSize = 55593,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4A3_Z28 = new LogFile
+    {
+        FileName = "HZW-8JK-LTT",
+        FileContent = new Text { PersistentId = 677330196u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4A3_Z31 = new LogFile
+    {
+        FileName = "DL4-39F-Q5Z",
+        FileContent = new Text { PersistentId = 2307214134u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4B1_Z52 = new LogFile
+    {
+        FileName = "6J8-9NK-8YT",
+        FileContent = new Text { PersistentId = 972338481u },
+        AttachedAudioFile = (Sound)3748372304,
+        AttachedAudioByteSize = 89002,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4B2_Z85 = new LogFile
+    {
+        FileName = "276-908-7U8",
+        FileContent = new Text { PersistentId = 386604089u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4B2_Z89 = new LogFile
+    {
+        FileName = "KAL-P48-7FR",
+        FileContent = new Text { PersistentId = 3847194193u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4B3_Z39 = new LogFile
+    {
+        FileName = "XMN-GBB-8B5",
+        FileContent = new Text { PersistentId = 275287026u },
+        AttachedAudioFile = (Sound)4229076750,
+        AttachedAudioByteSize = 7349,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4B3_Z41 = new LogFile
+    {
+        FileName = "YTG-N60-439",
+        FileContent = new Text { PersistentId = 1901056716u },
+        AttachedAudioFile = (Sound)2623972929,
+        AttachedAudioByteSize = 31037,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4C1_Z72 = new LogFile
+    {
+        FileName = "4HB-6UR-YTE",
+        FileContent = new Text { PersistentId = 1786862515u },
+        AttachedAudioFile = (Sound)1497904131,
+        AttachedAudioByteSize = 29934,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4C1_Z75 = new LogFile
+    {
+        FileName = "G62-988-G2Q",
+        FileContent = new Text { PersistentId = 2047464033u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4C1_Z79 = new LogFile
+    {
+        FileName = "EPL-LPY-T7N",
+        FileContent = new Text { PersistentId = 2660922051u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4C2_Z12 = new LogFile
+    {
+        FileName = "T87-OPE-NAW",
+        FileContent = new Text { PersistentId = 1045760311u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4C3_Z151 = new LogFile
+    {
+        FileName = "6YH-KKN-B11",
+        FileContent = new Text { PersistentId = 2300319938u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4D1_Z64 = new LogFile
+    {
+        FileName = "7JH-PPP-SAD",
+        FileContent = new Text { PersistentId = 2186934260u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4D1_Z67 = new LogFile
+    {
+        FileName = "XDL-9YD-1QA",
+        FileContent = new Text { PersistentId = 4107631192u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4D2_Z96 = new LogFile
+    {
+        FileName = "EYY-GBB-18P",
+        FileContent = new Text { PersistentId = 190515691u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4D2_Z100 = new LogFile
+    {
+        FileName = "V94-ER1-120",
+        FileContent = new Text { PersistentId = 3537071244u },
+        AttachedAudioFile = (Sound)0,
+        AttachedAudioByteSize = 0,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
+    public static readonly LogFile R4E1_Z459 = new LogFile
+    {
+        FileName = "M7B-NHG-F27",
+        FileContent = new Text { PersistentId = 971943816u },
+        AttachedAudioFile = (Sound)3885450114,
+        AttachedAudioByteSize = 476755,
+        PlayerDialogToTriggerAfterAudio = (Sound)0
+    };
+
     #endregion
 
     #region Rundown 5
@@ -586,6 +757,25 @@ public class DLockDecipherer
         R3D1_Z397,
 
         // Rundown 4
+        R4A1_Z34,
+        R4A2_Z45,
+        R4A3_Z28,
+        R4A3_Z31,
+        R4B1_Z52,
+        R4B2_Z85,
+        R4B2_Z89,
+        R4B3_Z39,
+        R4B3_Z41,
+        R4C1_Z72,
+        R4C1_Z75,
+        R4C1_Z79,
+        R4C2_Z12,
+        R4C3_Z151,
+        R4D1_Z64,
+        R4D1_Z67,
+        R4D2_Z96,
+        R4D2_Z100,
+        R4E1_Z459,
 
         // Rundown 5
 
