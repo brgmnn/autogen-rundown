@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Logs;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Terminals;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.Extensions;
 using Newtonsoft.Json;
@@ -262,7 +263,16 @@ public record Rundown : DataBlock
                 {
                     terminal.LogFiles.Add(lorelog);
 
-                    Plugin.Logger.LogDebug($" -> {bulkhead}, ZONE_{zone.LocalIndex}");
+                    if (lorelog.AttachedAudioFile != Sound.None &&
+                        terminal.StartingStateData.StartingState == TerminalState.Sleeping)
+                    {
+                        terminal.StartingStateData.StartingState = TerminalState.AudioLoopError;
+                        Plugin.Logger.LogDebug($" -> {bulkhead}, ZONE_{zone.LocalIndex}, with audio");
+                    }
+                    else
+                    {
+                        Plugin.Logger.LogDebug($" -> {bulkhead}, ZONE_{zone.LocalIndex}");
+                    }
                 }
             }
         }
