@@ -29,7 +29,7 @@ namespace AutogenRundown.DataBlocks;
  *          4. Trigger unit wave
  *          5. Trigger survival of the rest of the level with spawning mega wave at the end
  */
-public partial record class WardenObjective : DataBlock
+public partial record WardenObjective
 {
     /// <summary>
     /// We need to select the type of special terminal command that will be used here

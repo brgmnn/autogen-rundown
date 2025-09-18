@@ -11,24 +11,6 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks;
 
-public enum DistributionStrategy
-{
-    /// <summary>
-    /// Randomly placed across all zones in random locations.
-    /// </summary>
-    Random,
-
-    /// <summary>
-    /// All items in a single zone (randomly)
-    /// </summary>
-    SingleZone,
-
-    /// <summary>
-    /// Evenly distributed across all zones
-    /// </summary>
-    EvenlyAcrossZones
-}
-
 public partial record WardenObjective : DataBlock
 {
     /// <summary>
