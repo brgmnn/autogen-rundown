@@ -1,4 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using AutogenRundown.DataBlocks.Logs;
+using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.ZoneData;
+using AutogenRundown.Extensions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks;
@@ -171,6 +175,97 @@ public record Rundown : DataBlock
         rundown.DisplaySeed = Generator.DisplaySeed;
 
         return rundown;
+    }
+
+    /// <summary>
+    /// Distributes D-Lock Block Decipherer logs across the rundowns levels
+    ///
+    /// 83 total levels in base
+    /// 195 total logs
+    /// ~2.35 logs per level
+    ///
+    /// Logs are distributed as follows in levels across all rundowns
+    ///     0 logs: 4
+    ///     1 logs: 21
+    ///     2 logs: 30
+    ///     3 logs: 16
+    ///     4 logs: 6
+    ///     5 logs: 2
+    ///     6 logs: 4
+    /// </summary>
+    public void DistributeDLockLogs()
+    {
+        var logs = DLockDecipherer.AllLogs.Shuffle();
+        var totallevels = TierA.Count + TierB.Count + TierC.Count + TierD.Count + TierE.Count;
+
+        // 83 total levels in base
+        // 195 total logs
+        // ~2.35 logs per level
+
+        const double total = 83;
+
+        var levels = new List<Level>();
+        levels.AddRange(TierA);
+        levels.AddRange(TierB);
+        levels.AddRange(TierC);
+        levels.AddRange(TierD);
+        levels.AddRange(TierE);
+
+        Plugin.Logger.LogDebug("=== D-Lock Block Decipherer ===");
+
+        foreach (var level in levels)
+        {
+            var terminals = new List<(Bulkhead, Zone, TerminalPlacement)>();
+            var bulkheads =  new List<Bulkhead> { Bulkhead.Main, Bulkhead.Extreme, Bulkhead.Overload };
+
+            // Logs are distributed as follows in levels across all rundowns. We weight number of
+            // logs in each level to match the same distribution profile as the base game
+            //     0 logs: 4
+            //     1 logs: 21
+            //     2 logs: 30
+            //     3 logs: 16
+            //     4 logs: 6
+            //     5 logs: 2
+            //     6 logs: 4
+            var totalLogs = Generator.Select(new List<(double chance, int count)>
+            {
+                ( 4 / total, 0),
+                (21 / total, 1),
+                (30 / total, 2),
+                (16 / total, 3),
+                ( 6 / total, 4),
+                ( 5 / total, 5),
+                ( 6 / total, 6),
+            });
+
+            Plugin.Logger.LogDebug($"Placing {totalLogs} logs in \"{level.Tier}{level.Index} {level.Name}\", logs located at:");
+
+            foreach (var bulkhead in bulkheads)
+            {
+                var layout = level.GetLevelLayout(bulkhead);
+
+                if (layout == null)
+                    continue;
+
+                foreach (var zone in layout.Zones)
+                    foreach (var terminal in zone.TerminalPlacements)
+                        terminals.Add((bulkhead, zone, terminal));
+            }
+
+            var toPlace = terminals.Shuffle().Take(totalLogs);
+
+            foreach (var (bulkhead, zone, terminal) in toPlace)
+            {
+                var lorelog = logs.PickRandom();
+
+                if (lorelog != null)
+                {
+                    terminal.LogFiles.Add(lorelog);
+
+                    Plugin.Logger.LogDebug($" -> {bulkhead}, ZONE_{zone.LocalIndex}");
+                }
+            }
+        }
     }
 
     [JsonProperty("name")]

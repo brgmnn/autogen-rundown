@@ -497,6 +497,8 @@ public static class RundownFactory
         rundown.ReqToReachTierD.MainSectors = Math.Max(0, rundown.ReqToReachTierC.MainSectors + rundown.TierC.Count - 1);
         rundown.ReqToReachTierE.MainSectors = Math.Max(0, rundown.ReqToReachTierD.MainSectors + rundown.TierD.Count - 1);
 
+        rundown.DistributeDLockLogs();
+
         return rundown;
     }
 
@@ -751,6 +753,8 @@ public static class RundownFactory
 
         rundown.VisualsETier = Color.MenuVisuals_SeasonalE;
 
+        rundown.DistributeDLockLogs();
+
         return rundown;
     }
 
@@ -1003,6 +1007,8 @@ public static class RundownFactory
         #endif
 
         rundown.VisualsETier = Color.MenuVisuals_MonthlyE;
+
+        rundown.DistributeDLockLogs();
 
         return rundown;
     }

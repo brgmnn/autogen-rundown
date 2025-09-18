@@ -1741,7 +1741,7 @@ public class DLockDecipherer
 
     #endregion
 
-    public static readonly List<LogFile> AllLogs = new()
+    public static List<LogFile> AllLogs => new()
     {
         // Rundown 1
         R1B1_Z40,
