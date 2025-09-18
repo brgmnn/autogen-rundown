@@ -697,11 +697,11 @@ public class Level
     {
         Depth = Tier switch
         {
-            "A" => Generator.Random.Next(420, 650),
-            "B" => Generator.Random.Next(600, 850),
-            "C" => Generator.Random.Next(800, 1000),
-            "D" => Generator.Random.Next(900, 1100),
-            "E" => Generator.Random.Next(950, 1500),
+            "A" => Generator.Between(420, 650),
+            "B" => Generator.Between(600, 850),
+            "C" => Generator.Between(800, 1000),
+            "D" => Generator.Between(900, 1100),
+            "E" => Generator.Between(950, 1500),
             _ => Depth
         };
     }

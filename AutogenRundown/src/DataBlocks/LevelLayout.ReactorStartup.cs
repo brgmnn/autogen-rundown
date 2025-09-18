@@ -26,9 +26,9 @@ public partial record LevelLayout
         {
             "A" => 0,
             "B" => 1,
-            "C" => Generator.Random.Next(1, 2),
-            "D" => Generator.Random.Next(1, 3),
-            "E" => Generator.Random.Next(2, 4),
+            "C" => Generator.Between(1, 2),
+            "D" => Generator.Between(1, 3),
+            "E" => Generator.Between(2, 4),
             _ => 2
         };
 
@@ -86,7 +86,7 @@ public partial record LevelLayout
 
             var branchNodes = AddBranch(
                 baseNode,
-                Generator.Random.Next(branchMin, branchMax),
+                Generator.Between(branchMin, branchMax),
                 branch,
                 (_, zone) =>
                 {
@@ -109,7 +109,7 @@ public partial record LevelLayout
 
             // Add some extra terminals for confusion. All at the back.
             lastZone.TerminalPlacements = new List<TerminalPlacement>();
-            var terminalCount = Generator.Random.Next(2, 3);
+            var terminalCount = Generator.Between(2, 3);
 
             for (var i = 0; i < terminalCount; i++)
                 lastZone.TerminalPlacements.Add(

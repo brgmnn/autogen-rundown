@@ -43,7 +43,7 @@ public partial record LevelLayout
         void BuildGeneratorBranch(ZoneNode baseNode, string branch)
         {
             var objectiveLayerData = level.GetObjectiveLayerData(director.Bulkhead);
-            var branchZoneCount = Generator.Random.Next(2, 3);
+            var branchZoneCount = Generator.Between(2, 3);
             var prev = baseNode;
 
             // Generate the zones for this generators branch

@@ -233,11 +233,11 @@ public class BuildDirector
         // Baseline points will be around 25pts / zone for the baseline size.
         return (int)(factor * (Tier switch
         {
-            "A" => Generator.Random.Next(20, 25),
-            "B" => Generator.Random.Next(23, 27),
-            "C" => Generator.Random.Next(25, 30),
-            "D" => Generator.Random.Next(30, 35),
-            "E" => Generator.Random.Next(35, 40),
+            "A" => Generator.Between(20, 25),
+            "B" => Generator.Between(23, 27),
+            "C" => Generator.Between(25, 30),
+            "D" => Generator.Between(30, 35),
+            "E" => Generator.Between(35, 40),
 
             _ => 25,
         }));
