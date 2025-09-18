@@ -43,10 +43,8 @@ TODO:
   * Uplink objectives stop ALL WAVES after completing them. Got to figure out a way to not do that.
   * Retrieve big item:
     * A-tier main only rolled no exit alarm.
-
  * Add "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_AW_01.prefab", the giant HSU pit. Technically an I-tile
 
-  * Any case of `Generator.Random.Next` is a bug really
 
 Idea:
   * Secondary survival that procs on door open

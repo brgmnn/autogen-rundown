@@ -463,13 +463,23 @@ public partial record WardenObjective : DataBlock
             case ("A", Bulkhead.Main):
                 WavesOnGotoWin.Add(GenericWave.Exit_Objective_Easy);
                 break;
+            case ("A", Bulkhead.Extreme):
+                break;
+            case ("A", Bulkhead.Overload):
+                break;
 
             case ("B", Bulkhead.Main):
                 WavesOnGotoWin.Add(GenericWave.Exit_Objective_Medium);
                 break;
+            case ("B", Bulkhead.Extreme):
+                break;
+            case ("B", Bulkhead.Overload):
+                break;
 
             case ("C", Bulkhead.Main):
                 WavesOnGotoWin.Add(GenericWave.Exit_Objective_Medium);
+                break;
+            case ("C", Bulkhead.Extreme):
                 break;
             case ("C", Bulkhead.Overload):
                 WavesOnGotoWin.Add(GenericWave.ErrorAlarm_Easy);
