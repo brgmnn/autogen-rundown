@@ -13,12 +13,17 @@ public partial record LevelLayout
     #region Challenge pickers
 
     /// <summary>
+    /// Target size is:
     ///
+    ///     start -> mid -> end (ret)
     /// </summary>
     /// <param name="start"></param>
     /// <returns></returns>
     public (ZoneNode, Zone) BuildChallenge_Small(ZoneNode start)
     {
+        var end = new ZoneNode();
+        var endZone = new Zone(level, this);
+
         switch (level.Tier)
         {
             case "A":
@@ -29,10 +34,56 @@ public partial record LevelLayout
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
+                    // +1 zones, alarm door
+                    (2.0, () => { (end, endZone) = AddZone(start); }),
+
+                    // +1 zones, door guarded by keycard in start
+                    (2.0, () => { (end, endZone) = BuildChallenge_KeycardInZone(start); }),
+
+                    // +1 zones, door locked down in start
+                    (2.0, () => { (end, endZone) = BuildChallenge_LockedTerminalDoor(start, sideZones: 0); }),
+
+                    // +2 zones, alarm doors
+                    (2.0, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 2);
+                        var zone = planner.GetZone(nodes.Last())!;
+
+                        (end, endZone) = (nodes.Last(), zone);
+                    }),
+
+                    // +2 zones, door guarded by keycard in mid
+                    (2.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        midZone.Coverage = CoverageMinMax.Small_24;
+
+                        (end, endZone) = BuildChallenge_KeycardInZone(mid);
+                    }),
+
+                    // +2 zones, door guarded by terminal in mid
+                    (2.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        midZone.Coverage = CoverageMinMax.Small_24;
+
+                        (end, endZone) = BuildChallenge_LockedTerminalDoor(mid, sideZones: 0);
+                    }),
+
+                    // +2 zones, door requires power cell
+                    (2.0, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        midZone.Coverage = CoverageMinMax.Small_24;
+
+                        (end, endZone) = BuildChallenge_GeneratorCellInZone(mid);
+                    }),
                 });
                 break;
             }
         }
+
+        return (end, endZone);
     }
 
     #endregion

@@ -30,7 +30,11 @@ public partial record LevelLayout
         var (portal, portalZone) = AddZone_Forward(start);
 
         portalZone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_portal_HA_01.prefab";
-        portalZone.BigPickupDistributionInZone = BigPickupDistribution.MatterWaveProjector.PersistentId;
+
+        var (mwp, mwpZone) = BuildChallenge_Small(portal);
+
+        mwpZone.GenMatterWaveProjectorGeomorph(level.Complex);
+        mwpZone.BigPickupDistributionInZone = BigPickupDistribution.MatterWaveProjector.PersistentId;
 
         // portalZone.EventsOnPortalWarp.AddSpawnWave(
         //     new GenericWave
