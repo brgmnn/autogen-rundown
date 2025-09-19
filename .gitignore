@@ -12,6 +12,7 @@
 
 # GTFO GameData dump
 /GameData-Dump
+/extract_dlock_logs.ps1
 
 # MacOS and zip files
 /*.zip
