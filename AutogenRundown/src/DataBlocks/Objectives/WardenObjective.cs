@@ -1128,6 +1128,16 @@ public partial record WardenObjective : DataBlock
 
     #region Type=12: Gather Terminal
 
+    /// <summary>
+    /// Internal property
+    ///
+    /// Determines what variant of this mission we play
+    ///
+    /// Default = GatherTerminalType.Default
+    /// </summary>
+    [JsonIgnore]
+    public GatherTerminalType GatherTerminal_SubType { get; set; } = GatherTerminalType.Default;
+
     public int GatherTerminal_SpawnCount { get; set; } = 0;
 
     public int GatherTerminal_RequiredCount { get; set; } = 0;

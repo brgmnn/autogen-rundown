@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -54,6 +55,8 @@ public record WardenObjectiveEvent
 
     public bool UseStaticBioscanPoints { get; set; } = false;
 
+    #region Location
+
     /// <summary>
     /// What Zone this event applies to. Typically for doors to be opened etc.
     ///
@@ -66,6 +69,14 @@ public record WardenObjectiveEvent
     /// Main / Extreme / Overload.
     /// </summary>
     public int Layer { get; set; } = 0;
+
+    /// <summary>
+    ///
+    /// </summary>
+    [JsonProperty("DimensionIndex")]
+    public DimensionIndex Dimension { get; set; } = DimensionIndex.Reality;
+
+    #endregion
 
     public double Delay { get; set; } = 0.0;
 
@@ -119,7 +130,6 @@ public record WardenObjectiveEvent
     #endregion
 
     #region Not implemented yet
-    public int DimensionIndex = 0;
     public uint SoundSubtitle = 0;
     public uint DialogueID = 0;
     #endregion

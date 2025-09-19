@@ -41,7 +41,7 @@ public record Dimension : DataBlock
             DustColor = new Color { Alpha = 1.0, Red = 0.65, Green = 0.6042968, Blue = 0.487499952 },
             DustAlphaBoost = 0.0,
             DustTurbulence = 1.0,
-            SoundEventOnWarpTo = 1998147319,
+            SoundEventOnWarpTo = (Sound)1998147319,
             DisableVFXEventOnWarp = false,
             UseLocalDimensionSeeds = false,
             ForbidWaveSpawning = true,

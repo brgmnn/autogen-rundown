@@ -46,6 +46,9 @@ TODO:
  * Add "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_AW_01.prefab", the giant HSU pit. Technically an I-tile
 
 
+NOTE
+  * Make sure we match the complex for `Reality` with the dimension geo we want
+
 Idea:
   * Secondary survival that procs on door open
   * Bring big pickup for scan on door

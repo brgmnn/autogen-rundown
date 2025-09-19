@@ -465,7 +465,8 @@ public class Level
         get => new JObject
         {
             ["ComplexResourceData"] = (int)Complex,
-            ["MLSLevelKit"] = 0,
+            // ["MLSLevelKit"] = 0,
+            ["MLSLevelKit"] = 1,
             ["LightSettings"] = 36,
             ["FogSettings"] = FogSettings.PersistentId,
             ["EnemyPopulation"] = 1,
@@ -590,7 +591,7 @@ public class Level
     /// <summary>
     /// Sound for warping?
     /// </summary>
-    public int SoundEventOnWarpToReality = 0;
+    public Sound SoundEventOnWarpToReality = Sound.WarpReality;
 
     #endregion
 
@@ -1534,7 +1535,7 @@ public class Level
                     new WardenObjectiveEvent
                     {
                         Type = WardenObjectiveEventType.DimensionWarpTeam,
-                        DimensionIndex = (int)DimensionIndex.Dimension1,
+                        Dimension = DimensionIndex.Dimension1,
                         Layer = (int)Bulkhead.Main
                     });
 

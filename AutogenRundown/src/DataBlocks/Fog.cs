@@ -42,6 +42,25 @@ public record Fog : DataBlock
 
     #region Preset fogs
 
+    #region Dimensions
+
+    public static readonly Fog AlphaSix = new()
+    {
+        PersistentId = 92,
+
+        FogColor = new Color { Red = 0.735849, Green = 0.583935559, Blue = 0.385279447, Alpha = 0.0 },
+        FogDensity = 0.0001,
+        FogAmbience = 0.0,
+        DensityNoiseDirection = new Vector3 { X = -1, Y = 0, Z = 0 },
+        DensityNoiseSpeed = 0.6,
+        DensityNoiseScale = 0.017,
+        DensityHeightRange = 6.0,
+        DensityHeightMaxBoost = 0.007,
+        Infection = 0.0
+    };
+
+    #endregion
+
     #region By level
 
     #region Bases
@@ -512,6 +531,8 @@ public record Fog : DataBlock
         Bins.Fogs.AddBlock(LowMidFog_Infectious);
         Bins.Fogs.AddBlock(FullFog_Infectious);
         Bins.Fogs.AddBlock(HeavyFullFog_Infectious);
+
+        AlphaSix.Persist();
 
         Normal_Altitude_minus8.Persist();
         Normal_Altitude_minus6.Persist();

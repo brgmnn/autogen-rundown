@@ -1,13 +1,18 @@
-﻿using AutogenRundown.DataBlocks.Enums;
+﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Logs;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Terminals;
+using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 
 public partial record LevelLayout
 {
-    private void BuildLayout_GatherTerminal_WarpJump(
+    private void BuildLayout_GatherTerminal_AlphaSix(
         BuildDirector director,
         WardenObjective objective,
         ZoneNode? startish)
@@ -22,30 +27,50 @@ public partial record LevelLayout
         var startZone = planner.GetZone(start)!;
         var layerData = level.GetObjectiveLayerData(director.Bulkhead);
 
-        var (portal, portalZone) = AddZone(start);
+        var (portal, portalZone) = AddZone_Forward(start);
 
         portalZone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_portal_HA_01.prefab";
-
         portalZone.BigPickupDistributionInZone = BigPickupDistribution.MatterWaveProjector.PersistentId;
 
+        // portalZone.EventsOnPortalWarp.AddSpawnWave(
+        //     new GenericWave
+        //     {
+        //         Population = WavePopulation.OnlyNightmareGiants,
+        //         Settings = WaveSettings.Error_Hard
+        //     },
+        //     delay: 10.0);
 
-
+        portalZone.EventsOnPortalWarp.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SpawnEnemyWave,
+                Delay = 10.0,
+                SoundId = Sound.Enemies_DistantLowRoar,
+                EnemyWaveData = new GenericWave
+                {
+                    Population = WavePopulation.OnlyNightmareGiants,
+                    Settings = WaveSettings.Error_Hard
+                },
+                Dimension = DimensionIndex.Dimension1
+            });
 
         var dimension = new Dimension
         {
-            Data = new Dimensions.DimensionData
+            Data = Dimensions.DimensionData.AlphaSix with
             {
-                // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_01.prefab",
-                DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab",
-                DimensionResourceSetID = 47,
-                IsOutside = true,
-                IsStaticDimension = true,
-                // StaticTerminalPlacements = []
-            },
-            PersistentId = 2,
+                StaticTerminalPlacements = new List<TerminalPlacement>
+                {
+                    new()
+                    {
+                        LogFiles = new List<LogFile>
+                        {
+                            DLockDecipherer.R1B1_Z40
+                        }
+                    }
+                }
+            }
         };
-        // dimension.FindOrPersist();
-        dimension.Persist();
+        dimension.FindOrPersist();
 
         level.DimensionDatas.Add(new Levels.DimensionData
         {
@@ -68,9 +93,9 @@ public partial record LevelLayout
 
     private void BuildLayout_GatherTerminal(BuildDirector director, WardenObjective objective, ZoneNode? startish)
     {
-        // BuildLayout_GatherTerminal_WarpJump(director, objective, startish);
-        //
-        // return;
+        BuildLayout_GatherTerminal_AlphaSix(director, objective, startish);
+
+        return;
 
         if (startish == null)
         {

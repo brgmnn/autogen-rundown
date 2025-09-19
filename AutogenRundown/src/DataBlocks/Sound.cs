@@ -19,6 +19,9 @@ public enum Sound : uint
 
     ReactorShutdown = 2741402798,
 
+    Warp = 1998147319,
+    WarpReality = 231201012,
+
     #region Alarms
     Alarms_MissingItem = 2200133294, // decon_unit_missing_alarm
 

@@ -10,6 +10,33 @@ namespace AutogenRundown.DataBlocks;
  */
 public partial record LevelLayout
 {
+    #region Challenge pickers
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="start"></param>
+    /// <returns></returns>
+    public (ZoneNode, Zone) BuildChallenge_Small(ZoneNode start)
+    {
+        switch (level.Tier)
+        {
+            case "A":
+            case "B":
+            case "C":
+            case "D":
+            case "E":
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                });
+                break;
+            }
+        }
+    }
+
+    #endregion
+
     /// <summary>
     /// Sets start to a hub zone with the next zone locked behind a powered down door that
     /// requires a generator to be powered. Cell is in a side zone from the hub. Layout:

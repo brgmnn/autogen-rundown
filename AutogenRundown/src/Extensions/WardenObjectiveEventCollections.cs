@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks;
 using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Objectives;
 
 namespace AutogenRundown.Extensions;
@@ -38,7 +39,7 @@ public static class WardenObjectiveEventCollections
             new WardenObjectiveEvent
             {
                 Type = WardenObjectiveEventType.LockSecurityDoor,
-                DimensionIndex = 0,
+                Dimension = DimensionIndex.Reality,
                 Layer = GetLayerFromBulkhead(bulkhead),
                 LocalIndex = zoneIndex,
                 SpecialText = lockMessage ?? Lore.LockedDoorMessage
@@ -86,7 +87,7 @@ public static class WardenObjectiveEventCollections
             new WardenObjectiveEvent
             {
                 Type = WardenObjectiveEventType.AlertEnemiesInZone,
-                DimensionIndex = 0,
+                Dimension = DimensionIndex.Reality,
                 Layer = GetLayerFromBulkhead(bulkhead),
                 LocalIndex = zoneIndex,
                 Enabled = true,
@@ -213,7 +214,7 @@ public static class WardenObjectiveEventCollections
             new WardenObjectiveEvent
             {
                 Type = WardenObjectiveEventType.SetFogSettings,
-                DimensionIndex = 0, // TODO: support dimensions
+                Dimension = DimensionIndex.Reality, // TODO: support dimensions
                 Trigger = WardenObjectiveEventTrigger.OnStart,
                 FogSetting = fogSettings.PersistentId,
                 FogTransitionDuration = duration,
