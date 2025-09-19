@@ -15,12 +15,12 @@ public enum WardenObjectiveType
     RetrieveBigItems = 6,         // B
     PowerCellDistribution = 7,    // C
     TerminalUplink = 8,           // U
+    CentralGeneratorCluster = 9,  // C
     HsuActivateSmall = 10,        // N
     Survival = 11,                // X
     GatherTerminal = 12,          // G
     CorruptedTerminalUplink = 13, // Y
     TimedTerminalSequence = 15,   // W
 
-    CentralGeneratorCluster = 9, // TODO: Generator cluster spawn is bugged
     Empty = 14
 }
