@@ -322,6 +322,8 @@ Follow the installation instructions again, check yes to overwrite all files.
   * [x] S-Class alarms
   * [x] Surge alarms
   * [x] High class alarms (> Class V)
+* Lore
+  * [x] All base game logs can be found on terminals
 
 
 ## Additional vanilla-like features
@@ -350,6 +352,7 @@ Follow the installation instructions again, check yes to overwrite all files.
       * [ ] Reactor Startup
       * [ ] Reactor Shutdown
       * [ ] Distribute Power Cells
+      * [ ] Central Generator Cluster
 
 
 ## 3rd Party Mod Support
