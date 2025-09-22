@@ -36,6 +36,8 @@ public partial record LevelLayout
         mwpZone.GenMatterWaveProjectorGeomorph(level.Complex);
         mwpZone.BigPickupDistributionInZone = BigPickupDistribution.MatterWaveProjector.PersistentId;
 
+        mwpZone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer);
+
         // portalZone.EventsOnPortalWarp.AddSpawnWave(
         //     new GenericWave
         //     {
@@ -60,7 +62,7 @@ public partial record LevelLayout
 
         var dimension = new Dimension
         {
-            Data = Dimensions.DimensionData.AlphaSix with
+            Data = Dimensions.DimensionData.AlphaTwo with
             {
                 StaticTerminalPlacements = new List<TerminalPlacement>
                 {

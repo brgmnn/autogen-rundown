@@ -144,6 +144,78 @@ public record DimensionData
     #region --- Prebuilt Static Dimensions ---
 
     /// <summary>
+    /// R6B1
+    ///
+    /// Takes about 2 mins to run from spawn to the base
+    /// </summary>
+    public static readonly DimensionData AlphaTwo = new()
+    {
+        LevelLayoutData = 0,
+        DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_01.prefab",
+        VerticalExtentsUp = 30.0,
+        VerticalExtentsDown = 30.0,
+        DimensionResourceSetID = 47,
+        DimensionFogData = 87,
+        EnvironmentWetness = 0.0,
+        DustColor = new Color { Alpha = 1.0, Red = 0.5, Green = 0.37109375, Blue = 0.25 },
+        DustAlphaBoost = 2.0,
+        DustTurbulence = 30.0,
+        SoundEventOnWarpTo = Sound.Warp,
+        DisableVFXEventOnWarp = false,
+        UseLocalDimensionSeeds = false,
+        ForbidWaveSpawning = false,
+        ForbidCarryItemWarps = false,
+        LeaveDeployablesOnWarp = false,
+        IsStaticDimension = true,
+        StaticZoneSeed = 0,
+        StaticMarkerSeed = 0,
+        StaticLightSeed = 0,
+        StaticLightSettings = 0,
+        StaticAliasOverride = -1,
+        StaticAllowResourceContainerAllocation = false,
+        StaticAllowSmallPickupsAllocation = false,
+        StaticForceBigPickupsAllocation = false,
+        StaticConsumableDistributionInZone = 0,
+        StaticBigPickupDistributionInZone = 0,
+        StaticGroundSpawnersInZone = 0,
+        StaticHealthMulti = 0.0,
+        StaticToolAmmoMulti = 0.0,
+        StaticWeaponAmmoMulti = 0.0,
+        StaticDisinfectionMulti = 0.0,
+        ForbidTerminalsInDimension = false,
+        IsOutside = true,
+
+        LightAzimuth = 170.8,
+        LightElevation = 28.1,
+        LightIntensity = 0.5,
+        AmbientIntensity = 0.7,
+        ReflectionsIntensity = 1.0,
+        GodrayRange = 4500.0,
+        GodrayExponent = 2.5,
+        AtmosphereData = 2,
+        AtmosphereDensity = 4.0,
+        Exposure = 4.0,
+        AerialScale = 10.0,
+        MieScattering = 1.0,
+        MieG = 0.85,
+        MultipleScattering = 6.0,
+        CloudsData = 1,
+        CloudsCoverage = 0.962,
+        CloudsDensity = 1.0,
+        CloudsSharpness = 0.5,
+        CloudsShadowOpacity = 1.0,
+        CloudsTimescale = 0.0,
+        CloudsCrawling = -0.02,
+        CloudsFade = 0.35,
+        Sandstorm = true,
+        SandstormEdgeA = 0.25,
+        SandstormEdgeB = 1.0,
+        SandstormMinFog = 0.006,
+        ObjectiveType = 0,
+        LinkedToLayer = 0
+    };
+
+    /// <summary>
     /// This is the R7C2 desert camp that you have to run to
     ///
     /// Very little cover, enemies can spawn on you. Takes about 65s to run from spawn to
