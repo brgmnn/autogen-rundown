@@ -28,7 +28,7 @@ public record DimensionData
 
     public double DustTurbulence { get; set; } = 1.0;
 
-    public Sound SoundEventOnWarpTo { get; set; } = (Sound)1064851100;
+    public Sound SoundEventOnWarpTo { get; set; } = Sound.Warp; //(Sound)1064851100;
 
     public bool DisableVFXEventOnWarp { get; set; } = false;
 
@@ -211,6 +211,75 @@ public record DimensionData
         SandstormEdgeA = 0.25,
         SandstormEdgeB = 1.0,
         SandstormMinFog = 0.006,
+        ObjectiveType = 0,
+        LinkedToLayer = 0
+    };
+
+    public static readonly DimensionData AlphaThree_Shaft = new()
+    {
+        LevelLayoutData = 0,
+        DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Mining_Shaft.prefab",
+        VerticalExtentsUp = 100.0,
+        VerticalExtentsDown = 50.0,
+        DimensionResourceSetID = 47,
+        DimensionFogData = 106,
+        EnvironmentWetness = 0.0118,
+        DustColor = new Color { Alpha = 1.0, Red = 0.5, Green = 0.351260275, Blue = 0.2523585 },
+        DustAlphaBoost = 2.0,
+        DustTurbulence = 20.0,
+        SoundEventOnWarpTo = Sound.Warp,
+        DisableVFXEventOnWarp = false,
+        UseLocalDimensionSeeds = false,
+        ForbidWaveSpawning = false,
+        ForbidCarryItemWarps = false,
+        LeaveDeployablesOnWarp = false,
+        IsStaticDimension = true,
+        StaticZoneSeed = 0,
+        StaticMarkerSeed = 234,
+        StaticLightSeed = 2234,
+        StaticLightSettings = 65,
+        StaticAliasOverride = -1,
+        // StaticEnemySpawningInZone = [],
+        StaticAllowResourceContainerAllocation = false,
+        StaticAllowSmallPickupsAllocation = false,
+        StaticForceBigPickupsAllocation = false,
+        StaticConsumableDistributionInZone = 0,
+        StaticBigPickupDistributionInZone = 0,
+        StaticGroundSpawnersInZone = 0,
+        StaticHealthMulti = 2.4,
+        StaticToolAmmoMulti = 2.4,
+        StaticWeaponAmmoMulti = 3.8,
+        StaticDisinfectionMulti = 0.0,
+        // StaticTerminalPlacements = []
+        ForbidTerminalsInDimension = false,
+        // EventsOnBossDeath = [],
+        IsOutside = true,
+        LightAzimuth = -169.5,
+        LightElevation = 80.0,
+        LightIntensity = 0.25,
+        AmbientIntensity = 1.0,
+        ReflectionsIntensity = 0.3,
+        GodrayRange = 8000.0,
+        GodrayExponent = 1.0,
+        AtmosphereData = 8,
+        AtmosphereDensity = 6.0,
+        Exposure = 5.0,
+        AerialScale = 10.0,
+        MieScattering = 40.0,
+        MieG = 0.75,
+        MultipleScattering = 5.0,
+        CloudsData = 1,
+        CloudsCoverage = 0.0,
+        CloudsDensity = 1.0,
+        CloudsSharpness = 0.5,
+        CloudsShadowOpacity = 1.0,
+        CloudsTimescale = 0.0,
+        CloudsCrawling = -0.02,
+        CloudsFade = 0.3,
+        Sandstorm = false,
+        SandstormEdgeA = 0.25,
+        SandstormEdgeB = 1.0,
+        SandstormMinFog = 0.013,
         ObjectiveType = 0,
         LinkedToLayer = 0
     };
