@@ -146,6 +146,8 @@ public record DimensionData
     /// <summary>
     /// R6B1
     ///
+    ///
+    ///
     /// Takes about 2 mins to run from spawn to the base
     /// </summary>
     public static readonly DimensionData AlphaTwo = new()
@@ -216,7 +218,9 @@ public record DimensionData
     };
 
     /// <summary>
+    /// R6AX
     ///
+    /// The small map with the giant fan vent as scenery
     /// </summary>
     public static readonly DimensionData AlphaThree_Top = new()
     {
@@ -286,6 +290,10 @@ public record DimensionData
     };
 
     /// <summary>
+    /// R6CX
+    ///
+    /// Inside the giant fan hole
+    ///
     /// Doesn't work great with spawning walking enemies due to how the two rooms vs single room
     /// split works
     /// </summary>
