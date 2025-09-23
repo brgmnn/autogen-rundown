@@ -215,6 +215,80 @@ public record DimensionData
         LinkedToLayer = 0
     };
 
+    /// <summary>
+    ///
+    /// </summary>
+    public static readonly DimensionData AlphaThree_Top = new()
+    {
+        LevelLayoutData = 1398700845,
+        DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab",
+        VerticalExtentsUp = 50.0,
+        VerticalExtentsDown = 10.0,
+        DimensionResourceSetID = 47,
+        DimensionFogData = 109,
+        EnvironmentWetness = 0.0,
+        DustColor = new Color { Alpha = 0.129411772, Red = 0.6981132, Green = 0.6952906, Blue = 0.68823427 },
+        DustAlphaBoost = 1.0,
+        DustTurbulence = 20.0,
+        SoundEventOnWarpTo = Sound.Warp,
+        DisableVFXEventOnWarp = false,
+        UseLocalDimensionSeeds = false,
+        ForbidWaveSpawning = false,
+        ForbidCarryItemWarps = false,
+        LeaveDeployablesOnWarp = false,
+        IsStaticDimension = true,
+        StaticZoneSeed = 418421869,
+        StaticMarkerSeed = 123486931,
+        StaticLightSeed = 0,
+        StaticLightSettings = 56,
+        StaticAliasOverride = -1,
+        // StaticEnemySpawningInZone = [],
+        StaticAllowResourceContainerAllocation = false,
+        StaticAllowSmallPickupsAllocation = false,
+        StaticForceBigPickupsAllocation = false,
+        StaticConsumableDistributionInZone = 0,
+        StaticBigPickupDistributionInZone = 0,
+        StaticGroundSpawnersInZone = 0,
+        StaticHealthMulti = 1.4,
+        StaticToolAmmoMulti = 1.2,
+        StaticWeaponAmmoMulti = 1.4,
+        StaticDisinfectionMulti = 0.0,
+        ForbidTerminalsInDimension = false,
+        IsOutside = true,
+        LightAzimuth = -22.3,
+        LightElevation = 58.9,
+        LightIntensity = 0.3048,
+        AmbientIntensity = 1.0,
+        ReflectionsIntensity = 1.0,
+        GodrayRange = 6580.0,
+        GodrayExponent = 1.348,
+        AtmosphereData = 9,
+        AtmosphereDensity = 6.171,
+        Exposure = 3.37,
+        AerialScale = 17.77,
+        MieScattering = 13.6,
+        MieG = 0.8231,
+        MultipleScattering = 13.6,
+        CloudsData = 1,
+        CloudsCoverage = 0.863,
+        CloudsDensity = 0.6827,
+        CloudsSharpness = 0.0,
+        CloudsShadowOpacity = 1.0,
+        CloudsTimescale = 0.0,
+        CloudsCrawling = 0.005,
+        CloudsFade = 0.2356,
+        Sandstorm = false,
+        SandstormEdgeA = 0.4,
+        SandstormEdgeB = 0.6,
+        SandstormMinFog = 0.01,
+        ObjectiveType = 0,
+        LinkedToLayer = 0
+    };
+
+    /// <summary>
+    /// Doesn't work great with spawning walking enemies due to how the two rooms vs single room
+    /// split works
+    /// </summary>
     public static readonly DimensionData AlphaThree_Shaft = new()
     {
         LevelLayoutData = 0,
