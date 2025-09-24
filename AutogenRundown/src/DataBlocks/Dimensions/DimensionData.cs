@@ -42,15 +42,15 @@ public record DimensionData
 
     public bool IsStaticDimension { get; set; } = false;
 
-    public int StaticZoneSeed { get; set; } =  0;
+    public int StaticZoneSeed { get; set; } = 0;
 
-    public int StaticMarkerSeed { get; set; } =  0;
+    public int StaticMarkerSeed { get; set; } = 0;
 
-    public int StaticLightSeed { get; set; } =  0;
+    public int StaticLightSeed { get; set; } = 0;
 
-    public int StaticLightSettings { get; set; } =  0;
+    public int StaticLightSettings { get; set; } = 0;
 
-    public int StaticAliasOverride { get; set; } =  -1;
+    public int StaticAliasOverride { get; set; } = -1;
 
     public JArray StaticEnemySpawningInZone { get; set; } = new();
 
@@ -60,11 +60,11 @@ public record DimensionData
 
     public bool StaticForceBigPickupsAllocation { get; set; } = false;
 
-    public int StaticConsumableDistributionInZone { get; set; } =  0;
+    public int StaticConsumableDistributionInZone { get; set; } = 0;
 
-    public int StaticBigPickupDistributionInZone { get; set; } =  0;
+    public int StaticBigPickupDistributionInZone { get; set; } = 0;
 
-    public int StaticGroundSpawnersInZone { get; set; } =  0;
+    public int StaticGroundSpawnersInZone { get; set; } = 0;
 
     public double StaticHealthMulti { get; set; } = 0.0;
 
@@ -142,6 +142,292 @@ public record DimensionData
     #endregion
 
     #region --- Prebuilt Static Dimensions ---
+
+    /// <summary>
+    /// R6C1
+    ///
+    /// Seems to be a small map with a large kraken off in the distance
+    /// </summary>
+    public static readonly DimensionData Unknown_One = new()
+    {
+        LevelLayoutData = 0,
+        DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Boss_flash.prefab",
+        VerticalExtentsUp = 100.0,
+        VerticalExtentsDown = 50.0,
+        DimensionResourceSetID = 47,
+        DimensionFogData = 94,
+        EnvironmentWetness = 0.0,
+        DustColor = new Color { Alpha = 1.0, Red = 0.5, Green = 0.5, Blue = 0.5 },
+        DustAlphaBoost = 0.0,
+        DustTurbulence = 1.0,
+        SoundEventOnWarpTo = Sound.Warp,
+        DisableVFXEventOnWarp = false,
+        UseLocalDimensionSeeds = false,
+        ForbidWaveSpawning = false,
+        ForbidCarryItemWarps = false,
+        LeaveDeployablesOnWarp = false,
+        IsStaticDimension = true,
+        StaticZoneSeed = 0,
+        StaticMarkerSeed = 0,
+        StaticLightSeed = 0,
+        StaticLightSettings = 24,
+        StaticAliasOverride = -1,
+        // StaticEnemySpawningInZone = [],
+        StaticAllowResourceContainerAllocation = false,
+        StaticAllowSmallPickupsAllocation = false,
+        StaticForceBigPickupsAllocation = false,
+        StaticConsumableDistributionInZone = 0,
+        StaticBigPickupDistributionInZone = 0,
+        StaticGroundSpawnersInZone = 0,
+        StaticHealthMulti = 0.0,
+        StaticToolAmmoMulti = 0.0,
+        StaticWeaponAmmoMulti = 0.0,
+        StaticDisinfectionMulti = 0.0,
+        ForbidTerminalsInDimension = false,
+        IsOutside = true,
+        LightAzimuth = -3.5,
+        LightElevation = 25.8,
+        LightIntensity = 0.2689,
+        AmbientIntensity = 1.0,
+        ReflectionsIntensity = 0.299,
+        GodrayRange = 8000.0,
+        GodrayExponent = 1.0,
+        AtmosphereData = 5,
+        AtmosphereDensity = 1.493,
+        Exposure = 3.93,
+        AerialScale = 10.7,
+        MieScattering = 9.02,
+        MieG = 0.85,
+        MultipleScattering = 9.04,
+        CloudsData = 2,
+        CloudsCoverage = 0.182,
+        CloudsDensity = 1.0,
+        CloudsSharpness = 0.0,
+        CloudsShadowOpacity = 1.0,
+        CloudsTimescale = 0.0341,
+        CloudsCrawling = 1.0,
+        CloudsFade = 0.2791,
+        Sandstorm = true,
+        SandstormEdgeA = 0.2,
+        SandstormEdgeB = 0.5,
+        SandstormMinFog = 0.015,
+        ObjectiveType = 0,
+        LinkedToLayer = 0
+    };
+
+    /// <summary>
+    /// R6A1
+    /// Desert flash
+    ///
+    /// This map isn't suitable for having people in for longer than 10s of seconds
+    /// </summary>
+    public static readonly DimensionData Unknown_Two = new()
+    {
+        LevelLayoutData = 0,
+        DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_02.prefab",
+        VerticalExtentsUp = 100.0,
+        VerticalExtentsDown = 55.0,
+        DimensionResourceSetID = 47,
+        DimensionFogData = 92,
+        EnvironmentWetness = 0.0,
+        DustColor = new Color { Alpha = 1.0, Red = 0.5019608, Green = 0.446603864, Blue = 0.3558902 },
+        DustAlphaBoost = 5.0,
+        DustTurbulence = 100.0,
+        SoundEventOnWarpTo = Sound.Warp,
+        DisableVFXEventOnWarp = false,
+        UseLocalDimensionSeeds = false,
+        ForbidWaveSpawning = false,
+        ForbidCarryItemWarps = false,
+        LeaveDeployablesOnWarp = false,
+        IsStaticDimension = true,
+        StaticZoneSeed = 0,
+        StaticMarkerSeed = 0,
+        StaticLightSeed = 0,
+        StaticLightSettings = 0,
+        StaticAliasOverride = -1,
+        StaticAllowResourceContainerAllocation = false,
+        StaticAllowSmallPickupsAllocation = false,
+        StaticForceBigPickupsAllocation = false,
+        StaticConsumableDistributionInZone = 0,
+        StaticBigPickupDistributionInZone = 0,
+        StaticGroundSpawnersInZone = 0,
+        StaticHealthMulti = 0.0,
+        StaticToolAmmoMulti = 0.0,
+        StaticWeaponAmmoMulti = 0.0,
+        StaticDisinfectionMulti = 0.0,
+        // StaticTerminalPlacements = [],
+        ForbidTerminalsInDimension = true,
+        IsOutside = true,
+        LightAzimuth = 119.5,
+        LightElevation = 162.0,
+        LightIntensity = 0.6,
+        AmbientIntensity = 0.5,
+        ReflectionsIntensity = 1.0,
+        GodrayRange = 2000.0,
+        GodrayExponent = 1.0,
+        AtmosphereData = 4,
+        AtmosphereDensity = 2.0,
+        Exposure = 5.0,
+        AerialScale = 20.0,
+        MieScattering = 10.0,
+        MieG = 0.85,
+        MultipleScattering = 2.0,
+        CloudsData = 1,
+        CloudsCoverage = 0.7,
+        CloudsDensity = 1.0,
+        CloudsSharpness = 0.0,
+        CloudsShadowOpacity = 1.0,
+        CloudsTimescale = 0.0,
+        CloudsCrawling = 0.02,
+        CloudsFade = 0.3,
+        Sandstorm = true,
+        SandstormEdgeA = 0.5,
+        SandstormEdgeB = 0.75,
+        SandstormMinFog = 0.005,
+        ObjectiveType = 0,
+        LinkedToLayer = 0
+    };
+
+    public static readonly DimensionData Unknown_Three = new()
+    {
+        LevelLayoutData = 0,
+        DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R7B3.prefab",
+        VerticalExtentsUp = 50.0,
+        VerticalExtentsDown = 10.0,
+        DimensionResourceSetID = 47,
+        DimensionFogData = 93,
+        EnvironmentWetness = 0.199,
+        DustColor = new Color { Alpha = 1.0, Red = 0.65, Green = 0.6042968, Blue = 0.487499952 },
+        DustAlphaBoost = 0.0,
+        DustTurbulence = 20.0,
+        SoundEventOnWarpTo = Sound.Warp,
+        DisableVFXEventOnWarp = false,
+        UseLocalDimensionSeeds = false,
+        ForbidWaveSpawning = false,
+        ForbidCarryItemWarps = false,
+        LeaveDeployablesOnWarp = false,
+        IsStaticDimension = true,
+        StaticZoneSeed = 0,
+        StaticMarkerSeed = 0,
+        StaticLightSeed = 0,
+        StaticLightSettings = 18,
+        StaticAliasOverride = -1,
+        // StaticEnemySpawningInZone = [],
+        StaticAllowResourceContainerAllocation = false,
+        StaticAllowSmallPickupsAllocation = false,
+        StaticForceBigPickupsAllocation = false,
+        StaticConsumableDistributionInZone = 0,
+        StaticBigPickupDistributionInZone = 0,
+        StaticGroundSpawnersInZone = 0,
+        StaticHealthMulti = 0.0,
+        StaticToolAmmoMulti = 0.0,
+        StaticWeaponAmmoMulti = 0.0,
+        StaticDisinfectionMulti = 0.0,
+        ForbidTerminalsInDimension = true,
+        IsOutside = true,
+        LightAzimuth = -4.7,
+        LightElevation = 81.4,
+        LightIntensity = 0.3198,
+        AmbientIntensity = 1.106,
+        ReflectionsIntensity = 1.547,
+        GodrayRange = 7622.0,
+        GodrayExponent = 1.227,
+        AtmosphereData = 1,
+        AtmosphereDensity = 7.23,
+        Exposure = 1.43,
+        AerialScale = 23.2,
+        MieScattering = 11.8,
+        MieG = 0.77,
+        MultipleScattering = 19.2,
+        CloudsData = 1,
+        CloudsCoverage = 0.5,
+        CloudsDensity = 0.8065,
+        CloudsSharpness = 0.0,
+        CloudsShadowOpacity = 1.0,
+        CloudsTimescale = 0.02,
+        CloudsCrawling = 0.1,
+        CloudsFade = 0.1,
+        Sandstorm = true,
+        SandstormEdgeA = 0.4,
+        SandstormEdgeB = 0.6,
+        SandstormMinFog = 0.01,
+        ObjectiveType = 0,
+        LinkedToLayer = 0
+    };
+
+    /// <summary>
+    /// R6D1
+    ///
+    /// The kraken boss fight map
+    /// </summary>
+    public static readonly DimensionData AlphaOne = new()
+    {
+        LevelLayoutData = 0,
+        DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Boss_Arena.prefab",
+        VerticalExtentsUp = 100.0,
+        VerticalExtentsDown = 40.0,
+        DimensionResourceSetID = 47,
+        DimensionFogData = 88,
+        EnvironmentWetness = 0.0,
+        DustColor = new Color { Alpha = 1.0, Red = 0.5, Green = 0.351260275, Blue = 0.2523585 },
+        DustAlphaBoost = 4.0,
+        DustTurbulence = 100.0,
+        SoundEventOnWarpTo = Sound.Warp,
+        DisableVFXEventOnWarp = false,
+        UseLocalDimensionSeeds = false,
+        ForbidWaveSpawning = false,
+        ForbidCarryItemWarps = false,
+        LeaveDeployablesOnWarp = false,
+        IsStaticDimension = true,
+        StaticZoneSeed = 0,
+        StaticMarkerSeed = 0,
+        StaticLightSeed = 0,
+        StaticLightSettings = 27,
+        StaticAliasOverride = -1,
+        // StaticEnemySpawningInZone = [],
+        StaticAllowResourceContainerAllocation = false,
+        StaticAllowSmallPickupsAllocation = false,
+        StaticForceBigPickupsAllocation = false,
+        StaticConsumableDistributionInZone = 0,
+        StaticBigPickupDistributionInZone = 0,
+        StaticGroundSpawnersInZone = 0,
+        StaticHealthMulti = 4.0,
+        StaticToolAmmoMulti = 3.0,
+        StaticWeaponAmmoMulti = 14.0,
+        StaticDisinfectionMulti = 0.0,
+        // StaticTerminalPlacements = [],
+        ForbidTerminalsInDimension = false,
+        // EventsOnBossDeath = [],
+        IsOutside = true,
+        LightAzimuth = 35.5,
+        LightElevation = 29.2,
+        LightIntensity = 1.0,
+        AmbientIntensity = 1.0,
+        ReflectionsIntensity = 1.0,
+        GodrayRange = 8000.0,
+        GodrayExponent = 1.082,
+        AtmosphereData = 6,
+        AtmosphereDensity = 2.0,
+        Exposure = 4.18,
+        AerialScale = 4.3,
+        MieScattering = 8.0,
+        MieG = 0.9,
+        MultipleScattering = 10.0,
+        CloudsData = 3,
+        CloudsCoverage = 0.926,
+        CloudsDensity = 1.0,
+        CloudsSharpness = 0.5,
+        CloudsShadowOpacity = 1.0,
+        CloudsTimescale = 0.0,
+        CloudsCrawling = -0.02,
+        CloudsFade = 0.3,
+        Sandstorm = true,
+        SandstormEdgeA = 0.25,
+        SandstormEdgeB = 1.0,
+        SandstormMinFog = 0.013,
+        ObjectiveType = 0,
+        LinkedToLayer = 0
+    };
 
     /// <summary>
     /// R6B1

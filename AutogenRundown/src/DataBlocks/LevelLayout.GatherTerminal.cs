@@ -62,7 +62,7 @@ public partial record LevelLayout
 
         var dimension = new Dimension
         {
-            Data = Dimensions.DimensionData.AlphaThree_Top with
+            Data = Dimensions.DimensionData.Unknown_Two with
             {
                 StaticTerminalPlacements = new List<TerminalPlacement>
                 {
