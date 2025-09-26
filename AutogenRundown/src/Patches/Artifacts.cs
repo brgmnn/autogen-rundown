@@ -52,11 +52,8 @@ internal static class Artifacts
     [HarmonyPostfix]
     internal static void Post_CM_MenuBar_UpdateMenuOptions(CM_MenuBar __instance)
     {
-        // __instance.m_expIconAlign.position.y = 677.5467;
+        var currentPos = __instance.m_expIcon.GetPosition();
 
-        // TopBarExpeditionIcon = __instance.m_expIcon;
-        // TopBarExpeditionIcon.m_artifactHeatText.text = "Test string";
-
-        __instance.m_expIcon.SetPosition(new Vector2(-677.0f, 0f));
+        __instance.m_expIcon.SetPosition(currentPos + new Vector2 { x = 200f });
     }
 }
