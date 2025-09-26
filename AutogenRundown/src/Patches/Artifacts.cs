@@ -10,8 +10,6 @@ namespace AutogenRundown.Patches;
 [HarmonyPatch]
 internal static class Artifacts
 {
-    private static CM_ExpeditionIcon_New? TopBarExpeditionIcon { get; set; }
-
     /// <summary>
     /// Fixes boosters to not be consumed upon use in levels
     /// </summary>
