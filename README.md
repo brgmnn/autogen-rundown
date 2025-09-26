@@ -47,10 +47,11 @@ TODO:
 
 
 NOTE
-  * Make sure we match the complex for `Reality` with the dimension geo we want
+  * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
 
 Idea:
   * Secondary survival that procs on door open
+  * Side quest room to lower the fog
   * Bring big pickup for scan on door
   * Add full team scan on extract instead of warden scan
   * "Archivist", like "Unaugmented" but for finding all the D-Lock Cipher logs in a level?
