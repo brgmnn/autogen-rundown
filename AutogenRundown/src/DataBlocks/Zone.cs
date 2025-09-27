@@ -851,8 +851,6 @@ public partial record Zone : DataBlock
     public DistributionAmount DeconUnitsInZone { get; set; } = DistributionAmount.None;
     public bool AllowSmallPickupsAllocation { get; set; } = true;
     public bool AllowResourceContainerAllocation { get; set; } = true;
-    public bool ForceBigPickupsAllocation { get; set; } = false;
-    public uint BigPickupDistributionInZone { get; set; } = 0;
 
     public List<TerminalPlacement> TerminalPlacements { get; set; } = new();
 

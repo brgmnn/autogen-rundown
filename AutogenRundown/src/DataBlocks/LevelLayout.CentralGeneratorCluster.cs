@@ -160,6 +160,30 @@ public partial record LevelLayout
         var cellNode = new ZoneNode();
         var cellZone = new Zone(level, this);
 
+        var zoneCount = planner.GetZones(Bulkhead.All, null).Count;
+
+        // If we are in this case, we don't want to add any more zones so just stick the cell
+        // in the start area
+        if (objective.PlacementNodes.Count >= 3)
+        {
+            cellZone.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
+
+            cellZone.BigPickupDistributionInZone = cellZone.BigPickupDistributionInZone switch
+            {
+                BigPickupDistribution.PowerCellId_1 => BigPickupDistribution.PowerCell_2.PersistentId,
+                BigPickupDistribution.PowerCellId_2 => BigPickupDistribution.PowerCell_3.PersistentId,
+                BigPickupDistribution.PowerCellId_3 => BigPickupDistribution.PowerCell_4.PersistentId,
+                BigPickupDistribution.PowerCellId_4 => BigPickupDistribution.PowerCell_5.PersistentId,
+
+                _ => BigPickupDistribution.PowerCell_1.PersistentId,
+            };
+
+            // Add the node to the objective placement list, if it doesn't already exist
+            if (!objective.PlacementNodes.Exists(node =>
+                    node.Bulkhead == cellNode.Bulkhead && node.ZoneNumber == cellNode.ZoneNumber))
+                objective.PlacementNodes.Add(cellNode);
+        }
+
         switch (level.Tier, director.Bulkhead)
         {
             #region Tier: A
