@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Markers;
 using BepInEx;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -40,6 +41,8 @@ public static class Bins
         = new BlocksBin<LevelLayout>();
 
     public static LazyBlocksBin<Light.LightSettings> LightSettings { get; private set; } = new();
+    public static BlocksBin<MiningMarker> MiningMarkers { get; private set; }
+        = new BlocksBin<MiningMarker>();
     public static BlocksBin<Rundown> Rundowns { get; private set; }
         = new BlocksBin<Rundown>();
     public static BlocksBin<Text> Texts { get; private set; }
@@ -58,6 +61,7 @@ public static class Bins
     public static void Setup()
     {
         ComplexResourceSet.Setup();
+        MiningMarker.Setup();
         Light.LightSettings.Setup();
         Light.LightSettings.SaveStatic();
         Text.Setup();
@@ -72,9 +76,11 @@ public static class Bins
         WavePopulation.Setup();
         Alarms.WaveSettings.Setup();
 
+        ComplexResourceSet.SaveStatic();
+        MiningMarker.SaveStatic();
+
         BigPickupDistribution.SaveStatic();
         ChainedPuzzle.SaveStatic();
-        ComplexResourceSet.SaveStatic();
         ConsumableDistribution.SaveStatic();
         Dimension.SaveStatic();
         EnemyGroup.SaveStatic();
@@ -96,9 +102,11 @@ public static class Bins
     /// </summary>
     public static void Save()
     {
+        ComplexResources.Save("ComplexResourceSet");
+        MiningMarkers.Save("MiningMarkers");
+
         BigPickupDistributions.Save("BigPickupDistribution");
         ChainedPuzzles.Save("ChainedPuzzle");
-        ComplexResources.Save("ComplexResourceSet");
         ConsumableDistributions.Save("ConsumableDistribution");
         Dimensions.Save("Dimension");
         Enemy.Save("Enemy");
