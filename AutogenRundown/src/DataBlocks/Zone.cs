@@ -658,10 +658,13 @@ public partial record Zone : DataBlock
     #endregion
 
     #region Seed properties
-    // TODO: should we randomize this?
+
     public int SubSeed { get; set; } = 24;
+
     public int MarkerSubSeed { get; set; } = 3;
+
     public int LightsSubSeed { get; set; } = 1;
+
     #endregion
 
     /// <summary>
@@ -812,7 +815,7 @@ public partial record Zone : DataBlock
     /// <summary>
     /// Used for distribute cells as well as generator puzzles
     /// </summary>
-    public List<FunctionPlacementData> PowerGeneratorPlacements { get; set; } = new List<FunctionPlacementData>();
+    public List<FunctionPlacementData> PowerGeneratorPlacements { get; set; } = new();
     #endregion
 
     #region Respawn settings
@@ -854,7 +857,7 @@ public partial record Zone : DataBlock
     public List<TerminalPlacement> TerminalPlacements { get; set; } = new();
 
     public bool ForbidTerminalsInZone { get; set; } = false;
-    public JArray DumbwaiterPlacements { get; set; } = new JArray();
+    public JArray DumbwaiterPlacements { get; set; } = new();
 
     #region Resources and items
     /// <summary>
@@ -917,6 +920,8 @@ public partial record Zone : DataBlock
     {
         this.level = level;
         this.layout = layout;
+
+        SubSeed = Generator.Between(10, 100);
 
         // Always ensure a terminal is placed in the zone
         TerminalPlacements.Add(new TerminalPlacement());
