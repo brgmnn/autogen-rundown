@@ -242,6 +242,34 @@ public record WaveSettings : DataBlock
         return PersistentId == other.PersistentId && RecordEqual(other);
     }
 
+    public override int GetHashCode()
+    {
+        var hashCode = new HashCode();
+
+        hashCode.Add(base.GetHashCode());
+        hashCode.Add(PauseBeforeStart);
+        hashCode.Add(PauseBetweenGroups);
+        hashCode.Add(WavePauseMin_atCost);
+        hashCode.Add(WavePauseMax_atCost);
+        hashCode.Add(WavePauseMin);
+        hashCode.Add(WavePauseMax);
+        hashCode.Add(PopulationFilter);
+        hashCode.Add((int)FilterType);
+        hashCode.Add(ChanceToRandomizeSpawnDirectionPerWave);
+        hashCode.Add(ChanceToRandomizeSpawnDirectionPerGroup);
+        hashCode.Add(OverrideWaveSpawnType);
+        hashCode.Add(SurvivalWaveSpawnType);
+        hashCode.Add(PopulationPointsTotal);
+        hashCode.Add(PopulationPointsPerWaveStart);
+        hashCode.Add(PopulationPointsPerWaveEnd);
+        hashCode.Add(PopulationPointsMinPerGroup);
+        hashCode.Add(PopulationPointsPerGroupStart);
+        hashCode.Add(PopulationPointsPerGroupEnd);
+        hashCode.Add(PopulationRampOverTime);
+
+        return hashCode.ToHashCode();
+    }
+
     public bool RecordEqual(WaveSettings? other)
     {
         if (other is null || GetType() != other.GetType())

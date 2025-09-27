@@ -76,6 +76,8 @@ public record Color
                Blue.ApproxEqual(other.Blue);;
     }
 
+    public override int GetHashCode() => HashCode.Combine(Alpha, Red, Green, Blue);
+
     #region Properties
 
     /// <summary>
