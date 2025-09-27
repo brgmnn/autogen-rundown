@@ -919,7 +919,7 @@ public partial record Zone : DataBlock
         this.level = level;
         this.layout = layout;
 
-        SubSeed = Generator.Between(10, 100);
+        SubSeed = Generator.Between(10, 999);
 
         // Always ensure a terminal is placed in the zone
         TerminalPlacements.Add(new TerminalPlacement());
