@@ -50,7 +50,15 @@ public partial record WardenObjective
         GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
         GoToWinCondition_ToMainLayer = "Malfunction in air purification system. Make your way for the forward emergency exit.";
 
-        MidPuzzle = ChainedPuzzle.FindOrPersist(ChainedPuzzle.AlarmClass1);
-        //"ChainedPuzzleAtExit": 11,
+        MidPuzzle = level.Tier switch
+        {
+            "A" => ChainedPuzzle.FindOrPersist(ChainedPuzzle.AlarmClass2 with { Settings = WaveSettings.Baseline_Easy }),
+            "B" => ChainedPuzzle.FindOrPersist(ChainedPuzzle.AlarmClass3 with { Settings = WaveSettings.Baseline_Normal }),
+            "C" => ChainedPuzzle.FindOrPersist(ChainedPuzzle.AlarmClass4 with { Settings = WaveSettings.Baseline_Hard }),
+            "D" => ChainedPuzzle.FindOrPersist(ChainedPuzzle.AlarmClass5 with { Settings = WaveSettings.Baseline_Hard }),
+            "E" => ChainedPuzzle.FindOrPersist(ChainedPuzzle.AlarmClass6 with { Settings = WaveSettings.Baseline_VeryHard })
+        };
+
+        AddCompletedObjectiveWaves(level, director);
     }
 }
