@@ -217,7 +217,7 @@ public static class RundownFactory
                 Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.GatherTerminal,
+                Objective = WardenObjectiveType.GatherSmallItems,
             };
             mainDirector.GenPoints();
 

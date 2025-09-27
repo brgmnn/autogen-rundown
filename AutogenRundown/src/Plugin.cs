@@ -116,8 +116,6 @@ public class Plugin : BasePlugin
 
         GameDataAPI.OnGameDataInitialized += Patch_CentralGeneratorCluster.Setup;
 
-        // LevelAPI.OnBuildDone += Patch_LG_DimensionRoot.OnLevelDone;
-
         // Apply patches
         var harmony = new Harmony("the_tavern-AutogenRundown");
         harmony.PatchAll();

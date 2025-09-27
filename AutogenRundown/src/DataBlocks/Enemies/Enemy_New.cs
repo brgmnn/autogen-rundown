@@ -137,6 +137,9 @@ public record Enemy_New : DataBlock
     /** Cocoon */
     public static Enemy_New Cocoon { get; set; } = new() { PersistentId = 22 };
 
+    /** Kraken */
+    public static Enemy_New Kraken { get; set; } = new() { PersistentId = 61 };
+
     #endregion
 
     #region Autogen enemies

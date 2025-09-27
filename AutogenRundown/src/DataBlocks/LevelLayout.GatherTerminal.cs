@@ -1,108 +1,13 @@
-﻿using AutogenRundown.DataBlocks.Alarms;
-using AutogenRundown.DataBlocks.Enemies;
-using AutogenRundown.DataBlocks.Enums;
-using AutogenRundown.DataBlocks.Logs;
-using AutogenRundown.DataBlocks.Objectives;
+﻿using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Terminals;
-using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
-using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 
 public partial record LevelLayout
 {
-    private void BuildLayout_GatherTerminal_AlphaSix(
-        BuildDirector director,
-        WardenObjective objective,
-        ZoneNode? startish)
-    {
-        if (startish == null)
-        {
-            Plugin.Logger.LogError($"No node returned when calling Planner.GetLastZone({director.Bulkhead})");
-            throw new Exception("No zone node returned");
-        }
-
-        var start = (ZoneNode)startish;
-        var startZone = planner.GetZone(start)!;
-        var layerData = level.GetObjectiveLayerData(director.Bulkhead);
-
-        var (portal, portalZone) = AddZone_Forward(start);
-
-        portalZone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_portal_HA_01.prefab";
-
-        var (mwp, mwpZone) = BuildChallenge_Small(portal);
-
-        mwpZone.GenMatterWaveProjectorGeomorph(level.Complex);
-        mwpZone.BigPickupDistributionInZone = BigPickupDistribution.MatterWaveProjector.PersistentId;
-
-        mwpZone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer);
-
-        // portalZone.EventsOnPortalWarp.AddSpawnWave(
-        //     new GenericWave
-        //     {
-        //         Population = WavePopulation.OnlyNightmareGiants,
-        //         Settings = WaveSettings.Error_Hard
-        //     },
-        //     delay: 10.0);
-
-        portalZone.EventsOnPortalWarp.Add(
-            new WardenObjectiveEvent
-            {
-                Type = WardenObjectiveEventType.SpawnEnemyWave,
-                Delay = 10.0,
-                SoundId = Sound.Enemies_DistantLowRoar,
-                EnemyWaveData = new GenericWave
-                {
-                    Population = WavePopulation.OnlyNightmareGiants,
-                    Settings = WaveSettings.Error_Hard
-                },
-                Dimension = DimensionIndex.Dimension1
-            });
-
-        var dimension = new Dimension
-        {
-            Data = Dimensions.DimensionData.Unknown_Two with
-            {
-                StaticTerminalPlacements = new List<TerminalPlacement>
-                {
-                    new()
-                    {
-                        LogFiles = new List<LogFile>
-                        {
-                            DLockDecipherer.R1B1_Z40
-                        }
-                    }
-                }
-            }
-        };
-        dimension.FindOrPersist();
-
-        level.DimensionDatas.Add(new Levels.DimensionData
-        {
-            Dimension = DimensionIndex.Dimension1,
-            Data = dimension
-        });
-
-        var dataLayer = level.GetObjectiveLayerData(director.Bulkhead);
-
-        dataLayer.ObjectiveData.ZonePlacementDatas.Add(new List<ZonePlacementData>
-        {
-            new()
-            {
-                Dimension = DimensionIndex.Dimension1,
-                LocalIndex = 0,
-                Weights = ZonePlacementWeights.EvenlyDistributed
-            }
-        });
-    }
-
     private void BuildLayout_GatherTerminal(BuildDirector director, WardenObjective objective, ZoneNode? startish)
     {
-        BuildLayout_GatherTerminal_AlphaSix(director, objective, startish);
-
-        return;
-
         if (startish == null)
         {
             Plugin.Logger.LogError($"No node returned when calling Planner.GetLastZone({director.Bulkhead})");
