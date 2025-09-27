@@ -15,7 +15,7 @@ namespace AutogenRundown.DataBlocks;
 /// <summary>
 ///
 /// </summary>
-public record Zone : DataBlock
+public partial record Zone : DataBlock
 {
     #region Direction manipulation
     /// <summary>
@@ -1404,6 +1404,7 @@ public record Zone : DataBlock
     #endregion
 
     #region Seed properties
+    // TODO: should we randomize this?
     public int SubSeed { get; set; } = 24;
     public int MarkerSubSeed { get; set; } = 3;
     public int LightsSubSeed { get; set; } = 1;
