@@ -164,7 +164,10 @@ public partial record LevelLayout
 
         // If we are in this case, we don't want to add any more zones so just stick the cell
         // in the start area
-        if (objective.PlacementNodes.Count >= 3)
+        //
+        // For main only levels we allow up to 4 branches, for levels with optionals we cap at 3
+        if (level.Settings.Bulkheads == Bulkhead.Main && objective.PlacementNodes.Count >= 4 ||
+            level.Settings.Bulkheads != Bulkhead.Main && objective.PlacementNodes.Count >= 3)
         {
             cellZone.BigPickupDistributionInZone = BigPickupDistribution.PowerCell_1.PersistentId;
 
