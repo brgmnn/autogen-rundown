@@ -1,5 +1,4 @@
 ﻿using AutogenRundown.Managers;
-using GameData;
 using HarmonyLib;
 using LevelGeneration;
 
@@ -17,13 +16,9 @@ internal static class LogArchivist
     {
         var terminalLogs = __instance.m_terminal.GetLocalLogs();
 
-        Plugin.Logger.LogInfo($"Trying to read log: {param1}");
-
         if (terminalLogs.ContainsKey(param1.ToUpper()))
         {
             var logData = terminalLogs[param1.ToUpper()];
-
-            Plugin.Logger.LogInfo($"Player has read a log: name = {logData.FileName}");
 
             var data = RundownManager.GetActiveExpeditionData();
             var rundown = data.rundownKey.data;

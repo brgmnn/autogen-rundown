@@ -1,11 +1,13 @@
 ﻿using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.Serialization;
 using BepInEx;
+using CellMenu;
 using Dissonance;
 using GameData;
 using LevelGeneration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using UnityEngine.PlayerLoop;
 
 namespace AutogenRundown.Managers;
 
@@ -17,11 +19,13 @@ public static class LogArchivistManager
 
     public static Dictionary<uint, List<ReadLogRecord>> readRecordsByLevel { get; set; } = new();
 
-    public static RundownLogRecord WeeklyLogRecord { get; set; } = new();
+    private static RundownLogRecord WeeklyLogRecord { get; set; } = new();
 
-    public static RundownLogRecord MonthlyLogRecord { get; set; } = new();
+    private static RundownLogRecord MonthlyLogRecord { get; set; } = new();
 
-    public static RundownLogRecord SeasonalLogRecord { get; set; } = new();
+    private static RundownLogRecord SeasonalLogRecord { get; set; } = new();
+
+    private static Dictionary<uint, CM_ExpeditionIcon_New> icons = new();
 
     private static readonly string dir = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -65,6 +69,44 @@ public static class LogArchivistManager
         };
     }
 
+    public static void RegisterIcon(CM_ExpeditionIcon_New icon)
+    {
+        icons[icon.DataBlock.LevelLayoutData] = icon;
+
+        UpdateIcon(icon.DataBlock.LevelLayoutData);
+    }
+
+    public static void UpdateIcon(uint mainId)
+    {
+        if (!icons.ContainsKey(mainId))
+            return;
+
+        var icon = icons[mainId];
+
+        LevelLogArchives logs;
+
+        if (archivesByLevel.TryGetValue(mainId, out logs))
+        {
+            var completed = 0;
+
+            if (readRecordsByLevel.TryGetValue(mainId, out var readLogs))
+                completed = readLogs.Count;
+
+            icon.m_artifactHeatText.SetText($"Logs: <color=orange>{completed}</color> / " +
+                                                  $"<color=orange>{logs.Logs.Count}</color>");
+        }
+        else
+        {
+            icon.m_artifactHeatText.SetText("<color=#777777>No logs</color>");
+        }
+    }
+
+    /// <summary>
+    /// Records a log read attempt. Will save to disk as soon as method is called for a valid log file
+    /// </summary>
+    /// <param name="rundown"></param>
+    /// <param name="mainLayout"></param>
+    /// <param name="logName"></param>
     public static void RecordRead(string rundown, uint mainLayout, string logName)
     {
         RundownLogRecord record;
@@ -110,6 +152,8 @@ public static class LogArchivistManager
             Save(record.Name, record);
 
             Plugin.Logger.LogDebug($"Recorded log read: {logName}");
+
+            UpdateIcon(mainLayout);
         }
     }
 
