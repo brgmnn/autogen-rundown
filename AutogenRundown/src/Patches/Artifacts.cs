@@ -1,4 +1,6 @@
-﻿using CellMenu;
+﻿using AutogenRundown.DataBlocks.Custom.AutogenRundown;
+using AutogenRundown.Managers;
+using CellMenu;
 using HarmonyLib;
 using UnityEngine;
 
@@ -33,12 +35,40 @@ internal static class Artifacts
     [HarmonyPostfix]
     internal static void Post_CM_ExpeditionIcon_New_Setup(CM_ExpeditionIcon_New __instance)
     {
-        // "Hides" the artifact heat text by moving it off-screen
-        __instance.m_artifactHeatText.gameObject.transform.localPosition += Vector3.down * 10_000;
+        var mainId = __instance.DataBlock.LevelLayoutData;
 
-        // Shifts up the level completion text
-        __instance.m_statusText.transform.localPosition += new Vector3(0f, 25.0f, 0f);
+        Plugin.Logger.LogInfo($"CM_ExpeditionIcon_New.Setup(pid = {mainId})");
+
+        LevelLogArchives logs;
+
+        if (LogArchivistManager.archivesByLevel.TryGetValue(mainId, out logs))
+        {
+            var completed = 0;
+
+            if (LogArchivistManager.readRecordsByLevel.TryGetValue(mainId, out var readLogs))
+                completed = readLogs.Count;
+
+            __instance.m_artifactHeatText.SetText($"Logs: <color=orange>{completed}</color> / " +
+                                                  $"<color=orange>{logs.Logs.Count}</color>");
+        }
+        else
+        {
+            __instance.m_artifactHeatText.SetText("<color=#777777>No logs</color>");
+        }
+
+
+        // // To just remove the artifact heat entirely
+        //
+        // // "Hides" the artifact heat text by moving it off-screen
+        // __instance.m_artifactHeatText.gameObject.transform.localPosition += Vector3.down * 10_000;
+        //
+        // // Shifts up the level completion text
+        // __instance.m_statusText.transform.localPosition += new Vector3(0f, 25.0f, 0f);
     }
+
+    [HarmonyPatch(typeof(CM_ExpeditionIcon_New), nameof(CM_ExpeditionIcon_New.SetArtifactHeat))]
+    [HarmonyPrefix]
+    internal static bool Post_CM_ExpeditionIcon_New_SetArtifactHeat(CM_ExpeditionIcon_New __instance) => false;
 
     /// <summary>
     /// Repositions the level icon in the top bar now that the artifact heat is gone from it

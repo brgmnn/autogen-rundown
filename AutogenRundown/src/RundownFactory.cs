@@ -54,7 +54,8 @@ public static class RundownFactory
     public static Rundown BuildRundown(
         Rundown newRundown,
         bool withFixed = true,
-        bool withUnlocks = true)
+        bool withUnlocks = true,
+        bool withLogs = true)
     {
         var rundown = Rundown.Build(newRundown);
         var levelNames = Words.NewLevelNamesPack();
@@ -485,6 +486,9 @@ public static class RundownFactory
         #endregion
         #endregion
 
+        if (withLogs)
+            rundown.DistributeDLockLogs();
+
         // Return without unlocks if we don't want them
         if (!withUnlocks)
             return rundown;
@@ -496,8 +500,6 @@ public static class RundownFactory
         rundown.ReqToReachTierC.MainSectors = Math.Max(0, rundown.ReqToReachTierB.MainSectors + rundown.TierB.Count - 1);
         rundown.ReqToReachTierD.MainSectors = Math.Max(0, rundown.ReqToReachTierC.MainSectors + rundown.TierC.Count - 1);
         rundown.ReqToReachTierE.MainSectors = Math.Max(0, rundown.ReqToReachTierD.MainSectors + rundown.TierD.Count - 1);
-
-        rundown.DistributeDLockLogs();
 
         return rundown;
     }
@@ -1120,7 +1122,7 @@ public static class RundownFactory
                 TierA_Count = 1,
                 TierD_Count = 3,
                 TierE_Count = 1
-            }, true, false);
+            }, true, false, false);
 
             daily.VisualsETier = Color.MenuVisuals_DailyE;
 

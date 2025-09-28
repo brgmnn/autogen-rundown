@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.Components;
+using AutogenRundown.Managers;
 using AutogenRundown.Patches;
 using BepInEx;
 using BepInEx.Configuration;
@@ -117,6 +118,7 @@ public class Plugin : BasePlugin
         Patch_LG_SecurityDoor.Setup();
 
         GameDataAPI.OnGameDataInitialized += Patch_CentralGeneratorCluster.Setup;
+        GameDataAPI.OnGameDataInitialized += LogArchivistManager.Setup;
 
         AssetAPI.OnAssetBundlesLoaded += ExpeditionSuccessPage_ArchivistIcon.OnAssetBundlesLoaded;
 

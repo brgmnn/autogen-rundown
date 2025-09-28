@@ -264,6 +264,12 @@ public class Level
     /// For customizing security doors
     /// </summary>
     [JsonIgnore]
+    public LevelLogArchives LogArchives { get; private set; } = new();
+
+    /// <summary>
+    /// For customizing security doors
+    /// </summary>
+    [JsonIgnore]
     public LevelSecurityDoors SecurityDoors { get; private set; } = new();
 
     /// <summary>
@@ -966,6 +972,9 @@ public class Level
             @"<color(\s*=\s*[^>]+)?>|</color>|<s>|</s>|/|\?|!",
             string.Empty,
             RegexOptions.IgnoreCase);
+
+        LogArchives.Name = $"{Tier}{Index}_{fsName}";
+        LogArchives.MainLevelLayout = LevelLayoutData;
 
         SecurityDoors.Name = $"{Tier}{Index}_{fsName}";
         SecurityDoors.MainLevelLayout = LevelLayoutData;

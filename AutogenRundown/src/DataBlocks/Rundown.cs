@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Logs;
+﻿using AutogenRundown.DataBlocks.Custom.AutogenRundown.LogArchives;
+using AutogenRundown.DataBlocks.Logs;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Terminals;
 using AutogenRundown.DataBlocks.ZoneData;
@@ -263,6 +264,13 @@ public record Rundown : DataBlock
                 {
                     terminal.LogFiles.Add(lorelog);
 
+                    level.LogArchives.Logs.Add(new Log
+                    {
+                        Bulkhead = bulkhead,
+                        ZoneNumber = zone.LocalIndex,
+                        FileName = lorelog.FileName
+                    });
+
                     if (lorelog.AttachedAudioFile != Sound.None &&
                         terminal.StartingStateData.StartingState == TerminalState.Sleeping)
                     {
@@ -275,6 +283,8 @@ public record Rundown : DataBlock
                     }
                 }
             }
+
+            level.LogArchives.Save();
         }
     }
 
