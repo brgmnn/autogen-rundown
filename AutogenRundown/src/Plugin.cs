@@ -1,10 +1,12 @@
-﻿using AutogenRundown.Patches;
+﻿using AutogenRundown.Components;
+using AutogenRundown.Patches;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using GTFO.API;
 using HarmonyLib;
+using UnityEngine;
 
 namespace AutogenRundown;
 
@@ -115,6 +117,8 @@ public class Plugin : BasePlugin
         Patch_LG_SecurityDoor.Setup();
 
         GameDataAPI.OnGameDataInitialized += Patch_CentralGeneratorCluster.Setup;
+
+        AssetAPI.OnAssetBundlesLoaded += ExpeditionSuccessPage_ArchivistIcon.OnAssetBundlesLoaded;
 
         // Apply patches
         var harmony = new Harmony("the_tavern-AutogenRundown");
