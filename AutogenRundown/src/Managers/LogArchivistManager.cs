@@ -183,22 +183,6 @@ public static class LogArchivistManager
             GTFO.API.NetworkAPI.InvokeEvent(eventName, data, SNet_ChannelType.GameReceiveCritical);
 
             OnReadLog(0u, data);
-
-            // if (!record.ReadLogs.ContainsKey(mainLayout))
-            //     record.ReadLogs.Add(mainLayout, new List<ReadLogRecord>());
-            //
-            // var logs = record.ReadLogs[mainLayout];
-            //
-            // logs.Add(new ReadLogRecord
-            // {
-            //     FileName = logName.ToUpper()
-            // });
-            //
-            // Save(record.Name, record);
-            //
-            // Plugin.Logger.LogDebug($"Recorded log read: {logName}");
-            //
-            // UpdateIcon(mainLayout);
         }
     }
 
