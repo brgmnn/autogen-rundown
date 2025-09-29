@@ -137,30 +137,26 @@ public static class LogArchivistManager
     /// <param name="rundown"></param>
     /// <param name="mainLayout"></param>
     /// <param name="logName"></param>
-    public static void RecordRead(string rundown, uint mainLayout, string logName)
+    public static void RecordRead(string rundownKey, uint mainLayout, string logName)
     {
-        RundownLogRecord record;
         logName = logName.ToUpper();
-        var rundown2 = PluginRundown.None;
+        PluginRundown rundown;
 
-        switch (rundown)
+        switch (rundownKey)
         {
             // Weekly
             case "Local_2":
-                record = WeeklyLogRecord;
-                rundown2 = PluginRundown.Weekly;
+                rundown = PluginRundown.Weekly;
                 break;
 
             // Monthly
             case "Local_3":
-                record = MonthlyLogRecord;
-                rundown2 = PluginRundown.Monthly;
+                rundown = PluginRundown.Monthly;
                 break;
 
             // Seasonal
             case "Local_4":
-                record = SeasonalLogRecord;
-                rundown2 = PluginRundown.Seasonal;
+                rundown = PluginRundown.Seasonal;
                 break;
 
             // Daily -> "Local_1"
@@ -175,7 +171,7 @@ public static class LogArchivistManager
 
             var data = new ReadLogEvent
             {
-                Rundown = rundown2,
+                Rundown = rundown,
                 MainId = mainLayout,
                 LogFileName = logName.ToUpper()
             };
@@ -192,13 +188,10 @@ public static class LogArchivistManager
     /// Actually updates the logs. This is received from a network requests so all players
     /// get the log
     /// </summary>
-    /// <param name="something"></param>
+    /// <param name="_"></param>
     /// <param name="data"></param>
-    private static void OnReadLog(ulong something, ReadLogEvent data)
+    private static void OnReadLog(ulong _, ReadLogEvent data)
     {
-        Plugin.Logger.LogDebug($"Got log event: {data}");
-
-
         RundownLogRecord record;
         var logName = data.LogFileName.ToUpper();
 
@@ -225,31 +218,21 @@ public static class LogArchivistManager
 
         if (archivesByLevel.TryGetValue(data.MainId, out var archives))
         {
-            if (!archives.Logs.Exists(log => log.FileName.ToUpper().Equals(logName.ToUpper())))
+            if (!archives.Logs.Exists(log => log.FileName.ToUpper().Equals(logName)))
                 return;
-
-            // GTFO.API.NetworkAPI.InvokeEvent(eventName, new ReadLogEvent
-            //     {
-            //         MainId = mainLayout,
-            //         LogFileName = logName.ToUpper()
-            //     },
-            //     SNet_ChannelType.GameReceiveCritical);
 
             if (!record.ReadLogs.ContainsKey(data.MainId))
                 record.ReadLogs.Add(data.MainId, new List<ReadLogRecord>());
 
             var logs = record.ReadLogs[data.MainId];
 
-            logs.Add(new ReadLogRecord
-            {
-                FileName = logName.ToUpper()
-            });
+            if (!logs.Exists(log => log.FileName == logName))
+                logs.Add(new ReadLogRecord { FileName = logName });
 
             Save(record.Name, record);
+            UpdateIcon(data.MainId);
 
             Plugin.Logger.LogDebug($"Recorded log read: {logName}");
-
-            UpdateIcon(data.MainId);
         }
     }
 
