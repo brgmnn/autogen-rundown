@@ -36,33 +36,24 @@ internal static class Artifacts
     internal static void Post_CM_ExpeditionIcon_New_Setup(CM_ExpeditionIcon_New __instance)
     {
         LogArchivistManager.RegisterIcon(__instance);
-
-
-        // // To just remove the artifact heat entirely
-        //
-        // // "Hides" the artifact heat text by moving it off-screen
-        // __instance.m_artifactHeatText.gameObject.transform.localPosition += Vector3.down * 10_000;
-        //
-        // // Shifts up the level completion text
-        // __instance.m_statusText.transform.localPosition += new Vector3(0f, 25.0f, 0f);
     }
 
     [HarmonyPatch(typeof(CM_ExpeditionIcon_New), nameof(CM_ExpeditionIcon_New.SetArtifactHeat))]
     [HarmonyPrefix]
     internal static bool Post_CM_ExpeditionIcon_New_SetArtifactHeat(CM_ExpeditionIcon_New __instance) => false;
 
-    // /// <summary>
-    // /// Repositions the level icon in the top bar now that the artifact heat is gone from it
-    // ///
-    // /// TODO: can we add the level name where the artifact heat went?
-    // /// </summary>
-    // /// <param name="__instance"></param>
-    // [HarmonyPatch(typeof(CM_MenuBar), nameof(CM_MenuBar.UpdateMenuOptions))]
-    // [HarmonyPostfix]
-    // internal static void Post_CM_MenuBar_UpdateMenuOptions(CM_MenuBar __instance)
-    // {
-    //     var currentPos = __instance.m_expIcon.GetPosition();
-    //
-    //     __instance.m_expIcon.SetPosition(currentPos + new Vector2 { x = 200f });
-    // }
+    /// <summary>
+    /// Repositions the level icon in the top bar now that the artifact heat is gone from it
+    ///
+    /// TODO: can we add the level name where the artifact heat went?
+    /// </summary>
+    /// <param name="__instance"></param>
+    [HarmonyPatch(typeof(CM_MenuBar), nameof(CM_MenuBar.UpdateMenuOptions))]
+    [HarmonyPostfix]
+    internal static void Post_CM_MenuBar_UpdateMenuOptions(CM_MenuBar __instance)
+    {
+        var currentPos = __instance.m_expIcon.GetPosition();
+
+        __instance.m_expIcon.SetPosition(currentPos + new Vector2 { x = 200f });
+    }
 }

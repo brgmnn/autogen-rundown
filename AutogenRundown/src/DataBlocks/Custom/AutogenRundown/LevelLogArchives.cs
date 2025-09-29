@@ -58,11 +58,11 @@ public record LevelLogArchives
         return results;
     }
 
+    /// <summary>
+    /// We always want to save this even if there are zero logs
+    /// </summary>
     public void Save()
     {
-        if (!Logs.Any())
-            return;
-
         var serializer = new JsonSerializer { Formatting = Formatting.Indented };
 
         // Replace with Plugin.GameRevision to avoid interop dependency

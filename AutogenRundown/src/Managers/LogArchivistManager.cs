@@ -7,6 +7,7 @@ using GameData;
 using LevelGeneration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 using UnityEngine.PlayerLoop;
 
 namespace AutogenRundown.Managers;
@@ -83,22 +84,47 @@ public static class LogArchivistManager
 
         var icon = icons[mainId];
 
-        LevelLogArchives logs;
-
-        if (archivesByLevel.TryGetValue(mainId, out logs))
+        if (archivesByLevel.TryGetValue(mainId, out var logs))
         {
+            if (logs.Logs.Count == 0)
+            {
+                icon.m_artifactHeatText.SetText("<color=#777777>No logs</color>");
+                return;
+            }
+
             var completed = 0;
 
             if (readRecordsByLevel.TryGetValue(mainId, out var readLogs))
-                completed = readLogs.Count;
+                completed = Math.Min(readLogs.Count, logs.Logs.Count);
 
-            icon.m_artifactHeatText.SetText($"Logs: <color=orange>{completed}</color> / " +
+            icon.m_artifactHeatText.SetText($"Logs: <color=orange>{completed}</color>/" +
                                                   $"<color=orange>{logs.Logs.Count}</color>");
         }
         else
         {
-            icon.m_artifactHeatText.SetText("<color=#777777>No logs</color>");
+            // If we can't find the mainId for this level, it means it's part of a rundown with
+            // no logs
+
+            // "Hides" the artifact heat text by moving it off-screen
+            icon.m_artifactHeatText.gameObject.transform.localPosition += Vector3.down * 10_000;
+
+            // Shifts up the level completion text
+            icon.m_statusText.transform.localPosition += new Vector3(0f, 25.0f, 0f);
         }
+    }
+
+    public static (int, int) GetLogsRead(uint mainId)
+    {
+        if (!archivesByLevel.TryGetValue(mainId, out var logs))
+            return (-1, -1);
+
+        var completed = 0;
+
+        if (readRecordsByLevel.TryGetValue(mainId, out var readLogs))
+            completed = Math.Min(readLogs.Count, logs.Logs.Count);
+
+        return (completed, logs.Logs.Count);
+
     }
 
     /// <summary>

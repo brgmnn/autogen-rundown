@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿using AutogenRundown.Managers;
+using BepInEx;
 using CellMenu;
 using GameData;
 using GTFO.API;
@@ -125,12 +126,23 @@ namespace AutogenRundown.Components;
         //     return;
         // }
 
+        var mainId = RundownManager.ActiveExpedition.LevelLayoutData;
+        var (read, total) = LogArchivistManager.GetLogsRead(mainId);
+
+        // Return early if there's either no logs at all or we haven't read all of them. So if:
+        //  1. read == -1 which means no logs in the rundown
+        //  2. total == -1 which means no logs in the rundown
+        //  3. total == 0 which means no logs in the level
+        //  4. read != total which means we didn't find all the logs yet
+        if (read < 0 || total <= 0 || read != total)
+            return;
+
         // bool isClearedWithNoBooster = LocalProgressionManager.Current.AllSectorCompletedWithoutBoosterAndCheckpoint();
 
         const float width = 400f;
-        int positionIndex = 1;
-        bool hasSecondary = RundownManager.HasSecondaryLayer(RundownManager.ActiveExpedition);
-        bool hasThird = RundownManager.HasThirdLayer(RundownManager.ActiveExpedition);
+        var positionIndex = 1;
+        var hasSecondary = RundownManager.HasSecondaryLayer(RundownManager.ActiveExpedition);
+        var hasThird = RundownManager.HasThirdLayer(RundownManager.ActiveExpedition);
         positionIndex += hasSecondary ? 1 : 0;
         positionIndex += hasThird ? 1 : 0;
         // positionIndex +=
@@ -195,7 +207,7 @@ namespace AutogenRundown.Components;
         }
 
         icon.m_rightSideText.gameObject.SetActive(false);
-        icon.m_title.SetText("<color=#A93EB3>ARCHIVIST</color>");
+        icon.m_title.SetText("ARCHIVIST");
 
         // sector_icon.m_title.fontSize = m_page.m_sectorIconMain.m_title.fontSize;
         icon.m_title.gameObject.SetActive(true);
