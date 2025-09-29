@@ -1,5 +1,4 @@
-﻿using AutogenRundown.DataBlocks.Custom.AutogenRundown;
-using AutogenRundown.Managers;
+﻿using AutogenRundown.Managers;
 using CellMenu;
 using HarmonyLib;
 using UnityEngine;
@@ -25,7 +24,7 @@ internal static class Artifacts
     }
 
     /// <summary>
-    /// Hides the artifact heat from the rundown level selection screen
+    /// Either hides or sets the logs that have been read here
     ///
     /// Unity game object path
     ///     GUI/CellUI_Camera(Clone)/MainMenuLayer/CM_PageRundown_New_CellUI_ALT(Clone)/MovingContent/Rundown/GUIX_layer_Tier_2/CM_ExpeditionIcon_New(Clone)/
@@ -44,8 +43,6 @@ internal static class Artifacts
 
     /// <summary>
     /// Repositions the level icon in the top bar now that the artifact heat is gone from it
-    ///
-    /// TODO: can we add the level name where the artifact heat went?
     /// </summary>
     /// <param name="__instance"></param>
     [HarmonyPatch(typeof(CM_MenuBar), nameof(CM_MenuBar.UpdateMenuOptions))]

@@ -8,7 +8,6 @@ using UnityEngine;
 
 namespace AutogenRundown.Components;
 
-
  public class ExpeditionSuccessPage_ArchivistIcon : MonoBehaviour
 {
     internal CM_PageExpeditionSuccess m_page = null;
@@ -35,7 +34,7 @@ namespace AutogenRundown.Components;
 
         if (!File.Exists(path))
         {
-            Debug.LogError($"[MyPlugin] File not found: {path}");
+            Plugin.Logger.LogError($"File not found: {path}");
             return;
         }
 
@@ -46,7 +45,7 @@ namespace AutogenRundown.Components;
 
         if (!ImageConversion.LoadImage(texture, spriteData, markNonReadable: false))
         {
-            Debug.LogError("[MyPlugin] Failed to decode image.");
+            Plugin.Logger.LogError("Failed to decode image.");
         }
     }
 
