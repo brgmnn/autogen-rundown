@@ -171,12 +171,12 @@ public static class LogArchivistManager
 
             var data = new ReadLogEvent
             {
-                Rundown = rundown,
+                Rundown = (uint)rundown,
                 MainId = mainLayout,
-                LogFileName = logName.ToUpper()
+                LogFileName = logName.ToUpper() ?? ""
             };
 
-            GTFO.API.NetworkAPI.InvokeEvent(eventName, data, SNet_ChannelType.GameReceiveCritical);
+            GTFO.API.NetworkAPI.InvokeEvent(eventName, data);
 
             OnReadLog(0u, data);
         }
@@ -188,14 +188,14 @@ public static class LogArchivistManager
     /// Actually updates the logs. This is received from a network requests so all players
     /// get the log
     /// </summary>
-    /// <param name="_"></param>
+    /// <param name="snetPlayer"></param>
     /// <param name="data"></param>
-    private static void OnReadLog(ulong _, ReadLogEvent data)
+    private static void OnReadLog(ulong snetPlayer, ReadLogEvent data)
     {
         RundownLogRecord record;
         var logName = data.LogFileName.ToUpper();
 
-        switch (data.Rundown)
+        switch ((PluginRundown)data.Rundown)
         {
             case PluginRundown.Weekly:
                 record = WeeklyLogRecord;
