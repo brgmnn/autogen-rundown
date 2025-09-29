@@ -2,7 +2,7 @@
 
 namespace AutogenRundown.Components;
 
-public class NoBoosterIconGOWrapper
+public class ArchivistIconWrapper
 {
     public GameObject GameObject { get; private set; } = null;
 
@@ -20,7 +20,7 @@ public class NoBoosterIconGOWrapper
 
     public GameObject RightSideText => GameObject?.transform.GetChild(2).gameObject;
 
-    public NoBoosterIconGOWrapper(GameObject iconGO)
+    public ArchivistIconWrapper(GameObject iconGO)
     {
         GameObject = iconGO;
     }
