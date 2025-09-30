@@ -521,7 +521,7 @@ static public class Generator
 
 
     /// <summary>
-    /// Used for the monthly rundown seed
+    /// Used for the seasonal rundown seed
     /// </summary>
     public static void SetSeasonSeed(string seed = "")
     {
@@ -653,7 +653,7 @@ static public class Generator
     public static void SetMonthSeed(string seed = "")
     {
         var utcNow = DateTime.UtcNow;
-        // var utcNow = new DateTime(2025, 8, 1, 10, 0, 0); // Debugging specific months
+        // var utcNow = new DateTime(2025, 10, 1, 10, 0, 0); // Debugging specific months
         var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
         var date = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
         var manualSeed = false;
