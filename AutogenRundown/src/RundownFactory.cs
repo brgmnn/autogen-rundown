@@ -60,6 +60,40 @@ public static class RundownFactory
         var rundown = Rundown.Build(newRundown);
         var levelNames = Words.NewLevelNamesPack();
 
+        #region Cross-level settings
+
+        // Define a rundown global pool of objectives for the main objective.
+        // This is to help us high rolling one particular objective over
+        // another. So we avoid having a rundown with only ReactorStartup
+        //
+        // For Daily/Weekly there's really only max 14 levels taht can be rolled
+        var mainObjectivesPool = new List<(double, int, WardenObjectiveType)>
+        {
+            (1.0, 2, WardenObjectiveType.HsuFindSample),
+            (1.0, 2, WardenObjectiveType.ReactorStartup),
+            (1.0, 1, WardenObjectiveType.ReactorShutdown),
+            (1.0, 1, WardenObjectiveType.GatherSmallItems),
+            (1.0, 1, WardenObjectiveType.ClearPath),
+            (1.0, 1, WardenObjectiveType.SpecialTerminalCommand),
+            (1.0, 2, WardenObjectiveType.RetrieveBigItems),
+            (1.0, 1, WardenObjectiveType.PowerCellDistribution),
+            (1.0, 2, WardenObjectiveType.TerminalUplink),
+            (1.0, 1, WardenObjectiveType.CentralGeneratorCluster),
+            (1.0, 2, WardenObjectiveType.HsuActivateSmall),
+            (1.0, 2, WardenObjectiveType.Survival),
+            (1.0, 1, WardenObjectiveType.GatherTerminal),
+            (0.8, 1, WardenObjectiveType.CorruptedTerminalUplink),
+            (0.6, 1, WardenObjectiveType.TimedTerminalSequence),
+        };
+        var complexPool = new List<(double, int, Complex)>
+        {
+            (1.0, 6, Complex.Mining),
+            (1.0, 6, Complex.Tech),
+            (1.0, 6, Complex.Service)
+        };
+
+        #endregion
+
         #region A-Tier Levels
         for (int i = 0; i < rundown.TierA_Count; i++)
         {
@@ -73,11 +107,23 @@ public static class RundownFactory
                 Generator.AdvanceSequence(buildSeed);
             }
 
+            var complex = Generator.DrawSelect(complexPool);
+            var objective = Generator.DrawSelect(mainObjectivesPool);
+            var director = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Main,
+                Complex = complex,
+                Tier = "A",
+                Objective = objective,
+            };
+
             var level = Level.Build(
                 new Level("A")
                 {
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
+                    Complex = complex,
+                    MainDirector = director,
                     BuildSeed = buildSeed
                 });
 
@@ -168,11 +214,23 @@ public static class RundownFactory
                 Generator.AdvanceSequence(buildSeed);
             }
 
+            var complex = Generator.DrawSelect(complexPool);
+            var objective = Generator.DrawSelect(mainObjectivesPool);
+            var director = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Main,
+                Complex = complex,
+                Tier = "B",
+                Objective = objective,
+            };
+
             var level = Level.Build(
                 new Level("B")
                 {
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
+                    Complex = complex,
+                    MainDirector = director,
                     BuildSeed = buildSeed
                 });
 
@@ -193,11 +251,23 @@ public static class RundownFactory
                 Generator.AdvanceSequence(buildSeed);
             }
 
+            var complex = Generator.DrawSelect(complexPool);
+            var objective = Generator.DrawSelect(mainObjectivesPool);
+            var director = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Main,
+                Complex = complex,
+                Tier = "C",
+                Objective = objective,
+            };
+
             var level = Level.Build(
                 new Level("C")
                 {
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
+                    Complex = complex,
+                    MainDirector = director,
                     BuildSeed = buildSeed
                 });
 
@@ -339,11 +409,23 @@ public static class RundownFactory
                 Generator.AdvanceSequence(buildSeed);
             }
 
+            var complex = Generator.DrawSelect(complexPool);
+            var objective = Generator.DrawSelect(mainObjectivesPool);
+            var director = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Main,
+                Complex = complex,
+                Tier = "D",
+                Objective = objective,
+            };
+
             var level = Level.Build(
                 new Level("D")
                 {
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
+                    Complex = complex,
+                    MainDirector = director,
                     BuildSeed = buildSeed
                 });
 
@@ -440,11 +522,23 @@ public static class RundownFactory
                 Generator.AdvanceSequence(buildSeed);
             }
 
+            var complex = Generator.DrawSelect(complexPool);
+            var objective = Generator.DrawSelect(mainObjectivesPool);
+            var director = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Main,
+                Complex = complex,
+                Tier = "E",
+                Objective = objective,
+            };
+
             var level = Level.Build(
                 new Level("E")
                 {
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
+                    Complex = complex,
+                    MainDirector = director,
                     BuildSeed = buildSeed
                 });
 
