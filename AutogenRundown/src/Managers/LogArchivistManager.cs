@@ -101,8 +101,14 @@ public static class LogArchivistManager
             if (readRecordsByLevel.TryGetValue(mainId, out var readLogs))
                 completed = Math.Min(readLogs.Count, logs.Logs.Count);
 
-            icon.m_artifactHeatText.SetText($"Logs: <color=orange>{completed}</color>/" +
-                                                  $"<color=orange>{logs.Logs.Count}</color>");
+            var completedString = $"{completed}";
+
+            if (completed == 0)
+                completedString = $"<color=red>{completedString}</color>";
+            else if (completed < logs.Logs.Count)
+                completedString = $"<color=orange>{completedString}</color>";
+
+            icon.m_artifactHeatText.SetText($"Logs: {completedString}/{logs.Logs.Count}");
         }
         else
         {

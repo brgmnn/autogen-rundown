@@ -9,6 +9,6 @@ public struct ReadLogEvent
 
     public uint MainId { get; set; }
 
-    [field: MarshalAs(UnmanagedType.ByValTStr, SizeConst = 240)]
+    [field: MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
     public string LogFileName { get; set; }
 }
