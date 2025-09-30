@@ -525,11 +525,11 @@ public static class RundownFactory
             {
                 "FALL_2025", new List<List<int>>
                 {
-                    new() { 1, 2, 2, 1, 1 },
-                    new() { 1, 1, 1, 1, 3, 1 }, // Keeps rolling bad spawns on first zone with 1,2 on B5
-                    new() { 2, 2, 1, 1, 2, 1 },
-                    new() { 1, 1, 1, 1, 2, 1 },
-                    new() { 2, 1, 1, 1 }
+                    new() { 1, 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 2, 1, 1 },
+                    new() { 3, 1, 2, 1, 1, 1 },
+                    new() { 1, 1, 2, 1, 2, 1 },
+                    new() { 3, 2, 1, 1 }
                 }
             }
         };
@@ -797,6 +797,16 @@ public static class RundownFactory
                     new() { 1, 1, 1, 1 },
                     new() { 3, 1, 1, 1 },
                     new() { 1, 1 }
+                }
+            },
+            {
+                "2025_10", new List<List<int>>
+                {
+                    new() { 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 1 },
+                    new() { 1 }
                 }
             }
         };
