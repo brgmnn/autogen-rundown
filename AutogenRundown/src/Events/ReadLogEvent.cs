@@ -5,7 +5,7 @@ namespace AutogenRundown.Events;
 [StructLayout(LayoutKind.Sequential)]
 public struct ReadLogEvent
 {
-    public uint Rundown { get; set; }
+    public PluginRundown Rundown { get; set; }
 
     public uint MainId { get; set; }
 

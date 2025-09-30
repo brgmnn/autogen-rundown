@@ -81,7 +81,7 @@ public static class LogArchivistManager
         UpdateIcon(icon.DataBlock.LevelLayoutData);
     }
 
-    public static void UpdateIcon(uint mainId)
+    private static void UpdateIcon(uint mainId)
     {
         if (!icons.ContainsKey(mainId))
             return;
@@ -137,8 +137,11 @@ public static class LogArchivistManager
     /// <param name="rundown"></param>
     /// <param name="mainLayout"></param>
     /// <param name="logName"></param>
-    public static void RecordRead(string rundownKey, uint mainLayout, string logName)
+    public static void RecordRead(string rundownKey, uint mainLayout, string? logName)
     {
+        if (logName == null)
+            return;
+
         logName = logName.ToUpper();
         PluginRundown rundown;
 
@@ -164,22 +167,22 @@ public static class LogArchivistManager
                 return;
         }
 
-        if (archivesByLevel.TryGetValue(mainLayout, out var archives))
+        if (!archivesByLevel.TryGetValue(mainLayout, out var levelLogs))
+            return;
+
+        if (!levelLogs.Logs.Exists(log => log.FileName.ToUpper().Equals(logName.ToUpper())))
+            return;
+
+        var data = new ReadLogEvent
         {
-            if (!archives.Logs.Exists(log => log.FileName.ToUpper().Equals(logName.ToUpper())))
-                return;
+            Rundown = rundown,
+            MainId = mainLayout,
+            LogFileName = logName.ToUpper() ?? ""
+        };
 
-            var data = new ReadLogEvent
-            {
-                Rundown = (uint)rundown,
-                MainId = mainLayout,
-                LogFileName = logName.ToUpper() ?? ""
-            };
+        GTFO.API.NetworkAPI.InvokeEvent(eventName, data);
 
-            GTFO.API.NetworkAPI.InvokeEvent(eventName, data);
-
-            OnReadLog(0u, data);
-        }
+        OnReadLog(0u, data);
     }
 
     #region Networking
@@ -195,7 +198,7 @@ public static class LogArchivistManager
         RundownLogRecord record;
         var logName = data.LogFileName.ToUpper();
 
-        switch ((PluginRundown)data.Rundown)
+        switch (data.Rundown)
         {
             case PluginRundown.Weekly:
                 record = WeeklyLogRecord;
@@ -209,31 +212,30 @@ public static class LogArchivistManager
                 record = SeasonalLogRecord;
                 break;
 
-
             case PluginRundown.None:
             case PluginRundown.Daily:
             default:
                 return;
         }
 
-        if (archivesByLevel.TryGetValue(data.MainId, out var archives))
-        {
-            if (!archives.Logs.Exists(log => log.FileName.ToUpper().Equals(logName)))
-                return;
+        if (!archivesByLevel.TryGetValue(data.MainId, out var levelLogs))
+            return;
 
-            if (!record.ReadLogs.ContainsKey(data.MainId))
-                record.ReadLogs.Add(data.MainId, new List<ReadLogRecord>());
+        if (!levelLogs.Logs.Exists(log => log.FileName.ToUpper().Equals(logName)))
+            return;
 
-            var logs = record.ReadLogs[data.MainId];
+        if (!record.ReadLogs.ContainsKey(data.MainId))
+            record.ReadLogs.Add(data.MainId, new List<ReadLogRecord>());
 
-            if (!logs.Exists(log => log.FileName == logName))
-                logs.Add(new ReadLogRecord { FileName = logName });
+        var logs = record.ReadLogs[data.MainId];
 
-            Save(record.Name, record);
-            UpdateIcon(data.MainId);
+        if (!logs.Exists(log => log.FileName == logName))
+            logs.Add(new ReadLogRecord { FileName = logName });
 
-            Plugin.Logger.LogDebug($"Recorded log read: {logName}");
-        }
+        Save(record.Name, record);
+        UpdateIcon(data.MainId);
+
+        Plugin.Logger.LogDebug($"Recorded log read: {logName}");
     }
 
     #endregion
