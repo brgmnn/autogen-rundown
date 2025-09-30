@@ -38,19 +38,9 @@ internal static class Artifacts
     }
 
     [HarmonyPatch(typeof(CM_ExpeditionIcon_New), nameof(CM_ExpeditionIcon_New.SetArtifactHeat))]
-    [HarmonyPrefix]
-    internal static bool Post_CM_ExpeditionIcon_New_SetArtifactHeat(CM_ExpeditionIcon_New __instance) => false;
-
-    // /// <summary>
-    // /// Repositions the level icon in the top bar now that the artifact heat is gone from it
-    // /// </summary>
-    // /// <param name="__instance"></param>
-    // [HarmonyPatch(typeof(CM_MenuBar), nameof(CM_MenuBar.UpdateMenuOptions))]
-    // [HarmonyPostfix]
-    // internal static void Post_CM_MenuBar_UpdateMenuOptions(CM_MenuBar __instance)
-    // {
-    //     var currentPos = __instance.m_expIcon.GetPosition();
-    //
-    //     __instance.m_expIcon.SetPosition(currentPos + new Vector2 { x = 200f });
-    // }
+    [HarmonyPostfix]
+    internal static void Postfix_CM_ExpeditionIcon_New_SetArtifactHeat(CM_ExpeditionIcon_New __instance)
+    {
+        LogArchivistManager.RegisterIcon(__instance);
+    }
 }
