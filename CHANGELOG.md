@@ -3,6 +3,38 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.77.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.77.0) — September 30, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* 🌟 New Geomorph pack: SamDB's [SamGeos V2](https://thunderstore.io/c/gtfo/p/Sam_D_B/SamGeosV2/)
+* 🌟 D-Lock Block Decipherer logs are now scattered throughout the rundowns
+  * Including audio logs! Enjoy the lore of GTFO again
+  * Read logs are tracked and displayed on rundown screen
+* Rundown screen now shows timer displaying remaining time on each rundown
+
+### Changes
+
+* Balance: Slightly increased alarm scan distances
+* Balance: Reduced number of zones in `CentralGeneratorCluster` layout for high cell count missions
+  * Main only levels are capped at 4 separate zone branches to gather cells
+  * Levels with side objectives are capped at 3 separate zone branches
+  * Note that generator clusters with more cells than branches will place multiple cells in some branches
+* Balance: Weekly / Daily rundowns now use main objective pools for selecting objectives
+  * This matches how Monthly / Seasonal rundowns work, and ensures there are max limits on the number of each main objective that can be rolled in a rundown
+* Change: Artifact heat level is now hidden from rundown level selection screen
+* Change: More level names added
+  * Added approximately 200 more level name prefixes and 200 more level name suffixes
+* Fix: Reduce chance of the same starting layouts occuring
+* Fix: Patched several cases where Custom Geo's won't spawn
+* Fix: `RetrieveBigItem` can now correctly roll more than 1 cryo case for several levels
+* Fix: `PowerCellDistribution` now rolls up to 1 cells higher as intended on all level tiers
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.76.1...v0.77.0
+
+
 ## [v0.76.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.76.1) — September 08, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
