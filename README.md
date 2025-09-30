@@ -31,7 +31,6 @@ TODO:
   * Special Terminal Command:
     * REROUTE_POWER - Should probably have more severe consequences then just turning the lights off?
     * REROUTE_POWER - Main - Is too many sequential zones. 6 zones in a row to go through
-  * Try and fix reactor start prefix for further zones (not next immediate), when 2 or more away
   * Add more points of enemies
   * Matter Wave Projector - Needs slightly less zones to go through. Very linear
   * Bring big pickup for scan
