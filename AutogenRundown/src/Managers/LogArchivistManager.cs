@@ -3,9 +3,9 @@ using AutogenRundown.Events;
 using AutogenRundown.Serialization;
 using CellMenu;
 using GameData;
+using GTFO.API;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SNetwork;
 using UnityEngine;
 
 namespace AutogenRundown.Managers;
@@ -65,13 +65,25 @@ public static class LogArchivistManager
             readRecordsByLevel[layoutId] = SeasonalLogRecord.ReadLogs[layoutId];
 
         // Ensure we update the icons when finishing a level
-        GTFO.API.LevelAPI.OnLevelCleanup += () =>
+        LevelAPI.OnLevelCleanup += OnLevelCleanup;
+
+        NetworkAPI.RegisterEvent<ReadLogEvent>(eventName, OnReadLog);
+    }
+
+    /// <summary>
+    /// Updates the icon for the level on cleanup
+    /// </summary>
+    private static void OnLevelCleanup()
+    {
+        try
         {
             var mainId = RundownManager.ActiveExpedition.LevelLayoutData;
             UpdateIcon(mainId);
-        };
-
-        GTFO.API.NetworkAPI.RegisterEvent<ReadLogEvent>(eventName, OnReadLog);
+        }
+        catch (NullReferenceException err)
+        {
+            Plugin.Logger.LogInfo($"Null reference exception: {err.Message}");
+        }
     }
 
     public static void RegisterIcon(CM_ExpeditionIcon_New icon)
