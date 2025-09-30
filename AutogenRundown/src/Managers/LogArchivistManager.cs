@@ -229,8 +229,10 @@ public static class LogArchivistManager
 
         var logs = record.ReadLogs[data.MainId];
 
-        if (!logs.Exists(log => log.FileName == logName))
-            logs.Add(new ReadLogRecord { FileName = logName });
+        logs.Add(new ReadLogRecord { FileName = logName });
+
+        // Remove any duplicates
+        record.ReadLogs[data.MainId] = logs.Distinct().ToList();
 
         Save(record.Name, record);
         UpdateIcon(data.MainId);
