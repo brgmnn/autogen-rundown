@@ -95,10 +95,8 @@ public static class LogArchivistManager
 
     private static void UpdateIcon(uint mainId)
     {
-        if (!icons.ContainsKey(mainId))
+        if (!icons.TryGetValue(mainId, out var icon))
             return;
-
-        var icon = icons[mainId];
 
         if (archivesByLevel.TryGetValue(mainId, out var logs))
         {
