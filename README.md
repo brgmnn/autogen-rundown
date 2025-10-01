@@ -68,7 +68,7 @@ Level Lockup:
   ```
   ZoneNode { Bulkhead = None, ZoneNumber = 0, Branch = , MaxConnections = 0, Tags =  }
   ```
-  There was a bug in the error alarm turnoff code where it would try and place a turnoff alarm from a nonexistent zone 
+  There was a bug in the error alarm turnoff code where it would try and place a turnoff alarm from a nonexistent zone
   ```
   [Error  :     Unity] WARNING : Zone1 (Zone_1 - 224): Failed to find any good StartAreas in zone 0 (223) expansionType:Towards_Random m_buildFromZone.m_areas: 0 scoredCount:0 dim: Reality
   ```
@@ -197,11 +197,11 @@ Levels and rundowns are designed to be similar and in the spirit of vanilla GTFO
 
 ## Installation
 
-### With Mod Manager
+<!-- ### With Mod Manager -->
 
 Go to the Autogen Rundown Thunderstore mod page (https://gtfo.thunderstore.io/package/the_tavern/AutogenRundown/) and install via your mod manager.
 
-### Manual Installation 📦
+<!-- ### Manual Installation 📦
 Download the latest version of the mods manual install zip from the [releases page](https://github.com/brgmnn/autogen-rundown/releases/latest).
 
 > [!IMPORTANT]
@@ -213,13 +213,13 @@ Download the latest version of the mods manual install zip from the [releases pa
   * Windows File Explorer will open inside the GTFO game folder. Navigate up one level and copy/paste the folder. Name it appropriately for your backup (eg. `GTFO_backup`).
 1. Extract the `Autogen_manual_install_<Version>.zip` archive into a folder. *Do not extract into the game folder*.
 2. Move the contents of `AutogenRundown_GTFO` into the GTFO game folder: `<Steam Location>\steamapps\common\GTFO`.
-3. Run the game.
+3. Run the game. -->
 
-If done correctly, after the game launches you should see a watermark in the bottom right corner of the game identifying the mod version `AR <version>`. If you further select a level from one of the rundowns you should also see a watermark identifying the leve, the rundown, and the seed used for that rundown.
+To check if the installation is successful, after the game launches you should see a watermark in the bottom right corner of the game identifying the mod version `AR <version>`. If you further select a level from one of the rundowns you should also see a watermark identifying the leve, the rundown, and the seed used for that rundown.
 
 ![GTFO Watermark](docs/watermark.jpg)
 
-#### Uninstalling the mod
+<!-- #### Uninstalling the mod
 
 To uninstall the mod, open `<Steam Location>\steamapps\common` and delete the GTFO game folder `GTFO`. Then rename your backup GTFO game folder (eg. `GTFO_backup`) to `GTFO`.
 
@@ -227,7 +227,7 @@ If you did not make a backup of the game: delete the GTFO game folder and run "V
 
 #### Updating to the latest mod version
 
-Follow the installation instructions again, check yes to overwrite all files.
+Follow the installation instructions again, check yes to overwrite all files. -->
 
 
 > [!CAUTION]
@@ -305,7 +305,7 @@ Follow the installation instructions again, check yes to overwrite all files.
       * [x] Mother
       * [x] P-Mother
       * [x] Nightmare Mother
-    * [-] Tanks
+    * [x] Tanks
       * [x] Tank
       * [ ] Immortal Tank
       * [x] Potato Tank
@@ -357,7 +357,7 @@ Follow the installation instructions again, check yes to overwrite all files.
 
 ## 3rd Party Mod Support
 
-AutogenRundown supports the following 3rd party peer mods. You can install them along side AutogenRundown. Note that several of these mods conflict with each other such as the weapon modification mods. 
+AutogenRundown supports the following 3rd party peer mods. You can install them along side AutogenRundown. Note that several of these mods conflict with each other such as the weapon modification mods.
 
 * [Arsenality](https://thunderstore.io/c/gtfo/p/W33B/Arsenality)
 * [ArsenalityRebalance](https://thunderstore.io/c/gtfo/p/leezurli/ArsenalityRebalance)
@@ -373,7 +373,6 @@ Many thanks to the modding community for making GTFO modding possible, and a spe
   * Notably [LocalProgression](https://thunderstore.io/c/gtfo/p/Inas07/LocalProgression/) and [ExtraObjectiveSetup](https://thunderstore.io/c/gtfo/p/Inas07/ExtraObjectiveSetup/)
 * Flowaria's [Geomorph Pack](https://thunderstore.io/c/gtfo/p/Flowaria/FlowGeos/)
   * Including the fantastic Floodways Reactor tile enables reactor missions in the service Complex.
-* donan3967's [Geomorph Pack 1](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_1/)
-* donan3967's [Geomorph Pack 2](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_2/)
+* donan3967's [Geomorph Pack 1](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_1/) and [Geomorph Pack 2](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_2/)
 * Red_Leicester_Cheese's [Geomorph Pack](https://thunderstore.io/c/gtfo/p/Red_Leicester_Cheese/CheeseGeos/)
-* SamDB's [SamGeos](https://thunderstore.io/c/gtfo/p/Sam_D_B/SamGeos/)
+* SamDB's [SamGeos](https://thunderstore.io/c/gtfo/p/Sam_D_B/SamGeos/) and [SamGeosV2](https://thunderstore.io/c/gtfo/p/Sam_D_B/SamGeosV2/)
