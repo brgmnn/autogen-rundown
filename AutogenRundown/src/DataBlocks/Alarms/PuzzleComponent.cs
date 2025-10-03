@@ -18,9 +18,17 @@ public class PuzzleComponent
     public static readonly PuzzleComponent BulkheadSecondary = new() { PuzzleType = PuzzleType.BulkheadSecondary };
     public static readonly PuzzleComponent BulkheadOverload  = new() { PuzzleType = PuzzleType.BulkheadOverload };
 
-    public static readonly PuzzleComponent ScanSmall = new() { PuzzleType = PuzzleType.Small };
+    // Unused?
+    public static readonly PuzzleComponent ScanSmall = new()
+    {
+        PuzzleType = PuzzleType.Small
+    };
 
-    public static readonly PuzzleComponent ScanLarge = new() { PuzzleType = PuzzleType.Large };
+    public static readonly PuzzleComponent ScanLarge = new()
+    {
+        PuzzleType = PuzzleType.Large
+        // TODO: Add Duration measurement
+    };
 
     public static readonly PuzzleComponent ClusterSmall = new()
     {
