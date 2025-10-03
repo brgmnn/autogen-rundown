@@ -12,11 +12,13 @@ namespace AutogenRundown.Managers;
 
 public static class LogArchivistManager
 {
-    public static List<LevelLogArchives> archives { get; set; } = new();
+    private static List<LevelLogArchives> archives { get; set; } = new();
 
-    public static Dictionary<uint, LevelLogArchives> archivesByLevel { get; set; } = new();
+    private static Dictionary<uint, LevelLogArchives> archivesByLevel { get; set; } = new();
 
-    public static Dictionary<uint, List<ReadLogRecord>> readRecordsByLevel { get; set; } = new();
+    private static Dictionary<uint, List<ReadLogRecord>> readRecordsByLevel { get; set; } = new();
+
+    private static Dictionary<uint, CM_ExpeditionIcon_New> icons = new();
 
     private static RundownLogRecord WeeklyLogRecord { get; set; } = new();
 
@@ -24,7 +26,6 @@ public static class LogArchivistManager
 
     private static RundownLogRecord SeasonalLogRecord { get; set; } = new();
 
-    private static Dictionary<uint, CM_ExpeditionIcon_New> icons = new();
 
     private const string eventName = "autogen_archivist_read_log";
 
@@ -126,10 +127,12 @@ public static class LogArchivistManager
             // no logs
 
             // "Hides" the artifact heat text by moving it off-screen
-            icon.m_artifactHeatText.gameObject.transform.localPosition += Vector3.down * 10_000;
+            icon.m_artifactHeatText.gameObject.transform.localPosition = Vector3.down * 10_000;
 
             // Shifts up the level completion text
-            icon.m_statusText.transform.localPosition += new Vector3(0f, 25.0f, 0f);
+            // Base game position is (-156.4, -67.8, -1.4)
+            // += new Vector3(0f, 25.0f, 0f) is perfect
+            icon.m_statusText.transform.localPosition = new Vector3 { x = -156.4f, y = -42.8f, z = -1.4f };
         }
     }
 
