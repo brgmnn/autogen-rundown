@@ -19,6 +19,7 @@ public class PuzzleComponent
     public static readonly PuzzleComponent BulkheadOverload  = new() { PuzzleType = PuzzleType.BulkheadOverload };
 
     public static readonly PuzzleComponent ScanSmall = new() { PuzzleType = PuzzleType.Small };
+
     public static readonly PuzzleComponent ScanLarge = new() { PuzzleType = PuzzleType.Large };
 
     public static readonly PuzzleComponent ClusterSmall = new()
@@ -33,12 +34,39 @@ public class PuzzleComponent
     };
     public static readonly PuzzleComponent Cluster = new() { PuzzleType = PuzzleType.Cluster };
 
-    public static readonly PuzzleComponent AllBig = new() { PuzzleType = PuzzleType.AllBig };
-    public static readonly PuzzleComponent AllBig_GreenActive = new() { PuzzleType = PuzzleType.AllBig_GreenActive };
-    public static readonly PuzzleComponent AllLarge = new() { PuzzleType = PuzzleType.AllLarge };
-    public static readonly PuzzleComponent AllLarge_Slow = new() { PuzzleType = PuzzleType.AllLarge_Slow };
+    /// <summary>
+    /// Team scan orange component
+    /// </summary>
+    public static readonly PuzzleComponent AllBig = new()
+    {
+        PuzzleType = PuzzleType.AllBig,
+        Duration = 8
+    };
 
-    public static readonly PuzzleComponent StealthBig_Cluster = new() { PuzzleType = PuzzleType.StealthBig_Cluster };
+    public static readonly PuzzleComponent AllBig_GreenActive = new()
+    {
+        PuzzleType = PuzzleType.AllBig_GreenActive
+    };
+
+    /// <summary>
+    /// Surge alarms orange team scan
+    /// </summary>
+    public static readonly PuzzleComponent AllLarge = new()
+    {
+        PuzzleType = PuzzleType.AllLarge,
+        Duration = 15
+    };
+
+    // Unused right now
+    public static readonly PuzzleComponent AllLarge_Slow = new()
+    {
+        PuzzleType = PuzzleType.AllLarge_Slow
+    };
+
+    public static readonly PuzzleComponent StealthBig_Cluster = new()
+    {
+        PuzzleType = PuzzleType.StealthBig_Cluster
+    };
 
     public static readonly PuzzleComponent Sustained = new()
     {
