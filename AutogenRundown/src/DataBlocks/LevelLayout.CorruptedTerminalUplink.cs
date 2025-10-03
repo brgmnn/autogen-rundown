@@ -156,7 +156,6 @@ public partial record LevelLayout
                             WavePopulation.Baseline_Hybrids,
                             WaveSettings.Baseline_Normal);
 
-                        planner.UpdateNode(mid2 with { Tags = mid2.Tags.Extend("uplink_terminal") });
                         planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
                     }),
 

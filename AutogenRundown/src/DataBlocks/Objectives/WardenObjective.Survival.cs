@@ -19,12 +19,18 @@ namespace AutogenRundown.DataBlocks;
  *  - Check exit zone for 2024_07_13
  *  - Maybe only have error alarm in E-tier, it's quite difficult with that
  */
-public partial record WardenObjective : DataBlock
+public partial record WardenObjective
 {
     public double Survival_CalculateTime(BuildDirector director, Level level)
     {
         var nodes = level.Planner.GetZones(director.Bulkhead, null);
-        var total = 0.0;
+        var total = level.Tier switch
+        {
+            "A" => 90.0,
+            "B" => 60.0,
+            "C" => 30.0,
+            _ => 0.0
+        };
 
         foreach (var node in nodes)
         {

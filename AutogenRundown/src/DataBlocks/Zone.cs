@@ -482,7 +482,7 @@ public partial record Zone : DataBlock
     // efficiently clear a zone.
 
     private const double clearTimeFactor_AlarmsTime     = 1.20; // Time factor for duration of each scan
-    private const double clearTimeFactor_AlarmsTraverse = 1.20; // Distance factor for walking between scans
+    private const double clearTimeFactor_AlarmsTraverse = 1.40; // Distance factor for walking between scans
     private const double clearTimeFactor_AreaCoverage   = 1.30; // Map area factor for size of zone
     private const double clearTimeFactor_EnemyPoints    = 1.80; // Points factor for each enemy point
     private const double clearTimeFactor_Bosses         = 1.00; // Per boss factor
