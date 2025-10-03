@@ -26,7 +26,7 @@ public partial record WardenObjective
         var nodes = level.Planner.GetZones(director.Bulkhead, null);
         var total = level.Tier switch
         {
-            "A" => 90.0,
+            "A" => 80.0,
             "B" => 60.0,
             "C" => 30.0,
             _ => 0.0

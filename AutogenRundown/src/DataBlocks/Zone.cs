@@ -502,12 +502,12 @@ public partial record Zone : DataBlock
     /// <returns></returns>
     public double ClearTime_Alarm()
         => 10.0 + Alarm.Puzzle.Sum(component => component.Duration)
-                * clearTimeFactor_AlarmsTime
+                    * clearTimeFactor_AlarmsTime
                 + Alarm.WantedDistanceFromStartPos
-                * clearTimeFactor_AlarmsTraverse
+                    * clearTimeFactor_AlarmsTraverse
                 + (Alarm.Puzzle.Count - 1)
-                * Alarm.WantedDistanceBetweenPuzzleComponents
-                * clearTimeFactor_AlarmsTraverse;
+                    * Alarm.WantedDistanceBetweenPuzzleComponents
+                    * clearTimeFactor_AlarmsTraverse;
 
     /// <summary>
     /// Estimates the time (in seconds) to clear a zone only of the enemies marked as bosses.
