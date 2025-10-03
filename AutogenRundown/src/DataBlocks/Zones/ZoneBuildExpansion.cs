@@ -1,6 +1,8 @@
 ﻿namespace AutogenRundown.DataBlocks.Zones;
 
 /// <summary>
+/// Zone.StartExpansion
+///
 /// eZoneBuildFromExpansionType
 ///
 /// What direction to try and place the entrance door for this zone

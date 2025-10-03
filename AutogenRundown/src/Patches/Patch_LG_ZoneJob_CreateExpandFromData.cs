@@ -16,6 +16,9 @@ internal static class Patch_LG_ZoneJob_CreateExpandFromData
     [HarmonyFinalizer]
     public static void Post_LG_ZoneJob_CreateExpandFromData_Build(LG_ZoneJob_CreateExpandFromData __instance, ref Exception? __exception)
     {
+        // [Warning:AutogenRundown] Re-rolling subSeed=5699
+        // [Error  :     Unity] WARNING : Zone1 (Zone_1 - 315): Failed to find any good StartAreas in zone 0 (314) expansionType:Towards_Random m_buildFromZone.m_areas: 1 scoredCount:0 dim: Reality
+
         if (__instance.m_mainStatus == MainStatus.FindStartArea &&
             __instance.m_subStatus == SubStatus.SelectArea &&
             __instance.m_scoredStartAreas.Count < 1)
@@ -31,6 +34,85 @@ internal static class Patch_LG_ZoneJob_CreateExpandFromData
             }
         }
     }
+
+    #region Fix: Directional expansion being blocked but not falling back to valid open other directions
+
+    /// <summary>
+    /// This is to help catch situations where zone expansion fails because the builder attempted
+    /// to build a zone, say, forward and failed because there were no forward spaces available.
+    /// But the starting zone does have space in other directions.
+    ///
+    /// This is fairly common with directional expansion settings because it excludes the other
+    /// directions normally from consideration. This adds those back in as a fallback.
+    /// </summary>
+    /// <param name="__instance"></param>
+    [HarmonyPatch(typeof(LG_ZoneJob_CreateExpandFromData), nameof(LG_ZoneJob_CreateExpandFromData.Build))]
+    [HarmonyPostfix]
+    public static void AddFallbackDirectionExpansion(LG_ZoneJob_CreateExpandFromData __instance)
+    {
+            // Preconditions: only act if no start areas are scored
+            var startAreaScores = __instance.m_scoredStartAreas; // public field
+
+            var mainStatus = __instance.m_mainStatus;
+            var subStatus = __instance.m_subStatus;
+
+            if (mainStatus != MainStatus.FindStartArea && subStatus != SubStatus.ScoreAreas)
+                return;
+
+            if (startAreaScores == null || startAreaScores.Count != 0)
+                return;
+
+            // If we already have a chosen start area, nothing to do
+            if (__instance.m_startArea != null)
+                return;
+
+            // Ensure we have a valid zone to pick areas from
+            var fromZone = __instance.m_buildFromZone;
+
+            if (fromZone == null || fromZone.m_areas == null || fromZone.m_areas.Count == 0)
+                return;
+
+            // Check requested StartExpansion; only fallback if it was directional (not Random)
+            var zoneData = __instance.m_zoneData;
+
+            if (zoneData == null)
+                return; // safety: cannot verify policy without zone data
+
+            // if (zoneData.StartExpansion == eZoneBuildFromExpansionType.Towards_Random)
+            // {
+            //     Plugin.Logger.LogWarning($"Exited 5; zone_number = {fromZone.LocalIndex}");
+            //     return; // already random; nothing to improve here
+            // }
+
+            try
+            {
+                // Fallback: include all directions with lower priority
+                // 1) Create low, positive scores for all areas
+                var fallback = LG_Scoring.CreateScores(fromZone.m_areas, 0.1f);
+                var subSeed = __instance.m_rnd.Random.NextSubSeed();
+
+                // 2) Randomize within the low-priority bucket for tie-breaking
+                LG_Scoring.AssignRandomScores(fallback, seed: subSeed, max: 1f);
+
+                // 3) Sort and assign back
+                fallback = LG_Scoring.ScoreSort(fallback);
+                __instance.m_scoredStartAreas = fallback;
+
+                // 4) Mark current expansion type as inclusive/random for the start-area phase
+                __instance.m_currentExpansionType = eZoneExpansionType.Directional_Random;
+
+                Plugin.Logger.LogWarning($"Fallback enabled for start areas in {__instance.m_zone?.Alias} " +
+                                         $"(dim:{__instance.m_dimension?.DimensionIndex}). " +
+                                         $"Requested: {zoneData.StartExpansion}; " +
+                                         $"using inclusive directions.");
+            }
+            catch (Exception ex)
+            {
+                Plugin.Logger.LogError($"Fallback start-area patch failed: {ex}");
+            }
+    }
+
+    #endregion
 
     #region Fix: Zone expansion getting trapped in dead ends
 

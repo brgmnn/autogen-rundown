@@ -1,6 +1,8 @@
 ﻿namespace AutogenRundown.DataBlocks.Zones;
 
 /// <summary>
+/// Zone.ZoneExpansion
+///
 /// eZoneExpansionType
 ///
 /// What direction to build the zone towards
