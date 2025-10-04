@@ -57,8 +57,6 @@ public static class RundownTimers
                 component.UpdateHeaderText();
             }
         }
-
-        Plugin.Logger.LogWarning("GUIX_layer_Tier_1 has been disabled");
     }
 
     [HarmonyPatch(typeof(GUIX_Layer), nameof(GUIX_Layer.OnEnable))]
@@ -100,8 +98,6 @@ public static class RundownTimers
                 component.UpdateHeaderText();
             }
         }
-
-        Plugin.Logger.LogWarning("GUIX_layer_Tier_1 has been enabled");
     }
 
     /// <summary>
