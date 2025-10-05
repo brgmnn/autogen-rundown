@@ -119,6 +119,11 @@ public static class LogArchivistManager
             else if (completed < logs.Logs.Count)
                 completedString = $"<color=orange>{completedString}</color>";
 
+            if (WeeklyLogRecord.ReadAllLogsLevels.Contains(mainId) ||
+                MonthlyLogRecord.ReadAllLogsLevels.Contains(mainId) ||
+                SeasonalLogRecord.ReadAllLogsLevels.Contains(mainId))
+                completedString = $"{logs.Logs.Count}";
+
             icon.m_artifactHeatText.SetText($"Logs: {completedString}/{logs.Logs.Count}");
         }
         else
@@ -287,6 +292,17 @@ public static class LogArchivistManager
 
     private static void Save(string rundownName, RundownLogRecord data)
     {
+        // Ensure we have all the "ReadAllLogsLevels" written
+        foreach (var (layoutId, record) in data.ReadLogs)
+        {
+            if (!archivesByLevel.TryGetValue(layoutId, out var levelLogs))
+                continue;
+
+            if (record.Count >= levelLogs.Logs.Count)
+                data.ReadAllLogsLevels.Add(layoutId);
+        }
+
+        // --- Actually save the data ---
         var serializer = new JsonSerializer { Formatting = Formatting.Indented };
 
         var path = RundownFile(rundownName);
