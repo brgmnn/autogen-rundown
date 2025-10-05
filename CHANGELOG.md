@@ -3,6 +3,18 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.78.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.78.1) — October 05, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Added full level clear tracking on logs archive
+  * Now when you read all the logs in a level, that level will still be marked as complete even if the level is re-rolled and a different quantity of logs are placed there
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.78.0...v0.78.1
+
+
 ## [v0.78.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.78.0) — October 04, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
