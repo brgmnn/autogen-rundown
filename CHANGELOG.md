@@ -3,6 +3,32 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.78.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.78.0) — October 04, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Added support for [OmegaWeapons](https://thunderstore.io/c/gtfo/p/Mimikium/OmegaWeapons/) peer mod
+
+### Changes
+
+* Balance: Added flat extra time to A/B/C tier survival missions timer
+  * A-tier: +80 seconds
+  * B-tier: +60 seconds
+  * C-tier: +30 seconds
+* Balance: Increased alarm travel distance time factor from `1.2` to `1.4`
+  * More time is awarded to survival / reactor code fetches for alarm travel distance
+* Balance: Adjust team scan component time duration by re-measuring scan times in game
+  * Team scan duration reduced from `10` to `8` seconds
+  * Slow team scan duration increased from `10` to `15` seconds
+* Fix: Issue where Daily rundown status text would slowly creep upwards
+* Fix: Issue with Apex alarm C-tier corrupted uplink spawning uplink terminals in the hub zone
+* Fix: Added additional zone expansion failure patch to fix some cases where zones would not build
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.77.0...v0.77.1
+
+
 ## [v0.77.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.77.0) — September 30, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
