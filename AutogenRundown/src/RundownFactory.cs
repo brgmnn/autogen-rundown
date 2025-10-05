@@ -620,10 +620,10 @@ public static class RundownFactory
                 "FALL_2025", new List<List<int>>
                 {
                     new() { 1, 1, 1, 1, 1 },
-                    new() { 1, 1, 1, 2, 1, 1 },
-                    new() { 3, 1, 2, 1, 1, 1 },
-                    new() { 1, 1, 2, 1, 2, 1 },
-                    new() { 3, 2, 1, 1 }
+                    new() { 1, 1, 1, 1, 1, 1 },
+                    new() { 2, 1, 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1, 1, 1 },
+                    new() { 2, 3, 2, 1 }
                 }
             }
         };
@@ -899,8 +899,8 @@ public static class RundownFactory
                     new() { 1, 1 },
                     new() { 1, 1, 2, 2 },
                     new() { 2, 1, 1, 1 },
-                    new() { 2, 1, 1 },
-                    new() { 2 }
+                    new() { 3, 4, 1 },
+                    new() { 1 }
                 }
             }
         };
