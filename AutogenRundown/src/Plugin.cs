@@ -72,7 +72,7 @@ public class Plugin : BasePlugin
             new ConfigDefinition("AutogenRundown.Seeds", "SeasonalSeed"),
             "",
             new ConfigDescription("Specify a seed for the Seasonal Rundown.\nExpected format is " +
-                                  "\"SEASON_YYYY\" where YYYY is the year (e.g 2025) and SEASON" +
+                                  "\"SEASON_YYYY\" where YYYY is the year (e.g 2025) and SEASON " +
                                   "is one of the four seasons (Winter, Spring, Summer, Fall)." +
                                   "e.g SPRING_2025"));
 
