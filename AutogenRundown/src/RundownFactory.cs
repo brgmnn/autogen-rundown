@@ -625,6 +625,17 @@ public static class RundownFactory
                     new() { 1, 1, 1, 1, 1, 1 },
                     new() { 2, 3, 2, 1 }
                 }
+            },
+            {
+                // TODO: roll seeds
+                "WINTER_2025", new List<List<int>>
+                {
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1, 1 }
+                }
             }
         };
 
@@ -901,6 +912,28 @@ public static class RundownFactory
                     new() { 2, 1, 1, 1 },
                     new() { 3, 4, 1 },
                     new() { 1 }
+                }
+            },
+            {
+                // TODO: roll seeds
+                "2025_11", new List<List<int>>
+                {
+                    new() { 1, 1, 1 },
+                    new() { 1, 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 1 },
+                    new() { 1, 1 }
+                }
+            },
+            {
+                // TODO: roll seeds
+                "2025_12", new List<List<int>>
+                {
+                    new() { 1, 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 1 },
+                    new() { 1, 1 }
                 }
             }
         };
