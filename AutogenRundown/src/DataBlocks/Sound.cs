@@ -22,6 +22,50 @@ public enum Sound : uint
     Warp = 1998147319,
     WarpReality = 231201012,
 
+
+
+    #region R8C2 Unplugged
+
+    /// <summary>
+    /// R8C2
+    /// </summary>
+    R8C2_Startupshort = 2578878269,
+
+    /// <summary>
+    /// Sounds like a short mic cutout
+    ///
+    /// Seems to have multiple versions
+    /// </summary>
+    StaticCutout_Short =  469352613,
+
+    StaticCutout_Medium = 2575020920,
+
+    // Schaeffer saying fuck = 380255615
+
+    /// <summary>
+    /// Robot voice: "Message Sent"
+    /// </summary>
+    Hearsay_MessageSent = 507879784,
+
+
+    /// <summary>
+    /// Short noise played just before the stack empty success screen
+    /// </summary>
+    Warden_ChipRemove = 3869511737,
+
+
+    /// <summary>
+    /// Also sounds:
+    ///     * 2871316840
+    ///     * 2952136044
+    /// </summary>
+    Woooo_Machine1 = 2871316841,
+
+    #endregion
+
+
+
+
     #region Alarms
     Alarms_MissingItem = 2200133294, // decon_unit_missing_alarm
 

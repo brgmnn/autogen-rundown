@@ -621,18 +621,29 @@ public class Level
     /// Additional override data JSON encoding
     /// </summary>
     [JsonProperty("SpecialOverrideData")]
-    public JObject SpecialOverrideData
+    public JObject SpecialOverrideData => new()
     {
-        get => new()
+        ["WeakResourceContainerWithPackChanceForLocked"] = -1.0,
+        ["InfectionLevelAtExpeditionStart"] = StartingInfection,
+        ["HealthLevelAtExpeditionStart"] = StartingHealth,
+        ["StandardAmmoAtExpeditionStart"] = StartingMainAmmo,
+        ["SpecialAmmoAtExpeditionStart"] = StartingSpecialAmmo,
+        ["ToolAmmoAtExpeditionStart"] = StartingTool,
+
+        // R8E2 fade out
+        // ["PreSuccessScreen"] = "CM_PreSuccessScreen_Fadeout",
+
+        ["CustomSuccessScreen"] = CustomSuccessScreen switch
         {
-            ["WeakResourceContainerWithPackChanceForLocked"] = -1.0,
-            ["InfectionLevelAtExpeditionStart"] = StartingInfection,
-            ["HealthLevelAtExpeditionStart"] = StartingHealth,
-            ["StandardAmmoAtExpeditionStart"] = StartingMainAmmo,
-            ["SpecialAmmoAtExpeditionStart"] = StartingSpecialAmmo,
-            ["ToolAmmoAtExpeditionStart"] = StartingTool
-        };
-    }
+            SuccessScreen.ResourcesExpended => "CM_PageExpeditionSuccess_Resources expended_CellUI 2",
+            SuccessScreen.SignalLost => "CM_PageExpeditionSuccess_SignalLost_CellUI",
+            SuccessScreen.StackEmpty => "CM_PageExpeditionSuccess_Stack Empty_CellUI 1",
+
+            _ => null,
+        }
+    };
+
+    public SuccessScreen CustomSuccessScreen { get; set; } = SuccessScreen.Default;
     #endregion
 
     #region Scout Waves
@@ -1383,6 +1394,8 @@ public class Level
             };
             var objective = WardenObjective.PreBuild(director, level);
 
+            objective.EventsOnElevatorLand.AddSound(Sound.Woooo_Machine1);
+
             level.Director[Bulkhead.Main] = director;
             level.Objective[Bulkhead.Main] = objective;
 
@@ -1407,6 +1420,8 @@ public class Level
             level.BuildDefaultScoutWaves();
 
             #endregion
+
+            level.CustomSuccessScreen = SuccessScreen.StackEmpty;
 
             var dimension = new Dimension
             {

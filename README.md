@@ -42,8 +42,8 @@ TODO:
   * Uplink objectives stop ALL WAVES after completing them. Got to figure out a way to not do that.
   * Retrieve big item:
     * A-tier main only rolled no exit alarm.
- * Add "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_AW_01.prefab", the giant HSU pit. Technically an I-tile
-
+  * Add "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_AW_01.prefab", the giant HSU pit. Technically an I-tile
+  * Weekly #40 A1 failed to generate objective room
 
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
@@ -53,7 +53,9 @@ Idea:
   * Side quest room to lower the fog
   * Bring big pickup for scan on door
   * Add full team scan on extract instead of warden scan
-  * "Archivist", like "Unaugmented" but for finding all the D-Lock Cipher logs in a level?
+  * R8E2 "ADMIN_TEMP_OVERRIDE" command level
+    * Keep putting in command to keep surge error at bay
+  * Clear path to a warp portal that jumps you to the success screen 
 
 # Datasphere color pack
 https://thunderstore.io/c/gtfo/p/ProjectZaero/Data_Sphere_Flavor_Pack/
