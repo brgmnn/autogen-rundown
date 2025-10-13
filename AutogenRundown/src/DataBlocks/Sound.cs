@@ -50,6 +50,8 @@ public enum Sound : uint
 
     /// <summary>
     /// Short noise played just before the stack empty success screen
+    ///
+    /// Duration = 1.0 seconds
     /// </summary>
     Warden_ChipRemove = 3869511737,
 
