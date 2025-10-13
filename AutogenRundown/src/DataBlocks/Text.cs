@@ -41,6 +41,18 @@ public record Text : DataBlock
         : base(Generator.GetPersistentId(offsets))
     { }
 
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public static Text FromFile(string path)
+    {
+        var text = new Text();
+
+        return text;
+    }
+
     public static void Setup()
         => Setup<GameDataText, Text>(Bins.Texts, "Text");
 
