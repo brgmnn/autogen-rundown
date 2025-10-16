@@ -27,7 +27,7 @@ public class ArchivistIconWrapper
 
     public void Destory()
     {
-        if(GameObject != null)
+        if (GameObject != null)
         {
             GameObject.Destroy(GameObject);
         }

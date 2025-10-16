@@ -121,6 +121,7 @@ public class Plugin : BasePlugin
         GameDataAPI.OnGameDataInitialized += LogArchivistManager.Setup;
 
         AssetAPI.OnAssetBundlesLoaded += ExpeditionSuccessPage_ArchivistIcon.OnAssetBundlesLoaded;
+        AssetAPI.OnAssetBundlesLoaded += RundownTierMarkerArchivist.OnAssetBundlesLoaded;
 
         // Apply patches
         var harmony = new Harmony("the_tavern-AutogenRundown");

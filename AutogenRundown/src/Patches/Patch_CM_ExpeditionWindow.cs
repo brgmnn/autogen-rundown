@@ -1,6 +1,9 @@
 ﻿using AutogenRundown.Components;
 using CellMenu;
 using HarmonyLib;
+using UnityEngine;
+using LevelGeneration;
+using SNetwork;
 
 namespace AutogenRundown.Patches;
 
