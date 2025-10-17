@@ -5,6 +5,7 @@ using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.GeneratorData;
+using BepInEx;
 
 namespace AutogenRundown;
 
@@ -38,6 +39,49 @@ public static class RundownFactory
 
     private static void CleanFolders()
     {
+        var gameData = Path.Combine(Paths.BepInExRootPath, "GameData");
+
+        try
+        {
+            // Validate the parent directory exists
+            if (!Directory.Exists(gameData))
+                throw new DirectoryNotFoundException($"Game data folder not found: {gameData}");
+
+            var directories = Directory.GetDirectories(gameData);
+
+            foreach (var dirPath in directories)
+            {
+                var folderName = Path.GetFileName(dirPath);
+
+                if (!int.TryParse(folderName, out var folderNumber))
+                    continue;
+
+                if (folderNumber >= CellBuildData.GetRevision())
+                    continue;
+
+                Plugin.Logger.LogInfo($"Deleting old data folder: {dirPath}");
+                Directory.Delete(dirPath, recursive: true);
+            }
+
+            Plugin.Logger.LogInfo("Deletion complete.");
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            Plugin.Logger.LogInfo($"Access denied: {ex.Message}");
+        }
+        catch (DirectoryNotFoundException ex)
+        {
+            Plugin.Logger.LogInfo($"Directory not found: {ex.Message}");
+        }
+        catch (IOException ex)
+        {
+            Plugin.Logger.LogInfo($"IO error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Plugin.Logger.LogInfo($"Error: {ex.Message}");
+        }
+
         var dir = Path.Combine(Plugin.GameDataPath, "Custom", "AutogenRundown");
 
         if (Directory.Exists(dir))
