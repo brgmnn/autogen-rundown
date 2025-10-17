@@ -82,6 +82,12 @@ public static class LogArchivistManager
         LevelAPI.OnLevelCleanup += OnLevelCleanup;
 
         NetworkAPI.RegisterEvent<ReadLogEvent>(eventName, OnReadLog);
+
+        EventManager.OnRundownUpdate += (_) =>
+        {
+            foreach (var mainId in icons.Keys)
+                UpdateIcon(mainId);
+        };
     }
 
     private static void AddRundownMainIds(PluginRundown rundown, RundownDataBlock data)

@@ -117,6 +117,8 @@ public class Plugin : BasePlugin
         Patch_LG_ComputerTerminal_Setup.Setup();
         Patch_LG_SecurityDoor.Setup();
 
+        EventManager.Setup();
+
         GameDataAPI.OnGameDataInitialized += Patch_CentralGeneratorCluster.Setup;
         GameDataAPI.OnGameDataInitialized += LogArchivistManager.Setup;
 

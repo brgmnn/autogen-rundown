@@ -12,6 +12,7 @@ public class Patch_CM_PageRundown_New
     private static void Post_Setup(CM_PageRundown_New __instance)
     {
         EventManager.RegisterPage(__instance);
+        EventManager.UpdateRundown();
     }
 
     [HarmonyPatch(typeof(CM_PageRundown_New), nameof(CM_PageRundown_New.PlaceRundown))]

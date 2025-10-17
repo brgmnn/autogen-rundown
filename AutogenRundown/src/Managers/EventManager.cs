@@ -18,6 +18,11 @@ public static class EventManager
 
     public static event Action<PluginRundown> OnRundownUpdate;
 
+    public static void Setup()
+    {
+        RundownManager.OnRundownProgressionUpdated += new Action(UpdateRundown);
+    }
+
     public static void RegisterPage(CM_PageRundown_New newPage)
     {
         page = newPage;

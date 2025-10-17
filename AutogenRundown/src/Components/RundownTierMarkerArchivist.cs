@@ -146,8 +146,8 @@ internal class RundownTierMarkerArchivist : MonoBehaviour
             return;
         }
 
+        UpdateText();
         SetVisible(true);
-        m_rightSideText.SetText($"<size=120>{totalRead}/{totalLogs}</size>");
     }
 
     private void SetupNoBoosterUsedIcon(bool boosterUnused)
@@ -182,7 +182,6 @@ internal class RundownTierMarkerArchivist : MonoBehaviour
         m_icon.sprite = sprite;
         m_icon.color = Color.white; // ensure it's not tinted
 
-
         // blink in sound control
         if (boosterUnused)
         {
@@ -197,10 +196,25 @@ internal class RundownTierMarkerArchivist : MonoBehaviour
         icon.m_rightSideText.gameObject.SetActive(false);
 
         icon.m_title.SetText("<size=120>LOG ARCHIVE</size>");
-        icon.m_rightSideText.SetText($"<size=120>{totalRead}/{totalLogs}</size>");
+        icon.m_rightSideText.SetText($"<size=120>[{totalRead}/{totalLogs}]</size>");
+
+        UpdateText();
 
         icon.m_title.gameObject.SetActive(true);
         icon.m_rightSideText.gameObject.SetActive(true);
+        SetVisible(true);
+    }
+
+    private void UpdateText()
+    {
+        var readString = $"{totalRead}";
+
+        if (totalRead == 0)
+            readString = $"<color=red>{readString}</color>";
+        else if (totalRead < totalLogs)
+            readString = $"<color=orange>{readString}</color>";
+
+        m_rightSideText.SetText($"<size=120>[{readString}/{totalLogs}]</size>");
     }
 
     static RundownTierMarkerArchivist()
