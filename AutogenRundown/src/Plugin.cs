@@ -120,6 +120,8 @@ public class Plugin : BasePlugin
         GameDataAPI.OnGameDataInitialized += Patch_CentralGeneratorCluster.Setup;
         GameDataAPI.OnGameDataInitialized += LogArchivistManager.Setup;
 
+        RundownTierMarkerArchivist.PluginSetup();
+
         AssetAPI.OnAssetBundlesLoaded += ExpeditionSuccessPage_ArchivistIcon.OnAssetBundlesLoaded;
         AssetAPI.OnAssetBundlesLoaded += RundownTierMarkerArchivist.OnAssetBundlesLoaded;
 

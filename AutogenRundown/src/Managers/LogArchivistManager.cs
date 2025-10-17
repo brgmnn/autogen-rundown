@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Custom.AutogenRundown;
+﻿using AutogenRundown.DataBlocks;
+using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.Events;
 using AutogenRundown.Serialization;
 using CellMenu;
@@ -6,13 +7,15 @@ using GameData;
 using GTFO.API;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 namespace AutogenRundown.Managers;
 
 public static class LogArchivistManager
 {
     private static List<LevelLogArchives> archives { get; set; } = new();
+
+    private static Dictionary<PluginRundown, HashSet<uint>> rundownMainIds { get; set; } = new();
 
     private static Dictionary<uint, LevelLogArchives> archivesByLevel { get; set; } = new();
 
@@ -25,7 +28,6 @@ public static class LogArchivistManager
     private static RundownLogRecord MonthlyLogRecord { get; set; } = new();
 
     private static RundownLogRecord SeasonalLogRecord { get; set; } = new();
-
 
     private const string eventName = "autogen_archivist_read_log";
 
@@ -49,11 +51,22 @@ public static class LogArchivistManager
         foreach (var rundown in blocks)
         {
             if (rundown.persistentID == (uint)PluginRundown.Weekly)
+            {
+                AddRundownMainIds(PluginRundown.Weekly, rundown);
                 WeeklyLogRecord = Load(rundown.name) ?? new RundownLogRecord { Name = rundown.name };
+            }
+
             if (rundown.persistentID == (uint)PluginRundown.Monthly)
+            {
+                AddRundownMainIds(PluginRundown.Monthly, rundown);
                 MonthlyLogRecord = Load(rundown.name) ?? new RundownLogRecord { Name = rundown.name };
+            }
+
             if (rundown.persistentID == (uint)PluginRundown.Seasonal)
+            {
+                AddRundownMainIds(PluginRundown.Seasonal, rundown);
                 SeasonalLogRecord = Load(rundown.name) ?? new RundownLogRecord { Name = rundown.name };
+            }
         }
 
         foreach (var layoutId in WeeklyLogRecord.ReadLogs.Keys)
@@ -69,6 +82,22 @@ public static class LogArchivistManager
         LevelAPI.OnLevelCleanup += OnLevelCleanup;
 
         NetworkAPI.RegisterEvent<ReadLogEvent>(eventName, OnReadLog);
+    }
+
+    private static void AddRundownMainIds(PluginRundown rundown, RundownDataBlock data)
+    {
+        rundownMainIds[rundown] = new HashSet<uint>();
+
+        foreach (var level in data.TierA)
+            rundownMainIds[rundown].Add(level.LevelLayoutData);
+        foreach (var level in data.TierB)
+            rundownMainIds[rundown].Add(level.LevelLayoutData);
+        foreach (var level in data.TierC)
+            rundownMainIds[rundown].Add(level.LevelLayoutData);
+        foreach (var level in data.TierD)
+            rundownMainIds[rundown].Add(level.LevelLayoutData);
+        foreach (var level in data.TierE)
+            rundownMainIds[rundown].Add(level.LevelLayoutData);
     }
 
     /// <summary>
@@ -152,7 +181,69 @@ public static class LogArchivistManager
             completed = Math.Min(readLogs.Count, logs.Logs.Count);
 
         return (completed, logs.Logs.Count);
+    }
 
+    /// <summary>
+    /// Gets the total number of read logs for a rundown
+    /// </summary>
+    /// <param name="rundown"></param>
+    /// <returns></returns>
+    public static (int, int) GetLogsRead(PluginRundown rundown)
+    {
+        RundownLogRecord record;
+
+        switch (rundown)
+        {
+            case PluginRundown.Weekly:
+                record = WeeklyLogRecord;
+                break;
+
+            case PluginRundown.Monthly:
+                record = MonthlyLogRecord;
+                break;
+
+            case PluginRundown.Seasonal:
+                record = SeasonalLogRecord;
+                break;
+
+            case PluginRundown.None:
+            case PluginRundown.Daily:
+            default:
+                return (0, 0);
+        }
+
+        var total = 0;
+        var read = 0;
+
+        foreach (var archive in archives)
+        {
+            var id = archive.MainLevelLayout;
+
+            if (!rundownMainIds.TryGetValue(rundown, out var ids))
+                continue;
+
+            if (!ids.Contains(id))
+                continue;
+
+            total += archive.Logs.Count;
+        }
+
+        foreach (var mainId in record.ReadAllLogsLevels)
+            if (archivesByLevel.TryGetValue(mainId, out var logs))
+                read += logs.Logs.Count;
+
+        foreach (var data in record.ReadLogs)
+        {
+            var mainId = data.Key;
+            var logs = data.Value;
+
+            if (record.ReadAllLogsLevels.Contains(mainId))
+                continue;
+
+            read += logs.Count;
+        }
+
+        return (read, total);
     }
 
     /// <summary>
@@ -204,7 +295,7 @@ public static class LogArchivistManager
             LogFileName = logName.ToUpper() ?? ""
         };
 
-        GTFO.API.NetworkAPI.InvokeEvent(eventName, data);
+        NetworkAPI.InvokeEvent(eventName, data);
 
         OnReadLog(0u, data);
     }

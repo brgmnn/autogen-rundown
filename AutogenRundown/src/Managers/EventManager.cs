@@ -16,9 +16,7 @@ public static class EventManager
     // Check when GUIX_layer_Tier_1 becomes visible
     public static event Action OnScreen_ViewRundown;
 
-
-    public static event Action OnRundownUpdate;
-
+    public static event Action<PluginRundown> OnRundownUpdate;
 
     public static void RegisterPage(CM_PageRundown_New newPage)
     {
@@ -27,10 +25,18 @@ public static class EventManager
 
     public static void UpdateRundown()
     {
-        var rundown = RundownManager.ActiveRundownKey;
+        var rundown = RundownManager.ActiveRundownKey switch
+        {
+            "Local_1" => PluginRundown.Daily,
+            "Local_2" => PluginRundown.Weekly,
+            "Local_3" => PluginRundown.Monthly,
+            "Local_4" => PluginRundown.Seasonal,
+
+            _ => PluginRundown.None
+        };
 
         Plugin.Logger.LogDebug($"Active rundown = {rundown}");
 
-        OnRundownUpdate?.Invoke();
+        OnRundownUpdate?.Invoke(rundown);
     }
 }

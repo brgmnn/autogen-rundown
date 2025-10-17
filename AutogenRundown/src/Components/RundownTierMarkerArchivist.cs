@@ -1,4 +1,5 @@
-﻿using GTFO.API;
+﻿using AutogenRundown.Managers;
+using GTFO.API;
 using Il2CppInterop.Runtime.Injection;
 using BepInEx;
 using TMPro;
@@ -17,6 +18,9 @@ internal class RundownTierMarkerArchivist : MonoBehaviour
     private TextMeshPro m_title;
     private TextMeshPro m_rightSideText;
 
+    private static int totalRead = 0;
+    private static int totalLogs = 0;
+
     private ArchivistIconWrapper Wrapper;
 
     private static byte[] spriteData;
@@ -24,6 +28,16 @@ internal class RundownTierMarkerArchivist : MonoBehaviour
     private SpriteRenderer m_sprite;
 
     private static GameObject? Icon { get; set; }
+
+    private static List<RundownTierMarkerArchivist> instances = new();
+
+    internal static void PluginSetup()
+    {
+        EventManager.OnRundownUpdate += (rundown) =>
+        {
+            (totalRead, totalLogs) = LogArchivistManager.GetLogsRead(rundown);
+        };
+    }
 
     internal static void OnAssetBundlesLoaded()
     {
@@ -72,6 +86,17 @@ internal class RundownTierMarkerArchivist : MonoBehaviour
         {
             LoadAsset();
         }
+
+        EventManager.OnRundownUpdate += OnRundownUpdate;
+
+        instances.Add(this);
+    }
+
+    public void OnDestroy()
+    {
+        EventManager.OnRundownUpdate -= OnRundownUpdate;
+
+        instances.Remove(this);
     }
 
     private void LoadAsset()
@@ -107,18 +132,22 @@ internal class RundownTierMarkerArchivist : MonoBehaviour
         var num = scale / 0.16f;
 
         m_completeWithNoBoosterIcon.transform.localScale = localScale;
-        // var diff = m_tierMarker.m_sectorIconSummarySecondary.GetPosition() - m_tierMarker.m_sectorIconSummaryMain.GetPosition();
 
-        m_completeWithNoBoosterIcon.SetPosition(new Vector2 { x = 0f, y = 150f });
-        // m_completeWithNoBoosterIcon.SetVisible(false);
+        m_completeWithNoBoosterIcon.SetPosition(new Vector2 { x = 0f, y = 160f });
     }
 
     internal void SetVisible(bool visible) => m_completeWithNoBoosterIcon.SetVisible(visible);
 
-    internal void SetSectorIconText(string text)
+    private void OnRundownUpdate(PluginRundown rundown)
     {
-        m_completeWithNoBoosterIcon.SetVisible(true);
-        m_completeWithNoBoosterIcon.SetRightSideText(text);
+        if (rundown is not (PluginRundown.Weekly or PluginRundown.Monthly or PluginRundown.Seasonal))
+        {
+            SetVisible(false);
+            return;
+        }
+
+        SetVisible(true);
+        m_rightSideText.SetText($"<size=120>{totalRead}/{totalLogs}</size>");
     }
 
     private void SetupNoBoosterUsedIcon(bool boosterUnused)
@@ -167,11 +196,11 @@ internal class RundownTierMarkerArchivist : MonoBehaviour
 
         icon.m_rightSideText.gameObject.SetActive(false);
 
-        icon.m_title.SetText("Log Archivist");
+        icon.m_title.SetText("<size=120>LOG ARCHIVE</size>");
+        icon.m_rightSideText.SetText($"<size=120>{totalRead}/{totalLogs}</size>");
 
-
-        //sector_icon.m_title.fontSize = m_page.m_sectorIconMain.m_title.fontSize;
         icon.m_title.gameObject.SetActive(true);
+        icon.m_rightSideText.gameObject.SetActive(true);
     }
 
     static RundownTierMarkerArchivist()
