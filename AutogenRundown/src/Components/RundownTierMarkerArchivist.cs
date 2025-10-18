@@ -127,13 +127,12 @@ internal class RundownTierMarkerArchivist : MonoBehaviour
 
         SetupNoBoosterUsedIcon(true);
 
-        var scale = 0.16f;
+        const float scale = 0.16f;
         var localScale = new Vector3(scale, scale, scale);
-        var num = scale / 0.16f;
 
         m_completeWithNoBoosterIcon.transform.localScale = localScale;
 
-        m_completeWithNoBoosterIcon.SetPosition(new Vector2 { x = 0f, y = 160f });
+        m_completeWithNoBoosterIcon.SetPosition(new Vector2 { x = 0f, y = 155f });
     }
 
     internal void SetVisible(bool visible) => m_completeWithNoBoosterIcon.SetVisible(visible);
