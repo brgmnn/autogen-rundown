@@ -646,7 +646,7 @@ public static class RundownFactory
         return rundown;
     }
 
-        /// <summary>
+    /// <summary>
     /// Dedicated method for building the monthly rundown
     /// </summary>
     /// <param name="rundown"></param>
@@ -675,14 +675,13 @@ public static class RundownFactory
                 }
             },
             {
-                // TODO: roll seeds
                 "WINTER_2025", new List<List<int>>
                 {
-                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 2, 1 },
+                    new() { 1, 1, 1, 1, 2, 1 },
+                    new() { 1, 1, 1, 1, 2, 2, 2 },
                     new() { 1, 1, 1, 1, 1, 1 },
-                    new() { 1, 1, 1, 1, 1, 1, 1 },
-                    new() { 1, 1, 1, 1, 1, 1 },
-                    new() { 1, 1, 1, 1, 1 }
+                    new() { 1, 1, 2, 1, 1 }
                 }
             }
         };
@@ -963,36 +962,33 @@ public static class RundownFactory
                 }
             },
             {
-                // TODO: roll seeds
                 "2025_11", new List<List<int>>
                 {
                     new() { 1, 1, 1 },
-                    new() { 1, 1, 1 },
-                    new() { 1, 1, 1, 1 },
+                    new() { 2, 1, 1 },
+                    new() { 1, 2, 2, 1 },
                     new() { 1, 1, 1 },
                     new() { 1, 1 }
                 }
             },
             {
-                // TODO: roll seeds
                 "2025_12", new List<List<int>>
                 {
                     new() { 1, 1, 1 },
                     new() { 1, 1, 1, 1 },
-                    new() { 1, 1, 1, 1 },
+                    new() { 2, 1, 1, 1 },
                     new() { 1, 1, 1 },
-                    new() { 1, 1 }
+                    new() { 2, 1 }
                 }
             },
             {
-                // TODO: roll seeds
                 "2026_01", new List<List<int>>
                 {
-                    new() { 1, 1, 1 },
-                    new() { 1, 1, 1, 1 },
-                    new() { 1, 1, 1, 1 },
+                    new() { 1, 2, 1 },
+                    new() { 1, 1, 2, 1 },
+                    new() { 1, 1, 3, 1 },
                     new() { 1, 1 },
-                    new() { 1, 1, 1 }
+                    new() { 2, 1, 1 }
                 }
             }
         };
