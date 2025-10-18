@@ -147,7 +147,6 @@ public partial record LevelLayout
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
-                        mid2Zone.SetStartExpansionFromExpansion();
 
                         (exit, exitZone) = BuildChallenge_ApexAlarm(
                             mid2,
@@ -204,7 +203,6 @@ public partial record LevelLayout
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
-                        mid2Zone.SetStartExpansionFromExpansion();
 
                         (exit, exitZone) = BuildChallenge_ApexAlarm(
                             mid2,
@@ -223,7 +221,6 @@ public partial record LevelLayout
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
-                        mid2Zone.SetStartExpansionFromExpansion();
 
                         (exit, exitZone) = BuildChallenge_ApexAlarm(
                             mid2,
@@ -327,7 +324,6 @@ public partial record LevelLayout
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
-                        mid2Zone.SetStartExpansionFromExpansion();
 
                         objective.WavesOnElevatorLand.Add(GenericWave.ErrorAlarm_Boss_Hard_Tank);
                         level.MarkAsBossErrorAlarm();
@@ -349,7 +345,6 @@ public partial record LevelLayout
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
-                        mid2Zone.SetStartExpansionFromExpansion();
 
                         (exit, exitZone) = BuildChallenge_ApexAlarm(
                             mid2,

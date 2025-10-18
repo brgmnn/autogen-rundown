@@ -149,7 +149,7 @@ public partial record LevelLayout
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
-                        mid2Zone.SetStartExpansionFromExpansion();
+                        // mid2Zone.SetStartExpansionFromExpansion();
 
                         (end, endZone) = BuildChallenge_ApexAlarm(
                             mid2,
@@ -224,7 +224,7 @@ public partial record LevelLayout
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
-                        mid2Zone.SetStartExpansionFromExpansion();
+                        // mid2Zone.SetStartExpansionFromExpansion();
 
                         (end, endZone) = BuildChallenge_ApexAlarm(
                             mid2,
@@ -283,7 +283,7 @@ public partial record LevelLayout
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
-                        mid2Zone.SetStartExpansionFromExpansion();
+                        // mid2Zone.SetStartExpansionFromExpansion();
 
                         (end, endZone) = BuildChallenge_ApexAlarm(
                             mid2,
@@ -305,7 +305,7 @@ public partial record LevelLayout
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
-                        mid2Zone.SetStartExpansionFromExpansion();
+                        // mid2Zone.SetStartExpansionFromExpansion();
 
                         (end, endZone) = BuildChallenge_ApexAlarm(
                             mid2,
@@ -374,7 +374,7 @@ public partial record LevelLayout
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
-                        mid2Zone.SetStartExpansionFromExpansion();
+                        // mid2Zone.SetStartExpansionFromExpansion();
 
                         (end, endZone) = BuildChallenge_ApexAlarm(
                             mid2,
@@ -393,7 +393,7 @@ public partial record LevelLayout
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
-                        mid2Zone.SetStartExpansionFromExpansion();
+                        // mid2Zone.SetStartExpansionFromExpansion();
 
                         (end, endZone) = BuildChallenge_ApexAlarm(
                             mid2,
@@ -554,7 +554,7 @@ public partial record LevelLayout
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
-                        mid2Zone.SetStartExpansionFromExpansion();
+                        // mid2Zone.SetStartExpansionFromExpansion();
 
                         (end, endZone) = BuildChallenge_ApexAlarm(
                             mid2,
@@ -576,7 +576,7 @@ public partial record LevelLayout
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
-                        mid2Zone.SetStartExpansionFromExpansion();
+                        // mid2Zone.SetStartExpansionFromExpansion();
 
                         (end, endZone) = BuildChallenge_ApexAlarm(
                             mid2,
