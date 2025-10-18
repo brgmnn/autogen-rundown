@@ -109,7 +109,9 @@ public class LayoutPlanner
                 _ => $"[\n    {ZoneNode.ListToString(n.Value, ",\n    ")}]"
             };
 
-            return $"  {n.Key} ({GetZone(n.Key)?.ZoneExpansion}) => {children}";
+            var zone = GetZone(n.Key);
+
+            return $"  {n.Key} (door={zone?.StartExpansion}, expand={zone?.ZoneExpansion}) => {children}";
         }));
         return $"Graph:\n{debug}";
     }
