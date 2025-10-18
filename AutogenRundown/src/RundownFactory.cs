@@ -37,13 +37,17 @@ public static class RundownFactory
         };
     }
 
+    /// <summary>
+    /// TODO: We might consider cleaning the entire GameData folder
+    /// </summary>
+    /// <exception cref="DirectoryNotFoundException"></exception>
     private static void CleanFolders()
     {
         var gameData = Path.Combine(Paths.BepInExRootPath, "GameData");
 
+        // This resolves the recent game update by clearing older folder versions
         try
         {
-            // Validate the parent directory exists
             if (!Directory.Exists(gameData))
                 throw new DirectoryNotFoundException($"Game data folder not found: {gameData}");
 
