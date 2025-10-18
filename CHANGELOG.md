@@ -3,6 +3,26 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.78.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.78.2) — October 18, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Added total logs collected counter to Rundown selection screen
+
+### Changes
+
+* Added support for 7 levels in a rundown tier
+* Check and rerolled seeds for Winter '25 seasonal and November / December / January monthly's
+* Fix: Resolved #22 both by ensuring max items per zone are rounded up.
+  * E.g. 13 items divided across 3 zones now round up to 5 per zone instead of rounding down to 4 per zone (resulting in 12 max spawning and hard locking the level)
+* Fix: Removed directional door spawns for all Apex alarm challenges to improve level generation
+  * This often caused bad spawns as multiple doors were attempting to spawn in the same direction
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.78.1...v0.78.2
+
+
 ## [v0.78.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.78.1) — October 05, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
