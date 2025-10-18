@@ -19,7 +19,7 @@ public static class ZoneNodeCollections
     /// </summary>
     /// <param name="nodes"></param>
     /// <returns></returns>
-    public static string ToString(this List<ZoneNode> nodes)
+    public static string Print(this List<ZoneNode> nodes)
         => string.Join(Environment.NewLine, nodes.Select(n => n.ToString()));
 
     public static ZoneNode SelectRandom(this ICollection<(double, ZoneNode)> nodes)

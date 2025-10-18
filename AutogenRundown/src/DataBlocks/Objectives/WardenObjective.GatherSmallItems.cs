@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -113,7 +114,12 @@ public partial record WardenObjective
         //      GatherMaxPerZone = GatherSpawnCount / placements.Count + Generator.Between(0, GatherSpawnCount / placements.Count);
 
         // We only need to divide up the spawn count. Nothing fancy
-        GatherMaxPerZone = GatherSpawnCount / placements.Count;
+        // We do need to make sure we Ceiling this value to ensure we have enough spots to spawn
+        // all the items
+        GatherMaxPerZone = (int)Math.Ceiling((double)GatherSpawnCount / placements.Count);
+
+        Plugin.Logger.LogDebug($"GatherSmallItems: GatherMaxPerZone = {GatherMaxPerZone}");
+        Plugin.Logger.LogDebug($"GatherSmallItems: Placements = [{Gather_PlacementNodes.Print()}]");
 
         // TODO: AddCompletedObjectiveWaves(level, director);
 
