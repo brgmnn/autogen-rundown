@@ -119,6 +119,8 @@ public class Plugin : BasePlugin
 
         EventManager.Setup();
 
+        Fix_NavMeshMarkerSubSeed.Setup();
+
         GameDataAPI.OnGameDataInitialized += Patch_CentralGeneratorCluster.Setup;
         GameDataAPI.OnGameDataInitialized += LogArchivistManager.Setup;
 
