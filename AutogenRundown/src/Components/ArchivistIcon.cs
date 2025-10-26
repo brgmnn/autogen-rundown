@@ -184,7 +184,7 @@ namespace AutogenRundown.Components;
     {
         m_icon = m_bg = null;
         m_archivistIcon = null;
-        Wrapper.Destory();
+        Wrapper.Destroy();
     }
 
     static ExpeditionSuccessPage_ArchivistIcon()
