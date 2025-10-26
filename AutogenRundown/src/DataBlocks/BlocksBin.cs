@@ -188,7 +188,7 @@ public class BlocksBin<T> where T : DataBlock
         LastPersistentId = Math.Max(LastPersistentId, block.PersistentId);
     }
 
-    public bool Contains(T? block) => Blocks.Contains(block);
+    public bool Contains(T? block) => block is not null && Blocks.Contains(block);
 
     public T? GetBlock(T? block) => Blocks.Find(b => b == block);
 
