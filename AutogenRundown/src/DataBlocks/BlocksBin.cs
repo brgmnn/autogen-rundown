@@ -188,7 +188,7 @@ public class BlocksBin<T> where T : DataBlock
         LastPersistentId = Math.Max(LastPersistentId, block.PersistentId);
     }
 
-    public bool Contains(T? block) => Blocks.Contains(block);
+    public bool Contains(T? block) => block is not null && Blocks.Contains(block);
 
     public T? GetBlock(T? block) => Blocks.Find(b => b == block);
 
@@ -207,8 +207,7 @@ public class BlocksBin<T> where T : DataBlock
     /// <param name="name"></param>
     public void Save(string name)
     {
-        JsonSerializer serializer = new JsonSerializer();
-        serializer.Formatting = Formatting.Indented;
+        var serializer = new JsonSerializer { Formatting = Formatting.Indented };
 
         // Replace with Plugin.GameRevision to avoid interop dependency
         var revision = CellBuildData.GetRevision();
@@ -219,8 +218,8 @@ public class BlocksBin<T> where T : DataBlock
         // Ensure the directory exists
         Directory.CreateDirectory(dir);
 
-        using StreamWriter stream = new StreamWriter(path);
-        using JsonWriter writer = new JsonTextWriter(stream);
+        using var stream = new StreamWriter(path);
+        using var writer = new JsonTextWriter(stream);
 
         serializer.Serialize(writer, this);
         stream.Flush();
@@ -233,16 +232,14 @@ public class BlocksBin<T> where T : DataBlock
     /// <param name="filename"></param>
     public void Save(string dir, string filename)
     {
-        JsonSerializer serializer = new JsonSerializer();
-        serializer.Formatting = Formatting.Indented;
-
+        var serializer = new JsonSerializer { Formatting = Formatting.Indented };
         var path = Path.Combine(dir, filename);
 
         // Ensure the directory exists
         Directory.CreateDirectory(dir);
 
-        using StreamWriter stream = new StreamWriter(path);
-        using JsonWriter writer = new JsonTextWriter(stream);
+        using var stream = new StreamWriter(path);
+        using var writer = new JsonTextWriter(stream);
 
         serializer.Serialize(writer, this);
         stream.Flush();
