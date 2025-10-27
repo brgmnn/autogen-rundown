@@ -208,7 +208,7 @@ public record WavePopulation : DataBlock
         WaveRoleStandard = Enemy.Striker_Wave,
         WaveRoleSpecial = (Enemy)Enemy_New.StrikerInfested.PersistentId,
         WaveRoleMiniBoss = Enemy.ShooterGiant,
-        Name = "Baseline"
+        Name = "Baseline_Infested"
     };
 
     public static WavePopulation Baseline_Hybrids = new()

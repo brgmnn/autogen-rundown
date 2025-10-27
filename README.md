@@ -44,6 +44,8 @@ TODO:
     * A-tier main only rolled no exit alarm.
   * Add "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_AW_01.prefab", the giant HSU pit. Technically an I-tile
   * Weekly #40 A1 failed to generate objective room
+  * Error thrown from EventManager.UpdateRundown. I suspect it might be from the daily.
+  * Check out Seasonal D4. End room that does nothing?
 
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly

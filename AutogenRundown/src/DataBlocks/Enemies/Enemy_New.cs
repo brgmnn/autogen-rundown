@@ -146,22 +146,30 @@ public record Enemy_New : DataBlock
 
     /// <summary>
     /// This is a shadow version of the pouncer
+    ///
+    /// PersistentID = 70
     /// </summary>
     public static Enemy_New PouncerShadow { get; set; } = new() { PersistentId = 0 };
 
     /// <summary>
     /// Infection hybrid
+    ///
+    /// PersistentID = 71
     /// </summary>
     public static Enemy_New HybridInfected { get; set; } = new() { PersistentId = 0 };
 
 
     /// <summary>
     /// Giant nightmare striker
+    ///
+    /// PersistentID = 72
     /// </summary>
     public static Enemy_New NightmareGiant { get; set; } = new() { PersistentId = 0 };
 
     /// <summary>
+    /// Striker that's infested and spawns babies
     ///
+    /// PersistentID = 73
     /// </summary>
     public static Enemy_New StrikerInfested { get; set; } = new() { PersistentId = 0 };
 
