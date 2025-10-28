@@ -82,7 +82,6 @@ public partial record WardenObjective
             "Use the navigational beacon and the information in the surroundings to find the exit point";
         GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition";
 
-        var placements = new List<ZonePlacementData>();
         var nodes = level.Planner.GetZonesByTag(director.Bulkhead, "uplink_terminal")
             .TakeLast(Uplink_NumberOfTerminals).ToList();
 
@@ -102,14 +101,15 @@ public partial record WardenObjective
                 zone.TerminalPlacements.Add(new TerminalPlacement());
             }
 
-            placements.Add(new ZonePlacementData
+            dataLayer.ObjectiveData.ZonePlacementDatas.Add(new List<ZonePlacementData>
             {
-                LocalIndex = node.ZoneNumber,
-                Weights = ZonePlacementWeights.NotAtStart
+                new()
+                {
+                    LocalIndex = node.ZoneNumber,
+                    Weights = ZonePlacementWeights.NotAtStart
+                }
             });
         }
-
-        dataLayer.ObjectiveData.ZonePlacementDatas.Add(placements);
 
         // TODO: add more interesting waves
         // Alarms do indeed get canceled after completing the uplink
