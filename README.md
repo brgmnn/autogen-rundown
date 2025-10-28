@@ -58,7 +58,8 @@ Idea:
   * Add full team scan on extract instead of warden scan
   * R8E2 "ADMIN_TEMP_OVERRIDE" command level
     * Keep putting in command to keep surge error at bay
-  * Clear path to a warp portal that jumps you to the success screen 
+  * Clear path to a warp portal that jumps you to the success screen
+  * Add bonus terminals in reactor zones
 
 # Datasphere color pack
 https://thunderstore.io/c/gtfo/p/ProjectZaero/Data_Sphere_Flavor_Pack/
