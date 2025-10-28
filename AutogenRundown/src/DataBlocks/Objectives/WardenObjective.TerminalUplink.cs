@@ -14,7 +14,7 @@ namespace AutogenRundown.DataBlocks;
  *
  * This objective can only be for Main given it ends the level on completion
  */
-public partial record class WardenObjective : DataBlock
+public partial record WardenObjective
 {
     public void PreBuild_TerminalUplink(BuildDirector director, Level level)
     {
@@ -87,21 +87,18 @@ public partial record class WardenObjective : DataBlock
 
         WavesOnActivate.Add(wave);
 
-        var placements = new List<ZonePlacementData>();
         // TODO: Generate proper zones, one for each uplink terminal
         var zones = level.Planner.GetZones(director.Bulkhead, "uplink_terminals")
                                  .TakeLast(Uplink_NumberOfTerminals);
 
         foreach (var zone in zones)
-        {
-            placements.Add(new ZonePlacementData
+            dataLayer.ObjectiveData.ZonePlacementDatas.Add(new List<ZonePlacementData>
             {
-                LocalIndex = zone.ZoneNumber,
-                Weights = ZonePlacementWeights.NotAtStart
+                new()
+                {
+                    LocalIndex = zone.ZoneNumber,
+                    Weights = ZonePlacementWeights.NotAtStart
+                }
             });
-        }
-
-        // TODO: Seems it picks randomly from the inner list? Let's split it a bit
-        dataLayer.ObjectiveData.ZonePlacementDatas.Add(placements);
     }
 }
