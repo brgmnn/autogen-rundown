@@ -39,7 +39,7 @@ namespace AutogenRundown.Patches;
 //     }
 // }
 
-[HarmonyPatch]
+// [HarmonyPatch]
 public class Fix_NavMeshMarkerSubSeed
 {
     private static readonly HashSet<int> s_building = new();
@@ -69,7 +69,7 @@ public class Fix_NavMeshMarkerSubSeed
         // markerSubSeeds[(TargetDimension, TargetLocalIndex)] = 0;
 
         // React when the whole factory finishes a pass
-        LG_Factory.OnFactoryBuildDone += new Action(OnFactoryDone);
+        // LG_Factory.OnFactoryBuildDone += new Action(OnFactoryDone);
     }
 
     public static void OnFactoryDone()
@@ -110,6 +110,8 @@ public class Fix_NavMeshMarkerSubSeed
                 Plugin.Logger.LogDebug($"[Reroll] Rebuilding {key} with m_markerSubSeed={next} (attempt {zoneAttempts[key]})");
 
                 rebuildInProgress = true;
+
+                CleanupGameObjects();
 
                 Builder.Current.Build();
 
@@ -189,6 +191,34 @@ public class Fix_NavMeshMarkerSubSeed
         return null;
     }
 
+    private static void CleanupGameObjects()
+    {
+        LG_BuildNodeCluster.LevelCleanup();
+        LG_FunctionMarkerBuilder.LevelCleanup();
+        LG_MarkerFactory.Cleanup();
+
+        // Remove terminals/uplinks from previous attempts
+        foreach (var t in UnityEngine.Object.FindObjectsOfType<LG_ComputerTerminal>())
+            UnityEngine.Object.Destroy(t.gameObject);
+
+        // try {
+        //     // foreach (var u in UnityEngine.Object.FindObjectsOfType<LevelGeneration.TerminalUplinkPuzzle>())
+        //     //     UnityEngine.Object.Destroy(u.gameObject);
+        // } catch {}
+    }
+
+
+    [HarmonyPatch(typeof(LG_Factory), nameof(LG_Factory.FactoryDone))]
+    [HarmonyPrefix]
+    public static bool Prefix_FactoryDone()
+    {
+        if (!shouldSuppressFactoryDone)
+            return true; // allow vanilla
+
+        OnFactoryDone();
+
+        return false; // skip all default listeners
+    }
 
     // Suppress default factory‑done listeners during reroll
     [HarmonyPatch(typeof(Builder), nameof(Builder.OnFactoryDone))]
