@@ -4,21 +4,21 @@ namespace AutogenRundown.PeerMods;
 
 public class Arsenality : SupportedMod
 {
-    public static string MOD_NAME = "W33B-Arsenality";
-
-    public Arsenality()
+    private Arsenality()
     {
         ModName = "W33B-Arsenality";
     }
 
     public static void Configure()
     {
-        if (!Peers.HasMod(MOD_NAME))
+        var mod = new Arsenality();
+
+        if (!Peers.HasMod(mod.ModName))
             return;
 
-        Plugin.Logger.LogInfo($"Configuring peer mod: {MOD_NAME}");
+        Plugin.Logger.LogInfo($"Configuring peer mod: {mod.ModName}");
 
-        var pluginData = Path.Combine(Paths.BepInExRootPath, "plugins", MOD_NAME, "arsenality");
+        var pluginData = Path.Combine(Paths.BepInExRootPath, "plugins", mod.ModName, "arsenality");
 
         var revision = CellBuildData.GetRevision();
         var gameData = Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}");

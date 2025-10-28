@@ -2,7 +2,7 @@
 
 public class ArsenalityRebalance : SupportedMod
 {
-    public ArsenalityRebalance()
+    private ArsenalityRebalance()
     {
         ModName = "leezurli-ArsenalityRebalance";
     }

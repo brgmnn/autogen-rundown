@@ -2,7 +2,7 @@
 
 public class VanillaReloaded : SupportedMod
 {
-    public VanillaReloaded()
+    private VanillaReloaded()
     {
         ModName = "tru0067-VanillaReloaded";
     }

@@ -2,7 +2,7 @@
 
 public class OmegaWeapons : SupportedMod
 {
-    public OmegaWeapons()
+    private OmegaWeapons()
     {
         ModName = "Mimikium-OmegaWeapons";
     }
