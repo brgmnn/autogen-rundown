@@ -1348,6 +1348,7 @@ public static class RundownFactory
         EnemyCustomization.EnemyAbility.Save();
         EnemyCustomization.Model.Save();
         EnemyCustomization.Projectile.Save();
+        EnemyCustomization.Property.Save();
         GlobalConfig.Save();
     }
 }

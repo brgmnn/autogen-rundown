@@ -6,6 +6,7 @@ using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models.Bones;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models.Glows;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models.Materials;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Projectiles;
+using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Properties;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -323,17 +324,31 @@ public record Enemy_New : DataBlock
         #region Custom enemy configuration
 
         #region Shadow Pouncer
-        // Shadow Pouncer
-        EnemyCustomization.Model.Shadows.Add(
-            new Shadow
+        /*
+         * It's just like a regular pouncer, but it's invisible
+         */
+        {
+            var shadowPouncer = new Target
             {
-                Target = new Target
+                Mode = Mode.PersistentId,
+                PersistentIds = new() { PouncerShadow.PersistentId }
+            };
+
+            // Shadow Pouncer
+            EnemyCustomization.Model.Shadows.Add(
+                new Shadow
                 {
-                    Mode = Mode.PersistentId,
-                    PersistentIds = new() { PouncerShadow.PersistentId }
-                },
-                Type = "NewShadows"
+                    Target = shadowPouncer,
+                    Type = "NewShadows"
+                });
+
+            EnemyCustomization.Property.DistantRoars.Add(new DistantRoar
+            {
+                Target = shadowPouncer,
+                RoarSound = "Pouncer",
+                RoarSize = "Medium"
             });
+        }
         #endregion
 
         #region Infected Hybrid
@@ -457,6 +472,13 @@ public record Enemy_New : DataBlock
                         Infection = 0.02
                     }
                 });
+
+            EnemyCustomization.Property.DistantRoars.Add(new DistantRoar
+            {
+                Target = hybridInfected,
+                RoarSound = "Shooter_Spread",
+                RoarSize = "Big"
+            });
         }
         #endregion
 
@@ -465,6 +487,12 @@ public record Enemy_New : DataBlock
          *
          */
         {
+            var nightmareGiant = new Target
+            {
+                Mode = Mode.PersistentId,
+                PersistentIds = new() { NightmareGiant.PersistentId }
+            };
+
             NightmareGiant.MovementDataId = EnemyMovement.NightmareGiant.PersistentId;
             NightmareGiant.BalancingDataId = EnemyBalancing.NightmareGiant.PersistentId;
             NightmareGiant.BehaviorDataId = 28; // Giant / Giant Charger
@@ -505,6 +533,13 @@ public record Enemy_New : DataBlock
                     SizeRange = new Vector2 { X = 1.9, Y = 2.0 }
                 }
             };
+
+            EnemyCustomization.Property.DistantRoars.Add(new DistantRoar
+            {
+                Target = nightmareGiant,
+                RoarSound = "Striker_Berserk",
+                RoarSize = "Big"
+            });
         }
         #endregion
 
@@ -653,6 +688,13 @@ public record Enemy_New : DataBlock
                     SizeRange = new Vector2 { X = 1.0, Y = 1.2 }
                 }
             };
+
+            EnemyCustomization.Property.DistantRoars.Add(new DistantRoar
+            {
+                Target = strikerInfested,
+                RoarSound = "OldDistantRoar",
+                RoarSize = "Big"
+            });
         }
         #endregion
 

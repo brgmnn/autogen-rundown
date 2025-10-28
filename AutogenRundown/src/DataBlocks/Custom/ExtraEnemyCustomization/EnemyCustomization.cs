@@ -25,6 +25,11 @@ public static class EnemyCustomization
     public static ProjectileDefs Projectile { get; private set; } = new();
 
     /// <summary>
+    ///
+    /// </summary>
+    public static Property Property { get; private set; } = new();
+
+    /// <summary>
     /// Cleans the EEC directory
     /// </summary>
     public static void Setup()
