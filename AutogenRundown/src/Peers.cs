@@ -43,6 +43,7 @@ public static class Peers
         // --- Supported Peers ---
         Arsenality.Configure();
         ArsenalityRebalance.Configure();
+        GTFriendlyO.Configure();
         OmegaWeapons.Configure();
         VanillaReloaded.Configure();
     }
