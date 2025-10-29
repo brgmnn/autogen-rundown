@@ -15,14 +15,9 @@ Check Alarm Persistent IDs for levellayout
 
 TODO:
   * Use https://thunderstore.io/c/gtfo/p/randomguy0753/ZoneScan/ for full room scanning
-  * Use Zone Prefix Override to alert to specific tiles.
   * Enable unit tests again after fixing chained puzzles.
-  * Don't allow small item pickup to have so many extras that we don't need to do all the zones
-  * Make giants blood door a bit harder? B-tier was easy
-  * Rework lights on zone to load into lightsettings and let us set our own light settings
   * Make extract scan short if there's no extract alarm (Don't do it just based on level tier)
   * Add a way to automatically install deps?
-  * Rising fog?
   * GIGA Infection Hybrid blood door might be _too_ much, it's like 12 hybrids
   * Objective: Distribute Power Cells
     * Needs something to happen when completing all the cells ideally
@@ -31,12 +26,10 @@ TODO:
   * Special Terminal Command:
     * REROUTE_POWER - Should probably have more severe consequences then just turning the lights off?
     * REROUTE_POWER - Main - Is too many sequential zones. 6 zones in a row to go through
-  * Add more points of enemies
   * Matter Wave Projector - Needs slightly less zones to go through. Very linear
   * Bring big pickup for scan
   * Add more variety on fog for vibes
   * Rework the special command layout
-  * Remove artifact heat from the menus
   * King of the Hill terminal spawns are... dodgy
     * They often spawn inside things.
   * Uplink objectives stop ALL WAVES after completing them. Got to figure out a way to not do that.
