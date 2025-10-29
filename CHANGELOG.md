@@ -3,6 +3,23 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.78.3](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.78.3) — October 29, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Added partial support for peer mod [GTFriendlyO](https://thunderstore.io/c/gtfo/p/Carb_Crusaders/GTFriendlyO/)
+
+### Changes
+
+* Fix: missing roars on custom enemies are now working
+* Fix: `TerminalUplink` and `CorruptedTerminalUplink` zone placement now correctly puts terminals in the right zones
+  * Previously terminals were randomly placed across all target zones, instead of one per zone
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.78.2...v0.78.3
+
+
 ## [v0.78.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.78.2) — October 18, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
