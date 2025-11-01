@@ -132,7 +132,7 @@ public record EnemyMovement : DataBlock
     {
         AnimationControllers = 20,
         GlobalAnimSpeedMulti = 1.1,
-        PathMoveAnimSpeedMulti = 2.0
+        PathMoveAnimSpeedMulti = 1.3
     };
 
     public static void Setup()
