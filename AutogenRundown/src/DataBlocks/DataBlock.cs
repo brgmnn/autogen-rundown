@@ -61,10 +61,14 @@ public record DataBlock
     /// </summary>
     /// <param name="bin"></param>
     /// <param name="filename"></param>
+    /// <param name="callback"></param>
     /// <typeparam name="TGameData"></typeparam>
     /// <typeparam name="TBlock"></typeparam>
     /// <exception cref="Exception"></exception>
-    public static void Setup<TGameData, TBlock>(BlocksBin<TBlock> bin, string filename)
+    protected static void Setup<TGameData, TBlock>(
+        BlocksBin<TBlock> bin,
+        string filename,
+        Action<TBlock>? callback = null)
         where TGameData : TBlock
         where TBlock : DataBlock
     {
@@ -81,7 +85,11 @@ public record DataBlock
             throw new Exception($"Failed to parse {filename}");
 
         foreach (var block in blocks)
+        {
             bin.AddBlock(block);
+
+            callback?.Invoke(block);
+        }
     }
 
     public static void SaveStatic()

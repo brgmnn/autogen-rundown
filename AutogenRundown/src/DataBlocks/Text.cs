@@ -8,14 +8,14 @@ public record LanguageData
     public bool ShouldTranslate => true;
 }
 
+public record GameDataText : Text
+{
+    public GameDataText() : base(PidOffsets.None)
+    { }
+}
+
 public record Text : DataBlock
 {
-    record GameDataText : Text
-    {
-        public GameDataText() : base(PidOffsets.None)
-        { }
-    }
-
     /// <summary>
     /// Instantiates a new text field. This will also persist that text string to the data blocks array. So ensure you
     /// use it.
