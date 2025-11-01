@@ -3,6 +3,21 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.78.4](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.78.4) — November 01, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* New: Added support for merging Text data block files for supported mods
+  * Peer mods that utilize text data blocks should now have their text strings loaded as long as they don't collide with other mod text strings
+* Balance: Reduced speed of Giant Nightmares
+* Balance: D-tier global enemy cap increased from `25` to `30`
+* Balance: E-tier global enemy cap increased from `25` to `35`
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.78.3...v0.78.4
+
+
 ## [v0.78.3](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.78.3) — October 29, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
