@@ -40,6 +40,7 @@ TODO:
   * Error thrown from EventManager.UpdateRundown. I suspect it might be from the daily.
   * Check out Seasonal D4. End room that does nothing?
   * Add support for text data block mergers. It should be relatively safe to do this even with overwrites
+  * Make E-tier shorter but harder. E4 Seasonal extreme has too many extra zones
 
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
