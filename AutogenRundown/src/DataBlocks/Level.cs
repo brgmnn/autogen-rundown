@@ -1505,10 +1505,11 @@ public class Level
             // level.Planner.AddZone(new ZoneNode(Bulkhead.Main, 1), zone2);
             // layout.Zones.Add(zone2);
 
-            elevatorDropZone.EnemySpawningInZone.Add(
-                EnemySpawningData.TierA with { Points = 30 });
+            // elevatorDropZone.EnemySpawningInZone.Add(
+            //     EnemySpawningData.TierA with { Points = 30 });
 
-            elevatorDropZone.TerminalPlacements[0].LogFiles.Add(DLockDecipherer.R7A1_Z49_1);
+            elevatorDropZone.EnemySpawningInZone.Add(
+                EnemySpawningData.HybridInfected with { Points = 4 });
 
             // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
 

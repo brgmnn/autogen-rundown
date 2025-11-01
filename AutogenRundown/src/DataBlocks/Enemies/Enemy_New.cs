@@ -484,7 +484,7 @@ public record Enemy_New : DataBlock
 
         #region Nightmare Giant Striker
         /*
-         *
+         * Similar to Giant Chargers, these are giant versions of the Nightmare Beserkers
          */
         {
             var nightmareGiant = new Target
