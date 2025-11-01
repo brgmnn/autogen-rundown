@@ -10,6 +10,12 @@ public record LanguageData
 
 public record GameDataText : Text
 {
+    [JsonIgnore]
+    public static Dictionary<uint, Text> Blocks { get; } = new();
+
+    [JsonIgnore]
+    public static Dictionary<string, List<uint>> BlocksLookup { get; } = new();
+
     public GameDataText() : base(PidOffsets.None)
     { }
 }
@@ -54,7 +60,29 @@ public record Text : DataBlock
     }
 
     public static void Setup()
-        => Setup<GameDataText, Text>(Bins.Texts, "Text");
+    {
+        Setup<GameDataText, Text>(Bins.Texts, "Text", text =>
+        {
+            GameDataText.Blocks.Add(text.PersistentId, text);
+
+            if (GameDataText.BlocksLookup.ContainsKey(text.English))
+                GameDataText.BlocksLookup[text.English].Add(text.PersistentId);
+            else
+                GameDataText.BlocksLookup[text.English] = new List<uint> { text.PersistentId };
+        });
+
+        Plugin.Logger.LogWarning($"How many text data blocks from base game 111? {GameDataText.Blocks.Count}");
+
+        // var dupes = GameDataText.BlocksLookup
+        //     .Where(pair => pair.Value.Count > 1)
+        //     .OrderBy(pair => pair.Value.Count)
+        //     .Select(pair => $"--> {pair.Key}: [{string.Join(", ", pair.Value)}]");
+        //
+        // Plugin.Logger.LogDebug("Duplicate TextIDs");
+        //
+        // foreach (var dupe in dupes)
+        //     Plugin.Logger.LogDebug(dupe);
+    }
 
     /// <summary>
     /// Local progression text for completing a level with no boosters
