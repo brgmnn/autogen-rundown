@@ -671,6 +671,14 @@ public class Level
         Tier = tier;
         Settings = new LevelSettings(tier);
 
+        GlobalWaveSettings = tier switch
+        {
+            "D" => GlobalWaveSettings.HighCap_30pts,
+            "E" => GlobalWaveSettings.HighCap_35pts,
+
+            _ => GlobalWaveSettings.Default
+        };
+
         // --- Ideas for level specific items
         // ">... [static crackle]\r\n>... We search for the key?\r\n>... <size=200%><color=red>Time is running out!</color></size>\n"
         // ">... [coughing] This air is thick.\r\n>... Where is that repeller?\r\n>... <size=200%><color=red>We need it now!</color></size>"
@@ -1422,6 +1430,8 @@ public class Level
             #endregion
 
             level.CustomSuccessScreen = SuccessScreen.StackEmpty;
+
+            // level.GlobalWaveSettings = GlobalWaveSettings.HighCap_40pts;
 
             var dimension = new Dimension
             {

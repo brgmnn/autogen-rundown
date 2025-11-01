@@ -117,15 +117,15 @@ public record GlobalWaveSettings : DataBlock
     /// </summary>
     public static readonly GlobalWaveSettings Default = new() { PersistentId = 1 };
 
-    public static readonly GlobalWaveSettings HighCap_35pts = new()
+    public static readonly GlobalWaveSettings HighCap_30pts = new()
     {
-        MaxCost = 35,
+        MaxCost = 30,
         PersistentId = 2
     };
 
-    public static readonly GlobalWaveSettings HighCap_50pts = new()
+    public static readonly GlobalWaveSettings HighCap_35pts = new()
     {
-        MaxCost = 50,
+        MaxCost = 35,
         PersistentId = 3
     };
 
@@ -133,7 +133,7 @@ public record GlobalWaveSettings : DataBlock
     {
         Bins.GlobalWaveSettings.AddBlock(Default);
 
+        Bins.GlobalWaveSettings.AddBlock(HighCap_30pts);
         Bins.GlobalWaveSettings.AddBlock(HighCap_35pts);
-        Bins.GlobalWaveSettings.AddBlock(HighCap_50pts);
     }
 }
