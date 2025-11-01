@@ -1,4 +1,6 @@
-﻿using BepInEx;
+﻿using AutogenRundown.DataBlocks;
+using BepInEx;
+using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.PeerMods;
 
@@ -38,7 +40,71 @@ public class SupportedMod
                 overwrite: true);
 
             Plugin.Logger.LogDebug($"{ModName}: Copied datablock -> {filename}");
+
+            if (filename == "GameData_TextDataBlock_bin.json")
+                LoadDataBlocks_Text(path);
         });
+    }
+
+    protected void LoadDataBlocks_Text(string path)
+    {
+        var data = JObject.Parse(File.ReadAllText(path));
+
+        if (data?["Blocks"] == null)
+        {
+            Plugin.Logger.LogWarning("Failed to get 'Blocks' property");
+            return;
+        }
+
+        var blocks = data["Blocks"]!.ToObject<List<GameDataText>>();
+
+        if (blocks == null)
+        {
+            Plugin.Logger.LogWarning($"Failed to parse file '{path}'");
+            return;
+        }
+
+        var skipped = 0;
+        var added = 0;
+        var addedDupe = 0;
+        var replaced = 0;
+
+        foreach (var block in blocks)
+        {
+            if (block.PersistentId == 0)
+                continue;
+
+            if (GameDataText.BlocksLookup.TryGetValue(block.English, out var persistentIds))
+            {
+                // This is an existing data block. We have the same ID/English combo
+                if (persistentIds.Contains(block.PersistentId))
+                {
+                    skipped++;
+                    continue;
+                }
+
+                // This is a dupe. We have a NEW_ID/English combo
+                Bins.Texts.AddBlock(block);
+                addedDupe++;
+                continue;
+            }
+
+            if (GameDataText.Blocks.TryGetValue(block.PersistentId, out var existing))
+            {
+                Plugin.Logger.LogDebug($"{ModName}: Replacing text block '{existing.English}' -> '{block.English}'");
+
+                // This is a replacement block
+                Bins.Texts.ReplaceBlock(block);
+                replaced++;
+                continue;
+            }
+
+            // This is a net new block. We have a NEW_ID/NEW_English combo
+            Bins.Texts.AddBlock(block);
+            added++;
+        }
+
+        Plugin.Logger.LogInfo($"{ModName}: Loaded text data blocks -- New={added} Replaced={replaced} Added_Dupes={addedDupe} Skipped={skipped}");
     }
 
     /// <summary>
