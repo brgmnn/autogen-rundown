@@ -63,21 +63,19 @@ public record DataBlock<T> where T : DataBlock<T>
     /// Generic function for setting up a BlockBin with the vanilla game data. Can be
     /// called like so:
     /// ```cs
-    ///     Setup<GameDataWaveSettings, WaveSettings>(Bins.WaveSettings, "SurvivalWaveSettings");
+    ///     Setup<GameDataWaveSettings>(Bins.WaveSettings, "SurvivalWaveSettings");
     /// ```
     /// </summary>
     /// <param name="bin"></param>
     /// <param name="filename"></param>
     /// <param name="callback"></param>
     /// <typeparam name="TGameData"></typeparam>
-    /// <typeparam name="TBlock"></typeparam>
     /// <exception cref="Exception"></exception>
     protected static void Setup<TGameData>(
         BlocksBin<T> bin,
         string filename,
         Action<T>? callback = null)
         where TGameData : T
-        // where T : DataBlock<TBlock>
     {
         var dir = Path.Combine(Paths.PluginPath, Plugin.Name);
         var path = Path.Combine(dir, $"GameData_{filename}DataBlock_bin.json");
