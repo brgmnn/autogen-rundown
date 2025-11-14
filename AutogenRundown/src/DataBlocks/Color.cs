@@ -73,7 +73,7 @@ public record Color
         return Alpha.ApproxEqual(other.Alpha) &&
                Red.ApproxEqual(other.Red) &&
                Green.ApproxEqual(other.Green) &&
-               Blue.ApproxEqual(other.Blue);;
+               Blue.ApproxEqual(other.Blue);
     }
 
     public override int GetHashCode() => HashCode.Combine(Alpha, Red, Green, Blue);
