@@ -39,7 +39,7 @@ namespace AutogenRundown.Patches;
 //     }
 // }
 
-// [HarmonyPatch]
+[HarmonyPatch]
 public class Fix_NavMeshMarkerSubSeed
 {
     private static readonly HashSet<int> s_building = new();
