@@ -71,7 +71,6 @@ public static class Bins
         EnemyMovement.Setup();
         EnemySFX.Setup();
         Enemy_New.Setup();
-        EnemyGroup.Setup();
         EnemyPopulation.Setup();
         WavePopulation.Setup();
         Alarms.WaveSettings.Setup();
@@ -137,7 +136,7 @@ public static class Bins
     }
 }
 
-public class BlocksBin<T> where T : DataBlock
+public class BlocksBin<T> where T : DataBlock<T>
 {
     /// <summary>
     /// Not sure what this is for yet
@@ -250,7 +249,7 @@ public class BlocksBin<T> where T : DataBlock
 /// Lazy persisting version of BlocksBin.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class LazyBlocksBin<T> : BlocksBin<T> where T : DataBlock
+public class LazyBlocksBin<T> : BlocksBin<T> where T : DataBlock<T>
 {
     /// <summary>
     ///

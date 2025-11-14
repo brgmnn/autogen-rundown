@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks;
 
-public record Dimension : DataBlock
+public record Dimension : DataBlock<Dimension>
 {
     #region Properties
 

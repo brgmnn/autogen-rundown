@@ -1,6 +1,6 @@
 ﻿namespace AutogenRundown.DataBlocks.Enemies;
 
-public record EnemyMovement : DataBlock
+public record EnemyMovement : DataBlock<EnemyMovement>
 {
     #region Properties
 
@@ -138,7 +138,7 @@ public record EnemyMovement : DataBlock
     public static void Setup()
     {
         // Loads the base game balancing
-        Setup<GameDataEnemyMovement, EnemyMovement>(Bins.EnemyMovements, "EnemyMovement");
+        Setup<GameDataEnemyMovement>(Bins.EnemyMovements, "EnemyMovement");
 
         NightmareGiant.Persist();
     }

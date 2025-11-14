@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.Enemies;
 
-public record EnemyPopulation : DataBlock
+public record EnemyPopulation : DataBlock<EnemyPopulation>
 {
     [JsonIgnore]
     public static List<EnemyPopulationRole> Roles = new();

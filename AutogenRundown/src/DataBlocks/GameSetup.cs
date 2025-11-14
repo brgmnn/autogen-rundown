@@ -1,6 +1,6 @@
 ﻿namespace AutogenRundown.DataBlocks;
 
-public record GameSetup : DataBlock
+public record GameSetup : DataBlock<GameSetup>
 {
     /// <summary>
     /// List of rundown ids to load. It appears these directly correspond in order to the rundowns that are loaded on

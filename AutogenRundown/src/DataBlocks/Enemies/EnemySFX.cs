@@ -2,7 +2,7 @@
 
 namespace AutogenRundown.DataBlocks.Enemies;
 
-public record EnemySFX : DataBlock
+public record EnemySFX : DataBlock<EnemySFX>
 {
     #region Properties
 
@@ -112,7 +112,7 @@ public record EnemySFX : DataBlock
     public static void Setup()
     {
         // Loads the base game balancing
-        Setup<GameDataEnemySFX, EnemySFX>(Bins.EnemySFXs, "EnemySFX");
+        Setup<GameDataEnemySFX>(Bins.EnemySFXs, "EnemySFX");
 
         NightmareGiant.Persist();
     }

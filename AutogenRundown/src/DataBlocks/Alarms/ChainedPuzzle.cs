@@ -15,7 +15,7 @@ namespace AutogenRundown.DataBlocks.Alarms;
 ///     * D-tier: Class 6-7
 ///     * E-tier: Hardest. Class 7+
 /// </summary>
-public record ChainedPuzzle : DataBlock
+public record ChainedPuzzle : DataBlock<ChainedPuzzle>
 {
     #region Internal for Autogen
     // These events get appended to the zone when the alarm is selected

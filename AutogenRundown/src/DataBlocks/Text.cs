@@ -20,7 +20,7 @@ public record GameDataText : Text
     { }
 }
 
-public record Text : DataBlock
+public record Text : DataBlock<Text>
 {
     /// <summary>
     /// Instantiates a new text field. This will also persist that text string to the data blocks array. So ensure you
@@ -61,7 +61,7 @@ public record Text : DataBlock
 
     public static void Setup()
     {
-        Setup<GameDataText, Text>(Bins.Texts, "Text", text =>
+        Setup<GameDataText>(Bins.Texts, "Text", text =>
         {
             GameDataText.Blocks.Add(text.PersistentId, text);
 

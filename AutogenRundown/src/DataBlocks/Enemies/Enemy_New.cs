@@ -12,7 +12,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.Enemies;
 
-public record Enemy_New : DataBlock
+public record Enemy_New : DataBlock<Enemy_New>
 {
     #region Properties
 
@@ -208,7 +208,7 @@ public record Enemy_New : DataBlock
     public static void Setup()
     {
         // Loads the base game enemies
-        Setup<GameDataEnemy, Enemy_New>(Bins.Enemy, "Enemy");
+        Setup<GameDataEnemy>(Bins.Enemy, "Enemy");
 
         #region --- Reference the base game enemies ---
         Shooter_Wave = Find(11);

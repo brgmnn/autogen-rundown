@@ -7,8 +7,15 @@ namespace AutogenRundown.DataBlocks;
 /// <summary>
 /// Base datablock type that all other data blocks inherit from
 /// </summary>
-public record DataBlock
+public record DataBlock<T> where T : DataBlock<T>
 {
+    [JsonIgnore]
+    public static Dictionary<uint, T> GtfoBlocks { get; } = new();
+
+    [JsonIgnore]
+    public static Dictionary<string, List<uint>> GtfoBlocksLookup { get; } = new();
+
+
     /// <summary>
     /// All persistent Ids must be unique
     /// </summary>
@@ -65,12 +72,12 @@ public record DataBlock
     /// <typeparam name="TGameData"></typeparam>
     /// <typeparam name="TBlock"></typeparam>
     /// <exception cref="Exception"></exception>
-    protected static void Setup<TGameData, TBlock>(
-        BlocksBin<TBlock> bin,
+    protected static void Setup<TGameData>(
+        BlocksBin<T> bin,
         string filename,
-        Action<TBlock>? callback = null)
-        where TGameData : TBlock
-        where TBlock : DataBlock
+        Action<T>? callback = null)
+        where TGameData : T
+        // where T : DataBlock<TBlock>
     {
         var dir = Path.Combine(Paths.PluginPath, Plugin.Name);
         var path = Path.Combine(dir, $"GameData_{filename}DataBlock_bin.json");
@@ -88,8 +95,12 @@ public record DataBlock
         {
             bin.AddBlock(block);
 
+            GtfoBlocks[block.PersistentId] = block;
+
             callback?.Invoke(block);
         }
+
+        Plugin.Logger.LogDebug($"Registered base GTFO DataBlocks for {filename} = {GtfoBlocks.Count}");
     }
 
     public static void SaveStatic()

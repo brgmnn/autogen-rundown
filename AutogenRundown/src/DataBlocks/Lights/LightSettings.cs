@@ -18,7 +18,7 @@ namespace AutogenRundown.DataBlocks.Light;
 ///
 /// In vanilla it looks like they do omit light category settings.
 /// </summary>
-public record LightSettings : DataBlock
+public record LightSettings : DataBlock<LightSettings>
 {
     public static readonly LightSettings None = new() { PersistentId = 0 };
 
@@ -225,6 +225,7 @@ public record LightSettings : DataBlock
     }
 
     public static void Setup()
-        => Setup<GameDataLightSettings, LightSettings>(Bins.LightSettings, "LightSettings");
+        => Setup<GameDataLightSettings>(Bins.LightSettings, "LightSettings");
+
     #endregion
 }

@@ -17,7 +17,7 @@ public enum SizeFactor
     Large
 }
 
-public partial record LevelLayout : DataBlock
+public partial record LevelLayout : DataBlock<LevelLayout>
 {
     #region hidden data
     [JsonIgnore]

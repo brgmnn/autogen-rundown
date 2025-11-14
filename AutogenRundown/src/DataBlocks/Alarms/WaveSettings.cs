@@ -61,7 +61,7 @@ namespace AutogenRundown.DataBlocks.Alarms;
 /// m_wavePauseMax to decrease the downtime if you wipe out the alarm wave.
 /// This does, of course, mean you fight more enemies the faster you kill them.
 ///</summary>
-public record WaveSettings : DataBlock
+public record WaveSettings : DataBlock<WaveSettings>
 {
     public static readonly double Points_Weakling = 0.75;
     public static readonly double Points_Standard = 1.0;

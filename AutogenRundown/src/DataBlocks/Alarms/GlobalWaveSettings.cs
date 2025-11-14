@@ -2,7 +2,7 @@
 
 namespace AutogenRundown.DataBlocks.Alarms;
 
-public record GlobalWaveSettings : DataBlock
+public record GlobalWaveSettings : DataBlock<GlobalWaveSettings>
 {
     #region Properties
 

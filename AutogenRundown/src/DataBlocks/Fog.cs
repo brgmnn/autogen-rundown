@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks;
 
-public record Fog : DataBlock
+public record Fog : DataBlock<Fog>
 {
     public static double DENSITY_CLEAR = 0.00008;
     public static double DENSITY_LOW   = 0.0007;
