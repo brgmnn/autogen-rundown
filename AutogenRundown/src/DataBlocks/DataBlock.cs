@@ -29,7 +29,7 @@ public record DataBlock<T> where T : DataBlock<T>
     public string BlockName
     {
         get => $"{PersistentId}_{Name}";
-        private set { }
+        set => Name = value;
     }
 
     /// <summary>
