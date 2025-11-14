@@ -174,15 +174,13 @@ public class BlocksBin<T> where T : DataBlock<T>
         if (block is null || block.PersistentId == 0)
             return;
 
-        if (persistentIds.Contains(block.PersistentId))
-        {
-            var existing = Blocks.Find(b => b.PersistentId == block.PersistentId);
+        var index = Blocks.FindIndex(b => b.PersistentId == block.PersistentId);
 
-            if (existing is not null)
-                Blocks.Remove(existing);
-        }
+        if (index >= 0)
+            Blocks[index] = block;
+        else
+            Blocks.Add(block);
 
-        Blocks.Add(block);
         persistentIds.Add(block.PersistentId);
         LastPersistentId = Math.Max(LastPersistentId, block.PersistentId);
     }
