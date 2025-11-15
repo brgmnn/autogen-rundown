@@ -6,31 +6,55 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
 
+public class EnemyAbilityAblities
+{
+    public List<JObject> Chain { get; set; } = new();
+
+    public List<FogSphereAbility> FogSphere { get; set; } = new();
+
+    public List<JObject> Explosion { get; set; } = new();
+
+    public List<SpawnEnemyAbility> SpawnEnemy { get; set; } = new();
+
+    public List<JObject> SpawnWave { get; set; } = new();
+
+    public List<JObject> SpawnProjectile { get; set; } = new();
+
+    public List<JObject> DoAnim { get; set; } = new();
+
+    public List<JObject> Cloak { get; set; } = new();
+
+    public List<JObject> EMP { get; set; } = new();
+}
+
 public class EnemyAbility
 {
     #region Properties
+
+    #region Used Properties
 
     /// <summary>
     /// Mother birthing abilities customization
     /// </summary>
     [JsonProperty("DeathAbilityCustom")]
-    public ICollection<DeathAbility> DeathAbilities { get; set; } = new List<DeathAbility>();
-
-    [JsonIgnore]
-    public List<FogSphereAbility> FogSphereAbilities { get; set; } = new();
-
-    [JsonIgnore]
-    public List<SpawnEnemyAbility> SpawnEnemyAbilities { get; set; } = new();
+    public List<DeathAbility> DeathAbilities { get; set; } = new();
 
     /// <summary>
     ///
     /// </summary>
-    public JObject Abilities => new JObject
-    {
-        ["FogSphere"] = JArray.FromObject(FogSphereAbilities),
-        ["SpawnEnemy"] = JArray.FromObject(SpawnEnemyAbilities)
-    };
+    public EnemyAbilityAblities Abilities { get; set; } = new();
 
+    #endregion
+
+    #region Unused Properties
+
+    [JsonProperty("BehaviourAbilityCustom")]
+    public List<JObject> BehaviourAbilities { get; set; } = new();
+
+    [JsonProperty("LimbDestroyedAbilityCustom")]
+    public List<JObject> LimbDestroyedAbilities { get; set; } = new();
+
+    #endregion
     #endregion
 
     /// <summary>

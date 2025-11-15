@@ -607,7 +607,7 @@ public record Enemy_New : DataBlock<Enemy_New>
                         }
                     }
                 });
-            EnemyCustomization.EnemyAbility.SpawnEnemyAbilities.Add(new SpawnEnemyAbility
+            EnemyCustomization.EnemyAbility.Abilities.SpawnEnemy.Add(new SpawnEnemyAbility
             {
                 EnemyId = Baby.PersistentId,
                 AgentMode = "Agressive",
@@ -615,7 +615,7 @@ public record Enemy_New : DataBlock<Enemy_New>
                 CountPerSpawn = 2,
                 Name = "Spawn_two_baby"
             });
-            EnemyCustomization.EnemyAbility.FogSphereAbilities.Add(new FogSphereAbility
+            EnemyCustomization.EnemyAbility.Abilities.FogSphere.Add(new FogSphereAbility
             {
                 ColorMin = $"{fogColor}99",
                 ColorMax = $"{fogColor}aa",
@@ -630,7 +630,7 @@ public record Enemy_New : DataBlock<Enemy_New>
                 Duration = 1,
                 Name = "Foggy_boi_fog_explode"
             });
-            EnemyCustomization.EnemyAbility.FogSphereAbilities.Add(new FogSphereAbility
+            EnemyCustomization.EnemyAbility.Abilities.FogSphere.Add(new FogSphereAbility
             {
                 ColorMin = $"{fogColor}aa",
                 ColorMax = $"{fogColor}66",
