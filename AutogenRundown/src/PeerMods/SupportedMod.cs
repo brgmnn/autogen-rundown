@@ -48,6 +48,10 @@ public partial class SupportedMod
                     LoadDataBlocks_EnemyBalancing(path);
                     break;
 
+                case "GameData_EnemyMovementDataBlock_bin.json":
+                    LoadDataBlocks_EnemyMovement(path);
+                    break;
+
                 case "GameData_TextDataBlock_bin.json":
                     LoadDataBlocks_Text(path);
                     break;
@@ -106,6 +110,59 @@ public partial class SupportedMod
         }
 
         Plugin.Logger.LogInfo($"{ModName}: Loaded enemy balance data blocks -- New={added} Replaced={replaced} Skipped={skipped}");
+    }
+
+    private void LoadDataBlocks_EnemyMovement(string path)
+    {
+        var data = JObject.Parse(File.ReadAllText(path));
+
+        if (data?["Blocks"] == null)
+        {
+            Plugin.Logger.LogWarning("Failed to get 'Blocks' property");
+            return;
+        }
+
+        var blocks = data["Blocks"]!.ToObject<List<GameDataEnemyMovement>>();
+
+        if (blocks == null)
+        {
+            Plugin.Logger.LogWarning($"Failed to parse file '{path}'");
+            return;
+        }
+
+        var skipped = 0;
+        var added = 0;
+        var replaced = 0;
+
+        foreach (var block in blocks)
+        {
+            if (block.PersistentId == 0)
+                continue;
+
+            if (GameDataEnemyMovement.GtfoBlocks.TryGetValue(block.PersistentId, out var existing))
+            {
+                if (existing.Equals(block))
+                {
+                    skipped++;
+                    continue;
+                }
+
+                Plugin.Logger.LogDebug($"{ModName}: Replacing enemy movement block ({existing.PersistentId}) '{existing.Name}' -> {block.Name}");
+
+                // This is a replacement block
+                Bins.EnemyMovements.ReplaceBlock(block);
+                replaced++;
+                continue;
+            }
+
+            // This is a net new block. We have a NEW_ID/NEW_English combo
+            Bins.EnemyMovements.AddBlock(block);
+            added++;
+
+            Plugin.Logger.LogDebug($"{ModName}: Adding new enemy movement block '{block.Name}'");
+        }
+
+        Plugin.Logger.LogInfo($"{ModName}: Loaded enemy movement data blocks -- New={added} Replaced={replaced} Skipped={skipped}");
     }
 
     private void LoadDataBlocks_Text(string path)
