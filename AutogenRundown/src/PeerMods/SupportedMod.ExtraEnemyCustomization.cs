@@ -25,6 +25,7 @@ public partial class SupportedMod
         Import_ExtraEnemyCustomizationAbility(Path.Combine(pluginPath, "Ability.json"));
         Import_ExtraEnemyCustomizationEnemyAbility(Path.Combine(pluginPath, "EnemyAbility.json"));
         Import_ExtraEnemyCustomizationModel(Path.Combine(pluginPath, "Model.json"));
+        Import_ExtraEnemyCustomizationProjectile(Path.Combine(pluginPath, "Projectile.json"));
 
         // Each of the unused files for now.
         foreach (var filename in new List<string> { "Category.json", "Detection.json", "ScoutWave.json", "Tentacle.json" })
@@ -35,9 +36,6 @@ public partial class SupportedMod
                 overwrite: true);
         }
 
-        // EnemyAbility
-        // Global
-        // Model
         // Projectile
         // Property
     }
@@ -101,7 +99,7 @@ public partial class SupportedMod
     }
 
     /// <summary>
-    ///
+    /// DONE
     /// </summary>
     /// <param name="path"></param>
     private void Import_ExtraEnemyCustomizationModel(string path)
@@ -130,23 +128,14 @@ public partial class SupportedMod
     /// <param name="path"></param>
     private void Import_ExtraEnemyCustomizationProjectile(string path)
     {
-        var data = JObject.Parse(File.ReadAllText(path)).ToObject<Ability>();
+        var data = JObject.Parse(File.ReadAllText(path)).ToObject<ProjectileDefs>();
 
         if (data == null)
             return;
 
         // Copy over each of the list of definitions as is
-        EnemyCustomization.Ability.FogSphere.AddRange(data.FogSphere);
-        EnemyCustomization.Ability.Birthings.AddRange(data.Birthings);
-        EnemyCustomization.Ability.HealthRegen.AddRange(data.HealthRegen);
-        EnemyCustomization.Ability.InfectionAttacks.AddRange(data.InfectionAttacks);
-        EnemyCustomization.Ability.ExplosiveAttacks.AddRange(data.ExplosiveAttacks);
-        EnemyCustomization.Ability.KnockbackAttacks.AddRange(data.KnockbackAttacks);
-        EnemyCustomization.Ability.BleedAttacks.AddRange(data.BleedAttacks);
-        EnemyCustomization.Ability.DrainStaminaAttacks.AddRange(data.DrainStaminaAttacks);
-        EnemyCustomization.Ability.DoorBreaker.AddRange(data.DoorBreaker);
-        EnemyCustomization.Ability.ScoutScreaming.AddRange(data.ScoutScreaming);
-        EnemyCustomization.Ability.Pouncer.AddRange(data.Pouncer);
+        EnemyCustomization.Projectile.ShooterFires.AddRange(data.ShooterFires);
+        EnemyCustomization.Projectile.Projectiles.AddRange(data.Projectiles);
     }
 
     /// <summary>

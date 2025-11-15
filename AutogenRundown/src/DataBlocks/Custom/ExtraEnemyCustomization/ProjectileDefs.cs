@@ -12,13 +12,13 @@ public class ProjectileDefs
     /// Shadow (invisible) enemy customization
     /// </summary>
     [JsonProperty("ShooterFireCustom")]
-    public ICollection<ShooterFire> ShooterFires { get; set; } = new List<ShooterFire>();
+    public List<ShooterFire> ShooterFires { get; set; } = new();
 
     /// <summary>
     /// Allows configuring enemy materials
     /// </summary>
     [JsonProperty("ProjectileDefinitions")]
-    public ICollection<Projectiles.Projectile> Projectiles { get; set; } = new List<Projectiles.Projectile>();
+    public List<Projectiles.Projectile> Projectiles { get; set; } = new();
 
     #endregion
 
