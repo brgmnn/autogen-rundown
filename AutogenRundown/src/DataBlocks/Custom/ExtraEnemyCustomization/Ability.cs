@@ -1,25 +1,62 @@
 ﻿using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Abilities;
 using BepInEx;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
 
 public class Ability
 {
     #region Properties
+    #region Used properties
 
     /// <summary>
     /// Mother birthing abilities customization
     /// </summary>
     [JsonProperty("BirthingCustom")]
-    public ICollection<Birthing> Birthings { get; set; } = new List<Birthing>();
+    public List<Birthing> Birthings { get; set; } = new();
 
     /// <summary>
     /// Customizing attacks to deal infection
     /// </summary>
     [JsonProperty("InfectionAttackCustom")]
-    public ICollection<InfectionAttack> InfectionAttacks { get; set; } = new List<InfectionAttack>();
+    public List<InfectionAttack> InfectionAttacks { get; set; } = new();
 
+    #endregion
+
+    #region Unused properties
+    /*
+     * These properties are still copied by the SupportedMod framework
+     */
+
+    [JsonProperty("FogSphereCustom")]
+    public List<JObject> FogSphere { get; set; } = new();
+
+    [JsonProperty("HealthRegenCustom")]
+    public List<JObject> HealthRegen { get; set; } = new();
+
+    [JsonProperty("ExplosiveAttackCustom")]
+    public List<JObject> ExplosiveAttacks { get; set; } = new();
+
+    [JsonProperty("KnockbackAttackCustom")]
+    public List<JObject> KnockbackAttacks { get; set; } = new();
+
+    [JsonProperty("BleedAttackCustom")]
+    public List<JObject> BleedAttacks { get; set; } = new();
+
+    [JsonProperty("DrainStaminaAttackCustom")]
+    public List<JObject> DrainStaminaAttacks { get; set; } = new();
+
+    [JsonProperty("DoorBreakerCustom")]
+    public List<JObject> DoorBreaker { get; set; } = new();
+
+    [JsonProperty("ScoutScreamingCustom")]
+    public List<JObject> ScoutScreaming { get; set; } = new();
+
+    [JsonProperty("PouncerCustom")]
+    public List<JObject> Pouncer { get; set; } = new();
+
+    #endregion
     #endregion
 
     /// <summary>

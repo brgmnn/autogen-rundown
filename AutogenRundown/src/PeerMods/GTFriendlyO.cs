@@ -22,6 +22,7 @@ public class GTFriendlyO : SupportedMod
         mod.CopyGameDataJson();
 
         mod.CopyCustom("CustomBoosters");
+        mod.CopyCustomExtraEnemyCustomization();
         mod.CopyCustom("ExtraSyringeCustomization");
         mod.CopyCustom("ExtraToolCustomization");
         mod.CopyCustom("ExtraWeaponCustomization");

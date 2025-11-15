@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.PeerMods;
 
-public class SupportedMod
+public partial class SupportedMod
 {
     protected string ModName = "";
 

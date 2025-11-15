@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AutogenRundown.Json;
+using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Abilities;
 
@@ -15,6 +16,7 @@ public record InfectionAttackData
     /// 1.0 = +100% infection
     /// -0.1 = -10% infection
     /// </summary>
+    [JsonConverter(typeof(PercentageConverter))]
     public double Infection { get; set; } = 0.0;
 
     /// <summary>
