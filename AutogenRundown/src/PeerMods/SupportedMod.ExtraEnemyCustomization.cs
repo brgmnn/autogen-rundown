@@ -18,7 +18,6 @@ public partial class SupportedMod
         Directory.CreateDirectory(Path.GetDirectoryName(gameDataPath)!);
 
         Plugin.Logger.LogDebug($"{ModName}: Copying \"Custom/ExtraEnemyCustomization\"");
-        // CopyDirectory(pluginPath, gameDataPath);
 
         CopyDirectory(Path.Combine(pluginPath, "icons"), Path.Combine(gameDataPath, "icons"));
 
@@ -26,6 +25,7 @@ public partial class SupportedMod
         Import_ExtraEnemyCustomizationEnemyAbility(Path.Combine(pluginPath, "EnemyAbility.json"));
         Import_ExtraEnemyCustomizationModel(Path.Combine(pluginPath, "Model.json"));
         Import_ExtraEnemyCustomizationProjectile(Path.Combine(pluginPath, "Projectile.json"));
+        Import_ExtraEnemyCustomizationProperty(Path.Combine(pluginPath, "Property.json"));
 
         // Each of the unused files for now.
         foreach (var filename in new List<string> { "Category.json", "Detection.json", "ScoutWave.json", "Tentacle.json" })
@@ -35,9 +35,6 @@ public partial class SupportedMod
                 Path.Combine(gameDataPath, filename),
                 overwrite: true);
         }
-
-        // Projectile
-        // Property
     }
 
     /// <summary>
@@ -144,23 +141,15 @@ public partial class SupportedMod
     /// <param name="path"></param>
     private void Import_ExtraEnemyCustomizationProperty(string path)
     {
-        var data = JObject.Parse(File.ReadAllText(path)).ToObject<Ability>();
+        var data = JObject.Parse(File.ReadAllText(path)).ToObject<Property>();
 
         if (data == null)
             return;
 
         // Copy over each of the list of definitions as is
-        EnemyCustomization.Ability.FogSphere.AddRange(data.FogSphere);
-        EnemyCustomization.Ability.Birthings.AddRange(data.Birthings);
-        EnemyCustomization.Ability.HealthRegen.AddRange(data.HealthRegen);
-        EnemyCustomization.Ability.InfectionAttacks.AddRange(data.InfectionAttacks);
-        EnemyCustomization.Ability.ExplosiveAttacks.AddRange(data.ExplosiveAttacks);
-        EnemyCustomization.Ability.KnockbackAttacks.AddRange(data.KnockbackAttacks);
-        EnemyCustomization.Ability.BleedAttacks.AddRange(data.BleedAttacks);
-        EnemyCustomization.Ability.DrainStaminaAttacks.AddRange(data.DrainStaminaAttacks);
-        EnemyCustomization.Ability.DoorBreaker.AddRange(data.DoorBreaker);
-        EnemyCustomization.Ability.ScoutScreaming.AddRange(data.ScoutScreaming);
-        EnemyCustomization.Ability.Pouncer.AddRange(data.Pouncer);
+        EnemyCustomization.Property.SpawnCost.AddRange(data.SpawnCost);
+        EnemyCustomization.Property.Events.AddRange(data.Events);
+        EnemyCustomization.Property.DistantRoars.AddRange(data.DistantRoars);
     }
 
     private void Import_ExtraEnemyCustomizationScoutWave(string path)

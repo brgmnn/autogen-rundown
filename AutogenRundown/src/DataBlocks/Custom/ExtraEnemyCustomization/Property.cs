@@ -9,11 +9,11 @@ public class Property
 {
     #region Properties
 
-    // [JsonProperty("SpawnCostCustom")]
-    // public JArray SpawnCost { get; set; } = new();
-    //
-    // [JsonProperty("EventsCustom")]
-    // public JArray Events { get; set; } = new();
+    [JsonProperty("SpawnCostCustom")]
+    public List<JObject> SpawnCost { get; set; } = new();
+
+    [JsonProperty("EventsCustom")]
+    public List<JObject> Events { get; set; } = new();
 
     /// <summary>
     /// Customize Roars
