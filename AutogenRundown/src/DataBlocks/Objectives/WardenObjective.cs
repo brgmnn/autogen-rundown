@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks;
 
-public partial record WardenObjective : DataBlock
+public partial record WardenObjective : DataBlock<WardenObjective>
 {
     /// <summary>
     /// Returns a random casualty warning for lore strings

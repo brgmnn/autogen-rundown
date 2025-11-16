@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks;
 
-public record Rundown : DataBlock
+public record Rundown : DataBlock<Rundown>
 {
     public static readonly uint R_Daily = 1;
     public static readonly uint R_Weekly = 2;

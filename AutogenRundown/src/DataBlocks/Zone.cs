@@ -15,7 +15,7 @@ namespace AutogenRundown.DataBlocks;
 /// <summary>
 ///
 /// </summary>
-public partial record Zone : DataBlock
+public partial record Zone : DataBlock<Zone>
 {
     #region Direction manipulation
     /// <summary>

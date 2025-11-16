@@ -2,7 +2,7 @@
 
 namespace AutogenRundown.DataBlocks;
 
-public record BigPickupDistribution : DataBlock
+public record BigPickupDistribution : DataBlock<BigPickupDistribution>
 {
     public static readonly BigPickupDistribution MatterWaveProjector = new()
     {

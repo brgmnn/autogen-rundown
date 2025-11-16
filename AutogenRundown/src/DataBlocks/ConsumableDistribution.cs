@@ -2,7 +2,7 @@
 
 namespace AutogenRundown.DataBlocks;
 
-public record ConsumableDistribution : DataBlock
+public record ConsumableDistribution : DataBlock<ConsumableDistribution>
 {
     /// <summary>
     /// Mostly glowsticks and lock melters, with a small chance of tripmines and c-foam. Also include long range

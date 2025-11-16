@@ -38,14 +38,13 @@ public static class RundownFactory
     }
 
     /// <summary>
-    /// TODO: We might consider cleaning the entire GameData folder
+    /// Ensures we get a clean GameData folder on every launch
     /// </summary>
     /// <exception cref="DirectoryNotFoundException"></exception>
     private static void CleanFolders()
     {
         var gameData = Path.Combine(Paths.BepInExRootPath, "GameData");
 
-        // This resolves the recent game update by clearing older folder versions
         try
         {
             if (!Directory.Exists(gameData))
@@ -60,10 +59,7 @@ public static class RundownFactory
                 if (!int.TryParse(folderName, out var folderNumber))
                     continue;
 
-                if (folderNumber >= CellBuildData.GetRevision())
-                    continue;
-
-                Plugin.Logger.LogInfo($"Deleting old data folder: {dirPath}");
+                Plugin.Logger.LogInfo($"Cleaning GameData: {folderNumber}");
                 Directory.Delete(dirPath, recursive: true);
             }
 
@@ -85,11 +81,6 @@ public static class RundownFactory
         {
             Plugin.Logger.LogInfo($"Error: {ex.Message}");
         }
-
-        var dir = Path.Combine(Plugin.GameDataPath, "Custom", "AutogenRundown");
-
-        if (Directory.Exists(dir))
-            Directory.Delete(dir, recursive: true);
     }
 
     /// <summary>

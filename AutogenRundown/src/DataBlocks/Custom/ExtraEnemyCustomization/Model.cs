@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models;
 using BepInEx;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
 
@@ -12,25 +13,33 @@ public class Model
     /// Shadow (invisible) enemy customization
     /// </summary>
     [JsonProperty("ShadowCustom")]
-    public ICollection<Shadow> Shadows { get; set; } = new List<Shadow>();
+    public List<Shadow> Shadows { get; set; } = new();
 
     /// <summary>
     /// Allows configuring enemy materials
     /// </summary>
     [JsonProperty("MaterialCustom")]
-    public ICollection<Material> Materials { get; set; } = new List<Material>();
+    public List<Material> Materials { get; set; } = new();
 
     /// <summary>
     /// Allows configuring enemy materials
     /// </summary>
     [JsonProperty("GlowCustom")]
-    public ICollection<Glow> Glows { get; set; } = new List<Glow>();
+    public List<Glow> Glows { get; set; } = new();
 
-    /// <summary>
-    /// Body part transformation
-    /// </summary>
-    [JsonProperty("BoneCustom")]
-    public ICollection<BoneCustom> Bones { get; set; } = new List<BoneCustom>();
+    public List<JObject> BoneCustom { get; set; } = new();
+
+    public List<JObject> LimbCustom { get; set; } = new();
+
+    public List<JObject> AnimHandleCustom { get; set; } = new();
+
+    public List<JObject> ModelRefCustom { get; set; } = new();
+
+    public List<JObject> MarkerCustom { get; set; } = new();
+
+    public List<JObject> ScannerCustom { get; set; } = new();
+
+    public List<JObject> SilhouetteCustom { get; set; } = new();
 
     #endregion
 

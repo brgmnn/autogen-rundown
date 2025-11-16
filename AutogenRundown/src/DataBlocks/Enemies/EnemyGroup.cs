@@ -32,7 +32,7 @@ public record class EnemyGroupRole
     public EnemyRoleDistribution Distribution { get; set; } = EnemyRoleDistribution.Rel100;
 }
 
-public record EnemyGroup : DataBlock
+public record EnemyGroup : DataBlock<EnemyGroup>
 {
     #region Properties
     /// <summary>
@@ -773,8 +773,6 @@ public record EnemyGroup : DataBlock
     };
 
     #endregion
-
-    public static void Setup() { }
 
     public new static void SaveStatic()
     {

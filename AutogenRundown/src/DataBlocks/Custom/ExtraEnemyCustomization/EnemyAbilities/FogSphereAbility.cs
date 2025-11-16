@@ -4,7 +4,7 @@ namespace AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.EnemyAbilitie
 
 public class FogSphereAbility
 {
-    public int SoundEventID { get; set; } = 0;
+    public Sound SoundEventID { get; set; } = Sound.None;
 
     public string ColorMin { get; set; } = "#FFFFFFFF";
 

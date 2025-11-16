@@ -2,7 +2,7 @@
 
 namespace AutogenRundown.DataBlocks;
 
-public record ExpeditionBalance : DataBlock
+public record ExpeditionBalance : DataBlock<ExpeditionBalance>
 {
     /// <summary>
     /// This is the default balance settings for the game

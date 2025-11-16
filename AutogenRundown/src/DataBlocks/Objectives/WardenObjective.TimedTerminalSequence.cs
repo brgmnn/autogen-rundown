@@ -5,7 +5,7 @@ using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 
-public partial record WardenObjective : DataBlock
+public partial record WardenObjective
 {
     public void PreBuild_TimedTerminalSequence(BuildDirector director, Level level)
     {

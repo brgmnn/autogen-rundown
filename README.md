@@ -65,22 +65,16 @@ https://thunderstore.io/c/gtfo/p/TheDoggyDoge/DogsTilePack/
 https://thunderstore.io/c/gtfo/p/xiaoyao/XAOYAO_developer_package/
 
 
-Level Lockup:
-  Double check logs on any of the old versions for this:
-  ```
-  ZoneNode { Bulkhead = None, ZoneNumber = 0, Branch = , MaxConnections = 0, Tags =  }
-  ```
-  There was a bug in the error alarm turnoff code where it would try and place a turnoff alarm from a nonexistent zone
-  ```
-  [Error  :     Unity] WARNING : Zone1 (Zone_1 - 224): Failed to find any good StartAreas in zone 0 (223) expansionType:Towards_Random m_buildFromZone.m_areas: 0 scoredCount:0 dim: Reality
-  ```
-  Happens in:
-    LG_ZoneJob_CreateExpandFromData
-  Second error:
-  ```
-  [Error  :     Unity] NullReferenceException: Object reference not set to an instance of an object.
-  [Error  :     Unity] <b>LG_ZoneJob_CreateExpandFromData:</b> sourceExpander is null for New Game Object[SubSeed:24(24)] | zone dim: Reality | job dim: Reality!
-  ```
+E-tier analysis
+
+* R2E1 - Crib
+* R4E1 - Downwards
+* R5E1 - KDS Deep
+* R7E1 - Chaos
+* R8E1 - Valiant
+* R8E2 - Release
+
+
 
 Requests:
   * Add support for VanillaReloaded mod
@@ -137,7 +131,6 @@ Monthly April
   [ ] Check if we can use a mod like https://thunderstore.io/c/gtfo/p/W33B/Arsenality/
     * Seems like it adds datablock files directly
   * Try using fixed bioscan points for room wide scans?
-  [ ] B1 Secondary (Cryo) - No exit alarm
   [ ] C4 - Security sensors spawn LOADS of snatchers
   [ ] E1 - Maybe a bit too easy?
   [ ] D1 - Activate small HSU doesn't require the objective to exit

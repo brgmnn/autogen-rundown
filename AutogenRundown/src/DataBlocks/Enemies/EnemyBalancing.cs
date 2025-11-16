@@ -1,6 +1,8 @@
-﻿namespace AutogenRundown.DataBlocks.Enemies;
+﻿using AutogenRundown.Extensions;
 
-public record EnemyBalancing : DataBlock
+namespace AutogenRundown.DataBlocks.Enemies;
+
+public record EnemyBalancing : DataBlock<EnemyBalancing>
 {
     #region Properties
 
@@ -62,6 +64,7 @@ public record EnemyBalancing : DataBlock
 
     public static readonly EnemyBalancing NightmareGiant = new()
     {
+        Name = "NightmareGiant",
         Health = new()
         {
             HealthMax = 200,
@@ -89,6 +92,7 @@ public record EnemyBalancing : DataBlock
     /// </summary>
     public static readonly EnemyBalancing StrikerInfested = new()
     {
+        Name = "StrikerInfested",
         Health = new()
         {
             HealthMax = 12,
@@ -105,10 +109,74 @@ public record EnemyBalancing : DataBlock
     public static void Setup()
     {
         // Loads the base game balancing
-        Setup<GameDataEnemyBalancing, EnemyBalancing>(Bins.EnemyBalancing, "EnemyBalancing");
+        Setup<GameDataEnemyBalancing>(Bins.EnemyBalancing, "EnemyBalancing");
 
         NightmareGiant.Persist();
         StrikerInfested.Persist();
+    }
+
+    public virtual bool Equals(EnemyBalancing? other)
+    {
+        if (other is null)
+            return false;
+
+        if (ReferenceEquals(this, other))
+            return true;
+
+        return base.Equals(other) &&
+               Health.Equals(other.Health) &&
+               GlueTolerance.Equals(other.GlueTolerance) &&
+               GlueFadeOutTime.Equals(other.GlueFadeOutTime) &&
+               CanBePushed == other.CanBePushed &&
+               ForbidTwitchHit == other.ForbidTwitchHit &&
+               AllowDamgeBonusFromBehind == other.AllowDamgeBonusFromBehind &&
+               UseTentacleTunnelCheck == other.UseTentacleTunnelCheck &&
+               UseVisibilityRaycastDuringTentacleAttack == other.UseVisibilityRaycastDuringTentacleAttack &&
+               TentacleAttackDamageRadiusIfNoTunnelCheck.Equals(other.TentacleAttackDamageRadiusIfNoTunnelCheck) &&
+               TentacleAttackDamage.Equals(other.TentacleAttackDamage) &&
+               MeleeAttackDamage.Equals(other.MeleeAttackDamage) &&
+               MeleeAttackDamageCheckRadius.Equals(other.MeleeAttackDamageCheckRadius) &&
+               TagTime.Equals(other.TagTime) &&
+               EnemyCollisionRadius.Equals(other.EnemyCollisionRadius) &&
+               EnemyCollisionPlayerMovementReduction.Equals(other.EnemyCollisionPlayerMovementReduction) &&
+               EnemyCollisionMinimumMoveSpeedModifier.Equals(other.EnemyCollisionMinimumMoveSpeedModifier) &&
+               ScoutTentaclesMoveOutMultiplier.Equals(other.ScoutTentaclesMoveOutMultiplier) &&
+               ScoutTentaclesMoveInTime.Equals(other.ScoutTentaclesMoveInTime) &&
+               ScoutTentaclesMoveInDetectedTime.Equals(other.ScoutTentaclesMoveInDetectedTime) &&
+               ScoutTentacleSourceExpansionOffset.Equals(other.ScoutTentacleSourceExpansionOffset) &&
+               ScoutTentacleAngleMinMax.Equals(other.ScoutTentacleAngleMinMax) &&
+               ScoutTentacleCount == other.ScoutTentacleCount;
+    }
+
+    public override int GetHashCode()
+    {
+        var hashCode = new HashCode();
+
+        hashCode.Add(base.GetHashCode());
+        hashCode.Add(Health);
+        hashCode.Add(GlueTolerance);
+        hashCode.Add(GlueFadeOutTime);
+        hashCode.Add(CanBePushed);
+        hashCode.Add(ForbidTwitchHit);
+        hashCode.Add(AllowDamgeBonusFromBehind);
+        hashCode.Add(UseTentacleTunnelCheck);
+        hashCode.Add(UseVisibilityRaycastDuringTentacleAttack);
+        hashCode.Add(TentacleAttackDamageRadiusIfNoTunnelCheck);
+        hashCode.Add(TentacleAttackDamage);
+        hashCode.Add(MeleeAttackDamage);
+        hashCode.Add(MeleeAttackDamageCheckRadius);
+        hashCode.Add(TagTime);
+        hashCode.Add(EnemyCollisionRadius);
+        hashCode.Add(EnemyCollisionPlayerMovementReduction);
+        hashCode.Add(EnemyCollisionMinimumMoveSpeedModifier);
+        hashCode.Add(ScoutTentaclesMoveOutMultiplier);
+        hashCode.Add(ScoutTentaclesMoveInTime);
+        hashCode.Add(ScoutTentaclesMoveInDetectedTime);
+        hashCode.Add(ScoutTentacleSourceExpansionOffset);
+        hashCode.Add(ScoutTentacleAngleMinMax);
+        hashCode.Add(ScoutTentacleCount);
+
+        return hashCode.ToHashCode();
     }
 }
 

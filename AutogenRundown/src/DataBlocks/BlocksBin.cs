@@ -71,7 +71,6 @@ public static class Bins
         EnemyMovement.Setup();
         EnemySFX.Setup();
         Enemy_New.Setup();
-        EnemyGroup.Setup();
         EnemyPopulation.Setup();
         WavePopulation.Setup();
         Alarms.WaveSettings.Setup();
@@ -137,7 +136,7 @@ public static class Bins
     }
 }
 
-public class BlocksBin<T> where T : DataBlock
+public class BlocksBin<T> where T : DataBlock<T>
 {
     /// <summary>
     /// Not sure what this is for yet
@@ -175,15 +174,13 @@ public class BlocksBin<T> where T : DataBlock
         if (block is null || block.PersistentId == 0)
             return;
 
-        if (persistentIds.Contains(block.PersistentId))
-        {
-            var existing = Blocks.Find(b => b.PersistentId == block.PersistentId);
+        var index = Blocks.FindIndex(b => b.PersistentId == block.PersistentId);
 
-            if (existing is not null)
-                Blocks.Remove(existing);
-        }
+        if (index >= 0)
+            Blocks[index] = block;
+        else
+            Blocks.Add(block);
 
-        Blocks.Add(block);
         persistentIds.Add(block.PersistentId);
         LastPersistentId = Math.Max(LastPersistentId, block.PersistentId);
     }
@@ -250,7 +247,7 @@ public class BlocksBin<T> where T : DataBlock
 /// Lazy persisting version of BlocksBin.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class LazyBlocksBin<T> : BlocksBin<T> where T : DataBlock
+public class LazyBlocksBin<T> : BlocksBin<T> where T : DataBlock<T>
 {
     /// <summary>
     ///

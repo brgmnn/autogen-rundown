@@ -2,7 +2,7 @@
 
 namespace AutogenRundown.DataBlocks.Markers;
 
-public record MiningMarker : DataBlock
+public record MiningMarker : DataBlock<MiningMarker>
 {
     #region Properties
 
@@ -14,7 +14,7 @@ public record MiningMarker : DataBlock
     { }
 
     public static void Setup()
-        => Setup<MiningMarker, MiningMarker>(Bins.MiningMarkers, "MiningMarker");
+        => Setup<MiningMarker>(Bins.MiningMarkers, "MiningMarker");
 
     public new static void SaveStatic()
     {

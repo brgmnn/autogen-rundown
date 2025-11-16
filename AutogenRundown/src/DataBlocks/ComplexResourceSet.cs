@@ -8,7 +8,7 @@ namespace AutogenRundown.DataBlocks;
 /// <summary>
 /// This is actually the individual data block in ComplexResourceSet
 /// </summary>
-public record ComplexResourceSet : DataBlock
+public record ComplexResourceSet : DataBlock<ComplexResourceSet>
 {
     #region Properties
     [JsonProperty("name")]
@@ -176,7 +176,7 @@ public record ComplexResourceSet : DataBlock
     public static ComplexResourceSet Find(uint persistentId) => Bins.ComplexResources.Find(persistentId)!;
 
     public static void Setup()
-        => Setup<GameDataComplexResourceSet, ComplexResourceSet>(Bins.ComplexResources, "ComplexResourceSet");
+        => Setup<GameDataComplexResourceSet>(Bins.ComplexResources, "ComplexResourceSet");
 
     public new static void SaveStatic()
     {
