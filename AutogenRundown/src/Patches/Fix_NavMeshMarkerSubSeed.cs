@@ -1,43 +1,12 @@
 ﻿using AIGraph;
+using AutogenRundown.Managers;
+using CellMenu;
 using GameData;
 using HarmonyLib;
 using LevelGeneration;
 using UnityEngine;
 
 namespace AutogenRundown.Patches;
-
-// [HarmonyPatch(typeof(LG_NodeTools), nameof(LG_NodeTools.CalculateReachableNodesAndLocationScores))]
-// static class CalcReachables_Patch
-// {
-//     static void Postfix(LG_Area area, Vector3 sourcePos)
-//     {
-//         var cluster = area?.m_courseNode?.m_nodeCluster;
-//         if (cluster == null) return;
-//         if (cluster.m_reachableNodes.Count > 1) return;
-//
-//         var zone = area.m_zone;
-//         if (RerollRuntime.TryBegin(zone))
-//             RerollRuntime.RerollAndRebuildZone(zone);
-//     }
-// }
-
-// public class RerollBarrierJob : LG_FactoryJob
-// {
-//     private readonly LG_Zone _zone;
-//
-//     public RerollBarrierJob(LG_Zone zone)
-//     {
-//         _zone = zone;
-//     }
-//
-//     public override string GetName() => $"RerollBarrier {_zone?.name}";
-//
-//     public override bool Build()
-//     {
-//         Fix_NavMeshMarkerSubSeed.End(_zone);
-//         return true;
-//     }
-// }
 
 [HarmonyPatch]
 public class Fix_NavMeshMarkerSubSeed
@@ -111,9 +80,9 @@ public class Fix_NavMeshMarkerSubSeed
 
                 rebuildInProgress = true;
 
-                CleanupGameObjects();
+                FactoryJobManager.LevelCleanup();
 
-                Builder.Current.Build();
+                FactoryJobManager.Rebuild();
 
                 return; // one rebuild per completion
             }
@@ -191,23 +160,6 @@ public class Fix_NavMeshMarkerSubSeed
         return null;
     }
 
-    private static void CleanupGameObjects()
-    {
-        LG_BuildNodeCluster.LevelCleanup();
-        LG_FunctionMarkerBuilder.LevelCleanup();
-        LG_MarkerFactory.Cleanup();
-
-        // Remove terminals/uplinks from previous attempts
-        foreach (var t in UnityEngine.Object.FindObjectsOfType<LG_ComputerTerminal>())
-            UnityEngine.Object.Destroy(t.gameObject);
-
-        // try {
-        //     // foreach (var u in UnityEngine.Object.FindObjectsOfType<LevelGeneration.TerminalUplinkPuzzle>())
-        //     //     UnityEngine.Object.Destroy(u.gameObject);
-        // } catch {}
-    }
-
-
     [HarmonyPatch(typeof(LG_Factory), nameof(LG_Factory.FactoryDone))]
     [HarmonyPrefix]
     public static bool Prefix_FactoryDone()
@@ -247,60 +199,6 @@ public class Fix_NavMeshMarkerSubSeed
         return true;
     }
 
-
-
-
-
-    // [HarmonyPatch(typeof(LG_ZoneJob_CreateExpandFromData), MethodType.Constructor,
-    //     new Type[]
-    //     {
-    //         typeof(LG_Floor), typeof(Dimension), typeof(LG_Layer), typeof(int), typeof(GameData.ExpeditionZoneData),
-    //         typeof(LG_Area)
-    //     })]
-    // [HarmonyPrefix]
-    // static void Prefix_LG_ZoneJob_CreateExpandFromData_Ctor(
-    //     LG_ZoneJob_CreateExpandFromData __instance,
-    //     LG_Floor floor,
-    //     Dimension dimension,
-    //     LG_Layer layer,
-    //     int id,
-    //     ref ExpeditionZoneData zoneData,
-    //     LG_Area? startArea)
-    // {
-    //     try
-    //     {
-    //         // var zone = __instance.m_zone; // public in decomp; use AccessTools if needed
-    //
-    //         // if (zone == null)
-    //         //     return;
-    //
-    //         // var key = (zone.DimensionIndex, zone.LocalIndex);
-    //         var key = (dimension.DimensionIndex, zoneData.LocalIndex);
-    //
-    //         if (markerSubSeeds.TryGetValue(key, out var overrideSeed))
-    //         {
-    //             // zone.m_markerSubSeed = overrideSeed;
-    //             // Align the job’s internal field for consistency in logs
-    //             // var f = AccessTools.Field(typeof(LG_ZoneJob_CreateExpandFromData), "m_markerSubSeed");
-    //             // if (f != null) f.SetValue(__instance, overrideSeed);
-    //
-    //             zoneData.MarkerSubSeed = (int)overrideSeed;
-    //
-    //             Plugin.Logger.LogDebug($"[Reroll] Applied override m_markerSubSeed={overrideSeed} to Zone_{zoneData.LocalIndex} (dim:{dimension.DimensionIndex})");
-    //         }
-    //         // else
-    //         // {
-    //         //     // Seed our map from data default on first encounter
-    //         //     markerSubSeeds[key] = zone.m_markerSubSeed;
-    //         // }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Plugin.Logger.LogError(ex);
-    //     }
-    // }
-
-
     [HarmonyPatch(typeof(LG_Layer), nameof(LG_Layer.CreateZone))]
     [HarmonyPrefix]
     static void Prefix_Layer_CreateZone(LG_Layer __instance, LG_Floor floor, ref ExpeditionZoneData zoneData, int zoneAliasStart)
@@ -328,48 +226,6 @@ public class Fix_NavMeshMarkerSubSeed
             // Debug.Log($"[Reroll] Applied override m_markerSubSeed={overrideSeed} to {zone.name}");
         }
     }
-
-
-    // // Apply the override at zone creation
-    // [HarmonyPatch(typeof(LG_ZoneJob_CreateExpandFromData), MethodType.Constructor,
-    //     new Type[] { typeof(LG_Floor), typeof(Dimension), typeof(LG_Layer), typeof(int), typeof(GameData.ExpeditionZoneData), typeof(LG_Area) })]
-    // [HarmonyPostfix]
-    // static void LG_ZoneJob_CreateExpandFromData_Ctor_Postfix(LG_ZoneJob_CreateExpandFromData __instance)
-    // {
-    //     try
-    //     {
-    //         // var zone = __instance.m_zone; // public in decomp; use AccessTools if needed
-    //         //
-    //         // if (zone == null)
-    //         //     return;
-    //
-    //         // var key = (zone.DimensionIndex, zone.LocalIndex);
-    //
-    //         // if (markerSubSeeds.TryGetValue(key, out var overrideSeed))
-    //         // {
-    //         //     zone.m_markerSubSeed = overrideSeed;
-    //         //     __instance.m_markerSubSeed = overrideSeed;
-    //         //
-    //         //     Plugin.Logger.LogDebug($"[Reroll] Applied override m_markerSubSeed={overrideSeed} to Zone_{zone.LocalIndex} (dim:{zone.DimensionIndex})");
-    //         //
-    //         //     // // Align the job’s internal field for consistency in logs
-    //         //     // var f = AccessTools.Field(typeof(LG_ZoneJob_CreateExpandFromData), "m_markerSubSeed");
-    //         //     // if (f != null) f.SetValue(__instance, overrideSeed);
-    //         //     // Debug.Log($"[Reroll] Applied override m_markerSubSeed={overrideSeed} to {zone.name}");
-    //         // }
-    //
-    //
-    //         // else
-    //         // {
-    //         //     // Seed our map from data default on first encounter
-    //         //     markerSubSeeds[key] = zone.m_markerSubSeed;
-    //         // }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Plugin.Logger.LogError(ex);
-    //     }
-    // }
 
     // Optional: detect degenerate areas early (no action here; we rebuild on factory done)
     [HarmonyPatch(typeof(LG_NodeTools), nameof(LG_NodeTools.CalculateReachableNodesAndLocationScores))]
@@ -418,229 +274,4 @@ public class Fix_NavMeshMarkerSubSeed
             Plugin.Logger.LogError(ex);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-    // public static bool TryBegin(LG_Zone zone)
-    // {
-    //     if (zone == null)
-    //         return false;
-    //
-    //     var key = zone.IDinLayer;
-    //
-    //     if (zone.m_markerSubSeed >= 6000)
-    //         return false;
-    //
-    //     if (!s_building.Add(key))
-    //         return false;
-    //
-    //     return true;
-    // }
-
-    // public static void End(LG_Zone zone)
-    // {
-    //     if (zone == null)
-    //         return;
-    //
-    //     s_building.Remove(zone.IDinLayer);
-    //
-    //     Plugin.Logger.LogDebug($"Finished fixing ZoneId={zone.IDinLayer}");
-    // }
-
-    // // Populate NodeVolumeJobDatas by preparing volumes in the dimension
-    // private static void PrepareVolumesForDimension(eDimensionIndex dimIndex)
-    // {
-    //     var volumes = UnityEngine.Object.FindObjectsOfType<AIGraph.AIG_NodeVolume>();
-    //     for (int i = 0; i < volumes.Length; i++)
-    //     {
-    //         var v = volumes[i];
-    //         v.PrepareBuild(dimIndex);
-    //         v.StartBuild();
-    //     }
-    //     for (int i = 0; i < volumes.Length; i++)
-    //         volumes[i].EndBuild();
-    // }
-
-    // [HarmonyPatch(typeof(LG_NodeTools), nameof(LG_NodeTools.CalculateReachableNodesAndLocationScores))]
-    // [HarmonyPostfix]
-    // static void TryGetScoreNodes_Prefix(LG_Area area, Vector3 sourcePos)
-    // {
-    //     var cluster = area?.m_courseNode?.m_nodeCluster;
-    //
-    //     if (cluster == null)
-    //         return;
-    //
-    //     if (cluster.m_reachableNodes.Count > 1)
-    //         return;
-    //
-    //     var zone = area.m_zone;
-    //
-    //     // We know that the following work:
-    //     //      - 47
-    //     //      - 5437
-    //
-    //
-    //     var maxAttempts = 50;
-    //     var respawnMarkers = true;
-    //
-    //     if (TryBegin(zone))
-    //     {
-    //         try
-    //         {
-    //             var floor = Builder.CurrentFloor;
-    //             if (floor == null) return;
-    //
-    //             for (int attempt = 0; attempt < maxAttempts; attempt++)
-    //             {
-    //                 zone.m_markerSubSeed += 1;
-    //
-    //                 // A) Optional: respawn markers so m_markerSubSeed takes effect on content
-    //                 if (respawnMarkers)
-    //                 {
-    //                     LevelGeneration.LG_MarkerFactory.Cleanup();
-    //
-    //                     foreach (var cn in zone.m_courseNodes)
-    //                     {
-    //                         var area2 = cn?.m_area;
-    //                         if (area2 == null) continue;
-    //
-    //                         // 1) Destroy old spawns
-    //                         for (int f = 0; f < EnumUtil.GetValueLength<ExpeditionFunction>(); f++)
-    //                         {
-    //                             var fn = (ExpeditionFunction)f;
-    //                             var spawners = area2.GetAllMarkerSpawners(fn);
-    //                             for (int i = 0; i < spawners.Count; i++)
-    //                                 spawners[i].DestroySpawnedGO();
-    //                         }
-    //
-    //                         // 2) Recreate spawners deterministically
-    //                         area2.CreateMarkerSpawners(area2.AreaSeed);
-    //
-    //                         // 3) Queue generic markers (None) for production
-    //                         LevelGeneration.LG_MarkerFactory.Register(area2.GetAllMarkerSpawners(ExpeditionFunction.None));
-    //                     }
-    //
-    //                     // Drain generic production synchronously
-    //                     var produce = new LevelGeneration.LG_ProduceMarkersJob();
-    //                     int safetyProduce = 0;
-    //                     while (!produce.Build() && safetyProduce++ < 10000) {}
-    //
-    //                     // Rebuild function markers for the zone (uses zone.m_markerSubSeed)
-    //                     var jobFunc = new LevelGeneration.LG_PopulateFunctionMarkersInZoneJob(zone, floor, fallbackMode: false);
-    //                     int safetyFunc = 0;
-    //                     while (!jobFunc.Build() && safetyFunc++ < 10000) {}
-    //                 }
-    //
-    //                 // B) Prepare NodeVolume jobs BEFORE LG_BuildNodeVolumes
-    //                 PrepareVolumesForDimension(zone.DimensionIndex);
-    //
-    //                 // C) Rebuild per-floor node volumes
-    //                 var buildVolumes = new AIGraph.LG_BuildNodeVolumes(floor);
-    //                 int safety = 0;
-    //                 while (!buildVolumes.Build() && safety++ < 10000) {}
-    //
-    //                 // D) Rebuild clusters for this zone’s course nodes
-    //                 var dim = zone.Dimension;
-    //                 if (dim?.CourseGraph?.m_nodes != null)
-    //                 {
-    //                     foreach (var cn in dim.CourseGraph.m_nodes)
-    //                     {
-    //                         if (cn == null || cn.m_zone != zone || cn.m_area == null) continue;
-    //                         var buildCluster = new AIGraph.LG_BuildNodeCluster(cn, cn.m_area.GraphSource);
-    //                         safety = 0;
-    //                         while (!buildCluster.Build() && safety++ < 10000) {}
-    //                     }
-    //                 }
-    //
-    //                 // E) Recompute reachables for all areas (suppress our Postfix)
-    //                 s_suppressHook = true;
-    //                 try
-    //                 {
-    //                     foreach (var cn in zone.m_courseNodes)
-    //                     {
-    //                         var a = cn?.m_area;
-    //                         if (a == null) continue;
-    //                         LevelGeneration.LG_NodeTools.CalculateReachableNodesAndLocationScores(a, a.GraphSource.Position);
-    //                     }
-    //                 }
-    //                 finally { s_suppressHook = false; }
-    //
-    //                 // F) Health check: all areas must have >1 reachable node
-    //                 bool healthy = true;
-    //                 foreach (var cn in zone.m_courseNodes)
-    //                 {
-    //                     var cl = cn?.m_nodeCluster;
-    //                     if (cl == null || cl.m_reachableNodes == null || cl.m_reachableNodes.Count <= 1)
-    //                     {
-    //                         healthy = false;
-    //                         break;
-    //                     }
-    //                 }
-    //
-    //                 if (healthy)
-    //                 {
-    //                     // G) Re-link gates touching the zone
-    //                     foreach (var cn in zone.m_courseNodes)
-    //                     {
-    //                         foreach (var portal in cn.m_portals)
-    //                         {
-    //                             var gate = portal?.Gate;
-    //                             if (gate != null)
-    //                             {
-    //                                 gate.ConnectGraph();
-    //                                 gate.IsTraversable = gate.m_isTraversableFromStart;
-    //                             }
-    //                         }
-    //                     }
-    //                     var sg = zone.m_sourceGate;
-    //                     if (sg != null)
-    //                     {
-    //                         sg.ConnectGraph();
-    //                         sg.IsTraversable = sg.m_isTraversableFromStart;
-    //                     }
-    //
-    //                     Plugin.Logger.LogDebug($"[Reroll] Zone {zone.IDinLayer} healthy after {attempt + 1} attempts. m_markerSubSeed={zone.m_markerSubSeed}");
-    //                     return;
-    //                 }
-    //             }
-    //
-    //             Plugin.Logger.LogError($"[Reroll] Zone {zone.IDinLayer} failed after {maxAttempts} attempts. Last m_markerSubSeed={zone.m_markerSubSeed}");
-    //         }
-    //         finally { End(zone); }
-    //     }
-    // }
-
-
-    // [HarmonyPostfix]
-    // [HarmonyPatch(typeof(LG_Gate), nameof(LG_Gate.ProgressionSourceDirection), MethodType.Getter)]
-    // static void ProgressionSourceDirection_Postfix(LG_Gate __instance)
-    // {
-    //     // Heuristic: if m_hasProgressionSourceDirection is true but the direction equals forward
-    //     // and TryFindProgressionDirToArea returned false (the code keeps forward), the error was logged.
-    //     // We can’t read the local result here, so use a simple check on area/cluster reachables.
-    //     var area = __instance?.ProgressionSourceArea;
-    //     if (area?.m_courseNode?.m_nodeCluster == null)
-    //         return;
-    //
-    //     if (area.m_courseNode.m_nodeCluster.m_reachableNodes.Count <= 1)
-    //     {
-    //         var zone = area.m_zone; // adjust if accessor differs
-    //         var markerSubSeed = area.m_zone.m_markerSubSeed;
-    //
-    //         // if (RerollState.TryBegin(zone))
-    //         if (markerSubSeed < 20)
-    //         {
-    //             zone.m_markerSubSeed += 1;
-    //             Plugin.Logger.LogDebug($"Rerolling MarkerSubSeed for Zone {area.m_zone.LocalIndex} - MarkerSubSeed = {zone.m_markerSubSeed}");
-    //         }
-    //     }
-    // }
 }
