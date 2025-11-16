@@ -108,7 +108,7 @@ public class Fix_NavMeshMarkerSubSeed
             // Release suppression when done
             if (s_targetsDetected.Count == 0)
             {
-                Plugin.Logger.LogDebug("[Reroll] All detected zones healthy. Releasing factory‑done suppression.");
+                Plugin.Logger.LogDebug("[Reroll] All detected zones healthy. Releasing factory done suppression.");
                 shouldSuppressFactoryDone = false;
             }
         }

@@ -7,15 +7,36 @@ namespace AutogenRundown.Managers;
 
 public class FactoryJobManager
 {
+    public static bool ShowMessage { get; private set; }
+
+    public static int RebuildCount { get; private set; }
+
+    public static void FlashMessage()
+    {
+        ShowMessage = true;
+
+        DropServerManager.Current.Update();
+
+        Task.Run(async () =>
+        {
+            await Task.Delay(4_000);
+            ShowMessage = false;
+        });
+    }
+
     /// <summary>
     ///
     /// </summary>
     public static void Rebuild()
     {
+        RebuildCount++;
+
         var activeExpedition = RundownManager.GetActiveExpeditionData();
         var expeditionData = RundownManager.ActiveExpedition;
 
         // WardenObjectiveManager.Current.Setup();
+
+        FlashMessage();
 
         Builder.Current.Build();
 
