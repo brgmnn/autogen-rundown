@@ -3,6 +3,22 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.78.5](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.78.5) — November 15, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Add game data folder cleaning on startup
+  * This should resolve some issues after removing peer mods which used datablock files
+* Peer mod [GTFriendlyO](https://thunderstore.io/c/gtfo/p/Carb_Crusaders/GTFriendlyO/) - Added support for the following data blocks - #27
+  * EnemyBalancing data block
+  * EnemyMovement data block
+  * EEC custom files
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.78.4...v0.78.5
+
+
 ## [v0.78.4](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.78.4) — November 01, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
