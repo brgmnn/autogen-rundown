@@ -924,6 +924,7 @@ public static class TerminalUplink
     #endregion
 
     #region TerminalUplinkPuzzle
+
     /// <summary>
     /// Patches the terminal uplink puzzle to have a configurable number of
     /// code words per round. Currently, this is just set by tier, with harder
@@ -934,6 +935,10 @@ public static class TerminalUplink
     [HarmonyPostfix]
     public static void TerminalUplinkPuzzle_Setup(TerminalUplinkPuzzle __instance)
     {
+        // Guards against rerolls with uninitialized terminals
+        if (__instance == null || __instance.m_terminal == null)
+            return;
+
         var tier = RundownManager.GetActiveExpeditionData().tier;
         var codesCount = tier switch
         {
