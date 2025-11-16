@@ -24,9 +24,9 @@ public record Fog : DataBlock<Fog>
     public static double INFECTION_MEDIUM = 0.022;
     public static double INFECTION_FAST   = 0.030;
 
-    public static Fog None = new Fog { PersistentId = 0 };
+    public static Fog None = new() { PersistentId = 0 };
 
-    public static Fog DefaultFog = new Fog
+    public static Fog DefaultFog = new()
     {
         Name = "Fog_DefaultFog",
         FogColor = new Color { Red = 0.5235849, Green = 0.682390034, Blue = 1.0, Alpha = 0.0 },
@@ -358,7 +358,7 @@ public record Fog : DataBlock<Fog>
     /// <summary>
     /// Fully submerged low levels, mid/high are clear of fog (low density).
     /// </summary>
-    public static Fog LowFog = new Fog
+    public static Fog LowFog = new()
     {
         Name = "Fog_Low",
         FogColor = new Color { Red = 0.4, Green = 0.68, Blue = 1.0, Alpha = 0.0 },
@@ -378,7 +378,7 @@ public record Fog : DataBlock<Fog>
     /// <summary>
     /// Low and mid levels are submerged, high levels are clear of fog (low density).
     /// </summary>
-    public static Fog LowMidFog = new Fog
+    public static Fog LowMidFog = new()
     {
         Name = "Fog_LowMid",
         FogColor = new Color { Red = 0.4, Green = 0.68, Blue = 1.0, Alpha = 0.0 },
@@ -395,7 +395,7 @@ public record Fog : DataBlock<Fog>
         NoFogLevels = { Height.OnlyHigh }
     };
 
-    public static Fog FullFog = new Fog
+    public static Fog FullFog = new()
     {
         Name = "Fog_Full",
         DensityHeightAltitude = 16.0,
@@ -580,13 +580,13 @@ public record Fog : DataBlock<Fog>
     ///
     /// </summary>
     [JsonIgnore]
-    public List<Height> FogLevels { get; set; } = new List<Height>();
+    public List<Height> FogLevels { get; set; } = new();
 
     /// <summary>
     ///
     /// </summary>
     [JsonIgnore]
-    public List<Height> NoFogLevels { get; set; } = new List<Height>
+    public List<Height> NoFogLevels { get; set; } = new()
     {
         Height.LowMidHigh,
         Height.OnlyLow,
