@@ -18,6 +18,8 @@ public static class EventManager
 
     public static event Action<PluginRundown> OnRundownUpdate;
 
+    public static event Action OnFactoryDone;
+
     public static void Setup()
     {
         RundownManager.OnRundownProgressionUpdated += new Action(UpdateRundown);
