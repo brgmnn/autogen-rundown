@@ -14,7 +14,7 @@ public class FactoryJobManager
     /// true/false. True is a passing value and will allow the game to continue, false will trigger
     /// a level rebuild.
     /// </summary>
-    public static Func<bool> OnDoneValidate { get; } = () => true;
+    public static Func<bool> OnDoneValidate { get; set; } = () => true;
 
     public static bool ShowMessage { get; private set; }
 
@@ -128,17 +128,17 @@ public class FactoryJobManager
     public static bool s_suppressHook = false; // prevent recursion while we recompute
     // private const int MaxAttempts = 8; // your choice
 
-    public const int MaxAttemptsPerZone = 128;
+    // public const int MaxAttemptsPerZone = 128;
 
     // public static bool initialized = false;
     // public static bool rebuildInProgress = false;
     // public static bool shouldSuppressFactoryDone = false;
 
-    public static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), int> zoneAttempts = new();
-
-    public static readonly HashSet<(eDimensionIndex dim, eLocalZoneIndex lz)> s_targetsDetected = new();
-
-    public static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), uint> markerSubSeeds = new();
+    // private static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), int> zoneAttempts = new();
+    //
+    // private static readonly HashSet<(eDimensionIndex dim, eLocalZoneIndex lz)> s_targetsDetected = new();
+    //
+    // private static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), uint> markerSubSeeds = new();
 
 
 
@@ -147,77 +147,104 @@ public class FactoryJobManager
         try
         {
             if (Rebuilding)
-                return; // guard
+                return;
 
-            // Find first unhealthy detected target
-            foreach (var key in s_targetsDetected)
+            var delegates = OnDoneValidate.GetInvocationList();
+            var results = new List<bool>(delegates.Length);
+
+            foreach (var @delegate in delegates)
             {
-                var zone = FindZone(key);
+                var check = (Func<bool>)@delegate;
+                var result = check();
 
-                if (zone == null)
-                    continue;
+                results.Add(result);
 
-                if (IsZoneHealthy(zone))
-                    continue;
+                if (!result)
+                    ShouldRebuild = true;
+            }
 
-                // Bump and rebuild
-                var current = markerSubSeeds.TryGetValue(key, out var v) ? v : zone.m_markerSubSeed;
-                var next = current + 1;
-                markerSubSeeds[key] = next;
-                zoneAttempts[key] = (zoneAttempts.TryGetValue(key, out var a) ? a : 0) + 1;
-
-                if (zoneAttempts[key] > MaxAttemptsPerZone)
-                {
-                    Plugin.Logger.LogError($"[Reroll] Max attempts reached for {key}. Last m_markerSubSeed={current}");
-                    // Give up on this key but keep others (remove from detected set)
-                    // Optionally: keep it to retry later
-                    s_targetsDetected.Remove(key);
-                    break;
-                }
-
-                Plugin.Logger.LogDebug($"[Reroll] Rebuilding {key} with m_markerSubSeed={next} (attempt {zoneAttempts[key]})");
-
+            if (results.Any(r => !r))
+            {
                 Rebuilding = true;
 
                 LevelCleanup();
                 Rebuild();
 
-                return; // one rebuild per completion
+                Rebuilding = false;
             }
-
-            // All detected targets healthy? Clean up
-            // (re-check and prune)
-            var toRemove = new List<(eDimensionIndex, eLocalZoneIndex)>();
-
-            foreach (var key in s_targetsDetected)
-            {
-                var zone = FindZone(key);
-
-                if (zone != null && IsZoneHealthy(zone))
-                {
-                    Plugin.Logger.LogDebug($"[Reroll] {key} healthy. Attempts={zoneAttempts.GetValueOrDefault(key, 0)}, m_markerSubSeed={zone.m_markerSubSeed}");
-                    toRemove.Add(key);
-                }
-            }
-
-            foreach (var key in toRemove)
-                s_targetsDetected.Remove(key);
-
-            // Release suppression when done
-            if (s_targetsDetected.Count == 0)
-            {
-                Plugin.Logger.LogDebug("[Reroll] All detected zones healthy. Releasing factory done suppression.");
+            else
                 ShouldRebuild = false;
-            }
+
+
+            // // Find first unhealthy detected target
+            // foreach (var key in s_targetsDetected)
+            // {
+            //     var zone = FindZone(key);
+            //
+            //     if (zone == null)
+            //         continue;
+            //
+            //     if (IsZoneHealthy(zone))
+            //         continue;
+            //
+            //     // Bump and rebuild
+            //     var current = markerSubSeeds.TryGetValue(key, out var v) ? v : zone.m_markerSubSeed;
+            //     var next = current + 1;
+            //     markerSubSeeds[key] = next;
+            //     zoneAttempts[key] = (zoneAttempts.TryGetValue(key, out var a) ? a : 0) + 1;
+            //
+            //     if (zoneAttempts[key] > MaxAttemptsPerZone)
+            //     {
+            //         Plugin.Logger.LogError($"[Reroll] Max attempts reached for {key}. Last m_markerSubSeed={current}");
+            //         // Give up on this key but keep others (remove from detected set)
+            //         // Optionally: keep it to retry later
+            //         s_targetsDetected.Remove(key);
+            //         break;
+            //     }
+            //
+            //     Plugin.Logger.LogDebug($"[Reroll] Rebuilding {key} with m_markerSubSeed={next} (attempt {zoneAttempts[key]})");
+            //
+            //     Rebuilding = true;
+            //
+            //     LevelCleanup();
+            //     Rebuild();
+            //
+            //     return; // one rebuild per completion
+            // }
+            //
+            // // All detected targets healthy? Clean up
+            // // (re-check and prune)
+            // var toRemove = new List<(eDimensionIndex, eLocalZoneIndex)>();
+            //
+            // foreach (var key in s_targetsDetected)
+            // {
+            //     var zone = FindZone(key);
+            //
+            //     if (zone != null && IsZoneHealthy(zone))
+            //     {
+            //         Plugin.Logger.LogDebug($"[Reroll] {key} healthy. Attempts={zoneAttempts.GetValueOrDefault(key, 0)}, m_markerSubSeed={zone.m_markerSubSeed}");
+            //         toRemove.Add(key);
+            //     }
+            // }
+            //
+            // foreach (var key in toRemove)
+            //     s_targetsDetected.Remove(key);
+            //
+            // // Release suppression when done
+            // if (s_targetsDetected.Count == 0)
+            // {
+            //     Plugin.Logger.LogDebug("[Reroll] All detected zones healthy. Releasing factory done suppression.");
+            //     ShouldRebuild = false;
+            // }
         }
         catch (Exception ex)
         {
-            Plugin.Logger.LogError($"Encountered a bad error: {ex}");
-            ShouldRebuild = false;
+            // Plugin.Logger.LogError($"Encountered a bad error: {ex}");
+            // ShouldRebuild = false;
         }
         finally
         {
-            Rebuilding = false;
+            // Rebuilding = false;
         }
     }
 
