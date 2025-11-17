@@ -6,7 +6,10 @@ using LevelGeneration;
 
 namespace AutogenRundown.Managers;
 
-public class FactoryJobManager
+/// <summary>
+/// Handles managing rebuilds for levels
+/// </summary>
+public static class FactoryJobManager
 {
     /// <summary>
     /// Register new validations here to be called when LG_Factory.FactoryDone is called. These
@@ -47,7 +50,7 @@ public class FactoryJobManager
     /// <summary>
     ///
     /// </summary>
-    public static void Rebuild()
+    private static void Rebuild()
     {
         RebuildCount++;
 
@@ -67,7 +70,7 @@ public class FactoryJobManager
     /// Performs a level cleanup so a rebuild can occur. This mostly follows what the base game
     /// does for level cleanup.
     /// </summary>
-    public static void LevelCleanup()
+    private static void LevelCleanup()
     {
         // --- Level ---
         LG_BuildNodeCluster.LevelCleanup();
@@ -123,168 +126,44 @@ public class FactoryJobManager
 
     #region Event handlers
 
-
-    public static readonly HashSet<int> s_building = new();
-    public static bool s_suppressHook = false; // prevent recursion while we recompute
-    // private const int MaxAttempts = 8; // your choice
-
-    // public const int MaxAttemptsPerZone = 128;
-
-    // public static bool initialized = false;
-    // public static bool rebuildInProgress = false;
-    // public static bool shouldSuppressFactoryDone = false;
-
-    // private static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), int> zoneAttempts = new();
-    //
-    // private static readonly HashSet<(eDimensionIndex dim, eLocalZoneIndex lz)> s_targetsDetected = new();
-    //
-    // private static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), uint> markerSubSeeds = new();
-
-
-
+    /// <summary>
+    /// Checks all validation methods and catches FactoryDone and optionally triggers a rebuild
+    /// </summary>
     public static void OnFactoryDone()
     {
-        try
+        if (Rebuilding)
+            return;
+
+        var delegates = OnDoneValidate.GetInvocationList();
+        var results = new List<bool>(delegates.Length);
+
+        foreach (var @delegate in delegates)
         {
-            if (Rebuilding)
-                return;
+            var check = (Func<bool>)@delegate;
+            var result = check();
 
-            var delegates = OnDoneValidate.GetInvocationList();
-            var results = new List<bool>(delegates.Length);
+            results.Add(result);
 
-            foreach (var @delegate in delegates)
-            {
-                var check = (Func<bool>)@delegate;
-                var result = check();
-
-                results.Add(result);
-
-                if (!result)
-                    ShouldRebuild = true;
-            }
-
-            if (results.Any(r => !r))
-            {
-                Rebuilding = true;
-
-                LevelCleanup();
-                Rebuild();
-
-                Rebuilding = false;
-            }
-            else
-                ShouldRebuild = false;
-
-
-            // // Find first unhealthy detected target
-            // foreach (var key in s_targetsDetected)
-            // {
-            //     var zone = FindZone(key);
-            //
-            //     if (zone == null)
-            //         continue;
-            //
-            //     if (IsZoneHealthy(zone))
-            //         continue;
-            //
-            //     // Bump and rebuild
-            //     var current = markerSubSeeds.TryGetValue(key, out var v) ? v : zone.m_markerSubSeed;
-            //     var next = current + 1;
-            //     markerSubSeeds[key] = next;
-            //     zoneAttempts[key] = (zoneAttempts.TryGetValue(key, out var a) ? a : 0) + 1;
-            //
-            //     if (zoneAttempts[key] > MaxAttemptsPerZone)
-            //     {
-            //         Plugin.Logger.LogError($"[Reroll] Max attempts reached for {key}. Last m_markerSubSeed={current}");
-            //         // Give up on this key but keep others (remove from detected set)
-            //         // Optionally: keep it to retry later
-            //         s_targetsDetected.Remove(key);
-            //         break;
-            //     }
-            //
-            //     Plugin.Logger.LogDebug($"[Reroll] Rebuilding {key} with m_markerSubSeed={next} (attempt {zoneAttempts[key]})");
-            //
-            //     Rebuilding = true;
-            //
-            //     LevelCleanup();
-            //     Rebuild();
-            //
-            //     return; // one rebuild per completion
-            // }
-            //
-            // // All detected targets healthy? Clean up
-            // // (re-check and prune)
-            // var toRemove = new List<(eDimensionIndex, eLocalZoneIndex)>();
-            //
-            // foreach (var key in s_targetsDetected)
-            // {
-            //     var zone = FindZone(key);
-            //
-            //     if (zone != null && IsZoneHealthy(zone))
-            //     {
-            //         Plugin.Logger.LogDebug($"[Reroll] {key} healthy. Attempts={zoneAttempts.GetValueOrDefault(key, 0)}, m_markerSubSeed={zone.m_markerSubSeed}");
-            //         toRemove.Add(key);
-            //     }
-            // }
-            //
-            // foreach (var key in toRemove)
-            //     s_targetsDetected.Remove(key);
-            //
-            // // Release suppression when done
-            // if (s_targetsDetected.Count == 0)
-            // {
-            //     Plugin.Logger.LogDebug("[Reroll] All detected zones healthy. Releasing factory done suppression.");
-            //     ShouldRebuild = false;
-            // }
+            // Fast fail, mark the manager as attempting a rebuild
+            if (!result)
+                ShouldRebuild = true;
         }
-        catch (Exception ex)
+
+        if (results.Any(r => !r))
         {
-            // Plugin.Logger.LogError($"Encountered a bad error: {ex}");
-            // ShouldRebuild = false;
+            Rebuilding = true;
+
+            LevelCleanup();
+            Rebuild();
+
+            Rebuilding = false;
         }
-        finally
+        else
         {
-            // Rebuilding = false;
+            // Only re-enable the handlers when all validation checks pass
+            ShouldRebuild = false;
         }
     }
-
-    private static bool IsZoneHealthy(LG_Zone zone)
-    {
-        foreach (var cn in zone.m_courseNodes)
-        {
-            var cl = cn?.m_nodeCluster;
-
-            if (cl == null || cl.m_reachableNodes == null || cl.m_reachableNodes.Count <= 1)
-                return false;
-        }
-        return true;
-    }
-
-    private static LG_Zone? FindZone((eDimensionIndex dim, eLocalZoneIndex lz) key)
-    {
-        var floor = Builder.CurrentFloor;
-
-        if (floor == null)
-            return null;
-
-        Dimension dim;
-
-        if (!floor.GetDimension(key.dim, out dim) || dim == null)
-            return null;
-
-        foreach (var layer in dim.Layers)
-        {
-            foreach (var zone in layer.m_zones)
-                if (zone.LocalIndex == key.lz)
-                    return zone;
-            //
-            // if (layer?.m_zonesByLocalIndex != null && layer.m_zonesByLocalIndex.TryGetValue(key.lz, out var zone))
-            //     return zone;
-        }
-
-        return null;
-    }
-
 
     #endregion
 }
