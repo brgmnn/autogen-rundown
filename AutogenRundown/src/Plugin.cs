@@ -114,12 +114,8 @@ public class Plugin : BasePlugin
 
         PlayFabManager.add_OnTitleDataUpdated((Action)RundownNames.OnTitleDataUpdated);
 
-        Patch_LG_ComputerTerminal_Setup.Setup();
-        Patch_LG_SecurityDoor.Setup();
-
         EventManager.Setup();
-
-        Fix_NavMeshMarkerSubSeed.Setup();
+        PatchManager.Setup();
 
         GameDataAPI.OnGameDataInitialized += Patch_CentralGeneratorCluster.Setup;
         GameDataAPI.OnGameDataInitialized += LogArchivistManager.Setup;

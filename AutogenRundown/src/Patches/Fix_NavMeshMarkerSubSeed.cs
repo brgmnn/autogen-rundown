@@ -1,6 +1,4 @@
-﻿using AIGraph;
-using AutogenRundown.Managers;
-using CellMenu;
+﻿using AutogenRundown.Managers;
 using GameData;
 using HarmonyLib;
 using LevelGeneration;
@@ -11,21 +9,17 @@ namespace AutogenRundown.Patches;
 [HarmonyPatch]
 public class Fix_NavMeshMarkerSubSeed
 {
-    private static readonly HashSet<int> s_building = new();
     private static bool s_suppressHook = false; // prevent recursion while we recompute
-    private const int MaxAttempts = 8; // your choice
 
     private const int MaxAttemptsPerZone = 128;
-    //
+
     private static bool initialized = false;
-    private static bool rebuildInProgress = false;
-    private static bool shouldSuppressFactoryDone = false;
 
-    private static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), int> zoneAttempts = new();
+    private static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), int> ZoneAttempts = new();
 
-    private static readonly HashSet<(eDimensionIndex dim, eLocalZoneIndex lz)> s_targetsDetected = new();
+    private static readonly HashSet<(eDimensionIndex dim, eLocalZoneIndex lz)> TargetsDetected = new();
 
-    private static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), uint> markerSubSeeds = new();
+    private static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), uint> MarkerSubSeeds = new();
 
     public static void Setup()
     {
@@ -35,23 +29,14 @@ public class Fix_NavMeshMarkerSubSeed
         initialized = true;
 
         FactoryJobManager.OnDoneValidate += Validate;
-
-        // // Let first encountered value (from data) seed our map at construction time
-        // markerSubSeeds[(TargetDimension, TargetLocalIndex)] = 0;
-
-        // React when the whole factory finishes a pass
-        // LG_Factory.OnFactoryBuildDone += new Action(OnFactoryDone);
     }
 
-    public static bool Validate()
+    private static bool Validate()
     {
         try
         {
-            // if (rebuildInProgress)
-            //     return; // guard
-
             // Find first unhealthy detected target
-            foreach (var key in s_targetsDetected)
+            foreach (var key in TargetsDetected)
             {
                 var zone = FindZone(key);
 
@@ -62,66 +47,54 @@ public class Fix_NavMeshMarkerSubSeed
                     continue;
 
                 // Bump and rebuild
-                var current = markerSubSeeds.TryGetValue(key, out var v) ? v : zone.m_markerSubSeed;
+                var current = MarkerSubSeeds.TryGetValue(key, out var v) ? v : zone.m_markerSubSeed;
                 var next = current + 1;
-                markerSubSeeds[key] = next;
-                zoneAttempts[key] = (zoneAttempts.TryGetValue(key, out var a) ? a : 0) + 1;
+                MarkerSubSeeds[key] = next;
+                ZoneAttempts[key] = (ZoneAttempts.TryGetValue(key, out var a) ? a : 0) + 1;
 
-                if (zoneAttempts[key] > MaxAttemptsPerZone)
+                if (ZoneAttempts[key] > MaxAttemptsPerZone)
                 {
                     Plugin.Logger.LogError($"[Reroll] Max attempts reached for {key}. Last m_markerSubSeed={current}");
                     // Give up on this key but keep others (remove from detected set)
                     // Optionally: keep it to retry later
-                    s_targetsDetected.Remove(key);
+                    TargetsDetected.Remove(key);
                     break;
                 }
 
-                Plugin.Logger.LogDebug($"[Reroll] Rebuilding {key} with m_markerSubSeed={next} (attempt {zoneAttempts[key]})");
-
-                // rebuildInProgress = true;
-                //
-                // FactoryJobManager.LevelCleanup();
-                //
-                // FactoryJobManager.Rebuild();
+                Plugin.Logger.LogDebug($"[Reroll] Rebuilding {key} with m_markerSubSeed={next} (attempt {ZoneAttempts[key]})");
 
                 return false;
-                // return; // one rebuild per completion
             }
 
             // All detected targets healthy? Clean up
             // (re-check and prune)
             var toRemove = new List<(eDimensionIndex, eLocalZoneIndex)>();
 
-            foreach (var key in s_targetsDetected)
+            foreach (var key in TargetsDetected)
             {
                 var zone = FindZone(key);
 
                 if (zone != null && IsZoneHealthy(zone))
                 {
-                    Plugin.Logger.LogDebug($"[Reroll] {key} healthy. Attempts={zoneAttempts.GetValueOrDefault(key, 0)}, m_markerSubSeed={zone.m_markerSubSeed}");
+                    Plugin.Logger.LogDebug($"[Reroll] {key} healthy. Attempts={ZoneAttempts.GetValueOrDefault(key, 0)}, m_markerSubSeed={zone.m_markerSubSeed}");
                     toRemove.Add(key);
                 }
             }
 
             foreach (var key in toRemove)
-                s_targetsDetected.Remove(key);
+                TargetsDetected.Remove(key);
 
             // Release suppression when done
-            if (s_targetsDetected.Count == 0)
+            if (TargetsDetected.Count == 0)
             {
                 Plugin.Logger.LogDebug("[Reroll] All detected zones healthy. Releasing factory done suppression.");
-                // shouldSuppressFactoryDone = false;
+
                 return true;
             }
         }
         catch (Exception ex)
         {
             Plugin.Logger.LogError($"Encountered a bad error: {ex}");
-            shouldSuppressFactoryDone = false;
-        }
-        finally
-        {
-            rebuildInProgress = false;
         }
 
         return true;
@@ -156,9 +129,6 @@ public class Fix_NavMeshMarkerSubSeed
             foreach (var zone in layer.m_zones)
                 if (zone.LocalIndex == key.lz)
                     return zone;
-            //
-            // if (layer?.m_zonesByLocalIndex != null && layer.m_zonesByLocalIndex.TryGetValue(key.lz, out var zone))
-            //     return zone;
         }
 
         return null;
@@ -218,11 +188,8 @@ public class Fix_NavMeshMarkerSubSeed
 
         var key = (__instance.m_dimension.DimensionIndex, zoneData.LocalIndex);
 
-        if (markerSubSeeds.TryGetValue(key, out var overrideSeed))
+        if (MarkerSubSeeds.TryGetValue(key, out var overrideSeed))
         {
-            // zone.m_markerSubSeed = overrideSeed;
-            // __instance.m_markerSubSeed = overrideSeed;
-
             zoneData.MarkerSubSeed = (int)overrideSeed;
 
             Plugin.Logger.LogDebug($"[Reroll] Applied override m_markerSubSeed={overrideSeed} to Zone_{zoneData.LocalIndex}");
@@ -260,19 +227,18 @@ public class Fix_NavMeshMarkerSubSeed
 
             var key = (zone.DimensionIndex, zone.LocalIndex);
 
-            if (!s_targetsDetected.Contains(key))
+            if (!TargetsDetected.Contains(key))
             {
-                s_targetsDetected.Add(key);
+                TargetsDetected.Add(key);
 
-                // shouldSuppressFactoryDone = true;
                 FactoryJobManager.MarkForRebuild();
 
                 // Initialize override baseline if not present
-                if (!markerSubSeeds.ContainsKey(key))
-                    markerSubSeeds[key] = zone.m_markerSubSeed;
+                if (!MarkerSubSeeds.ContainsKey(key))
+                    MarkerSubSeeds[key] = zone.m_markerSubSeed;
 
-                if (!zoneAttempts.ContainsKey(key))
-                    zoneAttempts[key] = 0;
+                if (!ZoneAttempts.ContainsKey(key))
+                    ZoneAttempts[key] = 0;
 
                 Plugin.Logger.LogDebug($"[Reroll] Detected unhealthy zone {key}. Will reroll after factory completion.");
             }
