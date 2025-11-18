@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Globalization;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Projectiles;
@@ -94,7 +95,7 @@ public record Projectile : CustomRecord
     public double Damage { get; set; } = 1.0;
 
     [JsonProperty("Damage")]
-    public string DamageValue => $"{Damage}%";
+    public string DamageValue => Damage.ToString("F", CultureInfo.InvariantCulture) + "%";
 
     /// <summary>
     /// BasedValue: (Based on 1.0, Has Original Value): Add Infection On Hit
