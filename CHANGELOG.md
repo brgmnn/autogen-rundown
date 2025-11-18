@@ -3,6 +3,19 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.79.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.79.0) — November 17, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Add full level re-rolls on error detection during elevator drop. You will see "Rebuild #x" message if a rebuild occurs with the count of rebuilds. This release includes rebuilds for the following errors:
+  * Missing navmesh generations, fixes #23
+  * Custom geos failing to spawn, fixes forward extract being at spawn or loading in to a level with extract already started. Currently only the zone and parent zones are re-rolled.
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.78.5...v0.79.0
+
+
 ## [v0.78.5](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.78.5) — November 15, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
