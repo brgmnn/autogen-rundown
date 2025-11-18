@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace AutogenRundown.Patches;
 
+using MainStatus = LG_ZoneJob_CreateExpandFromData.MainStatus;
+using SubStatus = LG_ZoneJob_CreateExpandFromData.SubStatus;
+
 [HarmonyPatch]
 public class Fix_NavMeshMarkerSubSeed
 {
@@ -21,6 +24,10 @@ public class Fix_NavMeshMarkerSubSeed
 
     private static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), uint> MarkerSubSeeds = new();
 
+    private static readonly HashSet<(eDimensionIndex dim, eLocalZoneIndex lz)> FailedSubSeeds = new();
+
+    private static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), uint> SubSeeds = new();
+
     public static void Setup()
     {
         if (initialized)
@@ -28,7 +35,29 @@ public class Fix_NavMeshMarkerSubSeed
 
         initialized = true;
 
+        FactoryJobManager.OnDoneValidate += ValidateSubSeeds;
         FactoryJobManager.OnDoneValidate += Validate;
+    }
+
+    private static bool ValidateSubSeeds()
+    {
+        var successful = FailedSubSeeds.Count == 0;
+
+        foreach (var key in FailedSubSeeds)
+        {
+            var zone = FindZone(key);
+
+            if (zone == null)
+                continue;
+
+            var subSeed = SubSeeds.TryGetValue(key, out var v) ? v : zone.m_subSeed;
+
+            SubSeeds[key] = subSeed + 1;
+        }
+
+        FailedSubSeeds.Clear();
+
+        return successful;
     }
 
     private static bool Validate()
@@ -182,11 +211,20 @@ public class Fix_NavMeshMarkerSubSeed
     {
         // TODO: we need to account for the different layers
 
+        // TODO: we probably want to extract this to it's own manager/patcher so we can override seeds from other places too
+
         Plugin.Logger.LogDebug($"--------------------------> [Reroll] GOTCHA!!! " +
                                $"m_markerSubSeed={zoneData.MarkerSubSeed} to " +
                                $"{zoneData.LocalIndex} (dim:{__instance.m_dimension.DimensionIndex})");
 
         var key = (__instance.m_dimension.DimensionIndex, zoneData.LocalIndex);
+
+        if (SubSeeds.TryGetValue(key, out var overrideSubSeed))
+        {
+            zoneData.SubSeed = (int)overrideSubSeed;
+
+            Plugin.Logger.LogDebug($"[Reroll] Applied override m_subSeed={overrideSubSeed} to Zone_{zoneData.LocalIndex}");
+        }
 
         if (MarkerSubSeeds.TryGetValue(key, out var overrideSeed))
         {
@@ -246,6 +284,54 @@ public class Fix_NavMeshMarkerSubSeed
         catch (Exception ex)
         {
             Plugin.Logger.LogError(ex);
+        }
+    }
+
+
+    [HarmonyPatch(typeof(LG_ZoneJob_CreateExpandFromData), nameof(LG_ZoneJob_CreateExpandFromData.Build))]
+    [HarmonyPrefix]
+    public static void CaptureState(LG_ZoneJob_CreateExpandFromData __instance, out BuildState __state)
+    {
+        __state = new BuildState(__instance.m_mainStatus, __instance.m_subStatus);
+    }
+
+    /// <summary>
+    /// Rerolls zones that didn't get their custom geos
+    ///
+    /// Also re-roll the parent zones subseed. We often see that the issue is the parent zone
+    /// needs to be re-rolled.
+    ///
+    /// TODO: Handle zone_0 zones, notably secondary/extreme
+    /// TODO: Handle dimensions
+    /// </summary>
+    /// <param name="__instance"></param>
+    /// <param name="__state"></param>
+    [HarmonyPatch(typeof(LG_ZoneJob_CreateExpandFromData), nameof(LG_ZoneJob_CreateExpandFromData.Build))]
+    [HarmonyPostfix]
+    public static void ForceRerollForMissingCustomGeos(LG_ZoneJob_CreateExpandFromData __instance, BuildState __state)
+    {
+        var mainStatus = __state.MainStatus;
+        // var subStatus = __state.SubStatus;
+
+        var zone = __instance.m_zone;
+        var data = __instance.m_zoneData;
+        var settings = __instance.m_zoneSettings;
+
+        if (mainStatus != MainStatus.Done)
+            return;
+
+        if (data?.CustomGeomorph != null && !settings.HasCustomGeomorphInstance)
+        {
+            FactoryJobManager.MarkForRebuild();
+
+            var zoneKey = (zone.DimensionIndex, zone.LocalIndex);
+            FailedSubSeeds.Add(zoneKey);
+
+            if (zone.LocalIndex == eLocalZoneIndex.Zone_0)
+                return;
+
+            var parentKey = (zone.DimensionIndex, data.BuildFromLocalIndex);
+            FailedSubSeeds.Add(parentKey);
         }
     }
 }
