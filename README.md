@@ -65,6 +65,13 @@ https://thunderstore.io/c/gtfo/p/TheDoggyDoge/DogsTilePack/
 https://thunderstore.io/c/gtfo/p/xiaoyao/XAOYAO_developer_package/
 
 
+Weekly missing geo seed B1:
+    2025_11_05
+
+Monthly missing nav mesh A1:
+    2025_10
+
+
 E-tier analysis
 
 * R2E1 - Crib
