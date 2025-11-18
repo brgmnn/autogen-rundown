@@ -8,7 +8,7 @@ namespace AutogenRundown.Patches;
 using MainStatus = LG_ZoneJob_CreateExpandFromData.MainStatus;
 using SubStatus = LG_ZoneJob_CreateExpandFromData.SubStatus;
 
-internal record BuildState(MainStatus MainStatus, SubStatus SubStatus);
+public record BuildState(MainStatus MainStatus, SubStatus SubStatus);
 
 /// <summary>
 /// Improves several methods in the level generation
