@@ -12,9 +12,6 @@ public static class ZoneSeedManager
     // private static readonly HashSet<(eDimensionIndex dim, eLocalZoneIndex lz)> TargetsDetected = new();
     //
     // private static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), uint> MarkerSubSeeds = new();
-    //
-
-
 
     private static readonly HashSet<(eDimensionIndex dimension, LG_LayerType layer, eLocalZoneIndex index)> FailedSubSeeds = new();
 
@@ -49,7 +46,7 @@ public static class ZoneSeedManager
 
     #region Private methods
 
-    static bool ValidateSubSeeds()
+    private static bool ValidateSubSeeds()
     {
         var successful = FailedSubSeeds.Count == 0;
 

@@ -7,7 +7,6 @@ using UnityEngine;
 namespace AutogenRundown.Patches;
 
 using MainStatus = LG_ZoneJob_CreateExpandFromData.MainStatus;
-using SubStatus = LG_ZoneJob_CreateExpandFromData.SubStatus;
 
 [HarmonyPatch]
 public class Fix_NavMeshMarkerSubSeed
@@ -16,31 +15,14 @@ public class Fix_NavMeshMarkerSubSeed
 
     private const int MaxAttemptsPerZone = 128;
 
-    private static bool initialized = false;
+    public static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), int> ZoneAttempts = new();
 
-    private static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), int> ZoneAttempts = new();
+    public static readonly HashSet<(eDimensionIndex dim, eLocalZoneIndex lz)> TargetsDetected = new();
 
-    private static readonly HashSet<(eDimensionIndex dim, eLocalZoneIndex lz)> TargetsDetected = new();
-
-    private static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), uint> MarkerSubSeeds = new();
+    public static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), uint> MarkerSubSeeds = new();
 
     public static void Setup()
     {
-        if (initialized)
-            return;
-
-        initialized = true;
-
-        FactoryJobManager.OnDoneValidate += () =>
-        {
-            foreach (var z in Builder.CurrentFloor.allZones)
-            {
-                Plugin.Logger.LogDebug($"Zone check: {z.LocalIndex} dim={z.Dimension.DimensionIndex} {z.m_layer.m_type}");
-            }
-
-            return true;
-        };
-
         FactoryJobManager.OnDoneValidate += Validate;
     }
 
@@ -175,11 +157,6 @@ public class Fix_NavMeshMarkerSubSeed
             zoneData.MarkerSubSeed = (int)overrideSeed;
 
             Plugin.Logger.LogDebug($"[Reroll] Applied override m_markerSubSeed={overrideSeed} to Zone_{zoneData.LocalIndex}");
-
-            // // Align the job’s internal field for consistency in logs
-            // var f = AccessTools.Field(typeof(LG_ZoneJob_CreateExpandFromData), "m_markerSubSeed");
-            // if (f != null) f.SetValue(__instance, overrideSeed);
-            // Debug.Log($"[Reroll] Applied override m_markerSubSeed={overrideSeed} to {zone.name}");
         }
     }
 
@@ -260,8 +237,6 @@ public class Fix_NavMeshMarkerSubSeed
         var zone = __instance.m_zone;
         var data = __instance.m_zoneData;
         var settings = __instance.m_zoneSettings;
-
-        Plugin.Logger.LogDebug($"Got Build job: {zone.LocalIndex} {zone.Layer} {zone.Dimension} {zone.DimensionIndex}");
 
         if (mainStatus != MainStatus.Done)
             return;

@@ -1,7 +1,6 @@
 ﻿using AIGraph;
+using AutogenRundown.Patches;
 using CellMenu;
-using GameData;
-using Globals;
 using LevelGeneration;
 
 namespace AutogenRundown.Managers;
@@ -56,8 +55,6 @@ public static class FactoryJobManager
 
         var activeExpedition = RundownManager.GetActiveExpeditionData();
         var expeditionData = RundownManager.ActiveExpedition;
-
-        // WardenObjectiveManager.Current.Setup();
 
         FlashMessage();
 
@@ -162,6 +159,13 @@ public static class FactoryJobManager
         {
             // Only re-enable the handlers when all validation checks pass
             ShouldRebuild = false;
+            RebuildCount = 0;
+
+            // TODO: move this logic to the respective managers
+            ZoneSeedManager.SubSeeds.Clear();
+            Fix_NavMeshMarkerSubSeed.TargetsDetected.Clear();
+            Fix_NavMeshMarkerSubSeed.MarkerSubSeeds.Clear();
+            Fix_NavMeshMarkerSubSeed.ZoneAttempts.Clear();
         }
     }
 
