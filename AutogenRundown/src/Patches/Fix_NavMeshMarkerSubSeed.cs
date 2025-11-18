@@ -24,10 +24,6 @@ public class Fix_NavMeshMarkerSubSeed
 
     private static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), uint> MarkerSubSeeds = new();
 
-    private static readonly HashSet<(eDimensionIndex dim, eLocalZoneIndex lz)> FailedSubSeeds = new();
-
-    private static readonly Dictionary<(eDimensionIndex dim, eLocalZoneIndex lz), uint> SubSeeds = new();
-
     public static void Setup()
     {
         if (initialized)
@@ -35,29 +31,17 @@ public class Fix_NavMeshMarkerSubSeed
 
         initialized = true;
 
-        FactoryJobManager.OnDoneValidate += ValidateSubSeeds;
-        FactoryJobManager.OnDoneValidate += Validate;
-    }
-
-    private static bool ValidateSubSeeds()
-    {
-        var successful = FailedSubSeeds.Count == 0;
-
-        foreach (var key in FailedSubSeeds)
+        FactoryJobManager.OnDoneValidate += () =>
         {
-            var zone = FindZone(key);
+            foreach (var z in Builder.CurrentFloor.allZones)
+            {
+                Plugin.Logger.LogDebug($"Zone check: {z.LocalIndex} dim={z.Dimension.DimensionIndex} {z.m_layer.m_type}");
+            }
 
-            if (zone == null)
-                continue;
+            return true;
+        };
 
-            var subSeed = SubSeeds.TryGetValue(key, out var v) ? v : zone.m_subSeed;
-
-            SubSeeds[key] = subSeed + 1;
-        }
-
-        FailedSubSeeds.Clear();
-
-        return successful;
+        FactoryJobManager.OnDoneValidate += Validate;
     }
 
     private static bool Validate()
@@ -163,48 +147,6 @@ public class Fix_NavMeshMarkerSubSeed
         return null;
     }
 
-    // // Moved
-    // [HarmonyPatch(typeof(LG_Factory), nameof(LG_Factory.FactoryDone))]
-    // [HarmonyPrefix]
-    // public static bool Prefix_FactoryDone()
-    // {
-    //     if (!shouldSuppressFactoryDone)
-    //         return true; // allow vanilla
-    //
-    //     OnFactoryDone();
-    //
-    //     return false; // skip all default listeners
-    // }
-
-    // // Moved
-    // // Suppress default factory‑done listeners during reroll
-    // [HarmonyPatch(typeof(Builder), nameof(Builder.OnFactoryDone))]
-    // [HarmonyPrefix]
-    // public static bool Builder_OnFactoryDone_Suppress_Prefix()
-    // {
-    //     if (shouldSuppressFactoryDone)
-    //     {
-    //         Debug.Log("[Reroll] Suppressing Builder.OnFactoryDone (rebuild in progress)");
-    //         return false;
-    //     }
-    //
-    //     return true;
-    // }
-
-    // // Moved
-    // [HarmonyPatch(typeof(EnvironmentStateManager), nameof(EnvironmentStateManager.OnFactoryBuildDone))]
-    // [HarmonyPrefix]
-    // public static bool Env_OnFactoryBuildDone_Suppress_Prefix()
-    // {
-    //     if (shouldSuppressFactoryDone)
-    //     {
-    //         Debug.Log("[Reroll] Suppressing Builder.OnFactoryDone (rebuild in progress)");
-    //         return false;
-    //     }
-    //
-    //     return true;
-    // }
-
     [HarmonyPatch(typeof(LG_Layer), nameof(LG_Layer.CreateZone))]
     [HarmonyPrefix]
     static void Prefix_Layer_CreateZone(LG_Layer __instance, LG_Floor floor, ref ExpeditionZoneData zoneData, int zoneAliasStart)
@@ -219,7 +161,9 @@ public class Fix_NavMeshMarkerSubSeed
 
         var key = (__instance.m_dimension.DimensionIndex, zoneData.LocalIndex);
 
-        if (SubSeeds.TryGetValue(key, out var overrideSubSeed))
+        if (ZoneSeedManager.SubSeeds.TryGetValue(
+                (__instance.m_dimension.DimensionIndex, __instance.m_type, zoneData.LocalIndex),
+                out var overrideSubSeed))
         {
             zoneData.SubSeed = (int)overrideSubSeed;
 
@@ -317,21 +261,19 @@ public class Fix_NavMeshMarkerSubSeed
         var data = __instance.m_zoneData;
         var settings = __instance.m_zoneSettings;
 
+        Plugin.Logger.LogDebug($"Got Build job: {zone.LocalIndex} {zone.Layer} {zone.Dimension} {zone.DimensionIndex}");
+
         if (mainStatus != MainStatus.Done)
             return;
 
         if (data?.CustomGeomorph != null && !settings.HasCustomGeomorphInstance)
         {
-            FactoryJobManager.MarkForRebuild();
-
-            var zoneKey = (zone.DimensionIndex, zone.LocalIndex);
-            FailedSubSeeds.Add(zoneKey);
+            ZoneSeedManager.Reroll_SubSeed(zone);
 
             if (zone.LocalIndex == eLocalZoneIndex.Zone_0)
                 return;
 
-            var parentKey = (zone.DimensionIndex, data.BuildFromLocalIndex);
-            FailedSubSeeds.Add(parentKey);
+            ZoneSeedManager.Reroll_SubSeed(data.BuildFromLocalIndex, zone.DimensionIndex, zone.Layer.m_type);
         }
     }
 }
