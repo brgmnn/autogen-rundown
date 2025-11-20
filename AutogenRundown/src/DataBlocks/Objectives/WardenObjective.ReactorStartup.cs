@@ -1282,7 +1282,7 @@ public partial record WardenObjective
             wave.RecalculateWaveSpawnTimes();
 
             var fog = level.FogSettings;
-            var isInfectious = level.FogSettings.Infection > 0.01;
+            var isInfectious = level.FogSettings.IsInfectious;
 
             if (wave.IsFogWave)
             {

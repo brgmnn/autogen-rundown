@@ -5,24 +5,28 @@ namespace AutogenRundown.DataBlocks;
 
 public record Fog : DataBlock<Fog>
 {
-    public static double DENSITY_CLEAR = 0.00008;
-    public static double DENSITY_LOW   = 0.0007;
-    public static double DENSITY_MED   = 0.005;
-    public static double DENSITY_HIGH  = 0.015;
+    public const double DENSITY_CLEAR = 0.00008;
+    public const double DENSITY_LOW   = 0.0007;
+    public const double DENSITY_MED   = 0.005;
+    public const double DENSITY_HIGH  = 0.015;
 
     /// <summary>
     /// Value = 0.045
     /// </summary>
-    public static double DENSITY_FULL  = 0.045;
+    public const double DENSITY_FULL  = 0.045;
 
-    public static double HEIGHT_LOW  = -4.0;
-    public static double HEIGHT_MED  =  0.0;
-    public static double HEIGHT_HIGH =  4.0;
-    public static double HEIGHT_MAX  = 12.0;
+    public const double HEIGHT_LOW  = -4.0;
+    public const double HEIGHT_MED  =  0.0;
+    public const double HEIGHT_HIGH =  4.0;
+    public const double HEIGHT_MAX  = 12.0;
 
-    public static double INFECTION_SLOW   = 0.015;
-    public static double INFECTION_MEDIUM = 0.022;
-    public static double INFECTION_FAST   = 0.030;
+    public const double INFECTION_SLOW   = 0.015;
+    public const double INFECTION_MEDIUM = 0.022;
+    public const double INFECTION_FAST   = 0.030;
+
+    public static double InfectionSlow { get; set; } = INFECTION_SLOW;
+    public static double InfectionMedium { get; set; } = INFECTION_MEDIUM;
+    public static double InfectionFast { get; set; } = INFECTION_FAST;
 
     public static Fog None = new() { PersistentId = 0 };
 

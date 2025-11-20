@@ -126,7 +126,7 @@ public partial record Zone : DataBlock<Zone>
     private void AlarmModifier_FogFlood(double duration)
     {
         var fog = level.FogSettings;
-        var isInfectious = level.FogSettings.Infection > 0.01;
+        var isInfectious = level.FogSettings.IsInfectious;
         var inverted = fog.IsInverted;
         var tempFog = (isInfectious, inverted) switch
         {
