@@ -650,6 +650,13 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
             Shard = 2
         });
 
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Junction.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
         #endregion
         #endregion
 
