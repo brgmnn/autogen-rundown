@@ -633,6 +633,24 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
 
         #endregion
         #endregion
+
+        #region MODDER: The Doggy Doge
+        // Medium size
+        Tech.ElevatorShafts_1x1.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Elevator.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Overpass.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        #endregion
         #endregion
 
         #region Service Floodways

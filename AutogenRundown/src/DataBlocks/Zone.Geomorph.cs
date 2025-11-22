@@ -281,6 +281,9 @@ public partial record Zone
 
                     // SamDB
                     (SubComplex.Lab, "Assets/Custom Geo's/Labs/lab_i_tile/lab_i_tile_V1.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+
+                    // The Doggy Doge
+                    (SubComplex.DataCenter, "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Overpass.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                 });
                 break;
 
