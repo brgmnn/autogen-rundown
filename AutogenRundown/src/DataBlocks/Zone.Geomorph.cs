@@ -54,7 +54,10 @@ public partial record Zone
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_exit/floodways_exit_tile.prefab"),
 
                     // SamDB v2
-                    (SubComplex.Floodways, "Assets/SamdownGeos/Floodways Abberation Exit/Abberation_Exit_tile.prefab")
+                    (SubComplex.Floodways, "Assets/SamdownGeos/Floodways Abberation Exit/Abberation_Exit_tile.prefab"),
+
+                    // The Doggy Doge
+                    (SubComplex.Floodways, "Assets/DogCustomGeos/Tilepack/DogGeos_Service_Exit.prefab")
                 });
                 break;
         };

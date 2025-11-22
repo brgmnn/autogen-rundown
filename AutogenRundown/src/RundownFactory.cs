@@ -221,12 +221,12 @@ public static class RundownFactory
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Junction.prefab",
+                "Assets/DogCustomGeos/Tilepack/DogGeos_Service_Exit.prefab",
                 new Level("A")
                 {
                     Tier = "A",
                     Name = "Debug Test",
-                    Complex = Complex.Tech,
+                    Complex = Complex.Service,
                     Settings = settings,
                     Index = rundown.TierA_Count + 1,
                     // Accessibility = Accessibility.BlockedAndScrambled,
