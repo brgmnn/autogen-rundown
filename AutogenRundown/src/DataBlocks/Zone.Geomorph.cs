@@ -168,6 +168,9 @@ public partial record Zone
 
                     // SamDB v2
                     (SubComplex.Floodways, "Assets/SamdownGeos/Floodways Scaffolding HUB/Floodways_Scaffolding_HUB.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
+                    // The Doggy Doge
+                    (SubComplex.Floodways, "Assets/DogCustomGeos/Tilepack/Releases/Floodways/DogGeos_Floodways_X_HA_06.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                 });
                 break;
         }
@@ -725,6 +728,9 @@ public partial record Zone
                     // --- MOD Geomorphs ---
                     // donan3967
                     (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_boss_hub_DS_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
+                    // The Doggy Doge
+                    (SubComplex.Floodways, "Assets/DogCustomGeos/Tilepack/Releases/Floodways/DogGeos_Floodways_X_HA_06.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                 });
                 break;
         }

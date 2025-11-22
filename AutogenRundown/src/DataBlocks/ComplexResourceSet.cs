@@ -1183,6 +1183,20 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
             Shard = 2
         });
 
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/Gardens/DogGeos_Garden_DataExtractor.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 2
+        });
+
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/Floodways/DogGeos_Floodways_X_HA_06.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 2
+        });
+
         #endregion
         #endregion
     }
