@@ -921,6 +921,10 @@ public partial record Zone : DataBlock<Zone>
 
         SubSeed = Generator.Between(10, 999);
 
+        // TODO: Add MarkerSubSeed / LightsSubSeed generator here
+        // MarkerSubSeed = Generator.Between(10, 999);
+        // LightsSubSeed = Generator.Between(10, 999);
+
         // Always ensure a terminal is placed in the zone
         TerminalPlacements.Add(new TerminalPlacement());
 

@@ -16,35 +16,35 @@ public record BuildState(MainStatus MainStatus, SubStatus SubStatus);
 [HarmonyPatch]
 internal static class Patch_LG_ZoneJob_CreateExpandFromData
 {
-    private static Dictionary<(LG_LayerType layer, eLocalZoneIndex zoneNumber), int> jobFailures = new();
-
-    /// <summary>
-    /// This is where we need to catch and itemize failed zones
-    /// </summary>
-    /// <param name="__instance"></param>
-    /// <param name="__exception"></param>
-    [HarmonyPatch(typeof(LG_ZoneJob_CreateExpandFromData), nameof(LG_ZoneJob_CreateExpandFromData.Build))]
-    [HarmonyFinalizer]
-    public static void Post_LG_ZoneJob_CreateExpandFromData_Build(LG_ZoneJob_CreateExpandFromData __instance, ref Exception? __exception)
-    {
-        // [Warning:AutogenRundown] Re-rolling subSeed=5699
-        // [Error  :     Unity] WARNING : Zone1 (Zone_1 - 315): Failed to find any good StartAreas in zone 0 (314) expansionType:Towards_Random m_buildFromZone.m_areas: 1 scoredCount:0 dim: Reality
-
-        if (__instance.m_mainStatus == MainStatus.FindStartArea &&
-            __instance.m_subStatus == SubStatus.SelectArea &&
-            __instance.m_scoredStartAreas.Count < 1)
-        {
-            if (__instance.m_subSeed < 0xffff)
-            {
-                Plugin.Logger.LogWarning($"Re-rolling subSeed={__instance.m_subSeed}");
-                __instance.m_subSeed++;
-            }
-            else
-            {
-                Plugin.Logger.LogError($"Exhausted SubSeed rolls. Zone placement is unlikely to ever succeed");
-            }
-        }
-    }
+    // private static Dictionary<(LG_LayerType layer, eLocalZoneIndex zoneNumber), int> jobFailures = new();
+    //
+    // /// <summary>
+    // /// This is where we need to catch and itemize failed zones
+    // /// </summary>
+    // /// <param name="__instance"></param>
+    // /// <param name="__exception"></param>
+    // [HarmonyPatch(typeof(LG_ZoneJob_CreateExpandFromData), nameof(LG_ZoneJob_CreateExpandFromData.Build))]
+    // [HarmonyFinalizer]
+    // public static void Post_LG_ZoneJob_CreateExpandFromData_Build(LG_ZoneJob_CreateExpandFromData __instance, ref Exception? __exception)
+    // {
+    //     // [Warning:AutogenRundown] Re-rolling subSeed=5699
+    //     // [Error  :     Unity] WARNING : Zone1 (Zone_1 - 315): Failed to find any good StartAreas in zone 0 (314) expansionType:Towards_Random m_buildFromZone.m_areas: 1 scoredCount:0 dim: Reality
+    //
+    //     if (__instance.m_mainStatus == MainStatus.FindStartArea &&
+    //         __instance.m_subStatus == SubStatus.SelectArea &&
+    //         __instance.m_scoredStartAreas.Count < 1)
+    //     {
+    //         if (__instance.m_subSeed < 0xffff)
+    //         {
+    //             Plugin.Logger.LogWarning($"Re-rolling subSeed={__instance.m_subSeed}");
+    //             __instance.m_subSeed++;
+    //         }
+    //         else
+    //         {
+    //             Plugin.Logger.LogError($"Exhausted SubSeed rolls. Zone placement is unlikely to ever succeed");
+    //         }
+    //     }
+    // }
 
     #region Fix: Directional expansion being blocked but not falling back to valid open other directions
 

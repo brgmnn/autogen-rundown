@@ -215,7 +215,7 @@ public static class RundownFactory
 
         #region Geomorph Debugging test level
         #if DEBUG
-        #if true
+        #if false
         if (withFixed)
         {
             var settings = new LevelSettings("A");
@@ -315,6 +315,7 @@ public static class RundownFactory
 
         #region Test C Levels
         #if DEBUG
+        #if false
         if (withFixed)
         {
             const string tier = "E";
@@ -373,13 +374,14 @@ public static class RundownFactory
             rundown.AddLevel(testLevel);
         }
         #endif
+        #endif
         #endregion
         #endregion
 
         #region D-Tier Levels
         #region Survival Fixed
         // #if DEBUG
-        #if true
+        // #if false
         if (withFixed)
         {
             var objective = WardenObjectiveType.Survival;
@@ -431,7 +433,7 @@ public static class RundownFactory
 
             rundown.AddLevel(level);
         }
-        #endif
+        // #endif
         // #endif
         #endregion
 
@@ -586,6 +588,7 @@ public static class RundownFactory
 
         #region Test E Levels
         #if DEBUG
+        #if false
         if (false && withFixed)
         {
             var mainDirectorE = new BuildDirector
@@ -615,6 +618,7 @@ public static class RundownFactory
                 });
             rundown.AddLevel(testLevelE);
         }
+        #endif
         #endif
         #endregion
         #endregion

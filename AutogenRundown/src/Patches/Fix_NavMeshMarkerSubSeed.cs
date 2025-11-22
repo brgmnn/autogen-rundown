@@ -143,14 +143,14 @@ public class Fix_NavMeshMarkerSubSeed
 
         var key = (__instance.m_dimension.DimensionIndex, zoneData.LocalIndex);
 
-        if (ZoneSeedManager.SubSeeds.TryGetValue(
-                (__instance.m_dimension.DimensionIndex, __instance.m_type, zoneData.LocalIndex),
-                out var overrideSubSeed))
-        {
-            zoneData.SubSeed = (int)overrideSubSeed;
-
-            Plugin.Logger.LogDebug($"[Reroll] Applied override m_subSeed={overrideSubSeed} to Zone_{zoneData.LocalIndex}");
-        }
+        // if (ZoneSeedManager.SubSeeds.TryGetValue(
+        //         (__instance.m_dimension.DimensionIndex, __instance.m_type, zoneData.LocalIndex),
+        //         out var overrideSubSeed))
+        // {
+        //     zoneData.SubSeed = (int)overrideSubSeed;
+        //
+        //     Plugin.Logger.LogDebug($"[Reroll] Applied override m_subSeed={overrideSubSeed} to Zone_{zoneData.LocalIndex}");
+        // }
 
         if (MarkerSubSeeds.TryGetValue(key, out var overrideSeed))
         {

@@ -4,6 +4,9 @@ using LevelGeneration;
 
 namespace AutogenRundown.Managers;
 
+/// <summary>
+/// Check Patch_LG_Layer for CreateZone prefix
+/// </summary>
 public static class ZoneSeedManager
 {
     // TODO: Move marker subseed logic to here
@@ -19,7 +22,7 @@ public static class ZoneSeedManager
 
     private static readonly HashSet<(eDimensionIndex dimension, LG_LayerType layer, eLocalZoneIndex index)> FailedMarkerSubSeeds = new();
 
-    private static readonly Dictionary<(eDimensionIndex dimension, LG_LayerType layer, eLocalZoneIndex index), uint> MarkerSubSeeds = new();
+    public static readonly Dictionary<(eDimensionIndex dimension, LG_LayerType layer, eLocalZoneIndex index), uint> MarkerSubSeeds = new();
 
 
     #region Public methods
