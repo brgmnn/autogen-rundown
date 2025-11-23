@@ -683,6 +683,15 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
             Shard = 2
         });
 
+        // Awesome dead end tile
+        // TODO: use for something
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/ALTRX1/ALT_RX1_Tech_NFrame.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
         #endregion
         #endregion
 
@@ -1202,6 +1211,14 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         {
             Asset = "Assets/DogCustomGeos/Tilepack/Releases/Floodways/DogGeos_Floodways_X_HA_06.prefab",
             SubComplex = SubComplex.Floodways,
+            Shard = 2
+        });
+
+        // Both lab and service
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/Gardens/DogGeos_Garden_X_GlowCave.prefab",
+            SubComplex = SubComplex.Gardens,
             Shard = 2
         });
 

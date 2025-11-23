@@ -221,7 +221,7 @@ public static class RundownFactory
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/DogCustomGeos/Tilepack/Releases/Datacenter/DogGeos_Datacenter_X_HA_07.prefab",
+                "Assets/DogCustomGeos/Tilepack/Releases/ALTRX1/ALT_RX1_Tech_NFrame.prefab",
                 new Level("A")
                 {
                     Tier = "A",
