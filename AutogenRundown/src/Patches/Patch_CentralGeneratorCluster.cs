@@ -87,9 +87,9 @@ public class Patch_CentralGeneratorCluster
 
     /// <summary>
     /// This method sets up the ServiceMarker data blocks to add the extra marker needed for the
-    /// Service Complex geomorphs to be able to spawn the generator cluster marker
+    /// Service Complex geomorphs to be able to spawn the generator cluster marker.
     ///
-    /// It can be called multiple times, but once after the datablocks are loaded is sufficient
+    /// It can be called multiple times, but once after the datablocks are loaded is sufficient.
     /// </summary>
     public static void Setup()
     {

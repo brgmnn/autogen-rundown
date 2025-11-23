@@ -221,12 +221,12 @@ public static class RundownFactory
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/DogCustomGeos/Tilepack/Releases/Floodways/DogGeos_Floodways_X_HA_06.prefab",
+                "Assets/DogCustomGeos/Tilepack/Releases/Datacenter/DogGeos_Datacenter_X_HA_07.prefab",
                 new Level("A")
                 {
                     Tier = "A",
                     Name = "Debug Test",
-                    Complex = Complex.Service,
+                    Complex = Complex.Tech,
                     Settings = settings,
                     Index = rundown.TierA_Count + 1,
                     // Accessibility = Accessibility.BlockedAndScrambled,
@@ -315,12 +315,12 @@ public static class RundownFactory
 
         #region Test C Levels
         #if DEBUG
-        #if false
+        #if true
         if (withFixed)
         {
-            const string tier = "E";
+            const string tier = "C";
             const string title = "Test";
-            const Complex complex = Complex.Mining;
+            const Complex complex = Complex.Tech;
 
             var mainDirector = new BuildDirector
             {

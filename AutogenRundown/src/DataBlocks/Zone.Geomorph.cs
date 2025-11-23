@@ -491,6 +491,11 @@ public partial record Zone
 
                     // (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_LF_03_R8C2.prefab"),
                     //                  Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_02.prefab
+
+                    // --- MOD Geomorphs ---
+                    // SamDB
+                    (SubComplex.DataCenter, "Assets/DogCustomGeos/Tilepack/Releases/Datacenter/DogGeos_Datacenter_X_HA_07.prefab"),
+
                 });
 
                 CustomGeomorph = geo;

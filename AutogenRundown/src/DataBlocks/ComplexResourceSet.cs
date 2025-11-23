@@ -675,6 +675,14 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
             Shard = 2
         });
 
+        // Requires custom marker, see TechMarker
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/Datacenter/DogGeos_Datacenter_X_HA_07.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
         #endregion
         #endregion
 
