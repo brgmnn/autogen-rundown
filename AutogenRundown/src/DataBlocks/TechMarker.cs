@@ -76,6 +76,109 @@ public record TechMarker : DataBlock<TechMarker>
             PersistentId = 7509
         };
 
+        var dogsTechDisplay1 = new TechMarker
+        {
+            CommonData = new CommonData
+            {
+                FunctionComponentLinks = new List<JArray>
+                {
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new()
+                },
+                Compositions = new List<JObject>
+                {
+                    new()
+                    {
+                        ["weight"] = 1.0,
+                        ["prefab"] = "Assets/AssetPrefabs/Complex/Tech/Markers/MarkerCompositions/Tech_function_submarker_120x50x120/Tech_function_submarker_120x50x120_V03.prefab",
+                        ["function"] = 0,
+                        ["Shard"] = 19
+                    },
+                },
+                AssetBundleName = 3,
+                Group = 10,
+                FunctionPotential = 0.0,
+                RotationSnap = 0,
+                RotationNoise = 0.0,
+                EditorMesh = "Markerproducers/Tech/SM_DataCenter_120x50x120",
+                BoundingVolume = 720.0
+            },
+            Name = "Tech_FixedDisplay_01",
+            PersistentId = 7500
+        };
+        var dogsTechDisplay2 = new TechMarker
+        {
+            CommonData = new CommonData
+            {
+                FunctionComponentLinks = new List<JArray>
+                {
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new(),
+                    new()
+                },
+                Compositions = new List<JObject>
+                {
+                    new()
+                    {
+                        ["weight"] = 1.0,
+                        ["prefab"] = "Assets/AssetPrefabs/Complex/Tech/Markers/MarkerCompositions/Tech_function_submarker_120x50x120/Tech_function_submarker_120x50x120_V02.prefab",
+                        ["function"] = 0,
+                        ["Shard"] = 19
+                    },
+                },
+                AssetBundleName = 3,
+                Group = 10,
+                FunctionPotential = 0.0,
+                RotationSnap = 0,
+                RotationNoise = 0.0,
+                EditorMesh = "Markerproducers/Tech/SM_DataCenter_120x50x120",
+                BoundingVolume = 720.0
+            },
+            Name = "Tech_FixedDisplay_02",
+            PersistentId = 7501
+        };
+
         Bins.TechMarkers.AddBlock(dogsTechGenerator);
+        Bins.TechMarkers.AddBlock(dogsTechDisplay1);
+        Bins.TechMarkers.AddBlock(dogsTechDisplay2);
     }
 }
