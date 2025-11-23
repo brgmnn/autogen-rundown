@@ -633,6 +633,57 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
 
         #endregion
         #endregion
+
+        #region MODDER: The Doggy Doge
+        // Medium size
+        Tech.ElevatorShafts_1x1.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Elevator.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Overpass.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        // Forward plug is raised elevation, left/right plugs are lowered elevation
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Junction.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        // Contains working HSU Activator, and Extractor (I know one overwrites the other, so let
+        // me know if I should make 2 versions with only 1 in each)
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_HSUProcessing.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        // Looks like it needs a lot of custom work
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Arena.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        // Requires custom marker, see TechMarker
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/Datacenter/DogGeos_Datacenter_X_HA_07.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        #endregion
         #endregion
 
         #region Service Floodways
@@ -1129,6 +1180,31 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         });
 
         #endregion
+        #endregion
+
+        #region MODDER: The Doggy Doge
+
+        Service.CustomGeomorphs_Exit_1x1.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/DogGeos_Service_Exit.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 2
+        });
+
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/Gardens/DogGeos_Garden_DataExtractor.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 2
+        });
+
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/Floodways/DogGeos_Floodways_X_HA_06.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 2
+        });
+
         #endregion
         #endregion
     }

@@ -215,18 +215,18 @@ public static class RundownFactory
 
         #region Geomorph Debugging test level
         #if DEBUG
-        #if false
+        #if true
         if (withFixed)
         {
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab",
+                "Assets/DogCustomGeos/Tilepack/Releases/Datacenter/DogGeos_Datacenter_X_HA_07.prefab",
                 new Level("A")
                 {
                     Tier = "A",
                     Name = "Debug Test",
-                    Complex = Complex.Mining,
+                    Complex = Complex.Tech,
                     Settings = settings,
                     Index = rundown.TierA_Count + 1,
                     // Accessibility = Accessibility.BlockedAndScrambled,
@@ -315,12 +315,12 @@ public static class RundownFactory
 
         #region Test C Levels
         #if DEBUG
-        #if false
+        #if true
         if (withFixed)
         {
-            const string tier = "E";
+            const string tier = "C";
             const string title = "Test";
-            const Complex complex = Complex.Mining;
+            const Complex complex = Complex.Tech;
 
             var mainDirector = new BuildDirector
             {
