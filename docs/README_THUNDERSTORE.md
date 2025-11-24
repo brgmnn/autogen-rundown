@@ -20,5 +20,6 @@ AutogenRundown supports the following 3rd party peer mods. You can install them 
 * [GTFriendlyO](https://thunderstore.io/c/gtfo/p/Carb_Crusaders/GTFriendlyO/)
 * [OmegaWeapons](https://thunderstore.io/c/gtfo/p/Mimikium/OmegaWeapons/)
 
+<hr>
 
 See [Github](https://github.com/brgmnn/autogen-rundown) for more details.
