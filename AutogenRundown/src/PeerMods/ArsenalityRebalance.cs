@@ -4,14 +4,14 @@ public class ArsenalityRebalance : SupportedMod
 {
     private ArsenalityRebalance()
     {
-        ModName = "leezurli-ArsenalityRebalance";
+        ModName = "ArsenalityRebalance";
     }
 
     public static void Configure()
     {
         var mod = new ArsenalityRebalance();
 
-        if (!Peers.HasMod(mod.ModName))
+        if (!Peers.HasMod(mod.ModName) || mod.PluginFolder is null)
             return;
 
         Plugin.Logger.LogInfo($"Configuring peer mod: {mod.ModName}");

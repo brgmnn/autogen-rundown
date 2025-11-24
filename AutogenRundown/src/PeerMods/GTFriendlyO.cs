@@ -7,14 +7,14 @@ public class GTFriendlyO : SupportedMod
 {
     private GTFriendlyO()
     {
-        ModName = "Carb_Crusaders-GTFriendlyO";
+        ModName = "GTFriendlyO";
     }
 
     public static void Configure()
     {
         var mod = new GTFriendlyO();
 
-        if (!Peers.HasMod(mod.ModName))
+        if (!Peers.HasMod(mod.ModName) || mod.PluginFolder is null)
             return;
 
         Plugin.Logger.LogInfo($"Configuring peer mod: {mod.ModName}");
