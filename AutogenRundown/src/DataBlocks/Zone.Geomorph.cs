@@ -112,6 +112,12 @@ public partial record Zone
 
                     // SamDB v2
                     (SubComplex.DigSite, "Assets/SamdownGeos/Refinery_X_tile_1/Refinery_X_Tile_1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
+                    // ZaeroGeos
+                    (SubComplex.DigSite, "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_01_v2.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.DigSite, "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_02_X.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.DigSite, "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_03.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.DigSite, "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_04.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                 });
                 break;
 

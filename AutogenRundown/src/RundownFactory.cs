@@ -221,7 +221,7 @@ public static class RundownFactory
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_01_v2.prefab",
+                "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_04.prefab",
                 new Level("A")
                 {
                     Tier = "A",
