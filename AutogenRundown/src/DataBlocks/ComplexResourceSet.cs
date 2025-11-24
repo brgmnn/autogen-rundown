@@ -482,6 +482,7 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         });
 
         // This is a narrow I tile; security doors can only spawn forward and backward.
+        // Looks like a very hard ladder to traverse. Bad if scans go forward
         Mining.CustomGeomorphs.Insert(0, new Prefab()
         {
             Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_I_01.prefab",
@@ -489,13 +490,14 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
             Shard = 4
         });
 
-        // This is a large open I tile; security doors can only spawn forward and backward.
-        Mining.CustomGeomorphs.Insert(0, new Prefab()
-        {
-            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_I_02.prefab",
-            SubComplex = SubComplex.DigSite,
-            Shard = 4
-        });
+        // // This is a large open I tile; security doors can only spawn forward and backward.
+        // // Note: Not usable, has holes in the floor which players can fall off the map
+        // Mining.CustomGeomorphs.Insert(0, new Prefab()
+        // {
+        //     Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_I_02.prefab",
+        //     SubComplex = SubComplex.DigSite,
+        //     Shard = 4
+        // });
 
         // This is a dead end. There is only one entrance.
         Mining.CustomGeomorphs.Insert(0, new Prefab()

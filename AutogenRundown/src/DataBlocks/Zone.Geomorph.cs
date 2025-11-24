@@ -658,7 +658,10 @@ public partial record Zone
                     (SubComplex.DigSite, "Assets/Bundles/RLC_Mining/geo_64x64_mining_digsite_dead_end_RLC_01.prefab", new CoverageMinMax { Min = 10, Max = 15 }),
 
                     // SamDB v2
-                    (SubComplex.DataCenter, "Assets/SamdownGeos/Storage dead end spawn/DeadEnd_Storage.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
+                    (SubComplex.Storage, "Assets/SamdownGeos/Storage dead end spawn/DeadEnd_Storage.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
+
+                    // ZaeroGeos
+                    (SubComplex.DigSite, "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_Dead_End_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
                 });
                 break;
 

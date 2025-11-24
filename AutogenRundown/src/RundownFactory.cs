@@ -221,7 +221,7 @@ public static class RundownFactory
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_04.prefab",
+                "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_Dead_End_01.prefab",
                 new Level("A")
                 {
                     Tier = "A",
@@ -231,7 +231,7 @@ public static class RundownFactory
                     Index = rundown.TierA_Count + 1,
                     // Accessibility = Accessibility.BlockedAndScrambled,
                     IsTest = true
-                }, 3);
+                }, 0);
 
             rundown.AddLevel(testLevel);
         }
