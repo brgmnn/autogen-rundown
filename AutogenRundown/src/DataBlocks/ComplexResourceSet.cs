@@ -425,6 +425,87 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
 
         #endregion
         #endregion
+
+        #region MODDER: Zaero
+        // This is an X tile; security doors can spawn on all 4 sides.
+        // A generator cluster objective can be used, it will spawn in the lower cave.
+        // This would be a very difficult scan room. Lots of verticality
+        // Generator spawns at a very low elevation, will likely be in full fog
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_01.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        // This is a simplified version of Cave 01; the upper and lower floors are blocked off.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_01_v2.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        // This is a T tile; security doors can only spawn on the front and sides.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_02.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        // This is an X tile version of Cave 02; security doors can spawn on all 4 sides.
+        // There is now a path leading from the Middle Island to the 4th security door.
+        // X version is flipped 180 degrees so you enter from the new security door instead of the front.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_02_X.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        // This is an X tile; security doors can spawn on all 4 sides.
+        // This is the first cave tile with more than 1 room. This tile has 2 rooms that can generate.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_03.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        // This is an X tile; security doors can spawn on all 4 sides.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_04.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        // This is a narrow I tile; security doors can only spawn forward and backward.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_I_01.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        // This is a large open I tile; security doors can only spawn forward and backward.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_I_02.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        // This is a dead end. There is only one entrance.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_Dead_End_01.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        #endregion
         #endregion
 
         #region Tech

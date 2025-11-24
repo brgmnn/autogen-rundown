@@ -1434,25 +1434,25 @@ public class Level
 
             // level.GlobalWaveSettings = GlobalWaveSettings.HighCap_40pts;
 
-            var dimension = new Dimension
-            {
-                Data = new Dimensions.DimensionData
-                {
-                    // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_01.prefab",
-                    DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab",
-                    DimensionResourceSetID = 47,
-                    IsStaticDimension = true
-                },
-                PersistentId = 2,
-            };
-            // dimension.FindOrPersist();
-            dimension.Persist();
-
-            level.DimensionDatas.Add(new Levels.DimensionData
-            {
-                Dimension = DimensionIndex.Dimension1,
-                Data = dimension
-            });
+            // var dimension = new Dimension
+            // {
+            //     Data = new Dimensions.DimensionData
+            //     {
+            //         // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_01.prefab",
+            //         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab",
+            //         DimensionResourceSetID = 47,
+            //         IsStaticDimension = true
+            //     },
+            //     PersistentId = 2,
+            // };
+            // // dimension.FindOrPersist();
+            // dimension.Persist();
+            //
+            // level.DimensionDatas.Add(new Levels.DimensionData
+            // {
+            //     Dimension = DimensionIndex.Dimension1,
+            //     Data = dimension
+            // });
 
             // The zones
             var elevatorDrop = new ZoneNode(Bulkhead.Main, level.Planner.NextIndex(Bulkhead.Main));
@@ -1464,6 +1464,8 @@ public class Level
                 LocalIndex = 0,
                 CustomGeomorph = geo
             };
+
+            // elevatorDropZone.GeneratorClustersInZone = 1;
 
             // elevatorDropZone.EnemySpawningInZone.Add(
             //     EnemySpawningData.MegaMother_AlignedSpawn);
@@ -1519,8 +1521,8 @@ public class Level
             // elevatorDropZone.EnemySpawningInZone.Add(
             //     EnemySpawningData.TierA with { Points = 30 });
 
-            elevatorDropZone.EnemySpawningInZone.Add(
-                EnemySpawningData.HybridInfected with { Points = 4 });
+            // elevatorDropZone.EnemySpawningInZone.Add(
+            //     EnemySpawningData.HybridInfected with { Points = 4 });
 
             // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
 

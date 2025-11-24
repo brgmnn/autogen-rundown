@@ -221,17 +221,17 @@ public static class RundownFactory
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/DogCustomGeos/Tilepack/Releases/ALTRX1/ALT_RX1_Tech_NFrame.prefab",
+                "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_01_v2.prefab",
                 new Level("A")
                 {
                     Tier = "A",
                     Name = "Debug Test",
-                    Complex = Complex.Tech,
+                    Complex = Complex.Mining,
                     Settings = settings,
                     Index = rundown.TierA_Count + 1,
                     // Accessibility = Accessibility.BlockedAndScrambled,
                     IsTest = true
-                }, 0);
+                }, 3);
 
             rundown.AddLevel(testLevel);
         }
