@@ -1157,6 +1157,19 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 break;
             }
 
+            #region Autogen Custom Objectives
+
+            /*
+             * Modeled after R8E1 / R8E2 / R5E1
+             */
+            case WardenObjectiveType.ReachKdsDeep:
+            {
+                layout.BuildLayout_ReachKdsDeep(director, objective, (ZoneNode)start);
+                break;
+            }
+
+            #endregion
+
             // Something has gone wrong if we are reaching this
             default:
             {

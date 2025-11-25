@@ -314,13 +314,13 @@ public static class RundownFactory
         }
 
         #region Test C Levels
-        #if DEBUG
         #if true
-        if (withFixed)
+        #if true
+        if (withFixed || true)
         {
             const string tier = "C";
-            const string title = "Test";
-            const Complex complex = Complex.Tech;
+            const string title = "Sub Test";
+            const Complex complex = Complex.Mining;
 
             var mainDirector = new BuildDirector
             {
@@ -328,7 +328,8 @@ public static class RundownFactory
                 Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.CentralGeneratorCluster,
+                Objective = WardenObjectiveType.ReachKdsDeep,
+                // SubObjective = WardenObjectiveSubType.BlowReactor
             };
             mainDirector.GenPoints();
 

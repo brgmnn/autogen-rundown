@@ -57,12 +57,10 @@ public enum WardenObjectiveEventType : uint
     #region --- Modder: Flow's Events ---
 
     LockSecurityDoor = 10001,
-
-    SetLightDataInZone = 10016,
-
-    AlertEnemiesInZone = 10017,
-
+    ForceCompleteLevel = 10008,
     Countdown = 10010,
+    SetLightDataInZone = 10016,
+    AlertEnemiesInZone = 10017,
 
     #endregion
 

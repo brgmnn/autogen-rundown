@@ -4,6 +4,7 @@ using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.WorldEvents;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
@@ -908,6 +909,13 @@ public partial record Zone : DataBlock<Zone>
         ToolPacks = transformer(ToolPacks);
         AmmoPacks = transformer(AmmoPacks);
     }
+    #endregion
+
+    #region World Events
+
+    [JsonProperty("WorldEventChainedPuzzleDatas")]
+    public List<WorldEventChainedPuzzle> WorldEventChainedPuzzleData { get; set; } = new();
+
     #endregion
 
     public Zone(Level level, Bulkhead bulkhead) : this(level, level.GetLevelLayout(bulkhead)!)

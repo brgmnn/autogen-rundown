@@ -333,6 +333,70 @@ public static class WardenObjectiveEventCollections
 
     #endregion
 
+    #region Objectives
+
+    public static ICollection<WardenObjectiveEvent> AddActivateChainedPuzzle(
+        this ICollection<WardenObjectiveEvent> events,
+        string? filter = null,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ActivateChainedPuzzle,
+                Identifier = filter,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> AddForceCompleteLevel(
+        this ICollection<WardenObjectiveEvent> events,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ForceCompleteLevel,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> AddSetNavMarker(
+        this ICollection<WardenObjectiveEvent> events,
+        string? filter = null,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SetNavMarker,
+                Identifier = filter,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> AddWinOnDeath(
+        this ICollection<WardenObjectiveEvent> events,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.WinOnDeath,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    #endregion
+
     #region Security Sensors
     /// <summary>
     /// Adds a security sensor toggle event

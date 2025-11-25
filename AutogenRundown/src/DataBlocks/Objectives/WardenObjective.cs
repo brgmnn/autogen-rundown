@@ -583,6 +583,14 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 objective.PreBuild_TimedTerminalSequence(director, level);
                 break;
 
+            #region Autogen Custom Objectives
+
+            case WardenObjectiveType.ReachKdsDeep:
+                objective.PreBuild_ReachKdsDeep(director, level);
+                break;
+
+            #endregion
+
             default:
                 throw new ArgumentOutOfRangeException(nameof(director));
         }
@@ -781,6 +789,14 @@ public partial record WardenObjective : DataBlock<WardenObjective>
             case WardenObjectiveType.TimedTerminalSequence:
                 Build_TimedTerminalSequence(director, level);
                 break;
+
+            #region Autogen Custom Objectives
+
+            case WardenObjectiveType.ReachKdsDeep:
+                Build_ReachKdsDeep(director, level);
+                break;
+
+            #endregion
         }
 
         dataLayer.ObjectiveData.DataBlockId = PersistentId;
