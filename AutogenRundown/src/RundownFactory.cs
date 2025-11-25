@@ -105,7 +105,7 @@ public static class RundownFactory
         // This is to help us high rolling one particular objective over
         // another. So we avoid having a rundown with only ReactorStartup
         //
-        // For Daily/Weekly there's really only max 14 levels taht can be rolled
+        // For Daily/Weekly there's really only max 14 levels that can be rolled
         var mainObjectivesPool = new List<(double, int, WardenObjectiveType)>
         {
             (1.0, 2, WardenObjectiveType.HsuFindSample),
