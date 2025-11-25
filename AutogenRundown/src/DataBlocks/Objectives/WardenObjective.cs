@@ -515,7 +515,11 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     /// <returns></returns>
     public static WardenObjective PreBuild(BuildDirector director, Level level)
     {
-        var objective = new WardenObjective { Type = director.Objective };
+        var objective = new WardenObjective
+        {
+            Type = director.Objective,
+            SubType = director.SubObjective,
+        };
 
         switch (objective.Type)
         {
@@ -839,6 +843,12 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     /// What type of objective this is.
     /// </summary>
     public WardenObjectiveType Type { get; set; }
+
+    /// <summary>
+    /// Autogen only, subtype is used for more specific level crafting
+    /// </summary>
+    [JsonIgnore]
+    public WardenObjectiveSubType SubType { get; set; } = WardenObjectiveSubType.Default;
 
     #region Information and display strings
     [JsonIgnore]

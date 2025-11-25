@@ -30,6 +30,11 @@ public class BuildDirector
 
     public WardenObjectiveType Objective { get; set; } = WardenObjectiveType.GatherSmallItems;
 
+    /// <summary>
+    /// Autogen only, used for specific variants of objectives
+    /// </summary>
+    public WardenObjectiveSubType SubObjective { get; set; } = WardenObjectiveSubType.Default;
+
     #region Zones
     [Obsolete("Prefer specifying the number of zones in each objective layout")]
     public int ZoneCount { get; set; } = 0;

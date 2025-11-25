@@ -206,6 +206,14 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
             Asset = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04_test.prefab",
             SubComplex = SubComplex.Storage
         });
+
+        // R8E1 HSU Exit (destroyed)
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_HSU_exit_R8E1.prefab",
+            SubComplex = SubComplex.All,
+            Shard = 0
+        });
         #endregion
 
         #region MODDER: dakkhuza

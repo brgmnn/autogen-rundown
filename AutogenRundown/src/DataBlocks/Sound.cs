@@ -22,6 +22,8 @@ public enum Sound : uint
     Warp = 1998147319,
     WarpReality = 231201012,
 
+    // Objective update ping
+    ObjectiveNoise = 979647287,
 
 
     #region R8C2 Unplugged
@@ -65,6 +67,18 @@ public enum Sound : uint
 
     #endregion
 
+    #region R8E1 Valiant
+
+    MachineryBlow = 1007447703,
+
+    // This seems like it's supposed to be the other team shooting
+    Gunfire = 3665191083,
+
+    DramaticTension = 1819247891,
+
+    MonsterNoises = 637231409,
+
+    #endregion
 
 
 
