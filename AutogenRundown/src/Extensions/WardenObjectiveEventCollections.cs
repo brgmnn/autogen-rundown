@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks;
+using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Objectives;
@@ -270,6 +271,29 @@ public static class WardenObjectiveEventCollections
         return events;
     }
 
+    public static ICollection<WardenObjectiveEvent> AddSetZoneLights(
+        this ICollection<WardenObjectiveEvent> events,
+        int zoneNumber,
+        int layer,
+        SetZoneLight setZoneLight,
+        double duration,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SetLightDataInZone,
+                Trigger = WardenObjectiveEventTrigger.OnStart,
+                LocalIndex = zoneNumber,
+                Layer = layer,
+                Duration = duration,
+                Delay = delay,
+                SetZoneLight = setZoneLight
+            });
+
+        return events;
+    }
+
     #endregion
 
     #region Messaging
@@ -335,6 +359,32 @@ public static class WardenObjectiveEventCollections
 
         return events;
     }
+    #endregion
+
+    #region Screen
+
+    public static ICollection<WardenObjectiveEvent> AddScreenShake(
+        this ICollection<WardenObjectiveEvent> events,
+        double duration,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ShakeScreen,
+                Duration = duration,
+                Delay = delay,
+                CameraShake = new CameraShake
+                {
+                    Amplitude = 45.0,
+                    Radius = 450.0,
+                    Frequency = 50.0
+                }
+            });
+
+        return events;
+    }
+
     #endregion
 
     #region Timers

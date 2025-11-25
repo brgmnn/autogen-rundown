@@ -75,6 +75,8 @@ public enum WardenObjectiveEventType : uint
 
     AdjustAwoTimer = 20007,
 
+    ShakeScreen = 20011,
+
     CustomHudText = 20017,
     #endregion
     #endregion

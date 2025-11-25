@@ -179,6 +179,9 @@ public record WardenObjectiveEvent
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
     public EventLoop? EventLoop { get; set; }
 
+    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    public CameraShake? CameraShake { get; set; }
+
     /// <summary>
     ///
     /// </summary>
