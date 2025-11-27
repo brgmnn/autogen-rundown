@@ -158,6 +158,9 @@ Monthly Feb
 Missing tiles to add
   * Add R8A1 garden hub tile to hubs
 
+Remove intel in elevator drop that shows:
+  "Artifact Heat at"
+Maybe replace with number of logs?
 
 Enemies:
   A:

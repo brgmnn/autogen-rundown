@@ -24,43 +24,6 @@ public partial record WardenObjective
     /// <param name="level"></param>
     public void PreBuild_ReachKdsDeep(BuildDirector director, Level level)
     {
-        // SpecialTerminalCommand_Type = director.Tier switch
-        // {
-        //     "A" => Generator.Select(new List<(double, SpecialCommand)>
-        //     {
-        //         (0.50, SpecialCommand.LightsOff),
-        //         (0.07, SpecialCommand.FillWithFog),
-        //         (0.43, SpecialCommand.KingOfTheHill)
-        //     }),
-        //     "B" => Generator.Select(new List<(double, SpecialCommand)>
-        //     {
-        //         (0.30, SpecialCommand.LightsOff),
-        //         (0.10, SpecialCommand.FillWithFog),
-        //         (0.10, SpecialCommand.ErrorAlarm),
-        //         (0.50, SpecialCommand.KingOfTheHill)
-        //     }),
-        //     "C" => Generator.Select(new List<(double, SpecialCommand)>
-        //     {
-        //         (0.30, SpecialCommand.LightsOff),
-        //         (0.10, SpecialCommand.FillWithFog),
-        //         (0.15, SpecialCommand.ErrorAlarm),
-        //         (0.45, SpecialCommand.KingOfTheHill)
-        //     }),
-        //     "D" => Generator.Select(new List<(double, SpecialCommand)>
-        //     {
-        //         (0.25, SpecialCommand.LightsOff),
-        //         (0.15, SpecialCommand.FillWithFog),
-        //         (0.20, SpecialCommand.ErrorAlarm),
-        //         (0.40, SpecialCommand.KingOfTheHill)
-        //     }),
-        //     "E" => Generator.Select(new List<(double, SpecialCommand)>
-        //     {
-        //         (0.05, SpecialCommand.LightsOff),
-        //         (0.15, SpecialCommand.FillWithFog),
-        //         (0.30, SpecialCommand.ErrorAlarm),
-        //         (0.50, SpecialCommand.KingOfTheHill)
-        //     }),
-        // };
     }
 
     public void Build_ReachKdsDeep(BuildDirector director, Level level)
