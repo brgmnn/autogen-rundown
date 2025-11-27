@@ -212,6 +212,6 @@ public partial record LevelLayout
             }
         }
 
-        AddKdsDeep_R8E1Exit(terminal, Generator.Between(0, 4));
+        AddKdsDeep_R8E1Exit(start, Generator.Between(0, 4));
         }
 }
