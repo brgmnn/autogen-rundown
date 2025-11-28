@@ -26,7 +26,13 @@ public class BuildDirector
 
     public Complex Complex { get; set; }
 
-    public LevelSettings Settings { get; set; } = new LevelSettings();
+    /// <summary>
+    /// When set to true, the starting area build step will be skipped and the Main level gen
+    /// will be expected to build any starting area
+    /// </summary>
+    public bool DisableStartingArea { get; set; } = false;
+
+    public LevelSettings Settings { get; set; } = new();
 
     public WardenObjectiveType Objective { get; set; } = WardenObjectiveType.GatherSmallItems;
 

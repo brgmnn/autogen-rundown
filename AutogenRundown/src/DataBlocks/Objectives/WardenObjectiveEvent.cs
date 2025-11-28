@@ -136,6 +136,9 @@ public record WardenObjectiveEvent
 
     #region Filtering
 
+    [JsonProperty("WorldEventTriggerObjectFilter", NullValueHandling = NullValueHandling.Ignore)]
+    public string? TriggerFilter { get; set; }
+
     /// <summary>
     ///
     /// </summary>

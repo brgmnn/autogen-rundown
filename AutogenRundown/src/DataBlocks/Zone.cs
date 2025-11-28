@@ -750,6 +750,7 @@ public partial record Zone : DataBlock<Zone>
     public List<WardenObjectiveEvent> EventsOnOpenDoor { get; set; } = new();
     public List<WardenObjectiveEvent> EventsOnDoorScanStart { get; set; } = new();
     public List<WardenObjectiveEvent> EventsOnDoorScanDone { get; set; } = new();
+    public List<WardenObjectiveEvent> EventsOnTrigger { get; set; } = new();
     #endregion
 
     #region Puzzle settings

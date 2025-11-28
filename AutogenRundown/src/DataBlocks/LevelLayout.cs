@@ -1164,7 +1164,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
              */
             case WardenObjectiveType.ReachKdsDeep:
             {
-                layout.BuildLayout_ReachKdsDeep(director, objective, (ZoneNode)start);
+                layout.BuildLayout_ReachKdsDeep(director, objective, start);
                 break;
             }
 

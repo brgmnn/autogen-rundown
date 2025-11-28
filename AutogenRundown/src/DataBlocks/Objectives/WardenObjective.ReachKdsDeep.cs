@@ -24,6 +24,7 @@ public partial record WardenObjective
     /// <param name="level"></param>
     public void PreBuild_ReachKdsDeep(BuildDirector director, Level level)
     {
+        director.DisableStartingArea = true;
     }
 
     public void Build_ReachKdsDeep(BuildDirector director, Level level)

@@ -6,12 +6,11 @@ using AutogenRundown.DataBlocks.WorldEvents;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
+using AutogenRundown.Utils;
 
 namespace AutogenRundown.DataBlocks;
 
 // Ideas:
-//
-//      EMERGENCY_ESCAPE_PROTOCOL -- From R7C1 Monster room
 
 public partial record LevelLayout
 {
@@ -30,10 +29,11 @@ public partial record LevelLayout
 
 
         // ------ Snatcher scan corridor ------
-        var (corridor1, corridor1Zone) = AddZone_Forward(start);
+        var (corridor1, corridor1Zone) = AddZone_Forward(start, new ZoneNode { MaxConnections = 1 });
 
         {
             corridor1Zone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_I_HA_03.prefab";
+            corridor1Zone.Coverage = CoverageMinMax.Small_10;
             corridor1Zone.AliasPrefix = "KDS Deep, ZONE";
             corridor1Zone.Altitude = Altitude.OnlyHigh;
             // corridor1Zone.LightSettings = Lights.Light.Monochrome_Red;
@@ -42,11 +42,12 @@ public partial record LevelLayout
 
 
         // ------ Penultimate corridor ------
-        var (corridor2, corridor2Zone) = AddZone_Forward(corridor1);
+        var (corridor2, corridor2Zone) = AddZone_Forward(corridor1, new ZoneNode { MaxConnections = 1 });
 
         {
             corridor2Zone.CustomGeomorph =
                 "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_I_HA_06.prefab";
+            corridor2Zone.Coverage = CoverageMinMax.Tiny_3;
             corridor2Zone.SecurityGateToEnter = SecurityGate.Apex;
             corridor2Zone.AliasPrefix = "KDS Deep, ZONE";
             corridor2Zone.Altitude = Altitude.OnlyHigh;
@@ -107,11 +108,15 @@ public partial record LevelLayout
         }
 
         // ------ KDS Deep HSU Exit tile ------
-        var (exit, exitZone) = AddZone_Forward(corridor2);
+        var (exit, exitZone) = AddZone_Forward(
+            corridor2,
+            new ZoneNode
+            {
+                MaxConnections = 0,
+                Tags = new Tags("no_enemies", "no_blood_door")
+            });
 
         {
-            exit = planner.UpdateNode(exit with { Tags = exit.Tags.Extend("no_enemies", "no_blood_door") });
-
             exitZone.LightSettings = (Lights.Light)Light.LightSettings.AuxiliaryPower.PersistentId;
             exitZone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_HSU_exit_R8E1.prefab";
             exitZone.AliasPrefix = "KDS Deep, ZONE";
@@ -123,6 +128,16 @@ public partial record LevelLayout
             exitZone.EventsOnOpenDoor
                 .AddActivateChainedPuzzle("CustomSpawnExit", 1.0)
                 .AddSetNavMarker("WE_R8E1_Center", 0.5);
+
+            // Plays the dramatic tension when they see the destruction
+            exitZone.EventsOnTrigger.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.PlaySound,
+                    Trigger = WardenObjectiveEventTrigger.None,
+                    TriggerFilter = "Evt_TriggerVoice_R8E1",
+                    SoundId = Sound.DramaticTension
+                });
 
             var scanDoneEvents = new List<WardenObjectiveEvent>();
             var surviveDuration = level.Tier switch
@@ -168,7 +183,11 @@ public partial record LevelLayout
         }
 
         var start = (ZoneNode)startish;
+        var elevator = planner.GetZone(start)!;
 
+        elevator.Coverage = CoverageMinMax.Small_10;
+
+        Plugin.Logger.LogDebug($"What zone is start? {start}");
 
         // planner.UpdateNode(terminal with { Tags = terminal.Tags.Extend("bulkhead_candidate") });
 
@@ -182,6 +201,7 @@ public partial record LevelLayout
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
+                    (1.0, () => { }),
                 });
                 break;
             }
@@ -194,6 +214,7 @@ public partial record LevelLayout
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
+                    (1.0, () => { }),
                 });
                 break;
             }
@@ -206,6 +227,7 @@ public partial record LevelLayout
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
+                    (1.0, () => { }),
                 });
                 break;
             }
