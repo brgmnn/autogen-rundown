@@ -440,9 +440,9 @@ public static class WardenObjectiveEventCollections
                 Delay = delay,
                 CameraShake = new CameraShake
                 {
-                    Amplitude = 20.0,
-                    Radius = 40.0,
-                    Frequency = 110.0
+                    Amplitude = 5.0,
+                    Radius = 10.0,
+                    Frequency = 90.0
                 }
             });
 

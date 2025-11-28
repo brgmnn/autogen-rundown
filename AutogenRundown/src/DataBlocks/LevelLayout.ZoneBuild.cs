@@ -55,6 +55,36 @@ public partial record LevelLayout
         return (node, zone);
     }
 
+    public (ZoneNode, Zone) AddZone_Left(ZoneNode source, ZoneNode? newNode = null)
+    {
+        var (node, zone) = AddZone(source, newNode);
+
+        zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Left;
+        zone.SetStartExpansionFromExpansion();
+
+        return (node, zone);
+    }
+
+    public (ZoneNode, Zone) AddZone_Right(ZoneNode source, ZoneNode? newNode = null)
+    {
+        var (node, zone) = AddZone(source, newNode);
+
+        zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Right;
+        zone.SetStartExpansionFromExpansion();
+
+        return (node, zone);
+    }
+
+    public (ZoneNode, Zone) AddZone_Backward(ZoneNode source, ZoneNode? newNode = null)
+    {
+        var (node, zone) = AddZone(source, newNode);
+
+        zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Backward;
+        zone.SetStartExpansionFromExpansion();
+
+        return (node, zone);
+    }
+
     /// <summary>
     /// Builds a branch, connecting zones and returning the last zone.
     /// </summary>
