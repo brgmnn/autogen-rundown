@@ -1209,6 +1209,9 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     public List<List<WardenObjectiveEvent>> TimedTerminalSequence_EventsOnSequenceFail = new();
     #endregion
 
+    #region Type=20: Reach KDS Deep
+    #endregion
+
     #region Expedition exit
     /// <summary>
     /// What exit scan to use at the exit

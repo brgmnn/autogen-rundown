@@ -6,7 +6,13 @@ public enum WardenObjectiveSubType
 
     #region Type=5: Special Terminal Command
 
-    BlowReactor = 500
+    BlowReactor = 500,
+
+    #endregion
+
+    #region Type=20: Reach KDS Deep
+
+    ErrorAlarmChase,
 
     #endregion
 }

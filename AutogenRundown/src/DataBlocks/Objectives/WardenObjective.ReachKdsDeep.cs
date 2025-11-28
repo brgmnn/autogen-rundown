@@ -25,6 +25,11 @@ public partial record WardenObjective
     public void PreBuild_ReachKdsDeep(BuildDirector director, Level level)
     {
         director.DisableStartingArea = true;
+
+        SubType = Generator.Pick(new List<WardenObjectiveSubType>
+        {
+            WardenObjectiveSubType.ErrorAlarmChase
+        });
     }
 
     public void Build_ReachKdsDeep(BuildDirector director, Level level)

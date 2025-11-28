@@ -11,6 +11,9 @@ using AutogenRundown.Utils;
 namespace AutogenRundown.DataBlocks;
 
 // Ideas:
+//
+//  * ADMIN_TEMP_OVERRIDE command styled in R8E2
+//  * Really hard error alarm chasing you
 
 public partial record LevelLayout
 {
@@ -18,10 +21,7 @@ public partial record LevelLayout
     /// A mad dash to the exit
     /// </summary>
     /// <param name="start"></param>
-    /// <param name="delay"></param>
-    public void AddKdsDeep_R8E1Exit(
-        ZoneNode start,
-        double delay = 0.0)
+    public void AddKdsDeep_R8E1Exit(ZoneNode start)
     {
         // Level settings
         level.FogSettings = Fog.DefaultFog;
@@ -34,9 +34,7 @@ public partial record LevelLayout
         {
             corridor1Zone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_I_HA_03.prefab";
             corridor1Zone.Coverage = CoverageMinMax.Small_10;
-            corridor1Zone.AliasPrefix = "KDS Deep, ZONE";
             corridor1Zone.Altitude = Altitude.OnlyHigh;
-            // corridor1Zone.LightSettings = Lights.Light.Monochrome_Red;
             corridor1Zone.LightSettings = Lights.Light.RedToYellow_1;
         }
 
@@ -72,6 +70,7 @@ public partial record LevelLayout
             corridor2Zone.UseStaticBioscanPointsInZone = true;
             corridor2Zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
 
+            var delay = Generator.Between(1, 4);
             var explosionDelay = delay + 17;
             var auxLightsDelay = explosionDelay + 4;
 
@@ -189,9 +188,8 @@ public partial record LevelLayout
 
         Plugin.Logger.LogDebug($"What zone is start? {start}");
 
-        // planner.UpdateNode(terminal with { Tags = terminal.Tags.Extend("bulkhead_candidate") });
 
-
+        var endStart = start;
 
         switch (level.Tier, director.Bulkhead)
         {
@@ -240,6 +238,6 @@ public partial record LevelLayout
             }
         }
 
-        AddKdsDeep_R8E1Exit(start, Generator.Between(0, 4));
+        AddKdsDeep_R8E1Exit(endStart);
         }
 }
