@@ -78,6 +78,8 @@ public enum Sound : uint
 
     MonsterNoises = 637231409,
 
+    R8E1_ErrorAlarm = 1068424543,
+
     #endregion
 
 

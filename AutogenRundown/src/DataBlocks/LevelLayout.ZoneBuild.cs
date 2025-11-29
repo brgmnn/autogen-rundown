@@ -85,6 +85,9 @@ public partial record LevelLayout
         return (node, zone);
     }
 
+    public (ZoneNode, Zone) AddZone_Side(ZoneNode source, ZoneNode? newNode = null)
+        => Generator.Flip() ? AddZone_Left(source, newNode) : AddZone_Right(source, newNode);
+
     /// <summary>
     /// Builds a branch, connecting zones and returning the last zone.
     /// </summary>

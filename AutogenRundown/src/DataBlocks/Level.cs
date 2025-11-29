@@ -1346,7 +1346,7 @@ public class Level
 
             // TODO: rebalance enemies
             // TODO: skip this if it's a custom geomorph
-            zone.Coverage = new CoverageMinMax { Min = 80.0, Max = 80.0 };
+            // zone.Coverage = new CoverageMinMax { Min = 80.0, Max = 80.0 };
         }
         #endregion
 

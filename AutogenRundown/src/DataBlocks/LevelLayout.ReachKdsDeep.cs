@@ -2,6 +2,7 @@
 using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Terminals;
 using AutogenRundown.DataBlocks.WorldEvents;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
@@ -14,11 +15,27 @@ namespace AutogenRundown.DataBlocks;
 //
 //  * ADMIN_TEMP_OVERRIDE command styled in R8E2
 //  * Really hard error alarm chasing you
+//
+// Door Intel message on approach for halfway point check:
+//      <color=red>://ERROR: Door in temporary lockdown. Admin clearance required to operate.</color>
+//
+// Intel when door becomes unlocked:
+//      <color=red>ERROR:</color> Connection to <color=yellow>ZONE 521</color> lost. Door unlocked.
 
 public partial record LevelLayout
 {
     /// <summary>
     /// A mad dash to the exit
+    ///
+    /// R8E1 has:
+    ///     * 2x keycard in zone challenges
+    ///     * Doors mostly long team scans or None puzzles
+    ///     * halfway R2E1 hub is a class 1 stealth scan with 4 individual scans
+    ///
+    /// * Checkpoint near the very end
+    /// * Last stand at the door before KDS deep crater
+    /// * Smoke after the explosion in the corridor
+    /// * Smoking crater?
     /// </summary>
     /// <param name="start"></param>
     public void AddKdsDeep_R8E1Exit(ZoneNode start)
@@ -49,7 +66,7 @@ public partial record LevelLayout
             corridor2Zone.SecurityGateToEnter = SecurityGate.Apex;
             corridor2Zone.AliasPrefix = "KDS Deep, ZONE";
             corridor2Zone.Altitude = Altitude.OnlyHigh;
-            corridor2Zone.LightSettings = Lights.Light.RedToYellow_1;
+            corridor2Zone.LightSettings = Lights.Light.RedToWhite_1_R5A2_L1;
 
             var puzzle = Generator.Select(level.Tier switch
             {
@@ -77,7 +94,7 @@ public partial record LevelLayout
             // Events to simulate the reactor blowing
             corridor2Zone.EventsOnDoorScanDone
                 .AddSound(Sound.MachineryBlow, delay)
-                .AddScreenShake(3.0, explosionDelay)
+                .AddScreenShake(1.0, explosionDelay)
                 .AddSetZoneLights(corridor1.ZoneNumber, 0, new SetZoneLight
                 {
                     LightSettings = Light.LightSettings.LightsOff,
@@ -145,7 +162,9 @@ public partial record LevelLayout
                 "B" => 40.0,
                 "C" => 50.0,
                 "D" => 70.0,
-                "E" => 90.0
+                "E" => 90.0,
+
+                _ => 30.0
             };
 
             scanDoneEvents
@@ -181,25 +200,48 @@ public partial record LevelLayout
             throw new Exception("No zone node returned");
         }
 
-        var start = (ZoneNode)startish;
-        var elevator = planner.GetZone(start)!;
+        var elevator = (ZoneNode)startish;
+        planner.AddTags(elevator, "no_enemies");
 
-        elevator.Coverage = CoverageMinMax.Small_10;
+        var elevatorZone = planner.GetZone(elevator)!;
+        elevatorZone.Coverage = CoverageMinMax.Small_10;
 
-        Plugin.Logger.LogDebug($"What zone is start? {start}");
+        var endStart = elevator;
+
+        #region Start challenge
 
 
-        var endStart = start;
 
-        switch (level.Tier, director.Bulkhead)
+        #endregion
+
+        switch (level.Tier)
         {
             #region Tier: C
 
-            case ("C", _):
+            case "C":
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    (1.0, () => { }),
+                    (1.0, () =>
+                    {
+                        var tmp1 = AddBranch_Forward(elevator, 3, zoneCallback: (node, zone) =>
+                        {
+                            zone.GenCorridorGeomorph(level.Complex);
+                            zone.Alarm = Generator.Select(new List<(double, ChainedPuzzle)>
+                            {
+                                (0.6, ChainedPuzzle.None),
+                                (0.4, ChainedPuzzle.TeamScan)
+                            });
+
+                            Plugin.Logger.LogDebug($"What alarm did we write? {zone.Alarm}");
+
+                            planner.AddTags(node, "no_enemies", "no_blood_door");
+                        }).Last();
+
+                        // Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_L_HA_01.prefab
+
+                        endStart = tmp1;
+                    }),
                 });
                 break;
             }
@@ -208,7 +250,7 @@ public partial record LevelLayout
 
             #region Tier: D
 
-            case ("D", _):
+            case "D":
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -221,7 +263,7 @@ public partial record LevelLayout
 
             #region Tier: E
 
-            case ("E", _):
+            case "E":
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -237,6 +279,81 @@ public partial record LevelLayout
                 break;
             }
         }
+
+        #region Mid challenge
+        //
+        // Builds out a middle challenge item
+        //
+        Generator.SelectRun(new List<(double, Action)>
+        {
+            // This is a terminal to disable the KDS deep defenses
+            (1.0, () =>
+            {
+                var (hub, hubZone) = AddZone_Forward(endStart, new ZoneNode
+                {
+                    Tags = new Tags("no_enemies", "no_blood_door")
+                });
+
+                hubZone.CustomGeomorph =
+                    "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_SF_01.prefab";
+
+                var (security, securityZone) = AddZone_Side(hub, new ZoneNode
+                {
+                    MaxConnections = 0,
+                    Tags = new Tags("no_enemies")
+                });
+
+                securityZone.AliasPrefix = "Security, ZONE";
+
+                var terminal = securityZone.TerminalPlacements.First();
+
+                terminal.UniqueCommands.Add(new CustomTerminalCommand
+                {
+                    Command = "KDS-DEEP_DEACTIVATE_DEFENSE",
+                    CommandDesc = "Deactivate KDS Deep",
+                    // CommandEvents = new List<WardenObjectiveEvent>()
+                    //     .AddUnlockDoor(
+                    //         lockedNode.Bulkhead,
+                    //         lockedNode.ZoneNumber,
+                    //         null,
+                    //         WardenObjectiveEventTrigger.OnStart,
+                    //         10)
+                    //     .ToList(),
+                    PostCommandOutputs = new List<TerminalOutput>
+                    {
+                        // 3 for starting command
+                        new()
+                        {
+                            Output = "Connecting to door control plane...",
+                            Type = LineType.SpinningWaitNoDone,
+                            Time = 2.5
+                        },
+                        new()
+                        {
+                            Output = "Confirming valid terminal ID",
+                            Type = LineType.Normal,
+                            Time = 1.5
+                        },
+                        new()
+                        {
+                            Output = "Activating door servo motor systems...",
+                            Type = LineType.SpinningWaitDone,
+                            Time = 3.0
+                        },
+                        new()
+                        {
+                            Output = "Door unlocked.",
+                            Type = LineType.Normal,
+                            Time = 1.0
+                        },
+                    }
+                });
+
+                endStart = hub;
+            }),
+        });
+
+        #endregion
 
         AddKdsDeep_R8E1Exit(endStart);
         }

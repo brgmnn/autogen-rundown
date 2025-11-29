@@ -1209,7 +1209,11 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     public List<List<WardenObjectiveEvent>> TimedTerminalSequence_EventsOnSequenceFail = new();
     #endregion
 
-    #region Type=20: Reach KDS Deep
+    #region Type=20: -CUSTOM- Reach KDS Deep
+
+    [JsonIgnore]
+    public int KdsDeepUnit { get; set; } = 1;
+
     #endregion
 
     #region Expedition exit

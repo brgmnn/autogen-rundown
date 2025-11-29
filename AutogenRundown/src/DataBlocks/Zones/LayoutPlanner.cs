@@ -177,6 +177,9 @@ public class LayoutPlanner
         return node;
     }
 
+    public ZoneNode AddTags(ZoneNode node, params string[] tags)
+        => UpdateNode(node with { Tags = node.Tags.Extend(tags) });
+
     /// <summary>
     /// Handles assigning the right local index and build from index.
     /// </summary>

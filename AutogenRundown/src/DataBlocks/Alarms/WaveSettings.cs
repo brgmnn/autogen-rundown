@@ -167,7 +167,8 @@ public record WaveSettings : DataBlock<WaveSettings>
     /// Default = 0
     /// </summary>
     [JsonProperty("m_survivalWaveSpawnType")]
-    public int SurvivalWaveSpawnType { get; set; } = 0; // 0 or 1
+    public Enemies.SurvivalWaveSpawnType SurvivalWaveSpawnType { get; set; } =
+        Enemies.SurvivalWaveSpawnType.InRelationToClosestAlivePlayer;
 
     /// <summary>
     /// The total population points for waves. The alarm automatically stops if this runs out.

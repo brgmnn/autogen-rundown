@@ -1,8 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
-using AutogenRundown.DataBlocks.Zones;
-using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -30,6 +28,8 @@ public partial record WardenObjective
         {
             WardenObjectiveSubType.ErrorAlarmChase
         });
+
+        KdsDeepUnit = Generator.Between(1, 9);
     }
 
     public void Build_ReachKdsDeep(BuildDirector director, Level level)
@@ -50,6 +50,32 @@ public partial record WardenObjective
         GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
         dataLayer.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToExitGeo;
+
+        switch (SubType)
+        {
+            case WardenObjectiveSubType.ErrorAlarmChase:
+            {
+                EventsOnElevatorLand.AddSound(Sound.R8E1_ErrorAlarm, 2.0, WardenObjectiveEventTrigger.None);
+                WavesOnElevatorLand.Add(new GenericWave
+                {
+                    Settings = (WaveSettings.Error_VeryHard with
+                    {
+                        FilterType = PopulationFilterType.Include,
+                        PopulationFilter = new List<Enemies.EnemyType>
+                        {
+                            Enemies.EnemyType.Standard,
+                            Enemies.EnemyType.MiniBoss
+                        },
+                        OverrideWaveSpawnType = true,
+                        SurvivalWaveSpawnType = Enemies.SurvivalWaveSpawnType.FromElevatorDirection,
+                    }).FindOrPersist(),
+                    Population = WavePopulation.Baseline_Hybrids,
+                    SpawnDelay = 5.0,
+                    TriggerAlarm = true
+                });
+                break;
+            }
+        }
 
         // Set type to empty
         Type = WardenObjectiveType.Empty;
