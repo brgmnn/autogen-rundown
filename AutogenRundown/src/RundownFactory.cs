@@ -334,15 +334,15 @@ public static class RundownFactory
             };
             mainDirector.GenPoints();
 
-            var secondDirector = new BuildDirector
-            {
-                Bulkhead = Bulkhead.Extreme,
-                Complex = complex,
-                Complexity = Complexity.Low,
-                Tier = tier,
-                Objective = WardenObjectiveType.GatherSmallItems,
-            };
-            secondDirector.GenPoints();
+            // var secondDirector = new BuildDirector
+            // {
+            //     Bulkhead = Bulkhead.Extreme,
+            //     Complex = complex,
+            //     Complexity = Complexity.Low,
+            //     Tier = tier,
+            //     Objective = WardenObjectiveType.GatherSmallItems,
+            // };
+            // secondDirector.GenPoints();
 
             var thirdDirector = new BuildDirector
             {
@@ -350,7 +350,7 @@ public static class RundownFactory
                 Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.GatherSmallItems,
+                Objective = WardenObjectiveType.SpecialTerminalCommand
             };
             thirdDirector.GenPoints();
 
@@ -359,11 +359,11 @@ public static class RundownFactory
                 {
                     Tier = tier,
                     Name = title,
-                    Prefix = $"<color=orange>K</color><color=#444444>:</color>C",
+                    Prefix = "<color=orange>K</color><color=#444444>:</color>C",
                     Complex = complex,
                     MainDirector = mainDirector,
-                    SecondaryDirector = secondDirector,
-                    OverloadDirector = thirdDirector,
+                    // SecondaryDirector = secondDirector,
+                    // OverloadDirector = thirdDirector,
                     Settings = new LevelSettings(tier)
                     {
                         Bulkheads = Bulkhead.Main
@@ -372,7 +372,7 @@ public static class RundownFactory
                         // Bulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload
                     },
                     Index = rundown.TierC_Count + 1,
-                    IsTest = false
+                    IsTest = true
                 });
             rundown.AddLevel(testLevel);
         }

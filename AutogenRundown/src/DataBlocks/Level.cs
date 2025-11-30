@@ -236,7 +236,7 @@ public class Level
         blocked.Add((ZoneAliasStart_Main, ZoneAliasStart_Main + mainSize - 1));
 
         // Extreme
-        if (SecondaryLayerEnabled)
+        if (HasExtreme)
         {
             var extremeSize = Layouts[Bulkhead.Extreme].Zones.Count;
 
@@ -246,7 +246,7 @@ public class Level
         }
 
         // Overload
-        if (ThirdLayerEnabled)
+        if (HasOverload)
         {
             var overloadSize = Layouts[Bulkhead.Overload].Zones.Count;
 
@@ -342,7 +342,7 @@ public class Level
     /// <summary>
     /// Allows easy access to the directors without having to switch
     /// </summary>
-    public Dictionary<Bulkhead, BuildDirector> Director { get; private set; } = new();
+    public Dictionary<Bulkhead, BuildDirector> Director { get; } = new();
 
     [JsonIgnore]
     public BuildDirector MainDirector
@@ -529,11 +529,8 @@ public class Level
         set => ObjectiveLayer[Bulkhead.Extreme] = value;
     }
 
-    public bool SecondaryLayerEnabled
-    {
-        get => Layouts.ContainsKey(Bulkhead.Extreme);
-        private set { }
-    }
+    [JsonProperty("SecondaryLayerEnabled")]
+    public bool HasExtreme => Settings.Bulkheads.HasFlag(Bulkhead.Extreme);
 
     public uint SecondaryLayout
     {
@@ -558,11 +555,8 @@ public class Level
         set => ObjectiveLayer[Bulkhead.Overload] = value;
     }
 
-    public bool ThirdLayerEnabled
-    {
-        get => Layouts.ContainsKey(Bulkhead.Overload);
-        private set { }
-    }
+    [JsonProperty("ThirdLayerEnabled")]
+    public bool HasOverload => Settings.Bulkheads.HasFlag(Bulkhead.Overload);
 
     public uint ThirdLayout
     {
@@ -968,10 +962,10 @@ public class Level
          * */
         SelectDirection(Bulkhead.Main);
 
-        if (Settings.Bulkheads.HasFlag(Bulkhead.Extreme))
+        if (HasExtreme)
             SelectDirection(Bulkhead.Extreme);
 
-        if (Settings.Bulkheads.HasFlag(Bulkhead.Overload))
+        if (HasOverload)
             SelectDirection(Bulkhead.Overload);
     }
 
@@ -1180,6 +1174,11 @@ public class Level
         level.GenerateZoneAliasStarts();
         level.BuildBulkheads();
 
+        if (level.Name == "Valiant")
+        {
+            Plugin.Logger.LogDebug($"Ok what are the bulkheads? {level.Settings.Bulkheads}");
+        }
+
         #region Fog settings
         var lowFog = level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)
             ? Fog.LowFog_Infectious
@@ -1275,10 +1274,10 @@ public class Level
          * distributed to. */
         level.PreBuildObjective(Bulkhead.Main);
 
-        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme))
+        if (level.HasExtreme)
             level.PreBuildObjective(Bulkhead.Extreme);
 
-        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload))
+        if (level.HasOverload)
             level.PreBuildObjective(Bulkhead.Overload);
         #endregion
 
@@ -1297,10 +1296,10 @@ public class Level
          * */
         level.BuildLayout(Bulkhead.Main);
 
-        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme))
+        if (level.HasExtreme)
             level.BuildLayout(Bulkhead.Extreme);
 
-        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload))
+        if (level.HasOverload)
             level.BuildLayout(Bulkhead.Overload);
         #endregion
 
@@ -1315,14 +1314,14 @@ public class Level
                 new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
             });
 
-        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme))
+        if (level.HasExtreme)
             level.SecondaryLayerData.BulkheadKeyPlacements.Add(
                 new List<ZonePlacementData>
                 {
                     new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
                 });
 
-        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload))
+        if (level.HasOverload)
             level.ThirdLayerData.BulkheadKeyPlacements.Add(
                 new List<ZonePlacementData>
                 {
@@ -1353,10 +1352,10 @@ public class Level
         #region Finalize -- WardenObjective.PostBuild()
         level.GetObjective(Bulkhead.Main)!.PostBuild(level.MainDirector, level);
 
-        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme) && level.GetObjective(Bulkhead.Extreme) != null)
+        if (level.HasExtreme && level.GetObjective(Bulkhead.Extreme) != null)
             level.GetObjective(Bulkhead.Extreme)!.PostBuild(level.SecondaryDirector, level);
 
-        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload) && level.GetObjective(Bulkhead.Overload) != null)
+        if (level.HasOverload && level.GetObjective(Bulkhead.Overload) != null)
             level.GetObjective(Bulkhead.Overload)!.PostBuild(level.OverloadDirector, level);
         #endregion
 

@@ -973,7 +973,6 @@ public partial record LevelLayout : DataBlock<LevelLayout>
     /// <param name="level"></param>
     /// <param name="director"></param>
     /// <param name="objective"></param>
-    /// <param name="direction">What direction we should build this level layout for</param>
     /// <returns></returns>
     public static LevelLayout Build(
         Level level,
