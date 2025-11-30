@@ -158,15 +158,7 @@ public partial record Zone : DataBlock<Zone>
     ///     * Turn on the security error scans from R8?
     ///
     /// </summary>
-    /// <param name="puzzlePack"></param>
-    /// <param name="wavePopulationPack"></param>
-    /// <param name="waveSettingsPack"></param>
-    public void RollAlarms(
-        Level level,
-        LevelLayout layout,
-        ICollection<(double, int, ChainedPuzzle)> puzzlePack,
-        ICollection<(double, int, WavePopulation)> wavePopulationPack,
-        ICollection<(double, int, WaveSettings)> waveSettingsPack)
+    public void RollAlarms()
     {
         // TODO: should we just be trying to set the alarm if there isn't already an alarm here?
         if (LocalIndex == 0 ||
@@ -179,7 +171,7 @@ public partial record Zone : DataBlock<Zone>
         }
 
         // Grab a random puzzle from the puzzle pack
-        var puzzle = Generator.DrawSelect(puzzlePack);
+        var puzzle = Generator.DrawSelect(layout.PuzzlePack);
 
         if (puzzle == null)
             return;
@@ -188,8 +180,8 @@ public partial record Zone : DataBlock<Zone>
         // We only copy the population settings in if we have an actual alarm here
         if (puzzle.TriggerAlarmOnActivate && !puzzle.FixedAlarm)
         {
-            var population = Generator.DrawSelect(wavePopulationPack)!;
-            var settings = Generator.DrawSelect(waveSettingsPack)!;
+            var population = Generator.DrawSelect(layout.WavePopulationPack);
+            var settings = Generator.DrawSelect(layout.WaveSettingsPack);
 
             // Rescale settings by difficulty factor
             if (!population.DifficultyFactor.ApproxEqual(1.0))
