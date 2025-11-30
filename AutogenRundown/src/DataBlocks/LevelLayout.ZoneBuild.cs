@@ -132,7 +132,7 @@ public partial record LevelLayout
     /// <param name="branch"></param>
     /// <param name="zoneCallback"></param>
     /// <returns></returns>
-    public ICollection<ZoneNode> AddBranch(
+    public List<ZoneNode> AddBranch(
         ZoneNode baseNode,
         int zoneCount,
         string branch = "primary",
@@ -170,7 +170,7 @@ public partial record LevelLayout
     /// <param name="branch"></param>
     /// <param name="zoneCallback"></param>
     /// <returns></returns>
-    public ICollection<ZoneNode> AddBranch_Forward(
+    public List<ZoneNode> AddBranch_Forward(
         ZoneNode baseNode,
         int zoneCount,
         string branch = "primary",
@@ -185,6 +185,48 @@ public partial record LevelLayout
                 zoneCallback?.Invoke(node, zone);
             });
 
+    public List<ZoneNode> AddBranch_Left(
+        ZoneNode baseNode,
+        int zoneCount,
+        string branch = "primary",
+        Action<ZoneNode, Zone>? zoneCallback = null)
+    => AddBranch(baseNode, zoneCount, branch,
+        (node, zone) =>
+        {
+            zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Left;
+            zone.SetStartExpansionFromExpansion();
+
+            zoneCallback?.Invoke(node, zone);
+        });
+
+    public List<ZoneNode> AddBranch_Right(
+        ZoneNode baseNode,
+        int zoneCount,
+        string branch = "primary",
+        Action<ZoneNode, Zone>? zoneCallback = null)
+    => AddBranch(baseNode, zoneCount, branch,
+        (node, zone) =>
+        {
+            zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Right;
+            zone.SetStartExpansionFromExpansion();
+
+            zoneCallback?.Invoke(node, zone);
+        });
+
+    public List<ZoneNode> AddBranch_Backward(
+        ZoneNode baseNode,
+        int zoneCount,
+        string branch = "primary",
+        Action<ZoneNode, Zone>? zoneCallback = null)
+    => AddBranch(baseNode, zoneCount, branch,
+        (node, zone) =>
+        {
+            zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Backward;
+            zone.SetStartExpansionFromExpansion();
+
+            zoneCallback?.Invoke(node, zone);
+        });
+
     /// <summary>
     /// Wraps AddBranch() with an automatic callback to set the zone expansion
     /// to either the left or right relative direction. Nice in conjunction
@@ -195,25 +237,14 @@ public partial record LevelLayout
     /// <param name="branch"></param>
     /// <param name="zoneCallback"></param>
     /// <returns></returns>
-    public ICollection<ZoneNode> AddBranch_Side(
+    public List<ZoneNode> AddBranch_Side(
         ZoneNode baseNode,
         int zoneCount,
         string branch = "primary",
         Action<ZoneNode, Zone>? zoneCallback = null)
-    {
-        var direction = Generator.Flip()
-            ? level.Settings.GetDirections(director.Bulkhead).Left
-            : level.Settings.GetDirections(director.Bulkhead).Right;
-
-        return AddBranch(baseNode, zoneCount, branch,
-            (node, zone) =>
-            {
-                zone.ZoneExpansion = direction;
-                zone.SetStartExpansionFromExpansion();
-
-                zoneCallback?.Invoke(node, zone);
-            });
-    }
+    => Generator.Flip()
+        ? AddBranch_Left(baseNode, zoneCount, branch, zoneCallback)
+        : AddBranch_Right(baseNode, zoneCount, branch, zoneCallback);
 
     /// <summary>
     /// Creates the very first zone in the level, which is the elevator zone. This zone doesn't

@@ -899,17 +899,6 @@ public partial record Zone : DataBlock<Zone>
     public Placement DisinfectionPlacement { get; set; } = new();
 
     public List<FunctionPlacementData> DisinfectionStationPlacements { get; set; } = new();
-
-    /// <summary>
-    /// Takes an input function and applies it to each of the three major resource multiples.
-    /// </summary>
-    /// <param name="transformer"></param>
-    public void SetMainResourceMulti(Func<double, double> transformer)
-    {
-        HealthPacks = transformer(HealthPacks);
-        ToolPacks = transformer(ToolPacks);
-        AmmoPacks = transformer(AmmoPacks);
-    }
     #endregion
 
     #region World Events
