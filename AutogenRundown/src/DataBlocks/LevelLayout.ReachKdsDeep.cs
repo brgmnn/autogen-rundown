@@ -21,11 +21,12 @@ namespace AutogenRundown.DataBlocks;
 //
 // Intel when door becomes unlocked:
 //      <color=red>ERROR:</color> Connection to <color=yellow>ZONE 521</color> lost. Door unlocked.
-
+//
+// R8E1 has 19 zones in it (main)
 public partial record LevelLayout
 {
     /// <summary>
-    /// A mad dash to the exit
+    /// A mad dash to the exit. Adds +3 zones
     ///
     /// R8E1 has:
     ///     * 2x keycard in zone challenges
@@ -36,6 +37,7 @@ public partial record LevelLayout
     /// * Last stand at the door before KDS deep crater
     /// * Smoke after the explosion in the corridor
     /// * Smoking crater?
+    ///
     /// </summary>
     /// <param name="start"></param>
     public void AddKdsDeep_R8E1Exit(ZoneNode start)
@@ -224,23 +226,44 @@ public partial record LevelLayout
                 {
                     (1.0, () =>
                     {
-                        var tmp1 = AddBranch_Forward(elevator, 3, zoneCallback: (node, zone) =>
+                        var segment1 = AddBranch_Forward(elevator, 3, zoneCallback: (node, zone) =>
                         {
                             zone.GenCorridorGeomorph(level.Complex);
                             zone.Alarm = Generator.Select(new List<(double, ChainedPuzzle)>
                             {
-                                (0.6, ChainedPuzzle.None),
+                                (0.6, ChainedPuzzle.SkipZone),
                                 (0.4, ChainedPuzzle.TeamScan)
                             });
 
-                            Plugin.Logger.LogDebug($"What alarm did we write? {zone.Alarm}");
-
                             planner.AddTags(node, "no_enemies", "no_blood_door");
-                        }).Last();
+                        });
 
-                        // Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_L_HA_01.prefab
+                        var (turn1, turn1Zone) = AddZone_Forward(
+                            segment1.Last(),
+                            new ZoneNode { MaxConnections = 1, Tags = new Tags("no_enemies") });
+                        turn1Zone.CustomGeomorph =
+                            "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_L_HA_01.prefab";
 
-                        endStart = tmp1;
+                        Generator.SelectRun(new List<(double, Action)>
+                        {
+                            // (0.33, () => AddKeycardPuzzle(turn1, segment1[2])),
+                            // (0.33, () => AddGeneratorPuzzle(turn1, segment1[2])),
+                            (0.33, () => AddTerminalUnlockPuzzle(turn1, segment1[2])),
+                        });
+
+                        var segment2 = AddBranch_Left(turn1, 2, zoneCallback: (node, zone) =>
+                        {
+                            zone.GenCorridorGeomorph(level.Complex);
+                            zone.Alarm = Generator.Select(new List<(double, ChainedPuzzle)>
+                            {
+                                (0.4, ChainedPuzzle.SkipZone),
+                                (0.6, ChainedPuzzle.TeamScan)
+                            });
+
+                            planner.AddTags(node, "no_enemies");
+                        });
+
+                        endStart = segment2.Last();
                     }),
                 });
                 break;

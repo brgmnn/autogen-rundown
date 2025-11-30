@@ -144,31 +144,6 @@ public static class EventCollectionExtensions
         return events;
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="events"></param>
-    /// <param name="message"></param>
-    /// <param name="delay"></param>
-    /// <returns></returns>
-    public static ICollection<WardenObjectiveEvent> AddSound(
-        this ICollection<WardenObjectiveEvent> events,
-        Sound sound,
-        double delay = 0.0,
-        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart)
-    {
-        events.Add(
-            new WardenObjectiveEvent
-            {
-                Type = WardenObjectiveEventType.PlaySound,
-                Trigger = trigger,
-                Delay = delay,
-                SoundId = sound
-            });
-
-        return events;
-    }
-
     public static ICollection<WardenObjectiveEvent> AddLightsOff(
         this ICollection<WardenObjectiveEvent> events,
         double delay = 0.0,

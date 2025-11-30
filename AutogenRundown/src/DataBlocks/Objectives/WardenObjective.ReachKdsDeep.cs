@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -55,24 +56,26 @@ public partial record WardenObjective
         {
             case WardenObjectiveSubType.ErrorAlarmChase:
             {
-                EventsOnElevatorLand.AddSound(Sound.R8E1_ErrorAlarm, 2.0, WardenObjectiveEventTrigger.None);
-                WavesOnElevatorLand.Add(new GenericWave
-                {
-                    Settings = (WaveSettings.Error_VeryHard with
-                    {
-                        FilterType = PopulationFilterType.Include,
-                        PopulationFilter = new List<Enemies.EnemyType>
+                EventsOnElevatorLand
+                    .AddSound(Sound.R8E1_ErrorAlarm, 2.0, WardenObjectiveEventTrigger.None)
+                    .AddSpawnWave(
+                        new GenericWave
                         {
-                            Enemies.EnemyType.Standard,
-                            Enemies.EnemyType.MiniBoss
-                        },
-                        OverrideWaveSpawnType = true,
-                        SurvivalWaveSpawnType = Enemies.SurvivalWaveSpawnType.FromElevatorDirection,
-                    }).FindOrPersist(),
-                    Population = WavePopulation.Baseline_Hybrids,
-                    SpawnDelay = 5.0,
-                    TriggerAlarm = true
-                });
+                            Settings = (WaveSettings.Error_VeryHard with
+                            {
+                                FilterType = PopulationFilterType.Include,
+                                PopulationFilter = new List<Enemies.EnemyType>
+                                {
+                                    Enemies.EnemyType.Standard,
+                                    Enemies.EnemyType.MiniBoss
+                                },
+                                OverrideWaveSpawnType = true,
+                                SurvivalWaveSpawnType = Enemies.SurvivalWaveSpawnType.FromElevatorDirection,
+                            }).FindOrPersist(),
+                            Population = WavePopulation.Baseline_Hybrids,
+                            SpawnDelay = 5.0,
+                            TriggerAlarm = true
+                        }, 2.0);
                 break;
             }
         }

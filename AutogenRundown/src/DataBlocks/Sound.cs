@@ -80,6 +80,8 @@ public enum Sound : uint
 
     R8E1_ErrorAlarm = 1068424543,
 
+    R8E1_GargantaWarning = 3030964334,
+
     #endregion
 
 

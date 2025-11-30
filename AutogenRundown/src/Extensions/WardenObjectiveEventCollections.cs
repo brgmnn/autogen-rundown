@@ -451,6 +451,35 @@ public static class WardenObjectiveEventCollections
 
     #endregion
 
+    #region Sound
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="message"></param>
+    /// <param name="delay"></param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddSound(
+        this ICollection<WardenObjectiveEvent> events,
+        Sound sound,
+        double delay = 0.0,
+        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.PlaySound,
+                Trigger = trigger,
+                Delay = delay,
+                SoundId = sound
+            });
+
+        return events;
+    }
+
+    #endregion
+
     #region Timers
     /// <summary>
     /// Adjusts the current AWO timer time. Can accept both positive and negative duration

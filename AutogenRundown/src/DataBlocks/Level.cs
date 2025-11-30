@@ -8,6 +8,7 @@ using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Logs;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Extensions;
 using AutogenRundown.GeneratorData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
