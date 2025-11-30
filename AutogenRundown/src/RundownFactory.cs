@@ -33,6 +33,8 @@ public static class RundownFactory
             WardenObjectiveType.CorruptedTerminalUplink => prefix + "<color=orange>Dual Network Uplink</color>\n",
             WardenObjectiveType.TimedTerminalSequence => prefix + "<color=orange>Timed Sequence</color>\n",
 
+            WardenObjectiveType.ReachKdsDeep => prefix + "<color=orange>Enter KDS Deep</color>\n",
+
             _ => ""
         };
     }
@@ -315,11 +317,10 @@ public static class RundownFactory
 
         #region Test C Levels
         #if true
-        #if true
         if (withFixed || true)
         {
             const string tier = "C";
-            const string title = "Sub Test";
+            const string title = "Valiant";
             const Complex complex = Complex.Mining;
 
             var mainDirector = new BuildDirector
@@ -358,6 +359,7 @@ public static class RundownFactory
                 {
                     Tier = tier,
                     Name = title,
+                    Prefix = $"<color=orange>K</color><color=#444444>:</color>C",
                     Complex = complex,
                     MainDirector = mainDirector,
                     SecondaryDirector = secondDirector,
@@ -370,11 +372,10 @@ public static class RundownFactory
                         // Bulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload
                     },
                     Index = rundown.TierC_Count + 1,
-                    IsTest = true
+                    IsTest = false
                 });
             rundown.AddLevel(testLevel);
         }
-        #endif
         #endif
         #endregion
         #endregion
