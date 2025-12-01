@@ -231,110 +231,76 @@ public partial record LevelLayout
         {
             "D" => new List<(double chance, int count, ChainedPuzzle puzzle)>
             {
-                (0.5, 8, ChainedPuzzle.None),
-                (0.5, 12, ChainedPuzzle.TeamScan)
+                (0.1,  8, ChainedPuzzle.None),
+                (0.1, 12, ChainedPuzzle.TeamScan),
+                (0.4,  2, ChainedPuzzle.StealthScan1),
+                (0.4,  1, ChainedPuzzle.StealthScan2)
             },
 
             "E" => new List<(double chance, int count, ChainedPuzzle puzzle)>
             {
-                (0.5, 6, ChainedPuzzle.None),
-                (0.5, 14, ChainedPuzzle.TeamScan)
+                (0.10,  6, ChainedPuzzle.None),
+                (0.10, 14, ChainedPuzzle.TeamScan),
+                (0.35,  2, ChainedPuzzle.StealthScan1),
+                (0.45,  1, ChainedPuzzle.StealthScan2)
             },
 
             // A/B/C
             _ => new List<(double chance, int count, ChainedPuzzle puzzle)>
             {
-                (0.5, 10, ChainedPuzzle.None),
-                (0.5, 10, ChainedPuzzle.TeamScan)
+                (0.2, 10, ChainedPuzzle.None),
+                (0.2, 10, ChainedPuzzle.TeamScan),
+                (0.8,  1, ChainedPuzzle.StealthScan1)
             },
         };
 
         #region Start challenge
-        switch (level.Tier)
+        //
+        // All tiers will pick from the same category of options
+        //
+        Generator.SelectRun(new List<(double, Action)>
         {
-            #region Tier: C
-
-            case "C":
+            (1.0, () =>
             {
+                var segment1 = AddBranch_Forward(elevator, 3, zoneCallback: (node, zone) =>
+                {
+                    node = planner.UpdateNode(node with { MaxConnections = 1 });
+                    node = planner.AddTags(node, "no_enemies", "no_blood_door");
+                    zone.GenCorridorGeomorph(level.Complex);
+                    zone.HealthPacks = 0.0;
+                    zone.ToolPacks = 0.0;
+                    zone.AmmoPacks = 1.0;
+                });
+
+                var (turn1, turn1Zone) = AddZone_Forward(
+                    segment1.Last(),
+                    new ZoneNode { MaxConnections = 1, Tags = new Tags("no_enemies") });
+                turn1Zone.CustomGeomorph =
+                    "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_L_HA_01.prefab";
+                turn1Zone.HealthPacks = 1.0;
+                turn1Zone.ToolPacks = 0.0;
+                turn1Zone.AmmoPacks = 1.0;
+
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    (1.0, () =>
-                    {
-                        var segment1 = AddBranch_Forward(elevator, 3, zoneCallback: (node, zone) =>
-                        {
-                            node = planner.UpdateNode(node with { MaxConnections = 1 });
-                            node = planner.AddTags(node, "no_enemies", "no_blood_door");
-                            zone.GenCorridorGeomorph(level.Complex);
-                            zone.HealthPacks = 0.0;
-                            zone.ToolPacks = 0.0;
-                            zone.AmmoPacks = 1.0;
-                        });
-
-                        var (turn1, turn1Zone) = AddZone_Forward(
-                            segment1.Last(),
-                            new ZoneNode { MaxConnections = 1, Tags = new Tags("no_enemies") });
-                        turn1Zone.CustomGeomorph =
-                            "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_L_HA_01.prefab";
-                        turn1Zone.HealthPacks = 1.0;
-                        turn1Zone.ToolPacks = 0.0;
-                        turn1Zone.AmmoPacks = 1.0;
-
-                        Generator.SelectRun(new List<(double, Action)>
-                        {
-                            (0.33, () => AddKeycardPuzzle(turn1, segment1[2])),
-                            (0.33, () => AddGeneratorPuzzle(turn1, segment1[2])),
-                            (0.33, () => AddTerminalUnlockPuzzle(turn1, segment1[2])),
-                        });
-
-                        var segment2 = AddBranch_Left(turn1, 2, zoneCallback: (node, zone) =>
-                        {
-                            node = planner.UpdateNode(node with { MaxConnections = 1 });
-                            planner.AddTags(node, "no_enemies");
-                            zone.GenCorridorGeomorph(level.Complex);
-                            zone.HealthPacks = 1.0;
-                            zone.ToolPacks = 0.0;
-                            zone.AmmoPacks = 1.0;
-                        });
-
-                        endStart = segment2.Last();
-                    }),
+                    (0.33, () => AddKeycardPuzzle(turn1, segment1[2])),
+                    (0.33, () => AddGeneratorPuzzle(turn1, segment1[2])),
+                    (0.33, () => AddTerminalUnlockPuzzle(turn1, segment1[2])),
                 });
-                break;
-            }
 
-            #endregion
-
-            #region Tier: D
-
-            case "D":
-            {
-                Generator.SelectRun(new List<(double, Action)>
+                var segment2 = AddBranch_Left(turn1, 2, zoneCallback: (node, zone) =>
                 {
-                    (1.0, () => { }),
+                    node = planner.UpdateNode(node with { MaxConnections = 1 });
+                    planner.AddTags(node, "no_enemies");
+                    zone.GenCorridorGeomorph(level.Complex);
+                    zone.HealthPacks = 1.0;
+                    zone.ToolPacks = 0.0;
+                    zone.AmmoPacks = 1.0;
                 });
-                break;
-            }
 
-            #endregion
-
-            #region Tier: E
-
-            case "E":
-            {
-                Generator.SelectRun(new List<(double, Action)>
-                {
-                    (1.0, () => { }),
-                });
-                break;
-            }
-
-            #endregion
-
-            default:
-            {
-                break;
-            }
-        }
+                endStart = segment2.Last();
+            }),
+        });
 
         var toMidClearTime = planner
             .TraverseToElevator(endStart)
@@ -492,68 +458,26 @@ public partial record LevelLayout
         #endregion
 
         #region End challenge
-        switch (level.Tier)
+        Generator.SelectRun(new List<(double, Action)>
         {
-            #region Tier: C
-
-            case "C":
+            (1.0, () =>
             {
+                var segment1 = AddBranch_Right(endStart, 2, zoneCallback: (node, zone) =>
+                {
+                    planner.AddTags(node, "no_enemies", "no_blood_door");
+                    zone.GenCorridorGeomorph(level.Complex);
+                });
+
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    (1.0, () =>
-                    {
-                        var segment1 = AddBranch_Right(endStart, 2, zoneCallback: (node, zone) =>
-                        {
-                            planner.AddTags(node, "no_enemies", "no_blood_door");
-                            zone.GenCorridorGeomorph(level.Complex);
-                        });
-
-                        Generator.SelectRun(new List<(double, Action)>
-                        {
-                            (0.33, () => AddKeycardPuzzle(segment1[1], segment1[0])),
-                            (0.33, () => AddGeneratorPuzzle(segment1[1], segment1[0])),
-                            (0.33, () => AddTerminalUnlockPuzzle(segment1[1], segment1[0])),
-                        });
-
-                        endStart = segment1.Last();
-                    }),
+                    (0.33, () => AddKeycardPuzzle(segment1[1], segment1[0])),
+                    (0.33, () => AddGeneratorPuzzle(segment1[1], segment1[0])),
+                    (0.33, () => AddTerminalUnlockPuzzle(segment1[1], segment1[0])),
                 });
-                break;
-            }
 
-            #endregion
-
-            #region Tier: D
-
-            case "D":
-            {
-                Generator.SelectRun(new List<(double, Action)>
-                {
-                    (1.0, () => { }),
-                });
-                break;
-            }
-
-            #endregion
-
-            #region Tier: E
-
-            case "E":
-            {
-                Generator.SelectRun(new List<(double, Action)>
-                {
-                    (1.0, () => { }),
-                });
-                break;
-            }
-
-            #endregion
-
-            default:
-            {
-                break;
-            }
-        }
+                endStart = segment1.Last();
+            }),
+        });
         #endregion
 
         AddKdsDeep_R8E1Exit(endStart);
