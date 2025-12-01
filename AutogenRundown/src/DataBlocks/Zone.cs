@@ -498,7 +498,7 @@ public partial record Zone : DataBlock<Zone>
                     * clearTimeFactor_AlarmsTime
                 + Alarm.WantedDistanceFromStartPos
                     * clearTimeFactor_AlarmsTraverse
-                + (Alarm.Puzzle.Count - 1)
+                + Math.Max(0, Alarm.Puzzle.Count - 1)
                     * Alarm.WantedDistanceBetweenPuzzleComponents
                     * clearTimeFactor_AlarmsTraverse;
 
