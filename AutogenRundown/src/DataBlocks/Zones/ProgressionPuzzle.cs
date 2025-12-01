@@ -15,6 +15,12 @@ public class ProgressionPuzzle
         CustomText = Lore.LockedDoorMessage
     };
 
+    public static readonly ProgressionPuzzle AdminLocked = new()
+    {
+        PuzzleType = ProgressionPuzzleType.Locked,
+        CustomText = "<color=red>://ERROR: Door in temporary lockdown. Admin clearance required to operate.</color>"
+    };
+
     /// <summary>
     /// The type of the puzzle.
     /// </summary>

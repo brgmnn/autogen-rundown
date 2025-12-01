@@ -37,18 +37,9 @@ public partial record WardenObjective
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
-        MainObjective = new Text("Find Computer terminal [ITEM_SERIAL] and input the backdoor command [SPECIAL_COMMAND]");
-        FindLocationInfo = "Gather information about the location of [ITEM_SERIAL]";
+        MainObjective = new Text("Reach and enter KDS Deep");
+        // FindLocationInfo = "Gather information about the location of [ITEM_SERIAL]";
         FindLocationInfoHelp = "Access more data in the terminal maintenance system";
-        GoToZone = new Text("Navigate to [ITEM_ZONE] and find [ITEM_SERIAL]");
-        GoToZoneHelp = "Use information in the environment to find [ITEM_ZONE]";
-        InZoneFindItem = "Find [ITEM_SERIAL] somewhere inside [ITEM_ZONE]";
-        InZoneFindItemHelp = "Use maintenance terminal command PING to find [ITEM_SERIAL]";
-        SolveItem = "Proceed to input the backdoor command [SPECIAL_COMMAND] in [ITEM_SERIAL]";
-
-        GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
-        GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
-        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
         dataLayer.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToExitGeo;
 
@@ -58,6 +49,11 @@ public partial record WardenObjective
             {
                 EventsOnElevatorLand
                     .AddSound(Sound.R8E1_ErrorAlarm, 2.0, WardenObjectiveEventTrigger.None)
+                    .AddSound(
+                        Sound.R8E1_GargantaWarning,
+                        subtitle: 442824023,
+                        delay: 7.0,
+                        trigger: WardenObjectiveEventTrigger.None)
                     .AddSpawnWave(
                         new GenericWave
                         {
@@ -73,9 +69,9 @@ public partial record WardenObjective
                                 SurvivalWaveSpawnType = Enemies.SurvivalWaveSpawnType.FromElevatorDirection,
                             }).FindOrPersist(),
                             Population = WavePopulation.Baseline_Hybrids,
-                            SpawnDelay = 5.0,
+                            SpawnDelay = 0.0,
                             TriggerAlarm = true
-                        }, 2.0);
+                        }, 30.0);
                 break;
             }
         }

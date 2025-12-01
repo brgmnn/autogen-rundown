@@ -67,6 +67,7 @@ public partial record LevelLayout
             corridor2Zone.Coverage = CoverageMinMax.Tiny_3;
             corridor2Zone.SecurityGateToEnter = SecurityGate.Apex;
             corridor2Zone.AliasPrefix = "KDS Deep, ZONE";
+            corridor2Zone.AliasPrefixShort = "KDS";
             corridor2Zone.Altitude = Altitude.OnlyHigh;
             corridor2Zone.LightSettings = Lights.Light.RedToWhite_1_R5A2_L1;
 
@@ -138,6 +139,7 @@ public partial record LevelLayout
             exitZone.LightSettings = (Lights.Light)Light.LightSettings.AuxiliaryPower.PersistentId;
             exitZone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_HSU_exit_R8E1.prefab";
             exitZone.AliasPrefix = "KDS Deep, ZONE";
+            exitZone.AliasPrefixShort = "KDS";
             exitZone.Altitude = Altitude.OnlyHigh;
             exitZone.LightSettings = Lights.Light.Reactor_blue_to_red_all_on_1;
 
@@ -210,12 +212,29 @@ public partial record LevelLayout
 
         var endStart = elevator;
 
+        PuzzlePack = level.Tier switch
+        {
+            "D" => new List<(double chance, int count, ChainedPuzzle puzzle)>
+            {
+                (0.5, 8, ChainedPuzzle.None),
+                (0.5, 12, ChainedPuzzle.TeamScan)
+            },
+
+            "E" => new List<(double chance, int count, ChainedPuzzle puzzle)>
+            {
+                (0.5, 6, ChainedPuzzle.None),
+                (0.5, 14, ChainedPuzzle.TeamScan)
+            },
+
+            // A/B/C
+            _ => new List<(double chance, int count, ChainedPuzzle puzzle)>
+            {
+                (0.5, 10, ChainedPuzzle.None),
+                (0.5, 10, ChainedPuzzle.TeamScan)
+            },
+        };
+
         #region Start challenge
-
-
-
-        #endregion
-
         switch (level.Tier)
         {
             #region Tier: C
@@ -228,14 +247,8 @@ public partial record LevelLayout
                     {
                         var segment1 = AddBranch_Forward(elevator, 3, zoneCallback: (node, zone) =>
                         {
-                            zone.GenCorridorGeomorph(level.Complex);
-                            zone.Alarm = Generator.Select(new List<(double, ChainedPuzzle)>
-                            {
-                                (0.6, ChainedPuzzle.SkipZone),
-                                (0.4, ChainedPuzzle.TeamScan)
-                            });
-
                             planner.AddTags(node, "no_enemies", "no_blood_door");
+                            zone.GenCorridorGeomorph(level.Complex);
                         });
 
                         var (turn1, turn1Zone) = AddZone_Forward(
@@ -246,21 +259,15 @@ public partial record LevelLayout
 
                         Generator.SelectRun(new List<(double, Action)>
                         {
-                            // (0.33, () => AddKeycardPuzzle(turn1, segment1[2])),
-                            // (0.33, () => AddGeneratorPuzzle(turn1, segment1[2])),
+                            (0.33, () => AddKeycardPuzzle(turn1, segment1[2])),
+                            (0.33, () => AddGeneratorPuzzle(turn1, segment1[2])),
                             (0.33, () => AddTerminalUnlockPuzzle(turn1, segment1[2])),
                         });
 
                         var segment2 = AddBranch_Left(turn1, 2, zoneCallback: (node, zone) =>
                         {
-                            zone.GenCorridorGeomorph(level.Complex);
-                            zone.Alarm = Generator.Select(new List<(double, ChainedPuzzle)>
-                            {
-                                (0.4, ChainedPuzzle.SkipZone),
-                                (0.6, ChainedPuzzle.TeamScan)
-                            });
-
                             planner.AddTags(node, "no_enemies");
+                            zone.GenCorridorGeomorph(level.Complex);
                         });
 
                         endStart = segment2.Last();
@@ -302,6 +309,7 @@ public partial record LevelLayout
                 break;
             }
         }
+        #endregion
 
         #region Mid challenge
         //
@@ -328,20 +336,31 @@ public partial record LevelLayout
 
                 securityZone.AliasPrefix = "Security, ZONE";
 
+                var (next, nextZone) = AddZone_Forward(hub, new ZoneNode
+                {
+                    Tags = new Tags("no_enemies", "no_blood_door")
+                });
+                nextZone.ProgressionPuzzleToEnter = ProgressionPuzzle.AdminLocked;
+
                 var terminal = securityZone.TerminalPlacements.First();
 
                 terminal.UniqueCommands.Add(new CustomTerminalCommand
                 {
                     Command = "KDS-DEEP_DEACTIVATE_DEFENSE",
                     CommandDesc = "Deactivate KDS Deep",
-                    // CommandEvents = new List<WardenObjectiveEvent>()
-                    //     .AddUnlockDoor(
-                    //         lockedNode.Bulkhead,
-                    //         lockedNode.ZoneNumber,
-                    //         null,
-                    //         WardenObjectiveEventTrigger.OnStart,
-                    //         10)
-                    //     .ToList(),
+                    CommandEvents = new List<WardenObjectiveEvent>()
+                        .AddUnlockDoor(
+                            next.Bulkhead,
+                            next.ZoneNumber,
+                            null,
+                            WardenObjectiveEventTrigger.OnStart,
+                            10)
+                        .AddUpdateSubObjective(
+                            header: new Text($"Proceed to KDS Deep"),
+                            description: new Text($"Use information in the environment to find KDS Deep"),
+                            intel: $"Door unlocked. Proceed to KDS Deep",
+                            delay: 13.0)
+                        .ToList(),
                     PostCommandOutputs = new List<TerminalOutput>
                     {
                         // 3 for starting command
@@ -372,10 +391,81 @@ public partial record LevelLayout
                     }
                 });
 
-                endStart = hub;
+                objective.EventsOnElevatorLand.AddUpdateSubObjective(
+                    header: new Text($"Find {Intel.Terminal(security)} and deactivate KDS Defense"),
+                    description: new Text($"Use information in the environment to find {Intel.Terminal(security)}"),
+                    intel: $"Find {Intel.Terminal(security)} in the KDS Security zone",
+                    delay: 5.0);
+
+                endStart = next;
             }),
         });
 
+        #endregion
+
+        #region End challenge
+        switch (level.Tier)
+        {
+            #region Tier: C
+
+            case "C":
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    (1.0, () =>
+                    {
+                        var segment1 = AddBranch_Right(endStart, 2, zoneCallback: (node, zone) =>
+                        {
+                            planner.AddTags(node, "no_enemies", "no_blood_door");
+                            zone.GenCorridorGeomorph(level.Complex);
+                        });
+
+                        Generator.SelectRun(new List<(double, Action)>
+                        {
+                            (0.33, () => AddKeycardPuzzle(segment1[1], segment1[0])),
+                            (0.33, () => AddGeneratorPuzzle(segment1[1], segment1[0])),
+                            (0.33, () => AddTerminalUnlockPuzzle(segment1[1], segment1[0])),
+                        });
+
+                        endStart = segment1.Last();
+                    }),
+                });
+                break;
+            }
+
+            #endregion
+
+            #region Tier: D
+
+            case "D":
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    (1.0, () => { }),
+                });
+                break;
+            }
+
+            #endregion
+
+            #region Tier: E
+
+            case "E":
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    (1.0, () => { }),
+                });
+                break;
+            }
+
+            #endregion
+
+            default:
+            {
+                break;
+            }
+        }
         #endregion
 
         AddKdsDeep_R8E1Exit(endStart);

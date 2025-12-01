@@ -381,6 +381,35 @@ public static class WardenObjectiveEventCollections
         return events;
     }
 
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="header"></param>
+    /// <param name="description"></param>
+    /// <param name="intel"></param>
+    /// <param name="delay"></param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddUpdateSubObjective(
+        this ICollection<WardenObjectiveEvent> events,
+        DataBlocks.Text? header = null,
+        DataBlocks.Text? description = null,
+        string? intel = null,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.UpdateCustomSubObjective,
+                SubObjective = description ?? DataBlocks.Text.None,
+                SubObjectiveHeader = header ?? DataBlocks.Text.None,
+                WardenIntel = intel ?? "",
+                Delay = delay
+            });
+
+        return events;
+    }
+
     public static ICollection<WardenObjectiveEvent> AddWinOnDeath(
         this ICollection<WardenObjectiveEvent> events,
         double delay = 0.0)
@@ -464,7 +493,8 @@ public static class WardenObjectiveEventCollections
         this ICollection<WardenObjectiveEvent> events,
         Sound sound,
         double delay = 0.0,
-        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart)
+        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
+        uint subtitle = 0)
     {
         events.Add(
             new WardenObjectiveEvent
@@ -472,7 +502,8 @@ public static class WardenObjectiveEventCollections
                 Type = WardenObjectiveEventType.PlaySound,
                 Trigger = trigger,
                 Delay = delay,
-                SoundId = sound
+                SoundId = sound,
+                Subtitle = subtitle
             });
 
         return events;

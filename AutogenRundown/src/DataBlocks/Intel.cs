@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Zones;
+﻿using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -49,6 +50,19 @@ public class Intel
     public const string Warning = ":://WARNING";
 
     public const string Error = ":://ERROR";
+
+    public static string Terminal(ZoneNode node, int terminalIndex = 0)
+    {
+        var layer = node.Bulkhead switch
+        {
+            Bulkhead.Main => 0,
+            Bulkhead.Extreme => 1,
+            Bulkhead.Overload => 2,
+            _ => 0
+        };
+
+        return $"[TERMINAL_0_{layer}_{node.ZoneNumber}_{terminalIndex}]";
+    }
 
     public static string Zone(int number, bool underscore = false)
         => $"<color=orange>ZONE{(underscore ? "_" : " ")}{number}</color>";
