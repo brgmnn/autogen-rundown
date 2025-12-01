@@ -465,6 +465,19 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
 
     /******************** Stealth Scans ********************/
     #region Stealth scans
+    public static readonly ChainedPuzzle StealthScan1 = new()
+    {
+        PublicAlarmName = "Class I Scan",
+        TriggerAlarmOnActivate = false,
+        FixedAlarm = true,
+        WantedDistanceFromStartPos = 0.0,
+        WantedDistanceBetweenPuzzleComponents = 35.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.ClusterSmall
+        }
+    };
+
     public static readonly ChainedPuzzle StealthScan2 = new()
     {
         PublicAlarmName = "Class II Scan",
