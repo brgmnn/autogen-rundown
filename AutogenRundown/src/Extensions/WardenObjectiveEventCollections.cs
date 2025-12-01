@@ -538,5 +538,24 @@ public static class WardenObjectiveEventCollections
 
         return events;
     }
+
+    public static ICollection<WardenObjectiveEvent> AddCountdown(
+        this ICollection<WardenObjectiveEvent> events,
+        double duration,
+        WardenObjectiveEventCountdown countdown,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.Countdown,
+                Delay = delay,
+                Duration = duration,
+                Countdown = countdown
+            });
+
+        return events;
+    }
+
     #endregion
 }

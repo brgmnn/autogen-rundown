@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
+using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Terminals;
@@ -48,7 +49,11 @@ public partial record LevelLayout
 
 
         // ------ Snatcher scan corridor ------
-        var (corridor1, corridor1Zone) = AddZone_Forward(start, new ZoneNode { MaxConnections = 1 });
+        var (corridor1, corridor1Zone) = AddZone_Forward(start, new ZoneNode
+        {
+            MaxConnections = 1,
+            Tags = new Tags("no_enemies", "no_blood_door")
+        });
 
         {
             corridor1Zone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_I_HA_03.prefab";
@@ -59,7 +64,11 @@ public partial record LevelLayout
 
 
         // ------ Penultimate corridor ------
-        var (corridor2, corridor2Zone) = AddZone_Forward(corridor1, new ZoneNode { MaxConnections = 1 });
+        var (corridor2, corridor2Zone) = AddZone_Forward(corridor1, new ZoneNode
+        {
+            MaxConnections = 1,
+            Tags = new Tags("no_enemies", "no_blood_door")
+        });
 
         {
             corridor2Zone.CustomGeomorph =
@@ -70,6 +79,12 @@ public partial record LevelLayout
             corridor2Zone.AliasPrefixShort = "KDS";
             corridor2Zone.Altitude = Altitude.OnlyHigh;
             corridor2Zone.LightSettings = Lights.Light.RedToWhite_1_R5A2_L1;
+
+            corridor2Zone.EnemySpawningInZone.Add(EnemySpawningData.NightmareGiant with
+            {
+                Points = 12
+            });
+            corridor2Zone.EventsOnOpenDoor.AddAlertEnemies(corridor2.Bulkhead, corridor2.ZoneNumber, 2.0);
 
             var puzzle = Generator.Select(level.Tier switch
             {
@@ -247,8 +262,12 @@ public partial record LevelLayout
                     {
                         var segment1 = AddBranch_Forward(elevator, 3, zoneCallback: (node, zone) =>
                         {
-                            planner.AddTags(node, "no_enemies", "no_blood_door");
+                            node = planner.UpdateNode(node with { MaxConnections = 1 });
+                            node = planner.AddTags(node, "no_enemies", "no_blood_door");
                             zone.GenCorridorGeomorph(level.Complex);
+                            zone.HealthPacks = 0.0;
+                            zone.ToolPacks = 0.0;
+                            zone.AmmoPacks = 1.0;
                         });
 
                         var (turn1, turn1Zone) = AddZone_Forward(
@@ -256,6 +275,9 @@ public partial record LevelLayout
                             new ZoneNode { MaxConnections = 1, Tags = new Tags("no_enemies") });
                         turn1Zone.CustomGeomorph =
                             "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_L_HA_01.prefab";
+                        turn1Zone.HealthPacks = 1.0;
+                        turn1Zone.ToolPacks = 0.0;
+                        turn1Zone.AmmoPacks = 1.0;
 
                         Generator.SelectRun(new List<(double, Action)>
                         {
@@ -266,8 +288,12 @@ public partial record LevelLayout
 
                         var segment2 = AddBranch_Left(turn1, 2, zoneCallback: (node, zone) =>
                         {
+                            node = planner.UpdateNode(node with { MaxConnections = 1 });
                             planner.AddTags(node, "no_enemies");
                             zone.GenCorridorGeomorph(level.Complex);
+                            zone.HealthPacks = 1.0;
+                            zone.ToolPacks = 0.0;
+                            zone.AmmoPacks = 1.0;
                         });
 
                         endStart = segment2.Last();
@@ -309,6 +335,42 @@ public partial record LevelLayout
                 break;
             }
         }
+
+        var toMidClearTime = planner
+            .TraverseToElevator(endStart)
+            .Select(node => planner.GetZone(node)?.GetClearTimeEstimate() ?? 0.0)
+            .Sum();
+
+        objective.EventsOnElevatorLand
+            .AddSpawnWave(
+                new GenericWave
+                {
+                    Settings = WaveSettings.SingleWave_20pts,
+                    Population = WavePopulation.OnlyShadows,
+                    TriggerAlarm = false
+                }, toMidClearTime * 0.4)
+            .AddSpawnWave(
+                new GenericWave
+                {
+                    Settings = WaveSettings.SingleMiniBoss,
+                    Population = WavePopulation.SingleEnemy_Pouncer,
+                    TriggerAlarm = false
+                }, toMidClearTime * 0.25)
+            .AddSpawnWave(
+                new GenericWave
+                {
+                    Settings = WaveSettings.SingleWave_MiniBoss_12pts,
+                    Population = WavePopulation.OnlyGiantShooters,
+                    TriggerAlarm = false
+                }, toMidClearTime * 0.85)
+            .AddSpawnWave(
+                new GenericWave
+                {
+                    Settings = WaveSettings.SingleMiniBoss,
+                    Population = WavePopulation.SingleEnemy_PouncerShadow,
+                    TriggerAlarm = false
+                }, toMidClearTime * 0.90);
+
         #endregion
 
         #region Mid challenge
@@ -322,9 +384,9 @@ public partial record LevelLayout
             {
                 var (hub, hubZone) = AddZone_Forward(endStart, new ZoneNode
                 {
+                    MaxConnections = 3,
                     Tags = new Tags("no_enemies", "no_blood_door")
                 });
-
                 hubZone.CustomGeomorph =
                     "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_SF_01.prefab";
 
@@ -335,9 +397,11 @@ public partial record LevelLayout
                 });
 
                 securityZone.AliasPrefix = "Security, ZONE";
+                securityZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
 
                 var (next, nextZone) = AddZone_Forward(hub, new ZoneNode
                 {
+                    MaxConnections = 2,
                     Tags = new Tags("no_enemies", "no_blood_door")
                 });
                 nextZone.ProgressionPuzzleToEnter = ProgressionPuzzle.AdminLocked;
@@ -347,26 +411,33 @@ public partial record LevelLayout
                 terminal.UniqueCommands.Add(new CustomTerminalCommand
                 {
                     Command = "KDS-DEEP_DEACTIVATE_DEFENSE",
-                    CommandDesc = "Deactivate KDS Deep",
+                    CommandDesc = "Deactivate KDS Deep defense grid",
                     CommandEvents = new List<WardenObjectiveEvent>()
                         .AddUnlockDoor(
                             next.Bulkhead,
                             next.ZoneNumber,
                             null,
                             WardenObjectiveEventTrigger.OnStart,
-                            10)
+                            11)
                         .AddUpdateSubObjective(
                             header: new Text($"Proceed to KDS Deep"),
                             description: new Text($"Use information in the environment to find KDS Deep"),
                             intel: $"Door unlocked. Proceed to KDS Deep",
                             delay: 13.0)
+                        .AddSpawnWave(
+                            new GenericWave
+                            {
+                                Settings = WaveSettings.Error_Normal,
+                                Population = WavePopulation.OnlyShadows,
+                                TriggerAlarm = false
+                            }, 25.0)
                         .ToList(),
                     PostCommandOutputs = new List<TerminalOutput>
                     {
                         // 3 for starting command
                         new()
                         {
-                            Output = "Connecting to door control plane...",
+                            Output = "Authenticating with BIOCOM...",
                             Type = LineType.SpinningWaitNoDone,
                             Time = 2.5
                         },
@@ -378,24 +449,41 @@ public partial record LevelLayout
                         },
                         new()
                         {
-                            Output = "Activating door servo motor systems...",
-                            Type = LineType.SpinningWaitDone,
-                            Time = 3.0
+                            Output = "Confirming operative credentials",
+                            Type = LineType.Normal,
+                            Time = 1.5
                         },
                         new()
                         {
-                            Output = "Door unlocked.",
+                            Output = "Deactivating defense grid...",
+                            Type = LineType.SpinningWaitDone,
+                            Time = 4.0
+                        },
+                        new()
+                        {
+                            Output = "KDS Defense system <color=red>inactive</color>",
                             Type = LineType.Normal,
                             Time = 1.0
                         },
                     }
                 });
 
-                objective.EventsOnElevatorLand.AddUpdateSubObjective(
-                    header: new Text($"Find {Intel.Terminal(security)} and deactivate KDS Defense"),
-                    description: new Text($"Use information in the environment to find {Intel.Terminal(security)}"),
-                    intel: $"Find {Intel.Terminal(security)} in the KDS Security zone",
-                    delay: 5.0);
+                objective.EventsOnElevatorLand
+                    .AddUpdateSubObjective(
+                        header: new Text($"Find {Intel.Terminal(security)} and deactivate KDS Defense"),
+                        description: new Text($"Use information in the environment to find {Intel.Terminal(security)}"),
+                        intel: $"Find {Intel.Terminal(security)} in the KDS Security zone",
+                        delay: 5.0)
+                    .AddCountdown(
+                        countdown: new WardenObjectiveEventCountdown
+                        {
+                            TitleText = "Security zone time lock lifts in:",
+                            TimerColor = "orange",
+                            EventsOnDone = new List<WardenObjectiveEvent>()
+                                .AddUnlockDoor(hub.Bulkhead, hub.ZoneNumber, "Door Unlocked").ToList()
+                        },
+                        duration: toMidClearTime + hubZone.GetClearTimeEstimate(),
+                        delay: 5.0);
 
                 endStart = next;
             }),
