@@ -547,13 +547,17 @@ public partial record Zone : DataBlock<Zone>
     /// helpful for a number of objectives where players need to race against the clock to
     /// achieve some objective. This function lets us grant the players an amount of time that
     /// is difficult but still possible.
+    ///
+    /// TODO: this needs to somehow be run after the level is generated. It depends on things
+    ///       like the alarm which may not actually be rolled when this is called in the
+    ///       level layout
     /// </summary>
     /// <returns>Estimated time to clear the zone and any alarms to _enter_ the zone</returns>
     public double GetClearTimeEstimate()
     {
         const double factorAlarms = 1.20;
         const double factorBoss = 1.0;
-        const double factorCoverage = 1.30;
+        const double factorCoverage = 1.20;
         const double factorEnemyPoints = 2.40;
 
         // Add time based on the zone size
@@ -591,6 +595,9 @@ public partial record Zone : DataBlock<Zone>
         //                     + (Alarm.Puzzle.Count - 1) * Alarm.WantedDistanceBetweenPuzzleComponents;
         // timeAlarms *= factorAlarms;
 
+        // How long it takes the door animation to open
+        var timeDoorOpen = SecurityGateToEnter == SecurityGate.Security ? 5.0 : 14.0;
+
         // Give +20s for a blood door.
         // TODO: adjust based on spawns in the blood door.
         var timeBloodDoor = 0.0;
@@ -614,7 +621,8 @@ public partial record Zone : DataBlock<Zone>
                     + timeBosses
                     + timeAlarms
                     + timeBloodDoor
-                    + timeBloodDoorBoss;
+                    + timeBloodDoorBoss
+                    + timeDoorOpen;
 
         Plugin.Logger.LogDebug($"Zone {LocalIndex} time budget: total={total}s -- "
                                + $"alarms={timeAlarms}s coverage={timeCoverage}s "
