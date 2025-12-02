@@ -186,10 +186,72 @@ public partial record LevelLayout
                 _ => 30.0
             };
 
+            // Warden messages and win on death
             scanDoneEvents
                 .AddMessage("SURVIVE", 6.0)
                 .AddWinOnDeath(surviveDuration)
                 .AddMessage("WARDEN SECURITY SYSTEMS DISABLED", surviveDuration + 2.5);
+
+            // Enemy waves
+            scanDoneEvents
+                .AddSpawnWave(
+                    new GenericWave
+                    {
+                        Settings = WaveSettings.Error_VeryHard,
+                        Population = WavePopulation.Baseline,
+                        TriggerAlarm = false
+                    }, 8.0)
+                .AddSpawnWave(
+                    new GenericWave
+                    {
+                        Settings = WaveSettings.Survival_Impossible_MiniBoss,
+                        Population = WavePopulation.SingleEnemy_Tank,
+                        TriggerAlarm = false
+                    }, surviveDuration + 4.0);
+
+            if (level.Tier == "D")
+            {
+                scanDoneEvents
+                    .AddSpawnWave(
+                        new GenericWave
+                        {
+                            Settings = WaveSettings.SingleMiniBoss,
+                            Population = WavePopulation.SingleEnemy_PouncerShadow,
+                            TriggerAlarm = false
+                        }, surviveDuration * 0.25)
+                    .AddSpawnWave(
+                        new GenericWave
+                        {
+                            Settings = WaveSettings.SingleWave_MiniBoss_8pts,
+                            Population = WavePopulation.OnlyInfectedHybrids,
+                            TriggerAlarm = false
+                        }, surviveDuration * 0.66);
+            }
+            else if (level.Tier == "E")
+            {
+                scanDoneEvents
+                    .AddSpawnWave(
+                        new GenericWave
+                        {
+                            Settings = WaveSettings.SingleWave_MiniBoss_4pts,
+                            Population = WavePopulation.SingleEnemy_Pouncer,
+                            TriggerAlarm = false
+                        }, surviveDuration * 0.20)
+                    .AddSpawnWave(
+                        new GenericWave
+                        {
+                            Settings = WaveSettings.Finite_25pts_Normal,
+                            Population = WavePopulation.OnlyChargers,
+                            TriggerAlarm = false
+                        }, surviveDuration * 0.55)
+                    .AddSpawnWave(
+                        new GenericWave
+                        {
+                            Settings = WaveSettings.SingleWave_MiniBoss_16pts,
+                            Population = WavePopulation.OnlyGiantShooters,
+                            TriggerAlarm = false
+                        }, surviveDuration * 0.85);
+            }
 
             exitZone.WorldEventChainedPuzzleData.Add(new WorldEventChainedPuzzle
             {
@@ -287,7 +349,7 @@ public partial record LevelLayout
                     (0.33, () => AddTerminalUnlockPuzzle(turn1, segment1[2])),
                 });
 
-                var segment2 = AddBranch_Left(turn1, 2, zoneCallback: (node, zone) =>
+                var segment2 = AddBranch_Side(turn1, 2, zoneCallback: (node, zone) =>
                 {
                     node = planner.UpdateNode(node with { MaxConnections = 1 });
                     planner.AddTags(node, "no_enemies");
@@ -396,7 +458,7 @@ public partial record LevelLayout
                         .AddSpawnWave(
                             new GenericWave
                             {
-                                Settings = WaveSettings.Error_Normal,
+                                Settings = level.Tier == "C" ? WaveSettings.Error_Easy : WaveSettings.Error_Normal,
                                 Population = WavePopulation.OnlyShadows,
                                 TriggerAlarm = false
                             }, 25.0)
@@ -468,20 +530,57 @@ public partial record LevelLayout
         {
             (1.0, () =>
             {
-                var segment1 = AddBranch_Right(endStart, 2, zoneCallback: (node, zone) =>
+                var segment1 = AddBranch_Side(endStart, 2, zoneCallback: (node, zone) =>
                 {
+                    node = planner.UpdateNode(node with { MaxConnections = 1 });
                     planner.AddTags(node, "no_enemies", "no_blood_door");
                     zone.GenCorridorGeomorph(level.Complex);
                 });
+
+                var segment1Zone1 = planner.GetZone(segment1.First())!;
+                segment1Zone1.EventsOnOpenDoor
+                    .AddSpawnWave(
+                        new GenericWave
+                        {
+                            Settings = WaveSettings.SingleMiniBoss,
+                            Population = WavePopulation.SingleEnemy_TankPotato,
+                            TriggerAlarm = false
+                        }, 40)
+                    .AddSpawnWave(
+                        new GenericWave
+                        {
+                            Settings = WaveSettings.SingleWave_MiniBoss_12pts,
+                            Population = WavePopulation.OnlyGiantShooters,
+                            TriggerAlarm = false
+                        }, 120)
+                    .AddSpawnWave(
+                        new GenericWave
+                        {
+                            Settings = WaveSettings.SingleMiniBoss,
+                            Population = WavePopulation.SingleEnemy_PouncerShadow,
+                            TriggerAlarm = false
+                        }, 180);
+
+                var (hub, hubZone) = AddZone(segment1.Last(), new ZoneNode
+                {
+                    MaxConnections = 3,
+                    Tags = new Tags("no_enemies", "no_blood_door")
+
+                });
+                hubZone.GenHubGeomorph(level.Complex);
 
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     (0.33, () => AddKeycardPuzzle(segment1[1], segment1[0])),
                     (0.33, () => AddGeneratorPuzzle(segment1[1], segment1[0])),
                     (0.33, () => AddTerminalUnlockPuzzle(segment1[1], segment1[0])),
+
+                    (0.33, () => AddKeycardPuzzle(hub, segment1[1])),
+                    (0.33, () => AddGeneratorPuzzle(hub, segment1[1])),
+                    (0.33, () => AddTerminalUnlockPuzzle(hub, segment1[1])),
                 });
 
-                endStart = segment1.Last();
+                endStart = hub;
             }),
         });
         #endregion
