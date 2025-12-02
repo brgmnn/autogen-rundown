@@ -286,6 +286,7 @@ public partial record LevelLayout
 
         var elevatorZone = planner.GetZone(elevator)!;
         elevatorZone.Coverage = CoverageMinMax.Small_10;
+        elevatorZone.ConsumableDistributionInZone = ConsumableDistribution.Baseline_LockMelters.PersistentId;
 
         var endStart = elevator;
 
@@ -327,11 +328,12 @@ public partial record LevelLayout
                 var segment1 = AddBranch_Forward(elevator, 3, zoneCallback: (node, zone) =>
                 {
                     node = planner.UpdateNode(node with { MaxConnections = 1 });
-                    node = planner.AddTags(node, "no_enemies", "no_blood_door");
+                    planner.AddTags(node, "no_enemies", "no_blood_door");
                     zone.GenCorridorGeomorph(level.Complex);
                     zone.HealthPacks = 0.0;
                     zone.ToolPacks = 0.0;
                     zone.AmmoPacks = 1.0;
+                    zone.ConsumableDistributionInZone = 0;
                 });
 
                 var (turn1, turn1Zone) = AddZone_Forward(
@@ -339,8 +341,9 @@ public partial record LevelLayout
                     new ZoneNode { MaxConnections = 3, Tags = new Tags("no_enemies") });
                 turn1Zone.GenHubGeomorph(level.Complex);
                 turn1Zone.HealthPacks = 1.0;
-                turn1Zone.ToolPacks = 0.0;
-                turn1Zone.AmmoPacks = 1.0;
+                turn1Zone.ToolPacks = 1.0;
+                turn1Zone.AmmoPacks = 3.0;
+                turn1Zone.ConsumableDistributionInZone = 0;
 
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -357,6 +360,7 @@ public partial record LevelLayout
                     zone.HealthPacks = 1.0;
                     zone.ToolPacks = 0.0;
                     zone.AmmoPacks = 1.0;
+                    zone.ConsumableDistributionInZone = 0;
                 });
 
                 endStart = segment2.Last();
@@ -389,14 +393,18 @@ public partial record LevelLayout
                     Settings = WaveSettings.SingleWave_MiniBoss_12pts,
                     Population = WavePopulation.OnlyGiantShooters,
                     TriggerAlarm = false
-                }, toMidClearTime * 0.85)
-            .AddSpawnWave(
+                }, toMidClearTime * 0.85);
+
+        if (level.Tier != "C")
+        {
+            objective.EventsOnElevatorLand.AddSpawnWave(
                 new GenericWave
                 {
                     Settings = WaveSettings.SingleMiniBoss,
                     Population = WavePopulation.SingleEnemy_PouncerShadow,
                     TriggerAlarm = false
                 }, toMidClearTime * 0.90);
+        }
 
         #endregion
 
@@ -420,6 +428,10 @@ public partial record LevelLayout
                 });
                 hubZone.CustomGeomorph =
                     "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_SF_01.prefab";
+                hubZone.HealthPacks = 4.0;
+                hubZone.ToolPacks = 4.0;
+                hubZone.AmmoPacks = 4.0;
+                hubZone.ConsumableDistributionInZone = ConsumableDistribution.Baseline_LockMelters.PersistentId;
 
                 var (security, securityZone) = AddZone_Side(hub, new ZoneNode
                 {
@@ -535,6 +547,10 @@ public partial record LevelLayout
                     node = planner.UpdateNode(node with { MaxConnections = 1 });
                     planner.AddTags(node, "no_enemies", "no_blood_door");
                     zone.GenCorridorGeomorph(level.Complex);
+                    zone.ConsumableDistributionInZone = 0;
+                    zone.HealthPacks = 0.0;
+                    zone.ToolPacks = 0.0;
+                    zone.AmmoPacks = 2.0;
                 });
 
                 var segment1Zone1 = planner.GetZone(segment1.First())!;
@@ -568,6 +584,10 @@ public partial record LevelLayout
 
                 });
                 hubZone.GenHubGeomorph(level.Complex);
+                hubZone.HealthPacks = 4.0;
+                hubZone.ToolPacks = 8.0;
+                hubZone.AmmoPacks = 8.0;
+                hubZone.ConsumableDistributionInZone = 0;
 
                 Generator.SelectRun(new List<(double, Action)>
                 {
