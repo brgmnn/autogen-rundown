@@ -485,7 +485,7 @@ public partial record Zone : DataBlock<Zone>
     /// </summary>
     /// <returns></returns>
     public double ClearTime_AreaCoverage()
-        => Coverage.Max * clearTimeFactor_AreaCoverage;
+        => (Coverage.Min + Coverage.Max) * clearTimeFactor_AreaCoverage / 2;
 
     /// <summary>
     /// Time based on door alarms
