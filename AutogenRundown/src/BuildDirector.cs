@@ -79,9 +79,6 @@ public class BuildDirector
             WardenObjectiveType.TimedTerminalSequence,
         };
 
-        // Remove any objectives that are in the exclude list.
-        objectives.RemoveAll(o => exclude.Contains(o));
-
         // These objectives are incompatible with non-Main bulkheads.
         if (!Bulkhead.HasFlag(Bulkhead.Main))
         {
@@ -93,6 +90,26 @@ public class BuildDirector
         // These objectives are really intended as side quests.
         if (Bulkhead.HasFlag(Bulkhead.Main))
             objectives.Remove(WardenObjectiveType.SpecialTerminalCommand);
+
+        // --- Specific main objectives ---
+
+        // Reach KDS Deep
+        if (exclude.Contains(WardenObjectiveType.ReachKdsDeep))
+        {
+            // These objectives will have special logic for when they're part of KDS deep to be
+            // very short objectives that can possibly fit within the run time
+            objectives = new List<WardenObjectiveType>
+            {
+                WardenObjectiveType.SpecialTerminalCommand,
+                WardenObjectiveType.GatherSmallItems,
+                WardenObjectiveType.PowerCellDistribution,
+                WardenObjectiveType.HsuFindSample,
+                WardenObjectiveType.GatherTerminal
+            };
+        }
+
+        // Remove any objectives that are in the exclude list.
+        objectives.RemoveAll(o => exclude.Contains(o));
 
         // In this case we need to set a very simple objective that can be completed quickly
         if (Bulkhead.HasFlag(Bulkhead.Overload) && exclude.Contains(WardenObjectiveType.Survival))
