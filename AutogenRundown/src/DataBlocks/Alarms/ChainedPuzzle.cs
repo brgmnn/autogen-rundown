@@ -776,6 +776,72 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     };
     #endregion
 
+    #region Alarms: Team Scans
+
+    public static readonly ChainedPuzzle AlarmClass2_Team = new()
+    {
+        PublicAlarmName = "Class II Alarm",
+        Settings = WaveSettings.Baseline_Hard,
+        Population = WavePopulation.Baseline_Hybrids,
+        WantedDistanceBetweenPuzzleComponents = 20.0,
+        WantedDistanceFromStartPos = 20.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.AllLarge,
+            PuzzleComponent.AllLarge
+        },
+    };
+
+    public static readonly ChainedPuzzle AlarmClass3_Team = new()
+    {
+        PublicAlarmName = "Class III Alarm",
+        Settings = WaveSettings.Baseline_Hard,
+        Population = WavePopulation.Baseline_Hybrids,
+        WantedDistanceBetweenPuzzleComponents = 20.0,
+        WantedDistanceFromStartPos = 20.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.AllLarge,
+            PuzzleComponent.AllLarge,
+            PuzzleComponent.AllLarge,
+        },
+    };
+
+    public static readonly ChainedPuzzle AlarmClass4_Team = new()
+    {
+        PublicAlarmName = "Class IV Alarm",
+        Settings = WaveSettings.Baseline_VeryHard,
+        Population = WavePopulation.Baseline_Hybrids,
+        WantedDistanceBetweenPuzzleComponents = 20.0,
+        WantedDistanceFromStartPos = 20.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.AllLarge,
+            PuzzleComponent.AllLarge,
+            PuzzleComponent.AllLarge,
+            PuzzleComponent.AllLarge,
+        },
+    };
+
+    public static readonly ChainedPuzzle AlarmClass5_Team = new()
+    {
+        PublicAlarmName = "Class V Alarm",
+        Settings = WaveSettings.Baseline_VeryHard,
+        Population = WavePopulation.Baseline_Hybrids,
+        WantedDistanceBetweenPuzzleComponents = 20.0,
+        WantedDistanceFromStartPos = 20.0,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.AllLarge,
+            PuzzleComponent.AllLarge,
+            PuzzleComponent.AllLarge,
+            PuzzleComponent.AllLarge,
+            PuzzleComponent.AllLarge
+        },
+    };
+
+    #endregion
+
     #region Alarms: Cluster
     public static readonly ChainedPuzzle AlarmClass2_Cluster = new()
     {

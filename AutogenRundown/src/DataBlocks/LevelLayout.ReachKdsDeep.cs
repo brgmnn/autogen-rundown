@@ -98,7 +98,7 @@ public partial record LevelLayout
                 },
                 _ => new List<(double, ChainedPuzzle)>
                 {
-                    (1.0, ChainedPuzzle.AlarmClass4_Mixed)
+                    (1.0, ChainedPuzzle.AlarmClass4_Team)
                 }
             });
 
@@ -274,9 +274,8 @@ public partial record LevelLayout
 
                 var (turn1, turn1Zone) = AddZone_Forward(
                     segment1.Last(),
-                    new ZoneNode { MaxConnections = 1, Tags = new Tags("no_enemies") });
-                turn1Zone.CustomGeomorph =
-                    "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_L_HA_01.prefab";
+                    new ZoneNode { MaxConnections = 3, Tags = new Tags("no_enemies") });
+                turn1Zone.GenHubGeomorph(level.Complex);
                 turn1Zone.HealthPacks = 1.0;
                 turn1Zone.ToolPacks = 0.0;
                 turn1Zone.AmmoPacks = 1.0;
@@ -345,7 +344,11 @@ public partial record LevelLayout
         //
         Generator.SelectRun(new List<(double, Action)>
         {
+            //
+            // --- Terminal Unlock: KDS Defense Grid ---
+            //
             // This is a terminal to disable the KDS deep defenses
+            //
             (1.0, () =>
             {
                 var (hub, hubZone) = AddZone_Forward(endStart, new ZoneNode
@@ -458,6 +461,9 @@ public partial record LevelLayout
         #endregion
 
         #region End challenge
+        //
+        // Second act challenge
+        //
         Generator.SelectRun(new List<(double, Action)>
         {
             (1.0, () =>
