@@ -80,9 +80,11 @@ public partial record LevelLayout
             corridor2Zone.Altitude = Altitude.OnlyHigh;
             corridor2Zone.LightSettings = Lights.Light.RedToWhite_1_R5A2_L1;
 
-            corridor2Zone.EnemySpawningInZone.Add(EnemySpawningData.NightmareGiant with
+            corridor2Zone.EnemySpawningInZone.Add(level.Tier switch
             {
-                Points = 12
+                "D" => EnemySpawningData.ChargerGiant with { Points = 8 },
+                "E" => EnemySpawningData.NightmareGiant with { Points = 8 },
+                _ => EnemySpawningData.Charger with { Points = 6 }
             });
             corridor2Zone.EventsOnOpenDoor.AddAlertEnemies(corridor2.Bulkhead, corridor2.ZoneNumber, 2.0);
 
@@ -390,21 +392,25 @@ public partial record LevelLayout
             .AddSpawnWave(
                 new GenericWave
                 {
-                    Settings = WaveSettings.SingleWave_MiniBoss_12pts,
+                    Settings = level.Tier switch
+                    {
+                        "D" => WaveSettings.SingleWave_MiniBoss_8pts,
+                        "E" => WaveSettings.SingleWave_MiniBoss_12pts,
+                        _ => WaveSettings.SingleWave_MiniBoss_6pts,
+                    },
                     Population = WavePopulation.OnlyGiantShooters,
                     TriggerAlarm = false
                 }, toMidClearTime * 0.85);
 
         if (level.Tier != "C")
-        {
-            objective.EventsOnElevatorLand.AddSpawnWave(
-                new GenericWave
-                {
-                    Settings = WaveSettings.SingleMiniBoss,
-                    Population = WavePopulation.SingleEnemy_PouncerShadow,
-                    TriggerAlarm = false
-                }, toMidClearTime * 0.90);
-        }
+            objective.EventsOnElevatorLand
+                .AddSpawnWave(
+                    new GenericWave
+                    {
+                        Settings = WaveSettings.SingleMiniBoss,
+                        Population = WavePopulation.SingleEnemy_PouncerShadow,
+                        TriggerAlarm = false
+                    }, toMidClearTime * 0.90);
 
         #endregion
 
@@ -430,7 +436,7 @@ public partial record LevelLayout
                     "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_SF_01.prefab";
                 hubZone.HealthPacks = 4.0;
                 hubZone.ToolPacks = 4.0;
-                hubZone.AmmoPacks = 4.0;
+                hubZone.AmmoPacks = 8.0;
                 hubZone.ConsumableDistributionInZone = ConsumableDistribution.Baseline_LockMelters.PersistentId;
 
                 var (security, securityZone) = AddZone_Side(hub, new ZoneNode
@@ -438,9 +444,21 @@ public partial record LevelLayout
                     MaxConnections = 0,
                     Tags = new Tags("no_enemies")
                 });
-
                 securityZone.AliasPrefix = "Security, ZONE";
                 securityZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
+                securityZone.CustomGeomorph = Generator.Select(new List<(double, string)>
+                {
+                    // (1.0, "Assets/geo_64x64_dig_site_dead_end_dak_01.prefab"),
+
+                    (1.0, "Assets/Prefabs/Geomorph/Mining/geo_storage_FA_dead_end_01.prefab"),
+                    // (1.0, "Assets/Bundles/RLC_Mining/geo_64x64_mining_digsite_dead_end_RLC_01.prefab"),
+                    // (1.0, "Assets/SamdownGeos/Storage dead end spawn/DeadEnd_Storage.prefab"),
+                    // (1.0, "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_Dead_End_01.prefab")
+                });
+                hubZone.HealthPacks = 4.0;
+                hubZone.ToolPacks = 4.0;
+                hubZone.AmmoPacks = 8.0;
+                hubZone.ConsumableDistributionInZone = 0;
 
                 var (next, nextZone) = AddZone_Forward(hub, new ZoneNode
                 {
@@ -523,15 +541,11 @@ public partial record LevelLayout
                             TitleText = "Security zone time lock lifts in:",
                             TimerColor = "orange",
                             EventsOnDone = new List<WardenObjectiveEvent>()
-                                .AddUnlockDoor(hub.Bulkhead, hub.ZoneNumber, "Door Unlocked").ToList()
+                                .AddUnlockDoor(security.Bulkhead, security.ZoneNumber, "Door Unlocked")
+                                .ToList()
                         },
                         duration: toMidClearTime + hubZone.GetClearTimeEstimate(),
-                        delay: 5.0)
-                    .AddUnlockDoor(
-                        security.Bulkhead,
-                        security.ZoneNumber,
-                        "Security Zone Unlocked",
-                        delay: toMidClearTime + hubZone.GetClearTimeEstimate() + 5.0);
+                        delay: 5.0);
 
                 endStart = next;
             }),
@@ -566,11 +580,15 @@ public partial record LevelLayout
                             Settings = WaveSettings.SingleMiniBoss,
                             Population = WavePopulation.SingleEnemy_TankPotato,
                             TriggerAlarm = false
-                        }, 40)
+                        }, 20)
                     .AddSpawnWave(
                         new GenericWave
                         {
-                            Settings = WaveSettings.SingleWave_MiniBoss_12pts,
+                            Settings = level.Tier switch
+                            {
+                                "D" or "E" => WaveSettings.SingleWave_MiniBoss_8pts,
+                                _ => WaveSettings.SingleWave_MiniBoss_6pts
+                            },
                             Population = WavePopulation.OnlyGiantShooters,
                             TriggerAlarm = false
                         }, 120)
