@@ -526,7 +526,12 @@ public partial record LevelLayout
                                 .AddUnlockDoor(hub.Bulkhead, hub.ZoneNumber, "Door Unlocked").ToList()
                         },
                         duration: toMidClearTime + hubZone.GetClearTimeEstimate(),
-                        delay: 5.0);
+                        delay: 5.0)
+                    .AddUnlockDoor(
+                        security.Bulkhead,
+                        security.ZoneNumber,
+                        "Security Zone Unlocked",
+                        delay: toMidClearTime + hubZone.GetClearTimeEstimate() + 5.0);
 
                 endStart = next;
             }),
