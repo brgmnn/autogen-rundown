@@ -448,12 +448,9 @@ public partial record LevelLayout
                 securityZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
                 securityZone.CustomGeomorph = Generator.Select(new List<(double, string)>
                 {
-                    // (1.0, "Assets/geo_64x64_dig_site_dead_end_dak_01.prefab"),
-
+                    (1.0, "Assets/geo_64x64_dig_site_dead_end_dak_01.prefab"),
                     (1.0, "Assets/Prefabs/Geomorph/Mining/geo_storage_FA_dead_end_01.prefab"),
-                    // (1.0, "Assets/Bundles/RLC_Mining/geo_64x64_mining_digsite_dead_end_RLC_01.prefab"),
-                    // (1.0, "Assets/SamdownGeos/Storage dead end spawn/DeadEnd_Storage.prefab"),
-                    // (1.0, "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_Dead_End_01.prefab")
+                    (1.0, "Assets/SamdownGeos/Storage dead end spawn/DeadEnd_Storage.prefab"),
                 });
                 hubZone.HealthPacks = 4.0;
                 hubZone.ToolPacks = 4.0;
