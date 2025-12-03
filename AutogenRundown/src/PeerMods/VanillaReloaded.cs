@@ -4,14 +4,14 @@ public class VanillaReloaded : SupportedMod
 {
     private VanillaReloaded()
     {
-        ModName = "tru0067-VanillaReloaded";
+        ModName = "VanillaReloaded";
     }
 
     public static void Configure()
     {
         var mod = new VanillaReloaded();
 
-        if (!Peers.HasMod(mod.ModName))
+        if (!Peers.HasMod(mod.ModName) || mod.PluginFolder is null)
             return;
 
         Plugin.Logger.LogInfo($"Configuring peer mod: {mod.ModName}");

@@ -360,6 +360,8 @@ AutogenRundown supports the following 3rd party peer mods. You can install them 
 * [Arsenality](https://thunderstore.io/c/gtfo/p/W33B/Arsenality)
 * [ArsenalityRebalance](https://thunderstore.io/c/gtfo/p/leezurli/ArsenalityRebalance)
 * [VanillaReloaded](https://thunderstore.io/c/gtfo/p/tru0067/VanillaReloaded)
+* [GTFriendlyO](https://thunderstore.io/c/gtfo/p/Carb_Crusaders/GTFriendlyO/)
+* [OmegaWeapons](https://thunderstore.io/c/gtfo/p/Mimikium/OmegaWeapons/)
 
 
 ## Acknowledgements

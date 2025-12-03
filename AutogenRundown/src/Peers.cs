@@ -1,7 +1,6 @@
 ﻿using AutogenRundown.PeerMods;
 using BepInEx;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
+using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown;
 
@@ -11,19 +10,36 @@ public static class Peers
 
     public static void Init()
     {
-        try
+        var plugins = Path.Combine(Paths.BepInExRootPath, "plugins");
+
+        if (!Directory.Exists(plugins))
         {
-            var yaml = File.ReadAllText(Path.Combine(Paths.BepInExRootPath, "..", "mods.yml"));
-
-            var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                .Build();
-
-            Mods = deserializer.Deserialize<List<Mod>>(yaml);
+            Plugin.Logger.LogError($"No plugins directory found: {plugins}");
+            return;
         }
-        catch (FileNotFoundException)
+
+        Mods = new List<Mod>();
+
+        var modDirs = Directory.GetDirectories(plugins);
+
+        foreach (var dir in modDirs)
         {
-            Plugin.Logger.LogWarning("Peers.Init(): Could not find mods.yml");
+            var manifestPath = Path.Combine(dir, "manifest.json");
+
+            if (!File.Exists(manifestPath))
+                continue;
+
+            var data = JObject.Parse(File.ReadAllText(manifestPath));
+            var mod = data.ToObject<Mod>();
+
+            if (mod is null)
+                continue;
+
+            mod.Path = dir;
+
+            Mods.Add(mod);
+
+            Plugin.Logger.LogInfo($"Detected peer mod: {mod.Name} {mod.Version}");
         }
     }
 
@@ -32,8 +48,9 @@ public static class Peers
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public static bool HasMod(string name)
-        => Mods.Any(mod => mod.Name == name && mod.Enabled);
+    public static bool HasMod(string name) => Mods.Any(mod => mod.Name == name);
+
+    public static string? ModPath(string name) => Mods.Find(mod => mod.Name == name)?.Path;
 
     public static void Configure()
     {

@@ -22,6 +22,9 @@
     <BepInEx_Debug>$(AppData)\r2modmanPlus-local\GTFO\profiles\modding\BepInEx</BepInEx_Debug>
     <OutputPath_Debug>$(BepInEx_Debug)\plugins\the_tavern-$(SolutionName)</OutputPath_Debug>
 
+    <Gale_Debug>$(AppData)\com.kesomannen.gale\gtfo\profiles\Modding\BepInEx</Gale_Debug>
+    <GalePlugin_Debug>$(Gale_Debug)\plugins\the_tavern-$(SolutionName)</GalePlugin_Debug>
+
     <DefineConstants>DEBUG</DefineConstants>
   </PropertyGroup>
 
@@ -50,7 +53,6 @@
 
     <!-- NuGet Packages -->
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
@@ -72,6 +74,9 @@
     <Copy SourceFiles="@(AssetItems)" DestinationFolder="$(OutputPath)" />
     <Copy SourceFiles="@(GameDataItems)" DestinationFolder="$(OutputPath)" />
 
+    <!-- R2ModMan debug modding profile -->
     <Copy Condition="$(Debug) != 'false' And $(OS) == 'Windows_NT'" SourceFiles="@(DebugCopyItems)" DestinationFolder="$(OutputPath_Debug)" />
+    <!-- Gale debug modding profile -->
+    <Copy Condition="$(Debug) != 'false' And $(OS) == 'Windows_NT'" SourceFiles="@(DebugCopyItems)" DestinationFolder="$(GalePlugin_Debug)" />
   </Target>
 </Project>

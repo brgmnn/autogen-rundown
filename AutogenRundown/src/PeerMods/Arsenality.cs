@@ -6,19 +6,19 @@ public class Arsenality : SupportedMod
 {
     private Arsenality()
     {
-        ModName = "W33B-Arsenality";
+        ModName = "Arsenality";
     }
 
     public static void Configure()
     {
         var mod = new Arsenality();
 
-        if (!Peers.HasMod(mod.ModName))
+        if (!Peers.HasMod(mod.ModName) || mod.PluginFolder is null)
             return;
 
         Plugin.Logger.LogInfo($"Configuring peer mod: {mod.ModName}");
 
-        var pluginData = Path.Combine(Paths.BepInExRootPath, "plugins", mod.ModName, "arsenality");
+        var pluginData = Path.Combine(mod.PluginFolder, "arsenality");
 
         var revision = CellBuildData.GetRevision();
         var gameData = Path.Combine(Paths.BepInExRootPath, "GameData", $"{revision}");

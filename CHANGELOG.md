@@ -3,6 +3,29 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.79.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.79.2) — November 23, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Added support for [Gale mod manager](https://kesomannen.com/gale)
+  * Peer mods will now be loaded correctly when using Gale
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.79.1...v0.79.2
+
+
+## [v0.80.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.80.0) — November 23, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* 🌟 New Geomorph pack: TheDoggyDoge's [DogsTilePack](https://thunderstore.io/c/gtfo/p/TheDoggyDoge/DogsTilePack/)
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.79.1...v0.80.0
+
+
 ## [v0.79.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.79.1) — November 18, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
