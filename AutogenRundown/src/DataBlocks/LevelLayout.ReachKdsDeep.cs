@@ -164,7 +164,13 @@ public partial record LevelLayout
 
             exitZone.EventsOnOpenDoor
                 .AddActivateChainedPuzzle("CustomSpawnExit", 1.0)
-                .AddSetNavMarker("WE_R8E1_Center", 0.5);
+                .AddSetNavMarker("WE_R8E1_Center", 0.5)
+                .AddSpawnWave(new GenericWave
+                {
+                    Population = WavePopulation.Baseline,
+                    Settings = WaveSettings.Diminished_Normal,
+                    TriggerAlarm = true
+                }, 4.0);
 
             // Plays the dramatic tension when they see the destruction
             exitZone.EventsOnTrigger.Add(
