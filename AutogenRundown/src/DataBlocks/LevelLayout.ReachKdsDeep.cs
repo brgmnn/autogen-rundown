@@ -578,7 +578,7 @@ public partial record LevelLayout
                     MaxConnections = 2,
                     Tags = new Tags("no_enemies", "no_blood_door")
                 });
-                nextZone.ProgressionPuzzleToEnter = ProgressionPuzzle.AdminLocked;
+                nextZone.ProgressionPuzzleToEnter = ProgressionPuzzle.TimeLocked;
 
                 objective.EventsOnElevatorLand
                     .AddUpdateSubObjective(
@@ -602,9 +602,9 @@ public partial record LevelLayout
                             hubZone.GetClearTimeEstimate() +
                             level.Tier switch
                             {
-                                "C" => 30.0,
-                                "D" => 45.0,
-                                "E" => 70.0,
+                                "C" => 45.0,
+                                "D" => 60.0,
+                                "E" => 90.0,
                                 _ => 10.0
                             },
                         delay: 5.0)

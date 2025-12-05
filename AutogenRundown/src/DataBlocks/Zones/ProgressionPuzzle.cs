@@ -9,6 +9,11 @@ namespace AutogenRundown.DataBlocks.Zones;
 /// </summary>
 public class ProgressionPuzzle
 {
+    #region Door locked text
+
+    /// <summary>
+    /// The standard door locked text
+    /// </summary>
     public static readonly ProgressionPuzzle Locked = new()
     {
         PuzzleType = ProgressionPuzzleType.Locked,
@@ -20,6 +25,14 @@ public class ProgressionPuzzle
         PuzzleType = ProgressionPuzzleType.Locked,
         CustomText = "<color=red>://ERROR: Door in temporary lockdown. Admin clearance required to operate.</color>"
     };
+
+    public static readonly ProgressionPuzzle TimeLocked = new()
+    {
+        PuzzleType = ProgressionPuzzleType.Locked,
+        CustomText = "<color=red>://ERROR: Door in temporary lockdown. Time lock in effect.</color>"
+    };
+
+    #endregion
 
     /// <summary>
     /// The type of the puzzle.
