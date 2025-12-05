@@ -558,7 +558,7 @@ public partial record LevelLayout
             //
             // This matches what R8E1 does, have a hub tile with an alarm door
             //
-            (10000.0, () =>
+            (1.0, () =>
             {
                 var (hub, hubZone) = AddZone_Forward(endStart, new ZoneNode
                 {
