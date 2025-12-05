@@ -552,6 +552,75 @@ public partial record LevelLayout
 
                 endStart = next;
             }),
+
+            //
+            // --- Holdout: R2E1 hub tile hold and alarm ---
+            //
+            // This matches what R8E1 does, have a hub tile with an alarm door
+            //
+            (10000.0, () =>
+            {
+                var (hub, hubZone) = AddZone_Forward(endStart, new ZoneNode
+                {
+                    MaxConnections = 3,
+                    Tags = new Tags("no_enemies", "no_blood_door")
+                });
+                hubZone.CustomGeomorph =
+                    "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_05.prefab";
+                hubZone.AliasPrefix = "HSU Staging, ZONE";
+                hubZone.HealthPacks = 4.0;
+                hubZone.ToolPacks = 4.0;
+                hubZone.AmmoPacks = 8.0;
+                hubZone.ConsumableDistributionInZone = ConsumableDistribution.Baseline_LockMelters.PersistentId;
+
+                var (next, nextZone) = AddZone_Forward(hub, new ZoneNode
+                {
+                    MaxConnections = 2,
+                    Tags = new Tags("no_enemies", "no_blood_door")
+                });
+                nextZone.ProgressionPuzzleToEnter = ProgressionPuzzle.AdminLocked;
+
+                objective.EventsOnElevatorLand
+                    .AddUpdateSubObjective(
+                        header: new Text(() => $"Get to the HSU staging zone {Intel.Zone(hub, planner)}"),
+                        intel: "Get to the HSU staging zone",
+                        delay: 5.0)
+                    .AddCountdown(
+                        countdown: new WardenObjectiveEventCountdown
+                        {
+                            TitleText = "KDS Deep access lockdown lifts in:",
+                            TimerColor = "orange",
+                            EventsOnDone = new List<WardenObjectiveEvent>()
+                                .AddUnlockDoor(next.Bulkhead, next.ZoneNumber)
+                                .AddUpdateSubObjective(
+                                    header: new Text("Proceed to KDS Deep"),
+                                    intel: "Door Unlocked")
+                                .ToList()
+                        },
+                        duration:
+                            toMidClearTime +
+                            hubZone.GetClearTimeEstimate() +
+                            level.Tier switch
+                            {
+                                "C" => 30.0,
+                                "D" => 45.0,
+                                "E" => 70.0,
+                                _ => 10.0
+                            },
+                        delay: 5.0)
+                    .AddSpawnWave(new GenericWave
+                    {
+                        Population = Generator.Select(new List<(double, WavePopulation)>
+                        {
+                            (0.4, WavePopulation.Baseline),
+                            (0.3, WavePopulation.Baseline_Chargers),
+                            (0.3, WavePopulation.Baseline_Nightmare),
+                        }),
+                        Settings = level.Tier == "E" ? WaveSettings.Baseline_Hard : WaveSettings.Baseline_Normal,
+                    }, toMidClearTime + hubZone.GetClearTimeEstimate());
+
+                endStart = next;
+            }),
         });
 
         #endregion
