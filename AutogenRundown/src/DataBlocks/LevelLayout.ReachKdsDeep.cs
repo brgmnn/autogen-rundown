@@ -579,6 +579,25 @@ public partial record LevelLayout
                     Tags = new Tags("no_enemies", "no_blood_door")
                 });
                 nextZone.ProgressionPuzzleToEnter = ProgressionPuzzle.TimeLocked;
+                nextZone.Alarm = level.Tier switch
+                {
+                    "C" => ChainedPuzzle.StealthScan2,
+                    "D" => ChainedPuzzle.StealthScan3,
+                    "E" => ChainedPuzzle.StealthScan4,
+
+                    _ => ChainedPuzzle.StealthScan1
+                };
+                nextZone.EventsOnDoorScanStart.AddSpawnWave(
+                    new GenericWave
+                    {
+                        Population = level.Tier switch
+                        {
+                            "E" => WavePopulation.SingleEnemy_Mother,
+                            _ => WavePopulation.SingleEnemy_Tank
+                        },
+                        Settings = WaveSettings.SingleMiniBoss
+                    },
+                    delay: Generator.Between(15, 30));
 
                 objective.EventsOnElevatorLand
                     .AddUpdateSubObjective(
