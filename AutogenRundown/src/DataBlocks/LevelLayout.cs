@@ -38,10 +38,13 @@ public partial record LevelLayout : DataBlock<LevelLayout>
     [JsonIgnore]
     private readonly LevelSettings settings;
 
+    [JsonIgnore]
     public List<(double chance, int count, ChainedPuzzle puzzle)> PuzzlePack { get; set; } = new();
 
+    [JsonIgnore]
     public List<(double chance, int count, WavePopulation population)> WavePopulationPack { get; set; } = new();
 
+    [JsonIgnore]
     public List<(double chance, int count, WaveSettings)> WaveSettingsPack { get; set; } = new();
 
     #endregion
