@@ -7,7 +7,6 @@ using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using GTFO.API;
 using HarmonyLib;
-using UnityEngine;
 
 namespace AutogenRundown;
 
@@ -28,7 +27,7 @@ namespace AutogenRundown;
 [BepInDependency("dev.gtfomodding.gtfo-api")]
 public class Plugin : BasePlugin
 {
-    public const string Version = "0.79.2";
+    public const string Version = "0.80.0";
 
     public const string Name = "the_tavern-AutogenRundown";
 

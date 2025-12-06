@@ -22,5 +22,11 @@ public enum WardenObjectiveType
     CorruptedTerminalUplink = 13, // Y
     TimedTerminalSequence = 15,   // W
 
-    Empty = 14
+    Empty = 14,
+
+    #region Autogen Custom objectives
+
+    ReachKdsDeep = 20             // K
+
+    #endregion
 }

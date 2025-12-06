@@ -167,7 +167,8 @@ public record WaveSettings : DataBlock<WaveSettings>
     /// Default = 0
     /// </summary>
     [JsonProperty("m_survivalWaveSpawnType")]
-    public int SurvivalWaveSpawnType { get; set; } = 0; // 0 or 1
+    public Enemies.SurvivalWaveSpawnType SurvivalWaveSpawnType { get; set; } =
+        Enemies.SurvivalWaveSpawnType.InRelationToClosestAlivePlayer;
 
     /// <summary>
     /// The total population points for waves. The alarm automatically stops if this runs out.
@@ -486,6 +487,9 @@ public record WaveSettings : DataBlock<WaveSettings>
 
         // Single enemy spawn
         Bins.WaveSettings.AddBlock(SingleMiniBoss);
+
+        // Diminished
+        Bins.WaveSettings.AddBlock(Diminished_Normal);
     }
 
     public static readonly WaveSettings None = new() { PersistentId = 0, Name = "None" };
@@ -544,6 +548,25 @@ public record WaveSettings : DataBlock<WaveSettings>
         PopulationRampOverTime = 45,
         Name = "Baseline_VeryHard"
     };
+    #endregion
+
+    #region Alarm Waves -- Diminished
+
+    public static WaveSettings Diminished_Normal = new()
+    {
+        PopulationFilter = {
+            Enemies.EnemyType.Standard,
+            Enemies.EnemyType.Special
+        },
+        FilterType = PopulationFilterType.Include,
+        PauseBetweenGroups = 10,
+        WavePauseMax_atCost = 10,
+        PopulationPointsPerWaveStart = 10,
+        PopulationPointsPerWaveEnd = 15,
+        PopulationRampOverTime = 100,
+        Name = "Diminished_Normal"
+    };
+
     #endregion
 
     #region MiniBoss_Hard

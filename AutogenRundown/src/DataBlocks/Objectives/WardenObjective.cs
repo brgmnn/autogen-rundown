@@ -515,7 +515,11 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     /// <returns></returns>
     public static WardenObjective PreBuild(BuildDirector director, Level level)
     {
-        var objective = new WardenObjective { Type = director.Objective };
+        var objective = new WardenObjective
+        {
+            Type = director.Objective,
+            SubType = director.SubObjective,
+        };
 
         switch (objective.Type)
         {
@@ -578,6 +582,14 @@ public partial record WardenObjective : DataBlock<WardenObjective>
             case WardenObjectiveType.TimedTerminalSequence:
                 objective.PreBuild_TimedTerminalSequence(director, level);
                 break;
+
+            #region Autogen Custom Objectives
+
+            case WardenObjectiveType.ReachKdsDeep:
+                objective.PreBuild_ReachKdsDeep(director, level);
+                break;
+
+            #endregion
 
             default:
                 throw new ArgumentOutOfRangeException(nameof(director));
@@ -777,6 +789,14 @@ public partial record WardenObjective : DataBlock<WardenObjective>
             case WardenObjectiveType.TimedTerminalSequence:
                 Build_TimedTerminalSequence(director, level);
                 break;
+
+            #region Autogen Custom Objectives
+
+            case WardenObjectiveType.ReachKdsDeep:
+                Build_ReachKdsDeep(director, level);
+                break;
+
+            #endregion
         }
 
         dataLayer.ObjectiveData.DataBlockId = PersistentId;
@@ -839,6 +859,12 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     /// What type of objective this is.
     /// </summary>
     public WardenObjectiveType Type { get; set; }
+
+    /// <summary>
+    /// Autogen only, subtype is used for more specific level crafting
+    /// </summary>
+    [JsonIgnore]
+    public WardenObjectiveSubType SubType { get; set; } = WardenObjectiveSubType.Default;
 
     #region Information and display strings
     [JsonIgnore]
@@ -1181,6 +1207,13 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     public List<List<WardenObjectiveEvent>> TimedTerminalSequence_EventsOnSequenceDone = new();
 
     public List<List<WardenObjectiveEvent>> TimedTerminalSequence_EventsOnSequenceFail = new();
+    #endregion
+
+    #region Type=20: -CUSTOM- Reach KDS Deep
+
+    [JsonIgnore]
+    public int KdsDeepUnit { get; set; } = 1;
+
     #endregion
 
     #region Expedition exit

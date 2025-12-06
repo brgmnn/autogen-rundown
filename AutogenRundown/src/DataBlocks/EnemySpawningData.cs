@@ -203,6 +203,18 @@ public record EnemySpawningData
         Difficulty = (uint)Enemy.Shooter
     };
 
+    public static EnemySpawningData Charger = new()
+    {
+        GroupType = EnemyGroupType.Hibernate,
+        Difficulty = (uint)Enemy.Charger
+    };
+
+    public static EnemySpawningData ChargerGiant = new()
+    {
+        GroupType = EnemyGroupType.Hibernate,
+        Difficulty = (uint)Enemy.ChargerGiant
+    };
+
     public static EnemySpawningData Hybrid = new()
     {
         GroupType = EnemyGroupType.Hibernate,

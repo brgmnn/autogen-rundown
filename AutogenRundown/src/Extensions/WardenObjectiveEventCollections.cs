@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks;
+using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Objectives;
@@ -270,6 +271,29 @@ public static class WardenObjectiveEventCollections
         return events;
     }
 
+    public static ICollection<WardenObjectiveEvent> AddSetZoneLights(
+        this ICollection<WardenObjectiveEvent> events,
+        int zoneNumber,
+        int layer,
+        SetZoneLight setZoneLight,
+        double duration,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SetLightDataInZone,
+                Trigger = WardenObjectiveEventTrigger.OnStart,
+                LocalIndex = zoneNumber,
+                Layer = layer,
+                Duration = duration,
+                Delay = delay,
+                SetZoneLight = setZoneLight
+            });
+
+        return events;
+    }
+
     #endregion
 
     #region Messaging
@@ -309,6 +333,99 @@ public static class WardenObjectiveEventCollections
 
     #endregion
 
+    #region Objectives
+
+    public static ICollection<WardenObjectiveEvent> AddActivateChainedPuzzle(
+        this ICollection<WardenObjectiveEvent> events,
+        string? filter = null,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ActivateChainedPuzzle,
+                Identifier = filter,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> AddForceCompleteLevel(
+        this ICollection<WardenObjectiveEvent> events,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ForceCompleteLevel,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> AddSetNavMarker(
+        this ICollection<WardenObjectiveEvent> events,
+        string? filter = null,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SetNavMarker,
+                Identifier = filter,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="header"></param>
+    /// <param name="description"></param>
+    /// <param name="intel"></param>
+    /// <param name="delay"></param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddUpdateSubObjective(
+        this ICollection<WardenObjectiveEvent> events,
+        DataBlocks.Text? header = null,
+        DataBlocks.Text? description = null,
+        string? intel = null,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.UpdateCustomSubObjective,
+                SubObjective = description ?? DataBlocks.Text.None,
+                SubObjectiveHeader = header ?? DataBlocks.Text.None,
+                WardenIntel = intel ?? "",
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> AddWinOnDeath(
+        this ICollection<WardenObjectiveEvent> events,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.WinOnDeath,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    #endregion
+
     #region Security Sensors
     /// <summary>
     /// Adds a security sensor toggle event
@@ -335,6 +452,63 @@ public static class WardenObjectiveEventCollections
 
         return events;
     }
+    #endregion
+
+    #region Screen
+
+    public static ICollection<WardenObjectiveEvent> AddScreenShake(
+        this ICollection<WardenObjectiveEvent> events,
+        double duration,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ShakeScreen,
+                Duration = duration,
+                Delay = delay,
+                CameraShake = new CameraShake
+                {
+                    Amplitude = 5.0,
+                    Radius = 10.0,
+                    Frequency = 90.0
+                }
+            });
+
+        return events;
+    }
+
+    #endregion
+
+    #region Sound
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="message"></param>
+    /// <param name="delay"></param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddSound(
+        this ICollection<WardenObjectiveEvent> events,
+        Sound sound,
+        double delay = 0.0,
+        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
+        uint subtitle = 0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.PlaySound,
+                Trigger = trigger,
+                Delay = delay,
+                SoundId = sound,
+                Subtitle = subtitle
+            });
+
+        return events;
+    }
+
     #endregion
 
     #region Timers
@@ -364,5 +538,24 @@ public static class WardenObjectiveEventCollections
 
         return events;
     }
+
+    public static ICollection<WardenObjectiveEvent> AddCountdown(
+        this ICollection<WardenObjectiveEvent> events,
+        double duration,
+        WardenObjectiveEventCountdown countdown,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.Countdown,
+                Delay = delay,
+                Duration = duration,
+                Countdown = countdown
+            });
+
+        return events;
+    }
+
     #endregion
 }

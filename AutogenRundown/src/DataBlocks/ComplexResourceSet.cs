@@ -206,6 +206,14 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
             Asset = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04_test.prefab",
             SubComplex = SubComplex.Storage
         });
+
+        // R8E1 HSU Exit (destroyed)
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_HSU_exit_R8E1.prefab",
+            SubComplex = SubComplex.All,
+            Shard = 0
+        });
         #endregion
 
         #region MODDER: dakkhuza
@@ -425,6 +433,89 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
 
         #endregion
         #endregion
+
+        #region MODDER: Zaero
+        // This is an X tile; security doors can spawn on all 4 sides.
+        // A generator cluster objective can be used, it will spawn in the lower cave.
+        // This would be a very difficult scan room. Lots of verticality
+        // Generator spawns at a very low elevation, will likely be in full fog
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_01.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        // This is a simplified version of Cave 01; the upper and lower floors are blocked off.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_01_v2.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        // This is a T tile; security doors can only spawn on the front and sides.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_02.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        // This is an X tile version of Cave 02; security doors can spawn on all 4 sides.
+        // There is now a path leading from the Middle Island to the 4th security door.
+        // X version is flipped 180 degrees so you enter from the new security door instead of the front.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_02_X.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        // This is an X tile; security doors can spawn on all 4 sides.
+        // This is the first cave tile with more than 1 room. This tile has 2 rooms that can generate.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_03.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        // This is an X tile; security doors can spawn on all 4 sides.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_04.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        // This is a narrow I tile; security doors can only spawn forward and backward.
+        // Looks like a very hard ladder to traverse. Bad if scans go forward
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_I_01.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        // // This is a large open I tile; security doors can only spawn forward and backward.
+        // // Note: Not usable, has holes in the floor which players can fall off the map
+        // Mining.CustomGeomorphs.Insert(0, new Prefab()
+        // {
+        //     Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_I_02.prefab",
+        //     SubComplex = SubComplex.DigSite,
+        //     Shard = 4
+        // });
+
+        // This is a dead end. There is only one entrance.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_Dead_End_01.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 4
+        });
+
+        #endregion
         #endregion
 
         #region Tech
@@ -632,6 +723,66 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         });
 
         #endregion
+        #endregion
+
+        #region MODDER: The Doggy Doge
+        // Medium size
+        Tech.ElevatorShafts_1x1.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Elevator.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Overpass.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        // Forward plug is raised elevation, left/right plugs are lowered elevation
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Junction.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        // Contains working HSU Activator, and Extractor (I know one overwrites the other, so let
+        // me know if I should make 2 versions with only 1 in each)
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_HSUProcessing.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        // Looks like it needs a lot of custom work
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Arena.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        // Requires custom marker, see TechMarker
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/Datacenter/DogGeos_Datacenter_X_HA_07.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        // Awesome dead end tile
+        // TODO: use for something
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/ALTRX1/ALT_RX1_Tech_NFrame.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
         #endregion
         #endregion
 
@@ -1129,6 +1280,39 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         });
 
         #endregion
+        #endregion
+
+        #region MODDER: The Doggy Doge
+
+        Service.CustomGeomorphs_Exit_1x1.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/DogGeos_Service_Exit.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 2
+        });
+
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/Gardens/DogGeos_Garden_DataExtractor.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 2
+        });
+
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/Floodways/DogGeos_Floodways_X_HA_06.prefab",
+            SubComplex = SubComplex.Floodways,
+            Shard = 2
+        });
+
+        // Both lab and service
+        Service.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/Gardens/DogGeos_Garden_X_GlowCave.prefab",
+            SubComplex = SubComplex.Gardens,
+            Shard = 2
+        });
+
         #endregion
         #endregion
     }
