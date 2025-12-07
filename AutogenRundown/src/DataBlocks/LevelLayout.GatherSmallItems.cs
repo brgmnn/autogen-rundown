@@ -90,6 +90,19 @@ public partial record LevelLayout
     }
 
     /// <summary>
+    /// Very short and fast optional
+    /// </summary>
+    /// <param name="start"></param>
+    public void BuildLayout_GatherSmallItems_Fast(ZoneNode start)
+    {
+        var startZone = planner.GetZone(start)!;
+
+        startZone.Coverage = CoverageMinMax.Large_100;
+
+        objective.Gather_PlacementNodes.Add(start);
+    }
+
+    /// <summary>
     ///
     /// </summary>
     /// <param name="director"></param>
@@ -106,6 +119,16 @@ public partial record LevelLayout
 
         var start = (ZoneNode)startish;
         var startZone = planner.GetZone(start)!;
+
+        // --- Fast version ---
+        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep)
+        {
+            BuildLayout_GatherSmallItems_Fast(start);
+
+            return;
+        }
+
+        // --- Normal version ---
 
         var last = new ZoneNode();
         var lastZone = new Zone(level, this);

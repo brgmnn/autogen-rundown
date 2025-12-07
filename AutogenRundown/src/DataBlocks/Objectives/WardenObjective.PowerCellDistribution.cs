@@ -26,6 +26,25 @@ public partial record WardenObjective
     /// <param name="level"></param>
     public void PreBuild_PowerCellDistribution(BuildDirector director, Level level)
     {
+        // Fast version of this objective
+        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep)
+        {
+            PowerCellsToDistribute = director.Tier switch
+            {
+                "D" => Generator.Select(new List<(double, int)>
+                {
+                    (0.7, 1),
+                    (0.3, 2)
+                }),
+
+                "E" => 2,
+
+                _ => 1
+            };
+
+            return;
+        }
+
         PowerCellsToDistribute = director.Tier switch
         {
             "A" => Generator.Between(1, 2),

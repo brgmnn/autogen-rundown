@@ -58,7 +58,7 @@ public class BuildDirector
     /// complex has no Reactor geomorph and so cannot have any Reactor objective. ClearPath
     /// only makes sense for Main bulkheads as players must extract to complete the objective.
     /// </summary>
-    public void GenObjective(IEnumerable<WardenObjectiveType> exclude)
+    public void GenObjective(List<WardenObjectiveType> exclude)
     {
         var objectives = new List<WardenObjectiveType>
         {
@@ -109,7 +109,7 @@ public class BuildDirector
         }
 
         // Remove any objectives that are in the exclude list.
-        objectives.RemoveAll(o => exclude.Contains(o));
+        objectives.RemoveAll(exclude.Contains);
 
         // In this case we need to set a very simple objective that can be completed quickly
         if (Bulkhead.HasFlag(Bulkhead.Overload) && exclude.Contains(WardenObjectiveType.Survival))

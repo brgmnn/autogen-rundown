@@ -329,20 +329,19 @@ public static class RundownFactory
                 Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.ReachKdsDeep,
-                // SubObjective = WardenObjectiveSubType.BlowReactor
+                Objective = WardenObjectiveType.ReachKdsDeep
             };
             mainDirector.GenPoints();
 
-            // var secondDirector = new BuildDirector
-            // {
-            //     Bulkhead = Bulkhead.Extreme,
-            //     Complex = complex,
-            //     Complexity = Complexity.Low,
-            //     Tier = tier,
-            //     Objective = WardenObjectiveType.GatherSmallItems,
-            // };
-            // secondDirector.GenPoints();
+            var secondDirector = new BuildDirector
+            {
+                Bulkhead = Bulkhead.Extreme,
+                Complex = complex,
+                Complexity = Complexity.Low,
+                Tier = tier,
+                Objective = WardenObjectiveType.PowerCellDistribution,
+            };
+            secondDirector.GenPoints();
 
             var thirdDirector = new BuildDirector
             {
@@ -354,6 +353,8 @@ public static class RundownFactory
             };
             thirdDirector.GenPoints();
 
+            Generator.Between(2, 54);
+
             var testLevel = Level.Build(
                 new Level(tier)
                 {
@@ -362,12 +363,12 @@ public static class RundownFactory
                     Prefix = "<color=orange>K</color><color=#444444>:</color>C",
                     Complex = complex,
                     MainDirector = mainDirector,
-                    // SecondaryDirector = secondDirector,
+                    SecondaryDirector = secondDirector,
                     // OverloadDirector = thirdDirector,
                     Settings = new LevelSettings(tier)
                     {
-                        Bulkheads = Bulkhead.Main
-                        // Bulkheads = Bulkhead.Main | Bulkhead.Extreme
+                        // Bulkheads = Bulkhead.Main
+                        Bulkheads = Bulkhead.Main | Bulkhead.Extreme
                         // Bulkheads = Bulkhead.Main | Bulkhead.Overload
                         // Bulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload
                     },
