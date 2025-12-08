@@ -31,6 +31,10 @@ Each intel message MUST follow this exact format:
 - Lines separated by `\r\n` (NOT just `\n`)
 - **Exactly ONE section** must be in bold red: `<size=200%><color=red>TEXT HERE</color></size>`
 - Include atmospheric sound effects/actions in brackets: `[gunfire]`, `[whispering]`, `[static]`, `[screaming]`, `[coughing]`, `[typing]` etc.
+  - **Sound effects MUST be 1-2 words maximum** that describe actions or atmospheric sounds
+  - Use verbs or onomatopoeia (e.g., `[gunfire]`, `[static]`, `[screaming]`, `[breathing]`, `[alarm blaring]`)
+  - Do NOT use plain nouns (e.g., NOT `[metal]`, `[door]`, `[weapon]`)
+  - Examples: `[gunfire]`, `[static crackling]`, `[alarm blaring]`, `[screaming]`
   - Use this sparingly, in most cases we want three lines of dialog
 - The text should either be dialog from one of the four players, or a sound effect / action in the brackets.
 - Capture tension, panic, urgency
@@ -40,11 +44,15 @@ Each intel message MUST follow this exact format:
 ### Example Format
 
 ```csharp
-">... [sound effect]\r\n>... This sounds really bad.\r\n>... <size=200%><color=red>They're here!</color></size>"
+">... [static]\r\n>... This sounds really bad.\r\n>... <size=200%><color=red>They're here!</color></size>"
 ```
 
 ```csharp
 ">... <size=200%><color=red>I'm out of bullets!</color></size>\r\n>... There must be more somewhere.\r\n>... Keep searching!"
+```
+
+```csharp
+">... [screaming]\r\n>... [gunfire]\r\n>... <size=200%><color=red>Fall back!</color></size>"
 ```
 
 ## Code Structure
@@ -121,9 +129,9 @@ level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new L
 Review `kb/vanilla_warden_drop_intel.txt` for tone and style. Key patterns:
 
 - **Tension**: `>... [whispering] Slowly... Don't wake them up.`
-- **Panic**: `>... <size=200%><color=red>INCOMING!!</color></size>\r\n>... [gunfire, commotion]`
+- **Panic**: `>... <size=200%><color=red>INCOMING!!</color></size>\r\n>... [gunfire]`
 - **Dark humor**: `>... Shoot me then, 'cause I'm not going in there.`
-- **Desperation**: `>... I'm out of ammo.\r\n>... That was the last of it.\r\n<size=200%><color=red>>... [rustle, unsheathing knife]</color></size>`
+- **Desperation**: `>... I'm out of ammo.\r\n>... That was the last of it.\r\n<size=200%><color=red>>... [clattering]</color></size>`
 - **Instructions**: `>... <size=200%><color=red>Check every box</color></size>, use whatever you find.`
 
 ## Incorporating Objective Documentation
@@ -137,7 +145,7 @@ When generating messages, use the `docs/game/objectives/` files to add specific,
 
 **Terminal Uplink Example** (from `terminal-uplink.md`):
 - References IP addresses, UPLINK commands, alarm triggers
-- `>... UPLINK_CONNECT entered.\r\n>... <size=200%><color=red>Alarm's triggered!</color></size>\r\n>... [klaxon, footsteps]`
+- `>... UPLINK_CONNECT entered.\r\n>... <size=200%><color=red>Alarm's triggered!</color></size>\r\n>... [klaxon blaring]`
 - `>... Code's not matching!\r\n>... X04... where's X04?!\r\n>... <size=200%><color=red>Stage reset!</color></size>`
 
 **Survival Example** (from `survival.md`):
@@ -159,7 +167,7 @@ Before adding the messages, verify:
 - [ ] Each line starts with `>...`
 - [ ] Lines use `\r\n` as separator
 - [ ] Exactly ONE `<size=200%><color=red>` section per message
-- [ ] Include atmospheric [sound effects] or [actions]
+- [ ] Include atmospheric [sound effects] or [actions] (1-2 words max, describing actions/sounds, not plain nouns)
 - [ ] Messages relate to the context from {{args}}
 - [ ] Messages are thematically appropriate for the target location
 - [ ] Tone matches vanilla GTFO (tense, dark, desperate)
