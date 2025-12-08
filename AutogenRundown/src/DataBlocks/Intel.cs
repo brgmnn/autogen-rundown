@@ -51,6 +51,23 @@ public class Intel
 
     public const string Error = ":://ERROR";
 
+    public static string Number(int number)
+        => number switch
+        {
+            1 => "one",
+            2 => "two",
+            3 => "three",
+            4 => "four",
+            5 => "five",
+            6 => "six",
+            7 => "seven",
+            8 => "eight",
+            9 => "nine",
+            10 => "ten",
+
+            _ => "many"
+        };
+
     public static string Terminal(ZoneNode node, int terminalIndex = 0)
     {
         var layer = node.Bulkhead switch
