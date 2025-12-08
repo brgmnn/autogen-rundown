@@ -77,6 +77,7 @@ level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new L
   - Look for existing `#region Warden Intel Messages` blocks nearby
     - If it exists, look for comments like `// add warden intel here`, `// TODO: add warden intel`, or `// claude add intel here` and ONLY ADD THE WARDEN INTEL MESSAGES THERE.
   - Understand what the method/function does to ensure messages are contextually appropriate
+  - If adding to a WardenObjective file and there's no existing input, usually it should be added at the end of the `Build_*` method.
 
 3. **Review existing examples for style**:
   - Read `kb/vanilla_warden_drop_intel.txt` for inspiration and tone
