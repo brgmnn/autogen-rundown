@@ -72,27 +72,42 @@ level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new L
     - Search in `AutogenRundown/src/DataBlocks/` directory
     - Look for relevant objective or feature files
 
-2. **Review the target location**:
+2. **Review objective documentation in docs folder**:
+  - **Check `docs/game/objectives/` for relevant objective information**
+  - Read the relevant doc file to understand:
+    - **Objective mechanics and phases**: What happens during the mission
+    - **Common challenges**: What players struggle with (wave overwhelm, resource depletion, timer pressure, etc.)
+    - **Core mechanics**: Specific game mechanics involved (verification codes, bioscans, alarms, etc.)
+    - **Enemy types**: What enemies appear in this objective
+    - **Atmosphere and tone**: The tension and situations players face
+  - Use this information to make intel messages contextually accurate and atmospheric
+
+3. **Review the target location**:
   - Read the file and understand the surrounding code
   - Look for existing `#region Warden Intel Messages` blocks nearby
     - If it exists, look for comments like `// add warden intel here`, `// TODO: add warden intel`, or `// claude add intel here` and ONLY ADD THE WARDEN INTEL MESSAGES THERE.
   - Understand what the method/function does to ensure messages are contextually appropriate
   - If adding to a WardenObjective file and there's no existing input, usually it should be added at the end of the `Build_*` method.
 
-3. **Review existing examples for style**:
+4. **Review existing examples for style**:
   - Read `kb/vanilla_warden_drop_intel.txt` for inspiration and tone
   - Look at existing custom messages in the codebase for style consistency
   - Match the tone and theme of the context
 
-4. **Generate the 200 (or specified) new messages** that:
+5. **Generate the 200 (or specified) new messages** that:
   - Relate specifically to the context from {{args}}
+  - **Incorporate details from the objective docs** (if applicable):
+    - Reference specific mechanics (verification codes, bioscans, wave timers, fog, etc.)
+    - Mention specific challenges (timer pressure, code retrieval, resource depletion, etc.)
+    - Include relevant enemy types (Giants, Chargers, Mothers, Tanks, etc.)
+    - Capture the specific atmosphere of that objective type
   - Follow the exact format above
   - Capture the GTFO atmosphere: tense, scary, desperate, chaotic
   - Include relevant sound effects and actions
   - Have one dramatic red text section per message
   - Hint at what players will face without being too explicit
 
-5. **Add ONLY the new messages** at the specified location:
+6. **Add ONLY the new messages** at the specified location:
   - Use the `#region Warden Intel Messages` and `#endregion` wrapper if it doesn't exist
   - Add the `level.ElevatorDropWardenIntel.Add(...)` block
   - Place it in the appropriate location within the method/function specified in args
@@ -111,11 +126,34 @@ Review `kb/vanilla_warden_drop_intel.txt` for tone and style. Key patterns:
 - **Desperation**: `>... I'm out of ammo.\r\n>... That was the last of it.\r\n<size=200%><color=red>>... [rustle, unsheathing knife]</color></size>`
 - **Instructions**: `>... <size=200%><color=red>Check every box</color></size>, use whatever you find.`
 
+## Incorporating Objective Documentation
+
+When generating messages, use the `docs/game/objectives/` files to add specific, contextually accurate details:
+
+**Reactor Startup Example** (from `reactor-startup.md`):
+- References waves, verification codes, timer pressure
+- `>... Wave four incoming!\r\n>... <size=200%><color=red>Where's the verification code?!</color></size>\r\n>... [frantic typing]`
+- `>... The verification timer!\r\n>... <size=200%><color=red>We're out of time!</color></size>\r\n>... [alarm blaring]`
+
+**Terminal Uplink Example** (from `terminal-uplink.md`):
+- References IP addresses, UPLINK commands, alarm triggers
+- `>... UPLINK_CONNECT entered.\r\n>... <size=200%><color=red>Alarm's triggered!</color></size>\r\n>... [klaxon, footsteps]`
+- `>... Code's not matching!\r\n>... X04... where's X04?!\r\n>... <size=200%><color=red>Stage reset!</color></size>`
+
+**Survival Example** (from `survival.md`):
+- References timer countdown, position defense, environmental changes
+- `>... Thirty seconds left!\r\n>... <size=200%><color=red>Hold the position!</color></size>\r\n>... [gunfire intensifies]`
+- `>... Security doors opening!\r\n>... New spawn points!\r\n>... <size=200%><color=red>Reposition!</color></size>`
+
+These examples show how objective-specific details make messages more immersive and contextually appropriate.
+
 ## Quality Checklist
 
 Before adding the messages, verify:
 
 - [ ] Args parsed correctly for both context and location
+- [ ] Relevant objective docs reviewed (if applicable) from `docs/game/objectives/`
+- [ ] Messages incorporate specific details from objective docs (mechanics, challenges, enemies)
 - [ ] Target file and method/location identified correctly from args
 - [ ] Each message has exactly 3 lines
 - [ ] Each line starts with `>...`
@@ -132,6 +170,7 @@ Before adding the messages, verify:
 ## Output
 
 1. Confirm the context and location parsed from args
-2. Show the exact file path and line number where messages will be added
-3. Show the complete code block to add (with proper indentation)
-4. Confirm you are ONLY adding new messages and not modifying anything else
+2. Note which objective doc (if any) was reviewed from `docs/game/objectives/`
+3. Show the exact file path and line number where messages will be added
+4. Show the complete code block to add (with proper indentation)
+5. Confirm you are ONLY adding new messages and not modifying anything else
