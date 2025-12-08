@@ -21,7 +21,7 @@ In this objective type, Power Cells are scattered throughout different zones of 
 
 A key mechanic of this objective is its interaction with the Fog environmental hazard:
 
-- **Fog Reduction**: Each Power Cell inserted into the Generator Cluster lowers the fog level somewhat
+- **Fog Increase**: Each Power Cell inserted into the Generator Cluster usually makes the fog worse
 - **Progressive Clearing**: As more generators are powered, fog dissipates from the map, making navigation easier
 - **Strategic Insertion**: It's recommended to insert Power Cells as you collect them rather than gathering all first
 
@@ -30,14 +30,14 @@ A key mechanic of this objective is its interaction with the Fog environmental h
 Inserting the final Power Cell typically triggers significant gameplay changes:
 
 - **Alarm Activation**: May trigger a CLASS V ALARM or Error Alarm upon final insertion
-- **Fog Return**: In some expeditions, fog returns to original levels after the final cell
+- **Fog Clear**: In some many expeditions, fog is cleared after the final cell
 - **Continuous Spawns**: May initiate continuous enemy spawning (e.g., 3 Strikers every ~10 seconds)
 - **Extraction Requirement**: The alarm must often be completed before extraction is available
 
 ## Recommended Strategy
 
 1. **Insert Early Cells First**: Insert at least 2-3 Power Cells before collecting the final one
-2. **Clear the Fog**: Lowering fog early makes subsequent cell retrieval easier
+2. **Change the Fog**: Sometimes lowering fog early makes subsequent cell retrieval easier
 3. **Prepare for Final Cell**: Ensure team is ready for alarm/enemy waves before inserting the last cell
 4. **Use Terminals**: Locate all Power Cells via terminal before starting collection
 5. **Coordinate Transport**: Plan efficient routes and coordinate who carries cells
