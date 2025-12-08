@@ -339,7 +339,7 @@ public static class RundownFactory
                 Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.HsuFindSample,
+                Objective = WardenObjectiveType.GatherTerminal,
             };
             secondDirector.GenPoints();
 

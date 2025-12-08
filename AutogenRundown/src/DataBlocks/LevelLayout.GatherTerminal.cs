@@ -1,11 +1,43 @@
 ﻿using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Terminals;
+using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
 public partial record LevelLayout
 {
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="start"></param>
+    private void BuildLayout_GatherTerminal_Fast(ZoneNode start)
+    {
+        var startZone = planner.GetZone(start)!;
+        startZone.Coverage = CoverageMinMax.Large_100;
+        startZone.TerminalPlacements.First().PlacementWeights = ZonePlacementWeights.AtStart;
+
+        for (var t = 0; t < objective.GatherTerminal_SpawnCount; t++)
+        {
+            startZone.TerminalPlacements.Add(new TerminalPlacement
+            {
+                PlacementWeights = ZonePlacementWeights.AtEnd
+            });
+
+            SetGatherTerminal(start.ZoneNumber, ZonePlacementWeights.NotAtStart);
+            objective.PlacementNodes.Add(start);
+        }
+
+        AddGatherTerminalInfoLog(startZone);
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="director"></param>
+    /// <param name="objective"></param>
+    /// <param name="startish"></param>
+    /// <exception cref="Exception"></exception>
     private void BuildLayout_GatherTerminal(BuildDirector director, WardenObjective objective, ZoneNode? startish)
     {
         if (startish == null)
@@ -16,8 +48,16 @@ public partial record LevelLayout
 
         var start = (ZoneNode)startish;
         var startZone = planner.GetZone(start)!;
-        var layerData = level.GetObjectiveLayerData(director.Bulkhead);
 
+        // --- Fast version ---
+        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep)
+        {
+            BuildLayout_GatherTerminal_Fast(start);
+
+            return;
+        }
+
+        // --- Normal version ---
         switch (level.Tier, director.Bulkhead)
         {
             // These all have 3 spawn count
@@ -142,7 +182,16 @@ public partial record LevelLayout
             }
         }
 
-        startZone.TerminalPlacements.First().LogFiles.Add(new LogFile
+        AddGatherTerminalInfoLog(startZone);
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="zone"></param>
+    private void AddGatherTerminalInfoLog(Zone zone)
+    {
+        zone.TerminalPlacements.First().LogFiles.Add(new LogFile
         {
             FileName = $"DEC_KEY_INVENTORY-{Generator.ShortHexHash()}",
             FileContent = new Text(() =>
@@ -162,8 +211,14 @@ public partial record LevelLayout
         });
     }
 
-    // Helper function to wrap adding the zone placement data
-    private void SetGatherTerminal(int zoneNumber)
+    /// <summary>
+    /// Helper function to wrap adding the zone placement data
+    /// </summary>
+    /// <param name="zoneNumber"></param>
+    /// <param name="distribution"></param>
+    private void SetGatherTerminal(
+        int zoneNumber,
+        ZonePlacementWeights? distribution = null)
     {
         var dataLayer = level.GetObjectiveLayerData(director.Bulkhead);
 
@@ -172,7 +227,7 @@ public partial record LevelLayout
             new()
             {
                 LocalIndex = zoneNumber,
-                Weights = ZonePlacementWeights.EvenlyDistributed
+                Weights = distribution ?? ZonePlacementWeights.EvenlyDistributed
             }
         });
     }

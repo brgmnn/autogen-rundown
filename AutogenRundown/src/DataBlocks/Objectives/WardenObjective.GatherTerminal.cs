@@ -12,6 +12,18 @@ public partial record WardenObjective
 {
     private void PreBuild_GatherTerminal(BuildDirector director, Level level)
     {
+        // Fast version of this objective
+        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep)
+        {
+            GatherTerminal_SpawnCount = GatherTerminal_RequiredCount = level.Tier switch
+            {
+                "E" => 3,
+                _ => 2
+            };
+
+            return;
+        }
+
         GatherTerminal_SpawnCount = (level.Tier, director.Bulkhead) switch
         {
             ("A", _) => 2,
