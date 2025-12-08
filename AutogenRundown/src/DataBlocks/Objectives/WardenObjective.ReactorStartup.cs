@@ -3,6 +3,7 @@ using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
 using AutogenRundown.Extensions;
+using AutogenRundown.Patches;
 using FluffyUnderware.DevTools.Extensions;
 
 namespace AutogenRundown.DataBlocks;
@@ -1421,6 +1422,15 @@ public partial record WardenObjective
                                  $"Reactor Waves: [" + ReactorWave.ListToString(ReactorWaves, ",\n  ") + "]");
 
         #region Warden Intel Messages
+
+        var verifyCode = Generator.Pick(level.Tier switch
+        {
+            "C" => TerminalUplink.FiveLetterWords,
+            "D" => TerminalUplink.SixLetterWords,
+            "E" => TerminalUplink.SevenLetterWords,
+            _ => TerminalUplink.FourLetterWords
+        })!.ToUpperInvariant();
+
         level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
         {
             ">... REACTOR_STARTUP entered.\r\n>... <size=200%><color=red>Here they come!</color></size>\r\n>... [gunfire]",
@@ -1465,7 +1475,7 @@ public partial record WardenObjective
             ">... Tank incoming!\r\n>... <size=200%><color=red>Scatter!</color></size>\r\n>... [heavy footsteps]",
             ">... Verification failed!\r\n>... <size=200%><color=red>Wave reset!</color></size>\r\n>... Damn it!",
             ">... [alarm blaring]\r\n>... Wave timer!\r\n>... <size=200%><color=red>Sixty seconds!</color></size>",
-            ">... Code in Zone 18!\r\n>... <size=200%><color=red>That's across the map!</color></size>\r\n>... Run!",
+            // ">... Code in Zone 18!\r\n>... <size=200%><color=red>That's across the map!</color></size>\r\n>... Run!",
             ">... [gunfire]\r\n>... <size=200%><color=red>Reloading!</color></size>\r\n>... Cover me!",
             ">... Wave two starting.\r\n>... <size=200%><color=red>Here we go again!</color></size>\r\n>... [breathing heavily]",
             ">... Pre-typed the command!\r\n>... <size=200%><color=red>Just need the code!</color></size>\r\n>... Waiting!",
@@ -1485,7 +1495,7 @@ public partial record WardenObjective
             ">... Giants and Chargers!\r\n>... <size=200%><color=red>Prioritize Giants!</color></size>\r\n>... On it!",
             ">... Wave timer expired!\r\n>... <size=200%><color=red>Verify now!</color></size>\r\n>... [frantic typing]",
             ">... [alarm blaring]\r\n>... <size=200%><color=red>Contact!</color></size>\r\n>... [gunfire]",
-            ">... Terminal's in Zone 24!\r\n>... <size=200%><color=red>That's deep!</color></size>\r\n>... Go solo!",
+            // ">... Terminal's in Zone 24!\r\n>... <size=200%><color=red>That's deep!</color></size>\r\n>... Go solo!",
             ">... Code runner, status?\r\n>... <size=200%><color=red>Got it! CURE!</color></size>\r\n>... Verifying!",
             ">... [panting] Wave four done!\r\n>... <size=200%><color=red>Four more!</color></size>\r\n>... [groaning]",
             ">... Shooter wave!\r\n>... <size=200%><color=red>Take cover!</color></size>\r\n>... Behind the crate!",
@@ -1527,7 +1537,7 @@ public partial record WardenObjective
             ">... Verification in twenty!\r\n>... Code ready?\r\n>... <size=200%><color=red>DART!</color></size>",
             ">... [static]\r\n>... <size=200%><color=red>Reactor progressing!</color></size>\r\n>... Next wave!",
             ">... Shooter Giants incoming!\r\n>... <size=200%><color=red>Take cover!</color></size>\r\n>... [gunfire]",
-            ">... Code's in Zone 31!\r\n>... <size=200%><color=red>That's far!</color></size>\r\n>... Run fast!",
+            // ">... Code's in Zone 31!\r\n>... <size=200%><color=red>That's far!</color></size>\r\n>... Run fast!",
             ">... [alarm blaring]\r\n>... <size=200%><color=red>Wave starting!</color></size>\r\n>... Brace!",
             ">... Verification complete!\r\n>... <size=200%><color=red>Next wave incoming!</color></size>\r\n>... [breathing heavily]",
             ">... [coughing] Fog wave!\r\n>... <size=200%><color=red>Can't see!</color></size>\r\n>... Use trackers!",
@@ -1631,7 +1641,7 @@ public partial record WardenObjective
             ">... Verification in twenty-five!\r\n>... Code ready?\r\n>... <size=200%><color=red>DART!</color></size>",
             ">... [static]\r\n>... <size=200%><color=red>Reactor progressing!</color></size>\r\n>... Next wave!",
             ">... Giant Shooter wave!\r\n>... <size=200%><color=red>Take cover!</color></size>\r\n>... [gunfire]",
-            ">... Code's in Zone 45!\r\n>... <size=200%><color=red>That's deep!</color></size>\r\n>... Go now!",
+            // ">... Code's in Zone 45!\r\n>... <size=200%><color=red>That's deep!</color></size>\r\n>... Go now!",
             ">... [alarm blaring]\r\n>... <size=200%><color=red>Wave starting!</color></size>\r\n>... Brace!",
             ">... Verification complete!\r\n>... <size=200%><color=red>Next wave!</color></size>\r\n>... [breathing heavily]",
             ">... [coughing] Infectious fog!\r\n>... <size=200%><color=red>Disinfect!</color></size>\r\n>... Where?!",
