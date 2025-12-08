@@ -1,15 +1,22 @@
 ---
 description: Generate new warden intel messages for elevator drops
-args: <context> - Where/what objective these messages are for (e.g., "reactor startup", "fog zones", "terminal uplink", "mother boss")
+args: <context and location> - What the messages are about AND where to add them, AND optionally how many (e.g., "reactor startup in WardenObjective.Reactor.cs", "fog zones in LevelLayout.cs AddFogZone method", "terminal uplink", "mother boss fight in ZoneProgression.cs", "tank fight in LevelLayout.ZoneProgression.cs with 50 messages")
 ---
 
 # IMPORTANT: ONLY ADD NEW WARDEN INTEL MESSAGES
 
 Your task is to generate NEW warden intel messages and add them to the appropriate location in the codebase. **DO NOT refactor, reorganize, or modify any existing code beyond adding the new intel messages.**
 
-## Context
+## Context and Location
 
 You are generating warden intel messages for: **{{args}}**
+
+The args should specify:
+1. **What the messages are about** - The context/objective/feature (e.g., "reactor startup", "fog zones", "security sensors")
+2. **Where to add them** - File path, method name, or code location (e.g., "WardenObjective.Reactor.cs", "AddFogZone method", "LevelLayout.SecuritySensors.cs line 120")
+3. **Optionally: how many messages to add** -
+
+If location is not specified in args, search for the most appropriate location based on the context.
 
 ## Task Overview
 
@@ -57,32 +64,41 @@ level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new L
 
 ## Steps to Complete
 
-1. **Search for context**: Use Grep to find where `level.ElevatorDropWardenIntel` is used related to {{args}}
-   - Search in `AutogenRundown/src/DataBlocks/` directory
-   - Look for relevant objective or feature files
+1. **Identify the target location from args**:
+  - Parse {{args}} to extract both the context (what it's about) and location (where to add)
+  - If a specific file/method is mentioned in args, navigate to that location
+  - If no location is specified, search for the most appropriate place:
+    - Use Grep to find where `level.ElevatorDropWardenIntel` is used related to the context
+    - Search in `AutogenRundown/src/DataBlocks/` directory
+    - Look for relevant objective or feature files
 
-2. **Review existing examples**:
-   - Read `kb/vanilla_warden_drop_intel.txt` for inspiration and tone
-   - Look at existing custom messages in the codebase for style consistency
+2. **Review the target location**:
+  - Read the file and understand the surrounding code
+  - Look for existing `#region Warden Intel Messages` blocks nearby
+    - If it exists, look for comments like `// add warden intel here`, `// TODO: add warden intel`, or `// claude add intel here` and ONLY ADD THE WARDEN INTEL MESSAGES THERE.
+  - Understand what the method/function does to ensure messages are contextually appropriate
 
-3. **Generate 5-8 NEW messages** that:
-   - Relate specifically to {{args}}
-   - Follow the exact format above
-   - Capture the GTFO atmosphere: tense, scary, desperate, chaotic
-   - Include relevant sound effects and actions
-   - Have one dramatic red text section per message
-   - Hint at what players will face without being too explicit
+3. **Review existing examples for style**:
+  - Read `kb/vanilla_warden_drop_intel.txt` for inspiration and tone
+  - Look at existing custom messages in the codebase for style consistency
+  - Match the tone and theme of the context
 
-4. **Identify the exact location** to add them:
-   - Find the appropriate method/function where this intel should be added
-   - Show the file path and line number
+4. **Generate the 200 (or specified) new messages** that:
+  - Relate specifically to the context from {{args}}
+  - Follow the exact format above
+  - Capture the GTFO atmosphere: tense, scary, desperate, chaotic
+  - Include relevant sound effects and actions
+  - Have one dramatic red text section per message
+  - Hint at what players will face without being too explicit
 
-5. **Add ONLY the new messages**:
-   - Use the `#region Warden Intel Messages` and `#endregion` wrapper if it doesn't exist
-   - Add the `level.ElevatorDropWardenIntel.Add(...)` block
-   - **DO NOT modify any other code**
-   - **DO NOT refactor existing messages**
-   - **DO NOT reorganize the file structure**
+5. **Add ONLY the new messages** at the specified location:
+  - Use the `#region Warden Intel Messages` and `#endregion` wrapper if it doesn't exist
+  - Add the `level.ElevatorDropWardenIntel.Add(...)` block
+  - Place it in the appropriate location within the method/function specified in args
+  - Show the exact line number where it was added
+  - **DO NOT modify any other code**
+  - **DO NOT refactor existing messages**
+  - **DO NOT reorganize the file structure**
 
 ## Reference Examples from Vanilla Game
 
@@ -98,19 +114,23 @@ Review `kb/vanilla_warden_drop_intel.txt` for tone and style. Key patterns:
 
 Before adding the messages, verify:
 
+- [ ] Args parsed correctly for both context and location
+- [ ] Target file and method/location identified correctly from args
 - [ ] Each message has exactly 3 lines
 - [ ] Each line starts with `>...`
 - [ ] Lines use `\r\n` as separator
 - [ ] Exactly ONE `<size=200%><color=red>` section per message
 - [ ] Include atmospheric [sound effects] or [actions]
-- [ ] Messages relate to {{args}} context
+- [ ] Messages relate to the context from {{args}}
+- [ ] Messages are thematically appropriate for the target location
 - [ ] Tone matches vanilla GTFO (tense, dark, desperate)
-- [ ] 5-8 messages generated
-- [ ] Messages are added in the correct location
+- [ ] The right number of messages are entered. If not specified in the arguments default to 200 individual messages.
+- [ ] Messages are added in the location specified in {{args}}
 - [ ] NO OTHER CODE WAS MODIFIED
 
 ## Output
 
-1. Show the file path where messages will be added
-2. Show the complete code block to add
-3. Confirm you are ONLY adding new messages and not modifying anything else
+1. Confirm the context and location parsed from args
+2. Show the exact file path and line number where messages will be added
+3. Show the complete code block to add (with proper indentation)
+4. Confirm you are ONLY adding new messages and not modifying anything else
