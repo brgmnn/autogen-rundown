@@ -3,6 +3,7 @@ using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.Extensions;
+using AutogenRundown.Patches;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -760,6 +761,16 @@ public partial record WardenObjective
         LayoutDefinitions.Save();
 
         #region Warden Intel Messages
+
+        // Intel variables
+        var verifyCode = Generator.Pick(level.Tier switch
+        {
+            "C" => TerminalUplink.FiveLetterWords,
+            "D" => TerminalUplink.SixLetterWords,
+            "E" => TerminalUplink.SevenLetterWords,
+            _ => TerminalUplink.FourLetterWords
+        })!.ToUpperInvariant();
+
         level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
         {
             ">... REACTOR_SHUTDOWN entered.\r\n>... <size=200%><color=red>Verification code on HUD!</color></size>\r\n>... [frantic typing]",
