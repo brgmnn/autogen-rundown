@@ -353,8 +353,6 @@ public static class RundownFactory
             };
             thirdDirector.GenPoints();
 
-            Generator.Between(2, 54);
-
             var testLevel = Level.Build(
                 new Level(tier)
                 {
@@ -368,9 +366,9 @@ public static class RundownFactory
                     Settings = new LevelSettings(tier)
                     {
                         // Bulkheads = Bulkhead.Main
-                        Bulkheads = Bulkhead.Main | Bulkhead.Extreme
+                        // Bulkheads = Bulkhead.Main | Bulkhead.Extreme
                         // Bulkheads = Bulkhead.Main | Bulkhead.Overload
-                        // Bulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload
+                        Bulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload
                     },
                     Index = rundown.TierC_Count + 1,
                     IsTest = true
