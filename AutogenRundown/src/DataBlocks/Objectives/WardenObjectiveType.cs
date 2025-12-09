@@ -18,8 +18,8 @@ public enum WardenObjectiveType
     CentralGeneratorCluster = 9,  // C :done:
     HsuActivateSmall = 10,        // N :done:
     Survival = 11,                // X :done:
-    GatherTerminal = 12,          // G
-    CorruptedTerminalUplink = 13, // Y
+    GatherTerminal = 12,          // G :done:
+    CorruptedTerminalUplink = 13, // Y :done:
     TimedTerminalSequence = 15,   // W
 
     Empty = 14,

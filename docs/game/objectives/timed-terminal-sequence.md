@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Timed Terminal Sequence** is a high-pressure objective in GTFO that requires players to execute a series of terminal commands across multiple terminals within strict time limits. Players must initiate a timed connection at a central terminal, locate and verify at a randomly-selected parallel terminal within 3 minutes 20 seconds, then return to confirm at the central terminal within 10 seconds. This objective demands exceptional speed, coordination, pre-planning, and is extremely difficult or impossible to complete solo.
+**Timed Terminal Sequence** is a high-pressure objective in GTFO that requires players to execute a series of terminal commands across multiple terminals within strict time limits. Players must initiate a timed connection at a central terminal, locate and verify at a randomly-selected parallel terminal within several minutes, then return to confirm at the central terminal within 10 seconds. This objective demands exceptional speed, coordination, pre-planning, and is extremely difficult or impossible to complete solo.
 
 ## What is Timed Terminal Sequence?
 
@@ -23,17 +23,17 @@ Timed Terminal Sequence represents a time-sensitive network synchronization prot
 
 1. **Team Positioning**: Position players for rapid terminal access
 2. **Execute INIT_TIMED_CONNECTION**: Enter command at Central Terminal
-3. **First Timer Starts**: 3 minutes 20 seconds begins counting down
+3. **First Timer Starts**: Several minutes begins counting down
 4. **Continuous Enemy Spawns Begin**: Enemies spawn until sequence completion
 5. **Parallel Terminal Determined**: System randomly selects parallel terminal
 
-### Phase 3: Locate and Verify Parallel Terminal (3:20 Timer)
+### Phase 3: Locate and Verify Parallel Terminal
 
 1. **Search for Parallel Terminal**: Check terminals to find correct one
 2. **Navigate to Parallel Terminal**: Move quickly to correct terminal location
 3. **Execute VERIFY_TIMED_CONNECTION**: Enter verification command
 4. **Second Timer Starts**: 10 seconds to return to Central Terminal
-5. **First Timer Overridden**: Initial 3:20 timer replaced by 10-second countdown
+5. **First Timer Overridden**: Initial timer replaced by 10-second countdown
 
 ### Phase 4: Confirm at Central Terminal (0:10 Timer)
 
@@ -62,7 +62,7 @@ Timed Terminal Sequence represents a time-sensitive network synchronization prot
 
 **Command 2 - VERIFY_TIMED_CONNECTION (Parallel Terminal):**
 - Verifies connection at randomly-selected terminal
-- Must be executed within 3:20 of initialization
+- Must be executed within some minutes of initialization
 - Overrides first timer, starts 10-second countdown
 - Executed at Parallel Terminal (location unknown until search)
 
