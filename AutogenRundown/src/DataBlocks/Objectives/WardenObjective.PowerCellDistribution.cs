@@ -95,5 +95,12 @@ public partial record WardenObjective
                     throw new Exception($"Unhandled number of power cells to distribute");
             }
         }
+
+        #region Warden Intel Messages
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        {
+            // TODO: claude code: add 300 messages here
+        }))!);
+        #endregion
     }
 }
