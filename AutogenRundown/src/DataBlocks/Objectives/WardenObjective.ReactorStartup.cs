@@ -1431,10 +1431,10 @@ public partial record WardenObjective
             _ => TerminalUplink.FourLetterWords
         })!.ToUpperInvariant();
         var waveCount = ReactorWaves.Count;
-        var doneWaves = Math.Min(Math.Max(1, waveCount / 3), waveCount - 1);
-        var remainingWaves = waveCount - doneWaves;
+        var thirdWaves = Math.Min(Math.Max(1, waveCount / 3), waveCount - 1);
+        var twoThirdsWaves = waveCount - thirdWaves;
         var halfWaves = Math.Min(Math.Max(1, waveCount / 2), waveCount - 1);
-        var nextWave = doneWaves + 1;
+        var nextWave = thirdWaves + 1;
 
         level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
         {
@@ -1443,7 +1443,7 @@ public partial record WardenObjective
             ">... The verification timer!\r\n>... <size=200%><color=red>We're out of time!</color></size>\r\n>... [alarm blaring]",
             ">... [breathing heavily] I'm out of ammo!\r\n>... <size=200%><color=red>Hold position!</color></size>\r\n>... They're everywhere!",
             $">... REACTOR_VERIFY {verifyCode}\r\n>... <size=200%><color=red>It worked!</color></size>\r\n>... Next wave in thirty...",
-            $">... How many waves left?!\r\n>... <size=200%><color=red>{remainingWaves.ToCardinal().ToTitleCase()}!</color></size>\r\n>... [groaning]",
+            $">... How many waves left?!\r\n>... <size=200%><color=red>{twoThirdsWaves.ToCardinal().ToTitleCase()}!</color></size>\r\n>... [groaning]",
             ">... Giants incoming!\r\n>... Focus fire!\r\n>... <size=200%><color=red>He's down!</color></size>",
             ">... Wave timer's running!\r\n>... <size=200%><color=red>Thirty seconds!</color></size>\r\n>... Almost done!",
             ">... [static]\r\n>... Reactor's starting up.\r\n>... <size=200%><color=red>Brace for contact!</color></size>",
@@ -1464,7 +1464,7 @@ public partial record WardenObjective
             ">... Giant Strikers!\r\n>... <size=200%><color=red>Focus fire!</color></size>\r\n>... [gunfire intensifies]",
             ">... Verification timer's short!\r\n>... <size=200%><color=red>Twenty-five seconds!</color></size>\r\n>... Go now!",
             $">... [static]\r\n>... <size=200%><color=red>REACTOR_VERIFY {verifyCode}!</color></size>\r\n>... Verified!",
-            $">... Wave {doneWaves.ToCardinal()} complete.\r\n>... <size=200%><color=red>{remainingWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [groaning]",
+            $">... Wave {thirdWaves.ToCardinal()} complete.\r\n>... <size=200%><color=red>{twoThirdsWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [groaning]",
             ">... They're spawning behind us!\r\n>... <size=200%><color=red>Turn around!</color></size>\r\n>... [screaming]",
             ">... Reactor's at fifty percent!\r\n>... <size=200%><color=red>Keep going!</color></size>\r\n>... [mechanical sounds]",
             ">... Tank incoming!\r\n>... <size=200%><color=red>Scatter!</color></size>\r\n>... [heavy footsteps]",
@@ -1486,7 +1486,7 @@ public partial record WardenObjective
             ">... Wave timer expired!\r\n>... <size=200%><color=red>Verify now!</color></size>\r\n>... [frantic typing]",
             ">... [alarm blaring]\r\n>... <size=200%><color=red>Contact!</color></size>\r\n>... [gunfire]",
             // ">... Terminal's in Zone 24!\r\n>... <size=200%><color=red>That's deep!</color></size>\r\n>... Go solo!",
-            $">... [panting] Wave {doneWaves.ToCardinal()} done!\r\n>... <size=200%><color=red>{remainingWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [groaning]",
+            $">... [panting] Wave {thirdWaves.ToCardinal()} done!\r\n>... <size=200%><color=red>{twoThirdsWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [groaning]",
             ">... Shooter wave!\r\n>... <size=200%><color=red>Take cover!</color></size>\r\n>... Behind the crate!",
             ">... Reactor's at seventy-five percent!\r\n>... <size=200%><color=red>One more wave!</color></size>\r\n>... Hold on!",
             ">... [static]\r\n>... <size=200%><color=red>Verification complete!</color></size>\r\n>... Next wave!",
@@ -1513,7 +1513,7 @@ public partial record WardenObjective
             ">... Wave timer expired!\r\n>... <size=200%><color=red>Verify!</color></size>\r\n>... [frantic typing]",
             ">... [gunfire]\r\n>... Giant down!\r\n>... <size=200%><color=red>Two more!</color></size>",
             ">... [breathing heavily] Out of mines!\r\n>... <size=200%><color=red>Use C-Foam!</color></size>\r\n>... On it!",
-            $">... Wave {doneWaves.ToCardinal()} starting!\r\n>... <size=200%><color=red>Here they come!</color></size>\r\n>... [alarm blaring]",
+            $">... Wave {thirdWaves.ToCardinal()} starting!\r\n>... <size=200%><color=red>Here they come!</color></size>\r\n>... [alarm blaring]",
             $">... Verification in twenty!\r\n>... Code ready?\r\n>... <size=200%><color=red>\"{verifyCode}\"!</color></size>",
             ">... [static]\r\n>... <size=200%><color=red>Reactor progressing!</color></size>\r\n>... Next wave!",
             ">... Giant Shooters incoming!\r\n>... <size=200%><color=red>Take cover!</color></size>\r\n>... [gunfire]",
@@ -1525,7 +1525,7 @@ public partial record WardenObjective
             $">... [breathing heavily] Terminal found!\r\n>... <size=200%><color=red>What's the code?!</color></size>\r\n>... \"{verifyCode}\"!",
             ">... Reactor's at ninety percent!\r\n>... <size=200%><color=red>Almost done!</color></size>\r\n>... One wave!",
             ">... Verification timer!\r\n>... <size=200%><color=red>Five seconds!</color></size>\r\n>... [frantic typing]",
-            $">... Wave {remainingWaves.ToCardinal()} complete!\r\n>... <size=200%><color=red>{doneWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [panting]",
+            $">... Wave {twoThirdsWaves.ToCardinal()} complete!\r\n>... <size=200%><color=red>{thirdWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [panting]",
             // ">... Shadow wave!\r\n>... They're teleporting!\r\n>... <size=200%><color=red>Flashbangs!</color></size>",
             ">... [gunfire]\r\n>... <size=200%><color=red>Charger!</color></size>\r\n>... Behind you!",
             // ">... [mechanical whirring]\r\n>... <size=200%><color=red>Reactor online!</color></size>\r\n>... [cheering]",
@@ -1537,10 +1537,10 @@ public partial record WardenObjective
             ">... Flyers incoming!\r\n>... <size=200%><color=red>Look up!</color></size>\r\n>... [screeching]",
             $">... Code's on the HUD!\r\n>... <size=200%><color=red>\"{verifyCode}\"!</color></size>\r\n>... Typing!",
             ">... [coughing] Can't breathe!\r\n>... Fog's clearing!\r\n>... <size=200%><color=red>Hold on!</color></size>",
-            $">... Wave {doneWaves.ToCardinal()} complete!\r\n>... <size=200%><color=red>{remainingWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [groaning]",
+            $">... Wave {thirdWaves.ToCardinal()} complete!\r\n>... <size=200%><color=red>{twoThirdsWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [groaning]",
             $">... Verification ready!\r\n>... <size=200%><color=red>REACTOR_VERIFY {verifyCode}!</color></size>\r\n>... Done!",
             ">... [gunfire]\r\n>... <size=200%><color=red>Reload!</color></size>\r\n>... Covering!",
-            $">... Wave {remainingWaves.ToCardinal()} starting!\r\n>... <size=200%><color=red>{doneWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [breathing heavily]",
+            $">... Wave {twoThirdsWaves.ToCardinal()} starting!\r\n>... <size=200%><color=red>{thirdWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [breathing heavily]",
             ">... Pouncer spawning!\r\n>... <size=200%><color=red>It's grabbing me!</color></size>\r\n>... [screaming]",
             ">... [alarm blaring]\r\n>... <size=200%><color=red>Wave defense starting!</color></size>\r\n>... Here we go!",
             ">... Verification timer!\r\n>... <size=200%><color=red>Thirty seconds!</color></size>\r\n>... Get ready!",
@@ -1557,7 +1557,7 @@ public partial record WardenObjective
             $">... REACTOR_VERIFY {verifyCode}!\r\n>... <size=200%><color=red>Verified!</color></size>\r\n>... [mechanical sounds]",
             ">... [breathing heavily] Out of C-Foam!\r\n>... <size=200%><color=red>Use mines!</color></size>\r\n>... On it!",
             $">... Verification in ten!\r\n>... Code ready?\r\n>... <size=200%><color=red>\"{verifyCode}\"!</color></size>",
-            $">... Wave {remainingWaves.ToCardinal()} complete!\r\n>... <size=200%><color=red>{doneWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [groaning]",
+            $">... Wave {twoThirdsWaves.ToCardinal()} complete!\r\n>... <size=200%><color=red>{thirdWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [groaning]",
             ">... [static]\r\n>... <size=200%><color=red>Reactor advancing!</color></size>\r\n>... Next wave!",
             ">... Charger swarm!\r\n>... <size=200%><color=red>Shoot them!</color></size>\r\n>... Keep moving!",
             ">... [alarm blaring]\r\n>... <size=200%><color=red>Wave starting!</color></size>\r\n>... Brace!",
@@ -1574,16 +1574,16 @@ public partial record WardenObjective
             // ">... [mechanical whirring]\r\n>... <size=200%><color=red>Reactor fully online!</color></size>\r\n>... We did it!",
             $">... Verification in fifteen!\r\n>... Code?\r\n>... <size=200%><color=red>\"{verifyCode}\"!</color></size>",
             ">... [alarm blaring]\r\n>... <size=200%><color=red>Last wave!</color></size>\r\n>... [gunfire intensifies]",
-            $">... [breathing heavily] Wave {remainingWaves.ToCardinal()}!\r\n>... <size=200%><color=red>{doneWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... Almost there!",
+            $">... [breathing heavily] Wave {twoThirdsWaves.ToCardinal()}!\r\n>... <size=200%><color=red>{thirdWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... Almost there!",
             ">... Warmup ending!\r\n>... <size=200%><color=red>Brace!</color></size>\r\n>... [alarm blaring]",
             ">... [static]\r\n>... <size=200%><color=red>Verification done!</color></size>\r\n>... Next wave!",
             ">... Shadow wave!\r\n>... <size=200%><color=red>They're everywhere!</color></size>\r\n>... [screeching sounds]",
             $">... Code's on HUD!\r\n>... <size=200%><color=red>\"{verifyCode}\"!</color></size>\r\n>... Typing!",
             ">... [coughing] Fog's thick!\r\n>... <size=200%><color=red>Push through!</color></size>\r\n>... [breathing heavily]",
-            $">... Wave {doneWaves.ToCardinal()} complete!\r\n>... <size=200%><color=red>{remainingWaves.ToCardinal()} more!</color></size>\r\n>... [groaning]",
+            $">... Wave {thirdWaves.ToCardinal()} complete!\r\n>... <size=200%><color=red>{twoThirdsWaves.ToCardinal()} more!</color></size>\r\n>... [groaning]",
             $">... Verification ready!\r\n>... <size=200%><color=red>REACTOR_VERIFY {verifyCode}!</color></size>\r\n>... Done!",
             ">... [gunfire]\r\n>... <size=200%><color=red>Reloading!</color></size>\r\n>... Cover!",
-            $">... Wave {remainingWaves.ToCardinal()} starting!\r\n>... <size=200%><color=red>{doneWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [breathing heavily]",
+            $">... Wave {twoThirdsWaves.ToCardinal()} starting!\r\n>... <size=200%><color=red>{thirdWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [breathing heavily]",
             ">... Tank incoming!\r\n>... <size=200%><color=red>Scatter!</color></size>\r\n>... [heavy footsteps]",
             ">... [alarm blaring]\r\n>... <size=200%><color=red>Wave defense!</color></size>\r\n>... Here we go!",
             ">... Verification timer!\r\n>... <size=200%><color=red>Twenty seconds!</color></size>\r\n>... Hurry!",
@@ -1614,7 +1614,7 @@ public partial record WardenObjective
             // ">... [mechanical whirring]\r\n>... <size=200%><color=red>Reactor complete!</color></size>\r\n>... [cheering]",
             $">... Verification in five!\r\n>... Code?\r\n>... <size=200%><color=red>\"{verifyCode}\"!</color></size>",
             ">... [alarm blaring]\r\n>... <size=200%><color=red>Final wave!</color></size>\r\n>... [gunfire intensifies]",
-            $">... [breathing heavily] Wave {remainingWaves.ToCardinal()}!\r\n>... <size=200%><color=red>{doneWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... Keep going!",
+            $">... [breathing heavily] Wave {twoThirdsWaves.ToCardinal()}!\r\n>... <size=200%><color=red>{thirdWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... Keep going!",
             ">... Warmup phase!\r\n>... <size=200%><color=red>Get ready!</color></size>\r\n>... [alarm blaring]",
             ">... [static]\r\n>... <size=200%><color=red>Verification done!</color></size>\r\n>... Next!",
             ">... Infected Hybrids!\r\n>... <size=200%><color=red>They're fast!</color></size>\r\n>... [gunfire]",
@@ -1631,7 +1631,7 @@ public partial record WardenObjective
             ">... Striker wave!\r\n>... <size=200%><color=red>Focus fire!</color></size>\r\n>... [gunfire intensifies]",
             $">... Code's \"{verifyCode}\"!\r\n>... <size=200%><color=red>REACTOR_VERIFY {verifyCode}!</color></size>\r\n>... Verified!",
             ">... [breathing heavily] Need health!\r\n>... <size=200%><color=red>Health pack!</color></size>\r\n>... Here!",
-            $">... Wave {remainingWaves.ToCardinal()} complete!\r\n>... <size=200%><color=red>{doneWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [panting]",
+            $">... Wave {twoThirdsWaves.ToCardinal()} complete!\r\n>... <size=200%><color=red>{thirdWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [panting]",
             ">... Verification missed!\r\n>... <size=200%><color=red>Wave reset!</color></size>\r\n>... Not again!",
             ">... [alarm blaring]\r\n>... <size=200%><color=red>Contact!</color></size>\r\n>... [gunfire]",
             ">... Reactor's at forty percent!\r\n>... <size=200%><color=red>Keep defending!</color></size>\r\n>... [mechanical whirring]",
@@ -1641,7 +1641,7 @@ public partial record WardenObjective
             ">... [breathing heavily] Out of ammo!\r\n>... <size=200%><color=red>Ammo refill!</color></size>\r\n>... Where?!",
             $">... Verification in twelve!\r\n>... Code ready?\r\n>... <size=200%><color=red>\"{verifyCode}\"!</color></size>",
             ">... [static]\r\n>... <size=200%><color=red>Reactor advancing!</color></size>\r\n>... Next wave!",
-            $">... Wave {remainingWaves.ToCardinal()} complete!\r\n>... <size=200%><color=red>{doneWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [groaning]",
+            $">... Wave {twoThirdsWaves.ToCardinal()} complete!\r\n>... <size=200%><color=red>{thirdWaves.ToCardinal().ToTitleCase()} more!</color></size>\r\n>... [groaning]",
 
             // ">... [coughing] Infectious fog!\r\n>... <size=200%><color=red>Disinfect!</color></size>\r\n>... Where?!",
             // ">... Wave timer!\r\n>... <size=200%><color=red>Four minutes!</color></size>\r\n>... This is long!",
@@ -1655,7 +1655,7 @@ public partial record WardenObjective
                 $">... Code's in the log!\r\n>... <size=200%><color=red>\"{verifyCode}\"!</color></size>\r\n>... Get back here!",
                 $">... Verification code?\r\n>... It's on the HUD!\r\n>... <size=200%><color=red>\"{verifyCode}\"!</color></size>",
                 ">... Can't reach the terminal!\r\n>... <size=200%><color=red>Clear a path!</color></size>\r\n>... [gunfire]",
-                $">... Wave {doneWaves.ToCardinal().ToTitleCase()} complete!\r\n>... <size=200%><color=red>Get the code!</color></size>\r\n>... On it!",
+                $">... Wave {thirdWaves.ToCardinal().ToTitleCase()} complete!\r\n>... <size=200%><color=red>Get the code!</color></size>\r\n>... On it!",
                 ">... [panting] Found the terminal!\r\n>... <size=200%><color=red>What's the code?!</color></size>\r\n>... Checking logs!",
                 ">... Code runner down!\r\n>... <size=200%><color=red>I'll get it!</color></size>\r\n>... Hurry!",
                 ">... Code's not on HUD!\r\n>... <size=200%><color=red>Check the terminals!</color></size>\r\n>... Where?!",
