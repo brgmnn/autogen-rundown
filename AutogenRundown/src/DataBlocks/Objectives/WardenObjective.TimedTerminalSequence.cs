@@ -141,5 +141,18 @@ public partial record WardenObjective
                     Type = WardenObjectiveEventType.UnlockSecurityDoor,
                     LocalIndex = turnOff.First().ZoneNumber
                 });
+
+        #region Warden Intel Messages
+        // Intel variables
+
+        var verificationRounds = TimedTerminalSequence_NumberOfRounds.ToCardinal();
+        var terminalCount = TimedTerminalSequence_NumberOfTerminals.ToCardinal();
+        var midRound = 1.ToCardinal();
+
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        {
+            // TODO: Claude Code: add 300 intel messages here
+        }))!);
+        #endregion
     }
 }
