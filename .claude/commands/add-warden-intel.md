@@ -39,11 +39,13 @@ Each intel message MUST follow this exact format:
 - The text should either be dialog from one of the four players, or a sound effect / action in the brackets.
 - Capture tension, panic, urgency
 - The red text should be the most important/dramatic part, or the part that want's to be emphasized
+- Prefer spelling out numbers rather than writing as integers. E.g. "nine" instead of "9", or "fifteen" instead of "15"
 
 ### Avoid the following in messages
 
 - Any messages covering a victory. e.g completing the level, completing an objective, successfully extracting
 - Hopeful, positive, or upbeat messages.
+- Avoid using specific zone / item numbers. Don't say "Zone 123", instead say "in the zone" or "the zone" or "that zone" etc.
 - Never use the following words:
   - Kite
 
