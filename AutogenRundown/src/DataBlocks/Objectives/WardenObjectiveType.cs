@@ -14,9 +14,9 @@ public enum WardenObjectiveType
     SpecialTerminalCommand = 5,   // T :done:
     RetrieveBigItems = 6,         // B :done:
     PowerCellDistribution = 7,    // C :done:
-    TerminalUplink = 8,           // U
+    TerminalUplink = 8,           // U :done:
     CentralGeneratorCluster = 9,  // C :done:
-    HsuActivateSmall = 10,        // N
+    HsuActivateSmall = 10,        // N :done:
     Survival = 11,                // X :done:
     GatherTerminal = 12,          // G
     CorruptedTerminalUplink = 13, // Y

@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -85,5 +86,17 @@ public partial record WardenObjective
             "D" => Generator.Between(6, 10),
             "E" => Generator.Between(8, 14),
         };
+
+        #region Warden Intel Messages
+
+        // Intel variables
+        var totalTerminals = GatherTerminal_RequiredCount.ToCardinal();
+        var doneTerminals = Math.Min(Math.Max(1, GatherTerminal_RequiredCount / 2), GatherTerminal_RequiredCount - 1).ToCardinal();
+
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        {
+            // TODO: Claude Code: add 300 intel messages here
+        }))!);
+        #endregion
     }
 }
