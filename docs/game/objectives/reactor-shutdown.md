@@ -16,6 +16,7 @@ Reactors are critical power facilities located deep within the Complex. In React
 2. **Resource Collection**: Gather ammunition, health, and tools along the path
 3. **Clear Initial Threats**: Eliminate sleepers blocking access to the reactor terminal
 4. **Locate Terminal**: Find the dedicated reactor control terminal
+4. **Optionally: Unlock Reactor Terminal**: If the reactor terminal is password locked, locate the terminal that stores the password, get the password and unlock the reactor
 
 ### Phase 2: Reactor Shutdown Sequence
 
