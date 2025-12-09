@@ -20,7 +20,7 @@ If location is not specified in args, search for the most appropriate location b
 
 ## Task Overview
 
-Warden intel messages are flavor text snippets displayed to players during level loading. They capture chaotic voice transmissions from a previous team of 4 prisoners who attempted the mission, giving hints about what's coming.
+Warden intel messages are flavor text snippets displayed to players during level loading. They capture chaotic voice transmissions from a previous team of 4 prisoners who attempted the mission, giving hints about what's coming. The messages should be dark, grim, gritty, and possibly a bit scary for the players.
 
 ## Format Requirements
 
@@ -40,6 +40,10 @@ Each intel message MUST follow this exact format:
 - Capture tension, panic, urgency
 - The red text should be the most important/dramatic part, or the part that want's to be emphasized
 
+### Avoid the following in messages
+
+- Any messages covering a victory. e.g completing the level, completing an objective, successfully extracting
+- Hopeful, positive, or upbeat messages.
 
 ### Example Format
 
