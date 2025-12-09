@@ -148,6 +148,7 @@ public partial record LevelLayout
             corridor2,
             new ZoneNode
             {
+                Branch = "kds_deep",
                 MaxConnections = 0,
                 Tags = new Tags("no_enemies", "no_blood_door")
             });

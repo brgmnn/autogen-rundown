@@ -98,5 +98,12 @@ public partial record WardenObjective
 
         // Set type to empty
         Type = WardenObjectiveType.Empty;
+
+        #region Warden Intel Messages
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        {
+            // TODO: Claude Code: Add 300 intel messages here
+        }))!);
+        #endregion
     }
 }

@@ -20,7 +20,7 @@ public enum WardenObjectiveType
     Survival = 11,                // X :done:
     GatherTerminal = 12,          // G :done:
     CorruptedTerminalUplink = 13, // Y :done:
-    TimedTerminalSequence = 15,   // W
+    TimedTerminalSequence = 15,   // W :done:
 
     Empty = 14,
 
