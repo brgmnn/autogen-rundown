@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
@@ -73,6 +74,25 @@ public partial record WardenObjective
                             TriggerAlarm = true
                         }, 30.0);
                 break;
+            }
+        }
+
+        if (level.HasOverload)
+        {
+            var overload = level.Planner.GetBulkheadFirstZone(Bulkhead.Overload);
+
+            if (overload != null)
+            {
+                var overloadZone = level.Planner.GetZone((ZoneNode)overload);
+
+                if (overloadZone != null)
+                {
+                    Plugin.Logger.LogDebug($"Cycling fog");
+                    overloadZone.EventsOnOpenDoor.AddCyclingFog(
+                        Fog.FullFog,
+                        level.FogSettings,
+                        2);
+                }
             }
         }
 

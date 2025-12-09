@@ -492,6 +492,20 @@ public class LayoutPlanner
             .ToList();
 
     /// <summary>
+    /// Get's the first zone in a bulkhead
+    /// </summary>
+    /// <param name="bulkhead"></param>
+    /// <returns></returns>
+    public ZoneNode? GetBulkheadFirstZone(Bulkhead bulkhead)
+    {
+        var nodes = graph.Where(node => node.Key.Bulkhead.HasFlag(bulkhead))
+            .Select(node => node.Key)
+            .OrderBy(zone => zone.ZoneNumber);
+
+        return nodes.Any() ? nodes.First() : null;
+    }
+
+    /// <summary>
     /// Returns true/false whether the given node is a bulkhead entrance.
     /// </summary>
     /// <param name="node"></param>

@@ -245,6 +245,54 @@ public static class WardenObjectiveEventCollections
         return events;
     }
 
+    public static ICollection<WardenObjectiveEvent> AddCyclingFog(
+        this ICollection<WardenObjectiveEvent> events,
+        Fog fogSettings1,
+        Fog fogSettings2,
+        int loopIndex = 1,
+        double delay = 30.0,
+        double duration = 45.0)
+    {
+        var eventLoop = new EventLoop()
+        {
+            LoopIndex = loopIndex,
+            LoopDelay = delay,
+            LoopCount = -1
+        };
+
+        eventLoop.EventsToActivate.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SetFogSettings,
+                Dimension = DimensionIndex.Reality, // TODO: support dimensions
+                Trigger = WardenObjectiveEventTrigger.OnStart,
+                FogSetting = fogSettings1.PersistentId,
+                FogTransitionDuration = duration,
+                SoundId = (Sound)2275333205,
+                Delay = 0
+            });
+        eventLoop.EventsToActivate.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SetFogSettings,
+                Dimension = DimensionIndex.Reality, // TODO: support dimensions
+                Trigger = WardenObjectiveEventTrigger.OnStart,
+                FogSetting = fogSettings2.PersistentId,
+                FogTransitionDuration = duration,
+                SoundId = (Sound)2275333205,
+                Delay = duration + delay
+            });
+
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.StartEventLoop,
+                EventLoop = eventLoop
+            });
+
+        return events;
+    }
+
     #endregion
 
     #region Lights
