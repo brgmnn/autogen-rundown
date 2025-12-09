@@ -390,5 +390,23 @@ public partial record WardenObjective
                 break;
             }
         }
+
+        #region Warden Intel Messages
+
+        var itemName = item switch
+        {
+            WardenObjectiveItem.CryoCase => "Cryo Case",
+            WardenObjectiveItem.CargoCrate => "Cargo Crate",
+            WardenObjectiveItem.CargoCrateHighSecurity => "HiSec Cargo Crate",
+            WardenObjectiveItem.DataSphere => "Data Sphere",
+            WardenObjectiveItem.MatterWaveProjector => "Matter Wave Projector",
+            _ => "big item"
+        };
+
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        {
+            // TODO: Claude code: add 300 intel messages here
+        }))!);
+        #endregion
     }
 }
