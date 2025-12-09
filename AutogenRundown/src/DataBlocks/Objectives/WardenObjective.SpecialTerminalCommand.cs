@@ -470,5 +470,52 @@ public partial record WardenObjective
                 TriggerAlarm = true,
                 SpawnDelay = 4.0
             });
+
+        #region Warden Intel Messages
+
+        // Generic special terminal command intel
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        {
+            // TODO: Claude Code - Add 200 intel messages here
+        }))!);
+
+        if (SpecialTerminalCommand_Type == SpecialCommand.LightsOff)
+        {
+            // Intel for terminal command that shuts off all the lights/power in the level
+            level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+            {
+                // TODO: Claude Code - Add 150 intel messages here
+            }))!);
+        }
+
+        if (SpecialTerminalCommand_Type == SpecialCommand.FillWithFog)
+        {
+            // Intel for terminal command that shuts off the ventilation and slowly fills the level with fog
+            level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+            {
+                // TODO: Claude Code - Add 150 intel messages here
+            }))!);
+        }
+
+        if (SpecialTerminalCommand_Type == SpecialCommand.ErrorAlarm)
+        {
+            // Intel for terminal command that causes an error alarm to persist for the rest of the level
+            level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+            {
+                // TODO: Claude Code - Add 150 intel messages here
+            }))!);
+        }
+
+        if (SpecialTerminalCommand_Type == SpecialCommand.KingOfTheHill)
+        {
+            // Intel for terminal command that has a giant room scan in the middle of a big room
+            // that players must defend against. King of the hill style
+            level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+            {
+                // TODO: Claude Code - Add 150 intel messages here
+            }))!);
+        }
+
+        #endregion
     }
 }
