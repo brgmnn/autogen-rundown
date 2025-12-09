@@ -44,6 +44,8 @@ Each intel message MUST follow this exact format:
 
 - Any messages covering a victory. e.g completing the level, completing an objective, successfully extracting
 - Hopeful, positive, or upbeat messages.
+- Never use the following words:
+  - Kite
 
 ### Example Format
 
