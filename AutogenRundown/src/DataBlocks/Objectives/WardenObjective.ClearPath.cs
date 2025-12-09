@@ -289,7 +289,7 @@ public partial record WardenObjective
             ">... They're tanky!\r\n>... <size=200%><color=red>Keep firing!</color></size>\r\n>... [sustained]",
             ">... First Giant down!\r\n>... <size=200%><color=red>Next one!</color></size>\r\n>... [continuing]",
             ">... This is exhausting!\r\n>... <size=200%><color=red>Almost done!</color></size>\r\n>... [tired]",
-            ">... 80% complete!\r\n>... <size=200%><color=red>20 seconds!</color></size>\r\n>... [motivated]",
+            ">... 80% complete!\r\n>... <size=200%><color=red>Twenty seconds!</color></size>\r\n>... [motivated]",
             ">... We got this!\r\n>... <size=200%><color=red>Don't stop now!</color></size>\r\n>... [pushing]",
             ">... Mixed wave!\r\n>... <size=200%><color=red>Everything at once!</color></size>\r\n>... [chaos]",
             ">... Strikers, Shooters, Giants!\r\n>... <size=200%><color=red>Kill them all!</color></size>\r\n>... [everything]",
