@@ -373,7 +373,7 @@ switch (level.Tier, director.Bulkhead)
 }
 ```
 
-Use `Generator.SelectRun()` for weighted random selection:
+Use `Generator.SelectRun()` for weighted random selection of code blocks:
 
 ```csharp
 Generator.SelectRun(new List<(double, Action)>
@@ -386,7 +386,7 @@ Generator.SelectRun(new List<(double, Action)>
 
 ### Resource Distribution
 
-Add resources to zones based on difficulty:
+Add resources to zones based on difficulty. Each unit corresponds to one use of that resource. One use grants 20% ammo/tool/health to one player:
 
 ```csharp
 zone.AmmoPacks += 5.0;
