@@ -6,21 +6,21 @@
 /// </summary>
 public enum WardenObjectiveType
 {
-    HsuFindSample = 0,            // H :done:
-    ReactorStartup = 1,           // R :done:
-    ReactorShutdown = 2,          // S :done:
-    GatherSmallItems = 3,         // G :done:
-    ClearPath = 4,                // P :done:
-    SpecialTerminalCommand = 5,   // T :done:
-    RetrieveBigItems = 6,         // B :done:
-    PowerCellDistribution = 7,    // C :done:
-    TerminalUplink = 8,           // U :done:
-    CentralGeneratorCluster = 9,  // C :done:
-    HsuActivateSmall = 10,        // N :done:
-    Survival = 11,                // X :done:
-    GatherTerminal = 12,          // G :done:
-    CorruptedTerminalUplink = 13, // Y :done:
-    TimedTerminalSequence = 15,   // W :done:
+    HsuFindSample = 0,            // H
+    ReactorStartup = 1,           // R
+    ReactorShutdown = 2,          // S
+    GatherSmallItems = 3,         // G
+    ClearPath = 4,                // P
+    SpecialTerminalCommand = 5,   // T
+    RetrieveBigItems = 6,         // B
+    PowerCellDistribution = 7,    // C
+    TerminalUplink = 8,           // U
+    CentralGeneratorCluster = 9,  // C
+    HsuActivateSmall = 10,        // N
+    Survival = 11,                // X
+    GatherTerminal = 12,          // G
+    CorruptedTerminalUplink = 13, // Y
+    TimedTerminalSequence = 15,   // W
 
     Empty = 14,
 
