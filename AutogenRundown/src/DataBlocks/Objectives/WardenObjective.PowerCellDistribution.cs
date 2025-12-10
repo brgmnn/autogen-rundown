@@ -96,7 +96,10 @@ public partial record WardenObjective
                     throw new Exception($"Unhandled number of power cells to distribute");
             }
         }
+    }
 
+    private void PostBuildIntel_PowerCellDistribution(Level level)
+    {
         #region Warden Intel Messages
 
         var cells = PowerCellsToDistribute.ToCardinal();

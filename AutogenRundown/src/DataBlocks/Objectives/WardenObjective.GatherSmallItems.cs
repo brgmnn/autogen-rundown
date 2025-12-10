@@ -122,19 +122,23 @@ public partial record WardenObjective
         Plugin.Logger.LogDebug($"GatherSmallItems: Placements = [{Gather_PlacementNodes.Print()}]");
 
         // TODO: AddCompletedObjectiveWaves(level, director);
+    }
 
-        var itemName = itemId switch
+    private void PostBuildIntel_GatherSmallItems(Level level)
+    {
+        var itemName = GatherItemId switch
         {
-            WardenObjectiveItem.PersonnelId => "Personnel ID",
-            WardenObjectiveItem.PartialDecoder => "Decoder",
-            WardenObjectiveItem.Harddrive => "Hard Drive",
-            WardenObjectiveItem.Glp_1 => "GLP Canister",
-            WardenObjectiveItem.Glp_2 => "GLP Canister",
-            WardenObjectiveItem.Osip => "Vials",
-            WardenObjectiveItem.PlantSample => "Plant Sample",
-            WardenObjectiveItem.DataCube => "Data Cube",
-            WardenObjectiveItem.DataCubeBackup => "Data Cube",
-            WardenObjectiveItem.DataCubeTampered => "Data cube",
+            (uint)WardenObjectiveItem.PersonnelId => "Personnel ID",
+            (uint)WardenObjectiveItem.PartialDecoder => "Decoder",
+            (uint)WardenObjectiveItem.Harddrive => "Hard Drive",
+            (uint)WardenObjectiveItem.Glp_1 => "GLP Canister",
+            (uint)WardenObjectiveItem.Glp_2 => "GLP Canister",
+            (uint)WardenObjectiveItem.Osip => "Vials",
+            (uint)WardenObjectiveItem.PlantSample => "Plant Sample",
+            (uint)WardenObjectiveItem.DataCube => "Data Cube",
+            (uint)WardenObjectiveItem.DataCubeBackup => "Data Cube",
+            (uint)WardenObjectiveItem.DataCubeTampered => "Data cube",
+
             _ => "item"
         };
 

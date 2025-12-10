@@ -1419,7 +1419,10 @@ public partial record WardenObjective
 
         Plugin.Logger.LogDebug($"{level.Tier}{level.Index}, Bulkhead={director.Bulkhead} -- " +
                                  $"Reactor Waves: [" + ReactorWave.ListToString(ReactorWaves, ",\n  ") + "]");
+    }
 
+    private void PostBuildIntel_ReactorStartup(Level level)
+    {
         #region Warden Intel Messages
 
         // Intel variables

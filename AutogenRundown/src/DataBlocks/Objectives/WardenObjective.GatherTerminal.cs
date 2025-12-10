@@ -86,7 +86,10 @@ public partial record WardenObjective
             "D" => Generator.Between(6, 10),
             "E" => Generator.Between(8, 14),
         };
+    }
 
+    private void PostBuildIntel_GatherTerminal(Level level)
+    {
         #region Warden Intel Messages
 
         // Intel variables

@@ -98,7 +98,10 @@ public partial record WardenObjective
 
         // Set type to empty
         Type = WardenObjectiveType.Empty;
+    }
 
+    private void PostBuildIntel_ReachKdsDeep(Level level)
+    {
         #region Warden Intel Messages
         level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {

@@ -76,7 +76,7 @@ public partial record WardenObjective
         AddCompletedObjectiveWaves(level, director);
     }
 
-    public void PostBuild_HsuActivateSmall(BuildDirector director, Level level)
+    private void PostBuildIntel_HsuActivateSmall(Level level)
     {
         #region Warden Intel Messages
         // Generic item messages

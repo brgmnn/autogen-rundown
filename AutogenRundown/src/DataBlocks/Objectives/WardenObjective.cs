@@ -815,12 +815,78 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 PostBuild_ReactorShutdown(director, level);
                 break;
 
+            case WardenObjectiveType.Survival:
+                PostBuild_Survival(director, level);
+                break;
+        }
+
+        if (director.Bulkhead != Bulkhead.Main)
+            return;
+
+        switch (director.Objective)
+        {
+            case WardenObjectiveType.HsuFindSample:
+                PostBuildIntel_HsuFindSample(level);
+                break;
+
+            case WardenObjectiveType.ReactorStartup:
+                PostBuildIntel_ReactorStartup(level);
+                break;
+
+            case WardenObjectiveType.ReactorShutdown:
+                PostBuildIntel_ReactorShutdown(level);
+                break;
+
+            case WardenObjectiveType.GatherSmallItems:
+                PostBuildIntel_GatherSmallItems(level);
+                break;
+
+            case WardenObjectiveType.ClearPath:
+                PostBuildIntel_ClearPath(level);
+                break;
+
+            case WardenObjectiveType.SpecialTerminalCommand:
+                PostBuildIntel_SpecialTerminalCommand(level);
+                break;
+
+            case WardenObjectiveType.RetrieveBigItems:
+                PostBuildIntel_RetrieveBigItems(level);
+                break;
+
+            case WardenObjectiveType.PowerCellDistribution:
+                PostBuildIntel_PowerCellDistribution(level);
+                break;
+
+            case WardenObjectiveType.TerminalUplink:
+                PostBuildIntel_TerminalUplink(level);
+                break;
+
+            case WardenObjectiveType.CentralGeneratorCluster:
+                PostBuildIntel_CentralGeneratorCluster(level);
+                break;
+
             case WardenObjectiveType.HsuActivateSmall:
-                PostBuild_HsuActivateSmall(director, level);
+                PostBuildIntel_HsuActivateSmall(level);
                 break;
 
             case WardenObjectiveType.Survival:
-                PostBuild_Survival(director, level);
+                PostBuildIntel_Survival(level);
+                break;
+
+            case WardenObjectiveType.GatherTerminal:
+                PostBuildIntel_GatherTerminal(level);
+                break;
+
+            case WardenObjectiveType.CorruptedTerminalUplink:
+                PostBuildIntel_CorruptedTerminalUplink(level);
+                break;
+
+            case WardenObjectiveType.TimedTerminalSequence:
+                PostBuildIntel_TimedTerminalSequence(level);
+                break;
+
+            case WardenObjectiveType.ReachKdsDeep:
+                PostBuildIntel_ReachKdsDeep(level);
                 break;
         }
     }

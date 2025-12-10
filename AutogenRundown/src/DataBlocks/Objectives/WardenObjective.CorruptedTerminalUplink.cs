@@ -124,8 +124,11 @@ public partial record WardenObjective
         WavesOnActivate.Add(waves);
 
         AddCompletedObjectiveWaves(level, director);
+    }
 
-                #region Warden Intel Messages
+    private void PostBuildIntel_CorruptedTerminalUplink(Level level)
+    {
+        #region Warden Intel Messages
 
         // Intel variables
         var terminalCount = Uplink_NumberOfTerminals.ToCardinal();

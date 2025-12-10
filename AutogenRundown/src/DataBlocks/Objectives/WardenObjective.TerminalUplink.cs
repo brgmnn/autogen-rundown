@@ -102,7 +102,10 @@ public partial record WardenObjective
                     Weights = ZonePlacementWeights.NotAtStart
                 }
             });
+    }
 
+    private void PostBuildIntel_TerminalUplink(Level level)
+    {
         #region Warden Intel Messages
 
         // Intel variables

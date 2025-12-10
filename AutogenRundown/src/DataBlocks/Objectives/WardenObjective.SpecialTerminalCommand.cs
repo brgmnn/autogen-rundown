@@ -470,7 +470,10 @@ public partial record WardenObjective
                 TriggerAlarm = true,
                 SpawnDelay = 4.0
             });
+    }
 
+    private void PostBuildIntel_SpecialTerminalCommand(Level level)
+    {
         #region Warden Intel Messages
 
         // Generic special terminal command intel

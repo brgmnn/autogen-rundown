@@ -24,7 +24,10 @@ public partial record WardenObjective
         GoToWinCondition_CustomGeo = new Text(() => $"Go to the forward exit point in {Intel.Zone(exit, level.Planner)}");
 
         dataLayer.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
+    }
 
+    private void PostBuildIntel_ClearPath(Level level)
+    {
         #region Warden Intel Messages
         level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {

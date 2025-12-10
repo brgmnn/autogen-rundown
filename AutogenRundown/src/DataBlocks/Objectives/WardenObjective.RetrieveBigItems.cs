@@ -390,6 +390,11 @@ public partial record WardenObjective
                 break;
             }
         }
+    }
+
+    private void PostBuildIntel_RetrieveBigItems(Level level)
+    {
+        var item = RetrieveItems.First();
 
         #region Warden Intel Messages
 

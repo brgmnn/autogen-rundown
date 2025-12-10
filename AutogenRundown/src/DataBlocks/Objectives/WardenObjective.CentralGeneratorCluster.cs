@@ -60,7 +60,10 @@ public partial record WardenObjective
         };
 
         AddCompletedObjectiveWaves(level, director);
+    }
 
+    private void PostBuildIntel_CentralGeneratorCluster(Level level)
+    {
         #region Warden Intel Messages
 
         var totalCells = Intel.Number(CentralGeneratorCluster_NumberOfPowerCells - 1).ToTitleCase();

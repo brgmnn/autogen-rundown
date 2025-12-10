@@ -141,7 +141,10 @@ public partial record WardenObjective
                     Type = WardenObjectiveEventType.UnlockSecurityDoor,
                     LocalIndex = turnOff.First().ZoneNumber
                 });
+    }
 
+    private void PostBuildIntel_TimedTerminalSequence(Level level)
+    {
         #region Warden Intel Messages
         // Intel variables
 

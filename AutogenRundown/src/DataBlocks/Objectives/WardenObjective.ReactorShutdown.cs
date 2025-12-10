@@ -759,7 +759,10 @@ public partial record WardenObjective
         // This always needs to be the main level layout
         LayoutDefinitions!.MainLevelLayout = level.GetLevelLayout(Bulkhead.Main)!.PersistentId;
         LayoutDefinitions.Save();
+    }
 
+    private void PostBuildIntel_ReactorShutdown(Level level)
+    {
         #region Warden Intel Messages
 
         // Intel variables
