@@ -143,7 +143,7 @@ public partial record WardenObjective
             })
         })!;
 
-        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {
             // Code matching & verification panic (with variables)
             $">... Which code is it?!\r\n>... <size=200%><color=red>{correctHudCode}!</color></size>\r\n>... [typing frantically]",

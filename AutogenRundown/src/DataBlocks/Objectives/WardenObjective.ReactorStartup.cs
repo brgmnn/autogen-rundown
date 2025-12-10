@@ -1436,7 +1436,7 @@ public partial record WardenObjective
         var halfWaves = Math.Min(Math.Max(1, waveCount / 2), waveCount - 1);
         var nextWave = thirdWaves + 1;
 
-        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {
             ">... REACTOR_STARTUP entered.\r\n>... <size=200%><color=red>Here they come!</color></size>\r\n>... [gunfire]",
             ">... Wave four incoming!\r\n>... <size=200%><color=red>Where's the verification code?!</color></size>\r\n>... [frantic typing]",
@@ -1649,7 +1649,7 @@ public partial record WardenObjective
 
         if (ReactorStartupGetCodes)
         {
-            level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+            level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
             {
                 ">... Terminal's in the next zone!\r\n>... <size=200%><color=red>Get the code!</color></size>\r\n>... [running footsteps]",
                 $">... Code's in the log!\r\n>... <size=200%><color=red>\"{verifyCode}\"!</color></size>\r\n>... Get back here!",

@@ -66,7 +66,7 @@ public partial record WardenObjective
         var totalCells = Intel.Number(CentralGeneratorCluster_NumberOfPowerCells - 1).ToTitleCase();
         var totalGenerators = Intel.Number(CentralGeneratorCluster_NumberOfPowerCells - 1).ToTitleCase();
 
-        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {
             $">... How many cells do we need?\r\n>... <size=200%><color=red>{Intel.Number(CentralGeneratorCluster_NumberOfGenerators).ToTitleCase()}!</color></size>\r\n>... [breathing heavily] These things are heavy...",
             ">... Found another one.\r\n>... <size=200%><color=red>Grab it!</color></size>\r\n>... Already carrying one...",

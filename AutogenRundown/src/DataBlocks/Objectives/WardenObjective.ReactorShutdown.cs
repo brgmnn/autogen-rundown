@@ -771,7 +771,7 @@ public partial record WardenObjective
             _ => TerminalUplink.FourLetterWords
         })!.ToUpperInvariant();
 
-        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {
             ">... REACTOR_SHUTDOWN entered.\r\n>... <size=200%><color=red>Verification code on HUD!</color></size>\r\n>... [frantic typing]",
             ">... Got the verification!\r\n>... <size=200%><color=red>Bioscans starting!</color></size>\r\n>... [alarm blaring]",

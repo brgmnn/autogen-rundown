@@ -100,7 +100,7 @@ public partial record WardenObjective
         Type = WardenObjectiveType.Empty;
 
         #region Warden Intel Messages
-        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {
             // Mission Start / ErrorAlarmChase (30 messages)
             ">... [error alarm blaring]\r\n>... What's that sound?\r\n>... <size=200%><color=red>Something's coming!</color></size>",

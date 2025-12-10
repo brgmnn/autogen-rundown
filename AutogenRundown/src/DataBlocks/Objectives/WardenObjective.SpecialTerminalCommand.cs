@@ -474,7 +474,7 @@ public partial record WardenObjective
         #region Warden Intel Messages
 
         // Generic special terminal command intel
-        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {
             $">... Found the terminal.\r\n>... Command is {SpecialTerminalCommand}.\r\n>... <size=200%><color=red>What does it do?!</color></size>",
             ">... [typing]\r\n>... Backdoor command ready.\r\n>... <size=200%><color=red>Execute now!</color></size>",
@@ -664,7 +664,7 @@ public partial record WardenObjective
         if (SpecialTerminalCommand_Type == SpecialCommand.LightsOff)
         {
             // Intel for terminal command that shuts off all the lights/power in the level
-            level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+            level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
             {
                 ">... Lights are going out!\r\n>... <size=200%><color=red>Flashlights on!</color></size>\r\n>... [electrical humming]",
                 ">... Can't see anything!\r\n>... Everything's dark!\r\n>... <size=200%><color=red>Stay together!</color></size>",
@@ -806,7 +806,7 @@ public partial record WardenObjective
         {
             // Intel for terminal command that shuts off the ventilation and slowly fills the level with fog
             // TODO: separate infectious ones only if level has infectious fog
-            level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+            level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
             {
                 ">... [coughing]\r\n>... Fog's filling the zones!\r\n>... <size=200%><color=red>Ventilation's down!</color></size>",
                 ">... Can't breathe!\r\n>... <size=200%><color=red>Infection rising!</color></size>\r\n>... Need disinfection!",
@@ -947,7 +947,7 @@ public partial record WardenObjective
         if (SpecialTerminalCommand_Type == SpecialCommand.ErrorAlarm)
         {
             // Intel for terminal command that causes an error alarm to persist for the rest of the level
-            level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+            level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
             {
                 ">... [alarm wailing]\r\n>... <size=200%><color=red>Can't shut it off!</color></size>\r\n>... It won't stop!",
                 ">... They keep spawning!\r\n>... Alarm's stuck!\r\n>... <size=200%><color=red>No end!</color></size>",
@@ -1080,7 +1080,7 @@ public partial record WardenObjective
         {
             // Intel for terminal command that has a giant room scan in the middle of a big room
             // that players must defend against. King of the hill style
-            level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+            level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
             {
                 ">... Big scan starting!\r\n>... Hold this position!\r\n>... <size=200%><color=red>They're everywhere!</color></size>",
                 ">... [heavy footsteps]\r\n>... <size=200%><color=red>Tank incoming!</color></size>\r\n>... Defend the scan!",

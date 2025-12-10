@@ -734,7 +734,7 @@ public class Level
     {
         Name = $"<color=red>?!</color><color=#444444>-</color>{Name}";
 
-        ElevatorDropWardenIntel.Add((Generator.Between(1, 4), Generator.Draw(new List<string>
+        ElevatorDropWardenIntel.Add((Generator.Between(1, 6), Generator.Draw(new List<string>
         {
             ">... That alarm started the moment we dropped.\r\n>... [static crackle]\r\n>... <size=200%><color=red>There's no way to turn it off!</color></size>",
             ">... [warning siren blares]\r\n>... Everything's already awake.\r\n>... <size=200%><color=red>We push forward regardless!</color></size>",
@@ -766,7 +766,7 @@ public class Level
     {
         Name = $"<color=red>!!!</color><color=#444444>/</color>{Name}";
 
-        ElevatorDropWardenIntel.Add((Generator.Between(6, 12), Generator.Draw(new List<string>
+        ElevatorDropWardenIntel.Add((Generator.Between(5, 12), Generator.Draw(new List<string>
         {
             ">... [distant rumbling]\r\n>... Feels like something massive is nearby.\r\n>... <size=200%><color=red>We can't face it unprepared!</color></size>",
             ">... There's a lull right now.\r\n>... Could be gathering strength.\r\n>... <size=200%><color=red>When it comes, be ready.</color></size>",

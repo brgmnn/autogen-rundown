@@ -165,7 +165,7 @@ public partial record WardenObjective
             })
         })!;
 
-        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {
             // Log File Navigation & Code Retrieval (70 messages with logCodesCount and correctLogCode)
             $">... There's {logCodesCount.ToTitleCase()} codes in the log!\r\n>... <size=200%><color=red>Which one is it?!</color></size>\r\n>... [typing frantically]",

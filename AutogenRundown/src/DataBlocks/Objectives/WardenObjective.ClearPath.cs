@@ -26,7 +26,7 @@ public partial record WardenObjective
         dataLayer.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToElevator;
 
         #region Warden Intel Messages
-        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {
             ">... Just keep moving forward.\r\n>... <size=200%><color=red>Don't look back.</color></size>\r\n>... [distant screaming]",
             ">... Where's the extraction point?\r\n>... <size=200%><color=red>I don't know!</color></size>\r\n>... Check the terminal!",

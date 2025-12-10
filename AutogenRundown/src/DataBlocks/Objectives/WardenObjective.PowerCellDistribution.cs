@@ -101,7 +101,7 @@ public partial record WardenObjective
 
         var cells = PowerCellsToDistribute.ToCardinal();
 
-        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {
             // Theme 1: Cell Count & Overwhelming Task (70 messages: 20 with PowerCellsToDistribute, 50 generic)
             $">... {cells.ToTitleCase()} cells total!\r\n>... <size=200%><color=red>That's a lot!</color></size>\r\n>... Get moving!",

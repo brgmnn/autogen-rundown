@@ -93,7 +93,7 @@ public partial record WardenObjective
         var totalTerminals = GatherTerminal_RequiredCount.ToCardinal();
         var doneTerminals = Math.Min(Math.Max(1, GatherTerminal_RequiredCount / 2), GatherTerminal_RequiredCount - 1).ToCardinal();
 
-        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {
             // Terminal progress tracking (with totalTerminals and doneTerminals)
             $">... This is terminal {doneTerminals}!\r\n>... <size=200%><color=red>How many total?!</color></size>\r\n>... {totalTerminals.ToTitleCase()}!",

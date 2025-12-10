@@ -403,7 +403,7 @@ public partial record WardenObjective
             _ => "big item"
         };
 
-        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {
             // Theme 1: Carrier Restrictions & Vulnerability (80 messages: 30 with itemName, 50 generic)
             $">... Got the {itemName}!\r\n>... <size=200%><color=red>Can't use my weapon!</color></size>\r\n>... Cover me!",

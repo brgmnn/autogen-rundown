@@ -149,7 +149,7 @@ public partial record WardenObjective
         var terminalCount = TimedTerminalSequence_NumberOfTerminals.ToCardinal();
         var midRound = 1.ToCardinal();
 
-        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {
             // Timer Pressure & 10-Second Sprint (Static)
             ">... Ten seconds!\r\n>... <size=200%><color=red>I can't make it!</color></size>\r\n>... [frantic footsteps]",
