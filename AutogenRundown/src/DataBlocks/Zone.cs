@@ -826,15 +826,37 @@ public partial record Zone : DataBlock<Zone>
     /// </summary>
     public bool EnemyRespawning { get; set; } = false;
 
+    /// <summary>
+    ///
+    /// </summary>
     public bool EnemyRespawnRequireOtherZone { get; set; } = true;
 
+    /// <summary>
+    ///
+    /// </summary>
     public int EnemyRespawnRoomDistance { get; set; } = 2;
 
-    public double EnemyRespawnTimeInterval { get; set; } = 10.0;
+    /// <summary>
+    ///
+    /// </summary>
+    public double EnemyRespawnTimeInterval { get; set; } = 30.0;
 
+    /// <summary>
+    ///
+    /// </summary>
     public double EnemyRespawnCountMultiplier { get; set; } = 1.0;
 
-    public JArray EnemyRespawnExcludeList = new JArray();
+    /// <summary>
+    /// Enemy persistent ID's to exclude from spawning. Usually we want to do this to exclude scouts
+    /// </summary>
+    public List<Enemy> EnemyRespawnExcludeList { get; set; } = new()
+    {
+        Enemy.Scout,
+        Enemy.ScoutCharger,
+        Enemy.ScoutShadow,
+        Enemy.ScoutNightmare,
+        Enemy.ScoutZoomer
+    };
     #endregion
 
     #region Static Spawns (Spitters, Mother Sacks etc)
