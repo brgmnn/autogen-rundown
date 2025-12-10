@@ -116,6 +116,10 @@ Tags modify zone generation behavior:
 Add tags via:
 
 ```csharp
+// Preferred - more ergonomic
+node = planner.AddTags(node, "no_enemies", "no_scouts");
+
+// Alternative - manual extension
 node = planner.UpdateNode(node with { Tags = node.Tags.Extend("no_enemies", "no_scouts") });
 ```
 
