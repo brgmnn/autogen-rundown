@@ -1,11 +1,10 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enemies;
-using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.Extensions;
 using AutogenRundown.Patches;
 
-namespace AutogenRundown.DataBlocks;
+namespace AutogenRundown.DataBlocks.Objectives;
 
 public partial record WardenObjective
 {

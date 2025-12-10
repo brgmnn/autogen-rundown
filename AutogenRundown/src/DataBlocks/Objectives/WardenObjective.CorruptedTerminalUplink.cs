@@ -1,10 +1,9 @@
 ﻿using AutogenRundown.DataBlocks.Enemies;
-using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.Extensions;
 using AutogenRundown.Patches;
 
-namespace AutogenRundown.DataBlocks;
+namespace AutogenRundown.DataBlocks.Objectives;
 
 /**
  * Objective: CorruptedTerminalUplink

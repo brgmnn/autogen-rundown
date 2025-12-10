@@ -7,6 +7,8 @@ using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
+using WardenObjective = Objectives.WardenObjective;
+
 public enum GeneratorFogShape
 {
     Ascending,

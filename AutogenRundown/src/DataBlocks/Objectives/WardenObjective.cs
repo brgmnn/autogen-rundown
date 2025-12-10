@@ -2,14 +2,13 @@
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
-using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.CentralGeneratorCluster;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
 using AutogenRundown.DataBlocks.Zones;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace AutogenRundown.DataBlocks;
+namespace AutogenRundown.DataBlocks.Objectives;
 
 public partial record WardenObjective : DataBlock<WardenObjective>
 {

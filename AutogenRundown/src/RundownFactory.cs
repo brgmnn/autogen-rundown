@@ -418,7 +418,7 @@ public static class RundownFactory
             var settings = new LevelSettings("B");
             // settings.Modifiers.Add(LevelModifiers.Chargers);
             var description = new DataBlocks.Text(DescriptionHeader(objective) +
-                                                  DataBlocks.WardenObjective.GenLevelDescription(objective));
+                                                  DataBlocks.Objectives.WardenObjective.GenLevelDescription(objective));
             var level = Level.Build(
                 new("B")
                 {

@@ -1,7 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Enemies;
-using AutogenRundown.DataBlocks.Objectives;
 
-namespace AutogenRundown.DataBlocks;
+namespace AutogenRundown.DataBlocks.Objectives;
 
 /*
  * This objective is bringing a large item like Neonate or Data Sphere to a machine and then

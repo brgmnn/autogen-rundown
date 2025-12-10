@@ -1,10 +1,9 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Levels;
-using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.Extensions;
 
-namespace AutogenRundown.DataBlocks;
+namespace AutogenRundown.DataBlocks.Objectives;
 
 public partial record WardenObjective
 {

@@ -5,6 +5,8 @@ using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
+using WardenObjective = Objectives.WardenObjective;
+
 // Ideas:
 //
 //      EMERGENCY_ESCAPE_PROTOCOL -- From R7C1 Monster room

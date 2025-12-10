@@ -10,6 +10,8 @@ using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks;
 
+using WardenObjective = Objectives.WardenObjective;
+
 public enum SizeFactor
 {
     Small,

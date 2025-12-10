@@ -1,6 +1,4 @@
-﻿using AutogenRundown.DataBlocks.Objectives;
-
-namespace AutogenRundown.DataBlocks;
+﻿namespace AutogenRundown.DataBlocks.Objectives;
 
 /**
  * Objective: ClearPath

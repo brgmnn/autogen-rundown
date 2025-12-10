@@ -15,6 +15,8 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks;
 
+using WardenObjective = Objectives.WardenObjective;
+
 public class BuildFrom
 {
     public int LayerType { get; set; } = 0;

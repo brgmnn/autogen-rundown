@@ -12,6 +12,8 @@ using AutogenRundown.Utils;
 
 namespace AutogenRundown.DataBlocks;
 
+using WardenObjective = Objectives.WardenObjective;
+
 // Ideas:
 //
 //  * ADMIN_TEMP_OVERRIDE command styled in R8E2

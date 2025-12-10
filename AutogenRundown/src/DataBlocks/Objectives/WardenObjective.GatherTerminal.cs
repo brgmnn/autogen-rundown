@@ -1,7 +1,6 @@
-﻿using AutogenRundown.DataBlocks.Objectives;
-using AutogenRundown.Extensions;
+﻿using AutogenRundown.Extensions;
 
-namespace AutogenRundown.DataBlocks;
+namespace AutogenRundown.DataBlocks.Objectives;
 
 /**
  * Objective: Gather Terminal

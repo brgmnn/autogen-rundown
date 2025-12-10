@@ -7,6 +7,8 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks;
 
+using WardenObjective = Objectives.WardenObjective;
+
 public static class Bins
 {
     public static BlocksBin<BigPickupDistribution> BigPickupDistributions { get; private set; }

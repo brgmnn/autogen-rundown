@@ -10,6 +10,8 @@ using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 
+using WardenObjective = Objectives.WardenObjective;
+
 public partial record LevelLayout
 {
     private void BuildLayout_GatherTerminal_AlphaSix(
