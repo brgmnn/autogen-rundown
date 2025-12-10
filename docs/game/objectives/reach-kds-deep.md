@@ -2,15 +2,17 @@
 
 ## Overview
 
-**Reach KDS Deep** is a custom AutogenRundown objective that recreates the iconic R8E1 "Valiant" mission from GTFO. Players must fight through the Complex to reach the KDS Deep facility, but arrive too late—the reactor has already exploded ahead of them, plunging critical zones into darkness and destroying the extraction point. The mission culminates in a desperate survival encounter in the devastated HSU storage crater, with victory determined by a custom "Resources Expended" win screen rather than traditional extraction. This objective features dramatic environmental events, tier-scaled difficulty, and unique mechanics not found in vanilla GTFO objectives.
+**Reach KDS Deep** is a custom AutogenRundown objective that recreates the iconic R8E1 "Valiant" mission from GTFO. Players must fight through the Complex to reach the KDS Deep facility, but arrive too late—the reactor has already been sabotaged and exploded ahead of them, plunging critical zones into darkness and destroying the extraction point. The mission culminates in a desperate survival encounter in the devastated HSU storage crater, with victory determined by a custom "Resources Expended" win screen rather than traditional extraction.
+
+**In lore, this is a fatal betrayal**: A duplicate team has teleported out and sabotaged the reactor, abandoning the player team to die in the Complex. While the game counts it as a victory if the team survives long enough, there is no escape—the players are eventually overrun and killed. The "Resources Expended" refers to the player team being sacrificed. This objective features dramatic environmental events, tier-scaled difficulty, and tragic narrative stakes unique among GTFO missions.
 
 ## What is Reach KDS Deep?
 
 Reach KDS Deep represents a desperate fight to reach the deepest section of the Kovac Defense Services (KDS) facility in the Mining complex, located at the Chicxulub crater in Mexico's Yucatan Peninsula. This is where the ancient alien spacecraft "The Inner" rests, and where Garganta—the alien life force harboring NAM-V virus—resides in stored HSU units.
 
-The objective simulates a catastrophic facility failure where **players arrive too late**. The KDS Deep reactor has already failed and exploded while the team was fighting through the Complex. As players approach the final zones, they witness the reactor explosion firsthand—a scripted sequence that plunges the corridors they're traversing into complete darkness before emergency auxiliary power activates. Upon reaching KDS Deep, they find the facility destroyed and running on emergency power, with no traditional extraction available.
+The objective simulates a catastrophic facility failure where **players arrive too late**. The KDS Deep reactor has been sabotaged by a duplicate team that teleported out, leaving the player team to die. As players approach the final zones, they witness the reactor explosion firsthand—a scripted sequence that plunges the corridors they're traversing into complete darkness before emergency auxiliary power activates. Upon reaching KDS Deep, they find the facility destroyed, running on emergency power, with extraction deliberately sabotaged.
 
-The mission culminates in a final survival encounter in the devastated HSU storage crater. Unlike standard objectives, there is **no elevator extraction**. Instead, the win condition uses a custom **"Resources Expended"** success screen—the same dramatic ending as the original R8E1 "Valiant" mission. Victory is achieved by surviving a tier-scaled timer (30-90 seconds), after which the mission instantly succeeds via the WinOnDeath mechanic, representing the prisoners' last stand in the aftermath of disaster.
+The mission culminates in a final survival encounter in the devastated HSU storage crater. Unlike standard objectives, there is **no elevator extraction**—the duplicate team has destroyed it. The game counts it as a "victory" if players survive a tier-scaled timer (30-90 seconds), displaying the custom **"Resources Expended"** success screen. However, **in lore this is not a victory**—it's a fatal backstab. The duplicate team has escaped via matter wave projector, blowing the reactor to cover their tracks and abandoning the player team. The timer measures how long the players survive their last stand before inevitable death. "Resources Expended" refers to the player team—they are the resources that were sacrificed.
 
 This is an **AutogenRundown-exclusive custom objective** that does not appear in vanilla GTFO, though it faithfully recreates the structure, atmosphere, and tragic narrative of the base game's R8E1 "Valiant" expedition.
 
@@ -130,26 +132,30 @@ Players witness the reactor explosion **in the zones they're currently occupying
 
 ### Phase 5: KDS Deep Survival
 
-Players arrive at KDS Deep to find the facility **already destroyed**, running on emergency auxiliary power with no extraction available.
+Players arrive at KDS Deep to find the facility **already destroyed**, sabotaged by the duplicate team that has abandoned them. The reactor has been blown, extraction is impossible, and no rescue is coming. This is the player team's last stand before inevitable death.
 
 1. **Enter Destroyed Exit Zone**: Reach custom R8E1 HSU exit geomorph
-   - Crater-like destroyed area—the reactor has already exploded
+   - Crater-like destroyed area—the duplicate team has blown the reactor
    - Emergency reactor lighting (blue-to-red, auxiliary power only)
    - Zone aliased as "KDS Deep, ZONE" / "KDS"
    - Dramatic tension music begins playing
-   - **No elevator—extraction is impossible**
+   - **No elevator—the duplicate team has destroyed extraction**
+   - Players are abandoned, left behind to die
 
 2. **Activate Exit Scan**: Complete team scan at entry point
    - This initiates the final survival encounter
    - **WinOnDeath** timer begins counting (Event Type 26)
+   - No rescue is coming—this measures the last stand
 
 3. **"SURVIVE" Message** (6 seconds after scan):
    - Objective updates to survival mode
-   - Win condition: Survive the tier-based timer duration
+   - Game win condition: Survive the tier-based timer duration
+   - Lore reality: Hold out as long as possible before being overrun
 
 4. **Survive Enemy Waves**:
-   - **Critical**: Win condition is surviving the timer, NOT killing all enemies
-   - Players don't need to clear all spawns, just stay alive
+   - **Critical**: Game win condition is surviving the timer, NOT killing all enemies
+   - In lore: Fight to the end, knowing death is inevitable
+   - Players don't need to clear all spawns, just stay alive as long as they can
 
 **Survival Duration by Tier**:
 - **A-tier**: 30 seconds
@@ -167,34 +173,38 @@ Players arrive at KDS Deep to find the facility **already destroyed**, running o
 - **E-tier 85% timer**: Giant Shooters wave
 - **Survival end + 4s**: Final boss wave (Tank for most tiers, Mother for E-tier)
 
-5. **Timer Expires → Instant Win**:
+5. **Timer Expires → Instant Win** (game mechanics):
    - When the survival timer hits zero, **mission immediately succeeds**
-   - Players do NOT actually die—the WinOnDeath name is misleading
+   - Players do NOT actually die in-game—the WinOnDeath name is misleading
    - Mission transitions directly to victory screen
+   - **However, in lore**: The players are eventually overrun and killed after this point
 
 6. **"WARDEN SECURITY SYSTEMS DISABLED"** (survival duration + 2.5 seconds):
-   - Victory message displays
-   - Indicates facility defenses have shut down due to reactor failure
+   - Game victory message displays
+   - In lore: The duplicate team has successfully escaped, systems are failing
 
-7. **Custom Victory Screen**:
+7. **Custom Victory Screen** (the dark irony):
    - **"Resources Expended"** success screen displays (R8E1 Valiant-style)
-   - No traditional extraction or elevator escape
-   - Mission ends with prisoners stranded but alive in KDS Deep
+   - Game counts it as a mission success
+   - **Lore reality**: This is a fatal betrayal, not a victory
+   - The player team is the "resource" that was "expended"
+   - No extraction, no escape—abandoned to die in KDS Deep
+   - Timer only measured how long they survived before inevitable death
 
 ### Phase 6: Mission Complete
 
-This mission uses a **custom win condition** unique among GTFO objectives:
+This mission uses a **custom win condition** unique among GTFO objectives, with a dark narrative twist:
 
 **Win Condition**: `GoToExitGeo` (NOT `GoToElevator`)
 - Players must reach the exit geomorph tile (KDS Deep destroyed zone)
-- **No elevator extraction**—the reactor explosion has destroyed traditional extraction
+- **No elevator extraction**—the duplicate team has sabotaged it
 - Survival timer completion triggers instant mission success
 
 **Custom Success Screen**: **"Resources Expended"**
 - Same dramatic ending as vanilla R8E1 "Valiant"
 - UI displays: `"CM_PageExpeditionSuccess_Resources expended_CellUI 2"`
-- Emphasizes the cost of reaching KDS Deep—prisoners survive but are stranded
-- No traditional "mission accomplished" extraction sequence
+- **The dark irony**: "Resources Expended" refers to the player team
+- They are the resources that were sacrificed to allow the duplicate team's escape
 
 **WinOnDeath Mechanic** (Event Type 26):
 ```csharp
@@ -203,17 +213,27 @@ This mission uses a **custom win condition** unique among GTFO objectives:
 .AddMessage("WARDEN SECURITY SYSTEMS DISABLED", surviveDuration + 2.5)
 ```
 
-**What Actually Happens**:
+**What Actually Happens (Game Mechanics)**:
 1. Survival timer expires (30-90 seconds based on tier)
 2. Mission **instantly succeeds**—no need to kill all enemies
 3. "WARDEN SECURITY SYSTEMS DISABLED" message confirms victory
 4. Custom "Resources Expended" win screen displays
-5. **Players do not actually die**—the name "WinOnDeath" is misleading
+5. **Players do not actually die in-game**—the name "WinOnDeath" is misleading
    - It means "instant win when this timer hits zero"
    - Not "win only if all players die"
 
+**What Actually Happens (Lore Reality)**:
+1. **Duplicate team has teleported out** via matter wave projector
+2. **They sabotaged the reactor** to cover their escape
+3. **Player team is abandoned** with no extraction possible
+4. Timer measures how long players survive before being overrun
+5. **Players are eventually killed**—there is no rescue
+6. **"Victory" is a fatal backstab**, not a real success
+7. The duplicate team succeeds; the player team dies
+8. Warden counts it as "mission success" only because objectives were completed
+
 **Mission Narrative**:
-The prisoners have reached KDS Deep too late to extract traditionally. By surviving the onslaught in the destroyed reactor chamber, they've managed to hold position until emergency rescue can arrive—hence "Resources Expended" rather than a clean extraction.
+The prisoners have reached KDS Deep too late—not because of bad timing, but because **they were never meant to make it out**. A duplicate team has used them as a distraction, teleporting to safety and blowing the reactor to eliminate witnesses. The player team is left behind to die in the Complex. The game counts it as a "victory" if they survive long enough for the duplicate team to escape, but in lore, this is a pyrrhic victory at best—a fatal betrayal at worst. "Resources Expended" is grimly literal: the player team is the resource that was expended.
 
 ## Core Mechanics
 
@@ -258,17 +278,19 @@ Auxiliary Delay: Explosion + 4 seconds
 
 ### Survival Encounter Mechanics
 
-The final survival encounter uses **unique win conditions** not found in standard GTFO objectives:
+The final survival encounter uses **unique win conditions** not found in standard GTFO objectives, with dark lore implications:
 
 **Custom Win Condition**: `GoToExitGeo`
 - Players must reach the exit geomorph (KDS Deep destroyed zone)
 - **NOT a standard elevator extraction** (`GoToElevator`)
 - Win condition triggers instant success upon survival timer completion
+- **Lore context**: No extraction exists—the duplicate team sabotaged it
 
 **Custom Success Screen**: `SuccessScreen.ResourcesExpended`
 - Displays "Resources Expended" R8E1 Valiant-style ending
 - UI element: `"CM_PageExpeditionSuccess_Resources expended_CellUI 2"`
-- Emphasizes the costly nature of reaching KDS Deep
+- **Game interpretation**: Emphasizes the costly nature of reaching KDS Deep
+- **Lore interpretation**: The player team IS the resource that was expended
 
 **WinOnDeath Timer** (Event Type 26):
 ```csharp
@@ -278,25 +300,33 @@ scanDoneEvents
     .AddMessage("WARDEN SECURITY SYSTEMS DISABLED", surviveDuration + 2.5);
 ```
 
-**How WinOnDeath Works**:
+**How WinOnDeath Works (Game Mechanics)**:
 - Starts immediately when exit scan completes
 - Counts down based on tier (30-90 seconds)
 - **When timer hits zero → instant mission success**
-- **Players do NOT actually die**—the name is misleading
+- **Players do NOT actually die in-game**—the name is misleading
 - Mission succeeds even if enemies are still alive
 - "WinOnDeath" means "instant win when this timer expires"
+
+**How WinOnDeath Works (Lore Reality)**:
+- Timer measures how long the player team survives their last stand
+- When timer completes, the duplicate team has successfully escaped
+- Players are eventually overrun and killed after this point
+- "WinOnDeath" is grimly accurate—death comes after the timer
+- The abandoned team is doomed, but they hold out long enough
 
 **Wave-Based Spawns**:
 - Continuous enemy spawns throughout duration
 - Tier D/E receive additional mid-timer waves
 - Final boss wave spawns at/after survival completion (can be ignored if timer finished)
-- Spawn density designed to be overwhelming
+- Spawn density designed to be overwhelming—intentionally unwinnable long-term
 
 **Objective**: Survive, not eliminate all enemies
 - Focus on staying alive, not kill counts
 - Defensive positioning critical
 - Consumables and resources expendable
-- Victory achieved by outlasting the timer, not clearing the zone
+- Game victory: Outlast the timer, not clear the zone
+- Lore reality: Hold out as long as possible before inevitable death
 
 ### Two Mid-Level Path Options
 
@@ -462,6 +492,7 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 2. Identify cover and fallback positions
 3. Assign sectors/lanes to team members
 4. Prepare consumables for immediate use
+5. **Understand the reality**: This is a last stand, not an escape
 
 **During Survival** (30-90 seconds):
 1. **Focus on STAYING ALIVE, not kill counts**
@@ -469,19 +500,23 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 3. Rotate positions to avoid being pinned
 4. Call out high-priority targets (Giants, Chargers)
 5. Revive downed teammates quickly
-6. Watch survival timer - sprint to the end
+6. Watch survival timer—hold out to the end
+7. **No rescue is coming**—timer measures your last stand
 
 **Wave Management**:
 1. **8-second wave**: Baseline enemies, moderate threat
 2. **Mid-timer waves** (D/E only): High threat, coordinate focus
 3. **Final boss wave**: Spawns AT/AFTER survival completion
 4. Boss can be ignored if survival timer completes
+5. Spawns are overwhelming by design—you can't clear everything
 
 **Win Condition Awareness**:
-- Timer completion = win, even if players die after
+- Game: Timer completion = mission success
+- Lore: Timer measures how long you survive before being overrun
 - Prioritize time over kills
-- Last player alive can win by surviving to timer end
-- Don't give up if most of team is down
+- Last player alive can achieve game victory by surviving to timer end
+- Don't give up if most of team is down—go down fighting
+- In lore, you're all doomed, but make it count
 
 ## Terminal Commands
 
@@ -564,7 +599,7 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 
 **Solution**:
 - **Understand the win condition**: Timer expiration = instant win via WinOnDeath mechanic
-- **Players do NOT actually die** - mission succeeds when timer hits zero
+- **Players do NOT actually die in-game** - mission succeeds when timer hits zero
 - Focus ONLY on staying alive, not killing enemies
 - Use all consumables (mines, sentries, C-foam) immediately
 - Position in defensible location with cover
@@ -574,6 +609,38 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 - Final boss spawns AFTER survival timer, can be completely ignored
 - Custom "Resources Expended" win screen displays (no traditional extraction)
 - You've arrived too late to extract—survival IS the victory condition
+
+### Challenge: Understanding the "Victory"
+
+**Problem**: The "Resources Expended" victory screen feels hollow or confusing. Is this really a successful mission? Why does it feel like a defeat?
+
+**Explanation**:
+The victory screen is intentionally ambiguous because **in lore, this is not a happy ending**:
+
+**Game Mechanics Perspective**:
+- Mission counted as success if survival timer completes
+- "Resources Expended" is a valid victory condition
+- Players don't die in-game—mission ends successfully
+- All objectives technically completed
+
+**Lore Reality Perspective**:
+- **This is a fatal betrayal**, not a real victory
+- A duplicate team has teleported out via matter wave projector
+- They deliberately sabotaged the reactor to cover their escape
+- Player team was left behind to die—no rescue is coming
+- The timer measures how long you survive before being overrun
+- Players are eventually killed by the endless enemy waves
+- "Resources Expended" refers to **YOUR team**—you are the resources
+- The duplicate team succeeds; the player team dies
+
+**Why Warden Counts It As Success**:
+- Objectives were completed (reached KDS Deep)
+- The duplicate team's mission succeeded
+- Player team surviving long enough allowed duplicate team to escape
+- From Warden's perspective, expendable resources fulfilled their purpose
+
+**The Dark Irony**:
+This is one of GTFO's bleakest narratives—a pyrrhic victory where you "win" the game by being successfully sacrificed. The triumph belongs to the team that abandoned you, not to you.
 
 ### Challenge: Mid-Level Path Choice
 
@@ -677,21 +744,28 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 - Know the path forward before triggering the scan
 
 ### Survival Encounter
-- **No extraction available** - reactor explosion destroyed traditional extraction
+- **No extraction available** - duplicate team sabotaged the reactor and extraction
 - **Custom win condition**: `GoToExitGeo` (NOT standard elevator extraction)
 - **Custom "Resources Expended" win screen** displays (R8E1 Valiant-style)
+- **Lore context**: "Resources Expended" refers to YOUR team being sacrificed
 - Save ALL consumables for final survival encounter
 - **Survival timer completion = instant win** via WinOnDeath mechanic
-- **Players do NOT actually die** - WinOnDeath means "instant win at timer expiration"
-- Win condition is surviving the timer, NOT killing all enemies
+- **Players do NOT actually die in-game** - WinOnDeath means "instant win at timer expiration"
+- **In lore**: Players are eventually overrun and killed after timer ends
+- **Game win condition**: Survive the timer, NOT kill all enemies
+- **Lore reality**: Last stand before inevitable death—hold out as long as you can
 - "SURVIVE" message appears at 6 seconds into encounter
-- "WARDEN SECURITY SYSTEMS DISABLED" confirms victory at timer + 2.5s
+- "WARDEN SECURITY SYSTEMS DISABLED" confirms game victory at timer + 2.5s
+- **Duplicate team has already escaped** - they teleported out and left you to die
+- **No rescue is coming** - this is your final stand
+- Timer measures how long you survive before being overrun
 - Final boss wave spawns at/after survival duration end (can be ignored)
 - Boss spawns are tier-dependent (E-tier gets Mother, others get Tank)
 - Focus on staying alive over getting kills
 - Use defensive positioning with cover
 - Coordinate team sectors to watch all angles
 - Mission succeeds even if enemies are still alive when timer expires
+- **Dark irony**: "Victory" means you lasted long enough for the duplicate team to escape
 
 ### Reactor & Lore
 - **Reactor explosion happens AHEAD of players** (in KDS Deep), not behind them
