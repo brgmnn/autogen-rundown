@@ -48,6 +48,10 @@ Each intel message MUST follow this exact format:
 - Avoid using specific zone / item numbers. Don't say "Zone 123", instead say "in the zone" or "the zone" or "that zone" etc.
 - Never use the following words:
   - Kite
+- Never reference the level tier
+- Never reference the number of points of enemies
+- Never reference the victory screen / failure screen. Or any of the out-of-game menus etc.
+- Avoid using "Revive", instead say things like "get him back up"
 
 ### Example Format
 
