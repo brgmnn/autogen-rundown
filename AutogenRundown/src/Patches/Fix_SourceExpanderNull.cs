@@ -5,33 +5,37 @@ using LevelGeneration;
 
 namespace AutogenRundown.Patches;
 
+using MainStatus = LG_ZoneJob_CreateExpandFromData.MainStatus;
+using SubStatus = LG_ZoneJob_CreateExpandFromData.SubStatus;
+
 [HarmonyPatch]
 public class Fix_SourceExpanderNull
 {
     /// <summary>
-    /// Catches zones that reach Done state without a sourceExpander and triggers a reroll.
-    /// This prevents the NullReferenceException that would otherwise crash the build.
+    /// Catches zones that reach Done state without a sourceExpander and redirects to Failed state.
+    /// The Failed state has a fallback mechanism that eventually returns true, allowing the factory
+    /// to proceed. This prevents the NullReferenceException that would otherwise crash the build.
     /// </summary>
     [HarmonyPatch(typeof(LG_ZoneJob_CreateExpandFromData), nameof(LG_ZoneJob_CreateExpandFromData.Build))]
     [HarmonyPrefix]
-    public static bool Pre_Build(LG_ZoneJob_CreateExpandFromData __instance, ref bool __result)
+    public static void Pre_Build(LG_ZoneJob_CreateExpandFromData __instance)
     {
-        // Only intercept when transitioning to Done state
-        if (__instance.m_mainStatus != LG_ZoneJob_CreateExpandFromData.MainStatus.Done)
-            return true;
+        // Only intercept when in Done state
+        if (__instance.m_mainStatus != MainStatus.Done)
+            return;
 
         var zone = __instance.m_zone;
         if (zone == null)
-            return true;
+            return;
 
-        // Check if sourceExpander is null - this would cause a crash
+        // Check if sourceExpander is null - this would cause a crash in Done handler
         if (zone.m_sourceExpander == null)
         {
             Plugin.Logger.LogWarning(
                 $"Zone {zone.LocalIndex} reached Done state without sourceExpander. " +
-                $"Triggering subseed reroll.");
+                $"Transitioning to Failed state and triggering subseed reroll.");
 
-            // Trigger a reroll for this zone
+            // Trigger a reroll for this zone (for next rebuild attempt)
             ZoneSeedManager.Reroll_SubSeed(zone);
 
             // Also reroll parent zone if applicable
@@ -42,12 +46,12 @@ public class Fix_SourceExpanderNull
                 Plugin.Logger.LogDebug($"Also rerolling parent zone {parentIndex}");
             }
 
-            // Return false to skip the original Build() which would crash
-            // The factory will detect the rebuild flag and restart
-            __result = false;
-            return false;
+            // Transition to Failed state - this has a fallback mechanism that:
+            // 1. Relaxes coverage requirements
+            // 2. Changes expansion type to Random
+            // 3. Eventually returns true so factory can proceed
+            __instance.m_mainStatus = MainStatus.Failed;
+            __instance.m_subStatus = SubStatus.Init;
         }
-
-        return true;
     }
 }
