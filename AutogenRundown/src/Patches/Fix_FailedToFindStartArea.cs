@@ -11,7 +11,8 @@ public class Fix_FailedToFindStartArea
     public static readonly Dictionary<(eDimensionIndex dimension, LG_LayerType layer, eLocalZoneIndex index), uint> zoneFailures = new();
 
     /// <summary>
-    /// This is where we need to catch and itemize failed zones
+    /// Catches zones that fail to find valid start areas and triggers a proper subseed reroll.
+    /// The reroll is persisted via ZoneSeedManager so it survives level rebuilds.
     /// </summary>
     /// <param name="__instance"></param>
     /// <param name="__exception"></param>
@@ -19,11 +20,6 @@ public class Fix_FailedToFindStartArea
     [HarmonyFinalizer]
     public static void Post_LG_ZoneJob_CreateExpandFromData_Build(LG_ZoneJob_CreateExpandFromData __instance, ref Exception? __exception)
     {
-        // [Warning:AutogenRundown] Re-rolling subSeed=5699
-        // [Error  :     Unity] WARNING : Zone1 (Zone_1 - 315): Failed to find any good StartAreas in zone 0 (314) expansionType:Towards_Random m_buildFromZone.m_areas: 1 scoredCount:0 dim: Reality
-
-        // TODO: can't call Reroll_Subseed here as it still seems to be stuck?
-
         if (__instance.m_mainStatus == LG_ZoneJob_CreateExpandFromData.MainStatus.FindStartArea &&
             __instance.m_subStatus == LG_ZoneJob_CreateExpandFromData.SubStatus.SelectArea &&
             __instance.m_scoredStartAreas.Count < 1)
@@ -31,27 +27,22 @@ public class Fix_FailedToFindStartArea
             var zone = __instance.m_zone;
             var zoneKey = (zone.m_dimensionIndex, zone.m_layer.m_type, zone.LocalIndex);
 
-            var rollCount = 0u;
+            var rollCount = zoneFailures.GetValueOrDefault(zoneKey, 0u);
+            zoneFailures[zoneKey] = rollCount + 1;
 
-            if (zoneFailures.TryGetValue(zoneKey, out var count))
+            Plugin.Logger.LogWarning($"Zone {zone.LocalIndex} failed to find start area (attempt {rollCount}). Triggering subseed reroll.");
+
+            // Trigger a proper reroll that persists across rebuilds
+            ZoneSeedManager.Reroll_SubSeed(zone);
+
+            // Also reroll the parent zone since it may be the cause of the blockage
+            if (zone.LocalIndex != eLocalZoneIndex.Zone_0 && __instance.m_zoneData != null)
             {
-                rollCount = count;
+                var parentIndex = __instance.m_zoneData.BuildFromLocalIndex;
+                ZoneSeedManager.Reroll_SubSeed(parentIndex, zone.DimensionIndex, zone.Layer.m_type);
 
-                if (count > 50)
-                {
-                    ZoneSeedManager.Reroll_SubSeed(zone);
-                    zoneFailures[zoneKey] = 0;
-
-                    return;
-                }
+                Plugin.Logger.LogDebug($"Also rerolling parent zone {parentIndex}");
             }
-            else
-                zoneFailures[zoneKey] = 0;
-
-            zoneFailures[zoneKey] += 1;
-
-            Plugin.Logger.LogWarning($"Re-rolling ({rollCount}) NEW subSeed={__instance.m_subSeed}");
-            __instance.m_subSeed++;
         }
     }
 }
