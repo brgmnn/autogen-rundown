@@ -1,6 +1,7 @@
 ﻿using AIGraph;
 using AutogenRundown.Patches;
 using CellMenu;
+using Enemies;
 using LevelGeneration;
 
 namespace AutogenRundown.Managers;
@@ -69,6 +70,15 @@ public static class FactoryJobManager
     /// </summary>
     private static void LevelCleanup()
     {
+        // --- Enemies ---
+        // Clear enemy spawn manager cache (uses reflection since m_groupRandomizers is private static)
+        // var groupRandomizersField = typeof(EnemySpawnManager).GetField(
+        //     "m_groupRandomizers",
+        //     System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        // if (groupRandomizersField?.GetValue(null) is System.Collections.IDictionary dict)
+        //     dict.Clear();
+        EnemySpawnManager.m_groupRandomizers.Clear();
+
         // --- Level ---
         LG_BuildNodeCluster.LevelCleanup();
         LG_FunctionMarkerBuilder.LevelCleanup();
@@ -166,6 +176,7 @@ public static class FactoryJobManager
             Fix_NavMeshMarkerSubSeed.TargetsDetected.Clear();
             Fix_NavMeshMarkerSubSeed.MarkerSubSeeds.Clear();
             Fix_NavMeshMarkerSubSeed.ZoneAttempts.Clear();
+            Fix_FailedToFindStartArea.zoneFailures.Clear();
         }
     }
 

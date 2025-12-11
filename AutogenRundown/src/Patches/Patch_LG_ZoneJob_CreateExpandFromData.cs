@@ -232,7 +232,7 @@ internal static class Patch_LG_ZoneJob_CreateExpandFromData
                 {
                     discarded.Reverse();
 
-                    foreach (var score in scoredStartAreas)
+                    foreach (var score in discarded)
                         __instance.m_scoredStartAreas.Add(score);
                 }
             }
