@@ -36,26 +36,22 @@ public class Fix_FailedToFindStartArea
             // Trigger a proper reroll that persists across rebuilds
             ZoneSeedManager.Reroll_SubSeed(zone);
 
-            // Also reroll the parent zone since it may be the cause of the blockage
+            // Reroll the entire parent chain - constraints can propagate from any ancestor
             if (zone.LocalIndex != eLocalZoneIndex.Zone_0 && __instance.m_zoneData != null)
             {
-                var parentIndex = __instance.m_zoneData.BuildFromLocalIndex;
-                ZoneSeedManager.Reroll_SubSeed(parentIndex, zone.DimensionIndex, zone.Layer.m_type);
-                Plugin.Logger.LogDebug($"Also rerolling parent zone {parentIndex}");
+                var currentIndex = __instance.m_zoneData.BuildFromLocalIndex;
 
-                // Also reroll grandparent - the parent's constraint may come from its parent
-                if (parentIndex != eLocalZoneIndex.Zone_0)
+                while (currentIndex != eLocalZoneIndex.Zone_0)
                 {
-                    var parentZone = Game.FindZone(parentIndex, zone.DimensionIndex, zone.Layer.m_type);
-                    if (parentZone?.m_settings?.m_zoneData != null)
-                    {
-                        var grandparentIndex = parentZone.m_settings.m_zoneData.BuildFromLocalIndex;
-                        if (grandparentIndex != eLocalZoneIndex.Zone_0)
-                        {
-                            ZoneSeedManager.Reroll_SubSeed(grandparentIndex, zone.DimensionIndex, zone.Layer.m_type);
-                            Plugin.Logger.LogDebug($"Also rerolling grandparent zone {grandparentIndex}");
-                        }
-                    }
+                    ZoneSeedManager.Reroll_SubSeed(currentIndex, zone.DimensionIndex, zone.Layer.m_type);
+                    Plugin.Logger.LogDebug($"Also rerolling ancestor zone {currentIndex}");
+
+                    // Move up to the next parent
+                    var currentZone = Game.FindZone(currentIndex, zone.DimensionIndex, zone.Layer.m_type);
+                    if (currentZone?.m_settings?.m_zoneData == null)
+                        break;
+
+                    currentIndex = currentZone.m_settings.m_zoneData.BuildFromLocalIndex;
                 }
             }
         }
