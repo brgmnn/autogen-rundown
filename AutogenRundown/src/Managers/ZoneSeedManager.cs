@@ -64,7 +64,7 @@ public static class ZoneSeedManager
                 ? value
                 : zone.m_subSeed;
 
-            SubSeeds[(dimension, layer, index)] = subSeed + 1;
+            SubSeeds[(dimension, layer, index)] = subSeed + 137;
         }
 
         FailedSubSeeds.Clear();
