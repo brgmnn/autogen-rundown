@@ -14,36 +14,48 @@ public record Color
         Blue = 0.858823538,
     };
 
+    /// <summary>
+    /// Color = #db2727
+    /// </summary>
     public static readonly Color MenuVisuals_SeasonalE = new()
     {
         Alpha = 1.0,
-        Red = 0.858823538,
-        Green = 0.1509804,
-        Blue = 0.1509804,
+        Red = 0.858823538, // #db
+        Green = 0.1509804, // #27
+        Blue = 0.1509804,  // #27
     };
 
+    /// <summary>
+    /// Color = #276bdb
+    /// </summary>
     public static readonly Color MenuVisuals_MonthlyE = new()
     {
         Alpha = 1.0,
-        Red = 0.1509804,
-        Green = 0.4190196,
-        Blue = 0.858823538,
+        Red = 0.1509804,    // #27
+        Green = 0.4190196,  // #6b
+        Blue = 0.858823538, // #db
     };
 
+    /// <summary>
+    /// Color = #29d96b
+    /// </summary>
     public static readonly Color MenuVisuals_WeeklyE = new()
     {
         Alpha = 1.0,
-        Green = 0.8509804,
-        Blue = 0.4190196,
-        Red = 0.158823538,
+        Red = 0.158823538, // #29
+        Green = 0.8509804, // #d9
+        Blue = 0.4190196,  // #6b
     };
 
+    /// <summary>
+    /// Color = #d96b29
+    /// </summary>
     public static readonly Color MenuVisuals_DailyE = new()
     {
         Alpha = 1.0,
-        Red = 0.8509804,
-        Green = 0.4190196,
-        Blue = 0.158823538,
+        Red = 0.8509804,    // #d9
+        Green = 0.4190196,  // #6b
+        Blue = 0.158823538, // #29
     };
     #endregion
 
@@ -77,6 +89,21 @@ public record Color
     }
 
     public override int GetHashCode() => HashCode.Combine(Alpha, Red, Green, Blue);
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="includeAlpha"></param>
+    /// <returns></returns>
+    public string ToHex(bool includeAlpha = false)
+    {
+        var a = (int)Math.Round(Math.Clamp(Alpha, 0.0, 1.0) * 255);
+        var r = (int)Math.Round(Math.Clamp(Red, 0.0, 1.0) * 255);
+        var g = (int)Math.Round(Math.Clamp(Green, 0.0, 1.0) * 255);
+        var b = (int)Math.Round(Math.Clamp(Blue, 0.0, 1.0) * 255);
+
+        return includeAlpha ? $"#{r:X2}{g:X2}{b:X2}{a:X2}" : $"#{r:X2}{g:X2}{b:X2}";
+    }
 
     #region Properties
 
