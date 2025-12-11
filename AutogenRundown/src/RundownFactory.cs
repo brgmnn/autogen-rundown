@@ -367,8 +367,8 @@ public static class RundownFactory
                     {
                         // Bulkheads = Bulkhead.Main
                         // Bulkheads = Bulkhead.Main | Bulkhead.Extreme
-                        // Bulkheads = Bulkhead.Main | Bulkhead.Overload
-                        Bulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload
+                        Bulkheads = Bulkhead.Main | Bulkhead.Overload
+                        // Bulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload
                     },
                     Index = rundown.TierC_Count + 1,
                     IsTest = true

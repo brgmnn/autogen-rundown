@@ -436,6 +436,8 @@ public partial record LevelLayout
             //
             (1.0, () =>
             {
+                AddStealth_RespawnZone(endStart);
+
                 var (hub, hubZone) = AddZone_Forward(endStart, new ZoneNode
                 {
                     MaxConnections = 3,
