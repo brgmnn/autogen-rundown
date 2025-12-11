@@ -72,11 +72,12 @@ public static class FactoryJobManager
     {
         // --- Enemies ---
         // Clear enemy spawn manager cache (uses reflection since m_groupRandomizers is private static)
-        var groupRandomizersField = typeof(EnemySpawnManager).GetField(
-            "m_groupRandomizers",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-        if (groupRandomizersField?.GetValue(null) is System.Collections.IDictionary dict)
-            dict.Clear();
+        // var groupRandomizersField = typeof(EnemySpawnManager).GetField(
+        //     "m_groupRandomizers",
+        //     System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        // if (groupRandomizersField?.GetValue(null) is System.Collections.IDictionary dict)
+        //     dict.Clear();
+        EnemySpawnManager.m_groupRandomizers.Clear();
 
         // --- Level ---
         LG_BuildNodeCluster.LevelCleanup();
