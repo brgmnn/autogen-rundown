@@ -91,6 +91,28 @@ public record Color
     public override int GetHashCode() => HashCode.Combine(Alpha, Red, Green, Blue);
 
     /// <summary>
+    /// Returns a new Color that is lightened by the specified amount.
+    /// </summary>
+    /// <param name="amount">Amount to lighten (0.0 = no change, 1.0 = fully white). Default = 0.2</param>
+    /// <returns>A new Color record with lightened values</returns>
+    public Color Lighten(double amount = 0.2)
+    {
+        amount = Math.Clamp(amount, 0.0, 1.0);
+
+        // Lerp towards white (1.0, 1.0, 1.0)
+        var newRed = Red + (1.0 - Red) * amount;
+        var newGreen = Green + (1.0 - Green) * amount;
+        var newBlue = Blue + (1.0 - Blue) * amount;
+
+        return this with
+        {
+            Red = newRed,
+            Green = newGreen,
+            Blue = newBlue
+        };
+    }
+
+    /// <summary>
     ///
     /// </summary>
     /// <param name="includeAlpha"></param>

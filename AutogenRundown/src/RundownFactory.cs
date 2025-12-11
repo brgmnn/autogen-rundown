@@ -11,6 +11,11 @@ namespace AutogenRundown;
 
 public static class RundownFactory
 {
+    private static string seasonalPrefix = $"<color=#ff3311>S</color><space=0.3em>";
+    private static string monthlyPrefix = $"<color=#58fcee>M</color><space=0.3em>";
+    private static string weeklyPrefix = $"<color=green>W</color><space=0.3em>";
+    private static string dailyPrefix = $"<color=orange>D</color><space=0.3em>";
+
     private static string DescriptionHeader(WardenObjectiveType objectiveType)
     {
         const string prefix = "<color=#444444>Objective Dispatch:</color> ";
@@ -91,15 +96,20 @@ public static class RundownFactory
     /// <param name="newRundown"></param>
     /// <param name="withFixed"></param>
     /// <param name="withUnlocks"></param>
+    /// <param name="withLogs"></param>
+    /// <param name="prefix"></param>
     /// <returns></returns>
     public static Rundown BuildRundown(
         Rundown newRundown,
         bool withFixed = true,
         bool withUnlocks = true,
-        bool withLogs = true)
+        bool withLogs = true,
+        string? prefix = null)
     {
         var rundown = Rundown.Build(newRundown);
         var levelNames = Words.NewLevelNamesPack();
+
+        prefix ??= "";
 
         #region Cross-level settings
 
@@ -161,6 +171,7 @@ public static class RundownFactory
             var level = Level.Build(
                 new Level("A")
                 {
+                    Prefix = $"{prefix}A",
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
                     Complex = complex,
@@ -268,6 +279,7 @@ public static class RundownFactory
             var level = Level.Build(
                 new Level("B")
                 {
+                    Prefix = $"{prefix}B",
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
                     Complex = complex,
@@ -305,6 +317,7 @@ public static class RundownFactory
             var level = Level.Build(
                 new Level("C")
                 {
+                    Prefix = $"{prefix}C",
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
                     Complex = complex,
@@ -464,6 +477,7 @@ public static class RundownFactory
             var level = Level.Build(
                 new Level("D")
                 {
+                    Prefix = $"{prefix}D",
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
                     Complex = complex,
@@ -577,6 +591,7 @@ public static class RundownFactory
             var level = Level.Build(
                 new Level("E")
                 {
+                    Prefix = $"{prefix}E",
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
                     Complex = complex,
@@ -651,6 +666,7 @@ public static class RundownFactory
     {
         var rundown = Rundown.Build(newRundown);
         var levelNames = Words.NewLevelNamesPack();
+        var prefix = seasonalPrefix;
 
         //
         // Use the seed pool to re-roll levels. Start by setting these at 1 and incrementing each time
@@ -759,6 +775,7 @@ public static class RundownFactory
             var level = Level.Build(
                 new Level("A")
                 {
+                    Prefix = $"{prefix}A",
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
                     Complex = complex,
@@ -789,6 +806,7 @@ public static class RundownFactory
             var level = Level.Build(
                 new Level("B")
                 {
+                    Prefix = $"{prefix}B",
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
                     Complex = complex,
@@ -819,6 +837,7 @@ public static class RundownFactory
             var level = Level.Build(
                 new Level("C")
                 {
+                    Prefix = $"{prefix}C",
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
                     Complex = complex,
@@ -849,6 +868,7 @@ public static class RundownFactory
             var level = Level.Build(
                 new Level("D")
                 {
+                    Prefix = $"{prefix}D",
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
                     Complex = complex,
@@ -879,6 +899,7 @@ public static class RundownFactory
             var level = Level.Build(
                 new Level("E")
                 {
+                    Prefix = $"{prefix}E",
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
                     Complex = complex,
@@ -918,6 +939,7 @@ public static class RundownFactory
     {
         var rundown = Rundown.Build(newRundown);
         var levelNames = Words.NewLevelNamesPack();
+        var prefix = monthlyPrefix;
 
         //
         // Use the seed pool to re-roll levels. Start by setting these at 1 and incrementing each time
@@ -1059,6 +1081,7 @@ public static class RundownFactory
             var level = Level.Build(
                 new Level("A")
                 {
+                    Prefix = $"{prefix}A",
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
                     Complex = complex,
@@ -1088,6 +1111,7 @@ public static class RundownFactory
             var level = Level.Build(
                 new Level("B")
                 {
+                    Prefix = $"{prefix}B",
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
                     Complex = complex,
@@ -1117,6 +1141,7 @@ public static class RundownFactory
             var level = Level.Build(
                 new Level("C")
                 {
+                    Prefix = $"{prefix}C",
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
                     Complex = complex,
@@ -1146,6 +1171,7 @@ public static class RundownFactory
             var level = Level.Build(
                 new Level("D")
                 {
+                    Prefix = $"{prefix}D",
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
                     Complex = complex,
@@ -1175,6 +1201,7 @@ public static class RundownFactory
             var level = Level.Build(
                 new Level("E")
                 {
+                    Prefix = $"{prefix}E",
                     Name = Generator.Draw(levelNames)!,
                     Index = i + 1,
                     Complex = complex,
@@ -1280,12 +1307,17 @@ public static class RundownFactory
             withUnlocks = false;
             #endif
 
-            var weekly = BuildRundown(new Rundown
-            {
-                PersistentId = Rundown.R_Weekly,
-                Title = $"{name.ToUpper()}",
-                StoryTitle = $"WEEKLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
-            }, false, withUnlocks);
+            var weekly = BuildRundown(
+                new Rundown
+                {
+                    PersistentId = Rundown.R_Weekly,
+                    Title = $"{name.ToUpper()}",
+                    StoryTitle = $"WEEKLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
+                },
+                withFixed: false,
+                withUnlocks: withUnlocks,
+                withLogs: true,
+                prefix: weeklyPrefix);
 
             weekly.VisualsETier = Color.MenuVisuals_WeeklyE;
 
@@ -1301,16 +1333,21 @@ public static class RundownFactory
             Generator.Reload();
 
             var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
-            var daily = BuildRundown(new Rundown
-            {
-                PersistentId = Rundown.R_Daily,
-                Title = $"{name.ToUpper()}",
-                StoryTitle = $"DAILY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
+            var daily = BuildRundown(
+                new Rundown
+                {
+                    PersistentId = Rundown.R_Daily,
+                    Title = $"{name.ToUpper()}",
+                    StoryTitle = $"DAILY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
 
-                TierA_Count = 1,
-                TierD_Count = 3,
-                TierE_Count = 1
-            }, true, false, false);
+                    TierA_Count = 1,
+                    TierD_Count = 3,
+                    TierE_Count = 1
+                },
+                withFixed: true,
+                withUnlocks: false,
+                withLogs: false,
+                prefix: dailyPrefix);
 
             daily.VisualsETier = Color.MenuVisuals_DailyE;
 

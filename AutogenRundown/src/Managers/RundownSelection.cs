@@ -4,32 +4,6 @@ namespace AutogenRundown.Managers;
 
 public class RundownSelection
 {
-
-    // public static readonly Color MenuVisuals_MonthlyE = new()
-    // {
-    //     Alpha = 1.0,
-    //     Red = 0.1509804,
-    //     Green = 0.4190196,
-    //     Blue = 0.858823538,
-    // };
-    //
-    // public static readonly Color MenuVisuals_WeeklyE = new()
-    // {
-    //     Alpha = 1.0,
-    //     Red = 0.158823538,
-    //     Green = 0.8509804,
-    //     Blue = 0.4190196,
-    // };
-    //
-    // public static readonly Color MenuVisuals_DailyE = new()
-    // {
-    //     Alpha = 1.0,
-    //     Red = 0.8509804,
-    //     Green = 0.4190196,
-    //     Blue = 0.158823538,
-    // };
-
-
     public static RundownTimerData? DailyTimer { get; set; }
 
     public static RundownTimerData? WeeklyTimer { get; set; }
