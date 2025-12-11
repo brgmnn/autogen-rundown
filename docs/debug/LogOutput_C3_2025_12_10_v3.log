@@ -1,0 +1,1139 @@
+[Debug  :AutogenRundown] StartingArea strategy = Default
+[Debug  :AutogenRundown] Level=C3 (Tech) - Modifiers: [Fog, NoShadows, ManyChargers, NoNightmares, FogIsInfectious], Fog: Fog_Low_Infectious
+[Debug  :AutogenRundown] Building layout (C3 Deathly Nomad Main), Objective = CorruptedTerminalUplink
+[Warning:AutogenRundown] Planner.AddZone() did not add zone as it already exists: node = $ZoneNode { Bulkhead = Main, StartingArea, ZoneNumber = 0, Branch = primary, MaxConnections = 2, Tags = {} }
+[Info   :AutogenRundown] Level=C3 - Extreme Bulkhead Entrance = ZoneNode { Bulkhead = Main, StartingArea, ZoneNumber = 1, Branch = primary, MaxConnections = 2, Tags = {} }
+[Info   :AutogenRundown] Level=C3 - Main Bulkhead Entrance = ZoneNode { Bulkhead = Main, StartingArea, ZoneNumber = 1, Branch = primary, MaxConnections = 2, Tags = {} }
+[Debug  :AutogenRundown] What are the nodes? ZoneNode = ZoneNode { Bulkhead = Main, ZoneNumber = 5, Branch = keycard, MaxConnections = 2, Tags = {} }, Zone = 5
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Number of in-fog zones: 3
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone_0 number=523 pid=101551 -- branch=primary -- Lights=WashedOutRed_1, InFog=True, Tags={}
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone_1 number=524 pid=101552 -- branch=primary -- Lights=OrangeToBluishGrey, InFog=False, Tags={}
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone_2 number=525 pid=101554 -- branch=primary -- Lights=camo_green_R4E1, InFog=False, Tags={}
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone_3 number=526 pid=101556 -- branch=primary -- Lights=DarkGreenToOrange_1, InFog=False, Tags={}
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone_4 number=527 pid=101557 -- branch=primary -- Lights=DarkBlueToPurple_1, InFog=True, Tags={}
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone_5 number=528 pid=101558 -- branch=keycard -- Lights=PeachToGreen, InFog=False, Tags={}
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone_6 number=529 pid=101559 -- branch=primary -- Lights=camo_green, InFog=False, Tags={}
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone_7 number=530 pid=101560 -- branch=primary -- Lights=PurpleToRed_1, InFog=False, Tags={uplink_terminal}
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone_8 number=531 pid=101561 -- branch=apex_spawn -- Lights=CyanToPurple_1, InFog=True, Tags={no_enemies}
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone_9 number=532 pid=101563 -- branch=primary -- Lights=RedToCyan_1, InFog=True, Tags={}
+[Debug  :AutogenRundown] Zone 1 alarm(rolled): ChainedPuzzle { PublicAlarmName = Class V Cluster Alarm, Population = WavePopulation { Name = Baseline_Chargers, PersistentId = 207 }, Settings = WaveSettings { Name = Baseline_Hard, PersistentId = 4, PointsPerWaveStart = 18 } }
+[Debug  :AutogenRundown] Zone 8 alarm(rolled): ChainedPuzzle { PublicAlarmName = Class IV Cluster Alarm, Population = WavePopulation { Name = OnlyChargers, PersistentId = 217 }, Settings = WaveSettings { Name = Baseline_Hard, PersistentId = 4, PointsPerWaveStart = 18 } }
+[Debug  :AutogenRundown] Zone 4 alarm(rolled): ChainedPuzzle { PublicAlarmName = Class IV M Alarm, Population = WavePopulation { Name = OnlyChargers, PersistentId = 217 }, Settings = WaveSettings { Name = Baseline_Hard, PersistentId = 4, PointsPerWaveStart = 18 } }
+[Debug  :AutogenRundown] Zone 5 alarm(rolled): ChainedPuzzle { PublicAlarmName = Class V Alarm, Population = WavePopulation { Name = Baseline_Chargers, PersistentId = 207 }, Settings = WaveSettings { Name = Baseline_Hard, PersistentId = 4, PointsPerWaveStart = 18 } }
+[Debug  :AutogenRundown] Zone 6 alarm(rolled): ChainedPuzzle { PublicAlarmName = Class S I Alarm, Population = WavePopulation { Name = Baseline_Flyers, PersistentId = 209 }, Settings = WaveSettings { Name = Baseline_Hard, PersistentId = 4, PointsPerWaveStart = 18 } }
+[Debug  :AutogenRundown] Zone 2 alarm(rolled): ChainedPuzzle { PublicAlarmName = Class V Alarm, Population = WavePopulation { Name = OnlyChargers, PersistentId = 217 }, Settings = WaveSettings { Name = Baseline_Hard, PersistentId = 4, PointsPerWaveStart = 18 } }
+[Debug  :AutogenRundown] Zone 3 alarm(fixed): ChainedPuzzle { PublicAlarmName = Class III Surge Alarm, Population = WavePopulation { Name = OnlyStrikers, PersistentId = 213 }, Settings = WaveSettings { Name = Surge, PersistentId = 24, PointsPerWaveStart = 10000 } }
+[Info   :AutogenRundown] Zone 3 alarm reassigned: ChainedPuzzle { PublicAlarmName = Class III Surge Alarm, Population = WavePopulation { Name = OnlyStrikers, PersistentId = 213 }, Settings = WaveSettings { Name = Surge, PersistentId = 24, PointsPerWaveStart = 10000 } }
+[Debug  :AutogenRundown] Zone 9 alarm(rolled): ChainedPuzzle { PublicAlarmName = Class IV M Alarm, Population = WavePopulation { Name = Baseline_Hybrids, PersistentId = 205 }, Settings = WaveSettings { Name = Baseline_Hard, PersistentId = 4, PointsPerWaveStart = 18 } }
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone 5 rolled a boss!
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone 5 has 9pts for enemies. Groups: Base, Base
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone 6 has 5pts for enemies. Groups: Base
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone 3 has 43pts for enemies. Groups: Base
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone 0 has 18pts for enemies. Groups: Base
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone 9 has 7pts for enemies. Groups: Base
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone 4 has 31pts for enemies. Groups: Base
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone 1 has 10pts for enemies. Groups: Base
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone 2 has 29pts for enemies. Groups: Base, Base
+[Debug  :AutogenRundown] C3 Deathly Nomad Main -- Zone 7 has 5pts for enemies. Groups: Base
+[Debug  :AutogenRundown] Building layout (C3 Deathly Nomad Extreme), Objective = GatherTerminal
+[Debug  :AutogenRundown] C3 Deathly Nomad Extreme -- Number of in-fog zones: 0
+[Debug  :AutogenRundown] C3 Deathly Nomad Extreme -- Zone_0 number=274 pid=101553 -- branch=primary -- Lights=OrangeToBlue_1, InFog=False, Tags={}
+[Debug  :AutogenRundown] C3 Deathly Nomad Extreme -- Zone_1 number=275 pid=101580 -- branch=primary -- Lights=ColdWhite_all_on_1, InFog=False, Tags={}
+[Debug  :AutogenRundown] Zone 1 alarm(rolled): ChainedPuzzle { PublicAlarmName = Class V M Alarm, Population = WavePopulation { Name = OnlyChargers, PersistentId = 217 }, Settings = WaveSettings { Name = Baseline_Hard, PersistentId = 4, PointsPerWaveStart = 18 } }
+[Debug  :AutogenRundown] C3 Deathly Nomad Extreme -- Zone 0 has 49pts for enemies. Groups: Base
+[Debug  :AutogenRundown] C3 Deathly Nomad Extreme -- Zone 1 has 64pts for enemies. Groups: Base
+[Debug  :AutogenRundown] Level=C3 level plan: Graph:
+  ZoneNode { Bulkhead = Main, StartingArea, ZoneNumber = 0, Branch = primary, MaxConnections = 2, Tags = {} } (door=Random, expand=Right) => ZoneNode { Bulkhead = Main, StartingArea, ZoneNumber = 1, Branch = primary, MaxConnections = 2, Tags = {} }
+  ZoneNode { Bulkhead = Main, StartingArea, ZoneNumber = 1, Branch = primary, MaxConnections = 2, Tags = {} } (door=Random, expand=Right) => [
+    ZoneNode { Bulkhead = Extreme, ZoneNumber = 0, Branch = primary, MaxConnections = 2, Tags = {} },
+    ZoneNode { Bulkhead = Main, ZoneNumber = 2, Branch = primary, MaxConnections = 2, Tags = {} }]
+  ZoneNode { Bulkhead = Extreme, ZoneNumber = 0, Branch = primary, MaxConnections = 2, Tags = {} } (door=Forward, expand=Forward) => [
+    ZoneNode { Bulkhead = Main, ZoneNumber = 9, Branch = primary, MaxConnections = 0, Tags = {} },
+    ZoneNode { Bulkhead = Extreme, ZoneNumber = 1, Branch = primary, MaxConnections = 2, Tags = {} }]
+  ZoneNode { Bulkhead = Main, ZoneNumber = 2, Branch = primary, MaxConnections = 2, Tags = {} } (door=Right, expand=Right) => ZoneNode { Bulkhead = Main, ZoneNumber = 3, Branch = primary, MaxConnections = 3, Tags = {} }
+  ZoneNode { Bulkhead = Main, ZoneNumber = 3, Branch = primary, MaxConnections = 3, Tags = {} } (door=Right, expand=Right) => [
+    ZoneNode { Bulkhead = Main, ZoneNumber = 4, Branch = primary, MaxConnections = 2, Tags = {} },
+    ZoneNode { Bulkhead = Main, ZoneNumber = 5, Branch = keycard, MaxConnections = 2, Tags = {} }]
+  ZoneNode { Bulkhead = Main, ZoneNumber = 4, Branch = primary, MaxConnections = 2, Tags = {} } (door=Random, expand=Right) => ZoneNode { Bulkhead = Main, ZoneNumber = 6, Branch = primary, MaxConnections = 3, Tags = {} }
+  ZoneNode { Bulkhead = Main, ZoneNumber = 5, Branch = keycard, MaxConnections = 2, Tags = {} } (door=Random, expand=Random) => []
+  ZoneNode { Bulkhead = Main, ZoneNumber = 6, Branch = primary, MaxConnections = 3, Tags = {} } (door=Random, expand=Right) => [
+    ZoneNode { Bulkhead = Main, ZoneNumber = 7, Branch = primary, MaxConnections = 2, Tags = {uplink_terminal} },
+    ZoneNode { Bulkhead = Main, ZoneNumber = 8, Branch = apex_spawn, MaxConnections = 0, Tags = {no_enemies} }]
+  ZoneNode { Bulkhead = Main, ZoneNumber = 7, Branch = primary, MaxConnections = 2, Tags = {uplink_terminal} } (door=Random, expand=Right) => []
+  ZoneNode { Bulkhead = Main, ZoneNumber = 8, Branch = apex_spawn, MaxConnections = 0, Tags = {no_enemies} } (door=Random, expand=Random) => []
+  ZoneNode { Bulkhead = Main, ZoneNumber = 9, Branch = primary, MaxConnections = 0, Tags = {} } (door=Random, expand=Right) => []
+  ZoneNode { Bulkhead = Extreme, ZoneNumber = 1, Branch = primary, MaxConnections = 2, Tags = {} } (door=Random, expand=Forward) => []
+
+
+
+
+
+
+
+[Message:     Unity] <color=red> >>>>>> GAMESTATEMANAGER CHANGE STATE FROM : Lobby TO: Generating</color>
+[Message:     Unity] RundownManager: Starting new game session
+[Message:     Unity] <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  SetFogSettingsLocal
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 0
+nFogStartTime: 0
+FogDuration: 0
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0
+DensityNoiseSpeed: 0
+DensityNoiseScale: 0
+DensityHeightAltitude: 0
+DensityHeightRange: 0
+DensityHeightMaxBoost: 0
+Infection: 0
+FogColor: RGBA(0.000, 0.000, 0.000, 0.000)
+DensityNoiseDirection: (0.0, 0.0, 0.0)
+
+[Message:     Unity] <color=#C84800>>>>>>>>>>>>>> SetBuildSeed, forcedSeed: 1 exp: GameData.ExpeditionInTierData BuildRandom.Seed: 1</color>
+[Message:     Unity] <color=#C84800>>>>>>>>>>>>>> SetHostIDSeed, forcedSeed: 57844055 exp: GameData.ExpeditionInTierData HostIDRandom.Seed: 57844055</color>
+[Message:     Unity] <color=#C84800>>>>>>>>>>>>>> SetSessionIDSeed, forcedSeed: 1500736408 exp: GameData.ExpeditionInTierData SessionRandom.Seed: 1500736408</color>
+[Info   :ConfigurableGlobalWaveSettings] ActiveExpedition DevInfo globalwavesettings_1
+[Info   :ConfigurableGlobalWaveSettings] GlobalWaveSettingsEntry ID 1 matched for current level
+[Message:     Unity] Builder.Build, settings seeds, activeExp: GameData.ExpeditionInTierData buildSeed: 1 hostIDSeed: 57844055 sessionSeed: 1500736408
+[Message:     Unity] <color=#C84800>Builder.Build, Start Building using BuildSeed: 1 HostIDSeed: 57844055 SessionSeed: 1500736408</color>
+[Message:     Unity] <color=#C84800>>>>>>>>>>>>>> SetBuildSeed, forcedSeed: 1 exp: GameData.ExpeditionInTierData BuildRandom.Seed: 1</color>
+[Warning:AutogenRundown] Expedition tier is: $TierC
+[Message:     Unity] <color=#C84800>SerialGenerator GENERATE! SessionRandom.seed: 1500736408</color>
+[Message:     Unity] >>>>>>>>>>>>> BuildFloor
+[Warning:     Unity] DontDestroyOnLoad only works for root GameObjects or components on root GameObjects.
+[Message:     Unity] <color=#C84800>LoadComplexResources complexResourceDataID: 3</color>
+[Message:     Unity] <color=#C84800>LG_LoadComplexDataSetResourcesJob.ComplexAssetBundleLoaded, ComplexResourceSetBlock: Complex_Tech</color>
+[Info   :DonanV09Fix] Assets/GameObject/Floodways_open_1400x1000x1000_V09.prefab touched and works fine.
+[Message:     Unity] DIMENSION: Setting sound ENVIRONMENT state to Tech!
+[Warning:     Unity] CommandBuffer: built-in render texture type 15 not found while executing Custom Motion Vectors (SetRenderTarget color buffer)
+[Message:     Unity] DropServerManager: Enqueueing 'new session (sessionId: dWypidvUEEWbTSDLjuWCrQ==, rundown: Local_3, expedition: C3, boosters: [])' request
+[Message:     Unity] SNET : MasterReplicationUpdate_Player : pumba mode change : InSessionHub_ReadyToGenerate GeneratingLevel
+[Message:     Unity] GameData: GameData.FogSettingsDataBlock does not contain a block with ID: 96
+[Error  :     Unity] <b>EnvironmentStateManager:</b> Tried to set fog settings with ID 96 that does not have a game data representation!
+[Message:     Unity] Last Batch: Setup
+		 Total Time: 3.333s Frames: 0 Ticks: 676
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: StaticLevel - Count: 0
+
+[Message:     Unity] Last Batch: StaticLevel
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: LoadResourcesShards_Level - Count: 2
+
+[Message:     Unity] Engine Started
+[Message:     Unity] <b><color=#00FF00FF>EnvironmentStateManager:</color></b>  SetFogSettingsLocal
+ExpeditionProgressionTime: 0
+<b>Lights</b>
+LightsEnabled: pEnvironmentLightStateDimension[]
+<b>Fog</b>
+FogDataID: 0
+nFogStartTime: 0
+FogDuration: 0
+FogBlend: 0
+
+<b>FogSettings:</b>
+FogDensity: 0
+DensityNoiseSpeed: 0
+DensityNoiseScale: 0
+DensityHeightAltitude: 0
+DensityHeightRange: 0
+DensityHeightMaxBoost: 0
+Infection: 0
+FogColor: RGBA(0.000, 0.000, 0.000, 0.000)
+DensityNoiseDirection: (0.0, 0.0, 0.0)
+
+[Message:     Unity] DropServerManager: Making 'rundown progression (rundown: Local_2)' request...
+[Message:     Unity] DropServerManager: 'rundown progression (rundown: Local_2)' request completed successfully
+[Message:     Unity] DropServerManager: Sleeping for 2 seconds...
+[Message:     Unity] RundownManager: Got rundown progression from drop server
+[Debug  :AutogenRundown] Active rundown = Monthly
+[Message:     Unity] CM_PageRundown_New.OnRundownProgressionFileUpdated
+[Message:     Unity] tier: TierA index: 0 EXPEDITION UNLOCKED
+[Message:     Unity] tier: TierA index: 1 EXPEDITION UNLOCKED
+[Message:     Unity] tier: TierA index: 2 EXPEDITION UNLOCKED
+[Message:     Unity] tier: TierB index: 0 EXPEDITION UNLOCKED
+[Message:     Unity] tier: TierB index: 1 EXPEDITION UNLOCKED
+[Message:     Unity] tier: TierB index: 2 EXPEDITION UNLOCKED
+[Message:     Unity] tier: TierB index: 3 EXPEDITION UNLOCKED
+[Message:     Unity] tier: TierC index: 0 EXPEDITION UNLOCKED
+[Message:     Unity] tier: TierC index: 1 EXPEDITION UNLOCKED
+[Message:     Unity] tier: TierC index: 2 EXPEDITION UNLOCKED
+[Message:     Unity] tier: TierC index: 3 EXPEDITION UNLOCKED
+[Message:     Unity] tier: TierD index: 0 EXPEDITION UNLOCKED
+[Message:     Unity] tier: TierD index: 1 EXPEDITION UNLOCKED
+[Message:     Unity] tier: TierD index: 2 EXPEDITION UNLOCKED
+[Message:     Unity] tier: TierE index: 0 EXPEDITION UNLOCKED
+[Message:     Unity] tier: TierE index: 1 EXPEDITION UNLOCKED
+[Message:     Unity] CM_PageRundown_New.UpdateRundownExpeditionProgression, RundownManager.RundownProgressionReady: True
+[Warning:LocalProgression] Update LPData to rundown_id: 3
+[Message:     Unity] DropServerManager: Making 'new session (sessionId: dWypidvUEEWbTSDLjuWCrQ==, rundown: Local_3, expedition: C3, boosters: [])' request...
+[Message:     Unity] DropServerManager: 'new session (sessionId: dWypidvUEEWbTSDLjuWCrQ==, rundown: Local_3, expedition: C3, boosters: [])' request completed successfully
+[Message:     Unity] DropServerManager: Sleeping for 2 seconds...
+[Message:     Unity] DropServerManager: Idle
+[Message:     Unity] Last Batch: LoadResourcesShards_Level
+		 Total Time: 15.506s Frames: 936 Ticks: 9085
+		 FrameTime (avg/max/ticks max): 8.7ms / 3,262.9ms / 354
+		 Jobs (started/looped): 1 / 936
+Next Batch: SetupFloor - Count: 1
+
+[Message:     Unity] <color=#C84800>LG_SetupFloor.Build</color>
+[Message:     Unity] <b>LG_Floor:</b> Setup() Setting up Base Dimension (0).
+[Message:     Unity] <b>LG_Floor:</b> Creating (Dimension_20) dimension at (32.0, 160.0, 0.0).
+[Message:     Unity] <b>LG_Floor:</b> Created Dimension (Index: Dimension_20, gridSize: 10, cellSize: 64).
+[Message:     Unity] <b>LG_Floor:</b> Creating (Dimension_19) dimension at (32.0, 180.0, 0.0).
+[Message:     Unity] <b>LG_Floor:</b> Created Dimension (Index: Dimension_19, gridSize: 10, cellSize: 64).
+[Message:     Unity] <b>LG_Floor:</b> Creating (Dimension_18) dimension at (32.0, 200.0, 0.0).
+[Message:     Unity] <b>LG_Floor:</b> Created Dimension (Index: Dimension_18, gridSize: 10, cellSize: 64).
+[Message:     Unity] <b>LG_Floor:</b> Creating (Dimension_17) dimension at (32.0, 220.0, 0.0).
+[Message:     Unity] <b>LG_Floor:</b> Created Dimension (Index: Dimension_17, gridSize: 10, cellSize: 64).
+[Message:     Unity] <b>LG_Floor:</b> Found (4) unique dimension references in GameData for this expedition and created (4) enemy dimensions.
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_0 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 254 with BuildFromZoneAlias254 zoneAliasStart: 254 aliasOffset: Zone_0</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 685 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_1 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 255 with BuildFromZoneAlias254 zoneAliasStart: 254 aliasOffset: Zone_1</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 247 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_2 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 256 with BuildFromZoneAlias255 zoneAliasStart: 254 aliasOffset: Zone_2</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 496 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_3 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 257 with BuildFromZoneAlias256 zoneAliasStart: 254 aliasOffset: Zone_3</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 423 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_4 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 258 with BuildFromZoneAlias257 zoneAliasStart: 254 aliasOffset: Zone_4</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 902 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_5 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 259 with BuildFromZoneAlias257 zoneAliasStart: 254 aliasOffset: Zone_5</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 204 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_6 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 260 with BuildFromZoneAlias258 zoneAliasStart: 254 aliasOffset: Zone_6</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 97 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_7 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 261 with BuildFromZoneAlias260 zoneAliasStart: 254 aliasOffset: Zone_7</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 317 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_8 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 262 with BuildFromZoneAlias260 zoneAliasStart: 254 aliasOffset: Zone_8</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 633 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_9 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 263 with BuildFromZoneAlias254 zoneAliasStart: 254 aliasOffset: Zone_9</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 135 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_0 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 382 with BuildFromZoneAlias383 zoneAliasStart: 382 aliasOffset: Zone_0</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality SecondaryLayer with 
+<b>SubSeed:</b> 675 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_1 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 383 with BuildFromZoneAlias382 zoneAliasStart: 382 aliasOffset: Zone_1</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality SecondaryLayer with 
+<b>SubSeed:</b> 245 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Message:     Unity] <b>Zone Created (Static)</b> (New Game Object) in Dimension_20 MainLayer
+[Message:     Unity] <b>LG_ZoneJob_CreateZoneForStaticLevel:</b> Dimension_20 added area: Area_A
+[Message:     Unity] <b>Zone Created (Static)</b> (New Game Object) in Dimension_19 MainLayer
+[Message:     Unity] <b>LG_ZoneJob_CreateZoneForStaticLevel:</b> Dimension_19 added area: Area_A
+[Message:     Unity] <b>Zone Created (Static)</b> (New Game Object) in Dimension_18 MainLayer
+[Message:     Unity] <b>LG_ZoneJob_CreateZoneForStaticLevel:</b> Dimension_18 added area: Area_A
+[Message:     Unity] <b>Zone Created (Static)</b> (New Game Object) in Dimension_17 MainLayer
+[Message:     Unity] <b>LG_ZoneJob_CreateZoneForStaticLevel:</b> Dimension_17 added area: Area_A
+[Message:     Unity] Last Batch: SetupFloor
+		 Total Time: 0.000s Frames: 0 Ticks: 125
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: GenerateZones - Count: 16
+
+[Message:     Unity] <color=#C84800> ---- MainLayer ---- Picked build from area : Area_A</color>
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 254 in layer MainLayer, please select a subcomplex for each zone
+[Debug  :Il2CppInterop] Original class was inflated, falling back to reflection
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 255 in layer MainLayer, please select a subcomplex for each zone
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 255 in layer MainLayer, please select a subcomplex for each zone
+[Debug  :Il2CppInterop] Original class was inflated, falling back to reflection
+[Debug  :Il2CppInterop] Original class was inflated, falling back to reflection
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 256 in layer MainLayer, please select a subcomplex for each zone
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 256 in layer MainLayer, please select a subcomplex for each zone
+[Error  :     Unity] BlockAndCleanFailedAreasFromZone >  ZoneAlias: 257 dim:Reality  AreaCount: 1  ZoneCoverageOnFail:32  ZoneMinCoverage:30  CoverageStatus:Ok
+[Error  :     Unity] BlockAndCleanFailedAreasFromZone >  ZoneAlias: 259 dim:Reality  AreaCount: 1  ZoneCoverageOnFail:3  ZoneMinCoverage:10  CoverageStatus:NotEnough
+[Warning:AutogenRundown] Zone Zone_5 failed to find start area (attempt 0). Triggering subseed reroll.
+[Debug  :AutogenRundown] Also rerolling parent zone Zone_3
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 259 in layer MainLayer, please select a subcomplex for each zone
+[Error  :     Unity] WARNING : Zone6 (Zone_6 - 260): Failed to find any good StartAreas in zone 4 (258) expansionType:Towards_Random m_buildFromZone.m_areas: 2 scoredCount:0 dim: Reality
+[Warning:AutogenRundown] Zone Zone_6 failed to find start area (attempt 0). Triggering subseed reroll.
+[Debug  :AutogenRundown] Also rerolling parent zone Zone_4
+[Error  :     Unity] WARNING : Zone6 (Zone_6 - 260): Failed to find any good StartAreas in zone 4 (258) expansionType:Towards_Random m_buildFromZone.m_areas: 2 scoredCount:0 dim: Reality
+[Warning:AutogenRundown] Zone Zone_6 failed to find start area (attempt 1). Triggering subseed reroll.
+[Debug  :AutogenRundown] Also rerolling parent zone Zone_4
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 261 in layer MainLayer, please select a subcomplex for each zone
+[Message:     Unity] <color=#C84800> ---- SecondaryLayer ---- Picked build from zone : New Game Object[SubSeed:247(247)]</color>
+[Info   :AutogenRundown] === FORCING NEW ZONE TO BUILD FROM PLUG ===
+[Info   :AutogenRundown] 382, Zone_0, numareas=0, aim direction = (0.0, 0.0, 1.0)
+[Info   :AutogenRundown]     score=7.667369 -> False, Il2CppSystem.Collections.Generic.List`1[LevelGeneration.LG_ZoneExpander]
+[Info   :AutogenRundown]         expander: type=Gate, free=False -> Zone_1 
+[Info   :AutogenRundown]         expander: type=Gate, free=False -> Zone_1 
+[Info   :AutogenRundown]         expander: type=Gate, free=False -> Zone_1 
+[Info   :AutogenRundown]         expander: type=Plug, free=True
+[Info   :AutogenRundown]     score=5.3436923 -> False, Il2CppSystem.Collections.Generic.List`1[LevelGeneration.LG_ZoneExpander]
+[Info   :AutogenRundown]         expander: type=Gate, free=False -> Zone_1 
+[Info   :AutogenRundown]         expander: type=Gate, free=False -> Zone_1 
+[Info   :AutogenRundown]         expander: type=Gate, free=False -> Zone_1 
+[Info   :AutogenRundown]         expander: type=Gate, free=False -> Zone_1 
+[Info   :AutogenRundown]         expander: type=Plug, free=False -> Zone_2 
+[Info   :AutogenRundown]         expander: type=Plug, free=True
+[Info   :AutogenRundown]     score=4.6004972 -> False, Il2CppSystem.Collections.Generic.List`1[LevelGeneration.LG_ZoneExpander]
+[Info   :AutogenRundown]         expander: type=Gate, free=True
+[Info   :AutogenRundown]         expander: type=Gate, free=False -> Zone_1 
+[Info   :AutogenRundown]     discarded area: score=4.6004972, position=(137.5, -1.0, 37.0)
+[Info   :AutogenRundown]     score=4.146301 -> False, Il2CppSystem.Collections.Generic.List`1[LevelGeneration.LG_ZoneExpander]
+[Info   :AutogenRundown]         expander: type=Gate, free=False -> Zone_1 
+[Info   :AutogenRundown]         expander: type=Gate, free=False -> Zone_1 
+[Info   :AutogenRundown]     discarded area: score=4.146301, position=(138.5, -1.5, 91.5)
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 382 in layer SecondaryLayer, please select a subcomplex for each zone
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 382 in layer SecondaryLayer, please select a subcomplex for each zone
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 382 in layer SecondaryLayer, please select a subcomplex for each zone
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 383 in layer SecondaryLayer, please select a subcomplex for each zone
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 383 in layer SecondaryLayer, please select a subcomplex for each zone
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 383 in layer SecondaryLayer, please select a subcomplex for each zone
+[Message:     Unity] Last Batch: GenerateZones
+		 Total Time: 0.585s Frames: 9 Ticks: 469
+		 FrameTime (avg/max/ticks max): 60.8ms / 140.3ms / 69
+		 Jobs (started/looped): 15 / 253
+Next Batch: PlaceAddonZones - Count: 0
+
+[Message:     Unity] Last Batch: PlaceAddonZones
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: PrepareZones - Count: 16
+
+[Message:     Unity] Adding culling jobs for zone New Game Object[SubSeed:685(685)] from dimension Reality
+[Message:     Unity] Adding culling jobs for zone New Game Object[SubSeed:247(247)] from dimension Reality
+[Message:     Unity] Adding culling jobs for zone New Game Object[SubSeed:496(496)] from dimension Reality
+[Message:     Unity] Adding culling jobs for zone New Game Object[SubSeed:423(423)] from dimension Reality
+[Message:     Unity] Adding culling jobs for zone New Game Object[SubSeed:902(902)] from dimension Reality
+[Message:     Unity] Adding culling jobs for zone New Game Object[SubSeed:204(204)] from dimension Reality
+[Message:     Unity] Adding culling jobs for zone New Game Object[SubSeed:97(97)] from dimension Reality
+[Message:     Unity] Adding culling jobs for zone New Game Object[SubSeed:317(317)] from dimension Reality
+[Message:     Unity] Adding culling jobs for zone New Game Object[SubSeed:633(633)] from dimension Reality
+[Message:     Unity] Adding culling jobs for zone New Game Object[SubSeed:135(135)] from dimension Reality
+[Message:     Unity] Adding culling jobs for zone New Game Object[SubSeed:675(675)] from dimension Reality
+[Message:     Unity] Adding culling jobs for zone New Game Object[SubSeed:245(245)] from dimension Reality
+[Message:     Unity] Adding culling jobs for zone New Game Object from dimension Dimension_20
+[Message:     Unity] Adding culling jobs for zone New Game Object from dimension Dimension_19
+[Message:     Unity] Adding culling jobs for zone New Game Object from dimension Dimension_18
+[Message:     Unity] Adding culling jobs for zone New Game Object from dimension Dimension_17
+[Message:     Unity] Last Batch: PrepareZones
+		 Total Time: 0.000s Frames: 0 Ticks: 15
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 16 / 10
+Next Batch: BuildFloors - Count: 1
+
+[Message:     Unity] LG_BuildNodeVolumes() bulding NodeClusterData array with length of dimension count (5).
+[Message:     Unity] Last Batch: BuildFloors
+		 Total Time: 0.044s Frames: 1 Ticks: 22
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 1
+		 Jobs (started/looped): 0 / 1
+Next Batch: Geomorphs - Count: 22
+
+[Message:     Unity] Last Batch: Geomorphs
+		 Total Time: 0.032s Frames: 1 Ticks: 29
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 24
+		 Jobs (started/looped): 21 / 1
+Next Batch: Areas - Count: 54
+
+[Message:     Unity] Last Batch: Areas
+		 Total Time: 0.070s Frames: 2 Ticks: 80
+		 FrameTime (avg/max/ticks max): 25.0ms / 40.0ms / 35
+		 Jobs (started/looped): 52 / 2
+Next Batch: Plugs - Count: 48
+
+[Message:     Unity] Last Batch: Plugs
+		 Total Time: 0.053s Frames: 1 Ticks: 57
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 15
+		 Jobs (started/looped): 47 / 1
+Next Batch: Gates - Count: 184
+
+[Message:     Unity] <color=#C84800>>>>>>>>>>> ZONE 256 IS IN ZonesWithBulkheadEntrance!</color>
+[Message:     Unity] Last Batch: Gates
+		 Total Time: 0.271s Frames: 5 Ticks: 258
+		 FrameTime (avg/max/ticks max): 49.1ms / 75.4ms / 74
+		 Jobs (started/looped): 179 / 5
+Next Batch: AreaNames - Count: 5
+
+[Message:     Unity] Last Batch: AreaNames
+		 Total Time: 0.000s Frames: 0 Ticks: 2
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 5 / 0
+Next Batch: WardenObjectivePrep - Count: 0
+
+[Message:     Unity] Last Batch: WardenObjectivePrep
+		 Total Time: 0.000s Frames: 0 Ticks: 2
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: DistributionSetup - Count: 6
+
+[Message:     Unity] Last Batch: DistributionSetup
+		 Total Time: 0.000s Frames: 0 Ticks: 2
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 6 / 0
+Next Batch: TerminalDistribution - Count: 32
+
+[Message:     Unity] Last Batch: TerminalDistribution
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 32 / 0
+Next Batch: Distribution - Count: 6
+
+[Message:     Unity] <b>Artifacts:</b> Could NOT find a ArtifactDistributionDataBlock in layer: MainLayer, Using ArtifactDistribution.Default.
+[Message:     Unity] <b>Artifacts:</b> Allocated 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Zone 0 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Zone 1 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Zone 2 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Zone 3 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Zone 4 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Zone 5 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Zone 6 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Zone 7 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Zone 8 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Zone 9 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Could NOT find a ArtifactDistributionDataBlock in layer: SecondaryLayer, Using ArtifactDistribution.Default.
+[Message:     Unity] <b>Artifacts:</b> Allocated 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Zone 0 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Zone 1 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Could NOT find a ArtifactDistributionDataBlock in layer: MainLayer, Using ArtifactDistribution.Default.
+[Message:     Unity] <b>Artifacts:</b> Allocated 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Zone 0 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Could NOT find a ArtifactDistributionDataBlock in layer: MainLayer, Using ArtifactDistribution.Default.
+[Message:     Unity] <b>Artifacts:</b> Allocated 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Zone 0 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Could NOT find a ArtifactDistributionDataBlock in layer: MainLayer, Using ArtifactDistribution.Default.
+[Message:     Unity] <b>Artifacts:</b> Allocated 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Zone 0 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Could NOT find a ArtifactDistributionDataBlock in layer: MainLayer, Using ArtifactDistribution.Default.
+[Message:     Unity] <b>Artifacts:</b> Allocated 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <b>Artifacts:</b> Zone 0 has 0 basic artifacts, 0 advanced artifacts and 0 specialized artifacts.
+[Message:     Unity] <color=purple>CreateKeyItemDistribution, keyItem: PublicName: KEY_WHITE_265 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:KEY_WHITE_265_terminalKey: KEY_WHITE_265 (KeyItemPickup_Core) placementData: DimensionIndex: Reality LocalIndex: Zone_5 ZonePlacementWeights, Start: 0 Middle: 0 End: 0</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights START: FindContainerFor PublicName: KEY_WHITE_265 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:KEY_WHITE_265_terminalKey: KEY_WHITE_265 (KeyItemPickup_Core) --- Zone: ZONE259, AreaCount: 2 half: 1 even: True ZonePlacementWeights, Start: 0 Middle: 0 End: 0</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 0 StartMul: 1 MiddleMul: 0 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 0 End: 0 Total area weight: 1</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 1 StartMul: 0 MiddleMul: 0 EndMul: 1 --- ZonePlacementWeights, Start: 0 Middle: 0 End: 0 Total area weight: 1</color>
+[Message:     Unity] <color=#C84800>TryGetExistingGenericFunctionDistributionForSession, foundDist in zone: ZONE259 function: ResourceContainerWeak available: 12 randomValue: 0.7377589 ri: 8 had weight: 1</color>
+[Message:     Unity] SetupAsLockedNoKey, interactionText: <color=red>://ERROR: Door in emergency lockdown, unable to operate.</color>
+[Message:     Unity] <color=purple>CreateKeyItemDistribution, keyItem: PublicName: BULKHEAD_KEY_167 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:BULKHEAD_KEY_167_terminalKey: BULKHEAD_KEY_167 (KeyItemPickup_Core) placementData: DimensionIndex: Reality LocalIndex: Zone_0 ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights START: FindContainerFor PublicName: BULKHEAD_KEY_167 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:BULKHEAD_KEY_167_terminalKey: BULKHEAD_KEY_167 (KeyItemPickup_Core) --- Zone: ZONE254, AreaCount: 7 half: 3 even: False ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 0 StartMul: 1 MiddleMul: 0 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000 Total area weight: 1</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 1 StartMul: 0.6666666 MiddleMul: 0.3333334 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000 Total area weight: 334.3334</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 2 StartMul: 0.3333333 MiddleMul: 0.6666667 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000 Total area weight: 667.6667</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 3 StartMul: 0 MiddleMul: 1 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000 Total area weight: 1001</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 4 StartMul: 0 MiddleMul: 0.6666666 EndMul: 0.3333333 --- ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000 Total area weight: 1001</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 5 StartMul: 0 MiddleMul: 0.3333333 EndMul: 0.6666667 --- ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000 Total area weight: 1001</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 6 StartMul: 0 MiddleMul: 0 EndMul: 1 --- ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000 Total area weight: 1001</color>
+[Message:     Unity] <color=#C84800>TryGetExistingGenericFunctionDistributionForSession, foundDist in zone: ZONE254 function: ResourceContainerWeak available: 30 randomValue: 0.9837872 ri: 29 had weight: 1001</color>
+[Message:     Unity] <color=#C84800>>>>> LG_Distribute_DetailedPlacedFunctionPerZone - Placing WEIGHTED function (BulkheadDoorController) in zone: ZONE255, area: AreaK ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000</color>
+[Error  :     Unity] >>>>>>>>>>>>>>> TryGetZoneFunctionDistribution returning FALSE!! We need more pre-allocated distribution data of function ResourceContainerWeak in dim Reality in layer MainLayer zone ZONE258! You need to instruct the zone to spawn more of function ResourceContainerWeak to be able to use the pre-allocated randomization.
+[Error  :     Unity] LG_Distribute_PickupItems Had to create a new resourceContainer!!
+[Error  :     Unity] >>>>>>>>>>>>>>> TryGetZoneFunctionDistribution returning FALSE!! We need more pre-allocated distribution data of function ResourceContainerWeak in dim Reality in layer MainLayer zone ZONE258! You need to instruct the zone to spawn more of function ResourceContainerWeak to be able to use the pre-allocated randomization.
+[Error  :     Unity] LG_Distribute_PickupItems Had to create a new resourceContainer!!
+[Message:     Unity] <color=#C84800>>>>> LG_Distribute_DetailedPlacedFunctionPerZone - Placing WEIGHTED function (DisinfectionStation) in zone: ZONE263, area: AreaA ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000</color>
+[Message:     Unity] <color=#C84800>------------------- LG_Distribute_WardenObjective, got objective for layer MainLayer: 101547_101547</color>
+[Message:     Unity] <color=red>LG_Distribute_WardenObjective, FindAndTagMultipleDistsWithFunctionInObjectiveZones, count: 1 function: Terminal</color>
+[Message:     Unity] <color=#C84800>LG_Distribute_WardenObjective.SelectZoneFromPlacementAndKeepTrackOnCount, creating dist in zone ZONE261 spawnZones[placementDataIndex].Count: 1 spawnZoneIndex: 0 spawnedInZoneCount: 1</color>
+[Message:     Unity] <color=#C84800>LG_Distribute_WardenObjective.FindAndTagMultipleDistsWithFunctionInObjectiveZones, creating dist to spawn function: Terminal in zone ZONE261</color>
+[Message:     Unity] <color=#C84800>>>>> LG_Distribute_WardenObjective, placing warden objective item with function Terminal for wardenObjectiveType: CorruptedTerminalUplink in zone: 261, Area: 32_Area B (LevelGeneration.LG_Area)</color>
+[Message:     Unity] RESET placementDataIndex to 0
+[Message:     Unity] <color=purple>CreateKeyItemDistribution, keyItem: PublicName: BULKHEAD_KEY_116 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:BULKHEAD_KEY_116_terminalKey: BULKHEAD_KEY_116 (KeyItemPickup_Core) placementData: DimensionIndex: Reality LocalIndex: Zone_0 ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights START: FindContainerFor PublicName: BULKHEAD_KEY_116 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:BULKHEAD_KEY_116_terminalKey: BULKHEAD_KEY_116 (KeyItemPickup_Core) --- Zone: ZONE382, AreaCount: 9 half: 4 even: False ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 0 StartMul: 1 MiddleMul: 0 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000 Total area weight: 1</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 1 StartMul: 0.75 MiddleMul: 0.25 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000 Total area weight: 251</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 2 StartMul: 0.5 MiddleMul: 0.5 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000 Total area weight: 501</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 3 StartMul: 0.25 MiddleMul: 0.75 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000 Total area weight: 751</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 4 StartMul: 0 MiddleMul: 1 EndMul: 0 --- ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000 Total area weight: 1001</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 5 StartMul: 0 MiddleMul: 0.75 EndMul: 0.25 --- ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000 Total area weight: 1001</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 6 StartMul: 0 MiddleMul: 0.5 EndMul: 0.5 --- ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000 Total area weight: 1001</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 7 StartMul: 0 MiddleMul: 0.25 EndMul: 0.75 --- ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000 Total area weight: 1001</color>
+[Message:     Unity] <color=#C84800>>>>> CalcAreaWeights AREA RESULT: AreaIndex: 8 StartMul: 0 MiddleMul: 0 EndMul: 1 --- ZonePlacementWeights, Start: 0 Middle: 1000 End: 1000 Total area weight: 1001</color>
+[Message:     Unity] <color=#C84800>TryGetExistingGenericFunctionDistributionForSession, foundDist in zone: ZONE382 function: ResourceContainerWeak available: 50 randomValue: 0.3220661 ri: 23 had weight: 1001</color>
+[Message:     Unity] <color=#C84800>------------------- LG_Distribute_WardenObjective, got objective for layer SecondaryLayer: 101548_101548</color>
+[Message:     Unity] <color=red>LG_Distribute_WardenObjective, FindAndTagMultipleDistsWithFunctionInObjectiveZones, count: 2 function: Terminal</color>
+[Message:     Unity] <color=#C84800>LG_Distribute_WardenObjective.SelectZoneFromPlacementAndKeepTrackOnCount, creating dist in zone ZONE382 spawnZones[placementDataIndex].Count: 1 spawnZoneIndex: 0 spawnedInZoneCount: 1</color>
+[Message:     Unity] <color=#C84800>LG_Distribute_WardenObjective.FindAndTagMultipleDistsWithFunctionInObjectiveZones, creating dist to spawn function: Terminal in zone ZONE382</color>
+[Message:     Unity] <color=#C84800>>>>> LG_Distribute_WardenObjective, placing warden objective item with function Terminal for wardenObjectiveType: GatherTerminal in zone: 382, Area: 43_Area C (LevelGeneration.LG_Area)</color>
+[Message:     Unity] Increment placementDataIndex to 1
+[Message:     Unity] <color=#C84800>LG_Distribute_WardenObjective.SelectZoneFromPlacementAndKeepTrackOnCount, creating dist in zone ZONE383 spawnZones[placementDataIndex].Count: 1 spawnZoneIndex: 0 spawnedInZoneCount: 1</color>
+[Message:     Unity] <color=#C84800>LG_Distribute_WardenObjective.FindAndTagMultipleDistsWithFunctionInObjectiveZones, creating dist to spawn function: Terminal in zone ZONE383</color>
+[Message:     Unity] <color=#C84800>>>>> LG_Distribute_WardenObjective, placing warden objective item with function Terminal for wardenObjectiveType: GatherTerminal in zone: 383, Area: 46_Area A (LevelGeneration.LG_Area)</color>
+[Message:     Unity] RESET placementDataIndex to 0
+[Error  :     Unity] Found zone without sourceGate AND ID over 0, id: 12
+[Error  :     Unity] Found zone without sourceGate AND ID over 0, id: 13
+[Error  :     Unity] Found zone without sourceGate AND ID over 0, id: 14
+[Error  :     Unity] Found zone without sourceGate AND ID over 0, id: 15
+[Message:     Unity] Last Batch: Distribution
+		 Total Time: 0.271s Frames: 7 Ticks: 272
+		 FrameTime (avg/max/ticks max): 38.2ms / 46.5ms / 46
+		 Jobs (started/looped): 191 / 7
+Next Batch: FunctionMarkers - Count: 16
+
+[Message:     Unity] <color=#C84800>Spawning KEYCARD (PublicName: BULKHEAD_KEY_167 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:BULKHEAD_KEY_167_terminalKey: BULKHEAD_KEY_167 (KeyItemPickup_Core)) in countainer: LockerWeakLock(Clone)_terminalKey: LOCKER_434</color>
+[Debug  :    FloLib] TaskQueue: Coroutine started
+[Warning:     Unity] Creating a new persistant corutine object for the Corutine Manager - automated log
+[Message:     Unity] <color=purple>SetupAsBigPickupItem, randomizer selected id 0 and got itemId:133 isWardenObjectiveItem: False</color>
+[Message:     Unity] CarryItemWithGlobalStateManager.TryCreateItemInstance, type: FogRepeller count: 1
+[Message:     Unity] LG_PickupItem.SpawnPickupItemAndGetComp globalStateIndex: 0 m_globalState: HeavyFogRepellerGlobalState(Clone) (HeavyFogRepellerGlobalState)
+[Message:     Unity] <color=#C84800>Spawning KEYCARD (PublicName: KEY_WHITE_265 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:KEY_WHITE_265_terminalKey: KEY_WHITE_265 (KeyItemPickup_Core)) in countainer: BoxWeakLock(Clone)_terminalKey: BOX_690</color>
+[Debug  :Il2CppInterop] Original class was inflated, falling back to reflection
+[Info   :AutogenRundown] Repositioned Terminal Terminal_Mini_GO_UID:4300_TERMINAL_745_terminalKey: TERMINAL_745_Sync:7 { Position = (-10.0, -5.1, -128.0) }
+[Message:     Unity] WardenObjectiveManager.RegisterObjectiveItemForCollection 0 item: TERMINAL_418
+[Message:     Unity] <color=#C84800>Spawning KEYCARD (PublicName: BULKHEAD_KEY_116 SpawnedItem: KeyItemPickup_Core(Clone)_GateKeyItem:BULKHEAD_KEY_116_terminalKey: BULKHEAD_KEY_116 (KeyItemPickup_Core)) in countainer: BoxWeakLock(Clone)_terminalKey: BOX_349</color>
+[Message:     Unity] WardenObjectiveManager.RegisterObjectiveItemForCollection 0 item: TERMINAL_478
+[Message:     Unity] <color=#C84800>LG_ComputerTerminal.Setup, Gather Terminal is SETUP on this terminal!</color>
+[Message:     Unity] WardenObjectiveManager.RegisterObjectiveItemForCollection 1 item: TERMINAL_639
+[Message:     Unity] <color=#C84800>LG_ComputerTerminal.Setup, Gather Terminal is SETUP on this terminal!</color>
+[Message:     Unity] Last Batch: FunctionMarkers
+		 Total Time: 1.295s Frames: 27 Ticks: 1286
+		 FrameTime (avg/max/ticks max): 56.0ms / 63.7ms / 62
+		 Jobs (started/looped): 16 / 690
+Next Batch: FunctionMarkerLeftovers - Count: 16
+
+[Message:     Unity] Last Batch: FunctionMarkerLeftovers
+		 Total Time: 0.102s Frames: 1 Ticks: 121
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 27
+		 Jobs (started/looped): 15 / 1
+Next Batch: Markers - Count: 1
+
+[Message:     Unity] Last Batch: Markers
+		 Total Time: 0.363s Frames: 4 Ticks: 355
+		 FrameTime (avg/max/ticks max): 80.9ms / 129.6ms / 130
+		 Jobs (started/looped): 1 / 270
+Next Batch: PrefabSpawners - Count: 29682
+
+[Message:     Unity] Last Batch: PrefabSpawners
+		 Total Time: 0.965s Frames: 24 Ticks: 958
+		 FrameTime (avg/max/ticks max): 47.5ms / 49.8ms / 50
+		 Jobs (started/looped): 29682 / 29393
+Next Batch: LateMarkerCleanup - Count: 0
+
+[Message:     Unity] Last Batch: LateMarkerCleanup
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: MarkerLoop - Count: 1
+
+[Message:     Unity] Last Batch: MarkerLoop
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: LateGeomorphScan - Count: 22
+
+[Message:     Unity] Last Batch: LateGeomorphScan
+		 Total Time: 3.111s Frames: 22 Ticks: 3104
+		 FrameTime (avg/max/ticks max): 130.0ms / 258.5ms / 263
+		 Jobs (started/looped): 22 / 88
+Next Batch: Pillars - Count: 0
+
+[Message:     Unity] Last Batch: Pillars
+		 Total Time: 0.000s Frames: 0 Ticks: 2
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: AIGraph_UnityAIGraph - Count: 5
+
+[Message:     Unity] CollectNavMeshSources : From 18 roots and 213816 possible sources, 47935 vas valid
+[Message:     Unity] CollectNavMeshSources : NotStatic:0 NotActive:2380
+[Message:     Unity] CollectNavMeshSources : WrongLayer:19472 NoCollider:146409 WasTrigger:0 MissingMesh:0 BadColliderType:0
+[Message:     Unity] NavmeshUtils.NavMeshSourceCollector : 47935 valid NavMesh sources found!
+[Message:     Unity] ---------------------------------------------------------
+[Message:     Unity] Navmesh done! time: 0.4851532
+[Message:     Unity] ---------------------------------------------------------
+[Message:     Unity] CollectNavMeshSources : From 1 roots and 26 possible sources, 7 vas valid
+[Message:     Unity] CollectNavMeshSources : NotStatic:0 NotActive:0
+[Message:     Unity] CollectNavMeshSources : WrongLayer:2 NoCollider:17 WasTrigger:0 MissingMesh:0 BadColliderType:0
+[Message:     Unity] NavmeshUtils.NavMeshSourceCollector : 7 valid NavMesh sources found!
+[Message:     Unity] ---------------------------------------------------------
+[Message:     Unity] Navmesh done! time: 0.01114655
+[Message:     Unity] ---------------------------------------------------------
+[Message:     Unity] CollectNavMeshSources : From 1 roots and 26 possible sources, 7 vas valid
+[Message:     Unity] CollectNavMeshSources : NotStatic:0 NotActive:0
+[Message:     Unity] CollectNavMeshSources : WrongLayer:2 NoCollider:17 WasTrigger:0 MissingMesh:0 BadColliderType:0
+[Message:     Unity] NavmeshUtils.NavMeshSourceCollector : 7 valid NavMesh sources found!
+[Message:     Unity] ---------------------------------------------------------
+[Message:     Unity] Navmesh done! time: 0.03240967
+[Message:     Unity] ---------------------------------------------------------
+[Message:     Unity] CollectNavMeshSources : From 1 roots and 26 possible sources, 7 vas valid
+[Message:     Unity] CollectNavMeshSources : NotStatic:0 NotActive:0
+[Message:     Unity] CollectNavMeshSources : WrongLayer:2 NoCollider:17 WasTrigger:0 MissingMesh:0 BadColliderType:0
+[Message:     Unity] NavmeshUtils.NavMeshSourceCollector : 7 valid NavMesh sources found!
+[Message:     Unity] ---------------------------------------------------------
+[Message:     Unity] Navmesh done! time: 0.03133392
+[Message:     Unity] ---------------------------------------------------------
+[Message:     Unity] CollectNavMeshSources : From 1 roots and 26 possible sources, 7 vas valid
+[Message:     Unity] CollectNavMeshSources : NotStatic:0 NotActive:0
+[Message:     Unity] CollectNavMeshSources : WrongLayer:2 NoCollider:17 WasTrigger:0 MissingMesh:0 BadColliderType:0
+[Message:     Unity] NavmeshUtils.NavMeshSourceCollector : 7 valid NavMesh sources found!
+[Message:     Unity] ---------------------------------------------------------
+[Message:     Unity] Navmesh done! time: 0.03186798
+[Message:     Unity] ---------------------------------------------------------
+[Message:     Unity] Last Batch: AIGraph_UnityAIGraph
+		 Total Time: 0.612s Frames: 9 Ticks: 611
+		 FrameTime (avg/max/ticks max): 35.1ms / 240.5ms / 163
+		 Jobs (started/looped): 5 / 2423696
+Next Batch: AIGraph_Prepare - Count: 22
+
+[Message:     Unity] Last Batch: AIGraph_Prepare
+		 Total Time: 0.034s Frames: 1 Ticks: 48
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 25
+		 Jobs (started/looped): 21 / 1
+Next Batch: AIGraph_NodeVolumeJobs - Count: 1
+
+[Message:     Unity] Last Batch: AIGraph_NodeVolumeJobs
+		 Total Time: 0.149s Frames: 4 Ticks: 139
+		 FrameTime (avg/max/ticks max): 34.9ms / 45.2ms / 45
+		 Jobs (started/looped): 1 / 121955
+Next Batch: LadderAIGNodes - Count: 20
+
+[Message:     Unity] Last Batch: LadderAIGNodes
+		 Total Time: 0.000s Frames: 0 Ticks: 5
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 20 / 0
+Next Batch: AIGraph_LinkGates - Count: 67
+
+[Message:     Unity] Last Batch: AIGraph_LinkGates
+		 Total Time: 0.000s Frames: 0 Ticks: 15
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 67 / 0
+Next Batch: AIGraph_LinkPlugs - Count: 0
+
+[Message:     Unity] Last Batch: AIGraph_LinkPlugs
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: AIGRaph_SpecialNodesFindSource - Count: 12
+
+[Message:     Unity] Last Batch: AIGRaph_SpecialNodesFindSource
+		 Total Time: 0.035s Frames: 1 Ticks: 8
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 0
+		 Jobs (started/looped): 11 / 1
+Next Batch: AIGRaph_SpecialNodesLinkIntoVolume - Count: 12
+
+[Message:     Unity] Last Batch: AIGRaph_SpecialNodesLinkIntoVolume
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 12 / 0
+Next Batch: AIGraph_Start - Count: 22
+
+[Message:     Unity] Last Batch: AIGraph_Start
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 22 / 0
+Next Batch: AIGraph_CreateNodeClusters - Count: 54
+
+[Message:     Unity] Last Batch: AIGraph_CreateNodeClusters
+		 Total Time: 0.034s Frames: 1 Ticks: 52
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 25
+		 Jobs (started/looped): 53 / 338
+Next Batch: AIGraph_ScoreNodeClusters - Count: 54
+
+[Message:     Unity] Last Batch: AIGraph_ScoreNodeClusters
+		 Total Time: 0.032s Frames: 1 Ticks: 21
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 6
+		 Jobs (started/looped): 53 / 1
+Next Batch: AIGraph_End - Count: 22
+
+[Message:     Unity] Last Batch: AIGraph_End
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 22 / 0
+Next Batch: AIGraph_AirGraph - Count: 22
+
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 60 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 33 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 55 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 31 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 46 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 17 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 45 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 28 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 34 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 47 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 38 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 11 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 35 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 18 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 18 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 17 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 28 ms
+[Message:     Unity] Populate grid created 32768 compound nodes and took ~128 KB and 9 ms
+[Message:     Unity] Populate grid created 109150 compound nodes and took ~426 KB and 17 ms
+[Message:     Unity] Populate grid created 109150 compound nodes and took ~426 KB and 17 ms
+[Message:     Unity] Populate grid created 109150 compound nodes and took ~426 KB and 17 ms
+[Message:     Unity] Populate grid created 109150 compound nodes and took ~426 KB and 17 ms
+[Message:     Unity] Last Batch: AIGraph_AirGraph
+		 Total Time: 1.137s Frames: 19 Ticks: 1168
+		 FrameTime (avg/max/ticks max): 53.3ms / 98.1ms / 82
+		 Jobs (started/looped): 3 / 19
+Next Batch: AIGraph_AirGraph_PostProcess - Count: 22
+
+[Message:     Unity] Last Batch: AIGraph_AirGraph_PostProcess
+		 Total Time: 0.049s Frames: 1 Ticks: 9
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 0
+		 Jobs (started/looped): 21 / 1
+Next Batch: SetGateAlwaysTraversable - Count: 67
+
+[Message:     Unity] Last Batch: SetGateAlwaysTraversable
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 67 / 67
+Next Batch: FunctionMarkerFallback - Count: 17
+
+[Message:     Unity] LG_BuildBulkheadDoorControllerLogicJob, dc: Bulkhead_Door_Controller_GO_UID:2846_terminalKey: BULKHEAD_DC_186_func:BulkheadDoorController_funcWasSpawned:True (LevelGeneration.LG_BulkheadDoorController_Core)
+[Message:     Unity] >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SECURITY DOOR, SetupBulkheadDCLock BULKHEAD_DC_186
+[Message:     Unity] >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SECURITY DOOR, SetupBulkheadDCLock BULKHEAD_DC_186
+[Message:     Unity] Last Batch: FunctionMarkerFallback
+		 Total Time: 0.000s Frames: 0 Ticks: 9
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 17 / 0
+Next Batch: SetGateTraversableFromStart - Count: 67
+
+[Message:     Unity] Last Batch: SetGateTraversableFromStart
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 67 / 67
+Next Batch: Ladders - Count: 20
+
+[Message:     Unity] Last Batch: Ladders
+		 Total Time: 0.000s Frames: 0 Ticks: 9
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 20 / 0
+Next Batch: DoorLocks - Count: 12
+
+[Message:     Unity] Last Batch: DoorLocks
+		 Total Time: 0.245s Frames: 5 Ticks: 249
+		 FrameTime (avg/max/ticks max): 46.7ms / 61.4ms / 62
+		 Jobs (started/looped): 7 / 5
+Next Batch: Resources - Count: 1
+
+[Message:     Unity] Last Batch: Resources
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: CustomGeomorphBuildJob - Count: 1
+
+[Message:     Unity] Last Batch: CustomGeomorphBuildJob
+		 Total Time: 0.000s Frames: 0 Ticks: 2
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: CustomObjectCollection - Count: 16
+
+[Message:     Unity] Last Batch: CustomObjectCollection
+		 Total Time: 0.078s Frames: 2 Ticks: 55
+		 FrameTime (avg/max/ticks max): 24.5ms / 39.0ms / 39
+		 Jobs (started/looped): 14 / 2
+Next Batch: SpecificSpawning - Count: 48
+
+[Message:     Unity] Last Batch: SpecificSpawning
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 48 / 0
+Next Batch: EnemiesPlacement_Scoring - Count: 16
+
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 1_Area A (LevelGeneration.LG_Area)_ZONE_254_ (LevelGeneration.LG_Area) | VoxelCoverage: 349 | VoxelCoverage after Multi: 12.913
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 2_Area F (LevelGeneration.LG_Area)_ZONE_254_ (LevelGeneration.LG_Area) | VoxelCoverage: 158.175 | VoxelCoverage after Multi: 5.852475
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 3_Area G (LevelGeneration.LG_Area)_ZONE_254_ (LevelGeneration.LG_Area) | VoxelCoverage: 117.7375 | VoxelCoverage after Multi: 4.356287
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 4_Area D (LevelGeneration.LG_Area)_ZONE_254_ (LevelGeneration.LG_Area) | VoxelCoverage: 676.275 | VoxelCoverage after Multi: 25.02218
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 5_Area C (LevelGeneration.LG_Area)_ZONE_254_ (LevelGeneration.LG_Area) | VoxelCoverage: 201.8 | VoxelCoverage after Multi: 7.4666
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 6_Area B (LevelGeneration.LG_Area)_ZONE_254_ (LevelGeneration.LG_Area) | VoxelCoverage: 130.825 | VoxelCoverage after Multi: 4.840525
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 7_Area C (LevelGeneration.LG_Area)_ZONE_255_ (LevelGeneration.LG_Area) | VoxelCoverage: 260.9375 | VoxelCoverage after Multi: 9.654688
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 8_Area D (LevelGeneration.LG_Area)_ZONE_255_ (LevelGeneration.LG_Area) | VoxelCoverage: 532.7875 | VoxelCoverage after Multi: 19.71314
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 9_Area B (LevelGeneration.LG_Area)_ZONE_255_ (LevelGeneration.LG_Area) | VoxelCoverage: 127.675 | VoxelCoverage after Multi: 4.723975
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 10_Area E (LevelGeneration.LG_Area)_ZONE_255_ (LevelGeneration.LG_Area) | VoxelCoverage: 154.925 | VoxelCoverage after Multi: 5.732225
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 11_Area F (LevelGeneration.LG_Area)_ZONE_255_ (LevelGeneration.LG_Area) | VoxelCoverage: 525.1375 | VoxelCoverage after Multi: 19.43009
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 12_Area F (LevelGeneration.LG_Area)_ZONE_255_ (LevelGeneration.LG_Area) | VoxelCoverage: 403.0625 | VoxelCoverage after Multi: 14.91331
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 13_Area A (LevelGeneration.LG_Area)_ZONE_255_ (LevelGeneration.LG_Area) | VoxelCoverage: 1141.15 | VoxelCoverage after Multi: 42.22255
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 14_Area E (LevelGeneration.LG_Area)_ZONE_255_ (LevelGeneration.LG_Area) | VoxelCoverage: 96.225 | VoxelCoverage after Multi: 3.560325
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 15_Area A (LevelGeneration.LG_Area)_ZONE_255_ (LevelGeneration.LG_Area) | VoxelCoverage: 770.7125 | VoxelCoverage after Multi: 28.51636
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 16_Area B (LevelGeneration.LG_Area)_ZONE_255_ (LevelGeneration.LG_Area) | VoxelCoverage: 520.65 | VoxelCoverage after Multi: 19.26405
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 17_Area D (LevelGeneration.LG_Area)_ZONE_255_ (LevelGeneration.LG_Area) | VoxelCoverage: 255.225 | VoxelCoverage after Multi: 9.443325
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 18_Area J (LevelGeneration.LG_Area)_ZONE_256_ (LevelGeneration.LG_Area) | VoxelCoverage: 79.5125 | VoxelCoverage after Multi: 2.941962
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 19_Area I (LevelGeneration.LG_Area)_ZONE_256_ (LevelGeneration.LG_Area) | VoxelCoverage: 140.625 | VoxelCoverage after Multi: 5.203125
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 20_Area D (LevelGeneration.LG_Area)_ZONE_256_ (LevelGeneration.LG_Area) | VoxelCoverage: 1073.05 | VoxelCoverage after Multi: 39.70285
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 21_Area E (LevelGeneration.LG_Area)_ZONE_256_ (LevelGeneration.LG_Area) | VoxelCoverage: 123.9 | VoxelCoverage after Multi: 4.5843
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 22_Area A (LevelGeneration.LG_Area)_ZONE_256_ (LevelGeneration.LG_Area) | VoxelCoverage: 654.8625 | VoxelCoverage after Multi: 24.22991
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 23_Area C (LevelGeneration.LG_Area)_ZONE_257_ (LevelGeneration.LG_Area) | VoxelCoverage: 175.8 | VoxelCoverage after Multi: 6.5046
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 24_Area A (LevelGeneration.LG_Area)_ZONE_257_ (LevelGeneration.LG_Area) | VoxelCoverage: 324.9625 | VoxelCoverage after Multi: 12.02361
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 25_Area A (LevelGeneration.LG_Area)_ZONE_257_ (LevelGeneration.LG_Area) | VoxelCoverage: 2516.75 | VoxelCoverage after Multi: 93.11975
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 26_Area F (LevelGeneration.LG_Area)_ZONE_258_ (LevelGeneration.LG_Area) | VoxelCoverage: 172 | VoxelCoverage after Multi: 6.364
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 27_Area G (LevelGeneration.LG_Area)_ZONE_258_ (LevelGeneration.LG_Area) | VoxelCoverage: 137.25 | VoxelCoverage after Multi: 5.07825
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 28_Area B (LevelGeneration.LG_Area)_ZONE_259_ (LevelGeneration.LG_Area) | VoxelCoverage: 956.625 | VoxelCoverage after Multi: 35.39513
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 29_Area A (LevelGeneration.LG_Area)_ZONE_259_ (LevelGeneration.LG_Area) | VoxelCoverage: 933.6125 | VoxelCoverage after Multi: 34.54366
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 30_Area A (LevelGeneration.LG_Area)_ZONE_260_ (LevelGeneration.LG_Area) | VoxelCoverage: 1948.412 | VoxelCoverage after Multi: 72.09126
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 31_Area A (LevelGeneration.LG_Area)_ZONE_261_ (LevelGeneration.LG_Area) | VoxelCoverage: 1564.563 | VoxelCoverage after Multi: 57.88881
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 32_Area B (LevelGeneration.LG_Area)_ZONE_261_ (LevelGeneration.LG_Area) | VoxelCoverage: 1261.4 | VoxelCoverage after Multi: 46.6718
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 34_Area A (LevelGeneration.LG_Area)_ZONE_263_ (LevelGeneration.LG_Area) | VoxelCoverage: 360.7875 | VoxelCoverage after Multi: 13.34914
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 35_Area C (LevelGeneration.LG_Area)_ZONE_382_ (LevelGeneration.LG_Area) | VoxelCoverage: 148.3375 | VoxelCoverage after Multi: 5.488487
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 36_Area D (LevelGeneration.LG_Area)_ZONE_382_ (LevelGeneration.LG_Area) | VoxelCoverage: 260.6875 | VoxelCoverage after Multi: 9.645437
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 37_Area B (LevelGeneration.LG_Area)_ZONE_382_ (LevelGeneration.LG_Area) | VoxelCoverage: 479.1 | VoxelCoverage after Multi: 17.7267
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 38_Area A (LevelGeneration.LG_Area)_ZONE_382_ (LevelGeneration.LG_Area) | VoxelCoverage: 1139 | VoxelCoverage after Multi: 42.143
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 39_Area E (LevelGeneration.LG_Area)_ZONE_382_ (LevelGeneration.LG_Area) | VoxelCoverage: 92.55 | VoxelCoverage after Multi: 3.42435
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 40_Area F (LevelGeneration.LG_Area)_ZONE_382_ (LevelGeneration.LG_Area) | VoxelCoverage: 386.4 | VoxelCoverage after Multi: 14.2968
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 41_Area A (LevelGeneration.LG_Area)_ZONE_382_ (LevelGeneration.LG_Area) | VoxelCoverage: 1501.063 | VoxelCoverage after Multi: 55.53931
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 42_Area B (LevelGeneration.LG_Area)_ZONE_382_ (LevelGeneration.LG_Area) | VoxelCoverage: 361.5375 | VoxelCoverage after Multi: 13.37689
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 43_Area C (LevelGeneration.LG_Area)_ZONE_382_ (LevelGeneration.LG_Area) | VoxelCoverage: 593.5375 | VoxelCoverage after Multi: 21.96089
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 44_Area C (LevelGeneration.LG_Area)_ZONE_383_ (LevelGeneration.LG_Area) | VoxelCoverage: 402.7875 | VoxelCoverage after Multi: 14.90314
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 45_Area B (LevelGeneration.LG_Area)_ZONE_383_ (LevelGeneration.LG_Area) | VoxelCoverage: 530.2375 | VoxelCoverage after Multi: 19.61879
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 46_Area A (LevelGeneration.LG_Area)_ZONE_383_ (LevelGeneration.LG_Area) | VoxelCoverage: 795.6 | VoxelCoverage after Multi: 29.4372
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 47_Area B (LevelGeneration.LG_Area)_ZONE_383_ (LevelGeneration.LG_Area) | VoxelCoverage: 713.175 | VoxelCoverage after Multi: 26.38747
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 48_Area C (LevelGeneration.LG_Area)_ZONE_383_ (LevelGeneration.LG_Area) | VoxelCoverage: 792.2625 | VoxelCoverage after Multi: 29.31371
+[Message:     Unity] <b>LG_PopulateZone:</b> Area 49_Area C (LevelGeneration.LG_Area)_ZONE_383_ (LevelGeneration.LG_Area) | VoxelCoverage: 414.0125 | VoxelCoverage after Multi: 15.31846
+[Message:     Unity] Last Batch: EnemiesPlacement_Scoring
+		 Total Time: 0.000s Frames: 0 Ticks: 20
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 67 / 0
+Next Batch: StaticEnemiesPlacement - Count: 16
+
+[Message:     Unity] Last Batch: StaticEnemiesPlacement
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 16 / 0
+Next Batch: PreCulling - Count: 16
+
+[Message:     Unity] Last Batch: PreCulling
+		 Total Time: 0.076s Frames: 2 Ticks: 55
+		 FrameTime (avg/max/ticks max): 23.1ms / 36.2ms / 39
+		 Jobs (started/looped): 14 / 2
+Next Batch: Culling_Nodes - Count: 54
+
+[Message:     Unity] Last Batch: Culling_Nodes
+		 Total Time: 0.078s Frames: 2 Ticks: 93
+		 FrameTime (avg/max/ticks max): 24.7ms / 39.5ms / 39
+		 Jobs (started/looped): 52 / 2
+Next Batch: Culling_Portals - Count: 83
+
+[Message:     Unity] Last Batch: Culling_Portals
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 83 / 0
+Next Batch: Culling_Cullers - Count: 321
+
+[Message:     Unity] Last Batch: Culling_Cullers
+		 Total Time: 0.036s Frames: 1 Ticks: 16
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 5
+		 Jobs (started/looped): 320 / 1
+Next Batch: Culling_Lights - Count: 54
+
+[Message:     Unity] Last Batch: Culling_Lights
+		 Total Time: 1.062s Frames: 25 Ticks: 1061
+		 FrameTime (avg/max/ticks max): 36.2ms / 69.9ms / 71
+		 Jobs (started/looped): 29 / 25
+Next Batch: Culling_NodeInstanceSearch - Count: 54
+
+[Message:     Unity] Last Batch: Culling_NodeInstanceSearch
+		 Total Time: 0.162s Frames: 5 Ticks: 169
+		 FrameTime (avg/max/ticks max): 31.1ms / 34.2ms / 34
+		 Jobs (started/looped): 54 / 2810
+Next Batch: Culling_NodeClusterJobs - Count: 16
+
+[Message:     Unity] Last Batch: Culling_NodeClusterJobs
+		 Total Time: 0.310s Frames: 10 Ticks: 307
+		 FrameTime (avg/max/ticks max): 30.8ms / 32.2ms / 32
+		 Jobs (started/looped): 70 / 2452146
+Next Batch: Culling_Cleanup - Count: 54
+
+[Message:     Unity] Last Batch: Culling_Cleanup
+		 Total Time: 0.000s Frames: 0 Ticks: 2
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 54 / 0
+Next Batch: Culling_GatherLightCulling - Count: 797
+
+[Message:     Unity] Last Batch: Culling_GatherLightCulling
+		 Total Time: 0.000s Frames: 0 Ticks: 10
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 797 / 0
+Next Batch: Culling_TrimPortalLists - Count: 59
+
+[Message:     Unity] Last Batch: Culling_TrimPortalLists
+		 Total Time: 0.031s Frames: 1 Ticks: 19
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 10
+		 Jobs (started/looped): 59 / 125351
+Next Batch: PostCulling - Count: 0
+
+[Message:     Unity] Last Batch: PostCulling
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: ZoneLights - Count: 17
+
+[Debug  :Il2CppInterop] Original class was inflated, falling back to reflection
+[Message:     Unity] <color=#C84800>#### LG_BuildCustomLightHandlerJob, number of iCustomLightHandler found on the floor: 0</color>
+[Message:     Unity] Last Batch: ZoneLights
+		 Total Time: 0.694s Frames: 10 Ticks: 763
+		 FrameTime (avg/max/ticks max): 81.3ms / 122.7ms / 122
+		 Jobs (started/looped): 7 / 10
+Next Batch: GenerateNavigationInfo - Count: 7
+
+[Message:     Unity] Last Batch: GenerateNavigationInfo
+		 Total Time: 1.412s Frames: 6 Ticks: 1339
+		 FrameTime (avg/max/ticks max): 244.0ms / 295.3ms / 296
+		 Jobs (started/looped): 55 / 6
+Next Batch: DisplayNavigationInfo - Count: 64
+
+[Message:     Unity] Last Batch: DisplayNavigationInfo
+		 Total Time: 0.000s Frames: 0 Ticks: 3
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 64 / 0
+Next Batch: CustomGeomorphPostCullingJob - Count: 1
+
+[Message:     Unity] Last Batch: CustomGeomorphPostCullingJob
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: LateGeomorphBuildStep - Count: 22
+
+[Message:     Unity] Last Batch: LateGeomorphBuildStep
+		 Total Time: 0.124s Frames: 1 Ticks: 134
+		 FrameTime (avg/max/ticks max): 10.0ms / 20.0ms / 23
+		 Jobs (started/looped): 21 / 1
+Next Batch: LateRuntimeOptimizations - Count: 22
+
+[Message:     Unity] Last Batch: LateRuntimeOptimizations
+		 Total Time: 0.111s Frames: 3 Ticks: 99
+		 FrameTime (avg/max/ticks max): 30.9ms / 45.7ms / 44
+		 Jobs (started/looped): 22 / 198
+Next Batch: EnemiesPlacement - Count: 0
+
+[Message:     Unity] Last Batch: EnemiesPlacement
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: FixColliders - Count: 0
+
+[Message:     Unity] Last Batch: FixColliders
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: FinalGeomorphErrorCheck - Count: 0
+
+[Message:     Unity] Last Batch: FinalGeomorphErrorCheck
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: SpectatorJobs - Count: 0
+
+[Message:     Unity] Last Batch: SpectatorJobs
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: LoadResourcesShards_Enemies - Count: 1
+
+[Message:     Unity] LG_LoadPopulationShards : Disabled, handled earlier by GS_Offline
+[Message:     Unity] Last Batch: LoadResourcesShards_Enemies
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: DebugJobs - Count: 5
+
+[Message:     Unity] Last Batch: DebugJobs
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 5 / 0
+Next Batch: Culling_LateCleanup - Count: 6
+
+[Message:     Unity] Last Batch: Culling_LateCleanup
+		 Total Time: 0.000s Frames: 0 Ticks: 5
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 60 / 0
+Next Batch: Culling_PrepForInlevel - Count: 5
+
+[Message:     Unity] Last Batch: Culling_PrepForInlevel
+		 Total Time: 0.000s Frames: 0 Ticks: 1
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 5 / 0
+Next Batch: LateCustomObjectCollection - Count: 16
+
+[Message:     Unity] Last Batch: LateCustomObjectCollection
+		 Total Time: 0.000s Frames: 0 Ticks: 0
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 16 / 0
+Next Batch: FinalLogicLinking - Count: 32
+
+[Debug  :AutogenRundown] [Reroll] All detected zones healthy. Releasing factory done suppression.
+[Debug  :Il2CppInterop] Original class was inflated, falling back to reflection
+[Message:     Unity] <color=#C84800>>>>>>>>>>>>>> SetBuildSeed, forcedSeed: 1 exp: GameData.ExpeditionInTierData BuildRandom.Seed: 1</color>
+[Message:     Unity] <color=#C84800>>>>>>>>>>>>>> SetHostIDSeed, forcedSeed: 57844055 exp: GameData.ExpeditionInTierData HostIDRandom.Seed: 57844055</color>
+[Message:     Unity] <color=#C84800>>>>>>>>>>>>>> SetSessionIDSeed, forcedSeed: 1500736408 exp: GameData.ExpeditionInTierData SessionRandom.Seed: 1500736408</color>
+[Info   :ConfigurableGlobalWaveSettings] ActiveExpedition DevInfo globalwavesettings_1
+[Info   :ConfigurableGlobalWaveSettings] GlobalWaveSettingsEntry ID 1 matched for current level
+[Message:     Unity] Builder.Build, settings seeds, activeExp: GameData.ExpeditionInTierData buildSeed: 1 hostIDSeed: 57844055 sessionSeed: 1500736408
+[Message:     Unity] <color=#C84800>Builder.Build, Start Building using BuildSeed: 1 HostIDSeed: 57844055 SessionSeed: 1500736408</color>
+[Message:     Unity] <color=#C84800>>>>>>>>>>>>>> SetBuildSeed, forcedSeed: 1 exp: GameData.ExpeditionInTierData BuildRandom.Seed: 1</color>
+[Warning:AutogenRundown] Expedition tier is: $TierC
+[Message:     Unity] <color=#C84800>SerialGenerator GENERATE! SessionRandom.seed: 1500736408</color>
+[Message:     Unity] >>>>>>>>>>>>> BuildFloor
+[Warning:     Unity] DontDestroyOnLoad only works for root GameObjects or components on root GameObjects.
+[Message:     Unity] <color=#C84800>LoadComplexResources complexResourceDataID: 3</color>
+[Message:     Unity] <color=#C84800>LG_LoadComplexDataSetResourcesJob.ComplexAssetBundleLoaded, ComplexResourceSetBlock: Complex_Tech</color>
+[Message:     Unity] DIMENSION: Setting sound ENVIRONMENT state to Tech!
+[Message:     Unity] <b>WardenObjectiveManager:</b> SetupWardenObjectiveLayer() Setting definition for MainLayer with CorruptedTerminalUplink.
+[Message:     Unity] Last Batch: Setup
+		 Total Time: 0.333s Frames: 0 Ticks: 1440
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: StaticLevel - Count: 0
+
+[Message:     Unity] Last Batch: StaticLevel
+		 Total Time: 0.000s Frames: 0 Ticks: 2
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 0 / 0
+Next Batch: LoadResourcesShards_Level - Count: 2
+
+[Message:     Unity] Last Batch: LoadResourcesShards_Level
+		 Total Time: 0.013s Frames: 3 Ticks: 11
+		 FrameTime (avg/max/ticks max): 5.6ms / 20.0ms / 4
+		 Jobs (started/looped): 1 / 3
+Next Batch: SetupFloor - Count: 1
+
+[Message:     Unity] <color=#C84800>LG_SetupFloor.Build</color>
+[Message:     Unity] <b>LG_Floor:</b> Setup() Setting up Base Dimension (0).
+[Message:     Unity] <b>LG_Floor:</b> Creating (Dimension_20) dimension at (32.0, 160.0, 0.0).
+[Message:     Unity] <b>LG_Floor:</b> Created Dimension (Index: Dimension_20, gridSize: 10, cellSize: 64).
+[Message:     Unity] <b>LG_Floor:</b> Creating (Dimension_19) dimension at (32.0, 180.0, 0.0).
+[Message:     Unity] <b>LG_Floor:</b> Created Dimension (Index: Dimension_19, gridSize: 10, cellSize: 64).
+[Message:     Unity] <b>LG_Floor:</b> Creating (Dimension_18) dimension at (32.0, 200.0, 0.0).
+[Message:     Unity] <b>LG_Floor:</b> Created Dimension (Index: Dimension_18, gridSize: 10, cellSize: 64).
+[Message:     Unity] <b>LG_Floor:</b> Creating (Dimension_17) dimension at (32.0, 220.0, 0.0).
+[Message:     Unity] <b>LG_Floor:</b> Created Dimension (Index: Dimension_17, gridSize: 10, cellSize: 64).
+[Message:     Unity] <b>LG_Floor:</b> Found (4) unique dimension references in GameData for this expedition and created (4) enemy dimensions.
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_0 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 254 with BuildFromZoneAlias254 zoneAliasStart: 254 aliasOffset: Zone_0</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 685 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_1 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 255 with BuildFromZoneAlias254 zoneAliasStart: 254 aliasOffset: Zone_1</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 247 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_2 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 256 with BuildFromZoneAlias255 zoneAliasStart: 254 aliasOffset: Zone_2</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 496 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_3 (dim:Reality)
+[Debug  :AutogenRundown] Applied override m_subSeed=560 to Zone_Zone_3
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 257 with BuildFromZoneAlias256 zoneAliasStart: 254 aliasOffset: Zone_3</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 560 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_4 (dim:Reality)
+[Debug  :AutogenRundown] Applied override m_subSeed=1039 to Zone_Zone_4
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 258 with BuildFromZoneAlias257 zoneAliasStart: 254 aliasOffset: Zone_4</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 1039 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_5 (dim:Reality)
+[Debug  :AutogenRundown] Applied override m_subSeed=341 to Zone_Zone_5
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 259 with BuildFromZoneAlias257 zoneAliasStart: 254 aliasOffset: Zone_5</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 341 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_6 (dim:Reality)
+[Debug  :AutogenRundown] Applied override m_subSeed=234 to Zone_Zone_6
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 260 with BuildFromZoneAlias258 zoneAliasStart: 254 aliasOffset: Zone_6</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 234 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_7 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 261 with BuildFromZoneAlias260 zoneAliasStart: 254 aliasOffset: Zone_7</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 317 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_8 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 262 with BuildFromZoneAlias260 zoneAliasStart: 254 aliasOffset: Zone_8</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 633 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_9 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 263 with BuildFromZoneAlias254 zoneAliasStart: 254 aliasOffset: Zone_9</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality MainLayer with 
+<b>SubSeed:</b> 135 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_0 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 382 with BuildFromZoneAlias383 zoneAliasStart: 382 aliasOffset: Zone_0</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality SecondaryLayer with 
+<b>SubSeed:</b> 675 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Debug  :AutogenRundown] --------------------------> [Reroll] GOTCHA!!! m_markerSubSeed=3 to Zone_1 (dim:Reality)
+[Message:     Unity] <color=#C84800>>>>>>>>>------------->>>>>>>>>>>> LG_Floor.CreateZone, Alias: 383 with BuildFromZoneAlias382 zoneAliasStart: 382 aliasOffset: Zone_1</color>
+[Message:     Unity] <b>Zone Created</b> (New Game Object) in Reality SecondaryLayer with 
+<b>SubSeed:</b> 245 (Defined), <b>MarkerSubSeed:</b> 3 (Defined), <b>LightSubSeed:</b> 1 (Defined)
+[Message:     Unity] <b>Zone Created (Static)</b> (New Game Object) in Dimension_20 MainLayer
+[Message:     Unity] <b>LG_ZoneJob_CreateZoneForStaticLevel:</b> Dimension_20 added area: Area_A
+[Message:     Unity] <b>Zone Created (Static)</b> (New Game Object) in Dimension_19 MainLayer
+[Message:     Unity] <b>LG_ZoneJob_CreateZoneForStaticLevel:</b> Dimension_19 added area: Area_A
+[Message:     Unity] <b>Zone Created (Static)</b> (New Game Object) in Dimension_18 MainLayer
+[Message:     Unity] <b>LG_ZoneJob_CreateZoneForStaticLevel:</b> Dimension_18 added area: Area_A
+[Message:     Unity] <b>Zone Created (Static)</b> (New Game Object) in Dimension_17 MainLayer
+[Message:     Unity] <b>LG_ZoneJob_CreateZoneForStaticLevel:</b> Dimension_17 added area: Area_A
+[Message:     Unity] Last Batch: SetupFloor
+		 Total Time: 0.000s Frames: 0 Ticks: 35
+		 FrameTime (avg/max/ticks max): 0.0ms / 0.0ms / 0
+		 Jobs (started/looped): 1 / 0
+Next Batch: GenerateZones - Count: 16
+
+[Message:     Unity] <color=#C84800> ---- MainLayer ---- Picked build from area : Area_A</color>
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 254 in layer MainLayer, please select a subcomplex for each zone
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 255 in layer MainLayer, please select a subcomplex for each zone
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 255 in layer MainLayer, please select a subcomplex for each zone
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 256 in layer MainLayer, please select a subcomplex for each zone
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 256 in layer MainLayer, please select a subcomplex for each zone
+[Error  :     Unity] BlockAndCleanFailedAreasFromZone >  ZoneAlias: 257 dim:Reality  AreaCount: 1  ZoneCoverageOnFail:32  ZoneMinCoverage:30  CoverageStatus:Ok
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 259 in layer MainLayer, please select a subcomplex for each zone
+[Error  :     Unity] WARNING : Zone6 (Zone_6 - 260): Failed to find any good StartAreas in zone 4 (258) expansionType:Towards_Random m_buildFromZone.m_areas: 1 scoredCount:0 dim: Reality
+[Warning:AutogenRundown] Zone Zone_6 failed to find start area (attempt 2). Triggering subseed reroll.
+[Debug  :AutogenRundown] Also rerolling parent zone Zone_4
+[Error  :     Unity] WARNING : Zone6 (Zone_6 - 260): Failed to find any good StartAreas in zone 4 (258) expansionType:Towards_Random m_buildFromZone.m_areas: 1 scoredCount:0 dim: Reality
+[Warning:AutogenRundown] Zone Zone_6 failed to find start area (attempt 3). Triggering subseed reroll.
+[Debug  :AutogenRundown] Also rerolling parent zone Zone_4
+[Error  :     Unity] LG_Floor, got subcomplex ALL for zone 261 in layer MainLayer, please select a subcomplex for each zone
+[Error  :     Unity] <b>LG_ZoneJob_CreateExpandFromData:</b> sourceExpander is null for New Game Object[SubSeed:633(633)] | zone dim: Reality | job dim: Reality!
+[Error  :Il2CppInterop] During invoking native->managed trampoline
+Exception: Il2CppInterop.Runtime.Il2CppException: System.NullReferenceException: Object reference not set to an instance of an object.
+--- BEGIN IL2CPP STACK TRACE ---
+System.NullReferenceException: Object reference not set to an instance of an object.
+  at LevelGeneration.LG_ZoneJob_CreateExpandFromData.Build () [0x00000] in <00000000000000000000000000000000>:0 
+--- END IL2CPP STACK TRACE ---
+
+   at Il2CppInterop.Runtime.Il2CppException.RaiseExceptionIfNecessary(IntPtr returnedException) in /home/runner/work/Il2CppInterop/Il2CppInterop/Il2CppInterop.Runtime/Il2CppException.cs:line 36
+   at DMD<LevelGeneration.LG_ZoneJob_CreateExpandFromData::Build>(LG_ZoneJob_CreateExpandFromData this)
+   at (il2cpp -> managed) Build(IntPtr , Il2CppMethodInfo* )
+[Error  :     Unity] <b>LG_ZoneJob_CreateExpandFromData:</b> sourceExpander is null for New Game Object[SubSeed:633(633)] | zone dim: Reality | job dim: Reality!
+[Error  :Il2CppInterop] During invoking native->managed trampoline
+Exception: Il2CppInterop.Runtime.Il2CppException: System.NullReferenceException: Object reference not set to an instance of an object.
+--- BEGIN IL2CPP STACK TRACE ---
+System.NullReferenceException: Object reference not set to an instance of an object.
+  at LevelGeneration.LG_ZoneJob_CreateExpandFromData.Build () [0x00000] in <00000000000000000000000000000000>:0 
+--- END IL2CPP STACK TRACE ---
+
+   at Il2CppInterop.Runtime.Il2CppException.RaiseExceptionIfNecessary(IntPtr returnedException) in /home/runner/work/Il2CppInterop/Il2CppInterop/Il2CppInterop.Runtime/Il2CppException.cs:line 36
+   at DMD<LevelGeneration.LG_ZoneJob_CreateExpandFromData::Build>(LG_ZoneJob_CreateExpandFromData this)
+   at (il2cpp -> managed) Build(IntPtr , Il2CppMethodInfo* )
+[Error  :     Unity] <b>LG_ZoneJob_CreateExpandFromData:</b> sourceExpander is null for New Game Object[SubSeed:633(633)] | zone dim: Reality | job dim: Reality!
+[Error  :Il2CppInterop] During invoking native->managed trampoline
+Exception: Il2CppInterop.Runtime.Il2CppException: System.NullReferenceException: Object reference not set to an instance of an object.
+--- BEGIN IL2CPP STACK TRACE ---
+System.NullReferenceException: Object reference not set to an instance of an object.
+  at LevelGeneration.LG_ZoneJob_CreateExpandFromData.Build () [0x00000] in <00000000000000000000000000000000>:0 
+--- END IL2CPP STACK TRACE ---
+
+   at Il2CppInterop.Runtime.Il2CppException.RaiseExceptionIfNecessary(IntPtr returnedException) in /home/runner/work/Il2CppInterop/Il2CppInterop/Il2CppInterop.Runtime/Il2CppException.cs:line 36
+   at DMD<LevelGeneration.LG_ZoneJob_CreateExpandFromData::Build>(LG_ZoneJob_CreateExpandFromData this)
+   at (il2cpp -> managed) Build(IntPtr , Il2CppMethodInfo* )
+[Error  :     Unity] <b>LG_ZoneJob_CreateExpandFromData:</b> sourceExpander is null for New Game Object[SubSeed:633(633)] | zone dim: Reality | job dim: Reality!
+[Error  :Il2CppInterop] During invoking native->managed trampoline
+Exception: Il2CppInterop.Runtime.Il2CppException: System.NullReferenceException: Object reference not set to an instance of an object.
+--- BEGIN IL2CPP STACK TRACE ---
+System.NullReferenceException: Object reference not set to an instance of an object.
+  at LevelGeneration.LG_ZoneJob_CreateExpandFromData.Build () [0x00000] in <00000000000000000000000000000000>:0 
+--- END IL2CPP STACK TRACE ---
+
+   at Il2CppInterop.Runtime.Il2CppException.RaiseExceptionIfNecessary(IntPtr returnedException) in /home/runner/work/Il2CppInterop/Il2CppInterop/Il2CppInterop.Runtime/Il2CppException.cs:line 36
+   at DMD<LevelGeneration.LG_ZoneJob_CreateExpandFromData::Build>(LG_ZoneJob_CreateExpandFromData this)
+   at (il2cpp -> managed) Build(IntPtr , Il2CppMethodInfo* )
+[Error  :     Unity] <b>LG_ZoneJob_CreateExpandFromData:</b> sourceExpander is null for New Game Object[SubSeed:633(633)] | zone dim: Reality | job dim: Reality!
+[Error  :Il2CppInterop] During invoking native->managed trampoline
