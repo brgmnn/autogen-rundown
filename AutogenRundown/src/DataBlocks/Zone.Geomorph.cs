@@ -54,7 +54,10 @@ public partial record Zone
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_exit/floodways_exit_tile.prefab"),
 
                     // SamDB v2
-                    (SubComplex.Floodways, "Assets/SamdownGeos/Floodways Abberation Exit/Abberation_Exit_tile.prefab")
+                    (SubComplex.Floodways, "Assets/SamdownGeos/Floodways Abberation Exit/Abberation_Exit_tile.prefab"),
+
+                    // The Doggy Doge
+                    (SubComplex.Floodways, "Assets/DogCustomGeos/Tilepack/DogGeos_Service_Exit.prefab")
                 });
                 break;
         };
@@ -109,6 +112,12 @@ public partial record Zone
 
                     // SamDB v2
                     (SubComplex.DigSite, "Assets/SamdownGeos/Refinery_X_tile_1/Refinery_X_Tile_1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
+                    // ZaeroGeos
+                    (SubComplex.DigSite, "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_01_v2.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.DigSite, "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_02_X.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.DigSite, "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_03.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.DigSite, "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_04.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                 });
                 break;
 
@@ -135,6 +144,9 @@ public partial record Zone
                     // Red_Leicester_Cheese
                     // (SubComplex.Lab, "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_Hub_RLC_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }), // Disabled due to functioning NCR machine
                     (SubComplex.DataCenter, "Assets/Bundles/RLC_Tech/geo_64x64_tech_data_center_hub_JG_RLC_02_v3.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
+                    // The Doggy Doge
+                    (SubComplex.DataCenter, "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Junction.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                 });
                 break;
 
@@ -162,6 +174,9 @@ public partial record Zone
 
                     // SamDB v2
                     (SubComplex.Floodways, "Assets/SamdownGeos/Floodways Scaffolding HUB/Floodways_Scaffolding_HUB.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
+                    // The Doggy Doge
+                    (SubComplex.Floodways, "Assets/DogCustomGeos/Tilepack/Releases/Floodways/DogGeos_Floodways_X_HA_06.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                 });
                 break;
         }
@@ -281,6 +296,9 @@ public partial record Zone
 
                     // SamDB
                     (SubComplex.Lab, "Assets/Custom Geo's/Labs/lab_i_tile/lab_i_tile_V1.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+
+                    // The Doggy Doge
+                    (SubComplex.DataCenter, "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Overpass.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                 });
                 break;
 
@@ -479,6 +497,11 @@ public partial record Zone
 
                     // (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_LF_03_R8C2.prefab"),
                     //                  Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_02.prefab
+
+                    // --- MOD Geomorphs ---
+                    // SamDB
+                    (SubComplex.DataCenter, "Assets/DogCustomGeos/Tilepack/Releases/Datacenter/DogGeos_Datacenter_X_HA_07.prefab"),
+
                 });
 
                 CustomGeomorph = geo;
@@ -635,7 +658,10 @@ public partial record Zone
                     (SubComplex.DigSite, "Assets/Bundles/RLC_Mining/geo_64x64_mining_digsite_dead_end_RLC_01.prefab", new CoverageMinMax { Min = 10, Max = 15 }),
 
                     // SamDB v2
-                    (SubComplex.DataCenter, "Assets/SamdownGeos/Storage dead end spawn/DeadEnd_Storage.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
+                    (SubComplex.Storage, "Assets/SamdownGeos/Storage dead end spawn/DeadEnd_Storage.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
+
+                    // ZaeroGeos
+                    (SubComplex.DigSite, "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_Dead_End_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
                 });
                 break;
 
@@ -716,6 +742,9 @@ public partial record Zone
                     // --- MOD Geomorphs ---
                     // donan3967
                     (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_boss_hub_DS_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+
+                    // The Doggy Doge
+                    (SubComplex.Floodways, "Assets/DogCustomGeos/Tilepack/Releases/Floodways/DogGeos_Floodways_X_HA_06.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                 });
                 break;
         }

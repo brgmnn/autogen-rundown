@@ -33,6 +33,8 @@ public static class RundownFactory
             WardenObjectiveType.CorruptedTerminalUplink => prefix + "<color=orange>Dual Network Uplink</color>\n",
             WardenObjectiveType.TimedTerminalSequence => prefix + "<color=orange>Timed Sequence</color>\n",
 
+            WardenObjectiveType.ReachKdsDeep => prefix + "<color=orange>Enter KDS Deep</color>\n",
+
             _ => ""
         };
     }
@@ -105,7 +107,7 @@ public static class RundownFactory
         // This is to help us high rolling one particular objective over
         // another. So we avoid having a rundown with only ReactorStartup
         //
-        // For Daily/Weekly there's really only max 14 levels taht can be rolled
+        // For Daily/Weekly there's really only max 14 levels that can be rolled
         var mainObjectivesPool = new List<(double, int, WardenObjectiveType)>
         {
             (1.0, 2, WardenObjectiveType.HsuFindSample),
@@ -215,13 +217,13 @@ public static class RundownFactory
 
         #region Geomorph Debugging test level
         #if DEBUG
-        #if false
+        #if true
         if (withFixed)
         {
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab",
+                "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_Dead_End_01.prefab",
                 new Level("A")
                 {
                     Tier = "A",
@@ -314,12 +316,11 @@ public static class RundownFactory
         }
 
         #region Test C Levels
-        #if DEBUG
-        #if false
-        if (withFixed)
+        #if true
+        if (withFixed || true)
         {
-            const string tier = "E";
-            const string title = "Test";
+            const string tier = "C";
+            const string title = "Valiant";
             const Complex complex = Complex.Mining;
 
             var mainDirector = new BuildDirector
@@ -328,7 +329,7 @@ public static class RundownFactory
                 Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.CentralGeneratorCluster,
+                Objective = WardenObjectiveType.ReachKdsDeep
             };
             mainDirector.GenPoints();
 
@@ -338,7 +339,7 @@ public static class RundownFactory
                 Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.GatherSmallItems,
+                Objective = WardenObjectiveType.GatherTerminal,
             };
             secondDirector.GenPoints();
 
@@ -348,7 +349,7 @@ public static class RundownFactory
                 Complex = complex,
                 Complexity = Complexity.Low,
                 Tier = tier,
-                Objective = WardenObjectiveType.GatherSmallItems,
+                Objective = WardenObjectiveType.SpecialTerminalCommand
             };
             thirdDirector.GenPoints();
 
@@ -357,15 +358,16 @@ public static class RundownFactory
                 {
                     Tier = tier,
                     Name = title,
+                    Prefix = "<color=orange>K</color><color=#444444>:</color>C",
                     Complex = complex,
                     MainDirector = mainDirector,
                     SecondaryDirector = secondDirector,
-                    OverloadDirector = thirdDirector,
+                    // OverloadDirector = thirdDirector,
                     Settings = new LevelSettings(tier)
                     {
-                        Bulkheads = Bulkhead.Main
+                        // Bulkheads = Bulkhead.Main
                         // Bulkheads = Bulkhead.Main | Bulkhead.Extreme
-                        // Bulkheads = Bulkhead.Main | Bulkhead.Overload
+                        Bulkheads = Bulkhead.Main | Bulkhead.Overload
                         // Bulkheads = Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload
                     },
                     Index = rundown.TierC_Count + 1,
@@ -373,7 +375,6 @@ public static class RundownFactory
                 });
             rundown.AddLevel(testLevel);
         }
-        #endif
         #endif
         #endregion
         #endregion
@@ -417,7 +418,7 @@ public static class RundownFactory
             var settings = new LevelSettings("B");
             // settings.Modifiers.Add(LevelModifiers.Chargers);
             var description = new DataBlocks.Text(DescriptionHeader(objective) +
-                                                  DataBlocks.WardenObjective.GenLevelDescription(objective));
+                                                  DataBlocks.Objectives.WardenObjective.GenLevelDescription(objective));
             var level = Level.Build(
                 new("B")
                 {

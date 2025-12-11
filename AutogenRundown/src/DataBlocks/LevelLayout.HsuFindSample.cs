@@ -5,8 +5,25 @@ using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
+using WardenObjective = Objectives.WardenObjective;
+
 public partial record LevelLayout
 {
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="start"></param>
+    public void BuildLayout_HsuFindSample_Fast(ZoneNode start)
+    {
+        start = planner.UpdateNode(start with { MaxConnections = 1 });
+
+        var startZone = planner.GetZone(start)!;
+        startZone.Coverage = CoverageMinMax.Small_10;
+
+        var (hsu, hsuZone) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
+        hsuZone.Coverage = CoverageMinMax.Large_100;
+    }
+
     /// <summary>
     /// Ideas for layout
     ///
@@ -36,6 +53,15 @@ public partial record LevelLayout
         var start = (ZoneNode)startish;
         var startZone = planner.GetZone(start)!;
 
+        // --- Fast version ---
+        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep)
+        {
+            BuildLayout_HsuFindSample_Fast(start);
+
+            return;
+        }
+
+        // --- Normal version ---
         switch (level.Tier, director.Bulkhead)
         {
             #region Tier: A

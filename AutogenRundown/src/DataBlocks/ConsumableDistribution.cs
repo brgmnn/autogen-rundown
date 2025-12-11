@@ -40,6 +40,18 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
         )
     };
 
+    public static ConsumableDistribution Baseline_LockMelters = new()
+    {
+        SpawnsPerZone = 6,
+        SpawnData = Collections.Flatten(
+            ItemSpawn.GlowSticks(2.0),
+            new List<ItemSpawn> {
+                new() { Weight = 8.0, Item = Items.Item.LockMelter },
+                new() { Weight = 1.0, Item = Items.Item.FogRepeller }
+            }
+        )
+    };
+
     /// <summary>
     /// Spawns a lot of fog repellers. We need this for certain alarm zones
     /// </summary>
@@ -73,6 +85,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
     {
         Bins.ConsumableDistributions.AddBlock(Baseline);
         Bins.ConsumableDistributions.AddBlock(Baseline_FogRepellers);
+        Bins.ConsumableDistributions.AddBlock(Baseline_LockMelters);
 
         Bins.ConsumableDistributions.AddBlock(Alarms_FogRepellers);
 

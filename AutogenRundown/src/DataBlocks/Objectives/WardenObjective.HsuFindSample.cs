@@ -1,9 +1,8 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
-using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 
-namespace AutogenRundown.DataBlocks;
+namespace AutogenRundown.DataBlocks.Objectives;
 
 /**
  * Objective: HsuFindSample
@@ -64,7 +63,10 @@ public partial record WardenObjective
         };
 
         AddCompletedObjectiveWaves(level, director);
+    }
 
+    private void PostBuildIntel_HsuFindSample(Level level)
+    {
         #region Warden Intel Messages
         /*
          * HSU Find Sample specific warden intel messages
@@ -171,7 +173,7 @@ public partial record WardenObjective
             ">... <size=200%><color=red>Keep your footsteps quiet!</color></size>\r\n>... These HSUs might alert something.\r\n>... No sudden noises.",
             ">... That panel's flickering again.\r\n>... <size=200%><color=red>Reset it to access the logs!</color></size>\r\n>... The sample is in there.",
             ">... <size=200%><color=red>These tubes are everywhere.</color></size>\r\n>... We'll have to split up.\r\n>... Remember the plan, and regroup.",
-            ">... The occupant's readout is stable.\r\n>... <size=200%><color=red>Let’s extract the data now.</color></size>\r\n>... Watch my back!",
+            ">... The occupant's readout is stable.\r\n>... <size=200%><color=red>Let's extract the data now.</color></size>\r\n>... Watch my back!",
             ">... <size=200%><color=red>Heads up!</color></size>\r\n>... We lost power again.\r\n>... This won't be easy.",
             ">... Something's locked in that case.\r\n>... <size=200%><color=red>Could be the sample drive!</color></size>\r\n>... Let's pry it open.",
             ">... <size=200%><color=red>This isn't the right occupant.</color></size>\r\n>... Keep looking.\r\n>... We'll find the match.",

@@ -86,6 +86,31 @@ public partial record LevelLayout
         });
     }
 
+    private static void SetRespawnVibe(Zone zone, int respawnSacks = 50)
+    {
+        // Dark, ominous lighting for respawn zones
+        zone.LightSettings = Generator.Pick(new List<Lights.Light>
+        {
+            Lights.Light.Pitch_black_1,
+            Lights.Light.DarkGrey_1,
+            Lights.Light.DarkBlue_1,
+            Lights.Light.DarkBlueToPurple_1
+        });
+
+        // Add respawn sacks
+        zone.StaticSpawnDataContainers.Add(
+            new StaticSpawnDataContainer
+            {
+                Count = respawnSacks,
+                DistributionWeightType = 0,
+                DistributionWeight = 1.0,
+                DistributionRandomBlend = 0.5,
+                DistributionResultPow = 2.0,
+                Unit = StaticSpawnUnit.Respawner,
+                FixedSeed = Generator.Between(10, 150)
+            });
+    }
+
     #endregion
 
     #region Apex Alarms
@@ -577,6 +602,64 @@ public partial record LevelLayout
                 _ => 15
             }
         });
+
+        return node;
+    }
+
+    /// <summary>
+    /// Adds a respawn zone where enemies will continuously respawn from sacks.
+    /// Players must clear the zone and move on, as enemies will keep coming back.
+    /// </summary>
+    /// <param name="node">The zone node to configure</param>
+    /// <param name="enemyData">Optional custom enemy spawning data. Defaults to tier-appropriate enemies.</param>
+    /// <param name="respawnSacks">Optional override for respawn sack count. Defaults to tier-appropriate value.</param>
+    /// <returns>The updated zone node</returns>
+    public ZoneNode AddStealth_RespawnZone(
+        ZoneNode node,
+        EnemySpawningData? enemyData = null,
+        int? respawnSacks = null)
+    {
+        var zone = planner.GetZone(node);
+
+        if (zone == null)
+        {
+            Plugin.Logger.LogDebug($"Skipping adding respawn zone as zone is null: {node}");
+            return node;
+        }
+
+        // Prevent normal enemy rolling
+        node = planner.AddTags(node, "no_enemies");
+
+        // Get tier-appropriate defaults
+        var (defaultPoints, defaultSacks, timeInterval) = level.Tier switch
+        {
+            "A" => (15, 20, 12.0),
+            "B" => (20, 30, 11.0),
+            "C" => (25, 40, 10.0),
+            "D" => (30, 50, 9.0),
+            "E" => (35, 60, 8.0),
+            _ => (15, 20, 12.0)
+        };
+
+        // Enable respawning
+        zone.EnemyRespawning = true;
+        zone.EnemyRespawnTimeInterval = timeInterval;
+
+        // Set respawn vibe (lighting + sacks)
+        SetRespawnVibe(zone, respawnSacks ?? defaultSacks);
+
+        // Add hibernating enemies
+        var spawningData = enemyData ?? (level.Tier switch
+        {
+            "A" => EnemySpawningData.TierA,
+            "B" => EnemySpawningData.TierB,
+            "C" => EnemySpawningData.TierC,
+            "D" => EnemySpawningData.TierD,
+            "E" => EnemySpawningData.TierE,
+            _ => EnemySpawningData.TierA
+        });
+
+        zone.EnemySpawningInZone.Add(spawningData with { Points = defaultPoints });
 
         return node;
     }

@@ -10,6 +10,8 @@ using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks;
 
+using WardenObjective = Objectives.WardenObjective;
+
 public enum SizeFactor
 {
     Small,
@@ -37,6 +39,16 @@ public partial record LevelLayout : DataBlock<LevelLayout>
 
     [JsonIgnore]
     private readonly LevelSettings settings;
+
+    [JsonIgnore]
+    public List<(double chance, int count, ChainedPuzzle puzzle)> PuzzlePack { get; set; } = new();
+
+    [JsonIgnore]
+    public List<(double chance, int count, WavePopulation population)> WavePopulationPack { get; set; } = new();
+
+    [JsonIgnore]
+    public List<(double chance, int count, WaveSettings)> WaveSettingsPack { get; set; } = new();
+
     #endregion
 
     /// <summary>
@@ -67,10 +79,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
     /// <summary>
     /// Roll for door alarms
     /// </summary>
-    public void RollAlarms(
-        ICollection<(double, int, ChainedPuzzle)> puzzlePack,
-        ICollection<(double, int, WavePopulation)> wavePopulationPack,
-        ICollection<(double, int, WaveSettings)> waveSettingsPack)
+    public void RollAlarms()
     {
         // We want to roll the alarms on the zones in a random order. The alarm packs have
         // weighted chances on them. This means zones rolled first have a higher chance of
@@ -80,7 +89,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         var zones = Zones.Shuffle();
 
         foreach (var zone in zones)
-            zone.RollAlarms(level, this, puzzlePack, wavePopulationPack, waveSettingsPack);
+            zone.RollAlarms();
     }
 
     /// <summary>
@@ -973,7 +982,6 @@ public partial record LevelLayout : DataBlock<LevelLayout>
     /// <param name="level"></param>
     /// <param name="director"></param>
     /// <param name="objective"></param>
-    /// <param name="direction">What direction we should build this level layout for</param>
     /// <returns></returns>
     public static LevelLayout Build(
         Level level,
@@ -984,14 +992,18 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         var layout = new LevelLayout(level, director, objective, level.Settings, level.Planner)
         {
             Name = $"{level.Tier}{level.Index} {level.Name} {director.Bulkhead}",
-            direction = direction
+            direction = direction,
+
+            PuzzlePack = ChainedPuzzle.BuildPack(level.Tier, director.Bulkhead, level.Settings),
+            WavePopulationPack = WavePopulation.BuildPack(level.Tier, level.Settings),
+            WaveSettingsPack = WaveSettings.BuildPack(level.Tier)
         };
 
         director.GenZones();
 
-        var puzzlePack = ChainedPuzzle.BuildPack(level.Tier, director.Bulkhead, level.Settings);
-        var wavePopulationPack = WavePopulation.BuildPack(level.Tier, level.Settings);
-        var waveSettingsPack = WaveSettings.BuildPack(level.Tier);
+        // var puzzlePack = ChainedPuzzle.BuildPack(level.Tier, director.Bulkhead, level.Settings);
+        // var wavePopulationPack = WavePopulation.BuildPack(level.Tier, level.Settings);
+        // var waveSettingsPack = WaveSettings.BuildPack(level.Tier);
 
         Plugin.Logger.LogDebug($"Building layout ({layout.Name}), Objective = {objective.Type}");
 
@@ -1157,6 +1169,19 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 break;
             }
 
+            #region Autogen Custom Objectives
+
+            /*
+             * Modeled after R8E1 / R8E2 / R5E1
+             */
+            case WardenObjectiveType.ReachKdsDeep:
+            {
+                layout.BuildLayout_ReachKdsDeep(director, objective, start);
+                break;
+            }
+
+            #endregion
+
             // Something has gone wrong if we are reaching this
             default:
             {
@@ -1260,7 +1285,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
 
         // TODO: most or all of these need to be moved
         // layout.RollErrorAlarm(); // Deprecated
-        layout.RollAlarms(puzzlePack, wavePopulationPack, waveSettingsPack);
+        layout.RollAlarms();
         layout.RollBloodDoors();
         layout.RollEnemies(director);
 

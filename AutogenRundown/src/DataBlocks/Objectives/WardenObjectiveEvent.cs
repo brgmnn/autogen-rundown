@@ -86,13 +86,39 @@ public record WardenObjectiveEvent
 
     public string WardenIntel { get; set; } = "";
 
-    public string CustomSubObjectiveHeader { get; set; } = "";
+    #region Objective
 
-    public string CustomSubObjective { get; set; } = "";
+    /// <summary>
+    /// The bit next to [PROGRESSION] in all caps
+    /// </summary>
+    [JsonIgnore]
+    public Text SubObjectiveHeader { get; set; } = Text.None;
+
+    /// <summary>
+    /// Below the [PROGRESSION], not in all caps
+    /// </summary>
+    [JsonIgnore]
+    public Text SubObjective { get; set; } = Text.None;
+
+    [JsonProperty]
+    public uint CustomSubObjectiveHeader => SubObjectiveHeader.PersistentId;
+
+    [JsonProperty]
+    public uint CustomSubObjective => SubObjective.PersistentId;
+
+    #endregion
 
     #region Sound settings
+
     [JsonProperty("SoundID")]
     public Sound SoundId { get; set; } = Sound.None;
+
+    [JsonProperty("SoundSubtitle")]
+    public uint Subtitle { get; set; } = 0;
+
+    [JsonProperty("DialogueID")]
+    public uint DialogueId { get; set; } = 0;
+
     #endregion
 
     #region Fog settings
@@ -129,12 +155,10 @@ public record WardenObjectiveEvent
     public int TerminalCommandRule = 0;
     #endregion
 
-    #region Not implemented yet
-    public uint SoundSubtitle = 0;
-    public uint DialogueID = 0;
-    #endregion
-
     #region Filtering
+
+    [JsonProperty("WorldEventTriggerObjectFilter", NullValueHandling = NullValueHandling.Ignore)]
+    public string? TriggerFilter { get; set; }
 
     /// <summary>
     ///
@@ -178,6 +202,9 @@ public record WardenObjectiveEvent
     /// </summary>
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
     public EventLoop? EventLoop { get; set; }
+
+    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    public CameraShake? CameraShake { get; set; }
 
     /// <summary>
     ///

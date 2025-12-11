@@ -177,6 +177,9 @@ public class LayoutPlanner
         return node;
     }
 
+    public ZoneNode AddTags(ZoneNode node, params string[] tags)
+        => UpdateNode(node with { Tags = node.Tags.Extend(tags) });
+
     /// <summary>
     /// Handles assigning the right local index and build from index.
     /// </summary>
@@ -220,7 +223,37 @@ public class LayoutPlanner
     /// </summary>
     /// <param name="node"></param>
     /// <returns></returns>
-    public ZoneNode? GetParent(ZoneNode node) => graph.First(pair => pair.Value.Contains(node)).Key;
+    public ZoneNode? GetParent(ZoneNode node)
+    {
+        try
+        {
+            return graph.First(pair => pair.Value.Contains(node)).Key;
+        }
+        catch (InvalidOperationException)
+        {
+            // This should only happen for the elevator node, which has no parent
+            return null;
+        }
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="startNode"></param>
+    /// <returns></returns>
+    public List<ZoneNode> TraverseToElevator(ZoneNode startNode)
+    {
+        ZoneNode? node = startNode;
+        var path = new List<ZoneNode>();
+
+        while (node != null)
+        {
+            path.Add((ZoneNode)node);
+            node = GetParent((ZoneNode)node);
+        }
+
+        return path;
+    }
 
     /// <summary>
     /// Gets a zone node by its index.
@@ -457,6 +490,20 @@ public class LayoutPlanner
             .Select(node => node.Key)
             .OrderBy(zone => zone.ZoneNumber)
             .ToList();
+
+    /// <summary>
+    /// Get's the first zone in a bulkhead
+    /// </summary>
+    /// <param name="bulkhead"></param>
+    /// <returns></returns>
+    public ZoneNode? GetBulkheadFirstZone(Bulkhead bulkhead)
+    {
+        var nodes = graph.Where(node => node.Key.Bulkhead.HasFlag(bulkhead))
+            .Select(node => node.Key)
+            .OrderBy(zone => zone.ZoneNumber);
+
+        return nodes.Any() ? nodes.First() : null;
+    }
 
     /// <summary>
     /// Returns true/false whether the given node is a bulkhead entrance.

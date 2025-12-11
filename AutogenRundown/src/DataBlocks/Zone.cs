@@ -4,6 +4,7 @@ using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.WorldEvents;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
@@ -157,15 +158,7 @@ public partial record Zone : DataBlock<Zone>
     ///     * Turn on the security error scans from R8?
     ///
     /// </summary>
-    /// <param name="puzzlePack"></param>
-    /// <param name="wavePopulationPack"></param>
-    /// <param name="waveSettingsPack"></param>
-    public void RollAlarms(
-        Level level,
-        LevelLayout layout,
-        ICollection<(double, int, ChainedPuzzle)> puzzlePack,
-        ICollection<(double, int, WavePopulation)> wavePopulationPack,
-        ICollection<(double, int, WaveSettings)> waveSettingsPack)
+    public void RollAlarms()
     {
         // TODO: should we just be trying to set the alarm if there isn't already an alarm here?
         if (LocalIndex == 0 ||
@@ -178,7 +171,7 @@ public partial record Zone : DataBlock<Zone>
         }
 
         // Grab a random puzzle from the puzzle pack
-        var puzzle = Generator.DrawSelect(puzzlePack);
+        var puzzle = Generator.DrawSelect(layout.PuzzlePack);
 
         if (puzzle == null)
             return;
@@ -187,8 +180,8 @@ public partial record Zone : DataBlock<Zone>
         // We only copy the population settings in if we have an actual alarm here
         if (puzzle.TriggerAlarmOnActivate && !puzzle.FixedAlarm)
         {
-            var population = Generator.DrawSelect(wavePopulationPack)!;
-            var settings = Generator.DrawSelect(waveSettingsPack)!;
+            var population = Generator.DrawSelect(layout.WavePopulationPack);
+            var settings = Generator.DrawSelect(layout.WaveSettingsPack);
 
             // Rescale settings by difficulty factor
             if (!population.DifficultyFactor.ApproxEqual(1.0))
@@ -492,7 +485,7 @@ public partial record Zone : DataBlock<Zone>
     /// </summary>
     /// <returns></returns>
     public double ClearTime_AreaCoverage()
-        => Coverage.Max * clearTimeFactor_AreaCoverage;
+        => (Coverage.Min + Coverage.Max) * clearTimeFactor_AreaCoverage / 2;
 
     /// <summary>
     /// Time based on door alarms
@@ -505,7 +498,7 @@ public partial record Zone : DataBlock<Zone>
                     * clearTimeFactor_AlarmsTime
                 + Alarm.WantedDistanceFromStartPos
                     * clearTimeFactor_AlarmsTraverse
-                + (Alarm.Puzzle.Count - 1)
+                + Math.Max(0, Alarm.Puzzle.Count - 1)
                     * Alarm.WantedDistanceBetweenPuzzleComponents
                     * clearTimeFactor_AlarmsTraverse;
 
@@ -554,13 +547,17 @@ public partial record Zone : DataBlock<Zone>
     /// helpful for a number of objectives where players need to race against the clock to
     /// achieve some objective. This function lets us grant the players an amount of time that
     /// is difficult but still possible.
+    ///
+    /// TODO: this needs to somehow be run after the level is generated. It depends on things
+    ///       like the alarm which may not actually be rolled when this is called in the
+    ///       level layout
     /// </summary>
     /// <returns>Estimated time to clear the zone and any alarms to _enter_ the zone</returns>
     public double GetClearTimeEstimate()
     {
         const double factorAlarms = 1.20;
         const double factorBoss = 1.0;
-        const double factorCoverage = 1.30;
+        const double factorCoverage = 1.20;
         const double factorEnemyPoints = 2.40;
 
         // Add time based on the zone size
@@ -598,6 +595,9 @@ public partial record Zone : DataBlock<Zone>
         //                     + (Alarm.Puzzle.Count - 1) * Alarm.WantedDistanceBetweenPuzzleComponents;
         // timeAlarms *= factorAlarms;
 
+        // How long it takes the door animation to open
+        var timeDoorOpen = SecurityGateToEnter == SecurityGate.Security ? 5.0 : 14.0;
+
         // Give +20s for a blood door.
         // TODO: adjust based on spawns in the blood door.
         var timeBloodDoor = 0.0;
@@ -621,7 +621,8 @@ public partial record Zone : DataBlock<Zone>
                     + timeBosses
                     + timeAlarms
                     + timeBloodDoor
-                    + timeBloodDoorBoss;
+                    + timeBloodDoorBoss
+                    + timeDoorOpen;
 
         Plugin.Logger.LogDebug($"Zone {LocalIndex} time budget: total={total}s -- "
                                + $"alarms={timeAlarms}s coverage={timeCoverage}s "
@@ -749,6 +750,7 @@ public partial record Zone : DataBlock<Zone>
     public List<WardenObjectiveEvent> EventsOnOpenDoor { get; set; } = new();
     public List<WardenObjectiveEvent> EventsOnDoorScanStart { get; set; } = new();
     public List<WardenObjectiveEvent> EventsOnDoorScanDone { get; set; } = new();
+    public List<WardenObjectiveEvent> EventsOnTrigger { get; set; } = new();
     #endregion
 
     #region Puzzle settings
@@ -824,15 +826,37 @@ public partial record Zone : DataBlock<Zone>
     /// </summary>
     public bool EnemyRespawning { get; set; } = false;
 
+    /// <summary>
+    ///
+    /// </summary>
     public bool EnemyRespawnRequireOtherZone { get; set; } = true;
 
+    /// <summary>
+    ///
+    /// </summary>
     public int EnemyRespawnRoomDistance { get; set; } = 2;
 
-    public double EnemyRespawnTimeInterval { get; set; } = 10.0;
+    /// <summary>
+    ///
+    /// </summary>
+    public double EnemyRespawnTimeInterval { get; set; } = 30.0;
 
+    /// <summary>
+    ///
+    /// </summary>
     public double EnemyRespawnCountMultiplier { get; set; } = 1.0;
 
-    public JArray EnemyRespawnExcludeList = new JArray();
+    /// <summary>
+    /// Enemy persistent ID's to exclude from spawning. Usually we want to do this to exclude scouts
+    /// </summary>
+    public List<Enemy> EnemyRespawnExcludeList { get; set; } = new()
+    {
+        Enemy.Scout,
+        Enemy.ScoutCharger,
+        Enemy.ScoutShadow,
+        Enemy.ScoutNightmare,
+        Enemy.ScoutZoomer
+    };
     #endregion
 
     #region Static Spawns (Spitters, Mother Sacks etc)
@@ -897,17 +921,13 @@ public partial record Zone : DataBlock<Zone>
     public Placement DisinfectionPlacement { get; set; } = new();
 
     public List<FunctionPlacementData> DisinfectionStationPlacements { get; set; } = new();
+    #endregion
 
-    /// <summary>
-    /// Takes an input function and applies it to each of the three major resource multiples.
-    /// </summary>
-    /// <param name="transformer"></param>
-    public void SetMainResourceMulti(Func<double, double> transformer)
-    {
-        HealthPacks = transformer(HealthPacks);
-        ToolPacks = transformer(ToolPacks);
-        AmmoPacks = transformer(AmmoPacks);
-    }
+    #region World Events
+
+    [JsonProperty("WorldEventChainedPuzzleDatas")]
+    public List<WorldEventChainedPuzzle> WorldEventChainedPuzzleData { get; set; } = new();
+
     #endregion
 
     public Zone(Level level, Bulkhead bulkhead) : this(level, level.GetLevelLayout(bulkhead)!)
@@ -920,10 +940,8 @@ public partial record Zone : DataBlock<Zone>
         this.layout = layout;
 
         SubSeed = Generator.Between(10, 999);
-
-        // TODO: Add MarkerSubSeed / LightsSubSeed generator here
-        // MarkerSubSeed = Generator.Between(10, 999);
-        // LightsSubSeed = Generator.Between(10, 999);
+        MarkerSubSeed = Generator.Between(10, 999);
+        LightsSubSeed = Generator.Between(10, 999);
 
         // Always ensure a terminal is placed in the zone
         TerminalPlacements.Add(new TerminalPlacement());

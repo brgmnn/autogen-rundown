@@ -1,7 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Enemies;
-using AutogenRundown.DataBlocks.Objectives;
 
-namespace AutogenRundown.DataBlocks;
+namespace AutogenRundown.DataBlocks.Objectives;
 
 /*
  * This objective is bringing a large item like Neonate or Data Sphere to a machine and then
@@ -76,11 +75,11 @@ public partial record WardenObjective
         AddCompletedObjectiveWaves(level, director);
     }
 
-    public void PostBuild_HsuActivateSmall(BuildDirector director, Level level)
+    private void PostBuildIntel_HsuActivateSmall(Level level)
     {
         #region Warden Intel Messages
         // Generic item messages
-        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 6), Generator.Draw(new List<string>
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {
             ">... [flicker of lights]\r\n>... The machine says 'processing'.\r\n>... <size=200%><color=red>Defend until it's done!</color></size>",
             ">... [quiet humming]\r\n>... Haul it faster!\r\n>... <size=200%><color=red>Bring it to the machine.</color></size>",

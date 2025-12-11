@@ -7,6 +7,8 @@ using AutogenRundown.Utils;
 
 namespace AutogenRundown.DataBlocks;
 
+using WardenObjective = Objectives.WardenObjective;
+
 public partial record LevelLayout
 {
     public void BuildLayout_HsuActivateSmall(BuildDirector director, WardenObjective objective, ZoneNode? startish)

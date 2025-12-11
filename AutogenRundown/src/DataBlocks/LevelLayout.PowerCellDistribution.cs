@@ -1,11 +1,42 @@
-﻿using AutogenRundown.DataBlocks.Zones;
+﻿using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
+using WardenObjective = Objectives.WardenObjective;
+
 public partial record LevelLayout
 {
+    public void BuildLayout_PowerCellDistribution_Fast(ZoneNode start)
+    {
+        var startZone = planner.GetZone(start)!;
+        var objectiveLayerData = level.GetObjectiveLayerData(director.Bulkhead);
+
+        startZone.Coverage = CoverageMinMax.Small_16;
+
+        for (var g = 0; g < objective.PowerCellsToDistribute; g++)
+        {
+            startZone.PowerGeneratorPlacements.Add(
+                new FunctionPlacementData
+                {
+                    PlacementWeights = ZonePlacementWeights.NotAtStart
+                });
+
+            // Assign the zone placement data for the objective text
+            objectiveLayerData.ObjectiveData.ZonePlacementDatas.Add(
+                new List<ZonePlacementData>
+                {
+                    new()
+                    {
+                        LocalIndex = start.ZoneNumber,
+                        Weights = ZonePlacementWeights.NotAtStart
+                    }
+                });
+        }
+    }
+
     /// <summary>
-    /// When building the power cell distribution layout, here we are modelling a hub with offshoot zones.
+    /// When building the power cell distribution layout, here we are modeling a hub with offshoot zones.
     /// </summary>
     /// <param name="director"></param>
     /// <param name="objective"></param>
@@ -20,6 +51,16 @@ public partial record LevelLayout
 
         var start = (ZoneNode)startish;
         var startZone = planner.GetZone(start)!;
+
+        // --- Fast version ---
+        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep)
+        {
+            BuildLayout_PowerCellDistribution_Fast(start);
+
+            return;
+        }
+
+        // --- Normal version ---
 
         // Zone 1 is an entrance I-geo
         startZone.GenCorridorGeomorph(director.Complex);

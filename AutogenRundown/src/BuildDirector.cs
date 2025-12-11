@@ -26,9 +26,20 @@ public class BuildDirector
 
     public Complex Complex { get; set; }
 
-    public LevelSettings Settings { get; set; } = new LevelSettings();
+    /// <summary>
+    /// When set to true, the starting area build step will be skipped and the Main level gen
+    /// will be expected to build any starting area
+    /// </summary>
+    public bool DisableStartingArea { get; set; } = false;
+
+    public LevelSettings Settings { get; set; } = new();
 
     public WardenObjectiveType Objective { get; set; } = WardenObjectiveType.GatherSmallItems;
+
+    /// <summary>
+    /// Autogen only, used for specific variants of objectives
+    /// </summary>
+    public WardenObjectiveSubType SubObjective { get; set; } = WardenObjectiveSubType.Default;
 
     #region Zones
     [Obsolete("Prefer specifying the number of zones in each objective layout")]
@@ -47,7 +58,7 @@ public class BuildDirector
     /// complex has no Reactor geomorph and so cannot have any Reactor objective. ClearPath
     /// only makes sense for Main bulkheads as players must extract to complete the objective.
     /// </summary>
-    public void GenObjective(IEnumerable<WardenObjectiveType> exclude)
+    public void GenObjective(List<WardenObjectiveType> exclude)
     {
         var objectives = new List<WardenObjectiveType>
         {
@@ -68,9 +79,6 @@ public class BuildDirector
             WardenObjectiveType.TimedTerminalSequence,
         };
 
-        // Remove any objectives that are in the exclude list.
-        objectives.RemoveAll(o => exclude.Contains(o));
-
         // These objectives are incompatible with non-Main bulkheads.
         if (!Bulkhead.HasFlag(Bulkhead.Main))
         {
@@ -82,6 +90,26 @@ public class BuildDirector
         // These objectives are really intended as side quests.
         if (Bulkhead.HasFlag(Bulkhead.Main))
             objectives.Remove(WardenObjectiveType.SpecialTerminalCommand);
+
+        // --- Specific main objectives ---
+
+        // Reach KDS Deep
+        if (exclude.Contains(WardenObjectiveType.ReachKdsDeep))
+        {
+            // These objectives will have special logic for when they're part of KDS deep to be
+            // very short objectives that can possibly fit within the run time
+            objectives = new List<WardenObjectiveType>
+            {
+                WardenObjectiveType.SpecialTerminalCommand,
+                WardenObjectiveType.GatherSmallItems,
+                WardenObjectiveType.PowerCellDistribution,
+                WardenObjectiveType.HsuFindSample,
+                WardenObjectiveType.GatherTerminal
+            };
+        }
+
+        // Remove any objectives that are in the exclude list.
+        objectives.RemoveAll(exclude.Contains);
 
         // In this case we need to set a very simple objective that can be completed quickly
         if (Bulkhead.HasFlag(Bulkhead.Overload) && exclude.Contains(WardenObjectiveType.Survival))

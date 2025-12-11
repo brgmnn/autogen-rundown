@@ -18,7 +18,7 @@ public static class TerminalUplink
     private static string[] Ipv6Prefixes => new[] { "2001:db8", "fc00", "fd00", "fe80" };
 
     // These are the base game words
-    private static string[] FourLetterWords => new[]
+    public static string[] FourLetterWords => new[]
     {
         "able", "acid", "aged", "airy", "ally", "anti", "area", "army", "atom", "auto",
         "axis", "baby", "back", "bait", "bake", "bald", "ball", "band", "bank", "bark",
@@ -96,7 +96,7 @@ public static class TerminalUplink
         "your", "zone", "zoom"
     };
 
-    private static string[] FiveLetterWords => new[]
+    public static string[] FiveLetterWords => new[]
     {
         "about", "actor", "adapt", "adieu", "adobe", "aeons", "after", "again", "agape",
         "agate", "aging", "aglow", "agree", "ahead", "aimed", "aired", "alarm", "alive",
@@ -214,7 +214,7 @@ public static class TerminalUplink
     /// <summary>
     /// About 2000 words
     /// </summary>
-    private static string[] SixLetterWords => new[]
+    public static string[] SixLetterWords => new[]
     {
         "bourns", "upkeep", "sewage", "lucida", "undyed", "faster", "bidder", "salada",
         "therms", "rosary", "pecked", "cramps", "terran", "stared", "tammie", "linsey",
@@ -471,7 +471,7 @@ public static class TerminalUplink
     /// <summary>
     /// About 2,100 words
     /// </summary>
-    private static string[] SevenLetterWords => new[]
+    public static string[] SevenLetterWords => new[]
     {
         "abating", "abiding", "abolish", "absinth", "abyssal", "acacias", "academy",
         "accents", "account", "acquire", "acreage", "actions", "acutely", "address",

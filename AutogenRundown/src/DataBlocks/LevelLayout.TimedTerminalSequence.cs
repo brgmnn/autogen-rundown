@@ -5,6 +5,8 @@ using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
+using WardenObjective = Objectives.WardenObjective;
+
 public partial record LevelLayout
 {
     public void BuildLayout_TimedTerminalSequence(

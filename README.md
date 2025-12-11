@@ -143,13 +143,6 @@ Monthly April
   [ ] D1 - Activate small HSU doesn't require the objective to exit
       - Can we exclude double mother / double tank from first zone
 
-Monthly March
-  * March 27th
-    * E2
-      * Time maybe too generous, finished with 2:30 left
-  * Yoshi Feedback
-    [ ] May want to look in to making it so error alarm terminals don't cancel others. Many instances of trivialized scans because of error turnoff.
-
 Monthly Feb
   * Double cargo B1 -- Not sure why?
   * Reactor D2
@@ -158,6 +151,9 @@ Monthly Feb
 Missing tiles to add
   * Add R8A1 garden hub tile to hubs
 
+Remove intel in elevator drop that shows:
+  "Artifact Heat at"
+Maybe replace with number of logs?
 
 Enemies:
   A:

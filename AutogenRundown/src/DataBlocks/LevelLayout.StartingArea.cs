@@ -85,6 +85,13 @@ public partial record LevelLayout
         if (!director.Bulkhead.HasFlag(Bulkhead.Main))
             return;
 
+        if (director.DisableStartingArea)
+        {
+            Plugin.Logger.LogDebug("Skipping building starting area");
+            CreateElevatorZone();
+            return;
+        }
+
         switch (level.Settings.BulkheadStrategy)
         {
             case BukheadStrategy.CentralHub_x2:
@@ -112,7 +119,9 @@ public partial record LevelLayout
     /// <returns></returns>
     private (ZoneNode, Zone) StartingArea_GetBuildStart(Bulkhead bulkhead)
     {
-        var existing = level.Planner.GetLastZoneExact(director.Bulkhead);
+        var existing = director is { Bulkhead: Bulkhead.Main, DisableStartingArea: true }
+            ? level.Planner.GetZoneNode(0)
+            : level.Planner.GetLastZoneExact(director.Bulkhead);
 
         if (existing is not null)
             return ((ZoneNode)existing, level.Planner.GetZone((ZoneNode)existing)!);

@@ -5,6 +5,8 @@ using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
+using WardenObjective = Objectives.WardenObjective;
+
 // Ideas:
 //
 //      EMERGENCY_ESCAPE_PROTOCOL -- From R7C1 Monster room
@@ -54,6 +56,16 @@ public partial record LevelLayout
         }
     }
 
+    public void BuildLayout_SpecialTerminalCommand_Fast(ZoneNode start)
+    {
+        // Mark the first zone to be where the terminal will spawn
+        planner.UpdateNode(start with { Branch = "special_terminal" });
+
+        // Largeish zone size
+        var zone = planner.GetZone(start)!;
+        zone.Coverage = new CoverageMinMax { Min = 32, Max = 64 };
+    }
+
     /// <summary>
     /// Adds a special terminal command layout
     /// </summary>
@@ -75,12 +87,15 @@ public partial record LevelLayout
 
         var start = (ZoneNode)startish;
 
-        // switch (objective.SpecialTerminalCommand_Type)
-        // {
-        //     case SpecialCommand.ErrorAlarm:
-        //         BuildLayout_SpecialTerminalCommand_ErrorAlarm(start);
-        //         return;
-        // }
+        // If this is true, then we have a very limited objective that needs to be completed _fast_.
+        if (level.MainDirector.Objective
+            is WardenObjectiveType.Survival
+            or WardenObjectiveType.ReachKdsDeep)
+        {
+            BuildLayout_SpecialTerminalCommand_Fast(start);
+
+            return;
+        }
 
         // We have a special flow for KingOfTheHill
         if (objective.SpecialTerminalCommand_Type == SpecialCommand.KingOfTheHill)
@@ -129,20 +144,6 @@ public partial record LevelLayout
                 level.Planner.Connect(hill, node);
                 level.Planner.AddZone(node, zone);
             }
-
-            return;
-        }
-
-        // If this is true, then we have a very limited objective that needs to be completed _fast_.
-        if (level.MainDirector.Objective == WardenObjectiveType.Survival &&
-            director.Bulkhead.HasFlag(Bulkhead.Overload))
-        {
-            // Mark the first zone to be where the terminal will spawn
-            planner.UpdateNode(start with { Branch = "special_terminal" });
-
-            // Largeish zone size
-            var zone = planner.GetZone(start)!;
-            zone.Coverage = new() { Min = 32, Max = 64 };
 
             return;
         }

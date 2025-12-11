@@ -7,6 +7,8 @@ using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks;
 
+using WardenObjective = Objectives.WardenObjective;
+
 public static class Bins
 {
     public static BlocksBin<BigPickupDistribution> BigPickupDistributions { get; private set; }
@@ -43,6 +45,8 @@ public static class Bins
     public static LazyBlocksBin<Light.LightSettings> LightSettings { get; private set; } = new();
     public static BlocksBin<MiningMarker> MiningMarkers { get; private set; }
         = new BlocksBin<MiningMarker>();
+    public static BlocksBin<TechMarker> TechMarkers { get; private set; }
+        = new BlocksBin<TechMarker>();
     public static BlocksBin<Rundown> Rundowns { get; private set; }
         = new BlocksBin<Rundown>();
     public static BlocksBin<Text> Texts { get; private set; }
@@ -62,6 +66,7 @@ public static class Bins
     {
         ComplexResourceSet.Setup();
         MiningMarker.Setup();
+        TechMarker.Setup();
         Light.LightSettings.Setup();
         Light.LightSettings.SaveStatic();
         Text.Setup();
@@ -77,6 +82,7 @@ public static class Bins
 
         ComplexResourceSet.SaveStatic();
         MiningMarker.SaveStatic();
+        TechMarker.SaveStatic();
 
         BigPickupDistribution.SaveStatic();
         ChainedPuzzle.SaveStatic();
@@ -102,7 +108,8 @@ public static class Bins
     public static void Save()
     {
         ComplexResources.Save("ComplexResourceSet");
-        MiningMarkers.Save("MiningMarkers");
+        MiningMarkers.Save("MiningMarkers"); // TODO: wrong name!
+        TechMarkers.Save("TechMarker");
 
         BigPickupDistributions.Save("BigPickupDistribution");
         ChainedPuzzles.Save("ChainedPuzzle");

@@ -7,6 +7,8 @@ using AutogenRundown.Utils;
 
 namespace AutogenRundown.DataBlocks;
 
+using WardenObjective = Objectives.WardenObjective;
+
 public partial record LevelLayout
 {
     /// <summary>
@@ -15,7 +17,10 @@ public partial record LevelLayout
     public void BuildLayout_ForwardExtract(WardenObjective objective, double chance = 0.5)
     {
         // Skip objectives that already include forward extracts
-        if (director.Objective is WardenObjectiveType.ClearPath or WardenObjectiveType.Survival)
+        if (director.Objective is
+            WardenObjectiveType.ClearPath or
+            WardenObjectiveType.Survival or
+            WardenObjectiveType.ReachKdsDeep)
             return;
 
         // Random chance for us to skip doing this all together

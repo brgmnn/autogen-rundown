@@ -16,16 +16,6 @@ public enum CoverageSize : int
 
 public class CoverageMinMax
 {
-    private static List<double> Sizes = new()
-    {
-        (double)CoverageSize.Nano,
-        (double)CoverageSize.Tiny,
-        (double)CoverageSize.Small,
-        (double)CoverageSize.Medium,
-        (double)CoverageSize.Large,
-        (double)CoverageSize.Huge
-    };
-
     private System.Numerics.Vector2 vec = new() { X = 0.0f, Y = 0.0f };
 
     #region Input values
@@ -51,13 +41,14 @@ public class CoverageMinMax
         Max = value;
     }
 
-    public static readonly CoverageMinMax Nano = new() { Min = (double)CoverageSize.Nano, Max = (double)CoverageSize.Nano };
-    public static readonly CoverageMinMax Tiny = new() { Min = (double)CoverageSize.Tiny, Max = (double)CoverageSize.Tiny };
-    public static readonly CoverageMinMax Small = new() { Min = (double)CoverageSize.Small, Max = (double)CoverageSize.Small };
+    public static readonly CoverageMinMax Nano =   new() { Min = (double)CoverageSize.Nano,   Max = (double)CoverageSize.Nano };
+    public static readonly CoverageMinMax Tiny =   new() { Min = (double)CoverageSize.Tiny,   Max = (double)CoverageSize.Tiny };
+    public static readonly CoverageMinMax Small =  new() { Min = (double)CoverageSize.Small,  Max = (double)CoverageSize.Small };
     public static readonly CoverageMinMax Medium = new() { Min = (double)CoverageSize.Medium, Max = (double)CoverageSize.Medium };
-    public static readonly CoverageMinMax Large = new() { Min = (double)CoverageSize.Large, Max = (double)CoverageSize.Large };
-    public static readonly CoverageMinMax Huge = new() { Min = (double)CoverageSize.Huge, Max = (double)CoverageSize.Huge };
+    public static readonly CoverageMinMax Large =  new() { Min = (double)CoverageSize.Large,  Max = (double)CoverageSize.Large };
+    public static readonly CoverageMinMax Huge =   new() { Min = (double)CoverageSize.Huge,   Max = (double)CoverageSize.Huge };
 
+    public static readonly CoverageMinMax Tiny_3    = new() { Min =   3.0, Max =   3.0 };
     public static readonly CoverageMinMax Small_10  = new() { Min =  10.0, Max =  10.0 };
     public static readonly CoverageMinMax Small_16  = new() { Min =  16.0, Max =  16.0 };
     public static readonly CoverageMinMax Small_24  = new() { Min =  24.0, Max =  24.0 };
@@ -68,14 +59,6 @@ public class CoverageMinMax
     public static readonly CoverageMinMax Large_100 = new() { Min = 100.0, Max = 100.0 };
     public static readonly CoverageMinMax Large_120 = new() { Min = 120.0, Max = 120.0 };
     public static readonly CoverageMinMax Large_150 = new() { Min = 150.0, Max = 150.0 };
-
-
-    /// <summary>
-    /// Generates a randomly picked size
-    /// </summary>
-    /// <returns></returns>
-    public static CoverageMinMax GenCoverage()
-        => new CoverageMinMax { Min = Generator.Pick(Sizes), Max = Generator.Pick(Sizes) };
 
 
     #region Normal size generation

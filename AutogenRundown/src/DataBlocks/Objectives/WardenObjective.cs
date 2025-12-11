@@ -2,14 +2,13 @@
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
-using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.CentralGeneratorCluster;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
 using AutogenRundown.DataBlocks.Zones;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace AutogenRundown.DataBlocks;
+namespace AutogenRundown.DataBlocks.Objectives;
 
 public partial record WardenObjective : DataBlock<WardenObjective>
 {
@@ -515,7 +514,11 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     /// <returns></returns>
     public static WardenObjective PreBuild(BuildDirector director, Level level)
     {
-        var objective = new WardenObjective { Type = director.Objective };
+        var objective = new WardenObjective
+        {
+            Type = director.Objective,
+            SubType = director.SubObjective,
+        };
 
         switch (objective.Type)
         {
@@ -578,6 +581,14 @@ public partial record WardenObjective : DataBlock<WardenObjective>
             case WardenObjectiveType.TimedTerminalSequence:
                 objective.PreBuild_TimedTerminalSequence(director, level);
                 break;
+
+            #region Autogen Custom Objectives
+
+            case WardenObjectiveType.ReachKdsDeep:
+                objective.PreBuild_ReachKdsDeep(director, level);
+                break;
+
+            #endregion
 
             default:
                 throw new ArgumentOutOfRangeException(nameof(director));
@@ -777,6 +788,14 @@ public partial record WardenObjective : DataBlock<WardenObjective>
             case WardenObjectiveType.TimedTerminalSequence:
                 Build_TimedTerminalSequence(director, level);
                 break;
+
+            #region Autogen Custom Objectives
+
+            case WardenObjectiveType.ReachKdsDeep:
+                Build_ReachKdsDeep(director, level);
+                break;
+
+            #endregion
         }
 
         dataLayer.ObjectiveData.DataBlockId = PersistentId;
@@ -795,12 +814,78 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 PostBuild_ReactorShutdown(director, level);
                 break;
 
+            case WardenObjectiveType.Survival:
+                PostBuild_Survival(director, level);
+                break;
+        }
+
+        if (director.Bulkhead != Bulkhead.Main)
+            return;
+
+        switch (director.Objective)
+        {
+            case WardenObjectiveType.HsuFindSample:
+                PostBuildIntel_HsuFindSample(level);
+                break;
+
+            case WardenObjectiveType.ReactorStartup:
+                PostBuildIntel_ReactorStartup(level);
+                break;
+
+            case WardenObjectiveType.ReactorShutdown:
+                PostBuildIntel_ReactorShutdown(level);
+                break;
+
+            case WardenObjectiveType.GatherSmallItems:
+                PostBuildIntel_GatherSmallItems(level);
+                break;
+
+            case WardenObjectiveType.ClearPath:
+                PostBuildIntel_ClearPath(level);
+                break;
+
+            case WardenObjectiveType.SpecialTerminalCommand:
+                PostBuildIntel_SpecialTerminalCommand(level);
+                break;
+
+            case WardenObjectiveType.RetrieveBigItems:
+                PostBuildIntel_RetrieveBigItems(level);
+                break;
+
+            case WardenObjectiveType.PowerCellDistribution:
+                PostBuildIntel_PowerCellDistribution(level);
+                break;
+
+            case WardenObjectiveType.TerminalUplink:
+                PostBuildIntel_TerminalUplink(level);
+                break;
+
+            case WardenObjectiveType.CentralGeneratorCluster:
+                PostBuildIntel_CentralGeneratorCluster(level);
+                break;
+
             case WardenObjectiveType.HsuActivateSmall:
-                PostBuild_HsuActivateSmall(director, level);
+                PostBuildIntel_HsuActivateSmall(level);
                 break;
 
             case WardenObjectiveType.Survival:
-                PostBuild_Survival(director, level);
+                PostBuildIntel_Survival(level);
+                break;
+
+            case WardenObjectiveType.GatherTerminal:
+                PostBuildIntel_GatherTerminal(level);
+                break;
+
+            case WardenObjectiveType.CorruptedTerminalUplink:
+                PostBuildIntel_CorruptedTerminalUplink(level);
+                break;
+
+            case WardenObjectiveType.TimedTerminalSequence:
+                PostBuildIntel_TimedTerminalSequence(level);
+                break;
+
+            case WardenObjectiveType.ReachKdsDeep:
+                PostBuildIntel_ReachKdsDeep(level);
                 break;
         }
     }
@@ -839,6 +924,12 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     /// What type of objective this is.
     /// </summary>
     public WardenObjectiveType Type { get; set; }
+
+    /// <summary>
+    /// Autogen only, subtype is used for more specific level crafting
+    /// </summary>
+    [JsonIgnore]
+    public WardenObjectiveSubType SubType { get; set; } = WardenObjectiveSubType.Default;
 
     #region Information and display strings
     [JsonIgnore]
@@ -1181,6 +1272,13 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     public List<List<WardenObjectiveEvent>> TimedTerminalSequence_EventsOnSequenceDone = new();
 
     public List<List<WardenObjectiveEvent>> TimedTerminalSequence_EventsOnSequenceFail = new();
+    #endregion
+
+    #region Type=20: -CUSTOM- Reach KDS Deep
+
+    [JsonIgnore]
+    public int KdsDeepUnit { get; set; } = 1;
+
     #endregion
 
     #region Expedition exit

@@ -1,8 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Enemies;
-using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.Extensions;
 
-namespace AutogenRundown.DataBlocks;
+namespace AutogenRundown.DataBlocks.Objectives;
 
 /**
  * Objective: Survival
@@ -246,7 +245,10 @@ public partial record WardenObjective
                 .AddAdjustTimer(overloadClearTime)
                 .AddMessage("LOCKDOWN TIME EXTENDED");
         }
+    }
 
+    private void PostBuildIntel_Survival(Level level)
+    {
         #region Warden Intel Messages
         level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Draw(new List<string>
         {

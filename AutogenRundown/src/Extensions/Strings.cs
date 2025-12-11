@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization.Models.Materials;
+using System.Globalization;
 
 namespace AutogenRundown.Extensions;
 
@@ -62,4 +63,8 @@ public static class Strings
             SkinNoise.ThreeChannelNoise => "ThreeChannelNoise",
             _ => ""
         };
+
+    public static string ToTitleCase(this string input) => CultureInfo.InvariantCulture.TextInfo.ToTitleCase(input);
+
+    public static string Pluralize(this string input, int count) => count == 1 ? input : $"{input}s";
 }

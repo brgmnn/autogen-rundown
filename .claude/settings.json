@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "WebSearch",
+      "WebSearch(**)",
+      "WebFetch",
+      "WebFetch(**)"
+    ]
+  }
+}

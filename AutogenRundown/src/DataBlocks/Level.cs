@@ -8,11 +8,14 @@ using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Logs;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Extensions;
 using AutogenRundown.GeneratorData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks;
+
+using WardenObjective = Objectives.WardenObjective;
 
 public class BuildFrom
 {
@@ -236,7 +239,7 @@ public class Level
         blocked.Add((ZoneAliasStart_Main, ZoneAliasStart_Main + mainSize - 1));
 
         // Extreme
-        if (SecondaryLayerEnabled)
+        if (HasExtreme)
         {
             var extremeSize = Layouts[Bulkhead.Extreme].Zones.Count;
 
@@ -246,7 +249,7 @@ public class Level
         }
 
         // Overload
-        if (ThirdLayerEnabled)
+        if (HasOverload)
         {
             var overloadSize = Layouts[Bulkhead.Overload].Zones.Count;
 
@@ -342,7 +345,7 @@ public class Level
     /// <summary>
     /// Allows easy access to the directors without having to switch
     /// </summary>
-    public Dictionary<Bulkhead, BuildDirector> Director { get; private set; } = new();
+    public Dictionary<Bulkhead, BuildDirector> Director { get; } = new();
 
     [JsonIgnore]
     public BuildDirector MainDirector
@@ -529,11 +532,8 @@ public class Level
         set => ObjectiveLayer[Bulkhead.Extreme] = value;
     }
 
-    public bool SecondaryLayerEnabled
-    {
-        get => Layouts.ContainsKey(Bulkhead.Extreme);
-        private set { }
-    }
+    [JsonProperty("SecondaryLayerEnabled")]
+    public bool HasExtreme => Settings.Bulkheads.HasFlag(Bulkhead.Extreme);
 
     public uint SecondaryLayout
     {
@@ -558,11 +558,8 @@ public class Level
         set => ObjectiveLayer[Bulkhead.Overload] = value;
     }
 
-    public bool ThirdLayerEnabled
-    {
-        get => Layouts.ContainsKey(Bulkhead.Overload);
-        private set { }
-    }
+    [JsonProperty("ThirdLayerEnabled")]
+    public bool HasOverload => Settings.Bulkheads.HasFlag(Bulkhead.Overload);
 
     public uint ThirdLayout
     {
@@ -739,7 +736,7 @@ public class Level
     {
         Name = $"<color=red>?!</color><color=#444444>-</color>{Name}";
 
-        ElevatorDropWardenIntel.Add((Generator.Between(1, 4), Generator.Draw(new List<string>
+        ElevatorDropWardenIntel.Add((Generator.Between(1, 6), Generator.Draw(new List<string>
         {
             ">... That alarm started the moment we dropped.\r\n>... [static crackle]\r\n>... <size=200%><color=red>There's no way to turn it off!</color></size>",
             ">... [warning siren blares]\r\n>... Everything's already awake.\r\n>... <size=200%><color=red>We push forward regardless!</color></size>",
@@ -771,7 +768,7 @@ public class Level
     {
         Name = $"<color=red>!!!</color><color=#444444>/</color>{Name}";
 
-        ElevatorDropWardenIntel.Add((Generator.Between(6, 12), Generator.Draw(new List<string>
+        ElevatorDropWardenIntel.Add((Generator.Between(5, 12), Generator.Draw(new List<string>
         {
             ">... [distant rumbling]\r\n>... Feels like something massive is nearby.\r\n>... <size=200%><color=red>We can't face it unprepared!</color></size>",
             ">... There's a lull right now.\r\n>... Could be gathering strength.\r\n>... <size=200%><color=red>When it comes, be ready.</color></size>",
@@ -968,10 +965,10 @@ public class Level
          * */
         SelectDirection(Bulkhead.Main);
 
-        if (Settings.Bulkheads.HasFlag(Bulkhead.Extreme))
+        if (HasExtreme)
             SelectDirection(Bulkhead.Extreme);
 
-        if (Settings.Bulkheads.HasFlag(Bulkhead.Overload))
+        if (HasOverload)
             SelectDirection(Bulkhead.Overload);
     }
 
@@ -1180,6 +1177,11 @@ public class Level
         level.GenerateZoneAliasStarts();
         level.BuildBulkheads();
 
+        if (level.Name == "Valiant")
+        {
+            Plugin.Logger.LogDebug($"Ok what are the bulkheads? {level.Settings.Bulkheads}");
+        }
+
         #region Fog settings
         var lowFog = level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)
             ? Fog.LowFog_Infectious
@@ -1275,10 +1277,10 @@ public class Level
          * distributed to. */
         level.PreBuildObjective(Bulkhead.Main);
 
-        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme))
+        if (level.HasExtreme)
             level.PreBuildObjective(Bulkhead.Extreme);
 
-        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload))
+        if (level.HasOverload)
             level.PreBuildObjective(Bulkhead.Overload);
         #endregion
 
@@ -1297,10 +1299,10 @@ public class Level
          * */
         level.BuildLayout(Bulkhead.Main);
 
-        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme))
+        if (level.HasExtreme)
             level.BuildLayout(Bulkhead.Extreme);
 
-        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload))
+        if (level.HasOverload)
             level.BuildLayout(Bulkhead.Overload);
         #endregion
 
@@ -1315,14 +1317,14 @@ public class Level
                 new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
             });
 
-        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme))
+        if (level.HasExtreme)
             level.SecondaryLayerData.BulkheadKeyPlacements.Add(
                 new List<ZonePlacementData>
                 {
                     new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
                 });
 
-        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload))
+        if (level.HasOverload)
             level.ThirdLayerData.BulkheadKeyPlacements.Add(
                 new List<ZonePlacementData>
                 {
@@ -1346,17 +1348,17 @@ public class Level
 
             // TODO: rebalance enemies
             // TODO: skip this if it's a custom geomorph
-            zone.Coverage = new CoverageMinMax { Min = 80.0, Max = 80.0 };
+            // zone.Coverage = new CoverageMinMax { Min = 80.0, Max = 80.0 };
         }
         #endregion
 
         #region Finalize -- WardenObjective.PostBuild()
         level.GetObjective(Bulkhead.Main)!.PostBuild(level.MainDirector, level);
 
-        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme) && level.GetObjective(Bulkhead.Extreme) != null)
+        if (level.HasExtreme && level.GetObjective(Bulkhead.Extreme) != null)
             level.GetObjective(Bulkhead.Extreme)!.PostBuild(level.SecondaryDirector, level);
 
-        if (level.Settings.Bulkheads.HasFlag(Bulkhead.Overload) && level.GetObjective(Bulkhead.Overload) != null)
+        if (level.HasOverload && level.GetObjective(Bulkhead.Overload) != null)
             level.GetObjective(Bulkhead.Overload)!.PostBuild(level.OverloadDirector, level);
         #endregion
 
@@ -1379,9 +1381,10 @@ public class Level
     /// <summary>
     /// Test level construction for testing out new geos
     /// </summary>
+    /// <param name="geo"></param>
     /// <param name="level"></param>
     /// <returns></returns>
-    public static Level Debug_BuildGeoTest(string geo, Level level, int forwardZones = 0)
+    public static Level Debug_BuildGeoTest(string? geo, Level level, int forwardZones = 0)
     {
         try
         {
@@ -1433,25 +1436,25 @@ public class Level
 
             // level.GlobalWaveSettings = GlobalWaveSettings.HighCap_40pts;
 
-            var dimension = new Dimension
-            {
-                Data = new Dimensions.DimensionData
-                {
-                    // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_01.prefab",
-                    DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab",
-                    DimensionResourceSetID = 47,
-                    IsStaticDimension = true
-                },
-                PersistentId = 2,
-            };
-            // dimension.FindOrPersist();
-            dimension.Persist();
-
-            level.DimensionDatas.Add(new Levels.DimensionData
-            {
-                Dimension = DimensionIndex.Dimension1,
-                Data = dimension
-            });
+            // var dimension = new Dimension
+            // {
+            //     Data = new Dimensions.DimensionData
+            //     {
+            //         // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_01.prefab",
+            //         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab",
+            //         DimensionResourceSetID = 47,
+            //         IsStaticDimension = true
+            //     },
+            //     PersistentId = 2,
+            // };
+            // // dimension.FindOrPersist();
+            // dimension.Persist();
+            //
+            // level.DimensionDatas.Add(new Levels.DimensionData
+            // {
+            //     Dimension = DimensionIndex.Dimension1,
+            //     Data = dimension
+            // });
 
             // The zones
             var elevatorDrop = new ZoneNode(Bulkhead.Main, level.Planner.NextIndex(Bulkhead.Main));
@@ -1463,6 +1466,8 @@ public class Level
                 LocalIndex = 0,
                 CustomGeomorph = geo
             };
+
+            // elevatorDropZone.GeneratorClustersInZone = 1;
 
             // elevatorDropZone.EnemySpawningInZone.Add(
             //     EnemySpawningData.MegaMother_AlignedSpawn);
@@ -1518,8 +1523,8 @@ public class Level
             // elevatorDropZone.EnemySpawningInZone.Add(
             //     EnemySpawningData.TierA with { Points = 30 });
 
-            elevatorDropZone.EnemySpawningInZone.Add(
-                EnemySpawningData.HybridInfected with { Points = 4 });
+            // elevatorDropZone.EnemySpawningInZone.Add(
+            //     EnemySpawningData.HybridInfected with { Points = 4 });
 
             // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
 
