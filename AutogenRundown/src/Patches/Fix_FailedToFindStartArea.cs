@@ -36,15 +36,19 @@ public class Fix_FailedToFindStartArea
             // Trigger a proper reroll that persists across rebuilds
             ZoneSeedManager.Reroll_SubSeed(zone);
 
-            // Reroll the entire parent chain - constraints can propagate from any ancestor
+            // Reroll the entire parent chain including Zone_0
             if (zone.LocalIndex != eLocalZoneIndex.Zone_0 && __instance.m_zoneData != null)
             {
                 var currentIndex = __instance.m_zoneData.BuildFromLocalIndex;
 
-                while (currentIndex != eLocalZoneIndex.Zone_0)
+                while (true)
                 {
                     ZoneSeedManager.Reroll_SubSeed(currentIndex, zone.DimensionIndex, zone.Layer.m_type);
                     Plugin.Logger.LogDebug($"Also rerolling ancestor zone {currentIndex}");
+
+                    // Zone_0 has no parent, stop here
+                    if (currentIndex == eLocalZoneIndex.Zone_0)
+                        break;
 
                     // Move up to the next parent
                     var currentZone = Game.FindZone(currentIndex, zone.DimensionIndex, zone.Layer.m_type);
