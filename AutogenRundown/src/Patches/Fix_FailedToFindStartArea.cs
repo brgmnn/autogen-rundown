@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.Managers;
+using AutogenRundown.Utils;
 using GameData;
 using HarmonyLib;
 using LevelGeneration;
@@ -40,8 +41,22 @@ public class Fix_FailedToFindStartArea
             {
                 var parentIndex = __instance.m_zoneData.BuildFromLocalIndex;
                 ZoneSeedManager.Reroll_SubSeed(parentIndex, zone.DimensionIndex, zone.Layer.m_type);
-
                 Plugin.Logger.LogDebug($"Also rerolling parent zone {parentIndex}");
+
+                // Also reroll grandparent - the parent's constraint may come from its parent
+                if (parentIndex != eLocalZoneIndex.Zone_0)
+                {
+                    var parentZone = Game.FindZone(parentIndex, zone.DimensionIndex, zone.Layer.m_type);
+                    if (parentZone?.m_settings?.m_zoneData != null)
+                    {
+                        var grandparentIndex = parentZone.m_settings.m_zoneData.BuildFromLocalIndex;
+                        if (grandparentIndex != eLocalZoneIndex.Zone_0)
+                        {
+                            ZoneSeedManager.Reroll_SubSeed(grandparentIndex, zone.DimensionIndex, zone.Layer.m_type);
+                            Plugin.Logger.LogDebug($"Also rerolling grandparent zone {grandparentIndex}");
+                        }
+                    }
+                }
             }
         }
     }
