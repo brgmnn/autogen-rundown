@@ -101,7 +101,7 @@ public partial record Zone
 
                     // --- MOD Geomorphs ---
                     // DakGeos
-                    (SubComplex.DigSite, "assets/geo_64x64_mining_dig_site_t_dak_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+                    (SubComplex.DigSite, "Assets/geo_64x64_mining_dig_site_t_dak_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
 
                     // Red_Leicester_Cheese
                     (SubComplex.Refinery, "Assets/Bundles/RLC_Mining/geo_64x64_mining_refinery_X_RLC_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
@@ -195,7 +195,7 @@ public partial record Zone
                 {
                     // --- MOD Geomorphs ---
                     // DakGeos
-                    (SubComplex.DigSite, "assets/geo_64x64_mining_dig_site_t_dak_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+                    (SubComplex.DigSite, "Assets/geo_64x64_mining_dig_site_t_dak_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                 });
                 break;
 
