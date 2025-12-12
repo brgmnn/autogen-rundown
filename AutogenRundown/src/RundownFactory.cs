@@ -182,53 +182,9 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
-        #region Regular debugging level
-        #if DEBUG
-        // if (withFixed)
-        // {
-        //     var mainDirector = new BuildDirector
-        //     {
-        //         Bulkhead = Bulkhead.Main,
-        //         Complex = Complex.Mining,
-        //         Complexity = Complexity.Low,
-        //         Tier = "D",
-        //         Objective = WardenObjectiveType.HsuFindSample,
-        //     };
-        //     mainDirector.GenPoints();
-        //
-        //     var extremeDirector = new BuildDirector
-        //     {
-        //         Bulkhead = Bulkhead.Extreme,
-        //         Complex = Complex.Mining,
-        //         Complexity = Complexity.Low,
-        //         Tier = "D",
-        //         Objective = WardenObjectiveType.HsuFindSample,
-        //     };
-        //     extremeDirector.GenPoints();
-        //
-        //     var settings = new LevelSettings("D");
-        //     settings.Modifiers.Add(LevelModifiers.Chargers);
-        //
-        //     var testLevel = Level.Build(
-        //         new Level("D")
-        //         {
-        //             Tier = "D",
-        //             Name = "Debug Test",
-        //             Complex = Complex.Mining,
-        //             MainDirector = mainDirector,
-        //             // SecondaryDirector = extremeDirector,
-        //             Settings = settings,
-        //             Index = rundown.TierB_Count + 1,
-        //             IsTest = true
-        //         });
-        //     rundown.AddLevel(testLevel);
-        // }
-        #endif
-        #endregion
-
         #region Geomorph Debugging test level
         #if DEBUG
-        #if true
+        #if false
         if (withFixed)
         {
             var settings = new LevelSettings("A");
@@ -329,7 +285,7 @@ public static class RundownFactory
         }
 
         #region Test C Levels
-        #if true
+        #if false
         if (withFixed || true)
         {
             const string tier = "C";
@@ -393,64 +349,6 @@ public static class RundownFactory
         #endregion
 
         #region D-Tier Levels
-        #region Survival Fixed
-        // #if DEBUG
-        // #if false
-        if (withFixed)
-        {
-            var objective = WardenObjectiveType.Survival;
-            var mainDirector = new BuildDirector()
-            {
-                Bulkhead = Bulkhead.Main,
-                Complex = Complex.Tech,
-                Tier = "B",
-                Objective = objective
-            };
-            mainDirector.GenPoints();
-
-            var extremeDirector = new BuildDirector
-            {
-                Bulkhead = Bulkhead.Extreme,
-                Complex = Complex.Tech,
-                Complexity = Complexity.Low,
-                Tier = "B",
-                Objective = WardenObjectiveType.SpecialTerminalCommand,
-            };
-            extremeDirector.GenPoints();
-
-            // var overloadDirector = new BuildDirector
-            // {
-            //     Bulkhead = Bulkhead.Overload,
-            //     Complex = Complex.Tech,
-            //     Complexity = Complexity.Low,
-            //     Tier = "C",
-            //     Objective = WardenObjectiveType.SpecialTerminalCommand,
-            // };
-            // overloadDirector.GenPoints();
-
-            var settings = new LevelSettings("B");
-            // settings.Modifiers.Add(LevelModifiers.Chargers);
-            var description = new DataBlocks.Text(DescriptionHeader(objective) +
-                                                  DataBlocks.Objectives.WardenObjective.GenLevelDescription(objective));
-            var level = Level.Build(
-                new("B")
-                {
-                    Prefix = $"<color=orange>X</color><color=#444444>:</color>B",
-                    Description = description.PersistentId,
-                    Complex = Complex.Tech,
-                    MainDirector = mainDirector,
-                    SecondaryDirector = extremeDirector,
-                    // OverloadDirector = overloadDirector,
-                    Settings = settings,
-                    Index = rundown.TierB_Count
-                });
-
-            rundown.AddLevel(level);
-        }
-        // #endif
-        // #endif
-        #endregion
-
         // D levels
         for (int i = 1; i < rundown.TierD_Count + 1; i++)
         {
@@ -487,81 +385,6 @@ public static class RundownFactory
 
             rundown.AddLevel(level);
         }
-
-        #region Timed Terminal Sequence
-        #if DEBUG
-        #if false
-        if (withFixed)
-        {
-            ///
-            /// Timed Terminal Sequence mission. This is a hard coded mission of sequence stuff
-            ///
-            var objective = WardenObjectiveType.TimedTerminalSequence;
-            var mainDirector = new BuildDirector()
-            {
-                Bulkhead = Bulkhead.Main,
-                Complex = Complex.Mining,
-                Tier = "D",
-                Objective = objective
-            };
-            mainDirector.GenPoints();
-
-            var settings = new LevelSettings("D");
-            var description = new DataBlocks.Text(DescriptionHeader(objective) +
-                                                  DataBlocks.WardenObjective.GenLevelDescription(objective));
-            var level = Level.Build(
-                new("D")
-                {
-                    Prefix = $"<color=orange>W</color><color=#444444>:</color>D",
-                    Description = description.PersistentId,
-                    Complex = Complex.Mining,
-                    MainDirector = mainDirector,
-                    Settings = settings,
-                    Index = rundown.TierD_Count + 2
-                });
-
-            rundown.AddLevel(level);
-        }
-        #endif
-        #endif
-        #endregion
-
-        #region Reactor startup
-        #if DEBUG
-        #if false
-        if (withFixed)
-        {
-            ///
-            /// Reactor startup mission. This will always spawn a reactor startup mission as
-            /// the main objective. Side objectives can still spawn.
-            ///
-            var objective = WardenObjectiveType.ReactorStartup;
-            var mainDirector = new BuildDirector()
-            {
-                Bulkhead = Bulkhead.Main,
-                Tier = "D",
-                Objective = objective
-            };
-            mainDirector.GenPoints();
-
-            var settings = new LevelSettings("D");
-            var description = new DataBlocks.Text(DescriptionHeader(objective) +
-                                                  DataBlocks.WardenObjective.GenLevelDescription(objective));
-            var level = Level.Build(
-                new("D")
-                {
-                    Prefix = $"<color=orange>R</color><color=#444444>:</color>D",
-                    Description = description.PersistentId,
-                    MainDirector = mainDirector,
-                    Settings = settings,
-                    Index = rundown.TierD_Count + 3
-                });
-
-            rundown.AddLevel(level);
-        }
-        #endif
-        #endif
-        #endregion
         #endregion
 
         #region E-Tier Levels
@@ -601,42 +424,6 @@ public static class RundownFactory
 
             rundown.AddLevel(level);
         }
-
-        #region Test E Levels
-        #if DEBUG
-        #if false
-        if (false && withFixed)
-        {
-            var mainDirectorE = new BuildDirector
-            {
-                Bulkhead = Bulkhead.Main,
-                Complex = Complex.Mining,
-                Complexity = Complexity.Low,
-                Tier = "E",
-                Objective = WardenObjectiveType.ReactorStartup,
-            };
-            mainDirectorE.GenPoints();
-
-            var settingsE = new LevelSettings("E");
-            settingsE.Modifiers.Add(LevelModifiers.ManyChargers);
-            settingsE.Modifiers.Add(LevelModifiers.ManyShadows);
-
-            var testLevelE = Level.Build(
-                new Level("E")
-                {
-                    Tier = "E",
-                    Name = "Terminal Command",
-                    Complex = Complex.Tech,
-                    MainDirector = mainDirectorE,
-                    Settings = settingsE,
-                    Index = rundown.TierE_Count + 1,
-                    IsTest = true
-                });
-            rundown.AddLevel(testLevelE);
-        }
-        #endif
-        #endif
-        #endregion
         #endregion
 
         if (withLogs)
@@ -1352,8 +1139,7 @@ public static class RundownFactory
                     Title = $"{name.ToUpper()}",
                     StoryTitle = $"DAILY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
 
-                    TierA_Count = 1,
-                    TierD_Count = 3,
+                    TierD_Count = Generator.Between(2, 3),
                     TierE_Count = 1
                 },
                 withFixed: true,
