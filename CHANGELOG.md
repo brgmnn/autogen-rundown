@@ -3,6 +3,37 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.80.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.80.0) — December 11, 2025
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* 🌟 New Custom Objective added: "Reach KDS Deep"
+  * Similar to Clear Path, and is a tribute to R8E1
+* 🌟 New Geomorph pack: TheDoggyDoge's [DogsTilePack](https://thunderstore.io/c/gtfo/p/TheDoggyDoge/DogsTilePack/)
+* 🌟 New Geomorph pack: ProjectZaero's [ZaeroGeos](https://thunderstore.io/c/gtfo/p/ProjectZaero/ZaeroGeos/)
+* Added warden intel for the remaining objectives which were missing them
+
+### Changes
+
+* Balance: Zone coverage clear time factor reduced from `1.3` to `1.2`
+* Balance: Zone coverage clear time changed to use average coverage instead of max coverage
+* Balance: Zone coverage clear time includes time to open security door
+* Change: Warden intel messages no longer show secondary/overload objective specific messages
+  * This turned out to be more confusing than helpful. Level build specific messages like fog/error alarm etc are still also candidates along with main objective specific messages.
+* Fix: Level wins via "WinOnDeath" are now correctly recorded
+* Fix: Bug where sometimes alarms were contributing negative times to zone clear estimate times
+  * Reactor code fetching, survival clear times, and some other places should now have more time for certain alarms
+* Fix: Several errors are now included in rebuilds
+  * `sourceExpander is null` from zones unable to find starting areas from their parent zones
+  * A common `null reference exception` also from zones entering a failed state
+* Fix: Enemies are cleaned up across rebuilds, some cases where duplicate enemies are spawning should be resolved now
+* Fix: Typo in geomorph path causing some levels to fail to build
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.79.1...v0.80.0
+
+
 ## [v0.79.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.79.2) — November 23, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
@@ -13,17 +44,6 @@ See more at https://github.com/brgmnn/autogen-rundown
   * Peer mods will now be loaded correctly when using Gale
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.79.1...v0.79.2
-
-
-## [v0.80.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.80.0) — November 23, 2025
-
-<!-- Release notes generated using configuration in .github/release.yml at main -->
-
-### New
-
-* 🌟 New Geomorph pack: TheDoggyDoge's [DogsTilePack](https://thunderstore.io/c/gtfo/p/TheDoggyDoge/DogsTilePack/)
-
-**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.79.1...v0.80.0
 
 
 ## [v0.79.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.79.1) — November 18, 2025
