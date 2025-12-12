@@ -60,36 +60,47 @@ public class BuildDirector
     /// </summary>
     public void GenObjective(List<WardenObjectiveType> exclude)
     {
-        var objectives = new List<WardenObjectiveType>
+        var objectives = new List<(double weight, WardenObjectiveType objective)>
         {
-            WardenObjectiveType.HsuFindSample,
-            WardenObjectiveType.ReactorStartup,
-            WardenObjectiveType.ReactorShutdown,
-            WardenObjectiveType.GatherSmallItems,
-            WardenObjectiveType.ClearPath,
-            WardenObjectiveType.SpecialTerminalCommand,
-            WardenObjectiveType.RetrieveBigItems,
-            WardenObjectiveType.PowerCellDistribution,
-            WardenObjectiveType.TerminalUplink,
-            WardenObjectiveType.CentralGeneratorCluster,
-            WardenObjectiveType.HsuActivateSmall,
-            WardenObjectiveType.Survival,
-            WardenObjectiveType.GatherTerminal,
-            WardenObjectiveType.CorruptedTerminalUplink,
-            WardenObjectiveType.TimedTerminalSequence,
+            (1.0, WardenObjectiveType.HsuFindSample),
+            (1.0, WardenObjectiveType.ReactorStartup),
+            (1.0, WardenObjectiveType.ReactorShutdown),
+            (1.0, WardenObjectiveType.GatherSmallItems),
+            (1.0, WardenObjectiveType.ClearPath),
+            (1.0, WardenObjectiveType.SpecialTerminalCommand),
+            (1.0, WardenObjectiveType.RetrieveBigItems),
+            (1.0, WardenObjectiveType.PowerCellDistribution),
+            (1.0, WardenObjectiveType.TerminalUplink),
+            (1.0, WardenObjectiveType.CentralGeneratorCluster),
+            (1.0, WardenObjectiveType.HsuActivateSmall),
+            (1.0, WardenObjectiveType.Survival),
+            (1.0, WardenObjectiveType.GatherTerminal),
+            (1.0, WardenObjectiveType.CorruptedTerminalUplink),
+            (1.0, WardenObjectiveType.TimedTerminalSequence),
         };
+
+        if (Tier is "C" or "D" or "E")
+            objectives.Add(Tier switch
+            {
+                "C" => (0.45, WardenObjectiveType.ReachKdsDeep),
+                "D" => (0.70, WardenObjectiveType.ReachKdsDeep),
+                "E" => (1.00, WardenObjectiveType.ReachKdsDeep),
+
+                _ => (0.0, WardenObjectiveType.ReachKdsDeep)
+            });
 
         // These objectives are incompatible with non-Main bulkheads.
         if (!Bulkhead.HasFlag(Bulkhead.Main))
         {
-            objectives.Remove(WardenObjectiveType.HsuActivateSmall);
-            objectives.Remove(WardenObjectiveType.ClearPath);
-            objectives.Remove(WardenObjectiveType.Survival);
+            objectives.RemoveAll(t => t.objective == WardenObjectiveType.HsuActivateSmall);
+            objectives.RemoveAll(t => t.objective == WardenObjectiveType.ClearPath);
+            objectives.RemoveAll(t => t.objective == WardenObjectiveType.Survival);
+            objectives.RemoveAll(t => t.objective == WardenObjectiveType.ReachKdsDeep);
         }
 
         // These objectives are really intended as side quests.
         if (Bulkhead.HasFlag(Bulkhead.Main))
-            objectives.Remove(WardenObjectiveType.SpecialTerminalCommand);
+            objectives.RemoveAll(t => t.objective == WardenObjectiveType.SpecialTerminalCommand);
 
         // --- Specific main objectives ---
 
@@ -98,30 +109,30 @@ public class BuildDirector
         {
             // These objectives will have special logic for when they're part of KDS deep to be
             // very short objectives that can possibly fit within the run time
-            objectives = new List<WardenObjectiveType>
+            objectives = new List<(double weight, WardenObjectiveType objective)>
             {
-                WardenObjectiveType.SpecialTerminalCommand,
-                WardenObjectiveType.GatherSmallItems,
-                WardenObjectiveType.PowerCellDistribution,
-                WardenObjectiveType.HsuFindSample,
-                WardenObjectiveType.GatherTerminal
+                (1.0, WardenObjectiveType.SpecialTerminalCommand),
+                (1.0, WardenObjectiveType.GatherSmallItems),
+                (1.0, WardenObjectiveType.PowerCellDistribution),
+                (1.0, WardenObjectiveType.HsuFindSample),
+                (1.0, WardenObjectiveType.GatherTerminal),
             };
         }
 
         // Remove any objectives that are in the exclude list.
-        objectives.RemoveAll(exclude.Contains);
+        objectives.RemoveAll(t => exclude.Contains(t.objective));
 
         // In this case we need to set a very simple objective that can be completed quickly
         if (Bulkhead.HasFlag(Bulkhead.Overload) && exclude.Contains(WardenObjectiveType.Survival))
         {
             // For now just set special terminal command and place the terminal in one zone
-            objectives = new List<WardenObjectiveType>
+            objectives = new List<(double weight, WardenObjectiveType objective)>
             {
-                WardenObjectiveType.SpecialTerminalCommand
+                (1.0, WardenObjectiveType.SpecialTerminalCommand),
             };
         }
 
-        Objective = Generator.Pick(objectives);
+        Objective = Generator.Select(objectives);
     }
 
     public void GenPoints()
