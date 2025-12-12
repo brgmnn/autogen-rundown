@@ -79,7 +79,7 @@ public class BuildDirector
             (1.0, WardenObjectiveType.TimedTerminalSequence),
         };
 
-        if (Tier is "C" or "D" or "E")
+        if (Tier is "C" or "D" or "E" && Complex == Complex.Mining)
             objectives.Add(Tier switch
             {
                 "C" => (0.45, WardenObjectiveType.ReachKdsDeep),
