@@ -849,6 +849,8 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.ReachKdsDeep));
+
         // --- D-Tier Levels ---
         for (var i = 0; i < rundown.TierD_Count; i++)
         {
@@ -1122,6 +1124,8 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.ReachKdsDeep));
+
         // --- C-Tier Levels ---
         for (var i = 0; i < rundown.TierC_Count; i++)
         {
@@ -1246,7 +1250,9 @@ public static class RundownFactory
             Name = "Default"
         };
 
+        //
         // Seasonal Rundown -- Rundown 8 replacement
+        //
         #region Seasonal Rundown
         {
             // Reads or generates the seed
@@ -1265,7 +1271,9 @@ public static class RundownFactory
         }
         #endregion
 
+        //
         // Monthly Rundown -- Rundown 4 replacement
+        //
         #region Monthly Rundown
         {
             ///
@@ -1293,7 +1301,9 @@ public static class RundownFactory
         }
         #endregion
 
+        //
         // Weekly Rundown -- Rundown 5 replacement
+        //
         #region Weekly Rundown
         {
             // Set the weekly seed
@@ -1325,7 +1335,9 @@ public static class RundownFactory
         }
         #endregion
 
+        //
         // Daily Rundown -- Rundown 7 replacement
+        //
         #region Daily Rundown
         {
             // Reads or generates the seed

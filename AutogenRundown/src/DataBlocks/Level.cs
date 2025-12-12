@@ -1168,6 +1168,10 @@ public class Level
     /// <returns></returns>
     public static Level Build(Level level)
     {
+        // TODO: remove this in the future after we are done testing it
+        if (level.MainDirector.Objective == WardenObjectiveType.ReachKdsDeep)
+            level.Name = "Valiant";
+
         if (level.Name == "")
             level.Name = Generator.Pick(Words.NounsLevel) ?? "";
 
@@ -1176,11 +1180,6 @@ public class Level
         level.GenerateDepth();
         level.GenerateZoneAliasStarts();
         level.BuildBulkheads();
-
-        if (level.Name == "Valiant")
-        {
-            Plugin.Logger.LogDebug($"Ok what are the bulkheads? {level.Settings.Bulkheads}");
-        }
 
         #region Fog settings
         var lowFog = level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)
