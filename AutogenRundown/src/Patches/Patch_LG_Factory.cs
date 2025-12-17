@@ -20,7 +20,10 @@ public class Patch_LG_Factory
 
         FactoryJobManager.OnFactoryDone();
 
-        return false;
+        // If validation passed (ShouldRebuild is now false), let original run
+        // to properly finish the factory and fire events. Otherwise, a rebuild
+        // was triggered and we skip the original.
+        return !FactoryJobManager.ShouldRebuild;
     }
 
     /// <summary>
