@@ -6,9 +6,7 @@
       "Bash(grep:*)",
       "Bash(rg:*)",
       "WebSearch",
-      "WebSearch(**)",
-      "WebFetch",
-      "WebFetch(**)"
+      "WebFetch"
     ]
   }
 }
