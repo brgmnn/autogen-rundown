@@ -520,6 +520,13 @@ public class Level
         get => ObjectiveLayer[Bulkhead.Main];
         set => ObjectiveLayer[Bulkhead.Main] = value;
     }
+
+    /// <summary>
+    /// True if this level has both an Extreme and Overload optional objectives
+    /// </summary>
+    [JsonIgnore]
+    public bool HasPrisonerEfficiency => Settings.Bulkheads.HasFlag(Bulkhead.PrisonerEfficiency);
+
     #endregion
 
     #region Secondary (Extreme) Objective Data
