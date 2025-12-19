@@ -550,15 +550,189 @@ public partial record LevelLayout
             #endregion
 
             #region E-tier
-            // TODO: Implement E-tier variants
-            // E-tier should have apex alarms, boss fights, complex puzzles
-            // Main: 6-12 zones, mega mom, double apex, multi-terminal setups
-            // Extreme: 5-8 zones, apex + boss
-            // Overload: 4-6 zones, mega mom or brutal apex
             case ("E", Bulkhead.Main):
+            {
+                var options = new List<(double, Action)>
+                {
+                    // Apex + keycard - apex immediately
+                    (0.25, () =>
+                    {
+                        var (mid, _) = BuildChallenge_ApexAlarm(
+                            start,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                        var (end, _) = BuildChallenge_KeycardInZone(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Error + boss - error first
+                    (0.25, () =>
+                    {
+                        var (mid, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
+                            start,
+                            errorZones: Generator.Between(2, 3),
+                            sideKeycardZones: 1,
+                            terminalTurnoffZones: 1);
+                        var (end, _) = BuildChallenge_BossFight(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Boss + apex - boss first, then forward, then apex
+                    (0.20, () =>
+                    {
+                        var (mid, _) = BuildChallenge_BossFight(start);
+                        var nodes = AddBranch_Forward(mid, Generator.Between(2, 3));
+                        var (end, _) = BuildChallenge_ApexAlarm(
+                            nodes.Last(),
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Error + generator - error immediately
+                    (0.15, () =>
+                    {
+                        var (mid, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
+                            start,
+                            errorZones: 2,
+                            sideKeycardZones: 1,
+                            terminalTurnoffZones: 1);
+                        var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+                };
+
+                // Hub multi-terminal (3+ terminals only) - apex first
+                if (objective.Uplink_NumberOfTerminals >= 3)
+                    options.Add((0.15, () =>
+                    {
+                        var (mid, _) = BuildChallenge_ApexAlarm(
+                            start,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                        var nodes = AddBranch_Forward(mid, Generator.Between(1, 2));
+                        var hub = nodes.Last();
+                        hub = planner.UpdateNode(hub with { MaxConnections = objective.Uplink_NumberOfTerminals + 1 });
+                        planner.GetZone(hub)!.GenHubGeomorph(level.Complex);
+
+                        for (var i = 0; i < objective.Uplink_NumberOfTerminals; i++)
+                        {
+                            var (end, _) = AddZone(hub);
+                            objective.PlacementNodes.Add(end);
+                        }
+                    }));
+
+                Generator.SelectRun(options);
+                break;
+            }
+
             case ("E", Bulkhead.Extreme):
+            {
+                var options = new List<(double, Action)>
+                {
+                    // Apex + boss - apex immediately
+                    (0.30, () =>
+                    {
+                        var (mid, _) = BuildChallenge_ApexAlarm(
+                            start,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                        var (end, _) = BuildChallenge_BossFight(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Boss + apex - boss first, forward, then apex
+                    (0.30, () =>
+                    {
+                        var (mid, _) = BuildChallenge_BossFight(start);
+                        var nodes = AddBranch_Forward(mid, Generator.Between(1, 2));
+                        var (end, _) = BuildChallenge_ApexAlarm(
+                            nodes.Last(),
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Double boss - forward in middle
+                    (0.25, () =>
+                    {
+                        var (mid, _) = BuildChallenge_BossFight(start);
+                        var nodes = AddBranch_Forward(mid, Generator.Between(1, 2));
+                        var (end, _) = BuildChallenge_BossFight(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+                };
+
+                // Generator + apex + keycard (single terminal only)
+                if (objective.Uplink_NumberOfTerminals == 1)
+                    options.Add((0.15, () =>
+                    {
+                        var (mid1, _) = BuildChallenge_GeneratorCellInZone(start);
+                        var (mid2, _) = BuildChallenge_ApexAlarm(
+                            mid1,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                        var (end, _) = BuildChallenge_KeycardInZone(mid2);
+                        AddUplinkTerminalZones(end, objective);
+                    }));
+
+                Generator.SelectRun(options);
+                break;
+            }
+
             case ("E", Bulkhead.Overload):
-                goto default;
+            {
+                var options = new List<(double, Action)>
+                {
+                    // Brutal apex - start immediately
+                    (0.35, () =>
+                    {
+                        var (end, _) = BuildChallenge_ApexAlarm(
+                            start,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_VeryHard);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Boss + apex - boss immediately
+                    (0.30, () =>
+                    {
+                        var (mid, _) = BuildChallenge_BossFight(start);
+                        var (end, _) = BuildChallenge_ApexAlarm(
+                            mid,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Generator + apex - forward then challenges
+                    (0.20, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                        var (mid, _) = BuildChallenge_GeneratorCellInZone(nodes.Last());
+                        var (end, _) = BuildChallenge_ApexAlarm(
+                            mid,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_VeryHard);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+                };
+
+                // Apex + boss (single terminal only)
+                if (objective.Uplink_NumberOfTerminals == 1)
+                    options.Add((0.15, () =>
+                    {
+                        var (mid, _) = BuildChallenge_ApexAlarm(
+                            start,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                        var (end, _) = BuildChallenge_BossFight(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }));
+
+                Generator.SelectRun(options);
+                break;
+            }
             #endregion
 
             default:
