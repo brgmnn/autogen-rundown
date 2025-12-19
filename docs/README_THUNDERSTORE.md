@@ -14,11 +14,11 @@ Levels and rundowns are designed to be similar and in the spirit of vanilla GTFO
 
 AutogenRundown supports the following 3rd party peer mods. You can install them along side AutogenRundown and play with modified weapons etc in the random rundowns.
 
-* [Arsenality](https://thunderstore.io/c/gtfo/p/W33B/Arsenality)
-* [ArsenalityRebalance](https://thunderstore.io/c/gtfo/p/leezurli/ArsenalityRebalance)
-* [VanillaReloaded](https://thunderstore.io/c/gtfo/p/tru0067/VanillaReloaded)
-* [GTFriendlyO](https://thunderstore.io/c/gtfo/p/Carb_Crusaders/GTFriendlyO/)
-* [OmegaWeapons](https://thunderstore.io/c/gtfo/p/Mimikium/OmegaWeapons/)
+- [Arsenality](https://thunderstore.io/c/gtfo/p/W33B/Arsenality)
+- [ArsenalityRebalance](https://thunderstore.io/c/gtfo/p/leezurli/ArsenalityRebalance)
+- [VanillaReloaded](https://thunderstore.io/c/gtfo/p/tru0067/VanillaReloaded)
+- [GTFriendlyO](https://thunderstore.io/c/gtfo/p/Carb_Crusaders/GTFriendlyO/)
+- [OmegaWeapons](https://thunderstore.io/c/gtfo/p/Mimikium/OmegaWeapons/)
 
 <hr>
 
