@@ -3,6 +3,7 @@
 This document provides detailed examples of every zone building, progression, and challenge method available in the level layout system. Use this as a reference when creating new objective layouts.
 
 **Source Files:**
+
 - `LevelLayout.ZoneBuild.cs` - Zone creation and branching
 - `LevelLayout.ZoneProgression.cs` - Puzzles, alarms, bosses
 - `LevelLayout.ZoneBuildChallenge.cs` - Pre-built challenge patterns
@@ -14,18 +15,19 @@ This document provides detailed examples of every zone building, progression, an
 
 By default, zones automatically roll the following properties unless specific tags are added to disable or change them:
 
-| Property | Default Behavior | Tags to Modify |
-|----------|------------------|----------------|
-| **Alarms** | Door alarms rolled based on tier | `no_alarm` to disable |
-| **Scouts** | Scout spawns rolled based on tier | `no_scouts` to disable |
-| **Hibernating Enemies** | Enemy population rolled | `no_enemies` to disable |
-| **Resources** | Ammo, tool, and health packs rolled | Manually set `AmmoPacks`, `ToolPacks`, `HealthPacks` |
-| **Lights** | Zone lighting rolled | Use `LightSettings` property or events |
-| **Blood Doors** | Can spawn on zone entrances | `no_blood_door` to disable |
+| Property                | Default Behavior                    | Tags to Modify                                       |
+| ----------------------- | ----------------------------------- | ---------------------------------------------------- |
+| **Alarms**              | Door alarms rolled based on tier    | `no_alarm` to disable                                |
+| **Scouts**              | Scout spawns rolled based on tier   | `no_scouts` to disable                               |
+| **Hibernating Enemies** | Enemy population rolled             | `no_enemies` to disable                              |
+| **Resources**           | Ammo, tool, and health packs rolled | Manually set `AmmoPacks`, `ToolPacks`, `HealthPacks` |
+| **Lights**              | Zone lighting rolled                | Use `LightSettings` property or events               |
+| **Blood Doors**         | Can spawn on zone entrances         | `no_blood_door` to disable                           |
 
 These automatic rolls are tier-appropriate and designed to create varied gameplay without manual configuration. When you need explicit control over a zone, add the appropriate tags or set properties directly.
 
 **Example: Disabling automatic enemies and scouts**
+
 ```csharp
 var (node, zone) = AddZone(sourceNode, new ZoneNode {
     Tags = new Tags("no_enemies", "no_scouts")
@@ -129,6 +131,7 @@ var nodes = AddBranch(baseNode, 0, "branch");
 ```
 
 **Parameters:**
+
 - `baseNode` - Zone to branch from
 - `zoneCount` - Number of zones to create
 - `branch` - Branch name for categorization (default: "primary")
@@ -224,6 +227,7 @@ AddKeycardPuzzle(endNode, keycardNodes.Last());
 ```
 
 **Layout Result:**
+
 ```
 keycardNode (has keycard)
                          \
@@ -242,11 +246,13 @@ AddGeneratorPuzzle(lockedNode, cellNode);
 ```
 
 **Side Effects:**
+
 - Turns off lights in the zone before the locked door
 - Adds events to turn on emergency lights when cell is inserted
 - Places power cell in cellNode
 
 **Layout Result:**
+
 ```
 cellNode (has power cell)
                          \
@@ -281,6 +287,7 @@ AddTerminalUnlockPuzzle(lockedNode, terminalNode, new TerminalStartingState {
 **Terminal Command Added:** `ACTIVATE_DOOR`
 
 **Layout Result:**
+
 ```
 terminalNode (terminal with ACTIVATE_DOOR command)
                                                    \
@@ -324,12 +331,14 @@ AddApexAlarm(lockedNode, WavePopulation.Nightmare, WaveSettings.Apex_VeryHard);
 ```
 
 **Side Effects:**
+
 - Sets SecurityGate to Apex
 - Creates side spawn room (prevents holding)
 - Chooses tier-appropriate alarm class (8-12)
 - Modifies setup zone to hub geomorph
 
 **Tier Alarm Classes:**
+
 - A: Class 8
 - B: Class 9
 - C: Class 10
@@ -409,6 +418,7 @@ bossNode = AddAlignedBoss(bossNode);
 ```
 
 **Tier Boss Types:**
+
 - A: Single Mother OR Double Pouncer
 - B: Single Mother OR Triple Pouncer
 - C: Mother
@@ -416,6 +426,7 @@ bossNode = AddAlignedBoss(bossNode);
 - E: Tank+Pouncer, Triple Potato+Tank, or Tank+PMother
 
 **Side Effects:**
+
 - Sets boss-appropriate geomorph
 - Adds "no_scouts" tag (except E-tier)
 - Adds "no_blood_door" tag (except D/E-tier)
@@ -446,6 +457,7 @@ bossNode = AddAlignedBoss_WakeOnOpen(bossNode);
 ```
 
 **Side Effects:**
+
 - Alerts enemies in zone on door open
 - Plays boss roar sound
 
@@ -466,6 +478,7 @@ AddAlignedBossFight_MegaMom(bossNode, deathEvents);
 ```
 
 **Side Effects:**
+
 - Uses specific large geomorphs (complex-dependent)
 - Adds 300 egg sacks
 - Adds 12 ammo packs, 4 tool packs
@@ -543,6 +556,7 @@ AddDisinfectionZone(hub);
 ```
 
 **Side Effects:**
+
 - Uses complex-appropriate geomorph
 - Adds 6 disinfection packs
 - Adds disinfection station placement
@@ -574,6 +588,7 @@ var (end, endZone) = BuildChallenge_Small(start);
 ```
 
 **Possible Results (equal weight):**
+
 - Single zone with alarm
 - Keycard in zone
 - Terminal locked door
@@ -595,6 +610,7 @@ var (end, endZone) = BuildChallenge_KeycardInZone(start);
 ```
 
 **Layout:**
+
 ```
 start (has keycard) -> end (keycard locked)
 ```
@@ -616,6 +632,7 @@ var (end, endZone) = BuildChallenge_KeycardInSide(start, sideKeycardZones: 2);
 ```
 
 **Layout:**
+
 ```
 start (hub) -> end (keycard locked)
             -> keycard[0] -> keycard[1] (has keycard)
@@ -636,6 +653,7 @@ var (end, endZone) = BuildChallenge_GeneratorCellInZone(start);
 ```
 
 **Layout:**
+
 ```
 start (has cell) -> end (generator locked)
 ```
@@ -657,6 +675,7 @@ var (end, endZone) = BuildChallenge_GeneratorCellInSide(start, sideCellZones: 2)
 ```
 
 **Layout:**
+
 ```
 start (hub) -> end (generator locked)
             -> power_cell[0] -> power_cell[1] (has cell)
@@ -681,6 +700,7 @@ var (end, endZone) = BuildChallenge_LockedTerminalDoor(start, sideZones: 2);
 ```
 
 **Layout (with side zones):**
+
 ```
 start (hub) -> end (terminal locked)
             -> terminal_door_unlock[0] -> terminal_door_unlock[1] (has terminal)
@@ -708,6 +728,7 @@ var (end, endZone) = BuildChallenge_LockedTerminalPasswordInSide(start,
 ```
 
 **Layout:**
+
 ```
 start (hub, has password-locked terminal) -> end (terminal locked)
                                           -> terminal_password (has password)
@@ -729,6 +750,7 @@ var (end, endZone) = BuildChallenge_ApexAlarm(
 ```
 
 **Side Effects:**
+
 - Modifies start to hub
 - Adds 3 ammo, 2 tool packs to start
 - Adds fog repellers if in fog
@@ -765,6 +787,7 @@ var (end, endZone) = BuildChallenge_ErrorWithOff_KeycardInSide(
 ```
 
 **Layout:**
+
 ```
 start -> firstError (error alarm) -> error[1] -> penultimate (hub) -> end (keycard locked)
                                                                    -> keycard[0] (has keycard)
@@ -772,6 +795,7 @@ start -> firstError (error alarm) -> error[1] -> penultimate (hub) -> end (keyca
 ```
 
 **Side Effects:**
+
 - Each zone gets 5 ammo, 3 tool, 4 health packs
 - Error population adapts to level enemy settings (shadows, chargers, flyers)
 - Error settings scale with tier
@@ -793,6 +817,7 @@ var (end, endZone) = BuildChallenge_ErrorWithOff_GeneratorCellCarry(
 ```
 
 **Layout:**
+
 ```
 start -> firstError (error alarm, has cell) -> error[1] -> penultimate -> end (generator locked)
                                                                        -> error_off[0] (DEACTIVATE_ALARMS)
@@ -807,15 +832,19 @@ start -> firstError (error alarm, has cell) -> error[1] -> penultimate -> end (g
 These are private helpers but show available zone theming:
 
 ### SetMotherVibe
+
 Red/orange lighting, 200 egg sacks
 
 ### SetInfectionVibe
+
 Green lighting, 100 spitters
 
 ### SetInfestedVibe
+
 Orange/brown lighting (no props)
 
 ### SetRespawnVibe
+
 Dark lighting, 50 respawn sacks
 
 ---
@@ -891,6 +920,60 @@ switch (level.Tier)
 }
 ```
 
+### Conditional Layout Options
+
+When some layout variants should only be available under certain conditions, build a mutable options list and conditionally add variants before calling `SelectRun()`.
+
+```csharp
+// Build base options list
+var options = new List<(double, Action)>
+{
+    // Always available options
+    (0.30, () =>
+    {
+        var nodes = AddBranch_Forward(start, 2);
+        var (end, _) = BuildChallenge_GeneratorCellInSide(nodes.Last());
+        AddObjectiveZones(end, objective);
+    }),
+
+    (0.30, () =>
+    {
+        var (mid, _) = BuildChallenge_KeycardInSide(start);
+        var (end, _) = BuildChallenge_LockedTerminalDoor(mid, 1);
+        AddObjectiveZones(end, objective);
+    }),
+
+    (0.25, () =>
+    {
+        var nodes = AddBranch_Forward(start, 1);
+        var (mid, _) = BuildChallenge_KeycardInSide(nodes.Last());
+        var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
+        AddObjectiveZones(end, objective);
+    }),
+};
+
+// Conditionally add variant (only when condition is met)
+if (objective.ItemCount == 1)
+    options.Add((0.15, () =>
+    {
+        // Special single-item variant
+        objective.PlacementNodes.Add(start);
+    }));
+
+Generator.SelectRun(options);
+```
+
+**When to use this pattern:**
+
+- A layout variant only makes sense under certain conditions (e.g., single terminal vs multiple)
+- You want to completely exclude an option rather than have it do nothing
+- Cleaner than having fallback logic inside the action
+
+**Avoid this pattern when:**
+
+- All options are always valid - just use inline `Generator.SelectRun()` with a list literal
+- The condition affects the weight but not whether the option exists - use a ternary for the weight instead
+
 ---
 
 ## Geomorph Settings (Zone.Geomorph.cs)
@@ -912,6 +995,7 @@ planner.GetZone(start)!.GenHubGeomorph(level.Complex);
 ```
 
 **Characteristics:**
+
 - 64x64 tiles with multiple exit points
 - Can connect to 3 new zones (X-shaped layout)
 - Ideal for hub-and-spoke level designs
@@ -928,6 +1012,7 @@ zone.GenCorridorGeomorph(level.Complex);
 ```
 
 **Characteristics:**
+
 - 64x64 linear tiles
 - Can only connect to one new zone (I-shaped layout)
 - Ideal for creating linear paths or connecting hubs
@@ -944,6 +1029,7 @@ zone.GenTGeomorph(level.Complex);
 ```
 
 **Characteristics:**
+
 - Similar to hubs but T-shaped instead of X-shaped
 - Limited selection (mostly mod geomorphs)
 
@@ -958,6 +1044,7 @@ zone.GenExitGeomorph(level.Complex);
 ```
 
 **Characteristics:**
+
 - 64x64 or 32x32 tiles with extraction points
 - Sets `Coverage` to `Tiny` automatically
 - Required for extraction objectives
@@ -973,6 +1060,7 @@ zone.GenReactorGeomorph(level.Complex);
 ```
 
 **Characteristics:**
+
 - **Only works in Mining and Tech complexes** (Service requires mod geomorphs)
 - Sets `IgnoreRandomGeomorphRotation = true`
 - Sets `Coverage` to fixed 40
@@ -989,6 +1077,7 @@ zone.GenReactorCorridorGeomorph(level.Complex);
 ```
 
 **Characteristics:**
+
 - Thematic connection between regular zones and reactor zones
 - Slightly larger coverage than standard corridors
 
@@ -1003,6 +1092,7 @@ zone.GenGeneratorClusterGeomorph(level.Complex);
 ```
 
 **Characteristics:**
+
 - Sets `GeneratorClustersInZone = 1`
 - Fixed coverage of 40
 - Required for Central Generator Cluster objectives
@@ -1018,6 +1108,7 @@ zone.GenKingOfTheHillGeomorph(level, director);
 ```
 
 **Characteristics:**
+
 - Adds terminal placement with specific position/rotation for the geomorph
 - Large arena rooms suitable for wave defense
 - Used for Terminal Uplink objectives
@@ -1033,6 +1124,7 @@ zone.GenDeadEndGeomorph(level.Complex);
 ```
 
 **Characteristics:**
+
 - Small coverage (5-15)
 - Single entrance design
 - Good for resource stashes, keycard rooms, or side objectives
@@ -1048,6 +1140,7 @@ zone.GenBossGeomorph(level.Complex);
 ```
 
 **Characteristics:**
+
 - Large coverage (30-75)
 - Open arena design for boss fights
 - Used by `AddAlignedBoss` methods
@@ -1063,6 +1156,7 @@ zone.GenMatterWaveProjectorGeomorph(level.Complex);
 ```
 
 **Characteristics:**
+
 - Complex-specific tiles
 - Mining: DigSite MWP rooms
 - Tech: Lab dead-end with data sphere/neonate needle
@@ -1079,6 +1173,7 @@ zone.GenGardenGeomorph(level.Complex);
 ```
 
 **Characteristics:**
+
 - **Only works in Service complex** (no-op for other complexes)
 - Sets `SubComplex` to `Gardens`
 - Large coverage (50-75)
@@ -1095,6 +1190,7 @@ zone.GenPortalGeomorph();
 ```
 
 **Characteristics:**
+
 - **Only works in Mining and Tech complexes**
 - Mining: Contains possible path forward
 - Tech: Dead-end design
@@ -1106,22 +1202,22 @@ zone.GenPortalGeomorph();
 
 When geomorph methods are called, they set these zone properties:
 
-| Property | Description |
-|----------|-------------|
-| `SubComplex` | The sub-complex type (DigSite, Refinery, Storage, Lab, DataCenter, Floodways, Gardens) |
-| `CustomGeomorph` | Path to the specific geomorph prefab asset |
-| `Coverage` | Room size/coverage area (Min/Max values) |
-| `IgnoreRandomGeomorphRotation` | When `true`, prevents random rotation (used for reactors) |
-| `GeneratorClustersInZone` | Number of generator clusters to spawn |
+| Property                       | Description                                                                            |
+| ------------------------------ | -------------------------------------------------------------------------------------- |
+| `SubComplex`                   | The sub-complex type (DigSite, Refinery, Storage, Lab, DataCenter, Floodways, Gardens) |
+| `CustomGeomorph`               | Path to the specific geomorph prefab asset                                             |
+| `Coverage`                     | Room size/coverage area (Min/Max values)                                               |
+| `IgnoreRandomGeomorphRotation` | When `true`, prevents random rotation (used for reactors)                              |
+| `GeneratorClustersInZone`      | Number of generator clusters to spawn                                                  |
 
 ---
 
 ### Complex and SubComplex Reference
 
-| Complex | SubComplexes |
-|---------|--------------|
-| Mining | DigSite, Refinery, Storage |
-| Tech | Lab, DataCenter |
-| Service | Floodways, Gardens |
+| Complex | SubComplexes               |
+| ------- | -------------------------- |
+| Mining  | DigSite, Refinery, Storage |
+| Tech    | Lab, DataCenter            |
+| Service | Floodways, Gardens         |
 
 Geomorph methods automatically select appropriate SubComplexes for the given Complex.

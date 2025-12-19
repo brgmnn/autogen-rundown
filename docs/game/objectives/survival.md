@@ -52,11 +52,13 @@ Survive Warden Protocol is a timed survival challenge where the Warden AI initia
 ### Survival Timer
 
 **Preparation Phase:**
+
 - Brief countdown before protocol activates (typically 10-30 seconds)
 - Use this time to establish defenses
 - Displayed at top of screen
 
 **Survival Phase:**
+
 - Main countdown showing remaining survival time (typically 30 seconds to several minutes)
 - Must survive until timer reaches zero
 - Displayed prominently on HUD
@@ -64,12 +66,14 @@ Survive Warden Protocol is a timed survival challenge where the Warden AI initia
 ### Wave Spawning
 
 **Set Intervals:**
+
 - Enemies spawn at predetermined times
 - Wave composition varies (Strikers, Shooters, Giants, Chargers, etc.)
 - Intensity typically escalates over time
 - Spawn locations may vary
 
 **Special Enemy Types:**
+
 - Some protocols spawn special enemies (Flyers, Shadows, Tanks)
 - Example: ALT://R6B1 spawns waves of Flyers for ~35 seconds
 - Enemy variety increases survival difficulty
@@ -77,12 +81,14 @@ Survive Warden Protocol is a timed survival challenge where the Warden AI initia
 ### Environmental Changes
 
 **Dynamic Environment:**
+
 - Security doors may open, revealing new threats or paths
 - Lights may toggle, affecting visibility
 - Fog may rise or lower, changing infection risk
 - Environmental hazards may activate
 
 **Adaptation Required:**
+
 - Team must adapt to changing conditions
 - New doors may require repositioning
 - Lighting changes affect combat tactics
@@ -91,6 +97,7 @@ Survive Warden Protocol is a timed survival challenge where the Warden AI initia
 ### Position Defense
 
 **King of the Hill Mechanics:**
+
 - Some survival objectives require defending specific position
 - May involve bioscan circles that must be occupied
 - Team must maintain presence in designated area
@@ -150,16 +157,19 @@ Survive Warden Protocol is a timed survival challenge where the Warden AI initia
 ### Environmental Adaptation
 
 **Door Openings:**
+
 - Quickly assess new threats from opened doors
 - Reposition if new approach angle compromises defense
 - Have one player watch new entry points
 
 **Lighting Changes:**
+
 - Switch to flashlights if lights go out
 - Adjust to darkness or brightness
 - Use Bio Tracker more heavily in darkness
 
 **Fog Changes:**
+
 - Monitor infection levels if fog rises
 - Use Fog Repellers if available
 - Navigate carefully through fog areas
@@ -175,28 +185,30 @@ Survival objectives typically don't require extensive terminal usage during the 
 ## Notable Expeditions
 
 ### Survive Warden Protocol Objectives
+
 - **[ALT://R6B1](https://gtfo.wiki.gg/wiki/ALT://R6B1)**: INTERPRET_NAV_DATA triggers ~35-second Flyer survival sequence
 - **[ALT://R6B1](https://gtfo.fandom.com/wiki/ALT://R6B1)**: Featured survival objective
 
 ### Introduction
+
 - Survive Warden Protocol objective type introduced in Rundown 5 (005://EXT)
 
 See [Survive Warden Protocol - Official GTFO Wiki](https://gtfo.fandom.com/wiki/Survive_Warden_Protocol) for complete list.
 
 ## Comparison to Related Objectives
 
-| Aspect | Survival | Reactor Startup | Clear Path |
-|--------|----------|-----------------|-----------|
-| **Primary Goal** | Survive timed waves | Defend reactor waves | Reach extraction |
-| **Time Limit** | Fixed countdown | Wave-based sequence | No specific limit |
-| **Position Defense** | Hold area | Defend reactor | Mobile to extraction |
-| **Wave Pattern** | Set intervals | Discrete waves | Varies (alarms) |
-| **Preparation Time** | Yes (short) | Yes (self-determined) | Yes (entire journey) |
-| **Movement** | Stationary defense | Stationary defense | High mobility |
-| **Completion Trigger** | Timer reaches zero | All waves complete | Reach extraction |
-| **Environmental Changes** | Yes (dynamic) | No | No |
-| **Complexity** | Moderate | High | Simple to moderate |
-| **Resource Intensity** | High | Very high | Moderate to high |
+| Aspect                    | Survival            | Reactor Startup       | Clear Path           |
+| ------------------------- | ------------------- | --------------------- | -------------------- |
+| **Primary Goal**          | Survive timed waves | Defend reactor waves  | Reach extraction     |
+| **Time Limit**            | Fixed countdown     | Wave-based sequence   | No specific limit    |
+| **Position Defense**      | Hold area           | Defend reactor        | Mobile to extraction |
+| **Wave Pattern**          | Set intervals       | Discrete waves        | Varies (alarms)      |
+| **Preparation Time**      | Yes (short)         | Yes (self-determined) | Yes (entire journey) |
+| **Movement**              | Stationary defense  | Stationary defense    | High mobility        |
+| **Completion Trigger**    | Timer reaches zero  | All waves complete    | Reach extraction     |
+| **Environmental Changes** | Yes (dynamic)       | No                    | No                   |
+| **Complexity**            | Moderate            | High                  | Simple to moderate   |
+| **Resource Intensity**    | High                | Very high             | Moderate to high     |
 
 ## Common Challenges
 

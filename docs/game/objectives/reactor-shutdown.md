@@ -16,7 +16,7 @@ Reactors are critical power facilities located deep within the Complex. In React
 2. **Resource Collection**: Gather ammunition, health, and tools along the path
 3. **Clear Initial Threats**: Eliminate sleepers blocking access to the reactor terminal
 4. **Locate Terminal**: Find the dedicated reactor control terminal
-4. **Optionally: Unlock Reactor Terminal**: If the reactor terminal is password locked, locate the terminal that stores the password, get the password and unlock the reactor
+5. **Optionally: Unlock Reactor Terminal**: If the reactor terminal is password locked, locate the terminal that stores the password, get the password and unlock the reactor
 
 ### Phase 2: Reactor Shutdown Sequence
 
@@ -133,28 +133,30 @@ This variant increases difficulty and requires additional coordination, combinin
 Reactor Shutdown appears less frequently than Reactor Startup:
 
 ### Reactor Shutdown (Main Objective)
+
 - **[ALT://R6D3](https://gtfo.fandom.com/wiki/ALT://R6D3)**: High-difficulty Reactor Shutdown mission
 - See [Reactor Shutdown Wiki](https://gtfo.fandom.com/wiki/Reactor_Shutdown) for complete list
 
 ### Comparison Count
+
 - **Reactor Startup**: 13+ expeditions
 - **Reactor Shutdown**: 4 expeditions (less common)
 
 ## Comparison to Reactor Startup
 
-| Aspect | Reactor Shutdown | Reactor Startup |
-|--------|------------------|-----------------|
-| **Objective Type** | Bioscan defense with alarm | Wave defense with verification codes |
-| **Initial State** | Well-illuminated zones | Often begins in darkness |
-| **Activation Command** | `REACTOR_SHUTDOWN` | `REACTOR_STARTUP` |
-| **Primary Mechanic** | Bioscan completion + sustained alarm | Timed waves + code verification |
-| **Code Verification** | Single verification to begin | Multiple times (4-10 cycles) |
-| **Enemy Spawning** | Continuous spawning until extraction | Wave-based, predetermined durations |
-| **Power State** | Severs power across expedition | Brings reactor online |
-| **Defense Phases** | Continuous combat during bioscans | Discrete waves with breaks |
-| **Complexity** | Moderate (single bioscan sequence) | Higher (multiple cycles, timing) |
-| **Time Pressure** | Less strict verification timing | Strict wave and verification timers |
-| **Number of Expeditions** | 4 expeditions | 13+ expeditions |
+| Aspect                    | Reactor Shutdown                     | Reactor Startup                      |
+| ------------------------- | ------------------------------------ | ------------------------------------ |
+| **Objective Type**        | Bioscan defense with alarm           | Wave defense with verification codes |
+| **Initial State**         | Well-illuminated zones               | Often begins in darkness             |
+| **Activation Command**    | `REACTOR_SHUTDOWN`                   | `REACTOR_STARTUP`                    |
+| **Primary Mechanic**      | Bioscan completion + sustained alarm | Timed waves + code verification      |
+| **Code Verification**     | Single verification to begin         | Multiple times (4-10 cycles)         |
+| **Enemy Spawning**        | Continuous spawning until extraction | Wave-based, predetermined durations  |
+| **Power State**           | Severs power across expedition       | Brings reactor online                |
+| **Defense Phases**        | Continuous combat during bioscans    | Discrete waves with breaks           |
+| **Complexity**            | Moderate (single bioscan sequence)   | Higher (multiple cycles, timing)     |
+| **Time Pressure**         | Less strict verification timing      | Strict wave and verification timers  |
+| **Number of Expeditions** | 4 expeditions                        | 13+ expeditions                      |
 
 ## Common Challenges
 

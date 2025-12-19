@@ -38,11 +38,13 @@ FinalLogicLinking (59)
 ### Key Classes and Methods
 
 #### Terminal Prefab
+
 ```
 Assets/AssetPrefabs/Complex/Generic/FunctionMarkers/Terminal_Floor.prefab
 ```
 
 #### Loading Assets
+
 ```csharp
 var prefab = AssetShardManager.GetLoadedAsset<GameObject>(TERMINAL_PREFAB);
 // or
@@ -50,11 +52,13 @@ var prefab = AssetAPI.GetLoadedAsset<GameObject>(TERMINAL_PREFAB);
 ```
 
 #### Spawning
+
 ```csharp
 var terminal = GOUtil.SpawnChildAndGetComp<LG_ComputerTerminal>(prefab, worldPos, worldRot);
 ```
 
 #### Terminal Setup Requirements
+
 ```csharp
 // 1. Set SpawnNode (for game integration, optional but recommended)
 terminal.SpawnNode = area.m_courseNode;
@@ -178,7 +182,9 @@ public class SpawnCustomTerminalJob : LG_FactoryJob
 ## Reference: How Game Spawns Terminals
 
 ### Via Marker System (Normal Flow)
+
 From `LG_FunctionMarkerBuilder.SetupFunctionGO()`:
+
 ```csharp
 LG_ComputerTerminal terminal = GO.GetComponentInChildren<LG_ComputerTerminal>();
 if (terminal != null)
@@ -190,7 +196,9 @@ if (terminal != null)
 ```
 
 ### Via Direct Spawn (Reactor Terminal)
+
 From `LG_WardenObjective_Reactor`:
+
 ```csharp
 m_terminal = GOUtil.SpawnChildAndGetComp<LG_ComputerTerminal>(m_terminalPrefab, m_terminalAlign);
 m_terminal.Setup();
@@ -198,6 +206,7 @@ m_terminal.ConnectedReactor = this;
 ```
 
 ### Via TGA_End_Room
+
 ```csharp
 LG_ComputerTerminal comp = GOUtil.SpawnChildAndGetComp<LG_ComputerTerminal>(
     m_terminalPrefab, m_terminalAlign);
