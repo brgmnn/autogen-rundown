@@ -242,15 +242,154 @@ public partial record LevelLayout
             #endregion
 
             #region C-tier
-            // TODO: Implement C-tier variants
-            // C-tier should have generator puzzles, class alarms
-            // Main: 4-7 zones, class II-IV alarms, multiple keycards
-            // Extreme: 3-5 zones, class I-II alarms
-            // Overload: 3-5 zones, error alarms with turn-off
             case ("C", Bulkhead.Main):
+            {
+                var options = new List<(double, Action)>
+                {
+                    // Double keycard - keycard then another keycard
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                        var (mid, _) = BuildChallenge_KeycardInSide(nodes.Last());
+                        var (end, _) = BuildChallenge_KeycardInSide(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Keycard + generator
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                        var (mid, _) = BuildChallenge_KeycardInSide(nodes.Last());
+                        var (end, _) = BuildChallenge_GeneratorCellInSide(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Generator + terminal unlock
+                    (0.20, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 2);
+                        var (mid, _) = BuildChallenge_GeneratorCellInSide(nodes.Last());
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(mid, 1);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Long path + keycard
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(3, 4));
+                        var (end, _) = BuildChallenge_KeycardInSide(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+                };
+
+                // Hub style - terminals in end zones off central hub (2-3 terminals only)
+                if (objective.Uplink_NumberOfTerminals >= 2)
+                    options.Add((0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                        var hub = nodes.Last();
+                        hub = planner.UpdateNode(hub with { MaxConnections = objective.Uplink_NumberOfTerminals + 1 });
+                        planner.GetZone(hub)!.GenHubGeomorph(level.Complex);
+
+                        // Add each terminal in its own end zone
+                        for (var i = 0; i < objective.Uplink_NumberOfTerminals; i++)
+                        {
+                            var (end, _) = AddZone(hub);
+                            objective.PlacementNodes.Add(end);
+                        }
+                    }));
+
+                Generator.SelectRun(options);
+                break;
+            }
+
             case ("C", Bulkhead.Extreme):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Forward + keycard
+                    (0.30, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                        var (end, _) = BuildChallenge_KeycardInSide(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Forward + generator
+                    (0.30, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (end, _) = BuildChallenge_GeneratorCellInSide(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Double puzzle - keycard then generator
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, _) = BuildChallenge_KeycardInSide(nodes.Last());
+                        var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Long path
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                        AddUplinkTerminalZones(nodes.Last(), objective);
+                    }),
+                });
+                break;
+            }
+
             case ("C", Bulkhead.Overload):
-                goto default;
+            {
+                var options = new List<(double, Action)>
+                {
+                    // Error + keycard
+                    (0.35, () =>
+                    {
+                        var (end, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
+                            start,
+                            errorZones: 1,
+                            sideKeycardZones: 1,
+                            terminalTurnoffZones: 1);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Generator + terminal unlock
+                    (0.35, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 2);
+                        var (mid, _) = BuildChallenge_GeneratorCellInSide(nodes.Last());
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(mid, 1);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Double generator
+                    (0.20, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, _) = BuildChallenge_GeneratorCellInSide(nodes.Last());
+                        var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+                };
+
+                // First zone uplink (single terminal only)
+                if (objective.Uplink_NumberOfTerminals == 1)
+                    options.Add((0.10, () =>
+                    {
+                        objective.PlacementNodes.Add(start);
+
+                        // Add challenge zones after for resources
+                        var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                        var (end, _) = BuildChallenge_KeycardInSide(nodes.Last());
+                    }));
+
+                Generator.SelectRun(options);
+                break;
+            }
             #endregion
 
             #region D-tier
