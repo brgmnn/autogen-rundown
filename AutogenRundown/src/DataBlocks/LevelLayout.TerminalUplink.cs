@@ -200,10 +200,7 @@ public partial record LevelLayout
 
             case ("B", Bulkhead.Overload):
             {
-                // Conditional weight: only allow first-zone uplink if single terminal
-                var firstZoneWeight = objective.Uplink_NumberOfTerminals == 1 ? 0.15 : 0.0;
-
-                Generator.SelectRun(new List<(double, Action)>
+                var options = new List<(double, Action)>
                 {
                     // Generator in side branch
                     (0.30, () =>
@@ -229,14 +226,17 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
                         AddUplinkTerminalZones(end, objective);
                     }),
+                };
 
-                    // Uplink terminal in first zone (only available for single terminal)
-                    // Terminal is in start zone, player must defend while doing uplink
-                    (firstZoneWeight, () =>
+                // Uplink terminal in first zone (only available for single terminal)
+                // Terminal is in start zone, player must defend while doing uplink
+                if (objective.Uplink_NumberOfTerminals == 1)
+                    options.Add((0.15, () =>
                     {
                         objective.PlacementNodes.Add(start);
-                    }),
-                });
+                    }));
+
+                Generator.SelectRun(options);
                 break;
             }
             #endregion
