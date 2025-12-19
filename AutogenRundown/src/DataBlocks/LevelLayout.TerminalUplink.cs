@@ -393,15 +393,160 @@ public partial record LevelLayout
             #endregion
 
             #region D-tier
-            // TODO: Implement D-tier variants
-            // D-tier should have error alarms, terminal puzzles
-            // Main: 5-9 zones, error alarms, boss fights possible
-            // Extreme: 4-6 zones, apex alarms
-            // Overload: 4-5 zones, error + boss
             case ("D", Bulkhead.Main):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Error + keycard
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                        var (end, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
+                            nodes.Last(),
+                            errorZones: Generator.Between(2, 3),
+                            sideKeycardZones: 1,
+                            terminalTurnoffZones: 1);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Error + generator carry
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                        var (end, _) = BuildChallenge_ErrorWithOff_GeneratorCellCarry(
+                            nodes.Last(),
+                            errorZones: Generator.Between(2, 3),
+                            terminalTurnoffZones: 1);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Boss + keycard
+                    (0.20, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                        var (mid, _) = BuildChallenge_BossFight(nodes.Last());
+                        var (end, _) = BuildChallenge_KeycardInSide(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Triple puzzle
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 2);
+                        var (mid1, _) = BuildChallenge_KeycardInSide(nodes.Last());
+                        var (mid2, _) = BuildChallenge_GeneratorCellInSide(mid1);
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(mid2, 1);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Long path + boss
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(3, 4));
+                        var (end, _) = BuildChallenge_BossFight(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+                });
+                break;
+            }
+
             case ("D", Bulkhead.Extreme):
+            {
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Forward + boss
+                    (0.30, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                        var (end, _) = BuildChallenge_BossFight(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Keycard zone + boss
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                        var (mid, _) = BuildChallenge_KeycardInZone(nodes.Last());
+                        var (end, _) = BuildChallenge_BossFight(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Generator zone + apex
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                        var (mid, _) = BuildChallenge_GeneratorCellInZone(nodes.Last());
+                        var (end, _) = BuildChallenge_ApexAlarm(
+                            mid,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Long path + boss
+                    (0.20, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(3, 4));
+                        var (end, _) = BuildChallenge_BossFight(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+                });
+                break;
+            }
+
             case ("D", Bulkhead.Overload):
-                goto default;
+            {
+                var options = new List<(double, Action)>
+                {
+                    // Forward + apex
+                    (0.30, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                        var (end, _) = BuildChallenge_ApexAlarm(
+                            nodes.Last(),
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Generator zone + apex
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                        var (mid, _) = BuildChallenge_GeneratorCellInZone(nodes.Last());
+                        var (end, _) = BuildChallenge_ApexAlarm(
+                            mid,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Boss + keycard zone
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, _) = BuildChallenge_BossFight(nodes.Last());
+                        var (end, _) = BuildChallenge_KeycardInZone(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+                };
+
+                // Error + keycard zone (single terminal only - larger layout)
+                if (objective.Uplink_NumberOfTerminals == 1)
+                    options.Add((0.20, () =>
+                    {
+                        var (mid, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
+                            start,
+                            errorZones: 1,
+                            sideKeycardZones: 1,
+                            terminalTurnoffZones: 1);
+                        var (end, _) = BuildChallenge_KeycardInZone(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }));
+
+                Generator.SelectRun(options);
+                break;
+            }
             #endregion
 
             #region E-tier
