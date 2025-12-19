@@ -9,6 +9,16 @@ using WardenObjective = Objectives.WardenObjective;
 public partial record LevelLayout
 {
     /// <summary>
+    /// Adds terminal zones for the uplink objective and registers them in PlacementNodes
+    /// </summary>
+    private void AddUplinkTerminalZones(ZoneNode parent, WardenObjective objective)
+    {
+        var nodes = AddBranch(parent, objective.Uplink_NumberOfTerminals, "uplink_terminals");
+        foreach (var node in nodes)
+            objective.PlacementNodes.Add(node);
+    }
+
+    /// <summary>
     /// Builds an uplink terminal objective layout
     /// </summary>
     /// <param name="director"></param>
@@ -41,7 +51,7 @@ public partial record LevelLayout
                         var last = nodes.Last();
 
                         // Add terminal zone at end
-                        AddBranch(last, 1, "uplink_terminals");
+                        AddUplinkTerminalZones(last, objective);
                     }),
 
                     // Keycard in side branch
@@ -51,7 +61,7 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_KeycardInSide(nodes.Last());
 
                         // Add terminal zone after keycard challenge
-                        AddBranch(end, 1, "uplink_terminals");
+                        AddUplinkTerminalZones(end, objective);
                     }),
 
                     // Generator cell challenge
@@ -61,7 +71,7 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_GeneratorCellInSide(nodes.Last());
 
                         // Add terminal zone after generator challenge
-                        AddBranch(end, 1, "uplink_terminals");
+                        AddUplinkTerminalZones(end, objective);
                     }),
                 });
                 break;
@@ -78,7 +88,7 @@ public partial record LevelLayout
                         var last = nodes.Last();
 
                         // Add terminal zone at end
-                        AddBranch(last, 1, "uplink_terminals");
+                        AddUplinkTerminalZones(last, objective);
                     }),
 
                     // Keycard in same zone
@@ -87,7 +97,7 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_KeycardInZone(start);
 
                         // Add terminal zone after keycard
-                        AddBranch(end, 1, "uplink_terminals");
+                        AddUplinkTerminalZones(end, objective);
                     }),
                 });
                 break;
@@ -103,7 +113,7 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_GeneratorCellInSide(start, 1);
 
                         // Add terminal zone after generator challenge
-                        AddBranch(end, 1, "uplink_terminals");
+                        AddUplinkTerminalZones(end, objective);
                     }),
 
                     // Locked terminal door - need to unlock via terminal command
@@ -112,7 +122,7 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_LockedTerminalDoor(start, 1);
 
                         // Add terminal zone after terminal unlock
-                        AddBranch(end, 1, "uplink_terminals");
+                        AddUplinkTerminalZones(end, objective);
                     }),
                 });
                 break;
@@ -128,7 +138,7 @@ public partial record LevelLayout
                     (0.30, () =>
                     {
                         var nodes = AddBranch_Forward(start, Generator.Between(3, 4));
-                        AddBranch(nodes.Last(), objective.Uplink_NumberOfTerminals, "uplink_terminals");
+                        AddUplinkTerminalZones(nodes.Last(), objective);
                     }),
 
                     // Keycard in side branch
@@ -136,7 +146,7 @@ public partial record LevelLayout
                     {
                         var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
                         var (end, _) = BuildChallenge_KeycardInSide(nodes.Last());
-                        AddBranch(end, objective.Uplink_NumberOfTerminals, "uplink_terminals");
+                        AddUplinkTerminalZones(end, objective);
                     }),
 
                     // Generator cell in side
@@ -144,7 +154,7 @@ public partial record LevelLayout
                     {
                         var nodes = AddBranch_Forward(start, 2);
                         var (end, _) = BuildChallenge_GeneratorCellInSide(nodes.Last());
-                        AddBranch(end, objective.Uplink_NumberOfTerminals, "uplink_terminals");
+                        AddUplinkTerminalZones(end, objective);
                     }),
 
                     // Locked terminal door
@@ -152,7 +162,7 @@ public partial record LevelLayout
                     {
                         var nodes = AddBranch_Forward(start, 2);
                         var (end, _) = BuildChallenge_LockedTerminalDoor(nodes.Last(), 1);
-                        AddBranch(end, objective.Uplink_NumberOfTerminals, "uplink_terminals");
+                        AddUplinkTerminalZones(end, objective);
                     }),
                 });
                 break;
@@ -166,7 +176,7 @@ public partial record LevelLayout
                     (0.40, () =>
                     {
                         var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
-                        AddBranch(nodes.Last(), objective.Uplink_NumberOfTerminals, "uplink_terminals");
+                        AddUplinkTerminalZones(nodes.Last(), objective);
                     }),
 
                     // Keycard in side
@@ -174,7 +184,7 @@ public partial record LevelLayout
                     {
                         var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
                         var (end, _) = BuildChallenge_KeycardInSide(nodes.Last());
-                        AddBranch(end, objective.Uplink_NumberOfTerminals, "uplink_terminals");
+                        AddUplinkTerminalZones(end, objective);
                     }),
 
                     // Generator cell in zone
@@ -182,7 +192,7 @@ public partial record LevelLayout
                     {
                         var nodes = AddBranch_Forward(start, 1);
                         var (end, _) = BuildChallenge_GeneratorCellInZone(nodes.Last());
-                        AddBranch(end, objective.Uplink_NumberOfTerminals, "uplink_terminals");
+                        AddUplinkTerminalZones(end, objective);
                     }),
                 });
                 break;
@@ -200,7 +210,7 @@ public partial record LevelLayout
                     {
                         var nodes = AddBranch_Forward(start, 2);
                         var (end, _) = BuildChallenge_GeneratorCellInSide(nodes.Last());
-                        AddBranch(end, objective.Uplink_NumberOfTerminals, "uplink_terminals");
+                        AddUplinkTerminalZones(end, objective);
                     }),
 
                     // Locked terminal door with keycard in side
@@ -208,7 +218,7 @@ public partial record LevelLayout
                     {
                         var (mid, _) = BuildChallenge_KeycardInSide(start);
                         var (end, _) = BuildChallenge_LockedTerminalDoor(mid, 1);
-                        AddBranch(end, objective.Uplink_NumberOfTerminals, "uplink_terminals");
+                        AddUplinkTerminalZones(end, objective);
                     }),
 
                     // Double puzzle - keycard then generator
@@ -217,7 +227,7 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, 1);
                         var (mid, _) = BuildChallenge_KeycardInSide(nodes.Last());
                         var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
-                        AddBranch(end, objective.Uplink_NumberOfTerminals, "uplink_terminals");
+                        AddUplinkTerminalZones(end, objective);
                     }),
 
                     // Uplink terminal in first zone (only available for single terminal)
@@ -225,7 +235,7 @@ public partial record LevelLayout
                     (firstZoneWeight, () =>
                     {
                         // Place terminal in start zone
-                        AddBranch(start, 1, "uplink_terminals");
+                        AddUplinkTerminalZones(start, objective);
 
                         // Add some challenge zones after for resource gathering
                         var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
@@ -289,7 +299,7 @@ public partial record LevelLayout
                 var last = nodes.Last();
 
                 // Add terminal zones at the end
-                AddBranch(last, objective.Uplink_NumberOfTerminals, "uplink_terminals");
+                AddUplinkTerminalZones(last, objective);
                 break;
             }
         }

@@ -88,16 +88,12 @@ public partial record WardenObjective
 
         WavesOnActivate.Add(wave);
 
-        // TODO: Generate proper zones, one for each uplink terminal
-        var zones = level.Planner.GetZones(director.Bulkhead, "uplink_terminals")
-                                 .TakeLast(Uplink_NumberOfTerminals);
-
-        foreach (var zone in zones)
+        foreach (var node in PlacementNodes)
             dataLayer.ObjectiveData.ZonePlacementDatas.Add(new List<ZonePlacementData>
             {
                 new()
                 {
-                    LocalIndex = zone.ZoneNumber,
+                    LocalIndex = node.ZoneNumber,
                     Weights = ZonePlacementWeights.NotAtStart
                 }
             });
