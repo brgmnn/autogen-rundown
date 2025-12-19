@@ -38,6 +38,8 @@ var (node, zone) = AddZone(sourceNode, new ZoneNode {
 
 ### AddZone
 
+**Zones Added:** +1
+
 Adds a single zone connected to the source zone.
 
 ```csharp
@@ -63,6 +65,8 @@ var (node, zone) = AddZone(sourceNode, new ZoneNode {
 
 ### AddZone_Forward / AddZone_Left / AddZone_Right / AddZone_Backward
 
+**Zones Added:** +1
+
 Add a zone that expands in a specific direction relative to the bulkhead orientation.
 
 ```csharp
@@ -85,6 +89,8 @@ var (node, zone) = AddZone_Backward(sourceNode);
 
 ### AddZone_Side
 
+**Zones Added:** +1
+
 Randomly picks left or right expansion (50/50).
 
 ```csharp
@@ -97,6 +103,8 @@ var (node, zone) = AddZone_Side(sourceNode);
 ---
 
 ### AddBranch
+
+**Zones Added:** +zoneCount (0 if count is 0)
 
 Creates a chain of connected zones from a base node.
 
@@ -132,6 +140,8 @@ var nodes = AddBranch(baseNode, 0, "branch");
 
 ### AddBranch_Forward / AddBranch_Left / AddBranch_Right / AddBranch_Backward
 
+**Zones Added:** +zoneCount
+
 Same as AddBranch but automatically sets expansion direction for all zones.
 
 ```csharp
@@ -159,6 +169,8 @@ var nodes = AddBranch_Backward(baseNode, 1, "backtrack");
 
 ### AddBranch_Side
 
+**Zones Added:** +zoneCount
+
 Randomly picks left or right for the entire branch (50/50).
 
 ```csharp
@@ -175,6 +187,8 @@ var generatorNodes = AddBranch_Side(hub, 1, "generator");
 ---
 
 ### CreateElevatorZone
+
+**Zones Added:** +1 (Zone 0)
 
 Creates the very first zone in the level (Zone 0). Only call once per level.
 
@@ -551,6 +565,8 @@ AddResourceZone(start);
 
 ### BuildChallenge_Small
 
+**Zones Added:** +1 to +2 (random selection)
+
 Randomly picks a small challenge (good for variety).
 
 ```csharp
@@ -570,6 +586,8 @@ var (end, endZone) = BuildChallenge_Small(start);
 
 ### BuildChallenge_KeycardInZone
 
+**Zones Added:** +1
+
 Simple keycard puzzle - keycard in start zone, door locked.
 
 ```csharp
@@ -584,6 +602,8 @@ start (has keycard) -> end (keycard locked)
 ---
 
 ### BuildChallenge_KeycardInSide
+
+**Zones Added:** 1 + sideKeycardZones (default: +2)
 
 Keycard in a side branch, door locked.
 
@@ -607,6 +627,8 @@ start (hub) -> end (keycard locked)
 
 ### BuildChallenge_GeneratorCellInZone
 
+**Zones Added:** +1
+
 Generator puzzle - cell in start zone, door powered.
 
 ```csharp
@@ -621,6 +643,8 @@ start (has cell) -> end (generator locked)
 ---
 
 ### BuildChallenge_GeneratorCellInSide
+
+**Zones Added:** 1 + sideCellZones (default: +2)
 
 Generator cell in side branch, door powered.
 
@@ -644,6 +668,8 @@ start (hub) -> end (generator locked)
 
 ### BuildChallenge_LockedTerminalDoor
 
+**Zones Added:** 1 + sideZones (default: +1)
+
 Terminal unlock puzzle.
 
 ```csharp
@@ -663,6 +689,8 @@ start (hub) -> end (terminal locked)
 ---
 
 ### BuildChallenge_LockedTerminalPasswordInSide
+
+**Zones Added:** +2 (end + password zone)
 
 Terminal unlock with password protection. Password in side zone.
 
@@ -689,6 +717,8 @@ start (hub, has password-locked terminal) -> end (terminal locked)
 
 ### BuildChallenge_ApexAlarm
 
+**Zones Added:** +2 (end + side spawn room)
+
 Apex alarm challenge wrapper.
 
 ```csharp
@@ -707,6 +737,8 @@ var (end, endZone) = BuildChallenge_ApexAlarm(
 
 ### BuildChallenge_BossFight
 
+**Zones Added:** +1 (end zone after boss)
+
 Boss fight challenge wrapper.
 
 ```csharp
@@ -718,6 +750,8 @@ var (end, endZone) = BuildChallenge_BossFight(start);
 ---
 
 ### BuildChallenge_ErrorWithOff_KeycardInSide
+
+**Zones Added:** errorZones + 1 + sideKeycardZones + terminalTurnoffZones
 
 Complex challenge: Error alarm + keycard puzzle + turn-off terminal.
 
@@ -745,6 +779,8 @@ start -> firstError (error alarm) -> error[1] -> penultimate (hub) -> end (keyca
 ---
 
 ### BuildChallenge_ErrorWithOff_GeneratorCellCarry
+
+**Zones Added:** errorZones + 1 + terminalTurnoffZones
 
 Complex challenge: Error alarm + generator puzzle (must carry cell through error!).
 

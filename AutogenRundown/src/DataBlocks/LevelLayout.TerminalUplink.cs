@@ -234,12 +234,7 @@ public partial record LevelLayout
                     // Terminal is in start zone, player must defend while doing uplink
                     (firstZoneWeight, () =>
                     {
-                        // Place terminal in start zone
-                        AddUplinkTerminalZones(start, objective);
-
-                        // Add some challenge zones after for resource gathering
-                        var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
-                        var (end, _) = BuildChallenge_KeycardInSide(nodes.Last());
+                        objective.PlacementNodes.Add(start);
                     }),
                 });
                 break;
