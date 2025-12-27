@@ -48,7 +48,7 @@ public class BuildDirector
     /// <summary>
     /// Pool of points to draw from for spawning enemies
     /// </summary>
-    public List<int> EnemyPointPool { get; set; } = new List<int>();
+    public List<int> EnemyPointPool { get; set; } = new();
     #endregion
 
     /// <summary>

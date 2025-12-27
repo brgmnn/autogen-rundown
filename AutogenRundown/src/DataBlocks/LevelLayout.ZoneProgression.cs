@@ -776,7 +776,10 @@ public partial record LevelLayout
         {
             level.SecurityDoors.Doors.Add(customDoor);
 
-            Plugin.Logger.LogDebug($"Custom Error Alarm: director bulkhead = {director.Bulkhead}, lockedNode = {lockedNode}");
+            Plugin.Logger.LogDebug($"Custom Error Alarm: director bulkhead = {director.Bulkhead}, " +
+                                   $"lockedNode = {lockedNode},\n" +
+                                   $"Wave settings = {settings},\n" +
+                                   $"Wave population = {population}");
 
             return;
         }
@@ -785,7 +788,11 @@ public partial record LevelLayout
         var terminalZone = planner.GetZone(terminalNode)!;
         var terminalPlacement = new TerminalPlacement { PlacementWeights = ZonePlacementWeights.NotAtStart };
 
-        Plugin.Logger.LogDebug($"Custom Error Alarm: lockedNode = {lockedNode}, terminalNode = {terminalNode}");
+        Plugin.Logger.LogDebug($"Custom Error Alarm: director bulkhead = {director.Bulkhead},\n" +
+                               $"lockedNode = {lockedNode},\n" +
+                               $"terminalNode = {terminalNode},\n" +
+                               $"Wave settings = {settings},\n" +
+                               $"Wave population = {population}");
 
         if (terminalZone.TerminalPlacements.Any())
             terminalPlacement = terminalZone.TerminalPlacements.First();

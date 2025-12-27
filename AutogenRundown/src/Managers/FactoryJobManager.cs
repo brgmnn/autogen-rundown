@@ -71,12 +71,7 @@ public static class FactoryJobManager
     private static void LevelCleanup()
     {
         // --- Enemies ---
-        // Clear enemy spawn manager cache (uses reflection since m_groupRandomizers is private static)
-        // var groupRandomizersField = typeof(EnemySpawnManager).GetField(
-        //     "m_groupRandomizers",
-        //     System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-        // if (groupRandomizersField?.GetValue(null) is System.Collections.IDictionary dict)
-        //     dict.Clear();
+        // Clear enemy spawn manager cache
         EnemySpawnManager.m_groupRandomizers.Clear();
 
         // Clear Mastermind's factory group spawn data to prevent duplicate enemy spawns.
