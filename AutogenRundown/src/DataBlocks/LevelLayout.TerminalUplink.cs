@@ -743,8 +743,7 @@ public partial record LevelLayout
                 {
                     1 => Generator.Between(2, 4),
                     2 => Generator.Between(2, 3),
-                    3 => Generator.Between(1, 2),
-                    4 => Generator.Between(1, 2),
+                    3 or 4 => Generator.Between(1, 2),
                     _ => Generator.Between(2, 4)
                 };
 
