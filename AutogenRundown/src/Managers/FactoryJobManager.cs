@@ -79,6 +79,11 @@ public static class FactoryJobManager
         //     dict.Clear();
         EnemySpawnManager.m_groupRandomizers.Clear();
 
+        // Clear Mastermind's factory group spawn data to prevent duplicate enemy spawns.
+        // LG_PopulateArea adds spawn data to m_factoryGroupDatas during build, which must be
+        // cleared before rebuild or enemies will spawn twice.
+        Mastermind.Current.OnLevelCleanup();
+
         // --- Level ---
         LG_BuildNodeCluster.LevelCleanup();
         LG_FunctionMarkerBuilder.LevelCleanup();
