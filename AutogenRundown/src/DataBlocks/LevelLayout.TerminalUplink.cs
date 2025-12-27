@@ -40,7 +40,8 @@ public partial record LevelLayout
         switch (level.Tier, director.Bulkhead)
         {
             #region A-tier
-            // A-Main: 3-4+N zones (straight), 3-4+N zones (keycard), 3+N zones (generator)
+            // A-Main: 2-3+N zones (straight), 3-4+N zones (keycard), 3+N zones (generator)
+            // 3 layouts
             case ("A", Bulkhead.Main):
             {
                 Generator.SelectRun(new List<(double, Action)>
@@ -79,6 +80,7 @@ public partial record LevelLayout
             }
 
             // A-Extreme: 2+N zones (simple), 1+N zones (keycard)
+            // 2 layouts
             case ("A", Bulkhead.Extreme):
             {
                 Generator.SelectRun(new List<(double, Action)>
@@ -106,6 +108,7 @@ public partial record LevelLayout
             }
 
             // A-Overload: 2+N zones (generator), 2+N zones (locked terminal)
+            // 2 layouts
             case ("A", Bulkhead.Overload):
             {
                 Generator.SelectRun(new List<(double, Action)>
@@ -134,6 +137,7 @@ public partial record LevelLayout
 
             #region B-tier
             // B-Main: 3-4+N zones (straight), 4-5+N zones (keycard), 4+N zones (generator), 4+N zones (locked)
+            // 4 layouts
             case ("B", Bulkhead.Main):
             {
                 Generator.SelectRun(new List<(double, Action)>
@@ -173,6 +177,7 @@ public partial record LevelLayout
             }
 
             // B-Extreme: 2-3+N zones (forward), 3-4+N zones (keycard), 2+N zones (generator)
+            // 3 layouts
             case ("B", Bulkhead.Extreme):
             {
                 Generator.SelectRun(new List<(double, Action)>
@@ -203,7 +208,8 @@ public partial record LevelLayout
                 break;
             }
 
-            // B-Overload: 4+N zones (generator), 4+N zones (locked+keycard), 4+N zones (keycard+generator), 0 zones (first zone, N=1)
+            // B-Overload: 4+N zones (generator), 4+N zones (locked+keycard), 4+N zones (keycard+generator), 0+N zones (first zone, N=1)
+            // 4 layouts (3 always, 1 conditional)
             case ("B", Bulkhead.Overload):
             {
                 var options = new List<(double, Action)>
@@ -250,6 +256,7 @@ public partial record LevelLayout
             #region C-tier
             // C-Main: 6-7+N zones (double keycard), 6-7+N zones (keycard+generator), 6+N zones (generator+terminal),
             //         5-6+N zones (long+keycard), 1-2+N zones (hub, N>=2)
+            // 5 layouts (4 always, 1 conditional)
             case ("C", Bulkhead.Main):
             {
                 var options = new List<(double, Action)>
@@ -312,6 +319,7 @@ public partial record LevelLayout
             }
 
             // C-Extreme: 3-4+N zones (forward+keycard), 3+N zones (forward+generator), 4+N zones (keycard+generator), 2-3+N zones (long path)
+            // 4 layouts
             case ("C", Bulkhead.Extreme):
             {
                 Generator.SelectRun(new List<(double, Action)>
@@ -351,7 +359,8 @@ public partial record LevelLayout
                 break;
             }
 
-            // C-Overload: 4+N zones (error+keycard), 6+N zones (generator+terminal), 4+N zones (double generator), 3-4 zones (first zone, N=1)
+            // C-Overload: 4+N zones (error+keycard), 6+N zones (generator+terminal), 4+N zones (double generator), 3-4+N zones (first zone, N=1)
+            // 4 layouts (3 always, 1 conditional)
             case ("C", Bulkhead.Overload):
             {
                 var options = new List<(double, Action)>
@@ -405,6 +414,7 @@ public partial record LevelLayout
             #region D-tier
             // D-Main: 7-9+N zones (error+keycard), 5-7+N zones (error+generator), 5-6+N zones (boss+keycard),
             //         8+N zones (triple puzzle), 4-5+N zones (long+boss)
+            // 5 layouts
             case ("D", Bulkhead.Main):
             {
                 Generator.SelectRun(new List<(double, Action)>
@@ -463,6 +473,7 @@ public partial record LevelLayout
             }
 
             // D-Extreme: 3-4+N zones (forward+boss), 3-4+N zones (keycard+boss), 3-4+N zones (generator+apex), 4-5+N zones (long+boss)
+            // 4 layouts
             case ("D", Bulkhead.Extreme):
             {
                 Generator.SelectRun(new List<(double, Action)>
@@ -508,6 +519,7 @@ public partial record LevelLayout
             }
 
             // D-Overload: 3-4+N zones (forward+apex), 3-4+N zones (generator+apex), 3+N zones (boss+keycard), 5+N zones (error+keycard, N=1)
+            // 4 layouts (3 always, 1 conditional)
             case ("D", Bulkhead.Overload):
             {
                 var options = new List<(double, Action)>
@@ -566,6 +578,7 @@ public partial record LevelLayout
             #region E-tier
             // E-Main: 2+N zones (apex+keycard), 6-7+N zones (error+boss), 4-5+N zones (boss+forward+apex),
             //         6+N zones (error+generator), 2-3+N zones (hub, N>=3)
+            // 5 layouts (4 always, 1 conditional)
             case ("E", Bulkhead.Main):
             {
                 var options = new List<(double, Action)>
@@ -643,6 +656,7 @@ public partial record LevelLayout
             }
 
             // E-Extreme: 2+N zones (apex+boss), 3-4+N zones (boss+forward+apex), 3-4+N zones (double boss), 3+N zones (gen+apex+keycard, N=1)
+            // 4 layouts (3 always, 1 conditional)
             case ("E", Bulkhead.Extreme):
             {
                 var options = new List<(double, Action)>
@@ -698,6 +712,7 @@ public partial record LevelLayout
             }
 
             // E-Overload: 1+N zones (brutal apex), 2+N zones (boss+apex), 3-4+N zones (generator+apex), 2+N zones (apex+boss, N=1)
+            // 4 layouts (3 always, 1 conditional)
             case ("E", Bulkhead.Overload):
             {
                 var options = new List<(double, Action)>
@@ -754,6 +769,7 @@ public partial record LevelLayout
             #endregion
 
             // Default: 2-4+N zones (N=1), 2-3+N zones (N=2), 1-2+N zones (N=3,4)
+            // Fallback for unhandled tier/bulkhead combinations
             default:
             {
                 // Fallback layout - simple branch with terminal zones
