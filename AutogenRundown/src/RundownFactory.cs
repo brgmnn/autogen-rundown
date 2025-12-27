@@ -480,7 +480,7 @@ public static class RundownFactory
                     new() { 1, 1, 1, 1, 2, 1 },
                     new() { 1, 2, 1, 3, 2, 2, 5 },
                     new() { 1, 1, 4, 1, 3, 1 },
-                    new() { 1, 2, 4, 1, 1 }
+                    new() { 1, 2, 4, 1, 2 }
                 }
             }
         };
