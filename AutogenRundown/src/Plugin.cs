@@ -75,6 +75,11 @@ public class Plugin : BasePlugin
                                   "is one of the four seasons (Winter, Spring, Summer, Fall)." +
                                   "e.g SPRING_2025"));
 
+        var useUnlocks = Config.Bind(
+            new ConfigDefinition("AutogenRundown.Levels", "UnlockAllLevels"),
+            false,
+            new ConfigDescription("Disables all tier unlock requirements on rundowns, unlocking all levels"));
+
         var regenerateOnStartup = Config.Bind(
             new ConfigDefinition("AutogenRundown", "RegenerateOnStartup"),
             true,
@@ -96,10 +101,11 @@ public class Plugin : BasePlugin
         {
             Peers.Init();
             RundownFactory.Build(
-                seedDailyConfig.Value,
-                seedWeeklyConfig.Value,
-                seedMonthlyConfig.Value,
-                seedSeasonalConfig.Value);
+                dailySeed: seedDailyConfig.Value,
+                weeklySeed: seedWeeklyConfig.Value,
+                monthlySeed: seedMonthlyConfig.Value,
+                seasonalSeed: seedSeasonalConfig.Value,
+                unlockAll: useUnlocks.Value);
         }
 
         PlayFabManager.add_OnTitleDataUpdated((Action)RundownNames.OnTitleDataUpdated);
