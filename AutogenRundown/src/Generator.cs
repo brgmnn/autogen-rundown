@@ -481,8 +481,8 @@ static public class Generator
         var tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
         var pst = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
 
-        var now = $"{pst:yyyy_MM_dd}";
-        var display = $"{pst:MM/dd}";
+        var now = pst.ToString("yyyy_MM_dd", CultureInfo.InvariantCulture);
+        var display = pst.ToString("MM/dd", CultureInfo.InvariantCulture);
 
         // Set the countdown timer only when auto-selecting the seed
         var endLocal = pst.Date.AddDays(1); // midnight at local next day
@@ -658,7 +658,7 @@ static public class Generator
         var date = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
         var manualSeed = false;
 
-        InputMonthlySeed = $"{date:yyyy_MM}";
+        InputMonthlySeed = date.ToString("yyyy_MM", CultureInfo.InvariantCulture);
 
         if (!string.IsNullOrWhiteSpace(seed))
         {
@@ -705,8 +705,8 @@ static public class Generator
 
         Plugin.Logger.LogDebug($"Monthly date seed: {date}");
 
-        var now = $"{date:yyyy_MM}";
-        var display = $"{date:MMMM}";
+        var now = date.ToString("yyyy_MM", CultureInfo.InvariantCulture);
+        var display = date.ToString("MMMM", CultureInfo.InvariantCulture);
 
         Seed = now;
         DisplaySeed = $"<color=orange>{display}</color>";
@@ -724,7 +724,7 @@ static public class Generator
         var date = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzi);
         var manualSeed = false;
 
-        InputWeeklySeed = $"{date:yyyy_MM_dd}";
+        InputWeeklySeed = date.ToString("yyyy_MM_dd", CultureInfo.InvariantCulture);
 
         if (!string.IsNullOrWhiteSpace(seed))
         {
@@ -779,7 +779,7 @@ static public class Generator
             CalendarWeekRule.FirstFullWeek,
             DayOfWeek.Tuesday);
 
-        var now = $"{date:yyyy}_W{week}";
+        var now = $"{date.ToString("yyyy", CultureInfo.InvariantCulture)}_W{week}";
         var display = $"Week {week}";
 
         Seed = now;
