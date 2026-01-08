@@ -3,6 +3,22 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.80.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.80.2) — January 07, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* New config value `UnlockAllLevels`, disables the tier requirements and unlocks all levels
+
+### Changes
+
+* Fix level seeds not using invariant locales
+  * Now users with OS locales other than en-US will still generate the same default seeds for rundowns
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.80.1...v0.80.2
+
+
 ## [v0.80.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.80.1) — December 28, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
@@ -15,7 +31,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.80.0...v0.80.1
 
 
-## [v0.81.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.0) — December 28, 2025
+## [v0.81.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.0) — January 07, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
 
