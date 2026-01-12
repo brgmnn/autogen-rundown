@@ -1199,6 +1199,7 @@ public partial record LevelLayout
                     {
                         startZone.GenGeneratorClusterGeomorph(director.Complex);
                         startZone.Altitude = Altitude.OnlyMid;
+                        objective.GeneratorClusterNode = start;
 
                         var altitudes = new List<Altitude>
                         {
@@ -1242,6 +1243,7 @@ public partial record LevelLayout
                     {
                         startZone.GenGeneratorClusterGeomorph(director.Complex);
                         startZone.Altitude = Altitude.OnlyMid;
+                        objective.GeneratorClusterNode = start;
 
                         var altitudes = new List<Altitude>
                         {
@@ -1285,6 +1287,7 @@ public partial record LevelLayout
                     {
                         startZone.GenGeneratorClusterGeomorph(director.Complex);
                         startZone.Altitude = Altitude.OnlyMid;
+                        objective.GeneratorClusterNode = start;
 
                         var altitudes = new List<Altitude>
                         {
@@ -1334,6 +1337,7 @@ public partial record LevelLayout
                     {
                         startZone.GenGeneratorClusterGeomorph(director.Complex);
                         startZone.Altitude = Altitude.OnlyMid;
+                        objective.GeneratorClusterNode = start;
 
                         var altitudes = new List<Altitude>
                         {
@@ -1383,6 +1387,7 @@ public partial record LevelLayout
                     {
                         startZone.GenGeneratorClusterGeomorph(director.Complex);
                         startZone.Altitude = Altitude.OnlyMid;
+                        objective.GeneratorClusterNode = start;
 
                         var altitudes = new List<Altitude>
                         {
