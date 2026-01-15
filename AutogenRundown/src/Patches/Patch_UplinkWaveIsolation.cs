@@ -13,15 +13,19 @@ namespace AutogenRundown.Patches;
 /// The vanilla game calls WardenObjectiveManager.StopAllWardenObjectiveEnemyWaves()
 /// when an uplink completes, which stops ALL tracked waves. This patch intercepts
 /// that call and only stops waves that were spawned by the uplink itself.
+///
+/// IMPORTANT: Uses NodeID (int) instead of AIG_CourseNode object references because
+/// IL2CPP creates different C# wrapper instances for the same game object, so
+/// reference equality (HashSet.Contains) fails even for the same node.
 /// </summary>
 [HarmonyPatch]
 public static class Patch_UplinkWaveIsolation
 {
-    // Active uplink spawn nodes - set when uplink connects, cleared when uplink completes
-    private static readonly HashSet<AIG_CourseNode> ActiveUplinkSpawnNodes = new();
+    // Active uplink node IDs - set when uplink connects, cleared when uplink completes
+    private static readonly HashSet<int> ActiveUplinkNodeIds = new();
 
-    // Map spawn node -> set of wave event IDs for that uplink
-    private static readonly Dictionary<AIG_CourseNode, HashSet<ushort>> UplinkWaveIds = new();
+    // Map node ID -> set of wave event IDs for that uplink
+    private static readonly Dictionary<int, HashSet<ushort>> UplinkWaveIds = new();
 
     // Context tracking for detecting uplink verify callback
     private static LG_ComputerTerminalCommandInterpreter? CurrentInterpreter = null;
@@ -30,14 +34,14 @@ public static class Patch_UplinkWaveIsolation
     {
         LevelAPI.OnLevelCleanup += () =>
         {
-            ActiveUplinkSpawnNodes.Clear();
+            ActiveUplinkNodeIds.Clear();
             UplinkWaveIds.Clear();
             CurrentInterpreter = null;
         };
     }
 
     /// <summary>
-    /// Postfix patch on StartTerminalUplinkSequence to record the uplink's spawn node.
+    /// Postfix patch on StartTerminalUplinkSequence to record the uplink's spawn node ID.
     /// This marks which terminal is starting an uplink so we can track its wave IDs.
     /// </summary>
     [HarmonyPatch(typeof(LG_ComputerTerminalCommandInterpreter), nameof(LG_ComputerTerminalCommandInterpreter.StartTerminalUplinkSequence))]
@@ -53,12 +57,12 @@ public static class Patch_UplinkWaveIsolation
         if (targetTerminal?.SpawnNode == null)
             return;
 
-        var spawnNode = targetTerminal.SpawnNode;
+        var nodeId = targetTerminal.SpawnNode.NodeID;
 
-        ActiveUplinkSpawnNodes.Add(spawnNode);
-        UplinkWaveIds[spawnNode] = new HashSet<ushort>();
+        ActiveUplinkNodeIds.Add(nodeId);
+        UplinkWaveIds[nodeId] = new HashSet<ushort>();
 
-        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] Tracking uplink spawn node: {spawnNode.m_zone?.LocalIndex}_{spawnNode.m_area?.m_navInfo?.Suffix}");
+        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] Tracking uplink node ID: {nodeId} (zone {targetTerminal.SpawnNode.m_zone?.LocalIndex})");
     }
 
     /// <summary>
@@ -86,10 +90,12 @@ public static class Patch_UplinkWaveIsolation
             if (!__result || refNode == null)
                 return;
 
-            if (ActiveUplinkSpawnNodes.Contains(refNode) && UplinkWaveIds.TryGetValue(refNode, out var waveIds))
+            var nodeId = refNode.NodeID;
+
+            if (ActiveUplinkNodeIds.Contains(nodeId) && UplinkWaveIds.TryGetValue(nodeId, out var waveIds))
             {
                 waveIds.Add(eventID);
-                Plugin.Logger.LogDebug($"[UplinkWaveIsolation] Captured uplink wave ID: {eventID} for node {refNode.m_zone?.LocalIndex}");
+                Plugin.Logger.LogDebug($"[UplinkWaveIsolation] Captured uplink wave ID: {eventID} for node ID {nodeId}");
             }
         }
     }
@@ -130,13 +136,13 @@ public static class Patch_UplinkWaveIsolation
         if (terminal?.SpawnNode == null)
             return true;
 
-        var spawnNode = terminal.SpawnNode;
+        var nodeId = terminal.SpawnNode.NodeID;
 
         // Check if this terminal has uplink waves to stop
-        if (!UplinkWaveIds.TryGetValue(spawnNode, out var waveIds) || waveIds.Count == 0)
+        if (!UplinkWaveIds.TryGetValue(nodeId, out var waveIds) || waveIds.Count == 0)
             return true; // No uplink waves tracked, let original run
 
-        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] Intercepting StopAll - stopping {waveIds.Count} uplink waves only");
+        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] Intercepting StopAll - stopping {waveIds.Count} uplink waves only for node ID {nodeId}");
 
         // Play the alarm stop sound to match vanilla behavior
         WardenObjectiveManager.Current?.m_sound?.Post(AK.EVENTS.APEX_PUZZLE_STOP_ALARM);
@@ -145,8 +151,8 @@ public static class Patch_UplinkWaveIsolation
         if (!SNet.IsMaster)
         {
             // Still clean up tracking even on clients
-            UplinkWaveIds.Remove(spawnNode);
-            ActiveUplinkSpawnNodes.Remove(spawnNode);
+            UplinkWaveIds.Remove(nodeId);
+            ActiveUplinkNodeIds.Remove(nodeId);
             return false;
         }
 
@@ -167,8 +173,8 @@ public static class Patch_UplinkWaveIsolation
         }
 
         // Cleanup our tracking
-        UplinkWaveIds.Remove(spawnNode);
-        ActiveUplinkSpawnNodes.Remove(spawnNode);
+        UplinkWaveIds.Remove(nodeId);
+        ActiveUplinkNodeIds.Remove(nodeId);
 
         return false; // Skip original method
     }
