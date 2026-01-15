@@ -1,3 +1,4 @@
+using System.Reflection;
 using AIGraph;
 using GTFO.API;
 using HarmonyLib;
@@ -66,23 +67,33 @@ public static class Patch_UplinkWaveIsolation
     }
 
     /// <summary>
-    /// Postfix patch on Mastermind.TriggerSurvivalWave to capture wave IDs spawned for uplinks.
-    /// When a wave spawns with a spawn node matching an active uplink, we record its event ID.
-    /// Patches ALL overloads - don't specify parameter types due to IL2CPP signature differences.
+    /// Nested patch class for Mastermind.TriggerSurvivalWave using HarmonyTargetMethods
+    /// to patch ALL overloads. This avoids the "Ambiguous match" error.
     /// </summary>
-    [HarmonyPatch(typeof(Mastermind), nameof(Mastermind.TriggerSurvivalWave))]
-    [HarmonyPostfix]
-    public static void TriggerSurvivalWave_Postfix(AIG_CourseNode refNode, ushort eventID, bool __result)
+    [HarmonyPatch]
+    public static class Patch_TriggerSurvivalWave
     {
-        if (!__result || refNode == null)
-            return;
-
-        var nodeId = refNode.NodeID;
-
-        if (ActiveUplinkNodeIds.Contains(nodeId) && UplinkWaveIds.TryGetValue(nodeId, out var waveIds))
+        [HarmonyTargetMethods]
+        public static IEnumerable<MethodBase> TargetMethods()
         {
-            waveIds.Add(eventID);
-            Plugin.Logger.LogDebug($"[UplinkWaveIsolation] Captured uplink wave ID: {eventID} for node ID {nodeId}");
+            return typeof(Mastermind).GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .Where(m => m.Name == nameof(Mastermind.TriggerSurvivalWave))
+                .Cast<MethodBase>();
+        }
+
+        [HarmonyPostfix]
+        public static void Postfix(AIG_CourseNode refNode, ushort eventID, bool __result)
+        {
+            if (!__result || refNode == null)
+                return;
+
+            var nodeId = refNode.NodeID;
+
+            if (ActiveUplinkNodeIds.Contains(nodeId) && UplinkWaveIds.TryGetValue(nodeId, out var waveIds))
+            {
+                waveIds.Add(eventID);
+                Plugin.Logger.LogDebug($"[UplinkWaveIsolation] Captured uplink wave ID: {eventID} for node ID {nodeId}");
+            }
         }
     }
 
