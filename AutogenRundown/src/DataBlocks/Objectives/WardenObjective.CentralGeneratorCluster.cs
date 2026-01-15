@@ -41,7 +41,7 @@ public partial record WardenObjective
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
-        MainObjective = new Text("Find [COUNT_REQUIRED] Power Cells and bring them to the Central Generator Cluster in [ITEM_ZONE]");
+        MainObjective = new Text(() => $"Find [COUNT_REQUIRED] Power Cells and bring them to the Central Generator Cluster in {Intel.Zone(GeneratorClusterNode, level.Planner)}");
         FindLocationInfo = "Locate the Power Cells and use them to power up the Generator Cluster";
         FindLocationInfoHelp = "Generators Online: [COUNT_CURRENT] / [COUNT_REQUIRED]";
         // TODO: this key_map doesn't work?

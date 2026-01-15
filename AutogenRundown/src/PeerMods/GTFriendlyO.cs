@@ -1,7 +1,7 @@
 ﻿namespace AutogenRundown.PeerMods;
 
 /// <summary>
-/// TODO: Add support for merging text data block items
+///
 /// </summary>
 public class GTFriendlyO : SupportedMod
 {

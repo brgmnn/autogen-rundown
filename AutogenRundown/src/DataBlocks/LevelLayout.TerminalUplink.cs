@@ -778,8 +778,7 @@ public partial record LevelLayout
                 {
                     1 => Generator.Between(2, 4),  // 3-5 total zones
                     2 => Generator.Between(2, 3),  // 4-5 total zones
-                    3 => Generator.Between(1, 2),  // 4-5 total zones
-                    4 => Generator.Between(1, 2),  // 5-6 total zones
+                    3 or 4 => Generator.Between(1, 2), // 5-6 total zones
                     _ => Generator.Between(2, 4)
                 };
 

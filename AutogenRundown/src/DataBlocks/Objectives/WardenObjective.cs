@@ -1163,6 +1163,9 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     #endregion
 
     #region Type=9: Central generator cluster
+    [JsonIgnore]
+    public ZoneNode GeneratorClusterNode { get; set; }
+
     /// <summary>
     /// How many cells to distribute
     ///
