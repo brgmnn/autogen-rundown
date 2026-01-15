@@ -27,7 +27,7 @@ namespace AutogenRundown;
 [BepInDependency("dev.gtfomodding.gtfo-api")]
 public class Plugin : BasePlugin
 {
-    public const string Version = "0.80.0";
+    public const string Version = "0.80.3";
 
     public const string Name = "the_tavern-AutogenRundown";
 
@@ -75,6 +75,11 @@ public class Plugin : BasePlugin
                                   "is one of the four seasons (Winter, Spring, Summer, Fall)." +
                                   "e.g SPRING_2025"));
 
+        var useUnlocks = Config.Bind(
+            new ConfigDefinition("AutogenRundown.Levels", "UnlockAllLevels"),
+            false,
+            new ConfigDescription("Disables all tier unlock requirements on rundowns, unlocking all levels"));
+
         var regenerateOnStartup = Config.Bind(
             new ConfigDefinition("AutogenRundown", "RegenerateOnStartup"),
             true,
@@ -88,15 +93,6 @@ public class Plugin : BasePlugin
 
         Config_UsePlayerColoredGlowsticks = usePlayerColorGlowsticks.Value;
 
-        // // Reset any broken save configs from 0.73.0
-        // // TODO: remove probably after a year? 2026/08/16
-        // if (seedDailyConfig.Value == "Todays date, YYYY_MM_DD")
-        //     seedDailyConfig.Value = "";
-        // if (seedWeeklyConfig.Value == "Todays date, YYYY_MM_DD")
-        //     seedWeeklyConfig.Value = "";
-        // if (seedMonthlyConfig.Value == "Todays month, YYYY_MM")
-        //     seedMonthlyConfig.Value = "";
-
         Config.Save();
 
         #endregion
@@ -105,10 +101,11 @@ public class Plugin : BasePlugin
         {
             Peers.Init();
             RundownFactory.Build(
-                seedDailyConfig.Value,
-                seedWeeklyConfig.Value,
-                seedMonthlyConfig.Value,
-                seedSeasonalConfig.Value);
+                dailySeed: seedDailyConfig.Value,
+                weeklySeed: seedWeeklyConfig.Value,
+                monthlySeed: seedMonthlyConfig.Value,
+                seasonalSeed: seedSeasonalConfig.Value,
+                unlockAll: useUnlocks.Value);
         }
 
         PlayFabManager.add_OnTitleDataUpdated((Action)RundownNames.OnTitleDataUpdated);

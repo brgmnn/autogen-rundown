@@ -43,6 +43,8 @@ TODO:
   * Make E-tier shorter but harder. E4 Seasonal extreme has too many extra zones
   * Check [DEV::EXPEDITION SURVIVED]
     * It seems to stack with successive clears.
+  * Shorter (or longer?) warden protocol startup times?
+    * Maybe even a bait one?
 
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly

@@ -449,7 +449,7 @@ public static class RundownFactory
     /// </summary>
     /// <param name="rundown"></param>
     /// <returns></returns>
-    public static Rundown BuildSeasonalRundown(Rundown newRundown)
+    public static Rundown BuildSeasonalRundown(Rundown newRundown, bool withUnlocks)
     {
         var rundown = Rundown.Build(newRundown);
         var levelNames = Words.NewLevelNamesPack();
@@ -480,7 +480,7 @@ public static class RundownFactory
                     new() { 1, 1, 1, 1, 2, 1 },
                     new() { 1, 2, 1, 3, 2, 2, 5 },
                     new() { 1, 1, 4, 1, 3, 1 },
-                    new() { 1, 2, 4, 1, 1 }
+                    new() { 1, 2, 4, 1, 2 }
                 }
             }
         };
@@ -700,16 +700,16 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
-        // Add progression requirements if unlocks are needed
-        // Only add this for the non-debug build
-        #if !DEBUG
-        rundown.UseTierUnlockRequirements = true;
+        if (withUnlocks)
+        {
+            // Add progression requirements if unlocks are needed
+            rundown.UseTierUnlockRequirements = true;
 
-        rundown.ReqToReachTierB.MainSectors = Math.Max(1, rundown.TierA.Count - 3);
-        rundown.ReqToReachTierC.MainSectors = Math.Max(0, rundown.ReqToReachTierB.MainSectors + rundown.TierB.Count - 3);
-        rundown.ReqToReachTierD.MainSectors = Math.Max(0, rundown.ReqToReachTierC.MainSectors + rundown.TierC.Count - 3);
-        rundown.ReqToReachTierE.MainSectors = Math.Max(0, rundown.ReqToReachTierD.MainSectors + rundown.TierD.Count - 3);
-        #endif
+            rundown.ReqToReachTierB.MainSectors = Math.Max(1, rundown.TierA.Count - 3);
+            rundown.ReqToReachTierC.MainSectors = Math.Max(0, rundown.ReqToReachTierB.MainSectors + rundown.TierB.Count - 3);
+            rundown.ReqToReachTierD.MainSectors = Math.Max(0, rundown.ReqToReachTierC.MainSectors + rundown.TierC.Count - 3);
+            rundown.ReqToReachTierE.MainSectors = Math.Max(0, rundown.ReqToReachTierD.MainSectors + rundown.TierD.Count - 3);
+        }
 
         rundown.VisualsETier = Color.MenuVisuals_SeasonalE;
 
@@ -724,7 +724,7 @@ public static class RundownFactory
     /// </summary>
     /// <param name="rundown"></param>
     /// <returns></returns>
-    public static Rundown BuildMonthlyRundown(Rundown newRundown)
+    public static Rundown BuildMonthlyRundown(Rundown newRundown, bool withUnlocks)
     {
         var rundown = Rundown.Build(newRundown);
         var levelNames = Words.NewLevelNamesPack();
@@ -793,9 +793,9 @@ public static class RundownFactory
                 {
                     new() { 1, 2, 1 },
                     new() { 1, 1, 2, 1 },
-                    new() { 1, 1, 3, 1 },
-                    new() { 1, 1 },
-                    new() { 2, 1, 1 }
+                    new() { 2, 1, 3, 1 },
+                    new() { 2, 1 },
+                    new() { 5, 1, 1 }
                 }
             }
         };
@@ -1003,16 +1003,16 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
-        // Add progression requirements if unlocks are needed
-        // Only add this for the non-debug build
-        #if !DEBUG
-        rundown.UseTierUnlockRequirements = true;
+        if (withUnlocks)
+        {
+            // Add progression requirements if unlocks are needed
+            rundown.UseTierUnlockRequirements = true;
 
-        rundown.ReqToReachTierB.MainSectors = Math.Max(1, rundown.TierA.Count - 1);
-        rundown.ReqToReachTierC.MainSectors = Math.Max(0, rundown.ReqToReachTierB.MainSectors + rundown.TierB.Count - 1);
-        rundown.ReqToReachTierD.MainSectors = Math.Max(0, rundown.ReqToReachTierC.MainSectors + rundown.TierC.Count - 1);
-        rundown.ReqToReachTierE.MainSectors = Math.Max(0, rundown.ReqToReachTierD.MainSectors + rundown.TierD.Count - 1);
-        #endif
+            rundown.ReqToReachTierB.MainSectors = Math.Max(1, rundown.TierA.Count - 3);
+            rundown.ReqToReachTierC.MainSectors = Math.Max(0, rundown.ReqToReachTierB.MainSectors + rundown.TierB.Count - 3);
+            rundown.ReqToReachTierD.MainSectors = Math.Max(0, rundown.ReqToReachTierC.MainSectors + rundown.TierC.Count - 3);
+            rundown.ReqToReachTierE.MainSectors = Math.Max(0, rundown.ReqToReachTierD.MainSectors + rundown.TierD.Count - 3);
+        }
 
         rundown.VisualsETier = Color.MenuVisuals_MonthlyE;
 
@@ -1024,7 +1024,7 @@ public static class RundownFactory
     /// <summary>
     /// Entrypoint to build a new rundown
     /// </summary>
-    public static void Build(string dailySeed, string weeklySeed, string monthlySeed, string seasonalSeed)
+    public static void Build(string dailySeed, string weeklySeed, string monthlySeed, string seasonalSeed, bool unlockAll)
     {
         CleanFolders();
 
@@ -1048,11 +1048,12 @@ public static class RundownFactory
 
             var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
             var seasonal = BuildSeasonalRundown(new Rundown
-            {
-                PersistentId = Rundown.R_Seasonal,
-                Title = $"{Generator.SeasonalSeason.ToUpper()} '{Generator.SeasonalYear % 100}",
-                StoryTitle = $"SEASON {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}"
-            });
+                {
+                    PersistentId = Rundown.R_Seasonal,
+                    Title = $"{Generator.SeasonalSeason.ToUpper()} '{Generator.SeasonalYear % 100}",
+                    StoryTitle = $"SEASON {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}"
+                },
+                !unlockAll);
 
             Bins.Rundowns.AddBlock(seasonal);
         }
@@ -1078,11 +1079,12 @@ public static class RundownFactory
 
             var name = Words.RundownNameMonthly();
             var monthly = BuildMonthlyRundown(new Rundown
-            {
-                PersistentId = Rundown.R_Monthly,
-                Title = $"{name.ToUpper()}",
-                StoryTitle = $"MONTHLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
-            });
+                {
+                    PersistentId = Rundown.R_Monthly,
+                    Title = $"{name.ToUpper()}",
+                    StoryTitle = $"MONTHLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
+                },
+                !unlockAll);
 
             Bins.Rundowns.AddBlock(monthly);
         }
@@ -1099,11 +1101,6 @@ public static class RundownFactory
 
             var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
 
-            var withUnlocks = false;
-            #if DEBUG
-            withUnlocks = false;
-            #endif
-
             var weekly = BuildRundown(
                 new Rundown
                 {
@@ -1112,7 +1109,7 @@ public static class RundownFactory
                     StoryTitle = $"WEEKLY {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
                 },
                 withFixed: false,
-                withUnlocks: withUnlocks,
+                withUnlocks: !unlockAll,
                 withLogs: true,
                 prefix: weeklyPrefix);
 
