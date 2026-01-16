@@ -104,6 +104,9 @@ public static class Patch_UplinkWaveIsolation
     [HarmonyPrefix]
     public static void FireEndOfQueuCallbacks_Prefix(LG_ComputerTerminalCommandInterpreter __instance)
     {
+        var terminalName = __instance.m_terminal?.name ?? "null";
+        var nodeId = __instance.m_terminal?.SpawnNode?.NodeID ?? -1;
+        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] FireEndOfQueuCallbacks_Prefix - setting CurrentInterpreter (terminal: {terminalName}, nodeId: {nodeId})");
         CurrentInterpreter = __instance;
     }
 
@@ -114,6 +117,7 @@ public static class Patch_UplinkWaveIsolation
     [HarmonyPostfix]
     public static void FireEndOfQueuCallbacks_Postfix()
     {
+        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] FireEndOfQueuCallbacks_Postfix - clearing CurrentInterpreter");
         CurrentInterpreter = null;
     }
 
@@ -125,21 +129,37 @@ public static class Patch_UplinkWaveIsolation
     [HarmonyPrefix]
     public static bool StopAllWardenObjectiveEnemyWaves_Prefix()
     {
+        // === DIAGNOSTIC LOGGING ===
+        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] === StopAllWardenObjectiveEnemyWaves_Prefix called ===");
+        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] CurrentInterpreter: {(CurrentInterpreter != null ? "SET" : "NULL")}");
+        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] ActiveUplinkNodeIds: [{string.Join(", ", ActiveUplinkNodeIds)}]");
+        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] UplinkWaveIds: [{string.Join(", ", UplinkWaveIds.Select(kv => $"{kv.Key}:[{string.Join(",", kv.Value)}]"))}]");
+
         // Only intercept when called from a terminal callback context
         if (CurrentInterpreter == null)
+        {
+            Plugin.Logger.LogDebug($"[UplinkWaveIsolation] EARLY RETURN: CurrentInterpreter is null - letting original run");
             return true; // Let original run
+        }
 
         var terminal = CurrentInterpreter.m_terminal;
         if (terminal?.SpawnNode == null)
+        {
+            Plugin.Logger.LogDebug($"[UplinkWaveIsolation] EARLY RETURN: terminal or SpawnNode is null");
             return true;
+        }
 
         var nodeId = terminal.SpawnNode.NodeID;
+        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] CurrentInterpreter terminal nodeId: {nodeId}");
 
         // Check if this terminal has uplink waves to stop
         if (!UplinkWaveIds.TryGetValue(nodeId, out var waveIds) || waveIds.Count == 0)
+        {
+            Plugin.Logger.LogDebug($"[UplinkWaveIsolation] EARLY RETURN: No tracked waves for nodeId {nodeId}");
             return true; // No uplink waves tracked, let original run
+        }
 
-        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] Intercepting StopAll - stopping {waveIds.Count} uplink waves only for node ID {nodeId}");
+        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] SUCCESS: Intercepting StopAll - stopping {waveIds.Count} uplink waves only for node ID {nodeId}");
 
         // Play the alarm stop sound to match vanilla behavior
         WardenObjectiveManager.Current?.m_sound?.Post(AK.EVENTS.APEX_PUZZLE_STOP_ALARM);
