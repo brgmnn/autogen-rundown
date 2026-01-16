@@ -119,12 +119,16 @@ public partial record WardenObjective
         var (settings, spawnDelay) = (level.Tier, director.Bulkhead) switch
         {
             ("A", _) => (WaveSettings.Baseline_Easy, 4.0),
+
             ("B", Bulkhead.Main) => (WaveSettings.Baseline_Easy, 3.5),
             ("B", _) => (WaveSettings.Baseline_Normal, 3.0),
+
             ("C", Bulkhead.Main) => (WaveSettings.Baseline_Normal, 3.0),
             ("C", _) => (WaveSettings.Baseline_Hard, 3.0),
+
             ("D", Bulkhead.Main) => (WaveSettings.Baseline_Hard, 3.0),
             ("D", _) => (WaveSettings.Baseline_Hard, 2.5),
+
             ("E", _) => (WaveSettings.Baseline_VeryHard, 2.5),
             _ => (WaveSettings.Baseline_Normal, 3.0)
         };
