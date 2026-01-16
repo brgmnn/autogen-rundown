@@ -3,7 +3,6 @@ using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Custom.ZoneSensors;
-using AutogenRundown.Patches.ZoneSensors;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
@@ -1049,14 +1048,16 @@ public class Level
         if (EOS_SecuritySensor.Definitions.Any())
             EOS_SecuritySensor.Save();
 
-        // Register zone sensors with the runtime manager
+        // Save zone sensors to JSON for runtime loading
         if (ZoneSensors.Any())
         {
-            foreach (var definition in ZoneSensors)
+            var levelZoneSensors = new LevelZoneSensors
             {
-                ZoneSensorManager.Current.RegisterDefinition(LevelLayoutData, definition);
-            }
-            Plugin.Logger.LogDebug($"Level={Tier}{Index}: Registered {ZoneSensors.Count} zone sensor definitions");
+                Name = $"{Tier}{Index}_{fsName}",
+                MainLevelLayout = LevelLayoutData,
+                Definitions = ZoneSensors
+            };
+            levelZoneSensors.Save();
         }
     }
 

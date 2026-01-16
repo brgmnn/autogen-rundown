@@ -114,10 +114,10 @@ public class Plugin : BasePlugin
 
         EventManager.Setup();
         PatchManager.Setup();
-        ZoneSensorManager.Setup();
 
         GameDataAPI.OnGameDataInitialized += Patch_CentralGeneratorCluster.Setup;
         GameDataAPI.OnGameDataInitialized += LogArchivistManager.Setup;
+        GameDataAPI.OnGameDataInitialized += ZoneSensorManager.Setup;
 
         RundownTierMarkerArchivist.PluginSetup();
 

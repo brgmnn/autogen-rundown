@@ -1,4 +1,5 @@
 using AIGraph;
+using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Objectives;
 using GameData;
@@ -19,9 +20,9 @@ public sealed class ZoneSensorManager
     public static ZoneSensorManager Current { get; } = new();
 
     /// <summary>
-    /// Definitions indexed by MainLevelLayout ID.
+    /// Definitions indexed by MainLevelLayout ID, loaded from JSON.
     /// </summary>
-    private Dictionary<uint, List<ZoneSensorDefinition>> definitions = new();
+    private static Dictionary<uint, List<ZoneSensorDefinition>> definitions = new();
 
     /// <summary>
     /// Active sensor groups in the current level.
@@ -32,27 +33,6 @@ public sealed class ZoneSensorManager
     {
         LevelAPI.OnBuildDone += BuildSensors;
         LevelAPI.OnLevelCleanup += Clear;
-    }
-
-    /// <summary>
-    /// Registers a definition for a level.
-    /// Called during level generation.
-    /// </summary>
-    public void RegisterDefinition(uint levelLayoutId, ZoneSensorDefinition definition)
-    {
-        if (!definitions.ContainsKey(levelLayoutId))
-            definitions[levelLayoutId] = new List<ZoneSensorDefinition>();
-
-        definitions[levelLayoutId].Add(definition);
-    }
-
-    /// <summary>
-    /// Clears all definitions for a level.
-    /// </summary>
-    public void ClearDefinitions(uint levelLayoutId)
-    {
-        if (definitions.ContainsKey(levelLayoutId))
-            definitions[levelLayoutId].Clear();
     }
 
     /// <summary>
@@ -322,12 +302,28 @@ public sealed class ZoneSensorManager
     }
 
     /// <summary>
-    /// Force initialization (call from Plugin.Load).
+    /// Loads zone sensor definitions from JSON files.
+    /// Called during game data initialization.
     /// </summary>
     public static void Setup()
     {
-        // Access Current to ensure singleton is created
+        // Clear any previous definitions
+        definitions.Clear();
+
+        // Load all zone sensor definitions from JSON
+        var allLevelSensors = LevelZoneSensors.LoadAll();
+
+        foreach (var levelSensors in allLevelSensors)
+        {
+            if (!definitions.ContainsKey(levelSensors.MainLevelLayout))
+                definitions[levelSensors.MainLevelLayout] = new List<ZoneSensorDefinition>();
+
+            definitions[levelSensors.MainLevelLayout].AddRange(levelSensors.Definitions);
+        }
+
+        // Ensure singleton is created to hook up level events
         _ = Current;
-        Plugin.Logger.LogDebug("ZoneSensorManager initialized");
+
+        Plugin.Logger.LogDebug($"ZoneSensorManager: Loaded {allLevelSensors.Count} level definitions");
     }
 }
