@@ -267,55 +267,43 @@ public sealed class ZoneSensorManager
     /// </summary>
     private GameObject CreateSensorVisual(Vector3 position, ZoneSensorGroupDefinition groupDef, int groupIndex)
     {
-        // Create parent object
-        var sensorGO = new GameObject($"ZoneSensor_{groupIndex}");
-        sensorGO.transform.position = position;
+        if (!ZoneSensorAssets.AssetsLoaded)
+        {
+            Plugin.Logger.LogError("ZoneSensor: CircleSensor prefab not loaded!");
+            return new GameObject($"ZoneSensor_{groupIndex}_Error");
+        }
 
-        // Add detection collider component
+        // Instantiate CircleSensor prefab
+        var sensorGO = UnityEngine.Object.Instantiate(ZoneSensorAssets.CircleSensor);
+        sensorGO.name = $"ZoneSensor_{groupIndex}";
+
+        // Position and scale per EOS pattern
+        sensorGO.transform.SetPositionAndRotation(position, Quaternion.identity);
+        float height = 0.6f / 3.7f;
+        sensorGO.transform.localScale = new Vector3(
+            (float)groupDef.Radius,
+            (float)groupDef.Radius,
+            (float)groupDef.Radius);
+        sensorGO.transform.localPosition += Vector3.up * height;
+
+        // Set color via material (child 0 -> child 1 -> renderer)
+        var renderer = sensorGO.transform.GetChild(0).GetChild(1)
+            .gameObject.GetComponentInChildren<Renderer>();
+        if (renderer != null)
+        {
+            renderer.material.SetColor("_ColorA", new Color(
+                (float)groupDef.Color.Red,
+                (float)groupDef.Color.Green,
+                (float)groupDef.Color.Blue,
+                (float)groupDef.Color.Alpha));
+        }
+
+        // Add detection collider
         var collider = sensorGO.AddComponent<ZoneSensorCollider>();
         collider.GroupIndex = groupIndex;
         collider.Radius = (float)groupDef.Radius;
 
-        // Create visual ring (cylinder)
-        var ringGO = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        ringGO.name = "SensorRing";
-        ringGO.transform.SetParent(sensorGO.transform);
-        ringGO.transform.localPosition = Vector3.zero;
-
-        // Scale cylinder to match radius (diameter = radius * 2)
-        float diameter = (float)groupDef.Radius * 2f;
-        ringGO.transform.localScale = new Vector3(diameter, 0.1f, diameter);
-
-        // Remove the default collider from the primitive
-        var primitiveCollider = ringGO.GetComponent<Collider>();
-        if (primitiveCollider != null)
-            UnityEngine.Object.Destroy(primitiveCollider);
-
-        // Apply material with sensor color
-        var renderer = ringGO.GetComponent<MeshRenderer>();
-        if (renderer != null)
-        {
-            // Create emissive material
-            var material = new Material(Shader.Find("Standard"));
-            var color = new UnityEngine.Color(
-                (float)groupDef.Color.Red,
-                (float)groupDef.Color.Green,
-                (float)groupDef.Color.Blue,
-                (float)groupDef.Color.Alpha);
-
-            material.SetColor("_Color", color);
-            material.SetColor("_EmissionColor", color * 2f);
-            material.EnableKeyword("_EMISSION");
-            material.renderQueue = 3000; // Transparent queue
-
-            renderer.material = material;
-        }
-
-        // TODO: Add TextMeshPro for sensor text display
-        // This requires TextMeshPro asset which may need additional setup
-
         Plugin.Logger.LogDebug($"ZoneSensor: Created sensor at {position} with radius {groupDef.Radius}");
-
         return sensorGO;
     }
 

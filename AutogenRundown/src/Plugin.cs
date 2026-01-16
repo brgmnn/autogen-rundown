@@ -123,6 +123,7 @@ public class Plugin : BasePlugin
 
         AssetAPI.OnAssetBundlesLoaded += ExpeditionSuccessPage_ArchivistIcon.OnAssetBundlesLoaded;
         AssetAPI.OnAssetBundlesLoaded += RundownTierMarkerArchivist.OnAssetBundlesLoaded;
+        AssetAPI.OnAssetBundlesLoaded += ZoneSensorAssets.Init;
 
         // Apply patches
         var harmony = new Harmony("the_tavern-AutogenRundown");
