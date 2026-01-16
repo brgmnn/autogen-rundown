@@ -1607,6 +1607,42 @@ public class Level
                     });
 
                 layout.Zones.Add(zone);
+
+                if (z == 1)
+                {
+                    var sensorEvents = new List<WardenObjectiveEvent>();
+
+                    sensorEvents
+                        .AddToggleSecuritySensors(false, 0, 0.1)
+                        .AddSound(Sound.LightsOff)
+                        .AddSpawnWave(GenericWave.SinglePouncer, 2.0);
+
+                    level.ZoneSensors.Add(new ZoneSensorDefinition
+                    {
+                        ZoneNumber = zone.LocalIndex,
+                        Bulkhead = Bulkhead.Main,
+
+                        SensorGroups = new List<ZoneSensorGroupDefinition>
+                        {
+                            new ZoneSensorGroupDefinition
+                            {
+                                Count = 3,
+                                Radius = 2.5,
+                                AreaIndex = -1,
+                                Text = "Super Security Scan",
+                                Color = new Color
+                                {
+                                    Red = 0.93f,
+                                    Green = 0.10f,
+                                    Blue = 0.0,
+                                    Alpha = 0.26f
+                                }
+                            }
+                        },
+
+                        EventsOnTrigger = sensorEvents
+                    });
+                }
             }
 
             // layout.AddSecuritySensors_SinglePouncerShadow((0, 1));
