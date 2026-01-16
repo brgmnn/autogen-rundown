@@ -18,6 +18,10 @@ namespace AutogenRundown.Patches;
 /// IMPORTANT: Uses NodeID (int) instead of AIG_CourseNode object references because
 /// IL2CPP creates different C# wrapper instances for the same game object, so
 /// reference equality (HashSet.Contains) fails even for the same node.
+///
+/// NOTE: We can't patch FireEndOfQueuCallbacks because IL2CPP invokes the delegate
+/// directly without going through the patchable C# method wrapper. Instead, we detect
+/// uplink completion by monitoring puzzle state changes in TerminalUplinkVerify.
 /// </summary>
 [HarmonyPatch]
 public static class Patch_UplinkWaveIsolation
@@ -28,8 +32,11 @@ public static class Patch_UplinkWaveIsolation
     // Map node ID -> set of wave event IDs for that uplink
     private static readonly Dictionary<int, HashSet<ushort>> UplinkWaveIds = new();
 
-    // Context tracking for detecting uplink verify callback
-    private static LG_ComputerTerminalCommandInterpreter? CurrentInterpreter = null;
+    // Flag: Should we intercept the next StopAllWardenObjectiveEnemyWaves call?
+    private static bool InterceptNextStopAll = false;
+
+    // Which node's waves should be stopped when intercepting?
+    private static int? CompletingUplinkNodeId = null;
 
     internal static void Setup()
     {
@@ -37,7 +44,8 @@ public static class Patch_UplinkWaveIsolation
         {
             ActiveUplinkNodeIds.Clear();
             UplinkWaveIds.Clear();
-            CurrentInterpreter = null;
+            InterceptNextStopAll = false;
+            CompletingUplinkNodeId = null;
         };
     }
 
@@ -98,27 +106,45 @@ public static class Patch_UplinkWaveIsolation
     }
 
     /// <summary>
-    /// Prefix patch on FireEndOfQueuCallbacks to set context before callbacks run.
+    /// Prefix patch on TerminalUplinkVerify to capture pre-solve puzzle state.
+    /// We use __state to pass whether the puzzle was already solved BEFORE this method runs.
     /// </summary>
-    [HarmonyPatch(typeof(LG_ComputerTerminalCommandInterpreter), nameof(LG_ComputerTerminalCommandInterpreter.FireEndOfQueuCallbacks))]
+    [HarmonyPatch(typeof(LG_ComputerTerminalCommandInterpreter), nameof(LG_ComputerTerminalCommandInterpreter.TerminalUplinkVerify))]
     [HarmonyPrefix]
-    public static void FireEndOfQueuCallbacks_Prefix(LG_ComputerTerminalCommandInterpreter __instance)
+    public static void TerminalUplinkVerify_Prefix(
+        LG_ComputerTerminalCommandInterpreter __instance,
+        out bool __state)
     {
-        var terminalName = __instance.m_terminal?.name ?? "null";
-        var nodeId = __instance.m_terminal?.SpawnNode?.NodeID ?? -1;
-        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] FireEndOfQueuCallbacks_Prefix - setting CurrentInterpreter (terminal: {terminalName}, nodeId: {nodeId})");
-        CurrentInterpreter = __instance;
+        // Record if puzzle was already solved BEFORE this method runs
+        __state = __instance.m_terminal?.UplinkPuzzle?.Solved ?? true;
     }
 
     /// <summary>
-    /// Postfix patch on FireEndOfQueuCallbacks to clear context after callbacks run.
+    /// Postfix patch on TerminalUplinkVerify to detect when uplink completes.
+    /// If puzzle wasn't solved before but is now, we set the intercept flag.
     /// </summary>
-    [HarmonyPatch(typeof(LG_ComputerTerminalCommandInterpreter), nameof(LG_ComputerTerminalCommandInterpreter.FireEndOfQueuCallbacks))]
+    [HarmonyPatch(typeof(LG_ComputerTerminalCommandInterpreter), nameof(LG_ComputerTerminalCommandInterpreter.TerminalUplinkVerify))]
     [HarmonyPostfix]
-    public static void FireEndOfQueuCallbacks_Postfix()
+    public static void TerminalUplinkVerify_Postfix(
+        LG_ComputerTerminalCommandInterpreter __instance,
+        bool __state)
     {
-        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] FireEndOfQueuCallbacks_Postfix - clearing CurrentInterpreter");
-        CurrentInterpreter = null;
+        // __state = was puzzle solved BEFORE the method ran?
+        var puzzle = __instance.m_terminal?.UplinkPuzzle;
+        if (puzzle == null)
+            return;
+
+        // If puzzle wasn't solved before but IS solved now, uplink just completed
+        if (!__state && puzzle.Solved)
+        {
+            var nodeId = __instance.m_terminal?.SpawnNode?.NodeID;
+            if (nodeId.HasValue && UplinkWaveIds.ContainsKey(nodeId.Value))
+            {
+                InterceptNextStopAll = true;
+                CompletingUplinkNodeId = nodeId.Value;
+                Plugin.Logger.LogDebug($"[UplinkWaveIsolation] Uplink completed! Setting intercept flag for node {nodeId}");
+            }
+        }
     }
 
     /// <summary>
@@ -129,42 +155,30 @@ public static class Patch_UplinkWaveIsolation
     [HarmonyPrefix]
     public static bool StopAllWardenObjectiveEnemyWaves_Prefix()
     {
-        // === DIAGNOSTIC LOGGING ===
-        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] === StopAllWardenObjectiveEnemyWaves_Prefix called ===");
-        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] CurrentInterpreter: {(CurrentInterpreter != null ? "SET" : "NULL")}");
-        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] ActiveUplinkNodeIds: [{string.Join(", ", ActiveUplinkNodeIds)}]");
-        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] UplinkWaveIds: [{string.Join(", ", UplinkWaveIds.Select(kv => $"{kv.Key}:[{string.Join(",", kv.Value)}]"))}]");
-
-        // Only intercept when called from a terminal callback context
-        if (CurrentInterpreter == null)
+        // Check if we should intercept this call
+        if (!InterceptNextStopAll || !CompletingUplinkNodeId.HasValue)
         {
-            Plugin.Logger.LogDebug($"[UplinkWaveIsolation] EARLY RETURN: CurrentInterpreter is null - letting original run");
             return true; // Let original run
         }
 
-        var terminal = CurrentInterpreter.m_terminal;
-        if (terminal?.SpawnNode == null)
-        {
-            Plugin.Logger.LogDebug($"[UplinkWaveIsolation] EARLY RETURN: terminal or SpawnNode is null");
-            return true;
-        }
+        var nodeId = CompletingUplinkNodeId.Value;
 
-        var nodeId = terminal.SpawnNode.NodeID;
-        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] CurrentInterpreter terminal nodeId: {nodeId}");
+        // Clear flags immediately to avoid intercepting unrelated calls
+        InterceptNextStopAll = false;
+        CompletingUplinkNodeId = null;
 
-        // Check if this terminal has uplink waves to stop
         if (!UplinkWaveIds.TryGetValue(nodeId, out var waveIds) || waveIds.Count == 0)
         {
-            Plugin.Logger.LogDebug($"[UplinkWaveIsolation] EARLY RETURN: No tracked waves for nodeId {nodeId}");
-            return true; // No uplink waves tracked, let original run
+            Plugin.Logger.LogDebug($"[UplinkWaveIsolation] Intercept flag set but no tracked waves for nodeId {nodeId}");
+            return true; // No waves to stop, let original run
         }
 
-        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] SUCCESS: Intercepting StopAll - stopping {waveIds.Count} uplink waves only for node ID {nodeId}");
+        Plugin.Logger.LogDebug($"[UplinkWaveIsolation] Intercepting StopAll - stopping {waveIds.Count} uplink waves only for node ID {nodeId}");
 
         // Play the alarm stop sound to match vanilla behavior
         WardenObjectiveManager.Current?.m_sound?.Post(AK.EVENTS.APEX_PUZZLE_STOP_ALARM);
 
-        // Only run on master
+        // Only run wave stopping on master
         if (!SNet.IsMaster)
         {
             // Still clean up tracking even on clients
