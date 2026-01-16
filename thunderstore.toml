@@ -13,6 +13,7 @@ containsNsfwContent = false
 BepInEx-BepInExPack_GTFO = "3.2.1"
 dakkhuza-MTFO = "4.6.2"
 dakkhuza-DakGeos = "0.3.8"
+Dinorush-ItemSpawnFix = "1.2.3"
 TheDoggyDoge-DogsTilePack = "1.3.0"
 donan3967-donan3967_geo_pack_1 = "1.1.1"
 donan3967-donan3967_geo_pack_2 = "1.3.2"
