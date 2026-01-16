@@ -26,9 +26,6 @@ namespace AutogenRundown.Patches;
 [HarmonyPatch]
 public static class Patch_UplinkWaveIsolation
 {
-    // Active uplink node IDs - set when uplink connects, cleared when uplink completes
-    private static readonly HashSet<int> ActiveUplinkNodeIds = new();
-
     // Map node ID -> set of wave event IDs for that uplink
     private static readonly Dictionary<int, HashSet<ushort>> UplinkWaveIds = new();
 
@@ -42,10 +39,10 @@ public static class Patch_UplinkWaveIsolation
     {
         LevelAPI.OnLevelCleanup += () =>
         {
-            ActiveUplinkNodeIds.Clear();
             UplinkWaveIds.Clear();
             InterceptNextStopAll = false;
             CompletingUplinkNodeId = null;
+            _cachedEnemyWaveEventIDs = null;
         };
     }
 
@@ -67,8 +64,6 @@ public static class Patch_UplinkWaveIsolation
             return;
 
         var nodeId = targetTerminal.SpawnNode.NodeID;
-
-        ActiveUplinkNodeIds.Add(nodeId);
         UplinkWaveIds[nodeId] = new HashSet<ushort>();
 
         Plugin.Logger.LogDebug($"[UplinkWaveIsolation] Tracking uplink node ID: {nodeId} (zone {targetTerminal.SpawnNode.m_zone?.LocalIndex})");
@@ -97,7 +92,7 @@ public static class Patch_UplinkWaveIsolation
 
             var nodeId = refNode.NodeID;
 
-            if (ActiveUplinkNodeIds.Contains(nodeId) && UplinkWaveIds.TryGetValue(nodeId, out var waveIds))
+            if (UplinkWaveIds.TryGetValue(nodeId, out var waveIds))
             {
                 waveIds.Add(eventID);
                 Plugin.Logger.LogDebug($"[UplinkWaveIsolation] Captured uplink wave ID: {eventID} for node ID {nodeId}");
@@ -111,10 +106,7 @@ public static class Patch_UplinkWaveIsolation
     /// </summary>
     [HarmonyPatch(typeof(LG_ComputerTerminalCommandInterpreter), nameof(LG_ComputerTerminalCommandInterpreter.TerminalUplinkVerify))]
     [HarmonyPrefix]
-    public static void TerminalUplinkVerify_Prefix(
-        LG_ComputerTerminalCommandInterpreter __instance,
-        string param1,
-        out string __state)
+    public static void TerminalUplinkVerify_Prefix(string param1, out string __state)
     {
         // Pass the entered code to postfix so we can check if it was correct
         __state = param1;
@@ -138,7 +130,7 @@ public static class Patch_UplinkWaveIsolation
             return;
 
         // Check if the entered code was correct
-        if (puzzle.CurrentRound.CorrectCode.ToUpper() != __state?.ToUpper())
+        if (!string.Equals(puzzle.CurrentRound.CorrectCode, __state, StringComparison.OrdinalIgnoreCase))
             return;
 
         // Check if this is the final round by parsing CurrentProgress ("X/Y")
@@ -195,7 +187,6 @@ public static class Patch_UplinkWaveIsolation
         {
             // Still clean up tracking even on clients
             UplinkWaveIds.Remove(nodeId);
-            ActiveUplinkNodeIds.Remove(nodeId);
             return false;
         }
 
@@ -217,13 +208,12 @@ public static class Patch_UplinkWaveIsolation
 
         // Cleanup our tracking
         UplinkWaveIds.Remove(nodeId);
-        ActiveUplinkNodeIds.Remove(nodeId);
 
         return false; // Skip original method
     }
 
     private static List<ushort>? _cachedEnemyWaveEventIDs = null;
-    private static System.Reflection.FieldInfo? _enemyWaveEventIDsField = null;
+    private static FieldInfo? _enemyWaveEventIDsField = null;
 
     private static List<ushort>? GetEnemyWaveEventIDs()
     {
@@ -236,7 +226,7 @@ public static class Patch_UplinkWaveIsolation
 
         // Get field via reflection
         _enemyWaveEventIDsField ??= typeof(WardenObjectiveManager)
-            .GetField("m_enemyWaveEventIDs", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            .GetField("m_enemyWaveEventIDs", BindingFlags.NonPublic | BindingFlags.Instance);
 
         if (_enemyWaveEventIDsField == null)
         {
