@@ -116,7 +116,7 @@ public static class Patch_UplinkWaveIsolation
     /// Postfix patch on TerminalUplinkVerify to detect when uplink completes.
     /// We detect completion by checking if the entered code was correct AND it's the final round.
     /// Note: puzzle.Solved is set inside the callback that runs LATER, so we can't check it here.
-    /// Instead we check the verification conditions directly.
+    /// Instead, we check the verification conditions directly.
     /// </summary>
     [HarmonyPatch(typeof(LG_ComputerTerminalCommandInterpreter), nameof(LG_ComputerTerminalCommandInterpreter.TerminalUplinkVerify))]
     [HarmonyPostfix]
@@ -126,6 +126,7 @@ public static class Patch_UplinkWaveIsolation
     {
         // __state = the code entered by the user
         var puzzle = __instance.m_terminal?.UplinkPuzzle;
+
         if (puzzle == null || !puzzle.Connected || puzzle.Solved)
             return;
 
@@ -143,6 +144,7 @@ public static class Patch_UplinkWaveIsolation
 
         // Final round with correct code - uplink will complete!
         var nodeId = __instance.m_terminal?.SpawnNode?.NodeID;
+
         if (nodeId.HasValue && UplinkWaveIds.ContainsKey(nodeId.Value))
         {
             InterceptNextStopAll = true;
@@ -235,6 +237,7 @@ public static class Patch_UplinkWaveIsolation
         }
 
         _cachedEnemyWaveEventIDs = _enemyWaveEventIDsField.GetValue(WardenObjectiveManager.Current) as List<ushort>;
+
         return _cachedEnemyWaveEventIDs;
     }
 }
