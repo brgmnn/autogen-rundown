@@ -92,24 +92,6 @@ public record GenericWave
     };
     #endregion
 
-    #region Uplink Waves
-    public static readonly GenericWave Uplink_Easy = new()
-    {
-        Settings = WaveSettings.Baseline_Normal,
-        Population = WavePopulation.Baseline,
-        SpawnDelay = 2.0,
-        TriggerAlarm = true,
-    };
-
-    public static readonly GenericWave Uplink_Medium = new()
-    {
-        Settings = WaveSettings.Baseline_Hard,
-        Population = WavePopulation.Baseline,
-        SpawnDelay = 2.0,
-        TriggerAlarm = true
-    };
-    #endregion
-
     #region Chargers
     public static readonly GenericWave GiantChargers_35pts = new()
     {
