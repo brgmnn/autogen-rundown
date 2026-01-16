@@ -4,6 +4,7 @@ using AutogenRundown.DataBlocks.Objectives;
 using GameData;
 using GTFO.API;
 using LevelGeneration;
+using Localization;
 using SNetwork;
 using UnityEngine;
 
@@ -82,14 +83,71 @@ public sealed class ZoneSensorManager
 
         Plugin.Logger.LogDebug($"ZoneSensor: Group {groupIndex} triggered, executing {group.EventsOnTrigger.Count} events");
 
-        // Execute events using the game's warden objective system
-        // Note: This is a simplified approach. For full event support,
-        // you may need to convert WardenObjectiveEvent to WardenObjectiveEventData
+        // Disable the sensor group after trigger
+        group.SetEnabled(false);
+
+        // Execute events
         foreach (var evt in group.EventsOnTrigger)
         {
-            // Log the event for now - full implementation would convert and execute
-            Plugin.Logger.LogDebug($"ZoneSensor: Would execute event type {evt.Type} with delay {evt.Delay}");
+            var eventData = ConvertToEventData(evt);
+            WardenObjectiveManager.CheckAndExecuteEventsOnTrigger(
+                eventData,
+                eWardenObjectiveEventTrigger.None,
+                ignoreTrigger: true
+            );
         }
+    }
+
+    /// <summary>
+    /// Converts autogen's WardenObjectiveEvent to the game's WardenObjectiveEventData.
+    /// </summary>
+    private static WardenObjectiveEventData ConvertToEventData(WardenObjectiveEvent evt)
+    {
+        var eventData = new WardenObjectiveEventData
+        {
+            Type = (eWardenObjectiveEventType)evt.Type,
+            Trigger = eWardenObjectiveEventTrigger.None,
+            Layer = (LG_LayerType)evt.Layer,
+            DimensionIndex = (eDimensionIndex)evt.Dimension,
+            LocalIndex = (eLocalZoneIndex)evt.LocalIndex,
+            Delay = (float)evt.Delay,
+            Duration = (float)evt.Duration,
+            WardenIntel = ToLocalizedText(evt.WardenIntel),
+            SoundID = (uint)evt.SoundId,
+            DialogueID = evt.DialogueId,
+            FogSetting = evt.FogSetting,
+            FogTransitionDuration = (float)evt.FogTransitionDuration,
+            ChainPuzzle = evt.ChainPuzzle,
+            ClearDimension = evt.ClearDimension,
+            UseStaticBioscanPoints = evt.UseStaticBioscanPoints
+        };
+
+        // Convert EnemyWaveData if present
+        if (evt.EnemyWaveData != null && evt.EnemyWaveData.Settings != null)
+        {
+            eventData.EnemyWaveData = new GenericEnemyWaveData
+            {
+                WaveSettings = evt.EnemyWaveData.SurvivalWaveSettings,
+                WavePopulation = evt.EnemyWaveData.SurvivalWavePopulation,
+                SpawnDelay = (float)evt.EnemyWaveData.SpawnDelay,
+                TriggerAlarm = evt.EnemyWaveData.TriggerAlarm,
+                IntelMessage = ToLocalizedText(evt.EnemyWaveData.IntelMessage)
+            };
+        }
+
+        return eventData;
+    }
+
+    /// <summary>
+    /// Converts a string to LocalizedText for the game's event system.
+    /// </summary>
+    private static LocalizedText ToLocalizedText(string text)
+    {
+        return new LocalizedText
+        {
+            Id = 0u,
+            UntranslatedText = text ?? ""
+        };
     }
 
     /// <summary>
