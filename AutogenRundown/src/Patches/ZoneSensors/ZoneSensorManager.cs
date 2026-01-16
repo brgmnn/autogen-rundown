@@ -102,8 +102,8 @@ public sealed class ZoneSensorManager
             UseStaticBioscanPoints = evt.UseStaticBioscanPoints
         };
 
-        // Convert EnemyWaveData if present
-        if (evt.EnemyWaveData != null && evt.EnemyWaveData.Settings != null)
+        // Convert EnemyWaveData if present (check serialized uint, not [JsonIgnore] property)
+        if (evt.EnemyWaveData != null && evt.EnemyWaveData.SurvivalWaveSettings != 0)
         {
             eventData.EnemyWaveData = new GenericEnemyWaveData
             {
@@ -179,19 +179,19 @@ public sealed class ZoneSensorManager
                 _ => eDimensionIndex.Reality
             };
 
-            var layerType = definition.Bulkhead switch
+            var layerType = definition.LayerType switch
             {
-                Bulkhead.Main => LG_LayerType.MainLayer,
-                Bulkhead.Extreme => LG_LayerType.SecondaryLayer,
-                Bulkhead.Overload => LG_LayerType.ThirdLayer,
+                "MainLayer" => LG_LayerType.MainLayer,
+                "SecondaryLayer" => LG_LayerType.SecondaryLayer,
+                "ThirdLayer" => LG_LayerType.ThirdLayer,
                 _ => LG_LayerType.MainLayer
             };
 
-            var localZoneIndex = (eLocalZoneIndex)definition.ZoneNumber;
+            var localZoneIndex = (eLocalZoneIndex)(definition.LocalIndex ?? 0);
 
             if (!Builder.CurrentFloor.TryGetZoneByLocalIndex(dimensionIndex, layerType, localZoneIndex, out var zone))
             {
-                Plugin.Logger.LogWarning($"ZoneSensor: Could not find zone {definition.ZoneNumber} in layer {layerType}");
+                Plugin.Logger.LogWarning($"ZoneSensor: Could not find zone {definition.LocalIndex} in layer {layerType}");
                 continue;
             }
 
