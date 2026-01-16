@@ -2,6 +2,8 @@
 using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
+using AutogenRundown.DataBlocks.Custom.ZoneSensors;
+using AutogenRundown.Patches.ZoneSensors;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
@@ -330,6 +332,15 @@ public class Level
     {
         Type = ExtraObjectiveSetupType.SecuritySensor
     };
+    #endregion
+
+    #region Zone Sensors (Autogen Custom)
+    /// <summary>
+    /// Zone-based security sensors that are placed automatically within zones.
+    /// These are handled by AutogenRundown's ZoneSensorManager at runtime.
+    /// </summary>
+    [JsonIgnore]
+    public List<ZoneSensorDefinition> ZoneSensors { get; private set; } = new();
     #endregion
 
     #region GlobalWaveSettings
@@ -1037,6 +1048,16 @@ public class Level
 
         if (EOS_SecuritySensor.Definitions.Any())
             EOS_SecuritySensor.Save();
+
+        // Register zone sensors with the runtime manager
+        if (ZoneSensors.Any())
+        {
+            foreach (var definition in ZoneSensors)
+            {
+                ZoneSensorManager.Current.RegisterDefinition(LevelLayoutData, definition);
+            }
+            Plugin.Logger.LogDebug($"Level={Tier}{Index}: Registered {ZoneSensors.Count} zone sensor definitions");
+        }
     }
 
     /// <summary>

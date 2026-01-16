@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.Components;
 using AutogenRundown.Managers;
 using AutogenRundown.Patches;
+using AutogenRundown.Patches.ZoneSensors;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
@@ -112,6 +113,7 @@ public class Plugin : BasePlugin
 
         EventManager.Setup();
         PatchManager.Setup();
+        ZoneSensorManager.Setup();
 
         GameDataAPI.OnGameDataInitialized += Patch_CentralGeneratorCluster.Setup;
         GameDataAPI.OnGameDataInitialized += LogArchivistManager.Setup;

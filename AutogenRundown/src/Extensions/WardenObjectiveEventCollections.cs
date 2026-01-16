@@ -476,7 +476,7 @@ public static class WardenObjectiveEventCollections
 
     #region Security Sensors
     /// <summary>
-    /// Adds a security sensor toggle event
+    /// Adds a security sensor toggle event (for EOSExt_SecuritySensor)
     /// </summary>
     /// <param name="events"></param>
     /// <param name="sensorIndex"></param>
@@ -495,6 +495,35 @@ public static class WardenObjectiveEventCollections
                 Type = WardenObjectiveEventType.ToggleSecuritySensor,
                 Enabled = enabled,
                 Count = sensorIndex,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Adds a zone sensor toggle event (for autogen's zone-based sensors).
+    /// This event is handled at runtime by ZoneSensorManager.
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="enabled">Whether to enable or disable the sensor group</param>
+    /// <param name="sensorGroupIndex">Index of the sensor group to toggle</param>
+    /// <param name="delay">Delay before the event fires</param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddToggleZoneSensors(
+        this ICollection<WardenObjectiveEvent> events,
+        bool enabled,
+        int sensorGroupIndex,
+        double delay = 0.0)
+    {
+        // Use the same event type as EOSExt_SecuritySensor for compatibility
+        // The ZoneSensorManager will intercept and handle these events
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ToggleSecuritySensor,
+                Enabled = enabled,
+                Count = sensorGroupIndex,
                 Delay = delay
             });
 
