@@ -1,3 +1,4 @@
+using AmorLib.Networking.StateReplicators;
 using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Objectives;
 using UnityEngine;
@@ -10,13 +11,15 @@ namespace AutogenRundown.Patches.ZoneSensors;
 /// </summary>
 public class ZoneSensorGroup
 {
+    // Base ID for zone sensor replicators (avoid collisions with other mods)
+    private const uint REPLICATOR_BASE_ID = 0x5A534E00; // "ZSN" prefix + group index
+
     public int GroupIndex { get; private set; }
     public bool Enabled { get; private set; } = true;
     public List<GameObject> Sensors { get; } = new();
     public List<WardenObjectiveEvent> EventsOnTrigger { get; set; } = new();
 
-    // TODO: Add FloLib StateReplicator for network sync when available
-    // public StateReplicator<ZoneSensorGroupState> StateReplicator { get; private set; }
+    public StateReplicator<ZoneSensorGroupState>? Replicator { get; private set; }
 
     public void Initialize(int index, List<WardenObjectiveEvent> events)
     {
@@ -24,16 +27,18 @@ public class ZoneSensorGroup
         EventsOnTrigger = events;
         Enabled = true;
 
-        // TODO: Initialize FloLib StateReplicator for multiplayer sync
-        // When FloLib is added as a dependency:
-        //
-        // uint replicatorId = EOSNetworking.AllotReplicatorID();
-        // StateReplicator = StateReplicator<ZoneSensorGroupState>.Create(
-        //     replicatorId,
-        //     new ZoneSensorGroupState { Enabled = true },
-        //     LifeTimeType.Level
-        // );
-        // StateReplicator.OnStateChanged += OnStateChanged;
+        // Create network replicator with unique ID
+        uint replicatorId = REPLICATOR_BASE_ID + (uint)index;
+        Replicator = StateReplicator<ZoneSensorGroupState>.Create(
+            replicatorId,
+            new ZoneSensorGroupState(true),
+            LifeTimeType.Session  // Auto-cleanup on level end
+        );
+
+        if (Replicator != null)
+        {
+            Replicator.OnStateChanged += OnStateChanged;
+        }
     }
 
     public void AddSensor(GameObject sensor)
@@ -43,19 +48,22 @@ public class ZoneSensorGroup
 
     /// <summary>
     /// Sets the enabled state of the sensor group.
-    /// In multiplayer, this would sync to all clients via StateReplicator.
+    /// Syncs to all clients via StateReplicator.
     /// </summary>
     public void SetEnabled(bool enabled)
     {
+        // Update visuals immediately for responsive feel
         UpdateVisualsUnsynced(enabled);
 
-        // TODO: For multiplayer sync with FloLib:
-        // if (SNet.IsMaster)
-        //     StateReplicator?.SetState(new ZoneSensorGroupState { Enabled = enabled });
+        // Sync to clients (only master can broadcast)
+        if (Replicator != null && Replicator.IsValid)
+        {
+            Replicator.SetState(new ZoneSensorGroupState(enabled));
+        }
     }
 
     /// <summary>
-    /// Callback for network state changes (when FloLib is available).
+    /// Callback for network state changes.
     /// </summary>
     private void OnStateChanged(ZoneSensorGroupState oldState, ZoneSensorGroupState newState, bool isRecall)
     {
@@ -81,6 +89,10 @@ public class ZoneSensorGroup
     /// </summary>
     public void Cleanup()
     {
+        // Unload replicator (though Session lifetime auto-cleans)
+        Replicator?.Unload();
+        Replicator = null;
+
         foreach (var sensor in Sensors)
         {
             if (sensor != null)
