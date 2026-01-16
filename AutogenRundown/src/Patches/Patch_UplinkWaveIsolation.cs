@@ -106,44 +106,56 @@ public static class Patch_UplinkWaveIsolation
     }
 
     /// <summary>
-    /// Prefix patch on TerminalUplinkVerify to capture pre-solve puzzle state.
-    /// We use __state to pass whether the puzzle was already solved BEFORE this method runs.
+    /// Prefix patch on TerminalUplinkVerify to capture the entered verification code.
+    /// We pass it to postfix via __state so we can check if it was correct.
     /// </summary>
     [HarmonyPatch(typeof(LG_ComputerTerminalCommandInterpreter), nameof(LG_ComputerTerminalCommandInterpreter.TerminalUplinkVerify))]
     [HarmonyPrefix]
     public static void TerminalUplinkVerify_Prefix(
         LG_ComputerTerminalCommandInterpreter __instance,
-        out bool __state)
+        string param1,
+        out string __state)
     {
-        // Record if puzzle was already solved BEFORE this method runs
-        __state = __instance.m_terminal?.UplinkPuzzle?.Solved ?? true;
+        // Pass the entered code to postfix so we can check if it was correct
+        __state = param1;
     }
 
     /// <summary>
     /// Postfix patch on TerminalUplinkVerify to detect when uplink completes.
-    /// If puzzle wasn't solved before but is now, we set the intercept flag.
+    /// We detect completion by checking if the entered code was correct AND it's the final round.
+    /// Note: puzzle.Solved is set inside the callback that runs LATER, so we can't check it here.
+    /// Instead we check the verification conditions directly.
     /// </summary>
     [HarmonyPatch(typeof(LG_ComputerTerminalCommandInterpreter), nameof(LG_ComputerTerminalCommandInterpreter.TerminalUplinkVerify))]
     [HarmonyPostfix]
     public static void TerminalUplinkVerify_Postfix(
         LG_ComputerTerminalCommandInterpreter __instance,
-        bool __state)
+        string __state)
     {
-        // __state = was puzzle solved BEFORE the method ran?
+        // __state = the code entered by the user
         var puzzle = __instance.m_terminal?.UplinkPuzzle;
-        if (puzzle == null)
+        if (puzzle == null || !puzzle.Connected || puzzle.Solved)
             return;
 
-        // If puzzle wasn't solved before but IS solved now, uplink just completed
-        if (!__state && puzzle.Solved)
+        // Check if the entered code was correct
+        if (puzzle.CurrentRound.CorrectCode.ToUpper() != __state?.ToUpper())
+            return;
+
+        // Check if this is the final round by parsing CurrentProgress ("X/Y")
+        // CurrentProgress returns strings like "1/3", "2/3", "3/3"
+        // If X == Y, it's the final round
+        var progress = puzzle.CurrentProgress;
+        var parts = progress.Split('/');
+        if (parts.Length != 2 || parts[0] != parts[1])
+            return; // Not final round
+
+        // Final round with correct code - uplink will complete!
+        var nodeId = __instance.m_terminal?.SpawnNode?.NodeID;
+        if (nodeId.HasValue && UplinkWaveIds.ContainsKey(nodeId.Value))
         {
-            var nodeId = __instance.m_terminal?.SpawnNode?.NodeID;
-            if (nodeId.HasValue && UplinkWaveIds.ContainsKey(nodeId.Value))
-            {
-                InterceptNextStopAll = true;
-                CompletingUplinkNodeId = nodeId.Value;
-                Plugin.Logger.LogDebug($"[UplinkWaveIsolation] Uplink completed! Setting intercept flag for node {nodeId}");
-            }
+            InterceptNextStopAll = true;
+            CompletingUplinkNodeId = nodeId.Value;
+            Plugin.Logger.LogDebug($"[UplinkWaveIsolation] Final round correct! Setting intercept flag for node {nodeId}");
         }
     }
 
