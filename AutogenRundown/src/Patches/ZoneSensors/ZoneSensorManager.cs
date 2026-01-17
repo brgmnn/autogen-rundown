@@ -2,6 +2,7 @@ using AIGraph;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Objectives;
+using ChainedPuzzles;
 using GameData;
 using GTFO.API;
 using LevelGeneration;
@@ -291,21 +292,50 @@ public sealed class ZoneSensorManager
     /// </summary>
     private GameObject CreateSensorVisual(Vector3 position, ZoneSensorGroupDefinition groupDef, int groupIndex, int sensorIndex)
     {
-        if (!ZoneSensorAssets.AssetsLoaded)
+        GameObject? prefab = groupDef.ScanType switch
         {
-            Plugin.Logger.LogError("ZoneSensor: CircleSensor prefab not loaded!");
+            ScanType.Small => ZoneSensorAssets.SmallScan,
+            _ => ZoneSensorAssets.CircleSensor
+        };
+
+        if (prefab == null)
+        {
+            Plugin.Logger.LogError($"ZoneSensor: Prefab not loaded for ScanType {groupDef.ScanType}!");
             return new GameObject($"ZoneSensor_{groupIndex}_{sensorIndex}_Error");
         }
 
-        // Instantiate CircleSensor prefab
-        var sensorGO = UnityEngine.Object.Instantiate(ZoneSensorAssets.CircleSensor);
+        var sensorGO = UnityEngine.Object.Instantiate(prefab);
         sensorGO.name = $"ZoneSensor_{groupIndex}_{sensorIndex}";
 
-        // Position and scale per EOS pattern
+        // Position
         sensorGO.transform.SetPositionAndRotation(position, Quaternion.identity);
 
-        var height = 0.6f / 3.7f;
+        // Setup differs by scan type
+        switch (groupDef.ScanType)
+        {
+            case ScanType.Small:
+                SetupSmallScan(sensorGO, groupDef);
+                break;
+            default:
+                SetupCorruptedScan(sensorGO, groupDef);
+                break;
+        }
 
+        // Add detection collider (same for all types)
+        var collider = sensorGO.AddComponent<ZoneSensorCollider>();
+        collider.GroupIndex = groupIndex;
+        collider.SensorIndex = sensorIndex;
+        collider.TriggerEach = groupDef.TriggerEach;
+        collider.Radius = (float)groupDef.Radius;
+
+        Plugin.Logger.LogDebug($"ZoneSensor: Created {groupDef.ScanType} sensor {sensorIndex} at {position}");
+        return sensorGO;
+    }
+
+    private void SetupCorruptedScan(GameObject sensorGO, ZoneSensorGroupDefinition groupDef)
+    {
+        // Scale and height offset
+        var height = 0.6f / 3.7f;
         sensorGO.transform.localScale = new Vector3(
             (float)groupDef.Radius,
             (float)groupDef.Radius,
@@ -347,16 +377,46 @@ public sealed class ZoneSensorManager
                     (float)groupDef.TextColor.Alpha);
             }
         }
+    }
 
-        // Add detection collider
-        var collider = sensorGO.AddComponent<ZoneSensorCollider>();
-        collider.GroupIndex = groupIndex;
-        collider.SensorIndex = sensorIndex;
-        collider.TriggerEach = groupDef.TriggerEach;
-        collider.Radius = (float)groupDef.Radius;
+    private void SetupSmallScan(GameObject sensorGO, ZoneSensorGroupDefinition groupDef)
+    {
+        // Vanilla bioscan structure: CP -> [0] (graphics) -> components
+        // Scale with height = 0.6 (vanilla default)
+        var graphics = sensorGO.transform.GetChild(0);
+        graphics.localScale = new Vector3(
+            (float)groupDef.Radius,
+            0.6f,
+            (float)groupDef.Radius);
+        graphics.localPosition += Vector3.up * 0.3f;  // Half height offset
 
-        Plugin.Logger.LogDebug($"ZoneSensor: Created sensor {sensorIndex} at {position} with radius {groupDef.Radius}, TriggerEach={groupDef.TriggerEach}");
-        return sensorGO;
+        // Set color (graphics -> [0] has renderer)
+        var renderer = graphics.GetChild(0).GetComponentInChildren<Renderer>();
+        if (renderer != null)
+        {
+            renderer.material.SetColor("_ColorA", new Color(
+                (float)groupDef.Color.Red,
+                (float)groupDef.Color.Green,
+                (float)groupDef.Color.Blue,
+                (float)groupDef.Color.Alpha));
+        }
+
+        // Disable bioscan components we don't need
+        var bioscanCore = sensorGO.GetComponent<CP_Bioscan_Core>();
+        if (bioscanCore != null)
+            UnityEngine.Object.Destroy(bioscanCore);
+
+        // Text is at graphics -> [1] -> [0]
+        var textGO = graphics.GetChild(1)?.GetChild(0)?.GetComponent<TMPro.TextMeshPro>();
+        if (textGO != null)
+        {
+            textGO.SetText(groupDef.Text);
+            textGO.m_fontColor = textGO.m_fontColor32 = new Color(
+                (float)groupDef.TextColor.Red,
+                (float)groupDef.TextColor.Green,
+                (float)groupDef.TextColor.Blue,
+                (float)groupDef.TextColor.Alpha);
+        }
     }
 
     /// <summary>

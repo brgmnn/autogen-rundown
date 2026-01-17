@@ -64,6 +64,11 @@ public record ZoneSensorGroupDefinition
     public bool TriggerEach { get; set; } = false;
 
     /// <summary>
+    /// Visual style of the sensor. Default = CorruptedScan (glitchy security sensor).
+    /// </summary>
+    public ScanType ScanType { get; set; } = ScanType.CorruptedScan;
+
+    /// <summary>
     /// Generates randomized glitchy sensor text.
     /// </summary>
     public static string GenText()
