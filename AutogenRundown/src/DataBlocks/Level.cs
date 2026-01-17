@@ -1609,6 +1609,37 @@ public class Level
 
                 layout.Zones.Add(zone);
 
+                if (z == 0)
+                {
+                    var sensorEvents = new List<WardenObjectiveEvent>();
+
+                    sensorEvents
+                        // .AddToggleZoneSensors(false, 0, 0.1)
+                        .AddSound(Sound.LightsOff)
+                        .AddSpawnWave(GenericWave.SingleTank, 2.0);
+                    // .AddToggleZoneSensors(true, 0, 4.0)
+                    // .AddSound(Sound.LightsOn_Vol2);
+
+                    level.ZoneSensors.Add(new ZoneSensorDefinition
+                    {
+                        ZoneNumber = zone.LocalIndex,
+                        Bulkhead = Bulkhead.Main,
+
+                        SensorGroups = new List<ZoneSensorGroupDefinition>
+                        {
+                            new ZoneSensorGroupDefinition
+                            {
+                                TriggerEach = true,
+                                Count = 10,
+                                Radius = 1,
+                                AreaIndex = -1,
+                            }
+                        },
+
+                        EventsOnTrigger = sensorEvents
+                    });
+                }
+
                 if (z == 1)
                 {
                     var sensorEvents = new List<WardenObjectiveEvent>();
