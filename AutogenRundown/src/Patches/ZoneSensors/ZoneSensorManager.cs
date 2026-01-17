@@ -257,34 +257,60 @@ public sealed class ZoneSensorManager
     /// </summary>
     private int SpawnSensorsInZone(LG_Zone zone, ZoneSensorGroupDefinition groupDef, ZoneSensorGroup sensorGroup, int groupIndex, int startingSensorIndex)
     {
+        const int maxPlacementAttempts = 5;
         int sensorIndex = startingSensorIndex;
+        var placedSensors = new List<(Vector3 pos, float radius)>();
+        var sensorRadius = (float)groupDef.Radius;
 
         for (var i = 0; i < groupDef.Count; i++)
         {
-            // Get position from zone's navigation mesh
-            Vector3 position;
+            Vector3 position = Vector3.zero;
+            var attempts = 0;
 
-            if (groupDef.AreaIndex >= 0 && groupDef.AreaIndex < zone.m_areas.Count)
+            while (attempts < maxPlacementAttempts)
             {
-                // Use specific area
-                var area = zone.m_areas[groupDef.AreaIndex];
-                position = area.m_courseNode.GetRandomPositionInside();
-            }
-            else
-            {
-                // Use random area
-                var randomAreaIndex = UnityEngine.Random.Range(0, zone.m_areas.Count);
-                var area = zone.m_areas[randomAreaIndex];
-                position = area.m_courseNode.GetRandomPositionInside();
+                if (groupDef.AreaIndex >= 0 && groupDef.AreaIndex < zone.m_areas.Count)
+                {
+                    var area = zone.m_areas[groupDef.AreaIndex];
+                    position = area.m_courseNode.GetRandomPositionInside();
+                }
+                else
+                {
+                    var randomAreaIndex = UnityEngine.Random.Range(0, zone.m_areas.Count);
+                    var area = zone.m_areas[randomAreaIndex];
+                    position = area.m_courseNode.GetRandomPositionInside();
+                }
+
+                if (!OverlapsExistingSensor(position, sensorRadius, placedSensors))
+                    break;
+
+                attempts++;
             }
 
-            // Create sensor GameObject
+            // Place sensor at final position (either non-overlapping or after max attempts)
+            placedSensors.Add((position, sensorRadius));
             var sensorGO = CreateSensorVisual(position, groupDef, groupIndex, sensorIndex);
             sensorGroup.AddSensor(sensorGO);
             sensorIndex++;
         }
 
         return sensorIndex;
+    }
+
+    /// <summary>
+    /// Checks if a position overlaps with any existing sensor positions.
+    /// </summary>
+    private bool OverlapsExistingSensor(Vector3 position, float radius, List<(Vector3 pos, float radius)> existingSensors)
+    {
+        foreach (var (existingPos, existingRadius) in existingSensors)
+        {
+            var distance = Vector3.Distance(position, existingPos);
+            var minDistance = radius + existingRadius;
+
+            if (distance < minDistance)
+                return true;
+        }
+        return false;
     }
 
     /// <summary>
