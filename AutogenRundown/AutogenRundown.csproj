@@ -68,24 +68,27 @@
     <ItemGroup>
       <AssetItems Include="$(SolutionDir)\Assets\*.*" />
       <GameDataItems Include="$(SolutionDir)\GameData\*.json" />
-
-      <DebugCopyItems Include="$(OutputPath)\**\*.*" />
+      <InnerAssetItems Include="$(SolutionDir)\Assets\Assets\**\*" />
     </ItemGroup>
 
     <Copy SourceFiles="@(AssetItems)" DestinationFolder="$(OutputPath)" />
-
-    <!-- Copy inner Assets folder (AssetBundles) preserving structure -->
-    <ItemGroup>
-      <InnerAssetItems Include="$(SolutionDir)\Assets\Assets\**\*" />
-    </ItemGroup>
     <Copy SourceFiles="@(InnerAssetItems)"
           DestinationFiles="@(InnerAssetItems->'$(OutputPath)\Assets\%(RecursiveDir)%(Filename)%(Extension)')" />
-
     <Copy SourceFiles="@(GameDataItems)" DestinationFolder="$(OutputPath)" />
 
-    <!-- R2ModMan debug modding profile -->
-    <Copy Condition="$(Debug) != 'false' And $(OS) == 'Windows_NT'" SourceFiles="@(DebugCopyItems)" DestinationFolder="$(OutputPath_Debug)" />
-    <!-- Gale debug modding profile -->
-    <Copy Condition="$(Debug) != 'false' And $(OS) == 'Windows_NT'" SourceFiles="@(DebugCopyItems)" DestinationFolder="$(GalePlugin_Debug)" />
+    <!-- Define DebugCopyItems AFTER all files are in OutputPath -->
+    <ItemGroup>
+      <DebugCopyItems Include="$(OutputPath)\**\*" />
+    </ItemGroup>
+
+    <!-- R2ModMan debug modding profile - preserve directory structure -->
+    <Copy Condition="$(Debug) != 'false' And $(OS) == 'Windows_NT'"
+          SourceFiles="@(DebugCopyItems)"
+          DestinationFiles="@(DebugCopyItems->'$(OutputPath_Debug)\%(RecursiveDir)%(Filename)%(Extension)')" />
+
+    <!-- Gale debug modding profile - preserve directory structure -->
+    <Copy Condition="$(Debug) != 'false' And $(OS) == 'Windows_NT'"
+          SourceFiles="@(DebugCopyItems)"
+          DestinationFiles="@(DebugCopyItems->'$(GalePlugin_Debug)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 </Project>
