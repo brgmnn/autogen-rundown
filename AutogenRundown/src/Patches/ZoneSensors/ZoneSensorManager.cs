@@ -261,7 +261,9 @@ public sealed class ZoneSensorManager
 
         // Position and scale per EOS pattern
         sensorGO.transform.SetPositionAndRotation(position, Quaternion.identity);
-        float height = 0.6f / 3.7f;
+
+        var height = 0.6f / 3.7f;
+
         sensorGO.transform.localScale = new Vector3(
             (float)groupDef.Radius,
             (float)groupDef.Radius,

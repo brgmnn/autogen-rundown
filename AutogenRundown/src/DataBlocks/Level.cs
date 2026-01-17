@@ -1629,17 +1629,10 @@ public class Level
                         {
                             new ZoneSensorGroupDefinition
                             {
-                                Count = 3,
+                                Count = 10,
                                 Radius = 2.5,
                                 AreaIndex = -1,
-                                Text = "Super Security Scan",
-                                Color = new Color
-                                {
-                                    Red = 0.93f,
-                                    Green = 0.10f,
-                                    Blue = 0.0,
-                                    Alpha = 0.26f
-                                }
+                                Text = "Super Security Scan"
                             }
                         },
 
