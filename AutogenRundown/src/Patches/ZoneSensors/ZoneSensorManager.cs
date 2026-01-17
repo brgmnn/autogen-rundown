@@ -79,6 +79,38 @@ public sealed class ZoneSensorManager
     }
 
     /// <summary>
+    /// Called when an individual sensor is triggered (TriggerEach mode).
+    /// Disables only that sensor and executes the group's events.
+    /// </summary>
+    public void SensorTriggeredIndividual(int groupIndex, int sensorIndex)
+    {
+        if (groupIndex < 0 || groupIndex >= activeSensorGroups.Count)
+            return;
+
+        var group = activeSensorGroups[groupIndex];
+
+        // Only master should execute events
+        if (!SNet.IsMaster)
+            return;
+
+        Plugin.Logger.LogDebug($"ZoneSensor: Group {groupIndex} sensor {sensorIndex} triggered individually");
+
+        // Disable only this sensor
+        group.DisableSensor(sensorIndex);
+
+        // Execute events (same as group trigger)
+        foreach (var evt in group.EventsOnTrigger)
+        {
+            var eventData = ConvertToEventData(evt);
+            WardenObjectiveManager.CheckAndExecuteEventsOnTrigger(
+                eventData,
+                eWardenObjectiveEventTrigger.None,
+                ignoreTrigger: true
+            );
+        }
+    }
+
+    /// <summary>
     /// Converts autogen's WardenObjectiveEvent to the game's WardenObjectiveEventData.
     /// </summary>
     private static WardenObjectiveEventData ConvertToEventData(WardenObjectiveEvent evt)
@@ -198,13 +230,17 @@ public sealed class ZoneSensorManager
             }
 
             // Create sensor group
+            // Determine if any sensor group uses TriggerEach mode
+            bool hasTriggerEach = definition.SensorGroups.Any(g => g.TriggerEach);
             var sensorGroup = new ZoneSensorGroup();
-            sensorGroup.Initialize(groupIndex, definition.EventsOnTrigger);
+            sensorGroup.Initialize(groupIndex, definition.EventsOnTrigger, hasTriggerEach);
 
             // Spawn sensors for each group definition
+            // Track sensor index across all group definitions
+            int sensorIndex = 0;
             foreach (var groupDef in definition.SensorGroups)
             {
-                SpawnSensorsInZone(zone, groupDef, sensorGroup, groupIndex);
+                sensorIndex = SpawnSensorsInZone(zone, groupDef, sensorGroup, groupIndex, sensorIndex);
             }
 
             activeSensorGroups.Add(sensorGroup);
@@ -216,9 +252,12 @@ public sealed class ZoneSensorManager
 
     /// <summary>
     /// Spawns sensors within a zone based on the group definition.
+    /// Returns the next sensor index to use.
     /// </summary>
-    private void SpawnSensorsInZone(LG_Zone zone, ZoneSensorGroupDefinition groupDef, ZoneSensorGroup sensorGroup, int groupIndex)
+    private int SpawnSensorsInZone(LG_Zone zone, ZoneSensorGroupDefinition groupDef, ZoneSensorGroup sensorGroup, int groupIndex, int startingSensorIndex)
     {
+        int sensorIndex = startingSensorIndex;
+
         for (var i = 0; i < groupDef.Count; i++)
         {
             // Get position from zone's navigation mesh
@@ -239,25 +278,28 @@ public sealed class ZoneSensorManager
             }
 
             // Create sensor GameObject
-            var sensorGO = CreateSensorVisual(position, groupDef, groupIndex);
+            var sensorGO = CreateSensorVisual(position, groupDef, groupIndex, sensorIndex);
             sensorGroup.AddSensor(sensorGO);
+            sensorIndex++;
         }
+
+        return sensorIndex;
     }
 
     /// <summary>
     /// Creates the visual representation of a sensor.
     /// </summary>
-    private GameObject CreateSensorVisual(Vector3 position, ZoneSensorGroupDefinition groupDef, int groupIndex)
+    private GameObject CreateSensorVisual(Vector3 position, ZoneSensorGroupDefinition groupDef, int groupIndex, int sensorIndex)
     {
         if (!ZoneSensorAssets.AssetsLoaded)
         {
             Plugin.Logger.LogError("ZoneSensor: CircleSensor prefab not loaded!");
-            return new GameObject($"ZoneSensor_{groupIndex}_Error");
+            return new GameObject($"ZoneSensor_{groupIndex}_{sensorIndex}_Error");
         }
 
         // Instantiate CircleSensor prefab
         var sensorGO = UnityEngine.Object.Instantiate(ZoneSensorAssets.CircleSensor);
-        sensorGO.name = $"ZoneSensor_{groupIndex}";
+        sensorGO.name = $"ZoneSensor_{groupIndex}_{sensorIndex}";
 
         // Position and scale per EOS pattern
         sensorGO.transform.SetPositionAndRotation(position, Quaternion.identity);
@@ -307,9 +349,11 @@ public sealed class ZoneSensorManager
         // Add detection collider
         var collider = sensorGO.AddComponent<ZoneSensorCollider>();
         collider.GroupIndex = groupIndex;
+        collider.SensorIndex = sensorIndex;
+        collider.TriggerEach = groupDef.TriggerEach;
         collider.Radius = (float)groupDef.Radius;
 
-        Plugin.Logger.LogDebug($"ZoneSensor: Created sensor at {position} with radius {groupDef.Radius}");
+        Plugin.Logger.LogDebug($"ZoneSensor: Created sensor {sensorIndex} at {position} with radius {groupDef.Radius}, TriggerEach={groupDef.TriggerEach}");
         return sensorGO;
     }
 

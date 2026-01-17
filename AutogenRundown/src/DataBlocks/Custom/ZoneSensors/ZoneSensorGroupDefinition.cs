@@ -58,6 +58,12 @@ public record ZoneSensorGroupDefinition
     };
 
     /// <summary>
+    /// When true, each sensor triggers independently and only that sensor is removed.
+    /// Events fire for each sensor triggered. Default = false (group triggers once).
+    /// </summary>
+    public bool TriggerEach { get; set; } = false;
+
+    /// <summary>
     /// Generates randomized glitchy sensor text.
     /// </summary>
     public static string GenText()

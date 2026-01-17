@@ -16,6 +16,16 @@ public class ZoneSensorCollider : MonoBehaviour
     public int GroupIndex;
 
     /// <summary>
+    /// Index of this sensor within its group.
+    /// </summary>
+    public int SensorIndex;
+
+    /// <summary>
+    /// When true, this sensor triggers independently from the group.
+    /// </summary>
+    public bool TriggerEach;
+
+    /// <summary>
     /// Detection radius for this sensor.
     /// </summary>
     public float Radius = 2.3f;
@@ -32,6 +42,11 @@ public class ZoneSensorCollider : MonoBehaviour
 
         checkTimer = 0f;
 
+        // In TriggerEach mode, the sensor's active state is the source of truth
+        // (synced via network). Skip if this sensor is disabled.
+        if (!gameObject.activeSelf)
+            return;
+
         // Skip if group is disabled
         if (!ZoneSensorManager.Current.IsGroupEnabled(GroupIndex))
             return;
@@ -41,7 +56,10 @@ public class ZoneSensorCollider : MonoBehaviour
         // Trigger when player count increases (player entered)
         if (currentCount > lastPlayerCount)
         {
-            ZoneSensorManager.Current.SensorTriggered(GroupIndex);
+            if (TriggerEach)
+                ZoneSensorManager.Current.SensorTriggeredIndividual(GroupIndex, SensorIndex);
+            else
+                ZoneSensorManager.Current.SensorTriggered(GroupIndex);
         }
 
         lastPlayerCount = currentCount;

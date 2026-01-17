@@ -21,17 +21,22 @@ public class ZoneSensorGroup
 
     public StateReplicator<ZoneSensorGroupState>? Replicator { get; private set; }
 
-    public void Initialize(int index, List<WardenObjectiveEvent> events)
+    private bool triggerEach;
+    private uint currentSensorMask = uint.MaxValue;
+
+    public void Initialize(int index, List<WardenObjectiveEvent> events, bool triggerEach)
     {
         GroupIndex = index;
         EventsOnTrigger = events;
         Enabled = true;
+        this.triggerEach = triggerEach;
+        currentSensorMask = uint.MaxValue;
 
         // Create network replicator with unique ID
         uint replicatorId = REPLICATOR_BASE_ID + (uint)index;
         Replicator = StateReplicator<ZoneSensorGroupState>.Create(
             replicatorId,
-            new ZoneSensorGroupState(true),
+            new ZoneSensorGroupState(true, uint.MaxValue),
             LifeTimeType.Session  // Auto-cleanup on level end
         );
 
@@ -52,13 +57,39 @@ public class ZoneSensorGroup
     /// </summary>
     public void SetEnabled(bool enabled)
     {
+        // Reset mask when enabling (all sensors become active again)
+        if (enabled)
+            currentSensorMask = uint.MaxValue;
+
         // Update visuals immediately for responsive feel
-        UpdateVisualsUnsynced(enabled);
+        UpdateVisualsUnsynced(enabled, currentSensorMask);
 
         // Sync to clients (only master can broadcast)
         if (Replicator != null && Replicator.IsValid)
         {
-            Replicator.SetState(new ZoneSensorGroupState(enabled));
+            Replicator.SetState(new ZoneSensorGroupState(enabled, currentSensorMask));
+        }
+    }
+
+    /// <summary>
+    /// Disables a single sensor and syncs to all clients.
+    /// Used when TriggerEach mode is enabled.
+    /// </summary>
+    public void DisableSensor(int sensorIndex)
+    {
+        if (sensorIndex < 0 || sensorIndex >= Sensors.Count || sensorIndex >= 32)
+            return;
+
+        currentSensorMask &= ~(1u << sensorIndex);
+
+        // Update local visual immediately
+        var sensor = Sensors[sensorIndex];
+        sensor?.SetActive(false);
+
+        // Sync to all clients
+        if (Replicator != null && Replicator.IsValid)
+        {
+            Replicator.SetState(new ZoneSensorGroupState(Enabled, currentSensorMask));
         }
     }
 
@@ -67,20 +98,26 @@ public class ZoneSensorGroup
     /// </summary>
     private void OnStateChanged(ZoneSensorGroupState oldState, ZoneSensorGroupState newState, bool isRecall)
     {
-        UpdateVisualsUnsynced(newState.Enabled);
+        currentSensorMask = newState.SensorMask;
+        UpdateVisualsUnsynced(newState.Enabled, newState.SensorMask);
     }
 
     /// <summary>
     /// Updates the local visual state without network sync.
     /// </summary>
-    private void UpdateVisualsUnsynced(bool enabled)
+    private void UpdateVisualsUnsynced(bool enabled, uint sensorMask)
     {
         Enabled = enabled;
 
-        foreach (var sensor in Sensors)
+        for (int i = 0; i < Sensors.Count; i++)
         {
+            var sensor = Sensors[i];
             if (sensor != null)
-                sensor.SetActive(enabled);
+            {
+                // Sensor is visible if group enabled AND individual sensor enabled
+                bool sensorEnabled = enabled && ((sensorMask & (1u << i)) != 0);
+                sensor.SetActive(sensorEnabled);
+            }
         }
     }
 
