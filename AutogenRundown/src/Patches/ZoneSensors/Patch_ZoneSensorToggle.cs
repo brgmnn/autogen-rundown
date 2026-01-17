@@ -94,7 +94,9 @@ public class ZoneSensorToggleScheduler : MonoBehaviour
             return;
 
         var go = new GameObject("ZoneSensorToggleScheduler");
+
         DontDestroyOnLoad(go);
+
         instance = go.AddComponent<ZoneSensorToggleScheduler>();
     }
 
@@ -103,9 +105,9 @@ public class ZoneSensorToggleScheduler : MonoBehaviour
         if (pendingToggles.Count == 0)
             return;
 
-        float currentTime = Time.time;
+        var currentTime = Time.time;
 
-        for (int i = pendingToggles.Count - 1; i >= 0; i--)
+        for (var i = pendingToggles.Count - 1; i >= 0; i--)
         {
             var toggle = pendingToggles[i];
 
