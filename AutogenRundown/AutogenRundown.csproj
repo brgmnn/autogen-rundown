@@ -73,6 +73,14 @@
     </ItemGroup>
 
     <Copy SourceFiles="@(AssetItems)" DestinationFolder="$(OutputPath)" />
+
+    <!-- Copy inner Assets folder (AssetBundles) preserving structure -->
+    <ItemGroup>
+      <InnerAssetItems Include="$(SolutionDir)\Assets\Assets\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(InnerAssetItems)"
+          DestinationFiles="@(InnerAssetItems->'$(OutputPath)\Assets\%(RecursiveDir)%(Filename)%(Extension)')" />
+
     <Copy SourceFiles="@(GameDataItems)" DestinationFolder="$(OutputPath)" />
 
     <!-- R2ModMan debug modding profile -->
