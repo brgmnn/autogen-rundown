@@ -45,6 +45,7 @@ TODO:
     * It seems to stack with successive clears.
   * Shorter (or longer?) warden protocol startup times?
     * Maybe even a bait one?
+  * Slightly longer time needed on D-tier reactor
 
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
