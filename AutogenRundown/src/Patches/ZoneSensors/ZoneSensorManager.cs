@@ -99,7 +99,9 @@ public sealed class ZoneSensorManager
             FogTransitionDuration = (float)evt.FogTransitionDuration,
             ChainPuzzle = evt.ChainPuzzle,
             ClearDimension = evt.ClearDimension,
-            UseStaticBioscanPoints = evt.UseStaticBioscanPoints
+            UseStaticBioscanPoints = evt.UseStaticBioscanPoints,
+            Count = evt.Count,
+            Enabled = evt.Enabled
         };
 
         // Convert EnemyWaveData if present (check serialized uint, not [JsonIgnore] property)
