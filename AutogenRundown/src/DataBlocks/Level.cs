@@ -1614,9 +1614,11 @@ public class Level
                     var sensorEvents = new List<WardenObjectiveEvent>();
 
                     sensorEvents
-                        .AddToggleSecuritySensors(false, 0, 0.1)
+                        .AddToggleZoneSensors(false, 0, 0.1)
                         .AddSound(Sound.LightsOff)
-                        .AddSpawnWave(GenericWave.SinglePouncer, 2.0);
+                        .AddSpawnWave(GenericWave.SinglePouncer, 2.0)
+                        .AddToggleZoneSensors(true, 0, 4.0)
+                        .AddSound(Sound.LightsOn_Vol2);
 
                     level.ZoneSensors.Add(new ZoneSensorDefinition
                     {
