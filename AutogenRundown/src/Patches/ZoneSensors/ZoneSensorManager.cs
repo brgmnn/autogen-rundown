@@ -280,6 +280,30 @@ public sealed class ZoneSensorManager
                 (float)groupDef.Color.Alpha));
         }
 
+        // Set up text display
+        var infoGO = sensorGO.transform.GetChild(0).GetChild(2);
+
+        // Destroy corrupted TMPro from prefab
+        var corruptedTMPro = infoGO.GetChild(0).gameObject;
+        corruptedTMPro.transform.SetParent(null);
+        UnityEngine.Object.Destroy(corruptedTMPro);
+
+        // Instantiate clean TMPro from vanilla assets
+        var tmproGO = GtfoTextMeshPro.Instantiate(infoGO.gameObject);
+        if (tmproGO != null)
+        {
+            var text = tmproGO.GetComponent<TMPro.TextMeshPro>();
+            if (text != null)
+            {
+                text.SetText(groupDef.Text);
+                text.m_fontColor = text.m_fontColor32 = new Color(
+                    (float)groupDef.TextColor.Red,
+                    (float)groupDef.TextColor.Green,
+                    (float)groupDef.TextColor.Blue,
+                    (float)groupDef.TextColor.Alpha);
+            }
+        }
+
         // Add detection collider
         var collider = sensorGO.AddComponent<ZoneSensorCollider>();
         collider.GroupIndex = groupIndex;
