@@ -168,7 +168,7 @@ public sealed class ZoneSensorManager
 
         Plugin.Logger.LogDebug($"ZoneSensor: Building sensors for level {levelLayoutId}, {levelDefinitions.Count} definitions");
 
-        int groupIndex = 0;
+        var groupIndex = 0;
 
         foreach (var definition in levelDefinitions)
         {
@@ -219,7 +219,7 @@ public sealed class ZoneSensorManager
     /// </summary>
     private void SpawnSensorsInZone(LG_Zone zone, ZoneSensorGroupDefinition groupDef, ZoneSensorGroup sensorGroup, int groupIndex)
     {
-        for (int i = 0; i < groupDef.Count; i++)
+        for (var i = 0; i < groupDef.Count; i++)
         {
             // Get position from zone's navigation mesh
             Vector3 position;
@@ -298,6 +298,7 @@ public sealed class ZoneSensorManager
         {
             group.Cleanup();
         }
+
         activeSensorGroups.Clear();
 
         Plugin.Logger.LogDebug("ZoneSensor: Cleared all sensors");
