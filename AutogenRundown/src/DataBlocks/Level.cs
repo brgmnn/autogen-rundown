@@ -1629,7 +1629,6 @@ public class Level
                         {
                             new ZoneSensorGroupDefinition
                             {
-                                ScanType = ScanType.CorruptedScan,
                                 TriggerEach = true,
                                 Count = 10,
                                 Radius = 1,
@@ -1662,7 +1661,6 @@ public class Level
                             new ZoneSensorGroupDefinition
                             {
                                 TriggerEach = true,
-                                ScanType = ScanType.CorruptedScan,
                                 Count = 10,
                                 Radius = 2.5,
                                 AreaIndex = -1,
