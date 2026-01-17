@@ -11,7 +11,7 @@ internal static class ZoneSensorAssets
     public static bool AssetsLoaded => CircleSensor != null && SmallScan != null;
 
     private const string VANILLA_CP_PREFAB_PATH =
-        "Assets/AssetPrefabs/Complex/Generic/ChainedPuzzles/CP_Bioscan_sustained_RequireAll.prefab";
+        "Assets/AssetPrefabs/Complex/Generic/ChainedPuzzles/CP_Bioscan_Small.prefab";
 
     public static void Init()
     {
