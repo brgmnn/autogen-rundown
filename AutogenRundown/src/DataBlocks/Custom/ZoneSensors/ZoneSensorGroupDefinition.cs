@@ -82,6 +82,12 @@ public record ZoneSensorGroupDefinition
     public double EdgeDistance { get; set; } = 0.1;
 
     /// <summary>
+    /// Height of the sensor visual. Combined with Radius for vertical offset.
+    /// Default = 0.6
+    /// </summary>
+    public double Height { get; set; } = 0.6;
+
+    /// <summary>
     /// Generates randomized glitchy sensor text.
     /// </summary>
     public static string GenText()

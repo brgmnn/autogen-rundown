@@ -381,13 +381,15 @@ public sealed class ZoneSensorManager
         // Position and scale per EOS pattern
         sensorGO.transform.SetPositionAndRotation(position, Quaternion.identity);
 
-        var height = 0.6f / 3.7f;
+        // For 75% above floor: center at 25% of scaled height
+        var scaledHeight = (float)groupDef.Height * (float)groupDef.Radius;
+        var heightOffset = 0.25f * scaledHeight;
 
         sensorGO.transform.localScale = new Vector3(
             (float)groupDef.Radius,
             (float)groupDef.Radius,
             (float)groupDef.Radius);
-        sensorGO.transform.localPosition += Vector3.up * height;
+        sensorGO.transform.localPosition += Vector3.up * heightOffset;
 
         // Set color via material (child 0 -> child 1 -> renderer)
         var renderer = sensorGO.transform.GetChild(0).GetChild(1)

@@ -153,6 +153,7 @@ Inherits from `Definition` base class:
 | `Moving` | bool | false | If true, sensors patrol between two points |
 | `Speed` | double | 1.5 | Movement speed (units/second) when Moving |
 | `EdgeDistance` | double | 0.1 | Min distance from NavMesh edges for waypoints when Moving |
+| `Height` | double | 0.6 | Height of sensor visual, combined with Radius for vertical offset |
 
 ### Color Format
 
