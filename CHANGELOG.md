@@ -3,6 +3,18 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.80.3](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.80.3) — January 17, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Change: [ArsenalityRebalance](https://thunderstore.io/c/gtfo/p/leezurli/ArsenalityRebalance/) support for version 1.0.6
+* Fix: Generator cluster objective zone number style, from "ZONE123" to "ZONE 123"
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.80.2...v0.80.3
+
+
 ## [v0.80.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.80.2) — January 07, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
@@ -31,17 +43,23 @@ See more at https://github.com/brgmnn/autogen-rundown
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.80.0...v0.80.1
 
 
-## [v0.81.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.0) — January 07, 2026
+## [v0.81.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.0) — January 17, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
 
 ### New
 
 * Reworked level generation for `TerminalUplink` objectives
+* New Security Sensors allow error sensors to be spawned in any zone with better positioning
 
 ### Changes
 
-* Balance: Reduced max number of `TerminalUplink` terminals on D-tier Secondary/Overload from `3` to `2` 
+* Balance: Reduced max number of `TerminalUplink` terminals on D-tier Secondary/Overload from `3` to `2`
+* Change: [GTFriendlyO](https://thunderstore.io/c/gtfo/p/Carb_Crusaders/GTFriendlyO/) now will correctly set infectious fog rates to `0.005`. Fixes #29 
+* Change: Terminal Uplinks now only stop their own waves, not _all_ waves when completing the uplink. Same applies to Corrupted Terminal Uplinks
+* Fix: Add [ItemSpawnFix](https://thunderstore.io/c/gtfo/p/Dinorush/ItemSpawnFix/) to help fix issues with core items not spawning
+  * Helps resolve things like missing generator cells or keycards which can cause softlocks
+* Fix: Generator cluster objective zone number style update. From "ZONE123" to "ZONE 123"
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.80.0...v0.81.0
 
