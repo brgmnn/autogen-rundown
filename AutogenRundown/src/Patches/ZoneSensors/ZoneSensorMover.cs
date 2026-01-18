@@ -16,7 +16,7 @@ public class ZoneSensorMover : MonoBehaviour
     private float speed;
     private bool initialized = false;
 
-    public void Initialize(Vector3 startPos, Vector3 endPos, float moveSpeed)
+    public void Initialize(Vector3 startPos, Vector3 endPos, float moveSpeed, float edgeDistance = 0.1f)
     {
         speed = moveSpeed;
 
@@ -24,7 +24,7 @@ public class ZoneSensorMover : MonoBehaviour
         NavMeshPath path = new NavMeshPath();
         if (NavMesh.CalculatePath(startPos, endPos, -1, path))
         {
-            waypoints = path.corners;
+            waypoints = AdjustWaypointsForEdgeDistance(path.corners, edgeDistance);
         }
         else
         {
@@ -36,6 +36,39 @@ public class ZoneSensorMover : MonoBehaviour
         initialized = true;
 
         Plugin.Logger.LogDebug($"ZoneSensorMover: Initialized with {waypoints.Length} waypoints, speed={speed}");
+    }
+
+    private Vector3[] AdjustWaypointsForEdgeDistance(Vector3[] corners, float edgeDistance)
+    {
+        if (edgeDistance <= 0f)
+            return corners;
+
+        var adjusted = new Vector3[corners.Length];
+        for (int i = 0; i < corners.Length; i++)
+        {
+            adjusted[i] = PullAwayFromEdge(corners[i], edgeDistance);
+        }
+        return adjusted;
+    }
+
+    private Vector3 PullAwayFromEdge(Vector3 position, float minDistance)
+    {
+        if (!NavMesh.FindClosestEdge(position, out NavMeshHit hit, -1))
+            return position;
+
+        if (hit.distance >= minDistance)
+            return position;
+
+        // Move away from edge (hit.normal points away from edge)
+        Vector3 pullDirection = hit.normal;
+        float pullAmount = minDistance - hit.distance;
+        Vector3 newPos = position + pullDirection * pullAmount;
+
+        // Verify new position is still on NavMesh
+        if (NavMesh.SamplePosition(newPos, out NavMeshHit sample, 0.5f, -1))
+            return sample.position;
+
+        return position;
     }
 
     void Update()

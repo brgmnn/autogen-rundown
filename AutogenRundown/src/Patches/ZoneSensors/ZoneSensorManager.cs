@@ -327,7 +327,7 @@ public sealed class ZoneSensorManager
         if (TryGetPosOnNavMesh(ref startPosition) && TryGetPosOnNavMesh(ref endPosition))
         {
             var mover = sensorGO.AddComponent<ZoneSensorMover>();
-            mover.Initialize(startPosition, endPosition, (float)groupDef.Speed);
+            mover.Initialize(startPosition, endPosition, (float)groupDef.Speed, (float)groupDef.EdgeDistance);
         }
         else
         {

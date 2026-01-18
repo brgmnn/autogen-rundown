@@ -75,6 +75,13 @@ public record ZoneSensorGroupDefinition
     public double Speed { get; set; } = 1.5;
 
     /// <summary>
+    /// Minimum distance from NavMesh edges for path waypoints when Moving is true.
+    /// Helps prevent sensors from hugging walls at corners.
+    /// Default = 0.1
+    /// </summary>
+    public double EdgeDistance { get; set; } = 0.1;
+
+    /// <summary>
     /// Generates randomized glitchy sensor text.
     /// </summary>
     public static string GenText()
