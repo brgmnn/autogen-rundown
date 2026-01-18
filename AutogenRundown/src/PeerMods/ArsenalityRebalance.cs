@@ -18,7 +18,7 @@ public class ArsenalityRebalance : SupportedMod
 
         mod.CopyGameDataJson();
 
-        var pluginPath = Path.Combine(mod.PluginFolder, "GearPartTransform.json");
+        var pluginPath = Path.Combine(mod.PluginFolder, "ArsenalityRebalance", "Custom", "mccad00", "GearPartTransform.json");
         var gameDataPath = Path.Combine(mod.GameDataFolder, "Custom", "mccad00", "GearPartTransform.json");
 
         if (!File.Exists(pluginPath))
