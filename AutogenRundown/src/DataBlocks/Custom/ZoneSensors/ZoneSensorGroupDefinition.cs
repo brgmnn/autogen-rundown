@@ -41,9 +41,10 @@ public record ZoneSensorGroupDefinition
 
     /// <summary>
     /// Text displayed on the sensor.
-    /// Default = "S:_EC/uR_ITY S:/Ca_N"
+    /// If null, a random corrupted text will be selected for each sensor.
+    /// Default = null
     /// </summary>
-    public string Text { get; set; } = "S:_EC/uR_ITY S:/Ca_N";
+    public string? Text { get; set; } = null;
 
     /// <summary>
     /// Color of the sensor text.
@@ -115,19 +116,4 @@ public record ZoneSensorGroupDefinition
     /// </summary>
     public double Height { get; set; } = 0.8;
 
-    /// <summary>
-    /// Generates randomized glitchy sensor text.
-    /// </summary>
-    public static string GenText()
-        => Generator.Pick(new List<string>
-        {
-            "Se@#$urity Sc3AN",
-            "S:_EC/uR_ITY S:/Ca_N",
-            "SC4N_ACT!VE",
-            "D3T:ECT_M0DE",
-            "S3NS0R://ON",
-            "//TR1GG3R_Z0NE",
-            "AUT0_SC4N::",
-            "PR0X_D3TECT"
-        })!;
 }

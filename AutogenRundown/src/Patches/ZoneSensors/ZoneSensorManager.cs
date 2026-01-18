@@ -25,6 +25,21 @@ public sealed class ZoneSensorManager
     /// </summary>
     private static Dictionary<uint, List<ZoneSensorDefinition>> definitions = new();
 
+    private static readonly List<string> SensorTexts = new()
+    {
+        "Se@#$urity Sc3AN",
+        "S:_EC/uR_ITY S:/Ca_N",
+        "SC4N_ACT!VE",
+        "D3T:ECT_M0DE",
+        "S3NS0R://ON",
+        "//TR1GG3R_Z0NE",
+        "AUT0_SC4N::",
+        "PR0X_D3TECT"
+    };
+
+    private static string GetRandomSensorText()
+        => SensorTexts[UnityEngine.Random.Range(0, SensorTexts.Count)];
+
     /// <summary>
     /// Active sensor groups in the current level.
     /// </summary>
@@ -454,12 +469,12 @@ public sealed class ZoneSensorManager
                             (float)groupDef.EncryptedTextColor.Alpha);
 
                         var animator = sensorGO.AddComponent<ZoneSensorTextAnimator>();
-                        var sensorText = ZoneSensorGroupDefinition.GenText();
+                        var sensorText = groupDef.Text ?? GetRandomSensorText();
                         animator.Initialize(sensorText, normalColor, encryptedColor, text);
                     }
                     else
                     {
-                        text.SetText(ZoneSensorGroupDefinition.GenText());
+                        text.SetText(groupDef.Text ?? GetRandomSensorText());
                         text.m_fontColor = text.m_fontColor32 = normalColor;
                     }
                 }
