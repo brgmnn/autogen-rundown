@@ -1,4 +1,6 @@
-﻿using AutogenRundown.DataBlocks.Enemies;
+﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.Extensions;
 using AutogenRundown.Patches;
@@ -112,15 +114,62 @@ public partial record WardenObjective
             });
         }
 
-        // TODO: add more interesting waves
-        // Alarms do indeed get canceled after completing the uplink
-        var waves = level.Tier switch
+        // Wave configuration for corrupted uplink (easier than regular uplink due to team split)
+        // Settings are one tier lower and spawn delays are longer to give split team breathing room
+        var (settings, spawnDelay) = (level.Tier, director.Bulkhead) switch
         {
-            "A" => GenericWave.Uplink_Easy,
-            "B" => GenericWave.Uplink_Easy,
-            _ => GenericWave.Uplink_Medium,
+            ("A", _) => (WaveSettings.Baseline_Easy, 4.0),
+
+            ("B", Bulkhead.Main) => (WaveSettings.Baseline_Easy, 3.5),
+            ("B", _) => (WaveSettings.Baseline_Normal, 3.0),
+
+            ("C", Bulkhead.Main) => (WaveSettings.Baseline_Normal, 3.0),
+            ("C", _) => (WaveSettings.Baseline_Hard, 3.0),
+
+            ("D", Bulkhead.Main) => (WaveSettings.Baseline_Hard, 3.0),
+            ("D", _) => (WaveSettings.Baseline_Hard, 2.5),
+
+            ("E", _) => (WaveSettings.Baseline_VeryHard, 2.5),
+            _ => (WaveSettings.Baseline_Normal, 3.0)
         };
-        WavesOnActivate.Add(waves);
+
+        // Always add primary baseline wave
+        WavesOnActivate.Add(new GenericWave
+        {
+            Settings = settings,
+            Population = WavePopulation.Baseline,
+            SpawnDelay = spawnDelay,
+            TriggerAlarm = true
+        });
+
+        // Fewer secondary waves than regular uplink due to team split requirement
+        if (level.Tier is "D" or "E")
+        {
+            // Add charger wave if chargers are enabled (Overload only for corrupted)
+            if (level.Settings.HasChargers() && director.Bulkhead == Bulkhead.Overload)
+            {
+                WavesOnActivate.Add(new GenericWave
+                {
+                    Settings = settings,
+                    Population = WavePopulation.Baseline_Chargers,
+                    SpawnDelay = spawnDelay + 15.0,
+                    TriggerAlarm = false
+                });
+            }
+
+            // Add nightmare wave if nightmares enabled (E-tier Overload only)
+            if (level.Tier == "E" && level.Settings.HasNightmares() &&
+                director.Bulkhead == Bulkhead.Overload)
+            {
+                WavesOnActivate.Add(new GenericWave
+                {
+                    Settings = WaveSettings.Baseline_Hard, // One tier lower than regular uplink
+                    Population = WavePopulation.Baseline_Nightmare,
+                    SpawnDelay = spawnDelay + 20.0,
+                    TriggerAlarm = false
+                });
+            }
+        }
 
         AddCompletedObjectiveWaves(level, director);
     }

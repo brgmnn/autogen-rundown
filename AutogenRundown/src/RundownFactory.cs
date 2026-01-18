@@ -184,13 +184,13 @@ public static class RundownFactory
 
         #region Geomorph Debugging test level
         #if DEBUG
-        #if false
+        #if true
         if (withFixed)
         {
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_Dead_End_01.prefab",
+                "Assets/SamdownGeos/Refinery_X_tile_1/Refinery_X_Tile_1.prefab",
                 new Level("A")
                 {
                     Tier = "A",
@@ -200,7 +200,7 @@ public static class RundownFactory
                     Index = rundown.TierA_Count + 1,
                     // Accessibility = Accessibility.BlockedAndScrambled,
                     IsTest = true
-                }, 0);
+                }, 3);
 
             rundown.AddLevel(testLevel);
         }

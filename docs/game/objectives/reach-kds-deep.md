@@ -35,6 +35,7 @@ This is an **AutogenRundown-exclusive custom objective** that does not appear in
    - Enemy encounters begin spawning
 
 **Enemy Waves During Start Challenge**:
+
 - **40% traverse time**: Shadow wave spawns (20 points)
 - **25% traverse time**: Single Pouncer mini-boss appears
 - **85% traverse time**: Giant Shooters spawn (6-12 points, tier-dependent)
@@ -109,15 +110,15 @@ This phase features the dramatic reactor explosion that has already occurred in 
 
 Players witness the reactor explosion **in the zones they're currently occupying**. The explosion affects Corridors 1 and 2—the two zones players are in or have just traversed.
 
-| Event | Delay | Description |
-|-------|-------|-------------|
-| Machinery Blow | 1-4 seconds | Distant reactor malfunction sound from KDS Deep ahead |
-| Screen Shake | +17 seconds | Violent 1-second screen shake (amplitude 5.0, 90Hz frequency) |
-| Lights Out (Corridor 1) | +17.5 seconds | Zone players traversed plunges into darkness |
-| Lights Out (Corridor 2) | +17.7 seconds | Zone players occupy plunges into darkness |
-| Power Failure Sound | +18 seconds | System-wide power-down failure alarm |
-| Auxiliary Power (Both) | +21.5 seconds | Emergency auxiliary lights activate in both corridors |
-| Lights On Sound | +21 seconds | Loud auxiliary power engagement |
+| Event                   | Delay         | Description                                                   |
+| ----------------------- | ------------- | ------------------------------------------------------------- |
+| Machinery Blow          | 1-4 seconds   | Distant reactor malfunction sound from KDS Deep ahead         |
+| Screen Shake            | +17 seconds   | Violent 1-second screen shake (amplitude 5.0, 90Hz frequency) |
+| Lights Out (Corridor 1) | +17.5 seconds | Zone players traversed plunges into darkness                  |
+| Lights Out (Corridor 2) | +17.7 seconds | Zone players occupy plunges into darkness                     |
+| Power Failure Sound     | +18 seconds   | System-wide power-down failure alarm                          |
+| Auxiliary Power (Both)  | +21.5 seconds | Emergency auxiliary lights activate in both corridors         |
+| Lights On Sound         | +21 seconds   | Loud auxiliary power engagement                               |
 
 4. **Experience the Explosion**:
    - Players are plunged into **complete darkness** for ~4 seconds
@@ -158,6 +159,7 @@ Players arrive at KDS Deep to find the facility **already destroyed**, sabotaged
    - Players don't need to clear all spawns, just stay alive as long as they can
 
 **Survival Duration by Tier**:
+
 - **A-tier**: 30 seconds
 - **B-tier**: 40 seconds
 - **C-tier**: 50 seconds
@@ -165,6 +167,7 @@ Players arrive at KDS Deep to find the facility **already destroyed**, sabotaged
 - **E-tier**: 90 seconds
 
 **Enemy Wave Sequence**:
+
 - **8 seconds**: Error_VeryHard baseline population wave
 - **D-tier 25% timer**: Pouncer Shadow mini-boss
 - **D-tier 66% timer**: Infected Hybrids wave
@@ -196,17 +199,20 @@ Players arrive at KDS Deep to find the facility **already destroyed**, sabotaged
 This mission uses a **custom win condition** unique among GTFO objectives, with a dark narrative twist:
 
 **Win Condition**: `GoToExitGeo` (NOT `GoToElevator`)
+
 - Players must reach the exit geomorph tile (KDS Deep destroyed zone)
 - **No elevator extraction**—the duplicate team has sabotaged it
 - Survival timer completion triggers instant mission success
 
 **Custom Success Screen**: **"Resources Expended"**
+
 - Same dramatic ending as vanilla R8E1 "Valiant"
 - UI displays: `"CM_PageExpeditionSuccess_Resources expended_CellUI 2"`
 - **The dark irony**: "Resources Expended" refers to the player team
 - They are the resources that were sacrificed to allow the duplicate team's escape
 
 **WinOnDeath Mechanic** (Event Type 26):
+
 ```csharp
 .AddMessage("SURVIVE", 6.0)
 .AddWinOnDeath(surviveDuration)  // Instant win when timer expires
@@ -214,6 +220,7 @@ This mission uses a **custom win condition** unique among GTFO objectives, with 
 ```
 
 **What Actually Happens (Game Mechanics)**:
+
 1. Survival timer expires (30-90 seconds based on tier)
 2. Mission **instantly succeeds**—no need to kill all enemies
 3. "WARDEN SECURITY SYSTEMS DISABLED" message confirms victory
@@ -223,6 +230,7 @@ This mission uses a **custom win condition** unique among GTFO objectives, with 
    - Not "win only if all players die"
 
 **What Actually Happens (Lore Reality)**:
+
 1. **Duplicate team has teleported out** via matter wave projector
 2. **They sabotaged the reactor** to cover their escape
 3. **Player team is abandoned** with no extraction possible
@@ -242,6 +250,7 @@ The prisoners have reached KDS Deep too late—not because of bad timing, but be
 The reactor explosion is a carefully choreographed environmental event that players **experience firsthand** as they traverse the final approach to KDS Deep.
 
 **Narrative Context**:
+
 - The KDS Deep reactor has **already failed** while players fought through the Complex
 - Players witness the explosion's effects in real-time as they reach the final corridors
 - Explosion affects the zones players are **currently occupying**, not zones behind them
@@ -250,6 +259,7 @@ The reactor explosion is a carefully choreographed environmental event that play
 **Trigger**: Completing the door scan in Corridor 2 (the penultimate zone)
 
 **Sequence Timeline**:
+
 ```
 Initial Delay: Random 1-4 seconds
 Explosion Delay: Initial + 17 seconds
@@ -257,6 +267,7 @@ Auxiliary Delay: Explosion + 4 seconds
 ```
 
 **Environmental Effects**:
+
 1. **MachineryBlow Sound** (ID: 1007447703): Distant reactor malfunction from KDS Deep ahead
 2. **Screen Shake**: Violent 1-second shake at 5.0 amplitude, 90Hz frequency, 10.0 radius
 3. **Progressive Lights Out**: Corridors 1 and 2 (zones players occupy) go completely dark in sequence (0.1s duration each)
@@ -265,6 +276,7 @@ Auxiliary Delay: Explosion + 4 seconds
 6. **LightsOn_Vol3 Sound** (ID: 3206896766): Loud auxiliary power-up sound
 
 **Player Experience**:
+
 - Brief warning period (distant machinery blow sound from ahead)
 - Sudden violent shake indicating catastrophic reactor failure
 - **Complete darkness** for ~4 seconds in the zones they're standing in
@@ -272,6 +284,7 @@ Auxiliary Delay: Explosion + 4 seconds
 - Realization that they're too late—the reactor ahead has already exploded
 
 **Affected Zones**:
+
 - **Corridor 1**: First approach corridor (loses power)
 - **Corridor 2**: Second approach corridor where scan is completed (loses power)
 - **KDS Deep Exit**: Final zone already running on auxiliary power when players arrive
@@ -281,18 +294,21 @@ Auxiliary Delay: Explosion + 4 seconds
 The final survival encounter uses **unique win conditions** not found in standard GTFO objectives, with dark lore implications:
 
 **Custom Win Condition**: `GoToExitGeo`
+
 - Players must reach the exit geomorph (KDS Deep destroyed zone)
 - **NOT a standard elevator extraction** (`GoToElevator`)
 - Win condition triggers instant success upon survival timer completion
 - **Lore context**: No extraction exists—the duplicate team sabotaged it
 
 **Custom Success Screen**: `SuccessScreen.ResourcesExpended`
+
 - Displays "Resources Expended" R8E1 Valiant-style ending
 - UI element: `"CM_PageExpeditionSuccess_Resources expended_CellUI 2"`
 - **Game interpretation**: Emphasizes the costly nature of reaching KDS Deep
 - **Lore interpretation**: The player team IS the resource that was expended
 
 **WinOnDeath Timer** (Event Type 26):
+
 ```csharp
 scanDoneEvents
     .AddMessage("SURVIVE", 6.0)
@@ -301,6 +317,7 @@ scanDoneEvents
 ```
 
 **How WinOnDeath Works (Game Mechanics)**:
+
 - Starts immediately when exit scan completes
 - Counts down based on tier (30-90 seconds)
 - **When timer hits zero → instant mission success**
@@ -309,6 +326,7 @@ scanDoneEvents
 - "WinOnDeath" means "instant win when this timer expires"
 
 **How WinOnDeath Works (Lore Reality)**:
+
 - Timer measures how long the player team survives their last stand
 - When timer completes, the duplicate team has successfully escaped
 - Players are eventually overrun and killed after this point
@@ -316,12 +334,14 @@ scanDoneEvents
 - The abandoned team is doomed, but they hold out long enough
 
 **Wave-Based Spawns**:
+
 - Continuous enemy spawns throughout duration
 - Tier D/E receive additional mid-timer waves
 - Final boss wave spawns at/after survival completion (can be ignored if timer finished)
 - Spawn density designed to be overwhelming—intentionally unwinnable long-term
 
 **Objective**: Survive, not eliminate all enemies
+
 - Focus on staying alive, not kill counts
 - Defensive positioning critical
 - Consumables and resources expendable
@@ -331,6 +351,7 @@ scanDoneEvents
 ### Two Mid-Level Path Options
 
 **Terminal Path Characteristics**:
+
 - Controlled pacing (player chooses when to activate)
 - Requires finding and using specific terminal
 - Admin-locked door unlocks on command
@@ -338,6 +359,7 @@ scanDoneEvents
 - Better for coordinated teams who want timing control
 
 **Holdout Path Characteristics**:
+
 - Forced timer-based pacing
 - Heavier combat encounter
 - Tier-scaled scan difficulty and duration
@@ -351,6 +373,7 @@ scanDoneEvents
 Special objective subtype that triggers on elevator landing:
 
 **Event Sequence**:
+
 1. **Error Alarm Sound** (2.0 second delay): R8E1_ErrorAlarm (ID: 1068424543)
 2. **Garganta Warning** (7.0 second delay): R8E1_GargantaWarning (ID: 3030964334)
    - Subtitle ID: 442824023
@@ -368,20 +391,24 @@ Special objective subtype that triggers on elevator landing:
 Nearly all difficulty parameters scale by tier (A through E):
 
 **Resource Scaling**:
+
 - Hub resource distribution remains consistent
 - Enemy point values increase at higher tiers
 
 **Enemy Composition**:
+
 - **A-C tiers**: Standard baseline enemies, Shadows, Pouncer scouts
 - **D-tier**: Adds Charger Giants, Pouncer Shadows, Infected Hybrids
 - **E-tier**: Adds Nightmare Giants, Chargers waves, Mother boss
 
 **Survival Duration**:
+
 - Linear scaling from 30 seconds (A) to 90 seconds (E)
 - 10-20 second increases per tier
 - D/E receive additional mid-timer enemy waves
 
 **Boss Types**:
+
 - **A-D tiers**: Tank boss at survival end
 - **E-tier**: Mother boss at survival end
 
@@ -390,17 +417,20 @@ Nearly all difficulty parameters scale by tier (A through E):
 ### Preparation Phase
 
 **Before Starting**:
+
 - Understand this is NOT an extraction mission
 - Final phase is survival, not evacuation
 - Stock up on consumables for finale
 - Coordinate team roles for survival encounter
 
 **Hub Resource Management**:
+
 - First hub: Moderate stockpile, expect more resources ahead
 - Mid-challenge hub: Heavy stockpile, prepare for final approach
 - Final hub: Take EVERYTHING - last resource opportunity
 
 **Path Selection**:
+
 - Terminal path if team wants controlled timing
 - Holdout path if team prefers heavier resources upfront
 - Both paths are viable, choose based on team coordination preference
@@ -408,16 +438,19 @@ Nearly all difficulty parameters scale by tier (A through E):
 ### Execution Phase (Start to Mid Challenge)
 
 **Corridor Navigation**:
+
 1. Clear start corridors quickly to avoid ErrorAlarmChase spawn wave
 2. Don't linger near elevator - enemies spawn from that direction
 3. Conserve resources in early corridors (limited supplies)
 
 **Hub Puzzles**:
+
 1. Identify puzzle type quickly (Keycard/Generator/Terminal)
 2. Coordinate team split for efficient completion
 3. Stock up on resources before continuing
 
 **Enemy Wave Management**:
+
 1. Shadow wave (40% traverse): Clear quickly, minimal threat
 2. Pouncer scout (25% traverse): Isolate and eliminate
 3. Giant Shooters (85% traverse): Suppress fire, coordinate focus
@@ -426,6 +459,7 @@ Nearly all difficulty parameters scale by tier (A through E):
 **Mid-Challenge Path Execution**:
 
 **Terminal Path**:
+
 1. Locate security zone terminal quickly
 2. Execute `KDS-DEEP_DEACTIVATE_DEFENSE` command
 3. Prepare for Shadow wave spawn (25 second delay)
@@ -433,6 +467,7 @@ Nearly all difficulty parameters scale by tier (A through E):
 5. Stock up at hub before continuing
 
 **Holdout Path**:
+
 1. Position defensively before triggering time lock
 2. Prepare for immediate mixed enemy spawn
 3. Focus fire on boss when it spawns (15-30s in)
@@ -442,12 +477,14 @@ Nearly all difficulty parameters scale by tier (A through E):
 ### Final Approach Phase
 
 **Corridor Management**:
+
 1. Clear minimal corridors with limited resources
 2. Prepare for Tank Pouncer spawn (20s delay on door open)
 3. Avoid wasting resources on delayed spawns (120s+ delays)
 4. Push forward quickly
 
 **Final Hub**:
+
 1. Take ALL resources - health, tools, ammo
 2. Discuss survival strategy with team
 3. Assign defensive positions for finale
@@ -458,12 +495,14 @@ Nearly all difficulty parameters scale by tier (A through E):
 Players experience the reactor explosion **in the zones they're traversing**, not behind them. The explosion affects Corridors 1 and 2 as players complete the door scan.
 
 **Pre-Explosion** (In Corridor 2):
+
 1. Complete surge alarm/team scan quickly to unlock progression
 2. Listen for distant machinery blow sound (first warning from KDS Deep ahead)
 3. Brace for screen shake at +17 seconds (violent 1-second shake)
 4. Know the path forward to final KDS Deep exit zone
 
 **During Explosion** (17-21 seconds after scan):
+
 1. **Screen shakes violently** - indicates reactor catastrophic failure
 2. **Complete darkness descends** on Corridors 1 and 2 (zones you're in)
 3. **Activate flashlights immediately** - you'll be blind for ~4 seconds
@@ -473,6 +512,7 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 7. Auxiliary power activates after ~4 seconds with dramatic red emergency lighting
 
 **Post-Explosion** (Under Emergency Lighting):
+
 1. Realize the reactor ahead has already failed—explosion wasn't behind you
 2. Navigate forward under emergency red auxiliary lighting
 3. Understand that KDS Deep will be destroyed when you arrive
@@ -480,6 +520,7 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 5. Stock up on any remaining resources before entering final zone
 
 **Key Understanding**:
+
 - You're NOT outrunning an explosion chasing you from behind
 - You're witnessing an explosion that's ALREADY occurred ahead of you
 - The zones you're in lose power because the reactor ahead has failed
@@ -488,6 +529,7 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 ### Survival Encounter Phase
 
 **Initial Setup** (Before scan):
+
 1. Position team in defensible formation
 2. Identify cover and fallback positions
 3. Assign sectors/lanes to team members
@@ -495,6 +537,7 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 5. **Understand the reality**: This is a last stand, not an escape
 
 **During Survival** (30-90 seconds):
+
 1. **Focus on STAYING ALIVE, not kill counts**
 2. Use all consumables liberally (mine, C-foam, sentries)
 3. Rotate positions to avoid being pinned
@@ -504,6 +547,7 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 7. **No rescue is coming**—timer measures your last stand
 
 **Wave Management**:
+
 1. **8-second wave**: Baseline enemies, moderate threat
 2. **Mid-timer waves** (D/E only): High threat, coordinate focus
 3. **Final boss wave**: Spawns AT/AFTER survival completion
@@ -511,6 +555,7 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 5. Spawns are overwhelming by design—you can't clear everything
 
 **Win Condition Awareness**:
+
 - Game: Timer completion = mission success
 - Lore: Timer measures how long you survive before being overrun
 - Prioritize time over kills
@@ -523,6 +568,7 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 ### Objective-Specific Commands
 
 **KDS-DEEP_DEACTIVATE_DEFENSE** (Terminal Path Only)
+
 - **Description**: Deactivate KDS Deep defense grid to unlock progression
 - **Usage**: Enter command at security terminal in mid-challenge zone
 - **Output Sequence**:
@@ -539,6 +585,7 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 ### Navigation Commands
 
 **PING [ZONE_ALIAS]** - Locate zones by alias
+
 - `PING KDS` - Locate KDS Deep zones
 - `PING` - General area scan
 
@@ -547,6 +594,7 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 ## Notable Expeditions
 
 **R8E1 "Valiant"** (Rundown 8, E-tier)
+
 - The vanilla GTFO expedition that this objective recreates
 - Features similar reactor explosion and KDS Deep arrival
 - Known for dramatic environmental storytelling
@@ -554,6 +602,7 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 - [R8E1 Wiki Page](https://gtfo.wiki.gg/wiki/R8E1)
 
 **AutogenRundown Implementation**
+
 - Custom objective exclusive to AutogenRundown mod
 - Appears in C-tier expeditions primarily
 - Can potentially appear in E-tier with full difficulty scaling
@@ -562,18 +611,18 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 
 ## Comparison to Related Objectives
 
-| Aspect | Reach KDS Deep | Clear Path | Reactor Startup | Survival |
-|--------|----------------|------------|-----------------|----------|
-| **Objective Type** | Custom | Vanilla | Vanilla | Vanilla |
-| **Main Goal** | Reach zone + survive | Reach extraction | Reactor verification | Timed survival |
-| **Time Pressure** | High (explosion) | Low | High (waves) | Very High |
-| **Combat Intensity** | Very High | Low-Medium | Very High | Extreme |
-| **Unique Mechanics** | Explosion, lights out | Simple navigation | Verification codes | None |
-| **Team Coordination** | High | Low | High | Very High |
-| **Environmental Hazards** | Darkness, explosion | Minimal | None | None |
-| **Win Condition** | Survival timer | Reach extraction | Complete sequence | Survival timer |
-| **Solo Feasibility** | Very Difficult | Easy | Difficult | Nearly Impossible |
-| **Resource Availability** | High | Varies | High | Pre-stocked |
+| Aspect                    | Reach KDS Deep        | Clear Path        | Reactor Startup      | Survival          |
+| ------------------------- | --------------------- | ----------------- | -------------------- | ----------------- |
+| **Objective Type**        | Custom                | Vanilla           | Vanilla              | Vanilla           |
+| **Main Goal**             | Reach zone + survive  | Reach extraction  | Reactor verification | Timed survival    |
+| **Time Pressure**         | High (explosion)      | Low               | High (waves)         | Very High         |
+| **Combat Intensity**      | Very High             | Low-Medium        | Very High            | Extreme           |
+| **Unique Mechanics**      | Explosion, lights out | Simple navigation | Verification codes   | None              |
+| **Team Coordination**     | High                  | Low               | High                 | Very High         |
+| **Environmental Hazards** | Darkness, explosion   | Minimal           | None                 | None              |
+| **Win Condition**         | Survival timer        | Reach extraction  | Complete sequence    | Survival timer    |
+| **Solo Feasibility**      | Very Difficult        | Easy              | Difficult            | Nearly Impossible |
+| **Resource Availability** | High                  | Varies            | High                 | Pre-stocked       |
 
 ## Common Challenges
 
@@ -582,6 +631,7 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 **Problem**: Lights go out in the zones players are currently occupying, completely disorienting the team in total darkness for several seconds
 
 **Solution**:
+
 - **Understand what's happening**: The reactor ahead has exploded, cutting power to zones you're in
 - **You're NOT being chased**: The explosion is ahead of you, not behind you
 - Activate flashlights **IMMEDIATELY** when lights cut
@@ -598,6 +648,7 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 **Problem**: Overwhelming enemy waves spawn continuously, making it feel impossible to survive the full timer. Additionally, there's no extraction available—what happens when the timer ends?
 
 **Solution**:
+
 - **Understand the win condition**: Timer expiration = instant win via WinOnDeath mechanic
 - **Players do NOT actually die in-game** - mission succeeds when timer hits zero
 - Focus ONLY on staying alive, not killing enemies
@@ -618,12 +669,14 @@ Players experience the reactor explosion **in the zones they're traversing**, no
 The victory screen is intentionally ambiguous because **in lore, this is not a happy ending**:
 
 **Game Mechanics Perspective**:
+
 - Mission counted as success if survival timer completes
 - "Resources Expended" is a valid victory condition
 - Players don't die in-game—mission ends successfully
 - All objectives technically completed
 
 **Lore Reality Perspective**:
+
 - **This is a fatal betrayal**, not a real victory
 - A duplicate team has teleported out via matter wave projector
 - They deliberately sabotaged the reactor to cover their escape
@@ -634,6 +687,7 @@ The victory screen is intentionally ambiguous because **in lore, this is not a h
 - The duplicate team succeeds; the player team dies
 
 **Why Warden Counts It As Success**:
+
 - Objectives were completed (reached KDS Deep)
 - The duplicate team's mission succeeded
 - Player team surviving long enough allowed duplicate team to escape
@@ -647,6 +701,7 @@ This is one of GTFO's bleakest narratives—a pyrrhic victory where you "win" th
 **Problem**: Uncertain which path (Terminal vs Holdout) is better for the team
 
 **Solution**:
+
 - **Choose Terminal path if**:
   - Team wants controlled timing
   - Better at coordinated command execution
@@ -662,6 +717,7 @@ This is one of GTFO's bleakest narratives—a pyrrhic victory where you "win" th
 **Problem**: Running out of ammo and consumables before reaching the final survival encounter
 
 **Solution**:
+
 - Conserve ammo in early corridors (limited enemy spawns)
 - Stock up heavily at EVERY hub zone
 - Use melee on lone enemies when safe
@@ -674,6 +730,7 @@ This is one of GTFO's bleakest narratives—a pyrrhic victory where you "win" th
 **Problem**: Team members get separated during the lights-out sequence, leading to disorganization
 
 **Solution**:
+
 - Establish leader before explosion zone
 - All players follow leader's position
 - Use voice comms constantly during darkness
@@ -686,6 +743,7 @@ This is one of GTFO's bleakest narratives—a pyrrhic victory where you "win" th
 **Problem**: Tank or Mother spawns during critical moments (mid-challenge holdout or final survival)
 
 **Solution**:
+
 - **Mid-challenge boss**:
   - Spawns 15-30 seconds into countdown
   - Coordinate burst damage immediately
@@ -701,6 +759,7 @@ This is one of GTFO's bleakest narratives—a pyrrhic victory where you "win" th
 **Problem**: Enemies spawn from elevator direction early in mission (30 seconds after land), overwhelming team
 
 **Solution**:
+
 - Clear start corridors QUICKLY
 - Don't linger near elevator area
 - Push forward to first hub before 30-second mark
@@ -713,6 +772,7 @@ This is one of GTFO's bleakest narratives—a pyrrhic victory where you "win" th
 **Problem**: Mission starts immediately with no safe zone to prepare
 
 **Solution**:
+
 - Discuss strategy during elevator descent
 - Assign roles before landing (leader, scout, defender)
 - Start moving immediately on landing
@@ -722,6 +782,7 @@ This is one of GTFO's bleakest narratives—a pyrrhic victory where you "win" th
 ## Tips
 
 ### Path Selection
+
 - Scout the two mid-level paths before choosing if possible
 - Terminal path gives more control over timing and pacing
 - Holdout path provides heavier resource stockpile upfront
@@ -730,6 +791,7 @@ This is one of GTFO's bleakest narratives—a pyrrhic victory where you "win" th
 - Holdout path is more straightforward (no terminal commands)
 
 ### Reactor Explosion
+
 - **Critical**: Explosion happens IN FRONT in zones you're occupying, NOT behind you
 - You witness the reactor failure firsthand in Corridors 1 & 2
 - Prepare for total darkness lasting ~4 seconds in your current zones
@@ -744,6 +806,7 @@ This is one of GTFO's bleakest narratives—a pyrrhic victory where you "win" th
 - Know the path forward before triggering the scan
 
 ### Survival Encounter
+
 - **No extraction available** - duplicate team sabotaged the reactor and extraction
 - **Custom win condition**: `GoToExitGeo` (NOT standard elevator extraction)
 - **Custom "Resources Expended" win screen** displays (R8E1 Valiant-style)
@@ -768,6 +831,7 @@ This is one of GTFO's bleakest narratives—a pyrrhic victory where you "win" th
 - **Dark irony**: "Victory" means you lasted long enough for the duplicate team to escape
 
 ### Reactor & Lore
+
 - **Reactor explosion happens AHEAD of players** (in KDS Deep), not behind them
 - Players arrive too late - reactor has already failed
 - Explosion affects zones players are currently occupying (Corridors 1 & 2)
@@ -781,6 +845,7 @@ This is one of GTFO's bleakest narratives—a pyrrhic victory where you "win" th
 - "Resources Expended" reflects the cost of reaching KDS Deep too late
 
 ### Combat & Resources
+
 - Clear start zones quickly to avoid early ErrorAlarmChase pressure
 - Hub puzzles are randomly selected (Keycard/Generator/Terminal)
 - Both mid-level paths lead to similar outcomes
@@ -790,6 +855,7 @@ This is one of GTFO's bleakest narratives—a pyrrhic victory where you "win" th
 - Conserve ammo in early phases, spend freely in finale
 
 ### Difficulty Scaling
+
 - Final survival duration scales by tier (30-90 seconds):
   - A: 30s, B: 40s, C: 50s, D: 70s, E: 90s
 - D/E tiers receive additional mid-survival enemy waves
@@ -799,6 +865,7 @@ This is one of GTFO's bleakest narratives—a pyrrhic victory where you "win" th
 - Puzzle difficulty does not scale by tier
 
 ### Technical Details
+
 - **Win condition**: `GoToExitGeo` (NOT `GoToElevator`)
 - **Success screen**: `SuccessScreen.ResourcesExpended` (R8E1 Valiant-style)
 - **WinOnDeath event** (Type 26): Instant win at timer expiration

@@ -66,11 +66,13 @@ Corrupted Terminal Uplink represents a damaged or compromised network connection
 ### Multi-Terminal Coordination
 
 **Terminal Roles:**
+
 - **Central Uplink Terminal**: Primary terminal for UPLINK_CONNECT and UPLINK_VERIFY
 - **Log Terminals**: Contain verification codes in log files (in other zones)
 - **Confirmation Terminal**: Secondary terminal for UPLINK_CONFIRM command
 
 **Team Splitting Required:**
+
 - Code Reader navigates to log terminals
 - Uplink Operator remains at central terminal
 - Defenders protect both positions
@@ -79,12 +81,14 @@ Corrupted Terminal Uplink represents a damaged or compromised network connection
 ### Corrupted Verification System
 
 **Code Location:**
+
 - Verification codes NOT displayed on HUD
 - Codes written to terminal log files instead
 - Log files located on terminals in other zones
 - Requires physical navigation to retrieve codes
 
 **Log File Access:**
+
 - Use `LOGS` command to list files on log terminal
 - Use `READ [FILENAME]` to view verification codes
 - Log files typically have descriptive names (verification.log, codes.log, etc.)
@@ -93,16 +97,19 @@ Corrupted Terminal Uplink represents a damaged or compromised network connection
 ### Verification Commands
 
 **UPLINK_CONNECT [IP_ADDRESS]:**
+
 - Initiates corrupted uplink to specified IP
 - Triggers alarm immediately
 - Begins multi-stage verification process
 
 **UPLINK_VERIFY [PASSWORD]:**
+
 - Enters 4-letter verification password at central terminal
 - Code must match log file code
 - Incorrect password resets current stage
 
 **UPLINK_CONFIRM:**
+
 - Final confirmation command at second terminal
 - Completes uplink establishment
 - Only used after all verification stages complete
@@ -110,6 +117,7 @@ Corrupted Terminal Uplink represents a damaged or compromised network connection
 ### Communication Requirements
 
 **Critical Information Flow:**
+
 - Log reader finds and reads codes
 - Codes relayed verbally to uplink operator
 - Uplink operator confirms receipt and enters verification
@@ -135,12 +143,14 @@ Corrupted Terminal Uplink represents a damaged or compromised network connection
 ### Team Positioning
 
 **Initial Setup:**
+
 - Uplink operator at central terminal
 - Code runner ready to navigate to first log terminal
 - Defenders positioned at uplink terminal
 - All players confirm readiness
 
 **During Uplink:**
+
 - Uplink operator and defenders hold central terminal
 - Code runner navigates between log terminals
 - Maintain constant communication
@@ -149,6 +159,7 @@ Corrupted Terminal Uplink represents a damaged or compromised network connection
 ### Code Retrieval Process
 
 **Code Runner Workflow:**
+
 1. Navigate to log terminal zone quickly but safely
 2. Access log terminal
 3. Type `LOGS` to list files
@@ -159,6 +170,7 @@ Corrupted Terminal Uplink represents a damaged or compromised network connection
 8. Prepare to move to next log terminal for next stage
 
 **Communication Protocol:**
+
 - Code runner: "Code is X04, repeat X-zero-four"
 - Uplink operator: "Confirm X04, entering verification"
 - Code runner: "Verified, moving to next terminal"
@@ -177,12 +189,14 @@ Corrupted Terminal Uplink represents a damaged or compromised network connection
 ### Defensive Strategy
 
 **Central Terminal Defense:**
+
 - 1-2 defenders focus on protecting uplink operator
 - Position sentries covering main approaches
 - C-Foam door reinforcement
 - Bio Tracker for enemy tagging
 
 **Code Runner Protection:**
+
 - Runner must be self-sufficient during retrieval
 - Pre-cleared zones critical for runner safety
 - Defenders cannot protect runner due to distance
@@ -199,15 +213,18 @@ Corrupted Terminal Uplink represents a damaged or compromised network connection
 ## Terminal Commands
 
 ### Uplink Commands
+
 - `UPLINK_CONNECT [IP_ADDRESS]` - Initiate corrupted uplink (e.g., `UPLINK_CONNECT 127.0.0.1`)
 - `UPLINK_VERIFY [PASSWORD]` - Enter 4-letter verification password (e.g., `UPLINK_VERIFY DART`)
 - `UPLINK_CONFIRM` - Final confirmation at second terminal
 
 ### Log File Commands
+
 - `LOGS` - List all available log files on current terminal
 - `READ [FILENAME]` - Read specific log file containing codes (e.g., `READ verification.log`)
 
 ### Navigation Commands
+
 - `PING` - Locate terminal zones
 - `LIST` - Show items and objectives
 - `QUERY` - Find specific objectives
@@ -217,27 +234,29 @@ Corrupted Terminal Uplink represents a damaged or compromised network connection
 Corrupted Terminal Uplink appears in various expeditions, particularly in higher-difficulty tiers.
 
 ### Introduction
+
 - Corrupted uplink variant with log files introduced in Rundown 5 (005://EXT)
 
 ### Difficulty Scaling
+
 - AutogenRundown mod features longer verification codes at higher difficulties for both standard and corrupted uplinks
 
 See [Establish Uplink - Official GTFO Wiki](https://gtfo.fandom.com/wiki/Establish_Uplink) for information about uplink objectives.
 
 ## Comparison to Related Objectives
 
-| Aspect | Corrupted Terminal Uplink | Terminal Uplink (Standard) | Timed Terminal Sequence |
-|--------|---------------------------|---------------------------|------------------------|
-| **Code Source** | Log files in other terminals | HUD display | N/A |
-| **Team Splitting** | Required | Not required | Required |
-| **Terminal Count** | 3+ (uplink, logs, confirm) | 1 (uplink only) | 2-3 (central, parallel) |
-| **Communication Needs** | Critical (code relay) | Low | Critical (coordination) |
-| **Time Pressure** | Moderate | Low | Very high (strict timers) |
-| **Zone Navigation** | Extensive | Minimal | Moderate |
-| **Complexity** | Very high | Moderate | Very high |
-| **Code Entry** | Relayed from reader | Direct from HUD | Command sequences |
-| **Confirmation Step** | UPLINK_CONFIRM required | None | Multiple confirms |
-| **Combat Intensity** | High (split defense) | Moderate to high | Very high (continuous) |
+| Aspect                  | Corrupted Terminal Uplink    | Terminal Uplink (Standard) | Timed Terminal Sequence   |
+| ----------------------- | ---------------------------- | -------------------------- | ------------------------- |
+| **Code Source**         | Log files in other terminals | HUD display                | N/A                       |
+| **Team Splitting**      | Required                     | Not required               | Required                  |
+| **Terminal Count**      | 3+ (uplink, logs, confirm)   | 1 (uplink only)            | 2-3 (central, parallel)   |
+| **Communication Needs** | Critical (code relay)        | Low                        | Critical (coordination)   |
+| **Time Pressure**       | Moderate                     | Low                        | Very high (strict timers) |
+| **Zone Navigation**     | Extensive                    | Minimal                    | Moderate                  |
+| **Complexity**          | Very high                    | Moderate                   | Very high                 |
+| **Code Entry**          | Relayed from reader          | Direct from HUD            | Command sequences         |
+| **Confirmation Step**   | UPLINK_CONFIRM required      | None                       | Multiple confirms         |
+| **Combat Intensity**    | High (split defense)         | Moderate to high           | Very high (continuous)    |
 
 ## Common Challenges
 

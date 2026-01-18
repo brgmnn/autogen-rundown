@@ -29,11 +29,13 @@ Reactors are critical power facilities located deep within the Complex. In React
 ### Phase 3: Verification Code Entry
 
 **Standard Variant (HUD Display):**
+
 - Verification code appears directly on the HUD (e.g., "DART", "CURE", "CELL")
 - Enter command: `REACTOR_VERIFY [CODE]` (e.g., `REACTOR_VERIFY DART`)
 - Must be completed before verification timer expires
 
 **Advanced Variant (Terminal Logs):**
+
 - Codes must be retrieved from log files on terminals in adjacent zones
 - Zones unlock sequentially as reactor progresses through phases
 - Code-retrieval zones may contain:
@@ -67,11 +69,13 @@ Reactors are critical power facilities located deep within the Complex. In React
 ### Code Retrieval Mechanics
 
 **HUD Codes (Basic):**
+
 - Codes displayed automatically
 - Focus remains on wave defense
 - Lower complexity, higher combat intensity
 
 **Terminal Log Codes (Advanced):**
+
 - Requires terminal navigation during or between waves
 - Adds exploration and risk management layer
 - May require team splitting or rapid solo runs
@@ -124,6 +128,7 @@ Reactors are critical power facilities located deep within the Complex. In React
 ## Notable Expeditions
 
 ### Reactor Startup (Main Objective)
+
 - **[ALT://R1C1](https://gtfo.fandom.com/wiki/ALT://R1C1)**: 8 waves, introductory difficulty
 - **[ALT://R2D2](https://gtfo.wiki.gg/wiki/ALT://R2D2)**: 10 waves, extended sequence
 - **[ALT://R3A3](https://gtfo.fandom.com/wiki/ALT://R3A3)**: Advanced enemy types
@@ -134,6 +139,7 @@ Reactors are critical power facilities located deep within the Complex. In React
 - **[R7E1](https://gtfo.fandom.com/wiki/R7E1)**: Rundown 7 E-tier mission
 
 ### Reactor Startup (Secondary/Overload)
+
 - **[ALT://R4B1](https://gtfo.fandom.com/wiki/ALT://R4B1)**: Secondary objective variant
 - **[ALT://R4E1](https://gtfo.fandom.com/wiki/ALT://R4E1)**: Overload objective, 25-second verification
 - **[ALT://R5B1](https://gtfo.fandom.com/wiki/ALT://R5B1)**: Secondary variant
@@ -142,18 +148,18 @@ Reactors are critical power facilities located deep within the Complex. In React
 
 ## Comparison to Reactor Shutdown
 
-| Aspect | Reactor Startup | Reactor Shutdown |
-|--------|-----------------|------------------|
-| **Objective Type** | Wave defense with verification codes | Bioscan defense with alarm |
-| **Initial State** | Often begins in darkness | Well-illuminated zones |
-| **Activation Command** | `REACTOR_STARTUP` | `REACTOR_SHUTDOWN` |
-| **Primary Mechanic** | Timed waves + code verification | Bioscan completion + sustained alarm |
-| **Code Verification** | Multiple times (4-10 cycles) | Single verification to begin |
-| **Enemy Spawning** | Wave-based, predetermined durations | Continuous spawning until extraction |
-| **Power State** | Brings reactor online | Severs power across expedition |
-| **Defense Phases** | Discrete waves with breaks | Continuous combat during bioscans |
-| **Complexity** | Higher (multiple cycles, timing) | Moderate (single bioscan sequence) |
-| **Number of Expeditions** | 13+ expeditions | 4 expeditions |
+| Aspect                    | Reactor Startup                      | Reactor Shutdown                     |
+| ------------------------- | ------------------------------------ | ------------------------------------ |
+| **Objective Type**        | Wave defense with verification codes | Bioscan defense with alarm           |
+| **Initial State**         | Often begins in darkness             | Well-illuminated zones               |
+| **Activation Command**    | `REACTOR_STARTUP`                    | `REACTOR_SHUTDOWN`                   |
+| **Primary Mechanic**      | Timed waves + code verification      | Bioscan completion + sustained alarm |
+| **Code Verification**     | Multiple times (4-10 cycles)         | Single verification to begin         |
+| **Enemy Spawning**        | Wave-based, predetermined durations  | Continuous spawning until extraction |
+| **Power State**           | Brings reactor online                | Severs power across expedition       |
+| **Defense Phases**        | Discrete waves with breaks           | Continuous combat during bioscans    |
+| **Complexity**            | Higher (multiple cycles, timing)     | Moderate (single bioscan sequence)   |
+| **Number of Expeditions** | 13+ expeditions                      | 4 expeditions                        |
 
 ## Common Challenges
 

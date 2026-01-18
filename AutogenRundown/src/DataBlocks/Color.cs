@@ -59,6 +59,18 @@ public record Color
     };
     #endregion
 
+    #region Zone Security Sensors
+
+    public static readonly Color ZoneSensor_EncryptedText = new()
+    {
+        Alpha = 0.8,
+        Red = 0.85,
+        Green = 0.41,
+        Blue = 0.15,
+    };
+
+    #endregion
+
     public static readonly Color White = new() { Red = 1.0, Green = 1.0, Blue = 1.0, Alpha = 1.0 };
 
     #region Fog Preset colors

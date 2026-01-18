@@ -51,21 +51,25 @@ Clear Path is a navigation and survival objective where the primary goal is simp
 ### Navigation Obstacles
 
 **Locked Security Doors:**
+
 - Require keys found elsewhere in the Complex
 - Use terminal commands to locate keys
 - Keys may be in dangerous zones requiring careful retrieval
 
 **Power Restoration:**
+
 - Some zones lose power and require generator activation
 - Power cells must be found and delivered to generators
 - Restoring power may trigger enemy spawns
 
 **Alarm Systems:**
+
 - Security doors with chained puzzle alarms
 - Error alarms that cannot be deactivated
 - Survival required during alarm sequences
 
 **Bioscan Sequences:**
+
 - Security scans requiring team presence
 - Vulnerable positions during scan completion
 - May trigger additional enemy spawns
@@ -73,12 +77,14 @@ Clear Path is a navigation and survival objective where the primary goal is simp
 ### Extraction Mechanics
 
 **Extraction Scan:**
+
 - Final bioscan required at extraction point
 - Duration varies by expedition
 - At least one player must complete scan for mission success
 - Commonly triggers error alarm with continuous enemy spawns
 
 **Error Alarm on Extraction:**
+
 - Many expeditions trigger error alarm when extraction begins
 - Continuous enemy spawns until scan completes
 - Cannot be deactivated - must survive through combat
@@ -86,11 +92,13 @@ Clear Path is a navigation and survival objective where the primary goal is simp
 ### Speed vs Preparation
 
 **Run and Gun Strategy:**
+
 - Move quickly to extraction after completing prerequisite objectives
 - Minimize time spent in alarm zones
 - Risk: less defensive preparation at extraction
 
 **Methodical Preparation:**
+
 - Clear path thoroughly, set up sentries along route
 - Establish fallback positions with C-Foam reinforcement
 - Walk the path once to learn layout and ladder positions
@@ -161,6 +169,7 @@ If you've completed secondary objectives before extraction:
 Clear Path appears in numerous expeditions across all rundowns:
 
 ### Featured Expeditions
+
 - **[ALT://R4D2](https://gtfo.wiki.gg/wiki/ALT://R4D2)**: Clear Path objective
 - Many other expeditions feature Clear Path as primary or secondary objective
 
@@ -168,16 +177,16 @@ See [Clear a Path - Official GTFO Wiki](https://gtfo.fandom.com/wiki/Clear_a_Pat
 
 ## Comparison to Other Objectives
 
-| Aspect | Clear Path | HSU Find Sample | Reactor Startup |
-|--------|-----------|-----------------|-----------------|
-| **Primary Goal** | Reach extraction | Retrieve tissue sample | Complete reactor waves |
-| **Complexity** | Simple (but challenging) | Moderate | High |
-| **Main Challenge** | Navigation + extraction survival | Path prep + alarm retreat | Wave defense + timing |
-| **Combat Intensity** | High at extraction | High during alarm | Very high during waves |
-| **Terminal Usage** | Navigation aid | HSU location critical | Code retrieval (variant) |
-| **Time Pressure** | Moderate | High after bioscan | Very high (timers) |
-| **Resource Intensity** | Moderate to High | High | Very High |
-| **Objective Count** | Very common | Common | Less common |
+| Aspect                 | Clear Path                       | HSU Find Sample           | Reactor Startup          |
+| ---------------------- | -------------------------------- | ------------------------- | ------------------------ |
+| **Primary Goal**       | Reach extraction                 | Retrieve tissue sample    | Complete reactor waves   |
+| **Complexity**         | Simple (but challenging)         | Moderate                  | High                     |
+| **Main Challenge**     | Navigation + extraction survival | Path prep + alarm retreat | Wave defense + timing    |
+| **Combat Intensity**   | High at extraction               | High during alarm         | Very high during waves   |
+| **Terminal Usage**     | Navigation aid                   | HSU location critical     | Code retrieval (variant) |
+| **Time Pressure**      | Moderate                         | High after bioscan        | Very high (timers)       |
+| **Resource Intensity** | Moderate to High                 | High                      | Very High                |
+| **Objective Count**    | Very common                      | Common                    | Less common              |
 
 ## Common Challenges
 

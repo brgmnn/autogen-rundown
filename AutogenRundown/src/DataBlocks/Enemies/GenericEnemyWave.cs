@@ -92,24 +92,6 @@ public record GenericWave
     };
     #endregion
 
-    #region Uplink Waves
-    public static readonly GenericWave Uplink_Easy = new()
-    {
-        Settings = WaveSettings.Baseline_Normal,
-        Population = WavePopulation.Baseline,
-        SpawnDelay = 2.0,
-        TriggerAlarm = true,
-    };
-
-    public static readonly GenericWave Uplink_Medium = new()
-    {
-        Settings = WaveSettings.Baseline_Hard,
-        Population = WavePopulation.Baseline,
-        SpawnDelay = 2.0,
-        TriggerAlarm = true
-    };
-    #endregion
-
     #region Chargers
     public static readonly GenericWave GiantChargers_35pts = new()
     {
@@ -171,11 +153,15 @@ public record GenericWave
     #endregion
 
 
+    // Backing fields for deserialized values
+    private uint? _survivalWaveSettings;
+    private uint? _survivalWavePopulation;
+
     [JsonProperty("WaveSettings")]
     public uint SurvivalWaveSettings
     {
-        get => Settings.PersistentId;
-        private set { }
+        get => _survivalWaveSettings ?? Settings.PersistentId;
+        set => _survivalWaveSettings = value;
     }
 
     [JsonIgnore]
@@ -189,8 +175,8 @@ public record GenericWave
     [JsonProperty("WavePopulation")]
     public uint SurvivalWavePopulation
     {
-        get => Population.PersistentId;
-        private set { }
+        get => _survivalWavePopulation ?? Population.PersistentId;
+        set => _survivalWavePopulation = value;
     }
 
     /// <summary>

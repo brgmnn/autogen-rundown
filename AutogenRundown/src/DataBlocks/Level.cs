@@ -2,6 +2,7 @@
 using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
+using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
@@ -332,6 +333,15 @@ public class Level
     };
     #endregion
 
+    #region Zone Sensors (Autogen Custom)
+    /// <summary>
+    /// Zone-based security sensors that are placed automatically within zones.
+    /// These are handled by AutogenRundown's ZoneSensorManager at runtime.
+    /// </summary>
+    [JsonIgnore]
+    public List<ZoneSensorDefinition> ZoneSensors { get; private set; } = new();
+    #endregion
+
     #region GlobalWaveSettings
 
     [JsonIgnore]
@@ -520,6 +530,13 @@ public class Level
         get => ObjectiveLayer[Bulkhead.Main];
         set => ObjectiveLayer[Bulkhead.Main] = value;
     }
+
+    /// <summary>
+    /// True if this level has both an Extreme and Overload optional objectives
+    /// </summary>
+    [JsonIgnore]
+    public bool HasPrisonerEfficiency => Settings.Bulkheads.HasFlag(Bulkhead.PrisonerEfficiency);
+
     #endregion
 
     #region Secondary (Extreme) Objective Data
@@ -1030,6 +1047,18 @@ public class Level
 
         if (EOS_SecuritySensor.Definitions.Any())
             EOS_SecuritySensor.Save();
+
+        // Save zone sensors to JSON for runtime loading
+        if (ZoneSensors.Any())
+        {
+            var levelZoneSensors = new LevelZoneSensors
+            {
+                Name = $"{Tier}{Index}_{fsName}",
+                MainLevelLayout = LevelLayoutData,
+                Definitions = ZoneSensors
+            };
+            levelZoneSensors.Save();
+        }
     }
 
     /// <summary>
@@ -1579,6 +1608,75 @@ public class Level
                     });
 
                 layout.Zones.Add(zone);
+
+                if (z == 0)
+                {
+                    var sensorEvents = new List<WardenObjectiveEvent>();
+
+                    sensorEvents
+                        // .AddToggleZoneSensors(false, 0, 0.1)
+                        .AddSound(Sound.LightsOff)
+                        .AddSpawnWave(GenericWave.SingleTank, 2.0);
+                    // .AddToggleZoneSensors(true, 0, 4.0)
+                    // .AddSound(Sound.LightsOn_Vol2);
+
+                    level.ZoneSensors.Add(new ZoneSensorDefinition
+                    {
+                        ZoneNumber = zone.LocalIndex,
+                        Bulkhead = Bulkhead.Main,
+
+                        SensorGroups = new List<ZoneSensorGroupDefinition>
+                        {
+                            new ZoneSensorGroupDefinition
+                            {
+                                TriggerEach = true,
+                                Count = 10,
+                                Radius = 1,
+                                AreaIndex = -1,
+                            }
+                        },
+
+                        EventsOnTrigger = sensorEvents
+                    });
+                }
+
+                if (z == 1)
+                {
+                    var sensorEvents = new List<WardenObjectiveEvent>();
+
+                    sensorEvents
+                        .AddSound(Sound.LightsOff)
+                        .AddSpawnWave(new GenericWave
+                        {
+                            Population = WavePopulation.Baseline,
+                            Settings = WaveSettings.SingleMiniBoss
+                        }, 1.0);
+                        // .AddSpawnWave(GenericWave.SinglePouncer, 2.0);
+
+                    level.ZoneSensors.Add(new ZoneSensorDefinition
+                    {
+                        ZoneNumber = 0,
+                        Bulkhead = Bulkhead.Main,
+
+                        SensorGroups = new List<ZoneSensorGroupDefinition>
+                        {
+                            new ZoneSensorGroupDefinition
+                            {
+                                TriggerEach = true,
+                                Count = 16,
+                                Moving = 3,
+                                Speed = 0.5,
+                                Radius = 2.5,
+                                EdgeDistance = 0.7,
+                                AreaIndex = -1,
+                                EncryptedText = true,
+                                Text = "Scout Security Scan"
+                            }
+                        },
+
+                        EventsOnTrigger = sensorEvents
+                    });
+                }
             }
 
             // layout.AddSecuritySensors_SinglePouncerShadow((0, 1));
