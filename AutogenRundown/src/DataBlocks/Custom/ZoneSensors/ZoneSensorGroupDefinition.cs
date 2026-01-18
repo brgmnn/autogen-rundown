@@ -64,9 +64,11 @@ public record ZoneSensorGroupDefinition
     public bool TriggerEach { get; set; } = false;
 
     /// <summary>
-    /// When true, sensors patrol between their initial position and a random second point.
+    /// Number of patrol points for sensor movement.
+    /// 1 = stationary, 2 = patrol between start and one point, 3+ = multi-point patrol.
+    /// Default = 1
     /// </summary>
-    public bool Moving { get; set; } = false;
+    public int Moving { get; set; } = 1;
 
     /// <summary>
     /// Movement speed in units per second when Moving is true.

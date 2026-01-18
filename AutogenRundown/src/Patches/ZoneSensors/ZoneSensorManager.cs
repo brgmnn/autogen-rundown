@@ -292,8 +292,8 @@ public sealed class ZoneSensorManager
             var sensorGO = CreateSensorVisual(position, groupDef, groupIndex, sensorIndex);
             sensorGroup.AddSensor(sensorGO);
 
-            // Add movement if enabled
-            if (groupDef.Moving)
+            // Add movement if enabled (Moving > 1 means patrol between multiple points)
+            if (groupDef.Moving > 1)
             {
                 InitializeSensorMovement(zone, groupDef, sensorGO, position);
             }
@@ -305,34 +305,49 @@ public sealed class ZoneSensorManager
     }
 
     /// <summary>
-    /// Initializes movement for a sensor by calculating a path to a random second point.
+    /// Initializes movement for a sensor by calculating paths through multiple patrol points.
     /// </summary>
     private void InitializeSensorMovement(LG_Zone zone, ZoneSensorGroupDefinition groupDef, GameObject sensorGO, Vector3 startPosition)
     {
-        // Get second random position in same area
-        Vector3 endPosition;
-        if (groupDef.AreaIndex >= 0 && groupDef.AreaIndex < zone.m_areas.Count)
+        var positions = new List<Vector3> { startPosition };
+
+        // Generate (Moving - 1) additional random positions
+        for (int i = 1; i < groupDef.Moving; i++)
         {
-            var area = zone.m_areas[groupDef.AreaIndex];
-            endPosition = area.m_courseNode.GetRandomPositionInside();
-        }
-        else
-        {
-            var randomAreaIndex = UnityEngine.Random.Range(0, zone.m_areas.Count);
-            var area = zone.m_areas[randomAreaIndex];
-            endPosition = area.m_courseNode.GetRandomPositionInside();
+            Vector3 pos;
+            if (groupDef.AreaIndex >= 0 && groupDef.AreaIndex < zone.m_areas.Count)
+            {
+                var area = zone.m_areas[groupDef.AreaIndex];
+                pos = area.m_courseNode.GetRandomPositionInside();
+            }
+            else
+            {
+                var randomAreaIndex = UnityEngine.Random.Range(0, zone.m_areas.Count);
+                var area = zone.m_areas[randomAreaIndex];
+                pos = area.m_courseNode.GetRandomPositionInside();
+            }
+
+            if (TryGetPosOnNavMesh(ref pos))
+                positions.Add(pos);
         }
 
-        // Snap both positions to NavMesh
-        if (TryGetPosOnNavMesh(ref startPosition) && TryGetPosOnNavMesh(ref endPosition))
+        if (positions.Count < 2)
         {
-            var mover = sensorGO.AddComponent<ZoneSensorMover>();
-            mover.Initialize(startPosition, endPosition, (float)groupDef.Speed, (float)groupDef.EdgeDistance);
+            Plugin.Logger.LogWarning("ZoneSensor: Not enough valid positions for moving sensor");
+            return;
         }
-        else
+
+        // Snap start position
+        var start = positions[0];
+        if (!TryGetPosOnNavMesh(ref start))
         {
-            Plugin.Logger.LogWarning("ZoneSensor: Could not snap positions to NavMesh for moving sensor");
+            Plugin.Logger.LogWarning("ZoneSensor: Could not snap start position to NavMesh");
+            return;
         }
+        positions[0] = start;
+
+        var mover = sensorGO.AddComponent<ZoneSensorMover>();
+        mover.Initialize(positions, (float)groupDef.Speed, (float)groupDef.EdgeDistance);
     }
 
     /// <summary>

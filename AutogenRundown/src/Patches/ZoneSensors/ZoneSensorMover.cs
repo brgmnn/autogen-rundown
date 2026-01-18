@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Il2CppInterop.Runtime.Injection;
 using UnityEngine;
 using UnityEngine.AI;
@@ -16,26 +17,37 @@ public class ZoneSensorMover : MonoBehaviour
     private float speed;
     private bool initialized = false;
 
-    public void Initialize(Vector3 startPos, Vector3 endPos, float moveSpeed, float edgeDistance = 0.1f)
+    public void Initialize(List<Vector3> positions, float moveSpeed, float edgeDistance = 0.1f)
     {
         speed = moveSpeed;
 
-        // Calculate NavMesh path
-        NavMeshPath path = new NavMeshPath();
-        if (NavMesh.CalculatePath(startPos, endPos, -1, path))
+        // Build waypoints by calculating NavMesh paths between consecutive positions
+        var allWaypoints = new List<Vector3>();
+
+        for (int i = 0; i < positions.Count - 1; i++)
         {
-            waypoints = AdjustWaypointsForEdgeDistance(path.corners, edgeDistance);
-        }
-        else
-        {
-            // Fallback: direct line between points
-            waypoints = new[] { startPos, endPos };
+            NavMeshPath path = new NavMeshPath();
+            if (NavMesh.CalculatePath(positions[i], positions[i + 1], -1, path))
+            {
+                var adjusted = AdjustWaypointsForEdgeDistance(path.corners, edgeDistance);
+                // Skip first point on subsequent segments to avoid duplicates
+                int startIdx = (i == 0) ? 0 : 1;
+                for (int j = startIdx; j < adjusted.Length; j++)
+                    allWaypoints.Add(adjusted[j]);
+            }
+            else
+            {
+                // Fallback: direct line
+                if (i == 0) allWaypoints.Add(positions[i]);
+                allWaypoints.Add(positions[i + 1]);
+            }
         }
 
-        currentWaypointIndex = 1; // Start moving toward second point
+        waypoints = allWaypoints.ToArray();
+        currentWaypointIndex = 1;
         initialized = true;
 
-        Plugin.Logger.LogDebug($"ZoneSensorMover: Initialized with {waypoints.Length} waypoints, speed={speed}");
+        Plugin.Logger.LogDebug($"ZoneSensorMover: Initialized with {waypoints.Length} waypoints from {positions.Count} positions, speed={speed}");
     }
 
     private Vector3[] AdjustWaypointsForEdgeDistance(Vector3[] corners, float edgeDistance)
