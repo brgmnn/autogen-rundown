@@ -31,13 +31,7 @@ public record ZoneSensorGroupDefinition
     /// Color of the sensor visual ring.
     /// Default = Red scan color (similar to R8D1)
     /// </summary>
-    public Color Color { get; set; } = new()
-    {
-        Red = 0.9339623,
-        Green = 0.1055641,
-        Blue = 0.0,
-        Alpha = 0.2627451
-    };
+    public Color Color { get; set; } = Color.ZoneSensor_RedSensor;
 
     /// <summary>
     /// Text displayed on the sensor.

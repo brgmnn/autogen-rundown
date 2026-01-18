@@ -61,12 +61,36 @@ public record Color
 
     #region Zone Security Sensors
 
+    /// <summary>
+    /// Default = Red scan color (similar to R8D1)
+    /// </summary>
+    public static readonly Color ZoneSensor_RedSensor = new()
+    {
+        Red = 0.9339623,
+        Green = 0.1055641,
+        Blue = 0.0,
+        Alpha = 0.2627451
+    };
+
+    /// <summary>
+    /// Default = Red scan color (similar to R8D1)
+    ///
+    /// 6fff70
+    /// </summary>
+    public static readonly Color ZoneSensor_InfectionGreenSensor = new()
+    {
+        Red = 0.4352941,
+        Green = 1.0,
+        Blue = 0.4352941,
+        Alpha = 0.2627451
+    };
+
     public static readonly Color ZoneSensor_EncryptedText = new()
     {
         Alpha = 0.8,
         Red = 0.85,
-        Green = 0.41,
-        Blue = 0.15,
+        Green = 0.31,
+        Blue = 0.10,
     };
 
     #endregion

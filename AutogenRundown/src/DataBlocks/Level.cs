@@ -1670,7 +1670,6 @@ public class Level
                                 EdgeDistance = 0.7,
                                 AreaIndex = -1,
                                 EncryptedText = true,
-                                Text = "Scout Security Scan"
                             }
                         },
 
