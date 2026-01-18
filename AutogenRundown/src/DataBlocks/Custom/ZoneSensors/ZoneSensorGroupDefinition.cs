@@ -122,6 +122,12 @@ public record ZoneSensorGroupDefinition
         => Generator.Pick(new List<string>
         {
             "Se@#$urity Sc3AN",
-            "S:_EC/uR_ITY S:/Ca_N"
+            "S:_EC/uR_ITY S:/Ca_N",
+            "SC4N_ACT!VE",
+            "D3T:ECT_M0DE",
+            "S3NS0R://ON",
+            "//TR1GG3R_Z0NE",
+            "AUT0_SC4N::",
+            "PR0X_D3TECT"
         })!;
 }

@@ -454,11 +454,12 @@ public sealed class ZoneSensorManager
                             (float)groupDef.EncryptedTextColor.Alpha);
 
                         var animator = sensorGO.AddComponent<ZoneSensorTextAnimator>();
-                        animator.Initialize(groupDef.Text, normalColor, encryptedColor, text);
+                        var sensorText = ZoneSensorGroupDefinition.GenText();
+                        animator.Initialize(sensorText, normalColor, encryptedColor, text);
                     }
                     else
                     {
-                        text.SetText(groupDef.Text);
+                        text.SetText(ZoneSensorGroupDefinition.GenText());
                         text.m_fontColor = text.m_fontColor32 = normalColor;
                     }
                 }

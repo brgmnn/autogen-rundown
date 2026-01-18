@@ -42,7 +42,20 @@ public class ZoneSensorTextAnimator : MonoBehaviour
 
         if (textComponent == null) return;
 
-        currentPhase = 0;
+        // Start at random point in cycle so scans aren't synchronized
+        cycleTimer = UnityEngine.Random.Range(0f, FULL_CYCLE_TIME);
+        float cyclePosition = cycleTimer % FULL_CYCLE_TIME;
+
+        // Determine starting phase based on random position
+        if (cyclePosition < REVEAL_DURATION)
+            currentPhase = 0;
+        else if (cyclePosition < REVEAL_DURATION + PARTIAL1_DURATION)
+            currentPhase = 1;
+        else if (cyclePosition < REVEAL_DURATION + PARTIAL1_DURATION + FULL_ENCRYPTED_DURATION)
+            currentPhase = 2;
+        else
+            currentPhase = 3;
+
         UpdateDisplay();
         initialized = true;
     }
