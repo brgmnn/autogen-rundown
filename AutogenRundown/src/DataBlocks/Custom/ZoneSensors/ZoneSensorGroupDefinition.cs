@@ -64,6 +64,17 @@ public record ZoneSensorGroupDefinition
     public bool TriggerEach { get; set; } = false;
 
     /// <summary>
+    /// When true, sensors patrol between their initial position and a random second point.
+    /// </summary>
+    public bool Moving { get; set; } = false;
+
+    /// <summary>
+    /// Movement speed in units per second when Moving is true.
+    /// Default = 1.5
+    /// </summary>
+    public double Speed { get; set; } = 1.5;
+
+    /// <summary>
     /// Generates randomized glitchy sensor text.
     /// </summary>
     public static string GenText()

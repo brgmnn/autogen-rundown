@@ -8,6 +8,7 @@ using LevelGeneration;
 using Localization;
 using SNetwork;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace AutogenRundown.Patches.ZoneSensors;
 
@@ -290,10 +291,60 @@ public sealed class ZoneSensorManager
             placedSensors.Add((position, sensorRadius));
             var sensorGO = CreateSensorVisual(position, groupDef, groupIndex, sensorIndex);
             sensorGroup.AddSensor(sensorGO);
+
+            // Add movement if enabled
+            if (groupDef.Moving)
+            {
+                InitializeSensorMovement(zone, groupDef, sensorGO, position);
+            }
+
             sensorIndex++;
         }
 
         return sensorIndex;
+    }
+
+    /// <summary>
+    /// Initializes movement for a sensor by calculating a path to a random second point.
+    /// </summary>
+    private void InitializeSensorMovement(LG_Zone zone, ZoneSensorGroupDefinition groupDef, GameObject sensorGO, Vector3 startPosition)
+    {
+        // Get second random position in same area
+        Vector3 endPosition;
+        if (groupDef.AreaIndex >= 0 && groupDef.AreaIndex < zone.m_areas.Count)
+        {
+            var area = zone.m_areas[groupDef.AreaIndex];
+            endPosition = area.m_courseNode.GetRandomPositionInside();
+        }
+        else
+        {
+            var randomAreaIndex = UnityEngine.Random.Range(0, zone.m_areas.Count);
+            var area = zone.m_areas[randomAreaIndex];
+            endPosition = area.m_courseNode.GetRandomPositionInside();
+        }
+
+        // Snap both positions to NavMesh
+        if (TryGetPosOnNavMesh(ref startPosition) && TryGetPosOnNavMesh(ref endPosition))
+        {
+            var mover = sensorGO.AddComponent<ZoneSensorMover>();
+            mover.Initialize(startPosition, endPosition, (float)groupDef.Speed);
+        }
+        else
+        {
+            Plugin.Logger.LogWarning("ZoneSensor: Could not snap positions to NavMesh for moving sensor");
+        }
+    }
+
+    /// <summary>
+    /// Attempts to snap a position to the NavMesh.
+    /// </summary>
+    private bool TryGetPosOnNavMesh(ref Vector3 pos)
+    {
+        NavMeshHit hit;
+        if (!NavMesh.SamplePosition(pos + Vector3.up * 0.15f, out hit, 1f, -1))
+            return false;
+        pos = hit.position;
+        return true;
     }
 
     /// <summary>
