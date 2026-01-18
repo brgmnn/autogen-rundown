@@ -7,7 +7,10 @@ namespace AutogenRundown.Patches.ZoneSensors;
 
 /// <summary>
 /// MonoBehaviour that handles sensor movement along a NavMesh path.
-/// Moves the sensor back and forth between two points at a constant speed.
+/// Moves the sensor back and forth between waypoints at a constant speed.
+///
+/// Note: Waypoints are generated deterministically using Builder.SessionSeedRandom,
+/// ensuring all clients generate identical patrol paths without network sync.
 /// </summary>
 public class ZoneSensorMover : MonoBehaviour
 {

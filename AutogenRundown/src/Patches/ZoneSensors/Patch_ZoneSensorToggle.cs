@@ -88,6 +88,15 @@ public class ZoneSensorToggleScheduler : MonoBehaviour
         Plugin.Logger.LogDebug($"ZoneSensor: Scheduled toggle for group {groupIndex} to {(enabled ? "enabled" : "disabled")} in {delaySeconds}s");
     }
 
+    /// <summary>
+    /// Clears all pending toggles. Called during level cleanup to prevent
+    /// stale toggles from persisting across level transitions.
+    /// </summary>
+    public static void ClearPending()
+    {
+        instance?.pendingToggles.Clear();
+    }
+
     private static void EnsureInstance()
     {
         if (instance != null)

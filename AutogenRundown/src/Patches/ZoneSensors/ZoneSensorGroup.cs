@@ -74,6 +74,8 @@ public class ZoneSensorGroup
     /// <summary>
     /// Disables a single sensor and syncs to all clients.
     /// Used when TriggerEach mode is enabled.
+    /// Note: Maximum of 32 sensors per group due to bitmask limitation.
+    /// Sensors beyond index 31 will be silently ignored.
     /// </summary>
     public void DisableSensor(int sensorIndex)
     {

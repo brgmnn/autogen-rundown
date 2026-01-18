@@ -100,7 +100,7 @@ public record ZoneSensorGroupDefinition
     /// <summary>
     /// Minimum distance from NavMesh edges for path waypoints when Moving is true.
     /// Helps prevent sensors from hugging walls at corners.
-    /// Default = 0.1
+    /// Default = 0.3
     /// </summary>
     public double EdgeDistance { get; set; } = 0.3;
 

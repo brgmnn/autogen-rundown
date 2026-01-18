@@ -62,7 +62,7 @@ public class ZoneSensorTextAnimator : MonoBehaviour
 
     void Update()
     {
-        if (!initialized || textComponent == null) return;
+        if (!initialized || textComponent == null || !gameObject.activeSelf) return;
 
         cycleTimer += Time.deltaTime;
         float cyclePosition = cycleTimer % FULL_CYCLE_TIME;

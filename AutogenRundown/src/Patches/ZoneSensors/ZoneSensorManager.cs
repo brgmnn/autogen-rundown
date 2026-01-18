@@ -10,6 +10,8 @@ using SNetwork;
 using UnityEngine;
 using UnityEngine.AI;
 
+// Note: Builder.SessionSeedRandom is used for deterministic position generation across all clients
+
 namespace AutogenRundown.Patches.ZoneSensors;
 
 /// <summary>
@@ -287,13 +289,13 @@ public sealed class ZoneSensorManager
                 if (groupDef.AreaIndex >= 0 && groupDef.AreaIndex < zone.m_areas.Count)
                 {
                     var area = zone.m_areas[groupDef.AreaIndex];
-                    position = area.m_courseNode.GetRandomPositionInside();
+                    position = area.m_courseNode.GetRandomPositionInside_SessionSeed();
                 }
                 else
                 {
-                    var randomAreaIndex = UnityEngine.Random.Range(0, zone.m_areas.Count);
+                    var randomAreaIndex = Builder.SessionSeedRandom.Range(0, zone.m_areas.Count, "ZoneSensor_AreaSelect");
                     var area = zone.m_areas[randomAreaIndex];
-                    position = area.m_courseNode.GetRandomPositionInside();
+                    position = area.m_courseNode.GetRandomPositionInside_SessionSeed();
                 }
 
                 if (!OverlapsExistingSensor(position, sensorRadius, placedSensors))
@@ -333,13 +335,13 @@ public sealed class ZoneSensorManager
             if (groupDef.AreaIndex >= 0 && groupDef.AreaIndex < zone.m_areas.Count)
             {
                 var area = zone.m_areas[groupDef.AreaIndex];
-                pos = area.m_courseNode.GetRandomPositionInside();
+                pos = area.m_courseNode.GetRandomPositionInside_SessionSeed();
             }
             else
             {
-                var randomAreaIndex = UnityEngine.Random.Range(0, zone.m_areas.Count);
+                var randomAreaIndex = Builder.SessionSeedRandom.Range(0, zone.m_areas.Count, "ZoneSensor_WaypointAreaSelect");
                 var area = zone.m_areas[randomAreaIndex];
-                pos = area.m_courseNode.GetRandomPositionInside();
+                pos = area.m_courseNode.GetRandomPositionInside_SessionSeed();
             }
 
             if (TryGetPosOnNavMesh(ref pos))
@@ -503,6 +505,9 @@ public sealed class ZoneSensorManager
         }
 
         activeSensorGroups.Clear();
+
+        // Clear any pending scheduled toggles to prevent stale toggles across levels
+        ZoneSensorToggleScheduler.ClearPending();
 
         Plugin.Logger.LogDebug("ZoneSensor: Cleared all sensors");
     }
