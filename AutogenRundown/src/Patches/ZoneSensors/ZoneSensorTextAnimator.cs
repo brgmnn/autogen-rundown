@@ -7,7 +7,7 @@ namespace AutogenRundown.Patches.ZoneSensors;
 
 /// <summary>
 /// MonoBehaviour that animates sensor text with a two-stage encryption effect.
-/// Cycles: Fully Encrypted (hex pairs) → Partially Decrypted (hex over text) → Reveal → repeat
+/// Cycles: Reveal → Partial Encrypted → Fully Encrypted → Partial Encrypted → repeat
 /// </summary>
 public class ZoneSensorTextAnimator : MonoBehaviour
 {
@@ -19,15 +19,16 @@ public class ZoneSensorTextAnimator : MonoBehaviour
     private const float HEX_CYCLE_INTERVAL = 0.6f;
     private const float FULL_CYCLE_TIME = 9.5f;
 
-    // Phase durations within the cycle
-    private const float FULLY_ENCRYPTED_DURATION = 4.0f;    // Hex pairs with dashes
-    private const float PARTIAL_DECRYPT_DURATION = 4.3f;    // Hex over original structure
-    private const float REVEAL_DURATION = 1.2f;             // Show actual text
+    // Phase durations within the cycle (total 9.5s)
+    private const float REVEAL_DURATION = 1.2f;              // Phase 0: actual text
+    private const float PARTIAL1_DURATION = 2.15f;           // Phase 1: partial encrypted
+    private const float FULL_ENCRYPTED_DURATION = 4.0f;      // Phase 2: full encrypted
+    private const float PARTIAL2_DURATION = 2.15f;           // Phase 3: partial encrypted
 
     private TextMeshPro textComponent;
     private float hexTimer = 0f;
     private float cycleTimer = 0f;
-    private int currentPhase = 0;  // 0=fully encrypted, 1=partial, 2=reveal
+    private int currentPhase = 0;  // 0=reveal, 1=partial, 2=full encrypted, 3=partial
     private bool initialized = false;
 
     private static readonly char[] HexChars = "0123456789ABCDEF".ToCharArray();
@@ -55,12 +56,14 @@ public class ZoneSensorTextAnimator : MonoBehaviour
 
         // Determine which phase we're in
         int newPhase;
-        if (cyclePosition < FULLY_ENCRYPTED_DURATION)
-            newPhase = 0;  // Fully encrypted (hex pairs with dashes)
-        else if (cyclePosition < FULLY_ENCRYPTED_DURATION + PARTIAL_DECRYPT_DURATION)
-            newPhase = 1;  // Partially decrypted (hex over original structure)
+        if (cyclePosition < REVEAL_DURATION)
+            newPhase = 0;  // Reveal
+        else if (cyclePosition < REVEAL_DURATION + PARTIAL1_DURATION)
+            newPhase = 1;  // Partial encrypted
+        else if (cyclePosition < REVEAL_DURATION + PARTIAL1_DURATION + FULL_ENCRYPTED_DURATION)
+            newPhase = 2;  // Full encrypted
         else
-            newPhase = 2;  // Reveal actual text
+            newPhase = 3;  // Partial encrypted again
 
         // Phase changed
         if (newPhase != currentPhase)
@@ -68,8 +71,8 @@ public class ZoneSensorTextAnimator : MonoBehaviour
             currentPhase = newPhase;
             UpdateDisplay();
         }
-        // Update hex scramble during encrypted phases
-        else if (currentPhase < 2)
+        // Update hex scramble during encrypted phases (1, 2, 3)
+        else if (currentPhase > 0)
         {
             hexTimer += Time.deltaTime;
             if (hexTimer >= HEX_CYCLE_INTERVAL)
@@ -85,13 +88,14 @@ public class ZoneSensorTextAnimator : MonoBehaviour
         switch (currentPhase)
         {
             case 0:
-                SetFullyEncryptedText();
+                SetRevealedText();
                 break;
             case 1:
+            case 3:
                 SetPartiallyDecryptedText();
                 break;
             case 2:
-                SetRevealedText();
+                SetFullyEncryptedText();
                 break;
         }
     }
@@ -121,20 +125,14 @@ public class ZoneSensorTextAnimator : MonoBehaviour
     {
         textComponent.m_fontColor = textComponent.m_fontColor32 = encryptedColor;
 
-        if (actualText.Length == 0) { textComponent.SetText(""); return; }
-
-        // Generate hex pairs with dashes: "AB-95-F7-02"
-        // Use ~half the original length for pair count to keep similar visual width
-        int pairCount = Mathf.Max(1, (actualText.Length + 1) / 2);
-        var sb = new StringBuilder(pairCount * 3 - 1);
-
-        for (int i = 0; i < pairCount; i++)
+        // Fixed 14-char format: "XX-XX-XX-XX-XX"
+        var sb = new StringBuilder(14);
+        for (int i = 0; i < 5; i++)
         {
             if (i > 0) sb.Append('-');
             sb.Append(HexChars[UnityEngine.Random.Range(0, HexChars.Length)]);
             sb.Append(HexChars[UnityEngine.Random.Range(0, HexChars.Length)]);
         }
-
         textComponent.SetText(sb.ToString());
     }
 
