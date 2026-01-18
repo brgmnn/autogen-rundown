@@ -426,19 +426,41 @@ public sealed class ZoneSensorManager
         corruptedTMPro.transform.SetParent(null);
         UnityEngine.Object.Destroy(corruptedTMPro);
 
-        // Instantiate clean TMPro from vanilla assets
-        var tmproGO = GtfoTextMeshPro.Instantiate(infoGO.gameObject);
-        if (tmproGO != null)
+        if (groupDef.HideText)
         {
-            var text = tmproGO.GetComponent<TMPro.TextMeshPro>();
-            if (text != null)
+            Plugin.Logger.LogDebug($"ZoneSensor: Sensor {sensorIndex} has hidden text");
+        }
+        else
+        {
+            var tmproGO = GtfoTextMeshPro.Instantiate(infoGO.gameObject);
+            if (tmproGO != null)
             {
-                text.SetText(groupDef.Text);
-                text.m_fontColor = text.m_fontColor32 = new Color(
-                    (float)groupDef.TextColor.Red,
-                    (float)groupDef.TextColor.Green,
-                    (float)groupDef.TextColor.Blue,
-                    (float)groupDef.TextColor.Alpha);
+                var text = tmproGO.GetComponent<TMPro.TextMeshPro>();
+                if (text != null)
+                {
+                    var normalColor = new Color(
+                        (float)groupDef.TextColor.Red,
+                        (float)groupDef.TextColor.Green,
+                        (float)groupDef.TextColor.Blue,
+                        (float)groupDef.TextColor.Alpha);
+
+                    if (groupDef.EncryptedText)
+                    {
+                        var encryptedColor = new Color(
+                            (float)groupDef.EncryptedTextColor.Red,
+                            (float)groupDef.EncryptedTextColor.Green,
+                            (float)groupDef.EncryptedTextColor.Blue,
+                            (float)groupDef.EncryptedTextColor.Alpha);
+
+                        var animator = sensorGO.AddComponent<ZoneSensorTextAnimator>();
+                        animator.Initialize(groupDef.Text, normalColor, encryptedColor, text);
+                    }
+                    else
+                    {
+                        text.SetText(groupDef.Text);
+                        text.m_fontColor = text.m_fontColor32 = normalColor;
+                    }
+                }
             }
         }
 

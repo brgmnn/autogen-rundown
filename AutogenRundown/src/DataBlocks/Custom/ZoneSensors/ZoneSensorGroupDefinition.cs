@@ -58,6 +58,31 @@ public record ZoneSensorGroupDefinition
     };
 
     /// <summary>
+    /// When true, text cycles through hex characters with periodic reveals of actual text.
+    /// Default = false
+    /// </summary>
+    public bool EncryptedText { get; set; } = false;
+
+    /// <summary>
+    /// Color for the encrypted hex text when EncryptedText is true.
+    /// Default = Orange
+    /// </summary>
+    public Color EncryptedTextColor { get; set; } = new()
+    {
+        Red = 1.0,
+        Green = 0.549,
+        Blue = 0.0,
+        Alpha = 0.8
+    };
+
+    /// <summary>
+    /// When true, no text is displayed on the sensor.
+    /// Takes precedence over EncryptedText.
+    /// Default = false
+    /// </summary>
+    public bool HideText { get; set; } = false;
+
+    /// <summary>
     /// When true, each sensor triggers independently and only that sensor is removed.
     /// Events fire for each sensor triggered. Default = false (group triggers once).
     /// </summary>
