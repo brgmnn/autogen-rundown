@@ -1645,15 +1645,17 @@ public class Level
                     var sensorEvents = new List<WardenObjectiveEvent>();
 
                     sensorEvents
-                        // .AddToggleZoneSensors(false, 0, 0.1)
                         .AddSound(Sound.LightsOff)
-                        .AddSpawnWave(GenericWave.SinglePouncer, 2.0);
-                        // .AddToggleZoneSensors(true, 0, 4.0)
-                        // .AddSound(Sound.LightsOn_Vol2);
+                        .AddSpawnWave(new GenericWave
+                        {
+                            Population = WavePopulation.Baseline,
+                            Settings = WaveSettings.SingleMiniBoss
+                        }, 1.0);
+                        // .AddSpawnWave(GenericWave.SinglePouncer, 2.0);
 
                     level.ZoneSensors.Add(new ZoneSensorDefinition
                     {
-                        ZoneNumber = zone.LocalIndex,
+                        ZoneNumber = 0,
                         Bulkhead = Bulkhead.Main,
 
                         SensorGroups = new List<ZoneSensorGroupDefinition>
@@ -1661,10 +1663,14 @@ public class Level
                             new ZoneSensorGroupDefinition
                             {
                                 TriggerEach = true,
-                                Count = 10,
+                                Count = 16,
+                                Moving = 3,
+                                Speed = 0.5,
                                 Radius = 2.5,
+                                EdgeDistance = 0.7,
                                 AreaIndex = -1,
-                                Text = "Super Security Scan"
+                                EncryptedText = true,
+                                Text = "Scout Security Scan"
                             }
                         },
 

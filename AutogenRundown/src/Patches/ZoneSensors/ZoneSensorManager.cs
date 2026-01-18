@@ -397,8 +397,9 @@ public sealed class ZoneSensorManager
         sensorGO.transform.SetPositionAndRotation(position, Quaternion.identity);
 
         // For 75% above floor: center at 25% of scaled height
+        var targetHeight = 0.6f;
         var scaledHeight = (float)groupDef.Height * (float)groupDef.Radius;
-        var heightOffset = 0.25f * scaledHeight;
+        var heightOffset = (targetHeight - 0.5f) * scaledHeight;
 
         sensorGO.transform.localScale = new Vector3(
             (float)groupDef.Radius,
