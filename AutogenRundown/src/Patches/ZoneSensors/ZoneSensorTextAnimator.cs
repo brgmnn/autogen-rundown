@@ -14,9 +14,9 @@ public class ZoneSensorTextAnimator : MonoBehaviour
     private Color encryptedColor;
     private Color normalColor;
 
-    private const float HEX_CYCLE_INTERVAL = 0.1f;   // Hex scramble rate
-    private const float REVEAL_CYCLE_TIME = 2.5f;    // Full cycle duration
-    private const float REVEAL_DURATION = 0.3f;      // Actual text flash duration
+    private const float HEX_CYCLE_INTERVAL = 0.6f;   // Hex scramble rate
+    private const float REVEAL_CYCLE_TIME = 9.5f;    // Full cycle duration
+    private const float REVEAL_DURATION = 1.2f;      // Actual text flash duration
 
     private TextMeshPro textComponent;
     private float hexTimer = 0f;

@@ -67,13 +67,14 @@ public record ZoneSensorGroupDefinition
     /// Color for the encrypted hex text when EncryptedText is true.
     /// Default = Orange
     /// </summary>
-    public Color EncryptedTextColor { get; set; } = new()
-    {
-        Red = 1.0,
-        Green = 0.549,
-        Blue = 0.0,
-        Alpha = 0.8
-    };
+    public Color EncryptedTextColor { get; set; } = Color.ZoneSensor_EncryptedText;
+        // new()
+        // {
+        //     Red = 0.0,
+        //     Green = 0.549,
+        //     Blue = 0.0,
+        //     Alpha = 0.8
+        // };
 
     /// <summary>
     /// When true, no text is displayed on the sensor.
