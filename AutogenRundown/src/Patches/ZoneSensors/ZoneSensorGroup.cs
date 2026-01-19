@@ -43,6 +43,7 @@ public class ZoneSensorGroup
 
     private bool triggerEach;
     private uint currentSensorMask = uint.MaxValue;
+    private uint triggeredSensorMask = 0;  // Persistent tracking of sensors that have fired
 
     // Pending spawn data - stored until positions are received
     private LG_Zone? pendingZone;
@@ -68,6 +69,7 @@ public class ZoneSensorGroup
         Enabled = true;
         this.triggerEach = triggerEach;
         currentSensorMask = uint.MaxValue;
+        triggeredSensorMask = 0;
         sensorsSpawned = false;
         receivedBatches.Clear();
 
@@ -469,11 +471,23 @@ public class ZoneSensorGroup
     /// Sets the enabled state of the sensor group.
     /// Syncs to all clients via StateReplicator.
     /// </summary>
-    public void SetEnabled(bool enabled)
+    /// <param name="enabled">Whether to enable or disable the sensor group</param>
+    /// <param name="preserveTriggered">When true, only re-enable sensors that haven't been triggered</param>
+    /// <param name="resetTriggered">When true, clear triggered state before enabling (all sensors reappear)</param>
+    public void SetEnabled(bool enabled, bool preserveTriggered = false, bool resetTriggered = false)
     {
-        // Reset mask when enabling (all sensors become active again)
+        // Reset triggered state if requested
+        if (resetTriggered)
+            triggeredSensorMask = 0;
+
+        // Reset mask when enabling
         if (enabled)
-            currentSensorMask = uint.MaxValue;
+        {
+            if (preserveTriggered)
+                currentSensorMask = uint.MaxValue & ~triggeredSensorMask;  // Only untriggered sensors
+            else
+                currentSensorMask = uint.MaxValue;
+        }
 
         // Update visuals immediately for responsive feel
         UpdateVisualsUnsynced(enabled, currentSensorMask);
@@ -481,7 +495,7 @@ public class ZoneSensorGroup
         // Sync to clients (only master can broadcast)
         if (Replicator != null && Replicator.IsValid)
         {
-            Replicator.SetState(new ZoneSensorGroupState(enabled, currentSensorMask));
+            Replicator.SetState(new ZoneSensorGroupState(enabled, currentSensorMask, triggeredSensorMask));
         }
     }
 
@@ -497,6 +511,7 @@ public class ZoneSensorGroup
             return;
 
         currentSensorMask &= ~(1u << sensorIndex);
+        triggeredSensorMask |= (1u << sensorIndex);  // Mark as triggered
 
         // Update local visual immediately
         var sensor = Sensors[sensorIndex];
@@ -505,7 +520,7 @@ public class ZoneSensorGroup
         // Sync to all clients
         if (Replicator != null && Replicator.IsValid)
         {
-            Replicator.SetState(new ZoneSensorGroupState(Enabled, currentSensorMask));
+            Replicator.SetState(new ZoneSensorGroupState(Enabled, currentSensorMask, triggeredSensorMask));
         }
     }
 
@@ -515,11 +530,13 @@ public class ZoneSensorGroup
     private void OnStateChanged(ZoneSensorGroupState oldState, ZoneSensorGroupState newState, bool isRecall)
     {
         currentSensorMask = newState.SensorMask;
+        triggeredSensorMask = newState.TriggeredMask;
         UpdateVisualsUnsynced(newState.Enabled, newState.SensorMask);
     }
 
     /// <summary>
     /// Updates the local visual state without network sync.
+    /// Resets collider state when enabling to prevent immediate triggers.
     /// </summary>
     private void UpdateVisualsUnsynced(bool enabled, uint sensorMask)
     {
@@ -533,6 +550,14 @@ public class ZoneSensorGroup
                 // Sensor is visible if group enabled AND individual sensor enabled
                 bool sensorEnabled = enabled && ((sensorMask & (1u << i)) != 0);
                 sensor.SetActive(sensorEnabled);
+
+                // BUG FIX: Reset collider state when enabling to prevent immediate trigger
+                // if player is already standing in sensor area
+                if (sensorEnabled)
+                {
+                    var collider = sensor.GetComponent<ZoneSensorCollider>();
+                    collider?.ResetState();
+                }
             }
         }
     }

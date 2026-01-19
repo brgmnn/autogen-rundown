@@ -172,25 +172,21 @@ public sealed class ZoneSensorManager
     /// <summary>
     /// Toggles a sensor group on or off.
     /// </summary>
-    public void ToggleSensorGroup(int groupIndex, bool enabled)
+    /// <param name="groupIndex">Index of the sensor group to toggle</param>
+    /// <param name="enabled">Whether to enable or disable the group</param>
+    /// <param name="preserveTriggered">When true, only re-enable sensors that haven't been triggered</param>
+    /// <param name="resetTriggered">When true, clear triggered state before enabling (all sensors reappear)</param>
+    public void ToggleSensorGroup(int groupIndex, bool enabled, bool preserveTriggered = false, bool resetTriggered = false)
     {
         if (groupIndex < 0 || groupIndex >= activeSensorGroups.Count)
             return;
 
         var group = activeSensorGroups[groupIndex];
-        group.SetEnabled(enabled);
+        group.SetEnabled(enabled, preserveTriggered, resetTriggered);
 
-        // Reset collider states when re-enabling
-        if (enabled)
-        {
-            foreach (var sensor in group.Sensors)
-            {
-                var collider = sensor?.GetComponent<ZoneSensorCollider>();
-                collider?.ResetState();
-            }
-        }
+        // Note: ResetState is now called inside UpdateVisualsUnsynced for each sensor
 
-        Plugin.Logger.LogDebug($"ZoneSensor: Group {groupIndex} set to {(enabled ? "enabled" : "disabled")}");
+        Plugin.Logger.LogDebug($"ZoneSensor: Group {groupIndex} set to {(enabled ? "enabled" : "disabled")} (preserveTriggered={preserveTriggered}, resetTriggered={resetTriggered})");
     }
 
     /// <summary>

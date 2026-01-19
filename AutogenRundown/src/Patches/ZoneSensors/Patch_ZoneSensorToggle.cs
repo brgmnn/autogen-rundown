@@ -8,7 +8,20 @@ using UnityEngine;
 namespace AutogenRundown.Patches.ZoneSensors;
 
 /// <summary>
-/// Harmony patch to handle ALL ToggleSecuritySensor (type 400) events.
+/// Event types for zone sensor toggle operations.
+/// 400: Standard toggle (resets all sensors on enable)
+/// 401: Toggle preserving triggered state (only re-enable untriggered sensors)
+/// 402: Toggle with reset (clear triggered state, then enable all)
+/// </summary>
+public static class ZoneSensorEventTypes
+{
+    public const int Toggle = 400;
+    public const int TogglePreserveTriggered = 401;
+    public const int ToggleResetTriggered = 402;
+}
+
+/// <summary>
+/// Harmony patch to handle zone sensor toggle events (types 400, 401, 402).
 /// This overrides EOSExt_SecuritySensor's handling entirely.
 /// </summary>
 [HarmonyPatch]
@@ -27,8 +40,12 @@ public static class Patch_ZoneSensorToggle
         if (eventToTrigger == null)
             return true;
 
-        // Only intercept type 400 (ToggleSecuritySensor)
-        if (eventToTrigger.Type != (eWardenObjectiveEventType)400)
+        var eventType = (int)eventToTrigger.Type;
+
+        // Only intercept zone sensor toggle events (400, 401, 402)
+        if (eventType != ZoneSensorEventTypes.Toggle &&
+            eventType != ZoneSensorEventTypes.TogglePreserveTriggered &&
+            eventType != ZoneSensorEventTypes.ToggleResetTriggered)
             return true;
 
         // Handle trigger check (same as vanilla)
@@ -39,9 +56,13 @@ public static class Patch_ZoneSensorToggle
         if (currentDuration != 0f && eventToTrigger.Delay <= currentDuration)
             return false;
 
+        // Determine flags based on event type
+        bool preserveTriggered = eventType == ZoneSensorEventTypes.TogglePreserveTriggered;
+        bool resetTriggered = eventType == ZoneSensorEventTypes.ToggleResetTriggered;
+
         // Schedule the toggle with delay
         float delaySeconds = Mathf.Max(eventToTrigger.Delay - currentDuration, 0f);
-        ZoneSensorToggleScheduler.Schedule(eventToTrigger.Count, eventToTrigger.Enabled, delaySeconds);
+        ZoneSensorToggleScheduler.Schedule(eventToTrigger.Count, eventToTrigger.Enabled, delaySeconds, preserveTriggered, resetTriggered);
 
         return false; // Skip original and any other patches
     }
@@ -61,6 +82,8 @@ public class ZoneSensorToggleScheduler : MonoBehaviour
         public int GroupIndex;
         public bool Enabled;
         public float ExecuteTime;
+        public bool PreserveTriggered;
+        public bool ResetTriggered;
     }
 
     static ZoneSensorToggleScheduler()
@@ -68,7 +91,7 @@ public class ZoneSensorToggleScheduler : MonoBehaviour
         ClassInjector.RegisterTypeInIl2Cpp<ZoneSensorToggleScheduler>();
     }
 
-    public static void Schedule(int groupIndex, bool enabled, float delaySeconds)
+    public static void Schedule(int groupIndex, bool enabled, float delaySeconds, bool preserveTriggered = false, bool resetTriggered = false)
     {
         EnsureInstance();
 
@@ -82,10 +105,12 @@ public class ZoneSensorToggleScheduler : MonoBehaviour
         {
             GroupIndex = groupIndex,
             Enabled = enabled,
-            ExecuteTime = Time.time + delaySeconds
+            ExecuteTime = Time.time + delaySeconds,
+            PreserveTriggered = preserveTriggered,
+            ResetTriggered = resetTriggered
         });
 
-        Plugin.Logger.LogDebug($"ZoneSensor: Scheduled toggle for group {groupIndex} to {(enabled ? "enabled" : "disabled")} in {delaySeconds}s");
+        Plugin.Logger.LogDebug($"ZoneSensor: Scheduled toggle for group {groupIndex} to {(enabled ? "enabled" : "disabled")} in {delaySeconds}s (preserveTriggered={preserveTriggered}, resetTriggered={resetTriggered})");
     }
 
     /// <summary>
@@ -127,8 +152,8 @@ public class ZoneSensorToggleScheduler : MonoBehaviour
                 if (!SNet.IsMaster)
                     continue;
 
-                Plugin.Logger.LogDebug($"ZoneSensor: Toggling group {toggle.GroupIndex} to {(toggle.Enabled ? "enabled" : "disabled")}");
-                ZoneSensorManager.Current.ToggleSensorGroup(toggle.GroupIndex, toggle.Enabled);
+                Plugin.Logger.LogDebug($"ZoneSensor: Toggling group {toggle.GroupIndex} to {(toggle.Enabled ? "enabled" : "disabled")} (preserveTriggered={toggle.PreserveTriggered}, resetTriggered={toggle.ResetTriggered})");
+                ZoneSensorManager.Current.ToggleSensorGroup(toggle.GroupIndex, toggle.Enabled, toggle.PreserveTriggered, toggle.ResetTriggered);
             }
         }
     }
