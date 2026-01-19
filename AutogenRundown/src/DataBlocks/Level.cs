@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Custom.ZoneSensors;
@@ -1651,7 +1652,6 @@ public class Level
                             Population = WavePopulation.Baseline,
                             Settings = WaveSettings.SingleMiniBoss
                         }, 1.0);
-                        // .AddSpawnWave(GenericWave.SinglePouncer, 2.0);
 
                     level.ZoneSensors.Add(new ZoneSensorDefinition
                     {
@@ -1660,21 +1660,53 @@ public class Level
 
                         SensorGroups = new List<ZoneSensorGroupDefinition>
                         {
+                            // new ZoneSensorGroupDefinition
+                            // {
+                            //     TriggerEach = true,
+                            //     Count = 16,
+                            //     Moving = 3,
+                            //     Speed = 0.5,
+                            //     Radius = 2.5,
+                            //     EdgeDistance = 0.7,
+                            //     AreaIndex = -1,
+                            //     EncryptedText = true,
+                            // }
+
                             new ZoneSensorGroupDefinition
                             {
                                 TriggerEach = true,
-                                Count = 16,
+                                Count = 128,
                                 Moving = 3,
                                 Speed = 0.5,
-                                Radius = 2.5,
+                                Radius = 1.0,
                                 EdgeDistance = 0.7,
-                                AreaIndex = -1,
+                                AreaIndex = 1,
                                 EncryptedText = true,
                             }
                         },
 
                         EventsOnTrigger = sensorEvents
                     });
+
+                    var eventLoop = new EventLoop()
+                    {
+                        LoopIndex = 263,
+                        LoopDelay = 4.0,
+                        LoopCount = -1
+                    };
+
+                    eventLoop.EventsToActivate
+                        .AddToggleZoneSensors(false, 1, 0.0)
+                        .AddToggleZoneSensors(true, 1, 2.0);
+
+                    level.Objective[Bulkhead.Main].EventsOnElevatorLand
+                        .Add(new WardenObjectiveEvent()
+                        {
+                            Type = WardenObjectiveEventType.StartEventLoop,
+                            EventLoop = eventLoop,
+                            Delay = 2.0
+                        });
+
                 }
             }
 
