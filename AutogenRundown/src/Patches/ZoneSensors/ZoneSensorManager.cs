@@ -1,4 +1,3 @@
-using AIGraph;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Objectives;
@@ -8,15 +7,18 @@ using LevelGeneration;
 using Localization;
 using SNetwork;
 using UnityEngine;
-using UnityEngine.AI;
-
-// Note: Builder.SessionSeedRandom is used for deterministic position generation across all clients
 
 namespace AutogenRundown.Patches.ZoneSensors;
 
 /// <summary>
 /// Manages zone-based security sensors that are placed automatically within zones.
 /// Sensors detect players and trigger configured events.
+///
+/// Network sync architecture:
+/// - Host generates random positions during OnBuildDone
+/// - Positions are synced via ZoneSensorPositionState replicator
+/// - Clients/late joiners spawn sensors when receiving position state
+/// - Enabled/disabled state synced via ZoneSensorGroupState replicator
 /// </summary>
 public sealed class ZoneSensorManager
 {
@@ -26,21 +28,6 @@ public sealed class ZoneSensorManager
     /// Definitions indexed by MainLevelLayout ID, loaded from JSON.
     /// </summary>
     private static Dictionary<uint, List<ZoneSensorDefinition>> definitions = new();
-
-    private static readonly List<string> SensorTexts = new()
-    {
-        "Se@#$urity Sc3AN",
-        "S:_EC/uR_ITY S:/Ca_N",
-        "SC4N_ACT!VE",
-        "D3T:ECT_M0DE",
-        "S3NS0R://ON",
-        "//TR1GG3R_Z0NE",
-        "AUT0_SC4N::",
-        "PR0X_D3TECT"
-    };
-
-    private static string GetRandomSensorText()
-        => SensorTexts[UnityEngine.Random.Range(0, SensorTexts.Count)];
 
     /// <summary>
     /// Active sensor groups in the current level.
@@ -207,7 +194,11 @@ public sealed class ZoneSensorManager
     }
 
     /// <summary>
-    /// Called when level build is complete. Spawns all registered sensors.
+    /// Called when level build is complete. Creates sensor groups and spawns sensors.
+    ///
+    /// Host: Generates random positions and syncs via position replicator.
+    /// Clients: Create groups with pending data, spawn on receiving positions.
+    /// Late joiners: Receive position state via recall, spawn sensors.
     /// </summary>
     private void BuildSensors()
     {
@@ -216,7 +207,7 @@ public sealed class ZoneSensorManager
         if (!definitions.TryGetValue(levelLayoutId, out var levelDefinitions))
             return;
 
-        Plugin.Logger.LogDebug($"ZoneSensor: Building sensors for level {levelLayoutId}, {levelDefinitions.Count} definitions");
+        Plugin.Logger.LogDebug($"ZoneSensor: Building sensors for level {levelLayoutId}, {levelDefinitions.Count} definitions, IsMaster={SNet.IsMaster}");
 
         var groupIndex = 0;
 
@@ -247,136 +238,95 @@ public sealed class ZoneSensorManager
                 continue;
             }
 
-            // Create sensor group
+            // Check total sensor count doesn't exceed position state limit
+            int totalSensors = definition.SensorGroups.Sum(g => g.Count);
+            if (totalSensors > ZoneSensorPositionState.MaxSensors)
+            {
+                Plugin.Logger.LogWarning($"ZoneSensor: Group {groupIndex} has {totalSensors} sensors, exceeds max {ZoneSensorPositionState.MaxSensors}. Some sensors will not be created.");
+            }
+
             // Determine if any sensor group uses TriggerEach mode
             bool hasTriggerEach = definition.SensorGroups.Any(g => g.TriggerEach);
+
+            // Create sensor group with replicators
             var sensorGroup = new ZoneSensorGroup();
             sensorGroup.Initialize(groupIndex, definition.EventsOnTrigger, hasTriggerEach);
 
-            // Spawn sensors for each group definition
-            // Track sensor index across all group definitions
-            int sensorIndex = 0;
-            foreach (var groupDef in definition.SensorGroups)
+            // Set pending spawn data (sensors will spawn when positions are received)
+            sensorGroup.SetPendingSpawnData(zone, definition.SensorGroups);
+
+            // Host generates random positions and triggers spawning on all clients
+            if (SNet.IsMaster)
             {
-                sensorIndex = SpawnSensorsInZone(zone, groupDef, sensorGroup, groupIndex, sensorIndex);
+                var positionState = GeneratePositions(zone, definition.SensorGroups);
+                sensorGroup.SetPositionsAndSpawn(positionState);
             }
+            // Clients wait for OnPositionStateChanged callback to spawn
 
             activeSensorGroups.Add(sensorGroup);
             groupIndex++;
         }
 
-        Plugin.Logger.LogDebug($"ZoneSensor: Built {activeSensorGroups.Count} sensor groups");
+        Plugin.Logger.LogDebug($"ZoneSensor: Created {activeSensorGroups.Count} sensor groups");
     }
 
     /// <summary>
-    /// Spawns sensors within a zone based on the group definition.
-    /// Returns the next sensor index to use.
+    /// Generates random positions for sensors within a zone.
+    /// Host-only: Uses SessionSeedRandom for deterministic generation.
     /// </summary>
-    private int SpawnSensorsInZone(LG_Zone zone, ZoneSensorGroupDefinition groupDef, ZoneSensorGroup sensorGroup, int groupIndex, int startingSensorIndex)
+    private ZoneSensorPositionState GeneratePositions(LG_Zone zone, List<ZoneSensorGroupDefinition> groupDefinitions)
     {
-        const int maxPlacementAttempts = 5;
-        int sensorIndex = startingSensorIndex;
+        var state = new ZoneSensorPositionState();
         var placedSensors = new List<(Vector3 pos, float radius)>();
-        var sensorRadius = (float)groupDef.Radius;
+        int positionIndex = 0;
 
-        for (var i = 0; i < groupDef.Count; i++)
+        foreach (var groupDef in groupDefinitions)
         {
-            Vector3 position = Vector3.zero;
-            var attempts = 0;
+            var sensorRadius = (float)groupDef.Radius;
 
-            while (attempts < maxPlacementAttempts)
+            for (int i = 0; i < groupDef.Count && positionIndex < ZoneSensorPositionState.MaxSensors; i++)
             {
-                if (groupDef.AreaIndex >= 0 && groupDef.AreaIndex < zone.m_areas.Count)
+                const int maxPlacementAttempts = 5;
+                Vector3 position = Vector3.zero;
+                var attempts = 0;
+
+                while (attempts < maxPlacementAttempts)
                 {
-                    var area = zone.m_areas[groupDef.AreaIndex];
-                    position = area.m_courseNode.GetRandomPositionInside_SessionSeed();
+                    if (groupDef.AreaIndex >= 0 && groupDef.AreaIndex < zone.m_areas.Count)
+                    {
+                        var area = zone.m_areas[groupDef.AreaIndex];
+                        position = area.m_courseNode.GetRandomPositionInside_SessionSeed();
+                    }
+                    else
+                    {
+                        var randomAreaIndex = Builder.SessionSeedRandom.Range(0, zone.m_areas.Count, "ZoneSensor_AreaSelect");
+                        var area = zone.m_areas[randomAreaIndex];
+                        position = area.m_courseNode.GetRandomPositionInside_SessionSeed();
+                    }
+
+                    if (!OverlapsExistingSensor(position, sensorRadius, placedSensors))
+                        break;
+
+                    attempts++;
                 }
-                else
+
+                placedSensors.Add((position, sensorRadius));
+                state.SetPosition(positionIndex, position);
+
+                // Store waypoint count for moving sensors (used by clients for deterministic generation)
+                if (groupDef.Moving > 1)
                 {
-                    var randomAreaIndex = Builder.SessionSeedRandom.Range(0, zone.m_areas.Count, "ZoneSensor_AreaSelect");
-                    var area = zone.m_areas[randomAreaIndex];
-                    position = area.m_courseNode.GetRandomPositionInside_SessionSeed();
+                    state.SetWaypointCount(positionIndex, Math.Min(groupDef.Moving - 1, 3));
                 }
 
-                if (!OverlapsExistingSensor(position, sensorRadius, placedSensors))
-                    break;
-
-                attempts++;
+                positionIndex++;
             }
-
-            // Place sensor at final position (either non-overlapping or after max attempts)
-            placedSensors.Add((position, sensorRadius));
-            var sensorGO = CreateSensorVisual(position, groupDef, groupIndex, sensorIndex);
-            sensorGroup.AddSensor(sensorGO);
-
-            // Add movement if enabled (Moving > 1 means patrol between multiple points)
-            if (groupDef.Moving > 1)
-            {
-                InitializeSensorMovement(zone, groupDef, sensorGO, position);
-            }
-
-            sensorIndex++;
         }
 
-        return sensorIndex;
-    }
+        state.SensorCount = (byte)positionIndex;
+        Plugin.Logger.LogDebug($"ZoneSensor: Generated {positionIndex} positions");
 
-    /// <summary>
-    /// Initializes movement for a sensor by calculating paths through multiple patrol points.
-    /// </summary>
-    private void InitializeSensorMovement(LG_Zone zone, ZoneSensorGroupDefinition groupDef, GameObject sensorGO, Vector3 startPosition)
-    {
-        var positions = new List<Vector3> { startPosition };
-
-        // Generate (Moving - 1) additional random positions
-        for (int i = 1; i < groupDef.Moving; i++)
-        {
-            Vector3 pos;
-            if (groupDef.AreaIndex >= 0 && groupDef.AreaIndex < zone.m_areas.Count)
-            {
-                var area = zone.m_areas[groupDef.AreaIndex];
-                pos = area.m_courseNode.GetRandomPositionInside_SessionSeed();
-            }
-            else
-            {
-                var randomAreaIndex = Builder.SessionSeedRandom.Range(0, zone.m_areas.Count, "ZoneSensor_WaypointAreaSelect");
-                var area = zone.m_areas[randomAreaIndex];
-                pos = area.m_courseNode.GetRandomPositionInside_SessionSeed();
-            }
-
-            if (TryGetPosOnNavMesh(ref pos))
-                positions.Add(pos);
-        }
-
-        if (positions.Count < 2)
-        {
-            Plugin.Logger.LogWarning("ZoneSensor: Not enough valid positions for moving sensor");
-            return;
-        }
-
-        // Snap start position
-        var start = positions[0];
-        if (!TryGetPosOnNavMesh(ref start))
-        {
-            Plugin.Logger.LogWarning("ZoneSensor: Could not snap start position to NavMesh");
-            return;
-        }
-        positions[0] = start;
-
-        var mover = sensorGO.AddComponent<ZoneSensorMover>();
-        mover.Initialize(positions, (float)groupDef.Speed, (float)groupDef.EdgeDistance);
-    }
-
-    /// <summary>
-    /// Attempts to snap a position to the NavMesh.
-    /// </summary>
-    private bool TryGetPosOnNavMesh(ref Vector3 pos)
-    {
-        NavMeshHit hit;
-        if (!NavMesh.SamplePosition(pos + Vector3.up * 0.15f, out hit, 1f, -1))
-            return false;
-        pos = hit.position;
-        return true;
+        return state;
     }
 
     /// <summary>
@@ -393,105 +343,6 @@ public sealed class ZoneSensorManager
                 return true;
         }
         return false;
-    }
-
-    /// <summary>
-    /// Creates the visual representation of a sensor.
-    /// </summary>
-    private GameObject CreateSensorVisual(Vector3 position, ZoneSensorGroupDefinition groupDef, int groupIndex, int sensorIndex)
-    {
-        if (!ZoneSensorAssets.AssetsLoaded)
-        {
-            Plugin.Logger.LogError("ZoneSensor: CircleSensor prefab not loaded!");
-            return new GameObject($"ZoneSensor_{groupIndex}_{sensorIndex}_Error");
-        }
-
-        // Instantiate CircleSensor prefab
-        var sensorGO = UnityEngine.Object.Instantiate(ZoneSensorAssets.CircleSensor);
-        sensorGO.name = $"ZoneSensor_{groupIndex}_{sensorIndex}";
-
-        // Position and scale per EOS pattern
-        sensorGO.transform.SetPositionAndRotation(position, Quaternion.identity);
-
-        // For 75% above floor: center at 25% of scaled height
-        var targetHeight = 0.6f;
-        var scaledHeight = (float)groupDef.Height * (float)groupDef.Radius;
-        var heightOffset = (targetHeight - 0.5f) * scaledHeight;
-
-        sensorGO.transform.localScale = new Vector3(
-            (float)groupDef.Radius,
-            (float)groupDef.Radius,
-            (float)groupDef.Radius);
-        sensorGO.transform.localPosition += Vector3.up * heightOffset;
-
-        // Set color via material (child 0 -> child 1 -> renderer)
-        var renderer = sensorGO.transform.GetChild(0).GetChild(1)
-            .gameObject.GetComponentInChildren<Renderer>();
-        if (renderer != null)
-        {
-            renderer.material.SetColor("_ColorA", new Color(
-                (float)groupDef.Color.Red,
-                (float)groupDef.Color.Green,
-                (float)groupDef.Color.Blue,
-                (float)groupDef.Color.Alpha));
-        }
-
-        // Set up text display
-        var infoGO = sensorGO.transform.GetChild(0).GetChild(2);
-
-        // Destroy corrupted TMPro from prefab
-        var corruptedTMPro = infoGO.GetChild(0).gameObject;
-        corruptedTMPro.transform.SetParent(null);
-        UnityEngine.Object.Destroy(corruptedTMPro);
-
-        if (groupDef.HideText)
-        {
-            Plugin.Logger.LogDebug($"ZoneSensor: Sensor {sensorIndex} has hidden text");
-        }
-        else
-        {
-            var tmproGO = GtfoTextMeshPro.Instantiate(infoGO.gameObject);
-            if (tmproGO != null)
-            {
-                var text = tmproGO.GetComponent<TMPro.TextMeshPro>();
-                if (text != null)
-                {
-                    var normalColor = new Color(
-                        (float)groupDef.TextColor.Red,
-                        (float)groupDef.TextColor.Green,
-                        (float)groupDef.TextColor.Blue,
-                        (float)groupDef.TextColor.Alpha);
-
-                    if (groupDef.EncryptedText)
-                    {
-                        var encryptedColor = new Color(
-                            (float)groupDef.EncryptedTextColor.Red,
-                            (float)groupDef.EncryptedTextColor.Green,
-                            (float)groupDef.EncryptedTextColor.Blue,
-                            (float)groupDef.EncryptedTextColor.Alpha);
-
-                        var animator = sensorGO.AddComponent<ZoneSensorTextAnimator>();
-                        var sensorText = groupDef.Text ?? GetRandomSensorText();
-                        animator.Initialize(sensorText, normalColor, encryptedColor, text);
-                    }
-                    else
-                    {
-                        text.SetText(groupDef.Text ?? GetRandomSensorText());
-                        text.m_fontColor = text.m_fontColor32 = normalColor;
-                    }
-                }
-            }
-        }
-
-        // Add detection collider
-        var collider = sensorGO.AddComponent<ZoneSensorCollider>();
-        collider.GroupIndex = groupIndex;
-        collider.SensorIndex = sensorIndex;
-        collider.TriggerEach = groupDef.TriggerEach;
-        collider.Radius = (float)groupDef.Radius;
-
-        Plugin.Logger.LogDebug($"ZoneSensor: Created sensor {sensorIndex} at {position} with radius {groupDef.Radius}, TriggerEach={groupDef.TriggerEach}");
-        return sensorGO;
     }
 
     /// <summary>
