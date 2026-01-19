@@ -44,6 +44,7 @@ public class ZoneSensorGroup
     private bool triggerEach;
     private uint currentSensorMask = uint.MaxValue;
     private uint triggeredSensorMask = 0;  // Persistent tracking of sensors that have fired
+    private uint previousSensorMask = 0;   // Track which sensors were visible for transition detection
 
     // Pending spawn data - stored until positions are received
     private LG_Zone? pendingZone;
@@ -70,6 +71,7 @@ public class ZoneSensorGroup
         this.triggerEach = triggerEach;
         currentSensorMask = uint.MaxValue;
         triggeredSensorMask = 0;
+        previousSensorMask = 0;
         sensorsSpawned = false;
         receivedBatches.Clear();
 
@@ -536,7 +538,7 @@ public class ZoneSensorGroup
 
     /// <summary>
     /// Updates the local visual state without network sync.
-    /// Resets collider state when enabling to prevent immediate triggers.
+    /// Resets collider state only when transitioning from disabled to enabled.
     /// </summary>
     private void UpdateVisualsUnsynced(bool enabled, uint sensorMask)
     {
@@ -549,17 +551,22 @@ public class ZoneSensorGroup
             {
                 // Sensor is visible if group enabled AND individual sensor enabled
                 bool sensorEnabled = enabled && ((sensorMask & (1u << i)) != 0);
+                bool wasEnabled = (previousSensorMask & (1u << i)) != 0;
+
                 sensor.SetActive(sensorEnabled);
 
-                // BUG FIX: Reset collider state when enabling to prevent immediate trigger
-                // if player is already standing in sensor area
-                if (sensorEnabled)
+                // Only reset collider state when TRANSITIONING to enabled
+                // This prevents immediate triggers when sensors reappear on top of players
+                if (sensorEnabled && !wasEnabled)
                 {
                     var collider = sensor.GetComponent<ZoneSensorCollider>();
                     collider?.ResetState();
                 }
             }
         }
+
+        // Update previous state for next comparison
+        previousSensorMask = enabled ? sensorMask : 0;
     }
 
     /// <summary>
