@@ -26,7 +26,10 @@ public class ZoneSensorGroup
 {
     // Base IDs for zone sensor replicators (avoid collisions with other mods)
     private const uint STATE_REPLICATOR_BASE_ID = 0x5A534E00; // "ZSN" prefix + group index
-    private const uint POSITION_REPLICATOR_BASE_ID = 0x5A535000; // "ZSP" prefix + group index
+    private const uint POSITION_REPLICATOR_BASE_ID = 0x5A535000; // "ZSP" prefix + group index * 8 + batch index
+
+    // Maximum batches per group (supports up to 128 sensors: 8 * 16)
+    private const int MAX_BATCHES_PER_GROUP = 8;
 
     public int GroupIndex { get; private set; }
     public bool Enabled { get; private set; } = true;
@@ -34,7 +37,9 @@ public class ZoneSensorGroup
     public List<WardenObjectiveEvent> EventsOnTrigger { get; set; } = new();
 
     public StateReplicator<ZoneSensorGroupState>? Replicator { get; private set; }
-    public StateReplicator<ZoneSensorPositionState>? PositionReplicator { get; private set; }
+
+    // Multiple position replicators for groups with more than 16 sensors
+    public List<StateReplicator<ZoneSensorPositionState>> PositionReplicators { get; } = new();
 
     private bool triggerEach;
     private uint currentSensorMask = uint.MaxValue;
@@ -44,11 +49,19 @@ public class ZoneSensorGroup
     private List<ZoneSensorGroupDefinition>? pendingGroupDefinitions;
     private bool sensorsSpawned = false;
 
+    // Batch tracking for multi-replicator position sync
+    private int expectedBatchCount = 0;
+    private Dictionary<int, ZoneSensorPositionState> receivedBatches = new();
+
     /// <summary>
     /// Initializes the sensor group with network replicators.
     /// Call this before setting positions or spawning sensors.
     /// </summary>
-    public void Initialize(int index, List<WardenObjectiveEvent> events, bool triggerEach)
+    /// <param name="index">Group index for replicator ID allocation</param>
+    /// <param name="events">Events to trigger when sensors are activated</param>
+    /// <param name="triggerEach">Whether each sensor triggers independently</param>
+    /// <param name="expectedSensorCount">Expected total sensors to calculate batch count</param>
+    public void Initialize(int index, List<WardenObjectiveEvent> events, bool triggerEach, int expectedSensorCount)
     {
         GroupIndex = index;
         EventsOnTrigger = events;
@@ -56,10 +69,18 @@ public class ZoneSensorGroup
         this.triggerEach = triggerEach;
         currentSensorMask = uint.MaxValue;
         sensorsSpawned = false;
+        receivedBatches.Clear();
+
+        // Calculate number of position batches needed
+        expectedBatchCount = ZoneSensorPositionState.CalculateBatchCount(expectedSensorCount);
+        if (expectedBatchCount > MAX_BATCHES_PER_GROUP)
+        {
+            Plugin.Logger.LogWarning($"ZoneSensorGroup {index}: Sensor count {expectedSensorCount} requires {expectedBatchCount} batches, clamping to {MAX_BATCHES_PER_GROUP}");
+            expectedBatchCount = MAX_BATCHES_PER_GROUP;
+        }
 
         // Create network replicators with unique IDs
         uint stateReplicatorId = STATE_REPLICATOR_BASE_ID + (uint)index;
-        uint positionReplicatorId = POSITION_REPLICATOR_BASE_ID + (uint)index;
 
         // State replicator for enabled/disabled
         Replicator = StateReplicator<ZoneSensorGroupState>.Create(
@@ -73,17 +94,27 @@ public class ZoneSensorGroup
             Replicator.OnStateChanged += OnStateChanged;
         }
 
-        // Position replicator for spawn positions
-        PositionReplicator = StateReplicator<ZoneSensorPositionState>.Create(
-            positionReplicatorId,
-            new ZoneSensorPositionState(),
-            LifeTimeType.Session
-        );
-
-        if (PositionReplicator != null)
+        // Create position replicators for each batch
+        // ID scheme: BASE_ID + groupIndex * 8 + batchIndex
+        PositionReplicators.Clear();
+        for (int batchIndex = 0; batchIndex < expectedBatchCount; batchIndex++)
         {
-            PositionReplicator.OnStateChanged += OnPositionStateChanged;
+            uint positionReplicatorId = POSITION_REPLICATOR_BASE_ID + (uint)(index * MAX_BATCHES_PER_GROUP + batchIndex);
+
+            var posReplicator = StateReplicator<ZoneSensorPositionState>.Create(
+                positionReplicatorId,
+                new ZoneSensorPositionState(),
+                LifeTimeType.Session
+            );
+
+            if (posReplicator != null)
+            {
+                posReplicator.OnStateChanged += OnPositionStateChanged;
+                PositionReplicators.Add(posReplicator);
+            }
         }
+
+        Plugin.Logger.LogDebug($"ZoneSensorGroup {index}: Initialized with {expectedBatchCount} position replicators for {expectedSensorCount} sensors");
     }
 
     /// <summary>
@@ -96,41 +127,69 @@ public class ZoneSensorGroup
     }
 
     /// <summary>
-    /// Host-only: Sets position state and triggers spawning on all clients.
+    /// Host-only: Sets position states across all replicators and triggers spawning.
     /// Call this after generating random positions.
     /// </summary>
-    public void SetPositionsAndSpawn(ZoneSensorPositionState positionState)
+    /// <param name="positionBatches">List of position state batches to broadcast</param>
+    public void SetPositionsAndSpawn(List<ZoneSensorPositionState> positionBatches)
     {
-        if (PositionReplicator == null || !PositionReplicator.IsValid)
+        if (positionBatches.Count != PositionReplicators.Count)
         {
-            Plugin.Logger.LogWarning($"ZoneSensorGroup {GroupIndex}: Position replicator not valid");
+            Plugin.Logger.LogWarning($"ZoneSensorGroup {GroupIndex}: Batch count mismatch - {positionBatches.Count} batches vs {PositionReplicators.Count} replicators");
             return;
         }
 
-        // Store state and broadcast to clients
-        PositionReplicator.SetState(positionState);
+        // Store batches and broadcast to clients
+        for (int i = 0; i < positionBatches.Count; i++)
+        {
+            if (PositionReplicators[i] == null || !PositionReplicators[i].IsValid)
+            {
+                Plugin.Logger.LogWarning($"ZoneSensorGroup {GroupIndex}: Position replicator {i} not valid");
+                continue;
+            }
 
-        // Host also spawns sensors locally
-        SpawnSensorsFromPositions(positionState, isRecall: false);
+            PositionReplicators[i].SetState(positionBatches[i]);
+            receivedBatches[positionBatches[i].BatchIndex] = positionBatches[i];
+        }
+
+        // Host spawns sensors locally using all batches
+        SpawnSensorsFromBatches(isRecall: false);
     }
 
     private void OnPositionStateChanged(ZoneSensorPositionState oldState, ZoneSensorPositionState newState, bool isRecall)
     {
-        Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Position state changed, isRecall={isRecall}, sensorCount={newState.SensorCount}, alreadySpawned={sensorsSpawned}");
+        Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Position state changed, batch={newState.BatchIndex}/{newState.TotalBatches}, sensorCount={newState.SensorCount}, isRecall={isRecall}, alreadySpawned={sensorsSpawned}");
 
         // Skip if no positions or already spawned
         if (!newState.HasPositions || sensorsSpawned)
             return;
 
-        // Spawn sensors using received positions
-        SpawnSensorsFromPositions(newState, isRecall);
+        // Store this batch
+        receivedBatches[newState.BatchIndex] = newState;
+
+        // Update expected batch count from the state (in case we didn't know it initially)
+        if (newState.TotalBatches > 0)
+        {
+            expectedBatchCount = newState.TotalBatches;
+        }
+
+        // Check if we've received all batches
+        if (receivedBatches.Count >= expectedBatchCount)
+        {
+            Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: All {expectedBatchCount} batches received, spawning sensors");
+            SpawnSensorsFromBatches(isRecall);
+        }
+        else
+        {
+            Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Waiting for more batches ({receivedBatches.Count}/{expectedBatchCount})");
+        }
     }
 
     /// <summary>
-    /// Spawns sensors using positions from the state.
-    /// Called by host immediately after setting positions, or by clients when receiving positions.
+    /// Spawns sensors using positions from all received batches.
+    /// Called when all batches have been received.
     /// </summary>
-    private void SpawnSensorsFromPositions(ZoneSensorPositionState positionState, bool isRecall)
+    private void SpawnSensorsFromBatches(bool isRecall)
     {
         if (sensorsSpawned)
         {
@@ -153,15 +212,30 @@ public class ZoneSensorGroup
         sensorsSpawned = true;
         var zone = pendingZone;
 
-        // Track position index across all group definitions
+        // Build ordered list of all positions from batches
+        var allPositions = new List<(Vector3 position, int waypointCount)>();
+        for (int batchIndex = 0; batchIndex < expectedBatchCount; batchIndex++)
+        {
+            if (!receivedBatches.TryGetValue(batchIndex, out var batch))
+            {
+                Plugin.Logger.LogWarning($"ZoneSensorGroup {GroupIndex}: Missing batch {batchIndex}");
+                continue;
+            }
+
+            for (int i = 0; i < batch.SensorCount; i++)
+            {
+                allPositions.Add((batch.GetPosition(i), batch.GetWaypointCount(i)));
+            }
+        }
+
+        // Track global position index across all group definitions
         int positionIndex = 0;
 
         foreach (var groupDef in pendingGroupDefinitions)
         {
-            for (int i = 0; i < groupDef.Count && positionIndex < positionState.SensorCount; i++)
+            for (int i = 0; i < groupDef.Count && positionIndex < allPositions.Count; i++)
             {
-                var position = positionState.GetPosition(positionIndex);
-                int waypointCount = positionState.GetWaypointCount(positionIndex);
+                var (position, waypointCount) = allPositions[positionIndex];
 
                 var sensorGO = CreateSensorVisual(position, groupDef, GroupIndex, positionIndex);
                 Sensors.Add(sensorGO);
@@ -177,11 +251,12 @@ public class ZoneSensorGroup
             }
         }
 
-        Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Spawned {Sensors.Count} sensors (isRecall={isRecall})");
+        Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Spawned {Sensors.Count} sensors from {expectedBatchCount} batches (isRecall={isRecall})");
 
         // Clear pending data
         pendingZone = null;
         pendingGroupDefinitions = null;
+        receivedBatches.Clear();
     }
 
     /// <summary>
@@ -470,8 +545,12 @@ public class ZoneSensorGroup
         // Unload replicators (though Session lifetime auto-cleans)
         Replicator?.Unload();
         Replicator = null;
-        PositionReplicator?.Unload();
-        PositionReplicator = null;
+
+        foreach (var posReplicator in PositionReplicators)
+        {
+            posReplicator?.Unload();
+        }
+        PositionReplicators.Clear();
 
         foreach (var sensor in Sensors)
         {
@@ -484,5 +563,7 @@ public class ZoneSensorGroup
         pendingZone = null;
         pendingGroupDefinitions = null;
         sensorsSpawned = false;
+        receivedBatches.Clear();
+        expectedBatchCount = 0;
     }
 }

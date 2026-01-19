@@ -238,19 +238,26 @@ public sealed class ZoneSensorManager
                 continue;
             }
 
-            // Check total sensor count doesn't exceed position state limit
+            // Calculate total sensor count for batch planning
             int totalSensors = definition.SensorGroups.Sum(g => g.Count);
-            if (totalSensors > ZoneSensorPositionState.MaxSensors)
+            int batchCount = ZoneSensorPositionState.CalculateBatchCount(totalSensors);
+
+            // Warn if we're hitting the maximum supported sensors (128 = 8 batches * 16 per batch)
+            const int maxSupportedSensors = 8 * ZoneSensorPositionState.MaxSensorsPerBatch;
+            if (totalSensors > maxSupportedSensors)
             {
-                Plugin.Logger.LogWarning($"ZoneSensor: Group {groupIndex} has {totalSensors} sensors, exceeds max {ZoneSensorPositionState.MaxSensors}. Some sensors will not be created.");
+                Plugin.Logger.LogWarning($"ZoneSensor: Group {groupIndex} has {totalSensors} sensors, exceeds max {maxSupportedSensors}. Some sensors will not be created.");
+                totalSensors = maxSupportedSensors;
             }
+
+            Plugin.Logger.LogDebug($"ZoneSensor: Group {groupIndex} will have {totalSensors} sensors in {batchCount} batches");
 
             // Determine if any sensor group uses TriggerEach mode
             bool hasTriggerEach = definition.SensorGroups.Any(g => g.TriggerEach);
 
-            // Create sensor group with replicators
+            // Create sensor group with replicators (pass expected count for batch allocation)
             var sensorGroup = new ZoneSensorGroup();
-            sensorGroup.Initialize(groupIndex, definition.EventsOnTrigger, hasTriggerEach);
+            sensorGroup.Initialize(groupIndex, definition.EventsOnTrigger, hasTriggerEach, totalSensors);
 
             // Set pending spawn data (sensors will spawn when positions are received)
             sensorGroup.SetPendingSpawnData(zone, definition.SensorGroups);
@@ -258,8 +265,8 @@ public sealed class ZoneSensorManager
             // Host generates random positions and triggers spawning on all clients
             if (SNet.IsMaster)
             {
-                var positionState = GeneratePositions(zone, definition.SensorGroups);
-                sensorGroup.SetPositionsAndSpawn(positionState);
+                var positionBatches = GeneratePositionBatches(zone, definition.SensorGroups);
+                sensorGroup.SetPositionsAndSpawn(positionBatches);
             }
             // Clients wait for OnPositionStateChanged callback to spawn
 
@@ -271,20 +278,24 @@ public sealed class ZoneSensorManager
     }
 
     /// <summary>
-    /// Generates random positions for sensors within a zone.
+    /// Generates random positions for sensors within a zone, split into batches.
     /// Host-only: Uses SessionSeedRandom for deterministic generation.
+    /// Returns a list of position state batches, each containing up to 16 sensors.
     /// </summary>
-    private ZoneSensorPositionState GeneratePositions(LG_Zone zone, List<ZoneSensorGroupDefinition> groupDefinitions)
+    private List<ZoneSensorPositionState> GeneratePositionBatches(LG_Zone zone, List<ZoneSensorGroupDefinition> groupDefinitions)
     {
-        var state = new ZoneSensorPositionState();
+        // First, generate all positions
+        var allPositions = new List<(Vector3 pos, int waypointCount)>();
         var placedSensors = new List<(Vector3 pos, float radius)>();
-        int positionIndex = 0;
+
+        // Maximum sensors supported (8 batches * 16 per batch)
+        const int maxTotalSensors = 8 * ZoneSensorPositionState.MaxSensorsPerBatch;
 
         foreach (var groupDef in groupDefinitions)
         {
             var sensorRadius = (float)groupDef.Radius;
 
-            for (int i = 0; i < groupDef.Count && positionIndex < ZoneSensorPositionState.MaxSensors; i++)
+            for (int i = 0; i < groupDef.Count && allPositions.Count < maxTotalSensors; i++)
             {
                 const int maxPlacementAttempts = 5;
                 Vector3 position = Vector3.zero;
@@ -311,22 +322,43 @@ public sealed class ZoneSensorManager
                 }
 
                 placedSensors.Add((position, sensorRadius));
-                state.SetPosition(positionIndex, position);
 
-                // Store waypoint count for moving sensors (used by clients for deterministic generation)
-                if (groupDef.Moving > 1)
-                {
-                    state.SetWaypointCount(positionIndex, Math.Min(groupDef.Moving - 1, 3));
-                }
-
-                positionIndex++;
+                // Store waypoint count for moving sensors
+                int waypointCount = groupDef.Moving > 1 ? Math.Min(groupDef.Moving - 1, 3) : 0;
+                allPositions.Add((position, waypointCount));
             }
         }
 
-        state.SensorCount = (byte)positionIndex;
-        Plugin.Logger.LogDebug($"ZoneSensor: Generated {positionIndex} positions");
+        // Split positions into batches of MaxSensorsPerBatch
+        int totalBatches = ZoneSensorPositionState.CalculateBatchCount(allPositions.Count);
+        var batches = new List<ZoneSensorPositionState>();
 
-        return state;
+        for (int batchIndex = 0; batchIndex < totalBatches; batchIndex++)
+        {
+            var state = new ZoneSensorPositionState
+            {
+                BatchIndex = (byte)batchIndex,
+                TotalBatches = (byte)totalBatches
+            };
+
+            int startIndex = batchIndex * ZoneSensorPositionState.MaxSensorsPerBatch;
+            int endIndex = Math.Min(startIndex + ZoneSensorPositionState.MaxSensorsPerBatch, allPositions.Count);
+            int batchSensorCount = endIndex - startIndex;
+
+            for (int i = 0; i < batchSensorCount; i++)
+            {
+                var (pos, waypointCount) = allPositions[startIndex + i];
+                state.SetPosition(i, pos);
+                state.SetWaypointCount(i, waypointCount);
+            }
+
+            state.SensorCount = (byte)batchSensorCount;
+            batches.Add(state);
+        }
+
+        Plugin.Logger.LogDebug($"ZoneSensor: Generated {allPositions.Count} positions in {totalBatches} batches");
+
+        return batches;
     }
 
     /// <summary>
