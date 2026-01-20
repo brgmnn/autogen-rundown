@@ -48,6 +48,16 @@ public enum WardenObjectiveEventType : uint
     ToggleSecuritySensor = 400,
 
     /// <summary>
+    /// Toggle a security sensor group, preserving triggered state (triggered sensors stay hidden)
+    /// </summary>
+    ToggleSecuritySensorPreserveTriggered = 401,
+
+    /// <summary>
+    /// Toggle a security sensor group with reset (all sensors reappear when enabled)
+    /// </summary>
+    ToggleSecuritySensorResetTriggered = 402,
+
+    /// <summary>
     /// Disable a security sensor group (preserves triggered state)
     /// </summary>
     DisableSecuritySensor = 403,

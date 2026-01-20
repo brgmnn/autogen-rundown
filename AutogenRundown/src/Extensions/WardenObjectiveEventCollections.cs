@@ -502,68 +502,101 @@ public static class WardenObjectiveEventCollections
     }
 
     /// <summary>
-    /// Adds a zone sensor toggle event (for autogen's zone-based sensors).
-    /// This event is handled at runtime by ZoneSensorManager.
+    /// Toggle a zone sensor group on/off.
     /// </summary>
-    /// <param name="events"></param>
-    /// <param name="enabled">Whether to enable or disable the sensor group</param>
-    /// <param name="sensorGroupIndex">Index of the sensor group to toggle</param>
-    /// <param name="delay">Delay before the event fires</param>
-    /// <returns></returns>
-    public static ICollection<WardenObjectiveEvent> AddToggleZoneSensors(
+    public static ICollection<WardenObjectiveEvent> ToggleZoneSensors(
         this ICollection<WardenObjectiveEvent> events,
+        int groupIndex,
         bool enabled,
-        int sensorGroupIndex,
         double delay = 0.0)
     {
-        // Use the same event type as EOSExt_SecuritySensor for compatibility
-        // The ZoneSensorManager will intercept and handle these events
         events.Add(
             new WardenObjectiveEvent
             {
                 Type = WardenObjectiveEventType.ToggleSecuritySensor,
                 Enabled = enabled,
-                Count = sensorGroupIndex,
+                Count = groupIndex,
                 Delay = delay
             });
 
         return events;
     }
 
-    public static ICollection<WardenObjectiveEvent> AddEnableZoneSensors(
+    /// <summary>
+    /// Enable a zone sensor group. Previously triggered sensors stay hidden.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> EnableZoneSensors(
         this ICollection<WardenObjectiveEvent> events,
-        bool enabled,
-        int sensorGroupIndex,
+        int groupIndex,
         double delay = 0.0)
     {
-        // Use the same event type as EOSExt_SecuritySensor for compatibility
-        // The ZoneSensorManager will intercept and handle these events
         events.Add(
             new WardenObjectiveEvent
             {
                 Type = WardenObjectiveEventType.EnableSecuritySensor,
-                Enabled = enabled,
-                Count = sensorGroupIndex,
+                Count = groupIndex,
                 Delay = delay
             });
 
         return events;
     }
 
-    public static ICollection<WardenObjectiveEvent> AddDisableZoneSensors(
+    /// <summary>
+    /// Disable a zone sensor group.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> DisableZoneSensors(
         this ICollection<WardenObjectiveEvent> events,
-        bool enabled,
-        int sensorGroupIndex,
+        int groupIndex,
         double delay = 0.0)
     {
-        // Use the same event type as EOSExt_SecuritySensor for compatibility
-        // The ZoneSensorManager will intercept and handle these events
         events.Add(
             new WardenObjectiveEvent
             {
                 Type = WardenObjectiveEventType.DisableSecuritySensor,
+                Count = groupIndex,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Enable a zone sensor group with full reset. All sensors reappear,
+    /// including previously triggered ones.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> EnableZoneSensorsWithReset(
+        this ICollection<WardenObjectiveEvent> events,
+        int groupIndex,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ToggleSecuritySensorResetTriggered,
+                Enabled = true,
+                Count = groupIndex,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Toggle a zone sensor group with full reset. When enabling,
+    /// all sensors reappear including previously triggered ones.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> ToggleZoneSensorsWithReset(
+        this ICollection<WardenObjectiveEvent> events,
+        int groupIndex,
+        bool enabled,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ToggleSecuritySensorResetTriggered,
                 Enabled = enabled,
-                Count = sensorGroupIndex,
+                Count = groupIndex,
                 Delay = delay
             });
 

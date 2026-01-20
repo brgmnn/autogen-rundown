@@ -212,7 +212,11 @@ Enable or disable sensor groups at runtime:
 ```csharp
 // Extension methods in WardenObjectiveEventCollections.cs
 events.AddToggleSecuritySensors(enabled: false, sensorIndex: 0, delay: 0.1);
-events.AddToggleZoneSensors(enabled: true, sensorGroupIndex: 0, delay: 5.0);
+events.ToggleZoneSensors(groupIndex: 0, enabled: true, delay: 5.0);
+events.EnableZoneSensors(groupIndex: 0, delay: 0.0);
+events.DisableZoneSensors(groupIndex: 0, delay: 0.0);
+events.EnableZoneSensorsWithReset(groupIndex: 0, delay: 0.0);  // Full reset, all sensors reappear
+events.ToggleZoneSensorsWithReset(groupIndex: 0, enabled: true, delay: 0.0);  // Toggle with reset
 ```
 
 ### Network Synchronization
@@ -426,12 +430,19 @@ levelSensors.Save();
 ### Toggle via Extension Methods
 
 ```csharp
-// In objective events
+// In objective events - disable sensors when objective completes
 objective.EventsOnGotoWin
-    .AddToggleSecuritySensors(enabled: false, sensorIndex: 0, delay: 0.0);
+    .DisableZoneSensors(groupIndex: 0, delay: 0.0);
 
 // Re-enable after wave ends
-waveEvents.AddToggleZoneSensors(enabled: true, sensorGroupIndex: 0, delay: 5.0);
+waveEvents.EnableZoneSensors(groupIndex: 0, delay: 5.0);
+
+// Re-enable with full reset (all sensors reappear)
+waveEvents.EnableZoneSensorsWithReset(groupIndex: 0, delay: 5.0);
+
+// Toggle sensors on/off
+events.ToggleZoneSensors(groupIndex: 0, enabled: false, delay: 0.0);
+events.ToggleZoneSensors(groupIndex: 0, enabled: true, delay: 3.0);
 ```
 
 ---

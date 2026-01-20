@@ -1616,10 +1616,10 @@ public class Level
                     var sensorEvents = new List<WardenObjectiveEvent>();
 
                     sensorEvents
-                        // .AddToggleZoneSensors(false, 0, 0.1)
+                        // .ToggleZoneSensors(0, false, 0.1)
                         .AddSound(Sound.LightsOff)
                         .AddSpawnWave(GenericWave.SingleTank, 2.0);
-                    // .AddToggleZoneSensors(true, 0, 4.0)
+                    // .ToggleZoneSensors(0, true, 4.0)
                     // .AddSound(Sound.LightsOn_Vol2);
 
                     level.ZoneSensors.Add(new ZoneSensorDefinition
@@ -1697,8 +1697,8 @@ public class Level
                     };
 
                     eventLoop.EventsToActivate
-                        .AddToggleZoneSensors(false, 1, 0.0)
-                        .AddToggleZoneSensors(true, 1, 3.0);
+                        .ToggleZoneSensors(1, false, 0.0)
+                        .ToggleZoneSensors(1, true, 3.0);
 
                     level.Objective[Bulkhead.Main].EventsOnElevatorLand
                         .Add(new WardenObjectiveEvent()
@@ -1717,7 +1717,7 @@ public class Level
                     Command = "DEACTIVATE_SENSORS",
                     CommandDesc = "Deactivate security sensors",
                     CommandEvents = new List<WardenObjectiveEvent>()
-                        .AddDisableZoneSensors(false, 1, 1.4)
+                        .DisableZoneSensors(1, 1.4)
                         .ToList(),
                     PostCommandOutputs = new List<TerminalOutput>
                     {
