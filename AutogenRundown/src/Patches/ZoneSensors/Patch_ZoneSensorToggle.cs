@@ -12,16 +12,20 @@ namespace AutogenRundown.Patches.ZoneSensors;
 /// 400: Standard toggle (resets all sensors on enable)
 /// 401: Toggle preserving triggered state (only re-enable untriggered sensors)
 /// 402: Toggle with reset (clear triggered state, then enable all)
+/// 403: Disable sensor group (preserves triggered state)
+/// 404: Enable sensor group (only untriggered sensors appear)
 /// </summary>
 public static class ZoneSensorEventTypes
 {
     public const int Toggle = 400;
     public const int TogglePreserveTriggered = 401;
     public const int ToggleResetTriggered = 402;
+    public const int Disable = 403;
+    public const int Enable = 404;
 }
 
 /// <summary>
-/// Harmony patch to handle zone sensor toggle events (types 400, 401, 402).
+/// Harmony patch to handle zone sensor toggle events (types 400-404).
 /// This overrides EOSExt_SecuritySensor's handling entirely.
 /// </summary>
 [HarmonyPatch]
@@ -42,10 +46,12 @@ public static class Patch_ZoneSensorToggle
 
         var eventType = (int)eventToTrigger.Type;
 
-        // Only intercept zone sensor toggle events (400, 401, 402)
+        // Only intercept zone sensor events (400-404)
         if (eventType != ZoneSensorEventTypes.Toggle &&
             eventType != ZoneSensorEventTypes.TogglePreserveTriggered &&
-            eventType != ZoneSensorEventTypes.ToggleResetTriggered)
+            eventType != ZoneSensorEventTypes.ToggleResetTriggered &&
+            eventType != ZoneSensorEventTypes.Disable &&
+            eventType != ZoneSensorEventTypes.Enable)
             return true;
 
         // Handle trigger check (same as vanilla)
@@ -57,12 +63,31 @@ public static class Patch_ZoneSensorToggle
             return false;
 
         // Determine flags based on event type
-        bool preserveTriggered = eventType == ZoneSensorEventTypes.TogglePreserveTriggered;
-        bool resetTriggered = eventType == ZoneSensorEventTypes.ToggleResetTriggered;
+        bool enabled;
+        bool preserveTriggered;
+        bool resetTriggered = false;
+
+        if (eventType == ZoneSensorEventTypes.Disable)
+        {
+            enabled = false;
+            preserveTriggered = false;  // N/A when disabling
+        }
+        else if (eventType == ZoneSensorEventTypes.Enable)
+        {
+            enabled = true;
+            preserveTriggered = true;   // Keep triggered sensors hidden
+        }
+        else
+        {
+            // Existing toggle events use Enabled field
+            enabled = eventToTrigger.Enabled;
+            preserveTriggered = eventType == ZoneSensorEventTypes.TogglePreserveTriggered;
+            resetTriggered = eventType == ZoneSensorEventTypes.ToggleResetTriggered;
+        }
 
         // Schedule the toggle with delay
         float delaySeconds = Mathf.Max(eventToTrigger.Delay - currentDuration, 0f);
-        ZoneSensorToggleScheduler.Schedule(eventToTrigger.Count, eventToTrigger.Enabled, delaySeconds, preserveTriggered, resetTriggered);
+        ZoneSensorToggleScheduler.Schedule(eventToTrigger.Count, enabled, delaySeconds, preserveTriggered, resetTriggered);
 
         return false; // Skip original and any other patches
     }

@@ -46,6 +46,16 @@ public enum WardenObjectiveEventType : uint
     /// Toggle a security sensor group state
     /// </summary>
     ToggleSecuritySensor = 400,
+
+    /// <summary>
+    /// Disable a security sensor group (preserves triggered state)
+    /// </summary>
+    DisableSecuritySensor = 403,
+
+    /// <summary>
+    /// Enable a security sensor group (only untriggered sensors appear)
+    /// </summary>
+    EnableSecuritySensor = 404,
     #endregion
 
     #region MOD: AdvancedWardenObjective

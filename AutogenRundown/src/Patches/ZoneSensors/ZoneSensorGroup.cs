@@ -42,9 +42,8 @@ public class ZoneSensorGroup
     public List<StateReplicator<ZoneSensorPositionState>> PositionReplicators { get; } = new();
 
     private bool triggerEach;
-    private uint currentSensorMask = uint.MaxValue;
-    private uint triggeredSensorMask = 0;  // Persistent tracking of sensors that have fired
-    private uint previousSensorMask = 0;   // Track which sensors were visible for transition detection
+    private ZoneSensorGroupState currentState;
+    private ZoneSensorGroupState previousState;  // Track which sensors were visible for transition detection
 
     // Pending spawn data - stored until positions are received
     private LG_Zone? pendingZone;
@@ -69,9 +68,8 @@ public class ZoneSensorGroup
         EventsOnTrigger = events;
         Enabled = true;
         this.triggerEach = triggerEach;
-        currentSensorMask = uint.MaxValue;
-        triggeredSensorMask = 0;
-        previousSensorMask = 0;
+        currentState = new ZoneSensorGroupState(true);
+        previousState = new ZoneSensorGroupState(false);
         sensorsSpawned = false;
         receivedBatches.Clear();
 
@@ -89,7 +87,7 @@ public class ZoneSensorGroup
         // State replicator for enabled/disabled
         Replicator = StateReplicator<ZoneSensorGroupState>.Create(
             stateReplicatorId,
-            new ZoneSensorGroupState(true, uint.MaxValue),
+            new ZoneSensorGroupState(true),
             LifeTimeType.Session
         );
 
@@ -480,40 +478,40 @@ public class ZoneSensorGroup
     {
         // Reset triggered state if requested
         if (resetTriggered)
-            triggeredSensorMask = 0;
+            currentState.ClearTriggered();
 
         // Reset mask when enabling
         if (enabled)
         {
+            currentState.SetAllEnabled();
             if (preserveTriggered)
-                currentSensorMask = uint.MaxValue & ~triggeredSensorMask;  // Only untriggered sensors
-            else
-                currentSensorMask = uint.MaxValue;
+                currentState.ApplyTriggeredMask();  // Disable sensors that were triggered
         }
 
+        currentState.Enabled = enabled;
+
         // Update visuals immediately for responsive feel
-        UpdateVisualsUnsynced(enabled, currentSensorMask);
+        UpdateVisualsUnsynced(currentState);
 
         // Sync to clients (only master can broadcast)
         if (Replicator != null && Replicator.IsValid)
         {
-            Replicator.SetState(new ZoneSensorGroupState(enabled, currentSensorMask, triggeredSensorMask));
+            Replicator.SetState(currentState);
         }
     }
 
     /// <summary>
     /// Disables a single sensor and syncs to all clients.
     /// Used when TriggerEach mode is enabled.
-    /// Note: Maximum of 32 sensors per group due to bitmask limitation.
-    /// Sensors beyond index 31 will be silently ignored.
+    /// Supports up to 128 sensors per group.
     /// </summary>
     public void DisableSensor(int sensorIndex)
     {
-        if (sensorIndex < 0 || sensorIndex >= Sensors.Count || sensorIndex >= 32)
+        if (sensorIndex < 0 || sensorIndex >= Sensors.Count || sensorIndex >= 128)
             return;
 
-        currentSensorMask &= ~(1u << sensorIndex);
-        triggeredSensorMask |= (1u << sensorIndex);  // Mark as triggered
+        currentState.SetSensorDisabled(sensorIndex);
+        currentState.SetSensorTriggered(sensorIndex);  // Mark as triggered
 
         // Update local visual immediately
         var sensor = Sensors[sensorIndex];
@@ -522,7 +520,7 @@ public class ZoneSensorGroup
         // Sync to all clients
         if (Replicator != null && Replicator.IsValid)
         {
-            Replicator.SetState(new ZoneSensorGroupState(Enabled, currentSensorMask, triggeredSensorMask));
+            Replicator.SetState(currentState);
         }
     }
 
@@ -531,18 +529,17 @@ public class ZoneSensorGroup
     /// </summary>
     private void OnStateChanged(ZoneSensorGroupState oldState, ZoneSensorGroupState newState, bool isRecall)
     {
-        currentSensorMask = newState.SensorMask;
-        triggeredSensorMask = newState.TriggeredMask;
-        UpdateVisualsUnsynced(newState.Enabled, newState.SensorMask);
+        currentState = newState;
+        UpdateVisualsUnsynced(newState);
     }
 
     /// <summary>
     /// Updates the local visual state without network sync.
     /// Resets collider state only when transitioning from disabled to enabled.
     /// </summary>
-    private void UpdateVisualsUnsynced(bool enabled, uint sensorMask)
+    private void UpdateVisualsUnsynced(ZoneSensorGroupState state)
     {
-        Enabled = enabled;
+        Enabled = state.Enabled;
 
         for (int i = 0; i < Sensors.Count; i++)
         {
@@ -550,8 +547,8 @@ public class ZoneSensorGroup
             if (sensor != null)
             {
                 // Sensor is visible if group enabled AND individual sensor enabled
-                bool sensorEnabled = enabled && ((sensorMask & (1u << i)) != 0);
-                bool wasEnabled = (previousSensorMask & (1u << i)) != 0;
+                bool sensorEnabled = state.Enabled && state.IsSensorEnabled(i);
+                bool wasEnabled = previousState.Enabled && previousState.IsSensorEnabled(i);
 
                 sensor.SetActive(sensorEnabled);
 
@@ -566,7 +563,7 @@ public class ZoneSensorGroup
         }
 
         // Update previous state for next comparison
-        previousSensorMask = enabled ? sensorMask : 0;
+        previousState = state;
     }
 
     /// <summary>
