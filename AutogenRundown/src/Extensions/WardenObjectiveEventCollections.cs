@@ -529,6 +529,46 @@ public static class WardenObjectiveEventCollections
 
         return events;
     }
+
+    public static ICollection<WardenObjectiveEvent> AddEnableZoneSensors(
+        this ICollection<WardenObjectiveEvent> events,
+        bool enabled,
+        int sensorGroupIndex,
+        double delay = 0.0)
+    {
+        // Use the same event type as EOSExt_SecuritySensor for compatibility
+        // The ZoneSensorManager will intercept and handle these events
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.EnableSecuritySensor,
+                Enabled = enabled,
+                Count = sensorGroupIndex,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> AddDisableZoneSensors(
+        this ICollection<WardenObjectiveEvent> events,
+        bool enabled,
+        int sensorGroupIndex,
+        double delay = 0.0)
+    {
+        // Use the same event type as EOSExt_SecuritySensor for compatibility
+        // The ZoneSensorManager will intercept and handle these events
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.DisableSecuritySensor,
+                Enabled = enabled,
+                Count = sensorGroupIndex,
+                Delay = delay
+            });
+
+        return events;
+    }
     #endregion
 
     #region Screen

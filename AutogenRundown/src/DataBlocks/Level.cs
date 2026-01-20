@@ -9,6 +9,7 @@ using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Logs;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Terminals;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
 using AutogenRundown.GeneratorData;
@@ -1691,13 +1692,13 @@ public class Level
                     var eventLoop = new EventLoop()
                     {
                         LoopIndex = 263,
-                        LoopDelay = 4.0,
+                        LoopDelay = 6.0,
                         LoopCount = -1
                     };
 
                     eventLoop.EventsToActivate
                         .AddToggleZoneSensors(false, 1, 0.0)
-                        .AddToggleZoneSensors(true, 1, 2.0);
+                        .AddToggleZoneSensors(true, 1, 3.0);
 
                     level.Objective[Bulkhead.Main].EventsOnElevatorLand
                         .Add(new WardenObjectiveEvent()
@@ -1709,6 +1710,31 @@ public class Level
 
                 }
             }
+
+            elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
+                new CustomTerminalCommand
+                {
+                    Command = "DEACTIVATE_SENSORS",
+                    CommandDesc = "Deactivate security sensors",
+                    CommandEvents = new List<WardenObjectiveEvent>()
+                        .AddDisableZoneSensors(false, 1, 1.4)
+                        .ToList(),
+                    PostCommandOutputs = new List<TerminalOutput>
+                    {
+                        new()
+                        {
+                            Output = "Authenticating with BIOCOM...",
+                            Type = LineType.SpinningWaitNoDone,
+                            Time = 1.0
+                        },
+                        new()
+                        {
+                            Output = "Done.",
+                            Type = LineType.Normal,
+                            Time = 1.0
+                        },
+                    }
+                });
 
             // layout.AddSecuritySensors_SinglePouncerShadow((0, 1));
 
