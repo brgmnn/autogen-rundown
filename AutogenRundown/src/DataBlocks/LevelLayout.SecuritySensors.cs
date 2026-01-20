@@ -1,6 +1,7 @@
-﻿using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
+﻿using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
@@ -8,16 +9,17 @@ namespace AutogenRundown.DataBlocks;
 public partial record LevelLayout
 {
     /// <summary>
-    /// Adds security sensors to this quadrant
+    /// Adds security sensors to this zone
     /// </summary>
-    /// <param name="quadrant"></param>
+    /// <param name="node"></param>
+    /// <param name="wave"></param>
     /// <param name="resets"></param>
-    public void AddSecuritySensors((int, int) quadrant, GenericWave wave, bool resets = true)
+    public void AddSecuritySensors(ZoneNode node, GenericWave wave, bool resets = true)
     {
         var sensorEvents = new List<WardenObjectiveEvent>();
 
         sensorEvents
-            .AddToggleSecuritySensors(false, 0, 0.1)
+            .DisableZoneSensors(0, 0.1)
             .AddSound(Sound.LightsOff)
             .AddSpawnWave(wave, 2.0);
 
@@ -26,14 +28,9 @@ public partial record LevelLayout
             var resetTime = Generator.Between(8, 15);
 
             sensorEvents
-                .AddToggleSecuritySensors(true, 0, resetTime)
+                .EnableZoneSensorsWithReset(0, resetTime)
                 .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
         }
-
-        var sensor = new SecuritySensor
-        {
-            EventsOnTrigger = sensorEvents
-        };
 
         var count = level.Tier switch
         {
@@ -44,21 +41,28 @@ public partial record LevelLayout
             _ => 10
         };
 
-        Plugin.Logger.LogDebug($"{Name} -- Rolled Security Sensors: quadrant = {quadrant}, count = {count}");
+        Plugin.Logger.LogDebug($"{Name} -- Rolled Security Sensors: zone = {node}, count = {count}");
 
-        sensor.AddInQuadrant(quadrant, count);
-
-        level.EOS_SecuritySensor.Definitions.Add(sensor);
+        level.ZoneSensors.Add(new ZoneSensorDefinition
+        {
+            Bulkhead = node.Bulkhead,
+            ZoneNumber = node.ZoneNumber,
+            SensorGroups = new List<ZoneSensorGroupDefinition>
+            {
+                new ZoneSensorGroupDefinition { Count = count }
+            },
+            EventsOnTrigger = sensorEvents
+        });
     }
 
     /// <summary>
-    /// Adds sensors to this quadrant
+    /// Adds sensors to this zone
     /// </summary>
-    /// <param name="quadrant"></param>
+    /// <param name="node"></param>
     /// <param name="resets"></param>
-    public void AddSecuritySensors_SinglePouncer((int, int) quadrant, bool resets = true)
+    public void AddSecuritySensors_SinglePouncer(ZoneNode node, bool resets = true)
     {
-        AddSecuritySensors(quadrant, GenericWave.SinglePouncer, resets);
+        AddSecuritySensors(node, GenericWave.SinglePouncer, resets);
 
         #region Warden Intel Messages
         level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
@@ -72,13 +76,13 @@ public partial record LevelLayout
     }
 
     /// <summary>
-    /// Adds sensors to this quadrant
+    /// Adds sensors to this zone
     /// </summary>
-    /// <param name="quadrant"></param>
+    /// <param name="node"></param>
     /// <param name="resets"></param>
-    public void AddSecuritySensors_SinglePouncerShadow((int, int) quadrant, bool resets = true)
+    public void AddSecuritySensors_SinglePouncerShadow(ZoneNode node, bool resets = true)
     {
-        AddSecuritySensors(quadrant, GenericWave.SinglePouncerShadow, resets);
+        AddSecuritySensors(node, GenericWave.SinglePouncerShadow, resets);
 
         #region Warden Intel Messages
         level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
