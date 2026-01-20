@@ -14,7 +14,7 @@ public partial record LevelLayout
     /// <param name="node"></param>
     /// <param name="wave"></param>
     /// <param name="resets"></param>
-    public void AddSecuritySensors(ZoneNode node, GenericWave wave, bool resets = true)
+    public void AddSecuritySensors_Simple(ZoneNode node, GenericWave wave, bool resets = true)
     {
         var sensorEvents = new List<WardenObjectiveEvent>();
 
@@ -62,7 +62,7 @@ public partial record LevelLayout
     /// <param name="resets"></param>
     public void AddSecuritySensors_SinglePouncer(ZoneNode node, bool resets = true)
     {
-        AddSecuritySensors(node, GenericWave.SinglePouncer, resets);
+        AddSecuritySensors_Simple(node, GenericWave.SinglePouncer, resets);
 
         #region Warden Intel Messages
         level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
@@ -82,7 +82,7 @@ public partial record LevelLayout
     /// <param name="resets"></param>
     public void AddSecuritySensors_SinglePouncerShadow(ZoneNode node, bool resets = true)
     {
-        AddSecuritySensors(node, GenericWave.SinglePouncerShadow, resets);
+        AddSecuritySensors_Simple(node, GenericWave.SinglePouncerShadow, resets);
 
         #region Warden Intel Messages
         level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
