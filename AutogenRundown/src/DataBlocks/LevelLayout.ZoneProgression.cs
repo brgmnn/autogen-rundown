@@ -807,7 +807,7 @@ public partial record LevelLayout
             new CustomTerminalCommand
             {
                 Command = "DEACTIVATE_ALARMS",
-                CommandDesc = "Terminates any active error alarms linked to this terminal",
+                CommandDesc = new Text("Terminates any active error alarms linked to this terminal"),
                 CommandEvents = commandEvents,
                 PostCommandOutputs = new List<TerminalOutput>
                 {
@@ -940,7 +940,7 @@ public partial record LevelLayout
             new CustomTerminalCommand
             {
                 Command = "FORCE_DEACTIVATE_ALARMS",
-                CommandDesc = "Admin override for deactivating all error/apex alarms",
+                CommandDesc = new Text("Admin override for deactivating all error/apex alarms"),
                 CommandEvents = commandEvents,
                 PostCommandOutputs = new List<TerminalOutput>
                 {
@@ -1285,7 +1285,7 @@ public partial record LevelLayout
                 new()
                 {
                     Command = "ACTIVATE_DOOR",
-                    CommandDesc = "Activates and unlocks the security door controlled by this terminal.",
+                    CommandDesc = new Text("Activates and unlocks the security door controlled by this terminal."),
                     CommandEvents = new List<WardenObjectiveEvent>()
                         .AddUnlockDoor(
                             lockedNode.Bulkhead,

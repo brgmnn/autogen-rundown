@@ -81,6 +81,12 @@ public class Intel
         return $"[TERMINAL_0_{layer}_{node.ZoneNumber}_{terminalIndex}]";
     }
 
+    public static string ZoneRaw(int number, bool underscore = false)
+        => $"ZONE{(underscore ? "_" : " ")}{number}";
+
+    public static string ZoneRaw(Zone zone, bool underscore = false)
+        => ZoneRaw(zone.layout.ZoneAliasStart + zone.LocalIndex, underscore);
+
     public static string Zone(int number, bool underscore = false)
         => $"<color=orange>ZONE{(underscore ? "_" : " ")}{number}</color>";
 

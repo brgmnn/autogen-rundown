@@ -1697,8 +1697,8 @@ public class Level
                     };
 
                     eventLoop.EventsToActivate
-                        .ToggleZoneSensors(1, false, 0.0)
-                        .ToggleZoneSensors(1, true, 3.0);
+                        .DisableZoneSensors(1, 0.0)
+                        .EnableZoneSensors(1, 3.0);
 
                     level.Objective[Bulkhead.Main].EventsOnElevatorLand
                         .Add(new WardenObjectiveEvent()
@@ -1715,8 +1715,9 @@ public class Level
                 new CustomTerminalCommand
                 {
                     Command = "DEACTIVATE_SENSORS",
-                    CommandDesc = "Deactivate security sensors",
+                    CommandDesc = new Text($"Deactivate security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
                     CommandEvents = new List<WardenObjectiveEvent>()
+                        .AddStopLoop(263, 0.4)
                         .DisableZoneSensors(1, 1.4)
                         .ToList(),
                     PostCommandOutputs = new List<TerminalOutput>
