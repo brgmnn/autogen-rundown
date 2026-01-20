@@ -169,14 +169,18 @@ public class ZoneSensorGroup
         // Store this batch
         receivedBatches[newState.BatchIndex] = newState;
 
-        // Update expected batch count from the state (in case we didn't know it initially)
-        if (newState.TotalBatches > 0)
+        // Only set expectedBatchCount from the first batch received to avoid mid-reception changes
+        if (newState.TotalBatches > 0 && expectedBatchCount == 0)
         {
             expectedBatchCount = newState.TotalBatches;
         }
+        else if (newState.TotalBatches > 0 && newState.TotalBatches != expectedBatchCount)
+        {
+            Plugin.Logger.LogWarning($"ZoneSensorGroup {GroupIndex}: Batch count mismatch - expected {expectedBatchCount}, got {newState.TotalBatches}");
+        }
 
-        // Check if we've received all batches
-        if (receivedBatches.Count >= expectedBatchCount)
+        // Check if we've received all batches (count check, actual sequential validation happens in SpawnSensorsFromBatches)
+        if (receivedBatches.Count >= expectedBatchCount && expectedBatchCount > 0)
         {
             Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: All {expectedBatchCount} batches received, spawning sensors");
             SpawnSensorsFromBatches(isRecall);
@@ -211,19 +215,23 @@ public class ZoneSensorGroup
             return;
         }
 
-        sensorsSpawned = true;
+        // Validate all sequential batch indices 0 through N-1 exist before spawning
+        for (int i = 0; i < expectedBatchCount; i++)
+        {
+            if (!receivedBatches.ContainsKey(i))
+            {
+                Plugin.Logger.LogWarning($"ZoneSensorGroup {GroupIndex}: Missing batch {i}/{expectedBatchCount}, aborting spawn");
+                return;
+            }
+        }
+
         var zone = pendingZone;
 
         // Build ordered list of all positions from batches
         var allPositions = new List<(Vector3 position, int waypointCount)>();
         for (int batchIndex = 0; batchIndex < expectedBatchCount; batchIndex++)
         {
-            if (!receivedBatches.TryGetValue(batchIndex, out var batch))
-            {
-                Plugin.Logger.LogWarning($"ZoneSensorGroup {GroupIndex}: Missing batch {batchIndex}");
-                continue;
-            }
-
+            var batch = receivedBatches[batchIndex];
             for (int i = 0; i < batch.SensorCount; i++)
             {
                 allPositions.Add((batch.GetPosition(i), batch.GetWaypointCount(i)));
@@ -252,6 +260,9 @@ public class ZoneSensorGroup
                 positionIndex++;
             }
         }
+
+        // Mark as spawned only after successful sensor creation
+        sensorsSpawned = true;
 
         Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Spawned {Sensors.Count} sensors from {expectedBatchCount} batches (isRecall={isRecall})");
 
@@ -530,16 +541,21 @@ public class ZoneSensorGroup
     private void OnStateChanged(ZoneSensorGroupState oldState, ZoneSensorGroupState newState, bool isRecall)
     {
         currentState = newState;
-        UpdateVisualsUnsynced(newState);
+        UpdateVisualsUnsynced(newState, oldState);
     }
 
     /// <summary>
     /// Updates the local visual state without network sync.
     /// Resets collider state only when transitioning from disabled to enabled.
     /// </summary>
-    private void UpdateVisualsUnsynced(ZoneSensorGroupState state)
+    /// <param name="state">The new state to apply</param>
+    /// <param name="oldState">The previous state for transition detection (optional)</param>
+    private void UpdateVisualsUnsynced(ZoneSensorGroupState state, ZoneSensorGroupState? oldState = null)
     {
         Enabled = state.Enabled;
+
+        // Use provided oldState if available, otherwise fall back to tracked previousState
+        var priorState = oldState ?? previousState;
 
         for (int i = 0; i < Sensors.Count; i++)
         {
@@ -548,7 +564,7 @@ public class ZoneSensorGroup
             {
                 // Sensor is visible if group enabled AND individual sensor enabled
                 bool sensorEnabled = state.Enabled && state.IsSensorEnabled(i);
-                bool wasEnabled = previousState.Enabled && previousState.IsSensorEnabled(i);
+                bool wasEnabled = priorState.Enabled && priorState.IsSensorEnabled(i);
 
                 sensor.SetActive(sensorEnabled);
 
@@ -571,13 +587,21 @@ public class ZoneSensorGroup
     /// </summary>
     public void Cleanup()
     {
-        // Unload replicators (though Session lifetime auto-cleans)
-        Replicator?.Unload();
+        // Unsubscribe and unload replicators
+        if (Replicator != null)
+        {
+            Replicator.OnStateChanged -= OnStateChanged;
+            Replicator.Unload();
+        }
         Replicator = null;
 
         foreach (var posReplicator in PositionReplicators)
         {
-            posReplicator?.Unload();
+            if (posReplicator != null)
+            {
+                posReplicator.OnStateChanged -= OnPositionStateChanged;
+                posReplicator.Unload();
+            }
         }
         PositionReplicators.Clear();
 
@@ -587,6 +611,10 @@ public class ZoneSensorGroup
                 UnityEngine.Object.Destroy(sensor);
         }
         Sensors.Clear();
+
+        // Reset state for level reload
+        currentState = new ZoneSensorGroupState(false);
+        previousState = new ZoneSensorGroupState(false);
 
         // Clear pending data
         pendingZone = null;
