@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Custom.ZoneSensors;
+﻿using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
+using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
@@ -108,5 +109,172 @@ public partial record LevelLayout
             ">... The logs show anomalies.\r\n>... One moment they're here...\r\n>... <size=200%><color=red>Next moment they're gone!</color></size>",
         }))!);
         #endregion
+    }
+
+    /// <summary>
+    /// Adds difficulty-scaled security sensors to a zone.
+    /// Parameters are randomized based on level tier if not specified.
+    /// </summary>
+    /// <param name="node">Zone to add sensors to</param>
+    /// <param name="wave">Enemy wave to spawn on trigger (null = auto-select based on tier)</param>
+    /// <param name="moving">Whether sensors should patrol (null = random based on tier)</param>
+    public void AddSecuritySensors(ZoneNode node, GenericWave? wave = null, bool? moving = null)
+    {
+        // 1. Determine sensor count by tier
+        var (minCount, maxCount) = level.Tier switch
+        {
+            "A" => (4, 6),
+            "B" => (6, 8),
+            "C" => (8, 10),
+            "D" => (10, 14),
+            "E" => (12, 18),
+            _ => (6, 10)
+        };
+        var count = Generator.Between(minCount, maxCount);
+
+        // 2. Determine if sensors move
+        var movingChance = level.Tier switch
+        {
+            "A" => 0.10,
+            "B" => 0.15,
+            "C" => 0.20,
+            "D" => 0.30,
+            "E" => 0.40,
+            _ => 0.15
+        };
+        var isMoving = moving ?? Generator.Flip(movingChance);
+
+        // 3. Determine TriggerEach (independent triggering)
+        var triggerEachChance = level.Tier switch
+        {
+            "A" => 0.80,
+            "B" => 0.75,
+            "C" => 0.65,
+            "D" => 0.55,
+            "E" => 0.45,
+            _ => 0.70
+        };
+        var triggerEach = Generator.Flip(triggerEachChance);
+
+        // 4. Select wave (easier for moving sensors)
+        var selectedWave = wave ?? SelectWaveForTier(isMoving);
+
+        // 5. Determine if sensors should cycle on/off
+        var cycleChance = level.Tier switch
+        {
+            "A" => 0.70,
+            "B" => 0.55,
+            "C" => 0.40,
+            "D" => 0.25,
+            "E" => 0.10,
+            _ => 0.40
+        };
+        var shouldCycle = Generator.Flip(cycleChance);
+
+        // 6. Setup cycling event loop if applicable
+        if (shouldCycle)
+        {
+            var loopIndex = 300 + level.ZoneSensors.Count;
+            var cycleTime = Generator.Between(8, 15);
+            var offTime = Generator.Between(3, 6);
+
+            var eventLoop = new EventLoop
+            {
+                LoopIndex = loopIndex,
+                LoopDelay = cycleTime,
+                LoopCount = -1
+            };
+
+            eventLoop.EventsToActivate
+                .DisableZoneSensors(0, 0.0)
+                .AddSound(Sound.LightsOff, 0.0)
+                .EnableZoneSensorsWithReset(0, offTime)
+                .AddSound(Sound.LightsOn_Vol4, offTime - 0.4);
+
+            level.Objective[node.Bulkhead].EventsOnElevatorLand.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.StartEventLoop,
+                    EventLoop = eventLoop,
+                    Delay = Generator.Between(5, 15)
+                });
+        }
+
+        // 7. Build trigger events
+        var sensorEvents = new List<WardenObjectiveEvent>();
+        sensorEvents
+            .DisableZoneSensors(0, 0.1)
+            .AddSound(Sound.LightsOff)
+            .AddSpawnWave(selectedWave, 2.0);
+
+        if (!shouldCycle)
+        {
+            var resetTime = Generator.Between(8, 15);
+            sensorEvents
+                .EnableZoneSensorsWithReset(0, resetTime)
+                .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
+        }
+
+        // 8. Determine sensor radius by tier
+        var radius = level.Tier switch
+        {
+            "A" => 2.0,
+            "B" => 2.2,
+            "C" => 2.3,
+            "D" => 2.4,
+            "E" => 2.5,
+            _ => 2.3
+        };
+
+        Plugin.Logger.LogDebug($"{Name} -- Security Sensors: zone={node}, count={count}, " +
+            $"moving={isMoving}, triggerEach={triggerEach}, cycling={shouldCycle}");
+
+        // 9. Create the zone sensor definition
+        level.ZoneSensors.Add(new ZoneSensorDefinition
+        {
+            Bulkhead = node.Bulkhead,
+            ZoneNumber = node.ZoneNumber,
+            SensorGroups = new List<ZoneSensorGroupDefinition>
+            {
+                new ZoneSensorGroupDefinition
+                {
+                    Count = count,
+                    Moving = isMoving ? Generator.Between(2, 4) : 1,
+                    Speed = isMoving ? Generator.NextDouble(1.2, 2.0) : 1.5,
+                    TriggerEach = triggerEach,
+                    Radius = radius
+                }
+            },
+            EventsOnTrigger = sensorEvents
+        });
+    }
+
+    /// <summary>
+    /// Selects an appropriate wave based on tier, with easier waves for moving sensors.
+    /// </summary>
+    private GenericWave SelectWaveForTier(bool isMoving)
+    {
+        var baseWave = level.Tier switch
+        {
+            "A" => GenericWave.Exit_Objective_Easy,
+            "B" => Generator.Pick(new List<GenericWave> { GenericWave.Exit_Objective_Easy, GenericWave.Exit_Objective_Medium })!,
+            "C" => Generator.Pick(new List<GenericWave> { GenericWave.Exit_Objective_Medium, GenericWave.Exit_Objective_Hard })!,
+            "D" => GenericWave.Exit_Objective_Hard,
+            "E" => GenericWave.Exit_Objective_VeryHard,
+            _ => GenericWave.Exit_Objective_Medium
+        };
+
+        // Downgrade wave difficulty for moving sensors
+        if (isMoving && baseWave != GenericWave.Exit_Objective_Easy)
+        {
+            if (baseWave == GenericWave.Exit_Objective_VeryHard)
+                baseWave = GenericWave.Exit_Objective_Hard;
+            else if (baseWave == GenericWave.Exit_Objective_Hard)
+                baseWave = GenericWave.Exit_Objective_Medium;
+            else if (baseWave == GenericWave.Exit_Objective_Medium)
+                baseWave = GenericWave.Exit_Objective_Easy;
+        }
+
+        return baseWave;
     }
 }
