@@ -17,9 +17,17 @@ public record ZoneSensorGroupDefinition
 
     /// <summary>
     /// Number of sensors to place in this group.
+    /// Ignored when Density is set to a value other than None.
     /// Default = 1
     /// </summary>
     public int Count { get; set; } = 1;
+
+    /// <summary>
+    /// Sensor density for runtime count calculation based on zone area.
+    /// When set (not None), Count is ignored and calculated from zone VoxelCoverage.
+    /// Default = None (uses explicit Count)
+    /// </summary>
+    public SensorDensity Density { get; set; } = SensorDensity.None;
 
     /// <summary>
     /// Detection radius of each sensor.

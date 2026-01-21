@@ -234,8 +234,8 @@ public sealed class ZoneSensorManager
                 continue;
             }
 
-            // Calculate total sensor count for batch planning
-            int totalSensors = definition.SensorGroups.Sum(g => g.Count);
+            // Calculate total sensor count for batch planning (uses density if specified)
+            int totalSensors = definition.SensorGroups.Sum(g => GetEffectiveSensorCount(g, zone));
             int batchCount = ZoneSensorPositionState.CalculateBatchCount(totalSensors);
 
             // Warn if we're hitting the maximum supported sensors (128 = 8 batches * 16 per batch)
@@ -290,8 +290,9 @@ public sealed class ZoneSensorManager
         foreach (var groupDef in groupDefinitions)
         {
             var sensorRadius = (float)groupDef.Radius;
+            var effectiveCount = GetEffectiveSensorCount(groupDef, zone);
 
-            for (int i = 0; i < groupDef.Count && allPositions.Count < maxTotalSensors; i++)
+            for (int i = 0; i < effectiveCount && allPositions.Count < maxTotalSensors; i++)
             {
                 const int maxPlacementAttempts = 5;
                 Vector3 position = Vector3.zero;
@@ -371,6 +372,53 @@ public sealed class ZoneSensorManager
                 return true;
         }
         return false;
+    }
+
+    /// <summary>
+    /// Calculates sensor count based on zone's voxel coverage and density setting.
+    /// VoxelCoverage represents actual traversable area from the AI graph nodes.
+    /// </summary>
+    /// <param name="zone">The zone to calculate coverage for</param>
+    /// <param name="density">The density setting to use</param>
+    /// <returns>Calculated sensor count, clamped between 1 and 128</returns>
+    private int CalculateSensorCountFromDensity(LG_Zone zone, SensorDensity density)
+    {
+        // Sum VoxelCoverage from all areas - this is the actual walkable area
+        float totalCoverage = 0f;
+        foreach (var area in zone.m_areas)
+        {
+            totalCoverage += area.VoxelCoverage;
+        }
+
+        // Sensors per 100 units of voxel coverage
+        // VoxelCoverage is derived from AI graph node count, not raw area
+        var sensorsPerHundredCoverage = density switch
+        {
+            SensorDensity.Low => 3.0f,     // ~3 sensors per 100 coverage
+            SensorDensity.Medium => 6.0f,  // ~6 sensors per 100 coverage
+            SensorDensity.High => 12.0f,   // ~12 sensors per 100 coverage
+            _ => 6.0f
+        };
+
+        var rawCount = (int)(totalCoverage / 100f * sensorsPerHundredCoverage);
+
+        Plugin.Logger.LogDebug($"ZoneSensor density calc: zone has {zone.m_areas.Count} areas, " +
+            $"totalCoverage={totalCoverage:F1}, density={density}, count={rawCount}");
+
+        return Math.Clamp(rawCount, 1, 128);
+    }
+
+    /// <summary>
+    /// Gets the effective sensor count for a group definition, either from explicit Count
+    /// or calculated from zone density.
+    /// </summary>
+    private int GetEffectiveSensorCount(ZoneSensorGroupDefinition groupDef, LG_Zone zone)
+    {
+        if (groupDef.Density != SensorDensity.None)
+        {
+            return CalculateSensorCountFromDensity(zone, groupDef.Density);
+        }
+        return groupDef.Count;
     }
 
     /// <summary>

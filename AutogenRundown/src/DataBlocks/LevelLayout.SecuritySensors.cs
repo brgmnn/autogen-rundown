@@ -120,17 +120,16 @@ public partial record LevelLayout
     /// <param name="moving">Whether sensors should patrol (null = random based on tier)</param>
     public void AddSecuritySensors(ZoneNode node, GenericWave? wave = null, bool? moving = null)
     {
-        // 1. Determine sensor count by tier
-        var (minCount, maxCount) = level.Tier switch
+        // 1. Determine sensor density by tier (count calculated at runtime from zone area)
+        var density = level.Tier switch
         {
-            "A" => (4, 6),
-            "B" => (6, 8),
-            "C" => (8, 10),
-            "D" => (10, 14),
-            "E" => (12, 18),
-            _ => (6, 10)
+            "A" => SensorDensity.Low,
+            "B" => SensorDensity.Low,
+            "C" => SensorDensity.Medium,
+            "D" => SensorDensity.Medium,
+            "E" => SensorDensity.High,
+            _ => SensorDensity.Medium
         };
-        var count = Generator.Between(minCount, maxCount);
 
         // 2. Determine if sensors move
         var movingChance = level.Tier switch
@@ -226,7 +225,7 @@ public partial record LevelLayout
             _ => 2.3
         };
 
-        Plugin.Logger.LogDebug($"{Name} -- Security Sensors: zone={node}, count={count}, " +
+        Plugin.Logger.LogDebug($"{Name} -- Security Sensors: zone={node}, density={density}, " +
             $"moving={isMoving}, triggerEach={triggerEach}, cycling={shouldCycle}");
 
         // 9. Create the zone sensor definition
@@ -238,7 +237,7 @@ public partial record LevelLayout
             {
                 new ZoneSensorGroupDefinition
                 {
-                    Count = count,
+                    Density = density,  // Count calculated at runtime from zone area
                     Moving = isMoving ? Generator.Between(2, 4) : 1,
                     Speed = isMoving ? Generator.NextDouble(1.2, 2.0) : 1.5,
                     TriggerEach = triggerEach,
