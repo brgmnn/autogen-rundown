@@ -190,7 +190,7 @@ public static class RundownFactory
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/SamdownGeos/Refinery_X_tile_1/Refinery_X_Tile_1.prefab",
+                "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab",
                 new Level("A")
                 {
                     Tier = "A",
