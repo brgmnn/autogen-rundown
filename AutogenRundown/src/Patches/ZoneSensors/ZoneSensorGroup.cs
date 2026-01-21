@@ -238,26 +238,21 @@ public class ZoneSensorGroup
             }
         }
 
-        // Track global position index across all group definitions
-        int positionIndex = 0;
+        // Use first group definition for visual settings (typically only one group)
+        var groupDef = pendingGroupDefinitions[0];
 
-        foreach (var groupDef in pendingGroupDefinitions)
+        for (int i = 0; i < allPositions.Count; i++)
         {
-            for (int i = 0; i < groupDef.Count && positionIndex < allPositions.Count; i++)
+            var (position, waypointCount) = allPositions[i];
+
+            var sensorGO = CreateSensorVisual(position, groupDef, GroupIndex, i);
+            Sensors.Add(sensorGO);
+
+            // Add movement if enabled
+            if (groupDef.Moving > 1)
             {
-                var (position, waypointCount) = allPositions[positionIndex];
-
-                var sensorGO = CreateSensorVisual(position, groupDef, GroupIndex, positionIndex);
-                Sensors.Add(sensorGO);
-
-                // Add movement if enabled
-                if (groupDef.Moving > 1)
-                {
-                    // Generate waypoints deterministically using position index as seed factor
-                    InitializeSensorMovement(zone, groupDef, sensorGO, position, GroupIndex, positionIndex);
-                }
-
-                positionIndex++;
+                // Generate waypoints deterministically using position index as seed factor
+                InitializeSensorMovement(zone, groupDef, sensorGO, position, GroupIndex, i);
             }
         }
 
