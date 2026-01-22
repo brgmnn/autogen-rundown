@@ -381,10 +381,11 @@ public sealed class ZoneSensorManager
     /// <param name="zone">The zone to calculate coverage for</param>
     /// <param name="density">The density setting to use</param>
     /// <returns>Calculated sensor count, clamped between 1 and 128</returns>
-    private int CalculateSensorCountFromDensity(LG_Zone zone, SensorDensity density)
+    private int CalculateSensorCountFromDensity(LG_Zone zone, SensorDensity density, double radius)
     {
         // Sum VoxelCoverage from all areas - this is the actual walkable area
         float totalCoverage = 0f;
+
         foreach (var area in zone.m_areas)
         {
             totalCoverage += area.VoxelCoverage;
@@ -394,13 +395,13 @@ public sealed class ZoneSensorManager
         // VoxelCoverage is derived from AI graph node count, not raw area
         var sensorsPerHundredCoverage = density switch
         {
-            SensorDensity.Low => 3.0f,     // ~3 sensors per 100 coverage
-            SensorDensity.Medium => 6.0f,  // ~6 sensors per 100 coverage
-            SensorDensity.High => 12.0f,   // ~12 sensors per 100 coverage
+            SensorDensity.Low => 1.5f,    // ~1.5 sensors per 100 coverage per unit radius
+            SensorDensity.Medium => 3.0f, // ~3.0 sensors per 100 coverage per unit radius
+            SensorDensity.High => 4.5f,   // ~4.5 sensors per 100 coverage per unit radius
             _ => 6.0f
         };
 
-        var rawCount = (int)(totalCoverage / 100f * sensorsPerHundredCoverage);
+        var rawCount = (int)(totalCoverage / 100f * sensorsPerHundredCoverage / radius);
 
         Plugin.Logger.LogDebug($"ZoneSensor density calc: zone has {zone.m_areas.Count} areas, " +
             $"totalCoverage={totalCoverage:F1}, density={density}, count={rawCount}");
@@ -416,7 +417,7 @@ public sealed class ZoneSensorManager
     {
         if (groupDef.Density != SensorDensity.None)
         {
-            return CalculateSensorCountFromDensity(zone, groupDef.Density);
+            return CalculateSensorCountFromDensity(zone, groupDef.Density, groupDef.Radius);
         }
         return groupDef.Count;
     }

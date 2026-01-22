@@ -1616,11 +1616,8 @@ public class Level
                     var sensorEvents = new List<WardenObjectiveEvent>();
 
                     sensorEvents
-                        // .ToggleZoneSensors(0, false, 0.1)
                         .AddSound(Sound.LightsOff)
                         .AddSpawnWave(GenericWave.SingleTank, 2.0);
-                    // .ToggleZoneSensors(0, true, 4.0)
-                    // .AddSound(Sound.LightsOn_Vol2);
 
                     level.ZoneSensors.Add(new ZoneSensorDefinition
                     {
@@ -1632,7 +1629,7 @@ public class Level
                             new ZoneSensorGroupDefinition
                             {
                                 TriggerEach = true,
-                                Count = 10,
+                                Density = SensorDensity.Low,
                                 Radius = 1,
                                 AreaIndex = -1,
                             }
@@ -1676,10 +1673,11 @@ public class Level
                             new ZoneSensorGroupDefinition
                             {
                                 TriggerEach = true,
-                                Count = 128,
-                                Moving = 3,
+                                // Count = 128,
+                                Density = SensorDensity.Low,
+                                Moving = 1,
                                 Speed = 0.5,
-                                Radius = 1.0,
+                                // Radius = 2.0,
                                 EdgeDistance = 0.7,
                                 AreaIndex = 1,
                                 EncryptedText = true,
@@ -1700,13 +1698,13 @@ public class Level
                         .DisableZoneSensors(1, 0.0)
                         .EnableZoneSensors(1, 3.0);
 
-                    level.Objective[Bulkhead.Main].EventsOnElevatorLand
-                        .Add(new WardenObjectiveEvent()
-                        {
-                            Type = WardenObjectiveEventType.StartEventLoop,
-                            EventLoop = eventLoop,
-                            Delay = 2.0
-                        });
+                    // level.Objective[Bulkhead.Main].EventsOnElevatorLand
+                    //     .Add(new WardenObjectiveEvent()
+                    //     {
+                    //         Type = WardenObjectiveEventType.StartEventLoop,
+                    //         EventLoop = eventLoop,
+                    //         Delay = 2.0
+                    //     });
 
                 }
             }
