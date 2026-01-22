@@ -74,6 +74,9 @@ public class ZoneSensorGroup
     private Dictionary<int, Vector3[]> receivedWaypoints = new();
     private Dictionary<int, float> receivedWaypointSpeeds = new();
 
+    // Track received movement state for late joiners (applied after sensors spawn)
+    private Dictionary<int, (int waypointIndex, bool forward, float progress)> receivedMovementState = new();
+
     private bool triggerEach;
     private ZoneSensorGroupState currentState;
     private ZoneSensorGroupState previousState;  // Track which sensors were visible for transition detection
@@ -109,6 +112,7 @@ public class ZoneSensorGroup
         generatedWaypoints.Clear();
         receivedWaypoints.Clear();
         receivedWaypointSpeeds.Clear();
+        receivedMovementState.Clear();
         movingSensorIndices.Clear();
         movementSyncTimer = 0f;
 
@@ -371,6 +375,27 @@ public class ZoneSensorGroup
                 }
             }
             Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Applied {receivedWaypoints.Count} stored waypoints to sensors");
+        }
+
+        // For clients: Apply any stored movement state that was received before sensors spawned
+        if (!SNet.IsMaster && receivedMovementState.Count > 0)
+        {
+            foreach (var kvp in receivedMovementState)
+            {
+                int sensorIndex = kvp.Key;
+                var (waypointIndex, forward, progress) = kvp.Value;
+                ApplyMovementStateToSensor(sensorIndex, waypointIndex, forward, progress, snap: true);
+            }
+            Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Applied {receivedMovementState.Count} stored movement states");
+        }
+
+        // Apply current group state to newly spawned sensors
+        // This handles the case where group state (with triggered sensors disabled)
+        // arrived before position state - we need to apply it now that sensors exist
+        if (!SNet.IsMaster)
+        {
+            UpdateVisualsUnsynced(currentState);
+            Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Applied current group state to spawned sensors");
         }
 
         Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Spawned {Sensors.Count} sensors from {expectedBatchCount} batches (isRecall={isRecall})");
@@ -637,11 +662,25 @@ public class ZoneSensorGroup
 
     /// <summary>
     /// Callback for movement state changes from replicator.
+    /// Queues state for late joiners if sensors haven't spawned yet.
     /// </summary>
     private void OnMovementStateChanged(ZoneSensorMovementState oldState, ZoneSensorMovementState newState, bool isRecall)
     {
         if (!newState.HasMovementData)
             return;
+
+        // If sensors haven't spawned yet, store movement state for later application
+        if (!sensorsSpawned)
+        {
+            for (int i = 0; i < newState.SensorCount; i++)
+            {
+                int globalSensorIndex = newState.GetGlobalSensorIndex(i);
+                var (waypointIndex, forward, progress) = newState.GetMovementState(i);
+                receivedMovementState[globalSensorIndex] = (waypointIndex, forward, progress);
+            }
+            Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Stored movement state for {newState.SensorCount} sensors (sensors not yet spawned)");
+            return;
+        }
 
         // Apply movement state to sensors in this batch
         for (int i = 0; i < newState.SensorCount; i++)
@@ -951,6 +990,7 @@ public class ZoneSensorGroup
         generatedWaypoints.Clear();
         receivedWaypoints.Clear();
         receivedWaypointSpeeds.Clear();
+        receivedMovementState.Clear();
         movingSensorIndices.Clear();
         movementSyncTimer = 0f;
     }

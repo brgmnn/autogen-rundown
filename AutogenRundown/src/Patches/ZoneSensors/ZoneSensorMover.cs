@@ -123,6 +123,20 @@ public class ZoneSensorMover : MonoBehaviour
         // Clamp to valid range
         waypointIndex = Math.Clamp(waypointIndex, 0, waypoints.Length - 1);
 
+        // Handle boundary cases to ensure fromIndex != waypointIndex
+        if (waypointIndex == 0 && !forward)
+        {
+            // At start but moving backward - should be moving forward from index 1
+            waypointIndex = 1;
+            forward = true;
+        }
+        else if (waypointIndex == waypoints.Length - 1 && forward)
+        {
+            // At end but moving forward - should be moving backward from second-to-last
+            waypointIndex = waypoints.Length - 2;
+            forward = false;
+        }
+
         currentWaypointIndex = waypointIndex;
         movingForward = forward;
 
@@ -130,13 +144,23 @@ public class ZoneSensorMover : MonoBehaviour
         int fromIndex = forward ? waypointIndex - 1 : waypointIndex + 1;
         fromIndex = Math.Clamp(fromIndex, 0, waypoints.Length - 1);
 
-        lastWaypointPosition = waypoints[fromIndex];
+        // Ensure we don't have from == target (would cause zero distance calculation issues)
+        if (fromIndex == waypointIndex)
+        {
+            // Fallback: use current position as "from"
+            lastWaypointPosition = transform.position;
+        }
+        else
+        {
+            lastWaypointPosition = waypoints[fromIndex];
+        }
 
         if (snap)
         {
             // Interpolate position between from and target waypoints
             Vector3 targetPos = waypoints[waypointIndex];
-            transform.position = Vector3.Lerp(waypoints[fromIndex], targetPos, progress);
+            Vector3 fromPos = (fromIndex != waypointIndex) ? waypoints[fromIndex] : transform.position;
+            transform.position = Vector3.Lerp(fromPos, targetPos, progress);
         }
         // If not snapping, the Update() loop will naturally move toward the target
     }
