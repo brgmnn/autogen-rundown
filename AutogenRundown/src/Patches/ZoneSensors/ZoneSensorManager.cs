@@ -526,15 +526,39 @@ public sealed class ZoneSensorManager
         // Reserved IDs that won't conflict with actual replicators (0x5A53FF00-FF range)
         const uint DUMMY_BASE_ID = 0x5A53FF00;
 
+        // Pre-register ZoneSensorGroupState events
+        var groupDummy = StateReplicator<ZoneSensorGroupState>.Create(
+            DUMMY_BASE_ID,
+            new ZoneSensorGroupState(),
+            LifeTimeType.Session
+        );
+        groupDummy?.Unload();
+
+        // Pre-register ZoneSensorPositionState events
+        var positionDummy = StateReplicator<ZoneSensorPositionState>.Create(
+            DUMMY_BASE_ID + 1,
+            new ZoneSensorPositionState(),
+            LifeTimeType.Session
+        );
+        positionDummy?.Unload();
+
+        // Pre-register ZoneSensorWaypointState events
+        var waypointDummy = StateReplicator<ZoneSensorWaypointState>.Create(
+            DUMMY_BASE_ID + 2,
+            new ZoneSensorWaypointState(),
+            LifeTimeType.Session
+        );
+        waypointDummy?.Unload();
+
         // Pre-register ZoneSensorMovementState events
         var movementDummy = StateReplicator<ZoneSensorMovementState>.Create(
-            DUMMY_BASE_ID,
+            DUMMY_BASE_ID + 3,
             new ZoneSensorMovementState(),
             LifeTimeType.Session
         );
         movementDummy?.Unload();
 
-        Plugin.Logger.LogDebug("ZoneSensorManager: Pre-registered state replicator event handlers");
+        Plugin.Logger.LogDebug("ZoneSensorManager: Pre-registered all state replicator event handlers");
     }
 }
 
