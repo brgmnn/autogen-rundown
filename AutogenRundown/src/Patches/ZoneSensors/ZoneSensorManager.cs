@@ -4,6 +4,7 @@ using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Objectives;
 using GameData;
 using GTFO.API;
+using GTFO.API.Resources;
 using Il2CppInterop.Runtime.Injection;
 using LevelGeneration;
 using Localization;
@@ -218,6 +219,15 @@ public sealed class ZoneSensorManager
 
         if (!definitions.TryGetValue(levelLayoutId, out var levelDefinitions))
             return;
+
+        // Safety check: NetworkAPI must be ready before creating StateReplicators.
+        // By OnBuildDone, NetworkAPI should always be ready (created during GameDataInit).
+        // If this triggers, something is fundamentally wrong with initialization order.
+        if (!APIStatus.Network.Ready)
+        {
+            Plugin.Logger.LogError("ZoneSensor: NetworkAPI not ready during BuildSensors! Cannot create sensors.");
+            return;
+        }
 
         Plugin.Logger.LogDebug($"ZoneSensor: Building sensors for level {levelLayoutId}, {levelDefinitions.Count} definitions, IsMaster={SNet.IsMaster}");
 
@@ -523,6 +533,16 @@ public sealed class ZoneSensorManager
     /// </summary>
     private static void PreRegisterStateReplicators()
     {
+        // NetworkAPI may not be ready during early initialization (OnGameDataInitialized fires
+        // BEFORE NetworkAPI_Impl is created in GTFO-API's GameDataInit_Patches).
+        // This is expected - skip pre-registration here; handlers will be created when
+        // Initialize() runs during OnBuildDone (when NetworkAPI is definitely ready).
+        if (!APIStatus.Network.Ready)
+        {
+            Plugin.Logger.LogDebug("ZoneSensorManager: NetworkAPI not ready, skipping pre-registration (expected on startup)");
+            return;
+        }
+
         // Reserved IDs that won't conflict with actual replicators (0x5A53FF00-FF range)
         const uint DUMMY_BASE_ID = 0x5A53FF00;
 
