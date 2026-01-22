@@ -66,9 +66,10 @@ public class ZoneSensorMover : MonoBehaviour
     }
 
     /// <summary>
-    /// Sets waypoints from network sync (for late joiners).
+    /// Sets waypoints from network sync (for clients and late joiners).
+    /// This replaces any locally generated waypoints with the host's authoritative waypoints.
     /// </summary>
-    public void SetWaypoints(Vector3[] newWaypoints)
+    public void SetWaypoints(Vector3[] newWaypoints, float moveSpeed)
     {
         if (newWaypoints == null || newWaypoints.Length < 2)
         {
@@ -77,7 +78,13 @@ public class ZoneSensorMover : MonoBehaviour
         }
 
         waypoints = newWaypoints;
+        speed = moveSpeed;
+        initialized = true;
         currentWaypointIndex = Math.Clamp(currentWaypointIndex, 0, waypoints.Length - 1);
+
+        // Ensure currentWaypointIndex is at least 1 for proper movement
+        if (currentWaypointIndex == 0)
+            currentWaypointIndex = 1;
 
         // Ensure lastWaypointPosition is valid
         int fromIndex = movingForward ? currentWaypointIndex - 1 : currentWaypointIndex + 1;
@@ -86,7 +93,7 @@ public class ZoneSensorMover : MonoBehaviour
         else
             lastWaypointPosition = transform.position;
 
-        Plugin.Logger.LogDebug($"ZoneSensorMover: SetWaypoints with {waypoints.Length} waypoints");
+        Plugin.Logger.LogDebug($"ZoneSensorMover: SetWaypoints with {waypoints.Length} waypoints, speed={moveSpeed}");
     }
 
     /// <summary>

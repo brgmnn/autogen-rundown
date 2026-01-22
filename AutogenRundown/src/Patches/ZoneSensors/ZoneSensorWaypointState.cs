@@ -35,6 +35,11 @@ public unsafe struct ZoneSensorWaypointState
     public ushort Padding;
 
     /// <summary>
+    /// Movement speed for this sensor.
+    /// </summary>
+    public float Speed;
+
+    /// <summary>
     /// Fixed buffer for waypoint positions: [x0, y0, z0, x1, y1, z1, ...]
     /// 12 waypoints * 3 floats = 36 floats = 144 bytes
     /// </summary>
@@ -45,6 +50,7 @@ public unsafe struct ZoneSensorWaypointState
         SensorIndex = 0;
         WaypointCount = 0;
         Padding = 0;
+        Speed = 0f;
     }
 
     /// <summary>
@@ -97,12 +103,13 @@ public unsafe struct ZoneSensorWaypointState
     /// <summary>
     /// Creates a waypoint state from an array of positions.
     /// </summary>
-    public static ZoneSensorWaypointState FromArray(int sensorIndex, Vector3[] waypoints)
+    public static ZoneSensorWaypointState FromArray(int sensorIndex, Vector3[] waypoints, float speed)
     {
         var state = new ZoneSensorWaypointState
         {
             SensorIndex = (byte)sensorIndex,
-            WaypointCount = (byte)Math.Min(waypoints.Length, MaxWaypointsPerSensor)
+            WaypointCount = (byte)Math.Min(waypoints.Length, MaxWaypointsPerSensor),
+            Speed = speed
         };
 
         for (int i = 0; i < state.WaypointCount; i++)

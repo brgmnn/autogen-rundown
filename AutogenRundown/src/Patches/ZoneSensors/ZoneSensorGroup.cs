@@ -72,6 +72,7 @@ public class ZoneSensorGroup
 
     // Track if waypoints have been received for late joiners
     private Dictionary<int, Vector3[]> receivedWaypoints = new();
+    private Dictionary<int, float> receivedWaypointSpeeds = new();
 
     private bool triggerEach;
     private ZoneSensorGroupState currentState;
@@ -107,6 +108,7 @@ public class ZoneSensorGroup
         receivedBatches.Clear();
         generatedWaypoints.Clear();
         receivedWaypoints.Clear();
+        receivedWaypointSpeeds.Clear();
         movingSensorIndices.Clear();
         movementSyncTimer = 0f;
 
@@ -355,6 +357,22 @@ public class ZoneSensorGroup
         // Mark as spawned only after successful sensor creation
         sensorsSpawned = true;
 
+        // For clients: Apply any stored waypoints that were received before sensors spawned
+        // This ensures clients use the host's authoritative waypoints instead of locally generated ones
+        if (!SNet.IsMaster && receivedWaypoints.Count > 0)
+        {
+            foreach (var kvp in receivedWaypoints)
+            {
+                int sensorIndex = kvp.Key;
+                var waypoints = kvp.Value;
+                if (receivedWaypointSpeeds.TryGetValue(sensorIndex, out float speed))
+                {
+                    ApplyWaypointsToSensor(sensorIndex, waypoints, speed);
+                }
+            }
+            Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Applied {receivedWaypoints.Count} stored waypoints to sensors");
+        }
+
         Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Spawned {Sensors.Count} sensors from {expectedBatchCount} batches (isRecall={isRecall})");
 
         // Clear pending data
@@ -540,7 +558,7 @@ public class ZoneSensorGroup
         if (SNet.IsMaster && waypointsArray != null && waypointsArray.Length > 0)
         {
             generatedWaypoints[sensorIndex] = waypointsArray;
-            BroadcastWaypoints(sensorIndex, waypointsArray);
+            BroadcastWaypoints(sensorIndex, waypointsArray, (float)groupDef.Speed);
         }
     }
 
@@ -548,7 +566,7 @@ public class ZoneSensorGroup
     /// Broadcasts waypoints for a sensor to all clients.
     /// Host only.
     /// </summary>
-    private void BroadcastWaypoints(int sensorIndex, Vector3[] waypoints)
+    private void BroadcastWaypoints(int sensorIndex, Vector3[] waypoints, float speed)
     {
         if (sensorIndex < 0 || sensorIndex >= WaypointReplicators.Count)
         {
@@ -563,14 +581,15 @@ public class ZoneSensorGroup
             return;
         }
 
-        var state = ZoneSensorWaypointState.FromArray(sensorIndex, waypoints);
+        var state = ZoneSensorWaypointState.FromArray(sensorIndex, waypoints, speed);
         replicator.SetState(state);
 
-        Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Broadcast {waypoints.Length} waypoints for sensor {sensorIndex}");
+        Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Broadcast {waypoints.Length} waypoints for sensor {sensorIndex}, speed={speed}");
     }
 
     /// <summary>
     /// Callback for waypoint state changes from replicator.
+    /// Applies waypoints to all clients (not just late joiners) to ensure consistency.
     /// </summary>
     private void OnWaypointStateChanged(ZoneSensorWaypointState oldState, ZoneSensorWaypointState newState, bool isRecall)
     {
@@ -579,24 +598,27 @@ public class ZoneSensorGroup
 
         int sensorIndex = newState.SensorIndex;
         var waypoints = newState.ToArray();
+        float speed = newState.Speed;
 
-        Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Waypoint state changed for sensor {sensorIndex}, {waypoints.Length} waypoints, isRecall={isRecall}");
+        Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Waypoint state changed for sensor {sensorIndex}, {waypoints.Length} waypoints, speed={speed}, isRecall={isRecall}");
 
-        // Store received waypoints
+        // Store received waypoints and speed
         receivedWaypoints[sensorIndex] = waypoints;
+        receivedWaypointSpeeds[sensorIndex] = speed;
 
-        // If sensors are already spawned (late joiner), apply waypoints to existing mover
-        if (isRecall && sensorsSpawned)
+        // Apply to sensor if spawned and we're not the host
+        // This handles both late joiners (isRecall=true) and clients at mission start (isRecall=false)
+        if (sensorsSpawned && !SNet.IsMaster)
         {
-            ApplyWaypointsToSensor(sensorIndex, waypoints);
+            ApplyWaypointsToSensor(sensorIndex, waypoints, speed);
         }
     }
 
     /// <summary>
     /// Applies received waypoints to an existing sensor's mover component.
-    /// Used for late joiner sync.
+    /// Used for client sync (both late joiners and clients at mission start).
     /// </summary>
-    private void ApplyWaypointsToSensor(int sensorIndex, Vector3[] waypoints)
+    private void ApplyWaypointsToSensor(int sensorIndex, Vector3[] waypoints, float speed)
     {
         if (sensorIndex < 0 || sensorIndex >= Sensors.Count)
             return;
@@ -608,8 +630,8 @@ public class ZoneSensorGroup
         var mover = sensor.GetComponent<ZoneSensorMover>();
         if (mover != null)
         {
-            mover.SetWaypoints(waypoints);
-            Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Applied {waypoints.Length} waypoints to sensor {sensorIndex}");
+            mover.SetWaypoints(waypoints, speed);
+            Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Applied {waypoints.Length} waypoints to sensor {sensorIndex}, speed={speed}");
         }
     }
 
@@ -928,6 +950,7 @@ public class ZoneSensorGroup
         // Clear movement sync data
         generatedWaypoints.Clear();
         receivedWaypoints.Clear();
+        receivedWaypointSpeeds.Clear();
         movingSensorIndices.Clear();
         movementSyncTimer = 0f;
     }
