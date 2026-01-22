@@ -1675,7 +1675,7 @@ public class Level
                                 TriggerEach = true,
                                 // Count = 128,
                                 Density = SensorDensity.Low,
-                                Moving = 1,
+                                Moving = 3,
                                 Speed = 0.5,
                                 // Radius = 2.0,
                                 EdgeDistance = 0.7,
