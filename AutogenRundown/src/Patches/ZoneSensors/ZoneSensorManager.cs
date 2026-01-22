@@ -3,6 +3,7 @@ using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Objectives;
 using GameData;
 using GTFO.API;
+using Il2CppInterop.Runtime.Injection;
 using LevelGeneration;
 using Localization;
 using SNetwork;
@@ -34,10 +35,24 @@ public sealed class ZoneSensorManager
     /// </summary>
     private List<ZoneSensorGroup> activeSensorGroups = new();
 
+    // Update helper component instance
+    private ZoneSensorManagerUpdater? updater;
+
     private ZoneSensorManager()
     {
         LevelAPI.OnBuildDone += BuildSensors;
         LevelAPI.OnLevelCleanup += Clear;
+    }
+
+    /// <summary>
+    /// Called every frame to update sensor groups (movement sync).
+    /// </summary>
+    internal void Update()
+    {
+        foreach (var group in activeSensorGroups)
+        {
+            group.Update();
+        }
     }
 
     /// <summary>
@@ -251,9 +266,12 @@ public sealed class ZoneSensorManager
             // Determine if any sensor group uses TriggerEach mode
             bool hasTriggerEach = definition.SensorGroups.Any(g => g.TriggerEach);
 
+            // Determine if any sensor in the group is moving
+            bool hasMovingSensors = definition.SensorGroups.Any(g => g.Moving > 1);
+
             // Create sensor group with replicators (pass expected count for batch allocation)
             var sensorGroup = new ZoneSensorGroup();
-            sensorGroup.Initialize(groupIndex, definition.EventsOnTrigger, hasTriggerEach, totalSensors);
+            sensorGroup.Initialize(groupIndex, definition.EventsOnTrigger, hasTriggerEach, totalSensors, hasMovingSensors);
 
             // Set pending spawn data (sensors will spawn when positions are received)
             sensorGroup.SetPendingSpawnData(zone, definition.SensorGroups);
@@ -270,7 +288,27 @@ public sealed class ZoneSensorManager
             groupIndex++;
         }
 
+        // Create updater component if we have any groups with moving sensors
+        if (activeSensorGroups.Any(g => g.MovementReplicators.Count > 0))
+        {
+            EnsureUpdaterExists();
+        }
+
         Plugin.Logger.LogDebug($"ZoneSensor: Created {activeSensorGroups.Count} sensor groups");
+    }
+
+    /// <summary>
+    /// Ensures the updater component exists for movement sync.
+    /// </summary>
+    private void EnsureUpdaterExists()
+    {
+        if (updater != null)
+            return;
+
+        var go = new GameObject("ZoneSensorManagerUpdater");
+        UnityEngine.Object.DontDestroyOnLoad(go);
+        updater = go.AddComponent<ZoneSensorManagerUpdater>();
+        Plugin.Logger.LogDebug("ZoneSensor: Created updater component for movement sync");
     }
 
     /// <summary>
@@ -434,6 +472,13 @@ public sealed class ZoneSensorManager
 
         activeSensorGroups.Clear();
 
+        // Destroy updater component
+        if (updater != null)
+        {
+            UnityEngine.Object.Destroy(updater.gameObject);
+            updater = null;
+        }
+
         // Clear any pending scheduled toggles to prevent stale toggles across levels
         ZoneSensorToggleScheduler.ClearPending();
 
@@ -464,5 +509,22 @@ public sealed class ZoneSensorManager
         _ = Current;
 
         Plugin.Logger.LogDebug($"ZoneSensorManager: Loaded {allLevelSensors.Count} level definitions");
+    }
+}
+
+/// <summary>
+/// MonoBehaviour helper that calls ZoneSensorManager.Update() every frame.
+/// Used for periodic movement sync of moving sensors.
+/// </summary>
+public class ZoneSensorManagerUpdater : MonoBehaviour
+{
+    void Update()
+    {
+        ZoneSensorManager.Current.Update();
+    }
+
+    static ZoneSensorManagerUpdater()
+    {
+        ClassInjector.RegisterTypeInIl2Cpp<ZoneSensorManagerUpdater>();
     }
 }

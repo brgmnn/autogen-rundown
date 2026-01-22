@@ -9,18 +9,27 @@ namespace AutogenRundown.Patches.ZoneSensors;
 /// MonoBehaviour that handles sensor movement along a NavMesh path.
 /// Moves the sensor back and forth between waypoints at a constant speed.
 ///
-/// Note: Waypoints are generated deterministically using Builder.SessionSeedRandom,
-/// ensuring all clients generate identical patrol paths without network sync.
+/// Network sync:
+/// - Host generates waypoints via Initialize() and broadcasts them
+/// - Clients/late joiners receive waypoints via SetWaypoints()
+/// - Movement state is periodically synced via GetMovementState/ApplyMovementState
 /// </summary>
 public class ZoneSensorMover : MonoBehaviour
 {
-    private Vector3[] waypoints;
+    private Vector3[] waypoints = Array.Empty<Vector3>();
     private int currentWaypointIndex;
     private bool movingForward = true;
     private float speed;
     private bool initialized = false;
 
-    public void Initialize(List<Vector3> positions, float moveSpeed, float edgeDistance = 0.1f)
+    // For calculating progress between waypoints
+    private Vector3 lastWaypointPosition;
+
+    /// <summary>
+    /// Initializes movement with generated waypoints.
+    /// Returns the computed waypoints array for network sync.
+    /// </summary>
+    public Vector3[] Initialize(List<Vector3> positions, float moveSpeed, float edgeDistance = 0.1f)
     {
         speed = moveSpeed;
 
@@ -48,9 +57,99 @@ public class ZoneSensorMover : MonoBehaviour
 
         waypoints = allWaypoints.ToArray();
         currentWaypointIndex = 1;
+        lastWaypointPosition = waypoints[0];
         initialized = true;
 
         Plugin.Logger.LogDebug($"ZoneSensorMover: Initialized with {waypoints.Length} waypoints from {positions.Count} positions, speed={speed}");
+
+        return waypoints;
+    }
+
+    /// <summary>
+    /// Sets waypoints from network sync (for late joiners).
+    /// </summary>
+    public void SetWaypoints(Vector3[] newWaypoints)
+    {
+        if (newWaypoints == null || newWaypoints.Length < 2)
+        {
+            Plugin.Logger.LogWarning("ZoneSensorMover: SetWaypoints called with invalid waypoints");
+            return;
+        }
+
+        waypoints = newWaypoints;
+        currentWaypointIndex = Math.Clamp(currentWaypointIndex, 0, waypoints.Length - 1);
+
+        // Ensure lastWaypointPosition is valid
+        int fromIndex = movingForward ? currentWaypointIndex - 1 : currentWaypointIndex + 1;
+        if (fromIndex >= 0 && fromIndex < waypoints.Length)
+            lastWaypointPosition = waypoints[fromIndex];
+        else
+            lastWaypointPosition = transform.position;
+
+        Plugin.Logger.LogDebug($"ZoneSensorMover: SetWaypoints with {waypoints.Length} waypoints");
+    }
+
+    /// <summary>
+    /// Gets the current movement state for network sync.
+    /// </summary>
+    public (int waypointIndex, bool forward, float progress) GetMovementState()
+    {
+        if (waypoints == null || waypoints.Length < 2)
+            return (0, true, 0f);
+
+        float progress = CalculateProgress();
+        return (currentWaypointIndex, movingForward, progress);
+    }
+
+    /// <summary>
+    /// Applies movement state from network sync.
+    /// </summary>
+    /// <param name="waypointIndex">Target waypoint index</param>
+    /// <param name="forward">Movement direction</param>
+    /// <param name="progress">Progress toward target (0.0-1.0)</param>
+    /// <param name="snap">If true, immediately snap to position; otherwise smoothly interpolate</param>
+    public void ApplyMovementState(int waypointIndex, bool forward, float progress, bool snap)
+    {
+        if (waypoints == null || waypoints.Length < 2)
+            return;
+
+        // Clamp to valid range
+        waypointIndex = Math.Clamp(waypointIndex, 0, waypoints.Length - 1);
+
+        currentWaypointIndex = waypointIndex;
+        movingForward = forward;
+
+        // Calculate the "from" waypoint based on direction
+        int fromIndex = forward ? waypointIndex - 1 : waypointIndex + 1;
+        fromIndex = Math.Clamp(fromIndex, 0, waypoints.Length - 1);
+
+        lastWaypointPosition = waypoints[fromIndex];
+
+        if (snap)
+        {
+            // Interpolate position between from and target waypoints
+            Vector3 targetPos = waypoints[waypointIndex];
+            transform.position = Vector3.Lerp(waypoints[fromIndex], targetPos, progress);
+        }
+        // If not snapping, the Update() loop will naturally move toward the target
+    }
+
+    /// <summary>
+    /// Calculates progress from last waypoint to current target (0.0-1.0).
+    /// </summary>
+    private float CalculateProgress()
+    {
+        if (waypoints == null || waypoints.Length < 2 || currentWaypointIndex < 0 || currentWaypointIndex >= waypoints.Length)
+            return 0f;
+
+        Vector3 target = waypoints[currentWaypointIndex];
+        float totalDistance = Vector3.Distance(lastWaypointPosition, target);
+
+        if (totalDistance < 0.001f)
+            return 1f;
+
+        float remainingDistance = Vector3.Distance(transform.position, target);
+        return 1f - (remainingDistance / totalDistance);
     }
 
     private Vector3[] AdjustWaypointsForEdgeDistance(Vector3[] corners, float edgeDistance)
@@ -110,6 +209,9 @@ public class ZoneSensorMover : MonoBehaviour
 
     private void AdvanceWaypoint()
     {
+        // Store current position as the "from" waypoint for progress calculation
+        lastWaypointPosition = waypoints[currentWaypointIndex];
+
         if (movingForward)
         {
             currentWaypointIndex++;
@@ -117,6 +219,9 @@ public class ZoneSensorMover : MonoBehaviour
             {
                 movingForward = false;
                 currentWaypointIndex = waypoints.Length - 2;
+                // When reversing, update lastWaypointPosition to the endpoint we just left
+                if (currentWaypointIndex >= 0)
+                    lastWaypointPosition = waypoints[waypoints.Length - 1];
             }
         }
         else
@@ -126,6 +231,9 @@ public class ZoneSensorMover : MonoBehaviour
             {
                 movingForward = true;
                 currentWaypointIndex = 1;
+                // When reversing, update lastWaypointPosition to the endpoint we just left
+                if (waypoints.Length > 0)
+                    lastWaypointPosition = waypoints[0];
             }
         }
     }

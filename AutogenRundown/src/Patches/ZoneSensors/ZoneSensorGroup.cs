@@ -16,20 +16,34 @@ namespace AutogenRundown.Patches.ZoneSensors;
 /// Network sync architecture:
 /// - StateReplicator: Syncs enabled/disabled state and per-sensor mask
 /// - PositionReplicator: Syncs spawn positions from host to clients/late joiners
+/// - WaypointReplicator: Syncs NavMesh waypoints for moving sensors
+/// - MovementReplicator: Periodically syncs movement progress for moving sensors
 ///
 /// Flow:
 /// - Host: Generates positions → Sets PositionReplicator → Spawns sensors
+/// - Host (moving): Generates waypoints → Sets WaypointReplicator → Periodic movement sync
 /// - Client: Creates group → OnPositionStateChanged → Spawns sensors
-/// - Late Joiner: OnPositionStateChanged (isRecall=true) → Spawns sensors
+/// - Late Joiner: OnPositionStateChanged + OnWaypointStateChanged → Spawns/syncs sensors
 /// </summary>
 public class ZoneSensorGroup
 {
     // Base IDs for zone sensor replicators (avoid collisions with other mods)
     private const uint STATE_REPLICATOR_BASE_ID = 0x5A534E00; // "ZSN" prefix + group index
     private const uint POSITION_REPLICATOR_BASE_ID = 0x5A535000; // "ZSP" prefix + group index * 8 + batch index
+    private const uint WAYPOINT_REPLICATOR_BASE_ID = 0x5A535700; // "ZSW" prefix + group index * 128 + sensor index
+    private const uint MOVEMENT_REPLICATOR_BASE_ID = 0x5A536000; // "ZSM" prefix + group index * 4 + batch index
 
     // Maximum batches per group (supports up to 128 sensors: 8 * 16)
     private const int MAX_BATCHES_PER_GROUP = 8;
+
+    // Maximum waypoint replicators per group (1 per moving sensor, max 128)
+    private const int MAX_WAYPOINT_REPLICATORS = 128;
+
+    // Maximum movement batches per group (32 sensors per batch, 4 batches = 128 sensors)
+    private const int MAX_MOVEMENT_BATCHES = 4;
+
+    // Movement sync interval in seconds
+    private const float MOVEMENT_SYNC_INTERVAL = 0.5f;
 
     public int GroupIndex { get; private set; }
     public bool Enabled { get; private set; } = true;
@@ -40,6 +54,24 @@ public class ZoneSensorGroup
 
     // Multiple position replicators for groups with more than 16 sensors
     public List<StateReplicator<ZoneSensorPositionState>> PositionReplicators { get; } = new();
+
+    // Waypoint replicators: 1 per moving sensor (syncs actual NavMesh path waypoints)
+    public List<StateReplicator<ZoneSensorWaypointState>> WaypointReplicators { get; } = new();
+
+    // Movement replicators: 1 per batch of 32 sensors (syncs movement progress)
+    public List<StateReplicator<ZoneSensorMovementState>> MovementReplicators { get; } = new();
+
+    // Host stores generated waypoints by sensor index
+    private Dictionary<int, Vector3[]> generatedWaypoints = new();
+
+    // Movement sync timer (host only)
+    private float movementSyncTimer = 0f;
+
+    // Track which sensors have moving behavior
+    private HashSet<int> movingSensorIndices = new();
+
+    // Track if waypoints have been received for late joiners
+    private Dictionary<int, Vector3[]> receivedWaypoints = new();
 
     private bool triggerEach;
     private ZoneSensorGroupState currentState;
@@ -62,7 +94,8 @@ public class ZoneSensorGroup
     /// <param name="events">Events to trigger when sensors are activated</param>
     /// <param name="triggerEach">Whether each sensor triggers independently</param>
     /// <param name="expectedSensorCount">Expected total sensors to calculate batch count</param>
-    public void Initialize(int index, List<WardenObjectiveEvent> events, bool triggerEach, int expectedSensorCount)
+    /// <param name="hasMovingSensors">Whether this group has moving sensors (creates waypoint/movement replicators)</param>
+    public void Initialize(int index, List<WardenObjectiveEvent> events, bool triggerEach, int expectedSensorCount, bool hasMovingSensors = false)
     {
         GroupIndex = index;
         EventsOnTrigger = events;
@@ -72,6 +105,10 @@ public class ZoneSensorGroup
         previousState = new ZoneSensorGroupState(false);
         sensorsSpawned = false;
         receivedBatches.Clear();
+        generatedWaypoints.Clear();
+        receivedWaypoints.Clear();
+        movingSensorIndices.Clear();
+        movementSyncTimer = 0f;
 
         // Calculate number of position batches needed
         expectedBatchCount = ZoneSensorPositionState.CalculateBatchCount(expectedSensorCount);
@@ -116,7 +153,66 @@ public class ZoneSensorGroup
             }
         }
 
-        Plugin.Logger.LogDebug($"ZoneSensorGroup {index}: Initialized with {expectedBatchCount} position replicators for {expectedSensorCount} sensors");
+        // Create waypoint and movement replicators if this group has moving sensors
+        if (hasMovingSensors)
+        {
+            InitializeMovementReplicators(index, expectedSensorCount);
+        }
+
+        Plugin.Logger.LogDebug($"ZoneSensorGroup {index}: Initialized with {expectedBatchCount} position replicators for {expectedSensorCount} sensors, hasMovingSensors={hasMovingSensors}");
+    }
+
+    /// <summary>
+    /// Creates waypoint and movement replicators for groups with moving sensors.
+    /// </summary>
+    private void InitializeMovementReplicators(int index, int expectedSensorCount)
+    {
+        // Waypoint replicators: 1 per sensor (max 128)
+        // ID scheme: BASE_ID + groupIndex * 128 + sensorIndex
+        WaypointReplicators.Clear();
+        int waypointReplicatorCount = Math.Min(expectedSensorCount, MAX_WAYPOINT_REPLICATORS);
+
+        for (int sensorIndex = 0; sensorIndex < waypointReplicatorCount; sensorIndex++)
+        {
+            uint waypointReplicatorId = WAYPOINT_REPLICATOR_BASE_ID + (uint)(index * MAX_WAYPOINT_REPLICATORS + sensorIndex);
+
+            var waypointReplicator = StateReplicator<ZoneSensorWaypointState>.Create(
+                waypointReplicatorId,
+                new ZoneSensorWaypointState(),
+                LifeTimeType.Session
+            );
+
+            if (waypointReplicator != null)
+            {
+                waypointReplicator.OnStateChanged += OnWaypointStateChanged;
+                WaypointReplicators.Add(waypointReplicator);
+            }
+        }
+
+        // Movement replicators: 1 per batch of 32 sensors (max 4 batches)
+        // ID scheme: BASE_ID + groupIndex * 4 + batchIndex
+        MovementReplicators.Clear();
+        int movementBatchCount = ZoneSensorMovementState.CalculateBatchCount(expectedSensorCount);
+        movementBatchCount = Math.Min(movementBatchCount, MAX_MOVEMENT_BATCHES);
+
+        for (int batchIndex = 0; batchIndex < movementBatchCount; batchIndex++)
+        {
+            uint movementReplicatorId = MOVEMENT_REPLICATOR_BASE_ID + (uint)(index * MAX_MOVEMENT_BATCHES + batchIndex);
+
+            var movementReplicator = StateReplicator<ZoneSensorMovementState>.Create(
+                movementReplicatorId,
+                new ZoneSensorMovementState(),
+                LifeTimeType.Session
+            );
+
+            if (movementReplicator != null)
+            {
+                movementReplicator.OnStateChanged += OnMovementStateChanged;
+                MovementReplicators.Add(movementReplicator);
+            }
+        }
+
+        Plugin.Logger.LogDebug($"ZoneSensorGroup {index}: Created {WaypointReplicators.Count} waypoint replicators and {MovementReplicators.Count} movement replicators");
     }
 
     /// <summary>
@@ -388,6 +484,7 @@ public class ZoneSensorGroup
     /// <summary>
     /// Initializes movement for a sensor using deterministic waypoint generation.
     /// Uses a per-sensor seed to ensure all clients generate identical paths.
+    /// Host broadcasts waypoints via replicators for late joiners.
     /// </summary>
     private void InitializeSensorMovement(LG_Zone zone, ZoneSensorGroupDefinition groupDef, GameObject sensorGO, Vector3 startPosition, int groupIndex, int sensorIndex)
     {
@@ -434,7 +531,193 @@ public class ZoneSensorGroup
         positions[0] = start;
 
         var mover = sensorGO.AddComponent<ZoneSensorMover>();
-        mover.Initialize(positions, (float)groupDef.Speed, (float)groupDef.EdgeDistance);
+        var waypointsArray = mover.Initialize(positions, (float)groupDef.Speed, (float)groupDef.EdgeDistance);
+
+        // Track this sensor as moving
+        movingSensorIndices.Add(sensorIndex);
+
+        // Host: Store and broadcast waypoints
+        if (SNet.IsMaster && waypointsArray != null && waypointsArray.Length > 0)
+        {
+            generatedWaypoints[sensorIndex] = waypointsArray;
+            BroadcastWaypoints(sensorIndex, waypointsArray);
+        }
+    }
+
+    /// <summary>
+    /// Broadcasts waypoints for a sensor to all clients.
+    /// Host only.
+    /// </summary>
+    private void BroadcastWaypoints(int sensorIndex, Vector3[] waypoints)
+    {
+        if (sensorIndex < 0 || sensorIndex >= WaypointReplicators.Count)
+        {
+            Plugin.Logger.LogWarning($"ZoneSensorGroup {GroupIndex}: Cannot broadcast waypoints for sensor {sensorIndex}, no replicator");
+            return;
+        }
+
+        var replicator = WaypointReplicators[sensorIndex];
+        if (replicator == null || !replicator.IsValid)
+        {
+            Plugin.Logger.LogWarning($"ZoneSensorGroup {GroupIndex}: Waypoint replicator {sensorIndex} not valid");
+            return;
+        }
+
+        var state = ZoneSensorWaypointState.FromArray(sensorIndex, waypoints);
+        replicator.SetState(state);
+
+        Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Broadcast {waypoints.Length} waypoints for sensor {sensorIndex}");
+    }
+
+    /// <summary>
+    /// Callback for waypoint state changes from replicator.
+    /// </summary>
+    private void OnWaypointStateChanged(ZoneSensorWaypointState oldState, ZoneSensorWaypointState newState, bool isRecall)
+    {
+        if (!newState.HasWaypoints)
+            return;
+
+        int sensorIndex = newState.SensorIndex;
+        var waypoints = newState.ToArray();
+
+        Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Waypoint state changed for sensor {sensorIndex}, {waypoints.Length} waypoints, isRecall={isRecall}");
+
+        // Store received waypoints
+        receivedWaypoints[sensorIndex] = waypoints;
+
+        // If sensors are already spawned (late joiner), apply waypoints to existing mover
+        if (isRecall && sensorsSpawned)
+        {
+            ApplyWaypointsToSensor(sensorIndex, waypoints);
+        }
+    }
+
+    /// <summary>
+    /// Applies received waypoints to an existing sensor's mover component.
+    /// Used for late joiner sync.
+    /// </summary>
+    private void ApplyWaypointsToSensor(int sensorIndex, Vector3[] waypoints)
+    {
+        if (sensorIndex < 0 || sensorIndex >= Sensors.Count)
+            return;
+
+        var sensor = Sensors[sensorIndex];
+        if (sensor == null)
+            return;
+
+        var mover = sensor.GetComponent<ZoneSensorMover>();
+        if (mover != null)
+        {
+            mover.SetWaypoints(waypoints);
+            Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Applied {waypoints.Length} waypoints to sensor {sensorIndex}");
+        }
+    }
+
+    /// <summary>
+    /// Callback for movement state changes from replicator.
+    /// </summary>
+    private void OnMovementStateChanged(ZoneSensorMovementState oldState, ZoneSensorMovementState newState, bool isRecall)
+    {
+        if (!newState.HasMovementData)
+            return;
+
+        // Apply movement state to sensors in this batch
+        for (int i = 0; i < newState.SensorCount; i++)
+        {
+            int globalSensorIndex = newState.GetGlobalSensorIndex(i);
+            var (waypointIndex, forward, progress) = newState.GetMovementState(i);
+
+            ApplyMovementStateToSensor(globalSensorIndex, waypointIndex, forward, progress, snap: isRecall);
+        }
+    }
+
+    /// <summary>
+    /// Applies movement state to a sensor's mover component.
+    /// </summary>
+    private void ApplyMovementStateToSensor(int sensorIndex, int waypointIndex, bool forward, float progress, bool snap)
+    {
+        if (sensorIndex < 0 || sensorIndex >= Sensors.Count)
+            return;
+
+        var sensor = Sensors[sensorIndex];
+        if (sensor == null)
+            return;
+
+        var mover = sensor.GetComponent<ZoneSensorMover>();
+        if (mover != null)
+        {
+            mover.ApplyMovementState(waypointIndex, forward, progress, snap);
+        }
+    }
+
+    /// <summary>
+    /// Update method for periodic movement sync.
+    /// Called by ZoneSensorManager.
+    /// </summary>
+    public void Update()
+    {
+        // Only host broadcasts movement state
+        if (!SNet.IsMaster || MovementReplicators.Count == 0 || movingSensorIndices.Count == 0)
+            return;
+
+        movementSyncTimer += Time.deltaTime;
+        if (movementSyncTimer >= MOVEMENT_SYNC_INTERVAL)
+        {
+            movementSyncTimer = 0f;
+            BroadcastMovementState();
+        }
+    }
+
+    /// <summary>
+    /// Broadcasts current movement state for all moving sensors.
+    /// Host only.
+    /// </summary>
+    private void BroadcastMovementState()
+    {
+        // Group sensors into batches
+        int batchCount = MovementReplicators.Count;
+
+        for (int batchIndex = 0; batchIndex < batchCount; batchIndex++)
+        {
+            var replicator = MovementReplicators[batchIndex];
+            if (replicator == null || !replicator.IsValid)
+                continue;
+
+            var state = new ZoneSensorMovementState
+            {
+                BatchIndex = (byte)batchIndex
+            };
+
+            int startSensorIndex = batchIndex * ZoneSensorMovementState.MaxSensors;
+            int sensorCountInBatch = 0;
+
+            for (int localIndex = 0; localIndex < ZoneSensorMovementState.MaxSensors; localIndex++)
+            {
+                int globalIndex = startSensorIndex + localIndex;
+
+                // Skip sensors that don't exist or aren't moving
+                if (globalIndex >= Sensors.Count || !movingSensorIndices.Contains(globalIndex))
+                    continue;
+
+                var sensor = Sensors[globalIndex];
+                if (sensor == null)
+                    continue;
+
+                var mover = sensor.GetComponent<ZoneSensorMover>();
+                if (mover == null)
+                    continue;
+
+                var (waypointIndex, forward, progress) = mover.GetMovementState();
+                state.SetMovementState(localIndex, waypointIndex, forward, progress);
+                sensorCountInBatch++;
+            }
+
+            if (sensorCountInBatch > 0)
+            {
+                state.SensorCount = (byte)sensorCountInBatch;
+                replicator.SetState(state);
+            }
+        }
     }
 
     /// <summary>
@@ -582,7 +865,7 @@ public class ZoneSensorGroup
     /// </summary>
     public void Cleanup()
     {
-        // Unsubscribe and unload replicators
+        // Unsubscribe and unload state replicator
         if (Replicator != null)
         {
             Replicator.OnStateChanged -= OnStateChanged;
@@ -590,6 +873,7 @@ public class ZoneSensorGroup
         }
         Replicator = null;
 
+        // Unsubscribe and unload position replicators
         foreach (var posReplicator in PositionReplicators)
         {
             if (posReplicator != null)
@@ -600,6 +884,29 @@ public class ZoneSensorGroup
         }
         PositionReplicators.Clear();
 
+        // Unsubscribe and unload waypoint replicators
+        foreach (var waypointReplicator in WaypointReplicators)
+        {
+            if (waypointReplicator != null)
+            {
+                waypointReplicator.OnStateChanged -= OnWaypointStateChanged;
+                waypointReplicator.Unload();
+            }
+        }
+        WaypointReplicators.Clear();
+
+        // Unsubscribe and unload movement replicators
+        foreach (var movementReplicator in MovementReplicators)
+        {
+            if (movementReplicator != null)
+            {
+                movementReplicator.OnStateChanged -= OnMovementStateChanged;
+                movementReplicator.Unload();
+            }
+        }
+        MovementReplicators.Clear();
+
+        // Destroy sensor GameObjects
         foreach (var sensor in Sensors)
         {
             if (sensor != null)
@@ -617,5 +924,11 @@ public class ZoneSensorGroup
         sensorsSpawned = false;
         receivedBatches.Clear();
         expectedBatchCount = 0;
+
+        // Clear movement sync data
+        generatedWaypoints.Clear();
+        receivedWaypoints.Clear();
+        movingSensorIndices.Clear();
+        movementSyncTimer = 0f;
     }
 }
