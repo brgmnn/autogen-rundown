@@ -1,3 +1,4 @@
+using AmorLib.Networking.StateReplicators;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Objectives;
@@ -508,7 +509,32 @@ public sealed class ZoneSensorManager
         // Ensure singleton is created to hook up level events
         _ = Current;
 
+        // Pre-register state replicators to handle late joiner edge case
+        PreRegisterStateReplicators();
+
         Plugin.Logger.LogDebug($"ZoneSensorManager: Loaded {allLevelSensors.Count} level definitions");
+    }
+
+    /// <summary>
+    /// Pre-registers all StateReplicator event handlers to prevent late joiner issues.
+    /// Creating a replicator instance triggers the static constructor which registers
+    /// the network event handler. This must happen before any late joiner can receive
+    /// recall events.
+    /// </summary>
+    private static void PreRegisterStateReplicators()
+    {
+        // Reserved IDs that won't conflict with actual replicators (0x5A53FF00-FF range)
+        const uint DUMMY_BASE_ID = 0x5A53FF00;
+
+        // Pre-register ZoneSensorMovementState events
+        var movementDummy = StateReplicator<ZoneSensorMovementState>.Create(
+            DUMMY_BASE_ID,
+            new ZoneSensorMovementState(),
+            LifeTimeType.Session
+        );
+        movementDummy?.Unload();
+
+        Plugin.Logger.LogDebug("ZoneSensorManager: Pre-registered state replicator event handlers");
     }
 }
 
