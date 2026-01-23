@@ -77,8 +77,8 @@ public class ZoneSensorGroup
     // Track received movement state for late joiners (applied after sensors spawn)
     private Dictionary<int, (int waypointIndex, bool forward, float progress)> receivedMovementState = new();
 
-    // Track if group state has been received (for late joiner sync)
-    private bool stateReceived = false;
+    // Track if this is a late joiner spawn (affects sensor creation)
+    private bool isLateJoinerSpawn = false;
 
     private bool triggerEach;
     private ZoneSensorGroupState currentState;
@@ -110,7 +110,7 @@ public class ZoneSensorGroup
         this.triggerEach = triggerEach;
         currentState = new ZoneSensorGroupState(true);
         previousState = new ZoneSensorGroupState(false);
-        stateReceived = false;
+        isLateJoinerSpawn = false;
         sensorsSpawned = false;
         receivedBatches.Clear();
         generatedWaypoints.Clear();
@@ -347,6 +347,9 @@ public class ZoneSensorGroup
         // Use first group definition for visual settings (typically only one group)
         var groupDef = pendingGroupDefinitions[0];
 
+        // Track if this is a late joiner spawn (affects sensor creation)
+        isLateJoinerSpawn = isRecall && !SNet.IsMaster;
+
         for (int i = 0; i < allPositions.Count; i++)
         {
             var (position, waypointCount) = allPositions[i];
@@ -394,20 +397,15 @@ public class ZoneSensorGroup
         }
 
         // Apply current group state to newly spawned sensors
-        // Only apply if state has been received from network, otherwise sensors stay inactive
-        // until OnStateChanged fires with the host's authoritative state
         if (!SNet.IsMaster)
         {
-            if (stateReceived)
+            if (!isRecall)
             {
+                // Normal client - initial state is correct, apply immediately
                 UpdateVisualsUnsynced(currentState);
-                Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Applied received group state to spawned sensors");
+                Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Applied initial state to spawned sensors");
             }
-            else
-            {
-                // State hasn't arrived yet - sensors created inactive will be updated when OnStateChanged fires
-                Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Waiting for group state before activating sensors");
-            }
+            // Late joiner - sensors created inactive, OnStateChanged will activate them when state arrives
         }
 
         Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Spawned {Sensors.Count} sensors from {expectedBatchCount} batches (isRecall={isRecall})");
@@ -507,8 +505,8 @@ public class ZoneSensorGroup
         collider.TriggerEach = groupDef.TriggerEach;
         collider.Radius = (float)groupDef.Radius;
 
-        // Clients create sensors inactive - they'll be activated when state is applied
-        if (!SNet.IsMaster)
+        // Late joiners create sensors inactive - they'll be activated when state is received
+        if (isLateJoinerSpawn)
         {
             sensorGO.SetActive(false);
         }
@@ -902,7 +900,6 @@ public class ZoneSensorGroup
     private void OnStateChanged(ZoneSensorGroupState oldState, ZoneSensorGroupState newState, bool isRecall)
     {
         currentState = newState;
-        stateReceived = true;
         UpdateVisualsUnsynced(newState, oldState);
     }
 
@@ -1001,7 +998,7 @@ public class ZoneSensorGroup
         // Reset state for level reload
         currentState = new ZoneSensorGroupState(false);
         previousState = new ZoneSensorGroupState(false);
-        stateReceived = false;
+        isLateJoinerSpawn = false;
 
         // Clear pending data
         pendingZone = null;
