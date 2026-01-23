@@ -700,6 +700,10 @@ public class ZoneSensorGroup
         if (sensorIndex < 0 || sensorIndex >= Sensors.Count)
             return;
 
+        // Don't apply movement to disabled sensors
+        if (!currentState.IsSensorEnabled(sensorIndex))
+            return;
+
         var sensor = Sensors[sensorIndex];
         if (sensor == null)
             return;
