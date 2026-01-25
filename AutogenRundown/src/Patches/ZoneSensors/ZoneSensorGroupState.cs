@@ -7,7 +7,7 @@ namespace AutogenRundown.Patches.ZoneSensors;
 /// Used with FloLib StateReplicator for multiplayer sync.
 /// Supports up to 128 sensors per group using 4 × 32-bit fields.
 /// </summary>
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
+[StructLayout(LayoutKind.Sequential)]
 public struct ZoneSensorGroupState
 {
     public bool Enabled;
