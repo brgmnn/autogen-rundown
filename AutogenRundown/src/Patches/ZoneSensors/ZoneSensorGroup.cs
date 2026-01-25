@@ -45,9 +45,6 @@ public class ZoneSensorGroup
     // Movement sync interval in seconds
     private const float MOVEMENT_SYNC_INTERVAL = 0.5f;
 
-    // State sync interval in seconds (for self-correction)
-    private const float STATE_SYNC_INTERVAL = 10f;
-
     public int GroupIndex { get; private set; }
     public bool Enabled { get; private set; } = true;
     public List<GameObject> Sensors { get; } = new();
@@ -69,9 +66,6 @@ public class ZoneSensorGroup
 
     // Movement sync timer (host only)
     private float movementSyncTimer = 0f;
-
-    // State sync timer for periodic self-correction (host only)
-    private float stateSyncTimer = 0f;
 
     // Track which sensors have moving behavior
     private HashSet<int> movingSensorIndices = new();
@@ -125,7 +119,6 @@ public class ZoneSensorGroup
         receivedMovementState.Clear();
         movingSensorIndices.Clear();
         movementSyncTimer = 0f;
-        stateSyncTimer = 0f;
 
         // Calculate number of position batches needed
         expectedBatchCount = ZoneSensorPositionState.CalculateBatchCount(expectedSensorCount);
@@ -735,7 +728,7 @@ public class ZoneSensorGroup
     }
 
     /// <summary>
-    /// Update method for periodic sync.
+    /// Update method for periodic movement sync.
     /// Called by ZoneSensorManager.
     /// </summary>
     public void Update()
@@ -743,18 +736,6 @@ public class ZoneSensorGroup
         // Only host broadcasts state
         if (!SNet.IsMaster)
             return;
-
-        // Periodic state sync for self-correction (ensures late joiners eventually sync)
-        if (Replicator != null && Replicator.IsValid)
-        {
-            stateSyncTimer += Time.deltaTime;
-            if (stateSyncTimer >= STATE_SYNC_INTERVAL)
-            {
-                stateSyncTimer = 0f;
-                currentState.SyncCounter++;
-                Replicator.SetState(currentState);
-            }
-        }
 
         // Movement state sync
         if (MovementReplicators.Count == 0 || movingSensorIndices.Count == 0)
@@ -1033,6 +1014,5 @@ public class ZoneSensorGroup
         receivedMovementState.Clear();
         movingSensorIndices.Clear();
         movementSyncTimer = 0f;
-        stateSyncTimer = 0f;
     }
 }
