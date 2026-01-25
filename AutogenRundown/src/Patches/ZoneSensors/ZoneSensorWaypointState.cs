@@ -16,9 +16,10 @@ public unsafe struct ZoneSensorWaypointState
 {
     /// <summary>
     /// Maximum waypoints per sensor. NavMesh paths typically have 4-8 corners,
-    /// but complex routes can have more. 32 should handle most cases.
+    /// but complex routes can have more. Limited to 20 to fit within
+    /// StateReplicator's 256-byte payload limit (8 + 20*3*4 = 248 bytes).
     /// </summary>
-    public const int MaxWaypointsPerSensor = 32;
+    public const int MaxWaypointsPerSensor = 20;
 
     /// <summary>
     /// Global sensor index within the group (0-127).
@@ -42,7 +43,7 @@ public unsafe struct ZoneSensorWaypointState
 
     /// <summary>
     /// Fixed buffer for waypoint positions: [x0, y0, z0, x1, y1, z1, ...]
-    /// 32 waypoints * 3 floats = 96 floats = 384 bytes
+    /// 20 waypoints * 3 floats = 60 floats = 240 bytes
     /// </summary>
     private fixed float _waypoints[MaxWaypointsPerSensor * 3];
 
