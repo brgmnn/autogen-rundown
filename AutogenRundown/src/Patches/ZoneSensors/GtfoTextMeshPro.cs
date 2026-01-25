@@ -9,6 +9,10 @@ namespace AutogenRundown.Patches.ZoneSensors;
 /// </summary>
 public static class GtfoTextMeshPro
 {
+    /// <summary>
+    /// Path to vanilla ChainedPuzzle prefab used to extract clean TMPro component.
+    /// WARNING: This path may change on game updates - verify after GTFO patches.
+    /// </summary>
     private const string VANILLA_CP_PREFAB_PATH =
         "Assets/AssetPrefabs/Complex/Generic/ChainedPuzzles/CP_Bioscan_sustained_RequireAll.prefab";
 

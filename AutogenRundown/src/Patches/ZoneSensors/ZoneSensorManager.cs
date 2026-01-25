@@ -450,6 +450,7 @@ public sealed class ZoneSensorManager
             _ => 6.0f
         };
 
+        // Larger radius sensors cover more area, so fewer are needed for same density
         var rawCount = (int)(totalCoverage / 100f * sensorsPerHundredCoverage / radius);
 
         Plugin.Logger.LogDebug($"ZoneSensor density calc: zone has {zone.m_areas.Count} areas, " +

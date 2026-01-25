@@ -104,9 +104,13 @@ public unsafe struct ZoneSensorWaypointState
 
     /// <summary>
     /// Creates a waypoint state from an array of positions.
+    /// Waypoints exceeding MaxWaypointsPerSensor will be truncated with a warning.
     /// </summary>
     public static ZoneSensorWaypointState FromArray(int sensorIndex, Vector3[] waypoints, float speed)
     {
+        if (waypoints.Length > MaxWaypointsPerSensor)
+            Plugin.Logger.LogWarning($"ZoneSensorWaypointState: Waypoint count {waypoints.Length} exceeds max {MaxWaypointsPerSensor}, truncating");
+
         var state = new ZoneSensorWaypointState
         {
             SensorIndex = (byte)sensorIndex,

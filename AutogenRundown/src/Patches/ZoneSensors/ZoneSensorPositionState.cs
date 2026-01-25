@@ -45,6 +45,7 @@ public unsafe struct ZoneSensorPositionState
     /// Packed waypoint counts for each sensor (2 bits per sensor).
     /// Supports 0-3 additional waypoints per sensor (beyond spawn position).
     /// Bits 0-1: sensor 0, Bits 2-3: sensor 1, etc.
+    /// Note: This is informational only - actual waypoints are synced via WaypointReplicators.
     /// </summary>
     public uint WaypointCounts;
 

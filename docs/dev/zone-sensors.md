@@ -56,6 +56,11 @@ Zone sensors are security sensors placed automatically within zones using the ga
 | `ZoneSensorCollider` | `Patches/ZoneSensors/ZoneSensorCollider.cs` | Player detection MonoBehaviour |
 | `ZoneSensorMover` | `Patches/ZoneSensors/ZoneSensorMover.cs` | Movement along NavMesh paths |
 | `ZoneSensorGroupState` | `Patches/ZoneSensors/ZoneSensorGroupState.cs` | Network replication state struct |
+| `ZoneSensorPositionState` | `Patches/ZoneSensors/ZoneSensorPositionState.cs` | Network state for spawn positions |
+| `ZoneSensorWaypointState` | `Patches/ZoneSensors/ZoneSensorWaypointState.cs` | Network state for NavMesh waypoints |
+| `ZoneSensorMovementState` | `Patches/ZoneSensors/ZoneSensorMovementState.cs` | Network state for movement progress |
+| `ZoneSensorTextAnimator` | `Patches/ZoneSensors/ZoneSensorTextAnimator.cs` | Encrypted text animation |
+| `GtfoTextMeshPro` | `Patches/ZoneSensors/GtfoTextMeshPro.cs` | Clean TMPro instantiation utility |
 
 ---
 
@@ -150,7 +155,7 @@ Inherits from `Definition` base class:
 | `Text` | string | "S:_EC/uR_ITY S:/Ca_N" | Text displayed on sensor |
 | `TextColor` | Color | Light gray | Color of the sensor text |
 | `TriggerEach` | bool | false | If true, each sensor triggers independently |
-| `Moving` | bool | false | If true, sensors patrol between two points |
+| `Moving` | int | 1 | Number of patrol positions (1=stationary, 2+=moving between positions) |
 | `Speed` | double | 1.5 | Movement speed (units/second) when Moving |
 | `EdgeDistance` | double | 0.1 | Min distance from NavMesh edges for waypoints when Moving |
 | `Height` | double | 0.6 | Height of sensor visual, combined with Radius for vertical offset |
@@ -165,6 +170,19 @@ Inherits from `Definition` base class:
   "Alpha": 0.0-1.0
 }
 ```
+
+### Text Animation (EncryptedText mode)
+
+When `EncryptedText: true`, sensor text animates through a 9.5-second cycle:
+
+| Phase | Duration | Display |
+|-------|----------|---------|
+| Reveal | 1.2s | Actual text in normal color |
+| Partial | 2.15s | Random hex chars (spaces preserved) in encrypted color |
+| Full Encrypted | 4.0s | "XX-XX-XX-XX-XX" format in encrypted color |
+| Partial | 2.15s | Random hex chars in encrypted color |
+
+Each sensor starts at a random point in the cycle to prevent synchronized text.
 
 ---
 
@@ -186,6 +204,16 @@ Standard `WardenObjectiveEvent` list executed when sensors trigger. Common event
   }
 }
 ```
+
+### Zone Sensor Event Types (400-404)
+
+| Type | Name | Description |
+|------|------|-------------|
+| 400 | `Toggle` | Standard toggle - resets all sensors on enable |
+| 401 | `TogglePreserveTriggered` | Toggle preserving triggered state (triggered sensors stay hidden) |
+| 402 | `ToggleResetTriggered` | Toggle with full reset (all sensors reappear) |
+| 403 | `Disable` | Disable sensor group (preserves triggered state) |
+| 404 | `Enable` | Enable sensor group (only untriggered sensors appear) |
 
 ### ToggleSecuritySensor (Type 400)
 
@@ -224,9 +252,42 @@ events.ToggleZoneSensorsWithReset(groupIndex: 0, enabled: true, delay: 0.0);  //
 Sensor state is synchronized via `StateReplicator<ZoneSensorGroupState>`:
 
 - **Enabled**: Group-level enable/disable state
-- **SensorMask**: Bitmask for individual sensor states (supports up to 32 sensors per group)
+- **SensorMask**: 128-bit bitmask (4×32-bit fields) for individual sensor states (up to 128 sensors per group)
 
 Only the master client executes events and sets state; other clients receive state updates.
+
+### Replicator Architecture
+
+The zone sensor system uses 4 types of StateReplicators for network sync:
+
+| Replicator | ID Scheme | Purpose | Sync Frequency |
+|------------|-----------|---------|----------------|
+| State | `0x5A534E00 + groupIndex` | Group enabled/disabled + 128-bit sensor masks | On change |
+| Position | `0x5A535000 + groupIndex*8 + batchIndex` | Spawn positions (16 sensors per batch) | Once at build |
+| Waypoint | `0x5A535700 + groupIndex*128 + sensorIndex` | NavMesh path waypoints per moving sensor | Once at build |
+| Movement | `0x5A536000 + groupIndex*4 + batchIndex` | Movement progress (32 sensors per batch) | Every 0.5s |
+
+**Size Constraints:**
+All state structs must fit within StateReplicator's 256-byte payload limit:
+- `ZoneSensorPositionState`: 200 bytes (16 sensors × 12 bytes + 8 header)
+- `ZoneSensorWaypointState`: 248 bytes (20 waypoints × 12 bytes + 8 header)
+- `ZoneSensorMovementState`: 104 bytes (32 sensors × 3 bytes + 8 header)
+- `ZoneSensorGroupState`: 33 bytes (1 + 16 + 16)
+
+### Late Joiner Support
+
+The system ensures late joiners see sensors in the correct state:
+
+1. **Position Recall**: Position replicators auto-recall stored state
+2. **Waypoint Recall**: Moving sensor paths are recalled from waypoint replicators
+3. **Movement State**: Current movement progress applied after sensor spawn
+4. **Inactive Creation**: Late joiner sensors start inactive, then apply received state
+
+Flow:
+- `isLateJoinerSpawn=true` → Sensors created inactive
+- `OnPositionStateChanged(isRecall=true)` → Store positions, wait for all batches
+- `SpawnSensorsFromBatches()` → Create sensors, apply stored waypoints + movement
+- `UpdateVisualsUnsynced()` → Apply group enabled/disabled state
 
 ---
 

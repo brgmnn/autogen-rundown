@@ -4,7 +4,7 @@ namespace AutogenRundown.Patches.ZoneSensors;
 
 /// <summary>
 /// Network replication state for a sensor group.
-/// Used with FloLib StateReplicator for multiplayer sync.
+/// Used with AmorLib StateReplicator for multiplayer sync.
 /// Supports up to 128 sensors per group using 4 × 32-bit fields.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
