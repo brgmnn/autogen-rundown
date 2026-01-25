@@ -45,6 +45,9 @@ public class ZoneSensorGroup
     // Movement sync interval in seconds
     private const float MOVEMENT_SYNC_INTERVAL = 0.5f;
 
+    // State sync interval in seconds (for self-correction)
+    private const float STATE_SYNC_INTERVAL = 10f;
+
     public int GroupIndex { get; private set; }
     public bool Enabled { get; private set; } = true;
     public List<GameObject> Sensors { get; } = new();
@@ -66,6 +69,9 @@ public class ZoneSensorGroup
 
     // Movement sync timer (host only)
     private float movementSyncTimer = 0f;
+
+    // State sync timer for periodic self-correction (host only)
+    private float stateSyncTimer = 0f;
 
     // Track which sensors have moving behavior
     private HashSet<int> movingSensorIndices = new();
@@ -119,6 +125,7 @@ public class ZoneSensorGroup
         receivedMovementState.Clear();
         movingSensorIndices.Clear();
         movementSyncTimer = 0f;
+        stateSyncTimer = 0f;
 
         // Calculate number of position batches needed
         expectedBatchCount = ZoneSensorPositionState.CalculateBatchCount(expectedSensorCount);
@@ -397,15 +404,11 @@ public class ZoneSensorGroup
         }
 
         // Apply current group state to newly spawned sensors
+        // For late joiners, currentState already contains the correct state from recall
         if (!SNet.IsMaster)
         {
-            if (!isRecall)
-            {
-                // Normal client - initial state is correct, apply immediately
-                UpdateVisualsUnsynced(currentState);
-                Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Applied initial state to spawned sensors");
-            }
-            // Late joiner - sensors created inactive, OnStateChanged will activate them when state arrives
+            UpdateVisualsUnsynced(currentState);
+            Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Applied state to spawned sensors (isRecall={isRecall})");
         }
 
         Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Spawned {Sensors.Count} sensors from {expectedBatchCount} batches (isRecall={isRecall})");
@@ -732,13 +735,29 @@ public class ZoneSensorGroup
     }
 
     /// <summary>
-    /// Update method for periodic movement sync.
+    /// Update method for periodic sync.
     /// Called by ZoneSensorManager.
     /// </summary>
     public void Update()
     {
-        // Only host broadcasts movement state
-        if (!SNet.IsMaster || MovementReplicators.Count == 0 || movingSensorIndices.Count == 0)
+        // Only host broadcasts state
+        if (!SNet.IsMaster)
+            return;
+
+        // Periodic state sync for self-correction (ensures late joiners eventually sync)
+        if (Replicator != null && Replicator.IsValid)
+        {
+            stateSyncTimer += Time.deltaTime;
+            if (stateSyncTimer >= STATE_SYNC_INTERVAL)
+            {
+                stateSyncTimer = 0f;
+                currentState.SyncCounter++;
+                Replicator.SetState(currentState);
+            }
+        }
+
+        // Movement state sync
+        if (MovementReplicators.Count == 0 || movingSensorIndices.Count == 0)
             return;
 
         movementSyncTimer += Time.deltaTime;
@@ -751,7 +770,7 @@ public class ZoneSensorGroup
 
     /// <summary>
     /// Broadcasts current movement state for all moving sensors.
-    /// Host only.
+    /// Host only. Packs entries consecutively with explicit global indices.
     /// </summary>
     private void BroadcastMovementState()
     {
@@ -770,7 +789,7 @@ public class ZoneSensorGroup
             };
 
             int startSensorIndex = batchIndex * ZoneSensorMovementState.MaxSensors;
-            int sensorCountInBatch = 0;
+            int entryIndex = 0;  // Packed entry index (consecutive)
 
             for (int localIndex = 0; localIndex < ZoneSensorMovementState.MaxSensors; localIndex++)
             {
@@ -789,13 +808,13 @@ public class ZoneSensorGroup
                     continue;
 
                 var (waypointIndex, forward, progress) = mover.GetMovementState();
-                state.SetMovementState(localIndex, waypointIndex, forward, progress);
-                sensorCountInBatch++;
+                state.SetMovementState(entryIndex, globalIndex, waypointIndex, forward, progress);
+                entryIndex++;
             }
 
-            if (sensorCountInBatch > 0)
+            if (entryIndex > 0)
             {
-                state.SensorCount = (byte)sensorCountInBatch;
+                state.SensorCount = (byte)entryIndex;
                 replicator.SetState(state);
             }
         }
@@ -1014,5 +1033,6 @@ public class ZoneSensorGroup
         receivedMovementState.Clear();
         movingSensorIndices.Clear();
         movementSyncTimer = 0f;
+        stateSyncTimer = 0f;
     }
 }

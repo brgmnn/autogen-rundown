@@ -40,6 +40,12 @@ public unsafe struct ZoneSensorMovementState
     public uint DirectionMask;
 
     /// <summary>
+    /// Global sensor indices for each entry in this batch.
+    /// Allows sparse storage of only moving sensors.
+    /// </summary>
+    private fixed byte _globalIndices[MaxSensors];
+
+    /// <summary>
     /// Current waypoint target index for each sensor.
     /// </summary>
     private fixed byte _waypointIndices[MaxSensors];
@@ -60,38 +66,40 @@ public unsafe struct ZoneSensorMovementState
     /// <summary>
     /// Sets the movement state for a sensor in this batch.
     /// </summary>
-    /// <param name="index">Sensor index within this batch (0-31)</param>
+    /// <param name="entryIndex">Entry index within this batch (0-31), packed consecutively</param>
+    /// <param name="globalSensorIndex">Global sensor index within the group</param>
     /// <param name="waypointIndex">Current target waypoint index</param>
     /// <param name="forward">True if moving forward through waypoints</param>
     /// <param name="progress">Progress toward target (0.0-1.0)</param>
-    public void SetMovementState(int index, int waypointIndex, bool forward, float progress)
+    public void SetMovementState(int entryIndex, int globalSensorIndex, int waypointIndex, bool forward, float progress)
     {
-        if (index < 0 || index >= MaxSensors)
+        if (entryIndex < 0 || entryIndex >= MaxSensors)
             return;
 
-        _waypointIndices[index] = (byte)Math.Clamp(waypointIndex, 0, 255);
-        _progress[index] = (byte)(Math.Clamp(progress, 0f, 1f) * 255f);
+        _globalIndices[entryIndex] = (byte)globalSensorIndex;
+        _waypointIndices[entryIndex] = (byte)Math.Clamp(waypointIndex, 0, 255);
+        _progress[entryIndex] = (byte)(Math.Clamp(progress, 0f, 1f) * 255f);
 
         // Set or clear direction bit
         if (forward)
-            DirectionMask |= (1u << index);
+            DirectionMask |= (1u << entryIndex);
         else
-            DirectionMask &= ~(1u << index);
+            DirectionMask &= ~(1u << entryIndex);
     }
 
     /// <summary>
-    /// Gets the movement state for a sensor in this batch.
+    /// Gets the movement state for an entry in this batch.
     /// </summary>
-    /// <param name="index">Sensor index within this batch (0-31)</param>
+    /// <param name="entryIndex">Entry index within this batch (0-31)</param>
     /// <returns>Tuple of (waypointIndex, isForward, progress 0.0-1.0)</returns>
-    public (int waypointIndex, bool forward, float progress) GetMovementState(int index)
+    public (int waypointIndex, bool forward, float progress) GetMovementState(int entryIndex)
     {
-        if (index < 0 || index >= MaxSensors)
+        if (entryIndex < 0 || entryIndex >= MaxSensors)
             return (0, true, 0f);
 
-        int waypointIndex = _waypointIndices[index];
-        bool forward = (DirectionMask & (1u << index)) != 0;
-        float progress = _progress[index] / 255f;
+        int waypointIndex = _waypointIndices[entryIndex];
+        bool forward = (DirectionMask & (1u << entryIndex)) != 0;
+        float progress = _progress[entryIndex] / 255f;
 
         return (waypointIndex, forward, progress);
     }
@@ -102,11 +110,15 @@ public unsafe struct ZoneSensorMovementState
     public bool HasMovementData => SensorCount > 0;
 
     /// <summary>
-    /// Calculates the global sensor index from a local index within this batch.
+    /// Gets the global sensor index for an entry in this batch.
     /// </summary>
-    public int GetGlobalSensorIndex(int localIndex)
+    /// <param name="entryIndex">Entry index within this batch (0-31)</param>
+    /// <returns>Global sensor index, or -1 if invalid</returns>
+    public int GetGlobalSensorIndex(int entryIndex)
     {
-        return BatchIndex * MaxSensors + localIndex;
+        if (entryIndex < 0 || entryIndex >= MaxSensors)
+            return -1;
+        return _globalIndices[entryIndex];
     }
 
     /// <summary>

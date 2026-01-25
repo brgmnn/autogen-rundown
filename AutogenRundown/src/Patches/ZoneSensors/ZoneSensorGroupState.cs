@@ -9,6 +9,12 @@ public struct ZoneSensorGroupState
 {
     public bool Enabled;
 
+    /// <summary>
+    /// Incrementing counter used to force periodic state sync.
+    /// Host increments this every ~10 seconds to ensure clients stay in sync.
+    /// </summary>
+    public byte SyncCounter;
+
     // 128-bit sensor mask split into 4 × 32-bit fields
     public uint SensorMask0;    // Sensors 0-31
     public uint SensorMask1;    // Sensors 32-63
@@ -24,6 +30,7 @@ public struct ZoneSensorGroupState
     public ZoneSensorGroupState()
     {
         Enabled = true;
+        SyncCounter = 0;
         SensorMask0 = SensorMask1 = SensorMask2 = SensorMask3 = uint.MaxValue;
         TriggeredMask0 = TriggeredMask1 = TriggeredMask2 = TriggeredMask3 = 0;
     }
@@ -31,6 +38,7 @@ public struct ZoneSensorGroupState
     public ZoneSensorGroupState(bool enabled)
     {
         Enabled = enabled;
+        SyncCounter = 0;
         var mask = enabled ? uint.MaxValue : 0u;
         SensorMask0 = SensorMask1 = SensorMask2 = SensorMask3 = mask;
         TriggeredMask0 = TriggeredMask1 = TriggeredMask2 = TriggeredMask3 = 0;

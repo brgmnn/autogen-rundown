@@ -15,9 +15,10 @@ namespace AutogenRundown.Patches.ZoneSensors;
 public unsafe struct ZoneSensorWaypointState
 {
     /// <summary>
-    /// Maximum waypoints per sensor. NavMesh paths typically have 4-8 corners.
+    /// Maximum waypoints per sensor. NavMesh paths typically have 4-8 corners,
+    /// but complex routes can have more. 32 should handle most cases.
     /// </summary>
-    public const int MaxWaypointsPerSensor = 12;
+    public const int MaxWaypointsPerSensor = 32;
 
     /// <summary>
     /// Global sensor index within the group (0-127).
@@ -41,7 +42,7 @@ public unsafe struct ZoneSensorWaypointState
 
     /// <summary>
     /// Fixed buffer for waypoint positions: [x0, y0, z0, x1, y1, z1, ...]
-    /// 12 waypoints * 3 floats = 36 floats = 144 bytes
+    /// 32 waypoints * 3 floats = 96 floats = 384 bytes
     /// </summary>
     private fixed float _waypoints[MaxWaypointsPerSensor * 3];
 
