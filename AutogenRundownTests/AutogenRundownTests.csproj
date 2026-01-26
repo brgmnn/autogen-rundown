@@ -16,7 +16,13 @@
 
   <ItemGroup>
     <!-- BepInEx -->
-    <Reference Include="$(BepInEx)\core\BepInEx.Core.dll" Private="false" />
+    <Reference Include="$(BepInEx)\core\BepInEx.Core.dll" />
+    <Reference Include="$(BepInEx)\core\BepInEx.Unity.IL2CPP.dll" />
+
+    <!-- BepInEx Core -->
+    <Reference Include="$(BepInEx)\core\0Harmony.dll" />
+    <Reference Include="$(BepInEx)\core\Il2CppInterop.Common.dll" />
+    <Reference Include="$(BepInEx)\core\Il2CppInterop.Runtime.dll" />
 
     <!-- NuGet Packages -->
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
