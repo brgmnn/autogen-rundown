@@ -30,14 +30,17 @@ public class ZoneSensorGroup
     // Base IDs for zone sensor replicators (avoid collisions with other mods)
     private const uint STATE_REPLICATOR_BASE_ID = 0x5A534E00; // "ZSN" prefix + group index
     private const uint POSITION_REPLICATOR_BASE_ID = 0x5A535000; // "ZSP" prefix + group index * 8 + batch index
-    private const uint WAYPOINT_REPLICATOR_BASE_ID = 0x5A535700; // "ZSW" prefix + group index * 128 + sensor index
+    private const uint WAYPOINT_REPLICATOR_BASE_ID = 0x5A535700; // "ZSW" prefix + group index * 1024 + sensor index * 8 + batch index
     private const uint MOVEMENT_REPLICATOR_BASE_ID = 0x5A536000; // "ZSM" prefix + group index * 4 + batch index
 
     // Maximum batches per group (supports up to 128 sensors: 8 * 16)
     private const int MAX_BATCHES_PER_GROUP = 8;
 
-    // Maximum waypoint replicators per group (1 per moving sensor, max 128)
-    private const int MAX_WAYPOINT_REPLICATORS = 128;
+    // Maximum waypoint batches per sensor (supports up to 160 waypoints: 8 * 20)
+    private const int MAX_WAYPOINT_BATCHES_PER_SENSOR = 8;
+
+    // Maximum waypoint replicators per group (8 batches per sensor * 128 sensors = 1024)
+    private const int MAX_WAYPOINT_REPLICATORS = 128 * MAX_WAYPOINT_BATCHES_PER_SENSOR;
 
     // Maximum movement batches per group (32 sensors per batch, 4 batches = 128 sensors)
     private const int MAX_MOVEMENT_BATCHES = 4;
@@ -73,6 +76,9 @@ public class ZoneSensorGroup
     // Track if waypoints have been received for late joiners
     private Dictionary<int, Vector3[]> receivedWaypoints = new();
     private Dictionary<int, float> receivedWaypointSpeeds = new();
+
+    // Track received waypoint batches for assembly (sensorIndex -> (batchIndex -> state))
+    private Dictionary<int, Dictionary<int, ZoneSensorWaypointState>> receivedWaypointBatches = new();
 
     // Track received movement state for late joiners (applied after sensors spawn)
     private Dictionary<int, (int waypointIndex, bool forward, float progress)> receivedMovementState = new();
@@ -116,6 +122,7 @@ public class ZoneSensorGroup
         generatedWaypoints.Clear();
         receivedWaypoints.Clear();
         receivedWaypointSpeeds.Clear();
+        receivedWaypointBatches.Clear();
         receivedMovementState.Clear();
         movingSensorIndices.Clear();
         movementSyncTimer = 0f;
@@ -177,25 +184,30 @@ public class ZoneSensorGroup
     /// </summary>
     private void InitializeMovementReplicators(int index, int expectedSensorCount)
     {
-        // Waypoint replicators: 1 per sensor (max 128)
-        // ID scheme: BASE_ID + groupIndex * 128 + sensorIndex
+        // Waypoint replicators: 8 batches per sensor (max 128 sensors = 1024 replicators)
+        // ID scheme: BASE_ID + groupIndex * 1024 + sensorIndex * 8 + batchIndex
         WaypointReplicators.Clear();
-        int waypointReplicatorCount = Math.Min(expectedSensorCount, MAX_WAYPOINT_REPLICATORS);
+        int maxSensors = Math.Min(expectedSensorCount, 128);
+        int waypointReplicatorCount = maxSensors * MAX_WAYPOINT_BATCHES_PER_SENSOR;
 
-        for (int sensorIndex = 0; sensorIndex < waypointReplicatorCount; sensorIndex++)
+        for (int sensorIndex = 0; sensorIndex < maxSensors; sensorIndex++)
         {
-            uint waypointReplicatorId = WAYPOINT_REPLICATOR_BASE_ID + (uint)(index * MAX_WAYPOINT_REPLICATORS + sensorIndex);
-
-            var waypointReplicator = StateReplicator<ZoneSensorWaypointState>.Create(
-                waypointReplicatorId,
-                new ZoneSensorWaypointState(),
-                LifeTimeType.Session
-            );
-
-            if (waypointReplicator != null)
+            for (int batchIndex = 0; batchIndex < MAX_WAYPOINT_BATCHES_PER_SENSOR; batchIndex++)
             {
-                waypointReplicator.OnStateChanged += OnWaypointStateChanged;
-                WaypointReplicators.Add(waypointReplicator);
+                uint waypointReplicatorId = WAYPOINT_REPLICATOR_BASE_ID +
+                    (uint)(index * MAX_WAYPOINT_REPLICATORS + sensorIndex * MAX_WAYPOINT_BATCHES_PER_SENSOR + batchIndex);
+
+                var waypointReplicator = StateReplicator<ZoneSensorWaypointState>.Create(
+                    waypointReplicatorId,
+                    new ZoneSensorWaypointState(),
+                    LifeTimeType.Session
+                );
+
+                if (waypointReplicator != null)
+                {
+                    waypointReplicator.OnStateChanged += OnWaypointStateChanged;
+                    WaypointReplicators.Add(waypointReplicator);
+                }
             }
         }
 
@@ -222,7 +234,7 @@ public class ZoneSensorGroup
             }
         }
 
-        Plugin.Logger.LogDebug($"ZoneSensorGroup {index}: Created {WaypointReplicators.Count} waypoint replicators and {MovementReplicators.Count} movement replicators");
+        Plugin.Logger.LogDebug($"ZoneSensorGroup {index}: Created {WaypointReplicators.Count} waypoint replicators ({maxSensors} sensors * {MAX_WAYPOINT_BATCHES_PER_SENSOR} batches) and {MovementReplicators.Count} movement replicators");
     }
 
     /// <summary>
@@ -601,31 +613,50 @@ public class ZoneSensorGroup
 
     /// <summary>
     /// Broadcasts waypoints for a sensor to all clients.
+    /// Splits large waypoint arrays into multiple batches.
     /// Host only.
     /// </summary>
     private void BroadcastWaypoints(int sensorIndex, Vector3[] waypoints, float speed)
     {
-        if (sensorIndex < 0 || sensorIndex >= WaypointReplicators.Count)
+        // Calculate replicator index range for this sensor
+        int baseReplicatorIndex = sensorIndex * MAX_WAYPOINT_BATCHES_PER_SENSOR;
+
+        if (baseReplicatorIndex >= WaypointReplicators.Count)
         {
-            Plugin.Logger.LogWarning($"ZoneSensorGroup {GroupIndex}: Cannot broadcast waypoints for sensor {sensorIndex}, no replicator");
+            Plugin.Logger.LogWarning($"ZoneSensorGroup {GroupIndex}: Cannot broadcast waypoints for sensor {sensorIndex}, no replicators");
             return;
         }
 
-        var replicator = WaypointReplicators[sensorIndex];
-        if (replicator == null || !replicator.IsValid)
+        // Create batched states
+        var batches = ZoneSensorWaypointState.FromArrayBatched(sensorIndex, waypoints, speed);
+
+        Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Broadcasting {waypoints.Length} waypoints for sensor {sensorIndex} in {batches.Count} batches, speed={speed}");
+
+        // Broadcast each batch
+        for (int batchIndex = 0; batchIndex < batches.Count; batchIndex++)
         {
-            Plugin.Logger.LogWarning($"ZoneSensorGroup {GroupIndex}: Waypoint replicator {sensorIndex} not valid");
-            return;
+            int replicatorIndex = baseReplicatorIndex + batchIndex;
+
+            if (replicatorIndex >= WaypointReplicators.Count)
+            {
+                Plugin.Logger.LogWarning($"ZoneSensorGroup {GroupIndex}: Waypoint replicator index {replicatorIndex} out of range");
+                break;
+            }
+
+            var replicator = WaypointReplicators[replicatorIndex];
+            if (replicator == null || !replicator.IsValid)
+            {
+                Plugin.Logger.LogWarning($"ZoneSensorGroup {GroupIndex}: Waypoint replicator {replicatorIndex} not valid");
+                continue;
+            }
+
+            replicator.SetState(batches[batchIndex]);
         }
-
-        var state = ZoneSensorWaypointState.FromArray(sensorIndex, waypoints, speed);
-        replicator.SetState(state);
-
-        Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Broadcast {waypoints.Length} waypoints for sensor {sensorIndex}, speed={speed}");
     }
 
     /// <summary>
     /// Callback for waypoint state changes from replicator.
+    /// Collects batches and assembles complete waypoint arrays when all batches are received.
     /// Applies waypoints to all clients (not just late joiners) to ensure consistency.
     /// </summary>
     private void OnWaypointStateChanged(ZoneSensorWaypointState oldState, ZoneSensorWaypointState newState, bool isRecall)
@@ -634,21 +665,90 @@ public class ZoneSensorGroup
             return;
 
         int sensorIndex = newState.SensorIndex;
-        var waypoints = newState.ToArray();
-        float speed = newState.Speed;
+        int batchIndex = newState.BatchIndex;
+        int totalBatches = newState.TotalBatches;
 
-        Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Waypoint state changed for sensor {sensorIndex}, {waypoints.Length} waypoints, speed={speed}, isRecall={isRecall}");
+        Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Waypoint batch received for sensor {sensorIndex}, batch {batchIndex + 1}/{totalBatches}, {newState.WaypointCount} waypoints, isRecall={isRecall}");
 
-        // Store received waypoints and speed
-        receivedWaypoints[sensorIndex] = waypoints;
-        receivedWaypointSpeeds[sensorIndex] = speed;
-
-        // Apply to sensor if spawned and we're not the host
-        // This handles both late joiners (isRecall=true) and clients at mission start (isRecall=false)
-        if (sensorsSpawned && !SNet.IsMaster)
+        // Initialize batch tracking for this sensor if needed
+        if (!receivedWaypointBatches.ContainsKey(sensorIndex))
         {
-            ApplyWaypointsToSensor(sensorIndex, waypoints, speed);
+            receivedWaypointBatches[sensorIndex] = new Dictionary<int, ZoneSensorWaypointState>();
         }
+
+        // Store this batch
+        receivedWaypointBatches[sensorIndex][batchIndex] = newState;
+
+        // Store speed from batch 0
+        if (batchIndex == 0)
+        {
+            receivedWaypointSpeeds[sensorIndex] = newState.Speed;
+        }
+
+        // Check if all batches received for this sensor
+        if (receivedWaypointBatches[sensorIndex].Count >= totalBatches)
+        {
+            // Assemble complete waypoint array
+            var waypoints = AssembleWaypointsFromBatches(sensorIndex, totalBatches);
+            if (waypoints != null)
+            {
+                float speed = receivedWaypointSpeeds.TryGetValue(sensorIndex, out float s) ? s : 0f;
+
+                Plugin.Logger.LogDebug($"ZoneSensorGroup {GroupIndex}: Assembled {waypoints.Length} waypoints for sensor {sensorIndex} from {totalBatches} batches, speed={speed}");
+
+                // Store assembled waypoints
+                receivedWaypoints[sensorIndex] = waypoints;
+
+                // Apply to sensor if spawned and we're not the host
+                if (sensorsSpawned && !SNet.IsMaster)
+                {
+                    ApplyWaypointsToSensor(sensorIndex, waypoints, speed);
+                }
+
+                // Clean up batch tracking for this sensor
+                receivedWaypointBatches.Remove(sensorIndex);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Assembles waypoints from received batches into a single array.
+    /// </summary>
+    private Vector3[]? AssembleWaypointsFromBatches(int sensorIndex, int totalBatches)
+    {
+        if (!receivedWaypointBatches.TryGetValue(sensorIndex, out var batches))
+            return null;
+
+        // Validate all batches are present
+        for (int i = 0; i < totalBatches; i++)
+        {
+            if (!batches.ContainsKey(i))
+            {
+                Plugin.Logger.LogWarning($"ZoneSensorGroup {GroupIndex}: Missing batch {i} for sensor {sensorIndex}");
+                return null;
+            }
+        }
+
+        // Calculate total waypoint count
+        int totalWaypoints = 0;
+        for (int i = 0; i < totalBatches; i++)
+        {
+            totalWaypoints += batches[i].WaypointCount;
+        }
+
+        // Assemble waypoints in order
+        var result = new Vector3[totalWaypoints];
+        int waypointIndex = 0;
+        for (int batchIdx = 0; batchIdx < totalBatches; batchIdx++)
+        {
+            var batch = batches[batchIdx];
+            for (int i = 0; i < batch.WaypointCount; i++)
+            {
+                result[waypointIndex++] = batch.GetWaypoint(i);
+            }
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -1011,6 +1111,7 @@ public class ZoneSensorGroup
         generatedWaypoints.Clear();
         receivedWaypoints.Clear();
         receivedWaypointSpeeds.Clear();
+        receivedWaypointBatches.Clear();
         receivedMovementState.Clear();
         movingSensorIndices.Clear();
         movementSyncTimer = 0f;

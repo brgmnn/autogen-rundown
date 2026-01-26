@@ -10,16 +10,22 @@ namespace AutogenRundown.Patches.ZoneSensors;
 ///
 /// This solves the issue where NavMesh.CalculatePath() can produce different
 /// corner points on different clients even with the same input positions.
+///
+/// Supports batching for paths with more than 20 waypoints.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public unsafe struct ZoneSensorWaypointState
 {
     /// <summary>
-    /// Maximum waypoints per sensor. NavMesh paths typically have 4-8 corners,
-    /// but complex routes can have more. Limited to 20 to fit within
+    /// Maximum waypoints per batch. Limited to 20 to fit within
     /// StateReplicator's 256-byte payload limit (8 + 20*3*4 = 248 bytes).
     /// </summary>
-    public const int MaxWaypointsPerSensor = 20;
+    public const int MaxWaypointsPerBatch = 20;
+
+    /// <summary>
+    /// Maximum batches per sensor. Supports up to 160 waypoints (8 * 20).
+    /// </summary>
+    public const int MaxBatchesPerSensor = 8;
 
     /// <summary>
     /// Global sensor index within the group (0-127).
@@ -27,40 +33,47 @@ public unsafe struct ZoneSensorWaypointState
     public byte SensorIndex;
 
     /// <summary>
-    /// Number of waypoints stored for this sensor.
+    /// Batch index for this sensor (0-based).
+    /// </summary>
+    public byte BatchIndex;
+
+    /// <summary>
+    /// Total number of batches for this sensor.
+    /// </summary>
+    public byte TotalBatches;
+
+    /// <summary>
+    /// Number of waypoints in THIS batch.
     /// </summary>
     public byte WaypointCount;
 
     /// <summary>
-    /// Padding for alignment.
-    /// </summary>
-    public ushort Padding;
-
-    /// <summary>
-    /// Movement speed for this sensor.
+    /// Movement speed for this sensor. Only meaningful in batch 0.
     /// </summary>
     public float Speed;
 
     /// <summary>
     /// Fixed buffer for waypoint positions: [x0, y0, z0, x1, y1, z1, ...]
     /// 20 waypoints * 3 floats = 60 floats = 240 bytes
+    /// Total struct: 8 header + 240 data = 248 bytes
     /// </summary>
-    private fixed float _waypoints[MaxWaypointsPerSensor * 3];
+    private fixed float _waypoints[MaxWaypointsPerBatch * 3];
 
     public ZoneSensorWaypointState()
     {
         SensorIndex = 0;
+        BatchIndex = 0;
+        TotalBatches = 0;
         WaypointCount = 0;
-        Padding = 0;
         Speed = 0f;
     }
 
     /// <summary>
-    /// Sets the waypoint position at the given index.
+    /// Sets the waypoint position at the given index within this batch.
     /// </summary>
     public void SetWaypoint(int index, Vector3 pos)
     {
-        if (index < 0 || index >= MaxWaypointsPerSensor)
+        if (index < 0 || index >= MaxWaypointsPerBatch)
             return;
 
         int offset = index * 3;
@@ -70,11 +83,11 @@ public unsafe struct ZoneSensorWaypointState
     }
 
     /// <summary>
-    /// Gets the waypoint position at the given index.
+    /// Gets the waypoint position at the given index within this batch.
     /// </summary>
     public Vector3 GetWaypoint(int index)
     {
-        if (index < 0 || index >= MaxWaypointsPerSensor)
+        if (index < 0 || index >= MaxWaypointsPerBatch)
             return Vector3.zero;
 
         int offset = index * 3;
@@ -103,18 +116,20 @@ public unsafe struct ZoneSensorWaypointState
     }
 
     /// <summary>
-    /// Creates a waypoint state from an array of positions.
-    /// Waypoints exceeding MaxWaypointsPerSensor will be truncated with a warning.
+    /// Creates a waypoint state from an array of positions (single batch, for backward compatibility).
+    /// Use FromArrayBatched() for paths that may exceed MaxWaypointsPerBatch.
     /// </summary>
     public static ZoneSensorWaypointState FromArray(int sensorIndex, Vector3[] waypoints, float speed)
     {
-        if (waypoints.Length > MaxWaypointsPerSensor)
-            Plugin.Logger.LogWarning($"ZoneSensorWaypointState: Waypoint count {waypoints.Length} exceeds max {MaxWaypointsPerSensor}, truncating");
+        if (waypoints.Length > MaxWaypointsPerBatch)
+            Plugin.Logger.LogWarning($"ZoneSensorWaypointState: Waypoint count {waypoints.Length} exceeds max {MaxWaypointsPerBatch}, use FromArrayBatched() instead");
 
         var state = new ZoneSensorWaypointState
         {
             SensorIndex = (byte)sensorIndex,
-            WaypointCount = (byte)Math.Min(waypoints.Length, MaxWaypointsPerSensor),
+            BatchIndex = 0,
+            TotalBatches = 1,
+            WaypointCount = (byte)Math.Min(waypoints.Length, MaxWaypointsPerBatch),
             Speed = speed
         };
 
@@ -124,5 +139,57 @@ public unsafe struct ZoneSensorWaypointState
         }
 
         return state;
+    }
+
+    /// <summary>
+    /// Creates multiple waypoint state batches from an array of positions.
+    /// Splits waypoints across batches of MaxWaypointsPerBatch.
+    /// </summary>
+    public static List<ZoneSensorWaypointState> FromArrayBatched(int sensorIndex, Vector3[] waypoints, float speed)
+    {
+        var batches = new List<ZoneSensorWaypointState>();
+        int totalBatches = CalculateBatchCount(waypoints.Length);
+
+        // Clamp to max supported batches
+        if (totalBatches > MaxBatchesPerSensor)
+        {
+            Plugin.Logger.LogWarning($"ZoneSensorWaypointState: Waypoint count {waypoints.Length} requires {totalBatches} batches, clamping to {MaxBatchesPerSensor} (max {MaxBatchesPerSensor * MaxWaypointsPerBatch} waypoints)");
+            totalBatches = MaxBatchesPerSensor;
+        }
+
+        int waypointIndex = 0;
+        for (int batchIndex = 0; batchIndex < totalBatches; batchIndex++)
+        {
+            int waypointsInBatch = Math.Min(MaxWaypointsPerBatch, waypoints.Length - waypointIndex);
+
+            var state = new ZoneSensorWaypointState
+            {
+                SensorIndex = (byte)sensorIndex,
+                BatchIndex = (byte)batchIndex,
+                TotalBatches = (byte)totalBatches,
+                WaypointCount = (byte)waypointsInBatch,
+                Speed = batchIndex == 0 ? speed : 0f  // Speed only in first batch
+            };
+
+            for (int i = 0; i < waypointsInBatch; i++)
+            {
+                state.SetWaypoint(i, waypoints[waypointIndex + i]);
+            }
+
+            batches.Add(state);
+            waypointIndex += waypointsInBatch;
+        }
+
+        return batches;
+    }
+
+    /// <summary>
+    /// Calculates the number of batches needed for a given waypoint count.
+    /// </summary>
+    public static int CalculateBatchCount(int waypointCount)
+    {
+        if (waypointCount <= 0)
+            return 0;
+        return (waypointCount + MaxWaypointsPerBatch - 1) / MaxWaypointsPerBatch;
     }
 }
