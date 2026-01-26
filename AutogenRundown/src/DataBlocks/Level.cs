@@ -1715,8 +1715,60 @@ public class Level
                     Command = "DEACTIVATE_SENSORS",
                     CommandDesc = new Text($"Deactivate security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
                     CommandEvents = new List<WardenObjectiveEvent>()
-                        .AddStopLoop(263, 0.4)
+                        // .AddStopLoop(263, 0.4)
                         .DisableZoneSensors(1, 1.4)
+                        .ToList(),
+                    PostCommandOutputs = new List<TerminalOutput>
+                    {
+                        new()
+                        {
+                            Output = "Authenticating with BIOCOM...",
+                            Type = LineType.SpinningWaitNoDone,
+                            Time = 1.0
+                        },
+                        new()
+                        {
+                            Output = "Done.",
+                            Type = LineType.Normal,
+                            Time = 1.0
+                        },
+                    }
+                });
+
+            elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
+                new CustomTerminalCommand
+                {
+                    Command = "ACTIVATE_SENSORS",
+                    CommandDesc = new Text($"Activate security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
+                    CommandEvents = new List<WardenObjectiveEvent>()
+                        // .AddStopLoop(263, 0.4)
+                        .EnableZoneSensors(1, 1.4)
+                        .ToList(),
+                    PostCommandOutputs = new List<TerminalOutput>
+                    {
+                        new()
+                        {
+                            Output = "Authenticating with BIOCOM...",
+                            Type = LineType.SpinningWaitNoDone,
+                            Time = 1.0
+                        },
+                        new()
+                        {
+                            Output = "Done.",
+                            Type = LineType.Normal,
+                            Time = 1.0
+                        },
+                    }
+                });
+
+            elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
+                new CustomTerminalCommand
+                {
+                    Command = "RESET_SENSORS",
+                    CommandDesc = new Text($"Fully reset security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
+                    CommandEvents = new List<WardenObjectiveEvent>()
+                        // .AddStopLoop(263, 0.4)
+                        .EnableZoneSensorsWithReset(1, 1.4)
                         .ToList(),
                     PostCommandOutputs = new List<TerminalOutput>
                     {
