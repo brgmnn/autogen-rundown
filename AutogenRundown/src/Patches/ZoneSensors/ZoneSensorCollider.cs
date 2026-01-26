@@ -11,9 +11,9 @@ namespace AutogenRundown.Patches.ZoneSensors;
 public class ZoneSensorCollider : MonoBehaviour
 {
     /// <summary>
-    /// Index of the sensor group this collider belongs to.
+    /// Definition ID of the sensor group this collider belongs to.
     /// </summary>
-    public int GroupIndex;
+    public int Id;
 
     /// <summary>
     /// Index of this sensor within its group.
@@ -48,7 +48,7 @@ public class ZoneSensorCollider : MonoBehaviour
             return;
 
         // Skip if group is disabled
-        if (!ZoneSensorManager.Current.IsGroupEnabled(GroupIndex))
+        if (!ZoneSensorManager.Current.IsGroupEnabled(Id))
             return;
 
         int currentCount = CountPlayersInRadius();
@@ -57,9 +57,9 @@ public class ZoneSensorCollider : MonoBehaviour
         if (currentCount > lastPlayerCount)
         {
             if (TriggerEach)
-                ZoneSensorManager.Current.SensorTriggeredIndividual(GroupIndex, SensorIndex);
+                ZoneSensorManager.Current.SensorTriggeredIndividual(Id, SensorIndex);
             else
-                ZoneSensorManager.Current.SensorTriggered(GroupIndex);
+                ZoneSensorManager.Current.SensorTriggered(Id);
         }
 
         lastPlayerCount = currentCount;

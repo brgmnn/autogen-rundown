@@ -87,7 +87,30 @@ public static class Patch_ZoneSensorToggle
 
         // Schedule the toggle with delay
         float delaySeconds = Mathf.Max(eventToTrigger.Delay - currentDuration, 0f);
-        ZoneSensorToggleScheduler.Schedule(eventToTrigger.Count, enabled, delaySeconds, preserveTriggered, resetTriggered);
+
+        // Determine targeting mode based on Count field
+        if (eventToTrigger.Count > 0)
+        {
+            // ID targeting: Count IS the definition ID (direct targeting)
+            ZoneSensorToggleScheduler.Schedule(eventToTrigger.Count, enabled, delaySeconds, preserveTriggered, resetTriggered);
+        }
+        else
+        {
+            // Zone targeting: use LocalIndex and Layer
+            var dimension = eventToTrigger.DimensionIndex;
+            var layer = eventToTrigger.Layer;
+            var zoneIndex = eventToTrigger.LocalIndex;
+
+            var definitionIds = ZoneSensorManager.Current.GetIdsForZone(dimension, layer, zoneIndex);
+            if (definitionIds.Count == 0)
+            {
+                Plugin.Logger.LogWarning($"ZoneSensor: No sensor groups found in zone {zoneIndex}, layer {layer}");
+            }
+            foreach (var definitionId in definitionIds)
+            {
+                ZoneSensorToggleScheduler.Schedule(definitionId, enabled, delaySeconds, preserveTriggered, resetTriggered);
+            }
+        }
 
         return false; // Skip original and any other patches
     }
@@ -104,7 +127,7 @@ public class ZoneSensorToggleScheduler : MonoBehaviour
 
     private struct PendingToggle
     {
-        public int GroupIndex;
+        public int Id;
         public bool Enabled;
         public float ExecuteTime;
         public bool PreserveTriggered;
@@ -116,7 +139,7 @@ public class ZoneSensorToggleScheduler : MonoBehaviour
         ClassInjector.RegisterTypeInIl2Cpp<ZoneSensorToggleScheduler>();
     }
 
-    public static void Schedule(int groupIndex, bool enabled, float delaySeconds, bool preserveTriggered = false, bool resetTriggered = false)
+    public static void Schedule(int definitionId, bool enabled, float delaySeconds, bool preserveTriggered = false, bool resetTriggered = false)
     {
         EnsureInstance();
 
@@ -128,14 +151,14 @@ public class ZoneSensorToggleScheduler : MonoBehaviour
 
         instance.pendingToggles.Add(new PendingToggle
         {
-            GroupIndex = groupIndex,
+            Id = definitionId,
             Enabled = enabled,
             ExecuteTime = Time.time + delaySeconds,
             PreserveTriggered = preserveTriggered,
             ResetTriggered = resetTriggered
         });
 
-        Plugin.Logger.LogDebug($"ZoneSensor: Scheduled toggle for group {groupIndex} to {(enabled ? "enabled" : "disabled")} in {delaySeconds}s (preserveTriggered={preserveTriggered}, resetTriggered={resetTriggered})");
+        Plugin.Logger.LogDebug($"ZoneSensor: Scheduled toggle for group {definitionId} to {(enabled ? "enabled" : "disabled")} in {delaySeconds}s (preserveTriggered={preserveTriggered}, resetTriggered={resetTriggered})");
     }
 
     /// <summary>
@@ -177,8 +200,8 @@ public class ZoneSensorToggleScheduler : MonoBehaviour
                 if (!SNet.IsMaster)
                     continue;
 
-                Plugin.Logger.LogDebug($"ZoneSensor: Toggling group {toggle.GroupIndex} to {(toggle.Enabled ? "enabled" : "disabled")} (preserveTriggered={toggle.PreserveTriggered}, resetTriggered={toggle.ResetTriggered})");
-                ZoneSensorManager.Current.ToggleSensorGroup(toggle.GroupIndex, toggle.Enabled, toggle.PreserveTriggered, toggle.ResetTriggered);
+                Plugin.Logger.LogDebug($"ZoneSensor: Toggling group {toggle.Id} to {(toggle.Enabled ? "enabled" : "disabled")} (preserveTriggered={toggle.PreserveTriggered}, resetTriggered={toggle.ResetTriggered})");
+                ZoneSensorManager.Current.ToggleSensorGroup(toggle.Id, toggle.Enabled, toggle.PreserveTriggered, toggle.ResetTriggered);
             }
         }
     }

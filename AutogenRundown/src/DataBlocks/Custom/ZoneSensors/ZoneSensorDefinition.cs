@@ -10,6 +10,13 @@ namespace AutogenRundown.DataBlocks.Custom.ZoneSensors;
 public class ZoneSensorDefinition : Definition
 {
     /// <summary>
+    /// Unique identifier for this sensor definition.
+    /// Used by events to target this specific sensor group.
+    /// Auto-assigned via Generator.GetPersistentId() if not explicitly set in JSON.
+    /// </summary>
+    public int Id { get; set; } = (int)Generator.GetPersistentId();
+
+    /// <summary>
     /// Groups of sensors to place in this zone.
     /// Each group can have different settings (radius, color, count).
     /// </summary>

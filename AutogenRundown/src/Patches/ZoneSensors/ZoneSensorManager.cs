@@ -33,9 +33,14 @@ public sealed class ZoneSensorManager
     private static Dictionary<uint, List<ZoneSensorDefinition>> definitions = new();
 
     /// <summary>
-    /// Active sensor groups in the current level.
+    /// Active sensor groups in the current level, keyed by definition Id.
     /// </summary>
-    private List<ZoneSensorGroup> activeSensorGroups = new();
+    private Dictionary<int, ZoneSensorGroup> activeSensorGroups = new();
+
+    /// <summary>
+    /// Counter for allocating unique replicator IDs (separate from definition Id).
+    /// </summary>
+    private int nextReplicatorIndex = 0;
 
     // Update helper component instance
     private ZoneSensorManagerUpdater? updater;
@@ -51,7 +56,7 @@ public sealed class ZoneSensorManager
     /// </summary>
     internal void Update()
     {
-        foreach (var group in activeSensorGroups)
+        foreach (var group in activeSensorGroups.Values)
         {
             group.Update();
         }
@@ -60,30 +65,25 @@ public sealed class ZoneSensorManager
     /// <summary>
     /// Checks if a sensor group is currently enabled.
     /// </summary>
-    public bool IsGroupEnabled(int groupIndex)
+    public bool IsGroupEnabled(int definitionId)
     {
-        if (groupIndex < 0 || groupIndex >= activeSensorGroups.Count)
-            return false;
-
-        return activeSensorGroups[groupIndex].Enabled;
+        return activeSensorGroups.TryGetValue(definitionId, out var group) && group.Enabled;
     }
 
     /// <summary>
     /// Called when a sensor is triggered by a player.
     /// Executes the configured events for that sensor group.
     /// </summary>
-    public void SensorTriggered(int groupIndex)
+    public void SensorTriggered(int definitionId)
     {
-        if (groupIndex < 0 || groupIndex >= activeSensorGroups.Count)
+        if (!activeSensorGroups.TryGetValue(definitionId, out var group))
             return;
-
-        var group = activeSensorGroups[groupIndex];
 
         // Only master should execute events
         if (!SNet.IsMaster)
             return;
 
-        Plugin.Logger.LogDebug($"ZoneSensor: Group {groupIndex} triggered, executing {group.EventsOnTrigger.Count} events");
+        Plugin.Logger.LogDebug($"ZoneSensor: Group {definitionId} triggered, executing {group.EventsOnTrigger.Count} events");
 
         // Disable the sensor group after trigger
         group.SetEnabled(false);
@@ -104,18 +104,16 @@ public sealed class ZoneSensorManager
     /// Called when an individual sensor is triggered (TriggerEach mode).
     /// Disables only that sensor and executes the group's events.
     /// </summary>
-    public void SensorTriggeredIndividual(int groupIndex, int sensorIndex)
+    public void SensorTriggeredIndividual(int definitionId, int sensorIndex)
     {
-        if (groupIndex < 0 || groupIndex >= activeSensorGroups.Count)
+        if (!activeSensorGroups.TryGetValue(definitionId, out var group))
             return;
-
-        var group = activeSensorGroups[groupIndex];
 
         // Only master should execute events
         if (!SNet.IsMaster)
             return;
 
-        Plugin.Logger.LogDebug($"ZoneSensor: Group {groupIndex} sensor {sensorIndex} triggered individually");
+        Plugin.Logger.LogDebug($"ZoneSensor: Group {definitionId} sensor {sensorIndex} triggered individually");
 
         // Disable only this sensor
         group.DisableSensor(sensorIndex);
@@ -189,21 +187,35 @@ public sealed class ZoneSensorManager
     /// <summary>
     /// Toggles a sensor group on or off.
     /// </summary>
-    /// <param name="groupIndex">Index of the sensor group to toggle</param>
+    /// <param name="definitionId">ID of the sensor group to toggle</param>
     /// <param name="enabled">Whether to enable or disable the group</param>
     /// <param name="preserveTriggered">When true, only re-enable sensors that haven't been triggered</param>
     /// <param name="resetTriggered">When true, clear triggered state before enabling (all sensors reappear)</param>
-    public void ToggleSensorGroup(int groupIndex, bool enabled, bool preserveTriggered = false, bool resetTriggered = false)
+    public void ToggleSensorGroup(int definitionId, bool enabled, bool preserveTriggered = false, bool resetTriggered = false)
     {
-        if (groupIndex < 0 || groupIndex >= activeSensorGroups.Count)
+        if (!activeSensorGroups.TryGetValue(definitionId, out var group))
             return;
 
-        var group = activeSensorGroups[groupIndex];
         group.SetEnabled(enabled, preserveTriggered, resetTriggered);
 
         // Note: ResetState is now called inside UpdateVisualsUnsynced for each sensor
 
-        Plugin.Logger.LogDebug($"ZoneSensor: Group {groupIndex} set to {(enabled ? "enabled" : "disabled")} (preserveTriggered={preserveTriggered}, resetTriggered={resetTriggered})");
+        Plugin.Logger.LogDebug($"ZoneSensor: Group {definitionId} set to {(enabled ? "enabled" : "disabled")} (preserveTriggered={preserveTriggered}, resetTriggered={resetTriggered})");
+    }
+
+    /// <summary>
+    /// Finds all definition IDs for sensor groups in the specified zone.
+    /// </summary>
+    /// <param name="dimension">The dimension to search in</param>
+    /// <param name="layer">The layer type to search in</param>
+    /// <param name="zoneIndex">The local zone index to search in</param>
+    /// <returns>List of definition IDs matching the zone criteria</returns>
+    public List<int> GetIdsForZone(eDimensionIndex dimension, LG_LayerType layer, eLocalZoneIndex zoneIndex)
+    {
+        return activeSensorGroups.Values
+            .Where(g => g.DimensionIndex == dimension && g.LayerType == layer && g.LocalZoneIndex == zoneIndex)
+            .Select(g => g.Id)
+            .ToList();
     }
 
     /// <summary>
@@ -231,7 +243,8 @@ public sealed class ZoneSensorManager
 
         Plugin.Logger.LogDebug($"ZoneSensor: Building sensors for level {levelLayoutId}, {levelDefinitions.Count} definitions, IsMaster={SNet.IsMaster}");
 
-        var groupIndex = 0;
+        // Reset replicator index counter for this level
+        nextReplicatorIndex = 0;
 
         foreach (var definition in levelDefinitions)
         {
@@ -268,11 +281,11 @@ public sealed class ZoneSensorManager
             const int maxSupportedSensors = 8 * ZoneSensorPositionState.MaxSensorsPerBatch;
             if (totalSensors > maxSupportedSensors)
             {
-                Plugin.Logger.LogWarning($"ZoneSensor: Group {groupIndex} has {totalSensors} sensors, exceeds max {maxSupportedSensors}. Some sensors will not be created.");
+                Plugin.Logger.LogWarning($"ZoneSensor: Group {definition.Id} has {totalSensors} sensors, exceeds max {maxSupportedSensors}. Some sensors will not be created.");
                 totalSensors = maxSupportedSensors;
             }
 
-            Plugin.Logger.LogDebug($"ZoneSensor: Group {groupIndex} will have {totalSensors} sensors in {batchCount} batches");
+            Plugin.Logger.LogDebug($"ZoneSensor: Group {definition.Id} will have {totalSensors} sensors in {batchCount} batches");
 
             // Determine if any sensor group uses TriggerEach mode
             bool hasTriggerEach = definition.SensorGroups.Any(g => g.TriggerEach);
@@ -282,7 +295,8 @@ public sealed class ZoneSensorManager
 
             // Create sensor group with replicators (pass expected count for batch allocation)
             var sensorGroup = new ZoneSensorGroup();
-            sensorGroup.Initialize(groupIndex, definition.EventsOnTrigger, hasTriggerEach, totalSensors, hasMovingSensors);
+            sensorGroup.Initialize(nextReplicatorIndex++, definition.Id, definition.EventsOnTrigger, hasTriggerEach,
+                totalSensors, hasMovingSensors, dimensionIndex, layerType, localZoneIndex);
 
             // Set pending spawn data (sensors will spawn when positions are received)
             sensorGroup.SetPendingSpawnData(zone, definition.SensorGroups);
@@ -295,12 +309,11 @@ public sealed class ZoneSensorManager
             }
             // Clients wait for OnPositionStateChanged callback to spawn
 
-            activeSensorGroups.Add(sensorGroup);
-            groupIndex++;
+            activeSensorGroups[definition.Id] = sensorGroup;
         }
 
         // Create updater component if we have any groups with moving sensors
-        if (activeSensorGroups.Any(g => g.MovementReplicators.Count > 0))
+        if (activeSensorGroups.Values.Any(g => g.MovementReplicators.Count > 0))
         {
             EnsureUpdaterExists();
         }
@@ -477,12 +490,13 @@ public sealed class ZoneSensorManager
     /// </summary>
     private void Clear()
     {
-        foreach (var group in activeSensorGroups)
+        foreach (var group in activeSensorGroups.Values)
         {
             group.Cleanup();
         }
 
         activeSensorGroups.Clear();
+        nextReplicatorIndex = 0;
 
         // Destroy updater component
         if (updater != null)
