@@ -17,22 +17,6 @@ public partial record LevelLayout
     /// <param name="resets"></param>
     public void AddSecuritySensors_Simple(ZoneNode node, GenericWave wave, bool resets = true)
     {
-        var sensorEvents = new List<WardenObjectiveEvent>();
-
-        sensorEvents
-            .DisableZoneSensors(0, 0.1)
-            .AddSound(Sound.LightsOff)
-            .AddSpawnWave(wave, 2.0);
-
-        if (resets)
-        {
-            var resetTime = Generator.Between(8, 15);
-
-            sensorEvents
-                .EnableZoneSensorsWithReset(0, resetTime)
-                .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
-        }
-
         var count = level.Tier switch
         {
             "B" => 8,
@@ -42,18 +26,38 @@ public partial record LevelLayout
             _ => 10
         };
 
-        Plugin.Logger.LogDebug($"{Name} -- Rolled Security Sensors: zone = {node}, count = {count}");
-
-        level.ZoneSensors.Add(new ZoneSensorDefinition
+        // Create sensor definition first to get its ID
+        var sensorDef = new ZoneSensorDefinition
         {
             Bulkhead = node.Bulkhead,
             ZoneNumber = node.ZoneNumber,
             SensorGroups = new List<ZoneSensorGroupDefinition>
             {
                 new ZoneSensorGroupDefinition { Count = count }
-            },
-            EventsOnTrigger = sensorEvents
-        });
+            }
+        };
+
+        // Build events using the definition's ID
+        var sensorEvents = new List<WardenObjectiveEvent>();
+        sensorEvents
+            .DisableZoneSensors(sensorDef.Id, 0.1)
+            .AddSound(Sound.LightsOff)
+            .AddSpawnWave(wave, 2.0);
+
+        if (resets)
+        {
+            var resetTime = Generator.Between(8, 15);
+
+            sensorEvents
+                .EnableZoneSensorsWithReset(sensorDef.Id, resetTime)
+                .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
+        }
+
+        sensorDef.EventsOnTrigger = sensorEvents;
+
+        Plugin.Logger.LogDebug($"{Name} -- Rolled Security Sensors: zone = {node}, count = {count}, id = {sensorDef.Id}");
+
+        level.ZoneSensors.Add(sensorDef);
     }
 
     /// <summary>
@@ -170,7 +174,36 @@ public partial record LevelLayout
         };
         var shouldCycle = Generator.Flip(cycleChance);
 
-        // 6. Setup cycling event loop if applicable
+        // 6. Determine sensor radius by tier
+        var radius = level.Tier switch
+        {
+            "A" => 2.0,
+            "B" => 2.2,
+            "C" => 2.3,
+            "D" => 2.4,
+            "E" => 2.5,
+            _ => 2.3
+        };
+
+        // 7. Create sensor definition first to get its ID
+        var sensorDef = new ZoneSensorDefinition
+        {
+            Bulkhead = node.Bulkhead,
+            ZoneNumber = node.ZoneNumber,
+            SensorGroups = new List<ZoneSensorGroupDefinition>
+            {
+                new ZoneSensorGroupDefinition
+                {
+                    Density = density,
+                    Moving = isMoving ? Generator.Between(2, 4) : 1,
+                    Speed = isMoving ? Generator.NextDouble(1.2, 2.0) : 1.5,
+                    TriggerEach = triggerEach,
+                    Radius = radius
+                }
+            }
+        };
+
+        // 8. Setup cycling event loop if applicable
         if (shouldCycle)
         {
             var loopIndex = 300 + level.ZoneSensors.Count;
@@ -185,9 +218,9 @@ public partial record LevelLayout
             };
 
             eventLoop.EventsToActivate
-                .DisableZoneSensors(0, 0.0)
+                .DisableZoneSensors(sensorDef.Id, 0.0)
                 .AddSound(Sound.LightsOff, 0.0)
-                .EnableZoneSensorsWithReset(0, offTime)
+                .EnableZoneSensorsWithReset(sensorDef.Id, offTime)
                 .AddSound(Sound.LightsOn_Vol4, offTime - 0.4);
 
             level.Objective[node.Bulkhead].EventsOnElevatorLand.Add(
@@ -199,10 +232,10 @@ public partial record LevelLayout
                 });
         }
 
-        // 7. Build trigger events
+        // 9. Build trigger events
         var sensorEvents = new List<WardenObjectiveEvent>();
         sensorEvents
-            .DisableZoneSensors(0, 0.1)
+            .DisableZoneSensors(sensorDef.Id, 0.1)
             .AddSound(Sound.LightsOff)
             .AddSpawnWave(selectedWave, 2.0);
 
@@ -210,42 +243,16 @@ public partial record LevelLayout
         {
             var resetTime = Generator.Between(8, 15);
             sensorEvents
-                .EnableZoneSensorsWithReset(0, resetTime)
+                .EnableZoneSensorsWithReset(sensorDef.Id, resetTime)
                 .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
         }
 
-        // 8. Determine sensor radius by tier
-        var radius = level.Tier switch
-        {
-            "A" => 2.0,
-            "B" => 2.2,
-            "C" => 2.3,
-            "D" => 2.4,
-            "E" => 2.5,
-            _ => 2.3
-        };
+        sensorDef.EventsOnTrigger = sensorEvents;
 
         Plugin.Logger.LogDebug($"{Name} -- Security Sensors: zone={node}, density={density}, " +
-            $"moving={isMoving}, triggerEach={triggerEach}, cycling={shouldCycle}");
+            $"moving={isMoving}, triggerEach={triggerEach}, cycling={shouldCycle}, id={sensorDef.Id}");
 
-        // 9. Create the zone sensor definition
-        level.ZoneSensors.Add(new ZoneSensorDefinition
-        {
-            Bulkhead = node.Bulkhead,
-            ZoneNumber = node.ZoneNumber,
-            SensorGroups = new List<ZoneSensorGroupDefinition>
-            {
-                new ZoneSensorGroupDefinition
-                {
-                    Density = density,  // Count calculated at runtime from zone area
-                    Moving = isMoving ? Generator.Between(2, 4) : 1,
-                    Speed = isMoving ? Generator.NextDouble(1.2, 2.0) : 1.5,
-                    TriggerEach = triggerEach,
-                    Radius = radius
-                }
-            },
-            EventsOnTrigger = sensorEvents
-        });
+        level.ZoneSensors.Add(sensorDef);
     }
 
     /// <summary>
