@@ -1,4 +1,5 @@
 using AutogenRundown.Patches.ZoneSensors;
+using UnityEngine;
 
 namespace AutogenRundownTests.Patches.ZoneSensors;
 
@@ -256,6 +257,111 @@ public class ZoneSensorPositionState_Tests
         var state = new ZoneSensorPositionState();
         state.TotalBatches = 8;
         Assert.AreEqual(8, state.TotalBatches);
+    }
+
+    #endregion
+
+    #region SetPosition/GetPosition Tests
+
+    [TestMethod]
+    public void Test_SetGetPosition_RoundTrip()
+    {
+        var state = new ZoneSensorPositionState();
+        var position = new Vector3(1.5f, 2.5f, 3.5f);
+
+        state.SetPosition(0, position);
+        var result = state.GetPosition(0);
+
+        Assert.AreEqual(position.x, result.x, 0.0001f);
+        Assert.AreEqual(position.y, result.y, 0.0001f);
+        Assert.AreEqual(position.z, result.z, 0.0001f);
+    }
+
+    [TestMethod]
+    public void Test_SetGetPosition_AllSlots()
+    {
+        var state = new ZoneSensorPositionState { SensorCount = 16 };
+
+        // Set positions for all 16 slots
+        for (int i = 0; i < 16; i++)
+        {
+            state.SetPosition(i, new Vector3(i * 10f, i * 20f, i * 30f));
+        }
+
+        // Verify all positions are independent and correct
+        for (int i = 0; i < 16; i++)
+        {
+            var pos = state.GetPosition(i);
+            Assert.AreEqual(i * 10f, pos.x, 0.0001f, $"Sensor {i} X mismatch");
+            Assert.AreEqual(i * 20f, pos.y, 0.0001f, $"Sensor {i} Y mismatch");
+            Assert.AreEqual(i * 30f, pos.z, 0.0001f, $"Sensor {i} Z mismatch");
+        }
+    }
+
+    [TestMethod]
+    public void Test_SetGetPosition_BoundaryIndices_Valid()
+    {
+        var state = new ZoneSensorPositionState();
+
+        // First valid index
+        state.SetPosition(0, new Vector3(1f, 2f, 3f));
+        var pos0 = state.GetPosition(0);
+        Assert.AreEqual(1f, pos0.x, 0.0001f);
+
+        // Last valid index
+        state.SetPosition(15, new Vector3(4f, 5f, 6f));
+        var pos15 = state.GetPosition(15);
+        Assert.AreEqual(4f, pos15.x, 0.0001f);
+    }
+
+    [TestMethod]
+    public void Test_SetGetPosition_BoundaryIndices_Invalid()
+    {
+        var state = new ZoneSensorPositionState();
+
+        // Invalid negative index returns zero
+        var negativeResult = state.GetPosition(-1);
+        Assert.AreEqual(0f, negativeResult.x);
+        Assert.AreEqual(0f, negativeResult.y);
+        Assert.AreEqual(0f, negativeResult.z);
+
+        // Invalid index at 16 (out of bounds) returns zero
+        var outOfBoundsResult = state.GetPosition(16);
+        Assert.AreEqual(0f, outOfBoundsResult.x);
+        Assert.AreEqual(0f, outOfBoundsResult.y);
+        Assert.AreEqual(0f, outOfBoundsResult.z);
+
+        // Setting invalid indices should be no-op (doesn't crash)
+        state.SetPosition(-1, new Vector3(100f, 100f, 100f));
+        state.SetPosition(16, new Vector3(100f, 100f, 100f));
+    }
+
+    [TestMethod]
+    public void Test_SetGetPosition_NegativeCoordinates()
+    {
+        var state = new ZoneSensorPositionState();
+        var position = new Vector3(-100.5f, -200.25f, -300.125f);
+
+        state.SetPosition(5, position);
+        var result = state.GetPosition(5);
+
+        Assert.AreEqual(position.x, result.x, 0.0001f);
+        Assert.AreEqual(position.y, result.y, 0.0001f);
+        Assert.AreEqual(position.z, result.z, 0.0001f);
+    }
+
+    [TestMethod]
+    public void Test_SetGetPosition_LargeCoordinates()
+    {
+        var state = new ZoneSensorPositionState();
+        var position = new Vector3(10000.0f, 50000.0f, 99999.0f);
+
+        state.SetPosition(8, position);
+        var result = state.GetPosition(8);
+
+        Assert.AreEqual(position.x, result.x, 0.01f);
+        Assert.AreEqual(position.y, result.y, 0.01f);
+        Assert.AreEqual(position.z, result.z, 0.01f);
     }
 
     #endregion

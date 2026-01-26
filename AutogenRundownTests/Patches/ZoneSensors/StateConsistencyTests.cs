@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using AutogenRundown.Patches.ZoneSensors;
+using UnityEngine;
 
 namespace AutogenRundownTests.Patches.ZoneSensors;
 
@@ -394,6 +395,175 @@ public class StateConsistency_Tests
         state.ClearTriggered();
         Assert.IsFalse(state.IsSensorTriggered(50));
         Assert.IsFalse(state.IsSensorEnabled(50)); // Still disabled (clear doesn't re-enable)
+    }
+
+    #endregion
+
+    #region Position State Vector3 Determinism
+
+    [TestMethod]
+    public void Test_PositionState_Vector3Deterministic()
+    {
+        var state1 = new ZoneSensorPositionState { SensorCount = 16 };
+        var state2 = new ZoneSensorPositionState { SensorCount = 16 };
+
+        // Set same positions
+        for (int i = 0; i < 16; i++)
+        {
+            var pos = new Vector3(i * 10.5f, i * 20.25f, i * 30.125f);
+            state1.SetPosition(i, pos);
+            state2.SetPosition(i, pos);
+        }
+
+        // Verify both states produce identical results
+        for (int i = 0; i < 16; i++)
+        {
+            var pos1 = state1.GetPosition(i);
+            var pos2 = state2.GetPosition(i);
+
+            Assert.AreEqual(pos1.x, pos2.x, 0.0001f, $"Sensor {i} X differs");
+            Assert.AreEqual(pos1.y, pos2.y, 0.0001f, $"Sensor {i} Y differs");
+            Assert.AreEqual(pos1.z, pos2.z, 0.0001f, $"Sensor {i} Z differs");
+        }
+    }
+
+    [TestMethod]
+    public unsafe void Test_PositionState_ByteLevelDeterministic()
+    {
+        var state1 = new ZoneSensorPositionState { SensorCount = 8, BatchIndex = 1, TotalBatches = 3 };
+        var state2 = new ZoneSensorPositionState { SensorCount = 8, BatchIndex = 1, TotalBatches = 3 };
+
+        // Set same positions and waypoint counts
+        for (int i = 0; i < 8; i++)
+        {
+            var pos = new Vector3(i * 100f, i * 200f, i * 300f);
+            state1.SetPosition(i, pos);
+            state2.SetPosition(i, pos);
+            state1.SetWaypointCount(i, i % 4);
+            state2.SetWaypointCount(i, i % 4);
+        }
+
+        // Compare byte-level representation
+        int size = sizeof(ZoneSensorPositionState);
+        byte* ptr1 = (byte*)&state1;
+        byte* ptr2 = (byte*)&state2;
+
+        for (int i = 0; i < size; i++)
+        {
+            Assert.AreEqual(ptr1[i], ptr2[i], $"Byte {i} differs");
+        }
+    }
+
+    #endregion
+
+    #region Waypoint State Vector3 Determinism
+
+    [TestMethod]
+    public void Test_WaypointState_Vector3Deterministic()
+    {
+        var state1 = new ZoneSensorWaypointState
+        {
+            SensorIndex = 5,
+            BatchIndex = 0,
+            TotalBatches = 1,
+            WaypointCount = 15,
+            Speed = 3.5f
+        };
+
+        var state2 = new ZoneSensorWaypointState
+        {
+            SensorIndex = 5,
+            BatchIndex = 0,
+            TotalBatches = 1,
+            WaypointCount = 15,
+            Speed = 3.5f
+        };
+
+        // Set same waypoints
+        for (int i = 0; i < 15; i++)
+        {
+            var wp = new Vector3(i * 5.5f, i * 10.25f, i * 15.125f);
+            state1.SetWaypoint(i, wp);
+            state2.SetWaypoint(i, wp);
+        }
+
+        // Verify deterministic results
+        for (int i = 0; i < 15; i++)
+        {
+            var wp1 = state1.GetWaypoint(i);
+            var wp2 = state2.GetWaypoint(i);
+
+            Assert.AreEqual(wp1.x, wp2.x, 0.0001f, $"Waypoint {i} X differs");
+            Assert.AreEqual(wp1.y, wp2.y, 0.0001f, $"Waypoint {i} Y differs");
+            Assert.AreEqual(wp1.z, wp2.z, 0.0001f, $"Waypoint {i} Z differs");
+        }
+    }
+
+    [TestMethod]
+    public void Test_WaypointState_ToArrayDeterministic()
+    {
+        var state1 = new ZoneSensorWaypointState { WaypointCount = 10 };
+        var state2 = new ZoneSensorWaypointState { WaypointCount = 10 };
+
+        // Set same waypoints
+        for (int i = 0; i < 10; i++)
+        {
+            var wp = new Vector3(i, i * 2, i * 3);
+            state1.SetWaypoint(i, wp);
+            state2.SetWaypoint(i, wp);
+        }
+
+        var array1 = state1.ToArray();
+        var array2 = state2.ToArray();
+
+        Assert.AreEqual(array1.Length, array2.Length);
+
+        for (int i = 0; i < array1.Length; i++)
+        {
+            Assert.AreEqual(array1[i].x, array2[i].x, 0.0001f, $"Array {i} X differs");
+            Assert.AreEqual(array1[i].y, array2[i].y, 0.0001f, $"Array {i} Y differs");
+            Assert.AreEqual(array1[i].z, array2[i].z, 0.0001f, $"Array {i} Z differs");
+        }
+    }
+
+    [TestMethod]
+    public unsafe void Test_WaypointState_ByteLevelDeterministic()
+    {
+        var state1 = new ZoneSensorWaypointState
+        {
+            SensorIndex = 3,
+            BatchIndex = 1,
+            TotalBatches = 2,
+            WaypointCount = 5,
+            Speed = 2.5f
+        };
+
+        var state2 = new ZoneSensorWaypointState
+        {
+            SensorIndex = 3,
+            BatchIndex = 1,
+            TotalBatches = 2,
+            WaypointCount = 5,
+            Speed = 2.5f
+        };
+
+        // Set same waypoints
+        for (int i = 0; i < 5; i++)
+        {
+            var wp = new Vector3(i * 50f, i * 100f, i * 150f);
+            state1.SetWaypoint(i, wp);
+            state2.SetWaypoint(i, wp);
+        }
+
+        // Compare byte-level representation
+        int size = sizeof(ZoneSensorWaypointState);
+        byte* ptr1 = (byte*)&state1;
+        byte* ptr2 = (byte*)&state2;
+
+        for (int i = 0; i < size; i++)
+        {
+            Assert.AreEqual(ptr1[i], ptr2[i], $"Byte {i} differs");
+        }
     }
 
     #endregion
