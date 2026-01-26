@@ -12,6 +12,7 @@
     <Interop>$(SolutionDir)\AutogenRundown\interop</Interop>
     <Plugins>$(SolutionDir)\AutogenRundown\plugins</Plugins>
     <BepInEx>$(Deps)\BepInEx-BepInExPack_GTFO\BepInExPack_GTFO\BepInEx</BepInEx>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +24,7 @@
     <Reference Include="$(BepInEx)\core\0Harmony.dll" />
     <Reference Include="$(BepInEx)\core\Il2CppInterop.Common.dll" />
     <Reference Include="$(BepInEx)\core\Il2CppInterop.Runtime.dll" />
+
 
     <!-- NuGet Packages -->
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
