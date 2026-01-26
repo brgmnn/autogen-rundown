@@ -1653,9 +1653,9 @@ public class Level
 
                     level.ZoneSensors.Add(new ZoneSensorDefinition
                     {
+                        Id = 123,
                         ZoneNumber = 0,
                         Bulkhead = Bulkhead.Main,
-
                         SensorGroups = new List<ZoneSensorGroupDefinition>
                         {
                             // new ZoneSensorGroupDefinition
@@ -1686,26 +1686,6 @@ public class Level
 
                         EventsOnTrigger = sensorEvents
                     });
-
-                    var eventLoop = new EventLoop()
-                    {
-                        LoopIndex = 263,
-                        LoopDelay = 6.0,
-                        LoopCount = -1
-                    };
-
-                    eventLoop.EventsToActivate
-                        .DisableZoneSensors(0, 0.0)
-                        .EnableZoneSensors(0, 3.0);
-
-                    // level.Objective[Bulkhead.Main].EventsOnElevatorLand
-                    //     .Add(new WardenObjectiveEvent()
-                    //     {
-                    //         Type = WardenObjectiveEventType.StartEventLoop,
-                    //         EventLoop = eventLoop,
-                    //         Delay = 2.0
-                    //     });
-
                 }
             }
 
@@ -1716,7 +1696,7 @@ public class Level
                     CommandDesc = new Text($"Deactivate security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
                     CommandEvents = new List<WardenObjectiveEvent>()
                         // .AddStopLoop(263, 0.4)
-                        .DisableZoneSensors(0, 1.4)
+                        .DisableZoneSensors(123, 1.4)
                         .ToList(),
                     PostCommandOutputs = new List<TerminalOutput>
                     {
@@ -1742,7 +1722,7 @@ public class Level
                     CommandDesc = new Text($"Activate security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
                     CommandEvents = new List<WardenObjectiveEvent>()
                         // .AddStopLoop(263, 0.4)
-                        .EnableZoneSensors(0, 1.4)
+                        .EnableZoneSensors(123, 1.4)
                         .ToList(),
                     PostCommandOutputs = new List<TerminalOutput>
                     {
@@ -1768,7 +1748,7 @@ public class Level
                     CommandDesc = new Text($"Fully reset security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
                     CommandEvents = new List<WardenObjectiveEvent>()
                         // .AddStopLoop(263, 0.4)
-                        .EnableZoneSensorsWithReset(0, 1.4)
+                        .EnableZoneSensorsWithReset(123, 1.4)
                         .ToList(),
                     PostCommandOutputs = new List<TerminalOutput>
                     {
