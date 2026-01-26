@@ -46,6 +46,9 @@ TODO:
   * Shorter (or longer?) warden protocol startup times?
     * Maybe even a bait one?
   * Slightly longer time needed on D-tier reactor
+  * Extract decryption keys far too easy on D-tier overload
+    * Needs extract or finish objective modifier
+  * Might consider if we even need an error alarm turnoff for levels in main where it goes all the way to the end?
 
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
