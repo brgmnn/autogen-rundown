@@ -3,6 +3,7 @@ using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.Extensions;
 
@@ -502,11 +503,11 @@ public static class WardenObjectiveEventCollections
     }
 
     /// <summary>
-    /// Toggle a zone sensor group on/off.
+    /// Toggle a sensor by ID on/off.
     /// </summary>
     public static ICollection<WardenObjectiveEvent> ToggleZoneSensors(
         this ICollection<WardenObjectiveEvent> events,
-        int groupIndex,
+        int sensorId,
         bool enabled,
         double delay = 0.0)
     {
@@ -515,7 +516,7 @@ public static class WardenObjectiveEventCollections
             {
                 Type = WardenObjectiveEventType.ToggleSecuritySensor,
                 Enabled = enabled,
-                Count = groupIndex,
+                Count = sensorId,
                 Delay = delay
             });
 
@@ -523,18 +524,18 @@ public static class WardenObjectiveEventCollections
     }
 
     /// <summary>
-    /// Enable a zone sensor group. Previously triggered sensors stay hidden.
+    /// Enable a sensor by ID. Previously triggered sensors stay hidden.
     /// </summary>
     public static ICollection<WardenObjectiveEvent> EnableZoneSensors(
         this ICollection<WardenObjectiveEvent> events,
-        int groupIndex,
+        int sensorId,
         double delay = 0.0)
     {
         events.Add(
             new WardenObjectiveEvent
             {
                 Type = WardenObjectiveEventType.EnableSecuritySensor,
-                Count = groupIndex,
+                Count = sensorId,
                 Delay = delay
             });
 
@@ -542,18 +543,18 @@ public static class WardenObjectiveEventCollections
     }
 
     /// <summary>
-    /// Disable a zone sensor group.
+    /// Disable a sensor by ID.
     /// </summary>
     public static ICollection<WardenObjectiveEvent> DisableZoneSensors(
         this ICollection<WardenObjectiveEvent> events,
-        int groupIndex,
+        int sensorId,
         double delay = 0.0)
     {
         events.Add(
             new WardenObjectiveEvent
             {
                 Type = WardenObjectiveEventType.DisableSecuritySensor,
-                Count = groupIndex,
+                Count = sensorId,
                 Delay = delay
             });
 
@@ -561,12 +562,12 @@ public static class WardenObjectiveEventCollections
     }
 
     /// <summary>
-    /// Enable a zone sensor group with full reset. All sensors reappear,
+    /// Enable a sensor by ID with full reset. All sensors reappear,
     /// including previously triggered ones.
     /// </summary>
     public static ICollection<WardenObjectiveEvent> EnableZoneSensorsWithReset(
         this ICollection<WardenObjectiveEvent> events,
-        int groupIndex,
+        int sensorId,
         double delay = 0.0)
     {
         events.Add(
@@ -574,7 +575,7 @@ public static class WardenObjectiveEventCollections
             {
                 Type = WardenObjectiveEventType.ToggleSecuritySensorResetTriggered,
                 Enabled = true,
-                Count = groupIndex,
+                Count = sensorId,
                 Delay = delay
             });
 
@@ -582,12 +583,12 @@ public static class WardenObjectiveEventCollections
     }
 
     /// <summary>
-    /// Toggle a zone sensor group with full reset. When enabling,
+    /// Toggle a sensor by ID with full reset. When enabling,
     /// all sensors reappear including previously triggered ones.
     /// </summary>
     public static ICollection<WardenObjectiveEvent> ToggleZoneSensorsWithReset(
         this ICollection<WardenObjectiveEvent> events,
-        int groupIndex,
+        int sensorId,
         bool enabled,
         double delay = 0.0)
     {
@@ -596,7 +597,75 @@ public static class WardenObjectiveEventCollections
             {
                 Type = WardenObjectiveEventType.ToggleSecuritySensorResetTriggered,
                 Enabled = enabled,
-                Count = groupIndex,
+                Count = sensorId,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Enable sensors in a zone. Previously triggered sensors stay hidden.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> EnableZoneSensorsInZone(
+        this ICollection<WardenObjectiveEvent> events,
+        ZoneNode zone,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.EnableSecuritySensor,
+                Dimension = DimensionIndex.Reality,
+                Layer = GetLayerFromBulkhead(zone.Bulkhead),
+                LocalIndex = zone.ZoneNumber,
+                Count = 0,  // Zone targeting mode
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Disable sensors in a zone.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> DisableZoneSensorsInZone(
+        this ICollection<WardenObjectiveEvent> events,
+        ZoneNode zone,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.DisableSecuritySensor,
+                Dimension = DimensionIndex.Reality,
+                Layer = GetLayerFromBulkhead(zone.Bulkhead),
+                LocalIndex = zone.ZoneNumber,
+                Count = 0,  // Zone targeting mode
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Enable sensors in a zone with full reset. All sensors reappear,
+    /// including previously triggered ones.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> ResetZoneSensorsInZone(
+        this ICollection<WardenObjectiveEvent> events,
+        ZoneNode zone,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ToggleSecuritySensorResetTriggered,
+                Enabled = true,
+                Dimension = DimensionIndex.Reality,
+                Layer = GetLayerFromBulkhead(zone.Bulkhead),
+                LocalIndex = zone.ZoneNumber,
+                Count = 0,  // Zone targeting mode
                 Delay = delay
             });
 
