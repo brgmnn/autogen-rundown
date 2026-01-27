@@ -33,7 +33,7 @@
     <PackageReference Include="coverlet.collector" Version="3.2.0" />
 
     <!-- Pure managed Unity types for testing (avoids IL2CPP runtime dependency) -->
-    <PackageReference Include="UnityEngine.CoreModule" Version="2020.3.1" />
+    <PackageReference Include="UnityEngine.CoreModule" Version="2020.3.1" NoWarn="NU1701" />
   </ItemGroup>
 
   <ItemGroup>
