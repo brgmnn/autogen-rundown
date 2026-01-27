@@ -25,5 +25,10 @@ public enum SensorDensity
     /// <summary>
     /// High density: ~12 sensors per 100 units of voxel coverage.
     /// </summary>
-    High = 3
+    High = 3,
+
+    /// <summary>
+    /// Very high density:
+    /// </summary>
+    VeryHigh = 4,
 }
