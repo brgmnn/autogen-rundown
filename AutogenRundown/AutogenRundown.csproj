@@ -47,6 +47,7 @@
     <Reference Include="$(Plugins)\GTFO-API.dll" />
     <Reference Include="$(Plugins)\AmorLib.dll" />
     <Reference Include="$(Plugins)\Inas07.LocalProgression.dll" />
+    <Reference Include="$(Plugins)\LGTuner.dll" />
 
     <Compile Remove="Blocks\**" />
     <EmbeddedResource Remove="Blocks\**" />
