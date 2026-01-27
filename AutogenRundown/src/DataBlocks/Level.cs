@@ -1611,33 +1611,33 @@ public class Level
 
                 layout.Zones.Add(zone);
 
-                // if (z == 0)
-                // {
-                //     var sensorEvents = new List<WardenObjectiveEvent>();
-                //
-                //     sensorEvents
-                //         .AddSound(Sound.LightsOff)
-                //         .AddSpawnWave(GenericWave.SingleTank, 2.0);
-                //
-                //     level.ZoneSensors.Add(new ZoneSensorDefinition
-                //     {
-                //         ZoneNumber = zone.LocalIndex,
-                //         Bulkhead = Bulkhead.Main,
-                //
-                //         SensorGroups = new List<ZoneSensorGroupDefinition>
-                //         {
-                //             new ZoneSensorGroupDefinition
-                //             {
-                //                 TriggerEach = true,
-                //                 Density = SensorDensity.Low,
-                //                 Radius = 1,
-                //                 AreaIndex = -1,
-                //             }
-                //         },
-                //
-                //         EventsOnTrigger = sensorEvents
-                //     });
-                // }
+                if (z == 0)
+                {
+                    var sensorEvents = new List<WardenObjectiveEvent>();
+
+                    sensorEvents
+                        .AddSound(Sound.LightsOff)
+                        .AddSpawnWave(GenericWave.SingleTank, 2.0);
+
+                    level.ZoneSensors.Add(new ZoneSensorDefinition
+                    {
+                        ZoneNumber = zone.LocalIndex,
+                        Bulkhead = Bulkhead.Main,
+
+                        SensorGroups = new List<ZoneSensorGroupDefinition>
+                        {
+                            new ZoneSensorGroupDefinition
+                            {
+                                TriggerEach = true,
+                                Density = SensorDensity.High,
+                                Radius = 1,
+                                AreaIndex = -1,
+                            }
+                        },
+
+                        EventsOnTrigger = sensorEvents
+                    });
+                }
 
                 if (z == 1)
                 {

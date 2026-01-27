@@ -457,9 +457,10 @@ public sealed class ZoneSensorManager
         // VoxelCoverage is derived from AI graph node count, not raw area
         var sensorsPerHundredCoverage = density switch
         {
-            SensorDensity.Low => 1.5f,    // ~1.5 sensors per 100 coverage per unit radius
-            SensorDensity.Medium => 3.0f, // ~3.0 sensors per 100 coverage per unit radius
-            SensorDensity.High => 4.5f,   // ~4.5 sensors per 100 coverage per unit radius
+            SensorDensity.Low => 1.5f,      // ~1.5 sensors per 100 coverage per unit radius
+            SensorDensity.Medium => 3.0f,   // ~3.0 sensors per 100 coverage per unit radius
+            SensorDensity.High => 4.5f,     // ~4.5 sensors per 100 coverage per unit radius
+            SensorDensity.VeryHigh => 6.0f, // ~6.0 sensors per 100 coverage per unit radius
             _ => 6.0f
         };
 
