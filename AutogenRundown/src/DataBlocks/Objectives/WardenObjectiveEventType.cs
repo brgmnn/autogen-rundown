@@ -90,6 +90,7 @@ public enum WardenObjectiveEventType : uint
     #region --- Modder: Armor's Events ---
     StartEventLoop = 20001,
     StopEventLoop = 20002,
+    InfectPlayer = 20004,
 
     AdjustAwoTimer = 20007,
 

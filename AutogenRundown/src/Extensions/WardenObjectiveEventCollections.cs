@@ -699,6 +699,85 @@ public static class WardenObjectiveEventCollections
 
     #endregion
 
+    #region Infection
+
+    public static ICollection<WardenObjectiveEvent> AddInfectPlayer(
+        this ICollection<WardenObjectiveEvent> events,
+        double infectionAmount,
+        List<int>? playerFilter = null,
+        bool useZone = false,
+        Bulkhead? bulkhead = null,
+        int zoneIndex = 0,
+        double delay = 0.0)
+    {
+        var infectPlayer = new InfectPlayer
+        {
+            InfectionAmount = infectionAmount,
+            UseZone = useZone
+        };
+
+        if (playerFilter != null)
+            infectPlayer.PlayerFilter = playerFilter;
+
+        var ev = new WardenObjectiveEvent
+        {
+            Type = WardenObjectiveEventType.InfectPlayer,
+            Delay = delay,
+            InfectPlayer = infectPlayer
+        };
+
+        if (bulkhead != null)
+        {
+            ev.Layer = GetLayerFromBulkhead(bulkhead.Value);
+            ev.LocalIndex = zoneIndex;
+        }
+
+        events.Add(ev);
+
+        return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> AddInfectPlayerOverTime(
+        this ICollection<WardenObjectiveEvent> events,
+        double infectionAmount,
+        double interval = 1.0,
+        List<int>? playerFilter = null,
+        bool useZone = false,
+        Bulkhead? bulkhead = null,
+        int zoneIndex = 0,
+        double delay = 0.0)
+    {
+        var infectPlayer = new InfectPlayer
+        {
+            InfectionAmount = infectionAmount,
+            InfectOverTime = true,
+            Interval = interval,
+            UseZone = useZone
+        };
+
+        if (playerFilter != null)
+            infectPlayer.PlayerFilter = playerFilter;
+
+        var ev = new WardenObjectiveEvent
+        {
+            Type = WardenObjectiveEventType.InfectPlayer,
+            Delay = delay,
+            InfectPlayer = infectPlayer
+        };
+
+        if (bulkhead != null)
+        {
+            ev.Layer = GetLayerFromBulkhead(bulkhead.Value);
+            ev.LocalIndex = zoneIndex;
+        }
+
+        events.Add(ev);
+
+        return events;
+    }
+
+    #endregion
+
     #region Sound
 
     /// <summary>
