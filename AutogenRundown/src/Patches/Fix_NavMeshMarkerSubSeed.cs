@@ -174,11 +174,9 @@ public class Fix_NavMeshMarkerSubSeed
 
             var cluster = area.m_courseNode?.m_nodeCluster;
 
-            // We don't care about the snatcher dimensions
-            if (zone.DimensionIndex == eDimensionIndex.Dimension_20 ||
-                zone.DimensionIndex == eDimensionIndex.Dimension_19 ||
-                zone.DimensionIndex == eDimensionIndex.Dimension_18 ||
-                zone.DimensionIndex == eDimensionIndex.Dimension_17)
+            // Skip arena dimensions — these are simple single-tile arenas (e.g. pouncer)
+            // that naturally have m_reachableNodes.Count <= 1
+            if (Builder.CurrentFloor.GetDimension(zone.DimensionIndex, out var dim) && dim.IsArenaDimension)
                 return;
 
             if (cluster == null || cluster.m_reachableNodes.Count > 1)

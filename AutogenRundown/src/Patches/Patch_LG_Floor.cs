@@ -21,14 +21,9 @@ internal static class Patch_LG_Floor
     [HarmonyPrefix]
     static void CreateDimension_Prefix(eDimensionIndex dimensionIndex, bool arenaDimension, ref Vector3 position)
     {
-        switch (dimensionIndex)
+        if (arenaDimension)
         {
-            case eDimensionIndex.Dimension_17:
-            case eDimensionIndex.Dimension_18:
-            case eDimensionIndex.Dimension_19:
-            case eDimensionIndex.Dimension_20:
-                position += new Vector3 { y = -500f };
-                break;
+            position += new Vector3 { y = -500f };
         }
     }
 }
