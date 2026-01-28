@@ -2,16 +2,20 @@
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Extensions;
+using AutogenRundown.Utils;
 
 namespace AutogenRundown.DataBlocks;
 
 /*
- * --- General layout building blocks ---
+ * --- Optional side rooms which don't need to be done for the mission ---
  */
 public partial record LevelLayout
 {
     /// <summary>
-    /// Adds a side room which is a med bay
+    /// Adds a side room which is a med bay.
+    ///
+    /// There is sometimes a cost for this room, usually in the form of ammo or something other than health
     /// </summary>
     /// <param name="start"></param>
     /// <returns></returns>
@@ -21,7 +25,8 @@ public partial record LevelLayout
         {
             Bulkhead = Bulkhead.Main,
             Branch = "medical_bay",
-            MaxConnections = 0
+            MaxConnections = 0,
+            Tags = new Tags("no_blood_door", "no_enemies")
         });
 
         medZone.AliasPrefix = "MedBay, ZONE";
@@ -66,6 +71,20 @@ public partial record LevelLayout
 
         // Entry
         medZone.Alarm = ChainedPuzzle.FindOrPersist(ChainedPuzzle.TeamScan);
+
+        medZone.EventsOnDoorScanDone
+            .AddInfectPlayer(
+                level.Tier switch
+                {
+                    "D" => Generator.Between(18, 23),
+                    "E" => Generator.Between(20, 27),
+                    _ => Generator.Between(16, 20)
+                },
+                delay: 1.2)
+            .AddSound(
+                Sound.FoleyDisinfectPack, // TODO: this doesn't seem to work
+                delay: 1.0,
+                trigger: WardenObjectiveEventTrigger.None);
 
         switch (level.Tier)
         {
