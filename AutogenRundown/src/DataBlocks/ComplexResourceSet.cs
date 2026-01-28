@@ -175,6 +175,68 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
 
     public static ComplexResourceSet Find(uint persistentId) => Bins.ComplexResources.Find(persistentId)!;
 
+    public void Persist(BlocksBin<ComplexResourceSet>? bin = null)
+    {
+        bin ??= Bins.ComplexResources;
+        bin.AddBlock(this);
+    }
+
+    public ComplexResourceSet Duplicate()
+    {
+        var dupe = this with
+        {
+            Config = Config with { },
+            GeomorphTiles_1x1 = new List<Prefab>(GeomorphTiles_1x1),
+            GeomorphTiles_2x1 = new List<Prefab>(GeomorphTiles_2x1),
+            GeomorphTiles_2x2 = new List<Prefab>(GeomorphTiles_2x2),
+            SmallWeakGates = new List<Prefab>(SmallWeakGates),
+            SmallSecurityGates = new List<Prefab>(SmallSecurityGates),
+            SmallApexGates = new List<Prefab>(SmallApexGates),
+            SmallBulkheadGates = new List<Prefab>(SmallBulkheadGates),
+            SmallMainPathBulkheadGates = new List<Prefab>(SmallMainPathBulkheadGates),
+            SmallWallCaps = new List<Prefab>(SmallWallCaps),
+            SmallDestroyedCaps = new List<Prefab>(SmallDestroyedCaps),
+            SmallWallAndDestroyedCaps = new List<Prefab>(SmallWallAndDestroyedCaps),
+            MediumWeakGates = new List<Prefab>(MediumWeakGates),
+            MediumSecurityGates = new List<Prefab>(MediumSecurityGates),
+            MediumApexGates = new List<Prefab>(MediumApexGates),
+            MediumBulkheadGates = new List<Prefab>(MediumBulkheadGates),
+            MediumMainPathBulkheadGates = new List<Prefab>(MediumMainPathBulkheadGates),
+            MediumWallCaps = new List<Prefab>(MediumWallCaps),
+            MediumDestroyedCaps = new List<Prefab>(MediumDestroyedCaps),
+            MediumWallAndDestroyedCaps = new List<Prefab>(MediumWallAndDestroyedCaps),
+            LargeWeakGates = new List<Prefab>(LargeWeakGates),
+            LargeSecurityGates = new List<Prefab>(LargeSecurityGates),
+            LargeApexGates = new List<Prefab>(LargeApexGates),
+            LargeBulkheadGates = new List<Prefab>(LargeBulkheadGates),
+            LargeMainPathBulkheadGates = new List<Prefab>(LargeMainPathBulkheadGates),
+            LargeWallCaps = new List<Prefab>(LargeWallCaps),
+            LargeDestroyedCaps = new List<Prefab>(LargeDestroyedCaps),
+            LargeWallAndDestroyedCaps = new List<Prefab>(LargeWallAndDestroyedCaps),
+            StraightPlugsNoGates = new List<Prefab>(StraightPlugsNoGates),
+            StraightPlugsWithGates = new List<Prefab>(StraightPlugsWithGates),
+            SingleDropPlugsNoGates = new List<Prefab>(SingleDropPlugsNoGates),
+            SingleDropPlugsWithGates = new List<Prefab>(SingleDropPlugsWithGates),
+            DoubleDropPlugsNoGates = new List<Prefab>(DoubleDropPlugsNoGates),
+            DoubleDropPlugsWithGates = new List<Prefab>(DoubleDropPlugsWithGates),
+            PlugCaps = new List<Prefab>(PlugCaps),
+            ElevatorShafts_1x1 = new List<Prefab>(ElevatorShafts_1x1),
+            CustomGeomorphs_Exit_1x1 = new List<Prefab>(CustomGeomorphs_Exit_1x1),
+            CustomGeomorphs = new List<Prefab>(CustomGeomorphs),
+            CustomGeomorphs_Challenge_1x1 = new List<Prefab>(CustomGeomorphs_Challenge_1x1),
+            Ladders_4m = new List<Prefab>(Ladders_4m),
+            Ladders_2m = new List<Prefab>(Ladders_2m),
+            Ladders_1m = new List<Prefab>(Ladders_1m),
+            Ladders_05m = new List<Prefab>(Ladders_05m),
+            Ladders_Bottom = new List<Prefab>(Ladders_Bottom),
+            Ladders_Top = new List<Prefab>(Ladders_Top),
+            PersistentId = Generator.GetPersistentId()
+        };
+
+        dupe.Persist();
+        return dupe;
+    }
+
     public static void Setup()
         => Setup<GameDataComplexResourceSet>(Bins.ComplexResources, "ComplexResourceSet");
 
