@@ -3,6 +3,18 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.80.5](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.80.5) — January 28, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fix: Levels failing to build when LobbyExpansion is installed as a peer mod
+* Fix: Rebuild indicator not clearing between levels, it now increments from 1 again when you load a new level
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.80.4...v0.80.5
+
+
 ## [v0.80.4](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.80.4) — January 27, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
@@ -55,7 +67,7 @@ See more at https://github.com/brgmnn/autogen-rundown
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.80.0...v0.80.1
 
 
-## [v0.81.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.0) — January 27, 2026
+## [v0.81.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.0) — January 28, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
 
@@ -69,6 +81,8 @@ See more at https://github.com/brgmnn/autogen-rundown
   * Security sensors can trigger any set of warden events, spawning enemies, fog, etc.
   * Events to turned off, turned on, or fully reset security sensors are available, and used.
   * These have been added to several objectives layouts as a new set of challenges
+* Added melee and health syringes into consumables pool
+  * New optional "Medical Bay" side zone's can spawn now which contain health, disinfect, and syringes
 * Reworked level generation for `TerminalUplink` objectives
 
 ### Changes
