@@ -2,6 +2,7 @@
 using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
 
@@ -256,31 +257,68 @@ public partial record LevelLayout
     }
 
     /// <summary>
-    /// Selects an appropriate wave based on tier, with easier waves for moving sensors.
+    /// Selects an appropriate wave based on tier and level modifiers.
+    /// Builds a weighted pool of finite-count sensor waves, then picks one via Generator.Select.
+    /// Moving sensors have boss-tier options removed.
     /// </summary>
     private GenericWave SelectWaveForTier(bool isMoving)
     {
-        var baseWave = level.Tier switch
-        {
-            "A" => GenericWave.Exit_Objective_Easy,
-            "B" => Generator.Pick(new List<GenericWave> { GenericWave.Exit_Objective_Easy, GenericWave.Exit_Objective_Medium })!,
-            "C" => Generator.Pick(new List<GenericWave> { GenericWave.Exit_Objective_Medium, GenericWave.Exit_Objective_Hard })!,
-            "D" => GenericWave.Exit_Objective_Hard,
-            "E" => GenericWave.Exit_Objective_VeryHard,
-            _ => GenericWave.Exit_Objective_Medium
-        };
+        var settings = level.Settings;
+        var options = new List<(double, GenericWave)>();
 
-        // Downgrade wave difficulty for moving sensors
-        if (isMoving && baseWave != GenericWave.Exit_Objective_Easy)
+        switch (level.Tier)
         {
-            if (baseWave == GenericWave.Exit_Objective_VeryHard)
-                baseWave = GenericWave.Exit_Objective_Hard;
-            else if (baseWave == GenericWave.Exit_Objective_Hard)
-                baseWave = GenericWave.Exit_Objective_Medium;
-            else if (baseWave == GenericWave.Exit_Objective_Medium)
-                baseWave = GenericWave.Exit_Objective_Easy;
+            case "A":
+                options.Add((1.0, GenericWave.Sensor_8pts));
+                break;
+
+            case "B":
+                options.Add((0.4, GenericWave.Sensor_8pts));
+                options.Add((1.0, GenericWave.Sensor_12pts));
+                break;
+
+            case "C":
+                options.Add((0.3, GenericWave.Sensor_12pts));
+                options.Add((1.0, GenericWave.Sensor_16pts));
+                break;
+
+            case "D":
+                options.Add((0.3, GenericWave.Sensor_16pts));
+                options.Add((1.0, GenericWave.Sensor_20pts));
+                options.Add((0.25, GenericWave.SingleMother));
+                options.Add((0.15, GenericWave.SingleTank));
+                break;
+
+            case "E":
+                options.Add((1.0, GenericWave.Sensor_20pts));
+                options.Add((0.4, GenericWave.SingleTank));
+                options.Add((0.3, GenericWave.SinglePouncer));
+                options.Add((0.2, GenericWave.SingleMother));
+                break;
+
+            default:
+                options.Add((1.0, GenericWave.Sensor_12pts));
+                break;
         }
 
-        return baseWave;
+        if (settings.HasChargers())
+            options.Add((0.6, GenericWave.Sensor_Chargers_12pts));
+
+        if (settings.HasShadows())
+            options.Add((0.5, GenericWave.Sensor_Shadows_8pts));
+
+        if (settings.HasNightmares())
+            options.Add((0.5, GenericWave.Sensor_Nightmares_12pts));
+
+        if (settings.Modifiers.Contains(LevelModifiers.Hybrids))
+            options.Add((0.4, GenericWave.Sensor_Hybrids_8pts));
+
+        if (isMoving)
+            options.RemoveAll(o =>
+                o.Item2 == GenericWave.SingleMother ||
+                o.Item2 == GenericWave.SingleTank ||
+                o.Item2 == GenericWave.SinglePouncer);
+
+        return Generator.Select(options);
     }
 }

@@ -152,6 +152,56 @@ public record GenericWave
     };
     #endregion
 
+    #region Sensor waves
+    public static readonly GenericWave Sensor_8pts = new()
+    {
+        Settings = WaveSettings.SingleWave_8pts,
+        Population = WavePopulation.Baseline
+    };
+
+    public static readonly GenericWave Sensor_12pts = new()
+    {
+        Settings = WaveSettings.SingleWave_12pts,
+        Population = WavePopulation.Baseline
+    };
+
+    public static readonly GenericWave Sensor_16pts = new()
+    {
+        Settings = WaveSettings.SingleWave_16pts,
+        Population = WavePopulation.Baseline
+    };
+
+    public static readonly GenericWave Sensor_20pts = new()
+    {
+        Settings = WaveSettings.SingleWave_20pts,
+        Population = WavePopulation.Baseline
+    };
+
+    public static readonly GenericWave Sensor_Chargers_12pts = new()
+    {
+        Settings = WaveSettings.SingleWave_12pts,
+        Population = WavePopulation.OnlyChargers
+    };
+
+    public static readonly GenericWave Sensor_Shadows_8pts = new()
+    {
+        Settings = WaveSettings.SingleWave_8pts,
+        Population = WavePopulation.OnlyShadows
+    };
+
+    public static readonly GenericWave Sensor_Nightmares_12pts = new()
+    {
+        Settings = WaveSettings.SingleWave_12pts,
+        Population = WavePopulation.OnlyNightmares
+    };
+
+    public static readonly GenericWave Sensor_Hybrids_8pts = new()
+    {
+        Settings = WaveSettings.SingleWave_8pts,
+        Population = WavePopulation.OnlyHybrids
+    };
+    #endregion
+
 
     // Backing fields for deserialized values
     private uint? _survivalWaveSettings;

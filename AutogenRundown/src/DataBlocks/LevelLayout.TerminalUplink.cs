@@ -172,6 +172,15 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_LockedTerminalDoor(nodes.Last(), 1);
                         AddUplinkTerminalZones(end, objective);
                     }),
+
+                    // Sensor corridor - sensors on last 2 zones (3-4+N zones)
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(3, 4));
+                        AddSecuritySensors(nodes[^2]);
+                        AddSecuritySensors(nodes[^1]);
+                        AddUplinkTerminalZones(nodes.Last(), objective);
+                    }),
                 });
                 break;
             }
@@ -201,6 +210,15 @@ public partial record LevelLayout
                     (0.30, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
+                        var (end, _) = BuildChallenge_GeneratorCellInZone(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Sensor generator - generator challenge with sensors (2+N zones)
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        AddSecuritySensors(nodes.Last());
                         var (end, _) = BuildChallenge_GeneratorCellInZone(nodes.Last());
                         AddUplinkTerminalZones(end, objective);
                     }),
@@ -314,6 +332,16 @@ public partial record LevelLayout
                         }
                     }));
 
+                // Sensor hub - sensors on last zone + keycard with sensors (4-5+N zones)
+                options.Add((0.15, () =>
+                {
+                    var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                    AddSecuritySensors(nodes.Last());
+                    var (end, _) = BuildChallenge_KeycardInSide(nodes.Last());
+                    AddSecuritySensors(end);
+                    AddUplinkTerminalZones(end, objective);
+                }));
+
                 Generator.SelectRun(options);
                 break;
             }
@@ -353,6 +381,15 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                        AddUplinkTerminalZones(nodes.Last(), objective);
+                    }),
+
+                    // Sensor long path - sensors on all zones (2-3+N zones)
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                        foreach (var node in nodes)
+                            AddSecuritySensors(node);
                         AddUplinkTerminalZones(nodes.Last(), objective);
                     }),
                 });
@@ -468,6 +505,20 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_BossFight(nodes.Last());
                         AddUplinkTerminalZones(end, objective);
                     }),
+
+                    // Sensor error approach - sensors on approach, then error+keycard (4-5+N zones)
+                    (0.10, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                        foreach (var node in nodes)
+                            AddSecuritySensors(node);
+                        var (end, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
+                            nodes.Last(),
+                            errorZones: 1,
+                            sideKeycardZones: 1,
+                            terminalTurnoffZones: 1);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
                 });
                 break;
             }
@@ -511,6 +562,16 @@ public partial record LevelLayout
                     (0.20, () =>
                     {
                         var nodes = AddBranch_Forward(start, Generator.Between(3, 4));
+                        var (end, _) = BuildChallenge_BossFight(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Sensor boss gauntlet - sensors on first zones, boss at end (3-4+N zones)
+                    (0.10, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                        for (var i = 0; i < Math.Min(2, nodes.Count); i++)
+                            AddSecuritySensors(nodes[i]);
                         var (end, _) = BuildChallenge_BossFight(nodes.Last());
                         AddUplinkTerminalZones(end, objective);
                     }),
@@ -650,6 +711,20 @@ public partial record LevelLayout
                             objective.PlacementNodes.Add(end);
                         }
                     }));
+
+                // Apex + sensor corridor - apex, sensors on all zones, keycard (3-4+N zones)
+                options.Add((0.10, () =>
+                {
+                    var (mid, _) = BuildChallenge_ApexAlarm(
+                        start,
+                        WavePopulation.Baseline_Hybrids,
+                        WaveSettings.Baseline_Hard);
+                    var nodes = AddBranch_Forward(mid, Generator.Between(2, 3));
+                    foreach (var node in nodes)
+                        AddSecuritySensors(node);
+                    var (end, _) = BuildChallenge_KeycardInZone(nodes.Last());
+                    AddUplinkTerminalZones(end, objective);
+                }));
 
                 Generator.SelectRun(options);
                 break;
