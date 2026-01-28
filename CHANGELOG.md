@@ -3,6 +3,30 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.80.5](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.80.5) — January 28, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fix: Levels failing to build when LobbyExpansion is installed as a peer mod
+* Fix: Rebuild indicator not clearing between levels, it now increments from 1 again when you load a new level
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.80.4...v0.80.5
+
+
+## [v0.80.4](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.80.4) — January 27, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fix: Added LGTuner to reduce memory usage
+  * In testing, this seems to be a significant reduction of 30-40% less memory being used
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.80.3...v0.80.4
+
+
 ## [v0.80.3](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.80.3) — January 17, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
@@ -43,14 +67,23 @@ See more at https://github.com/brgmnn/autogen-rundown
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.80.0...v0.80.1
 
 
-## [v0.81.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.0) — January 17, 2026
+## [v0.81.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.0) — January 28, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
 
 ### New
 
+* 🌟 New: Red Security Sensors overhaul! 🔴
+  * Error red security sensors can now be spawned in any zone, and are only placed in walkable areas. No more sensors floating in the middle of space or only in the elevator drop zone
+  * Security sensors can now also move, patrolling their area
+  * Security sensors can be individually triggered, so activating one sensor won't activate them all
+  * Customizable size, style, and text on the sensors is available now. Some security sensors will be large, others small.
+  * Security sensors can trigger any set of warden events, spawning enemies, fog, etc.
+  * Events to turned off, turned on, or fully reset security sensors are available, and used.
+  * These have been added to several objectives layouts as a new set of challenges
+* Added melee and health syringes into consumables pool
+  * New optional "Medical Bay" side zone's can spawn now which contain health, disinfect, and syringes
 * Reworked level generation for `TerminalUplink` objectives
-* New Security Sensors allow error sensors to be spawned in any zone with better positioning
 
 ### Changes
 
@@ -59,7 +92,6 @@ See more at https://github.com/brgmnn/autogen-rundown
 * Change: Terminal Uplinks now only stop their own waves, not _all_ waves when completing the uplink. Same applies to Corrupted Terminal Uplinks
 * Fix: Add [ItemSpawnFix](https://thunderstore.io/c/gtfo/p/Dinorush/ItemSpawnFix/) to help fix issues with core items not spawning
   * Helps resolve things like missing generator cells or keycards which can cause softlocks
-* Fix: Generator cluster objective zone number style update. From "ZONE123" to "ZONE 123"
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.80.0...v0.81.0
 

@@ -45,6 +45,23 @@ public static class FactoryJobManager
         ShouldRebuild = true;
     }
 
+    /// <summary>
+    /// Resets all rebuild tracking state for a fresh build cycle.
+    /// Called at the start of Builder.Build() when it's not a rebuild.
+    /// </summary>
+    public static void NewBuild()
+    {
+        ShowMessage = false;
+        ShouldRebuild = false;
+        RebuildCount = 0;
+
+        ZoneSeedManager.SubSeeds.Clear();
+        Fix_NavMeshMarkerSubSeed.TargetsDetected.Clear();
+        Fix_NavMeshMarkerSubSeed.MarkerSubSeeds.Clear();
+        Fix_NavMeshMarkerSubSeed.ZoneAttempts.Clear();
+        Fix_FailedToFindStartArea.zoneFailures.Clear();
+    }
+
     #region Build / Cleanup
 
     /// <summary>
@@ -170,6 +187,7 @@ public static class FactoryJobManager
             // Only re-enable the handlers when all validation checks pass
             ShouldRebuild = false;
             RebuildCount = 0;
+            ShowMessage = false;
 
             // TODO: move this logic to the respective managers
             ZoneSeedManager.SubSeeds.Clear();

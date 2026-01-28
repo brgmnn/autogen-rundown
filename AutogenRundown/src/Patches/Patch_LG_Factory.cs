@@ -27,6 +27,19 @@ public class Patch_LG_Factory
     }
 
     /// <summary>
+    /// Resets rebuild tracking state when a fresh build starts (not a rebuild).
+    /// </summary>
+    [HarmonyPatch(typeof(Builder), nameof(Builder.Build))]
+    [HarmonyPrefix]
+    public static void Prefix_Build()
+    {
+        if (!FactoryJobManager.Rebuilding)
+        {
+            FactoryJobManager.NewBuild();
+        }
+    }
+
+    /// <summary>
     /// Stops the default factory done listeners from running if a re-roll is requested
     /// </summary>
     /// <returns></returns>
