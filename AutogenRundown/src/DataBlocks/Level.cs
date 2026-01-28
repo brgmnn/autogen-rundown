@@ -1538,56 +1538,11 @@ public class Level
             level.Planner.AddZone(elevatorDrop, elevatorDropZone);
             layout.Zones.Add(elevatorDropZone);
 
-            // var zone2 = new Zone(level)
-            // {
-            //     Coverage = new CoverageMinMax { Min = 100, Max = 100 },
-            //     LightSettings = Lights.GenRandomLight(),
-            //     LocalIndex = 1,
-            //     BuildFromLocalIndex = 0,
-            //     CustomGeomorph = geo
-            // };
-            //
-            // level.Planner.AddZone(new ZoneNode(Bulkhead.Main, 1), zone2);
-            // layout.Zones.Add(zone2);
-
-            // elevatorDropZone.EnemySpawningInZone.Add(
-            //     EnemySpawningData.TierA with { Points = 30 });
-
-            // elevatorDropZone.EnemySpawningInZone.Add(
-            //     EnemySpawningData.HybridInfected with { Points = 4 });
-
-            // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
-
-            // elevatorDropZone.EnemySpawningInZone.Add(
-            //     EnemySpawningData.Mother with { Points = 10 });
-            //
-            // elevatorDropZone.EnemySpawningInZone.Add(
-            //     EnemySpawningData.PMother with { Points = 10 });
-
-
-            // elevatorDropZone.EnemySpawningInZone.Add(
-                // new EnemySpawningData
-                // {
-                //     Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Hybrids),
-                //     Points = 1,
-                //     GroupType = EnemyGroupType.Hibernate
-                // });
-                // EnemySpawningData.NightmareGiant with
-                // {
-                //     Points = 6
-                // });
-
             // elevatorDropZone.EnemySpawningInZone.Add(new EnemySpawningData
             // {
             //     GroupType = EnemyGroupType.Hibernate,
             //     Difficulty = (uint)Enemy.ChargerGiant,
             //     Points = 4
-            // });
-            // elevatorDropZone.EnemySpawningInZone.Add(new EnemySpawningData
-            // {
-            //     GroupType = EnemyGroupType.Hibernate,
-            //     Difficulty = (uint)Enemy.Charger,
-            //     Points = 1
             // });
 
 
@@ -1639,55 +1594,45 @@ public class Level
                     });
                 }
 
-                if (z == 1)
-                {
-                    var sensorEvents = new List<WardenObjectiveEvent>();
 
-                    sensorEvents
-                        .AddSound(Sound.LightsOff)
-                        .AddSpawnWave(new GenericWave
-                        {
-                            Population = WavePopulation.Baseline,
-                            Settings = WaveSettings.SingleMiniBoss
-                        }, 1.0);
-
-                    level.ZoneSensors.Add(new ZoneSensorDefinition
-                    {
-                        Id = 123,
-                        ZoneNumber = 0,
-                        Bulkhead = Bulkhead.Main,
-                        SensorGroups = new List<ZoneSensorGroupDefinition>
-                        {
-                            // new ZoneSensorGroupDefinition
-                            // {
-                            //     TriggerEach = true,
-                            //     Count = 16,
-                            //     Moving = 3,
-                            //     Speed = 0.5,
-                            //     Radius = 2.5,
-                            //     EdgeDistance = 0.7,
-                            //     AreaIndex = -1,
-                            //     EncryptedText = true,
-                            // }
-
-                            new ZoneSensorGroupDefinition
-                            {
-                                TriggerEach = true,
-                                // Count = 128,
-                                Density = SensorDensity.Low,
-                                Moving = 3,
-                                Speed = 0.5,
-                                // Radius = 2.0,
-                                EdgeDistance = 0.7,
-                                AreaIndex = 1,
-                                EncryptedText = true,
-                            }
-                        },
-
-                        EventsOnTrigger = sensorEvents
-                    });
-                }
             }
+
+            var sensorEvents2 = new List<WardenObjectiveEvent>();
+
+            sensorEvents2
+                .AddSound(Sound.LightsOff)
+                .AddSpawnWave(new GenericWave
+                {
+                    Population = WavePopulation.Baseline,
+                    Settings = WaveSettings.SingleMiniBoss
+                }, 1.0);
+
+            level.ZoneSensors.Add(new ZoneSensorDefinition
+            {
+                Id = 123,
+                ZoneNumber = 0,
+                Bulkhead = Bulkhead.Main,
+                SensorGroups = new List<ZoneSensorGroupDefinition>
+                {
+                    new ZoneSensorGroupDefinition
+                    {
+                        TriggerEach = true,
+                        // Count = 128,
+                        Density = SensorDensity.Low,
+                        Moving = 3,
+                        Speed = 0.5,
+                        // Radius = 2.0,
+                        EdgeDistance = 0.7,
+                        AreaIndex = 1,
+                        EncryptedText = true,
+                    }
+                },
+
+                EventsOnTrigger = sensorEvents2
+            });
+
+            var (med, medZone) = layout.BuildOptional_MedicalBay(elevatorDrop);
+            layout.Zones.Add(medZone);
 
             elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
                 new CustomTerminalCommand

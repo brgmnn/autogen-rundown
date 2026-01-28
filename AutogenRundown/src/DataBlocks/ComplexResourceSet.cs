@@ -207,6 +207,13 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
             SubComplex = SubComplex.Storage
         });
 
+        // R8B3 depressurizer room
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_dead_end_HA_01_R8B3.prefab",
+            SubComplex = SubComplex.Storage
+        });
+
         // R8E1 HSU Exit (destroyed)
         Mining.CustomGeomorphs.Insert(0, new Prefab()
         {
