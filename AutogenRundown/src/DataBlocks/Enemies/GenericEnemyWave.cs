@@ -159,6 +159,12 @@ public record GenericWave
         Population = WavePopulation.Baseline
     };
 
+    public static readonly GenericWave Sensor_Shooters_8pts = new()
+    {
+        Settings = WaveSettings.SingleWave_8pts,
+        Population = WavePopulation.Baseline_Shooters
+    };
+
     public static readonly GenericWave Sensor_12pts = new()
     {
         Settings = WaveSettings.SingleWave_12pts,
@@ -169,6 +175,13 @@ public record GenericWave
     {
         Settings = WaveSettings.SingleWave_16pts,
         Population = WavePopulation.Baseline
+    };
+
+
+    public static readonly GenericWave Sensor_Shooters_16pts = new()
+    {
+        Settings = WaveSettings.SingleWave_16pts,
+        Population = WavePopulation.Baseline_Shooters
     };
 
     public static readonly GenericWave Sensor_20pts = new()
@@ -183,15 +196,15 @@ public record GenericWave
         Population = WavePopulation.OnlyChargers
     };
 
-    public static readonly GenericWave Sensor_Shadows_8pts = new()
+    public static readonly GenericWave Sensor_Shadows_12pts = new()
     {
-        Settings = WaveSettings.SingleWave_8pts,
+        Settings = WaveSettings.SingleWave_12pts,
         Population = WavePopulation.OnlyShadows
     };
 
-    public static readonly GenericWave Sensor_Nightmares_12pts = new()
+    public static readonly GenericWave Sensor_Nightmares_8pts = new()
     {
-        Settings = WaveSettings.SingleWave_12pts,
+        Settings = WaveSettings.SingleWave_8pts,
         Population = WavePopulation.OnlyNightmares
     };
 
