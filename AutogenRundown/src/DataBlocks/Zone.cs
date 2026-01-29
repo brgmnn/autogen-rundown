@@ -234,6 +234,46 @@ public partial record Zone : DataBlock<Zone>
         // [Message:     Unity] WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
         // [Error  :     Unity] ERROR: Tried to add enemyType: 106 into WaveID: 2. This enemyType is not Linked to an ENEMY_TYPE in EnemyGroup.cs/TryGetAKSwitchIDFromEnemyType
 
+        // Scale distances per tier for all alarms (including surge/fixed alarms)
+        if (puzzle.TriggerAlarmOnActivate)
+        {
+            switch (level.Tier)
+            {
+                case "A":
+                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(0.9, 1.05);
+                    break;
+                case "B":
+                    if (Generator.Flip(0.05))
+                        puzzle.WantedDistanceFromStartPos += Generator.Between(15, 20);
+                    break;
+                case "C":
+                    if (Generator.Flip(0.2))
+                        puzzle.WantedDistanceFromStartPos += Generator.Between(20, 25);
+                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(1.0, 1.1);
+                    break;
+                case "D":
+                    if (Generator.Flip(0.32))
+                        puzzle.WantedDistanceFromStartPos += Generator.Between(20, 25);
+                    puzzle.WantedDistanceBetweenPuzzleComponents *= puzzle.Puzzle.Count switch
+                    {
+                        3 => Generator.NextDouble(1.5, 1.8),
+                        4 => Generator.NextDouble(1.2, 1.4),
+                        _ => Generator.NextDouble(1.0, 1.2)
+                    };
+                    break;
+                case "E":
+                    if (Generator.Flip(0.45))
+                        puzzle.WantedDistanceFromStartPos += Generator.Between(20, 30);
+                    puzzle.WantedDistanceBetweenPuzzleComponents *= puzzle.Puzzle.Count switch
+                    {
+                        3 => Generator.NextDouble(1.6, 2.0),
+                        4 => Generator.NextDouble(1.3, 1.5),
+                        _ => Generator.NextDouble(1.1, 1.3)
+                    };
+                    break;
+            }
+        }
+
         // Add custom events on alarms
         if (!puzzle.FixedAlarm)
         {
@@ -241,16 +281,11 @@ public partial record Zone : DataBlock<Zone>
             {
                 case "A":
                 {
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(0.9, 1.05);
-
                     break;
                 }
 
                 case "B":
                 {
-                    if (Generator.Flip(0.05))
-                        puzzle.WantedDistanceFromStartPos += Generator.Between(15, 20);
-
                     // Small chance to disable lights during the alarm
                     if (Generator.Flip(0.08))
                         AlarmModifier_LightsOff();
@@ -269,11 +304,6 @@ public partial record Zone : DataBlock<Zone>
 
                 case "C":
                 {
-                    if (Generator.Flip(0.2))
-                        puzzle.WantedDistanceFromStartPos += Generator.Between(20, 25);
-
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(1.0, 1.1);
-
                     // Infection hybrids during wave, lower the chance if it's in fog
                     if (isInfection && !InFog && Generator.Flip(0.2) )
                         EventsOnDoorScanStart.AddGenericWave(new GenericWave
@@ -305,16 +335,6 @@ public partial record Zone : DataBlock<Zone>
 
                 case "D":
                 {
-                    if (Generator.Flip(0.32))
-                        puzzle.WantedDistanceFromStartPos += Generator.Between(20, 25);
-
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= puzzle.Puzzle.Count switch
-                    {
-                        3 => Generator.NextDouble(1.5, 1.8),
-                        4 => Generator.NextDouble(1.2, 1.4),
-                        _ => Generator.NextDouble(1.0, 1.2)
-                    };
-
                     // Infection hybrids during wave, lower the chance if it's in fog
                     if (isInfection && Generator.Flip(InFog ? 0.2 : 0.4) )
                         EventsOnDoorScanStart.AddGenericWave(new GenericWave
@@ -361,16 +381,6 @@ public partial record Zone : DataBlock<Zone>
 
                 case "E":
                 {
-                    if (Generator.Flip(0.45))
-                        puzzle.WantedDistanceFromStartPos += Generator.Between(20, 30);
-
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= puzzle.Puzzle.Count switch
-                    {
-                        3 => Generator.NextDouble(1.6, 2.0),
-                        4 => Generator.NextDouble(1.3, 1.5),
-                        _ => Generator.NextDouble(1.1, 1.3)
-                    };
-
                     // Infection hybrids during wave, lower the chance if it's in fog
                     if (isInfection && Generator.Flip(InFog ? 0.4 : 0.6) )
                         EventsOnDoorScanStart.AddGenericWave(new GenericWave
