@@ -169,6 +169,11 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         PersistentId = (uint)Complex.Service
     };
 
+    public static ComplexResourceSet Dimensions { get; set; } = new()
+    {
+        PersistentId = 47u
+    };
+
     public ComplexResourceSet(PidOffsets offsets = PidOffsets.Normal)
         : base(Generator.GetPersistentId(offsets))
     { }
