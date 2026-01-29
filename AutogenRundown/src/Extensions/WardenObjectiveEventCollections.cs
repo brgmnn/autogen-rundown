@@ -355,7 +355,7 @@ public static class WardenObjectiveEventCollections
         var eventLoop = new EventLoop()
         {
             LoopIndex = loopIndex,
-            LoopDelay = 0.0,
+            LoopDelay = stateDuration * states.Length,
             LoopCount = -1
         };
 

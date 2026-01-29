@@ -156,10 +156,10 @@ public partial record Zone : DataBlock<Zone>
 
         EventsOnDoorScanStart.AddCyclingLights(
             LocalIndex, layer, states, loopIndex,
-            stateDuration: Generator.NextDouble(1.5, 2.0));
+            stateDuration: Generator.NextDouble(0.8, 1.5));
 
-        EventsOnDoorScanDone.AddStopLoop(loopIndex, Generator.Between(1, 3));
-        EventsOnDoorScanDone.AddRevertZoneLights(LocalIndex, layer, Generator.Between(2, 5));
+        EventsOnDoorScanDone.AddStopLoop(loopIndex, 0);
+        EventsOnDoorScanDone.AddRevertZoneLights(LocalIndex, layer, Generator.Between(1, 2));
     }
 
     /// <summary>
@@ -227,12 +227,7 @@ public partial record Zone : DataBlock<Zone>
         var parent = level.Planner.GetBuildFrom(new ZoneNode { Bulkhead = Bulkhead.Extreme, ZoneNumber = LocalIndex });
         var isInfection = level.FogSettings.IsInfectious;
 
-        // [Error  :     Unity] ERROR: Tried to add enemyType: 106 into WaveID: 1. This enemyType is not Linked to an ENEMY_TYPE in EnemyGroup.cs/TryGetAKSwitchIDFromEnemyType
-        // [Error  :     Unity] ERROR: Tried to add enemyType: 106 into WaveID: 1. This enemyType is not Linked to an ENEMY_TYPE in EnemyGroup.cs/TryGetAKSwitchIDFromEnemyType
-        // [Error  :     Unity] ERROR: Tried to add enemyType: 106 into WaveID: 1. This enemyType is not Linked to an ENEMY_TYPE in EnemyGroup.cs/TryGetAKSwitchIDFromEnemyType
-        // [Message:     Unity] <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: True, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData
-        // [Message:     Unity] WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
-        // [Error  :     Unity] ERROR: Tried to add enemyType: 106 into WaveID: 2. This enemyType is not Linked to an ENEMY_TYPE in EnemyGroup.cs/TryGetAKSwitchIDFromEnemyType
+        AlarmModifier_CyclingLights();
 
         // Scale distances per tier for all alarms (including surge/fixed alarms)
         if (puzzle.TriggerAlarmOnActivate)
@@ -275,7 +270,7 @@ public partial record Zone : DataBlock<Zone>
         }
 
         // Add custom events on alarms
-        if (!puzzle.FixedAlarm)
+        if (!puzzle.FixedAlarm && false)
         {
             switch (level.Tier)
             {
