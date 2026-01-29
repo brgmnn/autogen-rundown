@@ -145,6 +145,23 @@ public partial record Zone : DataBlock<Zone>
             "VENTILATION SYSTEM REBOOTED - SYSTEMS ONLINE");
     }
 
+    private void AlarmModifier_CyclingLights()
+    {
+        var layer = EventBuilder.GetLayerFromBulkhead(layout.director.Bulkhead);
+        var loopIndex = (int)Generator.GetPersistentId();
+
+        var states = Generator.Flip(0.5)
+            ? new[] { Light.LightSettings.LightsOff, Light.LightSettings.ErrorFlashOn }
+            : new[] { Light.LightSettings.LightsOff, Light.LightSettings.ErrorFlashOn, Light.LightSettings.AlarmCycling_Amber };
+
+        EventsOnDoorScanStart.AddCyclingLights(
+            LocalIndex, layer, states, loopIndex,
+            stateDuration: Generator.NextDouble(1.5, 2.0));
+
+        EventsOnDoorScanDone.AddStopLoop(loopIndex, Generator.Between(1, 3));
+        EventsOnDoorScanDone.AddRevertZoneLights(LocalIndex, layer, Generator.Between(2, 5));
+    }
+
     /// <summary>
     /// Ideas for alarm modifications
     ///
@@ -237,6 +254,8 @@ public partial record Zone : DataBlock<Zone>
                     // Small chance to disable lights during the alarm
                     if (Generator.Flip(0.08))
                         AlarmModifier_LightsOff();
+                    else if (Generator.Flip(0.05))
+                        AlarmModifier_CyclingLights();
                     else if (Generator.Flip(0.01))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.2, 1.4));
 
@@ -270,6 +289,8 @@ public partial record Zone : DataBlock<Zone>
                     // Small chance to disable lights during the alarm
                     if (Generator.Flip(0.1))
                         AlarmModifier_LightsOff();
+                    else if (Generator.Flip(0.07))
+                        AlarmModifier_CyclingLights();
                     else if (Generator.Flip(0.05))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.2, 1.4));
 
@@ -319,8 +340,9 @@ public partial record Zone : DataBlock<Zone>
                                 GenericWave.SinglePouncerShadow,
                                 Generator.Between(4, 16));
                     }
-
-                    if (Generator.Flip(0.07))
+                    else if (Generator.Flip(0.08))
+                        AlarmModifier_CyclingLights();
+                    else if (Generator.Flip(0.07))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.1, 1.3));
 
                     // Tiny chance for bait door approach pouncer
@@ -373,8 +395,9 @@ public partial record Zone : DataBlock<Zone>
                                 GenericWave.SinglePouncerShadow,
                                 Generator.Between(4, 16));
                     }
-
-                    if (Generator.Flip(0.15))
+                    else if (Generator.Flip(0.15))
+                        AlarmModifier_CyclingLights();
+                    else if (Generator.Flip(0.15))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.1, 1.1));
 
                     // Tiny chance to be pouncered when opening the door or

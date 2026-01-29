@@ -2,6 +2,7 @@
 using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 
@@ -338,6 +339,73 @@ public static class WardenObjectiveEventCollections
                 Duration = duration,
                 Delay = delay,
                 SetZoneLight = setZoneLight
+            });
+
+        return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> AddCyclingLights(
+        this ICollection<WardenObjectiveEvent> events,
+        int zoneNumber,
+        int layer,
+        LightSettings[] states,
+        int loopIndex,
+        double stateDuration = 1.5)
+    {
+        var eventLoop = new EventLoop()
+        {
+            LoopIndex = loopIndex,
+            LoopDelay = 0.0,
+            LoopCount = -1
+        };
+
+        for (int i = 0; i < states.Length; i++)
+        {
+            eventLoop.EventsToActivate.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.SetLightDataInZone,
+                    LocalIndex = zoneNumber,
+                    Layer = layer,
+                    Delay = i * stateDuration,
+                    Duration = 0.5,
+                    SetZoneLight = new SetZoneLight
+                    {
+                        LightSettings = states[i],
+                        Duration = 0.5,
+                        Seed = i + 1,
+                    }
+                });
+        }
+
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.StartEventLoop,
+                EventLoop = eventLoop
+            });
+
+        return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> AddRevertZoneLights(
+        this ICollection<WardenObjectiveEvent> events,
+        int zoneNumber,
+        int layer,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SetLightDataInZone,
+                LocalIndex = zoneNumber,
+                Layer = layer,
+                Delay = delay,
+                SetZoneLight = new SetZoneLight
+                {
+                    SetLight = SetZoneLightType.Revert,
+                    Duration = 1.0,
+                }
             });
 
         return events;

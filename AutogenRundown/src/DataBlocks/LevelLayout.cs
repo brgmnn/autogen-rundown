@@ -26,7 +26,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
     private readonly Level level;
 
     [JsonIgnore]
-    private readonly BuildDirector director;
+    internal readonly BuildDirector director;
 
     [JsonIgnore]
     private readonly WardenObjective objective;

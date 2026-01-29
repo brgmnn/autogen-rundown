@@ -140,6 +140,29 @@ public record LightSettings : DataBlock<LightSettings>
             LightCategorySetting.Off(LightCategory.DoorImportant),
         }
     };
+
+    public static readonly LightSettings AlarmCycling_Amber = new()
+    {
+        PersistentId = Generator.GetPersistentId(),
+        CategorySettings = new List<LightCategorySetting>()
+        {
+            new()
+            {
+                Color = new() { Red = 1.0, Green = 0.6, Blue = 0.15 },
+                Category = LightCategory.General,
+                Chance = 1.0,
+                Intensity = 0.7,
+                On = true
+            },
+
+            LightCategorySetting.Off(LightCategory.Special),
+            LightCategorySetting.Off(LightCategory.Emergency),
+            LightCategorySetting.Off(LightCategory.Independent),
+            LightCategorySetting.Off(LightCategory.Door),
+            LightCategorySetting.Off(LightCategory.Sign),
+            LightCategorySetting.Off(LightCategory.DoorImportant),
+        }
+    };
     //
     // public static readonly LightSettings RedZoneDoor = new()
     // {
@@ -163,6 +186,7 @@ public record LightSettings : DataBlock<LightSettings>
 
         LightsOff.Persist();
         ErrorFlashOn.Persist();
+        AlarmCycling_Amber.Persist();
 
         // RedZoneDoor.Persist();
     }
