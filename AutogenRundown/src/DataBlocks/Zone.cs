@@ -155,11 +155,11 @@ public partial record Zone : DataBlock<Zone>
             : new[] { Light.LightSettings.LightsOff, Light.LightSettings.ErrorFlashOn, Light.LightSettings.AlarmCycling_Amber };
 
         EventsOnDoorScanStart.AddCyclingLights(
-            LocalIndex, layer, states, loopIndex,
+            BuildFromLocalIndex, layer, states, loopIndex,
             stateDuration: Generator.NextDouble(0.8, 1.5));
 
         EventsOnDoorScanDone.AddStopLoop(loopIndex, 0);
-        EventsOnDoorScanDone.AddRevertZoneLights(LocalIndex, layer, Generator.Between(1, 2));
+        EventsOnDoorScanDone.AddRevertZoneLights(BuildFromLocalIndex, layer, Generator.Between(1, 2));
     }
 
     /// <summary>
