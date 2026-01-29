@@ -827,17 +827,13 @@ public class Level
             _ => MainLayerData
         };
 
-    public WardenObjective? GetObjective(Bulkhead variant) =>
-        variant switch
-        {
-            Bulkhead.Main => Bins.WardenObjectives.Find(MainLayerData.ObjectiveData.DataBlockId),
-            Bulkhead.Extreme => Bins.WardenObjectives.Find(SecondaryLayerData.ObjectiveData.DataBlockId),
-            Bulkhead.Overload => Bins.WardenObjectives.Find(ThirdLayerData.ObjectiveData.DataBlockId),
-            Bulkhead.None => throw new NotImplementedException(),
-            Bulkhead.StartingArea => throw new NotImplementedException(),
-            Bulkhead.All => throw new NotImplementedException(),
-            _ => throw new NotImplementedException(),
-        };
+    public WardenObjective GetObjective(Bulkhead variant)
+    {
+        if (variant.HasFlag(Bulkhead.Main))
+            return Objective[Bulkhead.Main];
+
+        return variant is Bulkhead.Extreme or Bulkhead.Overload ? Objective[variant] : Objective[Bulkhead.Main];
+    }
 
     public LevelLayout? GetLevelLayout(Bulkhead variant) =>
         variant switch

@@ -182,7 +182,7 @@ public partial record LevelLayout
                 .EnableZoneSensorsWithReset(sensorDef.Id, offTime)
                 .AddSound(Sound.LightsOn_Vol4, offTime - 0.4);
 
-            level.Objective[node.Bulkhead].EventsOnElevatorLand.Add(
+            level.GetObjective(node.Bulkhead).EventsOnElevatorLand.Add(
                 new WardenObjectiveEvent
                 {
                     Type = WardenObjectiveEventType.StartEventLoop,
