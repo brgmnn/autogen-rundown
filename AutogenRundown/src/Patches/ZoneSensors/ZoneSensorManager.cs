@@ -450,7 +450,7 @@ public sealed class ZoneSensorManager
 
         foreach (var area in zone.m_areas)
         {
-            totalCoverage += area.VoxelCoverage;
+            totalCoverage += area.m_courseNode?.m_nodeCluster?.CalculateVoxelCoverage(0.9f) ?? 0f;
         }
 
         // Sensors per 100 units of voxel coverage
