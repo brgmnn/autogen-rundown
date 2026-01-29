@@ -1018,8 +1018,6 @@ public class Level
                     usedCustomGeos.Add(zone.CustomGeomorph);
 
         ResourceSet.CustomGeomorphs.RemoveAll(prefab => !usedCustomGeos.Contains(prefab.Asset));
-
-        Name = $"{Name} - {Complex switch { Complex.Mining => "M", Complex.Tech => "T", Complex.Service => "S" }}";
     }
 
     /// <summary>

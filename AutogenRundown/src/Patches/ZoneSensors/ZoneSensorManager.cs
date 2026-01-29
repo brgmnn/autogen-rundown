@@ -483,6 +483,7 @@ public sealed class ZoneSensorManager
         {
             return CalculateSensorCountFromDensity(zone, groupDef.Density, groupDef.Radius);
         }
+
         return groupDef.Count;
     }
 
