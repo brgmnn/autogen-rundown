@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Resources;
+using System.Text.RegularExpressions;
 using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown;
@@ -13,6 +14,7 @@ using AutogenRundown.DataBlocks.Terminals;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
 using AutogenRundown.GeneratorData;
+using AutogenRundown.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -94,6 +96,9 @@ public class Level
             (1.0, Complex.Tech),
             (0.7, Complex.Service)
         });
+
+    [JsonIgnore]
+    public ComplexResourceSet ResourceSet { get; set; } = ComplexResourceSet.Mining;
 
     /// <summary>
     /// Chances of a level selecting each combination of bulkheads
@@ -481,12 +486,9 @@ public class Level
         };
     }
 
-    public JObject Expedition
-    {
-        get => new JObject
+    public JObject Expedition => new()
         {
-            ["ComplexResourceData"] = (int)Complex,
-            // ["MLSLevelKit"] = 0,
+            ["ComplexResourceData"] = ResourceSet.PersistentId,
             ["MLSLevelKit"] = 1,
             ["LightSettings"] = 36,
             ["FogSettings"] = FogSettings.PersistentId,
@@ -503,7 +505,6 @@ public class Level
                 new Color { Alpha = 1.0, Red = 0.5, Green = 0.5, Blue = 0.5 }),
             ["DustTurbulence"] = 1.0
         };
-    }
 
     public JObject VanityItemsDropData = new() { ["Groups"] = new JArray() };
 
@@ -992,9 +993,39 @@ public class Level
     }
 
     /// <summary>
+    /// Purely RAM/memory optimization step. This prunes any unneeded custom geos from the custom
+    /// geo list so they are not loaded by the game for this level. This saves around 1-2gb of
+    /// ram for people.
+    /// </summary>
+    private void FinalizeComplexResourceSet()
+    {
+        ResourceSet = Complex switch
+        {
+            Complex.Mining => ComplexResourceSet.Mining,
+            Complex.Tech => ComplexResourceSet.Tech,
+            Complex.Service => ComplexResourceSet.Service,
+        };
+
+        ResourceSet = ResourceSet.Duplicate();
+
+        ResourceSet.BlockName = $"{ResourceSet.BlockName}_{Tier}{Index}_{Filesystem.Filename(Name)}";
+
+        var usedCustomGeos = new HashSet<string>();
+
+        foreach (var layout in Layouts.Values)
+            foreach (var zone in layout.Zones)
+                if (zone.CustomGeomorph is not null)
+                    usedCustomGeos.Add(zone.CustomGeomorph);
+
+        ResourceSet.CustomGeomorphs.RemoveAll(prefab => !usedCustomGeos.Contains(prefab.Asset));
+
+        Name = $"{Name} - {Complex switch { Complex.Mining => "M", Complex.Tech => "T", Complex.Service => "S" }}";
+    }
+
+    /// <summary>
     /// Saves all of the EOS definitions
     /// </summary>
-    private void FinalizeExtraObjectiveSetup()
+    private void FinalizeCustomMods()
     {
         /*
          * We need to make sure the ExtraObjectiveSetup layout definitions are set up with the
@@ -1393,7 +1424,7 @@ public class Level
         #endregion
 
         #region Finalize -- ExtraObjectiveSetup
-        level.FinalizeExtraObjectiveSetup();
+        level.FinalizeCustomMods();
         #endregion
 
         #region Finalize -- Zone numbers & Extraction Intel
@@ -1401,6 +1432,10 @@ public class Level
         level.RecalculateZoneAliasStarts();
         level.Objective[Bulkhead.Main].PostBuild_ForwardExtract(level);
 
+        #endregion
+
+        #region Finalize -- Complex Resource Set
+        level.FinalizeComplexResourceSet();
         #endregion
 
         Plugin.Logger.LogDebug($"Level={level.Tier}{level.Index} level plan: {level.Planner}");
@@ -1721,7 +1756,8 @@ public class Level
             Plugin.Logger.LogError($"OH NO: {err}");
         }
 
-        level.FinalizeExtraObjectiveSetup();
+        level.FinalizeCustomMods();
+        level.FinalizeComplexResourceSet();
 
         return level;
     }
