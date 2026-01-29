@@ -49,6 +49,9 @@ TODO:
   * Extract decryption keys far too easy on D-tier overload
     * Needs extract or finish objective modifier
   * Might consider if we even need an error alarm turnoff for levels in main where it goes all the way to the end?
+  * Increase surge alarm distance
+  * VERY SLIGHT increase in Apex alarm wave pops
+  * Alarm modifier, disco lights
 
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
