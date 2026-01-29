@@ -21,4 +21,6 @@ public record Prefab
     ///
     /// </summary>
     public int Shard { get; set; } = 1;
+
+    public Prefab Duplicate() => this with { };
 }

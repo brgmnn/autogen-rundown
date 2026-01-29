@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.Components;
 using AutogenRundown.Managers;
 using AutogenRundown.Patches;
+using AutogenRundown.Patches.ZoneSensors;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
@@ -25,9 +26,10 @@ namespace AutogenRundown;
 [BepInPlugin("000-the_tavern-AutogenRundown", "AutogenRundown", Version)]
 [BepInProcess("GTFO.exe")]
 [BepInDependency("dev.gtfomodding.gtfo-api")]
+[BepInDependency("Amor.AmorLib", BepInDependency.DependencyFlags.HardDependency)]
 public class Plugin : BasePlugin
 {
-    public const string Version = "0.80.5";
+    public const string Version = "0.81.0";
 
     public const string Name = "the_tavern-AutogenRundown";
 
@@ -115,11 +117,13 @@ public class Plugin : BasePlugin
 
         GameDataAPI.OnGameDataInitialized += Patch_CentralGeneratorCluster.Setup;
         GameDataAPI.OnGameDataInitialized += LogArchivistManager.Setup;
+        GameDataAPI.OnGameDataInitialized += ZoneSensorManager.Setup;
 
         RundownTierMarkerArchivist.PluginSetup();
 
         AssetAPI.OnAssetBundlesLoaded += ExpeditionSuccessPage_ArchivistIcon.OnAssetBundlesLoaded;
         AssetAPI.OnAssetBundlesLoaded += RundownTierMarkerArchivist.OnAssetBundlesLoaded;
+        AssetAPI.OnAssetBundlesLoaded += ZoneSensorAssets.Init;
 
         // Apply patches
         var harmony = new Harmony("the_tavern-AutogenRundown");

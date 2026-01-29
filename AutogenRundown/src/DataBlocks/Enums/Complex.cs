@@ -10,5 +10,4 @@ public enum Complex
     Mining = 1,
     Tech = 3,
     Service = 27 // Just floodways, no gardens
-    // Service = 53, // With gardens
 }

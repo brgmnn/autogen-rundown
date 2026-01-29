@@ -11,6 +11,7 @@ Power cells are large, heavy energy storage units used to activate generators wi
 ### Power Cell Sources
 
 Power cells can be found in two ways:
+
 - **Starting Cargo Container**: Given to players at mission start in a crate
 - **Scattered in Zones**: Located throughout the expedition in various zones
 
@@ -53,6 +54,7 @@ Power cells can be found in two ways:
 ### Power Cell Carry Restrictions
 
 When carrying a power cell, players experience:
+
 - **Severe Movement Speed Reduction**: Cannot sprint, drastically reduced walk speed
 - **Can Still Use Weapons**: Unlike some carry items, weapons remain usable
 - **Can Drop Cell**: Ability to drop cell when needed for combat or repositioning
@@ -62,12 +64,14 @@ When carrying a power cell, players experience:
 ### Generator Mechanics
 
 **Generator Activation:**
+
 - Requires one power cell per generator
 - Insert cell at generator to activate
 - Activation may trigger enemy spawns or alarms
 - Powers systems (doors, lights, progression gates)
 
 **Generator Distribution Patterns:**
+
 - Multiple generators scattered across zones
 - Each requires individual power cell delivery
 - Generators may be in dangerous or distant zones
@@ -75,11 +79,13 @@ When carrying a power cell, players experience:
 ### Two Objective Variants
 
 **Distribute Power Cells (Standard):**
+
 - Cells found centrally or at start
 - Generators distributed throughout zones
 - Carry cells TO generators
 
 **Central Generator Cluster (Inverse):**
+
 - Cells scattered throughout zones
 - Generators in central location
 - Retrieve cells FROM zones to central cluster
@@ -100,6 +106,7 @@ When carrying a power cell, players experience:
 ### Progressive Carry Strategy
 
 **"Carry As You Go" Method (Recommended):**
+
 1. Pick up cell at mission start or early zone
 2. Carry cell through zones as team clears them
 3. Deliver to generator when encountered
@@ -107,6 +114,7 @@ When carrying a power cell, players experience:
 5. Continue pattern throughout mission
 
 **Advantages:**
+
 - No backtracking required
 - Integrates naturally with zone clearing
 - Reduces total transport time
@@ -115,17 +123,20 @@ When carrying a power cell, players experience:
 ### Dedicated Trip Strategy
 
 **"Make Special Trips" Method:**
+
 1. Clear all zones first without carrying cells
 2. Return to cell locations after clearing
 3. Make dedicated delivery runs
 4. Repeat for each generator
 
 **Advantages:**
+
 - Full combat capability during initial clear
 - Can optimize routes after seeing full layout
 - Less risk of dropping cells in dangerous situations
 
 **Disadvantages:**
+
 - Significant backtracking
 - Time-consuming
 - Vulnerable during dedicated delivery runs
@@ -159,28 +170,30 @@ When carrying a power cell, players experience:
 ## Notable Expeditions
 
 ### Distribute Powercells
+
 - **[ALT://R2D1](https://gtfo.fandom.com/wiki/ALT://R2D1)**: Power Cell Distribution objective
 - **[ALT://R2B2](https://gtfo.fandom.com/wiki/ALT://R2B2)**: Power Cell Distribution objective
 - Various other expeditions feature power cell distribution
 
 ### Central Generator Cluster (Inverse Variant)
+
 See [Central Generator Cluster documentation](./central-generator-cluster.md) for the inverse objective variant.
 
 See [Distribute Powercells - Official GTFO Wiki](https://gtfo.fandom.com/wiki/Distribute_Powercells) for complete list.
 
 ## Comparison to Related Objectives
 
-| Aspect | Distribute Power Cells | Central Generator Cluster | Retrieve Big Item |
-|--------|------------------------|--------------------------|------------------|
-| **Item Source** | Central/starting location | Scattered in zones | Single location |
-| **Destination** | Generators in zones | Central cluster | Extraction |
-| **Number of Deliveries** | Multiple (one per generator) | Multiple (one per cell) | Single item |
-| **Movement Speed** | Greatly reduced | Greatly reduced | Severely reduced |
-| **Weapon Use** | Available | Available | Prohibited |
-| **Distribution Pattern** | Cells to generators | Cells to cluster | Item to extraction |
-| **Backtracking** | Varies by strategy | High (retrieval missions) | Low (one-way trip) |
-| **Drop Mechanic** | Yes | Yes | Yes |
-| **Objective Relationship** | Standard variant | Inverse variant | Different objective |
+| Aspect                     | Distribute Power Cells       | Central Generator Cluster | Retrieve Big Item   |
+| -------------------------- | ---------------------------- | ------------------------- | ------------------- |
+| **Item Source**            | Central/starting location    | Scattered in zones        | Single location     |
+| **Destination**            | Generators in zones          | Central cluster           | Extraction          |
+| **Number of Deliveries**   | Multiple (one per generator) | Multiple (one per cell)   | Single item         |
+| **Movement Speed**         | Greatly reduced              | Greatly reduced           | Severely reduced    |
+| **Weapon Use**             | Available                    | Available                 | Prohibited          |
+| **Distribution Pattern**   | Cells to generators          | Cells to cluster          | Item to extraction  |
+| **Backtracking**           | Varies by strategy           | High (retrieval missions) | Low (one-way trip)  |
+| **Drop Mechanic**          | Yes                          | Yes                       | Yes                 |
+| **Objective Relationship** | Standard variant             | Inverse variant           | Different objective |
 
 ## Common Challenges
 

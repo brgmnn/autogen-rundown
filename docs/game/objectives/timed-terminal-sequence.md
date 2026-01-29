@@ -55,18 +55,21 @@ Timed Terminal Sequence represents a time-sensitive network synchronization prot
 ### Three-Command Sequence
 
 **Command 1 - INIT_TIMED_CONNECTION (Central Terminal):**
+
 - Initiates the timed sequence
 - Starts 3 minute 20 second timer
 - Triggers continuous enemy spawning
 - Executed at Central Terminal
 
 **Command 2 - VERIFY_TIMED_CONNECTION (Parallel Terminal):**
+
 - Verifies connection at randomly-selected terminal
 - Must be executed within some minutes of initialization
 - Overrides first timer, starts 10-second countdown
 - Executed at Parallel Terminal (location unknown until search)
 
 **Command 3 - CONFIRM_TIMED_CONNECTION (Central Terminal):**
+
 - Confirms and completes sequence
 - Must be executed within 10 seconds of verification
 - Returns to original Central Terminal
@@ -75,6 +78,7 @@ Timed Terminal Sequence represents a time-sensitive network synchronization prot
 ### Time Constraints
 
 **First Timer: 3 Minutes 20 Seconds (200 seconds)**
+
 - Find and reach parallel terminal
 - Navigate through zones
 - Execute VERIFY_TIMED_CONNECTION command
@@ -82,6 +86,7 @@ Timed Terminal Sequence represents a time-sensitive network synchronization prot
 - Overridden once verification executed
 
 **Second Timer: 10 Seconds**
+
 - Return to Central Terminal from Parallel Terminal
 - Execute CONFIRM_TIMED_CONNECTION command
 - Extremely tight timing
@@ -91,6 +96,7 @@ Timed Terminal Sequence represents a time-sensitive network synchronization prot
 ### Parallel Terminal Randomization
 
 **Random Selection:**
+
 - Parallel terminal chosen randomly from available terminals in objective area
 - Location not revealed until players search
 - Changes with every attempt at sequence
@@ -98,6 +104,7 @@ Timed Terminal Sequence represents a time-sensitive network synchronization prot
 - Can be same terminal as previous attempt (but random)
 
 **Terminal Search:**
+
 - Players must check terminals to find parallel terminal
 - Only one terminal is "correct" parallel terminal per attempt
 - Incorrect terminals provide no indication
@@ -106,6 +113,7 @@ Timed Terminal Sequence represents a time-sensitive network synchronization prot
 ### Continuous Enemy Spawns
 
 **Spawn Pattern:**
+
 - Enemies begin spawning when INIT_TIMED_CONNECTION executed
 - Continuous spawning throughout sequence
 - Various enemy types (Strikers, Shooters, Giants, etc.)
@@ -182,12 +190,14 @@ Timed Terminal Sequence represents a time-sensitive network synchronization prot
 ### Solo/Small Team Adaptation
 
 **Extreme Difficulty:**
+
 - Nearly impossible solo due to 10-second timer
 - Two players minimum for realistic completion
 - Distance between terminals determines feasibility
 - May be literally impossible if terminals too far apart
 
 **Solo Approach (if attempted):**
+
 1. Scout all terminals before initiation
 2. Memorize exact locations
 3. Plan optimal search pattern
@@ -199,6 +209,7 @@ Timed Terminal Sequence represents a time-sensitive network synchronization prot
 ### Terminal Search Optimization
 
 **Systematic Search:**
+
 - Divide terminals among scouts
 - Check closest terminals first
 - Eliminate incorrect terminals from mental list
@@ -206,6 +217,7 @@ Timed Terminal Sequence represents a time-sensitive network synchronization prot
 - Converge on correct terminal quickly
 
 **Speed Techniques:**
+
 - Pre-type commands while running
 - Use tab completion
 - Don't stop moving unless at terminal
@@ -215,11 +227,13 @@ Timed Terminal Sequence represents a time-sensitive network synchronization prot
 ## Terminal Commands
 
 ### Timed Sequence Commands
+
 - `INIT_TIMED_CONNECTION` - Initialize sequence at Central Terminal (starts 3:20 timer)
 - `VERIFY_TIMED_CONNECTION` - Verify at Parallel Terminal (starts 10-second timer)
 - `CONFIRM_TIMED_CONNECTION` - Confirm at Central Terminal (completes sequence)
 
 ### Navigation Commands
+
 - `PING` - Locate terminal zones
 - `LIST` - Show objectives
 - Tab key for auto-complete commands
@@ -227,6 +241,7 @@ Timed Terminal Sequence represents a time-sensitive network synchronization prot
 ## Notable Expeditions
 
 ### Featured Expeditions
+
 - **[R8C1](https://gtfo.wiki.gg/wiki/R8C1)**: Features Timed Terminal Sequence objective
 - Various other high-difficulty expeditions include timed sequences
 
@@ -234,19 +249,19 @@ See [Timed Sequence - Official GTFO Wiki](https://gtfo.fandom.com/wiki/Timed_Seq
 
 ## Comparison to Related Objectives
 
-| Aspect | Timed Terminal Sequence | Corrupted Terminal Uplink | Terminal Uplink (Standard) |
-|--------|------------------------|---------------------------|---------------------------|
-| **Time Pressure** | Extreme (3:20 + 10 sec) | Moderate | Low |
-| **Terminal Count** | 2 (Central + random Parallel) | 3+ (uplink, logs, confirm) | 1 |
-| **Terminal Selection** | Random parallel each attempt | Fixed terminal roles | Fixed uplink terminal |
-| **Command Count** | 3 sequential | Multiple verifications + confirm | Multiple verifications |
-| **Team Splitting** | Required | Required | Optional |
-| **Coordination Needs** | Extreme | High | Low |
-| **Solo Feasibility** | Nearly impossible | Very difficult | Possible |
-| **Enemy Spawning** | Continuous until completion | Alarm during uplink | Alarm during uplink |
-| **Retry Penalty** | Parallel terminal randomizes | Same terminals | Same terminal |
-| **Speed Requirement** | Critical (10-sec timer) | Moderate | Low |
-| **Complexity** | Very high | Very high | Moderate |
+| Aspect                 | Timed Terminal Sequence       | Corrupted Terminal Uplink        | Terminal Uplink (Standard) |
+| ---------------------- | ----------------------------- | -------------------------------- | -------------------------- |
+| **Time Pressure**      | Extreme (3:20 + 10 sec)       | Moderate                         | Low                        |
+| **Terminal Count**     | 2 (Central + random Parallel) | 3+ (uplink, logs, confirm)       | 1                          |
+| **Terminal Selection** | Random parallel each attempt  | Fixed terminal roles             | Fixed uplink terminal      |
+| **Command Count**      | 3 sequential                  | Multiple verifications + confirm | Multiple verifications     |
+| **Team Splitting**     | Required                      | Required                         | Optional                   |
+| **Coordination Needs** | Extreme                       | High                             | Low                        |
+| **Solo Feasibility**   | Nearly impossible             | Very difficult                   | Possible                   |
+| **Enemy Spawning**     | Continuous until completion   | Alarm during uplink              | Alarm during uplink        |
+| **Retry Penalty**      | Parallel terminal randomizes  | Same terminals                   | Same terminal              |
+| **Speed Requirement**  | Critical (10-sec timer)       | Moderate                         | Low                        |
+| **Complexity**         | Very high                     | Very high                        | Moderate                   |
 
 ## Common Challenges
 

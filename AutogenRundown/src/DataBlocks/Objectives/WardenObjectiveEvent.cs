@@ -206,6 +206,9 @@ public record WardenObjectiveEvent
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
     public CameraShake? CameraShake { get; set; }
 
+    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    public InfectPlayer? InfectPlayer { get; set; }
+
     /// <summary>
     ///
     /// </summary>

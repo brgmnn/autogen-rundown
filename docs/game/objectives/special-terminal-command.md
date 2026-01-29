@@ -47,16 +47,19 @@ Special Terminal Commands are executable programs that prisoners must run on des
 ### Command Types
 
 **Environmental Modification Commands:**
+
 - **LIGHT_TESTING.EXE**: Disables all lights in the expedition permanently
 - **VENTILATION_OVERRIDE.EXE**: Floods zones with highly infectious fog
 - **Power/Door Commands**: Open security doors or restore power systems
 
 **Security/Access Commands:**
+
 - Commands that unlock progression-critical doors
 - Commands that disable security systems
 - Commands that grant access to restricted zones
 
 **Unknown/Classified Commands:**
+
 - **DENOFWOLVES.EXE**: Special command with undisclosed effects
 - **THREAT_LEVEL_M.EXE**: Likely increases threat or spawns enemies
 - **PRIVATE_ENCRYPTION.EXE**: Encrypted command with special purpose
@@ -64,11 +67,13 @@ Special Terminal Commands are executable programs that prisoners must run on des
 ### Terminal Navigation
 
 **Finding Command Terminals:**
+
 - Use `PING` to locate terminal zones
 - Some commands must be executed at specific terminals
 - Terminal accessibility may require keys or security clearance
 
 **Using COMMANDS Command:**
+
 - Type `COMMANDS` at terminal to list available executable programs
 - Includes Reactor Startup, Reactor Shutdown, Establish Uplink, and Terminal Command objectives
 - Tab completion (TAB key) can auto-complete command names
@@ -76,23 +81,27 @@ Special Terminal Commands are executable programs that prisoners must run on des
 ### Environmental Consequences
 
 **Permanent Darkness (LIGHT_TESTING.EXE):**
+
 - All lights disabled for remainder of expedition
 - Flashlights become critical survival tool
 - Visibility drastically reduced
 - Enemy detection becomes significantly harder
 
 **Infectious Fog (VENTILATION_OVERRIDE.EXE):**
+
 - Highly infectious fog fills affected zones
 - Infection meter rises rapidly in fog
 - May become permanent environmental hazard
 - Requires careful navigation and fog repellers/turbines
 
 **Enemy Waves:**
+
 - Many commands trigger error alarms or surge alarms
 - Continuous or wave-based enemy spawns
 - Must survive while adapting to environmental changes
 
 **Bioscan Requirements:**
+
 - Some commands trigger bioscan sequences
 - Team must hold position during scan
 - Vulnerable to enemy attacks during scan
@@ -129,6 +138,7 @@ Special Terminal Commands are executable programs that prisoners must run on des
 ### Environmental Survival
 
 **Darkness Survival (LIGHT_TESTING):**
+
 - All players enable flashlights immediately
 - Move more slowly to avoid alerting sleeping enemies
 - Use Bio Tracker to tag enemies in darkness
@@ -136,6 +146,7 @@ Special Terminal Commands are executable programs that prisoners must run on des
 - Sentries become less effective - may need manual targeting
 
 **Infectious Fog Survival (VENTILATION_OVERRIDE):**
+
 - Deploy Fog Repellers if available
 - Move through fog quickly to minimize infection
 - Plan paths that avoid prolonged fog exposure
@@ -145,12 +156,14 @@ Special Terminal Commands are executable programs that prisoners must run on des
 ## Terminal Commands
 
 ### Standard Navigation Commands
+
 - `COMMANDS` - Lists all available executable commands at current terminal
 - `PING` - Locate terminal zones
 - `LIST` - Show items and objectives
 - `QUERY` - Find specific item or objective locations
 
 ### Special Executable Commands
+
 - `START LIGHT_TESTING.EXE` - Disable all lights in expedition
 - `START VENTILATION_OVERRIDE.EXE` - Flood zones with infectious fog
 - `START DENOFWOLVES.EXE` - Special classified command
@@ -159,6 +172,7 @@ Special Terminal Commands are executable programs that prisoners must run on des
 - Various mission-specific commands (varies by expedition)
 
 ### Command Syntax
+
 - Use `START [COMMAND_NAME].EXE` format
 - Tab completion available for faster input
 - Case-insensitive (usually)
@@ -172,16 +186,16 @@ See [List of Terminal Commands - Official GTFO Wiki](https://gtfo.wiki.gg/wiki/L
 
 ## Comparison to Related Objectives
 
-| Aspect | Special Terminal Command | Reactor Startup | Terminal Uplink |
-|--------|-------------------------|-----------------|-----------------|
-| **Primary Action** | Execute special command | Defend wave sequences | Establish network connection |
-| **Terminal Usage** | Single command execution | Multiple verification codes | Multiple uplink commands |
-| **Environmental Impact** | High (lights, fog, etc.) | Moderate (power activation) | Low (network only) |
-| **Combat Intensity** | Varies (often moderate) | Very high | Moderate to high |
-| **Preparation Needed** | Moderate | Very high | Moderate |
-| **Consequences** | Permanent environment change | Reactor online | Network established |
-| **Complexity** | Low to moderate | High | Moderate |
-| **Bioscan Requirement** | Sometimes | No (wave defense instead) | Sometimes |
+| Aspect                   | Special Terminal Command     | Reactor Startup             | Terminal Uplink              |
+| ------------------------ | ---------------------------- | --------------------------- | ---------------------------- |
+| **Primary Action**       | Execute special command      | Defend wave sequences       | Establish network connection |
+| **Terminal Usage**       | Single command execution     | Multiple verification codes | Multiple uplink commands     |
+| **Environmental Impact** | High (lights, fog, etc.)     | Moderate (power activation) | Low (network only)           |
+| **Combat Intensity**     | Varies (often moderate)      | Very high                   | Moderate to high             |
+| **Preparation Needed**   | Moderate                     | Very high                   | Moderate                     |
+| **Consequences**         | Permanent environment change | Reactor online              | Network established          |
+| **Complexity**           | Low to moderate              | High                        | Moderate                     |
+| **Bioscan Requirement**  | Sometimes                    | No (wave defense instead)   | Sometimes                    |
 
 ## Common Challenges
 

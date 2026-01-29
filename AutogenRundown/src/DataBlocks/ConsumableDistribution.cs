@@ -24,6 +24,18 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
         ),
     };
 
+    public static ConsumableDistribution Baseline_Syringes = new()
+    {
+        SpawnsPerZone = 6,
+        SpawnData = Collections.Flatten(
+            ItemSpawn.GlowSticks(2.0),
+            new List<ItemSpawn> {
+                new() { Weight = 2.0, Item = Items.Item.Syringe_Health },
+                new() { Weight = 1.0, Item = Items.Item.Syringe_Melee },
+            }
+        ),
+    };
+
     /// <summary>
     /// Baseline with heavy weighting to fog repellers. Averages to 4 repellers, 2 glowsticks,
     /// and 1 lock melter per zone.
@@ -81,15 +93,33 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
         )
     };
 
+    /// <summary>
+    ///
+    /// </summary>
+    public static ConsumableDistribution MedicalBay_Consumables = new()
+    {
+        SpawnsPerZone = 8,
+        SpawnData = Collections.Flatten(
+            new List<ItemSpawn> {
+                new() { Weight = 3.0, Item = Items.Item.Syringe_Health },
+                new() { Weight = 1.5, Item = Items.Item.Syringe_Melee },
+                new() { Weight = 1.0, Item = Items.Item.FogRepeller }
+            }
+        )
+    };
+
     public new static void SaveStatic()
     {
         Bins.ConsumableDistributions.AddBlock(Baseline);
         Bins.ConsumableDistributions.AddBlock(Baseline_FogRepellers);
         Bins.ConsumableDistributions.AddBlock(Baseline_LockMelters);
+        Bins.ConsumableDistributions.AddBlock(Baseline_Syringes);
 
         Bins.ConsumableDistributions.AddBlock(Alarms_FogRepellers);
 
         Bins.ConsumableDistributions.AddBlock(Reactor_FogRepellers);
+
+        Bins.ConsumableDistributions.AddBlock(MedicalBay_Consumables);
     }
 
     public uint SpawnsPerZone { get; set; } = 5;

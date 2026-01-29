@@ -281,7 +281,7 @@ public partial record LevelLayout
                     new()
                     {
                         Command = "OVERRIDE_LOCKDOWN_PROTOCOL",
-                        CommandDesc = "Manual override for security systems on floor, force open all security doors to exit",
+                        CommandDesc = new Text("Manual override for security systems on floor, force open all security doors to exit"),
                         CommandEvents = objective.SecurityControlEvents
                     }
                 }

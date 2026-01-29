@@ -11,5 +11,6 @@ public static class PatchManager
 
         Patch_LG_ComputerTerminal_Setup.Setup();
         Patch_LG_SecurityDoor.Setup();
+        Patch_UplinkWaveIsolation.Setup();
     }
 }

@@ -132,7 +132,7 @@ public partial record LevelLayout
                             new()
                             {
                                 Command = "DEACTIVATE_ALARMS",
-                                CommandDesc = "Turn off all active alarms",
+                                CommandDesc = new Text("Turn off all active alarms"),
                                 CommandEvents = new List<WardenObjectiveEvent>().AddTurnOffAlarms().ToList(),
                             }
                         }

@@ -5,6 +5,10 @@ namespace AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 
 public class Definition
 {
+    // Backing fields for deserialized values
+    private string? _layerType;
+    private int? _localIndex;
+
     /// <summary>
     /// Setting this value to null will cause it to be omitted from the JSON
     /// response. Useful for some definitions such as EventsOnScoutScream
@@ -17,14 +21,14 @@ public class Definition
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
     public string? LayerType
     {
-        get => Bulkhead switch
+        get => _layerType ?? Bulkhead switch
         {
             Bulkhead.Main => "MainLayer",
             Bulkhead.Extreme => "SecondaryLayer",
             Bulkhead.Overload => "ThirdLayer",
             _ => null
         };
-        private set { }
+        set => _layerType = value;
     }
 
     /// <summary>
@@ -39,8 +43,8 @@ public class Definition
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
     public int? LocalIndex
     {
-        get => ZoneNumber < 0 ? null : ZoneNumber;
-        private set { }
+        get => _localIndex ?? (ZoneNumber < 0 ? null : ZoneNumber);
+        set => _localIndex = value;
     }
 
     /// <summary>

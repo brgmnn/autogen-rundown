@@ -292,7 +292,7 @@ public partial record LevelLayout
         };
 
         if (Generator.Flip(sensorChance))
-            AddSecuritySensors_SinglePouncer((0, 1));
+            AddSecuritySensors(elevatorDrop);
 
         // Place both bulkheads in the first zone
         InitializeBulkheadArea(level, Bulkhead.Main, elevatorDrop);
@@ -358,7 +358,7 @@ public partial record LevelLayout
         };
 
         if (Generator.Flip(sensorChance))
-            AddSecuritySensors_SinglePouncer((0, 1));
+            AddSecuritySensors(elevatorDrop);
 
         // Place all bulkheads in the first zone
         InitializeBulkheadArea(level, Bulkhead.Main, elevatorDrop);

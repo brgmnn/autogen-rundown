@@ -112,6 +112,12 @@ public enum Sound : uint
     TenseRevelation = 1819247891,
     #endregion
 
+    #region Liquid and Disinfect
+
+    FoleyDisinfectPack = 2543859690,
+
+    #endregion
+
     #region Environment noises
     Environment_DistantMetalImpacts = 3865016528,
 
