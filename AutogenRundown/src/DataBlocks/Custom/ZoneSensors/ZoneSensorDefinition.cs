@@ -27,4 +27,10 @@ public class ZoneSensorDefinition : Definition
     /// Common events include spawning enemies, playing sounds, or toggling sensors.
     /// </summary>
     public List<WardenObjectiveEvent> EventsOnTrigger { get; set; } = new();
+
+    /// <summary>
+    /// Whether sensors in this definition start enabled when spawned.
+    /// Set to false to spawn sensors in a disabled state.
+    /// </summary>
+    public bool StartEnabled { get; set; } = true;
 }

@@ -296,7 +296,7 @@ public sealed class ZoneSensorManager
             // Create sensor group with replicators (pass expected count for batch allocation)
             var sensorGroup = new ZoneSensorGroup();
             sensorGroup.Initialize(nextReplicatorIndex++, definition.Id, definition.EventsOnTrigger, hasTriggerEach,
-                totalSensors, hasMovingSensors, dimensionIndex, layerType, localZoneIndex);
+                totalSensors, hasMovingSensors, dimensionIndex, layerType, localZoneIndex, definition.StartEnabled);
 
             // Set pending spawn data (sensors will spawn when positions are received)
             sensorGroup.SetPendingSpawnData(zone, definition.SensorGroups);

@@ -119,7 +119,7 @@ public class ZoneSensorGroup
     /// <param name="zoneIndex">Local zone index where this group is located</param>
     public void Initialize(int replicatorIndex, int id, List<WardenObjectiveEvent> events, bool triggerEach,
         int expectedSensorCount, bool hasMovingSensors,
-        eDimensionIndex dimension, LG_LayerType layer, eLocalZoneIndex zoneIndex)
+        eDimensionIndex dimension, LG_LayerType layer, eLocalZoneIndex zoneIndex, bool startEnabled = true)
     {
         ReplicatorIndex = replicatorIndex;
         Id = id;
@@ -127,9 +127,9 @@ public class ZoneSensorGroup
         LayerType = layer;
         LocalZoneIndex = zoneIndex;
         EventsOnTrigger = events;
-        Enabled = true;
+        Enabled = startEnabled;
         this.triggerEach = triggerEach;
-        currentState = new ZoneSensorGroupState(true);
+        currentState = new ZoneSensorGroupState(startEnabled);
         previousState = new ZoneSensorGroupState(false);
         isLateJoinerSpawn = false;
         sensorsSpawned = false;
@@ -156,7 +156,7 @@ public class ZoneSensorGroup
         // State replicator for enabled/disabled
         Replicator = StateReplicator<ZoneSensorGroupState>.Create(
             stateReplicatorId,
-            new ZoneSensorGroupState(true),
+            new ZoneSensorGroupState(startEnabled),
             LifeTimeType.Session
         );
 

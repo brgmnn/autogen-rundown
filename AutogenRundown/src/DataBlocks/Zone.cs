@@ -230,6 +230,7 @@ public partial record Zone : DataBlock<Zone>
         {
             Bulkhead = bulkhead,
             ZoneNumber = BuildFromLocalIndex,
+            StartEnabled = false,
             SensorGroups = new List<ZoneSensorGroupDefinition>
             {
                 new ZoneSensorGroupDefinition
@@ -256,15 +257,6 @@ public partial record Zone : DataBlock<Zone>
 
         sensorDef.EventsOnTrigger = sensorEvents;
         level.ZoneSensors.Add(sensorDef);
-
-        // Disable sensors immediately on elevator land (start hidden)
-        level.GetObjective(bulkhead).EventsOnElevatorLand.Add(
-            new WardenObjectiveEvent
-            {
-                Type = WardenObjectiveEventType.DisableSecuritySensor,
-                Count = sensorDef.Id,
-                Delay = 0.0
-            });
 
         // Enable sensors when alarm scan starts
         EventsOnDoorScanStart.EnableZoneSensorsWithReset(sensorDef.Id, Generator.Between(1, 4));
