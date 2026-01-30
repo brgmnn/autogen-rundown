@@ -188,23 +188,23 @@ public partial record Zone : DataBlock<Zone>
         // Tier-based sensor configuration
         var (density, radius) = level.Tier switch
         {
-            "B" => (SensorDensity.Low, 2.3),
+            "B" => (SensorDensity.Medium, 2.3),
             "C" => Generator.Select(new List<(double, (SensorDensity, double))>
             {
-                (1.0, (SensorDensity.Low, 2.3)),
-                (0.4, (SensorDensity.Medium, 1.2)),
+                (1.0, (SensorDensity.Medium, 2.3)),
+                (0.4, (SensorDensity.High, 1.2)),
             }),
             "D" => Generator.Select(new List<(double, (SensorDensity, double))>
             {
-                (0.5, (SensorDensity.Low, 2.3)),
-                (1.0, (SensorDensity.Medium, 1.2)),
-                (0.3, (SensorDensity.Medium, 2.3)),
+                (0.5, (SensorDensity.Medium, 2.3)),
+                (1.0, (SensorDensity.High, 1.2)),
+                (0.3, (SensorDensity.High, 2.3)),
             }),
             "E" => Generator.Select(new List<(double, (SensorDensity, double))>
             {
-                (1.0, (SensorDensity.Medium, 1.2)),
-                (0.7, (SensorDensity.Medium, 2.3)),
-                (0.3, (SensorDensity.High, 1.2)),
+                (1.0, (SensorDensity.High, 1.2)),
+                (0.7, (SensorDensity.High, 2.3)),
+                (0.3, (SensorDensity.VeryHigh, 1.2)),
             }),
             _ => (SensorDensity.Low, 2.3)
         };

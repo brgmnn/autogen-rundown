@@ -41,17 +41,13 @@ TODO:
   * Check out Seasonal D4. End room that does nothing?
   * Add support for text data block mergers. It should be relatively safe to do this even with overwrites
   * Make E-tier shorter but harder. E4 Seasonal extreme has too many extra zones
-  * Check [DEV::EXPEDITION SURVIVED]
-    * It seems to stack with successive clears.
   * Shorter (or longer?) warden protocol startup times?
     * Maybe even a bait one?
   * Slightly longer time needed on D-tier reactor
   * Extract decryption keys far too easy on D-tier overload
     * Needs extract or finish objective modifier
   * Might consider if we even need an error alarm turnoff for levels in main where it goes all the way to the end?
-  * Increase surge alarm distance
   * VERY SLIGHT increase in Apex alarm wave pops
-  * Alarm modifier, disco lights
 
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
