@@ -471,6 +471,7 @@ public record WaveSettings : DataBlock<WaveSettings>
         Bins.WaveSettings.AddBlock(Finite_25pts_Normal);
 
         // Single waves
+        Bins.WaveSettings.AddBlock(SingleWave_6pts);
         Bins.WaveSettings.AddBlock(SingleWave_8pts);
         Bins.WaveSettings.AddBlock(SingleWave_12pts);
         Bins.WaveSettings.AddBlock(SingleWave_16pts);
@@ -1598,6 +1599,19 @@ public record WaveSettings : DataBlock<WaveSettings>
         PopulationPointsTotal = 24,
     };
     #endregion
+
+    public static WaveSettings SingleWave_6pts = new()
+    {
+        PopulationFilter = {
+            Enemies.EnemyType.Standard,
+            Enemies.EnemyType.Special
+        },
+        FilterType = PopulationFilterType.Include,
+        WavePauseMin = 1,
+        WavePauseMax = 1,
+
+        PopulationPointsTotal = 6,
+    };
 
     public static WaveSettings SingleWave_8pts = new()
     {

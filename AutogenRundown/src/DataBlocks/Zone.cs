@@ -178,6 +178,13 @@ public partial record Zone : DataBlock<Zone>
     {
         var bulkhead = layout.director.Bulkhead;
 
+        // Skip adding any security sensor alarms to a zone that already has them
+        if (level.Planner.GetNode(this).Tags.Contains("security_sensors"))
+        {
+            Plugin.Logger.LogDebug("Skipping AlarmModifier_SecuritySensor()");
+            return;
+        }
+
         // Tier-based sensor configuration
         var (density, radius) = level.Tier switch
         {
@@ -205,24 +212,35 @@ public partial record Zone : DataBlock<Zone>
         // Select wave for sensor trigger (lighter than standalone sensors)
         var wave = level.Tier switch
         {
-            "B" => GenericWave.Sensor_8pts,
+            "B" => GenericWave.Sensor_6pts,
             "C" => Generator.Select(new List<(double, GenericWave)>
             {
-                (1.0, GenericWave.Sensor_8pts),
-                (0.5, GenericWave.Sensor_12pts),
+                (1.0, GenericWave.Sensor_6pts),
+                (0.5, GenericWave.Sensor_8pts),
             }),
             "D" => Generator.Select(new List<(double, GenericWave)>
             {
-                (0.5, GenericWave.Sensor_12pts),
-                (1.0, GenericWave.Sensor_16pts),
+                (0.5, GenericWave.Sensor_8pts),
+                (1.0, GenericWave.Sensor_12pts),
             }),
             "E" => Generator.Select(new List<(double, GenericWave)>
             {
-                (0.3, GenericWave.Sensor_12pts),
-                (1.0, GenericWave.Sensor_16pts),
-                (0.4, GenericWave.Sensor_20pts),
+                (0.3, GenericWave.Sensor_8pts),
+                (1.0, GenericWave.Sensor_12pts),
+                (0.4, GenericWave.Sensor_16pts),
             }),
-            _ => GenericWave.Sensor_8pts
+            _ => GenericWave.Sensor_6pts
+        };
+
+        // Re-enable sensor after delay (while alarm is still active)
+        var resetTime = level.Tier switch
+        {
+            "A" => Generator.Flip(0.80) ? Generator.Between(15, 24) : 0.0,
+            "B" => Generator.Flip(0.65) ? Generator.Between(12, 21) : 0.0,
+            "C" => Generator.Flip(0.45) ? Generator.Between( 8, 17) : 0.0,
+            "D" => Generator.Flip(0.40) ? Generator.Between( 6, 11) : 0.0,
+            "E" => Generator.Flip(0.45) ? Generator.Between( 4,  8) : 0.0,
+            _ => 0.0,
         };
 
         // Create sensor definition in the parent zone (where players are during alarm)
@@ -245,25 +263,30 @@ public partial record Zone : DataBlock<Zone>
         // Sensor trigger events: disable sensor + spawn enemies
         var sensorEvents = new List<WardenObjectiveEvent>();
         sensorEvents
-            .DisableZoneSensors(sensorDef.Id, 0.1)
             .AddSound(Sound.LightsOff)
             .AddSpawnWave(wave, 2.0);
 
-        // Re-enable sensor after delay (while alarm is still active)
-        var resetTime = Generator.Between(8, 15);
-        sensorEvents
-            .EnableZoneSensorsWithReset(sensorDef.Id, resetTime)
-            .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
+        if (resetTime >= 1.0)
+            sensorEvents
+                .DisableZoneSensors(sensorDef.Id, 0.1)
+                .EnableZoneSensorsWithReset(sensorDef.Id, resetTime)
+                .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
 
         sensorDef.EventsOnTrigger = sensorEvents;
         level.ZoneSensors.Add(sensorDef);
 
         // Enable sensors when alarm scan starts
-        EventsOnDoorScanStart.EnableZoneSensorsWithReset(sensorDef.Id, Generator.Between(1, 4));
-        EventsOnDoorScanStart.AddSound(Sound.LightsOff, Generator.Between(1, 3));
+        var sensorStart = Generator.Between(2, 5);
+        EventsOnDoorScanStart
+            .EnableZoneSensorsWithReset(sensorDef.Id, sensorStart)
+            .AddSound(Sound.LightsOn_Vol4, sensorStart)
+            .AddMessage(":://WARNING - SECURITY SCAN SYSTEM CORRUPTED", sensorStart - 1);
 
         // Disable sensors when alarm scan completes
-        EventsOnDoorScanDone.DisableZoneSensors(sensorDef.Id, Generator.Between(1, 3));
+        EventsOnDoorScanDone.DisableZoneSensors(sensorDef.Id);
+
+        Plugin.Logger.LogDebug($"{Name} -- Alarm Security Sensors: zone={LocalIndex}, density={density}, " +
+                               $"moving={false}, triggerEach={resetTime < 1.0}, id={sensorDef.Id}");
     }
 
     /// <summary>

@@ -54,6 +54,8 @@ public partial record LevelLayout
     /// <param name="moving">Whether sensors should patrol (null = random based on tier)</param>
     public void AddSecuritySensors(ZoneNode node, GenericWave? wave = null, bool? moving = null)
     {
+        planner.UpdateNode(node with { Tags = node.Tags.Extend("security_sensors") });
+
         // 1. Determine sensor density by tier (count calculated at runtime from zone area)
         //    And radius
         var (density, radius) = level.Tier switch
@@ -227,44 +229,44 @@ public partial record LevelLayout
         switch (level.Tier)
         {
             case "A":
-                options.Add((1.0, GenericWave.Sensor_8pts));
+                options.Add((1.0, GenericWave.Sensor_6pts));
                 break;
 
             case "B":
-                options.Add((0.4, GenericWave.Sensor_8pts));
-                options.Add((1.0, GenericWave.Sensor_12pts));
-                options.Add((0.4, GenericWave.Sensor_Shooters_8pts));
+                options.Add((0.4, GenericWave.Sensor_6pts));
+                options.Add((1.0, GenericWave.Sensor_8pts));
+                options.Add((0.4, GenericWave.Sensor_Shooters_6pts));
                 break;
 
             case "C":
-                options.Add((0.3, GenericWave.Sensor_Shooters_8pts));
-                options.Add((0.4, GenericWave.Sensor_12pts));
-                options.Add((1.0, GenericWave.Sensor_16pts));
+                options.Add((0.3, GenericWave.Sensor_Shooters_6pts));
+                options.Add((0.4, GenericWave.Sensor_8pts));
+                options.Add((1.0, GenericWave.Sensor_12pts));
                 break;
 
             case "D":
-                options.Add((0.3, GenericWave.Sensor_16pts));
-                options.Add((0.4, GenericWave.Sensor_Shooters_16pts));
-                options.Add((1.0, GenericWave.Sensor_20pts));
+                options.Add((0.3, GenericWave.Sensor_12pts));
+                options.Add((0.4, GenericWave.Sensor_Shooters_12pts));
+                options.Add((1.0, GenericWave.Sensor_16pts));
                 options.Add((0.25, GenericWave.SingleMother));
                 options.Add((0.15, GenericWave.SingleTank));
                 break;
 
             case "E":
-                options.Add((0.3, GenericWave.Sensor_Shooters_16pts));
-                options.Add((1.0, GenericWave.Sensor_20pts));
+                options.Add((0.3, GenericWave.Sensor_Shooters_12pts));
+                options.Add((1.0, GenericWave.Sensor_16pts));
                 options.Add((0.4, GenericWave.SingleTank));
                 options.Add((0.3, GenericWave.SinglePouncer));
                 options.Add((0.2, GenericWave.SingleMother));
                 break;
 
             default:
-                options.Add((1.0, GenericWave.Sensor_12pts));
+                options.Add((1.0, GenericWave.Sensor_8pts));
                 break;
         }
 
         if (settings.HasChargers())
-            options.Add((0.6, GenericWave.Sensor_Chargers_12pts));
+            options.Add((0.6, GenericWave.Sensor_Chargers_8pts));
 
         if (settings.HasShadows())
             options.Add((0.5, GenericWave.Sensor_Shadows_12pts));
