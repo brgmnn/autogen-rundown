@@ -374,7 +374,8 @@ public sealed class ZoneSensorManager
                         position = area.m_courseNode.GetRandomPositionInside_SessionSeed();
                     }
 
-                    if (!OverlapsExistingSensor(position, sensorRadius, placedSensors))
+                    if (!OverlapsExistingSensor(position, sensorRadius, placedSensors)
+                        && !IsNearOrigin(position))
                         break;
 
                     attempts++;
@@ -423,6 +424,12 @@ public sealed class ZoneSensorManager
     /// <summary>
     /// Checks if a position overlaps with any existing sensor positions.
     /// </summary>
+    private static bool IsNearOrigin(Vector3 position)
+    {
+        return position.x > -15f && position.x < 15f
+            && position.z > -15f && position.z < 15f;
+    }
+
     private bool OverlapsExistingSensor(Vector3 position, float radius, List<(Vector3 pos, float radius)> existingSensors)
     {
         foreach (var (existingPos, existingRadius) in existingSensors)
