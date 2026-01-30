@@ -95,7 +95,6 @@
 
   <Target Name="PostClean" AfterTargets="Clean">
     <RemoveDir Directories="$(OutputPath)" />
-    <RemoveDir Directories="$(BaseIntermediateOutputPath)" />
     <RemoveDir Condition="$(Debug) != 'false' And $(OS) == 'Windows_NT'"
                Directories="$(OutputPath_Debug)" />
     <RemoveDir Condition="$(Debug) != 'false' And $(OS) == 'Windows_NT'"

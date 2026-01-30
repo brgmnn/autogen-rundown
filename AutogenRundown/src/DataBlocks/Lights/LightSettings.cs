@@ -118,26 +118,55 @@ public record LightSettings : DataBlock<LightSettings>
         }
     };
 
-    public static readonly LightSettings ErrorFlashOn = new()
+    #region Alarm In Progress lights
+
+    public static readonly LightSettings LightsOff_ExceptSecurityDoor = new()
     {
         PersistentId = Generator.GetPersistentId(),
         CategorySettings = new List<LightCategorySetting>()
         {
-            new()
-            {
-                Color = new() { Red = 1.0, Green = 0.27, Blue = 0.27 },
-                Category = LightCategory.General,
-                Chance = 1.0,
-                Intensity = 0.9,
-                On = true
-            },
-
+            LightCategorySetting.Off(LightCategory.General),
             LightCategorySetting.Off(LightCategory.Special),
             LightCategorySetting.Off(LightCategory.Emergency),
             LightCategorySetting.Off(LightCategory.Independent),
             LightCategorySetting.Off(LightCategory.Door),
             LightCategorySetting.Off(LightCategory.Sign),
-            LightCategorySetting.Off(LightCategory.DoorImportant),
+
+            LightCategorySetting.SecurityDoor_White,
+        }
+    };
+
+    public static readonly LightSettings ErrorFlashOn = new()
+    {
+        PersistentId = Generator.GetPersistentId(),
+        CategorySettings = new List<LightCategorySetting>()
+        {
+            // LightCategorySetting.Off(LightCategory.General),
+            new()
+            {
+                Color = new() { Red = 1.0, Green = 0.27, Blue = 0.27 },
+                Category = LightCategory.General,
+                Chance = 0.1,
+                Intensity = 0.9,
+                On = true
+            },
+
+            LightCategorySetting.Off(LightCategory.Special),
+
+            new()
+            {
+                Color = new() { Red = 1.0, Green = 0.27, Blue = 0.27 },
+                Category = LightCategory.Emergency,
+                Chance = 1.0,
+                Intensity = 0.9,
+                On = true
+            },
+
+            LightCategorySetting.Off(LightCategory.Independent),
+            LightCategorySetting.Off(LightCategory.Door),
+            LightCategorySetting.Off(LightCategory.Sign),
+
+            LightCategorySetting.SecurityDoor_White,
         }
     };
 
@@ -146,49 +175,45 @@ public record LightSettings : DataBlock<LightSettings>
         PersistentId = Generator.GetPersistentId(),
         CategorySettings = new List<LightCategorySetting>()
         {
+            // LightCategorySetting.Off(LightCategory.General),
             new()
             {
                 Color = new() { Red = 1.0, Green = 0.6, Blue = 0.15 },
                 Category = LightCategory.General,
-                Chance = 1.0,
+                Chance = 0.1,
+                Intensity = 0.9,
+                On = true
+            },
+
+            new()
+            {
+                Color = new() { Red = 1.0, Green = 0.6, Blue = 0.15 },
+                Category = LightCategory.Special,
+                Chance = 0.9,
                 Intensity = 0.7,
                 On = true
             },
 
-            LightCategorySetting.Off(LightCategory.Special),
             LightCategorySetting.Off(LightCategory.Emergency),
             LightCategorySetting.Off(LightCategory.Independent),
             LightCategorySetting.Off(LightCategory.Door),
             LightCategorySetting.Off(LightCategory.Sign),
-            LightCategorySetting.Off(LightCategory.DoorImportant),
+
+            LightCategorySetting.SecurityDoor_White,
         }
     };
-    //
-    // public static readonly LightSettings RedZoneDoor = new()
-    // {
-    //     PersistentId = Generator.GetPersistentId(),
-    //     CategorySettings = new List<LightCategorySetting>()
-    //     {
-    //         new()
-    //         {
-    //             Color = new() { Red = 1.0, Green = 0.27, Blue = 0.27 },
-    //             Category = LightCategory.DoorImportant,
-    //             Chance = 1.0,
-    //             Intensity = 1.2,
-    //             On = true
-    //         },
-    //     }
-    // };
+
+    #endregion
 
     public new static void SaveStatic()
     {
         AuxiliaryPower.Persist();
 
         LightsOff.Persist();
+        LightsOff_ExceptSecurityDoor.Persist();
+
         ErrorFlashOn.Persist();
         AlarmCycling_Amber.Persist();
-
-        // RedZoneDoor.Persist();
     }
 
     /// <summary>

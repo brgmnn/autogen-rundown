@@ -350,7 +350,8 @@ public static class WardenObjectiveEventCollections
         int layer,
         LightSettings[] states,
         int loopIndex,
-        double stateDuration = 1.5)
+        double stateDuration = 1.5,
+        double transitionDuration = 0.05)
     {
         var eventLoop = new EventLoop()
         {
@@ -359,7 +360,7 @@ public static class WardenObjectiveEventCollections
             LoopCount = -1
         };
 
-        for (int i = 0; i < states.Length; i++)
+        for (var i = 0; i < states.Length; i++)
         {
             eventLoop.EventsToActivate.Add(
                 new WardenObjectiveEvent
@@ -368,11 +369,11 @@ public static class WardenObjectiveEventCollections
                     LocalIndex = zoneNumber,
                     Layer = layer,
                     Delay = i * stateDuration,
-                    Duration = 0.5,
+                    Duration = transitionDuration,
                     SetZoneLight = new SetZoneLight
                     {
                         LightSettings = states[i],
-                        Duration = 0.5,
+                        Duration = transitionDuration,
                         Seed = i + 1,
                     }
                 });

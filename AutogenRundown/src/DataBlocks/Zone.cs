@@ -3,6 +3,7 @@ using AutogenRundown.DataBlocks.Custom.AutogenRundown.TerminalPlacements;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
+using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.WorldEvents;
 using AutogenRundown.DataBlocks.ZoneData;
@@ -124,7 +125,7 @@ public partial record Zone : DataBlock<Zone>
         EventsOnDoorScanDone.AddLightsOn(Generator.Between(1, 9));
     }
 
-    private void AlarmModifier_FogFlood(double duration)
+    private void AlarmModifier_FogFlood(double alarmDuration)
     {
         var fog = level.FogSettings;
         var isInfectious = level.FogSettings.IsInfectious;
@@ -137,7 +138,7 @@ public partial record Zone : DataBlock<Zone>
             (true,  true ) => Fog.InvertedInfectious_Altitude_minus8
         };
 
-        EventsOnDoorScanStart.AddSetFog(tempFog, Generator.Between(3, 15), duration);
+        EventsOnDoorScanStart.AddSetFog(tempFog, Generator.Between(3, 15), alarmDuration * 0.66);
         EventsOnDoorScanDone.AddSetFog(
             fog,
             5.0,
@@ -145,14 +146,24 @@ public partial record Zone : DataBlock<Zone>
             "VENTILATION SYSTEM REBOOTED - SYSTEMS ONLINE");
     }
 
+    /// <summary>
+    ///
+    /// </summary>
     private void AlarmModifier_CyclingLights()
     {
         var layer = EventBuilder.GetLayerFromBulkhead(layout.director.Bulkhead);
         var loopIndex = (int)Generator.GetPersistentId();
 
-        var states = Generator.Flip(0.5)
-            ? new[] { Light.LightSettings.LightsOff, Light.LightSettings.ErrorFlashOn }
-            : new[] { Light.LightSettings.LightsOff, Light.LightSettings.ErrorFlashOn, Light.LightSettings.AlarmCycling_Amber };
+        var states = Generator.Select(new List<(double, LightSettings[])>
+        {
+            // Darkness / error light
+            (1.0, new[] { Light.LightSettings.LightsOff_ExceptSecurityDoor, Light.LightSettings.ErrorFlashOn }),
+            (1.0, new[] { Light.LightSettings.LightsOff_ExceptSecurityDoor, Light.LightSettings.AlarmCycling_Amber }),
+            (1.0, new[] { Light.LightSettings.LightsOff_ExceptSecurityDoor, Light.LightSettings.ErrorFlashOn, Light.LightSettings.AlarmCycling_Amber }),
+
+            // No darkness
+            (1.0, new[] { Light.LightSettings.ErrorFlashOn, Light.LightSettings.AlarmCycling_Amber }),
+        });
 
         EventsOnDoorScanStart.AddCyclingLights(
             BuildFromLocalIndex, layer, states, loopIndex,
@@ -227,8 +238,6 @@ public partial record Zone : DataBlock<Zone>
         var parent = level.Planner.GetBuildFrom(new ZoneNode { Bulkhead = Bulkhead.Extreme, ZoneNumber = LocalIndex });
         var isInfection = level.FogSettings.IsInfectious;
 
-        AlarmModifier_CyclingLights();
-
         // Scale distances per tier for all alarms (including surge/fixed alarms)
         if (puzzle.TriggerAlarmOnActivate)
         {
@@ -270,23 +279,25 @@ public partial record Zone : DataBlock<Zone>
         }
 
         // Add custom events on alarms
-        if (!puzzle.FixedAlarm && false)
+        if (!puzzle.FixedAlarm)
         {
             switch (level.Tier)
             {
                 case "A":
                 {
+                    if (Generator.Flip(0.03))
+                        AlarmModifier_CyclingLights();
                     break;
                 }
 
                 case "B":
                 {
-                    // Small chance to disable lights during the alarm
-                    if (Generator.Flip(0.08))
-                        AlarmModifier_LightsOff();
-                    else if (Generator.Flip(0.05))
+                    if (Generator.Flip(0.05))
                         AlarmModifier_CyclingLights();
-                    else if (Generator.Flip(0.01))
+                    else if (Generator.Flip(0.02))
+                        AlarmModifier_LightsOff();
+
+                    if (!InFog && Generator.Flip(0.01))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.2, 1.4));
 
                     if (Generator.Flip(0.005))
@@ -311,12 +322,12 @@ public partial record Zone : DataBlock<Zone>
                             })
                         }, puzzle.ClearTime() * Generator.NextDouble(0.2, 0.6));
 
-                    // Small chance to disable lights during the alarm
-                    if (Generator.Flip(0.1))
-                        AlarmModifier_LightsOff();
                     else if (Generator.Flip(0.07))
                         AlarmModifier_CyclingLights();
                     else if (Generator.Flip(0.05))
+                        AlarmModifier_LightsOff();
+
+                    if (!InFog && Generator.Flip(0.05))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.2, 1.4));
 
                     // Tiny chance for bait door approach pouncer
@@ -357,7 +368,8 @@ public partial record Zone : DataBlock<Zone>
                     }
                     else if (Generator.Flip(0.08))
                         AlarmModifier_CyclingLights();
-                    else if (Generator.Flip(0.07))
+
+                    if (!InFog && Generator.Flip(0.06))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.1, 1.3));
 
                     // Tiny chance for bait door approach pouncer
@@ -389,8 +401,9 @@ public partial record Zone : DataBlock<Zone>
                             })
                         }, puzzle.ClearTime() * Generator.NextDouble(0.2, 0.6));
 
-                    // Small chance to disable lights during the alarm
-                    if (Generator.Flip(0.3))
+                    if (Generator.Flip(0.12))
+                        AlarmModifier_CyclingLights();
+                    else if (Generator.Flip(0.25))
                     {
                         AlarmModifier_LightsOff();
 
@@ -400,9 +413,8 @@ public partial record Zone : DataBlock<Zone>
                                 GenericWave.SinglePouncerShadow,
                                 Generator.Between(4, 16));
                     }
-                    else if (Generator.Flip(0.15))
-                        AlarmModifier_CyclingLights();
-                    else if (Generator.Flip(0.15))
+
+                    if (!InFog && Generator.Flip(0.11))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.1, 1.1));
 
                     // Tiny chance to be pouncered when opening the door or
