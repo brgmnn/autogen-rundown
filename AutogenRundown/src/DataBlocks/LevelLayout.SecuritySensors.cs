@@ -124,7 +124,7 @@ public partial record LevelLayout
             (SensorDensity.High, "C") => 0.50,
             (SensorDensity.High, _) => 0.65,
 
-            (SensorDensity.VeryHigh, _) => 0.50,
+            (SensorDensity.VeryHigh, _) => 0.50, // TODO: this needs to be close to 1.0
 
             _ => 0.70
         };
