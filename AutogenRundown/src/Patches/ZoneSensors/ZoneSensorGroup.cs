@@ -425,11 +425,9 @@ public class ZoneSensorGroup
 
         // Apply current group state to newly spawned sensors
         // For late joiners, currentState already contains the correct state from recall
-        if (!SNet.IsMaster)
-        {
-            UpdateVisualsUnsynced(currentState);
-            Plugin.Logger.LogDebug($"ZoneSensorGroup {Id}: Applied state to spawned sensors (isRecall={isRecall})");
-        }
+        // For host with startEnabled=false, this deactivates the sensor GameObjects
+        UpdateVisualsUnsynced(currentState);
+        Plugin.Logger.LogDebug($"ZoneSensorGroup {Id}: Applied state to spawned sensors (isRecall={isRecall})");
 
         Plugin.Logger.LogDebug($"ZoneSensorGroup {Id}: Spawned {Sensors.Count} sensors from {expectedBatchCount} batches (isRecall={isRecall})");
 
