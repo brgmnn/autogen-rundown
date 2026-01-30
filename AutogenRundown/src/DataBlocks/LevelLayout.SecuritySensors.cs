@@ -54,6 +54,8 @@ public partial record LevelLayout
     /// <param name="moving">Whether sensors should patrol (null = random based on tier)</param>
     public void AddSecuritySensors(ZoneNode node, GenericWave? wave = null, bool? moving = null)
     {
+        planner.UpdateNode(node with { Tags = node.Tags.Extend("security_sensors") });
+
         // 1. Determine sensor density by tier (count calculated at runtime from zone area)
         //    And radius
         var (density, radius) = level.Tier switch
