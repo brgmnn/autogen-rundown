@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown.TerminalPlacements;
+using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
@@ -173,6 +174,106 @@ public partial record Zone : DataBlock<Zone>
         EventsOnDoorScanDone.AddRevertZoneLights(BuildFromLocalIndex, layer, Generator.Between(1, 2));
     }
 
+    private void AlarmModifier_SecuritySensors()
+    {
+        var bulkhead = layout.director.Bulkhead;
+
+        // Tier-based sensor configuration
+        var (density, radius) = level.Tier switch
+        {
+            "B" => (SensorDensity.Low, 2.3),
+            "C" => Generator.Select(new List<(double, (SensorDensity, double))>
+            {
+                (1.0, (SensorDensity.Low, 2.3)),
+                (0.4, (SensorDensity.Medium, 1.2)),
+            }),
+            "D" => Generator.Select(new List<(double, (SensorDensity, double))>
+            {
+                (0.5, (SensorDensity.Low, 2.3)),
+                (1.0, (SensorDensity.Medium, 1.2)),
+                (0.3, (SensorDensity.Medium, 2.3)),
+            }),
+            "E" => Generator.Select(new List<(double, (SensorDensity, double))>
+            {
+                (1.0, (SensorDensity.Medium, 1.2)),
+                (0.7, (SensorDensity.Medium, 2.3)),
+                (0.3, (SensorDensity.High, 1.2)),
+            }),
+            _ => (SensorDensity.Low, 2.3)
+        };
+
+        // Select wave for sensor trigger (lighter than standalone sensors)
+        var wave = level.Tier switch
+        {
+            "B" => GenericWave.Sensor_8pts,
+            "C" => Generator.Select(new List<(double, GenericWave)>
+            {
+                (1.0, GenericWave.Sensor_8pts),
+                (0.5, GenericWave.Sensor_12pts),
+            }),
+            "D" => Generator.Select(new List<(double, GenericWave)>
+            {
+                (0.5, GenericWave.Sensor_12pts),
+                (1.0, GenericWave.Sensor_16pts),
+            }),
+            "E" => Generator.Select(new List<(double, GenericWave)>
+            {
+                (0.3, GenericWave.Sensor_12pts),
+                (1.0, GenericWave.Sensor_16pts),
+                (0.4, GenericWave.Sensor_20pts),
+            }),
+            _ => GenericWave.Sensor_8pts
+        };
+
+        // Create sensor definition in the parent zone (where players are during alarm)
+        var sensorDef = new ZoneSensorDefinition
+        {
+            Bulkhead = bulkhead,
+            ZoneNumber = BuildFromLocalIndex,
+            SensorGroups = new List<ZoneSensorGroupDefinition>
+            {
+                new ZoneSensorGroupDefinition
+                {
+                    Density = density,
+                    Radius = radius,
+                    TriggerEach = true
+                }
+            }
+        };
+
+        // Sensor trigger events: disable sensor + spawn enemies
+        var sensorEvents = new List<WardenObjectiveEvent>();
+        sensorEvents
+            .DisableZoneSensors(sensorDef.Id, 0.1)
+            .AddSound(Sound.LightsOff)
+            .AddSpawnWave(wave, 2.0);
+
+        // Re-enable sensor after delay (while alarm is still active)
+        var resetTime = Generator.Between(8, 15);
+        sensorEvents
+            .EnableZoneSensorsWithReset(sensorDef.Id, resetTime)
+            .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
+
+        sensorDef.EventsOnTrigger = sensorEvents;
+        level.ZoneSensors.Add(sensorDef);
+
+        // Disable sensors immediately on elevator land (start hidden)
+        level.GetObjective(bulkhead).EventsOnElevatorLand.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.DisableSecuritySensor,
+                Count = sensorDef.Id,
+                Delay = 0.0
+            });
+
+        // Enable sensors when alarm scan starts
+        EventsOnDoorScanStart.EnableZoneSensorsWithReset(sensorDef.Id, Generator.Between(1, 4));
+        EventsOnDoorScanStart.AddSound(Sound.LightsOff, Generator.Between(1, 3));
+
+        // Disable sensors when alarm scan completes
+        EventsOnDoorScanDone.DisableZoneSensors(sensorDef.Id, Generator.Between(1, 3));
+    }
+
     /// <summary>
     /// Ideas for alarm modifications
     ///
@@ -300,6 +401,9 @@ public partial record Zone : DataBlock<Zone>
                     if (!InFog && Generator.Flip(0.01))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.2, 1.4));
 
+                    if (Generator.Flip(0.02))
+                        AlarmModifier_SecuritySensors();
+
                     if (Generator.Flip(0.005))
                         EventsOnApproachDoor.AddSpawnWave(
                             GenericWave.SinglePouncer,
@@ -329,6 +433,9 @@ public partial record Zone : DataBlock<Zone>
 
                     if (!InFog && Generator.Flip(0.05))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.2, 1.4));
+
+                    if (Generator.Flip(0.05))
+                        AlarmModifier_SecuritySensors();
 
                     // Tiny chance for bait door approach pouncer
                     if (Generator.Flip(0.01))
@@ -371,6 +478,9 @@ public partial record Zone : DataBlock<Zone>
 
                     if (!InFog && Generator.Flip(0.06))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.1, 1.3));
+
+                    if (Generator.Flip(0.08))
+                        AlarmModifier_SecuritySensors();
 
                     // Tiny chance for bait door approach pouncer
                     if (Generator.Flip(0.01))
@@ -416,6 +526,9 @@ public partial record Zone : DataBlock<Zone>
 
                     if (!InFog && Generator.Flip(0.11))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.1, 1.1));
+
+                    if (Generator.Flip(0.10))
+                        AlarmModifier_SecuritySensors();
 
                     // Tiny chance to be pouncered when opening the door or
                     // approaching the door
