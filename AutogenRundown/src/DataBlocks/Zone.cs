@@ -180,7 +180,10 @@ public partial record Zone : DataBlock<Zone>
 
         // Skip adding any security sensor alarms to a zone that already has them
         if (level.Planner.GetNode(this).Tags.Contains("security_sensors"))
+        {
+            Plugin.Logger.LogDebug("Skipping AlarmModifier_SecuritySensor()");
             return;
+        }
 
         // Tier-based sensor configuration
         var (density, radius) = level.Tier switch
@@ -209,24 +212,24 @@ public partial record Zone : DataBlock<Zone>
         // Select wave for sensor trigger (lighter than standalone sensors)
         var wave = level.Tier switch
         {
-            "B" => GenericWave.Sensor_8pts,
+            "B" => GenericWave.Sensor_6pts,
             "C" => Generator.Select(new List<(double, GenericWave)>
             {
-                (1.0, GenericWave.Sensor_8pts),
-                (0.5, GenericWave.Sensor_12pts),
+                (1.0, GenericWave.Sensor_6pts),
+                (0.5, GenericWave.Sensor_8pts),
             }),
             "D" => Generator.Select(new List<(double, GenericWave)>
             {
-                (0.5, GenericWave.Sensor_12pts),
-                (1.0, GenericWave.Sensor_16pts),
+                (0.5, GenericWave.Sensor_8pts),
+                (1.0, GenericWave.Sensor_12pts),
             }),
             "E" => Generator.Select(new List<(double, GenericWave)>
             {
-                (0.3, GenericWave.Sensor_12pts),
-                (1.0, GenericWave.Sensor_16pts),
-                (0.4, GenericWave.Sensor_20pts),
+                (0.3, GenericWave.Sensor_8pts),
+                (1.0, GenericWave.Sensor_12pts),
+                (0.4, GenericWave.Sensor_16pts),
             }),
-            _ => GenericWave.Sensor_8pts
+            _ => GenericWave.Sensor_6pts
         };
 
         // Re-enable sensor after delay (while alarm is still active)
@@ -276,7 +279,7 @@ public partial record Zone : DataBlock<Zone>
         var sensorStart = Generator.Between(2, 5);
         EventsOnDoorScanStart
             .EnableZoneSensorsWithReset(sensorDef.Id, sensorStart)
-            .AddSound(Sound.LightsOff, sensorStart)
+            .AddSound(Sound.LightsOn_Vol4, sensorStart)
             .AddMessage(":://WARNING - SECURITY SCAN SYSTEM CORRUPTED", sensorStart - 1);
 
         // Disable sensors when alarm scan completes

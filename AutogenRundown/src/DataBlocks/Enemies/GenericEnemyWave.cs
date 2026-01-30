@@ -153,16 +153,22 @@ public record GenericWave
     #endregion
 
     #region Sensor waves
+    public static readonly GenericWave Sensor_6pts = new()
+    {
+        Settings = WaveSettings.SingleWave_6pts,
+        Population = WavePopulation.Baseline
+    };
+
+    public static readonly GenericWave Sensor_Shooters_6pts = new()
+    {
+        Settings = WaveSettings.SingleWave_6pts,
+        Population = WavePopulation.Baseline_Shooters
+    };
+
     public static readonly GenericWave Sensor_8pts = new()
     {
         Settings = WaveSettings.SingleWave_8pts,
         Population = WavePopulation.Baseline
-    };
-
-    public static readonly GenericWave Sensor_Shooters_8pts = new()
-    {
-        Settings = WaveSettings.SingleWave_8pts,
-        Population = WavePopulation.Baseline_Shooters
     };
 
     public static readonly GenericWave Sensor_12pts = new()
@@ -171,28 +177,22 @@ public record GenericWave
         Population = WavePopulation.Baseline
     };
 
+
+    public static readonly GenericWave Sensor_Shooters_12pts = new()
+    {
+        Settings = WaveSettings.SingleWave_12pts,
+        Population = WavePopulation.Baseline_Shooters
+    };
+
     public static readonly GenericWave Sensor_16pts = new()
     {
         Settings = WaveSettings.SingleWave_16pts,
         Population = WavePopulation.Baseline
     };
 
-
-    public static readonly GenericWave Sensor_Shooters_16pts = new()
+    public static readonly GenericWave Sensor_Chargers_8pts = new()
     {
-        Settings = WaveSettings.SingleWave_16pts,
-        Population = WavePopulation.Baseline_Shooters
-    };
-
-    public static readonly GenericWave Sensor_20pts = new()
-    {
-        Settings = WaveSettings.SingleWave_20pts,
-        Population = WavePopulation.Baseline
-    };
-
-    public static readonly GenericWave Sensor_Chargers_12pts = new()
-    {
-        Settings = WaveSettings.SingleWave_12pts,
+        Settings = WaveSettings.SingleWave_8pts,
         Population = WavePopulation.OnlyChargers
     };
 
