@@ -85,7 +85,7 @@ public static class LogArchivistManager
 
         EventManager.OnRundownUpdate += (_) =>
         {
-            foreach (var mainId in icons.Keys)
+            foreach (var mainId in icons.Keys.ToList())
                 UpdateIcon(mainId);
         };
     }
@@ -133,6 +133,14 @@ public static class LogArchivistManager
     {
         if (!icons.TryGetValue(mainId, out var icon))
             return;
+
+        // Check if the Unity object has been destroyed (e.g. scene transition)
+        try { _ = icon.gameObject; }
+        catch
+        {
+            icons.Remove(mainId);
+            return;
+        }
 
         if (archivesByLevel.TryGetValue(mainId, out var logs))
         {
