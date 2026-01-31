@@ -253,11 +253,11 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
                 // Easy
                 (0.6, 2, AlarmClass1),
                 (1.0, 3, AlarmClass2),
-                (0.8, 1, AlarmClass2_Cluster),
+                (0.6, 1, AlarmClass2_Cluster),
 
                 // Normal
                 (1.0, 4, AlarmClass3),
-                (1.0, 2, AlarmClass3_Cluster),
+                (0.8, 1, AlarmClass3_Cluster),
                 (1.0, 2, AlarmClass3_Mixed),
                 (0.8, 3, AlarmClass4),
 
@@ -276,11 +276,11 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
                 // Easy
                 (0.6, 1, AlarmClass2),
                 (1.0, 3, AlarmClass3),
-                (0.8, 1, AlarmClass3_Cluster),
+                (0.6, 1, AlarmClass3_Cluster),
 
                 // Normal
                 (1.0, 4, AlarmClass4),
-                (1.0, 2, AlarmClass4_Cluster),
+                (0.8, 1, AlarmClass4_Cluster),
                 (1.0, 2, AlarmClass4_Mixed),
                 (0.8, 3, AlarmClass5),
 
@@ -300,12 +300,12 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
 
                 // Easy
                 (1.0, 2, AlarmClass4),
-                (0.8, 1, AlarmClass4_Cluster),
+                (0.6, 1, AlarmClass4_Cluster),
                 (0.8, 2, AlarmClass4_Mixed),
 
                 // Normal
                 (1.0, 4, AlarmClass5),
-                (1.0, 2, AlarmClass5_Cluster),
+                (0.7, 1, AlarmClass5_Cluster),
                 (1.0, 2, AlarmClass5_Mixed),
                 (0.8, 1, AlarmClass6),
                 (0.7, 1, AlarmClass6_Mixed),
@@ -330,15 +330,15 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
                 // Easy
                 (0.2, 1, AlarmClass3_Cluster),
                 (0.9, 2, AlarmClass4),
-                (0.9, 2, AlarmClass4_Cluster),
+                (0.7, 1, AlarmClass4_Cluster),
                 (0.9, 2, AlarmClass4_Mixed),
 
                 // Normal
                 (1.0, 2, AlarmClass5),
-                (1.0, 2, AlarmClass5_Cluster),
+                (0.7, 1, AlarmClass5_Cluster),
                 (1.0, 2, AlarmClass5_Mixed),
                 (0.9, 2, AlarmClass6),
-                (0.9, 1, AlarmClass6_Cluster),
+                (0.7, 1, AlarmClass6_Cluster),
                 (0.9, 2, AlarmClass6_Mixed),
 
                 // Hard
@@ -364,21 +364,21 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
 
                 // Easy
                 (0.9, 1, AlarmClass4),
-                (0.9, 1, AlarmClass4_Cluster),
+                (0.7, 1, AlarmClass4_Cluster),
                 (0.9, 1, AlarmClass4_Mixed),
                 (0.7, 1, AlarmClass1_Sustained),
 
                 // Normal
                 (1.0, 3, AlarmClass5),
-                (1.0, 2, AlarmClass5_Cluster),
+                (0.7, 1, AlarmClass5_Cluster),
                 (1.0, 2, AlarmClass5_Mixed),
                 (1.0, 3, AlarmClass6),
-                (1.0, 2, AlarmClass6_Cluster),
+                (0.8, 1, AlarmClass6_Cluster),
                 (1.0, 2, AlarmClass6_Mixed),
 
                 // Hard
                 (0.8, 1, AlarmClass7),
-                (0.6, 1, AlarmClass7_Cluster),
+                (0.5, 1, AlarmClass7_Cluster),
                 (0.6, 1, AlarmClass7_Mixed),
 
                 // Hard specialty
