@@ -363,6 +363,9 @@ public static class LogArchivistManager
         // Remove any duplicates
         record.ReadLogs[data.MainId] = logs.Distinct().ToList();
 
+        // Keep readRecordsByLevel in sync for GetLogsRead(uint) callers
+        readRecordsByLevel[data.MainId] = record.ReadLogs[data.MainId];
+
         Save(record.Name, record);
         UpdateIcon(data.MainId);
 
