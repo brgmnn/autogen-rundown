@@ -292,7 +292,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
             ("C", _) => new List<(double chance, int count, ChainedPuzzle puzzle)>
             {
                 // Free
-                (0.3, 1, TeamScan),
+                (0.3, 2, TeamScan),
 
                 // Stealth and Surprise scans
                 (0.2, 1, StealthScan4),
@@ -319,7 +319,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
             ("D", _) => new List<(double chance, int count, ChainedPuzzle puzzle)>
             {
                 // Free
-                (0.2, 1, TeamScan),
+                (0.2, 2, TeamScan),
 
                 // Stealth and Surprise scans
                 (0.3, 1, StealthScan4),
@@ -354,7 +354,8 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
 
             ("E", _) => new List<(double chance, int count, ChainedPuzzle puzzle)>
             {
-                // Free - No free alarms on E-tier. Not sorry
+                // Free
+                (0.2, 2, TeamScan),
 
                 // Stealth and Surprise scans
                 (0.05, 1, StealthScan4),
