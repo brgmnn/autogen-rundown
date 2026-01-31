@@ -232,6 +232,22 @@ public partial record LevelLayout
                     {
                         var last = BuildBranch(start, Generator.Between(2, 3));
                         planner.UpdateNode(last with { Branch = "hsu_sample" });
+                    }),
+
+                    // Keycard with sensors in approach
+                    (0.15, () =>
+                    {
+                        start = BuildBranch(start, Generator.Between(1, 2));
+                        startZone = planner.GetZone(start)!;
+
+                        planner.UpdateNode(start with { MaxConnections = 3 });
+                        startZone.GenHubGeomorph(level.Complex);
+                        AddSecuritySensors(start);
+
+                        var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
+                        var keycard = BuildBranch(start, 1, "keycard");
+
+                        AddKeycardPuzzle(locked, keycard);
                     })
                 });
                 break;
@@ -279,6 +295,19 @@ public partial record LevelLayout
                     {
                         var last = BuildBranch(start, Generator.Between(2, 3));
                         planner.UpdateNode(last with { Branch = "hsu_sample" });
+                    }),
+
+                    // Generator with sensors
+                    (0.15, () =>
+                    {
+                        planner.UpdateNode(start with { MaxConnections = 3 });
+                        startZone.GenHubGeomorph(level.Complex);
+                        AddSecuritySensors(start);
+
+                        var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
+                        var cell = BuildBranch(start, 2, "power_cell");
+
+                        AddGeneratorPuzzle(locked, cell);
                     })
                 });
                 break;
@@ -434,6 +463,26 @@ public partial record LevelLayout
 
                         var last = BuildBranch(start, Generator.Between(2, 3));
                         planner.UpdateNode(last with { Branch = "hsu_sample" });
+                    }),
+
+                    // 2 keycards with sensors in first hub
+                    (0.15, () =>
+                    {
+                        planner.UpdateNode(start with { MaxConnections = 3 });
+                        startZone.GenHubGeomorph(level.Complex);
+                        AddSecuritySensors(start);
+
+                        var (node2, zone2) = AddZone(start, new ZoneNode { Branch = "primary", MaxConnections = 3 });
+                        zone2.GenHubGeomorph(level.Complex);
+
+                        var keycard1 = BuildBranch(start, 1, "keycard_1");
+                        AddKeycardPuzzle(node2, keycard1);
+
+                        var keycard2 = BuildBranch(node2, 1, "keycard_2");
+                        var (hsu, hsuZone) = AddZone(node2, new ZoneNode { Branch = "hsu_sample" });
+                        hsuZone.Coverage = CoverageMinMax.Medium;
+
+                        AddKeycardPuzzle(hsu, keycard2);
                     })
                 });
                 break;
@@ -484,6 +533,22 @@ public partial record LevelLayout
                     {
                         var last = BuildBranch(start, Generator.Between(1, 2));
                         planner.UpdateNode(last with { Branch = "hsu_sample" });
+                    }),
+
+                    // Keycard with sensors
+                    (0.15, () =>
+                    {
+                        start = BuildBranch(start, Generator.Between(1, 2));
+                        startZone = planner.GetZone(start)!;
+
+                        planner.UpdateNode(start with { MaxConnections = 3 });
+                        startZone.GenHubGeomorph(level.Complex);
+                        AddSecuritySensors(start);
+
+                        var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
+                        var keycard = BuildBranch(start, Generator.Between(1, 2), "keycard");
+
+                        AddKeycardPuzzle(locked, keycard);
                     })
                 });
                 break;
@@ -543,6 +608,29 @@ public partial record LevelLayout
                             population = WavePopulation.Baseline_Flyers;
 
                         // Add the apex alarm
+                        AddApexAlarm(lockedApex, population, WaveSettings.Baseline_Normal);
+                    }),
+
+                    // Apex alarm with sensors in start zone
+                    (0.20, () =>
+                    {
+                        AddSecuritySensors(start);
+
+                        var (lockedApex, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
+
+                        startZone.HealthPacks += 5;
+                        startZone.ToolPacks += 4;
+                        startZone.AmmoPacks += 5;
+
+                        var population = WavePopulation.Baseline_Hybrids;
+
+                        if (level.Settings.HasShadows())
+                            population = Generator.Flip(0.4) ? WavePopulation.OnlyShadows : WavePopulation.Baseline_Shadows;
+                        if (level.Settings.HasChargers())
+                            population = WavePopulation.Baseline_Chargers;
+                        else if (level.Settings.HasFlyers())
+                            population = WavePopulation.Baseline_Flyers;
+
                         AddApexAlarm(lockedApex, population, WaveSettings.Baseline_Normal);
                     }),
                 });
@@ -653,6 +741,24 @@ public partial record LevelLayout
 
                         var last = BuildBranch(start, Generator.Between(2, 3));
                         planner.UpdateNode(last with { Branch = "hsu_sample" });
+                    }),
+
+                    // Generator lock with sensors in prelude
+                    (0.15, () =>
+                    {
+                        var (prelude, preludeZone) = AddZone(start, new ZoneNode
+                        {
+                            Branch = "primary",
+                            MaxConnections = 3
+                        });
+                        preludeZone.GenTGeomorph(level.Complex);
+                        AddSecuritySensors(prelude);
+
+                        var (hsu, hsuZone) = AddZone(prelude, new ZoneNode { Branch = "hsu_sample" });
+                        hsuZone.Coverage = CoverageMinMax.Medium;
+
+                        var cell = BuildBranch(prelude, Generator.Between(2, 3), "power_cell");
+                        AddGeneratorPuzzle(hsu, cell);
                     })
                 });
                 break;
@@ -695,6 +801,22 @@ public partial record LevelLayout
                         var keycard = BuildBranch(start, Generator.Between(1, 2), "keycard");
 
                         // Lock the first zone
+                        AddKeycardPuzzle(locked, keycard);
+                    }),
+
+                    // Keycard with sensors
+                    (0.15, () =>
+                    {
+                        start = BuildBranch(start, Generator.Between(1, 2));
+                        startZone = planner.GetZone(start)!;
+
+                        planner.UpdateNode(start with { MaxConnections = 3 });
+                        startZone.GenHubGeomorph(level.Complex);
+                        AddSecuritySensors(start);
+
+                        var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
+                        var keycard = BuildBranch(start, Generator.Between(1, 2), "keycard");
+
                         AddKeycardPuzzle(locked, keycard);
                     }),
                 });
@@ -764,6 +886,29 @@ public partial record LevelLayout
                             population = WavePopulation.Baseline_Flyers;
 
                         // Add the apex alarm
+                        AddApexAlarm(lockedApex, population, WaveSettings.Baseline_Normal);
+                    }),
+
+                    // Apex alarm with sensors in start zone
+                    (0.20, () =>
+                    {
+                        AddSecuritySensors(start);
+
+                        var (lockedApex, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
+
+                        startZone.HealthPacks += 4;
+                        startZone.ToolPacks += 4;
+                        startZone.AmmoPacks += 6;
+
+                        var population = WavePopulation.Baseline_Hybrids;
+
+                        if (level.Settings.HasShadows())
+                            population = Generator.Flip(0.4) ? WavePopulation.OnlyShadows : WavePopulation.Baseline_Shadows;
+                        if (level.Settings.HasChargers())
+                            population = WavePopulation.Baseline_Chargers;
+                        else if (level.Settings.HasFlyers())
+                            population = WavePopulation.Baseline_Flyers;
+
                         AddApexAlarm(lockedApex, population, WaveSettings.Baseline_Normal);
                     }),
                 });
@@ -877,6 +1022,27 @@ public partial record LevelLayout
 
                         var last = BuildBranch(start, Generator.Between(2, 3));
                         planner.UpdateNode(last with { Branch = "hsu_sample" });
+                    }),
+
+                    // 2 keycards with sensors on both hubs
+                    (0.15, () =>
+                    {
+                        planner.UpdateNode(start with { MaxConnections = 3 });
+                        startZone.GenHubGeomorph(level.Complex);
+                        AddSecuritySensors(start);
+
+                        var (node2, zone2) = AddZone(start, new ZoneNode { Branch = "primary", MaxConnections = 3 });
+                        zone2.GenHubGeomorph(level.Complex);
+                        AddSecuritySensors(node2);
+
+                        var keycard1 = BuildBranch(start, 1, "keycard_1");
+                        AddKeycardPuzzle(node2, keycard1);
+
+                        var keycard2 = BuildBranch(node2, 1, "keycard_2");
+                        var (hsu, hsuZone) = AddZone(node2, new ZoneNode { Branch = "hsu_sample" });
+                        hsuZone.Coverage = CoverageMinMax.Medium;
+
+                        AddKeycardPuzzle(hsu, keycard2);
                     })
                 });
                 break;
@@ -920,6 +1086,23 @@ public partial record LevelLayout
 
                         // Lock the first zone
                         AddKeycardPuzzle(locked, keycard);
+                    }),
+
+                    // Generator with sensors
+                    (0.15, () =>
+                    {
+                        var (prelude, preludeZone) = AddZone(start, new ZoneNode
+                        {
+                            Branch = "primary",
+                            MaxConnections = 3
+                        });
+                        preludeZone.GenTGeomorph(level.Complex);
+                        AddSecuritySensors(prelude);
+
+                        var (locked, _) = AddZone(prelude, new ZoneNode { Branch = "hsu_sample" });
+                        var cell = BuildBranch(prelude, 2, "power_cell");
+
+                        AddGeneratorPuzzle(locked, cell);
                     }),
                 });
                 break;
@@ -990,6 +1173,29 @@ public partial record LevelLayout
                             population = WavePopulation.Baseline_Flyers;
 
                         // Add the apex alarm
+                        AddApexAlarm(lockedApex, population, WaveSettings.Baseline_Normal);
+                    }),
+
+                    // Apex alarm with sensors in start zone
+                    (0.20, () =>
+                    {
+                        AddSecuritySensors(start);
+
+                        var (lockedApex, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
+
+                        startZone.HealthPacks += 2;
+                        startZone.ToolPacks += 6;
+                        startZone.AmmoPacks += 8;
+
+                        var population = WavePopulation.Baseline_Hybrids;
+
+                        if (level.Settings.HasShadows())
+                            population = Generator.Flip(0.4) ? WavePopulation.OnlyShadows : WavePopulation.Baseline_Shadows;
+                        if (level.Settings.HasChargers())
+                            population = WavePopulation.Baseline_Chargers;
+                        else if (level.Settings.HasFlyers())
+                            population = WavePopulation.Baseline_Flyers;
+
                         AddApexAlarm(lockedApex, population, WaveSettings.Baseline_Normal);
                     }),
                 });
