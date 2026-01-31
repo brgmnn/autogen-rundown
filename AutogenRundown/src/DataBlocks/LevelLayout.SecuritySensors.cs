@@ -102,31 +102,48 @@ public partial record LevelLayout
         };
 
         // 2. Determine if sensors move
-        var movingChance = level.Tier switch
+        var movingChance = (density, level.Tier) switch
         {
-            "A" => 0.10,
-            "B" => 0.15,
-            "C" => 0.20,
-            "D" => 0.30,
-            "E" => 0.40,
-            _ => 0.15
+            (SensorDensity.Low, "A") => 0.40,
+            (SensorDensity.Low, "B") => 0.45,
+            (SensorDensity.Low, "C") => 0.52,
+            (SensorDensity.Low, "D") => 0.60,
+            (SensorDensity.Low, "E") => 0.66,
+
+            (SensorDensity.Medium, "A" or "B") => 0.33,
+            (SensorDensity.Medium, _)          => 0.50,
+
+            (SensorDensity.High, "C") => 0.21,
+            (SensorDensity.High, "D") => 0.33,
+            (SensorDensity.High, "E") => 0.45,
+            (SensorDensity.High, _)   => 0.05,
+
+            (SensorDensity.VeryHigh, "D") => 0.08,
+            (SensorDensity.VeryHigh, "E") => 0.17,
+            (SensorDensity.VeryHigh, _)   => 0.00,
+
+            _ => 0.5
         };
         var isMoving = moving ?? Generator.Flip(movingChance);
 
         // 3. Determine TriggerEach (independent triggering)
         var triggerEachChance = (density, level.Tier) switch
         {
-            (SensorDensity.Low, _) => 0.92,
+            (SensorDensity.Low, _) => 0.33,
 
-            (SensorDensity.Medium, "A" or "B") => 0.75,
-            (SensorDensity.Medium, _) => 0.85,
+            (SensorDensity.Medium, "A" or "B") => 0.65,
+            (SensorDensity.Medium, _)          => 0.50,
 
-            (SensorDensity.High, "C") => 0.50,
-            (SensorDensity.High, _) => 0.65,
+            (SensorDensity.High, "C") => 0.82,
+            (SensorDensity.High, "D") => 0.75,
+            (SensorDensity.High, "E") => 0.60,
+            (SensorDensity.High, _)   => 0.90,
 
-            (SensorDensity.VeryHigh, _) => 0.50, // TODO: this needs to be close to 1.0
+            (SensorDensity.VeryHigh, "D") => 0.95,
+            (SensorDensity.VeryHigh, "E") => 0.90,
+            (SensorDensity.VeryHigh, _)   => 1.00,
 
-            _ => 0.70
+            _ => 0.5
         };
         var triggerEach = Generator.Flip(triggerEachChance);
 
@@ -152,7 +169,7 @@ public partial record LevelLayout
             ZoneNumber = node.ZoneNumber,
             SensorGroups = new List<ZoneSensorGroupDefinition>
             {
-                new ZoneSensorGroupDefinition
+                new()
                 {
                     Density = density,
                     Moving = isMoving ? Generator.Between(2, 3) : 1,
