@@ -429,6 +429,14 @@ public class ZoneSensorGroup
         UpdateVisualsUnsynced(currentState);
         Plugin.Logger.LogDebug($"ZoneSensorGroup {Id}: Applied state to spawned sensors (isRecall={isRecall})");
 
+        // Diagnostic: verify sensors are actually active
+        for (int i = 0; i < Sensors.Count; i++)
+        {
+            var s = Sensors[i];
+            Plugin.Logger.LogDebug($"ZoneSensor: Sensor {i} active={s.activeSelf}, " +
+                $"activeInHierarchy={s.activeInHierarchy}, pos={s.transform.position}");
+        }
+
         Plugin.Logger.LogDebug($"ZoneSensorGroup {Id}: Spawned {Sensors.Count} sensors from {expectedBatchCount} batches (isRecall={isRecall})");
 
         // Clear pending data
@@ -445,6 +453,10 @@ public class ZoneSensorGroup
         // Instantiate CircleSensor prefab
         var sensorGO = UnityEngine.Object.Instantiate(ZoneSensorAssets.CircleSensor);
         sensorGO.name = $"ZoneSensor_{groupIndex}_{sensorIndex}";
+
+        // Ensure all child objects are active (prefab may have disabled children)
+        foreach (var transform in sensorGO.GetComponentsInChildren<Transform>(true))
+            transform.gameObject.SetActive(true);
 
         // Position and scale per EOS pattern
         sensorGO.transform.SetPositionAndRotation(position, Quaternion.identity);
@@ -470,6 +482,10 @@ public class ZoneSensorGroup
                 (float)groupDef.Color.Green,
                 (float)groupDef.Color.Blue,
                 (float)groupDef.Color.Alpha));
+        }
+        else
+        {
+            Plugin.Logger.LogWarning($"ZoneSensor: Sensor {sensorIndex} has no renderer at expected child path!");
         }
 
         // Set up text display
