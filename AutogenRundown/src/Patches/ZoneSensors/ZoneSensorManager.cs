@@ -45,11 +45,8 @@ public sealed class ZoneSensorManager
     // Update helper component instance
     private ZoneSensorManagerUpdater? updater;
 
-    // Re-broadcast timer for slow client race condition (host only)
-    private const float REBROADCAST_DELAY = 2.0f;
-    private const int MAX_REBROADCASTS = 2;
-    private float rebroadcastTimer;
-    private int rebroadcastCount;
+    // Track synced player count for event-driven rebroadcast (host only)
+    private int lastSyncedPlayerCount;
 
     private ZoneSensorManager()
     {
@@ -67,14 +64,13 @@ public sealed class ZoneSensorManager
             group.Update();
         }
 
-        // Host: re-broadcast position states for slow clients
-        if (SNet.IsMaster && rebroadcastCount < MAX_REBROADCASTS)
+        // Host: re-broadcast position states when a new player finishes building
+        if (SNet.IsMaster)
         {
-            rebroadcastTimer += Time.deltaTime;
-            if (rebroadcastTimer >= REBROADCAST_DELAY)
+            var currentCount = SNet.Slots.PlayersSynchedWithGame.Count;
+            if (currentCount > lastSyncedPlayerCount)
             {
-                rebroadcastTimer = 0f;
-                rebroadcastCount++;
+                lastSyncedPlayerCount = currentCount;
                 RebroadcastPositionStates();
             }
         }
@@ -336,11 +332,10 @@ public sealed class ZoneSensorManager
         {
             EnsureUpdaterExists();
 
-            // Initialize re-broadcast timer (host only)
+            // Initialize synced player count (host only)
             if (SNet.IsMaster)
             {
-                rebroadcastTimer = 0f;
-                rebroadcastCount = 0;
+                lastSyncedPlayerCount = SNet.Slots.PlayersSynchedWithGame.Count;
             }
         }
 
@@ -367,7 +362,7 @@ public sealed class ZoneSensorManager
     /// </summary>
     private void RebroadcastPositionStates()
     {
-        Plugin.Logger.LogDebug($"ZoneSensor: Re-broadcasting position states (attempt {rebroadcastCount}/{MAX_REBROADCASTS})");
+        Plugin.Logger.LogDebug($"ZoneSensor: Re-broadcasting position states (syncedPlayers={lastSyncedPlayerCount})");
 
         foreach (var group in activeSensorGroups.Values)
         {
@@ -546,8 +541,7 @@ public sealed class ZoneSensorManager
 
         activeSensorGroups.Clear();
         nextReplicatorIndex = 0;
-        rebroadcastTimer = 0f;
-        rebroadcastCount = MAX_REBROADCASTS; // Prevent re-broadcasts during cleanup
+        lastSyncedPlayerCount = 0;
 
         // Destroy updater component
         if (updater != null)
