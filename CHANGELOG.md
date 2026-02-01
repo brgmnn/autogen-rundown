@@ -3,6 +3,52 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.81.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.0) — January 31, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* 🌟 New: Red Security Sensors overhaul! 🔴
+  * Error red security sensors can now be spawned in any zone, and are only placed in walkable areas. No more sensors floating in the middle of space or only in the elevator drop zone
+  * Security sensors can now also move, patrolling their area
+  * Security sensors can be individually triggered, so activating one sensor won't activate them all
+  * Customizable size, style, and text on the sensors is available now. Some security sensors will be large, others small.
+  * Security sensors can trigger any set of warden events, spawning enemies, fog, etc.
+  * Events to turned off, turned on, or fully reset security sensors are available, and used.
+  * These have been added to several objectives layouts as a new set of challenges
+* Reworked level generation for `TerminalUplink` objectives
+* New layouts for D and E tier Overload `GatherTerminal` objectives
+* New layouts for `HsuFindSample` objectives
+* New alarm modifiers added:
+  * Alarm lights (cycling lights) in zone for the duration of the scan
+  * Security sensors in zone for the duration of the scan
+
+### Changes
+
+* Balance: Reduced max number of `TerminalUplink` terminals on D-tier Secondary/Overload from `3` to `2`
+* Balance: Reduced chance and max number of Cluster Alarms on all tiers
+* Balance: Fog flood alarm modifier total time to reach max fog has been reduced by 33%
+  * Alarms with the fog flood modifier will be harder now as the fog will rise quicker and should engulf players part way through the alarm
+* Balance: Fog flood alarm modifier now rolls independently from lights modifier, roll chance reduced to compensate for increased chance of appearance 
+* Balance: Fog flood alarm modifier will now not roll on zones already in fog
+* Balance: Lights off alarm modifier chance reduced and placed after alarm lights roll
+* Balance: Added additional free Team Scan's to every tier, E-tier now can roll team scans (1 per bulkhead) on doors
+* Balance: Terminal Uplink waves completely reworked, with much more variety in enemies and difficulty
+* Balance: Corrupted Terminal Uplinks waves also reworked, and are adjusted down compared to Terminal Uplinks to account for the additional players on terminals
+* Change: [GTFriendlyO](https://thunderstore.io/c/gtfo/p/Carb_Crusaders/GTFriendlyO/) now will correctly set infectious fog rates to `0.005`. Fixes #29
+* Change: Terminal Uplinks now only stop their own waves, not _all_ waves when completing the uplink. Same applies to Corrupted Terminal Uplinks
+* Fix: Add [ItemSpawnFix](https://thunderstore.io/c/gtfo/p/Dinorush/ItemSpawnFix/) to help fix issues with core items not spawning
+  * Helps resolve things like missing generator cells or keycards which can cause softlocks
+* Fix: Several issues with log archivist icon on success screen
+* Performance: Added per level custom geo pruning to reduce memory usage. Saves between 1 and 2 GB of memory on average.
+* UI: Artifact text is hidden from success/failure screens
+
+As of this release Autogen now no longer depends on [EOSExt_SecuritySensor](https://thunderstore.io/c/gtfo/p/Inas07/EOSExt_SecuritySensor/). You can safely remove it if your mod manager doesn't.
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.80.0...v0.81.0
+
+
 ## [v0.80.5](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.80.5) — January 28, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
@@ -65,35 +111,6 @@ See more at https://github.com/brgmnn/autogen-rundown
 * Fix game cleanup not running in some cases on level rebuilds
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.80.0...v0.80.1
-
-
-## [v0.81.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.0) — January 28, 2026
-
-<!-- Release notes generated using configuration in .github/release.yml at main -->
-
-### New
-
-* 🌟 New: Red Security Sensors overhaul! 🔴
-  * Error red security sensors can now be spawned in any zone, and are only placed in walkable areas. No more sensors floating in the middle of space or only in the elevator drop zone
-  * Security sensors can now also move, patrolling their area
-  * Security sensors can be individually triggered, so activating one sensor won't activate them all
-  * Customizable size, style, and text on the sensors is available now. Some security sensors will be large, others small.
-  * Security sensors can trigger any set of warden events, spawning enemies, fog, etc.
-  * Events to turned off, turned on, or fully reset security sensors are available, and used.
-  * These have been added to several objectives layouts as a new set of challenges
-* Added melee and health syringes into consumables pool
-  * New optional "Medical Bay" side zone's can spawn now which contain health, disinfect, and syringes
-* Reworked level generation for `TerminalUplink` objectives
-
-### Changes
-
-* Balance: Reduced max number of `TerminalUplink` terminals on D-tier Secondary/Overload from `3` to `2`
-* Change: [GTFriendlyO](https://thunderstore.io/c/gtfo/p/Carb_Crusaders/GTFriendlyO/) now will correctly set infectious fog rates to `0.005`. Fixes #29 
-* Change: Terminal Uplinks now only stop their own waves, not _all_ waves when completing the uplink. Same applies to Corrupted Terminal Uplinks
-* Fix: Add [ItemSpawnFix](https://thunderstore.io/c/gtfo/p/Dinorush/ItemSpawnFix/) to help fix issues with core items not spawning
-  * Helps resolve things like missing generator cells or keycards which can cause softlocks
-
-**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.80.0...v0.81.0
 
 
 ## [v0.80.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.80.0) — December 11, 2025
