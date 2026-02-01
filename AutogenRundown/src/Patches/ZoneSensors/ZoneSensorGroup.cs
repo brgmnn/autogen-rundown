@@ -290,6 +290,22 @@ public class ZoneSensorGroup
         SpawnSensorsFromBatches(isRecall: false);
     }
 
+    /// <summary>
+    /// Re-broadcasts the current position state on all position replicators.
+    /// Called by the host to give slow clients another chance to receive positions.
+    /// Safe because OnPositionStateChanged guards against double-spawning via sensorsSpawned.
+    /// </summary>
+    public void RebroadcastPositions()
+    {
+        foreach (var replicator in PositionReplicators)
+        {
+            if (replicator != null && replicator.IsValid && replicator.State.HasPositions)
+            {
+                replicator.SetState(replicator.State);
+            }
+        }
+    }
+
     private void OnPositionStateChanged(ZoneSensorPositionState oldState, ZoneSensorPositionState newState, bool isRecall)
     {
         Plugin.Logger.LogDebug($"ZoneSensorGroup {Id}: Position state changed, batch={newState.BatchIndex}/{newState.TotalBatches}, sensorCount={newState.SensorCount}, isRecall={isRecall}, alreadySpawned={sensorsSpawned}");

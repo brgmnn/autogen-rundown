@@ -45,6 +45,12 @@ public sealed class ZoneSensorManager
     // Update helper component instance
     private ZoneSensorManagerUpdater? updater;
 
+    // Re-broadcast timer for slow client race condition (host only)
+    private const float REBROADCAST_DELAY = 2.0f;
+    private const int MAX_REBROADCASTS = 2;
+    private float rebroadcastTimer;
+    private int rebroadcastCount;
+
     private ZoneSensorManager()
     {
         LevelAPI.OnBuildDone += BuildSensors;
@@ -59,6 +65,18 @@ public sealed class ZoneSensorManager
         foreach (var group in activeSensorGroups.Values)
         {
             group.Update();
+        }
+
+        // Host: re-broadcast position states for slow clients
+        if (SNet.IsMaster && rebroadcastCount < MAX_REBROADCASTS)
+        {
+            rebroadcastTimer += Time.deltaTime;
+            if (rebroadcastTimer >= REBROADCAST_DELAY)
+            {
+                rebroadcastTimer = 0f;
+                rebroadcastCount++;
+                RebroadcastPositionStates();
+            }
         }
     }
 
@@ -312,10 +330,18 @@ public sealed class ZoneSensorManager
             activeSensorGroups[definition.Id] = sensorGroup;
         }
 
-        // Create updater component if we have any groups with moving sensors
-        if (activeSensorGroups.Values.Any(g => g.MovementReplicators.Count > 0))
+        // Create updater component if we have any active groups
+        // Needed for movement sync and position re-broadcast for slow clients
+        if (activeSensorGroups.Count > 0)
         {
             EnsureUpdaterExists();
+
+            // Initialize re-broadcast timer (host only)
+            if (SNet.IsMaster)
+            {
+                rebroadcastTimer = 0f;
+                rebroadcastCount = 0;
+            }
         }
 
         Plugin.Logger.LogDebug($"ZoneSensor: Created {activeSensorGroups.Count} sensor groups");
@@ -333,6 +359,20 @@ public sealed class ZoneSensorManager
         UnityEngine.Object.DontDestroyOnLoad(go);
         updater = go.AddComponent<ZoneSensorManagerUpdater>();
         Plugin.Logger.LogDebug("ZoneSensor: Created updater component for movement sync");
+    }
+
+    /// <summary>
+    /// Re-broadcasts position states for all groups so slow clients can receive them.
+    /// Host only. Safe because clients guard against double-spawning via sensorsSpawned flag.
+    /// </summary>
+    private void RebroadcastPositionStates()
+    {
+        Plugin.Logger.LogDebug($"ZoneSensor: Re-broadcasting position states (attempt {rebroadcastCount}/{MAX_REBROADCASTS})");
+
+        foreach (var group in activeSensorGroups.Values)
+        {
+            group.RebroadcastPositions();
+        }
     }
 
     /// <summary>
@@ -506,6 +546,8 @@ public sealed class ZoneSensorManager
 
         activeSensorGroups.Clear();
         nextReplicatorIndex = 0;
+        rebroadcastTimer = 0f;
+        rebroadcastCount = MAX_REBROADCASTS; // Prevent re-broadcasts during cleanup
 
         // Destroy updater component
         if (updater != null)
