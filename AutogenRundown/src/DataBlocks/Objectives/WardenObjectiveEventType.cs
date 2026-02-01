@@ -46,6 +46,26 @@ public enum WardenObjectiveEventType : uint
     /// Toggle a security sensor group state
     /// </summary>
     ToggleSecuritySensor = 400,
+
+    /// <summary>
+    /// Toggle a security sensor group, preserving triggered state (triggered sensors stay hidden)
+    /// </summary>
+    ToggleSecuritySensorPreserveTriggered = 401,
+
+    /// <summary>
+    /// Toggle a security sensor group with reset (all sensors reappear when enabled)
+    /// </summary>
+    ToggleSecuritySensorResetTriggered = 402,
+
+    /// <summary>
+    /// Disable a security sensor group (preserves triggered state)
+    /// </summary>
+    DisableSecuritySensor = 403,
+
+    /// <summary>
+    /// Enable a security sensor group (only untriggered sensors appear)
+    /// </summary>
+    EnableSecuritySensor = 404,
     #endregion
 
     #region MOD: AdvancedWardenObjective
@@ -70,6 +90,7 @@ public enum WardenObjectiveEventType : uint
     #region --- Modder: Armor's Events ---
     StartEventLoop = 20001,
     StopEventLoop = 20002,
+    InfectPlayer = 20004,
 
     AdjustAwoTimer = 20007,
 

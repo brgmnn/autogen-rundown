@@ -1,15 +1,20 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Resources;
+using System.Text.RegularExpressions;
 using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
+using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Logs;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Terminals;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
 using AutogenRundown.GeneratorData;
+using AutogenRundown.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -91,6 +96,9 @@ public class Level
             (1.0, Complex.Tech),
             (0.7, Complex.Service)
         });
+
+    [JsonIgnore]
+    public ComplexResourceSet ResourceSet { get; set; } = ComplexResourceSet.Mining;
 
     /// <summary>
     /// Chances of a level selecting each combination of bulkheads
@@ -332,6 +340,15 @@ public class Level
     };
     #endregion
 
+    #region Zone Sensors (Autogen Custom)
+    /// <summary>
+    /// Zone-based security sensors that are placed automatically within zones.
+    /// These are handled by AutogenRundown's ZoneSensorManager at runtime.
+    /// </summary>
+    [JsonIgnore]
+    public List<ZoneSensorDefinition> ZoneSensors { get; private set; } = new();
+    #endregion
+
     #region GlobalWaveSettings
 
     [JsonIgnore]
@@ -469,12 +486,9 @@ public class Level
         };
     }
 
-    public JObject Expedition
-    {
-        get => new JObject
+    public JObject Expedition => new()
         {
-            ["ComplexResourceData"] = (int)Complex,
-            // ["MLSLevelKit"] = 0,
+            ["ComplexResourceData"] = ResourceSet.PersistentId,
             ["MLSLevelKit"] = 1,
             ["LightSettings"] = 36,
             ["FogSettings"] = FogSettings.PersistentId,
@@ -491,7 +505,6 @@ public class Level
                 new Color { Alpha = 1.0, Red = 0.5, Green = 0.5, Blue = 0.5 }),
             ["DustTurbulence"] = 1.0
         };
-    }
 
     public JObject VanityItemsDropData = new() { ["Groups"] = new JArray() };
 
@@ -520,6 +533,13 @@ public class Level
         get => ObjectiveLayer[Bulkhead.Main];
         set => ObjectiveLayer[Bulkhead.Main] = value;
     }
+
+    /// <summary>
+    /// True if this level has both an Extreme and Overload optional objectives
+    /// </summary>
+    [JsonIgnore]
+    public bool HasPrisonerEfficiency => Settings.Bulkheads.HasFlag(Bulkhead.PrisonerEfficiency);
+
     #endregion
 
     #region Secondary (Extreme) Objective Data
@@ -807,17 +827,13 @@ public class Level
             _ => MainLayerData
         };
 
-    public WardenObjective? GetObjective(Bulkhead variant) =>
-        variant switch
-        {
-            Bulkhead.Main => Bins.WardenObjectives.Find(MainLayerData.ObjectiveData.DataBlockId),
-            Bulkhead.Extreme => Bins.WardenObjectives.Find(SecondaryLayerData.ObjectiveData.DataBlockId),
-            Bulkhead.Overload => Bins.WardenObjectives.Find(ThirdLayerData.ObjectiveData.DataBlockId),
-            Bulkhead.None => throw new NotImplementedException(),
-            Bulkhead.StartingArea => throw new NotImplementedException(),
-            Bulkhead.All => throw new NotImplementedException(),
-            _ => throw new NotImplementedException(),
-        };
+    public WardenObjective GetObjective(Bulkhead variant)
+    {
+        if (variant.HasFlag(Bulkhead.Main))
+            return Objective[Bulkhead.Main];
+
+        return variant is Bulkhead.Extreme or Bulkhead.Overload ? Objective[variant] : Objective[Bulkhead.Main];
+    }
 
     public LevelLayout? GetLevelLayout(Bulkhead variant) =>
         variant switch
@@ -973,9 +989,37 @@ public class Level
     }
 
     /// <summary>
+    /// Purely RAM/memory optimization step. This prunes any unneeded custom geos from the custom
+    /// geo list so they are not loaded by the game for this level. This saves around 1-2gb of
+    /// ram for people.
+    /// </summary>
+    private void FinalizeComplexResourceSet()
+    {
+        ResourceSet = Complex switch
+        {
+            Complex.Mining => ComplexResourceSet.Mining,
+            Complex.Tech => ComplexResourceSet.Tech,
+            Complex.Service => ComplexResourceSet.Service,
+        };
+
+        ResourceSet = ResourceSet.Duplicate();
+
+        ResourceSet.BlockName = $"{ResourceSet.BlockName}_{Tier}{Index}_{Filesystem.Filename(Name)}";
+
+        var usedCustomGeos = new HashSet<string>();
+
+        foreach (var layout in Layouts.Values)
+            foreach (var zone in layout.Zones)
+                if (zone.CustomGeomorph is not null)
+                    usedCustomGeos.Add(zone.CustomGeomorph);
+
+        ResourceSet.CustomGeomorphs.RemoveAll(prefab => !usedCustomGeos.Contains(prefab.Asset));
+    }
+
+    /// <summary>
     /// Saves all of the EOS definitions
     /// </summary>
-    private void FinalizeExtraObjectiveSetup()
+    private void FinalizeCustomMods()
     {
         /*
          * We need to make sure the ExtraObjectiveSetup layout definitions are set up with the
@@ -1030,6 +1074,18 @@ public class Level
 
         if (EOS_SecuritySensor.Definitions.Any())
             EOS_SecuritySensor.Save();
+
+        // Save zone sensors to JSON for runtime loading
+        if (ZoneSensors.Any())
+        {
+            var levelZoneSensors = new LevelZoneSensors
+            {
+                Name = $"{Tier}{Index}_{fsName}",
+                MainLevelLayout = LevelLayoutData,
+                Definitions = ZoneSensors
+            };
+            levelZoneSensors.Save();
+        }
     }
 
     /// <summary>
@@ -1362,7 +1418,7 @@ public class Level
         #endregion
 
         #region Finalize -- ExtraObjectiveSetup
-        level.FinalizeExtraObjectiveSetup();
+        level.FinalizeCustomMods();
         #endregion
 
         #region Finalize -- Zone numbers & Extraction Intel
@@ -1370,6 +1426,10 @@ public class Level
         level.RecalculateZoneAliasStarts();
         level.Objective[Bulkhead.Main].PostBuild_ForwardExtract(level);
 
+        #endregion
+
+        #region Finalize -- Complex Resource Set
+        level.FinalizeComplexResourceSet();
         #endregion
 
         Plugin.Logger.LogDebug($"Level={level.Tier}{level.Index} level plan: {level.Planner}");
@@ -1507,56 +1567,11 @@ public class Level
             level.Planner.AddZone(elevatorDrop, elevatorDropZone);
             layout.Zones.Add(elevatorDropZone);
 
-            // var zone2 = new Zone(level)
-            // {
-            //     Coverage = new CoverageMinMax { Min = 100, Max = 100 },
-            //     LightSettings = Lights.GenRandomLight(),
-            //     LocalIndex = 1,
-            //     BuildFromLocalIndex = 0,
-            //     CustomGeomorph = geo
-            // };
-            //
-            // level.Planner.AddZone(new ZoneNode(Bulkhead.Main, 1), zone2);
-            // layout.Zones.Add(zone2);
-
-            // elevatorDropZone.EnemySpawningInZone.Add(
-            //     EnemySpawningData.TierA with { Points = 30 });
-
-            // elevatorDropZone.EnemySpawningInZone.Add(
-            //     EnemySpawningData.HybridInfected with { Points = 4 });
-
-            // layout.AddAlignedBossFight_MegaMom(elevatorDrop);
-
-            // elevatorDropZone.EnemySpawningInZone.Add(
-            //     EnemySpawningData.Mother with { Points = 10 });
-            //
-            // elevatorDropZone.EnemySpawningInZone.Add(
-            //     EnemySpawningData.PMother with { Points = 10 });
-
-
-            // elevatorDropZone.EnemySpawningInZone.Add(
-                // new EnemySpawningData
-                // {
-                //     Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Hybrids),
-                //     Points = 1,
-                //     GroupType = EnemyGroupType.Hibernate
-                // });
-                // EnemySpawningData.NightmareGiant with
-                // {
-                //     Points = 6
-                // });
-
             // elevatorDropZone.EnemySpawningInZone.Add(new EnemySpawningData
             // {
             //     GroupType = EnemyGroupType.Hibernate,
             //     Difficulty = (uint)Enemy.ChargerGiant,
             //     Points = 4
-            // });
-            // elevatorDropZone.EnemySpawningInZone.Add(new EnemySpawningData
-            // {
-            //     GroupType = EnemyGroupType.Hibernate,
-            //     Difficulty = (uint)Enemy.Charger,
-            //     Points = 1
             // });
 
 
@@ -1579,7 +1594,152 @@ public class Level
                     });
 
                 layout.Zones.Add(zone);
+
+                if (z == 0)
+                {
+                    var sensorEvents = new List<WardenObjectiveEvent>();
+
+                    sensorEvents
+                        .AddSound(Sound.LightsOff)
+                        .AddSpawnWave(GenericWave.SingleTank, 2.0);
+
+                    level.ZoneSensors.Add(new ZoneSensorDefinition
+                    {
+                        ZoneNumber = zone.LocalIndex,
+                        Bulkhead = Bulkhead.Main,
+
+                        SensorGroups = new List<ZoneSensorGroupDefinition>
+                        {
+                            new ZoneSensorGroupDefinition
+                            {
+                                TriggerEach = true,
+                                Density = SensorDensity.High,
+                                Radius = 1,
+                                AreaIndex = -1,
+                            }
+                        },
+
+                        EventsOnTrigger = sensorEvents
+                    });
+                }
+
+
             }
+
+            var sensorEvents2 = new List<WardenObjectiveEvent>();
+
+            sensorEvents2
+                .AddSound(Sound.LightsOff)
+                .AddSpawnWave(new GenericWave
+                {
+                    Population = WavePopulation.Baseline,
+                    Settings = WaveSettings.SingleMiniBoss
+                }, 1.0);
+
+            level.ZoneSensors.Add(new ZoneSensorDefinition
+            {
+                Id = 123,
+                ZoneNumber = 0,
+                Bulkhead = Bulkhead.Main,
+                SensorGroups = new List<ZoneSensorGroupDefinition>
+                {
+                    new ZoneSensorGroupDefinition
+                    {
+                        TriggerEach = true,
+                        // Count = 128,
+                        Density = SensorDensity.Low,
+                        Moving = 3,
+                        Speed = 0.5,
+                        // Radius = 2.0,
+                        EdgeDistance = 0.7,
+                        AreaIndex = 1,
+                        EncryptedText = true,
+                    }
+                },
+
+                EventsOnTrigger = sensorEvents2
+            });
+
+            var (med, medZone) = layout.BuildOptional_MedicalBay(elevatorDrop);
+            layout.Zones.Add(medZone);
+
+            elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
+                new CustomTerminalCommand
+                {
+                    Command = "DEACTIVATE_SENSORS",
+                    CommandDesc = new Text($"Deactivate security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
+                    CommandEvents = new List<WardenObjectiveEvent>()
+                        // .AddStopLoop(263, 0.4)
+                        .DisableZoneSensors(123, 1.4)
+                        .ToList(),
+                    PostCommandOutputs = new List<TerminalOutput>
+                    {
+                        new()
+                        {
+                            Output = "Authenticating with BIOCOM...",
+                            Type = LineType.SpinningWaitNoDone,
+                            Time = 1.0
+                        },
+                        new()
+                        {
+                            Output = "Done.",
+                            Type = LineType.Normal,
+                            Time = 1.0
+                        },
+                    }
+                });
+
+            elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
+                new CustomTerminalCommand
+                {
+                    Command = "ACTIVATE_SENSORS",
+                    CommandDesc = new Text($"Activate security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
+                    CommandEvents = new List<WardenObjectiveEvent>()
+                        // .AddStopLoop(263, 0.4)
+                        .EnableZoneSensors(123, 1.4)
+                        .ToList(),
+                    PostCommandOutputs = new List<TerminalOutput>
+                    {
+                        new()
+                        {
+                            Output = "Authenticating with BIOCOM...",
+                            Type = LineType.SpinningWaitNoDone,
+                            Time = 1.0
+                        },
+                        new()
+                        {
+                            Output = "Done.",
+                            Type = LineType.Normal,
+                            Time = 1.0
+                        },
+                    }
+                });
+
+            elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
+                new CustomTerminalCommand
+                {
+                    Command = "RESET_SENSORS",
+                    CommandDesc = new Text($"Fully reset security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
+                    CommandEvents = new List<WardenObjectiveEvent>()
+                        // .AddStopLoop(263, 0.4)
+                        .EnableZoneSensorsWithReset(123, 1.4)
+                        .ToList(),
+                    PostCommandOutputs = new List<TerminalOutput>
+                    {
+                        new()
+                        {
+                            Output = "Authenticating with BIOCOM...",
+                            Type = LineType.SpinningWaitNoDone,
+                            Time = 1.0
+                        },
+                        new()
+                        {
+                            Output = "Done.",
+                            Type = LineType.Normal,
+                            Time = 1.0
+                        },
+                    }
+                });
 
             // layout.AddSecuritySensors_SinglePouncerShadow((0, 1));
 
@@ -1590,7 +1750,8 @@ public class Level
             Plugin.Logger.LogError($"OH NO: {err}");
         }
 
-        level.FinalizeExtraObjectiveSetup();
+        level.FinalizeCustomMods();
+        level.FinalizeComplexResourceSet();
 
         return level;
     }

@@ -305,6 +305,15 @@ public partial record LevelLayout
 
                         (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(mid, 0);
                     }),
+
+                    // 2 zones with sensors
+                    (0.3, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        if (altitude != null) midZone.Altitude = altitude;
+                        AddSecuritySensors(mid);
+                        (cellNode, cellZone) = AddZone(mid);
+                    }),
                 });
 
                 if (altitude != null)
@@ -347,6 +356,15 @@ public partial record LevelLayout
 
                         (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(mid, 0);
                     }),
+
+                    // Keycard with sensors
+                    (0.3, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        if (altitude != null) midZone.Altitude = altitude;
+                        AddSecuritySensors(mid);
+                        (cellNode, cellZone) = BuildChallenge_KeycardInZone(mid);
+                    }),
                 });
 
                 if (altitude != null)
@@ -383,6 +401,15 @@ public partial record LevelLayout
                             midZone.Altitude = altitude;
 
                         (cellNode, cellZone) = BuildChallenge_BossFight(mid);
+                    }),
+
+                    // 2 zones with sensors
+                    (0.3, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        if (altitude != null) midZone.Altitude = altitude;
+                        AddSecuritySensors(mid);
+                        (cellNode, cellZone) = AddZone(mid);
                     }),
                 });
 
@@ -472,6 +499,24 @@ public partial record LevelLayout
 
                         (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(mid, 0);
                     }),
+
+                    // 2 zones with sensors on mid
+                    (0.4, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        if (altitude != null) midZone.Altitude = altitude;
+                        AddSecuritySensors(mid);
+                        (cellNode, cellZone) = AddZone(mid);
+                    }),
+
+                    // Keycard in side with sensors
+                    (0.3, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        if (altitude != null) midZone.Altitude = altitude;
+                        AddSecuritySensors(mid);
+                        (cellNode, cellZone) = BuildChallenge_KeycardInSide(mid, 1);
+                    }),
                 });
 
                 if (altitude != null)
@@ -535,6 +580,15 @@ public partial record LevelLayout
                             midZone.Altitude = altitude;
 
                         (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(mid, 1);
+                    }),
+
+                    // Keycard with sensors
+                    (0.3, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        if (altitude != null) midZone.Altitude = altitude;
+                        AddSecuritySensors(mid);
+                        (cellNode, cellZone) = BuildChallenge_KeycardInZone(mid);
                     }),
                 });
 
@@ -601,6 +655,15 @@ public partial record LevelLayout
                             midZone.Altitude = altitude;
 
                         (cellNode, cellZone) = BuildChallenge_BossFight(mid);
+                    }),
+
+                    // 2 zones with sensors
+                    (0.4, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        if (altitude != null) midZone.Altitude = altitude;
+                        AddSecuritySensors(mid);
+                        (cellNode, cellZone) = AddZone(mid);
                     }),
                 });
 
@@ -709,6 +772,24 @@ public partial record LevelLayout
 
                         (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(mid, 0);
                     }),
+
+                    // 2 zones with sensors
+                    (0.5, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        if (altitude != null) midZone.Altitude = altitude;
+                        AddSecuritySensors(mid);
+                        (cellNode, cellZone) = AddZone(mid);
+                    }),
+
+                    // Boss fight with sensors in approach
+                    (0.3, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        if (altitude != null) midZone.Altitude = altitude;
+                        AddSecuritySensors(mid);
+                        (cellNode, cellZone) = BuildChallenge_BossFight(mid);
+                    }),
                 });
 
                 if (altitude != null)
@@ -772,6 +853,15 @@ public partial record LevelLayout
                             midZone.Altitude = altitude;
 
                         (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(mid, 1);
+                    }),
+
+                    // Keycard with sensors
+                    (0.3, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        if (altitude != null) midZone.Altitude = altitude;
+                        AddSecuritySensors(mid);
+                        (cellNode, cellZone) = BuildChallenge_KeycardInZone(mid);
                     }),
                 });
 
@@ -838,6 +928,15 @@ public partial record LevelLayout
                             midZone.Altitude = altitude;
 
                         (cellNode, cellZone) = BuildChallenge_BossFight(mid);
+                    }),
+
+                    // 2 zones with sensors
+                    (0.4, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        if (altitude != null) midZone.Altitude = altitude;
+                        AddSecuritySensors(mid);
+                        (cellNode, cellZone) = AddZone(mid);
                     }),
                 });
 
@@ -940,6 +1039,24 @@ public partial record LevelLayout
 
                         (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(mid, 0);
                     }),
+
+                    // 2 zones with sensors
+                    (0.6, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        if (altitude != null) midZone.Altitude = altitude;
+                        AddSecuritySensors(mid);
+                        (cellNode, cellZone) = AddZone(mid);
+                    }),
+
+                    // Keycard in side with sensors
+                    (0.5, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        if (altitude != null) midZone.Altitude = altitude;
+                        AddSecuritySensors(mid);
+                        (cellNode, cellZone) = BuildChallenge_KeycardInSide(mid, 1);
+                    }),
                 });
 
                 if (altitude != null)
@@ -1003,6 +1120,15 @@ public partial record LevelLayout
                             midZone.Altitude = altitude;
 
                         (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(mid, 1);
+                    }),
+
+                    // Keycard with sensors
+                    (0.3, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        if (altitude != null) midZone.Altitude = altitude;
+                        AddSecuritySensors(mid);
+                        (cellNode, cellZone) = BuildChallenge_KeycardInZone(mid);
                     }),
                 });
 
@@ -1084,6 +1210,15 @@ public partial record LevelLayout
                             midZone.Altitude = altitude;
 
                         (cellNode, cellZone) = BuildChallenge_BossFight(mid);
+                    }),
+
+                    // 2 zones with sensors
+                    (0.5, () =>
+                    {
+                        var (mid, midZone) = AddZone_Forward(start);
+                        if (altitude != null) midZone.Altitude = altitude;
+                        AddSecuritySensors(mid);
+                        (cellNode, cellZone) = AddZone(mid);
                     }),
                 });
 

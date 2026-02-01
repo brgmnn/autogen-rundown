@@ -7,13 +7,33 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+
+    <Deps>$(SolutionDir)\deps</Deps>
+    <Interop>$(SolutionDir)\AutogenRundown\interop</Interop>
+    <Plugins>$(SolutionDir)\AutogenRundown\plugins</Plugins>
+    <BepInEx>$(Deps)\BepInEx-BepInExPack_GTFO\BepInExPack_GTFO\BepInEx</BepInEx>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- BepInEx -->
+    <Reference Include="$(BepInEx)\core\BepInEx.Core.dll" />
+    <Reference Include="$(BepInEx)\core\BepInEx.Unity.IL2CPP.dll" />
+
+    <!-- BepInEx Core -->
+    <Reference Include="$(BepInEx)\core\0Harmony.dll" />
+    <Reference Include="$(BepInEx)\core\Il2CppInterop.Common.dll" />
+    <Reference Include="$(BepInEx)\core\Il2CppInterop.Runtime.dll" />
+
+
+    <!-- NuGet Packages -->
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
     <PackageReference Include="coverlet.collector" Version="3.2.0" />
+
+    <!-- Pure managed Unity types for testing (avoids IL2CPP runtime dependency) -->
+    <PackageReference Include="UnityEngine.CoreModule" Version="2020.3.1" NoWarn="NU1701" />
   </ItemGroup>
 
   <ItemGroup>

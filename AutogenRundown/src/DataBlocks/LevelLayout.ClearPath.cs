@@ -130,6 +130,14 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
                         (exit, exitZone) = BuildChallenge_KeycardInSide(nodes.Last());
 
+                    }),
+
+                    // Sensors + generator cell
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                        AddSecuritySensors(nodes.Last());
+                        (exit, exitZone) = BuildChallenge_GeneratorCellInSide(nodes.Last());
                     })
                 });
                 break;
@@ -187,6 +195,16 @@ public partial record LevelLayout
 
                         (exit, exitZone) = AddZone(mid, new ZoneNode { Branch = "exit" });
                     }),
+
+                    // Sensors + keycard to generator
+                    (0.20, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        AddSecuritySensors(nodes.Last());
+                        var (mid, _) = BuildChallenge_KeycardInSide(nodes.Last());
+                        var nodes2 = AddBranch_Forward(mid, 1);
+                        (exit, exitZone) = BuildChallenge_GeneratorCellInSide(nodes2.Last());
+                    })
                 });
                 break;
             }
@@ -307,6 +325,24 @@ public partial record LevelLayout
                             .AddUnlockDoor(director.Bulkhead, exit.ZoneNumber);
 
                         AddAlignedBossFight_MegaMom(boss, bossClearEvents);
+                    }),
+
+                    // Sensors + keycard to apex alarm
+                    (0.20, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last(), Generator.Between(1, 2));
+                        AddSecuritySensors(mid);
+
+                        midZone.GenCorridorGeomorph(level.Complex);
+
+                        var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+
+                        (exit, exitZone) = BuildChallenge_ApexAlarm(
+                            mid2,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
                     })
                 });
                 break;
@@ -375,6 +411,24 @@ public partial record LevelLayout
                             1);
 
                         (exit, exitZone) = AddZone(mid, new ZoneNode { Branch = "exit" });
+                    }),
+
+                    // Sensors + Boss fight to Apex
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 2);
+                        AddSecuritySensors(nodes.First());
+
+                        var (mid, midZone) = BuildChallenge_BossFight(nodes.Last());
+                        midZone.GenCorridorGeomorph(level.Complex);
+
+                        var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+
+                        (exit, exitZone) = BuildChallenge_ApexAlarm(
+                            mid2,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_VeryHard);
                     }),
 
                     // Boss Fight: Mega Mother

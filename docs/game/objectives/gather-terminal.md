@@ -47,12 +47,14 @@ Terminal data collection involves accessing computer terminals scattered through
 ### Terminal Log System
 
 **LOGS Command:**
+
 - Lists all available log files on current terminal
 - Shows filenames and extensions
 - Every terminal contains at least `auto_gen_status.log` (non-useful generic log)
 - Mission-critical logs have descriptive filenames
 
 **READ Command:**
+
 - Displays contents of specific log file
 - Format: `READ [FILENAME.EXT]` (e.g., `READ status.log`)
 - Log contents appear on terminal screen
@@ -61,36 +63,42 @@ Terminal data collection involves accessing computer terminals scattered through
 ### Log File Types
 
 **Mission-Critical Logs:**
+
 - Verification codes for uplinks or reactors
 - Equipment locations and zone information
 - Access codes for locked systems
 - Progression-critical data
 
 **Lore Logs:**
+
 - Story and world-building content
 - Character communications and reports
 - Historical information about the Complex
 - Optional but provides context
 
 **Generic Logs:**
+
 - `auto_gen_status.log` - Default log with no useful information
 - System status logs with standard information
 
 ### Information Gathering
 
 **Code Extraction:**
+
 - Verification codes for Terminal Uplink objectives
 - Access codes for locked terminals or doors
 - Reactor verification passwords
 - Equipment activation codes
 
 **Location Data:**
+
 - Zone information for objectives
 - Equipment locations
 - Key locations
 - Resource positions
 
 **Instructions:**
+
 - Procedural steps for objectives
 - Equipment usage instructions
 - Security protocols
@@ -142,15 +150,18 @@ Terminal data collection involves accessing computer terminals scattered through
 ## Terminal Commands
 
 ### Log Access Commands
+
 - `LOGS` - List all available log files on current terminal
 - `READ [FILENAME]` - Read specific log file (e.g., `READ verification.log`)
 
 ### Navigation Commands
+
 - `PING` - Locate terminal zones or objectives
 - `LIST` - Show items and objectives
 - `QUERY` - Find specific item or objective locations
 
 ### Related Commands
+
 - `UPLINK_VERIFY` - Uses codes often found in terminal logs
 - `REACTOR_VERIFY` - Uses codes sometimes retrieved from logs
 
@@ -159,14 +170,17 @@ Terminal data collection involves accessing computer terminals scattered through
 Terminal log gathering is often integrated into other objectives:
 
 ### Terminal Uplink (Advanced Variant)
+
 - Verification codes stored in terminal logs in other zones
 - Requires accessing multiple terminals to gather codes
 
 ### Reactor Startup/Shutdown (Variant)
+
 - Some expeditions require log file code retrieval
 - Codes in terminals rather than HUD display
 
 ### Lore Collection
+
 - D-Lock Block Decipherer Steam Achievement for collecting all lore logs
 - Optional exploration and story immersion
 
@@ -174,17 +188,17 @@ See [Logs - Official GTFO Wiki](https://gtfo.fandom.com/wiki/Logs) for comprehen
 
 ## Comparison to Related Objectives
 
-| Aspect | Gather Terminal Data | Gather Small Items | Terminal Uplink |
-|--------|---------------------|-------------------|-----------------|
-| **Collection Type** | Virtual data/information | Physical items | Network verification |
-| **Pickup Method** | Read terminal logs | Pick up from containers | Enter codes at terminal |
-| **Movement Impact** | None | None | None |
-| **Location Method** | Navigate to terminals | LIST/QUERY/PING | Find uplink terminals |
-| **Item Physicality** | Non-physical (data) | Physical containers | Non-physical (codes) |
-| **Terminal Dependency** | High (primary mechanic) | Moderate (location aid) | High (command entry) |
-| **Combat During Access** | Risk while reading | Risk while collecting | High (alarm during uplink) |
-| **Quota System** | Specific terminals/logs | Item count quota | Verification stages |
-| **Objective Integration** | Often part of larger objective | Standalone objective | Standalone objective |
+| Aspect                    | Gather Terminal Data           | Gather Small Items      | Terminal Uplink            |
+| ------------------------- | ------------------------------ | ----------------------- | -------------------------- |
+| **Collection Type**       | Virtual data/information       | Physical items          | Network verification       |
+| **Pickup Method**         | Read terminal logs             | Pick up from containers | Enter codes at terminal    |
+| **Movement Impact**       | None                           | None                    | None                       |
+| **Location Method**       | Navigate to terminals          | LIST/QUERY/PING         | Find uplink terminals      |
+| **Item Physicality**      | Non-physical (data)            | Physical containers     | Non-physical (codes)       |
+| **Terminal Dependency**   | High (primary mechanic)        | Moderate (location aid) | High (command entry)       |
+| **Combat During Access**  | Risk while reading             | Risk while collecting   | High (alarm during uplink) |
+| **Quota System**          | Specific terminals/logs        | Item count quota        | Verification stages        |
+| **Objective Integration** | Often part of larger objective | Standalone objective    | Standalone objective       |
 
 ## Common Challenges
 

@@ -64,12 +64,14 @@ A **Neonate HSU** is a smaller version of a regular HSU that contains an infant 
 ### Neonate HSU Activation
 
 **Activation Process:**
+
 - Requires specific equipment (NCR, Depressurizer, etc.)
 - Equipment location found via terminal commands
 - May involve bioscan sequences during activation
 - Commonly triggers alarm on activation
 
 **Equipment Interaction:**
+
 - Some equipment must be carried to HSU
 - Other equipment may be used in place
 - Activation typically irreversible once started
@@ -77,11 +79,13 @@ A **Neonate HSU** is a smaller version of a regular HSU that contains an infant 
 ### Terminal Navigation
 
 **Finding Neonate HSU:**
+
 - Use `QUERY [HSU_NAME]` to locate zone
-- HSU format: HSU_### (e.g., HSU_123)
+- HSU format: HSU\_### (e.g., HSU_123)
 - Use `PING` from zone terminal for directional guidance
 
 **Finding Activation Equipment:**
+
 - Equipment has specific names (NCR_A02, etc.)
 - Use `QUERY [DEVICE_NAME]` to locate
 - May be in different zone than neonate
@@ -89,12 +93,14 @@ A **Neonate HSU** is a smaller version of a regular HSU that contains an infant 
 ### Alarm Mechanics
 
 **Activation Alarms:**
+
 - Activation commonly triggers error alarm
 - Enemy waves spawn during or after activation
 - Alarm type varies by expedition
 - Must defend HSU area during activation
 
 **Bioscan Defense:**
+
 - Some activations require bioscan completion
 - Team must hold position during scan
 - Vulnerable to enemy attacks during process
@@ -156,18 +162,18 @@ See [Neonate HSU - Official GTFO Wiki](https://gtfo.wiki.gg/wiki/Neonate_HSU) fo
 
 ## Comparison to Related Objectives
 
-| Aspect | HSU Activate Small | HSU Find Sample | Retrieve Big Item (Neonate) |
-|--------|-------------------|-----------------|---------------------------|
-| **Primary Action** | Activate/process neonate | Extract tissue sample | Transport to extraction |
-| **HSU Type** | Neonate (small) | Standard (large) | Neonate (small) |
-| **Equipment Required** | Activation device (NCR, etc.) | None | None |
-| **Item Carry** | Possibly equipment | No | Yes (neonate itself) |
-| **Terminal Usage** | Find HSU and equipment | Find target HSU | Find neonate location |
-| **Activation Needed** | Yes (primary objective) | No | No |
-| **Transport Needed** | Equipment to HSU (sometimes) | No | Neonate to extraction |
-| **Alarm Timing** | At activation | At bioscan | At pickup/extraction |
-| **Bioscan** | Often required | Required at HSU | Required at extraction |
-| **Location Type** | Neonate in specific zone | Any HSU type | Neonate in specific zone |
+| Aspect                 | HSU Activate Small            | HSU Find Sample       | Retrieve Big Item (Neonate) |
+| ---------------------- | ----------------------------- | --------------------- | --------------------------- |
+| **Primary Action**     | Activate/process neonate      | Extract tissue sample | Transport to extraction     |
+| **HSU Type**           | Neonate (small)               | Standard (large)      | Neonate (small)             |
+| **Equipment Required** | Activation device (NCR, etc.) | None                  | None                        |
+| **Item Carry**         | Possibly equipment            | No                    | Yes (neonate itself)        |
+| **Terminal Usage**     | Find HSU and equipment        | Find target HSU       | Find neonate location       |
+| **Activation Needed**  | Yes (primary objective)       | No                    | No                          |
+| **Transport Needed**   | Equipment to HSU (sometimes)  | No                    | Neonate to extraction       |
+| **Alarm Timing**       | At activation                 | At bioscan            | At pickup/extraction        |
+| **Bioscan**            | Often required                | Required at HSU       | Required at extraction      |
+| **Location Type**      | Neonate in specific zone      | Any HSU type          | Neonate in specific zone    |
 
 ## Common Challenges
 

@@ -92,24 +92,6 @@ public record GenericWave
     };
     #endregion
 
-    #region Uplink Waves
-    public static readonly GenericWave Uplink_Easy = new()
-    {
-        Settings = WaveSettings.Baseline_Normal,
-        Population = WavePopulation.Baseline,
-        SpawnDelay = 2.0,
-        TriggerAlarm = true,
-    };
-
-    public static readonly GenericWave Uplink_Medium = new()
-    {
-        Settings = WaveSettings.Baseline_Hard,
-        Population = WavePopulation.Baseline,
-        SpawnDelay = 2.0,
-        TriggerAlarm = true
-    };
-    #endregion
-
     #region Chargers
     public static readonly GenericWave GiantChargers_35pts = new()
     {
@@ -170,12 +152,79 @@ public record GenericWave
     };
     #endregion
 
+    #region Sensor waves
+    public static readonly GenericWave Sensor_6pts = new()
+    {
+        Settings = WaveSettings.SingleWave_6pts,
+        Population = WavePopulation.Baseline
+    };
+
+    public static readonly GenericWave Sensor_Shooters_6pts = new()
+    {
+        Settings = WaveSettings.SingleWave_6pts,
+        Population = WavePopulation.Baseline_Shooters
+    };
+
+    public static readonly GenericWave Sensor_8pts = new()
+    {
+        Settings = WaveSettings.SingleWave_8pts,
+        Population = WavePopulation.Baseline
+    };
+
+    public static readonly GenericWave Sensor_12pts = new()
+    {
+        Settings = WaveSettings.SingleWave_12pts,
+        Population = WavePopulation.Baseline
+    };
+
+
+    public static readonly GenericWave Sensor_Shooters_12pts = new()
+    {
+        Settings = WaveSettings.SingleWave_12pts,
+        Population = WavePopulation.Baseline_Shooters
+    };
+
+    public static readonly GenericWave Sensor_16pts = new()
+    {
+        Settings = WaveSettings.SingleWave_16pts,
+        Population = WavePopulation.Baseline
+    };
+
+    public static readonly GenericWave Sensor_Chargers_8pts = new()
+    {
+        Settings = WaveSettings.SingleWave_8pts,
+        Population = WavePopulation.OnlyChargers
+    };
+
+    public static readonly GenericWave Sensor_Shadows_12pts = new()
+    {
+        Settings = WaveSettings.SingleWave_12pts,
+        Population = WavePopulation.OnlyShadows
+    };
+
+    public static readonly GenericWave Sensor_Nightmares_8pts = new()
+    {
+        Settings = WaveSettings.SingleWave_8pts,
+        Population = WavePopulation.OnlyNightmares
+    };
+
+    public static readonly GenericWave Sensor_Hybrids_8pts = new()
+    {
+        Settings = WaveSettings.SingleWave_8pts,
+        Population = WavePopulation.OnlyHybrids
+    };
+    #endregion
+
+
+    // Backing fields for deserialized values
+    private uint? _survivalWaveSettings;
+    private uint? _survivalWavePopulation;
 
     [JsonProperty("WaveSettings")]
     public uint SurvivalWaveSettings
     {
-        get => Settings.PersistentId;
-        private set { }
+        get => _survivalWaveSettings ?? Settings.PersistentId;
+        set => _survivalWaveSettings = value;
     }
 
     [JsonIgnore]
@@ -189,8 +238,8 @@ public record GenericWave
     [JsonProperty("WavePopulation")]
     public uint SurvivalWavePopulation
     {
-        get => Population.PersistentId;
-        private set { }
+        get => _survivalWavePopulation ?? Population.PersistentId;
+        set => _survivalWavePopulation = value;
     }
 
     /// <summary>

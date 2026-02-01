@@ -91,14 +91,14 @@ The alarm triggered by the HSU sample extraction varies by expedition:
 
 ## Comparison to Retrieve Big Items
 
-| Aspect | HSU Find Sample | Retrieve Big Items |
-|--------|----------------|-------------------|
-| **Item Type** | Tissue sample (invisible/automatic) | Physical large item (carried) |
-| **Interaction** | Bioscan at HSU location | Pick up and transport |
-| **Alarm Timing** | Triggered at HSU location | Often triggered at extraction |
-| **Movement** | Full speed throughout | Slowed when carrying item |
+| Aspect               | HSU Find Sample                      | Retrieve Big Items                 |
+| -------------------- | ------------------------------------ | ---------------------------------- |
+| **Item Type**        | Tissue sample (invisible/automatic)  | Physical large item (carried)      |
+| **Interaction**      | Bioscan at HSU location              | Pick up and transport              |
+| **Alarm Timing**     | Triggered at HSU location            | Often triggered at extraction      |
+| **Movement**         | Full speed throughout                | Slowed when carrying item          |
 | **Team Requirement** | Bioscan may require multiple players | One carrier, team provides support |
-| **Extraction** | Final bioscan at extraction point | Deliver item to specific location |
+| **Extraction**       | Final bioscan at extraction point    | Deliver item to specific location  |
 
 ## Notable Expeditions
 
@@ -112,18 +112,22 @@ Many expeditions feature the HSU Find Sample/Retrieve HSU objective:
 ## Common Challenges
 
 ### Path Preparation
+
 - **Challenge**: Failing to clear enemies before triggering HSU leads to fighting on two fronts
 - **Solution**: Methodically clear and secure the entire extraction route first
 
 ### Resource Depletion
+
 - **Challenge**: Running out of ammo during the continuous alarm spawns
 - **Solution**: Locate and memorize resource boxes along the route; conserve ammo before HSU trigger
 
 ### Team Separation
+
 - **Challenge**: Team gets split during extraction, leading to isolated players being overwhelmed
 - **Solution**: Establish rally points and maintain visual contact
 
 ### Final Scan Wipe
+
 - **Challenge**: Entire team dies during final extraction scan
 - **Solution**: Stagger player positions - not everyone needs to be in scan zone simultaneously
 

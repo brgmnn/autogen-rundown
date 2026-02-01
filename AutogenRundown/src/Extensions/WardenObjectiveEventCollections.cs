@@ -2,7 +2,9 @@
 using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.Extensions;
 
@@ -342,6 +344,74 @@ public static class WardenObjectiveEventCollections
         return events;
     }
 
+    public static ICollection<WardenObjectiveEvent> AddCyclingLights(
+        this ICollection<WardenObjectiveEvent> events,
+        int zoneNumber,
+        int layer,
+        LightSettings[] states,
+        int loopIndex,
+        double stateDuration = 1.5,
+        double transitionDuration = 0.05)
+    {
+        var eventLoop = new EventLoop()
+        {
+            LoopIndex = loopIndex,
+            LoopDelay = stateDuration * states.Length,
+            LoopCount = -1
+        };
+
+        for (var i = 0; i < states.Length; i++)
+        {
+            eventLoop.EventsToActivate.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.SetLightDataInZone,
+                    LocalIndex = zoneNumber,
+                    Layer = layer,
+                    Delay = i * stateDuration,
+                    Duration = transitionDuration,
+                    SetZoneLight = new SetZoneLight
+                    {
+                        LightSettings = states[i],
+                        Duration = transitionDuration,
+                        Seed = i + 1,
+                    }
+                });
+        }
+
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.StartEventLoop,
+                EventLoop = eventLoop
+            });
+
+        return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> AddRevertZoneLights(
+        this ICollection<WardenObjectiveEvent> events,
+        int zoneNumber,
+        int layer,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SetLightDataInZone,
+                LocalIndex = zoneNumber,
+                Layer = layer,
+                Delay = delay,
+                SetZoneLight = new SetZoneLight
+                {
+                    SetLight = SetZoneLightType.Revert,
+                    Duration = 1.0,
+                }
+            });
+
+        return events;
+    }
+
     #endregion
 
     #region Messaging
@@ -476,7 +546,7 @@ public static class WardenObjectiveEventCollections
 
     #region Security Sensors
     /// <summary>
-    /// Adds a security sensor toggle event
+    /// Adds a security sensor toggle event (for EOSExt_SecuritySensor)
     /// </summary>
     /// <param name="events"></param>
     /// <param name="sensorIndex"></param>
@@ -495,6 +565,176 @@ public static class WardenObjectiveEventCollections
                 Type = WardenObjectiveEventType.ToggleSecuritySensor,
                 Enabled = enabled,
                 Count = sensorIndex,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Toggle a sensor by ID on/off.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> ToggleZoneSensors(
+        this ICollection<WardenObjectiveEvent> events,
+        int sensorId,
+        bool enabled,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ToggleSecuritySensor,
+                Enabled = enabled,
+                Count = sensorId,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Enable a sensor by ID. Previously triggered sensors stay hidden.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> EnableZoneSensors(
+        this ICollection<WardenObjectiveEvent> events,
+        int sensorId,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.EnableSecuritySensor,
+                Count = sensorId,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Disable a sensor by ID.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> DisableZoneSensors(
+        this ICollection<WardenObjectiveEvent> events,
+        int sensorId,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.DisableSecuritySensor,
+                Count = sensorId,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Enable a sensor by ID with full reset. All sensors reappear,
+    /// including previously triggered ones.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> EnableZoneSensorsWithReset(
+        this ICollection<WardenObjectiveEvent> events,
+        int sensorId,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ToggleSecuritySensorResetTriggered,
+                Enabled = true,
+                Count = sensorId,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Toggle a sensor by ID with full reset. When enabling,
+    /// all sensors reappear including previously triggered ones.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> ToggleZoneSensorsWithReset(
+        this ICollection<WardenObjectiveEvent> events,
+        int sensorId,
+        bool enabled,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ToggleSecuritySensorResetTriggered,
+                Enabled = enabled,
+                Count = sensorId,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Enable sensors in a zone. Previously triggered sensors stay hidden.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> EnableZoneSensorsInZone(
+        this ICollection<WardenObjectiveEvent> events,
+        ZoneNode zone,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.EnableSecuritySensor,
+                Dimension = DimensionIndex.Reality,
+                Layer = GetLayerFromBulkhead(zone.Bulkhead),
+                LocalIndex = zone.ZoneNumber,
+                Count = 0,  // Zone targeting mode
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Disable sensors in a zone.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> DisableZoneSensorsInZone(
+        this ICollection<WardenObjectiveEvent> events,
+        ZoneNode zone,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.DisableSecuritySensor,
+                Dimension = DimensionIndex.Reality,
+                Layer = GetLayerFromBulkhead(zone.Bulkhead),
+                LocalIndex = zone.ZoneNumber,
+                Count = 0,  // Zone targeting mode
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Enable sensors in a zone with full reset. All sensors reappear,
+    /// including previously triggered ones.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> ResetZoneSensorsInZone(
+        this ICollection<WardenObjectiveEvent> events,
+        ZoneNode zone,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ToggleSecuritySensorResetTriggered,
+                Enabled = true,
+                Dimension = DimensionIndex.Reality,
+                Layer = GetLayerFromBulkhead(zone.Bulkhead),
+                LocalIndex = zone.ZoneNumber,
+                Count = 0,  // Zone targeting mode
                 Delay = delay
             });
 
@@ -522,6 +762,85 @@ public static class WardenObjectiveEventCollections
                     Frequency = 90.0
                 }
             });
+
+        return events;
+    }
+
+    #endregion
+
+    #region Infection
+
+    public static ICollection<WardenObjectiveEvent> AddInfectPlayer(
+        this ICollection<WardenObjectiveEvent> events,
+        double infectionAmount,
+        List<int>? playerFilter = null,
+        bool useZone = false,
+        Bulkhead? bulkhead = null,
+        int zoneIndex = 0,
+        double delay = 0.0)
+    {
+        var infectPlayer = new InfectPlayer
+        {
+            InfectionAmount = infectionAmount,
+            UseZone = useZone
+        };
+
+        if (playerFilter != null)
+            infectPlayer.PlayerFilter = playerFilter;
+
+        var ev = new WardenObjectiveEvent
+        {
+            Type = WardenObjectiveEventType.InfectPlayer,
+            Delay = delay,
+            InfectPlayer = infectPlayer
+        };
+
+        if (bulkhead != null)
+        {
+            ev.Layer = GetLayerFromBulkhead(bulkhead.Value);
+            ev.LocalIndex = zoneIndex;
+        }
+
+        events.Add(ev);
+
+        return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> AddInfectPlayerOverTime(
+        this ICollection<WardenObjectiveEvent> events,
+        double infectionAmount,
+        double interval = 1.0,
+        List<int>? playerFilter = null,
+        bool useZone = false,
+        Bulkhead? bulkhead = null,
+        int zoneIndex = 0,
+        double delay = 0.0)
+    {
+        var infectPlayer = new InfectPlayer
+        {
+            InfectionAmount = infectionAmount,
+            InfectOverTime = true,
+            Interval = interval,
+            UseZone = useZone
+        };
+
+        if (playerFilter != null)
+            infectPlayer.PlayerFilter = playerFilter;
+
+        var ev = new WardenObjectiveEvent
+        {
+            Type = WardenObjectiveEventType.InfectPlayer,
+            Delay = delay,
+            InfectPlayer = infectPlayer
+        };
+
+        if (bulkhead != null)
+        {
+            ev.Layer = GetLayerFromBulkhead(bulkhead.Value);
+            ev.LocalIndex = zoneIndex;
+        }
+
+        events.Add(ev);
 
         return events;
     }

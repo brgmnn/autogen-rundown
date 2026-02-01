@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.Extensions;
 using AutogenRundown.Patches;
 using BepInEx.Logging;
@@ -29,7 +30,7 @@ public partial record WardenObjective
             ("C", _) => Generator.Between(1, 2),
 
             ("D", Bulkhead.Main) => Generator.Between(1, 3),
-            ("D", _) => Generator.Between(1, 3),
+            ("D", _) => Generator.Between(1, 2),
 
             ("E", Bulkhead.Main) => Generator.Between(2, 4),
             ("E", _) => Generator.Between(1, 3),
@@ -79,25 +80,94 @@ public partial record WardenObjective
 
         Uplink_WaveSpawnType = SurvivalWaveSpawnType.InSuppliedCourseNodeZone;
 
-        var wave = level.Tier switch
+        // Primary wave settings based on tier and bulkhead
+        var (settings, spawnDelay) = (level.Tier, director.Bulkhead) switch
         {
-            "A" => GenericWave.Uplink_Easy,
-            "B" => GenericWave.Uplink_Easy,
-            _ => GenericWave.Uplink_Medium,
+            ("A", _) => (WaveSettings.Baseline_Easy, 3.0),
+
+            ("B", Bulkhead.Main) => (WaveSettings.Baseline_Normal, 2.5),
+            ("B", _) => (WaveSettings.Baseline_Normal, 2.0),
+
+            ("C", Bulkhead.Main) => (WaveSettings.Baseline_Hard, 2.0),
+            ("C", _) => (WaveSettings.Baseline_Hard, 2.0),
+
+            ("D", Bulkhead.Main) => (WaveSettings.Baseline_Hard, 2.0),
+            ("D", _) => (WaveSettings.Baseline_VeryHard, 2.0),
+
+            ("E", _) => (WaveSettings.Baseline_VeryHard, 2.0),
+            _ => (WaveSettings.Baseline_Normal, 2.0)
         };
 
-        WavesOnActivate.Add(wave);
+        // Always add primary baseline wave
+        WavesOnActivate.Add(new GenericWave
+        {
+            Settings = settings,
+            Population = WavePopulation.Baseline,
+            SpawnDelay = spawnDelay,
+            TriggerAlarm = true
+        });
 
-        // TODO: Generate proper zones, one for each uplink terminal
-        var zones = level.Planner.GetZones(director.Bulkhead, "uplink_terminals")
-                                 .TakeLast(Uplink_NumberOfTerminals);
+        // Conditionally add secondary waves based on tier, bulkhead, and level settings
+        if (level.Tier is "C" or "D" or "E")
+        {
+            // Add charger wave if chargers are enabled (Extreme/Overload only)
+            if (level.Settings.HasChargers() && director.Bulkhead != Bulkhead.Main)
+            {
+                WavesOnActivate.Add(new GenericWave
+                {
+                    Settings = settings,
+                    Population = WavePopulation.Baseline_Chargers,
+                    SpawnDelay = spawnDelay + 10.0,
+                    TriggerAlarm = false
+                });
+            }
 
-        foreach (var zone in zones)
+            // Add shadow wave if shadows are enabled (D/E Overload only)
+            if (level.Tier is "D" or "E" && level.Settings.HasShadows() &&
+                director.Bulkhead == Bulkhead.Overload)
+            {
+                WavesOnActivate.Add(new GenericWave
+                {
+                    Settings = settings,
+                    Population = WavePopulation.Baseline_Shadows,
+                    SpawnDelay = spawnDelay + 20.0,
+                    TriggerAlarm = false
+                });
+            }
+
+            // Add nightmare wave if nightmares enabled (D/E Extreme/Overload)
+            if (level.Tier is "D" or "E" && level.Settings.HasNightmares() &&
+                director.Bulkhead != Bulkhead.Main)
+            {
+                WavesOnActivate.Add(new GenericWave
+                {
+                    Settings = level.Tier == "E" ? WaveSettings.Baseline_VeryHard : WaveSettings.Baseline_Hard,
+                    Population = WavePopulation.Baseline_Nightmare,
+                    SpawnDelay = spawnDelay + 15.0,
+                    TriggerAlarm = false
+                });
+            }
+
+            // E-tier Overload gets hybrid boss wave (only if verification rounds <= 3)
+            if (level.Tier == "E" && director.Bulkhead == Bulkhead.Overload &&
+                Uplink_NumberOfVerificationRounds <= 3)
+            {
+                WavesOnActivate.Add(new GenericWave
+                {
+                    Settings = WaveSettings.MiniBoss_Hard,
+                    Population = WavePopulation.Baseline_Hybrids,
+                    SpawnDelay = spawnDelay + 30.0,
+                    TriggerAlarm = false
+                });
+            }
+        }
+
+        foreach (var node in PlacementNodes)
             dataLayer.ObjectiveData.ZonePlacementDatas.Add(new List<ZonePlacementData>
             {
                 new()
                 {
-                    LocalIndex = zone.ZoneNumber,
+                    LocalIndex = node.ZoneNumber,
                     Weights = ZonePlacementWeights.NotAtStart
                 }
             });

@@ -129,6 +129,16 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
                         (end, endZone) = BuildChallenge_KeycardInSide(nodes.Last());
 
+                    }),
+
+                    // Sensor straight shot - sensors on last zones (2-4+N zones)
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 4));
+                        for (var i = Math.Max(0, nodes.Count - 2); i < nodes.Count; i++)
+                            AddSecuritySensors(nodes[i]);
+                        end = nodes.Last();
+                        endZone = planner.GetZone(end)!;
                     })
                 });
 
@@ -207,6 +217,21 @@ public partial record LevelLayout
                         }
 
                         planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
+                    }),
+
+                    // Sensor double generator - generators with sensors on each zone
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, _) = BuildChallenge_GeneratorCellInSide(nodes.Last());
+                        AddSecuritySensors(mid);
+
+                        var nodes2 = AddBranch_Forward(mid, 1);
+                        (end, endZone) = BuildChallenge_GeneratorCellInSide(nodes2.Last());
+                        AddSecuritySensors(end);
+
+                        planner.UpdateNode(mid with { Tags = mid.Tags.Extend("uplink_terminal") });
+                        planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
                     })
                 });
                 break;
@@ -264,6 +289,18 @@ public partial record LevelLayout
                             1);
 
                         (end, endZone) = AddZone(mid);
+                    }),
+
+                    // Sensor double generator - generators with sensors on each zone
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, _) = BuildChallenge_GeneratorCellInSide(nodes.Last());
+                        AddSecuritySensors(mid);
+
+                        var nodes2 = AddBranch_Forward(mid, 1);
+                        (end, endZone) = BuildChallenge_GeneratorCellInSide(nodes2.Last());
+                        AddSecuritySensors(end);
                     })
                 });
 
@@ -480,6 +517,20 @@ public partial record LevelLayout
                             .AddUnlockDoor(director.Bulkhead, end.ZoneNumber);
 
                         AddAlignedBossFight_MegaMom(boss, bossClearEvents);
+                    }),
+
+                    // Sensor error approach - sensors on approach, then error+keycard
+                    (0.10, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                        foreach (var node in nodes)
+                            AddSecuritySensors(node);
+                        var (mid, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
+                            nodes.Last(),
+                            errorZones: 1,
+                            sideKeycardZones: 1,
+                            terminalTurnoffZones: 1);
+                        (end, endZone) = AddZone(mid);
                     })
                 });
 
@@ -499,11 +550,11 @@ public partial record LevelLayout
                         corridorZone.GenCorridorGeomorph(level.Complex);
 
                         var (hub, hubZone) = AddZone(corridor);
-                        corridorZone.GenHubGeomorph(level.Complex);
+                        hubZone.GenHubGeomorph(level.Complex);
                         planner.UpdateNode(hub with { Tags = hub.Tags.Extend("uplink_terminal") });
 
                         var (side1, side1Zone) = AddZone(hub);
-                        corridorZone.GenDeadEndGeomorph(level.Complex);
+                        side1Zone.GenDeadEndGeomorph(level.Complex);
                         planner.UpdateNode(hub with { Tags = hub.Tags.Extend("uplink_terminal") });
 
                         var nodes = AddBranch_Forward(
@@ -534,6 +585,25 @@ public partial record LevelLayout
                         (end, endZone) = AddZone(mid);
 
                         // We just distribute the uplinks throughout the area
+                        planner.UpdateNode(start with { Tags = start.Tags.Extend("uplink_terminal") });
+                        planner.UpdateNode(mid with { Tags = mid.Tags.Extend("uplink_terminal") });
+                        planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
+                    }),
+
+                    // Sensor error corridor - forward + sensors, error+cell carry + sensors on mid
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        AddSecuritySensors(nodes.Last());
+
+                        var (mid, _) = BuildChallenge_ErrorWithOff_GeneratorCellCarry(
+                            nodes.Last(),
+                            Generator.Between(1, 2),
+                            1);
+                        AddSecuritySensors(mid);
+
+                        (end, endZone) = AddZone(mid);
+
                         planner.UpdateNode(start with { Tags = start.Tags.Extend("uplink_terminal") });
                         planner.UpdateNode(mid with { Tags = mid.Tags.Extend("uplink_terminal") });
                         planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
@@ -674,6 +744,26 @@ public partial record LevelLayout
                         AddAlignedBossFight_MegaMom(boss, bossClearEvents);
 
                         planner.UpdateNode(boss with { Tags = boss.Tags.Extend("uplink_terminal") });
+                        planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
+                    }),
+
+                    // Sensor boss corridor - sensors on all zones, boss, corridor, apex
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+                        foreach (var node in nodes)
+                            AddSecuritySensors(node);
+
+                        var (mid, _) = BuildChallenge_BossFight(nodes.Last());
+                        var (mid2, mid2Zone) = AddZone(mid);
+                        mid2Zone.GenCorridorGeomorph(level.Complex);
+
+                        (end, endZone) = BuildChallenge_ApexAlarm(
+                            mid2,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_VeryHard);
+
+                        planner.UpdateNode(mid2 with { Tags = mid2.Tags.Extend("uplink_terminal") });
                         planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
                     })
                 });

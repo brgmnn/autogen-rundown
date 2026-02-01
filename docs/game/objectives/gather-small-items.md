@@ -116,17 +116,20 @@ These items are critical to the mission's research objectives, containing valuab
 ### Common Terminal Workflows
 
 **Initial Survey:**
+
 ```
 LIST ITEM_ID           // See all Personnel IDs
 ```
 
 **Zone-Specific Search:**
+
 ```
 LIST ZONE_21           // See all items in Zone 21
 PING ID_018            // Get directional ping for specific ID
 ```
 
 **Continuous Tracking:**
+
 ```
 PING -t GLP_042        // Continuous ping (stop with Ctrl+C)
 ```
@@ -146,26 +149,28 @@ PING -t GLP_042        // Continuous ping (stop with Ctrl+C)
 Gather Small Items appears in many expeditions:
 
 ### Personnel IDs
+
 - **[ALT://R1B1](https://gtfo.wiki.gg/wiki/ALT://R1B1)**: Collect 6 Personnel IDs
 - Many other expeditions feature ID collection
 
 ### GLP Canisters
+
 - Various expeditions require collecting GLP-1 or GLP-2 Canisters
 
 See [Gather Items - Official GTFO Wiki](https://gtfo.wiki.gg/wiki/Gather_Items) for complete list.
 
 ## Comparison to Related Objectives
 
-| Aspect | Gather Small Items | Retrieve Big Items | Gather Terminal Items |
-|--------|-------------------|-------------------|----------------------|
-| **Item Size** | Small (IDs, GLPs) | Large (Turbines, HSUs) | Virtual (terminal data) |
-| **Pickup Method** | Automatic from container | Pick up and carry | Terminal interaction |
-| **Movement Impact** | No slowdown | Slowed movement | No movement needed |
-| **Location Method** | LIST/QUERY/PING | QUERY/PING | Terminal logs |
-| **Quantity** | Multiple items (quota) | Typically 1-2 items | Variable |
-| **Container Source** | Physical containers | Items lying in zones | Terminal logs/data |
-| **Hands Occupied** | No | Yes (can't use weapons) | No |
-| **Team Distribution** | Can split to collect | One carrier + support | Team can split |
+| Aspect                | Gather Small Items       | Retrieve Big Items      | Gather Terminal Items   |
+| --------------------- | ------------------------ | ----------------------- | ----------------------- |
+| **Item Size**         | Small (IDs, GLPs)        | Large (Turbines, HSUs)  | Virtual (terminal data) |
+| **Pickup Method**     | Automatic from container | Pick up and carry       | Terminal interaction    |
+| **Movement Impact**   | No slowdown              | Slowed movement         | No movement needed      |
+| **Location Method**   | LIST/QUERY/PING          | QUERY/PING              | Terminal logs           |
+| **Quantity**          | Multiple items (quota)   | Typically 1-2 items     | Variable                |
+| **Container Source**  | Physical containers      | Items lying in zones    | Terminal logs/data      |
+| **Hands Occupied**    | No                       | Yes (can't use weapons) | No                      |
+| **Team Distribution** | Can split to collect     | One carrier + support   | Team can split          |
 
 ## Common Challenges
 

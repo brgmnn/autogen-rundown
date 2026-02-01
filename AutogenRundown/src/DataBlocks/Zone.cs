@@ -1,8 +1,10 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown.TerminalPlacements;
+using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
+using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.WorldEvents;
 using AutogenRundown.DataBlocks.ZoneData;
@@ -124,7 +126,7 @@ public partial record Zone : DataBlock<Zone>
         EventsOnDoorScanDone.AddLightsOn(Generator.Between(1, 9));
     }
 
-    private void AlarmModifier_FogFlood(double duration)
+    private void AlarmModifier_FogFlood(double alarmDuration)
     {
         var fog = level.FogSettings;
         var isInfectious = level.FogSettings.IsInfectious;
@@ -137,12 +139,154 @@ public partial record Zone : DataBlock<Zone>
             (true,  true ) => Fog.InvertedInfectious_Altitude_minus8
         };
 
-        EventsOnDoorScanStart.AddSetFog(tempFog, Generator.Between(3, 15), duration);
+        EventsOnDoorScanStart.AddSetFog(tempFog, Generator.Between(3, 15), alarmDuration * 0.66);
         EventsOnDoorScanDone.AddSetFog(
             fog,
             5.0,
             21.0,
             "VENTILATION SYSTEM REBOOTED - SYSTEMS ONLINE");
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    private void AlarmModifier_CyclingLights()
+    {
+        var layer = EventBuilder.GetLayerFromBulkhead(layout.director.Bulkhead);
+        var loopIndex = (int)Generator.GetPersistentId();
+
+        var states = Generator.Select(new List<(double, LightSettings[])>
+        {
+            // Darkness / error light
+            (1.0, new[] { Light.LightSettings.LightsOff_ExceptSecurityDoor, Light.LightSettings.ErrorFlashOn }),
+            (1.0, new[] { Light.LightSettings.LightsOff_ExceptSecurityDoor, Light.LightSettings.AlarmCycling_Amber }),
+            (1.0, new[] { Light.LightSettings.LightsOff_ExceptSecurityDoor, Light.LightSettings.ErrorFlashOn, Light.LightSettings.AlarmCycling_Amber }),
+
+            // No darkness
+            (1.0, new[] { Light.LightSettings.ErrorFlashOn, Light.LightSettings.AlarmCycling_Amber }),
+        });
+
+        EventsOnDoorScanStart.AddCyclingLights(
+            BuildFromLocalIndex, layer, states, loopIndex,
+            stateDuration: Generator.NextDouble(0.8, 1.5));
+
+        EventsOnDoorScanDone.AddStopLoop(loopIndex, 0);
+        EventsOnDoorScanDone.AddRevertZoneLights(BuildFromLocalIndex, layer, Generator.Between(1, 2));
+    }
+
+    private void AlarmModifier_SecuritySensors()
+    {
+        var bulkhead = layout.director.Bulkhead;
+
+        // Skip adding any security sensor alarms to a zone that already has them
+        if (level.Planner.GetNode(this).Tags.Contains("security_sensors"))
+        {
+            Plugin.Logger.LogDebug("Skipping AlarmModifier_SecuritySensor()");
+            return;
+        }
+
+        // Tier-based sensor configuration
+        var (density, radius) = level.Tier switch
+        {
+            "B" => (SensorDensity.Medium, 2.3),
+            "C" => Generator.Select(new List<(double, (SensorDensity, double))>
+            {
+                (1.0, (SensorDensity.Medium, 2.3)),
+                (0.4, (SensorDensity.High, 1.2)),
+            }),
+            "D" => Generator.Select(new List<(double, (SensorDensity, double))>
+            {
+                (0.5, (SensorDensity.Medium, 2.3)),
+                (1.0, (SensorDensity.High, 1.2)),
+                (0.3, (SensorDensity.High, 2.3)),
+            }),
+            "E" => Generator.Select(new List<(double, (SensorDensity, double))>
+            {
+                (1.0, (SensorDensity.High, 1.2)),
+                (0.7, (SensorDensity.High, 2.3)),
+                (0.3, (SensorDensity.VeryHigh, 1.2)),
+            }),
+            _ => (SensorDensity.Low, 2.3)
+        };
+
+        // Select wave for sensor trigger (lighter than standalone sensors)
+        var wave = level.Tier switch
+        {
+            "B" => GenericWave.Sensor_6pts,
+            "C" => Generator.Select(new List<(double, GenericWave)>
+            {
+                (1.0, GenericWave.Sensor_6pts),
+                (0.5, GenericWave.Sensor_8pts),
+            }),
+            "D" => Generator.Select(new List<(double, GenericWave)>
+            {
+                (0.5, GenericWave.Sensor_8pts),
+                (1.0, GenericWave.Sensor_12pts),
+            }),
+            "E" => Generator.Select(new List<(double, GenericWave)>
+            {
+                (0.3, GenericWave.Sensor_8pts),
+                (1.0, GenericWave.Sensor_12pts),
+                (0.4, GenericWave.Sensor_16pts),
+            }),
+            _ => GenericWave.Sensor_6pts
+        };
+
+        // Re-enable sensor after delay (while alarm is still active)
+        var resetTime = level.Tier switch
+        {
+            "A" => Generator.Flip(0.80) ? Generator.Between(15, 24) : 0.0,
+            "B" => Generator.Flip(0.65) ? Generator.Between(12, 21) : 0.0,
+            "C" => Generator.Flip(0.45) ? Generator.Between( 8, 17) : 0.0,
+            "D" => Generator.Flip(0.40) ? Generator.Between( 6, 11) : 0.0,
+            "E" => Generator.Flip(0.45) ? Generator.Between( 4,  8) : 0.0,
+            _ => 0.0,
+        };
+
+        // Create sensor definition in the parent zone (where players are during alarm)
+        var sensorDef = new ZoneSensorDefinition
+        {
+            Bulkhead = bulkhead,
+            ZoneNumber = BuildFromLocalIndex,
+            StartEnabled = false,
+            SensorGroups = new List<ZoneSensorGroupDefinition>
+            {
+                new ZoneSensorGroupDefinition
+                {
+                    Density = density,
+                    Radius = radius,
+                    TriggerEach = true
+                }
+            }
+        };
+
+        // Sensor trigger events: disable sensor + spawn enemies
+        var sensorEvents = new List<WardenObjectiveEvent>();
+        sensorEvents
+            .AddSound(Sound.LightsOff)
+            .AddSpawnWave(wave, 2.0);
+
+        if (resetTime >= 1.0)
+            sensorEvents
+                .DisableZoneSensors(sensorDef.Id, 0.1)
+                .EnableZoneSensorsWithReset(sensorDef.Id, resetTime)
+                .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
+
+        sensorDef.EventsOnTrigger = sensorEvents;
+        level.ZoneSensors.Add(sensorDef);
+
+        // Enable sensors when alarm scan starts
+        var sensorStart = Generator.Between(2, 5);
+        EventsOnDoorScanStart
+            .EnableZoneSensorsWithReset(sensorDef.Id, sensorStart)
+            .AddSound(Sound.LightsOn_Vol4, sensorStart)
+            .AddMessage(":://WARNING - SECURITY SCAN SYSTEM CORRUPTED", sensorStart - 1);
+
+        // Disable sensors when alarm scan completes
+        EventsOnDoorScanDone.DisableZoneSensors(sensorDef.Id);
+
+        Plugin.Logger.LogDebug($"{Name} -- Alarm Security Sensors: zone={LocalIndex}, density={density}, " +
+                               $"moving={false}, triggerEach={resetTime < 1.0}, id={sensorDef.Id}");
     }
 
     /// <summary>
@@ -210,12 +354,45 @@ public partial record Zone : DataBlock<Zone>
         var parent = level.Planner.GetBuildFrom(new ZoneNode { Bulkhead = Bulkhead.Extreme, ZoneNumber = LocalIndex });
         var isInfection = level.FogSettings.IsInfectious;
 
-        // [Error  :     Unity] ERROR: Tried to add enemyType: 106 into WaveID: 1. This enemyType is not Linked to an ENEMY_TYPE in EnemyGroup.cs/TryGetAKSwitchIDFromEnemyType
-        // [Error  :     Unity] ERROR: Tried to add enemyType: 106 into WaveID: 1. This enemyType is not Linked to an ENEMY_TYPE in EnemyGroup.cs/TryGetAKSwitchIDFromEnemyType
-        // [Error  :     Unity] ERROR: Tried to add enemyType: 106 into WaveID: 1. This enemyType is not Linked to an ENEMY_TYPE in EnemyGroup.cs/TryGetAKSwitchIDFromEnemyType
-        // [Message:     Unity] <b>LG_SecurityDoor:</b> OnSyncDoorStatusChange: m_lastState.hasBeenApproached: True, state.hasBeenApproached: True, LinkedToZoneData: GameData.ExpeditionZoneData
-        // [Message:     Unity] WardenObjectiveManager.CheckAndExecuteEventsOnTrigger, 0 trigger: None SNet.IsMaster: True Duration: 0
-        // [Error  :     Unity] ERROR: Tried to add enemyType: 106 into WaveID: 2. This enemyType is not Linked to an ENEMY_TYPE in EnemyGroup.cs/TryGetAKSwitchIDFromEnemyType
+        // Scale distances per tier for all alarms (including surge/fixed alarms)
+        if (puzzle.TriggerAlarmOnActivate)
+        {
+            switch (level.Tier)
+            {
+                case "A":
+                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(0.9, 1.05);
+                    break;
+                case "B":
+                    if (Generator.Flip(0.05))
+                        puzzle.WantedDistanceFromStartPos += Generator.Between(15, 20);
+                    break;
+                case "C":
+                    if (Generator.Flip(0.2))
+                        puzzle.WantedDistanceFromStartPos += Generator.Between(20, 25);
+                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(1.0, 1.1);
+                    break;
+                case "D":
+                    if (Generator.Flip(0.32))
+                        puzzle.WantedDistanceFromStartPos += Generator.Between(20, 25);
+                    puzzle.WantedDistanceBetweenPuzzleComponents *= puzzle.Puzzle.Count switch
+                    {
+                        3 => Generator.NextDouble(1.5, 1.8),
+                        4 => Generator.NextDouble(1.2, 1.4),
+                        _ => Generator.NextDouble(1.0, 1.2)
+                    };
+                    break;
+                case "E":
+                    if (Generator.Flip(0.45))
+                        puzzle.WantedDistanceFromStartPos += Generator.Between(20, 30);
+                    puzzle.WantedDistanceBetweenPuzzleComponents *= puzzle.Puzzle.Count switch
+                    {
+                        3 => Generator.NextDouble(1.6, 2.0),
+                        4 => Generator.NextDouble(1.3, 1.5),
+                        _ => Generator.NextDouble(1.1, 1.3)
+                    };
+                    break;
+            }
+        }
 
         // Add custom events on alarms
         if (!puzzle.FixedAlarm)
@@ -224,21 +401,23 @@ public partial record Zone : DataBlock<Zone>
             {
                 case "A":
                 {
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(0.9, 1.05);
-
+                    if (Generator.Flip(0.03))
+                        AlarmModifier_CyclingLights();
                     break;
                 }
 
                 case "B":
                 {
                     if (Generator.Flip(0.05))
-                        puzzle.WantedDistanceFromStartPos += Generator.Between(15, 20);
-
-                    // Small chance to disable lights during the alarm
-                    if (Generator.Flip(0.08))
+                        AlarmModifier_CyclingLights();
+                    else if (Generator.Flip(0.02))
                         AlarmModifier_LightsOff();
-                    else if (Generator.Flip(0.01))
+
+                    if (!InFog && Generator.Flip(0.01))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.2, 1.4));
+
+                    if (Generator.Flip(0.02))
+                        AlarmModifier_SecuritySensors();
 
                     if (Generator.Flip(0.005))
                         EventsOnApproachDoor.AddSpawnWave(
@@ -250,11 +429,6 @@ public partial record Zone : DataBlock<Zone>
 
                 case "C":
                 {
-                    if (Generator.Flip(0.2))
-                        puzzle.WantedDistanceFromStartPos += Generator.Between(20, 25);
-
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(1.0, 1.1);
-
                     // Infection hybrids during wave, lower the chance if it's in fog
                     if (isInfection && !InFog && Generator.Flip(0.2) )
                         EventsOnDoorScanStart.AddGenericWave(new GenericWave
@@ -267,11 +441,16 @@ public partial record Zone : DataBlock<Zone>
                             })
                         }, puzzle.ClearTime() * Generator.NextDouble(0.2, 0.6));
 
-                    // Small chance to disable lights during the alarm
-                    if (Generator.Flip(0.1))
-                        AlarmModifier_LightsOff();
+                    else if (Generator.Flip(0.07))
+                        AlarmModifier_CyclingLights();
                     else if (Generator.Flip(0.05))
+                        AlarmModifier_LightsOff();
+
+                    if (!InFog && Generator.Flip(0.05))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.2, 1.4));
+
+                    if (Generator.Flip(0.05))
+                        AlarmModifier_SecuritySensors();
 
                     // Tiny chance for bait door approach pouncer
                     if (Generator.Flip(0.01))
@@ -284,16 +463,6 @@ public partial record Zone : DataBlock<Zone>
 
                 case "D":
                 {
-                    if (Generator.Flip(0.32))
-                        puzzle.WantedDistanceFromStartPos += Generator.Between(20, 25);
-
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= puzzle.Puzzle.Count switch
-                    {
-                        3 => Generator.NextDouble(1.5, 1.8),
-                        4 => Generator.NextDouble(1.2, 1.4),
-                        _ => Generator.NextDouble(1.0, 1.2)
-                    };
-
                     // Infection hybrids during wave, lower the chance if it's in fog
                     if (isInfection && Generator.Flip(InFog ? 0.2 : 0.4) )
                         EventsOnDoorScanStart.AddGenericWave(new GenericWave
@@ -319,9 +488,14 @@ public partial record Zone : DataBlock<Zone>
                                 GenericWave.SinglePouncerShadow,
                                 Generator.Between(4, 16));
                     }
+                    else if (Generator.Flip(0.08))
+                        AlarmModifier_CyclingLights();
 
-                    if (Generator.Flip(0.07))
+                    if (!InFog && Generator.Flip(0.06))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.1, 1.3));
+
+                    if (Generator.Flip(0.08))
+                        AlarmModifier_SecuritySensors();
 
                     // Tiny chance for bait door approach pouncer
                     if (Generator.Flip(0.01))
@@ -339,16 +513,6 @@ public partial record Zone : DataBlock<Zone>
 
                 case "E":
                 {
-                    if (Generator.Flip(0.45))
-                        puzzle.WantedDistanceFromStartPos += Generator.Between(20, 30);
-
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= puzzle.Puzzle.Count switch
-                    {
-                        3 => Generator.NextDouble(1.6, 2.0),
-                        4 => Generator.NextDouble(1.3, 1.5),
-                        _ => Generator.NextDouble(1.1, 1.3)
-                    };
-
                     // Infection hybrids during wave, lower the chance if it's in fog
                     if (isInfection && Generator.Flip(InFog ? 0.4 : 0.6) )
                         EventsOnDoorScanStart.AddGenericWave(new GenericWave
@@ -362,8 +526,9 @@ public partial record Zone : DataBlock<Zone>
                             })
                         }, puzzle.ClearTime() * Generator.NextDouble(0.2, 0.6));
 
-                    // Small chance to disable lights during the alarm
-                    if (Generator.Flip(0.3))
+                    if (Generator.Flip(0.12))
+                        AlarmModifier_CyclingLights();
+                    else if (Generator.Flip(0.25))
                     {
                         AlarmModifier_LightsOff();
 
@@ -374,8 +539,11 @@ public partial record Zone : DataBlock<Zone>
                                 Generator.Between(4, 16));
                     }
 
-                    if (Generator.Flip(0.15))
+                    if (!InFog && Generator.Flip(0.11))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.1, 1.1));
+
+                    if (Generator.Flip(0.10))
+                        AlarmModifier_SecuritySensors();
 
                     // Tiny chance to be pouncered when opening the door or
                     // approaching the door

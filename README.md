@@ -41,10 +41,16 @@ TODO:
   * Check out Seasonal D4. End room that does nothing?
   * Add support for text data block mergers. It should be relatively safe to do this even with overwrites
   * Make E-tier shorter but harder. E4 Seasonal extreme has too many extra zones
-  * Check [DEV::EXPEDITION SURVIVED]
-    * It seems to stack with successive clears.
   * Shorter (or longer?) warden protocol startup times?
     * Maybe even a bait one?
+  * Slightly longer time needed on D-tier reactor
+  * Extract decryption keys far too easy on D-tier overload
+    * Needs extract or finish objective modifier
+  * Might consider if we even need an error alarm turnoff for levels in main where it goes all the way to the end?
+  * VERY SLIGHT increase in Apex alarm wave pops
+
+* Added melee and health syringes into consumables pool
+  * New optional "Medical Bay" side zone's can spawn now which contain health, disinfect, and syringes
 
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
@@ -181,10 +187,10 @@ Enemies:
 
 Automatic Rundown generation, using procedural seed based generation. Four active rundowns to choose from: the daily, weekly, monthly, and each season. Play with friends with zero configuration of seeds.
 
-* [Installation](#installation)
-* [Base game features](#base-game-features)
-* [Additional vanilla-like features](#additional-vanilla-like-features)
-* [3rd Party Mod Support](#3rd-party-mod-support)
+- [Installation](#installation)
+- [Base game features](#base-game-features)
+- [Additional vanilla-like features](#additional-vanilla-like-features)
+- [3rd Party Mod Support](#3rd-party-mod-support)
 
 ![Rundown Selection](/docs/rundown_selection_loop.apng "Rundown Selection")
 
@@ -193,7 +199,6 @@ Track your progression in each rundown separately from the base game and other m
 ![Monthly Rundown Preview](https://github.com/brgmnn/autogen-rundown/blob/main/docs/monthly_rundown.jpg?raw=true "Monthly Rundown Preview")
 
 Levels and rundowns are designed to be similar and in the spirit of vanilla GTFO. The largest difference is in the addition of new tilesets (geomorphs) to add more variety to the existing games set of tiles.
-
 
 ## Installation
 
@@ -229,152 +234,148 @@ If you did not make a backup of the game: delete the GTFO game folder and run "V
 
 Follow the installation instructions again, check yes to overwrite all files. -->
 
-
 > [!CAUTION]
 > GTFO game and mod spoilers below!
 
 ## Base game features
 
-* Levels
-  * [x] A Tier
-  * [x] B Tier
-  * [x] C Tier
-  * [x] D Tier
-  * [x] E Tier
-  * Additional objectives
-    * [x] Secondary
-    * [x] Overload
-  * Lights
-    * [x] Random lights selection
-    * [x] Reactor specific lights
-    * [ ] Fog specific lights
-    * [x] Custom lights(?)
-  * Zones
-    * Custom Geomorphs
-      * [x] Hubs
-      * [x] I's (corridors)
-      * [ ] Warp portals
-      * [x] Rundown 8 Geomorphs
-    * Curated event layouts
-      * [x] Class 10+ alarm room
-      * [x] King of the hill room
-    * [x] Specialized bulkhead geomorphs and layouts
-    * [x] Bulkheads behind bulkheads
-  * Challenges
-    * [x] Key to unlock doors
-    * [x] Cell to power generator to unlock doors
-    * [x] Locked terminals
-    * [x] Fog
-    * [x] Infectious fog
-    * [x] Security Sensors
-  * [ ] Dimensions
-* Objectives
-  * [x] Clear Path — *Navigate through the zones to a separate extraction elevator*
-  * [x] Gather Small Items — *IDs, GLPs etc.*
-  * [x] HSU Find Sample
-  * [x] Reactor Startup
-    * [x] Fetch codes from terminals
-  * [x] Reactor Shutdown
-  * [x] Input Special Terminal Command
-  * [x] Retrieve Big Items — *Fog Turbine etc.*
-  * [x] Power Cell Distribution — *Distributing cells to individual generators*
-  * [x] Terminal Uplink
-  * [x] Central Generator Cluster — *Fetching cells for a central generator cluster*
-  * [x] HSU Activate Small - *Bring Neonate to depressurizer*
-  * [x] Survival - *Timed survival*
-  * [x] Gather Terminal
-  * [x] Corrupted Terminal Uplink
-  * [x] Timed Terminal Sequence
-* Enemies
-  * [x] Basic hybernation
-  * [x] Event based activation
-  * Types of enemies present
-    * [x] Strikers / Shooters
-    * [x] Giants
-    * [x] Chargers
-    * [x] Shadows
-    * [x] Beserkers
-    * [x] Hybrids
-    * [x] Scouts
-      * [x] Regular
-      * [x] Zoomer
-      * [x] Shadow
-      * [x] Charger
-      * [x] Beserker
-    * [x] Mothers
-      * [x] Mother
-      * [x] P-Mother
-      * [x] Nightmare Mother
-    * [x] Tanks
-      * [x] Tank
-      * [ ] Immortal Tank
-      * [x] Potato Tank
-    * [x] Pouncers (Snatchers)
-  * Custom enemy spawning
-    * [x] Balanced default spawns (in progress)
-    * [x] Charger only zones
-    * [x] Shadow only zones
-    * [x] Beserker only zones
-* Alarms
-  * [x] Basic alarms
-  * [x] Blood doors
-  * [x] Error alarms
-  * [x] S-Class alarms
-  * [x] Surge alarms
-  * [x] High class alarms (> Class V)
-* Lore
-  * [x] All base game logs can be found on terminals
-
+- Levels
+  - [x] A Tier
+  - [x] B Tier
+  - [x] C Tier
+  - [x] D Tier
+  - [x] E Tier
+  - Additional objectives
+    - [x] Secondary
+    - [x] Overload
+  - Lights
+    - [x] Random lights selection
+    - [x] Reactor specific lights
+    - [ ] Fog specific lights
+    - [x] Custom lights(?)
+  - Zones
+    - Custom Geomorphs
+      - [x] Hubs
+      - [x] I's (corridors)
+      - [ ] Warp portals
+      - [x] Rundown 8 Geomorphs
+    - Curated event layouts
+      - [x] Class 10+ alarm room
+      - [x] King of the hill room
+    - [x] Specialized bulkhead geomorphs and layouts
+    - [x] Bulkheads behind bulkheads
+  - Challenges
+    - [x] Key to unlock doors
+    - [x] Cell to power generator to unlock doors
+    - [x] Locked terminals
+    - [x] Fog
+    - [x] Infectious fog
+    - [x] Security Sensors
+  - [ ] Dimensions
+- Objectives
+  - [x] Clear Path — _Navigate through the zones to a separate extraction elevator_
+  - [x] Gather Small Items — _IDs, GLPs etc._
+  - [x] HSU Find Sample
+  - [x] Reactor Startup
+    - [x] Fetch codes from terminals
+  - [x] Reactor Shutdown
+  - [x] Input Special Terminal Command
+  - [x] Retrieve Big Items — _Fog Turbine etc._
+  - [x] Power Cell Distribution — _Distributing cells to individual generators_
+  - [x] Terminal Uplink
+  - [x] Central Generator Cluster — _Fetching cells for a central generator cluster_
+  - [x] HSU Activate Small - _Bring Neonate to depressurizer_
+  - [x] Survival - _Timed survival_
+  - [x] Gather Terminal
+  - [x] Corrupted Terminal Uplink
+  - [x] Timed Terminal Sequence
+- Enemies
+  - [x] Basic hybernation
+  - [x] Event based activation
+  - Types of enemies present
+    - [x] Strikers / Shooters
+    - [x] Giants
+    - [x] Chargers
+    - [x] Shadows
+    - [x] Beserkers
+    - [x] Hybrids
+    - [x] Scouts
+      - [x] Regular
+      - [x] Zoomer
+      - [x] Shadow
+      - [x] Charger
+      - [x] Beserker
+    - [x] Mothers
+      - [x] Mother
+      - [x] P-Mother
+      - [x] Nightmare Mother
+    - [x] Tanks
+      - [x] Tank
+      - [ ] Immortal Tank
+      - [x] Potato Tank
+    - [x] Pouncers (Snatchers)
+  - Custom enemy spawning
+    - [x] Balanced default spawns (in progress)
+    - [x] Charger only zones
+    - [x] Shadow only zones
+    - [x] Beserker only zones
+- Alarms
+  - [x] Basic alarms
+  - [x] Blood doors
+  - [x] Error alarms
+  - [x] S-Class alarms
+  - [x] Surge alarms
+  - [x] High class alarms (> Class V)
+- Lore
+  - [x] All base game logs can be found on terminals
 
 ## Additional vanilla-like features
 
-* Alarms
-  * [x] Secret Alarms — *Appear to be free but aren't*
-  * [x] Events on/during Alarms — *Alarms can have events such as lights out or fog flood during the alarm*
-  * [x] Extreme/Overload Surge Alarms — Surge alarms with chargers / beserkers
-* Challenges
-  * [x] Reactor terminals can be locked just like regular terminals
-  * [x] Secret Reactor Shutdown — *Secret alarm but for the reactor shutdown*
-* Cosmetic
-  * Glowsticks — *All colors available to spawn*
-    * [x] Green (normal)
-    * [x] Yellow
-    * [x] Halloween (orange)
-    * [x] Christmas (red)
-    * [x] Player colored glowsticks (client side)
-  * Inserting generator cells turns on emergency lights
-* Lore
-  * Custom Warden intel messages
-    * [x] General
-    * [ ] Objectives
-      * [x] HSU Find Sample
-      * [ ] Clear Path
-      * [ ] Reactor Startup
-      * [ ] Reactor Shutdown
-      * [ ] Distribute Power Cells
-      * [ ] Central Generator Cluster
-
+- Alarms
+  - [x] Secret Alarms — _Appear to be free but aren't_
+  - [x] Events on/during Alarms — _Alarms can have events such as lights out or fog flood during the alarm_
+  - [x] Extreme/Overload Surge Alarms — Surge alarms with chargers / beserkers
+- Challenges
+  - [x] Reactor terminals can be locked just like regular terminals
+  - [x] Secret Reactor Shutdown — _Secret alarm but for the reactor shutdown_
+- Cosmetic
+  - Glowsticks — _All colors available to spawn_
+    - [x] Green (normal)
+    - [x] Yellow
+    - [x] Halloween (orange)
+    - [x] Christmas (red)
+    - [x] Player colored glowsticks (client side)
+  - Inserting generator cells turns on emergency lights
+- Lore
+  - Custom Warden intel messages
+    - [x] General
+    - [ ] Objectives
+      - [x] HSU Find Sample
+      - [ ] Clear Path
+      - [ ] Reactor Startup
+      - [ ] Reactor Shutdown
+      - [ ] Distribute Power Cells
+      - [ ] Central Generator Cluster
 
 ## 3rd Party Mod Support
 
 AutogenRundown supports the following 3rd party peer mods. You can install them along side AutogenRundown. Note that several of these mods conflict with each other such as the weapon modification mods.
 
-* [Arsenality](https://thunderstore.io/c/gtfo/p/W33B/Arsenality)
-* [ArsenalityRebalance](https://thunderstore.io/c/gtfo/p/leezurli/ArsenalityRebalance)
-* [VanillaReloaded](https://thunderstore.io/c/gtfo/p/tru0067/VanillaReloaded)
-* [GTFriendlyO](https://thunderstore.io/c/gtfo/p/Carb_Crusaders/GTFriendlyO/)
-* [OmegaWeapons](https://thunderstore.io/c/gtfo/p/Mimikium/OmegaWeapons/)
-
+- [Arsenality](https://thunderstore.io/c/gtfo/p/W33B/Arsenality)
+- [ArsenalityRebalance](https://thunderstore.io/c/gtfo/p/leezurli/ArsenalityRebalance)
+- [VanillaReloaded](https://thunderstore.io/c/gtfo/p/tru0067/VanillaReloaded)
+- [GTFriendlyO](https://thunderstore.io/c/gtfo/p/Carb_Crusaders/GTFriendlyO/)
+- [OmegaWeapons](https://thunderstore.io/c/gtfo/p/Mimikium/OmegaWeapons/)
 
 ## Acknowledgements
 
 Many thanks to the modding community for making GTFO modding possible, and a special thank you to the following creators for work that this mod depends on:
 
-* Dak's [MTFO](https://thunderstore.io/c/gtfo/p/dakkhuza/MTFO/) and [Geomorph Pack](https://thunderstore.io/c/gtfo/p/dakkhuza/DakGeos/)
-* Inas07's [many mods](https://thunderstore.io/c/gtfo/p/Inas07/)
-  * Notably [LocalProgression](https://thunderstore.io/c/gtfo/p/Inas07/LocalProgression/) and [ExtraObjectiveSetup](https://thunderstore.io/c/gtfo/p/Inas07/ExtraObjectiveSetup/)
-* Flowaria's [Geomorph Pack](https://thunderstore.io/c/gtfo/p/Flowaria/FlowGeos/)
-  * Including the fantastic Floodways Reactor tile enables reactor missions in the service Complex.
-* donan3967's [Geomorph Pack 1](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_1/) and [Geomorph Pack 2](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_2/)
-* Red_Leicester_Cheese's [Geomorph Pack](https://thunderstore.io/c/gtfo/p/Red_Leicester_Cheese/CheeseGeos/)
-* SamDB's [SamGeos](https://thunderstore.io/c/gtfo/p/Sam_D_B/SamGeos/) and [SamGeosV2](https://thunderstore.io/c/gtfo/p/Sam_D_B/SamGeosV2/)
+- Dak's [MTFO](https://thunderstore.io/c/gtfo/p/dakkhuza/MTFO/) and [Geomorph Pack](https://thunderstore.io/c/gtfo/p/dakkhuza/DakGeos/)
+- Inas07's [many mods](https://thunderstore.io/c/gtfo/p/Inas07/)
+  - Notably [LocalProgression](https://thunderstore.io/c/gtfo/p/Inas07/LocalProgression/) and [ExtraObjectiveSetup](https://thunderstore.io/c/gtfo/p/Inas07/ExtraObjectiveSetup/)
+- Flowaria's [Geomorph Pack](https://thunderstore.io/c/gtfo/p/Flowaria/FlowGeos/)
+  - Including the fantastic Floodways Reactor tile enables reactor missions in the service Complex.
+- donan3967's [Geomorph Pack 1](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_1/) and [Geomorph Pack 2](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_2/)
+- Red_Leicester_Cheese's [Geomorph Pack](https://thunderstore.io/c/gtfo/p/Red_Leicester_Cheese/CheeseGeos/)
+- SamDB's [SamGeos](https://thunderstore.io/c/gtfo/p/Sam_D_B/SamGeos/) and [SamGeosV2](https://thunderstore.io/c/gtfo/p/Sam_D_B/SamGeosV2/)

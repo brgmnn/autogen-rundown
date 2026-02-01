@@ -480,7 +480,7 @@ public partial record LevelLayout
                 terminal.UniqueCommands.Add(new CustomTerminalCommand
                 {
                     Command = "KDS-DEEP_DEACTIVATE_DEFENSE",
-                    CommandDesc = "Deactivate KDS Deep defense grid",
+                    CommandDesc = new Text("Deactivate KDS Deep defense grid"),
                     CommandEvents = new List<WardenObjectiveEvent>()
                         .AddUnlockDoor(
                             next.Bulkhead,

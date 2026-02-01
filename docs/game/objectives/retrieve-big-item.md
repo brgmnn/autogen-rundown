@@ -60,6 +60,7 @@ Big items represent high-value targets that justify the extreme risk and coordin
 ### Carry Restrictions
 
 When carrying a big item, the player **CANNOT**:
+
 - Sprint (reduced to walk speed)
 - Use weapons (completely defenseless)
 - Use consumables (mines, C-Foam, med-kits, etc.)
@@ -68,6 +69,7 @@ When carrying a big item, the player **CANNOT**:
 - Perform most interactions
 
 When carrying a big item, the player **CAN**:
+
 - Walk (at reduced speed)
 - Open doors
 - Use flashlight
@@ -77,6 +79,7 @@ When carrying a big item, the player **CAN**:
 ### Item Drop Mechanic
 
 **Strategic Dropping:**
+
 - Carrier can drop item to defend themselves
 - Dropped items remain where placed
 - Any player can pick up dropped item
@@ -86,6 +89,7 @@ When carrying a big item, the player **CAN**:
 ### Error Alarm on Extraction
 
 **Common Trigger Pattern:**
+
 - Picking up the item may trigger error alarm immediately
 - Alternatively, initiating extraction scan triggers alarm
 - Error alarms spawn enemies continuously
@@ -94,6 +98,7 @@ When carrying a big item, the player **CAN**:
 ### Extraction Scan Requirements
 
 **Mandatory Conditions:**
+
 - Item must be inside extraction scan circle
 - At least one living prisoner must complete scan
 - Scan duration varies by expedition
@@ -143,12 +148,14 @@ When carrying a big item, the player **CAN**:
 ### Team Coordination
 
 **Communication Essential:**
+
 - Carrier calls out movement ("stopping," "moving," "dropping item")
 - Guards call out threats and their positions
 - Coordinate item drops and pickups
 - Call out when carrier is vulnerable
 
 **Defensive Formation:**
+
 - Point player leads, clearing immediate path
 - Carrier follows in center
 - Guards flank left and right
@@ -156,6 +163,7 @@ When carrying a big item, the player **CAN**:
 - Maintain visual contact always
 
 **Combat Protocol:**
+
 - If attacked: Carrier drops item, all players engage
 - After combat: Carrier picks up item, formation re-established
 - Don't leave dropped item unattended for long
@@ -170,9 +178,11 @@ When carrying a big item, the player **CAN**:
 ## Notable Expeditions
 
 ### Fog Turbine Retrieval
+
 - Various expeditions require retrieving Fog Turbines to extraction
 
 ### Neonate HSU Retrieval
+
 - **[ALT://R5B1](https://gtfo.wiki.gg/wiki/ALT://R5B1)**: Features Neonate HSU retrieval
 - **[ALT://R2E1](https://gtfo.wiki.gg/wiki/ALT://R2E1)**: Neonate HSU objective
 - **[ALT://R3A1](https://gtfo.wiki.gg/wiki/R3A1)**: Neonate HSU retrieval
@@ -181,18 +191,18 @@ See [Retrieve Item - Official GTFO Wiki](https://gtfo.wiki.gg/wiki/Retrieve_Item
 
 ## Comparison to Related Objectives
 
-| Aspect | Retrieve Big Item | Gather Small Items | HSU Find Sample |
-|--------|------------------|-------------------|-----------------|
-| **Item Type** | Large carry item | Small auto-pickup | Tissue sample (virtual) |
-| **Carry Mechanic** | Must carry, restricts player | Automatic pickup | Bioscan only |
-| **Movement Impact** | Severe (walk speed, no sprint) | None | None |
-| **Weapon Use** | Prohibited while carrying | Full weapon access | Full weapon access |
-| **Team Dependency** | Very high (carrier defenseless) | Low to moderate | Moderate |
-| **Transport Required** | Yes (to extraction) | No | No |
-| **Alarm Timing** | At pickup or extraction | Varies | At HSU bioscan |
-| **Drop Mechanic** | Yes (strategic dropping) | N/A | N/A |
-| **Extraction Requirement** | Item in scan circle | Just player presence | Player presence |
-| **Difficulty** | High (coordination intensive) | Low to moderate | Moderate to high |
+| Aspect                     | Retrieve Big Item               | Gather Small Items   | HSU Find Sample         |
+| -------------------------- | ------------------------------- | -------------------- | ----------------------- |
+| **Item Type**              | Large carry item                | Small auto-pickup    | Tissue sample (virtual) |
+| **Carry Mechanic**         | Must carry, restricts player    | Automatic pickup     | Bioscan only            |
+| **Movement Impact**        | Severe (walk speed, no sprint)  | None                 | None                    |
+| **Weapon Use**             | Prohibited while carrying       | Full weapon access   | Full weapon access      |
+| **Team Dependency**        | Very high (carrier defenseless) | Low to moderate      | Moderate                |
+| **Transport Required**     | Yes (to extraction)             | No                   | No                      |
+| **Alarm Timing**           | At pickup or extraction         | Varies               | At HSU bioscan          |
+| **Drop Mechanic**          | Yes (strategic dropping)        | N/A                  | N/A                     |
+| **Extraction Requirement** | Item in scan circle             | Just player presence | Player presence         |
+| **Difficulty**             | High (coordination intensive)   | Low to moderate      | Moderate to high        |
 
 ## Common Challenges
 

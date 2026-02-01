@@ -54,13 +54,13 @@ Several expeditions feature the Central Generator Cluster objective:
 
 ## Comparison to Distribute Power Cells
 
-| Aspect | Central Generator Cluster | Distribute Power Cells |
-|--------|---------------------------|------------------------|
-| **Power Cell Source** | Scattered across zones | Given at mission start in cargo crate |
-| **Generator Location** | Centralized cluster | Scattered across multiple zones |
-| **Player Movement** | Gather cells from zones → central location | Central location → deliver to zones |
-| **Fog Mechanic** | Each cell clears fog progressively | Varies by mission |
-| **Complexity** | Higher (exploration + transport) | Moderate (known cells, find generators) |
+| Aspect                 | Central Generator Cluster                  | Distribute Power Cells                  |
+| ---------------------- | ------------------------------------------ | --------------------------------------- |
+| **Power Cell Source**  | Scattered across zones                     | Given at mission start in cargo crate   |
+| **Generator Location** | Centralized cluster                        | Scattered across multiple zones         |
+| **Player Movement**    | Gather cells from zones → central location | Central location → deliver to zones     |
+| **Fog Mechanic**       | Each cell clears fog progressively         | Varies by mission                       |
+| **Complexity**         | Higher (exploration + transport)           | Moderate (known cells, find generators) |
 
 ## Tips
 
