@@ -227,8 +227,13 @@ public partial record LevelLayout
 
         sensorDef.EventsOnTrigger = sensorEvents;
 
-        Plugin.Logger.LogDebug($"{Name} -- Security Sensors: zone={node}, density={density}, " +
-            $"moving={isMoving}, triggerEach={triggerEach}, cycling={shouldCycle}, id={sensorDef.Id}");
+        Plugin.Logger.LogDebug($"{Name} -- Security Sensors: " +
+                               $"zone={node}, " +
+                               $"density={density}, " +
+                               $"moving={isMoving}, " +
+                               $"triggerEach={triggerEach}, " +
+                               $"cycling={shouldCycle}, " +
+                               $"id={sensorDef.Id}");
 
         level.ZoneSensors.Add(sensorDef);
     }
