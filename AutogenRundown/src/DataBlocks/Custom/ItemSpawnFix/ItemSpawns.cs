@@ -15,7 +15,7 @@ public class ItemSpawns
 
         var serializer = new JsonSerializer { Formatting = Formatting.Indented };
 
-        var path = Path.Combine(dir, $"ItemSpawnFix.json");
+        var path = Path.Combine(dir, "ItemSpawnFix.json");
 
         // Ensure the directory exists
         Directory.CreateDirectory(dir);
@@ -25,13 +25,13 @@ public class ItemSpawns
 
         serializer.Serialize(writer, new JArray
         {
-            // new JObject
-            // {
-            //     ["RundownID"] = Rundown.R_Daily,
-            //     ["EnableNoBoosterUsedProgressionForRundown"] = true,
-            //     ["AlwaysShowIcon"] = true,
-            //     ["Expeditions"] = new JArray()
-            // }
+            new JObject
+            {
+                ["RundownID"] = 0,
+                ["Levels"] = new JArray { "A", "B", "C", "D", "E" },
+                ["RaiseObjectSpawnPriority"] = true,
+                ["AllowRedistributeObjects"] = false
+            }
         });
         stream.Flush();
     }

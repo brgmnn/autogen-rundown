@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
+using AutogenRundown.DataBlocks.Custom.ItemSpawnFix;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
@@ -480,10 +481,10 @@ public static class RundownFactory
                 "WINTER_2025", new List<List<int>>
                 {
                     new() { 1, 1, 1, 1 },
-                    new() { 1, 1, 1, 1, 1, 1 },
-                    new() { 1, 1, 1, 1, 1, 1, 1 },
-                    new() { 1, 1, 1, 1, 1, 1 },
-                    new() { 1, 1, 1, 1, 1 }
+                    new() { 1, 1, 1, 2, 1, 1 },
+                    new() { 1, 2, 1, 2, 1, 1, 1 },
+                    new() { 2, 3, 2, 1, 2, 1 },
+                    new() { 1, 3, 2, 1, 4 }
                 }
             }
         };
@@ -1191,6 +1192,7 @@ public static class RundownFactory
         EnemyCustomization.Projectile.Save();
         EnemyCustomization.Property.Save();
         GlobalConfig.Save();
+        ItemSpawns.Save();
     }
 }
 
