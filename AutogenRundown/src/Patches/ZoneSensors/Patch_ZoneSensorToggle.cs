@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using GameData;
 using HarmonyLib;
 using Il2CppInterop.Runtime.Injection;
@@ -65,7 +64,7 @@ public static class Patch_ZoneSensorToggle
         // Determine flags based on event type
         bool enabled;
         bool preserveTriggered;
-        bool resetTriggered = false;
+        var resetTriggered = false;
 
         if (eventType == ZoneSensorEventTypes.Disable)
         {
@@ -86,7 +85,7 @@ public static class Patch_ZoneSensorToggle
         }
 
         // Schedule the toggle with delay
-        float delaySeconds = Mathf.Max(eventToTrigger.Delay - currentDuration, 0f);
+        var delaySeconds = Mathf.Max(eventToTrigger.Delay - currentDuration, 0f);
 
         // Determine targeting mode based on Count field
         if (eventToTrigger.Count > 0)

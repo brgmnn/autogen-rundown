@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Il2CppInterop.Runtime.Injection;
 using UnityEngine;
 using UnityEngine.AI;
@@ -36,15 +35,15 @@ public class ZoneSensorMover : MonoBehaviour
         // Build waypoints by calculating NavMesh paths between consecutive positions
         var allWaypoints = new List<Vector3>();
 
-        for (int i = 0; i < positions.Count - 1; i++)
+        for (var i = 0; i < positions.Count - 1; i++)
         {
-            NavMeshPath path = new NavMeshPath();
+            var path = new NavMeshPath();
             if (NavMesh.CalculatePath(positions[i], positions[i + 1], -1, path))
             {
                 var adjusted = AdjustWaypointsForEdgeDistance(path.corners, edgeDistance);
                 // Skip first point on subsequent segments to avoid duplicates
-                int startIdx = (i == 0) ? 0 : 1;
-                for (int j = startIdx; j < adjusted.Length; j++)
+                var startIdx = (i == 0) ? 0 : 1;
+                for (var j = startIdx; j < adjusted.Length; j++)
                     allWaypoints.Add(adjusted[j]);
             }
             else
@@ -87,7 +86,7 @@ public class ZoneSensorMover : MonoBehaviour
             currentWaypointIndex = 1;
 
         // Ensure lastWaypointPosition is valid
-        int fromIndex = movingForward ? currentWaypointIndex - 1 : currentWaypointIndex + 1;
+        var fromIndex = movingForward ? currentWaypointIndex - 1 : currentWaypointIndex + 1;
         if (fromIndex >= 0 && fromIndex < waypoints.Length)
             lastWaypointPosition = waypoints[fromIndex];
         else
@@ -104,7 +103,7 @@ public class ZoneSensorMover : MonoBehaviour
         if (waypoints == null || waypoints.Length < 2)
             return (0, true, 0f);
 
-        float progress = CalculateProgress();
+        var progress = CalculateProgress();
         return (currentWaypointIndex, movingForward, progress);
     }
 
@@ -141,7 +140,7 @@ public class ZoneSensorMover : MonoBehaviour
         movingForward = forward;
 
         // Calculate the "from" waypoint based on direction
-        int fromIndex = forward ? waypointIndex - 1 : waypointIndex + 1;
+        var fromIndex = forward ? waypointIndex - 1 : waypointIndex + 1;
         fromIndex = Math.Clamp(fromIndex, 0, waypoints.Length - 1);
 
         // Ensure we don't have from == target (would cause zero distance calculation issues)
@@ -158,8 +157,8 @@ public class ZoneSensorMover : MonoBehaviour
         if (snap)
         {
             // Interpolate position between from and target waypoints
-            Vector3 targetPos = waypoints[waypointIndex];
-            Vector3 fromPos = (fromIndex != waypointIndex) ? waypoints[fromIndex] : transform.position;
+            var targetPos = waypoints[waypointIndex];
+            var fromPos = (fromIndex != waypointIndex) ? waypoints[fromIndex] : transform.position;
             transform.position = Vector3.Lerp(fromPos, targetPos, progress);
         }
         // If not snapping, the Update() loop will naturally move toward the target
@@ -173,13 +172,13 @@ public class ZoneSensorMover : MonoBehaviour
         if (waypoints == null || waypoints.Length < 2 || currentWaypointIndex < 0 || currentWaypointIndex >= waypoints.Length)
             return 0f;
 
-        Vector3 target = waypoints[currentWaypointIndex];
-        float totalDistance = Vector3.Distance(lastWaypointPosition, target);
+        var target = waypoints[currentWaypointIndex];
+        var totalDistance = Vector3.Distance(lastWaypointPosition, target);
 
         if (totalDistance < 0.001f)
             return 1f;
 
-        float remainingDistance = Vector3.Distance(transform.position, target);
+        var remainingDistance = Vector3.Distance(transform.position, target);
         return 1f - (remainingDistance / totalDistance);
     }
 
@@ -189,7 +188,7 @@ public class ZoneSensorMover : MonoBehaviour
             return corners;
 
         var adjusted = new Vector3[corners.Length];
-        for (int i = 0; i < corners.Length; i++)
+        for (var i = 0; i < corners.Length; i++)
         {
             adjusted[i] = PullAwayFromEdge(corners[i], edgeDistance);
         }
@@ -198,19 +197,19 @@ public class ZoneSensorMover : MonoBehaviour
 
     private Vector3 PullAwayFromEdge(Vector3 position, float minDistance)
     {
-        if (!NavMesh.FindClosestEdge(position, out NavMeshHit hit, -1))
+        if (!NavMesh.FindClosestEdge(position, out var hit, -1))
             return position;
 
         if (hit.distance >= minDistance)
             return position;
 
         // Move away from edge (hit.normal points away from edge)
-        Vector3 pullDirection = hit.normal;
-        float pullAmount = minDistance - hit.distance;
-        Vector3 newPos = position + pullDirection * pullAmount;
+        var pullDirection = hit.normal;
+        var pullAmount = minDistance - hit.distance;
+        var newPos = position + pullDirection * pullAmount;
 
         // Verify new position is still on NavMesh
-        if (NavMesh.SamplePosition(newPos, out NavMeshHit sample, 0.5f, -1))
+        if (NavMesh.SamplePosition(newPos, out var sample, 0.5f, -1))
             return sample.position;
 
         return position;
@@ -226,8 +225,8 @@ public class ZoneSensorMover : MonoBehaviour
             return;
 
         // Move toward current waypoint at constant speed
-        Vector3 target = waypoints[currentWaypointIndex];
-        float step = speed * Time.deltaTime;
+        var target = waypoints[currentWaypointIndex];
+        var step = speed * Time.deltaTime;
 
         transform.position = Vector3.MoveTowards(transform.position, target, step);
 

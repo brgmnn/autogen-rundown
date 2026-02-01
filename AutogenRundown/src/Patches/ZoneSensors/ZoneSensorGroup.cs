@@ -1,4 +1,3 @@
-using AIGraph;
 using AmorLib.Networking.StateReplicators;
 using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Objectives;
@@ -151,7 +150,7 @@ public class ZoneSensorGroup
         }
 
         // Create network replicators with unique IDs
-        uint stateReplicatorId = STATE_REPLICATOR_BASE_ID + (uint)replicatorIndex;
+        var stateReplicatorId = STATE_REPLICATOR_BASE_ID + (uint)replicatorIndex;
 
         // State replicator for enabled/disabled
         Replicator = StateReplicator<ZoneSensorGroupState>.Create(
@@ -168,9 +167,9 @@ public class ZoneSensorGroup
         // Create position replicators for each batch
         // ID scheme: BASE_ID + replicatorIndex * 8 + batchIndex
         PositionReplicators.Clear();
-        for (int batchIndex = 0; batchIndex < expectedBatchCount; batchIndex++)
+        for (var batchIndex = 0; batchIndex < expectedBatchCount; batchIndex++)
         {
-            uint positionReplicatorId = POSITION_REPLICATOR_BASE_ID + (uint)(replicatorIndex * MAX_BATCHES_PER_GROUP + batchIndex);
+            var positionReplicatorId = POSITION_REPLICATOR_BASE_ID + (uint)(replicatorIndex * MAX_BATCHES_PER_GROUP + batchIndex);
 
             var posReplicator = StateReplicator<ZoneSensorPositionState>.Create(
                 positionReplicatorId,
@@ -202,15 +201,15 @@ public class ZoneSensorGroup
         // Waypoint replicators: 8 batches per sensor (max 128 sensors = 1024 replicators)
         // ID scheme: BASE_ID + replicatorIndex * 1024 + sensorIndex * 8 + batchIndex
         WaypointReplicators.Clear();
-        int maxSensors = Math.Min(expectedSensorCount, 128);
-        int waypointReplicatorCount = maxSensors * MAX_WAYPOINT_BATCHES_PER_SENSOR;
+        var maxSensors = Math.Min(expectedSensorCount, 128);
+        var waypointReplicatorCount = maxSensors * MAX_WAYPOINT_BATCHES_PER_SENSOR;
 
-        for (int sensorIndex = 0; sensorIndex < maxSensors; sensorIndex++)
+        for (var sensorIndex = 0; sensorIndex < maxSensors; sensorIndex++)
         {
-            for (int batchIndex = 0; batchIndex < MAX_WAYPOINT_BATCHES_PER_SENSOR; batchIndex++)
+            for (var batchIndex = 0; batchIndex < MAX_WAYPOINT_BATCHES_PER_SENSOR; batchIndex++)
             {
-                uint waypointReplicatorId = WAYPOINT_REPLICATOR_BASE_ID +
-                    (uint)(replicatorIndex * MAX_WAYPOINT_REPLICATORS + sensorIndex * MAX_WAYPOINT_BATCHES_PER_SENSOR + batchIndex);
+                var waypointReplicatorId = WAYPOINT_REPLICATOR_BASE_ID +
+                                           (uint)(replicatorIndex * MAX_WAYPOINT_REPLICATORS + sensorIndex * MAX_WAYPOINT_BATCHES_PER_SENSOR + batchIndex);
 
                 var waypointReplicator = StateReplicator<ZoneSensorWaypointState>.Create(
                     waypointReplicatorId,
@@ -229,12 +228,12 @@ public class ZoneSensorGroup
         // Movement replicators: 1 per batch of 32 sensors (max 4 batches)
         // ID scheme: BASE_ID + replicatorIndex * 4 + batchIndex
         MovementReplicators.Clear();
-        int movementBatchCount = ZoneSensorMovementState.CalculateBatchCount(expectedSensorCount);
+        var movementBatchCount = ZoneSensorMovementState.CalculateBatchCount(expectedSensorCount);
         movementBatchCount = Math.Min(movementBatchCount, MAX_MOVEMENT_BATCHES);
 
-        for (int batchIndex = 0; batchIndex < movementBatchCount; batchIndex++)
+        for (var batchIndex = 0; batchIndex < movementBatchCount; batchIndex++)
         {
-            uint movementReplicatorId = MOVEMENT_REPLICATOR_BASE_ID + (uint)(replicatorIndex * MAX_MOVEMENT_BATCHES + batchIndex);
+            var movementReplicatorId = MOVEMENT_REPLICATOR_BASE_ID + (uint)(replicatorIndex * MAX_MOVEMENT_BATCHES + batchIndex);
 
             var movementReplicator = StateReplicator<ZoneSensorMovementState>.Create(
                 movementReplicatorId,
@@ -275,7 +274,7 @@ public class ZoneSensorGroup
         }
 
         // Store batches and broadcast to clients
-        for (int i = 0; i < positionBatches.Count; i++)
+        for (var i = 0; i < positionBatches.Count; i++)
         {
             if (PositionReplicators[i] == null || !PositionReplicators[i].IsValid)
             {
@@ -349,7 +348,7 @@ public class ZoneSensorGroup
         }
 
         // Validate all sequential batch indices 0 through N-1 exist before spawning
-        for (int i = 0; i < expectedBatchCount; i++)
+        for (var i = 0; i < expectedBatchCount; i++)
         {
             if (!receivedBatches.ContainsKey(i))
             {
@@ -362,10 +361,10 @@ public class ZoneSensorGroup
 
         // Build ordered list of all positions from batches
         var allPositions = new List<(Vector3 position, int waypointCount)>();
-        for (int batchIndex = 0; batchIndex < expectedBatchCount; batchIndex++)
+        for (var batchIndex = 0; batchIndex < expectedBatchCount; batchIndex++)
         {
             var batch = receivedBatches[batchIndex];
-            for (int i = 0; i < batch.SensorCount; i++)
+            for (var i = 0; i < batch.SensorCount; i++)
             {
                 allPositions.Add((batch.GetPosition(i), batch.GetWaypointCount(i)));
             }
@@ -377,7 +376,7 @@ public class ZoneSensorGroup
         // Track if this is a late joiner spawn (affects sensor creation)
         isLateJoinerSpawn = isRecall && !SNet.IsMaster;
 
-        for (int i = 0; i < allPositions.Count; i++)
+        for (var i = 0; i < allPositions.Count; i++)
         {
             var (position, waypointCount) = allPositions[i];
 
@@ -401,9 +400,9 @@ public class ZoneSensorGroup
         {
             foreach (var kvp in receivedWaypoints)
             {
-                int sensorIndex = kvp.Key;
+                var sensorIndex = kvp.Key;
                 var waypoints = kvp.Value;
-                if (receivedWaypointSpeeds.TryGetValue(sensorIndex, out float speed))
+                if (receivedWaypointSpeeds.TryGetValue(sensorIndex, out var speed))
                 {
                     ApplyWaypointsToSensor(sensorIndex, waypoints, speed);
                 }
@@ -416,7 +415,7 @@ public class ZoneSensorGroup
         {
             foreach (var kvp in receivedMovementState)
             {
-                int sensorIndex = kvp.Key;
+                var sensorIndex = kvp.Key;
                 var (waypointIndex, forward, progress) = kvp.Value;
                 ApplyMovementStateToSensor(sensorIndex, waypointIndex, forward, progress, snap: true);
             }
@@ -430,7 +429,7 @@ public class ZoneSensorGroup
         Plugin.Logger.LogDebug($"ZoneSensorGroup {Id}: Applied state to spawned sensors (isRecall={isRecall})");
 
         // Diagnostic: verify sensors are actually active
-        for (int i = 0; i < Sensors.Count; i++)
+        for (var i = 0; i < Sensors.Count; i++)
         {
             var s = Sensors[i];
             Plugin.Logger.LogDebug($"ZoneSensor: Sensor {i} active={s.activeSelf}, " +
@@ -573,7 +572,7 @@ public class ZoneSensorGroup
     private static string GetRandomSensorText(int groupIndex, int sensorIndex)
     {
         // Use deterministic index based on group and sensor
-        int textIndex = (groupIndex * 31 + sensorIndex * 17) % SensorTexts.Count;
+        var textIndex = (groupIndex * 31 + sensorIndex * 17) % SensorTexts.Count;
         return SensorTexts[textIndex];
     }
 
@@ -588,11 +587,11 @@ public class ZoneSensorGroup
 
         // Create deterministic random for this specific sensor
         // Combines session seed with group/sensor indices for uniqueness
-        int sensorSeed = Builder.SessionSeedRandom.Seed + groupIndex * 1000 + sensorIndex * 100;
+        var sensorSeed = Builder.SessionSeedRandom.Seed + groupIndex * 1000 + sensorIndex * 100;
         var sensorRandom = new System.Random(sensorSeed);
 
         // Generate (Moving - 1) additional random positions
-        for (int i = 1; i < groupDef.Moving; i++)
+        for (var i = 1; i < groupDef.Moving; i++)
         {
             Vector3 pos;
             if (groupDef.AreaIndex >= 0 && groupDef.AreaIndex < zone.m_areas.Count)
@@ -648,7 +647,7 @@ public class ZoneSensorGroup
     private void BroadcastWaypoints(int sensorIndex, Vector3[] waypoints, float speed)
     {
         // Calculate replicator index range for this sensor
-        int baseReplicatorIndex = sensorIndex * MAX_WAYPOINT_BATCHES_PER_SENSOR;
+        var baseReplicatorIndex = sensorIndex * MAX_WAYPOINT_BATCHES_PER_SENSOR;
 
         if (baseReplicatorIndex >= WaypointReplicators.Count)
         {
@@ -662,9 +661,9 @@ public class ZoneSensorGroup
         Plugin.Logger.LogDebug($"ZoneSensorGroup {Id}: Broadcasting {waypoints.Length} waypoints for sensor {sensorIndex} in {batches.Count} batches, speed={speed}");
 
         // Broadcast each batch
-        for (int batchIndex = 0; batchIndex < batches.Count; batchIndex++)
+        for (var batchIndex = 0; batchIndex < batches.Count; batchIndex++)
         {
-            int replicatorIndex = baseReplicatorIndex + batchIndex;
+            var replicatorIndex = baseReplicatorIndex + batchIndex;
 
             if (replicatorIndex >= WaypointReplicators.Count)
             {
@@ -721,7 +720,7 @@ public class ZoneSensorGroup
             var waypoints = AssembleWaypointsFromBatches(sensorIndex, totalBatches);
             if (waypoints != null)
             {
-                float speed = receivedWaypointSpeeds.TryGetValue(sensorIndex, out float s) ? s : 0f;
+                var speed = receivedWaypointSpeeds.TryGetValue(sensorIndex, out var s) ? s : 0f;
 
                 Plugin.Logger.LogDebug($"ZoneSensorGroup {Id}: Assembled {waypoints.Length} waypoints for sensor {sensorIndex} from {totalBatches} batches, speed={speed}");
 
@@ -749,7 +748,7 @@ public class ZoneSensorGroup
             return null;
 
         // Validate all batches are present
-        for (int i = 0; i < totalBatches; i++)
+        for (var i = 0; i < totalBatches; i++)
         {
             if (!batches.ContainsKey(i))
             {
@@ -759,19 +758,19 @@ public class ZoneSensorGroup
         }
 
         // Calculate total waypoint count
-        int totalWaypoints = 0;
-        for (int i = 0; i < totalBatches; i++)
+        var totalWaypoints = 0;
+        for (var i = 0; i < totalBatches; i++)
         {
             totalWaypoints += batches[i].WaypointCount;
         }
 
         // Assemble waypoints in order
         var result = new Vector3[totalWaypoints];
-        int waypointIndex = 0;
-        for (int batchIdx = 0; batchIdx < totalBatches; batchIdx++)
+        var waypointIndex = 0;
+        for (var batchIdx = 0; batchIdx < totalBatches; batchIdx++)
         {
             var batch = batches[batchIdx];
-            for (int i = 0; i < batch.WaypointCount; i++)
+            for (var i = 0; i < batch.WaypointCount; i++)
             {
                 result[waypointIndex++] = batch.GetWaypoint(i);
             }
@@ -813,9 +812,9 @@ public class ZoneSensorGroup
         // If sensors haven't spawned yet, store movement state for later application
         if (!sensorsSpawned)
         {
-            for (int i = 0; i < newState.SensorCount; i++)
+            for (var i = 0; i < newState.SensorCount; i++)
             {
-                int globalSensorIndex = newState.GetGlobalSensorIndex(i);
+                var globalSensorIndex = newState.GetGlobalSensorIndex(i);
                 var (waypointIndex, forward, progress) = newState.GetMovementState(i);
                 receivedMovementState[globalSensorIndex] = (waypointIndex, forward, progress);
             }
@@ -824,9 +823,9 @@ public class ZoneSensorGroup
         }
 
         // Apply movement state to sensors in this batch
-        for (int i = 0; i < newState.SensorCount; i++)
+        for (var i = 0; i < newState.SensorCount; i++)
         {
-            int globalSensorIndex = newState.GetGlobalSensorIndex(i);
+            var globalSensorIndex = newState.GetGlobalSensorIndex(i);
             var (waypointIndex, forward, progress) = newState.GetMovementState(i);
 
             ApplyMovementStateToSensor(globalSensorIndex, waypointIndex, forward, progress, snap: isRecall);
@@ -885,9 +884,9 @@ public class ZoneSensorGroup
     private void BroadcastMovementState()
     {
         // Group sensors into batches
-        int batchCount = MovementReplicators.Count;
+        var batchCount = MovementReplicators.Count;
 
-        for (int batchIndex = 0; batchIndex < batchCount; batchIndex++)
+        for (var batchIndex = 0; batchIndex < batchCount; batchIndex++)
         {
             var replicator = MovementReplicators[batchIndex];
             if (replicator == null || !replicator.IsValid)
@@ -898,12 +897,12 @@ public class ZoneSensorGroup
                 BatchIndex = (byte)batchIndex
             };
 
-            int startSensorIndex = batchIndex * ZoneSensorMovementState.MaxSensors;
-            int entryIndex = 0;  // Packed entry index (consecutive)
+            var startSensorIndex = batchIndex * ZoneSensorMovementState.MaxSensors;
+            var entryIndex = 0;  // Packed entry index (consecutive)
 
-            for (int localIndex = 0; localIndex < ZoneSensorMovementState.MaxSensors; localIndex++)
+            for (var localIndex = 0; localIndex < ZoneSensorMovementState.MaxSensors; localIndex++)
             {
-                int globalIndex = startSensorIndex + localIndex;
+                var globalIndex = startSensorIndex + localIndex;
 
                 // Skip sensors that don't exist or aren't moving
                 if (globalIndex >= Sensors.Count || !movingSensorIndices.Contains(globalIndex))
@@ -941,7 +940,7 @@ public class ZoneSensorGroup
             return courseNode?.Position ?? Vector3.zero;
 
         // Use our random instance to get a value for node selection
-        float randomValue = (float)random.NextDouble();
+        var randomValue = (float)random.NextDouble();
 
         // Try to get a random node from the cluster
         if (courseNode.m_nodeCluster.TryGetRandomNode(randomValue, out var node))
@@ -1045,14 +1044,14 @@ public class ZoneSensorGroup
         // Use provided oldState if available, otherwise fall back to tracked previousState
         var priorState = oldState ?? previousState;
 
-        for (int i = 0; i < Sensors.Count; i++)
+        for (var i = 0; i < Sensors.Count; i++)
         {
             var sensor = Sensors[i];
             if (sensor != null)
             {
                 // Sensor is visible if group enabled AND individual sensor enabled
-                bool sensorEnabled = state.Enabled && state.IsSensorEnabled(i);
-                bool wasEnabled = priorState.Enabled && priorState.IsSensorEnabled(i);
+                var sensorEnabled = state.Enabled && state.IsSensorEnabled(i);
+                var wasEnabled = priorState.Enabled && priorState.IsSensorEnabled(i);
 
                 sensor.SetActive(sensorEnabled);
 

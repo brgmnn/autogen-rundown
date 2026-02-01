@@ -51,7 +51,7 @@ public class ZoneSensorCollider : MonoBehaviour
         if (!ZoneSensorManager.Current.IsGroupEnabled(Id))
             return;
 
-        int currentCount = CountPlayersInRadius();
+        var currentCount = CountPlayersInRadius();
 
         // Trigger when player count increases (player entered)
         if (currentCount > lastPlayerCount)
@@ -70,7 +70,7 @@ public class ZoneSensorCollider : MonoBehaviour
     /// </summary>
     private int CountPlayersInRadius()
     {
-        int count = 0;
+        var count = 0;
 
         if (PlayerManager.PlayerAgentsInLevel == null)
             return count;
@@ -87,7 +87,7 @@ public class ZoneSensorCollider : MonoBehaviour
             if (player.Owner != null && player.Owner.IsBot)
                 continue;
 
-            float distance = Vector3.Distance(transform.position, player.Position);
+            var distance = Vector3.Distance(transform.position, player.Position);
             if (distance <= Radius)
                 count++;
         }

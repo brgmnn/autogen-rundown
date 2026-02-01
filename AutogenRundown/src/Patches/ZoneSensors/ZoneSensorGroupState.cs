@@ -61,8 +61,8 @@ public struct ZoneSensorGroupState
     public readonly bool IsSensorEnabled(int index)
     {
         if (index < 0 || index >= 128) return false;
-        int field = index / 32;
-        int bit = index % 32;
+        var field = index / 32;
+        var bit = index % 32;
         return field switch
         {
             0 => (SensorMask0 & (1u << bit)) != 0,
@@ -76,8 +76,8 @@ public struct ZoneSensorGroupState
     public readonly bool IsSensorTriggered(int index)
     {
         if (index < 0 || index >= 128) return false;
-        int field = index / 32;
-        int bit = index % 32;
+        var field = index / 32;
+        var bit = index % 32;
         return field switch
         {
             0 => (TriggeredMask0 & (1u << bit)) != 0,
@@ -91,8 +91,8 @@ public struct ZoneSensorGroupState
     public void SetSensorDisabled(int index)
     {
         if (index < 0 || index >= 128) return;
-        int field = index / 32;
-        int bit = index % 32;
+        var field = index / 32;
+        var bit = index % 32;
         switch (field)
         {
             case 0: SensorMask0 &= ~(1u << bit); break;
@@ -105,8 +105,8 @@ public struct ZoneSensorGroupState
     public void SetSensorTriggered(int index)
     {
         if (index < 0 || index >= 128) return;
-        int field = index / 32;
-        int bit = index % 32;
+        var field = index / 32;
+        var bit = index % 32;
         switch (field)
         {
             case 0: TriggeredMask0 |= (1u << bit); break;

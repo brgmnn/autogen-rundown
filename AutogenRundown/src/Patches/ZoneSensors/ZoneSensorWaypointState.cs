@@ -76,7 +76,7 @@ public unsafe struct ZoneSensorWaypointState
         if (index < 0 || index >= MaxWaypointsPerBatch)
             return;
 
-        int offset = index * 3;
+        var offset = index * 3;
         _waypoints[offset] = pos.x;
         _waypoints[offset + 1] = pos.y;
         _waypoints[offset + 2] = pos.z;
@@ -90,7 +90,7 @@ public unsafe struct ZoneSensorWaypointState
         if (index < 0 || index >= MaxWaypointsPerBatch)
             return Vector3.zero;
 
-        int offset = index * 3;
+        var offset = index * 3;
         return new Vector3(
             _waypoints[offset],
             _waypoints[offset + 1],
@@ -108,7 +108,7 @@ public unsafe struct ZoneSensorWaypointState
     public Vector3[] ToArray()
     {
         var result = new Vector3[WaypointCount];
-        for (int i = 0; i < WaypointCount; i++)
+        for (var i = 0; i < WaypointCount; i++)
         {
             result[i] = GetWaypoint(i);
         }
@@ -133,7 +133,7 @@ public unsafe struct ZoneSensorWaypointState
             Speed = speed
         };
 
-        for (int i = 0; i < state.WaypointCount; i++)
+        for (var i = 0; i < state.WaypointCount; i++)
         {
             state.SetWaypoint(i, waypoints[i]);
         }
@@ -148,7 +148,7 @@ public unsafe struct ZoneSensorWaypointState
     public static List<ZoneSensorWaypointState> FromArrayBatched(int sensorIndex, Vector3[] waypoints, float speed)
     {
         var batches = new List<ZoneSensorWaypointState>();
-        int totalBatches = CalculateBatchCount(waypoints.Length);
+        var totalBatches = CalculateBatchCount(waypoints.Length);
 
         // Clamp to max supported batches
         if (totalBatches > MaxBatchesPerSensor)
@@ -157,10 +157,10 @@ public unsafe struct ZoneSensorWaypointState
             totalBatches = MaxBatchesPerSensor;
         }
 
-        int waypointIndex = 0;
-        for (int batchIndex = 0; batchIndex < totalBatches; batchIndex++)
+        var waypointIndex = 0;
+        for (var batchIndex = 0; batchIndex < totalBatches; batchIndex++)
         {
-            int waypointsInBatch = Math.Min(MaxWaypointsPerBatch, waypoints.Length - waypointIndex);
+            var waypointsInBatch = Math.Min(MaxWaypointsPerBatch, waypoints.Length - waypointIndex);
 
             var state = new ZoneSensorWaypointState
             {
@@ -171,7 +171,7 @@ public unsafe struct ZoneSensorWaypointState
                 Speed = batchIndex == 0 ? speed : 0f  // Speed only in first batch
             };
 
-            for (int i = 0; i < waypointsInBatch; i++)
+            for (var i = 0; i < waypointsInBatch; i++)
             {
                 state.SetWaypoint(i, waypoints[waypointIndex + i]);
             }
