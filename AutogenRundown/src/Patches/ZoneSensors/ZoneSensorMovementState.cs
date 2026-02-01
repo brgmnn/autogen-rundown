@@ -98,8 +98,8 @@ public unsafe struct ZoneSensorMovementState
             return (0, true, 0f);
 
         int waypointIndex = _waypointIndices[entryIndex];
-        bool forward = (DirectionMask & (1u << entryIndex)) != 0;
-        float progress = _progress[entryIndex] / 255f;
+        var forward = (DirectionMask & (1u << entryIndex)) != 0;
+        var progress = _progress[entryIndex] / 255f;
 
         return (waypointIndex, forward, progress);
     }

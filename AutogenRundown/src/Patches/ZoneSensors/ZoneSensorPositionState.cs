@@ -71,7 +71,7 @@ public unsafe struct ZoneSensorPositionState
         if (index < 0 || index >= MaxSensorsPerBatch)
             return;
 
-        int offset = index * 3;
+        var offset = index * 3;
         _positions[offset] = position.x;
         _positions[offset + 1] = position.y;
         _positions[offset + 2] = position.z;
@@ -85,7 +85,7 @@ public unsafe struct ZoneSensorPositionState
         if (index < 0 || index >= MaxSensorsPerBatch)
             return Vector3.zero;
 
-        int offset = index * 3;
+        var offset = index * 3;
         return new Vector3(
             _positions[offset],
             _positions[offset + 1],
@@ -104,8 +104,8 @@ public unsafe struct ZoneSensorPositionState
         // Clamp to 0-3 (2 bits)
         count = Math.Clamp(count, 0, 3);
 
-        int shift = sensorIndex * 2;
-        uint mask = ~(3u << shift);
+        var shift = sensorIndex * 2;
+        var mask = ~(3u << shift);
         WaypointCounts = (WaypointCounts & mask) | ((uint)count << shift);
     }
 
@@ -118,7 +118,7 @@ public unsafe struct ZoneSensorPositionState
         if (sensorIndex < 0 || sensorIndex >= MaxSensorsPerBatch)
             return 0;
 
-        int shift = sensorIndex * 2;
+        var shift = sensorIndex * 2;
         return (int)((WaypointCounts >> shift) & 3);
     }
 

@@ -274,8 +274,8 @@ public sealed class ZoneSensorManager
             }
 
             // Calculate total sensor count for batch planning (uses density if specified)
-            int totalSensors = definition.SensorGroups.Sum(g => GetEffectiveSensorCount(g, zone));
-            int batchCount = ZoneSensorPositionState.CalculateBatchCount(totalSensors);
+            var totalSensors = definition.SensorGroups.Sum(g => GetEffectiveSensorCount(g, zone));
+            var batchCount = ZoneSensorPositionState.CalculateBatchCount(totalSensors);
 
             // Warn if we're hitting the maximum supported sensors (128 = 8 batches * 16 per batch)
             const int maxSupportedSensors = 8 * ZoneSensorPositionState.MaxSensorsPerBatch;
@@ -288,10 +288,10 @@ public sealed class ZoneSensorManager
             Plugin.Logger.LogDebug($"ZoneSensor: Group {definition.Id} will have {totalSensors} sensors in {batchCount} batches");
 
             // Determine if any sensor group uses TriggerEach mode
-            bool hasTriggerEach = definition.SensorGroups.Any(g => g.TriggerEach);
+            var hasTriggerEach = definition.SensorGroups.Any(g => g.TriggerEach);
 
             // Determine if any sensor in the group is moving
-            bool hasMovingSensors = definition.SensorGroups.Any(g => g.Moving > 1);
+            var hasMovingSensors = definition.SensorGroups.Any(g => g.Moving > 1);
 
             // Create sensor group with replicators (pass expected count for batch allocation)
             var sensorGroup = new ZoneSensorGroup();
@@ -354,10 +354,10 @@ public sealed class ZoneSensorManager
             var sensorRadius = (float)groupDef.Radius;
             var effectiveCount = GetEffectiveSensorCount(groupDef, zone);
 
-            for (int i = 0; i < effectiveCount && allPositions.Count < maxTotalSensors; i++)
+            for (var i = 0; i < effectiveCount && allPositions.Count < maxTotalSensors; i++)
             {
                 const int maxPlacementAttempts = 5;
-                Vector3 position = Vector3.zero;
+                var position = Vector3.zero;
                 var attempts = 0;
 
                 while (attempts < maxPlacementAttempts)
@@ -384,16 +384,16 @@ public sealed class ZoneSensorManager
                 placedSensors.Add((position, sensorRadius));
 
                 // Store waypoint count for moving sensors
-                int waypointCount = groupDef.Moving > 1 ? Math.Min(groupDef.Moving - 1, 3) : 0;
+                var waypointCount = groupDef.Moving > 1 ? Math.Min(groupDef.Moving - 1, 3) : 0;
                 allPositions.Add((position, waypointCount));
             }
         }
 
         // Split positions into batches of MaxSensorsPerBatch
-        int totalBatches = ZoneSensorPositionState.CalculateBatchCount(allPositions.Count);
+        var totalBatches = ZoneSensorPositionState.CalculateBatchCount(allPositions.Count);
         var batches = new List<ZoneSensorPositionState>();
 
-        for (int batchIndex = 0; batchIndex < totalBatches; batchIndex++)
+        for (var batchIndex = 0; batchIndex < totalBatches; batchIndex++)
         {
             var state = new ZoneSensorPositionState
             {
@@ -401,11 +401,11 @@ public sealed class ZoneSensorManager
                 TotalBatches = (byte)totalBatches
             };
 
-            int startIndex = batchIndex * ZoneSensorPositionState.MaxSensorsPerBatch;
-            int endIndex = Math.Min(startIndex + ZoneSensorPositionState.MaxSensorsPerBatch, allPositions.Count);
-            int batchSensorCount = endIndex - startIndex;
+            var startIndex = batchIndex * ZoneSensorPositionState.MaxSensorsPerBatch;
+            var endIndex = Math.Min(startIndex + ZoneSensorPositionState.MaxSensorsPerBatch, allPositions.Count);
+            var batchSensorCount = endIndex - startIndex;
 
-            for (int i = 0; i < batchSensorCount; i++)
+            for (var i = 0; i < batchSensorCount; i++)
             {
                 var (pos, waypointCount) = allPositions[startIndex + i];
                 state.SetPosition(i, pos);
@@ -453,7 +453,7 @@ public sealed class ZoneSensorManager
     private int CalculateSensorCountFromDensity(LG_Zone zone, SensorDensity density, double radius)
     {
         // Sum VoxelCoverage from all areas - this is the actual walkable area
-        float totalCoverage = 0f;
+        var totalCoverage = 0f;
 
         foreach (var area in zone.m_areas)
         {

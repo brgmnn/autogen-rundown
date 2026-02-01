@@ -44,7 +44,7 @@ public class ZoneSensorTextAnimator : MonoBehaviour
 
         // Start at random point in cycle so scans aren't synchronized
         cycleTimer = UnityEngine.Random.Range(0f, FULL_CYCLE_TIME);
-        float cyclePosition = cycleTimer % FULL_CYCLE_TIME;
+        var cyclePosition = cycleTimer % FULL_CYCLE_TIME;
 
         // Determine starting phase based on random position
         if (cyclePosition < REVEAL_DURATION)
@@ -65,7 +65,7 @@ public class ZoneSensorTextAnimator : MonoBehaviour
         if (!initialized || textComponent == null || !gameObject.activeSelf) return;
 
         cycleTimer += Time.deltaTime;
-        float cyclePosition = cycleTimer % FULL_CYCLE_TIME;
+        var cyclePosition = cycleTimer % FULL_CYCLE_TIME;
 
         // Determine which phase we're in
         int newPhase;
@@ -126,8 +126,8 @@ public class ZoneSensorTextAnimator : MonoBehaviour
         if (actualText.Length == 0) { textComponent.SetText(""); return; }
 
         // Hex chars preserving spaces (original behavior)
-        char[] scrambled = new char[actualText.Length];
-        for (int i = 0; i < actualText.Length; i++)
+        var scrambled = new char[actualText.Length];
+        for (var i = 0; i < actualText.Length; i++)
         {
             scrambled[i] = actualText[i] == ' ' ? ' ' : HexChars[UnityEngine.Random.Range(0, HexChars.Length)];
         }
@@ -140,7 +140,7 @@ public class ZoneSensorTextAnimator : MonoBehaviour
 
         // Fixed 14-char format: "XX-XX-XX-XX-XX"
         var sb = new StringBuilder(14);
-        for (int i = 0; i < 5; i++)
+        for (var i = 0; i < 5; i++)
         {
             if (i > 0) sb.Append('-');
             sb.Append(HexChars[UnityEngine.Random.Range(0, HexChars.Length)]);
