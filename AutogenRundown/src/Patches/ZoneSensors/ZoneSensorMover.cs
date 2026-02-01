@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Il2CppInterop.Runtime.Injection;
 using UnityEngine;
 using UnityEngine.AI;
