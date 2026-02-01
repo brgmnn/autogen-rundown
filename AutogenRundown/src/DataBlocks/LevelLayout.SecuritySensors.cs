@@ -198,8 +198,12 @@ public partial record LevelLayout
             eventLoop.EventsToActivate
                 .DisableZoneSensors(sensorDef.Id, 0.4)
                 .AddSound(Sound.LightsOn_Vol4)
-                .EnableZoneSensorsWithReset(sensorDef.Id, offTime)
                 .AddSound(Sound.LightsOn_Vol4, offTime - 0.4);
+
+            if (triggerEach)
+                eventLoop.EventsToActivate.EnableZoneSensors(sensorDef.Id, offTime);
+            else
+                eventLoop.EventsToActivate.EnableZoneSensorsWithReset(sensorDef.Id, offTime);
 
             level.GetObjective(node.Bulkhead).EventsOnElevatorLand.Add(
                 new WardenObjectiveEvent
@@ -213,11 +217,10 @@ public partial record LevelLayout
         // 8. Build trigger events
         var sensorEvents = new List<WardenObjectiveEvent>();
         sensorEvents
-            .DisableZoneSensors(sensorDef.Id, 0.1)
             .AddSound(Sound.LightsOff)
             .AddSpawnWave(selectedWave, 2.0);
 
-        if (!shouldCycle)
+        if (!shouldCycle && !triggerEach)
         {
             var resetTime = Generator.Between(8, 15);
             sensorEvents
