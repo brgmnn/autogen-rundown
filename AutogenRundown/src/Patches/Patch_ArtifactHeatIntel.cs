@@ -20,7 +20,7 @@ internal static class Patch_ArtifactHeatIntel
         var template = Localization.Text.Get(802U);
         var placeholderIndex = template.IndexOf("{0}");
 
-        if (placeholderIndex > 0 && intel.Contains(template.Substring(0, placeholderIndex)))
+        if (placeholderIndex >= 0 && intel.Contains(template.Substring(0, placeholderIndex)))
             return false;
 
         return true;

@@ -550,11 +550,11 @@ public partial record LevelLayout
                         corridorZone.GenCorridorGeomorph(level.Complex);
 
                         var (hub, hubZone) = AddZone(corridor);
-                        corridorZone.GenHubGeomorph(level.Complex);
+                        hubZone.GenHubGeomorph(level.Complex);
                         planner.UpdateNode(hub with { Tags = hub.Tags.Extend("uplink_terminal") });
 
                         var (side1, side1Zone) = AddZone(hub);
-                        corridorZone.GenDeadEndGeomorph(level.Complex);
+                        side1Zone.GenDeadEndGeomorph(level.Complex);
                         planner.UpdateNode(hub with { Tags = hub.Tags.Extend("uplink_terminal") });
 
                         var nodes = AddBranch_Forward(

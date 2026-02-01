@@ -88,7 +88,7 @@ public partial record LevelLayout
                     (0.4, () =>
                     {
                         // Possibly add an extra zone to go throuh
-                        if (Generator.Flip(0.7) || true)
+                        if (Generator.Flip(0.7))
                             (start, startZone) = AddZone(start, new ZoneNode { Branch = "primary" });
 
                         // Update number of connections for hub zone
