@@ -6,7 +6,7 @@ public class WatermarkManager
 
     private static PUI_Watermark? puiWatermark = null;
 
-    private static string displayText { get; set; } = $"<size=14>{EmptySeed}\nAR v{Plugin.Version}</size>";
+    private static string displayText { get; set; } = $"<size=14>{EmptySeed}\nAutogen v{Plugin.Version}</size>";
 
     public static void SetInstance(PUI_Watermark instance)
     {
@@ -16,7 +16,7 @@ public class WatermarkManager
 
     public static void SetWatermark(string text)
     {
-        displayText = $"<size=14>{text}\nAR v{Plugin.Version}</size>";
+        displayText = $"<size=14>{text}\nAutogen v{Plugin.Version}</size>";
 
         puiWatermark?.m_watermarkText.SetText(displayText);
     }
