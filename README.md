@@ -49,6 +49,9 @@ TODO:
   * Might consider if we even need an error alarm turnoff for levels in main where it goes all the way to the end?
   * VERY SLIGHT increase in Apex alarm wave pops
 
+* Added melee and health syringes into consumables pool
+  * New optional "Medical Bay" side zone's can spawn now which contain health, disinfect, and syringes
+
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
 
