@@ -71,7 +71,7 @@ public sealed class ZoneSensorManager
             if (currentCount > lastSyncedPlayerCount)
             {
                 lastSyncedPlayerCount = currentCount;
-                RebroadcastPositionStates();
+                RebroadcastStates();
             }
         }
     }
@@ -357,16 +357,16 @@ public sealed class ZoneSensorManager
     }
 
     /// <summary>
-    /// Re-broadcasts position states for all groups so slow clients can receive them.
-    /// Host only. Safe because clients guard against double-spawning via sensorsSpawned flag.
+    /// Re-broadcasts all replicator states for all groups so slow clients can receive them.
+    /// Host only. Safe because all rebroadcasts are idempotent.
     /// </summary>
-    private void RebroadcastPositionStates()
+    private void RebroadcastStates()
     {
-        Plugin.Logger.LogDebug($"ZoneSensor: Re-broadcasting position states (syncedPlayers={lastSyncedPlayerCount})");
+        Plugin.Logger.LogDebug($"ZoneSensor: Re-broadcasting all states (syncedPlayers={lastSyncedPlayerCount})");
 
         foreach (var group in activeSensorGroups.Values)
         {
-            group.RebroadcastPositions();
+            group.RebroadcastAllStates();
         }
     }
 

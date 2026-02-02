@@ -291,15 +291,48 @@ public class ZoneSensorGroup
     }
 
     /// <summary>
-    /// Re-broadcasts the current position state on all position replicators.
-    /// Called by the host to give slow clients another chance to receive positions.
-    /// Safe because OnPositionStateChanged guards against double-spawning via sensorsSpawned.
+    /// Re-broadcasts all replicator states to give slow clients another chance to receive them.
+    /// Called by the host when a new player finishes building.
+    ///
+    /// Order matters: group state first, then positions (triggers spawning),
+    /// then waypoints (for moving sensors), then movement progress.
+    ///
+    /// All rebroadcasts are idempotent:
+    /// - Group state: re-applies SetActive (idempotent)
+    /// - Positions: guarded by sensorsSpawned flag
+    /// - Waypoints: re-applies via SetWaypoints (overwrites with same data)
+    /// - Movement: re-applies progress (harmless)
     /// </summary>
-    public void RebroadcastPositions()
+    public void RebroadcastAllStates()
     {
+        // 1. Group state (enabled/disabled + per-sensor mask)
+        if (Replicator != null && Replicator.IsValid && Replicator.State.Enabled)
+        {
+            Replicator.SetState(Replicator.State);
+        }
+
+        // 2. Positions (triggers sensor spawning on clients)
         foreach (var replicator in PositionReplicators)
         {
             if (replicator != null && replicator.IsValid && replicator.State.HasPositions)
+            {
+                replicator.SetState(replicator.State);
+            }
+        }
+
+        // 3. Waypoints (for moving sensors)
+        foreach (var replicator in WaypointReplicators)
+        {
+            if (replicator != null && replicator.IsValid && replicator.State.HasWaypoints)
+            {
+                replicator.SetState(replicator.State);
+            }
+        }
+
+        // 4. Movement progress (current movement state)
+        foreach (var replicator in MovementReplicators)
+        {
+            if (replicator != null && replicator.IsValid && replicator.State.HasMovementData)
             {
                 replicator.SetState(replicator.State);
             }
