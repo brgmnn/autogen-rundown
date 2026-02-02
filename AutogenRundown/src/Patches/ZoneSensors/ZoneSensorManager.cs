@@ -54,6 +54,7 @@ public sealed class ZoneSensorManager
     private ZoneSensorManager()
     {
         LevelAPI.OnBuildDone += BuildSensors;
+        LevelAPI.OnEnterLevel += OnEnterLevel;
         LevelAPI.OnLevelCleanup += Clear;
     }
 
@@ -340,17 +341,27 @@ public sealed class ZoneSensorManager
         if (activeSensorGroups.Count > 0)
         {
             EnsureUpdaterExists();
-
-            // Start repeated rebroadcast timer (host only) so slow clients
-            // that finish building later still receive position states.
-            if (SNet.IsMaster)
-            {
-                rebroadcastAttemptsRemaining = REBROADCAST_ATTEMPTS;
-                rebroadcastIntervalTimer = REBROADCAST_INTERVAL;
-            }
         }
 
         Plugin.Logger.LogDebug($"ZoneSensor: Created {activeSensorGroups.Count} sensor groups");
+    }
+
+    /// <summary>
+    /// Called when all players exit the elevator. Starts the rebroadcast timer
+    /// so slow clients receive position states after they've finished building.
+    /// </summary>
+    private void OnEnterLevel()
+    {
+        if (!SNet.IsMaster)
+            return;
+
+        if (activeSensorGroups.Count == 0)
+            return;
+
+        rebroadcastAttemptsRemaining = REBROADCAST_ATTEMPTS;
+        rebroadcastIntervalTimer = REBROADCAST_INTERVAL;
+
+        Plugin.Logger.LogDebug("ZoneSensor: Entered level, beginning rebroadcast timer");
     }
 
     /// <summary>
