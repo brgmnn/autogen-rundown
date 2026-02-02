@@ -48,9 +48,11 @@ public sealed class ZoneSensorManager
     // Track synced player count for event-driven rebroadcast (host only)
     private int lastSyncedPlayerCount;
 
-    // Delay rebroadcast so slow clients have time to create replicators
-    private float rebroadcastDelayTimer;
-    private const float REBROADCAST_DELAY = 5.0f;
+    // Repeated rebroadcast so slow clients have time to create replicators
+    private float rebroadcastIntervalTimer;
+    private int rebroadcastAttemptsRemaining;
+    private const float REBROADCAST_INTERVAL = 5.0f;
+    private const int REBROADCAST_ATTEMPTS = 6;
 
     private ZoneSensorManager()
     {
@@ -68,24 +70,30 @@ public sealed class ZoneSensorManager
             group.Update();
         }
 
-        // Host: re-broadcast position states when a new player finishes building.
-        // Delay the rebroadcast so slow clients have time to create their replicators.
+        // Host: repeatedly re-broadcast position states when a new player joins.
+        // A single delayed rebroadcast isn't enough — slow clients may not have
+        // created their replicators yet. Fire multiple attempts over ~30s so at
+        // least one arrives after the client's OnBuildDone runs.
         if (SNet.IsMaster)
         {
             var currentCount = SNet.Slots.PlayersSynchedWithGame.Count;
             if (currentCount > lastSyncedPlayerCount)
             {
                 lastSyncedPlayerCount = currentCount;
-                rebroadcastDelayTimer = REBROADCAST_DELAY;
+                rebroadcastAttemptsRemaining = REBROADCAST_ATTEMPTS;
+                rebroadcastIntervalTimer = REBROADCAST_INTERVAL;
             }
 
-            if (rebroadcastDelayTimer > 0f)
+            if (rebroadcastAttemptsRemaining > 0)
             {
-                rebroadcastDelayTimer -= Time.deltaTime;
-                if (rebroadcastDelayTimer <= 0f)
+                rebroadcastIntervalTimer -= Time.deltaTime;
+                if (rebroadcastIntervalTimer <= 0f)
                 {
-                    rebroadcastDelayTimer = 0f;
                     RebroadcastStates();
+                    rebroadcastAttemptsRemaining--;
+
+                    if (rebroadcastAttemptsRemaining > 0)
+                        rebroadcastIntervalTimer = REBROADCAST_INTERVAL;
                 }
             }
         }
@@ -557,7 +565,8 @@ public sealed class ZoneSensorManager
         activeSensorGroups.Clear();
         nextReplicatorIndex = 0;
         lastSyncedPlayerCount = 0;
-        rebroadcastDelayTimer = 0f;
+        rebroadcastIntervalTimer = 0f;
+        rebroadcastAttemptsRemaining = 0;
 
         // Destroy updater component
         if (updater != null)
