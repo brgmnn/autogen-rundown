@@ -45,9 +45,6 @@ public sealed class ZoneSensorManager
     // Update helper component instance
     private ZoneSensorManagerUpdater? updater;
 
-    // Track synced player count for event-driven rebroadcast (host only)
-    private int lastSyncedPlayerCount;
-
     // Repeated rebroadcast so slow clients have time to create replicators
     private float rebroadcastIntervalTimer;
     private int rebroadcastAttemptsRemaining;
@@ -70,31 +67,20 @@ public sealed class ZoneSensorManager
             group.Update();
         }
 
-        // Host: repeatedly re-broadcast position states when a new player joins.
-        // A single delayed rebroadcast isn't enough — slow clients may not have
-        // created their replicators yet. Fire multiple attempts over ~30s so at
-        // least one arrives after the client's OnBuildDone runs.
-        if (SNet.IsMaster)
+        // Host: repeatedly re-broadcast position states after building.
+        // Slow clients may not have created their replicators yet when the host
+        // first sends state. Fire multiple attempts over ~30s so at least one
+        // arrives after each client's OnBuildDone runs.
+        if (SNet.IsMaster && rebroadcastAttemptsRemaining > 0)
         {
-            var currentCount = SNet.Slots.PlayersSynchedWithGame.Count;
-            if (currentCount > lastSyncedPlayerCount)
+            rebroadcastIntervalTimer -= Time.deltaTime;
+            if (rebroadcastIntervalTimer <= 0f)
             {
-                lastSyncedPlayerCount = currentCount;
-                rebroadcastAttemptsRemaining = REBROADCAST_ATTEMPTS;
-                rebroadcastIntervalTimer = REBROADCAST_INTERVAL;
-            }
+                RebroadcastStates();
+                rebroadcastAttemptsRemaining--;
 
-            if (rebroadcastAttemptsRemaining > 0)
-            {
-                rebroadcastIntervalTimer -= Time.deltaTime;
-                if (rebroadcastIntervalTimer <= 0f)
-                {
-                    RebroadcastStates();
-                    rebroadcastAttemptsRemaining--;
-
-                    if (rebroadcastAttemptsRemaining > 0)
-                        rebroadcastIntervalTimer = REBROADCAST_INTERVAL;
-                }
+                if (rebroadcastAttemptsRemaining > 0)
+                    rebroadcastIntervalTimer = REBROADCAST_INTERVAL;
             }
         }
     }
@@ -355,10 +341,12 @@ public sealed class ZoneSensorManager
         {
             EnsureUpdaterExists();
 
-            // Initialize synced player count (host only)
+            // Start repeated rebroadcast timer (host only) so slow clients
+            // that finish building later still receive position states.
             if (SNet.IsMaster)
             {
-                lastSyncedPlayerCount = SNet.Slots.PlayersSynchedWithGame.Count;
+                rebroadcastAttemptsRemaining = REBROADCAST_ATTEMPTS;
+                rebroadcastIntervalTimer = REBROADCAST_INTERVAL;
             }
         }
 
@@ -385,7 +373,7 @@ public sealed class ZoneSensorManager
     /// </summary>
     private void RebroadcastStates()
     {
-        Plugin.Logger.LogDebug($"ZoneSensor: Re-broadcasting all states (syncedPlayers={lastSyncedPlayerCount})");
+        Plugin.Logger.LogDebug($"ZoneSensor: Re-broadcasting all states (attemptsRemaining={rebroadcastAttemptsRemaining})");
 
         foreach (var group in activeSensorGroups.Values)
         {
@@ -564,7 +552,6 @@ public sealed class ZoneSensorManager
 
         activeSensorGroups.Clear();
         nextReplicatorIndex = 0;
-        lastSyncedPlayerCount = 0;
         rebroadcastIntervalTimer = 0f;
         rebroadcastAttemptsRemaining = 0;
 
