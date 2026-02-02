@@ -48,6 +48,10 @@ public sealed class ZoneSensorManager
     // Track synced player count for event-driven rebroadcast (host only)
     private int lastSyncedPlayerCount;
 
+    // Delay rebroadcast so slow clients have time to create replicators
+    private float rebroadcastDelayTimer;
+    private const float REBROADCAST_DELAY = 5.0f;
+
     private ZoneSensorManager()
     {
         LevelAPI.OnBuildDone += BuildSensors;
@@ -64,14 +68,25 @@ public sealed class ZoneSensorManager
             group.Update();
         }
 
-        // Host: re-broadcast position states when a new player finishes building
+        // Host: re-broadcast position states when a new player finishes building.
+        // Delay the rebroadcast so slow clients have time to create their replicators.
         if (SNet.IsMaster)
         {
             var currentCount = SNet.Slots.PlayersSynchedWithGame.Count;
             if (currentCount > lastSyncedPlayerCount)
             {
                 lastSyncedPlayerCount = currentCount;
-                RebroadcastStates();
+                rebroadcastDelayTimer = REBROADCAST_DELAY;
+            }
+
+            if (rebroadcastDelayTimer > 0f)
+            {
+                rebroadcastDelayTimer -= Time.deltaTime;
+                if (rebroadcastDelayTimer <= 0f)
+                {
+                    rebroadcastDelayTimer = 0f;
+                    RebroadcastStates();
+                }
             }
         }
     }
@@ -542,6 +557,7 @@ public sealed class ZoneSensorManager
         activeSensorGroups.Clear();
         nextReplicatorIndex = 0;
         lastSyncedPlayerCount = 0;
+        rebroadcastDelayTimer = 0f;
 
         // Destroy updater component
         if (updater != null)
