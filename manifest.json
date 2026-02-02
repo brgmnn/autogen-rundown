@@ -1,6 +1,6 @@
 {
   "name": "AutogenRundown",
-  "version_number": "0.81.0",
+  "version_number": "0.81.1",
   "website_url": "https://github.com/brgmnn/autogen-rundown",
   "description": "Rundown generation mod for GTFO. New rundowns generated daily, weekly, monthly, and each season.",
   "dependencies": [
@@ -20,7 +20,7 @@
     "hirnukuono-EEC_H-1.8.22",
     "hirnukuono-LGTuner-1.2.1",
     "Inas07-EOSExt_Reactor-1.0.7",
-    "Inas07-ExtraObjectiveSetup-1.6.11",
+    "Inas07-ExtraObjectiveSetup-1.6.12",
     "Inas07-ExtraSurvivalWaveSettings-1.1.3",
     "Inas07-LocalProgression-1.3.7"
   ]

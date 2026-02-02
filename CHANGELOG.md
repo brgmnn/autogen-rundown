@@ -3,6 +3,18 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.81.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.1) — February 01, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+Change: Bump mod dependencies
+Fix: Resolve slow client loading issue with security sensors not loading for them
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.81.0...v0.81.1
+
+
 ## [v0.81.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.0) — January 31, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
