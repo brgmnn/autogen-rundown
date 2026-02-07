@@ -1,6 +1,6 @@
 {
   "name": "AutogenRundown",
-  "version_number": "0.81.1",
+  "version_number": "0.81.2",
   "website_url": "https://github.com/brgmnn/autogen-rundown",
   "description": "Rundown generation mod for GTFO. New rundowns generated daily, weekly, monthly, and each season.",
   "dependencies": [
