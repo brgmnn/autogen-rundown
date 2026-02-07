@@ -103,16 +103,13 @@ public sealed class ZoneSensorManager
         if (!activeSensorGroups.TryGetValue(definitionId, out var group))
             return;
 
-        // Only master should execute events
-        if (!SNet.IsMaster)
-            return;
-
         Plugin.Logger.LogDebug($"ZoneSensor: Group {definitionId} triggered, executing {group.EventsOnTrigger.Count} events");
 
-        // Disable the sensor group after trigger
-        group.SetEnabled(false);
+        // Only master should modify state replicator
+        if (SNet.IsMaster)
+            group.SetEnabled(false);
 
-        // Execute events
+        // Execute events on all clients — each event type handles its own host/client gating
         foreach (var evt in group.EventsOnTrigger)
         {
             var eventData = ConvertToEventData(evt);
@@ -133,16 +130,13 @@ public sealed class ZoneSensorManager
         if (!activeSensorGroups.TryGetValue(definitionId, out var group))
             return;
 
-        // Only master should execute events
-        if (!SNet.IsMaster)
-            return;
-
         Plugin.Logger.LogDebug($"ZoneSensor: Group {definitionId} sensor {sensorIndex} triggered individually");
 
-        // Disable only this sensor
-        group.DisableSensor(sensorIndex);
+        // Only master should modify state replicator
+        if (SNet.IsMaster)
+            group.DisableSensor(sensorIndex);
 
-        // Execute events (same as group trigger)
+        // Execute events on all clients — each event type handles its own host/client gating
         foreach (var evt in group.EventsOnTrigger)
         {
             var eventData = ConvertToEventData(evt);
