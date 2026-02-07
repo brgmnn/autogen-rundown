@@ -1,7 +1,10 @@
-﻿using AIGraph;
+﻿using System;
+using AIGraph;
 using AutogenRundown.Patches;
 using CellMenu;
 using Enemies;
+using GTFO.API;
+using HarmonyLib;
 using LevelGeneration;
 
 namespace AutogenRundown.Managers;
@@ -87,6 +90,15 @@ public static class FactoryJobManager
     /// </summary>
     private static void LevelCleanup()
     {
+        // Fire GTFO.API's OnLevelCleanup so mods (AmorLib, AWO, etc.) clean up.
+        // This clears AmorLib's LightWorkers and StateReplicators which otherwise
+        // accumulate across rebuilds, causing NullRef errors and light toggle failures.
+        var field = AccessTools.Field(typeof(LevelAPI), "OnLevelCleanup");
+        if (field != null)
+        {
+            (field.GetValue(null) as Action)?.Invoke();
+        }
+
         // --- Enemies ---
         // Clear enemy spawn manager cache
         EnemySpawnManager.m_groupRandomizers.Clear();
