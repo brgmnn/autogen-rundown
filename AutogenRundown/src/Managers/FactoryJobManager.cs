@@ -3,6 +3,7 @@ using AIGraph;
 using AutogenRundown.Patches;
 using CellMenu;
 using Enemies;
+using AmorLib.API;
 using GTFO.API;
 using HarmonyLib;
 using LevelGeneration;
@@ -90,14 +91,13 @@ public static class FactoryJobManager
     /// </summary>
     private static void LevelCleanup()
     {
-        // Fire GTFO.API's OnLevelCleanup so mods (AmorLib, AWO, etc.) clean up.
-        // This clears AmorLib's LightWorkers and StateReplicators which otherwise
-        // accumulate across rebuilds, causing NullRef errors and light toggle failures.
-        var field = AccessTools.Field(typeof(LevelAPI), "OnLevelCleanup");
-        if (field != null)
-        {
-            (field.GetValue(null) as Action)?.Invoke();
-        }
+        // Clear AmorLib's LightWorkers directly to prevent accumulation across
+        // rebuilds (NullRef errors and light toggle failures). We avoid firing
+        // the broad LevelAPI.OnLevelCleanup event because it has side effects
+        // in the SNet session layer that cause Kick_GenerationChecksum for
+        // late joiners.
+        var lightsMapField = AccessTools.Field(typeof(LightAPI), "AllLightsMap");
+        (lightsMapField?.GetValue(null) as System.Collections.IDictionary)?.Clear();
 
         // --- Enemies ---
         // Clear enemy spawn manager cache
