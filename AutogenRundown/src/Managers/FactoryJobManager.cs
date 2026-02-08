@@ -7,6 +7,7 @@ using AmorLib.API;
 using GTFO.API;
 using HarmonyLib;
 using LevelGeneration;
+using SNetwork;
 
 namespace AutogenRundown.Managers;
 
@@ -91,6 +92,13 @@ public static class FactoryJobManager
     /// </summary>
     private static void LevelCleanup()
     {
+        // Clean up stale state replicators from the previous build attempt.
+        // The base game does this in GS_AfterLevel.CleanupAfterExpedition() but our
+        // rebuild path skips that. These calls only manage internal bookkeeping —
+        // they don't trigger session events or generation checksum validation.
+        SNet_SyncManager.CleanUpAllButManagersCaptureCallbacks();
+        SNet.Replication.CleanupReplicators();
+
         // Clear AmorLib's LightWorkers directly to prevent accumulation across
         // rebuilds (NullRef errors and light toggle failures). We avoid firing
         // the broad LevelAPI.OnLevelCleanup event because it has side effects
