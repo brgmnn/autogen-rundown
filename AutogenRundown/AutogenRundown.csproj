@@ -90,6 +90,16 @@
     <Copy Condition="$(Debug) != 'false' And $(OS) == 'Windows_NT'"
           SourceFiles="@(DebugCopyItems)"
           DestinationFiles="@(DebugCopyItems->'$(GalePlugin_Debug)\%(RecursiveDir)%(Filename)%(Extension)')" />
+
+    <!-- R2ModMan: Copy inner assets to BepInEx Assets folder -->
+    <Copy Condition="$(Debug) != 'false' And $(OS) == 'Windows_NT'"
+          SourceFiles="@(InnerAssetItems)"
+          DestinationFiles="@(InnerAssetItems->'$(BepInEx_Debug)\Assets\%(RecursiveDir)%(Filename)%(Extension)')" />
+
+    <!-- Gale: Copy inner assets to BepInEx Assets folder -->
+    <Copy Condition="$(Debug) != 'false' And $(OS) == 'Windows_NT'"
+          SourceFiles="@(InnerAssetItems)"
+          DestinationFiles="@(InnerAssetItems->'$(Gale_Debug)\Assets\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
   <Target Name="PostClean" AfterTargets="Clean">
