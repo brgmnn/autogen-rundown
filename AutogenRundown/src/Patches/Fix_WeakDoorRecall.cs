@@ -1,5 +1,6 @@
 using HarmonyLib;
 using LevelGeneration;
+using SNetwork;
 
 namespace AutogenRundown.Patches;
 
@@ -12,6 +13,26 @@ namespace AutogenRundown.Patches;
 [HarmonyPatch]
 public class Fix_WeakDoorRecall
 {
+    /// <summary>
+    /// Catch-all safety net: suppresses any exception thrown during a single replicator's
+    /// recall so that SNet_Replication.RecallBytes can continue to the next replicator.
+    /// Without this, a NullRef from any stale replicator type (weak locks, terminals,
+    /// generators, etc.) aborts the entire recall loop — breaking lights and other state.
+    /// </summary>
+    [HarmonyPatch(typeof(SNet_Replicator), nameof(SNet_Replicator.RevieveBytes))]
+    [HarmonyFinalizer]
+    public static Exception? Fin_RevieveBytes(Exception __exception)
+    {
+        if (__exception != null)
+        {
+            Plugin.Logger.LogWarning(
+                $"SNet_Replicator.RevieveBytes: suppressing exception during recall " +
+                $"to prevent buffer abort: {__exception.Message}");
+        }
+
+        return null;
+    }
+
     /// <summary>
     /// Broad guard: skip ALL door recall callbacks when the door sync object is destroyed.
     /// LG_Door_Sync.OnStateChange is the single entry point for all door state replication
