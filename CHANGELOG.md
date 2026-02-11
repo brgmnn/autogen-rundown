@@ -3,6 +3,19 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.81.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.2) — February 10, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fix: Events not executing on clients when triggering zone security sensors
+* Fix: Desync event relating to lights
+* Fix: Steam presence now cleanly shows the rundown and level names
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.81.1...v0.81.2
+
+
 ## [v0.81.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.1) — February 01, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
