@@ -5,9 +5,6 @@ namespace AutogenRundown.Patches;
 [HarmonyPatch]
 public class Patch_RundownManager
 {
-    public static PluginRundown CurrentRundown { get; private set; } = PluginRundown.None;
-    public static pActiveExpedition CurrentExpedition { get; private set; }
-
     /// <summary>
     /// Updates the watermark to show the seed for the active expedition
     /// </summary>
@@ -17,16 +14,6 @@ public class Patch_RundownManager
     [HarmonyPatch(typeof(RundownManager), nameof(RundownManager.SetActiveExpedition))]
     private static void Post_Setup(RundownManager __instance, pActiveExpedition expPackage)
     {
-        CurrentExpedition = expPackage;
-        CurrentRundown = expPackage.rundownKey.data switch
-        {
-            "Local_1" => PluginRundown.Daily,
-            "Local_2" => PluginRundown.Weekly,
-            "Local_3" => PluginRundown.Monthly,
-            "Local_4" => PluginRundown.Seasonal,
-            _ => PluginRundown.None
-        };
-
         switch (expPackage.rundownKey.data)
         {
             case "Local_1":
