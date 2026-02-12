@@ -3,6 +3,19 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.81.3](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.3) — February 12, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Change: Updated `TimedTerminalSequence` to allow completion by solo players
+  * Solo players receive 60s to enter confirmation code. Hopefully enough time to run back to the terminal.
+  * Lobbies with more than 1 player still only have 10s to enter the verification code.
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.81.2...v0.81.3
+
+
 ## [v0.81.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.2) — February 10, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
