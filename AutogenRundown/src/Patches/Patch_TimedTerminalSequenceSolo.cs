@@ -7,7 +7,8 @@ namespace AutogenRundown.Patches;
 [HarmonyPatch]
 public class Patch_TimedTerminalSequenceSolo
 {
-    private const float SoloExtraTime = 50f;
+    private const float NormalTime = 10;
+    private const float SoloTime = 60f;
 
     [HarmonyPatch(typeof(TimedTerminalSequencePuzzle), nameof(TimedTerminalSequencePuzzle.StartTimedConfirmation))]
     [HarmonyPostfix]
@@ -19,14 +20,9 @@ public class Patch_TimedTerminalSequenceSolo
             if (player != null && player.Owner != null && !player.Owner.IsBot)
                 humanCount++;
 
-        if (humanCount > 1)
-            return;
+        __instance.ConfirmationTime = humanCount == 1 ? SoloTime : NormalTime;
 
-        __instance.ConfirmationTime += SoloExtraTime;
-
-        Plugin.Logger.LogDebug(
-            $"[TimedTerminalSequenceSolo] Solo player detected, " +
-            $"added {SoloExtraTime}s to confirmation time " +
-            $"(now {__instance.ConfirmationTime}s)");
+        if (humanCount == 1)
+            Plugin.Logger.LogDebug("[TimedTerminalSequenceSolo] Solo player detected");
     }
 }
