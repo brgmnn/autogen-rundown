@@ -1,4 +1,5 @@
 using HarmonyLib;
+using Player;
 using SNetwork;
 
 namespace AutogenRundown.Patches;
@@ -12,21 +13,20 @@ public class Patch_TimedTerminalSequenceSolo
     [HarmonyPostfix]
     public static void StartTimedConfirmation_Postfix(TimedTerminalSequencePuzzle __instance)
     {
-        int humanCount = 0;
+        var humanCount = 0;
 
-        foreach (var player in SNet.Slots.SlottedPlayers)
-        {
-            if (!player.IsBot)
+        foreach (var player in PlayerManager.PlayerAgentsInLevel)
+            if (player != null && player.Owner != null && !player.Owner.IsBot)
                 humanCount++;
-        }
 
-        if (humanCount == 1)
-        {
-            __instance.ConfirmationTime += SoloExtraTime;
-            Plugin.Logger.LogDebug(
-                $"[TimedTerminalSequenceSolo] Solo player detected, " +
-                $"added {SoloExtraTime}s to confirmation time " +
-                $"(now {__instance.ConfirmationTime}s)");
-        }
+        if (humanCount > 1)
+            return;
+
+        __instance.ConfirmationTime += SoloExtraTime;
+
+        Plugin.Logger.LogDebug(
+            $"[TimedTerminalSequenceSolo] Solo player detected, " +
+            $"added {SoloExtraTime}s to confirmation time " +
+            $"(now {__instance.ConfirmationTime}s)");
     }
 }
