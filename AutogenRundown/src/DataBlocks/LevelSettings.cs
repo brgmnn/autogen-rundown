@@ -73,6 +73,20 @@ public class ModifiersSet : HashSet<LevelModifiers>
                 Remove(LevelModifiers.ManyShadows);
                 Remove(LevelModifiers.OnlyShadows);
                 break;
+
+            case LevelModifiers.NoInfection:
+            case LevelModifiers.Infection:
+            case LevelModifiers.HeavyInfection:
+                Remove(LevelModifiers.NoInfection);
+                Remove(LevelModifiers.Infection);
+                Remove(LevelModifiers.HeavyInfection);
+                break;
+
+            case LevelModifiers.NoRespawnCocoons:
+            case LevelModifiers.RespawnCocoons:
+                Remove(LevelModifiers.NoRespawnCocoons);
+                Remove(LevelModifiers.RespawnCocoons);
+                break;
         }
 
         return base.Add(modifier);
@@ -92,12 +106,10 @@ public class LevelSettings
 
     public BukheadStrategy BulkheadStrategy { get; set; } = BukheadStrategy.Default;
 
-    public Dictionary<Bulkhead, ZoneBuildExpansion> Directions { get; private set; }
-        = new Dictionary<Bulkhead, ZoneBuildExpansion>();
-
     public ModifiersSet Modifiers { get; set; } = new()
     {
-        LevelModifiers.NoFog
+        LevelModifiers.NoFog,
+        LevelModifiers.NoInfection
     };
 
     /// <summary>
