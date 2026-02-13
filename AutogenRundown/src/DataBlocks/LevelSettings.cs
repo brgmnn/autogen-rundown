@@ -5,13 +5,6 @@ using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
-public class WeightedModifier : Generator.ISelectable
-{
-    public LevelModifiers Modifier { get; set; }
-
-    public double Weight { get; set; }
-}
-
 public class ModifiersSet : HashSet<LevelModifiers>
 {
     /// <summary>
@@ -382,11 +375,11 @@ public class LevelSettings
                     Modifiers.Add(LevelModifiers.FogIsInfectious);
 
                 Modifiers.Add(
-                    Generator.Select(new List<WeightedModifier>
+                    Generator.Select(new List<(double, LevelModifiers)>
                     {
-                        new WeightedModifier { Modifier = LevelModifiers.NoFog, Weight = 0.85 },
-                        new WeightedModifier { Modifier = LevelModifiers.Fog,   Weight = 0.15 },
-                    }).Modifier);
+                        (0.85, LevelModifiers.NoFog),
+                        (0.15, LevelModifiers.Fog),
+                    }));
 
                 break;
             }
@@ -397,12 +390,12 @@ public class LevelSettings
 
                 Modifiers.Add(LevelModifiers.NoShadows);
                 Modifiers.Add(
-                    Generator.Select(new List<WeightedModifier>
+                    Generator.Select(new List<(double, LevelModifiers)>
                     {
-                        new WeightedModifier { Modifier = LevelModifiers.NoChargers,   Weight = 0.4 },
-                        new WeightedModifier { Modifier = LevelModifiers.Chargers,     Weight = 0.5 },
-                        new WeightedModifier { Modifier = LevelModifiers.ManyChargers, Weight = 0.1 },
-                    }).Modifier);
+                        (0.4, LevelModifiers.NoChargers),
+                        (0.5, LevelModifiers.Chargers),
+                        (0.1, LevelModifiers.ManyChargers),
+                    }));
                 Modifiers.Add(
                     Generator.Select(new List<(double, LevelModifiers)>
                     {
@@ -415,11 +408,11 @@ public class LevelSettings
                     Modifiers.Add(LevelModifiers.FogIsInfectious);
 
                 Modifiers.Add(
-                    Generator.Select(new List<WeightedModifier>
+                    Generator.Select(new List<(double, LevelModifiers)>
                     {
-                        new WeightedModifier { Modifier = LevelModifiers.NoFog, Weight = 0.6 },
-                        new WeightedModifier { Modifier = LevelModifiers.Fog,   Weight = 0.4 },
-                    }).Modifier);
+                        (0.6, LevelModifiers.NoFog),
+                        (0.4, LevelModifiers.Fog),
+                    }));
                 break;
             }
 
@@ -428,19 +421,19 @@ public class LevelSettings
                 MaxErrorAlarms = 3;
 
                 Modifiers.Add(
-                    Generator.Select(new List<WeightedModifier>
+                    Generator.Select(new List<(double, LevelModifiers)>
                     {
-                        new WeightedModifier { Modifier = LevelModifiers.NoShadows,   Weight = 0.4 },
-                        new WeightedModifier { Modifier = LevelModifiers.Shadows,     Weight = 0.5 },
-                        new WeightedModifier { Modifier = LevelModifiers.ManyShadows, Weight = 0.1 },
-                    }).Modifier);
+                        (0.4, LevelModifiers.NoShadows),
+                        (0.5, LevelModifiers.Shadows),
+                        (0.1, LevelModifiers.ManyShadows),
+                    }));
                 Modifiers.Add(
-                    Generator.Select(new List<WeightedModifier>
+                    Generator.Select(new List<(double, LevelModifiers)>
                     {
-                        new WeightedModifier { Modifier = LevelModifiers.NoChargers,   Weight = 0.4 },
-                        new WeightedModifier { Modifier = LevelModifiers.Chargers,     Weight = 0.5 },
-                        new WeightedModifier { Modifier = LevelModifiers.ManyChargers, Weight = 0.1 },
-                    }).Modifier);
+                        (0.4, LevelModifiers.NoChargers),
+                        (0.5, LevelModifiers.Chargers),
+                        (0.1, LevelModifiers.ManyChargers),
+                    }));
                 Modifiers.Add(
                     Generator.Select(new List<(double, LevelModifiers)>
                     {
@@ -468,12 +461,12 @@ public class LevelSettings
                     Modifiers.Add(LevelModifiers.Hybrids);
 
                 Modifiers.Add(
-                    Generator.Select(new List<WeightedModifier>
+                    Generator.Select(new List<(double, LevelModifiers)>
                     {
-                        new WeightedModifier { Modifier = LevelModifiers.NoFog,    Weight = 0.4 },
-                        new WeightedModifier { Modifier = LevelModifiers.Fog,      Weight = 0.5 },
-                        new WeightedModifier { Modifier = LevelModifiers.HeavyFog, Weight = 0.1 },
-                    }).Modifier);
+                        (0.4, LevelModifiers.NoFog),
+                        (0.5, LevelModifiers.Fog),
+                        (0.1, LevelModifiers.HeavyFog),
+                    }));
                 break;
             }
 
@@ -482,19 +475,19 @@ public class LevelSettings
                 MaxErrorAlarms = 5;
 
                 Modifiers.Add(
-                    Generator.Select(new List<WeightedModifier>
+                    Generator.Select(new List<(double, LevelModifiers)>
                     {
-                        new WeightedModifier { Modifier = LevelModifiers.NoShadows,   Weight = 0.3 },
-                        new WeightedModifier { Modifier = LevelModifiers.Shadows,     Weight = 0.6 },
-                        new WeightedModifier { Modifier = LevelModifiers.ManyShadows, Weight = 0.1 },
-                    }).Modifier);
+                        (0.3, LevelModifiers.NoShadows),
+                        (0.6, LevelModifiers.Shadows),
+                        (0.1, LevelModifiers.ManyShadows),
+                    }));
                 Modifiers.Add(
-                    Generator.Select(new List<WeightedModifier>
+                    Generator.Select(new List<(double, LevelModifiers)>
                     {
-                        new WeightedModifier { Modifier = LevelModifiers.NoChargers,   Weight = 0.3 },
-                        new WeightedModifier { Modifier = LevelModifiers.Chargers,     Weight = 0.6 },
-                        new WeightedModifier { Modifier = LevelModifiers.ManyChargers, Weight = 0.1 },
-                    }).Modifier);
+                        (0.3, LevelModifiers.NoChargers),
+                        (0.6, LevelModifiers.Chargers),
+                        (0.1, LevelModifiers.ManyChargers),
+                    }));
                 Modifiers.Add(
                     Generator.Select(new List<(double, LevelModifiers)>
                     {
@@ -522,12 +515,12 @@ public class LevelSettings
                     Modifiers.Add(LevelModifiers.Hybrids);
 
                 Modifiers.Add(
-                    Generator.Select(new List<WeightedModifier>
+                    Generator.Select(new List<(double, LevelModifiers)>
                     {
-                        new WeightedModifier { Modifier = LevelModifiers.NoFog,    Weight = 0.3 },
-                        new WeightedModifier { Modifier = LevelModifiers.Fog,      Weight = 0.5 },
-                        new WeightedModifier { Modifier = LevelModifiers.HeavyFog, Weight = 0.2 },
-                    }).Modifier);
+                        (0.3, LevelModifiers.NoFog),
+                        (0.5, LevelModifiers.Fog),
+                        (0.2, LevelModifiers.HeavyFog),
+                    }));
                 break;
             }
         }
