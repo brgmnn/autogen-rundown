@@ -119,6 +119,8 @@ public class Plugin : BasePlugin
         GameDataAPI.OnGameDataInitialized += LogArchivistManager.Setup;
         GameDataAPI.OnGameDataInitialized += ZoneSensorManager.Setup;
 
+        LevelAPI.OnLevelCleanup += SignBorderManager.Clear;
+
         RundownTierMarkerArchivist.PluginSetup();
 
         AssetAPI.OnAssetBundlesLoaded += ExpeditionSuccessPage_ArchivistIcon.OnAssetBundlesLoaded;
