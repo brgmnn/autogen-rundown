@@ -102,7 +102,8 @@ public class LevelSettings
     public ModifiersSet Modifiers { get; set; } = new()
     {
         LevelModifiers.NoFog,
-        LevelModifiers.NoInfection
+        LevelModifiers.NoInfection,
+        LevelModifiers.NoRespawnCocoons
     };
 
     /// <summary>
