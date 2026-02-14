@@ -604,6 +604,7 @@ public partial record LevelLayout
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                         AddForwardExtractStart(pwNodes.Last());
+                        AddForwardExtractStart(reactor, chance: 0.3);
                     }),
 
                     // Error + generator carry: Reactor → ErrorWithOff_GeneratorCellCarry(2,1) → PasswordTerminal
@@ -616,6 +617,7 @@ public partial record LevelLayout
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                         AddForwardExtractStart(pwNodes.Last());
+                        AddForwardExtractStart(reactor, chance: 0.3);
                     }),
 
                     // Boss + keycard: Reactor → 1 zone → BossFight → KeycardInSide → PasswordTerminal
@@ -627,6 +629,7 @@ public partial record LevelLayout
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                         AddForwardExtractStart(pwNodes.Last());
+                        AddForwardExtractStart(reactor, chance: 0.3);
                     }),
 
                     // Apex + boss: Reactor → transition → ApexAlarm(Hard) → BossFight → PasswordTerminal
@@ -641,6 +644,7 @@ public partial record LevelLayout
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                         AddForwardExtractStart(pwNodes.Last());
+                        AddForwardExtractStart(reactor, chance: 0.3);
                     }),
 
                     // Triple challenge: Reactor → transition → KeycardInSide → GeneratorCellInZone → LockedTerminalDoor(1) → PasswordTerminal
@@ -669,6 +673,7 @@ public partial record LevelLayout
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                         AddForwardExtractStart(pwNodes.Last());
+                        AddForwardExtractStart(reactor, chance: 0.3);
                     }),
 
                     // Locked reactor (keycard + boss): Reactor door keycard-locked, boss guards keycard
@@ -841,6 +846,7 @@ public partial record LevelLayout
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                         AddForwardExtractStart(pwNodes.Last());
+                        AddForwardExtractStart(reactor, chance: 0.3);
                     }),
 
                     // Error + generator carry + apex: Reactor → ErrorWithOff_GeneratorCellCarry(2,1) → ApexAlarm(VeryHard) → PasswordTerminal
@@ -857,6 +863,7 @@ public partial record LevelLayout
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                         AddForwardExtractStart(pwNodes.Last());
+                        AddForwardExtractStart(reactor, chance: 0.3);
                     }),
 
                     // Apex + boss + keycard: Reactor → transition → ApexAlarm(VeryHard) → BossFight → KeycardInZone → PasswordTerminal
@@ -872,6 +879,7 @@ public partial record LevelLayout
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                         AddForwardExtractStart(pwNodes.Last());
+                        AddForwardExtractStart(reactor, chance: 0.3);
                     }),
 
                     // Triple + sensors: Reactor → 1 zone [sensors] → KeycardInSide → GeneratorCellInSide → LockedTerminalDoor(1) → PasswordTerminal
@@ -885,6 +893,7 @@ public partial record LevelLayout
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                         AddForwardExtractStart(pwNodes.Last());
+                        AddForwardExtractStart(reactor, chance: 0.3);
                     }),
 
                     // Boss + error + password: Reactor → transition → BossFight → 1 zone → ErrorWithOff_KeycardInSide(2,1,1) → PasswordTerminal
@@ -901,6 +910,7 @@ public partial record LevelLayout
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                         AddForwardExtractStart(pwNodes.Last());
+                        AddForwardExtractStart(reactor, chance: 0.3);
                     }),
 
                     // Locked reactor (keycard + error): Reactor keycard-locked, error blockade guards key
