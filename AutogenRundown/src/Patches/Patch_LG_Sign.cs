@@ -22,6 +22,7 @@ public class Patch_LG_Sign
         if (block == null)
             return;
 
+        Plugin.Logger.LogDebug($"SignBorder: Post_Build fired, ZoneAliasStart={block.ZoneAliasStart}");
         SignBorderManager.SetBorderColor(block.ZoneAliasStart, new Color(1f, 0f, 0f, 0.8f));
     }
 
@@ -29,13 +30,19 @@ public class Patch_LG_Sign
     [HarmonyPostfix]
     private static void Post_SetZoneInfo(LG_Sign __instance, LG_NavInfo info)
     {
+        Plugin.Logger.LogDebug($"SignBorder: Post_SetZoneInfo zone={info.Number}");
+
         var color = SignBorderManager.GetBorderColor(info.Number);
         if (color == null)
+        {
+            Plugin.Logger.LogDebug($"SignBorder: No color for zone {info.Number}, skipping");
             return;
+        }
 
         if (__instance.GetComponent<SignBorder>() != null)
             return;
 
+        Plugin.Logger.LogDebug($"SignBorder: Creating border for zone {info.Number}");
         var border = __instance.gameObject.AddComponent<SignBorder>();
         border.Setup(__instance, color.Value, info.Number);
     }
