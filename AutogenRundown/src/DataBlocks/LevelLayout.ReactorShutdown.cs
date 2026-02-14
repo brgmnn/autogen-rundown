@@ -1,4 +1,4 @@
-﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
@@ -94,34 +94,39 @@ public partial record LevelLayout
             return;
         }
 
+        // Shared state: set by each case, used in the footer after the switch.
+        // Cases with "reactor at end" variants set reactorNode inside each lambda.
+        ZoneNode? reactorNode = null;
+        var reactorDefinition = new ReactorShutdown { Bulkhead = director.Bulkhead };
+
         switch (level.Tier, director.Bulkhead)
         {
             #region A-tier
             // A-Main: 3-5 zones, 4 variants
-            // Introductory — reactor easy to reach, light challenges
+            // Introductory — reactor easy to reach, light challenges.
+            // Has "reactor at end" variant: BuildReactor inside each lambda.
             case ("A", Bulkhead.Main):
             {
-                // Build reactor immediately from start
-                var reactor = BuildReactor(start);
-                var reactorDefinition = new ReactorShutdown
-                {
-                    ZoneNumber = reactor.ZoneNumber,
-                    Bulkhead = director.Bulkhead
-                };
-
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Direct password: Reactor → 1-2 zones → PasswordTerminal
                     (0.30, () =>
                     {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                         var nodes = AddBranch(reactor, Generator.Between(1, 2), "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
                     }),
 
-                    // Keycard password: Reactor → KeycardInSide → PasswordTerminal
+                    // Keycard password: Reactor → transition → KeycardInSide → PasswordTerminal
                     (0.30, () =>
                     {
-                        var (end, _) = BuildChallenge_KeycardInSide(reactor);
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = BuildChallenge_KeycardInSide(deep.Last());
                         var nodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
                     }),
@@ -129,33 +134,23 @@ public partial record LevelLayout
                     // Small + password: Reactor → Small → PasswordTerminal
                     (0.20, () =>
                     {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                         var (end, _) = BuildChallenge_Small(reactor);
                         var nodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
                     }),
 
-                    // Reactor at end: 2-3 zones → Reactor. No password.
+                    // Reactor at end: 1-2 approach zones → Reactor. No password.
                     (0.20, () =>
                     {
-                        // Undo the early reactor — rebuild with zones first
-                        // Actually, we need to handle this differently: don't use the
-                        // reactor built above. Instead we build zones from start, then
-                        // build reactor at the end.
-                        // But since reactor is already built, we add zones before it
-                        // by building from start with a forward branch, then putting
-                        // reactor at end.
-                        // Note: reactor is already built from start. For "reactor at end"
-                        // variants, we just don't set up password. The zones before
-                        // reactor serve as the challenge.
                         var nodes = AddBranch(start, Generator.Between(1, 2), "approach");
-                        // Reactor already connects from start through corridor — the
-                        // approach zones add bulk before the player finds the reactor path
+                        var reactor = BuildReactor(nodes.Last());
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                     }),
                 });
-
-                objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-                objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
-                objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
                 break;
             }
 
@@ -163,11 +158,8 @@ public partial record LevelLayout
             case ("A", Bulkhead.Extreme):
             {
                 var reactor = BuildReactor(start);
-                var reactorDefinition = new ReactorShutdown
-                {
-                    ZoneNumber = reactor.ZoneNumber,
-                    Bulkhead = director.Bulkhead
-                };
+                reactorNode = reactor;
+                reactorDefinition.ZoneNumber = reactor.ZoneNumber;
 
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -186,10 +178,6 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
                     }),
                 });
-
-                objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-                objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
-                objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
                 break;
             }
 
@@ -197,18 +185,16 @@ public partial record LevelLayout
             case ("A", Bulkhead.Overload):
             {
                 var reactor = BuildReactor(start);
-                var reactorDefinition = new ReactorShutdown
-                {
-                    ZoneNumber = reactor.ZoneNumber,
-                    Bulkhead = director.Bulkhead
-                };
+                reactorNode = reactor;
+                reactorDefinition.ZoneNumber = reactor.ZoneNumber;
 
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // Generator-in-zone: Reactor → GeneratorCellInZone → PasswordTerminal
+                    // Generator-in-zone: Reactor → transition → GeneratorCellInZone → PasswordTerminal
                     (0.50, () =>
                     {
-                        var (end, _) = BuildChallenge_GeneratorCellInZone(reactor);
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = BuildChallenge_GeneratorCellInZone(deep.Last());
                         var nodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
                     }),
@@ -221,40 +207,37 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
                     }),
                 });
-
-                objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-                objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
-                objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
                 break;
             }
             #endregion
 
             #region B-tier
-            // B-Main: 4-6 zones, 6 variants — moderate, first branching
+            // B-Main: 4-6 zones, 6 variants — moderate, first branching.
+            // Has "reactor at end" variant: BuildReactor inside each lambda.
             case ("B", Bulkhead.Main):
             {
-                var reactor = BuildReactor(start);
-                var reactorDefinition = new ReactorShutdown
-                {
-                    ZoneNumber = reactor.ZoneNumber,
-                    Bulkhead = director.Bulkhead
-                };
-
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Keycard-in-side: Reactor → 1 zone → KeycardInSide → PasswordTerminal
                     (0.20, () =>
                     {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                         var nodes = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_KeycardInSide(nodes.Last());
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Generator-in-side: Reactor → GeneratorCellInSide → PasswordTerminal
+                    // Generator-in-side: Reactor → transition → GeneratorCellInSide → PasswordTerminal
                     (0.15, () =>
                     {
-                        var (end, _) = BuildChallenge_GeneratorCellInSide(reactor);
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = BuildChallenge_GeneratorCellInSide(deep.Last());
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
@@ -262,6 +245,9 @@ public partial record LevelLayout
                     // Locked terminal + side: Reactor → 1 zone → LockedTerminalDoor(1) → PasswordTerminal
                     (0.15, () =>
                     {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                         var nodes = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_LockedTerminalDoor(nodes.Last(), 1);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
@@ -271,6 +257,9 @@ public partial record LevelLayout
                     // Sensor corridor: Reactor → 2-3 zones [sensors on last 2] → PasswordTerminal
                     (0.15, () =>
                     {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                         var nodes = AddBranch(reactor, Generator.Between(2, 3), "reactor_deep");
                         AddSecuritySensors(nodes[^2]);
                         AddSecuritySensors(nodes[^1]);
@@ -281,32 +270,29 @@ public partial record LevelLayout
                     // Reactor at end + keycard: KeycardInSide → Reactor. No password.
                     (0.15, () =>
                     {
-                        // Add zones from start before reactor
                         var nodes = AddBranch(start, 1, "approach");
                         var (end, _) = BuildChallenge_KeycardInSide(nodes.Last());
-                        // Reactor already built — no password needed
+                        var reactor = BuildReactor(end);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                     }),
 
                     // Locked reactor (keycard): Reactor door keycard-locked,
                     // keycard found through side branch challenge chain
                     (0.20, () =>
                     {
-                        // Get the reactor_entrance node and make it a hub
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+
                         var entranceNode = planner.GetZones(director.Bulkhead, "reactor_entrance").First();
                         entranceNode = planner.UpdateNode(entranceNode with { MaxConnections = 3 });
                         planner.GetZone(entranceNode)!.GenHubGeomorph(level.Complex);
 
-                        // Build challenge chain from the hub
                         var (end, _) = BuildChallenge_KeycardInSide(entranceNode);
-
-                        // Lock the reactor zone with keycard
                         AddKeycardPuzzle(reactor, end);
                     }),
                 });
-
-                objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-                objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
-                objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
                 break;
             }
 
@@ -314,11 +300,8 @@ public partial record LevelLayout
             case ("B", Bulkhead.Extreme):
             {
                 var reactor = BuildReactor(start);
-                var reactorDefinition = new ReactorShutdown
-                {
-                    ZoneNumber = reactor.ZoneNumber,
-                    Bulkhead = director.Bulkhead
-                };
+                reactorNode = reactor;
+                reactorDefinition.ZoneNumber = reactor.ZoneNumber;
 
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -331,10 +314,11 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Generator-in-zone: Reactor → GeneratorCellInZone → PasswordTerminal
+                    // Generator-in-zone: Reactor → transition → GeneratorCellInZone → PasswordTerminal
                     (0.35, () =>
                     {
-                        var (end, _) = BuildChallenge_GeneratorCellInZone(reactor);
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = BuildChallenge_GeneratorCellInZone(deep.Last());
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
@@ -349,10 +333,6 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
                 });
-
-                objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-                objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
-                objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
                 break;
             }
 
@@ -360,62 +340,55 @@ public partial record LevelLayout
             case ("B", Bulkhead.Overload):
             {
                 var reactor = BuildReactor(start);
-                var reactorDefinition = new ReactorShutdown
-                {
-                    ZoneNumber = reactor.ZoneNumber,
-                    Bulkhead = director.Bulkhead
-                };
+                reactorNode = reactor;
+                reactorDefinition.ZoneNumber = reactor.ZoneNumber;
 
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // Keycard-in-side: Reactor → KeycardInSide → PasswordTerminal
+                    // Keycard-in-side: Reactor → transition → KeycardInSide → PasswordTerminal
                     (0.35, () =>
                     {
-                        var (end, _) = BuildChallenge_KeycardInSide(reactor);
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = BuildChallenge_KeycardInSide(deep.Last());
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Generator-in-side: Reactor → GeneratorCellInSide → PasswordTerminal
+                    // Generator-in-side: Reactor → transition → GeneratorCellInSide → PasswordTerminal
                     (0.35, () =>
                     {
-                        var (end, _) = BuildChallenge_GeneratorCellInSide(reactor);
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = BuildChallenge_GeneratorCellInSide(deep.Last());
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Locked terminal password-in-side: Reactor → LockedTerminalPasswordInSide → PasswordTerminal
+                    // Locked terminal password-in-side: Reactor → transition → LockedTerminalPasswordInSide → PasswordTerminal
                     (0.30, () =>
                     {
-                        var (end, _) = BuildChallenge_LockedTerminalPasswordInSide(reactor);
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = BuildChallenge_LockedTerminalPasswordInSide(deep.Last());
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
                 });
-
-                objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-                objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
-                objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
                 break;
             }
             #endregion
 
             #region C-tier
-            // C-Main: 5-7 zones, 6 variants — significant, multi-layer challenges
+            // C-Main: 5-7 zones, 6 variants — significant, multi-layer challenges.
+            // Has "reactor at end" variant: BuildReactor inside each lambda.
             case ("C", Bulkhead.Main):
             {
-                var reactor = BuildReactor(start);
-                var reactorDefinition = new ReactorShutdown
-                {
-                    ZoneNumber = reactor.ZoneNumber,
-                    Bulkhead = director.Bulkhead
-                };
-
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Error + keycard blockade: Reactor → ErrorWithOff_KeycardInSide → PasswordTerminal
                     (0.20, () =>
                     {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                         var (end, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
                             reactor,
                             errorZones: 1,
@@ -428,6 +401,9 @@ public partial record LevelLayout
                     // Keycard + generator double: Reactor → 1 zone → KeycardInSide → GeneratorCellInZone → PasswordTerminal
                     (0.20, () =>
                     {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                         var nodes = AddBranch(reactor, 1, "reactor_deep");
                         var (mid, _) = BuildChallenge_KeycardInSide(nodes.Last());
                         var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
@@ -438,6 +414,9 @@ public partial record LevelLayout
                     // Boss + password: Reactor → 1 zone → BossFight → PasswordTerminal
                     (0.15, () =>
                     {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                         var nodes = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_BossFight(nodes.Last());
                         var pwNodes = AddBranch(end, 1, "reactor_password");
@@ -447,6 +426,9 @@ public partial record LevelLayout
                     // Sensor + keycard: Reactor → 1-2 zones [sensors] → KeycardInSide → PasswordTerminal
                     (0.15, () =>
                     {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                         var nodes = AddBranch(reactor, Generator.Between(1, 2), "reactor_deep");
                         foreach (var node in nodes)
                             AddSecuritySensors(node);
@@ -455,15 +437,19 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Locked reactor (generator): Reactor door generator-locked, cell found deeper
+                    // Locked reactor (generator): Reactor door generator-locked, cell in side branch
                     (0.15, () =>
                     {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+
                         var entranceNode = planner.GetZones(director.Bulkhead, "reactor_entrance").First();
                         entranceNode = planner.UpdateNode(entranceNode with { MaxConnections = 3 });
                         planner.GetZone(entranceNode)!.GenHubGeomorph(level.Complex);
 
-                        var (end, _) = BuildChallenge_GeneratorCellInSide(entranceNode);
-                        AddGeneratorPuzzle(reactor, end);
+                        var cellNodes = AddBranch(entranceNode, Generator.Between(1, 2), "power_cell");
+                        AddGeneratorPuzzle(reactor, cellNodes.Last());
                     }),
 
                     // Reactor at end + boss: 1 zone → BossFight → Reactor. No password.
@@ -471,48 +457,52 @@ public partial record LevelLayout
                     {
                         var nodes = AddBranch(start, 1, "approach");
                         var (end, _) = BuildChallenge_BossFight(nodes.Last());
-                        // Reactor already built, no password
+                        var reactor = BuildReactor(end);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                     }),
                 });
-
-                objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-                objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
-                objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
                 break;
             }
 
-            // C-Extreme: 3-5 zones, 4 variants
+            // C-Extreme: 3-5 zones, 4 variants.
+            // Has "reactor at end" variant: BuildReactor inside each lambda.
             case ("C", Bulkhead.Extreme):
             {
-                var reactor = BuildReactor(start);
-                var reactorDefinition = new ReactorShutdown
-                {
-                    ZoneNumber = reactor.ZoneNumber,
-                    Bulkhead = director.Bulkhead
-                };
-
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // Keycard-in-side: Reactor → KeycardInSide → PasswordTerminal
+                    // Keycard-in-side: Reactor → transition → KeycardInSide → PasswordTerminal
                     (0.25, () =>
                     {
-                        var (end, _) = BuildChallenge_KeycardInSide(reactor);
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = BuildChallenge_KeycardInSide(deep.Last());
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Generator-in-side: Reactor → GeneratorCellInSide → PasswordTerminal
+                    // Generator-in-side: Reactor → transition → GeneratorCellInSide → PasswordTerminal
                     (0.25, () =>
                     {
-                        var (end, _) = BuildChallenge_GeneratorCellInSide(reactor);
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = BuildChallenge_GeneratorCellInSide(deep.Last());
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Locked terminal + side: Reactor → LockedTerminalDoor(1) → PasswordTerminal
+                    // Locked terminal + side: Reactor → transition → LockedTerminalDoor(1) → PasswordTerminal
                     (0.25, () =>
                     {
-                        var (end, _) = BuildChallenge_LockedTerminalDoor(reactor, 1);
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(deep.Last(), 1);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
@@ -521,13 +511,11 @@ public partial record LevelLayout
                     (0.25, () =>
                     {
                         var (end, _) = BuildChallenge_KeycardInZone(start);
-                        // Reactor already built, no password
+                        var reactor = BuildReactor(end);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                     }),
                 });
-
-                objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-                objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
-                objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
                 break;
             }
 
@@ -535,11 +523,8 @@ public partial record LevelLayout
             case ("C", Bulkhead.Overload):
             {
                 var reactor = BuildReactor(start);
-                var reactorDefinition = new ReactorShutdown
-                {
-                    ZoneNumber = reactor.ZoneNumber,
-                    Bulkhead = director.Bulkhead
-                };
+                reactorNode = reactor;
+                reactorDefinition.ZoneNumber = reactor.ZoneNumber;
 
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -555,30 +540,28 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Apex gate: Reactor → ApexAlarm(Normal) → PasswordTerminal
+                    // Apex gate: Reactor → transition → ApexAlarm(Normal) → PasswordTerminal
                     (0.35, () =>
                     {
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_ApexAlarm(
-                            reactor,
+                            deep.Last(),
                             WavePopulation.Baseline_Hybrids,
                             WaveSettings.Baseline_Normal);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Generator + sensors: Reactor → GeneratorCellInZone [sensors] → PasswordTerminal
+                    // Generator + sensors: Reactor → transition → GeneratorCellInZone [sensors] → PasswordTerminal
                     (0.25, () =>
                     {
-                        var (end, endZone) = BuildChallenge_GeneratorCellInZone(reactor);
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = BuildChallenge_GeneratorCellInZone(deep.Last());
                         AddSecuritySensors(end);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
                 });
-
-                objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-                objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
-                objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
                 break;
             }
             #endregion
@@ -588,11 +571,8 @@ public partial record LevelLayout
             case ("D", Bulkhead.Main):
             {
                 var reactor = BuildReactor(start);
-                var reactorDefinition = new ReactorShutdown
-                {
-                    ZoneNumber = reactor.ZoneNumber,
-                    Bulkhead = director.Bulkhead
-                };
+                reactorNode = reactor;
+                reactorDefinition.ZoneNumber = reactor.ZoneNumber;
 
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -630,11 +610,12 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Apex + boss: Reactor → ApexAlarm(Hard) → BossFight → PasswordTerminal
+                    // Apex + boss: Reactor → transition → ApexAlarm(Hard) → BossFight → PasswordTerminal
                     (0.15, () =>
                     {
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (mid, _) = BuildChallenge_ApexAlarm(
-                            reactor,
+                            deep.Last(),
                             WavePopulation.Baseline_Hybrids,
                             WaveSettings.Baseline_Hard);
                         var (end, _) = BuildChallenge_BossFight(mid);
@@ -642,10 +623,11 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Triple challenge: Reactor → KeycardInSide → GeneratorCellInZone → LockedTerminalDoor(1) → PasswordTerminal
+                    // Triple challenge: Reactor → transition → KeycardInSide → GeneratorCellInZone → LockedTerminalDoor(1) → PasswordTerminal
                     (0.10, () =>
                     {
-                        var (mid1, _) = BuildChallenge_KeycardInSide(reactor);
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid1, _) = BuildChallenge_KeycardInSide(deep.Last());
                         var (mid2, _) = BuildChallenge_GeneratorCellInZone(mid1);
                         var (end, _) = BuildChallenge_LockedTerminalDoor(mid2, 1);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
@@ -680,10 +662,6 @@ public partial record LevelLayout
                         AddKeycardPuzzle(reactor, end);
                     }),
                 });
-
-                objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-                objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
-                objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
                 break;
             }
 
@@ -691,11 +669,8 @@ public partial record LevelLayout
             case ("D", Bulkhead.Extreme):
             {
                 var reactor = BuildReactor(start);
-                var reactorDefinition = new ReactorShutdown
-                {
-                    ZoneNumber = reactor.ZoneNumber,
-                    Bulkhead = director.Bulkhead
-                };
+                reactorNode = reactor;
+                reactorDefinition.ZoneNumber = reactor.ZoneNumber;
 
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -720,10 +695,11 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Keycard + generator double: Reactor → KeycardInSide → GeneratorCellInZone → PasswordTerminal
+                    // Keycard + generator double: Reactor → transition → KeycardInSide → GeneratorCellInZone → PasswordTerminal
                     (0.25, () =>
                     {
-                        var (mid, _) = BuildChallenge_KeycardInSide(reactor);
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid, _) = BuildChallenge_KeycardInSide(deep.Last());
                         var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
@@ -742,10 +718,6 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
                 });
-
-                objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-                objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
-                objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
                 break;
             }
 
@@ -753,38 +725,38 @@ public partial record LevelLayout
             case ("D", Bulkhead.Overload):
             {
                 var reactor = BuildReactor(start);
-                var reactorDefinition = new ReactorShutdown
-                {
-                    ZoneNumber = reactor.ZoneNumber,
-                    Bulkhead = director.Bulkhead
-                };
+                reactorNode = reactor;
+                reactorDefinition.ZoneNumber = reactor.ZoneNumber;
 
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // Apex gate: Reactor → ApexAlarm(Hard) → PasswordTerminal
+                    // Apex gate: Reactor → transition → ApexAlarm(Hard) → PasswordTerminal
                     (0.25, () =>
                     {
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_ApexAlarm(
-                            reactor,
+                            deep.Last(),
                             WavePopulation.Baseline_Hybrids,
                             WaveSettings.Baseline_Hard);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Boss + keycard-in-zone: Reactor → BossFight → KeycardInZone → PasswordTerminal
+                    // Boss + keycard-in-zone: Reactor → transition → BossFight → KeycardInZone → PasswordTerminal
                     (0.20, () =>
                     {
-                        var (mid, _) = BuildChallenge_BossFight(reactor);
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid, _) = BuildChallenge_BossFight(deep.Last());
                         var (end, _) = BuildChallenge_KeycardInZone(mid);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Generator + apex: Reactor → GeneratorCellInZone → ApexAlarm(Hard) → PasswordTerminal
+                    // Generator + apex: Reactor → transition → GeneratorCellInZone → ApexAlarm(Hard) → PasswordTerminal
                     (0.20, () =>
                     {
-                        var (mid, _) = BuildChallenge_GeneratorCellInZone(reactor);
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid, _) = BuildChallenge_GeneratorCellInZone(deep.Last());
                         var (end, _) = BuildChallenge_ApexAlarm(
                             mid,
                             WavePopulation.Baseline_Hybrids,
@@ -812,18 +784,14 @@ public partial record LevelLayout
                         entranceNode = planner.UpdateNode(entranceNode with { MaxConnections = 3 });
                         planner.GetZone(entranceNode)!.GenHubGeomorph(level.Complex);
 
-                        var (mid, _) = BuildChallenge_ApexAlarm(
+                        var (apexEnd, _) = BuildChallenge_ApexAlarm(
                             entranceNode,
                             WavePopulation.Baseline_Hybrids,
                             WaveSettings.Baseline_Hard);
-                        var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
-                        AddGeneratorPuzzle(reactor, end);
+                        var cellNodes = AddBranch(apexEnd, 1, "power_cell");
+                        AddGeneratorPuzzle(reactor, cellNodes.Last());
                     }),
                 });
-
-                objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-                objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
-                objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
                 break;
             }
             #endregion
@@ -833,11 +801,8 @@ public partial record LevelLayout
             case ("E", Bulkhead.Main):
             {
                 var reactor = BuildReactor(start);
-                var reactorDefinition = new ReactorShutdown
-                {
-                    ZoneNumber = reactor.ZoneNumber,
-                    Bulkhead = director.Bulkhead
-                };
+                reactorNode = reactor;
+                reactorDefinition.ZoneNumber = reactor.ZoneNumber;
 
                 Generator.SelectRun(new List<(double, Action)>
                 {
@@ -869,11 +834,12 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Apex + boss + keycard: Reactor → ApexAlarm(VeryHard) → BossFight → KeycardInZone → PasswordTerminal
+                    // Apex + boss + keycard: Reactor → transition → ApexAlarm(VeryHard) → BossFight → KeycardInZone → PasswordTerminal
                     (0.15, () =>
                     {
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (mid1, _) = BuildChallenge_ApexAlarm(
-                            reactor,
+                            deep.Last(),
                             WavePopulation.Baseline_Hybrids,
                             WaveSettings.Baseline_VeryHard);
                         var (mid2, _) = BuildChallenge_BossFight(mid1);
@@ -894,10 +860,11 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Boss + error + password: Reactor → BossFight → 1 zone → ErrorWithOff_KeycardInSide(2,1,1) → PasswordTerminal
+                    // Boss + error + password: Reactor → transition → BossFight → 1 zone → ErrorWithOff_KeycardInSide(2,1,1) → PasswordTerminal
                     (0.15, () =>
                     {
-                        var (mid, _) = BuildChallenge_BossFight(reactor);
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid, _) = BuildChallenge_BossFight(deep.Last());
                         var nodes = AddBranch(mid, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
                             nodes.Last(),
@@ -923,10 +890,6 @@ public partial record LevelLayout
                         AddKeycardPuzzle(reactor, end);
                     }),
                 });
-
-                objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-                objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
-                objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
                 break;
             }
 
@@ -934,19 +897,17 @@ public partial record LevelLayout
             case ("E", Bulkhead.Extreme):
             {
                 var reactor = BuildReactor(start);
-                var reactorDefinition = new ReactorShutdown
-                {
-                    ZoneNumber = reactor.ZoneNumber,
-                    Bulkhead = director.Bulkhead
-                };
+                reactorNode = reactor;
+                reactorDefinition.ZoneNumber = reactor.ZoneNumber;
 
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // Apex + boss: Reactor → ApexAlarm(VeryHard) → BossFight → PasswordTerminal
+                    // Apex + boss: Reactor → transition → ApexAlarm(VeryHard) → BossFight → PasswordTerminal
                     (0.25, () =>
                     {
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (mid, _) = BuildChallenge_ApexAlarm(
-                            reactor,
+                            deep.Last(),
                             WavePopulation.Baseline_Hybrids,
                             WaveSettings.Baseline_VeryHard);
                         var (end, _) = BuildChallenge_BossFight(mid);
@@ -976,10 +937,11 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Generator + apex + sensors: Reactor → GeneratorCellInZone → 1 zone [sensors] → ApexAlarm(VeryHard) → PasswordTerminal
+                    // Generator + apex + sensors: Reactor → transition → GeneratorCellInZone → 1 zone [sensors] → ApexAlarm(VeryHard) → PasswordTerminal
                     (0.15, () =>
                     {
-                        var (mid1, _) = BuildChallenge_GeneratorCellInZone(reactor);
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid1, _) = BuildChallenge_GeneratorCellInZone(deep.Last());
                         var nodes = AddBranch(mid1, 1, "reactor_deep");
                         AddSecuritySensors(nodes.Last());
                         var (end, _) = BuildChallenge_ApexAlarm(
@@ -997,45 +959,43 @@ public partial record LevelLayout
                         entranceNode = planner.UpdateNode(entranceNode with { MaxConnections = 3 });
                         planner.GetZone(entranceNode)!.GenHubGeomorph(level.Complex);
 
-                        var (mid, _) = BuildChallenge_BossFight(entranceNode);
-                        var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
-                        AddGeneratorPuzzle(reactor, end);
+                        var (bossEnd, _) = BuildChallenge_BossFight(entranceNode);
+                        var cellNodes = AddBranch(bossEnd, 1, "power_cell");
+                        AddGeneratorPuzzle(reactor, cellNodes.Last());
                     }),
                 });
-
-                objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-                objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
-                objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
                 break;
             }
 
-            // E-Overload: 4-5 zones, 4 variants
+            // E-Overload: 4-5 zones, 4 variants.
+            // Has "reactor at end" variant: BuildReactor inside each lambda.
             case ("E", Bulkhead.Overload):
             {
-                var reactor = BuildReactor(start);
-                var reactorDefinition = new ReactorShutdown
-                {
-                    ZoneNumber = reactor.ZoneNumber,
-                    Bulkhead = director.Bulkhead
-                };
-
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // Apex (VeryHard): Reactor → ApexAlarm(VeryHard) → PasswordTerminal
+                    // Apex (VeryHard): Reactor → transition → ApexAlarm(VeryHard) → PasswordTerminal
                     (0.25, () =>
                     {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_ApexAlarm(
-                            reactor,
+                            deep.Last(),
                             WavePopulation.Baseline_Hybrids,
                             WaveSettings.Baseline_VeryHard);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Boss + apex: Reactor → BossFight → ApexAlarm(Hard) → PasswordTerminal
+                    // Boss + apex: Reactor → transition → BossFight → ApexAlarm(Hard) → PasswordTerminal
                     (0.25, () =>
                     {
-                        var (mid, _) = BuildChallenge_BossFight(reactor);
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid, _) = BuildChallenge_BossFight(deep.Last());
                         var (end, _) = BuildChallenge_ApexAlarm(
                             mid,
                             WavePopulation.Baseline_Hybrids,
@@ -1044,10 +1004,14 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Generator + apex (VeryHard): Reactor → GeneratorCellInZone → ApexAlarm(VeryHard) → PasswordTerminal
+                    // Generator + apex (VeryHard): Reactor → transition → GeneratorCellInZone → ApexAlarm(VeryHard) → PasswordTerminal
                     (0.25, () =>
                     {
-                        var (mid, _) = BuildChallenge_GeneratorCellInZone(reactor);
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid, _) = BuildChallenge_GeneratorCellInZone(deep.Last());
                         var (end, _) = BuildChallenge_ApexAlarm(
                             mid,
                             WavePopulation.Baseline_Hybrids,
@@ -1056,20 +1020,19 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
-                    // Reactor at end + apex: ApexAlarm(VeryHard) → Reactor. No password.
+                    // Reactor at end + apex: approach → ApexAlarm(VeryHard) → Reactor. No password.
                     (0.25, () =>
                     {
+                        var nodes = AddBranch(start, 1, "approach");
                         var (end, _) = BuildChallenge_ApexAlarm(
-                            start,
+                            nodes.Last(),
                             WavePopulation.Baseline_Hybrids,
                             WaveSettings.Baseline_VeryHard);
-                        // Reactor already built, no password
+                        var reactor = BuildReactor(end);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                     }),
                 });
-
-                objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-                objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
-                objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
                 break;
             }
             #endregion
@@ -1078,20 +1041,18 @@ public partial record LevelLayout
             default:
             {
                 var reactor = BuildReactor(start);
-                var reactorDefinition = new ReactorShutdown
-                {
-                    ZoneNumber = reactor.ZoneNumber,
-                    Bulkhead = director.Bulkhead
-                };
+                reactorNode = reactor;
+                reactorDefinition.ZoneNumber = reactor.ZoneNumber;
 
                 var nodes = AddBranch(reactor, Generator.Between(1, 2), "reactor_password");
                 SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
-
-                objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactor, planner)} and shut it down");
-                objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactor, planner)} and initiate the shutdown process");
-                objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
                 break;
             }
         }
+
+        // Shared footer — reactorNode is guaranteed non-null (set in every code path above)
+        objective.MainObjective = new Text(() => $"Find the main reactor in {Intel.Zone(reactorNode!.Value, planner)} and shut it down");
+        objective.GoToZone = new Text(() => $"Navigate to {Intel.Zone(reactorNode!.Value, planner)} and initiate the shutdown process");
+        objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
     }
 }
