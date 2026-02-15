@@ -26,33 +26,20 @@ internal class SignBorder : MonoBehaviour
         ZoneNumber = zoneNumber;
 
         var borderGo = new GameObject("SignBorder_Mesh");
-        borderGo.transform.SetParent(sign.m_text.transform, false);
+        borderGo.transform.SetParent(sign.transform, false);
         borderGo.layer = sign.gameObject.layer;
 
         meshFilter = borderGo.AddComponent<MeshFilter>();
         meshRenderer = borderGo.AddComponent<MeshRenderer>();
 
-        // Borrow shader from sign's own renderer (guaranteed to work in pipeline)
-        var existingRenderer = sign.GetComponentInChildren<Renderer>();
-        if (existingRenderer != null && existingRenderer.material != null)
+        var shader = Shader.Find("Sprites/Default");
+        if (shader == null)
         {
-            material = new Material(existingRenderer.material.shader);
+            Plugin.Logger.LogError("SignBorder: Sprites/Default shader not found");
+            return;
         }
-        else
-        {
-            var shader = Shader.Find("Sprites/Default")
-                ?? Shader.Find("UI/Default")
-                ?? Shader.Find("Hidden/Internal-Colored");
-            if (shader == null)
-            {
-                Plugin.Logger.LogError("SignBorder: No shader found");
-                return;
-            }
-            material = new Material(shader);
-        }
-
+        material = new Material(shader);
         material.color = color;
-        material.SetTexture("_MainTex", Texture2D.whiteTexture);
         meshRenderer.material = material;
 
         Plugin.Logger.LogDebug($"SignBorder: Setup complete, shader={material.shader.name}, layer={borderGo.layer}");
@@ -86,8 +73,14 @@ internal class SignBorder : MonoBehaviour
             sign.m_text.ForceMeshUpdate();
 
         var bounds = sign.m_text.textBounds;
-        var min = bounds.min;
-        var max = bounds.max;
+        var textTransform = sign.m_text.transform;
+        var signTransform = sign.transform;
+
+        // Convert TMP-local bounds to sign-local space
+        var min = signTransform.InverseTransformPoint(
+            textTransform.TransformPoint(bounds.min));
+        var max = signTransform.InverseTransformPoint(
+            textTransform.TransformPoint(bounds.max));
 
         // Reject sentinel/inverted bounds (TMP returns huge inverted values when uninitialized)
         if (min.x >= max.x)
