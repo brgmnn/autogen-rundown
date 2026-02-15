@@ -133,14 +133,14 @@ public partial record LevelLayout
                         AddForwardExtractStart(nodes.Last());
                     }),
 
-                    // Locked terminal: Reactor → transition → LockedTerminalDoor(1) → PasswordTerminal
+                    // Small + locked terminal: Reactor → Small → LockedTerminalDoor(0) → PasswordTerminal
                     (0.15, () =>
                     {
                         var reactor = BuildReactor(start);
                         reactorNode = reactor;
                         reactorDefinition.ZoneNumber = reactor.ZoneNumber;
-                        var deep = AddBranch(reactor, 1, "reactor_deep");
-                        var (end, _) = BuildChallenge_LockedTerminalDoor(deep.Last(), 1);
+                        var (mid, _) = BuildChallenge_Small(reactor);
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(mid, 0);
                         var nodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
                         AddForwardExtractStart(nodes.Last());
@@ -269,13 +269,14 @@ public partial record LevelLayout
                         AddForwardExtractStart(pwNodes.Last());
                     }),
 
-                    // Locked terminal + side: Reactor → 1 zone → LockedTerminalDoor(1) → PasswordTerminal
+                    // Sensors + locked terminal: Reactor → 1 zone [sensors] → LockedTerminalDoor(1) → PasswordTerminal
                     (0.15, () =>
                     {
                         var reactor = BuildReactor(start);
                         reactorNode = reactor;
                         reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                         var nodes = AddBranch(reactor, 1, "reactor_deep");
+                        AddSecuritySensors(nodes.Last());
                         var (end, _) = BuildChallenge_LockedTerminalDoor(nodes.Last(), 1);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
@@ -481,14 +482,15 @@ public partial record LevelLayout
                         AddForwardExtractStart(pwNodes.Last());
                     }),
 
-                    // Locked terminal + deep: Reactor → 1 zone → LockedTerminalDoor(1) → PasswordTerminal
+                    // Locked terminal + generator: Reactor → 1 zone → LockedTerminalDoor(1) → GeneratorCellInZone → PasswordTerminal
                     (0.10, () =>
                     {
                         var reactor = BuildReactor(start);
                         reactorNode = reactor;
                         reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                         var nodes = AddBranch(reactor, 1, "reactor_deep");
-                        var (end, _) = BuildChallenge_LockedTerminalDoor(nodes.Last(), 1);
+                        var (mid, _) = BuildChallenge_LockedTerminalDoor(nodes.Last(), 1);
+                        var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                         AddForwardExtractStart(pwNodes.Last());
@@ -635,7 +637,7 @@ public partial record LevelLayout
             #endregion
 
             #region D-tier
-            // D-Main: 6-9 zones, 7 variants — hard, deep challenge chains
+            // D-Main: 6-9 zones, 8 variants — hard, deep challenge chains
             case ("D", Bulkhead.Main):
             {
                 var reactor = BuildReactor(start);
@@ -645,7 +647,7 @@ public partial record LevelLayout
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Error + keycard (deep): Reactor → 1 zone → ErrorWithOff_KeycardInSide(2,1,1) → PasswordTerminal
-                    (0.20, () =>
+                    (0.15, () =>
                     {
                         var nodes = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
@@ -673,7 +675,7 @@ public partial record LevelLayout
                     }),
 
                     // Boss + keycard: Reactor → 1 zone → BossFight → KeycardInSide → PasswordTerminal
-                    (0.15, () =>
+                    (0.10, () =>
                     {
                         var nodes = AddBranch(reactor, 1, "reactor_deep");
                         var (mid, _) = BuildChallenge_BossFight(nodes.Last());
@@ -722,6 +724,18 @@ public partial record LevelLayout
                             errorZones: 1,
                             sideKeycardZones: 1,
                             terminalTurnoffZones: 1);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                        AddForwardExtractStart(pwNodes.Last());
+                        AddForwardExtractStart(reactor, chance: 0.3);
+                    }),
+
+                    // Locked terminal + boss: Reactor → 1 zone → LockedTerminalDoor(1) → BossFight → PasswordTerminal
+                    (0.10, () =>
+                    {
+                        var nodes = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid, _) = BuildChallenge_LockedTerminalDoor(nodes.Last(), 1);
+                        var (end, _) = BuildChallenge_BossFight(mid);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                         AddForwardExtractStart(pwNodes.Last());
@@ -896,7 +910,7 @@ public partial record LevelLayout
             #endregion
 
             #region E-tier
-            // E-Main: 7-10 zones, 6 variants — maximum difficulty
+            // E-Main: 7-10 zones, 7 variants — maximum difficulty
             case ("E", Bulkhead.Main):
             {
                 var reactor = BuildReactor(start);
@@ -938,7 +952,7 @@ public partial record LevelLayout
                     }),
 
                     // Apex + boss + keycard: Reactor → transition → ApexAlarm(VeryHard) → BossFight → KeycardInZone → PasswordTerminal
-                    (0.15, () =>
+                    (0.10, () =>
                     {
                         var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (mid1, _) = BuildChallenge_ApexAlarm(
@@ -984,8 +998,23 @@ public partial record LevelLayout
                         AddForwardExtractStart(reactor, chance: 0.3);
                     }),
 
+                    // Locked terminal + apex: Reactor → transition → LockedTerminalDoor(1) → ApexAlarm(VeryHard) → PasswordTerminal
+                    (0.10, () =>
+                    {
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid, _) = BuildChallenge_LockedTerminalDoor(deep.Last(), 1);
+                        var (end, _) = BuildChallenge_ApexAlarm(
+                            mid,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_VeryHard);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                        AddForwardExtractStart(pwNodes.Last());
+                        AddForwardExtractStart(reactor, chance: 0.3);
+                    }),
+
                     // Locked reactor (keycard + error): Reactor keycard-locked, error blockade guards key
-                    (0.15, () =>
+                    (0.10, () =>
                     {
                         var entranceNode = planner.GetZones(director.Bulkhead, "reactor_entrance").First();
                         entranceNode = planner.UpdateNode(entranceNode with { MaxConnections = 3 });
