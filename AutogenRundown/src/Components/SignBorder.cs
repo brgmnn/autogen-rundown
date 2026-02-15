@@ -73,6 +73,12 @@ internal class SignBorder : MonoBehaviour
             sign.m_text.ForceMeshUpdate();
 
         var bounds = sign.m_text.textBounds;
+
+        // Reject sentinel/inverted bounds BEFORE coordinate transform
+        // (TMP returns huge inverted values when text bounds are uninitialized)
+        if (bounds.min.x >= bounds.max.x)
+            return;
+
         var textTransform = sign.m_text.transform;
         var signTransform = sign.transform;
 
@@ -81,10 +87,6 @@ internal class SignBorder : MonoBehaviour
             textTransform.TransformPoint(bounds.min));
         var max = signTransform.InverseTransformPoint(
             textTransform.TransformPoint(bounds.max));
-
-        // Reject sentinel/inverted bounds (TMP returns huge inverted values when uninitialized)
-        if (min.x >= max.x)
-            return;
 
         float p = Padding;
         float t = LineWidth;
