@@ -16,6 +16,7 @@ internal class SignBorder : MonoBehaviour
     private Material? material;
     private LG_Sign? sign;
     private bool boundsResolved;
+    private int frameCount;
 
     public int ZoneNumber { get; private set; }
 
@@ -50,7 +51,7 @@ internal class SignBorder : MonoBehaviour
             material = new Material(shader);
         }
 
-        material.color = color;
+        material.SetColor("_EmissionColor", color);
         meshRenderer.material = material;
 
         Plugin.Logger.LogDebug($"SignBorder: Setup complete, shader={material.shader.name}, layer={borderGo.layer}");
@@ -63,7 +64,7 @@ internal class SignBorder : MonoBehaviour
         if (material == null)
             return;
 
-        material.color = color;
+        material.SetColor("_EmissionColor", color);
     }
 
     public void SetVisible(bool visible)
@@ -77,13 +78,20 @@ internal class SignBorder : MonoBehaviour
         if (boundsResolved || sign == null || meshFilter == null)
             return;
 
+        frameCount++;
+
+        // Force mesh update after a few frames if bounds still invalid
+        if (frameCount == 3)
+            sign.m_text.ForceMeshUpdate();
+
         var bounds = sign.m_text.textBounds;
-
-        if (bounds.size.sqrMagnitude < 0.001f)
-            return;
-
         var min = bounds.min;
         var max = bounds.max;
+
+        // Reject sentinel/inverted bounds (TMP returns huge inverted values when uninitialized)
+        if (min.x >= max.x)
+            return;
+
         float p = Padding;
         float t = LineWidth;
         float z = ZOffset;
