@@ -347,19 +347,19 @@ Each objective is scored 1-5 based on:
 | Metric                  | Value                                |
 | ----------------------- | ------------------------------------ |
 | Layout file             | `LevelLayout.ReactorShutdown.cs`     |
-| Layout lines            | 111                                  |
-| Layout last modified    | 2025-12-10                           |
-| Layout SelectRun count  | 0                                    |
+| Layout lines            | 1224                                 |
+| Layout last modified    | 2026-02-15                           |
+| Layout SelectRun count  | 15                                   |
 | Objective file          | `WardenObjective.ReactorShutdown.cs` |
-| Objective lines         | 1038                                 |
-| Objective last modified | 2025-12-10                           |
-| **Rating**              | **1**                                |
+| Objective lines         | 989                                  |
+| Objective last modified | 2026-02-15                           |
+| **Rating**              | **5**                                |
 
-**Layout:** The simplest layout in the project. No SelectRun. Single codepath: 0-2 prelude zones -> reactor zone. Coin flip for locked reactor with password terminal in a side branch (1-2 zones). Garden tile chance on password terminal zone. That's it. 111 lines, most of which is boilerplate.
+**Layout:** Full tier/bulkhead coverage with 3 reactor placement modes: password-locked (majority — reactor early, password terminal deeper with red lights), door-locked (minority — reactor entrance hubbed with keycard/generator-locked door), and reactor-at-end (minority — challenge builders first, reactor at deepest point, no password). Full challenge composition toolkit across all tiers. Security sensors on approach zones in B+ tiers. Locked reactor variants where the reactor door itself is key/generator-locked. Forward extract candidates via `AddForwardExtractStart(reactor, chance: 0.3)` on D/E Main.
 
-**Objective:** Very complex (1038 lines). Multi-step shutdown with verification codes, custom alarm variants with large scan starts, tier-based puzzle selection, surprise boss spawns. Uses EOS LayoutDefinitions.
+**Objective:** Complex shutdown sequence (989 lines). Multi-step verification codes, custom alarm variants with large scan starts, tier-based puzzle selection, surprise boss spawns. Uses EOS LayoutDefinitions. Cleaned up dead StealthScan4 blocks and fixed alarm name bug.
 
-**Deficiencies:** Extreme mismatch between layout simplicity and objective complexity. The objective file does everything while the layout does almost nothing. No tier-specific layout variants. No challenge composition. No variety in zone structure.
+**Deficiencies:** None significant. This is now on par with the benchmark objectives.
 
 ---
 
@@ -382,55 +382,49 @@ Each objective is scored 1-5 based on:
 | 13  | RetrieveBigItems        | 236          | 0         | 720       | Dec 10        | **2**  |
 | 14  | PowerCellDistribution   | 163          | 0         | 417       | Dec 10        | **2**  |
 | 15  | ReactorStartup          | 156          | 0         | 1713      | Dec 10        | **2**  |
-| 16  | ReactorShutdown         | 111          | 0         | 1038      | Dec 10        | **1**  |
+| 16  | ReactorShutdown         | 1224         | 15        | 989       | Feb 15        | **5**  |
 
 ---
 
 ## Rework Priority Ranking
 
-### Priority 1: ReactorShutdown
-
-- **Current state:** 111 lines, 0 SelectRun, rating 1. The simplest layout in the entire project.
-- **Why rework first:** Massive mismatch - the objective file is 1038 lines of complex shutdown mechanics, but the physical layout is always the same: a straight line to a reactor with a maybe-locked door. Reactor levels are some of the most memorable in vanilla GTFO and deserve distinct layouts. The locked/unlocked reactor flip is the only variation.
-- **Rework scope:** Add per-tier SelectRun with challenge composition. A-tier could be a simple forward path. C-D tier could use keycard/generator challenges before the reactor. E-tier could use error alarms or boss fights. Consider multi-room reactor complexes, branching approaches, or environmental hazards (fog, sensors) on the path to the reactor.
-
-### Priority 2: ReactorStartup
+### Priority 1: ReactorStartup
 
 - **Current state:** 156 lines, 0 SelectRun, rating 2. Two methods but both deterministic.
 - **Why rework second:** Same reactor mismatch problem. The objective file (1713 lines!) is the most complex in the project, but layouts are either "prelude -> reactor" or "reactor -> branches". Pairs naturally with ReactorShutdown rework. Also the most complex objective type that players spend the most time in.
 - **Rework scope:** Add SelectRun for prelude approaches (challenge composition before reaching the reactor). For fetch codes, vary the branch topology (hub-and-spoke vs. sequential vs. mixed). Consider tier-specific branch challenges.
 
-### Priority 3: PowerCellDistribution
+### Priority 2: PowerCellDistribution
 
 - **Current state:** 163 lines, 0 SelectRun, rating 2. Always corridor-hub-branches.
 - **Why rework third:** High frequency objective. Every run has the same physical structure: corridor entrance, hub, branches with generators. No tier differentiation in layout. Good candidate for the TerminalUplink treatment with per-tier/bulkhead SelectRun.
 - **Rework scope:** Add SelectRun per tier. Vary hub topology. Add challenge composition to reach generators (keycards for locked generator rooms, error alarms, boss fights in E-tier). Consider linear approaches for some variants instead of always hub-and-spoke.
 
-### Priority 4: RetrieveBigItems
+### Priority 3: RetrieveBigItems
 
 - **Current state:** 236 lines, 0 SelectRun, rating 2. Has commented-out code and TODO.
 - **Why rework fourth:** The TODO says "re-evaluate this objective". Has dead code suggesting previous rework was abandoned. MatterWaveProjector variant is decent but the generic path is hub+branches with no variety.
 - **Rework scope:** Clean up commented-out code. Add SelectRun per tier. Item type could influence layout (e.g., CryoCase through fog zones, DataSphere through sensor corridors). Add challenge composition.
 
-### Priority 5: SpecialTerminalCommand
+### Priority 4: SpecialTerminalCommand
 
 - **Current state:** 166 lines, 1 SelectRun (empty!), rating 2. KingOfTheHill path is good, everything else is generic.
 - **Why rework fifth:** The objective file is massive (1238 lines) with 4 command types, but the layout is nearly identical for all. The empty SelectRun block for A-tier suggests rework was started but abandoned. Large TODO wishlist in the objective file.
 - **Rework scope:** Fill in the empty SelectRun blocks. Add per-tier layouts. Different command types could drive different layouts (e.g., FillWithFog could use fog-themed zones, LightsOff could have dark zones with sensors). ErrorAlarm sub-method needs adjustment per its own TODO.
 
-### Priority 6: TimedTerminalSequence
+### Priority 5: TimedTerminalSequence
 
 - **Current state:** 147 lines, 0 SelectRun, rating 2. Always corridor-hub-branches.
 - **Why rework sixth:** Same problem as PowerCellDistribution - every run has the same hub+branches structure. The error alarm variant for D/E is nice but the base layout never varies. TODO: "don't always do triple error alarms".
 - **Rework scope:** Add SelectRun per tier. Vary topology (some linear sequences, some hub-and-spoke). Add challenge composition to reach terminal zones. Consider tiered error alarm configurations instead of always triple.
 
-### Priority 7: Survival (partial)
+### Priority 6: Survival (partial)
 
 - **Current state:** 292 lines, 2 SelectRun, rating 3. E-tier is good, A-D all the same.
 - **Why partially rework:** E-tier has good SelectRun with boss error + puzzle variants. A-D all use the same default branch. The security control zone always spawns (TODO note). Lower priority because the survival objective's variety comes more from wave configuration than zone layout.
 - **Rework scope:** Add SelectRun for C-D tiers (currently only E has it). Make security control zone spawn probabilistic. Add sensor or challenge variants for C-D.
 
-### Priority 8: GatherTerminal (partial)
+### Priority 7: GatherTerminal (partial)
 
 - **Current state:** 430 lines, 5 SelectRun, rating 3. Good for covered combos, gaps elsewhere.
 - **Why partially rework:** Several tier/bulkhead combos have good SelectRun (B-Main, C/D-Main, D/E-Overload). E-Main 6-spawn is commented out (TODO). Many combos fall to default linear branch.
