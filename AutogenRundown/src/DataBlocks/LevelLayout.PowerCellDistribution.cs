@@ -716,8 +716,9 @@ public partial record LevelLayout
                         AddSecuritySensors(sensorNodes.First());
                         PlaceGenerator(sensorNodes.Last());
 
+                        var overflowBase = sensorNodes.Last();
                         for (var g = 3; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(overflowBase, $"generator_{g}");
 
                         AddForwardExtractStart(hub, chance: 0.3);
                     }),
@@ -771,8 +772,9 @@ public partial record LevelLayout
                         AddSecuritySensors(sensorNodes.First());
                         PlaceGenerator(sensorNodes.Last());
 
+                        var overflowBase = sensorNodes.Last();
                         for (var g = 3; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(overflowBase, $"generator_{g}");
 
                         AddForwardExtractStart(hub, chance: 0.3);
                     }),
@@ -789,11 +791,13 @@ public partial record LevelLayout
                         var (hub, hubZone) = AddZone(mid.Last(), new ZoneNode { MaxConnections = 3 });
                         hubZone.GenHubGeomorph(level.Complex);
 
+                        ZoneNode overflowBase = hub;
                         for (var g = 0; g < numGens; g++)
                         {
-                            var last = BuildGeneratorBranch(hub, $"generator_{g}");
+                            var last = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
                             if (g == 0)
                                 AddForwardExtractStart(last);
+                            overflowBase = last;
                         }
 
                         AddForwardExtractStart(hub, chance: 0.3);
@@ -853,10 +857,12 @@ public partial record LevelLayout
                         PlaceGenerator(gpNodes.Last());
                         AddForwardExtractStart(gpNodes.Last());
 
+                        var overflowBase = gpNodes.Last();
                         for (var g = 1; g < numGens; g++)
                         {
-                            var last = BuildGeneratorBranch(hub, $"generator_{g}");
+                            var last = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
                             AddForwardExtractStart(last);
+                            overflowBase = last;
                         }
 
                         AddForwardExtractStart(hub, chance: 0.3);
@@ -881,8 +887,9 @@ public partial record LevelLayout
                         var kcNodes = AddBranch(kcEnd, 1, "generator_0");
                         PlaceGenerator(kcNodes.Last());
 
+                        var overflowBase = kcNodes.Last();
                         for (var g = 1; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
                     }),
 
                     // Hub + boss — hub → gen branches, one behind BossFight
@@ -896,8 +903,9 @@ public partial record LevelLayout
                         var bossNodes = AddBranch(bossEnd, 1, "generator_0");
                         PlaceGenerator(bossNodes.Last());
 
+                        var overflowBase = bossNodes.Last();
                         for (var g = 1; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
                     }),
 
                     // Locked terminal + cluster — LockedTerminalDoor(1) → large zone (gens clustered)
@@ -926,8 +934,9 @@ public partial record LevelLayout
                         var ltNodes = AddBranch(ltEnd, 1, "generator_1");
                         PlaceGenerator(ltNodes.Last());
 
+                        var overflowBase = ltNodes.Last();
                         for (var g = 2; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
                     }),
 
                     // Error + keycard — hub → ErrorWithOff_KeycardInSide(1,1,1) → gen zone, other branches
@@ -944,8 +953,9 @@ public partial record LevelLayout
                         var errNodes = AddBranch(errEnd, 1, "generator_0");
                         PlaceGenerator(errNodes.Last());
 
+                        var overflowBase = errNodes.Last();
                         for (var g = 1; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
                     }),
                 });
                 break;
@@ -995,8 +1005,9 @@ public partial record LevelLayout
                         var kcNodes = AddBranch(kcEnd, 1, "generator_2");
                         PlaceGenerator(kcNodes.Last());
 
+                        var overflowBase = kcNodes.Last();
                         for (var g = 3; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(overflowBase, $"generator_{g}");
                     }),
 
                     // Apex + boss + sensors — hub → ApexAlarm(Hard) + gen, BossFight + gen, sensors + gen
@@ -1023,8 +1034,9 @@ public partial record LevelLayout
                         AddSecuritySensors(sensorNodes.First());
                         PlaceGenerator(sensorNodes.Last());
 
+                        var overflowBase = sensorNodes.Last();
                         for (var g = 3; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(overflowBase, $"generator_{g}");
                     }),
 
                     // Boss + sensors + hub — BossFight → 1 zone [sensors] → hub → 2 gen branches + 1 clustered
@@ -1037,8 +1049,9 @@ public partial record LevelLayout
                         var (hub, hubZone) = AddZone(sensorNodes.Last(), new ZoneNode { MaxConnections = 3 });
                         hubZone.GenHubGeomorph(level.Complex);
 
+                        ZoneNode overflowBase = hub;
                         for (var g = 0; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
                     }),
 
                     // Locked terminal password + apex — hub → LockedTerminalPasswordInSide branch (gen),
@@ -1061,8 +1074,9 @@ public partial record LevelLayout
                         var apexNodes = AddBranch(apexEnd, 1, "generator_1");
                         PlaceGenerator(apexNodes.Last());
 
+                        var overflowBase = apexNodes.Last();
                         for (var g = 2; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
                     }),
                 });
                 break;
@@ -1106,8 +1120,9 @@ public partial record LevelLayout
                         var apexNodes = AddBranch(apexEnd, 1, "generator_2");
                         PlaceGenerator(apexNodes.Last());
 
+                        var overflowBase = apexNodes.Last();
                         for (var g = 3; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(overflowBase, $"generator_{g}");
 
                         AddForwardExtractStart(hub, chance: 0.3);
                     }),
@@ -1169,8 +1184,9 @@ public partial record LevelLayout
                         PlaceGenerator(apexNodes.Last());
 
                         // Remaining gens off hub2
+                        var overflowBase = apexNodes.Last();
                         for (var g = 3; g < numGens; g++)
-                            BuildGeneratorBranch(hub2, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(g < 3 ? hub2 : overflowBase, $"generator_{g}");
 
                         AddForwardExtractStart(hub1, chance: 0.3);
                     }),
@@ -1201,8 +1217,9 @@ public partial record LevelLayout
                         var apexNodes = AddBranch(apexEnd, 1, "generator_2");
                         PlaceGenerator(apexNodes.Last());
 
+                        var overflowBase = apexNodes.Last();
                         for (var g = 3; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(overflowBase, $"generator_{g}");
 
                         AddForwardExtractStart(hub, chance: 0.3);
                     }),
@@ -1254,8 +1271,9 @@ public partial record LevelLayout
                         AddSecuritySensors(sensorNodes.First());
                         PlaceGenerator(sensorNodes.Last());
 
+                        var overflowBase = sensorNodes.Last();
                         for (var g = 3; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(overflowBase, $"generator_{g}");
 
                         AddForwardExtractStart(hub, chance: 0.3);
                     }),
@@ -1288,8 +1306,9 @@ public partial record LevelLayout
                         AddSecuritySensors(ltSensorNodes.First());
                         PlaceGenerator(ltSensorNodes.Last());
 
+                        var overflowBase = ltSensorNodes.Last();
                         for (var g = 3; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(overflowBase, $"generator_{g}");
 
                         AddForwardExtractStart(hub, chance: 0.3);
                     }),
@@ -1323,8 +1342,9 @@ public partial record LevelLayout
                         var ltNodes = AddBranch(ltEnd, 1, "generator_2");
                         PlaceGenerator(ltNodes.Last());
 
+                        var overflowBase = ltNodes.Last();
                         for (var g = 3; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(overflowBase, $"generator_{g}");
                     }),
 
                     // Boss + cluster — BossFight → large zone (gens clustered)
@@ -1359,8 +1379,9 @@ public partial record LevelLayout
                         PlaceGenerator(sensorNodes.Last());
 
                         // Normal branch
+                        var overflowBase = sensorNodes.Last();
                         for (var g = 2; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
                     }),
 
                     // Apex + keycard + terminal — hub → ApexAlarm(Hard) branch (gen),
@@ -1388,8 +1409,9 @@ public partial record LevelLayout
                         var ltNodes = AddBranch(ltEnd, 1, "generator_2");
                         PlaceGenerator(ltNodes.Last());
 
+                        var overflowBase = ltNodes.Last();
                         for (var g = 3; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(overflowBase, $"generator_{g}");
                     }),
 
                     // Sensors + keycard + hub — 1 zone [sensors] → KeycardInSide → hub → 2-3 gen branches
@@ -1403,8 +1425,9 @@ public partial record LevelLayout
                         var (hub, hubZone) = AddZone(kcEnd, new ZoneNode { MaxConnections = 3 });
                         hubZone.GenHubGeomorph(level.Complex);
 
+                        ZoneNode overflowBase = hub;
                         for (var g = 0; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
                     }),
                 });
                 break;
@@ -1459,8 +1482,9 @@ public partial record LevelLayout
                         var bossNodes = AddBranch(bossEnd, 1, "generator_2");
                         PlaceGenerator(bossNodes.Last());
 
+                        var overflowBase = bossNodes.Last();
                         for (var g = 3; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(overflowBase, $"generator_{g}");
                     }),
 
                     // Boss+sensors + error-carry + apex — hub → BossFight+sensors branch (gen),
@@ -1492,8 +1516,9 @@ public partial record LevelLayout
                         var apexNodes = AddBranch(apexEnd, 1, "generator_2");
                         PlaceGenerator(apexNodes.Last());
 
+                        var overflowBase = apexNodes.Last();
                         for (var g = 3; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(overflowBase, $"generator_{g}");
                     }),
 
                     // Error + apex gate hub — ErrorWithOff_KeycardInSide(2,1,1) → ApexAlarm(VeryHard) → hub → gen branches
@@ -1513,8 +1538,9 @@ public partial record LevelLayout
                         var (hub, hubZone) = AddZone(apexEnd, new ZoneNode { MaxConnections = 3 });
                         hubZone.GenHubGeomorph(level.Complex);
 
+                        ZoneNode overflowBase = hub;
                         for (var g = 0; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
                     }),
 
                     // Generator puzzle + boss + apex — hub → one branch with extra cell + gen-locked door
@@ -1538,8 +1564,9 @@ public partial record LevelLayout
                         var apexNodes = AddBranch(apexEnd, 1, "generator_1");
                         PlaceGenerator(apexNodes.Last());
 
+                        var overflowBase = apexNodes.Last();
                         for (var g = 2; g < numGens; g++)
-                            BuildGeneratorBranch(hub, $"generator_{g}");
+                            overflowBase = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
                     }),
                 });
                 break;
@@ -1552,10 +1579,12 @@ public partial record LevelLayout
                 var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                 hubZone.GenHubGeomorph(level.Complex);
 
+                ZoneNode overflowBase = hub;
                 for (var g = 0; g < numGens; g++)
                 {
-                    var last = BuildGeneratorBranch(hub, $"generator_{g}");
+                    var last = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
                     AddForwardExtractStart(last);
+                    overflowBase = last;
                 }
                 break;
             }
