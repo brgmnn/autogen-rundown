@@ -102,7 +102,7 @@ public partial record LevelLayout
         switch (level.Tier, director.Bulkhead)
         {
             #region A-tier
-            // A-Main: 3-5 zones, 4 variants
+            // A-Main: 3-5 zones, 5 variants
             // Introductory — reactor easy to reach, light challenges.
             // Has "reactor at end" variant: BuildReactor inside each lambda.
             case ("A", Bulkhead.Main):
@@ -110,7 +110,7 @@ public partial record LevelLayout
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Direct password: Reactor → 1-2 zones → PasswordTerminal
-                    (0.30, () =>
+                    (0.25, () =>
                     {
                         var reactor = BuildReactor(start);
                         reactorNode = reactor;
@@ -121,13 +121,26 @@ public partial record LevelLayout
                     }),
 
                     // Keycard password: Reactor → transition → KeycardInSide → PasswordTerminal
-                    (0.30, () =>
+                    (0.20, () =>
                     {
                         var reactor = BuildReactor(start);
                         reactorNode = reactor;
                         reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                         var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_KeycardInSide(deep.Last());
+                        var nodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
+                        AddForwardExtractStart(nodes.Last());
+                    }),
+
+                    // Locked terminal: Reactor → transition → LockedTerminalDoor(1) → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(deep.Last(), 1);
                         var nodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
                         AddForwardExtractStart(nodes.Last());
@@ -158,7 +171,7 @@ public partial record LevelLayout
                 break;
             }
 
-            // A-Extreme: 2-3 zones, 2 variants — as short as possible
+            // A-Extreme: 2-3 zones, 3 variants — as short as possible
             case ("A", Bulkhead.Extreme):
             {
                 var reactor = BuildReactor(start);
@@ -168,16 +181,24 @@ public partial record LevelLayout
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Direct password: Reactor → 1 zone → PasswordTerminal
-                    (0.60, () =>
+                    (0.45, () =>
                     {
                         var nodes = AddBranch(reactor, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
                     }),
 
                     // Keycard-in-zone: Reactor → KeycardInZone → PasswordTerminal
-                    (0.40, () =>
+                    (0.30, () =>
                     {
                         var (end, _) = BuildChallenge_KeycardInZone(reactor);
+                        var nodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
+                    }),
+
+                    // Locked terminal: Reactor → LockedTerminalDoor(0) → PasswordTerminal
+                    (0.25, () =>
+                    {
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(reactor, 0);
                         var nodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
                     }),
@@ -306,7 +327,7 @@ public partial record LevelLayout
                 break;
             }
 
-            // B-Extreme: 3-4 zones, 3 variants
+            // B-Extreme: 3-4 zones, 4 variants
             case ("B", Bulkhead.Extreme):
             {
                 var reactor = BuildReactor(start);
@@ -316,7 +337,7 @@ public partial record LevelLayout
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Keycard-in-zone: Reactor → 1 zone → KeycardInZone → PasswordTerminal
-                    (0.40, () =>
+                    (0.25, () =>
                     {
                         var nodes = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_KeycardInZone(nodes.Last());
@@ -325,10 +346,19 @@ public partial record LevelLayout
                     }),
 
                     // Generator-in-zone: Reactor → transition → GeneratorCellInZone → PasswordTerminal
-                    (0.35, () =>
+                    (0.25, () =>
                     {
                         var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_GeneratorCellInZone(deep.Last());
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
+
+                    // Locked terminal: Reactor → 1 zone → LockedTerminalDoor(0) → PasswordTerminal
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(nodes.Last(), 0);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
@@ -387,14 +417,14 @@ public partial record LevelLayout
             #endregion
 
             #region C-tier
-            // C-Main: 5-7 zones, 6 variants — significant, multi-layer challenges.
+            // C-Main: 5-7 zones, 7 variants — significant, multi-layer challenges.
             // Has "reactor at end" variant: BuildReactor inside each lambda.
             case ("C", Bulkhead.Main):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Error + keycard blockade: Reactor → ErrorWithOff_KeycardInSide → PasswordTerminal
-                    (0.20, () =>
+                    (0.15, () =>
                     {
                         var reactor = BuildReactor(start);
                         reactorNode = reactor;
@@ -410,7 +440,7 @@ public partial record LevelLayout
                     }),
 
                     // Keycard + generator double: Reactor → 1 zone → KeycardInSide → GeneratorCellInZone → PasswordTerminal
-                    (0.20, () =>
+                    (0.15, () =>
                     {
                         var reactor = BuildReactor(start);
                         reactorNode = reactor;
@@ -446,6 +476,19 @@ public partial record LevelLayout
                         foreach (var node in nodes)
                             AddSecuritySensors(node);
                         var (end, _) = BuildChallenge_KeycardInSide(nodes.Last());
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                        AddForwardExtractStart(pwNodes.Last());
+                    }),
+
+                    // Locked terminal + deep: Reactor → 1 zone → LockedTerminalDoor(1) → PasswordTerminal
+                    (0.10, () =>
+                    {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var nodes = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(nodes.Last(), 1);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                         AddForwardExtractStart(pwNodes.Last());
@@ -535,7 +578,7 @@ public partial record LevelLayout
                 break;
             }
 
-            // C-Overload: 3-4 zones, 3 variants
+            // C-Overload: 3-4 zones, 4 variants
             case ("C", Bulkhead.Overload):
             {
                 var reactor = BuildReactor(start);
@@ -545,7 +588,7 @@ public partial record LevelLayout
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Error + keycard (compact): Reactor → ErrorWithOff_KeycardInSide → PasswordTerminal
-                    (0.40, () =>
+                    (0.30, () =>
                     {
                         var (end, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
                             reactor,
@@ -557,7 +600,7 @@ public partial record LevelLayout
                     }),
 
                     // Apex gate: Reactor → transition → ApexAlarm(Normal) → PasswordTerminal
-                    (0.35, () =>
+                    (0.25, () =>
                     {
                         var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_ApexAlarm(
@@ -574,6 +617,15 @@ public partial record LevelLayout
                         var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_GeneratorCellInZone(deep.Last());
                         AddSecuritySensors(end);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
+
+                    // Locked terminal: Reactor → transition → LockedTerminalDoor(1) → PasswordTerminal
+                    (0.20, () =>
+                    {
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(deep.Last(), 1);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
@@ -693,7 +745,7 @@ public partial record LevelLayout
                 break;
             }
 
-            // D-Extreme: 4-6 zones, 4 variants
+            // D-Extreme: 4-6 zones, 5 variants
             case ("D", Bulkhead.Extreme):
             {
                 var reactor = BuildReactor(start);
@@ -703,7 +755,7 @@ public partial record LevelLayout
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Boss + password: Reactor → 1 zone → BossFight → PasswordTerminal
-                    (0.30, () =>
+                    (0.25, () =>
                     {
                         var nodes = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_BossFight(nodes.Last());
@@ -712,7 +764,7 @@ public partial record LevelLayout
                     }),
 
                     // Error + keycard (compact): Reactor → ErrorWithOff_KeycardInSide(1,1,1) → PasswordTerminal
-                    (0.25, () =>
+                    (0.20, () =>
                     {
                         var (end, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
                             reactor,
@@ -724,7 +776,7 @@ public partial record LevelLayout
                     }),
 
                     // Keycard + generator double: Reactor → transition → KeycardInSide → GeneratorCellInZone → PasswordTerminal
-                    (0.25, () =>
+                    (0.20, () =>
                     {
                         var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (mid, _) = BuildChallenge_KeycardInSide(deep.Last());
@@ -745,11 +797,20 @@ public partial record LevelLayout
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
+
+                    // Locked terminal + deep: Reactor → 1 zone → LockedTerminalDoor(1) → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(nodes.Last(), 1);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
                 });
                 break;
             }
 
-            // D-Overload: 3-5 zones, 5 variants
+            // D-Overload: 3-5 zones, 6 variants
             case ("D", Bulkhead.Overload):
             {
                 var reactor = BuildReactor(start);
@@ -759,7 +820,7 @@ public partial record LevelLayout
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Apex gate: Reactor → transition → ApexAlarm(Hard) → PasswordTerminal
-                    (0.25, () =>
+                    (0.20, () =>
                     {
                         var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_ApexAlarm(
@@ -771,7 +832,7 @@ public partial record LevelLayout
                     }),
 
                     // Boss + keycard-in-zone: Reactor → transition → BossFight → KeycardInZone → PasswordTerminal
-                    (0.20, () =>
+                    (0.15, () =>
                     {
                         var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (mid, _) = BuildChallenge_BossFight(deep.Last());
@@ -801,6 +862,16 @@ public partial record LevelLayout
                             errorZones: 1,
                             sideKeycardZones: 1,
                             terminalTurnoffZones: 1);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
+
+                    // Boss + locked terminal: Reactor → transition → BossFight → LockedTerminalDoor(0) → PasswordTerminal
+                    (0.10, () =>
+                    {
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid, _) = BuildChallenge_BossFight(deep.Last());
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(mid, 0);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
@@ -932,7 +1003,7 @@ public partial record LevelLayout
                 break;
             }
 
-            // E-Extreme: 5-7 zones, 5 variants
+            // E-Extreme: 5-7 zones, 6 variants
             case ("E", Bulkhead.Extreme):
             {
                 var reactor = BuildReactor(start);
@@ -942,7 +1013,7 @@ public partial record LevelLayout
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Apex + boss: Reactor → transition → ApexAlarm(VeryHard) → BossFight → PasswordTerminal
-                    (0.25, () =>
+                    (0.20, () =>
                     {
                         var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (mid, _) = BuildChallenge_ApexAlarm(
@@ -955,7 +1026,7 @@ public partial record LevelLayout
                     }),
 
                     // Boss + keycard: Reactor → 1 zone → BossFight → KeycardInSide → PasswordTerminal
-                    (0.20, () =>
+                    (0.15, () =>
                     {
                         var nodes = AddBranch(reactor, 1, "reactor_deep");
                         var (mid, _) = BuildChallenge_BossFight(nodes.Last());
@@ -991,6 +1062,16 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
 
+                    // Boss + locked terminal: Reactor → 1 zone → BossFight → LockedTerminalDoor(1) → PasswordTerminal
+                    (0.10, () =>
+                    {
+                        var nodes = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid, _) = BuildChallenge_BossFight(nodes.Last());
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(mid, 1);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
+
                     // Locked reactor (generator + boss): Reactor unpowered, boss guards cell
                     (0.20, () =>
                     {
@@ -1006,14 +1087,14 @@ public partial record LevelLayout
                 break;
             }
 
-            // E-Overload: 4-5 zones, 4 variants.
+            // E-Overload: 4-5 zones, 5 variants.
             // Has "reactor at end" variant: BuildReactor inside each lambda.
             case ("E", Bulkhead.Overload):
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Apex (VeryHard): Reactor → transition → ApexAlarm(VeryHard) → PasswordTerminal
-                    (0.25, () =>
+                    (0.20, () =>
                     {
                         var reactor = BuildReactor(start);
                         reactorNode = reactor;
@@ -1028,7 +1109,7 @@ public partial record LevelLayout
                     }),
 
                     // Boss + apex: Reactor → transition → BossFight → ApexAlarm(Hard) → PasswordTerminal
-                    (0.25, () =>
+                    (0.20, () =>
                     {
                         var reactor = BuildReactor(start);
                         reactorNode = reactor;
@@ -1044,13 +1125,29 @@ public partial record LevelLayout
                     }),
 
                     // Generator + apex (VeryHard): Reactor → transition → GeneratorCellInZone → ApexAlarm(VeryHard) → PasswordTerminal
-                    (0.25, () =>
+                    (0.20, () =>
                     {
                         var reactor = BuildReactor(start);
                         reactorNode = reactor;
                         reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                         var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (mid, _) = BuildChallenge_GeneratorCellInZone(deep.Last());
+                        var (end, _) = BuildChallenge_ApexAlarm(
+                            mid,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_VeryHard);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
+
+                    // Locked terminal + apex: Reactor → transition → LockedTerminalDoor(0) → ApexAlarm(VeryHard) → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid, _) = BuildChallenge_LockedTerminalDoor(deep.Last(), 0);
                         var (end, _) = BuildChallenge_ApexAlarm(
                             mid,
                             WavePopulation.Baseline_Hybrids,
