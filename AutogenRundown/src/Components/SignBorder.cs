@@ -26,20 +26,22 @@ internal class SignBorder : MonoBehaviour
         ZoneNumber = zoneNumber;
 
         var borderGo = new GameObject("SignBorder_Mesh");
-        borderGo.transform.SetParent(sign.transform, false);
+        borderGo.transform.SetParent(sign.m_text.transform, false);
         borderGo.layer = sign.gameObject.layer;
 
         meshFilter = borderGo.AddComponent<MeshFilter>();
         meshRenderer = borderGo.AddComponent<MeshRenderer>();
 
-        var shader = Shader.Find("Sprites/Default");
+        var shader = Shader.Find("Standard");
         if (shader == null)
         {
-            Plugin.Logger.LogError("SignBorder: Sprites/Default shader not found");
+            Plugin.Logger.LogError("SignBorder: Standard shader not found");
             return;
         }
         material = new Material(shader);
         material.color = color;
+        material.SetFloat("_Metallic", 0f);
+        material.SetFloat("_Glossiness", 0f);
         meshRenderer.material = material;
 
         Plugin.Logger.LogDebug($"SignBorder: Setup complete, shader={material.shader.name}, layer={borderGo.layer}");
@@ -74,19 +76,12 @@ internal class SignBorder : MonoBehaviour
 
         var bounds = sign.m_text.textBounds;
 
-        // Reject sentinel/inverted bounds BEFORE coordinate transform
-        // (TMP returns huge inverted values when text bounds are uninitialized)
+        // Reject sentinel/inverted bounds (TMP returns huge values when uninitialized)
         if (bounds.min.x >= bounds.max.x)
             return;
 
-        var textTransform = sign.m_text.transform;
-        var signTransform = sign.transform;
-
-        // Convert TMP-local bounds to sign-local space
-        var min = signTransform.InverseTransformPoint(
-            textTransform.TransformPoint(bounds.min));
-        var max = signTransform.InverseTransformPoint(
-            textTransform.TransformPoint(bounds.max));
+        var min = bounds.min;
+        var max = bounds.max;
 
         float p = Padding;
         float t = LineWidth;
