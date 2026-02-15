@@ -7,9 +7,9 @@ namespace AutogenRundown.Components;
 
 internal class SignBorder : MonoBehaviour
 {
-    private const float Padding = 0.15f;
-    private const float LineWidth = 0.02f;
-    private const float ZOffset = -0.01f;
+    private const float Padding = 0.5f;
+    private const float LineWidth = 1.0f;
+    private const float ZOffset = -0.005f;
 
     private MeshFilter? meshFilter;
     private MeshRenderer? meshRenderer;
