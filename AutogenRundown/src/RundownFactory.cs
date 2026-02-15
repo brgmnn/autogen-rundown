@@ -191,15 +191,15 @@ public static class RundownFactory
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                // "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab",
+                "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab",
                 // "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_01.prefab",
-                "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_01.prefab",
+                // "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_01.prefab",
 
                 new Level("A")
                 {
                     Tier = "A",
                     Name = "Debug Test",
-                    Complex = Complex.Service,
+                    Complex = Complex.Mining,
                     Settings = settings,
                     Index = rundown.TierA_Count + 1,
                     // Accessibility = Accessibility.BlockedAndScrambled,
@@ -485,6 +485,16 @@ public static class RundownFactory
                     new() { 1, 2, 1, 2, 1, 1, 1 },
                     new() { 2, 3, 2, 1, 2, 1 },
                     new() { 1, 3, 2, 1, 4 }
+                }
+            },
+            {
+                "SPRING_2026", new List<List<int>>
+                {
+                    new() { 1, 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1, 1 }
                 }
             }
         };
@@ -809,6 +819,16 @@ public static class RundownFactory
                     new() { 1, 2, 1 },
                     new() { 1, 1, 4, 1 },
                     new() { 1, 3, 1 },
+                    new() { 1, 1 }
+                }
+            },
+            {
+                "2026_03", new List<List<int>>
+                {
+                    new() { 1, 1 },
+                    new() { 1, 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1 },
                     new() { 1, 1 }
                 }
             }

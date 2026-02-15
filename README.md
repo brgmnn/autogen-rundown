@@ -48,6 +48,10 @@ TODO:
     * Needs extract or finish objective modifier
   * Might consider if we even need an error alarm turnoff for levels in main where it goes all the way to the end?
   * VERY SLIGHT increase in Apex alarm wave pops
+  * No sound playing for clients
+  * Investigate some kind of grace period for scans coming back on
+  * Check if I broke something with uplinks where host and client get desynced for where an uplink is. We had it where host didn't get the verify coming through
+  * Increase exclusion zone around elevator for security scans
 
 * Added melee and health syringes into consumables pool
   * New optional "Medical Bay" side zone's can spawn now which contain health, disinfect, and syringes

@@ -317,6 +317,7 @@ These files demonstrate best practices with extensive `SelectRun()` usage and fu
 | `LevelLayout.HsuActivateSmall.cs`        | ~509  | A-E tiers with multiple challenge paths  |
 | `LevelLayout.ForwardExtract.cs`          | ~468  | Tier x Bulkhead combinations             |
 | `LevelLayout.ClearPath.cs`               | ~460  | A-E tiers with boss fights, error alarms |
+| `LevelLayout.ReactorShutdown.cs`         | ~1224 | Full A-E × Main/Extreme/Overload, 3 placement modes |
 | `LevelLayout.ReachKdsDeep.cs`            | ~731  | Tier differentiation with KDS modules    |
 
 ### Moderately Developed
@@ -328,7 +329,6 @@ These have some differentiation but could use more variants:
 | `LevelLayout.Survival.cs`        | ~292  | Has tier differentiation, could add bulkhead variants |
 | `LevelLayout.GatherTerminal.cs`  | ~237  | Basic tier switching                                  |
 | `LevelLayout.ReactorStartup.cs`  | ~157  | Code count variants, limited tier variety             |
-| `LevelLayout.ReactorShutdown.cs` | ~111  | Basic implementation                                  |
 
 ### Needs Updates (Priority)
 
@@ -342,6 +342,70 @@ These files need significant updates to match the well-developed patterns:
 | `LevelLayout.TimedTerminalSequence.cs`  | ~147  | No tier/bulkhead switch                      | Add tier-based terminal counts and challenges |
 | `LevelLayout.SpecialTerminalCommand.cs` | ~166  | Skeleton SelectRun with empty cases          | Implement actual layout variants              |
 | `LevelLayout.Reactor.cs`                | ~72   | Just dispatches to Startup/Shutdown          | Base file, but could add common setup         |
+
+---
+
+## Objective-Specific Layout Patterns
+
+These patterns emerged from the ReactorShutdown rework and are applicable to other objective types that need shared state across SelectRun variants or objective-specific zone construction.
+
+### Shared State with Lambdas
+
+When `SelectRun` variants must set state consumed by code after the switch, declare shared variables before the switch and set them inside each lambda. The shared footer uses the state after the switch completes.
+
+```csharp
+// Declared before the switch — set inside each lambda
+ZoneNode? reactorNode = null;
+var reactorDefinition = new ReactorShutdown { Bulkhead = director.Bulkhead };
+
+switch (level.Tier, director.Bulkhead)
+{
+    case ("A", Bulkhead.Main):
+        Generator.SelectRun(new List<(double, Action)>
+        {
+            (0.25, () =>
+            {
+                var reactor = BuildReactor(start);
+                reactorNode = reactor;  // Set shared state
+                reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                // ... variant-specific layout ...
+            }),
+            // ... more variants ...
+        });
+        break;
+}
+
+// Shared footer — reactorNode is guaranteed non-null (set in every code path above)
+objective.MainObjective = new Text(() =>
+    $"Find the reactor in {Intel.Zone(reactorNode!.Value, planner)} and shut it down");
+objective.LayoutDefinitions!.Definitions.Add(reactorDefinition);
+```
+
+The `reactorNode!.Value` null-forgiving idiom is safe because every branch sets `reactorNode`. The `!` suppresses the nullable warning since the compiler can't see through the `SelectRun` lambda indirection.
+
+### Three Reactor Placement Modes
+
+A reusable pattern for objective types where the target zone can be placed in different positions relative to challenges:
+
+1. **Password-locked** (majority): `BuildReactor(start)` → challenge zones → `SetupReactorPassword()`. Target placed early, challenges extend deeper. Players see the objective immediately but must venture further to unlock it.
+
+2. **Door-locked** (minority): `BuildReactor(start)` → find `reactor_entrance` node → hub it → side branch with key/cell → lock target door. No password needed.
+
+3. **Target at end** (minority): Challenge zones first → `BuildReactor(end)`. No password. Target is at the deepest point. Traditional approach where challenges lead TO the objective.
+
+### Locked Reactor Door Pattern
+
+The `reactor_entrance` hub pattern used in door-locked variants. After `BuildReactor` creates a corridor with the `reactor_entrance` tag, the locked variant finds that corridor, upgrades it to a hub, and branches off for the unlock item:
+
+```csharp
+var entranceNode = planner.GetZones(director.Bulkhead, "reactor_entrance").First();
+entranceNode = planner.UpdateNode(entranceNode with { MaxConnections = 3 });
+planner.GetZone(entranceNode)!.GenHubGeomorph(level.Complex);
+
+// Branch off for the unlock item (keycard, power cell, etc.)
+var cellNodes = AddBranch(entranceNode, Generator.Between(1, 2), "power_cell");
+AddGeneratorPuzzle(reactor, cellNodes.Last());
+```
 
 ---
 

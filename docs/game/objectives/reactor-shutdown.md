@@ -116,17 +116,35 @@ Reactors are critical power facilities located deep within the Complex. In React
 
 ## AutogenRundown Modded Variant
 
-In the AutogenRundown mod, Reactor Shutdown can feature an advanced variant:
+In the AutogenRundown mod, Reactor Shutdown features full tier/bulkhead coverage (A-E × Main/Extreme/Overload) with 15 SelectRun blocks providing extensive layout variety. Three distinct reactor placement modes create fundamentally different level structures:
 
-### Password-Locked Terminal
+### Placement Modes
 
-- **Locked Reactor Terminal**: The reactor control terminal may be password-protected
-- **Code Retrieval**: Password must be fetched from a terminal in another zone
-- **Added Complexity**: Similar to Reactor Startup's advanced terminal log variant
-- **Zone Navigation**: Requires team to split or make an additional zone run before shutdown
-- **Strategic Planning**: Must decide whether to retrieve password before or after preparing defenses
+#### Password-Locked (Majority)
 
-This variant increases difficulty and requires additional coordination, combining elements of exploration, terminal navigation, and combat preparation before the main shutdown sequence can begin.
+The reactor is placed early via `BuildReactor(start)`, and challenge zones extend deeper beyond it. The reactor terminal is password-protected — players must venture past the reactor to find the password terminal in a deeper zone. Red lighting marks the reactor zone. This inverts the typical pattern: players see the objective immediately but can't interact with it until they push further.
+
+#### Door-Locked (Minority)
+
+The reactor is placed early, but its entrance corridor is upgraded to a hub. A side branch off the hub holds a keycard or power cell needed to unlock the reactor door itself. No password needed — the challenge is physically unlocking access. Variants include keycard-locked doors, generator-powered doors, and combinations with boss fights or apex alarms guarding the unlock item.
+
+#### Reactor at End (Minority)
+
+Challenge zones come first, with the reactor placed at the deepest point via `BuildReactor(end)`. No password needed. This is the traditional layout where challenges lead TO the objective. Simpler but provides contrast with the password-locked layouts.
+
+### Challenge Scaling by Tier
+
+- **A-tier**: Simple keycards, locked terminals, small challenges. Introductory layouts with 3-5 zones.
+- **B-tier**: Keycards in side branches, generator puzzles, locked terminal doors. Security sensors on approach zones.
+- **C-tier**: Boss fights, error alarms with turn-off terminals, generator-cell carries, apex alarms. Locked reactor variants appear.
+- **D-tier**: Apex alarms (hard/very hard), error alarm blockades with keycard-in-side, boss fight preludes, locked reactor with generator or keycard challenges. Forward extraction candidates near reactor.
+- **E-tier**: Apex alarms (very hard with hybrids), error alarm + keycard combos, boss fights, locked reactor with error blockades or apex-guarded power cells. Multiple forward extract candidates with `AddForwardExtractStart(reactor, chance: 0.3)`.
+
+### Additional Features
+
+- **Security Sensors**: Approach zones in B+ tiers can have security sensors
+- **Locked Reactor Variants**: In C+ tiers, the reactor door itself may be keycard-locked or generator-locked, requiring players to find the unlock item in a side branch off the reactor entrance corridor
+- **Forward Extraction**: On Main bulkhead, deep zones and reactor positions are registered as forward extraction candidates, allowing extraction to start near the reactor instead of backtracking to the elevator
 
 ## Notable Expeditions
 
