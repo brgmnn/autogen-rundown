@@ -51,7 +51,8 @@ internal class SignBorder : MonoBehaviour
             material = new Material(shader);
         }
 
-        material.SetColor("_EmissionColor", color);
+        material.color = color;
+        material.SetTexture("_MainTex", Texture2D.whiteTexture);
         meshRenderer.material = material;
 
         Plugin.Logger.LogDebug($"SignBorder: Setup complete, shader={material.shader.name}, layer={borderGo.layer}");
@@ -64,7 +65,7 @@ internal class SignBorder : MonoBehaviour
         if (material == null)
             return;
 
-        material.SetColor("_EmissionColor", color);
+        material.color = color;
     }
 
     public void SetVisible(bool visible)
@@ -145,6 +146,12 @@ internal class SignBorder : MonoBehaviour
 
         mesh.vertices = verts;
         mesh.triangles = tris;
+
+        var normals = new Vector3[16];
+        for (int i = 0; i < 16; i++)
+            normals[i] = new Vector3(0, 0, -1);
+        mesh.normals = normals;
+
         return mesh;
     }
 
