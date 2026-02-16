@@ -49,9 +49,9 @@ internal class SignBorder : MonoBehaviour
         // Cutout mode for weathered paint effect
         material.SetFloat("_Mode", 1);
         material.SetOverrideTag("RenderType", "TransparentCutout");
-        material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-        material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
-        material.SetInt("_ZWrite", 1);
+        material.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.One);
+        material.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.Zero);
+        material.SetFloat("_ZWrite", 1f);
         material.EnableKeyword("_ALPHATEST_ON");
         material.DisableKeyword("_ALPHABLEND_ON");
         material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
@@ -189,7 +189,6 @@ internal class SignBorder : MonoBehaviour
 
         var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
         var offset = new Vector2(seed * 17.3f, seed * 31.7f);
-        var pixels = new Color32[size * size];
 
         for (int y = 0; y < size; y++)
         for (int x = 0; x < size; x++)
@@ -213,12 +212,11 @@ internal class SignBorder : MonoBehaviour
             float edgeFade = Mathf.SmoothStep(0f, 0.3f, edgeDist);
 
             float alpha = Mathf.Clamp01(noise * edgeFade);
-            byte a = (byte)(alpha * 255);
-            pixels[y * size + x] = new Color32(255, 255, 255, a);
+            tex.SetPixel(x, y, new Color(1f, 1f, 1f, alpha));
         }
 
-        tex.SetPixels32(pixels);
         tex.Apply();
+        Plugin.Logger.LogDebug($"SignBorder: Generated texture for zone {seed}, sample alpha={tex.GetPixel(64, 64).a}");
         return tex;
     }
 
