@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using AutogenRundown.Managers;
 using Il2CppInterop.Runtime.Injection;
 using LevelGeneration;
@@ -10,6 +11,8 @@ internal class SignBorder : MonoBehaviour
     private const float Padding = 0.5f;
     private const float LineWidth = 1.0f;
     private const float ZOffset = -0.005f;
+
+    private static readonly Dictionary<int, Texture2D> textureCache = new();
 
     private MeshFilter? meshFilter;
     private MeshRenderer? meshRenderer;
@@ -42,6 +45,26 @@ internal class SignBorder : MonoBehaviour
         material.color = color;
         material.SetFloat("_Metallic", 0f);
         material.SetFloat("_Glossiness", 0f);
+
+        // Cutout mode for weathered paint effect
+        material.SetFloat("_Mode", 1);
+        material.SetOverrideTag("RenderType", "TransparentCutout");
+        material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+        material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+        material.SetInt("_ZWrite", 1);
+        material.EnableKeyword("_ALPHATEST_ON");
+        material.DisableKeyword("_ALPHABLEND_ON");
+        material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+        material.renderQueue = 2450;
+        material.SetFloat("_Cutoff", 0.35f);
+
+        if (!textureCache.TryGetValue(zoneNumber, out var tex))
+        {
+            tex = GenerateWeatheredTexture(zoneNumber);
+            textureCache[zoneNumber] = tex;
+        }
+        material.mainTexture = tex;
+
         meshRenderer.material = material;
 
         Plugin.Logger.LogDebug($"SignBorder: Setup complete, shader={material.shader.name}, layer={borderGo.layer}");
@@ -142,7 +165,61 @@ internal class SignBorder : MonoBehaviour
             normals[i] = new Vector3(0, 0, -1);
         mesh.normals = normals;
 
+        var uvs = new Vector2[16];
+        for (int i = 0; i < 4; i++)
+        {
+            int vi = i * 4;
+            uvs[vi]     = new Vector2(0, 0);
+            uvs[vi + 1] = new Vector2(1, 0);
+            uvs[vi + 2] = new Vector2(1, 1);
+            uvs[vi + 3] = new Vector2(0, 1);
+        }
+        mesh.uv = uvs;
+
         return mesh;
+    }
+
+    private static Texture2D GenerateWeatheredTexture(int seed)
+    {
+        const int size = 128;
+        const int octaves = 3;
+        const float baseScale = 6f;
+        const float persistence = 0.5f;
+        const float lacunarity = 2f;
+
+        var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+        var offset = new Vector2(seed * 17.3f, seed * 31.7f);
+        var pixels = new Color32[size * size];
+
+        for (int y = 0; y < size; y++)
+        for (int x = 0; x < size; x++)
+        {
+            float u = x / (float)size;
+            float v = y / (float)size;
+
+            // Multi-octave Perlin noise
+            float noise = 0f, amp = 1f, freq = 1f;
+            for (int o = 0; o < octaves; o++)
+            {
+                noise += amp * Mathf.PerlinNoise(
+                    u * baseScale * freq + offset.x,
+                    v * baseScale * freq + offset.y);
+                amp *= persistence;
+                freq *= lacunarity;
+            }
+
+            // Edge fade — paint wears more at edges
+            float edgeDist = Mathf.Min(Mathf.Min(u, 1f - u), Mathf.Min(v, 1f - v));
+            float edgeFade = Mathf.SmoothStep(0f, 0.3f, edgeDist);
+
+            float alpha = Mathf.Clamp01(noise * edgeFade);
+            byte a = (byte)(alpha * 255);
+            pixels[y * size + x] = new Color32(255, 255, 255, a);
+        }
+
+        tex.SetPixels32(pixels);
+        tex.Apply();
+        return tex;
     }
 
     public void OnDestroy()
