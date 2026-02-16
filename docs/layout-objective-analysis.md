@@ -305,19 +305,19 @@ Each objective is scored 1-5 based on:
 | Metric                  | Value                                      |
 | ----------------------- | ------------------------------------------ |
 | Layout file             | `LevelLayout.PowerCellDistribution.cs`     |
-| Layout lines            | 163                                        |
-| Layout last modified    | 2025-12-10                                 |
-| Layout SelectRun count  | 0                                          |
+| Layout lines            | 1593                                       |
+| Layout last modified    | 2026-02-15                                 |
+| Layout SelectRun count  | 15                                         |
 | Objective file          | `WardenObjective.PowerCellDistribution.cs` |
 | Objective lines         | 417                                        |
 | Objective last modified | 2025-12-10                                 |
-| **Rating**              | **2**                                      |
+| **Rating**              | **5**                                      |
 
-**Layout:** No SelectRun. Single deterministic path: corridor entrance -> hub -> generator branches (loop-based). Handles 4-5 generators with a second hub, but the structure is always the same. Has `_Fast` variant for sub-objectives.
+**Layout:** Full tier/bulkhead coverage with 15 SelectRun blocks covering all tier/bulkhead combos (A-E × Main/Extreme/Overload), providing ~71 weighted variants. Full challenge composition toolkit: KeycardInSide, KeycardInZone, BossFight, ApexAlarm, ErrorWithOff_KeycardInSide, ErrorWithOff_GeneratorCellCarry, GeneratorCellInSide, LockedTerminalDoor, LockedTerminalPasswordInSide, SecuritySensors. Hub+branches, linear, clustered, and double-hub topologies. Overflow chaining for D/E tier variants with 4-5 generators. Forward extract candidates via `AddForwardExtractStart`. `_Fast` variant preserved for sub-objectives.
 
 **Objective:** 1-5 power cells based on tier. Organized intel by themes (carrying, navigation, activation, coordination). Solid atmosphere.
 
-**Deficiencies:** Zero layout variety. Every level: corridor-hub-branches. No challenge composition. No tier-specific layout differences. Same physical layout whether A-tier or E-tier.
+**Deficiencies:** None significant (minor cosmetic Bug 2 MaxConnections issue).
 
 ---
 
@@ -370,6 +370,8 @@ Each objective is scored 1-5 based on:
 | 1   | TerminalUplink          | 869          | 15        | 539       | Jan 28        | **5**  |
 | 2   | CentralGeneratorCluster | 1564         | 23        | 327       | Jan 31        | **5**  |
 | 3   | HsuFindSample           | 1216         | 13        | 188       | Jan 31        | **5**  |
+| 16  | ReactorShutdown         | 1224         | 15        | 989       | Feb 15        | **5**  |
+| 14  | PowerCellDistribution   | 1593         | 15        | 417       | Feb 15        | **5**  |
 | 4   | GatherSmallItems        | 1106         | 15        | 318       | Dec 10        | **4**  |
 | 5   | CorruptedTerminalUplink | 774          | 10        | 539       | Jan 31        | **4**  |
 | 6   | ClearPath               | 514          | 7         | 312       | Jan 31        | **4**  |
@@ -380,9 +382,7 @@ Each objective is scored 1-5 based on:
 | 11  | SpecialTerminalCommand  | 166          | 1 (empty) | 1238      | Dec 10        | **2**  |
 | 12  | TimedTerminalSequence   | 147          | 0         | 487       | Jan 19        | **2**  |
 | 13  | RetrieveBigItems        | 236          | 0         | 720       | Dec 10        | **2**  |
-| 14  | PowerCellDistribution   | 163          | 0         | 417       | Dec 10        | **2**  |
 | 15  | ReactorStartup          | 156          | 0         | 1713      | Dec 10        | **2**  |
-| 16  | ReactorShutdown         | 1224         | 15        | 989       | Feb 15        | **5**  |
 
 ---
 
@@ -394,37 +394,31 @@ Each objective is scored 1-5 based on:
 - **Why rework second:** Same reactor mismatch problem. The objective file (1713 lines!) is the most complex in the project, but layouts are either "prelude -> reactor" or "reactor -> branches". Pairs naturally with ReactorShutdown rework. Also the most complex objective type that players spend the most time in.
 - **Rework scope:** Add SelectRun for prelude approaches (challenge composition before reaching the reactor). For fetch codes, vary the branch topology (hub-and-spoke vs. sequential vs. mixed). Consider tier-specific branch challenges.
 
-### Priority 2: PowerCellDistribution
-
-- **Current state:** 163 lines, 0 SelectRun, rating 2. Always corridor-hub-branches.
-- **Why rework third:** High frequency objective. Every run has the same physical structure: corridor entrance, hub, branches with generators. No tier differentiation in layout. Good candidate for the TerminalUplink treatment with per-tier/bulkhead SelectRun.
-- **Rework scope:** Add SelectRun per tier. Vary hub topology. Add challenge composition to reach generators (keycards for locked generator rooms, error alarms, boss fights in E-tier). Consider linear approaches for some variants instead of always hub-and-spoke.
-
-### Priority 3: RetrieveBigItems
+### Priority 2: RetrieveBigItems
 
 - **Current state:** 236 lines, 0 SelectRun, rating 2. Has commented-out code and TODO.
 - **Why rework fourth:** The TODO says "re-evaluate this objective". Has dead code suggesting previous rework was abandoned. MatterWaveProjector variant is decent but the generic path is hub+branches with no variety.
 - **Rework scope:** Clean up commented-out code. Add SelectRun per tier. Item type could influence layout (e.g., CryoCase through fog zones, DataSphere through sensor corridors). Add challenge composition.
 
-### Priority 4: SpecialTerminalCommand
+### Priority 3: SpecialTerminalCommand
 
 - **Current state:** 166 lines, 1 SelectRun (empty!), rating 2. KingOfTheHill path is good, everything else is generic.
 - **Why rework fifth:** The objective file is massive (1238 lines) with 4 command types, but the layout is nearly identical for all. The empty SelectRun block for A-tier suggests rework was started but abandoned. Large TODO wishlist in the objective file.
 - **Rework scope:** Fill in the empty SelectRun blocks. Add per-tier layouts. Different command types could drive different layouts (e.g., FillWithFog could use fog-themed zones, LightsOff could have dark zones with sensors). ErrorAlarm sub-method needs adjustment per its own TODO.
 
-### Priority 5: TimedTerminalSequence
+### Priority 4: TimedTerminalSequence
 
 - **Current state:** 147 lines, 0 SelectRun, rating 2. Always corridor-hub-branches.
 - **Why rework sixth:** Same problem as PowerCellDistribution - every run has the same hub+branches structure. The error alarm variant for D/E is nice but the base layout never varies. TODO: "don't always do triple error alarms".
 - **Rework scope:** Add SelectRun per tier. Vary topology (some linear sequences, some hub-and-spoke). Add challenge composition to reach terminal zones. Consider tiered error alarm configurations instead of always triple.
 
-### Priority 6: Survival (partial)
+### Priority 5: Survival (partial)
 
 - **Current state:** 292 lines, 2 SelectRun, rating 3. E-tier is good, A-D all the same.
 - **Why partially rework:** E-tier has good SelectRun with boss error + puzzle variants. A-D all use the same default branch. The security control zone always spawns (TODO note). Lower priority because the survival objective's variety comes more from wave configuration than zone layout.
 - **Rework scope:** Add SelectRun for C-D tiers (currently only E has it). Make security control zone spawn probabilistic. Add sensor or challenge variants for C-D.
 
-### Priority 7: GatherTerminal (partial)
+### Priority 6: GatherTerminal (partial)
 
 - **Current state:** 430 lines, 5 SelectRun, rating 3. Good for covered combos, gaps elsewhere.
 - **Why partially rework:** Several tier/bulkhead combos have good SelectRun (B-Main, C/D-Main, D/E-Overload). E-Main 6-spawn is commented out (TODO). Many combos fall to default linear branch.
