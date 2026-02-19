@@ -101,6 +101,7 @@ public partial record WardenObjective
             (0.5, 1, new List<WardenObjectiveEvent>().AddLightsOff(20.0)),
 
             // Fog flood
+            // TODO: this needs to set FogUsage
             (level.FogUsage != FogUsage.LongDuration ? 0.1 : 0.0, 1, new List<WardenObjectiveEvent>().AddFillFog(
                 5, 1800, $"{Intel.Warning} - VENTILATION SYSTEM ON BACKUP POWER"))
         };

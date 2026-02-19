@@ -43,38 +43,41 @@ public partial record WardenObjective
             "A" => Generator.Select(new List<(double, SpecialCommand)>
             {
                 (0.50, SpecialCommand.LightsOff),
-                (0.07, SpecialCommand.FillWithFog),
+                (level.FogUsage == FogUsage.None ? 0.07 : 0, SpecialCommand.FillWithFog),
                 (0.43, SpecialCommand.KingOfTheHill)
             }),
             "B" => Generator.Select(new List<(double, SpecialCommand)>
             {
                 (0.30, SpecialCommand.LightsOff),
-                (0.10, SpecialCommand.FillWithFog),
+                (level.FogUsage == FogUsage.None ? 0.10 : 0, SpecialCommand.FillWithFog),
                 (0.10, SpecialCommand.ErrorAlarm),
                 (0.50, SpecialCommand.KingOfTheHill)
             }),
             "C" => Generator.Select(new List<(double, SpecialCommand)>
             {
                 (0.30, SpecialCommand.LightsOff),
-                (0.10, SpecialCommand.FillWithFog),
+                (level.FogUsage == FogUsage.None ? 0.10 : 0, SpecialCommand.FillWithFog),
                 (0.15, SpecialCommand.ErrorAlarm),
                 (0.45, SpecialCommand.KingOfTheHill)
             }),
             "D" => Generator.Select(new List<(double, SpecialCommand)>
             {
                 (0.25, SpecialCommand.LightsOff),
-                (0.15, SpecialCommand.FillWithFog),
+                (level.FogUsage == FogUsage.None ? 0.15 : 0, SpecialCommand.FillWithFog),
                 (0.20, SpecialCommand.ErrorAlarm),
                 (0.40, SpecialCommand.KingOfTheHill)
             }),
             "E" => Generator.Select(new List<(double, SpecialCommand)>
             {
                 (0.05, SpecialCommand.LightsOff),
-                (0.15, SpecialCommand.FillWithFog),
+                (level.FogUsage == FogUsage.None ? 0.15 : 0, SpecialCommand.FillWithFog),
                 (0.30, SpecialCommand.ErrorAlarm),
                 (0.50, SpecialCommand.KingOfTheHill)
             }),
         };
+
+        if (SpecialTerminalCommand_Type == SpecialCommand.FillWithFog)
+            level.TrySetFogUsage(FogUsage.LongDuration);
     }
 
     public void Build_SpecialTerminalCommand(BuildDirector director, Level level)
@@ -146,15 +149,12 @@ public partial record WardenObjective
                 SpecialTerminalCommand = "FLUSH_VENTS";
                 SpecialTerminalCommandDesc = "Divert atmospheric control system to initiate environmental maintenance procedures.";
 
-                if (level.TrySetFogUsage(FogUsage.ShortDuration))
-                {
-                    // Add a fog turbine in the first zone.
-                    var firstNode = level.Planner.GetZones(director.Bulkhead, null).First()!;
-                    var firstZone = level.Planner.GetZone(firstNode)!;
-                    firstZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
+                // Add a fog turbine in the first zone.
+                var firstNode = level.Planner.GetZones(director.Bulkhead, null).First()!;
+                var firstZone = level.Planner.GetZone(firstNode)!;
+                firstZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
 
-                    EventsOnActivate.AddFillFog(11.0);
-                }
+                EventsOnActivate.AddFillFog(11.0);
 
                 break;
             }
