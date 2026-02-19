@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
 
@@ -145,12 +146,15 @@ public partial record WardenObjective
                 SpecialTerminalCommand = "FLUSH_VENTS";
                 SpecialTerminalCommandDesc = "Divert atmospheric control system to initiate environmental maintenance procedures.";
 
-                // Add a fog turbine in the first zone.
-                var firstNode = level.Planner.GetZones(director.Bulkhead, null).First()!;
-                var firstZone = level.Planner.GetZone(firstNode)!;
-                firstZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
+                if (level.TrySetFogUsage(FogUsage.ShortDuration))
+                {
+                    // Add a fog turbine in the first zone.
+                    var firstNode = level.Planner.GetZones(director.Bulkhead, null).First()!;
+                    var firstZone = level.Planner.GetZone(firstNode)!;
+                    firstZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
 
-                EventsOnActivate.AddFillFog(11.0);
+                    EventsOnActivate.AddFillFog(11.0);
+                }
 
                 break;
             }

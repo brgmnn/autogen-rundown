@@ -413,7 +413,7 @@ public partial record Zone : DataBlock<Zone>
                     else if (Generator.Flip(0.02))
                         AlarmModifier_LightsOff();
 
-                    if (!InFog && Generator.Flip(0.01))
+                    if (!InFog && level.TrySetFogUsage(Levels.FogUsage.ShortDuration) && Generator.Flip(0.01))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.2, 1.4));
 
                     if (Generator.Flip(0.02))
@@ -446,7 +446,7 @@ public partial record Zone : DataBlock<Zone>
                     else if (Generator.Flip(0.05))
                         AlarmModifier_LightsOff();
 
-                    if (!InFog && Generator.Flip(0.05))
+                    if (!InFog && level.TrySetFogUsage(Levels.FogUsage.ShortDuration) && Generator.Flip(0.05))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.2, 1.4));
 
                     if (Generator.Flip(0.05))
@@ -491,7 +491,7 @@ public partial record Zone : DataBlock<Zone>
                     else if (Generator.Flip(0.08))
                         AlarmModifier_CyclingLights();
 
-                    if (!InFog && Generator.Flip(0.06))
+                    if (!InFog && level.TrySetFogUsage(Levels.FogUsage.ShortDuration) && Generator.Flip(0.06))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.1, 1.3));
 
                     if (Generator.Flip(0.08))
@@ -539,7 +539,7 @@ public partial record Zone : DataBlock<Zone>
                                 Generator.Between(4, 16));
                     }
 
-                    if (!InFog && Generator.Flip(0.11))
+                    if (!InFog && level.TrySetFogUsage(Levels.FogUsage.ShortDuration) && Generator.Flip(0.11))
                         AlarmModifier_FogFlood(puzzle.ClearTime(1.1, 1.1));
 
                     if (Generator.Flip(0.10))

@@ -422,6 +422,30 @@ public class Level
     public Fog FogSettings { get; set; } = Fog.DefaultFog;
 
     /// <summary>
+    /// Tracks how fog is being used in this level to prevent incompatible fog transitions.
+    /// </summary>
+    [JsonIgnore]
+    public FogUsage FogUsage { get; set; } = FogUsage.None;
+
+    /// <summary>
+    /// Attempts to reserve fog usage for this level. Returns true if compatible,
+    /// false if the requested usage conflicts with existing fog usage.
+    /// </summary>
+    public bool TrySetFogUsage(FogUsage requested)
+    {
+        if (FogUsage == FogUsage.None)
+        {
+            FogUsage = requested;
+            return true;
+        }
+
+        if (FogUsage == FogUsage.ShortDuration && requested == FogUsage.ShortDuration)
+            return true;
+
+        return false;
+    }
+
+    /// <summary>
     /// Flags the level as a test level
     /// </summary>
     [JsonIgnore]
@@ -869,6 +893,12 @@ public class Level
             existing.Add(WardenObjectiveType.ReactorStartup);
             existing.Add(WardenObjectiveType.Survival);
             existing.Add(WardenObjectiveType.TimedTerminalSequence);
+        }
+
+        // Long-duration fog transitions are incompatible with objectives that modify fog
+        if (FogUsage == FogUsage.LongDuration)
+        {
+            existing.Add(WardenObjectiveType.CentralGeneratorCluster);
         }
 
         // Allow multiple instances of these objectives

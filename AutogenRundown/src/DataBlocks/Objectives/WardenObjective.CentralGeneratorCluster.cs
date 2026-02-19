@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks.Objectives;
@@ -35,6 +36,8 @@ public partial record WardenObjective
             ("E", Bulkhead.Overload) => 3,
         };
         CentralGeneratorCluster_NumberOfPowerCells = CentralGeneratorCluster_NumberOfGenerators;
+
+        level.TrySetFogUsage(FogUsage.ShortDuration);
     }
 
     private void Build_CentralGeneratorCluster(BuildDirector director, Level level)

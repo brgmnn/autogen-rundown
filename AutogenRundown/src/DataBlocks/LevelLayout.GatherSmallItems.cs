@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Logs;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Terminals;
@@ -811,30 +812,33 @@ public partial record LevelLayout
                     }),
 
                     // Fill level with infectious fog slowly over time
-                    (!level.Settings.HasFog() ? 0.0 : 0.30, () =>
+                    (!level.Settings.HasFog() || level.FogUsage == FogUsage.LongDuration ? 0.0 : 0.30, () =>
                     {
-                        // Make the zone size small
-                        startZone.Coverage = CoverageMinMax.Small_10;
-
-                        // Fog duration in seconds. It takes about 2/3'rds of the time to be over
-                        // the head of players at mid-height level. So even though these are at
-                        // 60mins+ players will be in fog by 40 mins or so
-                        var fogRiseDuration = 60.0 * level.Settings.Bulkheads switch
+                        if (level.TrySetFogUsage(FogUsage.ShortDuration))
                         {
-                            Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
-                            _ => Generator.Between(60, 75)
-                        };
+                            // Make the zone size small
+                            startZone.Coverage = CoverageMinMax.Small_10;
 
-                        // Ensure there's a fog turbine
-                        startZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
-                        startZone.EventsOnOpenDoor
-                            .AddSetFog(Fog.HeavyFullFog_Infectious, 2.0, fogRiseDuration, null)
-                            .AddSound(Sound.Environment_DistantFan, 6.0);
+                            // Fog duration in seconds. It takes about 2/3'rds of the time to be over
+                            // the head of players at mid-height level. So even though these are at
+                            // 60mins+ players will be in fog by 40 mins or so
+                            var fogRiseDuration = 60.0 * level.Settings.Bulkheads switch
+                            {
+                                Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
+                                _ => Generator.Between(60, 75)
+                            };
 
-                        // Add resources to deal with the infectious fog
-                        startZone.ConsumableDistributionInZone
-                            = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
-                        startZone.DisinfectPacks += 5.0;
+                            // Ensure there's a fog turbine
+                            startZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
+                            startZone.EventsOnOpenDoor
+                                .AddSetFog(Fog.HeavyFullFog_Infectious, 2.0, fogRiseDuration, null)
+                                .AddSound(Sound.Environment_DistantFan, 6.0);
+
+                            // Add resources to deal with the infectious fog
+                            startZone.ConsumableDistributionInZone
+                                = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
+                            startZone.DisinfectPacks += 5.0;
+                        }
 
                         objective.Gather_PlacementNodes.Add(start);
                     }),
@@ -1051,30 +1055,33 @@ public partial record LevelLayout
                     }),
 
                     // Fill level with infectious fog slowly over time
-                    (!level.Settings.HasFog() ? 0.0 : 0.50, () =>
+                    (!level.Settings.HasFog() || level.FogUsage == FogUsage.LongDuration ? 0.0 : 0.50, () =>
                     {
-                        // Make the zone size small
-                        startZone.Coverage = CoverageMinMax.Small_10;
-
-                        // Fog duration in seconds. It takes about 2/3'rds of the time to be over
-                        // the head of players at mid-height level. So even though these are at
-                        // 60mins+ players will be in fog by 40 mins or so
-                        var fogRiseDuration = 60.0 * level.Settings.Bulkheads switch
+                        if (level.TrySetFogUsage(FogUsage.ShortDuration))
                         {
-                            Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
-                            _ => Generator.Between(60, 75)
-                        };
+                            // Make the zone size small
+                            startZone.Coverage = CoverageMinMax.Small_10;
 
-                        // Ensure there's a fog turbine
-                        startZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
-                        startZone.EventsOnOpenDoor
-                            .AddSetFog(Fog.HeavyFullFog_Infectious, 2.0, fogRiseDuration, null)
-                            .AddSound(Sound.Environment_DistantFan, 6.0);
+                            // Fog duration in seconds. It takes about 2/3'rds of the time to be over
+                            // the head of players at mid-height level. So even though these are at
+                            // 60mins+ players will be in fog by 40 mins or so
+                            var fogRiseDuration = 60.0 * level.Settings.Bulkheads switch
+                            {
+                                Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
+                                _ => Generator.Between(60, 75)
+                            };
 
-                        // Add resources to deal with the infectious fog
-                        startZone.ConsumableDistributionInZone
-                            = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
-                        startZone.DisinfectPacks += 2.0;
+                            // Ensure there's a fog turbine
+                            startZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
+                            startZone.EventsOnOpenDoor
+                                .AddSetFog(Fog.HeavyFullFog_Infectious, 2.0, fogRiseDuration, null)
+                                .AddSound(Sound.Environment_DistantFan, 6.0);
+
+                            // Add resources to deal with the infectious fog
+                            startZone.ConsumableDistributionInZone
+                                = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
+                            startZone.DisinfectPacks += 2.0;
+                        }
 
                         objective.Gather_PlacementNodes.Add(start);
                     }),

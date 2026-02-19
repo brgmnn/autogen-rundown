@@ -280,7 +280,7 @@ public partial record WardenObjective
                         {
                             // Flood the level in 30 mins
                             // TODO: maybe this should be faster for main missions
-                            if (Generator.Flip(0.5))
+                            if (Generator.Flip(0.5) && level.TrySetFogUsage(FogUsage.ShortDuration))
                                 EventsOnGotoWin.AddFillFog(10.0, 30 * 60);
                         }
                         // Disable the lights
@@ -357,7 +357,7 @@ public partial record WardenObjective
                             level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
                         {
                             // Flood the level in 30 mins
-                            if (Generator.Flip(0.5))
+                            if (Generator.Flip(0.5) && level.TrySetFogUsage(FogUsage.ShortDuration))
                                 EventsOnGotoWin.AddFillFog(10.0, 30 * 60);
                         }
 

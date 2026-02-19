@@ -1283,7 +1283,7 @@ public partial record WardenObjective
             var fog = level.FogSettings;
             var isInfectious = level.FogSettings.IsInfectious;
 
-            if (wave.IsFogWave)
+            if (wave.IsFogWave && level.TrySetFogUsage(FogUsage.ShortDuration))
             {
                 var inverted = fog.IsInverted;
                 var tempFog = (isInfectious, inverted) switch
