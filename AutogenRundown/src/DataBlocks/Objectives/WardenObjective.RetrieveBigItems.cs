@@ -55,6 +55,14 @@ public partial record WardenObjective
 
         for (var i = 0; i < count; ++i)
             RetrieveItems.Add(item);
+
+        if (level.Tier == "D" && level.Settings.HasFog())
+            if (Generator.Flip(0.3) && level.TrySetFogUsage(FogUsage.LongDuration))
+                FogUsage = FogUsage.LongDuration;
+
+        if (level.Tier == "E" && level.Settings.HasFog())
+            if (Generator.Flip(0.51) && level.TrySetFogUsage(FogUsage.LongDuration))
+                FogUsage = FogUsage.LongDuration;
     }
 
     public void Build_RetrieveBigItems(BuildDirector director, Level level)
@@ -275,14 +283,9 @@ public partial record WardenObjective
                                 TriggerAlarm = false
                             });
 
-                        if (level.Settings.Modifiers.Contains(LevelModifiers.Fog) ||
-                            level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
-                        {
-                            // Flood the level in 30 mins
-                            // TODO: maybe this should be faster for main missions
-                            if (Generator.Flip(0.5) && level.TrySetFogUsage(FogUsage.ShortDuration))
-                                EventsOnGotoWin.AddFillFog(10.0, 30 * 60);
-                        }
+                        if (FogUsage == FogUsage.LongDuration)
+                            EventsOnGotoWin.AddFillFog(10.0, 30 * 60);
+
                         // Disable the lights
                         else if (Generator.Flip(0.6))
                             EventsOnGotoWin.AddLightsOff(Generator.Between(2, 35));
@@ -353,13 +356,8 @@ public partial record WardenObjective
                             });
 
 
-                        if (level.Settings.Modifiers.Contains(LevelModifiers.Fog) ||
-                            level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
-                        {
-                            // Flood the level in 30 mins
-                            if (Generator.Flip(0.5) && level.TrySetFogUsage(FogUsage.ShortDuration))
-                                EventsOnGotoWin.AddFillFog(10.0, 30 * 60);
-                        }
+                        if (FogUsage == FogUsage.LongDuration)
+                            EventsOnGotoWin.AddFillFog(10.0, 30 * 60);
 
                         // Disable the lights
                         if (Generator.Flip(0.4))
