@@ -52,5 +52,6 @@ public static class SignBorderManager
     {
         borderColors.Clear();
         borders.Clear();
+        SignBorder.ClearTextureCache();
     }
 }

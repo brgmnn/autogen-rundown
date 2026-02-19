@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using AutogenRundown.Managers;
 using Il2CppInterop.Runtime.Injection;
@@ -20,6 +21,8 @@ internal class SignBorder : MonoBehaviour
     private LG_Sign? sign;
     private bool boundsResolved;
     private int frameCount;
+
+    internal static void ClearTextureCache() => textureCache.Clear();
 
     public int ZoneNumber { get; private set; }
 
@@ -46,28 +49,50 @@ internal class SignBorder : MonoBehaviour
         material.SetFloat("_Metallic", 0f);
         material.SetFloat("_Glossiness", 0f);
 
-        // Cutout mode for weathered paint effect
-        material.SetFloat("_Mode", 1);
-        material.SetOverrideTag("RenderType", "TransparentCutout");
+        // Start with opaque mode (guaranteed visible)
+        material.SetFloat("_Mode", 0);
+        material.SetOverrideTag("RenderType", "Opaque");
         material.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.One);
         material.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.Zero);
         material.SetFloat("_ZWrite", 1f);
-        material.EnableKeyword("_ALPHATEST_ON");
+        material.DisableKeyword("_ALPHATEST_ON");
         material.DisableKeyword("_ALPHABLEND_ON");
         material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-        material.renderQueue = 2450;
-        material.SetFloat("_Cutoff", 0.35f);
-
-        if (!textureCache.TryGetValue(zoneNumber, out var tex))
-        {
-            tex = GenerateWeatheredTexture(zoneNumber);
-            textureCache[zoneNumber] = tex;
-        }
-        material.mainTexture = tex;
+        material.renderQueue = -1;
 
         meshRenderer.material = material;
 
-        Plugin.Logger.LogDebug($"SignBorder: Setup complete, shader={material.shader.name}, layer={borderGo.layer}");
+        Plugin.Logger.LogDebug($"SignBorder: Setup complete (opaque), shader={material.shader.name}, layer={borderGo.layer}");
+
+        try
+        {
+            if (!textureCache.TryGetValue(zoneNumber, out var tex))
+            {
+                Plugin.Logger.LogDebug($"SignBorder: Generating texture for zone {zoneNumber}");
+                tex = GenerateWeatheredTexture(zoneNumber);
+                textureCache[zoneNumber] = tex;
+            }
+            else
+            {
+                Plugin.Logger.LogDebug($"SignBorder: Using cached texture for zone {zoneNumber}");
+            }
+
+            // Switch to transparent mode for weathered effect
+            material.SetFloat("_Mode", 3);
+            material.SetOverrideTag("RenderType", "Transparent");
+            material.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            material.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            material.SetFloat("_ZWrite", 0f);
+            material.DisableKeyword("_ALPHATEST_ON");
+            material.EnableKeyword("_ALPHABLEND_ON");
+            material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            material.renderQueue = 3000;
+            material.mainTexture = tex;
+        }
+        catch (Exception ex)
+        {
+            Plugin.Logger.LogError($"SignBorder: Texture generation failed, using opaque fallback: {ex}");
+        }
 
         SignBorderManager.Register(this);
     }
@@ -116,7 +141,7 @@ internal class SignBorder : MonoBehaviour
             t, z);
 
         boundsResolved = true;
-        Plugin.Logger.LogDebug($"SignBorder: Bounds resolved, min={min}, max={max}");
+        Plugin.Logger.LogDebug($"SignBorder: Bounds resolved, min={min}, max={max}, verts={meshFilter.mesh.vertexCount}");
     }
 
     private static Mesh BuildBorderMesh(float left, float bottom, float right, float top, float thickness, float z)
@@ -216,7 +241,15 @@ internal class SignBorder : MonoBehaviour
         }
 
         tex.Apply();
-        Plugin.Logger.LogDebug($"SignBorder: Generated texture for zone {seed}, sample alpha={tex.GetPixel(64, 64).a}");
+        try
+        {
+            var sample = tex.GetPixel(64, 64);
+            Plugin.Logger.LogDebug($"SignBorder: Generated texture for zone {seed}, sample alpha={sample.a}");
+        }
+        catch (Exception ex)
+        {
+            Plugin.Logger.LogDebug($"SignBorder: Generated texture for zone {seed} (GetPixel failed: {ex.Message})");
+        }
         return tex;
     }
 
