@@ -895,8 +895,8 @@ public class Level
             existing.Add(WardenObjectiveType.TimedTerminalSequence);
         }
 
-        // Long-duration fog transitions are incompatible with objectives that modify fog
-        if (FogUsage == FogUsage.LongDuration)
+        // Exclude central generator cluster if there's other fog changing happening
+        if (FogUsage != FogUsage.None)
         {
             existing.Add(WardenObjectiveType.CentralGeneratorCluster);
         }
