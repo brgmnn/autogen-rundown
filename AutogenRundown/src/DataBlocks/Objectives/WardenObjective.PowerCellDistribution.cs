@@ -95,6 +95,13 @@ public partial record WardenObjective
                     throw new Exception($"Unhandled number of power cells to distribute");
             }
         }
+
+
+        // Set up some fog shenanigans
+        if (director.Bulkhead.HasFlag(Bulkhead.Main) && level.Settings.HasFog())
+        {
+
+        }
     }
 
     private void PostBuildIntel_PowerCellDistribution(Level level)

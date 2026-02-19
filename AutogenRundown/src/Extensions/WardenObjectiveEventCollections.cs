@@ -255,7 +255,7 @@ public static class WardenObjectiveEventCollections
         double delay = 30.0,
         double duration = 45.0)
     {
-        var eventLoop = new EventLoop()
+        var eventLoop = new EventLoop
         {
             LoopIndex = loopIndex,
             LoopDelay = delay,

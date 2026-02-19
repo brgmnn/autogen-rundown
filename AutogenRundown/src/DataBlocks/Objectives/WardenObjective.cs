@@ -2,9 +2,11 @@
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives.CentralGeneratorCluster;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -502,6 +504,66 @@ public partial record WardenObjective : DataBlock<WardenObjective>
         }
     }
 
+    public void AddCompletedObjectivePenalty(Level level, BuildDirector director)
+    {
+        switch (level.Tier, director.Bulkhead, level.HasPrisonerEfficiency)
+        {
+            case ("A", Bulkhead.Main, _):
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    (0.5, () => {}),
+                    (0.5, () =>
+                    {
+                        EventsOnGotoWin.AddLightsOff(Generator.Between(1, 6));
+                    }),
+                    (0.5, () =>
+                    {
+                        EventsOnGotoWin.AddFillFog(Generator.Between(1, 6));
+                    })
+                });
+                break;
+
+            case ("A", Bulkhead.Extreme, _):
+                EventsOnGotoWin.AddLightsOff(Generator.Between(1, 6));
+                break;
+
+            case ("A", Bulkhead.Overload, _):
+                EventsOnGotoWin.AddFillFog(Generator.Between(1, 6));
+                break;
+
+
+            case ("B", Bulkhead.Main, _):
+                break;
+            case ("B", Bulkhead.Extreme, _):
+                break;
+            case ("B", Bulkhead.Overload, _):
+                break;
+
+
+            case ("C", Bulkhead.Main, _):
+                break;
+            case ("C", Bulkhead.Extreme, _):
+                break;
+            case ("C", Bulkhead.Overload, _):
+                // EventsOnGotoWin.AddCyclingFog();
+                break;
+
+            case ("D", Bulkhead.Main, _):
+                break;
+            case ("D", Bulkhead.Extreme, _):
+                break;
+            case ("D", Bulkhead.Overload, _):
+                break;
+
+            case ("E", Bulkhead.Main, _):
+                break;
+            case ("E", Bulkhead.Extreme, _):
+                break;
+            case ("E", Bulkhead.Overload, _):
+                break;
+        }
+    }
+
     /// <summary>
     /// Some settings from the objective are needed for level generation. However plenty of
     /// layout information is needed for the objective. Objective building is split into two
@@ -911,6 +973,9 @@ public partial record WardenObjective : DataBlock<WardenObjective>
 
     [JsonIgnore]
     public int ReactorStartup_FetchWaves { get; set; } = 0;
+
+    [JsonIgnore]
+    public FogUsage FogUsage { get; set; } = FogUsage.None;
 
     /// <summary>
     /// Collect the nodes where items have been placed

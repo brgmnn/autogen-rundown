@@ -73,7 +73,7 @@ public static class Lights
         Reactor_blue_to_White_R5D1 = 101,
         Reactor_green_all_on_1 = 79,
         Reactor_green_all_on_1_R5C1_ALT = 94,
-        RedToCyan_1 = 9,
+        RedToCyan_1 = 9, // Great light color, excellent on floodways
         RedToWhite_1 = 55,
         RedToWhite_1_Flickering = 81,
         RedToWhite_1_R5A2_L1 = 88,

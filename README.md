@@ -52,6 +52,11 @@ TODO:
   * Investigate some kind of grace period for scans coming back on
   * Check if I broke something with uplinks where host and client get desynced for where an uplink is. We had it where host didn't get the verify coming through
   * Increase exclusion zone around elevator for security scans
+  * E-tier had gather 3 samples
+  * E-tier valiant way too easy
+    * enemies get bugged
+  * Have a challenge like halfway through the fog starts rising and you can turn off the fog in a zone
+  * Door alarm adjustments
 
 * Added melee and health syringes into consumables pool
   * New optional "Medical Bay" side zone's can spawn now which contain health, disinfect, and syringes
