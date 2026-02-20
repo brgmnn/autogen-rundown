@@ -38,43 +38,61 @@ public partial record WardenObjective
     /// <param name="level"></param>
     public void PreBuild_SpecialTerminalCommand(BuildDirector director, Level level)
     {
-        SpecialTerminalCommand_Type = director.Tier switch
+        var options = new List<(double, SpecialCommand)>();
+
+        switch (level.Tier)
         {
-            "A" => Generator.Select(new List<(double, SpecialCommand)>
+            case "A":
+                options.Add((0.50, SpecialCommand.LightsOff));
+                options.Add((0.43, SpecialCommand.KingOfTheHill));
+                break;
+
+            case "B":
+                options.Add((0.30, SpecialCommand.LightsOff));
+                options.Add((0.10, SpecialCommand.ErrorAlarm));
+                options.Add((0.50, SpecialCommand.KingOfTheHill));
+                break;
+
+            case "C":
+                options.Add((0.30, SpecialCommand.LightsOff));
+                options.Add((0.15, SpecialCommand.ErrorAlarm));
+                options.Add((0.45, SpecialCommand.KingOfTheHill));
+                break;
+
+            case "D":
+                options.Add((0.20, SpecialCommand.ErrorAlarm));
+                options.Add((0.40, SpecialCommand.KingOfTheHill));
+
+                if (director.Bulkhead == Bulkhead.Extreme)
+                    options.Add((0.25, SpecialCommand.LightsOff));
+
+                break;
+
+            case "E":
+                options.Add((0.30, SpecialCommand.ErrorAlarm));
+                options.Add((0.50, SpecialCommand.KingOfTheHill));
+                break;
+        }
+
+        if (level.FogUsage == FogUsage.None)
+            options.Add((level.Tier, level.Settings.HasFog()) switch
             {
-                (0.50, SpecialCommand.LightsOff),
-                (level.FogUsage == FogUsage.None ? 0.07 : 0, SpecialCommand.FillWithFog),
-                (0.43, SpecialCommand.KingOfTheHill)
-            }),
-            "B" => Generator.Select(new List<(double, SpecialCommand)>
-            {
-                (0.30, SpecialCommand.LightsOff),
-                (level.FogUsage == FogUsage.None ? 0.10 : 0, SpecialCommand.FillWithFog),
-                (0.10, SpecialCommand.ErrorAlarm),
-                (0.50, SpecialCommand.KingOfTheHill)
-            }),
-            "C" => Generator.Select(new List<(double, SpecialCommand)>
-            {
-                (0.30, SpecialCommand.LightsOff),
-                (level.FogUsage == FogUsage.None ? 0.10 : 0, SpecialCommand.FillWithFog),
-                (0.15, SpecialCommand.ErrorAlarm),
-                (0.45, SpecialCommand.KingOfTheHill)
-            }),
-            "D" => Generator.Select(new List<(double, SpecialCommand)>
-            {
-                (0.25, SpecialCommand.LightsOff),
-                (level.FogUsage == FogUsage.None ? 0.15 : 0, SpecialCommand.FillWithFog),
-                (0.20, SpecialCommand.ErrorAlarm),
-                (0.40, SpecialCommand.KingOfTheHill)
-            }),
-            "E" => Generator.Select(new List<(double, SpecialCommand)>
-            {
-                (0.05, SpecialCommand.LightsOff),
-                (level.FogUsage == FogUsage.None ? 0.15 : 0, SpecialCommand.FillWithFog),
-                (0.30, SpecialCommand.ErrorAlarm),
-                (0.50, SpecialCommand.KingOfTheHill)
-            }),
-        };
+                ("A",    _) => (0.07, SpecialCommand.FillWithFog),
+
+                ("B", true) => (0.40, SpecialCommand.FillWithFog),
+                ("B",    _) => (0.10, SpecialCommand.FillWithFog),
+
+                ("C", true) => (0.50, SpecialCommand.FillWithFog),
+                ("C",    _) => (0.10, SpecialCommand.FillWithFog),
+
+                ("D", true) => (0.55, SpecialCommand.FillWithFog),
+                ("D",    _) => (0.15, SpecialCommand.FillWithFog),
+
+                ("E", true) => (0.60, SpecialCommand.FillWithFog),
+                ("E",    _) => (0.15, SpecialCommand.FillWithFog),
+            });
+
+        SpecialTerminalCommand_Type = Generator.Select(options);
 
         if (SpecialTerminalCommand_Type == SpecialCommand.FillWithFog)
             level.TrySetFogUsage(FogUsage.LongDuration);

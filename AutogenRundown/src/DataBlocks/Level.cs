@@ -1417,26 +1417,6 @@ public class Level
                 });
         #endregion
 
-        #region Adjust coverage sizes
-        var entrances = level.Planner.GetBulkheadEntranceZones();
-
-        foreach (var node in entrances)
-        {
-            var zone = level.GetLevelLayout(node.Bulkhead)?.Zones[node.ZoneNumber];
-
-            if (zone == null)
-            {
-                Plugin.Logger.LogWarning($"Level={level.Tier}{level.Index} - Cannot resize " +
-                                         $"bulkhead entrance zone. Zone_{node.ZoneNumber} could not be found.");
-                continue;
-            }
-
-            // TODO: rebalance enemies
-            // TODO: skip this if it's a custom geomorph
-            // zone.Coverage = new CoverageMinMax { Min = 80.0, Max = 80.0 };
-        }
-        #endregion
-
         #region Finalize -- WardenObjective.PostBuild()
         level.GetObjective(Bulkhead.Main)!.PostBuild(level.MainDirector, level);
 
@@ -1445,6 +1425,10 @@ public class Level
 
         if (level.HasOverload && level.GetObjective(Bulkhead.Overload) != null)
             level.GetObjective(Bulkhead.Overload)!.PostBuild(level.OverloadDirector, level);
+        #endregion
+
+        #region Finalize -- Level.PostBuild()
+
         #endregion
 
         #region Finalize -- ExtraObjectiveSetup
