@@ -682,6 +682,12 @@ public partial record WardenObjective : DataBlock<WardenObjective>
         return (dataLayer, layout);
     }
 
+    public double GetClearTimeEstimate(BuildDirector director, Level level)
+    {
+        var (_, layout) = GetObjectiveLayerAndLayout(director, level);
+        return layout.Zones.Sum(z => z.GetClearTimeEstimate());
+    }
+
     /// <summary>
     /// This is called _after_ the level layout has been built
     /// </summary>
