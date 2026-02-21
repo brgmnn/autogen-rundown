@@ -432,6 +432,40 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     public static double GenExitScanTime(int min, int max)
         => CalculateExitScanSpeedMultiplier(Generator.Between(min, max));
 
+    public List<WardenObjectiveEvent> AddSlowFogFill(Level level, double? duration = null, double? delay = 2.0)
+    {
+        // Fog duration in seconds. It takes about 2/3'rds of the time to be over
+        // the head of players at mid-height level. So even though these are at
+        // 60mins+ players will be in fog by 40 mins or so
+        var fogRiseDuration = 60.0 * level.Settings.Bulkheads switch
+        {
+            Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
+            _ => Generator.Between(60, 75)
+        };
+
+        var events = new List<WardenObjectiveEvent>();
+        var durationOrDefault = duration ?? fogRiseDuration;
+
+        if (level.FogSettings.IsInfectious)
+            events.AddSetFog(
+                level.FogSettings.IsInverted
+                    ? Fog.InvertedInfectious_Altitude_minus8
+                    : Fog.NormalInfectious_Altitude_8,
+                duration: durationOrDefault,
+                message: null);
+        else
+            events.AddSetFog(
+                level.FogSettings.IsInverted
+                    ? Fog.Inverted_Altitude_minus8
+                    : Fog.Normal_Altitude_8,
+                duration: durationOrDefault,
+                message: null);
+
+        events.AddSound(Sound.Environment_DistantFan, 6.0);
+
+        return events;
+    }
+
     /// <summary>
     /// Add's default exit/completion waves for an objective. Often we want
     /// these but want to adjust them based on difficulty and what objective

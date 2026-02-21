@@ -172,8 +172,6 @@ public partial record WardenObjective
                 var firstZone = level.Planner.GetZone(firstNode)!;
                 firstZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
 
-                EventsOnActivate.AddFillFog(11.0);
-
                 break;
             }
 
@@ -495,6 +493,22 @@ public partial record WardenObjective
 
     private void PostBuildIntel_SpecialTerminalCommand(Level level)
     {
+        switch (SpecialTerminalCommand_Type)
+        {
+            case SpecialCommand.FillWithFog:
+            {
+                EventsOnActivate.AddRange(AddSlowFogFill(
+                    level,
+                    duration: 60.0 * level.Settings.Bulkheads switch
+                    {
+                        Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
+                        _ => Generator.Between(60, 75)
+                    }));
+
+                break;
+            }
+        }
+
         #region Warden Intel Messages
 
         // Generic special terminal command intel
