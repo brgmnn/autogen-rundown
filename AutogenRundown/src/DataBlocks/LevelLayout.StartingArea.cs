@@ -129,6 +129,12 @@ public partial record LevelLayout
         // There just isn't any zone for this bulkhead, so we must add the first zone
         switch (level.Settings.BulkheadStrategy)
         {
+            case BukheadStrategy.MainOnly_NoBulkhead:
+            {
+                var lastNode = (ZoneNode)level.Planner.GetLastZone(Bulkhead.Main)!;
+                return (lastNode, level.Planner.GetZone(lastNode)!);
+            }
+
             case BukheadStrategy.SingleChain:
             {
                 var sourceBulkhead = bulkhead switch

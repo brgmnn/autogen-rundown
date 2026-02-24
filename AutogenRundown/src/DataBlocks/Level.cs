@@ -980,7 +980,7 @@ public class Level
         {
             Bulkhead.Main => new List<(double, BukheadStrategy)>
             {
-                (0.5, BukheadStrategy.Default)
+                (0.5, BukheadStrategy.MainOnly_NoBulkhead)
             },
             Bulkhead.Main | Bulkhead.Extreme => new List<(double, BukheadStrategy)>
             {
