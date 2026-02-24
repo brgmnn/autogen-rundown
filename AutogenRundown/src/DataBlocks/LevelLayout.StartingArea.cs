@@ -132,6 +132,7 @@ public partial record LevelLayout
             case BukheadStrategy.MainOnly_NoBulkhead:
             {
                 var lastNode = (ZoneNode)level.Planner.GetLastZone(Bulkhead.Main)!;
+
                 return (lastNode, level.Planner.GetZone(lastNode)!);
             }
 
