@@ -201,7 +201,7 @@ public partial record LevelLayout
         // Bulkheads that need to be placed
         var toPlace = level.Settings.Bulkheads switch
         {
-            Bulkhead.Main => new List<Bulkhead> { Bulkhead.Main },
+            Bulkhead.Main => new List<Bulkhead>(),
             Bulkhead.Main | Bulkhead.Extreme => new List<Bulkhead>
             {
                 Bulkhead.Main,
@@ -247,7 +247,8 @@ public partial record LevelLayout
         }
 
         // The final area also needs to be placed
-        InitializeBulkheadArea(level, Generator.Draw(toPlace), prev);
+        if (toPlace.Count > 0)
+            InitializeBulkheadArea(level, Generator.Draw(toPlace), prev);
     }
 
     /// <summary>

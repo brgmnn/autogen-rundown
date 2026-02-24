@@ -1396,11 +1396,12 @@ public class Level
          * Ensure we place the bulkhead keys. For now, we just place one at the start of each
          * bulkhead zone. This is guaranteed to allow us to complete all the objectives.
          */
-        level.MainLayerData.BulkheadKeyPlacements.Add(
-            new List<ZonePlacementData>
-            {
-                new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
-            });
+        if (level.HasExtreme || level.HasOverload)
+            level.MainLayerData.BulkheadKeyPlacements.Add(
+                new List<ZonePlacementData>
+                {
+                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+                });
 
         if (level.HasExtreme)
             level.SecondaryLayerData.BulkheadKeyPlacements.Add(
