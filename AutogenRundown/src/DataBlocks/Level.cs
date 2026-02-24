@@ -851,6 +851,51 @@ public class Level
             _ => MainLayerData
         };
 
+    /// <summary>
+    /// Places default bulkhead keys if no keys have been placed already by layout builders.
+    /// </summary>
+    public void PlaceDefaultBulkheadKeys()
+    {
+        if ((HasExtreme || HasOverload) && MainLayerData.BulkheadKeyPlacements.Count == 0)
+            MainLayerData.BulkheadKeyPlacements.Add(
+                new List<ZonePlacementData>
+                {
+                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+                });
+
+        if (HasExtreme && SecondaryLayerData.BulkheadKeyPlacements.Count == 0)
+            SecondaryLayerData.BulkheadKeyPlacements.Add(
+                new List<ZonePlacementData>
+                {
+                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+                });
+
+        if (HasOverload && ThirdLayerData.BulkheadKeyPlacements.Count == 0)
+            ThirdLayerData.BulkheadKeyPlacements.Add(
+                new List<ZonePlacementData>
+                {
+                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+                });
+    }
+
+    /// <summary>
+    /// Places a bulkhead key in the specified zone. The bulkhead layer is
+    /// inferred from the node's Bulkhead property.
+    /// </summary>
+    public void PlaceBulkheadKey(ZoneNode node, ZonePlacementWeights? weights = null)
+    {
+        var layerData = GetObjectiveLayerData(node.Bulkhead);
+        layerData.BulkheadKeyPlacements.Add(
+            new List<ZonePlacementData>
+            {
+                new()
+                {
+                    LocalIndex = node.ZoneNumber,
+                    Weights = weights ?? ZonePlacementWeights.NotAtStart
+                }
+            });
+    }
+
     public WardenObjective GetObjective(Bulkhead variant)
     {
         if (variant.HasFlag(Bulkhead.Main))
@@ -1392,30 +1437,7 @@ public class Level
         #endregion
 
         #region Bulkhead Keys
-        /*
-         * Ensure we place the bulkhead keys. For now, we just place one at the start of each
-         * bulkhead zone. This is guaranteed to allow us to complete all the objectives.
-         */
-        if (level.HasExtreme || level.HasOverload)
-            level.MainLayerData.BulkheadKeyPlacements.Add(
-                new List<ZonePlacementData>
-                {
-                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
-                });
-
-        if (level.HasExtreme)
-            level.SecondaryLayerData.BulkheadKeyPlacements.Add(
-                new List<ZonePlacementData>
-                {
-                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
-                });
-
-        if (level.HasOverload)
-            level.ThirdLayerData.BulkheadKeyPlacements.Add(
-                new List<ZonePlacementData>
-                {
-                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
-                });
+        level.PlaceDefaultBulkheadKeys();
         #endregion
 
         #region Finalize -- WardenObjective.PostBuild()
