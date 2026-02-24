@@ -388,7 +388,9 @@ public sealed class ZoneSensorManager
 
     /// <summary>
     /// Generates random positions for sensors within a zone, split into batches.
-    /// Host-only: Uses SessionSeedRandom for deterministic generation.
+    /// Host-only: Uses a local RNG seeded from SessionSeedRandom.Seed to avoid
+    /// advancing the shared global RNG (which would desync terminal uplink codes).
+    /// Positions are synced to clients via the state replicator.
     /// Returns a list of position state batches, each containing up to 16 sensors.
     /// </summary>
     private List<ZoneSensorPositionState> GeneratePositionBatches(LG_Zone zone, List<ZoneSensorGroupDefinition> groupDefinitions)
@@ -396,6 +398,14 @@ public sealed class ZoneSensorManager
         // First, generate all positions
         var allPositions = new List<(Vector3 pos, int waypointCount)>();
         var placedSensors = new List<(Vector3 pos, float radius)>();
+
+        // Use a local RNG instead of Builder.SessionSeedRandom to avoid advancing the
+        // shared global RNG state on the host only (since this method runs inside an
+        // IsMaster guard). Diverging SessionSeedRandom causes terminal uplink verification
+        // codes to desync between host and clients. Reading .Seed does not advance the RNG.
+        var rng = new System.Random(Builder.SessionSeedRandom.Seed
+            ^ zone.LocalIndex.GetHashCode()
+            ^ zone.DimensionIndex.GetHashCode());
 
         // Maximum sensors supported (8 batches * 16 per batch)
         const int maxTotalSensors = 8 * ZoneSensorPositionState.MaxSensorsPerBatch;
@@ -416,13 +426,13 @@ public sealed class ZoneSensorManager
                     if (groupDef.AreaIndex >= 0 && groupDef.AreaIndex < zone.m_areas.Count)
                     {
                         var area = zone.m_areas[groupDef.AreaIndex];
-                        position = area.m_courseNode.GetRandomPositionInside_SessionSeed();
+                        position = area.m_courseNode.GetRandomPositionInside();
                     }
                     else
                     {
-                        var randomAreaIndex = Builder.SessionSeedRandom.Range(0, zone.m_areas.Count, "ZoneSensor_AreaSelect");
+                        var randomAreaIndex = rng.Next(0, zone.m_areas.Count);
                         var area = zone.m_areas[randomAreaIndex];
-                        position = area.m_courseNode.GetRandomPositionInside_SessionSeed();
+                        position = area.m_courseNode.GetRandomPositionInside();
                     }
 
                     if (!OverlapsExistingSensor(position, sensorRadius, placedSensors)
