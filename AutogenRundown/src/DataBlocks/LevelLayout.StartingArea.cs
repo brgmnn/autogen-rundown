@@ -106,6 +106,10 @@ public partial record LevelLayout
                 BuildStartingArea_SingleChain();
                 break;
 
+            case BukheadStrategy.Default_NoMainBulkhead:
+                BuildStartingArea_Default_NoMainBulkhead();
+                break;
+
             default:
                 BuildStartingArea_Default();
                 break;
@@ -372,6 +376,84 @@ public partial record LevelLayout
         InitializeBulkheadArea(level, Bulkhead.Main, elevatorDrop);
         InitializeBulkheadArea(level, Bulkhead.Extreme, elevatorDrop);
         InitializeBulkheadArea(level, Bulkhead.Overload, elevatorDrop);
+    }
+
+    /// <summary>
+    /// Same as Default but skips placing a Main bulkhead door. Players walk directly into
+    /// the main zone. Only Extreme and/or Overload get bulkhead doors.
+    /// </summary>
+    private void BuildStartingArea_Default_NoMainBulkhead()
+    {
+        // Add the first zone.
+        var (elevatorDrop, elevatorDropZone) = CreateElevatorZone();
+
+        // Add fog repellers in the first zone if there's fog in the level.
+        if (level.Settings.Modifiers.Contains(LevelModifiers.Fog) ||
+            level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
+            elevatorDropZone.ConsumableDistributionInZone
+                = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
+
+        level.Planner.Connect(elevatorDrop);
+        level.Planner.AddZone(elevatorDrop, elevatorDropZone);
+
+        // One fewer minimum zone since we don't need a slot for the Main bulkhead
+        var minimumZones = level.Settings.Bulkheads switch
+        {
+            Bulkhead.Main => 0,
+            Bulkhead.Main | Bulkhead.Extreme => 0,
+            Bulkhead.Main | Bulkhead.Overload => 0,
+            Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => 1,
+            _ => 0
+        };
+
+        // Bulkheads that need to be placed — no Main bulkhead door
+        var toPlace = level.Settings.Bulkheads switch
+        {
+            Bulkhead.Main => new List<Bulkhead>(),
+            Bulkhead.Main | Bulkhead.Extreme => new List<Bulkhead>
+            {
+                Bulkhead.Extreme
+            },
+            Bulkhead.Main | Bulkhead.Overload => new List<Bulkhead>
+            {
+                Bulkhead.Overload
+            },
+            Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => new List<Bulkhead>
+            {
+                Bulkhead.Extreme,
+                Bulkhead.Overload
+            },
+
+            _ => new List<Bulkhead>()
+        };
+
+        var prev = elevatorDrop;
+        Zone nextZone = elevatorDropZone;
+
+        for (var i = 0; i < minimumZones; i++)
+        {
+            var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
+            var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
+            nextZone = new Zone(level, this)
+            {
+                Coverage = CoverageMinMax.GenNormalSize(),
+                LightSettings = Lights.GenRandomLight(),
+            };
+            nextZone.RollFog(level);
+
+            level.Planner.Connect(prev, next);
+            nextZone = level.Planner.AddZone(next, nextZone);
+
+            // Place the first zones of the connecting bulkhead zones, so we can build from
+            // them later.
+            InitializeBulkheadArea(level, Generator.Draw(toPlace), next);
+
+            prev = next;
+        }
+
+        // The final area also needs to be placed
+        if (toPlace.Count > 0)
+            InitializeBulkheadArea(level, Generator.Draw(toPlace), prev);
     }
 
     /// <summary>

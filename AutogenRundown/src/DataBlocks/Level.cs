@@ -856,6 +856,7 @@ public class Level
     /// </summary>
     public void PlaceDefaultBulkheadKeys()
     {
+        // Main always needs a key if there are any secondary bulkheads
         if ((HasExtreme || HasOverload) && MainLayerData.BulkheadKeyPlacements.Count == 0)
             MainLayerData.BulkheadKeyPlacements.Add(
                 new List<ZonePlacementData>
@@ -863,19 +864,62 @@ public class Level
                     new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
                 });
 
-        if (HasExtreme && SecondaryLayerData.BulkheadKeyPlacements.Count == 0)
-            SecondaryLayerData.BulkheadKeyPlacements.Add(
-                new List<ZonePlacementData>
-                {
-                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
-                });
+        switch (Settings.BulkheadStrategy)
+        {
+            case BukheadStrategy.SingleChain:
+                // Chain: Main → Extreme → Overload. No main bulkhead door, so
+                // only the Extreme key is needed (to gate Overload).
+                if (HasExtreme && SecondaryLayerData.BulkheadKeyPlacements.Count == 0)
+                    SecondaryLayerData.BulkheadKeyPlacements.Add(
+                        new List<ZonePlacementData>
+                        {
+                            new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+                        });
+                break;
 
-        if (HasOverload && ThirdLayerData.BulkheadKeyPlacements.Count == 0)
-            ThirdLayerData.BulkheadKeyPlacements.Add(
-                new List<ZonePlacementData>
+            case BukheadStrategy.Default_NoMainBulkhead:
+                // No main bulkhead. With 3 bulkheads, randomly pick which secondary
+                // layer gets a key. With 2 bulkheads, no secondary key needed.
+                if (HasExtreme && HasOverload)
                 {
-                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
-                });
+                    if (Generator.Flip(0.5))
+                    {
+                        if (SecondaryLayerData.BulkheadKeyPlacements.Count == 0)
+                            SecondaryLayerData.BulkheadKeyPlacements.Add(
+                                new List<ZonePlacementData>
+                                {
+                                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+                                });
+                    }
+                    else
+                    {
+                        if (ThirdLayerData.BulkheadKeyPlacements.Count == 0)
+                            ThirdLayerData.BulkheadKeyPlacements.Add(
+                                new List<ZonePlacementData>
+                                {
+                                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+                                });
+                    }
+                }
+                break;
+
+            default:
+                // Standard strategies: place keys for all secondary layers
+                if (HasExtreme && SecondaryLayerData.BulkheadKeyPlacements.Count == 0)
+                    SecondaryLayerData.BulkheadKeyPlacements.Add(
+                        new List<ZonePlacementData>
+                        {
+                            new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+                        });
+
+                if (HasOverload && ThirdLayerData.BulkheadKeyPlacements.Count == 0)
+                    ThirdLayerData.BulkheadKeyPlacements.Add(
+                        new List<ZonePlacementData>
+                        {
+                            new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+                        });
+                break;
+        }
     }
 
     /// <summary>
@@ -1029,19 +1073,22 @@ public class Level
             },
             Bulkhead.Main | Bulkhead.Extreme => new List<(double, BukheadStrategy)>
             {
-                (0.5, BukheadStrategy.Default),
-                (0.5, BukheadStrategy.CentralHub_x2)
+                (0.35, BukheadStrategy.Default),
+                (0.30, BukheadStrategy.Default_NoMainBulkhead),
+                (0.35, BukheadStrategy.CentralHub_x2)
             },
             Bulkhead.Main | Bulkhead.Overload => new List<(double, BukheadStrategy)>
             {
-                (0.5, BukheadStrategy.Default),
-                (0.5, BukheadStrategy.CentralHub_x2)
+                (0.35, BukheadStrategy.Default),
+                (0.30, BukheadStrategy.Default_NoMainBulkhead),
+                (0.35, BukheadStrategy.CentralHub_x2)
             },
             Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => new List<(double, BukheadStrategy)>
             {
-                (0.1, BukheadStrategy.Default),
-                (0.2, BukheadStrategy.CentralHub_x3),
-                (0.7, BukheadStrategy.SingleChain)
+                (0.05, BukheadStrategy.Default),
+                (0.05, BukheadStrategy.Default_NoMainBulkhead),
+                (0.20, BukheadStrategy.CentralHub_x3),
+                (0.70, BukheadStrategy.SingleChain)
             },
 
             _ => throw new ArgumentOutOfRangeException()
