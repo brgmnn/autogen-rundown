@@ -82,9 +82,8 @@ public partial record LevelLayout
                 },
                 delay: 1.2)
             .AddSound(
-                Sound.FoleyDisinfectPack, // TODO: this doesn't seem to work
-                delay: 1.0,
-                trigger: WardenObjectiveEventTrigger.None);
+                (Sound)2837251734,
+                delay: 0.0);
 
         switch (level.Tier)
         {
