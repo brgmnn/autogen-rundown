@@ -136,15 +136,15 @@ public partial record LevelLayout
             case BukheadStrategy.MainOnly_NoBulkhead:
             {
                 var lastNode = (ZoneNode)level.Planner.GetLastZone(Bulkhead.Main)!;
-
-                return (lastNode, level.Planner.GetZone(lastNode)!);
+                InitializeBulkheadArea(level, bulkhead, lastNode);
+                break;
             }
 
             case BukheadStrategy.Default_NoMainBulkhead:
             {
                 var lastNode = (ZoneNode)level.Planner.GetLastZone(Bulkhead.Main)!;
-
-                return (lastNode, level.Planner.GetZone(lastNode)!);
+                InitializeBulkheadArea(level, bulkhead, lastNode);
+                break;
             }
 
             case BukheadStrategy.SingleChain:
