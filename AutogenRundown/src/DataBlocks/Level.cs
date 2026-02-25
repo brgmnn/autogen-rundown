@@ -499,16 +499,13 @@ public class Level
     /// </summary>
     public int BuildSeed { get; set; } = Generator.Between(1, 2000);
 
-    public JObject Seeds
-    {
-        get => new JObject
+    public JObject Seeds => new()
         {
             ["BuildSeed"] = BuildSeed,
             ["FunctionMarkerOffset"] = 1,
             ["StandardMarkerOffset"] = 0,
             ["LightJobSeedOffset"] = 0
         };
-    }
 
     public JObject Expedition => new()
         {
@@ -783,8 +780,6 @@ public class Level
     /// </summary>
     public void MarkAsErrorAlarm()
     {
-        Name = $"<color=red>?!</color><color=#444444>-</color>{Name}";
-
         ElevatorDropWardenIntel.Add((Generator.Between(1, 6), Generator.Draw(new List<string>
         {
             ">... That alarm started the moment we dropped.\r\n>... [static crackle]\r\n>... <size=200%><color=red>There's no way to turn it off!</color></size>",
@@ -815,8 +810,6 @@ public class Level
     /// </summary>
     public void MarkAsBossErrorAlarm()
     {
-        Name = $"<color=red>!!!</color><color=#444444>/</color>{Name}";
-
         ElevatorDropWardenIntel.Add((Generator.Between(5, 12), Generator.Draw(new List<string>
         {
             ">... [distant rumbling]\r\n>... Feels like something massive is nearby.\r\n>... <size=200%><color=red>We can't face it unprepared!</color></size>",
