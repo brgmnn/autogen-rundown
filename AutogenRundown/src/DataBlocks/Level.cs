@@ -459,9 +459,7 @@ public class Level
     /// </summary>
     public Accessibility Accessibility { get; set; } = Accessibility.Normal;
 
-    public JObject Descriptive
-    {
-        get => new()
+    public JObject Descriptive => new()
         {
             ["Prefix"] = IsTest ? "TEST" : (Prefix ?? Tier),
             ["PublicName"] = Name,
@@ -483,7 +481,6 @@ public class Level
             //  "... Shoot me then, 'cause I'm not going in there.  \r\n... Look, there's no time– \r\n... [gunshot]  \r\n... <size=200%><color=red>Start scanning.\r</color></size>",
             ["RoleplayedWardenIntel"] = ElevatorDropWardenIntel.MaxBy(intel => intel.Item1).Item2,
         };
-    }
 
     /// <summary>
     /// This string is displayed in the drop of the elevator as a role played intel message

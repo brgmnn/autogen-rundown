@@ -1174,9 +1174,9 @@ public record WaveSettings : DataBlock<WaveSettings>
         PopulationPointsPerGroupEnd = 5.0,
         PopulationPointsMinPerGroup = 3.0,
 
-        PopulationPointsPerWaveStart = 15,
-        PopulationPointsPerWaveEnd = 15,
-        PopulationPointsTotal = 15,
+        PopulationPointsPerWaveStart = 18,
+        PopulationPointsPerWaveEnd = 18,
+        PopulationPointsTotal = 18,
 
         WavePauseMin = 1.0,
         WavePauseMax = 20.0,
@@ -1202,9 +1202,9 @@ public record WaveSettings : DataBlock<WaveSettings>
         PopulationPointsPerGroupEnd = 5.0,
         PopulationPointsMinPerGroup = 3.0,
 
-        PopulationPointsPerWaveStart = 18,
-        PopulationPointsPerWaveEnd = 18,
-        PopulationPointsTotal = 18,
+        PopulationPointsPerWaveStart = 24,
+        PopulationPointsPerWaveEnd = 24,
+        PopulationPointsTotal = 24,
 
         WavePauseMin = 1.0,
         WavePauseMax = 20.0,
@@ -1230,9 +1230,9 @@ public record WaveSettings : DataBlock<WaveSettings>
         PopulationPointsPerGroupEnd = 5.0,
         PopulationPointsMinPerGroup = 3.0,
 
-        PopulationPointsPerWaveStart = 24,
-        PopulationPointsPerWaveEnd = 24,
-        PopulationPointsTotal = 24,
+        PopulationPointsPerWaveStart = 32,
+        PopulationPointsPerWaveEnd = 32,
+        PopulationPointsTotal = 32,
 
         WavePauseMin = 1.0,
         WavePauseMax = 20.0,
