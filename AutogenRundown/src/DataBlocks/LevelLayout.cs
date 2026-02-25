@@ -1193,17 +1193,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         if (director.Bulkhead == Bulkhead.Main)
             layout.BuildLayout_ForwardExtract(objective);
 
-        // Probabilistic med bay placement (max 1 per level)
-        var medBayChance = level.Tier switch
-        {
-            "A" => 0.35,
-            "B" => 0.30,
-            "C" => 0.20,
-            "D" => 0.15,
-            "E" => 0.10,
-            _ => 0.25
-        };
-        layout.TryAddMedicalBay(medBayChance);
+        layout.TryAddMedicalBay();
 
         // Attempt to reduce the chance of generation locking where zones cannot be placed
         level.Planner.PlanBulkheadPlacements(director.Bulkhead, direction);

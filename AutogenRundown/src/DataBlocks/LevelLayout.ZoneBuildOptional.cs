@@ -104,6 +104,8 @@ public partial record LevelLayout
         medZone.AmmoPacks = 0;
         medZone.ToolPacks = 0;
 
+        Plugin.Logger.LogDebug($"Added MedBay in: {med}");
+
         return (med, medZone);
     }
 
@@ -111,12 +113,31 @@ public partial record LevelLayout
     /// Attempts to place a med bay in the level with the given probability.
     /// At most one med bay per level.
     /// </summary>
-    public void TryAddMedicalBay(double chance)
+    public void TryAddMedicalBay(double? chance = null)
     {
         if (level.HasMedBay)
             return;
 
-        if (!Generator.Flip(chance))
+        // Keep chances relatively small for levels
+        if (!Generator.Flip(chance ?? (level.Tier, level.Complex) switch
+            {
+                ("A", Complex.Tech) => 0.120,
+                ("A", _           ) => 0.095,
+
+                ("B", Complex.Tech) => 0.100,
+                ("B", _           ) => 0.076,
+
+                ("C", Complex.Tech) => 0.085,
+                ("C", _           ) => 0.063,
+
+                ("D", Complex.Tech) => 0.085,
+                ("D", _           ) => 0.050,
+
+                ("E", Complex.Tech) => 0.085,
+                ("E", _           ) => 0.050,
+
+                _ => 0.05
+            }))
             return;
 
         var candidates = planner.GetOpenZones(director.Bulkhead, null)
@@ -126,14 +147,19 @@ public partial record LevelLayout
             .Where(z => !(z.ZoneNumber == 0 && director.Bulkhead == Bulkhead.Main))
             .ToList();
 
-        if (candidates.Count == 0)
-            return;
-
-        if (candidates.Count > 1)
-            candidates = candidates.Skip(1).ToList();
+        switch (candidates.Count)
+        {
+            case 0:
+                return;
+            case > 1:
+                candidates = candidates.Skip(1).ToList();
+                break;
+        }
 
         var selected = Generator.Pick(candidates);
+
         BuildOptional_MedicalBay(selected);
+
         level.HasMedBay = true;
     }
 }
