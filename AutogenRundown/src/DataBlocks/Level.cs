@@ -986,7 +986,10 @@ public class Level
             }
         };
 
-        return alternatives;
+        return alternatives
+            .GroupBy(a => a.LocalIndex)
+            .Select(g => g.First())
+            .ToList();
     }
 
     /// <summary>
