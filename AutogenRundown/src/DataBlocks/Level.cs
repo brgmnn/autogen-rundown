@@ -73,6 +73,9 @@ public class Level
     /// </summary>
     public List<(double, ZoneNode)> ForwardExtractStartCandidates { get; set; } = new();
 
+    [JsonIgnore]
+    public bool HasMedBay { get; set; } = false;
+
     /// <summary>
     /// Mainly used for calculating what the text should be for extract
     /// </summary>
@@ -1812,6 +1815,7 @@ public class Level
 
             var (med, medZone) = layout.BuildOptional_MedicalBay(elevatorDrop);
             layout.Zones.Add(medZone);
+            level.HasMedBay = true;
 
             elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
                 new CustomTerminalCommand

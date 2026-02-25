@@ -106,4 +106,34 @@ public partial record LevelLayout
 
         return (med, medZone);
     }
+
+    /// <summary>
+    /// Attempts to place a med bay in the level with the given probability.
+    /// At most one med bay per level.
+    /// </summary>
+    public void TryAddMedicalBay(double chance)
+    {
+        if (level.HasMedBay)
+            return;
+
+        if (!Generator.Flip(chance))
+            return;
+
+        var candidates = planner.GetOpenZones(director.Bulkhead, null)
+            .Where(z => !z.Tags.Contains("exit_elevator"))
+            .Where(z => z.Branch != "medical_bay")
+            .Where(z => z.Branch != "disinfection")
+            .Where(z => !(z.ZoneNumber == 0 && director.Bulkhead == Bulkhead.Main))
+            .ToList();
+
+        if (candidates.Count == 0)
+            return;
+
+        if (candidates.Count > 1)
+            candidates = candidates.Skip(1).ToList();
+
+        var selected = Generator.Pick(candidates);
+        BuildOptional_MedicalBay(selected);
+        level.HasMedBay = true;
+    }
 }
