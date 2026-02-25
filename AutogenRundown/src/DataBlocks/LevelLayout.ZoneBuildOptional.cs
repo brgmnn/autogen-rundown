@@ -26,7 +26,7 @@ public partial record LevelLayout
             Bulkhead = Bulkhead.Main,
             Branch = "medical_bay",
             MaxConnections = 0,
-            Tags = new Tags("no_blood_door", "no_enemies")
+            Tags = new Tags("no_blood_door", "no_enemies", "no_scouts")
         });
 
         medZone.AliasPrefix = "MedBay, ZONE";
@@ -76,9 +76,9 @@ public partial record LevelLayout
             .AddInfectPlayer(
                 level.Tier switch
                 {
-                    "D" => Generator.Between(18, 23),
-                    "E" => Generator.Between(20, 27),
-                    _ => Generator.Between(16, 20)
+                    "D" => Generator.Between(23, 28),
+                    "E" => Generator.Between(26, 33),
+                    _ => Generator.Between(18, 25)
                 },
                 delay: 1.2)
             .AddSound(
@@ -99,8 +99,8 @@ public partial record LevelLayout
         // Resources
         medZone.ConsumableDistributionInZone = ConsumableDistribution.MedicalBay_Consumables.PersistentId;
 
-        medZone.HealthPacks = 6;
-        medZone.DisinfectPacks = 2;
+        medZone.HealthPacks = 10;
+        medZone.DisinfectPacks = 6;
         medZone.AmmoPacks = 0;
         medZone.ToolPacks = 0;
 
