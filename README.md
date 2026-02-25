@@ -15,7 +15,6 @@ Check Alarm Persistent IDs for levellayout
 
 TODO:
   * Use https://thunderstore.io/c/gtfo/p/randomguy0753/ZoneScan/ for full room scanning
-  * Enable unit tests again after fixing chained puzzles.
   * Make extract scan short if there's no extract alarm (Don't do it just based on level tier)
   * Add a way to automatically install deps?
   * GIGA Infection Hybrid blood door might be _too_ much, it's like 12 hybrids
@@ -57,9 +56,6 @@ TODO:
     * enemies get bugged
   * Have a challenge like halfway through the fog starts rising and you can turn off the fog in a zone
   * Door alarm adjustments
-
-* Added melee and health syringes into consumables pool
-  * New optional "Medical Bay" side zone's can spawn now which contain health, disinfect, and syringes
 
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
