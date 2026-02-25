@@ -13,6 +13,7 @@ public partial record LevelLayout
     /// <param name="level"></param>
     /// <param name="bulkhead"></param>
     /// <param name="from"></param>
+    /// <param name="zone"></param>
     public void InitializeBulkheadArea(
         Level level,
         Bulkhead bulkhead,
@@ -42,12 +43,10 @@ public partial record LevelLayout
         // Ensure a Bulkhead DC is placed in the from zone.
         var layerData = level.GetObjectiveLayerData(from.Bulkhead);
 
-        if (layerData.BulkheadDoorControllerPlacements
-            .Where(dc => dc.ZoneIndex == from.ZoneNumber)
-            .Count() == 0)
+        if (layerData.BulkheadDoorControllerPlacements.All(dc => dc.ZoneIndex != from.ZoneNumber))
         {
             layerData.BulkheadDoorControllerPlacements.Add(
-                new BulkheadDoorPlacementData()
+                new BulkheadDoorPlacementData
                 {
                     ZoneIndex = from.ZoneNumber,
                     PlacementWeights = ZonePlacementWeights.NotAtStart
@@ -136,13 +135,17 @@ public partial record LevelLayout
             case BukheadStrategy.MainOnly_NoBulkhead:
             {
                 var lastNode = (ZoneNode)level.Planner.GetLastZone(Bulkhead.Main)!;
-                InitializeBulkheadArea(level, bulkhead, lastNode);
-                break;
+
+                return (lastNode, level.Planner.GetZone(lastNode)!);
             }
 
             case BukheadStrategy.Default_NoMainBulkhead:
             {
                 var lastNode = (ZoneNode)level.Planner.GetLastZone(Bulkhead.Main)!;
+
+                if (bulkhead == Bulkhead.Main)
+                    return (lastNode, level.Planner.GetZone(lastNode)!);
+
                 InitializeBulkheadArea(level, bulkhead, lastNode);
                 break;
             }
