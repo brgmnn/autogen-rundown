@@ -1307,7 +1307,7 @@ public class Level
                     {
                         (70, (population, WaveSettings.Scout_Normal)),
                         (15, (WavePopulation.OnlyHybrids, WaveSettings.SingleWave_MiniBoss_4pts)),
-                        (15, (WavePopulation.OnlyInfestedStrikers, WaveSettings.Scout_Normal)),
+                        (15, (WavePopulation.OnlyInfestedStrikers, WaveSettings.Scout_Easy)),
                     });
                 break;
             }
@@ -1338,10 +1338,10 @@ public class Level
                         (10, (WavePopulation.OnlyInfectedHybrids, WaveSettings.SingleWave_MiniBoss_8pts)),
                         (10, (WavePopulation.OnlyInfestedStrikers, WaveSettings.Scout_Hard)),
                         (10, (WavePopulation.OnlyNightmareGiants, WaveSettings.SingleWave_MiniBoss_6pts)),
-                        ( 8, (WavePopulation.SingleEnemy_Mother, WaveSettings.SingleMiniBoss)),
+                        ( 8, (WavePopulation.OnlyShadows, WaveSettings.SingleWave_MiniBoss_12pts)),
                         ( 7, (WavePopulation.SingleEnemy_Tank, WaveSettings.SingleMiniBoss)),
+                        ( 5, (WavePopulation.SingleEnemy_Mother, WaveSettings.SingleMiniBoss)),
                         ( 5, (WavePopulation.SingleEnemy_TankPotato, WaveSettings.SingleMiniBoss)),
-                        ( 5, (WavePopulation.OnlyShadows, WaveSettings.SingleWave_MiniBoss_12pts)),
                     });
                 break;
             }
@@ -1356,10 +1356,10 @@ public class Level
                         (10, (WavePopulation.OnlyInfectedHybrids, WaveSettings.SingleWave_MiniBoss_12pts)),
                         (10, (WavePopulation.OnlyInfestedStrikers, WaveSettings.Scout_VeryHard)),
                         (10, (WavePopulation.OnlyNightmareGiants, WaveSettings.SingleWave_MiniBoss_8pts)),
-                        (10, (WavePopulation.SingleEnemy_Mother, WaveSettings.SingleMiniBoss)),
+                        (10, (WavePopulation.OnlyShadows, WaveSettings.SingleWave_MiniBoss_16pts)),
                         (10, (WavePopulation.SingleEnemy_Tank, WaveSettings.SingleMiniBoss)),
                         ( 8, (WavePopulation.SingleEnemy_TankPotato, WaveSettings.SingleMiniBoss)),
-                        ( 7, (WavePopulation.OnlyShadows, WaveSettings.SingleWave_MiniBoss_16pts)),
+                        ( 7, (WavePopulation.SingleEnemy_Mother, WaveSettings.SingleMiniBoss)),
                     });
                 break;
             }
