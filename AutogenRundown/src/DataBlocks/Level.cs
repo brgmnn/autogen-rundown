@@ -1302,68 +1302,65 @@ public class Level
 
             case "B":
             {
-                settings = WaveSettings.Scout_Normal;
+                (population, settings) = Generator.Select(
+                    new List<(double, (WavePopulation, WaveSettings))>
+                    {
+                        (70, (population, WaveSettings.Scout_Normal)),
+                        (15, (WavePopulation.OnlyHybrids, WaveSettings.SingleWave_MiniBoss_4pts)),
+                        (15, (WavePopulation.OnlyInfestedStrikers, WaveSettings.Scout_Normal)),
+                    });
                 break;
             }
 
             case "C":
             {
-                settings = WaveSettings.Scout_Normal;
-
-                if (Settings.Modifiers.Contains(LevelModifiers.ManyShadows) && Generator.Flip())
-                {
-                    population = WavePopulation.OnlyShadows;
-                    settings = WaveSettings.SingleWave_MiniBoss_6pts;
-                }
-                else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers) && Generator.Flip())
-                {
-                    population = WavePopulation.OnlyChargers;
-                    settings = WaveSettings.SingleWave_MiniBoss_6pts;
-                }
+                (population, settings) = Generator.Select(
+                    new List<(double, (WavePopulation, WaveSettings))>
+                    {
+                        (45, (population, WaveSettings.Scout_Normal)),
+                        (15, (WavePopulation.OnlyHybrids, WaveSettings.SingleWave_MiniBoss_6pts)),
+                        (10, (WavePopulation.OnlyInfectedHybrids, WaveSettings.SingleWave_MiniBoss_6pts)),
+                        (10, (WavePopulation.OnlyInfestedStrikers, WaveSettings.Scout_Normal)),
+                        (10, (WavePopulation.OnlyNightmareGiants, WaveSettings.SingleWave_MiniBoss_4pts)),
+                        ( 5, (WavePopulation.SingleEnemy_Mother, WaveSettings.SingleMiniBoss)),
+                        ( 5, (WavePopulation.SingleEnemy_Tank, WaveSettings.SingleMiniBoss)),
+                    });
                 break;
             }
 
             case "D":
             {
-                settings = WaveSettings.Scout_Hard;
-
-                if (Settings.Modifiers.Contains(LevelModifiers.ManyNightmares) && Generator.Flip())
-                {
-                    population = WavePopulation.OnlyNightmareGiants;
-                    settings = WaveSettings.SingleWave_MiniBoss_8pts;
-                }
-                else if (Settings.Modifiers.Contains(LevelModifiers.ManyShadows) && Generator.Flip())
-                {
-                    population = WavePopulation.OnlyShadows;
-                    settings = WaveSettings.SingleWave_MiniBoss_12pts;
-                }
-                else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers) && Generator.Flip())
-                {
-                    population = WavePopulation.OnlyChargers;
-                    settings = WaveSettings.SingleWave_MiniBoss_8pts;
-                }
+                (population, settings) = Generator.Select(
+                    new List<(double, (WavePopulation, WaveSettings))>
+                    {
+                        (30, (population, WaveSettings.Scout_Hard)),
+                        (15, (WavePopulation.OnlyHybrids, WaveSettings.SingleWave_MiniBoss_8pts)),
+                        (10, (WavePopulation.OnlyInfectedHybrids, WaveSettings.SingleWave_MiniBoss_8pts)),
+                        (10, (WavePopulation.OnlyInfestedStrikers, WaveSettings.Scout_Hard)),
+                        (10, (WavePopulation.OnlyNightmareGiants, WaveSettings.SingleWave_MiniBoss_6pts)),
+                        ( 8, (WavePopulation.SingleEnemy_Mother, WaveSettings.SingleMiniBoss)),
+                        ( 7, (WavePopulation.SingleEnemy_Tank, WaveSettings.SingleMiniBoss)),
+                        ( 5, (WavePopulation.SingleEnemy_TankPotato, WaveSettings.SingleMiniBoss)),
+                        ( 5, (WavePopulation.OnlyShadows, WaveSettings.SingleWave_MiniBoss_12pts)),
+                    });
                 break;
             }
 
             case "E":
             {
-                settings = WaveSettings.Scout_VeryHard;
-
-                if (Settings.Modifiers.Contains(LevelModifiers.ManyNightmares) && Generator.Flip())
-                {
-                    population = WavePopulation.OnlyNightmareGiants;
-                    settings = WaveSettings.SingleWave_MiniBoss_12pts;
-                }
-                else if (Settings.Modifiers.Contains(LevelModifiers.ManyShadows) && Generator.Flip())
-                {
-                    population = WavePopulation.OnlyShadows;
-                    settings = WaveSettings.SingleWave_MiniBoss_16pts;
-                }
-                else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers) && Generator.Flip())
-                {
-                    population = WavePopulation.OnlyChargers;
-                    settings = WaveSettings.SingleWave_MiniBoss_12pts;
-                }
+                (population, settings) = Generator.Select(
+                    new List<(double, (WavePopulation, WaveSettings))>
+                    {
+                        (20, (population, WaveSettings.Scout_VeryHard)),
+                        (15, (WavePopulation.OnlyHybrids, WaveSettings.SingleWave_MiniBoss_12pts)),
+                        (10, (WavePopulation.OnlyInfectedHybrids, WaveSettings.SingleWave_MiniBoss_12pts)),
+                        (10, (WavePopulation.OnlyInfestedStrikers, WaveSettings.Scout_VeryHard)),
+                        (10, (WavePopulation.OnlyNightmareGiants, WaveSettings.SingleWave_MiniBoss_8pts)),
+                        (10, (WavePopulation.SingleEnemy_Mother, WaveSettings.SingleMiniBoss)),
+                        (10, (WavePopulation.SingleEnemy_Tank, WaveSettings.SingleMiniBoss)),
+                        ( 8, (WavePopulation.SingleEnemy_TankPotato, WaveSettings.SingleMiniBoss)),
+                        ( 7, (WavePopulation.OnlyShadows, WaveSettings.SingleWave_MiniBoss_16pts)),
+                    });
                 break;
             }
         }
