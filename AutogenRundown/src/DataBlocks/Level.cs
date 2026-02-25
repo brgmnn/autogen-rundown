@@ -1287,13 +1287,22 @@ public class Level
             population = WavePopulation.Baseline_Shadows;
         else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers))
             population = WavePopulation.OnlyShadows;
+        else if (Settings.Modifiers.Contains(LevelModifiers.Nightmares))
+            population = WavePopulation.Baseline_Nightmare;
+        else if (Settings.Modifiers.Contains(LevelModifiers.OnlyNightmares))
+            population = WavePopulation.OnlyNightmares;
 
         switch (Tier)
         {
             case "A":
-            case "B":
             {
                 settings = WaveSettings.Scout_Easy;
+                break;
+            }
+
+            case "B":
+            {
+                settings = WaveSettings.Scout_Normal;
                 break;
             }
 
@@ -1326,7 +1335,7 @@ public class Level
                 else if (Settings.Modifiers.Contains(LevelModifiers.ManyShadows) && Generator.Flip())
                 {
                     population = WavePopulation.OnlyShadows;
-                    settings = WaveSettings.SingleWave_MiniBoss_6pts;
+                    settings = WaveSettings.SingleWave_MiniBoss_12pts;
                 }
                 else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers) && Generator.Flip())
                 {
@@ -1348,7 +1357,7 @@ public class Level
                 else if (Settings.Modifiers.Contains(LevelModifiers.ManyShadows) && Generator.Flip())
                 {
                     population = WavePopulation.OnlyShadows;
-                    settings = WaveSettings.SingleWave_MiniBoss_12pts;
+                    settings = WaveSettings.SingleWave_MiniBoss_16pts;
                 }
                 else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers) && Generator.Flip())
                 {
