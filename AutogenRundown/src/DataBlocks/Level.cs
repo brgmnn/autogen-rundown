@@ -605,6 +605,11 @@ public class Level
     [JsonProperty("ThirdLayerEnabled")]
     public bool HasOverload => Settings.Bulkheads.HasFlag(Bulkhead.Overload);
 
+    private bool HasMainBulkheadDoor => Settings.BulkheadStrategy is
+        BukheadStrategy.Default or
+        BukheadStrategy.CentralHub_x2 or
+        BukheadStrategy.CentralHub_x3;
+
     public uint ThirdLayout
     {
         get => Layouts.TryGetValue(Bulkhead.Overload, out var val) ? val?.PersistentId ?? 0 : 0;
@@ -858,11 +863,10 @@ public class Level
     {
         // Main always needs a key if there are any secondary bulkheads
         if ((HasExtreme || HasOverload) && MainLayerData.BulkheadKeyPlacements.Count == 0)
-            MainLayerData.BulkheadKeyPlacements.Add(
-                new List<ZonePlacementData>
-                {
-                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
-                });
+        {
+            var candidates = GetKeyPlacementCandidates(Bulkhead.Main);
+            MainLayerData.BulkheadKeyPlacements.Add(BuildKeyAlternatives(candidates));
+        }
 
         switch (Settings.BulkheadStrategy)
         {
@@ -870,11 +874,10 @@ public class Level
                 // Chain: Main → Extreme → Overload. No main bulkhead door, so
                 // only the Extreme key is needed (to gate Overload).
                 if (HasExtreme && SecondaryLayerData.BulkheadKeyPlacements.Count == 0)
-                    SecondaryLayerData.BulkheadKeyPlacements.Add(
-                        new List<ZonePlacementData>
-                        {
-                            new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
-                        });
+                {
+                    var candidates = GetKeyPlacementCandidates(Bulkhead.Overload);
+                    SecondaryLayerData.BulkheadKeyPlacements.Add(BuildKeyAlternatives(candidates));
+                }
                 break;
 
             case BukheadStrategy.Default_NoMainBulkhead:
@@ -885,20 +888,18 @@ public class Level
                     if (Generator.Flip(0.5))
                     {
                         if (SecondaryLayerData.BulkheadKeyPlacements.Count == 0)
-                            SecondaryLayerData.BulkheadKeyPlacements.Add(
-                                new List<ZonePlacementData>
-                                {
-                                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
-                                });
+                        {
+                            var candidates = GetKeyPlacementCandidates(Bulkhead.Extreme);
+                            SecondaryLayerData.BulkheadKeyPlacements.Add(BuildKeyAlternatives(candidates));
+                        }
                     }
                     else
                     {
                         if (ThirdLayerData.BulkheadKeyPlacements.Count == 0)
-                            ThirdLayerData.BulkheadKeyPlacements.Add(
-                                new List<ZonePlacementData>
-                                {
-                                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
-                                });
+                        {
+                            var candidates = GetKeyPlacementCandidates(Bulkhead.Overload);
+                            ThirdLayerData.BulkheadKeyPlacements.Add(BuildKeyAlternatives(candidates));
+                        }
                     }
                 }
                 break;
@@ -906,20 +907,86 @@ public class Level
             default:
                 // Standard strategies: place keys for all secondary layers
                 if (HasExtreme && SecondaryLayerData.BulkheadKeyPlacements.Count == 0)
-                    SecondaryLayerData.BulkheadKeyPlacements.Add(
-                        new List<ZonePlacementData>
-                        {
-                            new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
-                        });
+                {
+                    var candidates = GetKeyPlacementCandidates(Bulkhead.Extreme);
+                    SecondaryLayerData.BulkheadKeyPlacements.Add(BuildKeyAlternatives(candidates));
+                }
 
                 if (HasOverload && ThirdLayerData.BulkheadKeyPlacements.Count == 0)
-                    ThirdLayerData.BulkheadKeyPlacements.Add(
-                        new List<ZonePlacementData>
-                        {
-                            new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
-                        });
+                {
+                    var candidates = GetKeyPlacementCandidates(Bulkhead.Overload);
+                    ThirdLayerData.BulkheadKeyPlacements.Add(BuildKeyAlternatives(candidates));
+                }
                 break;
         }
+    }
+
+    private List<ZoneNode> GetKeyPlacementCandidates(Bulkhead keyFor)
+    {
+        return keyFor switch
+        {
+            Bulkhead.Main when HasMainBulkheadDoor
+                => Planner.GetZones(Bulkhead.StartingArea, null),
+            Bulkhead.Main
+                => Planner.GetZones(Bulkhead.Main, null),
+            Bulkhead.Extreme
+                => Planner.GetZones(Bulkhead.Main, null),
+            Bulkhead.Overload when Settings.BulkheadStrategy is BukheadStrategy.SingleChain
+                => Planner.GetZones(Bulkhead.Extreme, null),
+            Bulkhead.Overload
+                => Planner.GetZones(Bulkhead.Main, null),
+            _ => Planner.GetZones(Bulkhead.Main, null)
+        };
+    }
+
+    private List<ZonePlacementData> BuildKeyAlternatives(List<ZoneNode> candidates)
+    {
+        if (candidates.Count == 0)
+            return new List<ZonePlacementData>
+            {
+                new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+            };
+
+        if (candidates.Count <= 3)
+            return candidates.Select(c => new ZonePlacementData
+            {
+                LocalIndex = c.ZoneNumber,
+                Weights = ZonePlacementWeights.EvenlyDistributed
+            }).ToList();
+
+        var third = candidates.Count / 3;
+        var early = candidates.Take(third).ToList();
+        var mid = candidates.Skip(third).Take(third).ToList();
+        var deep = candidates.Skip(third * 2).ToList();
+
+        var alternatives = Tier switch
+        {
+            "A" or "B" => new List<ZonePlacementData>
+            {
+                new() { LocalIndex = Generator.Pick(early)!.ZoneNumber, Weights = ZonePlacementWeights.EvenlyDistributed },
+                new() { LocalIndex = Generator.Pick(early.Concat(mid).ToList())!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart }
+            },
+            "C" => new List<ZonePlacementData>
+            {
+                new() { LocalIndex = Generator.Pick(early)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart },
+                new() { LocalIndex = Generator.Pick(mid)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart },
+                new() { LocalIndex = Generator.Pick(deep)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart }
+            },
+            "D" => new List<ZonePlacementData>
+            {
+                new() { LocalIndex = Generator.Pick(mid)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart },
+                new() { LocalIndex = Generator.Pick(deep)!.ZoneNumber, Weights = ZonePlacementWeights.AtEnd },
+                new() { LocalIndex = Generator.Pick(mid.Concat(deep).ToList())!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart }
+            },
+            _ => new List<ZonePlacementData>
+            {
+                new() { LocalIndex = Generator.Pick(deep)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart },
+                new() { LocalIndex = Generator.Pick(mid.Concat(deep).ToList())!.ZoneNumber, Weights = ZonePlacementWeights.AtEnd },
+                new() { LocalIndex = Generator.Pick(deep)!.ZoneNumber, Weights = ZonePlacementWeights.AtEnd }
+            }
+        };
+
+        return alternatives;
     }
 
     /// <summary>
