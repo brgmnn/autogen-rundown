@@ -120,12 +120,11 @@ public class Plugin : BasePlugin
         GameDataAPI.OnGameDataInitialized += LogArchivistManager.Setup;
         GameDataAPI.OnGameDataInitialized += ZoneSensorManager.Setup;
 
-        LevelAPI.OnLevelCleanup += SignBorderManager.Clear;
-
-        LevelAPI.OnEnterLevel += () =>
-        {
-            SignBorderManager.SetBorderColor(0, new Color { r = 1.0f, b = 0.0f, g = 0.0f });
-        };
+        // LevelAPI.OnLevelCleanup += SignBorderManager.Clear;
+        // LevelAPI.OnEnterLevel += () =>
+        // {
+        //     SignBorderManager.SetBorderColor(0, new Color { r = 1.0f, b = 0.0f, g = 0.0f });
+        // };
 
         RundownTierMarkerArchivist.PluginSetup();
 
