@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace AutogenRundown.Patches;
 
-[HarmonyPatch]
+// [HarmonyPatch]
 public class Patch_LG_Sign
 {
     [HarmonyPatch(typeof(Builder), nameof(Builder.Build))]
