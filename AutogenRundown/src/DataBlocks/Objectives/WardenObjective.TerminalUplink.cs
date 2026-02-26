@@ -171,6 +171,8 @@ public partial record WardenObjective
                     Weights = ZonePlacementWeights.NotAtStart
                 }
             });
+
+        AddCompletedObjectiveWaves(level, director);
     }
 
     private void PostBuildIntel_TerminalUplink(Level level)

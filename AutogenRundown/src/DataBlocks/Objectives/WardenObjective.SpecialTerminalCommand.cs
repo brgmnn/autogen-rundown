@@ -480,15 +480,9 @@ public partial record WardenObjective
 
         ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
 
-        // Add exit wave if this is the main bulkhead and it's not already an error alarm command
-        if (director.Bulkhead.HasFlag(Bulkhead.Main) && SpecialTerminalCommand_Type != SpecialCommand.ErrorAlarm)
-            WavesOnGotoWin.Add(new GenericWave
-            {
-                Population = WavePopulation.Baseline,
-                Settings = WaveSettings.Exit_Objective_Easy,
-                TriggerAlarm = true,
-                SpawnDelay = 4.0
-            });
+        // Add exit wave if this is not already an error alarm command
+        if (SpecialTerminalCommand_Type != SpecialCommand.ErrorAlarm)
+            AddCompletedObjectiveWaves(level, director);
     }
 
     private void PostBuildIntel_SpecialTerminalCommand(Level level)
