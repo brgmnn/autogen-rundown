@@ -295,6 +295,27 @@ public static class WardenObjectiveEventCollections
         return events;
     }
 
+    public static ICollection<WardenObjectiveEvent> AddCyclingFog(
+        this ICollection<WardenObjectiveEvent> events,
+        Level level,
+        int loopIndex = 1,
+        double delay = 30.0,
+        double duration = 45.0)
+    {
+        Fog submergedFog;
+
+        if (level.FogSettings.IsInfectious)
+            submergedFog = level.FogSettings.IsInverted
+                ? Fog.InvertedFullFog_Infectious
+                : Fog.FullFog_Infectious;
+        else
+            submergedFog = level.FogSettings.IsInverted
+                ? Fog.InvertedFullFog
+                : Fog.FullFog;
+
+        return events.AddCyclingFog(submergedFog, level.FogSettings, loopIndex, delay, duration);
+    }
+
     #endregion
 
     #region Lights

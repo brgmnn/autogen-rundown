@@ -433,6 +433,28 @@ public record Fog : DataBlock<Fog>
         DensityNoiseDirection = new Vector3 { X = 0.0, Y = -1.0, Z = 0.0 },
     };
 
+    public static Fog InvertedFullFog = FullFog with
+    {
+        Name = "Fog_InvertedFull",
+        PersistentId = Generator.GetPersistentId(),
+
+        FogDensity = DENSITY_HIGH,
+        DensityHeightMaxBoost = DENSITY_LOW,
+        DensityHeightAltitude = HEIGHT_MAX,
+        DensityHeightRange = 0.2,
+        DensityNoiseSpeed = 0.074,
+        DensityNoiseScale = 0.131,
+        DensityNoiseDirection = new Vector3 { X = 0.0, Y = -1.0, Z = 0.0 },
+    };
+
+    public static Fog InvertedFullFog_Infectious = InvertedFullFog with
+    {
+        Name = "Fog_InvertedFull_Infectious",
+        PersistentId = Generator.GetPersistentId(),
+        FogColor = Color.InfectiousFog_R8D1,
+        Infection = INFECTION_MEDIUM,
+    };
+
     public static Fog LowFog_Infectious = LowFog with
     {
         Name = "Fog_Low_Infectious",
@@ -530,6 +552,8 @@ public record Fog : DataBlock<Fog>
         Bins.Fogs.AddBlock(LowFog);
         Bins.Fogs.AddBlock(FullFog);
         Bins.Fogs.AddBlock(HeavyFullFog);
+        Bins.Fogs.AddBlock(InvertedFullFog);
+        Bins.Fogs.AddBlock(InvertedFullFog_Infectious);
 
         Bins.Fogs.AddBlock(LowFog_Infectious);
         Bins.Fogs.AddBlock(LowMidFog_Infectious);
