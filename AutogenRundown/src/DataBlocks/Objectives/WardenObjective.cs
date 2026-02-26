@@ -467,11 +467,10 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     }
 
     /// <summary>
-    /// Add's default exit/completion waves for an objective. Often we want
-    /// these but want to adjust them based on difficulty and what objective
-    /// we are on.
+    /// Adds default exit/completion waves and environmental penalties for an
+    /// objective. Scaled by tier and bulkhead.
     /// </summary>
-    public void AddCompletedObjectiveWaves(Level level, BuildDirector director)
+    public void AddCompletedObjectiveChallenge(Level level, BuildDirector director)
     {
         // Extraction waves. These are progressively harder
         // Overload is balanced to get harder error waves when getting the sample
@@ -536,23 +535,22 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 _ => 1.0,
             };
         }
-    }
 
-    public void AddCompletedObjectivePenalty(Level level, BuildDirector director)
-    {
+        // Environmental penalties — lights off, fog fill, or both
         switch (level.Tier, director.Bulkhead, level.HasPrisonerEfficiency)
         {
             case ("A", Bulkhead.Main, _):
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    (0.5, () => {}),
-                    (0.5, () =>
+                    (1.0, () => {}),
+                    (1.0, () =>
                     {
                         EventsOnGotoWin.AddLightsOff(Generator.Between(1, 6));
                     }),
-                    (0.5, () =>
+                    (1.0, () =>
                     {
-                        EventsOnGotoWin.AddFillFog(Generator.Between(1, 6));
+                        if (level.Settings.HasFog() && level.TrySetFogUsage(FogUsage.ShortDuration))
+                            EventsOnGotoWin.AddFillFog(Generator.Between(1, 6));
                     })
                 });
                 break;
@@ -562,39 +560,103 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 break;
 
             case ("A", Bulkhead.Overload, _):
-                EventsOnGotoWin.AddFillFog(Generator.Between(1, 6));
+                if (level.Settings.HasFog() && level.TrySetFogUsage(FogUsage.ShortDuration))
+                    EventsOnGotoWin.AddFillFog(Generator.Between(1, 6));
+                else
+                    EventsOnGotoWin.AddLightsOff(Generator.Between(1, 6));
                 break;
-
 
             case ("B", Bulkhead.Main, _):
-                break;
-            case ("B", Bulkhead.Extreme, _):
-                break;
-            case ("B", Bulkhead.Overload, _):
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    (1.0, () => {}),
+                    (1.0, () =>
+                    {
+                        EventsOnGotoWin.AddLightsOff(Generator.Between(1, 6));
+                    })
+                });
                 break;
 
+            case ("B", Bulkhead.Extreme, _):
+                EventsOnGotoWin.AddLightsOff(Generator.Between(1, 6));
+                break;
+
+            case ("B", Bulkhead.Overload, _):
+                if (level.Settings.HasFog() && level.TrySetFogUsage(FogUsage.ShortDuration))
+                    EventsOnGotoWin.AddFillFog(Generator.Between(1, 6));
+                else
+                    EventsOnGotoWin.AddLightsOff(Generator.Between(1, 6));
+                break;
 
             case ("C", Bulkhead.Main, _):
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    (1.0, () =>
+                    {
+                        EventsOnGotoWin.AddLightsOff(Generator.Between(1, 6));
+                    }),
+                    (1.0, () =>
+                    {
+                        if (level.Settings.HasFog() && level.TrySetFogUsage(FogUsage.ShortDuration))
+                            EventsOnGotoWin.AddFillFog(Generator.Between(1, 6));
+                        else
+                            EventsOnGotoWin.AddLightsOff(Generator.Between(1, 6));
+                    })
+                });
                 break;
+
             case ("C", Bulkhead.Extreme, _):
+                EventsOnGotoWin.AddLightsOff(Generator.Between(1, 6));
                 break;
+
             case ("C", Bulkhead.Overload, _):
-                // EventsOnGotoWin.AddCyclingFog();
+                if (level.Settings.HasFog() && level.TrySetFogUsage(FogUsage.ShortDuration))
+                    EventsOnGotoWin.AddFillFog(Generator.Between(1, 6));
+                else
+                    EventsOnGotoWin.AddLightsOff(Generator.Between(1, 6));
                 break;
 
             case ("D", Bulkhead.Main, _):
-                break;
-            case ("D", Bulkhead.Extreme, _):
-                break;
-            case ("D", Bulkhead.Overload, _):
+                EventsOnGotoWin.AddLightsOff(Generator.Between(1, 6));
                 break;
 
+            case ("D", Bulkhead.Extreme, _):
+                if (level.Settings.HasFog() && level.TrySetFogUsage(FogUsage.ShortDuration))
+                    EventsOnGotoWin.AddFillFog(Generator.Between(1, 6));
+                else
+                    EventsOnGotoWin.AddLightsOff(Generator.Between(1, 6));
+                break;
+
+            case ("D", Bulkhead.Overload, _):
+            {
+                var delay = Generator.Between(1, 6);
+                if (level.Settings.HasFog() && level.TrySetFogUsage(FogUsage.ShortDuration))
+                    EventsOnGotoWin.AddFillFog(delay);
+                EventsOnGotoWin.AddLightsOff(delay);
+                break;
+            }
+
             case ("E", Bulkhead.Main, _):
+                EventsOnGotoWin.AddLightsOff(Generator.Between(1, 6));
                 break;
+
             case ("E", Bulkhead.Extreme, _):
+            {
+                var delay = Generator.Between(1, 6);
+                if (level.Settings.HasFog() && level.TrySetFogUsage(FogUsage.ShortDuration))
+                    EventsOnGotoWin.AddFillFog(delay);
+                EventsOnGotoWin.AddLightsOff(delay);
                 break;
+            }
+
             case ("E", Bulkhead.Overload, _):
+            {
+                var delay = Generator.Between(1, 6);
+                if (level.Settings.HasFog() && level.TrySetFogUsage(FogUsage.ShortDuration))
+                    EventsOnGotoWin.AddFillFog(delay);
+                EventsOnGotoWin.AddLightsOff(delay);
                 break;
+            }
         }
     }
 

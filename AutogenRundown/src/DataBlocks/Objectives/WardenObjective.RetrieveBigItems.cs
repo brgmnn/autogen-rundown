@@ -136,7 +136,7 @@ public partial record WardenObjective
             case WardenObjectiveItem.CryoCase:
             {
                 if (RetrieveItems.Count == 1)
-                    AddCompletedObjectiveWaves(level, director);
+                    AddCompletedObjectiveChallenge(level, director);
 
                 break;
             }

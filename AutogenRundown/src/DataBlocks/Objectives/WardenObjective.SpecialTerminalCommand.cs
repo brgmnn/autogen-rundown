@@ -482,7 +482,7 @@ public partial record WardenObjective
 
         // Add exit wave if this is not already an error alarm command
         if (SpecialTerminalCommand_Type != SpecialCommand.ErrorAlarm)
-            AddCompletedObjectiveWaves(level, director);
+            AddCompletedObjectiveChallenge(level, director);
     }
 
     private void PostBuildIntel_SpecialTerminalCommand(Level level)

@@ -86,7 +86,7 @@ public partial record WardenObjective
             "E" => Generator.Between(8, 14),
         };
 
-        AddCompletedObjectiveWaves(level, director);
+        AddCompletedObjectiveChallenge(level, director);
     }
 
     private void PostBuildIntel_GatherTerminal(Level level)

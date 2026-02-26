@@ -62,7 +62,7 @@ public partial record WardenObjective
             _ => 1
         };
 
-        AddCompletedObjectiveWaves(level, director);
+        AddCompletedObjectiveChallenge(level, director);
     }
 
     private void PostBuildIntel_HsuFindSample(Level level)

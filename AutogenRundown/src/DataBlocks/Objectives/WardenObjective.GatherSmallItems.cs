@@ -129,7 +129,7 @@ public partial record WardenObjective
         Plugin.Logger.LogDebug($"GatherSmallItems: GatherMaxPerZone = {GatherMaxPerZone}");
         Plugin.Logger.LogDebug($"GatherSmallItems: Placements = [{Gather_PlacementNodes.Print()}]");
 
-        AddCompletedObjectiveWaves(level, director);
+        AddCompletedObjectiveChallenge(level, director);
     }
 
     private void PostBuildIntel_GatherSmallItems(Level level)

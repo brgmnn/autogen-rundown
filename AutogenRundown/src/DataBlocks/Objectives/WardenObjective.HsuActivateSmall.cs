@@ -72,7 +72,7 @@ public partial record WardenObjective
         ActivateHSU_ObjectiveCompleteAfterInsertion = true; // true fixes the double item in exit scan bug
         ActivateHSU_RequireItemAfterActivationInExitScan = true;
 
-        AddCompletedObjectiveWaves(level, director);
+        AddCompletedObjectiveChallenge(level, director);
     }
 
     private void PostBuildIntel_HsuActivateSmall(Level level)

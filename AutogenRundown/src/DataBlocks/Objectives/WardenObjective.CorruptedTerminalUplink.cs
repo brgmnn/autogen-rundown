@@ -171,7 +171,7 @@ public partial record WardenObjective
             }
         }
 
-        AddCompletedObjectiveWaves(level, director);
+        AddCompletedObjectiveChallenge(level, director);
     }
 
     private void PostBuildIntel_CorruptedTerminalUplink(Level level)

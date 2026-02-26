@@ -61,7 +61,7 @@ public partial record WardenObjective
             "E" => ChainedPuzzle.FindOrPersist(ChainedPuzzle.AlarmClass6 with { Settings = WaveSettings.Baseline_VeryHard })
         };
 
-        AddCompletedObjectiveWaves(level, director);
+        AddCompletedObjectiveChallenge(level, director);
     }
 
     private void PostBuildIntel_CentralGeneratorCluster(Level level)

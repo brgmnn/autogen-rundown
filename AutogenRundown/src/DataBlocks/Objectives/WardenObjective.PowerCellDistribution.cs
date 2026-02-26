@@ -103,7 +103,7 @@ public partial record WardenObjective
 
         }
 
-        AddCompletedObjectiveWaves(level, director);
+        AddCompletedObjectiveChallenge(level, director);
     }
 
     private void PostBuildIntel_PowerCellDistribution(Level level)
