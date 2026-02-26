@@ -493,7 +493,7 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 WavesOnGotoWin.Add(GenericWave.Exit_Objective_Medium);
                 break;
 
-            +case ("B", Bulkhead.Extreme):
+            case ("B", Bulkhead.Extreme):
                 break;
 
             case ("B", Bulkhead.Overload):
