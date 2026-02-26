@@ -258,7 +258,7 @@ public static class WardenObjectiveEventCollections
         var eventLoop = new EventLoop
         {
             LoopIndex = loopIndex,
-            LoopDelay = delay,
+            LoopDelay = 2 * (duration + delay),
             LoopCount = -1
         };
 
@@ -267,7 +267,6 @@ public static class WardenObjectiveEventCollections
             {
                 Type = WardenObjectiveEventType.SetFogSettings,
                 Dimension = DimensionIndex.Reality, // TODO: support dimensions
-                Trigger = WardenObjectiveEventTrigger.OnStart,
                 FogSetting = fogSettings1.PersistentId,
                 FogTransitionDuration = duration,
                 SoundId = (Sound)2275333205,
@@ -278,7 +277,6 @@ public static class WardenObjectiveEventCollections
             {
                 Type = WardenObjectiveEventType.SetFogSettings,
                 Dimension = DimensionIndex.Reality, // TODO: support dimensions
-                Trigger = WardenObjectiveEventTrigger.OnStart,
                 FogSetting = fogSettings2.PersistentId,
                 FogTransitionDuration = duration,
                 SoundId = (Sound)2275333205,
