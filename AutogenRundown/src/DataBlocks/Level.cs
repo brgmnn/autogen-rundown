@@ -439,6 +439,7 @@ public class Level
         if (FogUsage == FogUsage.None)
         {
             FogUsage = requested;
+
             return true;
         }
 
