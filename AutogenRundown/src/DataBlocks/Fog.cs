@@ -9,6 +9,7 @@ public record Fog : DataBlock<Fog>
     public const double DENSITY_LOW   = 0.0007;
     public const double DENSITY_MED   = 0.005;
     public const double DENSITY_HIGH  = 0.015;
+    public const double DENSITY_MAX   = 0.020;
 
     /// <summary>
     /// Value = 0.045
@@ -43,6 +44,7 @@ public record Fog : DataBlock<Fog>
         DensityHeightMaxBoost = 0.002,
         Infection = 0.0
     };
+
 
     #region Preset fogs
 
@@ -433,28 +435,6 @@ public record Fog : DataBlock<Fog>
         DensityNoiseDirection = new Vector3 { X = 0.0, Y = -1.0, Z = 0.0 },
     };
 
-    public static Fog InvertedFullFog = FullFog with
-    {
-        Name = "Fog_InvertedFull",
-        PersistentId = Generator.GetPersistentId(),
-
-        FogDensity = DENSITY_HIGH,
-        DensityHeightMaxBoost = DENSITY_LOW,
-        DensityHeightAltitude = HEIGHT_MAX,
-        DensityHeightRange = 0.2,
-        DensityNoiseSpeed = 0.074,
-        DensityNoiseScale = 0.131,
-        DensityNoiseDirection = new Vector3 { X = 0.0, Y = -1.0, Z = 0.0 },
-    };
-
-    public static Fog InvertedFullFog_Infectious = InvertedFullFog with
-    {
-        Name = "Fog_InvertedFull_Infectious",
-        PersistentId = Generator.GetPersistentId(),
-        FogColor = Color.InfectiousFog_R8D1,
-        Infection = INFECTION_MEDIUM,
-    };
-
     public static Fog LowFog_Infectious = LowFog with
     {
         Name = "Fog_Low_Infectious",
@@ -492,6 +472,60 @@ public record Fog : DataBlock<Fog>
         },
         Infection = INFECTION_SLOW,
     };
+
+    #region Cycling fog
+
+    public static Fog CyclingFog_Clear = new()
+    {
+        Name = "CyclingFog_Clear",
+        PersistentId = Generator.GetPersistentId(),
+
+        FogColor = new()
+        {
+            Red = 0.7815504,
+            Green = 0.834937453,
+            Blue = 0.8584906,
+            Alpha = 0.03137255
+        },
+
+        FogDensity = 0.0007, // Technically this makes the fog inverted
+        DensityHeightMaxBoost = 0.0007,
+        DensityHeightAltitude = 18.75,
+        DensityHeightRange = 0.05,
+        DensityNoiseSpeed = 0.1,
+        DensityNoiseScale = 0.131,
+        DensityNoiseDirection = Vector3.Zero()
+    };
+
+    public static Fog CyclingFog_Heavy = CyclingFog_Clear with
+    {
+        Name = "CyclingFog_Heavy",
+        PersistentId = Generator.GetPersistentId(),
+
+        FogDensity = 0.0174,
+        DensityHeightMaxBoost = 0.0175,
+    };
+
+    public static Fog CyclingFog_Clear_Infectious = CyclingFog_Clear with
+    {
+        Name = "CyclingFog_Clear_Infectious",
+        PersistentId = Generator.GetPersistentId(),
+
+        FogColor = Color.InfectiousFog_R8D1,
+        Infection = 0.01
+    };
+
+    public static Fog CyclingFog_Heavy_Infectious = CyclingFog_Heavy with
+    {
+        Name = "CyclingFog_Heavy_Infectious",
+        PersistentId = Generator.GetPersistentId(),
+
+        FogColor = Color.InfectiousFog_R8D1,
+        Infection = 0.01
+    };
+
+    #endregion
+
     #endregion
 
     public virtual bool Equals(Fog? other)
@@ -552,13 +586,16 @@ public record Fog : DataBlock<Fog>
         Bins.Fogs.AddBlock(LowFog);
         Bins.Fogs.AddBlock(FullFog);
         Bins.Fogs.AddBlock(HeavyFullFog);
-        Bins.Fogs.AddBlock(InvertedFullFog);
-        Bins.Fogs.AddBlock(InvertedFullFog_Infectious);
 
         Bins.Fogs.AddBlock(LowFog_Infectious);
         Bins.Fogs.AddBlock(LowMidFog_Infectious);
         Bins.Fogs.AddBlock(FullFog_Infectious);
         Bins.Fogs.AddBlock(HeavyFullFog_Infectious);
+
+        CyclingFog_Clear.Persist();
+        CyclingFog_Heavy.Persist();
+        CyclingFog_Clear_Infectious.Persist();
+        CyclingFog_Heavy_Infectious.Persist();
 
         AlphaSix.Persist();
 
@@ -642,7 +679,7 @@ public record Fog : DataBlock<Fog>
     /// The base fog density in the entire level.
     ///
     /// To create inversed fog (e.g. R5E1), you have to set `FogDensity` and
-    /// `DensityHeightMaxBoost` such that `FogDensity` < `DensityHeightMaxBoost`.
+    /// `DensityHeightMaxBoost` such that `FogDensity` > `DensityHeightMaxBoost`.
     /// </summary>
     public double FogDensity { get; set; } = 0.02;
 

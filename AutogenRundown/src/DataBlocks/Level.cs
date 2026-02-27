@@ -1779,43 +1779,47 @@ public class Level
 
             }
 
-            var sensorEvents2 = new List<WardenObjectiveEvent>();
+            // var sensorEvents2 = new List<WardenObjectiveEvent>();
+            //
+            // sensorEvents2
+            //     .AddSound(Sound.LightsOff)
+            //     .AddSpawnWave(new GenericWave
+            //     {
+            //         Population = WavePopulation.Baseline,
+            //         Settings = WaveSettings.SingleMiniBoss
+            //     }, 1.0);
 
-            sensorEvents2
-                .AddSound(Sound.LightsOff)
-                .AddSpawnWave(new GenericWave
-                {
-                    Population = WavePopulation.Baseline,
-                    Settings = WaveSettings.SingleMiniBoss
-                }, 1.0);
-
-            level.ZoneSensors.Add(new ZoneSensorDefinition
-            {
-                Id = 123,
-                ZoneNumber = 0,
-                Bulkhead = Bulkhead.Main,
-                SensorGroups = new List<ZoneSensorGroupDefinition>
-                {
-                    new ZoneSensorGroupDefinition
-                    {
-                        TriggerEach = true,
-                        // Count = 128,
-                        Density = SensorDensity.Low,
-                        Moving = 3,
-                        Speed = 0.5,
-                        // Radius = 2.0,
-                        EdgeDistance = 0.7,
-                        AreaIndex = 1,
-                        EncryptedText = true,
-                    }
-                },
-
-                EventsOnTrigger = sensorEvents2
-            });
+            // level.ZoneSensors.Add(new ZoneSensorDefinition
+            // {
+            //     Id = 123,
+            //     ZoneNumber = 0,
+            //     Bulkhead = Bulkhead.Main,
+            //     SensorGroups = new List<ZoneSensorGroupDefinition>
+            //     {
+            //         new ZoneSensorGroupDefinition
+            //         {
+            //             TriggerEach = true,
+            //             // Count = 128,
+            //             Density = SensorDensity.Low,
+            //             Moving = 3,
+            //             Speed = 0.5,
+            //             // Radius = 2.0,
+            //             EdgeDistance = 0.7,
+            //             AreaIndex = 1,
+            //             EncryptedText = true,
+            //         }
+            //     },
+            //
+            //     EventsOnTrigger = sensorEvents2
+            // });
 
             var (med, medZone) = layout.BuildOptional_MedicalBay(elevatorDrop);
             layout.Zones.Add(medZone);
             level.HasMedBay = true;
+
+            level.Settings.Modifiers.Add(LevelModifiers.FogIsInfectious);
+
+            medZone.EventsOnOpenDoor.AddCyclingFog(level);
 
             elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
                 new CustomTerminalCommand
