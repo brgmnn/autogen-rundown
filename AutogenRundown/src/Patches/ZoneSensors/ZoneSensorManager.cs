@@ -1,4 +1,5 @@
 using AmorLib.Networking.StateReplicators;
+using AIGraph;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Objectives;
@@ -41,6 +42,9 @@ public sealed class ZoneSensorManager
     /// Counter for allocating unique replicator IDs (separate from definition Id).
     /// </summary>
     private int nextReplicatorIndex = 0;
+
+    // Cached elevator area course node for sensor exclusion
+    private AIG_CourseNode? elevatorCourseNode;
 
     // Update helper component instance
     private ZoneSensorManagerUpdater? updater;
@@ -264,6 +268,15 @@ public sealed class ZoneSensorManager
         // Reset replicator index counter for this level
         nextReplicatorIndex = 0;
 
+        // Resolve the elevator area (Area 0 of Zone 0, MainLayer, Reality)
+        elevatorCourseNode = null;
+        if (Builder.CurrentFloor.TryGetZoneByLocalIndex(
+            eDimensionIndex.Reality, LG_LayerType.MainLayer, eLocalZoneIndex.Zone_0, out var spawnZone)
+            && spawnZone.m_areas.Count > 0)
+        {
+            elevatorCourseNode = spawnZone.m_areas[0].m_courseNode;
+        }
+
         foreach (var definition in levelDefinitions)
         {
             // Get the zone
@@ -436,7 +449,7 @@ public sealed class ZoneSensorManager
                     }
 
                     if (!OverlapsExistingSensor(position, sensorRadius, placedSensors)
-                        && !IsNearOrigin(position))
+                        && !IsInElevatorArea(position))
                         break;
 
                     attempts++;
@@ -483,10 +496,17 @@ public sealed class ZoneSensorManager
     }
 
     /// <summary>
-    /// Checks if a position overlaps with any existing sensor positions.
+    /// Checks if a position falls within the elevator area (Area 0 of Zone 0).
+    /// Uses the game's voxel graph to resolve the position to a course node.
     /// </summary>
-    private static bool IsNearOrigin(Vector3 position) => position.x is > -25f and < 25f &&
-                                                          position.z is > -25f and < 25f;
+    private bool IsInElevatorArea(Vector3 position)
+    {
+        if (elevatorCourseNode == null)
+            return false;
+
+        return AIG_CourseNode.TryGetCourseNode(eDimensionIndex.Reality, position, 1f, out var node)
+            && node.Pointer == elevatorCourseNode.Pointer;
+    }
 
     private bool OverlapsExistingSensor(Vector3 position, float radius, List<(Vector3 pos, float radius)> existingSensors)
     {
@@ -566,6 +586,7 @@ public sealed class ZoneSensorManager
         nextReplicatorIndex = 0;
         rebroadcastIntervalTimer = 0f;
         rebroadcastAttemptsRemaining = 0;
+        elevatorCourseNode = null;
 
         // Destroy updater component
         if (updater != null)
