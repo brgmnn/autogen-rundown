@@ -3,6 +3,43 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.82.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.82.0) — February 28, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* New layouts for `PowerCellDistribution` objectives
+* New layouts for `ReactorShutdown` objectives
+* Added cycling fog modifier for some objectives
+* Added many new level names
+* Syringes have been added 💉
+  * Higher chance on Lab/Datacenter levels
+* MedBay zone can now spawn in levels 💊
+  * Contains a lot of med packs, disinfect packs, and syringes
+
+### Changes
+
+* Balance: Increased elevator exclusion area for zone security sensors. This should help unavoidable security sensor activation.
+* Balance: Added more exit waves and challenges on several objectives
+* Balance: Reworked scout waves to have much more variety and increased scout wave points:
+  * Normal difficulty waves from `15` to `18` points
+  * Hard difficulty waves from `18` to `24` points
+  * Very Hard difficulty waves from `24` to `32` points
+* Balance: Zone security sensors elevator exclusion area changed to entire first room of the elevator zone. This should help give players a better chance of not running in to them immediately
+  * Note: High sensor densities can still cause sensors to spawn in the elevator room. This is a known issue being worked on.
+* Change: Improved fog handling across levels, now slow rising fog penalties (from Overload or other objectives) will cause alarm modifiers to not include fog change events which were overriding the slow fog rise
+* Change: Main only levels now no longer place Main bulkhead doors/keys/DCs.
+* Change: Main layout doesn't always have a Main bulkhead door now. Some levels will have only bulkheads for Overload/Extreme and associated keys for them.
+* Change: Bulkhead keys are now placed in more interesting places, not just the first zone of each layout
+* Change: Remove level name modifiers (`!!!` and `!?`) for boss and error alarms. These alarms haven't been changed, they'll just no longer be identified in the level names.
+* Fix: Host/Client desync issue occurring on Terminal Uplink objectives resulting in only the host being able to input verification codes
+* Fix: Zone security sensors not appearing for 5s on first level load
+  * First host sensor state broadcast now occurs after 1 second, so sensors should appear 1s after exiting the elevator
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.81.3...v0.82.0
+
+
 ## [v0.81.3](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.3) — February 12, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
