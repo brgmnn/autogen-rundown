@@ -96,13 +96,6 @@ public partial record WardenObjective
             }
         }
 
-
-        // Set up some fog shenanigans
-        if (director.Bulkhead.HasFlag(Bulkhead.Main) && level.Settings.HasFog())
-        {
-
-        }
-
         AddCompletedObjectiveChallenge(level, director);
     }
 

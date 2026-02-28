@@ -361,10 +361,13 @@ public class Level
     #endregion
 
     #region Build directors
-    [JsonIgnore]
     /// <summary>
     /// Allows easy access to the directors without having to switch
+    ///
+    /// TODO: find all reads/gets on Director and convert them to use GetDirector().
+    ///       As Bulkhead.Main | Bulkhead.StartingArea fails to find the main director with dictionary get
     /// </summary>
+    [JsonIgnore]
     public Dictionary<Bulkhead, BuildDirector> Director { get; } = new();
 
     [JsonIgnore]
@@ -386,6 +389,17 @@ public class Level
     {
         get => Director[Bulkhead.Overload];
         set => Director[Bulkhead.Overload] = value;
+    }
+
+    public BuildDirector GetDirector(Bulkhead bulkhead)
+    {
+        if (bulkhead.HasFlag(Bulkhead.Extreme))
+            return SecondaryDirector;
+
+        if (bulkhead.HasFlag(Bulkhead.Overload))
+            return OverloadDirector;
+
+        return MainDirector;
     }
     #endregion
 

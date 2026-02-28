@@ -330,6 +330,8 @@ public static class WardenObjectiveEventCollections
             false => (Fog.CyclingFog_Heavy,            Fog.CyclingFog_Clear           )
         };
 
+        Plugin.Logger.LogDebug($"AddCyclingFog()");
+
         return events.AddCyclingFog(fog1, fog2, (int)Generator.GetPersistentId(), delay1, duration1, delay2, duration2);
     }
 
