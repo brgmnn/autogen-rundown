@@ -96,6 +96,9 @@ public partial record WardenObjective
 
         if (SpecialTerminalCommand_Type == SpecialCommand.FillWithFog)
             level.TrySetFogUsage(FogUsage.LongDuration);
+
+        if (SpecialTerminalCommand_Type != SpecialCommand.ErrorAlarm)
+            PreReserveObjectiveFog(level, director);
     }
 
     public void Build_SpecialTerminalCommand(BuildDirector director, Level level)

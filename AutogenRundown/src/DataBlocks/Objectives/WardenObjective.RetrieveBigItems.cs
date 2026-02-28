@@ -56,6 +56,9 @@ public partial record WardenObjective
         for (var i = 0; i < count; ++i)
             RetrieveItems.Add(item);
 
+        if (item == WardenObjectiveItem.CryoCase && count == 1)
+            PreReserveObjectiveFog(level, director);
+
         if (level.Tier == "D" && level.Settings.HasFog())
             if (Generator.Flip(0.3) && level.TrySetFogUsage(FogUsage.LongDuration))
                 FogUsage = FogUsage.LongDuration;
