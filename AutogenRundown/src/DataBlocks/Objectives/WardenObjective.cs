@@ -472,7 +472,7 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     /// </summary>
     public void AddCompletedObjectiveChallenge(Level level, BuildDirector director)
     {
-        var entranceZone = level.Planner.GetZone(new ZoneNode { Bulkhead = director.Bulkhead, ZoneNumber = 0 })!;
+        var entranceZone = level.Planner.GetZone((ZoneNode)level.Planner.GetBulkheadFirstZone(director.Bulkhead)!);
 
         // Extraction waves. These are progressively harder
         // Overload is balanced to get harder error waves when getting the sample
@@ -555,21 +555,18 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 break;
 
             case ("D", Bulkhead.Overload):
-                if (level.Settings.HasFog())
-                {
-                    if (Generator.Flip(0.08) && level.TrySetFogUsage(FogUsage.ShortDuration))
-                        EventsOnGotoWin.AddFillFog(Generator.Between(1, 6));
-                    else if (Generator.Flip(0.19) && level.TrySetFogUsage(FogUsage.LongDuration))
-                        entranceZone.EventsOnOpenDoor.AddCyclingFog(level);
-                    else if (Generator.Flip(0.33) && level.TrySetFogUsage(FogUsage.LongDuration))
-                        EventsOnGotoWin.AddRange(AddSlowFogFill(
-                            level,
-                            duration: 60.0 * level.Settings.Bulkheads switch
-                            {
-                                Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
-                                _ => Generator.Between(60, 75)
-                            }));
-                }
+                if (level.Settings.HasFog() && Generator.Flip(0.08) && level.TrySetFogUsage(FogUsage.ShortDuration))
+                    EventsOnGotoWin.AddFillFog(Generator.Between(1, 6));
+                else if (Generator.Flip(0.19) && level.TrySetFogUsage(FogUsage.LongDuration))
+                    entranceZone.EventsOnOpenDoor.AddCyclingFog(level);
+                else if (Generator.Flip(0.33) && level.TrySetFogUsage(FogUsage.LongDuration))
+                    EventsOnGotoWin.AddRange(AddSlowFogFill(
+                        level,
+                        duration: 60.0 * level.Settings.Bulkheads switch
+                        {
+                            Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
+                            _ => Generator.Between(60, 75)
+                        }));
 
                 WavesOnGotoWin.Add(GenericWave.ErrorAlarm_Normal);
                 break;
@@ -584,21 +581,18 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 break;
 
             case ("E", Bulkhead.Overload):
-                if (level.Settings.HasFog())
-                {
-                    if (Generator.Flip(0.17) && level.TrySetFogUsage(FogUsage.ShortDuration))
-                        EventsOnGotoWin.AddFillFog(Generator.Between(1, 6));
-                    else if (Generator.Flip(0.23) && level.TrySetFogUsage(FogUsage.LongDuration))
-                        entranceZone.EventsOnOpenDoor.AddCyclingFog(level);
-                    else if (Generator.Flip(0.37) && level.TrySetFogUsage(FogUsage.LongDuration))
-                        entranceZone.EventsOnOpenDoor.AddRange(AddSlowFogFill(
-                            level,
-                            duration: 60.0 * level.Settings.Bulkheads switch
-                            {
-                                Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
-                                _ => Generator.Between(60, 75)
-                            }));
-                }
+                if (Generator.Flip(0.17) && level.TrySetFogUsage(FogUsage.ShortDuration))
+                    EventsOnGotoWin.AddFillFog(Generator.Between(1, 6));
+                else if (Generator.Flip(0.23) && level.TrySetFogUsage(FogUsage.LongDuration))
+                    entranceZone.EventsOnOpenDoor.AddCyclingFog(level);
+                else if (Generator.Flip(0.37) && level.TrySetFogUsage(FogUsage.LongDuration))
+                    entranceZone.EventsOnOpenDoor.AddRange(AddSlowFogFill(
+                        level,
+                        duration: 60.0 * level.Settings.Bulkheads switch
+                        {
+                            Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
+                            _ => Generator.Between(60, 75)
+                        }));
 
                 WavesOnGotoWin.Add(GenericWave.ErrorAlarm_Hard);
                 break;
