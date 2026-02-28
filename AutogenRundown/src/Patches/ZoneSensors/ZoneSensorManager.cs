@@ -353,7 +353,7 @@ public sealed class ZoneSensorManager
             return;
 
         rebroadcastAttemptsRemaining = REBROADCAST_ATTEMPTS;
-        rebroadcastIntervalTimer = REBROADCAST_INTERVAL;
+        rebroadcastIntervalTimer = 1.0f;
 
         Plugin.Logger.LogDebug("ZoneSensor: Entered level, beginning rebroadcast timer");
     }
