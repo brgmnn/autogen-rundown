@@ -56,6 +56,7 @@ TODO:
     * enemies get bugged
   * Have a challenge like halfway through the fog starts rising and you can turn off the fog in a zone
   * Door alarm adjustments
+  * Make generator distribution objective MAIN always have 2 or more generator cells
 
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
