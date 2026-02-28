@@ -660,6 +660,10 @@ public static class RundownFactory
 
             var complex = Generator.DrawSelect(complexPool);
             var objective = Generator.DrawSelect(mainObjectivesPool);
+
+            if (objective == WardenObjectiveType.ReachKdsDeep)
+                complex = Complex.Mining;
+
             var director = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
@@ -691,6 +695,10 @@ public static class RundownFactory
 
             var complex = Generator.DrawSelect(complexPool);
             var objective = Generator.DrawSelect(mainObjectivesPool);
+
+            if (objective == WardenObjectiveType.ReachKdsDeep)
+                complex = Complex.Mining;
+
             var director = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
@@ -955,6 +963,10 @@ public static class RundownFactory
 
             var complex = Generator.DrawSelect(complexPool);
             var objective = Generator.DrawSelect(mainObjectivesPool);
+
+            if (objective == WardenObjectiveType.ReachKdsDeep)
+                complex = Complex.Mining;
+
             var director = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
@@ -985,6 +997,10 @@ public static class RundownFactory
 
             var complex = Generator.DrawSelect(complexPool);
             var objective = Generator.DrawSelect(mainObjectivesPool);
+
+            if (objective == WardenObjectiveType.ReachKdsDeep)
+                complex = Complex.Mining;
+
             var director = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
@@ -1015,6 +1031,10 @@ public static class RundownFactory
 
             var complex = Generator.DrawSelect(complexPool);
             var objective = Generator.DrawSelect(mainObjectivesPool);
+
+            if (objective == WardenObjectiveType.ReachKdsDeep)
+                complex = Complex.Mining;
+
             var director = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
