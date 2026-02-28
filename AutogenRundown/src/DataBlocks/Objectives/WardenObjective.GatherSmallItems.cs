@@ -1,4 +1,5 @@
-﻿using AutogenRundown.Extensions;
+﻿using AutogenRundown.DataBlocks.Levels;
+using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks.Objectives;
 
@@ -42,6 +43,14 @@ public partial record WardenObjective
             < 12 => Generator.Between(GatherRequiredCount, GatherRequiredCount + 2), // 9, 10, 11
             _    => Generator.Between(GatherRequiredCount, GatherRequiredCount + 3)  // 12, 13, 14, 15, 16
         };
+
+        if (level.Tier == "D" && director.Bulkhead == Bulkhead.Overload && level.Settings.HasFog())
+            if (Generator.Flip(0.3) && level.TrySetFogUsage(FogUsage.LongDuration))
+                FogUsage = FogUsage.LongDuration;
+
+        if (level.Tier == "E" && director.Bulkhead == Bulkhead.Overload && level.Settings.HasFog())
+            if (Generator.Flip(0.51) && level.TrySetFogUsage(FogUsage.LongDuration))
+                FogUsage = FogUsage.LongDuration;
     }
 
     public void Build_GatherSmallItems(BuildDirector director, Level level)
@@ -120,7 +129,7 @@ public partial record WardenObjective
         Plugin.Logger.LogDebug($"GatherSmallItems: GatherMaxPerZone = {GatherMaxPerZone}");
         Plugin.Logger.LogDebug($"GatherSmallItems: Placements = [{Gather_PlacementNodes.Print()}]");
 
-        // TODO: AddCompletedObjectiveWaves(level, director);
+        AddCompletedObjectiveChallenge(level, director);
     }
 
     private void PostBuildIntel_GatherSmallItems(Level level)

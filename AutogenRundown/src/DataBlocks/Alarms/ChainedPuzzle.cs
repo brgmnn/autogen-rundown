@@ -244,15 +244,14 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
             {
                 // Free
                 (0.4, 1, None),
-                (1.0, 1, TeamScan),
+                (1.0, 2, TeamScan),
 
                 // Stealth and Surprise scans. Secret scans are grouped with their regular
                 // counterpart
                 (0.8, 1, Secret_TeamScan_EasyBaseline),
 
                 // Easy
-                (0.6, 2, AlarmClass1),
-                (1.0, 3, AlarmClass2),
+                (1.0, 4, AlarmClass2),
                 (0.6, 1, AlarmClass2_Cluster),
 
                 // Normal

@@ -73,6 +73,9 @@ public class Level
     /// </summary>
     public List<(double, ZoneNode)> ForwardExtractStartCandidates { get; set; } = new();
 
+    [JsonIgnore]
+    public bool HasMedBay { get; set; } = false;
+
     /// <summary>
     /// Mainly used for calculating what the text should be for extract
     /// </summary>
@@ -358,10 +361,13 @@ public class Level
     #endregion
 
     #region Build directors
-    [JsonIgnore]
     /// <summary>
     /// Allows easy access to the directors without having to switch
+    ///
+    /// TODO: find all reads/gets on Director and convert them to use GetDirector().
+    ///       As Bulkhead.Main | Bulkhead.StartingArea fails to find the main director with dictionary get
     /// </summary>
+    [JsonIgnore]
     public Dictionary<Bulkhead, BuildDirector> Director { get; } = new();
 
     [JsonIgnore]
@@ -383,6 +389,17 @@ public class Level
     {
         get => Director[Bulkhead.Overload];
         set => Director[Bulkhead.Overload] = value;
+    }
+
+    public BuildDirector GetDirector(Bulkhead bulkhead)
+    {
+        if (bulkhead.HasFlag(Bulkhead.Extreme))
+            return SecondaryDirector;
+
+        if (bulkhead.HasFlag(Bulkhead.Overload))
+            return OverloadDirector;
+
+        return MainDirector;
     }
     #endregion
 
@@ -422,6 +439,31 @@ public class Level
     public Fog FogSettings { get; set; } = Fog.DefaultFog;
 
     /// <summary>
+    /// Tracks how fog is being used in this level to prevent incompatible fog transitions.
+    /// </summary>
+    [JsonIgnore]
+    public FogUsage FogUsage { get; set; } = FogUsage.None;
+
+    /// <summary>
+    /// Attempts to reserve fog usage for this level. Returns true if compatible,
+    /// false if the requested usage conflicts with existing fog usage.
+    /// </summary>
+    public bool TrySetFogUsage(FogUsage requested)
+    {
+        if (FogUsage == FogUsage.None)
+        {
+            FogUsage = requested;
+
+            return true;
+        }
+
+        if (FogUsage == FogUsage.ShortDuration && requested == FogUsage.ShortDuration)
+            return true;
+
+        return false;
+    }
+
+    /// <summary>
     /// Flags the level as a test level
     /// </summary>
     [JsonIgnore]
@@ -435,9 +477,7 @@ public class Level
     /// </summary>
     public Accessibility Accessibility { get; set; } = Accessibility.Normal;
 
-    public JObject Descriptive
-    {
-        get => new()
+    public JObject Descriptive => new()
         {
             ["Prefix"] = IsTest ? "TEST" : (Prefix ?? Tier),
             ["PublicName"] = Name,
@@ -459,7 +499,6 @@ public class Level
             //  "... Shoot me then, 'cause I'm not going in there.  \r\n... Look, there's no time– \r\n... [gunshot]  \r\n... <size=200%><color=red>Start scanning.\r</color></size>",
             ["RoleplayedWardenIntel"] = ElevatorDropWardenIntel.MaxBy(intel => intel.Item1).Item2,
         };
-    }
 
     /// <summary>
     /// This string is displayed in the drop of the elevator as a role played intel message
@@ -475,16 +514,13 @@ public class Level
     /// </summary>
     public int BuildSeed { get; set; } = Generator.Between(1, 2000);
 
-    public JObject Seeds
-    {
-        get => new JObject
+    public JObject Seeds => new()
         {
             ["BuildSeed"] = BuildSeed,
             ["FunctionMarkerOffset"] = 1,
             ["StandardMarkerOffset"] = 0,
             ["LightJobSeedOffset"] = 0
         };
-    }
 
     public JObject Expedition => new()
         {
@@ -580,6 +616,11 @@ public class Level
 
     [JsonProperty("ThirdLayerEnabled")]
     public bool HasOverload => Settings.Bulkheads.HasFlag(Bulkhead.Overload);
+
+    private bool HasMainBulkheadDoor => Settings.BulkheadStrategy is
+        BukheadStrategy.Default or
+        BukheadStrategy.CentralHub_x2 or
+        BukheadStrategy.CentralHub_x3;
 
     public uint ThirdLayout
     {
@@ -754,8 +795,6 @@ public class Level
     /// </summary>
     public void MarkAsErrorAlarm()
     {
-        Name = $"<color=red>?!</color><color=#444444>-</color>{Name}";
-
         ElevatorDropWardenIntel.Add((Generator.Between(1, 6), Generator.Draw(new List<string>
         {
             ">... That alarm started the moment we dropped.\r\n>... [static crackle]\r\n>... <size=200%><color=red>There's no way to turn it off!</color></size>",
@@ -786,8 +825,6 @@ public class Level
     /// </summary>
     public void MarkAsBossErrorAlarm()
     {
-        Name = $"<color=red>!!!</color><color=#444444>/</color>{Name}";
-
         ElevatorDropWardenIntel.Add((Generator.Between(5, 12), Generator.Draw(new List<string>
         {
             ">... [distant rumbling]\r\n>... Feels like something massive is nearby.\r\n>... <size=200%><color=red>We can't face it unprepared!</color></size>",
@@ -826,6 +863,160 @@ public class Level
             Bulkhead.Overload => ThirdLayerData,
             _ => MainLayerData
         };
+
+    /// <summary>
+    /// Places default bulkhead keys if no keys have been placed already by layout builders.
+    /// </summary>
+    public void PlaceDefaultBulkheadKeys()
+    {
+        // Main always needs a key if there are any secondary bulkheads
+        if ((HasExtreme || HasOverload) && MainLayerData.BulkheadKeyPlacements.Count == 0)
+        {
+            var candidates = GetKeyPlacementCandidates(Bulkhead.Main);
+            MainLayerData.BulkheadKeyPlacements.Add(BuildKeyAlternatives(candidates));
+        }
+
+        switch (Settings.BulkheadStrategy)
+        {
+            case BukheadStrategy.SingleChain:
+                // Chain: Main → Extreme → Overload. No main bulkhead door, so
+                // only the Extreme key is needed (to gate Overload).
+                if (HasExtreme && SecondaryLayerData.BulkheadKeyPlacements.Count == 0)
+                {
+                    var candidates = GetKeyPlacementCandidates(Bulkhead.Overload);
+                    SecondaryLayerData.BulkheadKeyPlacements.Add(BuildKeyAlternatives(candidates));
+                }
+                break;
+
+            case BukheadStrategy.Default_NoMainBulkhead:
+                // No main bulkhead. With 3 bulkheads, randomly pick which secondary
+                // layer gets a key. With 2 bulkheads, no secondary key needed.
+                if (HasExtreme && HasOverload)
+                {
+                    if (Generator.Flip(0.5))
+                    {
+                        if (SecondaryLayerData.BulkheadKeyPlacements.Count == 0)
+                        {
+                            var candidates = GetKeyPlacementCandidates(Bulkhead.Extreme);
+                            SecondaryLayerData.BulkheadKeyPlacements.Add(BuildKeyAlternatives(candidates));
+                        }
+                    }
+                    else
+                    {
+                        if (ThirdLayerData.BulkheadKeyPlacements.Count == 0)
+                        {
+                            var candidates = GetKeyPlacementCandidates(Bulkhead.Overload);
+                            ThirdLayerData.BulkheadKeyPlacements.Add(BuildKeyAlternatives(candidates));
+                        }
+                    }
+                }
+                break;
+
+            default:
+                // Standard strategies: place keys for all secondary layers
+                if (HasExtreme && SecondaryLayerData.BulkheadKeyPlacements.Count == 0)
+                {
+                    var candidates = GetKeyPlacementCandidates(Bulkhead.Extreme);
+                    SecondaryLayerData.BulkheadKeyPlacements.Add(BuildKeyAlternatives(candidates));
+                }
+
+                if (HasOverload && ThirdLayerData.BulkheadKeyPlacements.Count == 0)
+                {
+                    var candidates = GetKeyPlacementCandidates(Bulkhead.Overload);
+                    ThirdLayerData.BulkheadKeyPlacements.Add(BuildKeyAlternatives(candidates));
+                }
+                break;
+        }
+    }
+
+    private List<ZoneNode> GetKeyPlacementCandidates(Bulkhead keyFor)
+    {
+        return keyFor switch
+        {
+            Bulkhead.Main when HasMainBulkheadDoor
+                => Planner.GetZones(Bulkhead.StartingArea, null),
+            Bulkhead.Main
+                => Planner.GetZones(Bulkhead.Main, null),
+            Bulkhead.Extreme
+                => Planner.GetZones(Bulkhead.Main, null),
+            Bulkhead.Overload when Settings.BulkheadStrategy is BukheadStrategy.SingleChain
+                => Planner.GetZones(Bulkhead.Extreme, null),
+            Bulkhead.Overload
+                => Planner.GetZones(Bulkhead.Main, null),
+            _ => Planner.GetZones(Bulkhead.Main, null)
+        };
+    }
+
+    private List<ZonePlacementData> BuildKeyAlternatives(List<ZoneNode> candidates)
+    {
+        if (candidates.Count == 0)
+            return new List<ZonePlacementData>
+            {
+                new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+            };
+
+        if (candidates.Count <= 3)
+            return candidates.Select(c => new ZonePlacementData
+            {
+                LocalIndex = c.ZoneNumber,
+                Weights = ZonePlacementWeights.EvenlyDistributed
+            }).ToList();
+
+        var third = candidates.Count / 3;
+        var early = candidates.Take(third).ToList();
+        var mid = candidates.Skip(third).Take(third).ToList();
+        var deep = candidates.Skip(third * 2).ToList();
+
+        var alternatives = Tier switch
+        {
+            "A" or "B" => new List<ZonePlacementData>
+            {
+                new() { LocalIndex = Generator.Pick(early)!.ZoneNumber, Weights = ZonePlacementWeights.EvenlyDistributed },
+                new() { LocalIndex = Generator.Pick(early.Concat(mid).ToList())!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart }
+            },
+            "C" => new List<ZonePlacementData>
+            {
+                new() { LocalIndex = Generator.Pick(early)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart },
+                new() { LocalIndex = Generator.Pick(mid)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart },
+                new() { LocalIndex = Generator.Pick(deep)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart }
+            },
+            "D" => new List<ZonePlacementData>
+            {
+                new() { LocalIndex = Generator.Pick(mid)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart },
+                new() { LocalIndex = Generator.Pick(deep)!.ZoneNumber, Weights = ZonePlacementWeights.AtEnd },
+                new() { LocalIndex = Generator.Pick(mid.Concat(deep).ToList())!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart }
+            },
+            _ => new List<ZonePlacementData>
+            {
+                new() { LocalIndex = Generator.Pick(deep)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart },
+                new() { LocalIndex = Generator.Pick(mid.Concat(deep).ToList())!.ZoneNumber, Weights = ZonePlacementWeights.AtEnd },
+                new() { LocalIndex = Generator.Pick(deep)!.ZoneNumber, Weights = ZonePlacementWeights.AtEnd }
+            }
+        };
+
+        return alternatives
+            .GroupBy(a => a.LocalIndex)
+            .Select(g => g.First())
+            .ToList();
+    }
+
+    /// <summary>
+    /// Places a bulkhead key in the specified zone. The bulkhead layer is
+    /// inferred from the node's Bulkhead property.
+    /// </summary>
+    public void PlaceBulkheadKey(ZoneNode node, ZonePlacementWeights? weights = null)
+    {
+        var layerData = GetObjectiveLayerData(node.Bulkhead);
+        layerData.BulkheadKeyPlacements.Add(
+            new List<ZonePlacementData>
+            {
+                new()
+                {
+                    LocalIndex = node.ZoneNumber,
+                    Weights = weights ?? ZonePlacementWeights.NotAtStart
+                }
+            });
+    }
 
     public WardenObjective GetObjective(Bulkhead variant)
     {
@@ -869,6 +1060,12 @@ public class Level
             existing.Add(WardenObjectiveType.ReactorStartup);
             existing.Add(WardenObjectiveType.Survival);
             existing.Add(WardenObjectiveType.TimedTerminalSequence);
+        }
+
+        // Exclude central generator cluster if there's other fog changing happening
+        if (FogUsage != FogUsage.None)
+        {
+            existing.Add(WardenObjectiveType.CentralGeneratorCluster);
         }
 
         // Allow multiple instances of these objectives
@@ -950,23 +1147,26 @@ public class Level
         {
             Bulkhead.Main => new List<(double, BukheadStrategy)>
             {
-                (0.5, BukheadStrategy.Default)
+                (1.0, BukheadStrategy.MainOnly_NoBulkhead)
             },
             Bulkhead.Main | Bulkhead.Extreme => new List<(double, BukheadStrategy)>
             {
-                (0.5, BukheadStrategy.Default),
-                (0.5, BukheadStrategy.CentralHub_x2)
+                (0.35, BukheadStrategy.Default),
+                (0.30, BukheadStrategy.Default_NoMainBulkhead),
+                (0.35, BukheadStrategy.CentralHub_x2)
             },
             Bulkhead.Main | Bulkhead.Overload => new List<(double, BukheadStrategy)>
             {
-                (0.5, BukheadStrategy.Default),
-                (0.5, BukheadStrategy.CentralHub_x2)
+                (0.35, BukheadStrategy.Default),
+                (0.30, BukheadStrategy.Default_NoMainBulkhead),
+                (0.35, BukheadStrategy.CentralHub_x2)
             },
             Bulkhead.Main | Bulkhead.Extreme | Bulkhead.Overload => new List<(double, BukheadStrategy)>
             {
-                (0.1, BukheadStrategy.Default),
-                (0.2, BukheadStrategy.CentralHub_x3),
-                (0.7, BukheadStrategy.SingleChain)
+                (0.05, BukheadStrategy.Default),
+                (0.05, BukheadStrategy.Default_NoMainBulkhead),
+                (0.20, BukheadStrategy.CentralHub_x3),
+                (0.70, BukheadStrategy.SingleChain)
             },
 
             _ => throw new ArgumentOutOfRangeException()
@@ -1105,74 +1305,80 @@ public class Level
             population = WavePopulation.Baseline_Shadows;
         else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers))
             population = WavePopulation.OnlyShadows;
+        else if (Settings.Modifiers.Contains(LevelModifiers.Nightmares))
+            population = WavePopulation.Baseline_Nightmare;
+        else if (Settings.Modifiers.Contains(LevelModifiers.OnlyNightmares))
+            population = WavePopulation.OnlyNightmares;
 
         switch (Tier)
         {
             case "A":
-            case "B":
             {
                 settings = WaveSettings.Scout_Easy;
                 break;
             }
 
+            case "B":
+            {
+                (population, settings) = Generator.Select(
+                    new List<(double, (WavePopulation, WaveSettings))>
+                    {
+                        (70, (population, WaveSettings.Scout_Normal)),
+                        (15, (WavePopulation.OnlyHybrids, WaveSettings.SingleWave_MiniBoss_4pts)),
+                        (15, (WavePopulation.OnlyInfestedStrikers, WaveSettings.Scout_Easy)),
+                    });
+                break;
+            }
+
             case "C":
             {
-                settings = WaveSettings.Scout_Normal;
-
-                if (Settings.Modifiers.Contains(LevelModifiers.ManyShadows) && Generator.Flip())
-                {
-                    population = WavePopulation.OnlyShadows;
-                    settings = WaveSettings.SingleWave_MiniBoss_6pts;
-                }
-                else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers) && Generator.Flip())
-                {
-                    population = WavePopulation.OnlyChargers;
-                    settings = WaveSettings.SingleWave_MiniBoss_6pts;
-                }
+                (population, settings) = Generator.Select(
+                    new List<(double, (WavePopulation, WaveSettings))>
+                    {
+                        (45, (population, WaveSettings.Scout_Normal)),
+                        (15, (WavePopulation.OnlyHybrids, WaveSettings.SingleWave_MiniBoss_6pts)),
+                        (10, (WavePopulation.OnlyInfectedHybrids, WaveSettings.SingleWave_MiniBoss_6pts)),
+                        (10, (WavePopulation.OnlyInfestedStrikers, WaveSettings.Scout_Normal)),
+                        (10, (WavePopulation.OnlyNightmareGiants, WaveSettings.SingleWave_MiniBoss_4pts)),
+                        ( 5, (WavePopulation.SingleEnemy_Mother, WaveSettings.SingleMiniBoss)),
+                        ( 5, (WavePopulation.SingleEnemy_Tank, WaveSettings.SingleMiniBoss)),
+                    });
                 break;
             }
 
             case "D":
             {
-                settings = WaveSettings.Scout_Hard;
-
-                if (Settings.Modifiers.Contains(LevelModifiers.ManyNightmares) && Generator.Flip())
-                {
-                    population = WavePopulation.OnlyNightmareGiants;
-                    settings = WaveSettings.SingleWave_MiniBoss_8pts;
-                }
-                else if (Settings.Modifiers.Contains(LevelModifiers.ManyShadows) && Generator.Flip())
-                {
-                    population = WavePopulation.OnlyShadows;
-                    settings = WaveSettings.SingleWave_MiniBoss_6pts;
-                }
-                else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers) && Generator.Flip())
-                {
-                    population = WavePopulation.OnlyChargers;
-                    settings = WaveSettings.SingleWave_MiniBoss_8pts;
-                }
+                (population, settings) = Generator.Select(
+                    new List<(double, (WavePopulation, WaveSettings))>
+                    {
+                        (30, (population, WaveSettings.Scout_Hard)),
+                        (15, (WavePopulation.OnlyHybrids, WaveSettings.SingleWave_MiniBoss_8pts)),
+                        (10, (WavePopulation.OnlyInfectedHybrids, WaveSettings.SingleWave_MiniBoss_8pts)),
+                        (10, (WavePopulation.OnlyInfestedStrikers, WaveSettings.Scout_Hard)),
+                        (10, (WavePopulation.OnlyNightmareGiants, WaveSettings.SingleWave_MiniBoss_6pts)),
+                        ( 8, (WavePopulation.OnlyShadows, WaveSettings.SingleWave_MiniBoss_12pts)),
+                        ( 7, (WavePopulation.SingleEnemy_Tank, WaveSettings.SingleMiniBoss)),
+                        ( 5, (WavePopulation.SingleEnemy_Mother, WaveSettings.SingleMiniBoss)),
+                        ( 5, (WavePopulation.SingleEnemy_TankPotato, WaveSettings.SingleMiniBoss)),
+                    });
                 break;
             }
 
             case "E":
             {
-                settings = WaveSettings.Scout_VeryHard;
-
-                if (Settings.Modifiers.Contains(LevelModifiers.ManyNightmares) && Generator.Flip())
-                {
-                    population = WavePopulation.OnlyNightmareGiants;
-                    settings = WaveSettings.SingleWave_MiniBoss_12pts;
-                }
-                else if (Settings.Modifiers.Contains(LevelModifiers.ManyShadows) && Generator.Flip())
-                {
-                    population = WavePopulation.OnlyShadows;
-                    settings = WaveSettings.SingleWave_MiniBoss_12pts;
-                }
-                else if (Settings.Modifiers.Contains(LevelModifiers.ManyChargers) && Generator.Flip())
-                {
-                    population = WavePopulation.OnlyChargers;
-                    settings = WaveSettings.SingleWave_MiniBoss_12pts;
-                }
+                (population, settings) = Generator.Select(
+                    new List<(double, (WavePopulation, WaveSettings))>
+                    {
+                        (20, (population, WaveSettings.Scout_VeryHard)),
+                        (15, (WavePopulation.OnlyHybrids, WaveSettings.SingleWave_MiniBoss_12pts)),
+                        (10, (WavePopulation.OnlyInfectedHybrids, WaveSettings.SingleWave_MiniBoss_12pts)),
+                        (10, (WavePopulation.OnlyInfestedStrikers, WaveSettings.Scout_VeryHard)),
+                        (10, (WavePopulation.OnlyNightmareGiants, WaveSettings.SingleWave_MiniBoss_8pts)),
+                        (10, (WavePopulation.OnlyShadows, WaveSettings.SingleWave_MiniBoss_16pts)),
+                        (10, (WavePopulation.SingleEnemy_Tank, WaveSettings.SingleMiniBoss)),
+                        ( 8, (WavePopulation.SingleEnemy_TankPotato, WaveSettings.SingleMiniBoss)),
+                        ( 7, (WavePopulation.SingleEnemy_Mother, WaveSettings.SingleMiniBoss)),
+                    });
                 break;
             }
         }
@@ -1362,49 +1568,7 @@ public class Level
         #endregion
 
         #region Bulkhead Keys
-        /*
-         * Ensure we place the bulkhead keys. For now, we just place one at the start of each
-         * bulkhead zone. This is guaranteed to allow us to complete all the objectives.
-         */
-        level.MainLayerData.BulkheadKeyPlacements.Add(
-            new List<ZonePlacementData>
-            {
-                new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
-            });
-
-        if (level.HasExtreme)
-            level.SecondaryLayerData.BulkheadKeyPlacements.Add(
-                new List<ZonePlacementData>
-                {
-                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
-                });
-
-        if (level.HasOverload)
-            level.ThirdLayerData.BulkheadKeyPlacements.Add(
-                new List<ZonePlacementData>
-                {
-                    new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
-                });
-        #endregion
-
-        #region Adjust coverage sizes
-        var entrances = level.Planner.GetBulkheadEntranceZones();
-
-        foreach (var node in entrances)
-        {
-            var zone = level.GetLevelLayout(node.Bulkhead)?.Zones[node.ZoneNumber];
-
-            if (zone == null)
-            {
-                Plugin.Logger.LogWarning($"Level={level.Tier}{level.Index} - Cannot resize " +
-                                         $"bulkhead entrance zone. Zone_{node.ZoneNumber} could not be found.");
-                continue;
-            }
-
-            // TODO: rebalance enemies
-            // TODO: skip this if it's a custom geomorph
-            // zone.Coverage = new CoverageMinMax { Min = 80.0, Max = 80.0 };
-        }
+        level.PlaceDefaultBulkheadKeys();
         #endregion
 
         #region Finalize -- WardenObjective.PostBuild()
@@ -1415,6 +1579,10 @@ public class Level
 
         if (level.HasOverload && level.GetObjective(Bulkhead.Overload) != null)
             level.GetObjective(Bulkhead.Overload)!.PostBuild(level.OverloadDirector, level);
+        #endregion
+
+        #region Finalize -- Level.PostBuild()
+
         #endregion
 
         #region Finalize -- ExtraObjectiveSetup
@@ -1626,42 +1794,47 @@ public class Level
 
             }
 
-            var sensorEvents2 = new List<WardenObjectiveEvent>();
+            // var sensorEvents2 = new List<WardenObjectiveEvent>();
+            //
+            // sensorEvents2
+            //     .AddSound(Sound.LightsOff)
+            //     .AddSpawnWave(new GenericWave
+            //     {
+            //         Population = WavePopulation.Baseline,
+            //         Settings = WaveSettings.SingleMiniBoss
+            //     }, 1.0);
 
-            sensorEvents2
-                .AddSound(Sound.LightsOff)
-                .AddSpawnWave(new GenericWave
-                {
-                    Population = WavePopulation.Baseline,
-                    Settings = WaveSettings.SingleMiniBoss
-                }, 1.0);
-
-            level.ZoneSensors.Add(new ZoneSensorDefinition
-            {
-                Id = 123,
-                ZoneNumber = 0,
-                Bulkhead = Bulkhead.Main,
-                SensorGroups = new List<ZoneSensorGroupDefinition>
-                {
-                    new ZoneSensorGroupDefinition
-                    {
-                        TriggerEach = true,
-                        // Count = 128,
-                        Density = SensorDensity.Low,
-                        Moving = 3,
-                        Speed = 0.5,
-                        // Radius = 2.0,
-                        EdgeDistance = 0.7,
-                        AreaIndex = 1,
-                        EncryptedText = true,
-                    }
-                },
-
-                EventsOnTrigger = sensorEvents2
-            });
+            // level.ZoneSensors.Add(new ZoneSensorDefinition
+            // {
+            //     Id = 123,
+            //     ZoneNumber = 0,
+            //     Bulkhead = Bulkhead.Main,
+            //     SensorGroups = new List<ZoneSensorGroupDefinition>
+            //     {
+            //         new ZoneSensorGroupDefinition
+            //         {
+            //             TriggerEach = true,
+            //             // Count = 128,
+            //             Density = SensorDensity.Low,
+            //             Moving = 3,
+            //             Speed = 0.5,
+            //             // Radius = 2.0,
+            //             EdgeDistance = 0.7,
+            //             AreaIndex = 1,
+            //             EncryptedText = true,
+            //         }
+            //     },
+            //
+            //     EventsOnTrigger = sensorEvents2
+            // });
 
             var (med, medZone) = layout.BuildOptional_MedicalBay(elevatorDrop);
             layout.Zones.Add(medZone);
+            level.HasMedBay = true;
+
+            level.Settings.Modifiers.Add(LevelModifiers.FogIsInfectious);
+
+            medZone.EventsOnOpenDoor.AddCyclingFog(level);
 
             elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
                 new CustomTerminalCommand

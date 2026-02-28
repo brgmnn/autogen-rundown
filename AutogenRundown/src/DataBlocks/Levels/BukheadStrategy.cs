@@ -7,4 +7,6 @@ public enum BukheadStrategy
     SingleChain,
     CentralHub_x2,
     CentralHub_x3,
+    MainOnly_NoBulkhead,
+    Default_NoMainBulkhead,
 }

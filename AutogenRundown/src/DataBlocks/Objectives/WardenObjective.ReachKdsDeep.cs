@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
 
@@ -84,7 +85,7 @@ public partial record WardenObjective
             {
                 var overloadZone = level.Planner.GetZone((ZoneNode)overload);
 
-                if (overloadZone != null)
+                if (overloadZone != null && level.TrySetFogUsage(FogUsage.ShortDuration))
                 {
                     Plugin.Logger.LogDebug($"Cycling fog");
                     overloadZone.EventsOnOpenDoor.AddCyclingFog(

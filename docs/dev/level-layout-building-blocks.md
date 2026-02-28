@@ -546,6 +546,39 @@ var exitNode = AddForwardExtract(start, preludeZones: 2);
 
 ---
 
+### AddForwardExtractStart
+
+Marks a node as a candidate for forward extraction start point. Multiple candidates can be registered; the system picks one based on weighted probability. Only active on Main bulkhead — no-op on Extreme/Overload.
+
+```csharp
+// Register with default 100% chance
+AddForwardExtractStart(lastNode);
+
+// Register with 30% chance
+AddForwardExtractStart(reactor, chance: 0.3);
+```
+
+**Parameters:**
+
+- `node` - The zone node to mark as a forward extract start candidate
+- `chance` - Probability weight for this candidate (default: 1.0)
+
+**Behavior:**
+
+- Adds the node to `level.ForwardExtractStartCandidates` with the given weight
+- Returns immediately (no-op) if `director.Bulkhead != Bulkhead.Main`
+- Unlike `AddForwardExtract` which creates extraction zones directly, this registers candidates for the system to choose from later
+
+**Example from ReactorShutdown D/E Main:**
+```csharp
+// Password terminal is always a candidate
+AddForwardExtractStart(pwNodes.Last());
+// Reactor itself has a 30% chance of being the extract start
+AddForwardExtractStart(reactor, chance: 0.3);
+```
+
+---
+
 ### AddDisinfectionZone
 
 Adds a small side zone with a disinfection station.
@@ -824,6 +857,49 @@ start -> firstError (error alarm, has cell) -> error[1] -> penultimate -> end (g
 ```
 
 **Warning:** Very difficult - requires carrying cell through active error alarm. Not recommended above C-tier.
+
+---
+
+## Composite Builders
+
+These methods build multi-zone structures for specific objective types.
+
+### BuildReactor
+
+**Zones Added:** +2 (corridor + reactor)
+
+**Source File:** `LevelLayout.Reactor.cs`
+
+Creates a corridor + reactor zone pair. The corridor gets reactor-corridor geomorphs and a `reactor_entrance` branch tag. The reactor zone gets reactor geomorphs, matching lighting, fog repellers, and `ForbidTerminalsInZone = true`.
+
+```csharp
+var reactorNode = BuildReactor(start);
+```
+
+**Returns:** `ZoneNode` - The reactor zone node (not the corridor)
+
+**Side Effects:**
+
+- Creates a corridor zone tagged `reactor_entrance` (important for locked reactor variants)
+- Creates a reactor zone with `GenReactorGeomorph`, matching lighting from `Lights.GenReactorLight()`
+- Sets `ForbidTerminalsInZone = true` on reactor zone
+- Adds fog repellers via `ConsumableDistribution.Reactor_FogRepellers`
+- Sets expansion direction and start position to `Furthest` for both zones
+
+**Usage Pattern:**
+
+```csharp
+// Basic: build reactor and use it
+var reactor = BuildReactor(start);
+reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+
+// Locked variant: find the corridor later and hub it
+var reactor = BuildReactor(start);
+var entranceNode = planner.GetZones(director.Bulkhead, "reactor_entrance").First();
+entranceNode = planner.UpdateNode(entranceNode with { MaxConnections = 3 });
+planner.GetZone(entranceNode)!.GenHubGeomorph(level.Complex);
+// Branch off entranceNode for unlock item
+```
 
 ---
 

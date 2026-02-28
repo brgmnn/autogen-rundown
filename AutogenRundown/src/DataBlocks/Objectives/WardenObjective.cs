@@ -2,9 +2,11 @@
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives.CentralGeneratorCluster;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -430,13 +432,96 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     public static double GenExitScanTime(int min, int max)
         => CalculateExitScanSpeedMultiplier(Generator.Between(min, max));
 
-    /// <summary>
-    /// Add's default exit/completion waves for an objective. Often we want
-    /// these but want to adjust them based on difficulty and what objective
-    /// we are on.
-    /// </summary>
-    public void AddCompletedObjectiveWaves(Level level, BuildDirector director)
+    public List<WardenObjectiveEvent> AddSlowFogFill(Level level, double? duration = null, double? delay = 2.0)
     {
+        // Fog duration in seconds. It takes about 2/3'rds of the time to be over
+        // the head of players at mid-height level. So even though these are at
+        // 60mins+ players will be in fog by 40 mins or so
+        var fogRiseDuration = 60.0 * level.Settings.Bulkheads switch
+        {
+            Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
+            _ => Generator.Between(60, 75)
+        };
+
+        var events = new List<WardenObjectiveEvent>();
+        var durationOrDefault = duration ?? fogRiseDuration;
+
+        if (level.FogSettings.IsInfectious)
+            events.AddSetFog(
+                level.FogSettings.IsInverted
+                    ? Fog.InvertedInfectious_Altitude_minus8
+                    : Fog.NormalInfectious_Altitude_8,
+                duration: durationOrDefault,
+                message: null);
+        else
+            events.AddSetFog(
+                level.FogSettings.IsInverted
+                    ? Fog.Inverted_Altitude_minus8
+                    : Fog.Normal_Altitude_8,
+                duration: durationOrDefault,
+                message: null);
+
+        events.AddSound(Sound.Environment_DistantFan, 6.0);
+
+        return events;
+    }
+
+    /// <summary>
+    /// Pre-reserves fog usage during PreBuild so that objective fog challenges
+    /// are claimed before zone alarm modifiers run in BuildLayout.
+    /// </summary>
+    public void PreReserveObjectiveFog(Level level, BuildDirector director)
+    {
+        switch (level.Tier, director.Bulkhead)
+        {
+            case ("B", Bulkhead.Overload):
+                if (level.Settings.HasFog() && Generator.Flip(0.1) && level.TrySetFogUsage(FogUsage.LongDuration))
+                    ObjectiveFogChallenge = ObjectiveFogChallenge.SlowFogFill;
+                break;
+
+            case ("C", Bulkhead.Extreme):
+                if (level.Settings.HasFog() && Generator.Flip(0.26) && level.TrySetFogUsage(FogUsage.LongDuration))
+                    ObjectiveFogChallenge = ObjectiveFogChallenge.SlowFogFill;
+                break;
+
+            case ("C", Bulkhead.Overload):
+                if (level.Settings.HasFog() && Generator.Flip(0.33) && level.TrySetFogUsage(FogUsage.LongDuration))
+                {
+                    if (Generator.Flip(0.33))
+                        ObjectiveFogChallenge = ObjectiveFogChallenge.CyclingFog;
+                    else
+                        ObjectiveFogChallenge = ObjectiveFogChallenge.SlowFogFill;
+                }
+                break;
+
+            case ("D", Bulkhead.Overload):
+                if (level.Settings.HasFog() && Generator.Flip(0.08) && level.TrySetFogUsage(FogUsage.ShortDuration))
+                    ObjectiveFogChallenge = ObjectiveFogChallenge.FillFog;
+                else if (Generator.Flip(0.19) && level.TrySetFogUsage(FogUsage.LongDuration))
+                    ObjectiveFogChallenge = ObjectiveFogChallenge.CyclingFog;
+                else if (Generator.Flip(0.33) && level.TrySetFogUsage(FogUsage.LongDuration))
+                    ObjectiveFogChallenge = ObjectiveFogChallenge.SlowFogFill;
+                break;
+
+            case ("E", Bulkhead.Overload):
+                if (Generator.Flip(0.17) && level.TrySetFogUsage(FogUsage.ShortDuration))
+                    ObjectiveFogChallenge = ObjectiveFogChallenge.FillFog;
+                else if (Generator.Flip(0.23) && level.TrySetFogUsage(FogUsage.LongDuration))
+                    ObjectiveFogChallenge = ObjectiveFogChallenge.CyclingFog;
+                else if (Generator.Flip(0.37) && level.TrySetFogUsage(FogUsage.LongDuration))
+                    ObjectiveFogChallenge = ObjectiveFogChallenge.SlowFogFill;
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Adds default exit/completion waves and environmental penalties for an
+    /// objective. Scaled by tier and bulkhead.
+    /// </summary>
+    public void AddCompletedObjectiveChallenge(Level level, BuildDirector director)
+    {
+        var entranceZone = level.Planner.GetZone((ZoneNode)level.Planner.GetBulkheadFirstZone(director.Bulkhead)!);
+
         // Extraction waves. These are progressively harder
         // Overload is balanced to get harder error waves when getting the sample
         switch (level.Tier, director.Bulkhead)
@@ -444,50 +529,120 @@ public partial record WardenObjective : DataBlock<WardenObjective>
             case ("A", Bulkhead.Main):
                 WavesOnGotoWin.Add(GenericWave.Exit_Objective_Easy);
                 break;
+
             case ("A", Bulkhead.Extreme):
                 break;
+
             case ("A", Bulkhead.Overload):
+                if (Generator.Flip(0.2))
+                    EventsOnGotoWin.AddLightsOff(Generator.Between(1, 6));
                 break;
+
 
             case ("B", Bulkhead.Main):
                 WavesOnGotoWin.Add(GenericWave.Exit_Objective_Medium);
                 break;
+
             case ("B", Bulkhead.Extreme):
                 break;
+
             case ("B", Bulkhead.Overload):
+                if (ObjectiveFogChallenge == ObjectiveFogChallenge.SlowFogFill)
+                    EventsOnGotoWin.AddRange(AddSlowFogFill(
+                        level,
+                        duration: 60.0 * level.Settings.Bulkheads switch
+                        {
+                            Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
+                            _ => Generator.Between(60, 75)
+                        }));
                 break;
+
 
             case ("C", Bulkhead.Main):
                 WavesOnGotoWin.Add(GenericWave.Exit_Objective_Medium);
                 break;
+
             case ("C", Bulkhead.Extreme):
+                if (ObjectiveFogChallenge == ObjectiveFogChallenge.SlowFogFill)
+                    EventsOnGotoWin.AddRange(AddSlowFogFill(
+                        level,
+                        duration: 60.0 * level.Settings.Bulkheads switch
+                        {
+                            Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
+                            _ => Generator.Between(60, 75)
+                        }));
                 break;
+
             case ("C", Bulkhead.Overload):
-                WavesOnGotoWin.Add(GenericWave.ErrorAlarm_Easy);
+                if (ObjectiveFogChallenge == ObjectiveFogChallenge.CyclingFog)
+                    entranceZone.EventsOnOpenDoor.AddCyclingFog(level);
+                else if (ObjectiveFogChallenge == ObjectiveFogChallenge.SlowFogFill)
+                    EventsOnGotoWin.AddRange(AddSlowFogFill(
+                        level,
+                        duration: 60.0 * level.Settings.Bulkheads switch
+                        {
+                            Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
+                            _ => Generator.Between(60, 75)
+                        }));
+                else
+                    WavesOnGotoWin.Add(GenericWave.ErrorAlarm_Easy);
                 break;
+
 
             case ("D", Bulkhead.Main):
                 WavesOnGotoWin.Add(GenericWave.Exit_Objective_Hard);
                 break;
+
             case ("D", Bulkhead.Extreme):
                 WavesOnGotoWin.Add(GenericWave.ErrorAlarm_Easy);
                 break;
+
             case ("D", Bulkhead.Overload):
+                if (ObjectiveFogChallenge == ObjectiveFogChallenge.FillFog)
+                    EventsOnGotoWin.AddFillFog(Generator.Between(1, 6));
+                else if (ObjectiveFogChallenge == ObjectiveFogChallenge.CyclingFog)
+                    entranceZone.EventsOnOpenDoor.AddCyclingFog(level);
+                else if (ObjectiveFogChallenge == ObjectiveFogChallenge.SlowFogFill)
+                    EventsOnGotoWin.AddRange(AddSlowFogFill(
+                        level,
+                        duration: 60.0 * level.Settings.Bulkheads switch
+                        {
+                            Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
+                            _ => Generator.Between(60, 75)
+                        }));
+
                 WavesOnGotoWin.Add(GenericWave.ErrorAlarm_Normal);
                 break;
+
 
             case ("E", Bulkhead.Main):
                 WavesOnGotoWin.Add(GenericWave.Exit_Objective_VeryHard);
                 break;
+
             case ("E", Bulkhead.Extreme):
                 WavesOnGotoWin.Add(GenericWave.ErrorAlarm_Normal);
                 break;
+
             case ("E", Bulkhead.Overload):
+                if (ObjectiveFogChallenge == ObjectiveFogChallenge.FillFog)
+                    EventsOnGotoWin.AddFillFog(Generator.Between(1, 6));
+                else if (ObjectiveFogChallenge == ObjectiveFogChallenge.CyclingFog)
+                    entranceZone.EventsOnOpenDoor.AddCyclingFog(level);
+                else if (ObjectiveFogChallenge == ObjectiveFogChallenge.SlowFogFill)
+                    entranceZone.EventsOnOpenDoor.AddRange(AddSlowFogFill(
+                        level,
+                        duration: 60.0 * level.Settings.Bulkheads switch
+                        {
+                            Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
+                            _ => Generator.Between(60, 75)
+                        }));
+
                 WavesOnGotoWin.Add(GenericWave.ErrorAlarm_Hard);
                 break;
         }
 
-        if (director.Bulkhead == Bulkhead.Main)
+        // Only modify extraction scan if there's enemy waves from this objective in main
+        if (director.Bulkhead == Bulkhead.Main && WavesOnGotoWin.Any())
         {
             // Set a longer extract scan then the default flat rate time
             ChainedPuzzleAtExitScanSpeedMultiplier = director.Tier switch
@@ -500,6 +655,20 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 _ => 1.0,
             };
         }
+
+        // EventsOnGotoWin.AddRange(AddSlowFogFill(
+        //     level,
+        //     duration: 60.0 * level.Settings.Bulkheads switch
+        //     {
+        //         Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
+        //         _ => Generator.Between(60, 75)
+        //     }));
+
+        // EventsOnGotoWin.AddLightsOff(Generator.Between(1, 6));
+
+        // if (level.Settings.HasFog() && level.TrySetFogUsage(FogUsage.ShortDuration))
+        //     EventsOnGotoWin.AddFillFog(delay);
+
     }
 
     /// <summary>
@@ -594,6 +763,20 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 throw new ArgumentOutOfRangeException(nameof(director));
         }
 
+        switch (objective.Type)
+        {
+            case WardenObjectiveType.HsuFindSample:
+            case WardenObjectiveType.HsuActivateSmall:
+            case WardenObjectiveType.GatherTerminal:
+            case WardenObjectiveType.PowerCellDistribution:
+            case WardenObjectiveType.CentralGeneratorCluster:
+            case WardenObjectiveType.TerminalUplink:
+            case WardenObjectiveType.CorruptedTerminalUplink:
+            case WardenObjectiveType.GatherSmallItems:
+                objective.PreReserveObjectiveFog(level, director);
+                break;
+        }
+
         return objective;
     }
 
@@ -618,6 +801,12 @@ public partial record WardenObjective : DataBlock<WardenObjective>
         }
 
         return (dataLayer, layout);
+    }
+
+    public double GetClearTimeEstimate(BuildDirector director, Level level)
+    {
+        var (_, layout) = GetObjectiveLayerAndLayout(director, level);
+        return layout.Zones.Sum(z => z.GetClearTimeEstimate());
     }
 
     /// <summary>
@@ -911,6 +1100,12 @@ public partial record WardenObjective : DataBlock<WardenObjective>
 
     [JsonIgnore]
     public int ReactorStartup_FetchWaves { get; set; } = 0;
+
+    [JsonIgnore]
+    public FogUsage FogUsage { get; set; } = FogUsage.None;
+
+    [JsonIgnore]
+    public ObjectiveFogChallenge ObjectiveFogChallenge { get; set; } = ObjectiveFogChallenge.None;
 
     /// <summary>
     /// Collect the nodes where items have been placed

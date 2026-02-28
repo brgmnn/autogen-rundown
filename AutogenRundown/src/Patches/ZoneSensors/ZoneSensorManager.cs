@@ -1,4 +1,5 @@
 using AmorLib.Networking.StateReplicators;
+using AIGraph;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Objectives;
@@ -41,6 +42,9 @@ public sealed class ZoneSensorManager
     /// Counter for allocating unique replicator IDs (separate from definition Id).
     /// </summary>
     private int nextReplicatorIndex = 0;
+
+    // Cached elevator area course node for sensor exclusion
+    private AIG_CourseNode? elevatorCourseNode;
 
     // Update helper component instance
     private ZoneSensorManagerUpdater? updater;
@@ -264,6 +268,15 @@ public sealed class ZoneSensorManager
         // Reset replicator index counter for this level
         nextReplicatorIndex = 0;
 
+        // Resolve the elevator area (Area 0 of Zone 0, MainLayer, Reality)
+        elevatorCourseNode = null;
+        if (Builder.CurrentFloor.TryGetZoneByLocalIndex(
+            eDimensionIndex.Reality, LG_LayerType.MainLayer, eLocalZoneIndex.Zone_0, out var spawnZone)
+            && spawnZone.m_areas.Count > 0)
+        {
+            elevatorCourseNode = spawnZone.m_areas[0].m_courseNode;
+        }
+
         foreach (var definition in levelDefinitions)
         {
             // Get the zone
@@ -353,7 +366,7 @@ public sealed class ZoneSensorManager
             return;
 
         rebroadcastAttemptsRemaining = REBROADCAST_ATTEMPTS;
-        rebroadcastIntervalTimer = REBROADCAST_INTERVAL;
+        rebroadcastIntervalTimer = 1.0f;
 
         Plugin.Logger.LogDebug("ZoneSensor: Entered level, beginning rebroadcast timer");
     }
@@ -388,7 +401,9 @@ public sealed class ZoneSensorManager
 
     /// <summary>
     /// Generates random positions for sensors within a zone, split into batches.
-    /// Host-only: Uses SessionSeedRandom for deterministic generation.
+    /// Host-only: Uses a local RNG seeded from SessionSeedRandom.Seed to avoid
+    /// advancing the shared global RNG (which would desync terminal uplink codes).
+    /// Positions are synced to clients via the state replicator.
     /// Returns a list of position state batches, each containing up to 16 sensors.
     /// </summary>
     private List<ZoneSensorPositionState> GeneratePositionBatches(LG_Zone zone, List<ZoneSensorGroupDefinition> groupDefinitions)
@@ -396,6 +411,14 @@ public sealed class ZoneSensorManager
         // First, generate all positions
         var allPositions = new List<(Vector3 pos, int waypointCount)>();
         var placedSensors = new List<(Vector3 pos, float radius)>();
+
+        // Use a local RNG instead of Builder.SessionSeedRandom to avoid advancing the
+        // shared global RNG state on the host only (since this method runs inside an
+        // IsMaster guard). Diverging SessionSeedRandom causes terminal uplink verification
+        // codes to desync between host and clients. Reading .Seed does not advance the RNG.
+        var rng = new System.Random(Builder.SessionSeedRandom.Seed
+            ^ zone.LocalIndex.GetHashCode()
+            ^ zone.DimensionIndex.GetHashCode());
 
         // Maximum sensors supported (8 batches * 16 per batch)
         const int maxTotalSensors = 8 * ZoneSensorPositionState.MaxSensorsPerBatch;
@@ -416,17 +439,17 @@ public sealed class ZoneSensorManager
                     if (groupDef.AreaIndex >= 0 && groupDef.AreaIndex < zone.m_areas.Count)
                     {
                         var area = zone.m_areas[groupDef.AreaIndex];
-                        position = area.m_courseNode.GetRandomPositionInside_SessionSeed();
+                        position = area.m_courseNode.GetRandomPositionInside();
                     }
                     else
                     {
-                        var randomAreaIndex = Builder.SessionSeedRandom.Range(0, zone.m_areas.Count, "ZoneSensor_AreaSelect");
+                        var randomAreaIndex = rng.Next(0, zone.m_areas.Count);
                         var area = zone.m_areas[randomAreaIndex];
-                        position = area.m_courseNode.GetRandomPositionInside_SessionSeed();
+                        position = area.m_courseNode.GetRandomPositionInside();
                     }
 
                     if (!OverlapsExistingSensor(position, sensorRadius, placedSensors)
-                        && !IsNearOrigin(position))
+                        && !IsInElevatorArea(position))
                         break;
 
                     attempts++;
@@ -473,12 +496,16 @@ public sealed class ZoneSensorManager
     }
 
     /// <summary>
-    /// Checks if a position overlaps with any existing sensor positions.
+    /// Checks if a position falls within the elevator area (Area 0 of Zone 0).
+    /// Uses the game's voxel graph to resolve the position to a course node.
     /// </summary>
-    private static bool IsNearOrigin(Vector3 position)
+    private bool IsInElevatorArea(Vector3 position)
     {
-        return position.x > -15f && position.x < 15f
-            && position.z > -15f && position.z < 15f;
+        if (elevatorCourseNode == null)
+            return false;
+
+        return AIG_CourseNode.TryGetCourseNode(eDimensionIndex.Reality, position, 1f, out var node)
+            && node.Pointer == elevatorCourseNode.Pointer;
     }
 
     private bool OverlapsExistingSensor(Vector3 position, float radius, List<(Vector3 pos, float radius)> existingSensors)
@@ -559,6 +586,7 @@ public sealed class ZoneSensorManager
         nextReplicatorIndex = 0;
         rebroadcastIntervalTimer = 0f;
         rebroadcastAttemptsRemaining = 0;
+        elevatorCourseNode = null;
 
         // Destroy updater component
         if (updater != null)

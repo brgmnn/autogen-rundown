@@ -249,36 +249,6 @@ static public class Generator
     public static List<T> Shuffle<T>(ICollection<T> collection)
         => collection.OrderBy(_ => Random.Next()).ToList();
 
-    public interface ISelectable
-    {
-        public double Weight { get; set; }
-    }
-
-    /// <summary>
-    /// Randomly selects from a collection of items weighted by their individual properties Weight.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="collection"></param>
-    /// <returns></returns>
-    public static T Select<T>(ICollection<T> collection) where T : ISelectable
-    {
-        var totalWeight = collection.Sum(x => x.Weight);
-        var rand = Random.NextDouble();
-        var randomWeight = rand * totalWeight;
-
-        double weightSum = 0;
-
-        foreach (var item in collection)
-        {
-            weightSum += item.Weight;
-
-            if (randomWeight <= weightSum)
-                return item;
-        }
-
-        return collection.Last();
-    }
-
     /// <summary>
     /// Randomly selects from a collection of tuples of (weight, item)'s with the weight being
     /// their relative chance of being selected.
@@ -332,14 +302,6 @@ static public class Generator
         }
 
         collection.Last().Item2();
-    }
-
-    /// <summary>
-    /// TODO: implement
-    /// </summary>
-    /// <param name="collection"></param>
-    public static void DrawSelectRun_PersistedList(ICollection<(double weight, int count, Action action)> collection)
-    {
     }
 
     /// <summary>

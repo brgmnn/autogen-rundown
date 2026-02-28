@@ -93,7 +93,7 @@ public partial record WardenObjective
 
     private static readonly ChainedPuzzle Reactor_AlarmClass6_Cluster = new()
     {
-        PublicAlarmName = "Class V Cluster Alarm",
+        PublicAlarmName = "Class VI Cluster Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
         WantedDistanceBetweenPuzzleComponents = 5.0,
@@ -223,15 +223,6 @@ public partial record WardenObjective
                     break; // No futher processing here
                 }
 
-                // Boss bait bait scan does still get the exit wave though
-                if (puzzle == ChainedPuzzle.StealthScan4)
-                {
-                    puzzle = puzzle with
-                    {
-                        WantedDistanceFromStartPos = 50,
-                        WantedDistanceBetweenPuzzleComponents = 50,
-                    };
-                }
                 break;
             }
 
@@ -314,16 +305,6 @@ public partial record WardenObjective
                     };
                     reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(surpriseBossEvents);
                     break; // No futher processing here
-                }
-
-                // Boss bait bait scan does still get the exit wave though
-                if (puzzle == ChainedPuzzle.StealthScan4)
-                {
-                    puzzle = puzzle with
-                    {
-                        WantedDistanceFromStartPos = 50,
-                        WantedDistanceBetweenPuzzleComponents = 50,
-                    };
                 }
 
                 reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(events);
@@ -422,16 +403,6 @@ public partial record WardenObjective
                     };
                     reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(surpriseBossEvents);
                     break; // No futher processing here
-                }
-
-                // Boss bait bait scan does still get the exit wave though
-                if (puzzle == ChainedPuzzle.StealthScan4)
-                {
-                    puzzle = puzzle with
-                    {
-                        WantedDistanceFromStartPos = 50,
-                        WantedDistanceBetweenPuzzleComponents = 50,
-                    };
                 }
 
                 reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(events);
@@ -547,16 +518,6 @@ public partial record WardenObjective
                     };
                     reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(surpriseBossEvents);
                     break; // No futher processing here
-                }
-
-                // Boss bait bait scan does still get the exit wave though
-                if (puzzle == ChainedPuzzle.StealthScan4)
-                {
-                    puzzle = puzzle with
-                    {
-                        WantedDistanceFromStartPos = 50,
-                        WantedDistanceBetweenPuzzleComponents = 50,
-                    };
                 }
 
                 reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(events);
@@ -676,16 +637,6 @@ public partial record WardenObjective
                     };
                     reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(surpriseBossEvents);
                     break; // No futher processing here
-                }
-
-                // Boss bait bait scan does still get the exit wave though
-                if (puzzle == ChainedPuzzle.StealthScan4)
-                {
-                    puzzle = puzzle with
-                    {
-                        WantedDistanceFromStartPos = 50,
-                        WantedDistanceBetweenPuzzleComponents = 50
-                    };
                 }
 
                 reactorDefinition.EventsOnShutdownPuzzleStarts.AddRange(events);

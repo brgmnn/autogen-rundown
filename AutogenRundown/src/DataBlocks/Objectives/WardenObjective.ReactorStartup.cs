@@ -171,12 +171,17 @@ public partial record WardenObjective
          */
         var candidateFogWaves = ReactorWaves.Skip(1).ToList();
 
-        for (var i = 0; i < fogWaveCount - 1; i++)
+        if (level.TrySetFogUsage(FogUsage.ShortDuration))
         {
-            var wave = Generator.Draw(candidateFogWaves);
+            FogUsage = FogUsage.ShortDuration;
 
-            if (wave != null)
-                wave.IsFogWave = true;
+            for (var i = 0; i < fogWaveCount - 1; i++)
+            {
+                var wave = Generator.Draw(candidateFogWaves);
+
+                if (wave != null)
+                    wave.IsFogWave = true;
+            }
         }
         #endregion
 

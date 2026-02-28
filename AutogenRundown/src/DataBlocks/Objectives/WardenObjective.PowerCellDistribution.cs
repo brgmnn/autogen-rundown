@@ -95,6 +95,8 @@ public partial record WardenObjective
                     throw new Exception($"Unhandled number of power cells to distribute");
             }
         }
+
+        AddCompletedObjectiveChallenge(level, director);
     }
 
     private void PostBuildIntel_PowerCellDistribution(Level level)

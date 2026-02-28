@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
 
@@ -37,43 +38,67 @@ public partial record WardenObjective
     /// <param name="level"></param>
     public void PreBuild_SpecialTerminalCommand(BuildDirector director, Level level)
     {
-        SpecialTerminalCommand_Type = director.Tier switch
+        var options = new List<(double, SpecialCommand)>();
+
+        switch (level.Tier)
         {
-            "A" => Generator.Select(new List<(double, SpecialCommand)>
+            case "A":
+                options.Add((0.50, SpecialCommand.LightsOff));
+                options.Add((0.43, SpecialCommand.KingOfTheHill));
+                break;
+
+            case "B":
+                options.Add((0.30, SpecialCommand.LightsOff));
+                options.Add((0.10, SpecialCommand.ErrorAlarm));
+                options.Add((0.50, SpecialCommand.KingOfTheHill));
+                break;
+
+            case "C":
+                options.Add((0.30, SpecialCommand.LightsOff));
+                options.Add((0.15, SpecialCommand.ErrorAlarm));
+                options.Add((0.45, SpecialCommand.KingOfTheHill));
+                break;
+
+            case "D":
+                options.Add((0.20, SpecialCommand.ErrorAlarm));
+                options.Add((0.40, SpecialCommand.KingOfTheHill));
+
+                if (director.Bulkhead == Bulkhead.Extreme)
+                    options.Add((0.25, SpecialCommand.LightsOff));
+
+                break;
+
+            case "E":
+                options.Add((0.30, SpecialCommand.ErrorAlarm));
+                options.Add((0.50, SpecialCommand.KingOfTheHill));
+                break;
+        }
+
+        if (level.FogUsage == FogUsage.None)
+            options.Add((level.Tier, level.Settings.HasFog()) switch
             {
-                (0.50, SpecialCommand.LightsOff),
-                (0.07, SpecialCommand.FillWithFog),
-                (0.43, SpecialCommand.KingOfTheHill)
-            }),
-            "B" => Generator.Select(new List<(double, SpecialCommand)>
-            {
-                (0.30, SpecialCommand.LightsOff),
-                (0.10, SpecialCommand.FillWithFog),
-                (0.10, SpecialCommand.ErrorAlarm),
-                (0.50, SpecialCommand.KingOfTheHill)
-            }),
-            "C" => Generator.Select(new List<(double, SpecialCommand)>
-            {
-                (0.30, SpecialCommand.LightsOff),
-                (0.10, SpecialCommand.FillWithFog),
-                (0.15, SpecialCommand.ErrorAlarm),
-                (0.45, SpecialCommand.KingOfTheHill)
-            }),
-            "D" => Generator.Select(new List<(double, SpecialCommand)>
-            {
-                (0.25, SpecialCommand.LightsOff),
-                (0.15, SpecialCommand.FillWithFog),
-                (0.20, SpecialCommand.ErrorAlarm),
-                (0.40, SpecialCommand.KingOfTheHill)
-            }),
-            "E" => Generator.Select(new List<(double, SpecialCommand)>
-            {
-                (0.05, SpecialCommand.LightsOff),
-                (0.15, SpecialCommand.FillWithFog),
-                (0.30, SpecialCommand.ErrorAlarm),
-                (0.50, SpecialCommand.KingOfTheHill)
-            }),
-        };
+                ("A",    _) => (0.07, SpecialCommand.FillWithFog),
+
+                ("B", true) => (0.40, SpecialCommand.FillWithFog),
+                ("B",    _) => (0.10, SpecialCommand.FillWithFog),
+
+                ("C", true) => (0.50, SpecialCommand.FillWithFog),
+                ("C",    _) => (0.10, SpecialCommand.FillWithFog),
+
+                ("D", true) => (0.55, SpecialCommand.FillWithFog),
+                ("D",    _) => (0.15, SpecialCommand.FillWithFog),
+
+                ("E", true) => (0.60, SpecialCommand.FillWithFog),
+                ("E",    _) => (0.15, SpecialCommand.FillWithFog),
+            });
+
+        SpecialTerminalCommand_Type = Generator.Select(options);
+
+        if (SpecialTerminalCommand_Type == SpecialCommand.FillWithFog)
+            level.TrySetFogUsage(FogUsage.LongDuration);
+
+        if (SpecialTerminalCommand_Type != SpecialCommand.ErrorAlarm)
+            PreReserveObjectiveFog(level, director);
     }
 
     public void Build_SpecialTerminalCommand(BuildDirector director, Level level)
@@ -149,8 +174,6 @@ public partial record WardenObjective
                 var firstNode = level.Planner.GetZones(director.Bulkhead, null).First()!;
                 var firstZone = level.Planner.GetZone(firstNode)!;
                 firstZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
-
-                EventsOnActivate.AddFillFog(11.0);
 
                 break;
             }
@@ -460,19 +483,29 @@ public partial record WardenObjective
 
         ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
 
-        // Add exit wave if this is the main bulkhead and it's not already an error alarm command
-        if (director.Bulkhead.HasFlag(Bulkhead.Main) && SpecialTerminalCommand_Type != SpecialCommand.ErrorAlarm)
-            WavesOnGotoWin.Add(new GenericWave
-            {
-                Population = WavePopulation.Baseline,
-                Settings = WaveSettings.Exit_Objective_Easy,
-                TriggerAlarm = true,
-                SpawnDelay = 4.0
-            });
+        // Add exit wave if this is not already an error alarm command
+        if (SpecialTerminalCommand_Type != SpecialCommand.ErrorAlarm)
+            AddCompletedObjectiveChallenge(level, director);
     }
 
     private void PostBuildIntel_SpecialTerminalCommand(Level level)
     {
+        switch (SpecialTerminalCommand_Type)
+        {
+            case SpecialCommand.FillWithFog:
+            {
+                EventsOnActivate.AddRange(AddSlowFogFill(
+                    level,
+                    duration: 60.0 * level.Settings.Bulkheads switch
+                    {
+                        Bulkhead.PrisonerEfficiency => Generator.Between(75, 85),
+                        _ => Generator.Between(60, 75)
+                    }));
+
+                break;
+            }
+        }
+
         #region Warden Intel Messages
 
         // Generic special terminal command intel

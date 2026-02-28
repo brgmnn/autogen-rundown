@@ -51,6 +51,29 @@ public enum LevelModifiers
     OnlyShadows,
 
     Hybrids,
-    InfectionHybrids
+    InfectionHybrids,
+    #endregion
+
+    #region Spitters
+
+    NoSpitters,
+    Spitters,
+    ManySpitters,
+
+    #endregion
+
+    #region Infection
+
+    NoInfection,
+    Infection,
+    HeavyInfection,
+
+    #endregion
+
+    #region RespawnCocoons
+
+    NoRespawnCocoons,
+    RespawnCocoons,
+
     #endregion
 }

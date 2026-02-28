@@ -1,5 +1,6 @@
 using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks.Objectives;
@@ -98,11 +99,14 @@ public partial record WardenObjective
 
             // Lights off
             (0.5, 1, new List<WardenObjectiveEvent>().AddLightsOff(20.0)),
-
-            // Fog flood
-            (0.1, 1, new List<WardenObjectiveEvent>().AddFillFog(
-                5, 1800, $"{Intel.Warning} - VENTILATION SYSTEM ON BACKUP POWER"))
         };
+
+        // Fog flood — reserve fog usage before adding to the pool
+        if (level.TrySetFogUsage(FogUsage.LongDuration))
+        {
+            extraEvents.Add((0.1, 1, new List<WardenObjectiveEvent>().AddFillFog(
+                5, 1800, $"{Intel.Warning} - VENTILATION SYSTEM ON BACKUP POWER")));
+        }
 
         // Add waves etc. on each round
         for (var round = 0; round < TimedTerminalSequence_NumberOfRounds; round++)

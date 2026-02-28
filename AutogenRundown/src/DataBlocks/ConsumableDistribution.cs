@@ -18,6 +18,27 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
                 new() { Weight = 5.0, Item = Items.Item.LockMelter },
                 new() { Weight = 1.0, Item = Items.Item.CfoamGrenade },
                 new() { Weight = 1.0, Item = Items.Item.ExplosiveTripmine },
+                new() { Weight = 1.0, Item = Items.Item.CfoamTripmine },
+                new() { Weight = 1.0, Item = Items.Item.LongRangeFlashlight },
+                new() { Weight = 1.0, Item = Items.Item.FogRepeller }
+            }
+        ),
+    };
+
+    /// <summary>
+    /// Variant of Baseline but for Tech labs
+    /// </summary>
+    public static ConsumableDistribution Baseline_TechComplex = new()
+    {
+        SpawnsPerZone = 6,
+        SpawnData = Collections.Flatten(
+            ItemSpawn.GlowSticks(8.0),
+            new List<ItemSpawn> {
+                new() { Weight = 2.0, Item = Items.Item.LockMelter },
+                new() { Weight = 2.0, Item = Items.Item.Syringe_Health },
+                new() { Weight = 2.0, Item = Items.Item.Syringe_Melee },
+                new() { Weight = 1.0, Item = Items.Item.CfoamGrenade },
+                new() { Weight = 1.0, Item = Items.Item.ExplosiveTripmine },
                 new() { Weight = 1.0, Item = Items.Item.LongRangeFlashlight },
                 new() { Weight = 1.0, Item = Items.Item.FogRepeller }
             }
@@ -101,8 +122,8 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
         SpawnsPerZone = 8,
         SpawnData = Collections.Flatten(
             new List<ItemSpawn> {
-                new() { Weight = 3.0, Item = Items.Item.Syringe_Health },
-                new() { Weight = 1.5, Item = Items.Item.Syringe_Melee },
+                new() { Weight = 6.0, Item = Items.Item.Syringe_Health },
+                new() { Weight = 3.0, Item = Items.Item.Syringe_Melee },
                 new() { Weight = 1.0, Item = Items.Item.FogRepeller }
             }
         )
@@ -111,6 +132,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
     public new static void SaveStatic()
     {
         Bins.ConsumableDistributions.AddBlock(Baseline);
+        Bins.ConsumableDistributions.AddBlock(Baseline_TechComplex);
         Bins.ConsumableDistributions.AddBlock(Baseline_FogRepellers);
         Bins.ConsumableDistributions.AddBlock(Baseline_LockMelters);
         Bins.ConsumableDistributions.AddBlock(Baseline_Syringes);

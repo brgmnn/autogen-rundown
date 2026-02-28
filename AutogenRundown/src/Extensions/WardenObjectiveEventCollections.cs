@@ -2,6 +2,7 @@
 using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
@@ -247,18 +248,32 @@ public static class WardenObjectiveEventCollections
         return events;
     }
 
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="fogSettings1"></param>
+    /// <param name="fogSettings2"></param>
+    /// <param name="loopIndex"></param>
+    /// <param name="delay1">How long fog 1 stays active after transitioning</param>
+    /// <param name="duration1">How long fog 1 transition lasts</param>
+    /// <param name="delay2">How long fog 2 stays active after transitioning</param>
+    /// <param name="duration2">How long fog 2 transition lasts</param>
+    /// <returns></returns>
     public static ICollection<WardenObjectiveEvent> AddCyclingFog(
         this ICollection<WardenObjectiveEvent> events,
         Fog fogSettings1,
         Fog fogSettings2,
         int loopIndex = 1,
-        double delay = 30.0,
-        double duration = 45.0)
+        double delay1 = 30.0,
+        double duration1 = 45.0,
+        double delay2 = 30.0,
+        double duration2 = 45.0)
     {
-        var eventLoop = new EventLoop()
+        var eventLoop = new EventLoop
         {
             LoopIndex = loopIndex,
-            LoopDelay = delay,
+            LoopDelay = duration1 + delay1 + duration2 + delay2,
             LoopCount = -1
         };
 
@@ -267,9 +282,8 @@ public static class WardenObjectiveEventCollections
             {
                 Type = WardenObjectiveEventType.SetFogSettings,
                 Dimension = DimensionIndex.Reality, // TODO: support dimensions
-                Trigger = WardenObjectiveEventTrigger.OnStart,
                 FogSetting = fogSettings1.PersistentId,
-                FogTransitionDuration = duration,
+                FogTransitionDuration = duration1,
                 SoundId = (Sound)2275333205,
                 Delay = 0
             });
@@ -278,11 +292,10 @@ public static class WardenObjectiveEventCollections
             {
                 Type = WardenObjectiveEventType.SetFogSettings,
                 Dimension = DimensionIndex.Reality, // TODO: support dimensions
-                Trigger = WardenObjectiveEventTrigger.OnStart,
                 FogSetting = fogSettings2.PersistentId,
-                FogTransitionDuration = duration,
+                FogTransitionDuration = duration2,
                 SoundId = (Sound)2275333205,
-                Delay = duration + delay
+                Delay = duration1 + delay1
             });
 
         events.Add(
@@ -293,6 +306,33 @@ public static class WardenObjectiveEventCollections
             });
 
         return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> AddCyclingFog(
+        this ICollection<WardenObjectiveEvent> events,
+        Level level)
+    {
+        var (delay1, duration1, delay2, duration2) = (level.Tier, level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)) switch
+        {
+            ("D", true) => (60, 25, 75, 22),
+            ("D", _   ) => (45, 25, 45, 25),
+
+            ("E", true) => (90, 35, 30, 22),
+            ("E", _   ) => (45, 25, 45, 25),
+
+            (_, true) => (30, 25, 90, 35), // Shorter infectious cycle by default
+
+            _ => (45, 30, 45, 30)
+        };
+        var (fog1, fog2) = (level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)) switch
+        {
+            true  => (Fog.CyclingFog_Heavy_Infectious, Fog.CyclingFog_Clear_Infectious),
+            false => (Fog.CyclingFog_Heavy,            Fog.CyclingFog_Clear           )
+        };
+
+        Plugin.Logger.LogDebug($"AddCyclingFog()");
+
+        return events.AddCyclingFog(fog1, fog2, (int)Generator.GetPersistentId(), delay1, duration1, delay2, duration2);
     }
 
     #endregion

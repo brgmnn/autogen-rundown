@@ -26,7 +26,7 @@ public partial record LevelLayout
             Bulkhead = Bulkhead.Main,
             Branch = "medical_bay",
             MaxConnections = 0,
-            Tags = new Tags("no_blood_door", "no_enemies")
+            Tags = new Tags("no_blood_door", "no_enemies", "no_scouts")
         });
 
         medZone.AliasPrefix = "MedBay, ZONE";
@@ -76,15 +76,14 @@ public partial record LevelLayout
             .AddInfectPlayer(
                 level.Tier switch
                 {
-                    "D" => Generator.Between(18, 23),
-                    "E" => Generator.Between(20, 27),
-                    _ => Generator.Between(16, 20)
+                    "D" => Generator.Between(23, 28),
+                    "E" => Generator.Between(26, 33),
+                    _ => Generator.Between(18, 25)
                 },
                 delay: 1.2)
             .AddSound(
-                Sound.FoleyDisinfectPack, // TODO: this doesn't seem to work
-                delay: 1.0,
-                trigger: WardenObjectiveEventTrigger.None);
+                (Sound)2837251734,
+                delay: 0.0);
 
         switch (level.Tier)
         {
@@ -99,11 +98,67 @@ public partial record LevelLayout
         // Resources
         medZone.ConsumableDistributionInZone = ConsumableDistribution.MedicalBay_Consumables.PersistentId;
 
-        medZone.HealthPacks = 6;
-        medZone.DisinfectPacks = 2;
+        medZone.HealthPacks = 10;
+        medZone.DisinfectPacks = 6;
         medZone.AmmoPacks = 0;
         medZone.ToolPacks = 0;
 
+        Plugin.Logger.LogDebug($"Added MedBay in: {med}");
+
         return (med, medZone);
+    }
+
+    /// <summary>
+    /// Attempts to place a med bay in the level with the given probability.
+    /// At most one med bay per level.
+    /// </summary>
+    public void TryAddMedicalBay(double? chance = null)
+    {
+        if (level.HasMedBay)
+            return;
+
+        // Keep chances relatively small for levels
+        if (!Generator.Flip(chance ?? (level.Tier, level.Complex) switch
+            {
+                ("A", Complex.Tech) => 0.120,
+                ("A", _           ) => 0.095,
+
+                ("B", Complex.Tech) => 0.100,
+                ("B", _           ) => 0.076,
+
+                ("C", Complex.Tech) => 0.085,
+                ("C", _           ) => 0.063,
+
+                ("D", Complex.Tech) => 0.085,
+                ("D", _           ) => 0.050,
+
+                ("E", Complex.Tech) => 0.085,
+                ("E", _           ) => 0.050,
+
+                _ => 0.05
+            }))
+            return;
+
+        var candidates = planner.GetOpenZones(director.Bulkhead, null)
+            .Where(z => !z.Tags.Contains("exit_elevator"))
+            .Where(z => z.Branch != "medical_bay")
+            .Where(z => z.Branch != "disinfection")
+            .Where(z => !(z.ZoneNumber == 0 && director.Bulkhead == Bulkhead.Main))
+            .ToList();
+
+        switch (candidates.Count)
+        {
+            case 0:
+                return;
+            case > 1:
+                candidates = candidates.Skip(1).ToList();
+                break;
+        }
+
+        var selected = Generator.Pick(candidates);
+
+        BuildOptional_MedicalBay(selected);
+
+        level.HasMedBay = true;
     }
 }
