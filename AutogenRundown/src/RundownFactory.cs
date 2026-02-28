@@ -661,6 +661,7 @@ public static class RundownFactory
             var complex = Generator.DrawSelect(complexPool);
             var objective = Generator.DrawSelect(mainObjectivesPool);
 
+            // TODO: we want a better solution than this
             if (objective == WardenObjectiveType.ReachKdsDeep)
                 complex = Complex.Mining;
 
