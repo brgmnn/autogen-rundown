@@ -57,6 +57,7 @@ TODO:
   * Have a challenge like halfway through the fog starts rising and you can turn off the fog in a zone
   * Door alarm adjustments
   * Make generator distribution objective MAIN always have 2 or more generator cells
+  * `GatherSmallItems` should probably not have error alarm on picking up the "last" objective item. Instead we should have it be done by the zones they have to open
 
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
