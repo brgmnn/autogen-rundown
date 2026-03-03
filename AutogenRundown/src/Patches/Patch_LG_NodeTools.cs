@@ -109,7 +109,7 @@ public static class Patch_LG_NodeTools
         }
         else
         {
-            ScoreOnPreferredDistance_LowOcclusion(sourcePos, candidates, atRadiusFromSourcePos);
+            ScoreOnPreferredDistance_Combined(sourcePos, candidates, atRadiusFromSourcePos);
         }
 
         // Step 4: Sort by score (ascending = best)
@@ -240,7 +240,11 @@ public static class Patch_LG_NodeTools
 
                 if (UseCombinedScoring)
                 {
-                    // #4: Add separation penalty for candidates closer than desired
+                    // #4: Add separation penalty for candidates closer than desired.
+                    // Note: when UseHardDistanceFilter is active, all candidates with
+                    // minDistToPlaced < minDistance are already filtered above, so
+                    // deficit will always be 0 here. The penalty only has effect when
+                    // the hard filter is disabled.
                     float deficit = Mathf.Max(0f, minDistance - minDistToPlaced);
                     score += SeparationWeight * deficit;
                 }
@@ -394,21 +398,6 @@ public static class Patch_LG_NodeTools
             var scored = scoredNodes[i];
             float distToSource = (scored.node.Position - sourcePos).magnitude;
             scored.score = SourceDistanceWeight * Mathf.Abs(distToSource - preferredDistance)
-                         + ((float)scored.node.OcclusionScore / 255f) * OcclusionScale;
-            scoredNodes[i] = scored;
-        }
-    }
-
-    private static void ScoreOnPreferredDistance_LowOcclusion(
-        Vector3 sourcePos,
-        List<ScoredNode> scoredNodes,
-        float preferredDistance)
-    {
-        for (int i = 0; i < scoredNodes.Count; i++)
-        {
-            var scored = scoredNodes[i];
-            float distToSource = (scored.node.Position - sourcePos).magnitude;
-            scored.score = Mathf.Abs(distToSource - preferredDistance)
                          + ((float)scored.node.OcclusionScore / 255f) * OcclusionScale;
             scoredNodes[i] = scored;
         }
