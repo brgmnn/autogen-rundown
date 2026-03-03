@@ -50,29 +50,29 @@ public static class Patch_LG_NodeTools
     }
 
     [HarmonyPatch(typeof(LG_NodeTools), nameof(LG_NodeTools.TryGetPositionsOnRadiusDistancedFromEachother))]
-    [HarmonyPrefix]
-    public static bool Pre_TryGetPositionsOnRadiusDistancedFromEachother(
+    [HarmonyPostfix]
+    public static void Post_TryGetPositionsOnRadiusDistancedFromEachother(
         LG_Area area,
         Vector3 sourcePos,
         int wantedCount,
         float atRadiusFromSourcePos,
         float distanceFromEachother,
         bool useRandomPosition,
-        ref Il2CppSystem.Collections.Generic.List<Vector3> positions,
+        Il2CppSystem.Collections.Generic.List<Vector3> positions,
         ref bool __result,
         int fixedSeed = 0,
         int maxEval = 30)
     {
+        // If the original method failed, nothing to do
+        if (!__result || positions == null)
+            return;
+
         // Call game API with IL2CPP types
         Il2CppSystem.Collections.Generic.List<LG_Scoring.Score<AIG_INode>> scoreNodes;
         if (!LG_NodeTools.TryGetScoreNodes(area, true, out scoreNodes))
-        {
-            positions = null;
-            __result = false;
-            return false;
-        }
+            return;
 
-        positions = new Il2CppSystem.Collections.Generic.List<Vector3>();
+        positions.Clear();
 
         Plugin.Logger.LogDebug(
             $"[NodeTools] Flags: HardFilter={UseHardDistanceFilter} " +
@@ -180,7 +180,6 @@ public static class Patch_LG_NodeTools
         Plugin.Logger.LogDebug($"[NodeTools] Final: placed {positions.Count}/{wantedCount} positions");
 
         __result = true;
-        return false;
     }
 
     private static int PlaceCandidates(
