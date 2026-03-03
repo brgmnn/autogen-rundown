@@ -58,7 +58,7 @@ public static class Patch_LG_NodeTools
         float atRadiusFromSourcePos,
         float distanceFromEachother,
         bool useRandomPosition,
-        out Il2CppSystem.Collections.Generic.List<Vector3> positions,
+        ref Il2CppSystem.Collections.Generic.List<Vector3> positions,
         ref bool __result,
         int fixedSeed = 0,
         int maxEval = 30)
