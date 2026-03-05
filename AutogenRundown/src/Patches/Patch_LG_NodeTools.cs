@@ -381,7 +381,7 @@ public static class Patch_LG_NodeTools
         AIG_INode to,
         Dictionary<(int, int), float> cache)
     {
-        if (from == to)
+        if (from.GetHashCode() == to.GetHashCode())
             return 0f;
 
         int fromId = from.GetHashCode();
@@ -410,16 +410,19 @@ public static class Patch_LG_NodeTools
         return distance;
     }
 
+    private static bool _loggedLinksCount;
+
     private static int GetGraphHopCount(AIG_INode from, AIG_INode to, int maxHops)
     {
-        if (from == to)
+        int fromHash = from.GetHashCode();
+        int toHash = to.GetHashCode();
+
+        if (fromHash == toHash)
             return 0;
 
-        AIG_SearchID.IncrementSearchID();
-        ushort searchId = AIG_SearchID.SearchID;
-
-        from.SearchID = searchId;
-
+        // Use managed HashSet instead of IL2CPP SearchID — avoids
+        // IL2CPP interface property persistence issues
+        var visited = new HashSet<int> { fromHash };
         var queue = new Queue<(AIG_INode node, int depth)>();
         queue.Enqueue((from, 0));
 
@@ -430,26 +433,33 @@ public static class Patch_LG_NodeTools
             if (depth >= maxHops)
                 continue;
 
-            for (int i = 0; i < current.Links.Count; i++)
-            {
-                var neighbor = current.Links[i];
+            var links = current.Links;
 
-                if (neighbor.SearchID == searchId)
+            if (!_loggedLinksCount)
+            {
+                Plugin.Logger.LogDebug($"[BFS] First node Links.Count = {links.Count}");
+                _loggedLinksCount = true;
+            }
+
+            for (int i = 0; i < links.Count; i++)
+            {
+                var neighbor = links[i];
+                int neighborHash = neighbor.GetHashCode();
+
+                if (!visited.Add(neighborHash))
                     continue;
 
                 if (!neighbor.IsTraversable)
                     continue;
 
-                neighbor.SearchID = searchId;
-
-                if (neighbor == to)
+                if (neighborHash == toHash)
                     return depth + 1;
 
                 queue.Enqueue((neighbor, depth + 1));
             }
         }
 
-        return -1; // Not reachable within maxHops
+        return -1;
     }
 
     private static void ScoreOnPreferredDistance_Combined(
