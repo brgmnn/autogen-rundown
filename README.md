@@ -58,6 +58,9 @@ TODO:
   * Door alarm adjustments
   * Make generator distribution objective MAIN always have 2 or more generator cells
   * `GatherSmallItems` should probably not have error alarm on picking up the "last" objective item. Instead we should have it be done by the zones they have to open
+  * Generator Cluster needs cells to be tightened up in their spawns
+
+  * Check SD6: 2 terminals on top of each other in overload
 
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
