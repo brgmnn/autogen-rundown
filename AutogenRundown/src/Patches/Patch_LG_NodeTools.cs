@@ -6,6 +6,7 @@ using Il2CppInterop.Common;
 using Il2CppInterop.Runtime.Runtime;
 using LevelGeneration;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace AutogenRundown.Patches;
 
@@ -22,7 +23,7 @@ namespace AutogenRundown.Patches;
 ///   2. Iterative relaxation — reduce required distance and retry when placement fails
 ///   3. Larger candidate pool — evaluate more nodes for better spread
 ///   4. Combined scoring — unified score combining source distance + separation
-///   5. Graph distance — BFS hop count through AI graph instead of Euclidean distance
+///   5. Graph distance — NavMesh walking distance instead of Euclidean distance
 /// </summary>
 public static class Patch_LG_NodeTools
 {
@@ -41,10 +42,9 @@ public static class Patch_LG_NodeTools
     private const float OcclusionScale = 20f;
     private const float VanillaPenalty = 10f;
 
-    // Graph distance settings
-    private const int   MaxBfsHops = 20;
-    private const float EstimatedNodeSpacing = 2.5f;
-    private const int   MaxBfsVisited = 2000;
+    // NavMesh path computation (reusable buffers)
+    private static readonly NavMeshPath s_navPath = new NavMeshPath();
+    private static readonly Vector3[] s_corners = new Vector3[64];
 
     private struct ScoredNode
     {
@@ -182,15 +182,10 @@ public static class Patch_LG_NodeTools
         var placedNodes = new List<AIG_INode>();
         var graphDistanceCache = new Dictionary<(int, int), float>();
 
-        // Build candidate hash set for single-source BFS
-        var candidateHashes = new HashSet<int>();
-        for (int i = 0; i < candidates.Count; i++)
-            candidateHashes.Add(candidates[i].node.GetHashCode());
-
         int placed = PlaceCandidates(
             candidates, placedPositions, placedNodes,
             wantedCount, currentMinDistance, sourcePos,
-            graphDistanceCache, candidateHashes);
+            graphDistanceCache);
 
         // Step 6: Iterative relaxation (#2)
         if (UseIterativeRelaxation && placed < wantedCount)
@@ -209,7 +204,7 @@ public static class Patch_LG_NodeTools
                 placed += PlaceCandidates(
                     remaining, placedPositions, placedNodes,
                     wantedCount - placed, currentMinDistance, sourcePos,
-                    graphDistanceCache, candidateHashes);
+                    graphDistanceCache);
             }
         }
 
@@ -258,8 +253,7 @@ public static class Patch_LG_NodeTools
         int wantedCount,
         float minDistance,
         Vector3 sourcePos,
-        Dictionary<(int, int), float> graphDistanceCache,
-        HashSet<int> candidateHashes)
+        Dictionary<(int, int), float> graphDistanceCache)
     {
         int placed = 0;
 
@@ -279,12 +273,7 @@ public static class Patch_LG_NodeTools
 
                 placedPositions.Add(best.node.Position);
                 placedNodes.Add(best.node);
-                candidateHashes.Remove(best.node.GetHashCode());
                 placed++;
-
-                // Pre-populate distances from this placed node to all candidates
-                if (UseGraphDistance)
-                    PopulateDistancesFrom(best.node, candidateHashes, graphDistanceCache);
 
                 float distToSource = (best.node.Position - sourcePos).magnitude;
                 Plugin.Logger.LogDebug(
@@ -343,12 +332,7 @@ public static class Patch_LG_NodeTools
             working.RemoveAt(bestIdx);
             placedPositions.Add(bestNode.Position);
             placedNodes.Add(bestNode);
-            candidateHashes.Remove(bestNode.GetHashCode());
             placed++;
-
-            // Pre-populate distances from this placed node to all candidates
-            if (UseGraphDistance)
-                PopulateDistancesFrom(bestNode, candidateHashes, graphDistanceCache);
 
             float dSource = (bestNode.Position - sourcePos).magnitude;
             float dNearest = GetMinDistanceToPlaced(
@@ -409,58 +393,23 @@ public static class Patch_LG_NodeTools
         if (cache.TryGetValue(key, out float cached))
             return cached;
 
-        // Cache miss = unreachable by BFS; fall back to Euclidean
-        float distance = (from.Position - to.Position).magnitude;
+        float distance = GetNavMeshDistance(from.Position, to.Position);
         cache[key] = distance;
         return distance;
     }
 
-    private static void PopulateDistancesFrom(
-        AIG_INode source,
-        HashSet<int> candidateHashes,
-        Dictionary<(int, int), float> cache)
+    private static float GetNavMeshDistance(Vector3 from, Vector3 to)
     {
-        int sourceHash = source.GetHashCode();
-        int found = 0;
-        int totalTargets = candidateHashes.Count;
-
-        var visited = new HashSet<int> { sourceHash };
-        var queue = new Queue<(AIG_INode node, int depth)>();
-        queue.Enqueue((source, 0));
-
-        while (queue.Count > 0 && found < totalTargets && visited.Count < MaxBfsVisited)
+        if (NavMesh.CalculatePath(from, to, -1, s_navPath))
         {
-            var (current, depth) = queue.Dequeue();
-
-            if (depth >= MaxBfsHops)
-                continue;
-
-            var links = current.Links;
-            for (int i = 0; i < links.Count; i++)
-            {
-                var neighbor = links[i];
-                int neighborHash = neighbor.GetHashCode();
-
-                if (!visited.Add(neighborHash))
-                    continue;
-
-                if (!neighbor.IsTraversable)
-                    continue;
-
-                if (candidateHashes.Contains(neighborHash))
-                {
-                    var key = sourceHash < neighborHash
-                        ? (sourceHash, neighborHash)
-                        : (neighborHash, sourceHash);
-                    cache[key] = (depth + 1) * EstimatedNodeSpacing;
-                    found++;
-                }
-
-                queue.Enqueue((neighbor, depth + 1));
-            }
+            int count = s_navPath.GetCornersNonAlloc(s_corners);
+            float dist = 0f;
+            for (int i = 1; i < count; i++)
+                dist += (s_corners[i] - s_corners[i - 1]).magnitude;
+            return dist;
         }
-
-        Plugin.Logger.LogDebug($"[BFS] Flood from placed node: found {found}/{totalTargets} candidates");
+        // Fallback to Euclidean if NavMesh path fails
+        return (from - to).magnitude;
     }
 
     private static void ScoreOnPreferredDistance_Combined(
