@@ -42,8 +42,9 @@ public static class Patch_LG_NodeTools
     private const float VanillaPenalty = 10f;
 
     // Graph distance settings
-    private const int   MaxBfsHops = 50;
+    private const int   MaxBfsHops = 20;
     private const float EstimatedNodeSpacing = 2.5f;
+    private const int   MaxBfsVisited = 2000;
 
     private struct ScoredNode
     {
@@ -278,6 +279,7 @@ public static class Patch_LG_NodeTools
 
                 placedPositions.Add(best.node.Position);
                 placedNodes.Add(best.node);
+                candidateHashes.Remove(best.node.GetHashCode());
                 placed++;
 
                 // Pre-populate distances from this placed node to all candidates
@@ -341,6 +343,7 @@ public static class Patch_LG_NodeTools
             working.RemoveAt(bestIdx);
             placedPositions.Add(bestNode.Position);
             placedNodes.Add(bestNode);
+            candidateHashes.Remove(bestNode.GetHashCode());
             placed++;
 
             // Pre-populate distances from this placed node to all candidates
@@ -425,7 +428,7 @@ public static class Patch_LG_NodeTools
         var queue = new Queue<(AIG_INode node, int depth)>();
         queue.Enqueue((source, 0));
 
-        while (queue.Count > 0 && found < totalTargets)
+        while (queue.Count > 0 && found < totalTargets && visited.Count < MaxBfsVisited)
         {
             var (current, depth) = queue.Dequeue();
 
