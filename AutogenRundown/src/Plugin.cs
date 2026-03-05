@@ -134,5 +134,8 @@ public class Plugin : BasePlugin
         // Apply patches
         var harmony = new Harmony("the_tavern-AutogenRundown");
         harmony.PatchAll();
+
+        // Native detour for methods that crash HarmonyX's DMD codegen
+        Patch_LG_NodeTools.Setup();
     }
 }

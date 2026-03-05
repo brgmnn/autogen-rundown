@@ -37,6 +37,7 @@
     <Reference Include="$(BepInEx)\core\0Harmony.dll" Private="false" />
     <Reference Include="$(BepInEx)\core\Il2CppInterop.Common.dll" Private="false" />
     <Reference Include="$(BepInEx)\core\Il2CppInterop.Runtime.dll" Private="false" />
+    <Reference Include="$(BepInEx)\core\MonoMod.RuntimeDetour.dll" Private="false" />
 
     <!-- BepInEx Interop -->
     <Reference Include="$(Interop)\*.dll" Private="false" />

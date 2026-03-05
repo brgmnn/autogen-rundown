@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+using System.Reflection;
 using AIGraph;
-using HarmonyLib;
+using BepInEx.Unity.IL2CPP.Hook;
+using Il2CppInterop.Common;
+using Il2CppInterop.Runtime.Runtime;
 using LevelGeneration;
 using UnityEngine;
 
@@ -10,9 +13,9 @@ namespace AutogenRundown.Patches;
 /// Replaces the vanilla LG_NodeTools.TryGetPositionsOnRadiusDistancedFromEachother with an
 /// improved version that better enforces distance between puzzle scan components.
 ///
-/// The vanilla method uses a soft +10 score penalty which is easily overwhelmed by the
-/// distance-from-source score, a 30-node candidate cap, and Euclidean distance (ignoring
-/// walls/floors). This causes scan components to frequently cluster too close together.
+/// Uses a native detour (INativeDetour) instead of Harmony to bypass a HarmonyX bug where
+/// DMD codegen fails on the method's out List&lt;Vector3&gt; parameter, causing
+/// InvalidProgramException at runtime.
 ///
 /// Five independently toggleable improvements:
 ///   1. Hard distance filter — discard candidates closer than the required distance
@@ -21,7 +24,6 @@ namespace AutogenRundown.Patches;
 ///   4. Combined scoring — unified score combining source distance + separation
 ///   5. Graph distance — BFS hop count through AI graph instead of Euclidean distance
 /// </summary>
-[HarmonyPatch]
 public static class Patch_LG_NodeTools
 {
     // Toggle each improvement independently
@@ -49,30 +51,52 @@ public static class Patch_LG_NodeTools
         public float score;
     }
 
-    [HarmonyPatch(typeof(LG_NodeTools), nameof(LG_NodeTools.TryGetPositionsOnRadiusDistancedFromEachother))]
-    [HarmonyPostfix]
-    public static void Post_TryGetPositionsOnRadiusDistancedFromEachother(
-        LG_Area area,
+    // IL2CPP native delegate — matches the platform ABI:
+    //   bool → byte, IL2CPP objects → IntPtr, out → pointer
+    private unsafe delegate byte d_TryGetPositions(
+        IntPtr area,
         Vector3 sourcePos,
         int wantedCount,
         float atRadiusFromSourcePos,
         float distanceFromEachother,
-        bool useRandomPosition,
-        Il2CppSystem.Collections.Generic.List<Vector3> positions,
-        ref bool __result,
-        int fixedSeed = 0,
-        int maxEval = 30)
-    {
-        // If the original method failed, nothing to do
-        if (!__result || positions == null)
-            return;
+        byte useRandomPosition,
+        IntPtr* positions,
+        int fixedSeed,
+        int maxEval,
+        Il2CppMethodInfo* methodInfo);
 
-        // Call game API with IL2CPP types
+    private static INativeDetour _detour;
+    private static d_TryGetPositions _original;
+
+    public static unsafe void Setup()
+    {
+        var method = typeof(LG_NodeTools).GetMethod(
+            nameof(LG_NodeTools.TryGetPositionsOnRadiusDistancedFromEachother),
+            BindingFlags.Public | BindingFlags.Static);
+
+        var ptrField = Il2CppInteropUtils
+            .GetIl2CppMethodInfoPointerFieldForGeneratedMethod(method);
+        var methodInfoPtr = (IntPtr)ptrField.GetValue(null);
+        nint functionPtr = *(nint*)(nint)methodInfoPtr;
+
+        _detour = INativeDetour.CreateAndApply(
+            functionPtr, Detour_TryGetPositions, out _original);
+    }
+
+    private static unsafe byte Detour_TryGetPositions(
+        IntPtr areaPtr, Vector3 sourcePos, int wantedCount,
+        float atRadiusFromSourcePos, float distanceFromEachother,
+        byte useRandomPosition, IntPtr* positions,
+        int fixedSeed, int maxEval, Il2CppMethodInfo* methodInfo)
+    {
+        var area = new LG_Area(areaPtr);
+
         Il2CppSystem.Collections.Generic.List<LG_Scoring.Score<AIG_INode>> scoreNodes;
         if (!LG_NodeTools.TryGetScoreNodes(area, true, out scoreNodes))
-            return;
-
-        positions.Clear();
+        {
+            *positions = IntPtr.Zero;
+            return 0;
+        }
 
         Plugin.Logger.LogDebug(
             $"[NodeTools] Flags: HardFilter={UseHardDistanceFilter} " +
@@ -88,7 +112,7 @@ public static class Patch_LG_NodeTools
             ? Builder.SessionSeedRandom.Range(0, int.MaxValue)
             : fixedSeed;
 
-        var il2cppCandidates = useRandomPosition
+        var il2cppCandidates = useRandomPosition != 0
             ? LG_Scoring.ShrinkRandomly<AIG_INode>(scoreNodes, poolSize, randomSeed)
             : LG_Scoring.ShrinkEvenly<AIG_INode>(scoreNodes, poolSize);
 
@@ -174,12 +198,15 @@ public static class Patch_LG_NodeTools
             }
         }
 
+        var positionsList = new Il2CppSystem.Collections.Generic.List<Vector3>();
         for (int i = 0; i < placedPositions.Count; i++)
-            positions.Add(placedPositions[i]);
+            positionsList.Add(placedPositions[i]);
 
-        Plugin.Logger.LogDebug($"[NodeTools] Final: placed {positions.Count}/{wantedCount} positions");
+        *positions = positionsList.Pointer;
 
-        __result = true;
+        Plugin.Logger.LogDebug($"[NodeTools] Final: placed {positionsList.Count}/{wantedCount} positions");
+
+        return 1;
     }
 
     private static int PlaceCandidates(
