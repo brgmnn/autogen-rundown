@@ -400,7 +400,8 @@ public static class Patch_LG_NodeTools
 
     private static float GetNavMeshDistance(Vector3 from, Vector3 to)
     {
-        if (NavMesh.CalculatePath(from, to, -1, s_navPath))
+        if (NavMesh.CalculatePath(from, to, -1, s_navPath)
+            && s_navPath.status == NavMeshPathStatus.PathComplete)
         {
             int count = s_navPath.GetCornersNonAlloc(s_corners);
             float dist = 0f;
