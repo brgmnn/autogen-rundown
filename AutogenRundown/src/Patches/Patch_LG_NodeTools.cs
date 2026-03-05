@@ -42,7 +42,7 @@ public static class Patch_LG_NodeTools
     private const float VanillaPenalty = 10f;
 
     // Graph distance settings
-    private const int   MaxBfsHops = 100;
+    private const int   MaxBfsHops = 50;
     private const float EstimatedNodeSpacing = 2.5f;
 
     private struct ScoredNode
@@ -181,10 +181,15 @@ public static class Patch_LG_NodeTools
         var placedNodes = new List<AIG_INode>();
         var graphDistanceCache = new Dictionary<(int, int), float>();
 
+        // Build candidate hash set for single-source BFS
+        var candidateHashes = new HashSet<int>();
+        for (int i = 0; i < candidates.Count; i++)
+            candidateHashes.Add(candidates[i].node.GetHashCode());
+
         int placed = PlaceCandidates(
             candidates, placedPositions, placedNodes,
             wantedCount, currentMinDistance, sourcePos,
-            graphDistanceCache);
+            graphDistanceCache, candidateHashes);
 
         // Step 6: Iterative relaxation (#2)
         if (UseIterativeRelaxation && placed < wantedCount)
@@ -203,7 +208,7 @@ public static class Patch_LG_NodeTools
                 placed += PlaceCandidates(
                     remaining, placedPositions, placedNodes,
                     wantedCount - placed, currentMinDistance, sourcePos,
-                    graphDistanceCache);
+                    graphDistanceCache, candidateHashes);
             }
         }
 
@@ -252,7 +257,8 @@ public static class Patch_LG_NodeTools
         int wantedCount,
         float minDistance,
         Vector3 sourcePos,
-        Dictionary<(int, int), float> graphDistanceCache)
+        Dictionary<(int, int), float> graphDistanceCache,
+        HashSet<int> candidateHashes)
     {
         int placed = 0;
 
@@ -273,6 +279,10 @@ public static class Patch_LG_NodeTools
                 placedPositions.Add(best.node.Position);
                 placedNodes.Add(best.node);
                 placed++;
+
+                // Pre-populate distances from this placed node to all candidates
+                if (UseGraphDistance)
+                    PopulateDistancesFrom(best.node, candidateHashes, graphDistanceCache);
 
                 float distToSource = (best.node.Position - sourcePos).magnitude;
                 Plugin.Logger.LogDebug(
@@ -333,6 +343,10 @@ public static class Patch_LG_NodeTools
             placedNodes.Add(bestNode);
             placed++;
 
+            // Pre-populate distances from this placed node to all candidates
+            if (UseGraphDistance)
+                PopulateDistancesFrom(bestNode, candidateHashes, graphDistanceCache);
+
             float dSource = (bestNode.Position - sourcePos).magnitude;
             float dNearest = GetMinDistanceToPlaced(
                 bestNode, placedPositions, placedNodes,
@@ -356,7 +370,7 @@ public static class Patch_LG_NodeTools
 
         for (int i = 0; i < placedNodes.Count; i++)
         {
-            if (excludeSelf && placedNodes[i] == candidate)
+            if (excludeSelf && placedNodes[i].GetHashCode() == candidate.GetHashCode())
                 continue;
 
             float dist;
@@ -381,66 +395,44 @@ public static class Patch_LG_NodeTools
         AIG_INode to,
         Dictionary<(int, int), float> cache)
     {
-        if (from.GetHashCode() == to.GetHashCode())
-            return 0f;
-
         int fromId = from.GetHashCode();
         int toId = to.GetHashCode();
+
+        if (fromId == toId)
+            return 0f;
+
         var key = fromId < toId ? (fromId, toId) : (toId, fromId);
 
         if (cache.TryGetValue(key, out float cached))
             return cached;
 
-        int hops = GetGraphHopCount(from, to, MaxBfsHops);
-        float distance;
-
-        if (hops < 0)
-        {
-            // BFS failed — fall back to Euclidean
-            distance = (from.Position - to.Position).magnitude;
-        }
-        else
-        {
-            distance = hops * EstimatedNodeSpacing;
-        }
-
-        Plugin.Logger.LogDebug($"--- GetGraphDistance({from.Position}, {to.Position}) -> hops={hops}, distance={distance})");
-
+        // Cache miss = unreachable by BFS; fall back to Euclidean
+        float distance = (from.Position - to.Position).magnitude;
         cache[key] = distance;
         return distance;
     }
 
-    private static bool _loggedLinksCount;
-
-    private static int GetGraphHopCount(AIG_INode from, AIG_INode to, int maxHops)
+    private static void PopulateDistancesFrom(
+        AIG_INode source,
+        HashSet<int> candidateHashes,
+        Dictionary<(int, int), float> cache)
     {
-        int fromHash = from.GetHashCode();
-        int toHash = to.GetHashCode();
+        int sourceHash = source.GetHashCode();
+        int found = 0;
+        int totalTargets = candidateHashes.Count;
 
-        if (fromHash == toHash)
-            return 0;
-
-        // Use managed HashSet instead of IL2CPP SearchID — avoids
-        // IL2CPP interface property persistence issues
-        var visited = new HashSet<int> { fromHash };
+        var visited = new HashSet<int> { sourceHash };
         var queue = new Queue<(AIG_INode node, int depth)>();
-        queue.Enqueue((from, 0));
+        queue.Enqueue((source, 0));
 
-        while (queue.Count > 0)
+        while (queue.Count > 0 && found < totalTargets)
         {
             var (current, depth) = queue.Dequeue();
 
-            if (depth >= maxHops)
+            if (depth >= MaxBfsHops)
                 continue;
 
             var links = current.Links;
-
-            if (!_loggedLinksCount)
-            {
-                Plugin.Logger.LogDebug($"[BFS] First node Links.Count = {links.Count}");
-                _loggedLinksCount = true;
-            }
-
             for (int i = 0; i < links.Count; i++)
             {
                 var neighbor = links[i];
@@ -452,14 +444,20 @@ public static class Patch_LG_NodeTools
                 if (!neighbor.IsTraversable)
                     continue;
 
-                if (neighborHash == toHash)
-                    return depth + 1;
+                if (candidateHashes.Contains(neighborHash))
+                {
+                    var key = sourceHash < neighborHash
+                        ? (sourceHash, neighborHash)
+                        : (neighborHash, sourceHash);
+                    cache[key] = (depth + 1) * EstimatedNodeSpacing;
+                    found++;
+                }
 
                 queue.Enqueue((neighbor, depth + 1));
             }
         }
 
-        return -1;
+        Plugin.Logger.LogDebug($"[BFS] Flood from placed node: found {found}/{totalTargets} candidates");
     }
 
     private static void ScoreOnPreferredDistance_Combined(
