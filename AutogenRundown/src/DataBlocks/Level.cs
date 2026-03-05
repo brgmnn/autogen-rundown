@@ -1763,33 +1763,46 @@ public class Level
 
                 layout.Zones.Add(zone);
 
+                var puzzle = ChainedPuzzle.TeamScan;
+
                 if (z == 0)
-                {
-                    var sensorEvents = new List<WardenObjectiveEvent>();
+                    puzzle = ChainedPuzzle.StealthScan3 with { WantedDistanceBetweenPuzzleComponents = 1.0 };
+                else if (z == 1)
+                    puzzle = ChainedPuzzle.StealthScan3 with { WantedDistanceBetweenPuzzleComponents = 5.0 };
+                else if (z == 2)
+                    puzzle = ChainedPuzzle.StealthScan3 with { WantedDistanceBetweenPuzzleComponents = 10.0 };
 
-                    sensorEvents
-                        .AddSound(Sound.LightsOff)
-                        .AddSpawnWave(GenericWave.SingleTank, 2.0);
+                zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
 
-                    level.ZoneSensors.Add(new ZoneSensorDefinition
-                    {
-                        ZoneNumber = zone.LocalIndex,
-                        Bulkhead = Bulkhead.Main,
+                // zone.ChainedPuzzleToEnter =
 
-                        SensorGroups = new List<ZoneSensorGroupDefinition>
-                        {
-                            new ZoneSensorGroupDefinition
-                            {
-                                TriggerEach = true,
-                                Density = SensorDensity.High,
-                                Radius = 1,
-                                AreaIndex = -1,
-                            }
-                        },
-
-                        EventsOnTrigger = sensorEvents
-                    });
-                }
+                // if (z == 0)
+                // {
+                //     var sensorEvents = new List<WardenObjectiveEvent>();
+                //
+                //     sensorEvents
+                //         .AddSound(Sound.LightsOff)
+                //         .AddSpawnWave(GenericWave.SingleTank, 2.0);
+                //
+                //     level.ZoneSensors.Add(new ZoneSensorDefinition
+                //     {
+                //         ZoneNumber = zone.LocalIndex,
+                //         Bulkhead = Bulkhead.Main,
+                //
+                //         SensorGroups = new List<ZoneSensorGroupDefinition>
+                //         {
+                //             new ZoneSensorGroupDefinition
+                //             {
+                //                 TriggerEach = true,
+                //                 Density = SensorDensity.High,
+                //                 Radius = 1,
+                //                 AreaIndex = -1,
+                //             }
+                //         },
+                //
+                //         EventsOnTrigger = sensorEvents
+                //     });
+                // }
 
 
             }
@@ -1828,13 +1841,13 @@ public class Level
             //     EventsOnTrigger = sensorEvents2
             // });
 
-            var (med, medZone) = layout.BuildOptional_MedicalBay(elevatorDrop);
-            layout.Zones.Add(medZone);
-            level.HasMedBay = true;
+            // var (med, medZone) = layout.BuildOptional_MedicalBay(elevatorDrop);
+            // layout.Zones.Add(medZone);
+            // level.HasMedBay = true;
 
-            level.Settings.Modifiers.Add(LevelModifiers.FogIsInfectious);
+            // level.Settings.Modifiers.Add(LevelModifiers.FogIsInfectious);
 
-            medZone.EventsOnOpenDoor.AddCyclingFog(level);
+            // medZone.EventsOnOpenDoor.AddCyclingFog(level);
 
             elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
                 new CustomTerminalCommand

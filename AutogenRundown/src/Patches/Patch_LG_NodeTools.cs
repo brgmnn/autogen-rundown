@@ -29,7 +29,7 @@ public static class Patch_LG_NodeTools
     // Toggle each improvement independently
     private const bool UseHardDistanceFilter = true;       // #1
     private const bool UseIterativeRelaxation = true;      // #2
-    private const int  CandidatePoolSize = 100;            // #3 (vanilla: 30)
+    private const int  CandidatePoolSize = 30;            // #3 (vanilla: 30)
     private const bool UseCombinedScoring = true;           // #4
     private const bool UseGraphDistance = true;             // #5
 
@@ -403,6 +403,8 @@ public static class Patch_LG_NodeTools
         {
             distance = hops * EstimatedNodeSpacing;
         }
+
+        Plugin.Logger.LogDebug($"--- GetGraphDistance({from.Position}, {to.Position}) -> hops={hops}, distance={distance})");
 
         cache[key] = distance;
         return distance;

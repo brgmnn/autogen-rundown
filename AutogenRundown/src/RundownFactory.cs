@@ -204,7 +204,7 @@ public static class RundownFactory
                     Index = rundown.TierA_Count + 1,
                     // Accessibility = Accessibility.BlockedAndScrambled,
                     IsTest = true
-                }, 0);
+                }, 3);
 
             rundown.AddLevel(testLevel);
         }
