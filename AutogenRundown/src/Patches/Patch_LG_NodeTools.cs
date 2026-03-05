@@ -91,8 +91,19 @@ public static class Patch_LG_NodeTools
     {
         var area = new LG_Area(areaPtr);
 
-        Il2CppSystem.Collections.Generic.List<LG_Scoring.Score<AIG_INode>> scoreNodes;
-        if (!LG_NodeTools.TryGetScoreNodes(area, true, out scoreNodes))
+        // Access nodes directly — bypasses IL2CPP generic types that cause TypeLoadException
+        if (area.m_courseNode == null || !area.m_courseNode.IsValid)
+        {
+            *positions = IntPtr.Zero;
+            return 0;
+        }
+
+        var nodeCluster = area.m_courseNode.m_nodeCluster;
+        var nodes = nodeCluster.m_reachableNodes;
+        if (nodes.Count < 2)
+            nodes = nodeCluster.m_nodes;
+
+        if (nodes.Count == 0)
         {
             *positions = IntPtr.Zero;
             return 0;
@@ -104,24 +115,49 @@ public static class Patch_LG_NodeTools
             $"CombinedScore={UseCombinedScoring} GraphDist={UseGraphDistance}");
         Plugin.Logger.LogDebug(
             $"[NodeTools] wantedCount={wantedCount} radius={atRadiusFromSourcePos} " +
-            $"minDist={distanceFromEachother} totalNodes={scoreNodes.Count}");
+            $"minDist={distanceFromEachother} totalNodes={nodes.Count}");
 
-        // Step 1: Shrink candidate pool (#3) via game API
+        // Build candidate list directly from nodes (replaces TryGetScoreNodes + ShrinkRandomly/ShrinkEvenly)
         int poolSize = CandidatePoolSize;
         int randomSeed = fixedSeed == 0
             ? Builder.SessionSeedRandom.Range(0, int.MaxValue)
             : fixedSeed;
 
-        var il2cppCandidates = useRandomPosition != 0
-            ? LG_Scoring.ShrinkRandomly<AIG_INode>(scoreNodes, poolSize, randomSeed)
-            : LG_Scoring.ShrinkEvenly<AIG_INode>(scoreNodes, poolSize);
+        var candidates = new List<ScoredNode>();
 
-        // Step 2: Convert to managed list for our own scoring/placement logic
-        var candidates = new List<ScoredNode>(il2cppCandidates.Count);
-        for (int i = 0; i < il2cppCandidates.Count; i++)
+        if (nodes.Count <= poolSize)
         {
-            var s = il2cppCandidates[i];
-            candidates.Add(new ScoredNode { node = s.item, score = 0f });
+            // All nodes fit in pool
+            for (int i = 0; i < nodes.Count; i++)
+                candidates.Add(new ScoredNode { node = nodes[i], score = 0f });
+        }
+        else if (useRandomPosition != 0)
+        {
+            // ShrinkRandomly equivalent: Fisher-Yates sampling
+            var indices = new List<int>(nodes.Count);
+            for (int i = 0; i < nodes.Count; i++)
+                indices.Add(i);
+
+            UnityEngine.Random.InitState(randomSeed);
+            for (int i = 0; i < poolSize && indices.Count > 0; i++)
+            {
+                int pick = UnityEngine.Random.Range(0, indices.Count);
+                candidates.Add(new ScoredNode { node = nodes[indices[pick]], score = 0f });
+                indices.RemoveAt(pick);
+            }
+        }
+        else
+        {
+            // ShrinkEvenly equivalent: uniform stride sampling
+            float step = (float)nodes.Count / poolSize;
+            float f = 0f;
+            int idx = 0;
+            for (int i = 0; idx < nodes.Count && i < poolSize; i++)
+            {
+                candidates.Add(new ScoredNode { node = nodes[idx], score = 0f });
+                f += step;
+                idx = Mathf.RoundToInt(f);
+            }
         }
 
         Plugin.Logger.LogDebug($"[NodeTools] Candidate pool: {candidates.Count} nodes");
