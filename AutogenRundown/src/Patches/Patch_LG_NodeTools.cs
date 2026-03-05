@@ -357,7 +357,7 @@ public static class Patch_LG_NodeTools
 
         for (int i = 0; i < placedNodes.Count; i++)
         {
-            if (excludeSelf && placedNodes[i].GetHashCode() == candidate.GetHashCode())
+            if (excludeSelf && placedNodes[i].Position == candidate.Position)
                 continue;
 
             float dist;
@@ -382,12 +382,11 @@ public static class Patch_LG_NodeTools
         AIG_INode to,
         Dictionary<(int, int), float> cache)
     {
-        int fromId = from.GetHashCode();
-        int toId = to.GetHashCode();
-
-        if (fromId == toId)
+        if (from.Position == to.Position)
             return 0f;
 
+        int fromId = from.Position.GetHashCode();
+        int toId = to.Position.GetHashCode();
         var key = fromId < toId ? (fromId, toId) : (toId, fromId);
 
         if (cache.TryGetValue(key, out float cached))
