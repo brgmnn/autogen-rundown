@@ -28,20 +28,59 @@ namespace AutogenRundown.Patches;
 /// </summary>
 public static class Patch_LG_NodeTools
 {
-    // Toggle each improvement independently
-    private const bool UseHardDistanceFilter = true;       // #1
-    private const bool UseIterativeRelaxation = true;      // #2
-    private const int  CandidatePoolSize = 100;            // #3 (vanilla: 30)
-    private const bool UseCombinedScoring = true;           // #4
-    private const bool UseGraphDistance = true;             // #5
+    // ── Feature toggles ──────────────────────────────────────────────────
+    // #1: Hard distance filter — reject any candidate closer than
+    //     HardFilterFraction * minDistance to an already-placed node.
+    //     Prevents clumping by culling obviously too-close candidates early.
+    private const bool UseHardDistanceFilter = true;
 
-    // Tuning
+    // #2: Iterative relaxation — when not enough candidates survive filtering,
+    //     reduce minDistance by RelaxationFactor and retry up to MaxRelaxationPasses
+    //     times. Gracefully handles tight maps where full spacing isn't possible.
+    private const bool UseIterativeRelaxation = true;
+
+    // #3: Candidate pool size — number of nodes to pre-score by source distance
+    //     before placement begins. Larger = better spread but slower.
+    //     Vanilla uses 30; we use 100 for better quality.
+    private const int  CandidatePoolSize = 100;
+
+    // #4: Combined scoring — during placement, rank candidates by a weighted sum
+    //     of source-distance score and separation score (distance to nearest
+    //     already-placed node). When off, falls back to vanilla penalty-based scoring.
+    private const bool UseCombinedScoring = true;
+
+    // #5: Graph distance — use NavMesh walking distance instead of straight-line
+    //     Euclidean distance for separation checks. More accurate in complex geometry
+    //     but falls back to Euclidean if the NavMesh query fails.
+    private const bool UseGraphDistance = true;
+
+    // ── Tuning constants ─────────────────────────────────────────────────
+    // How much to shrink minDistance each relaxation pass (0.75 = 25% reduction).
     private const float RelaxationFactor = 0.75f;
+
+    // Maximum number of relaxation passes before giving up on spacing.
     private const int   MaxRelaxationPasses = 3;
+
+    // Weight of the source-distance term in the combined placement score.
+    // Higher = prefer nodes at the correct distance from source over good separation.
+    // Both terms are normalized 0–1 (fractional deviation from target).
     private const float SourceDistanceWeight = 1.0f;
+
+    // Weight of the separation term in the combined placement score.
+    // Higher = prefer nodes far from already-placed nodes.
+    // At 8× source weight, separation dominates placement decisions.
     private const float SeparationWeight = 8.0f;
+
+    // Hard filter threshold as a fraction of minDistance.
+    // Candidates closer than minDistance * 0.5 to any placed node are rejected.
     private const float HardFilterFraction = 0.5f;
+
+    // Weight of the occlusion score (0–255 from the game engine, normalized to 0–1).
+    // Bonus for nodes with higher occlusion — favors visually interesting placements.
     private const float OcclusionScale = 3f;
+
+    // Flat penalty added in vanilla-style scoring when a candidate is too close
+    // to a placed node. Only used when UseCombinedScoring is false.
     private const float VanillaPenalty = 10f;
 
     // Diagnostics & circuit-breaker
