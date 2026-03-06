@@ -467,7 +467,7 @@ public static class Patch_LG_NodeTools
         {
             var scored = scoredNodes[i];
             float distToSource = (scored.node.Position - sourcePos).magnitude;
-            scored.score = SourceDistanceWeight * Mathf.Abs(distToSource - preferredDistance)
+            scored.score = Mathf.Abs(distToSource - preferredDistance) / Mathf.Max(preferredDistance, 0.001f)
                          + ((float)scored.node.OcclusionScore / 255f) * OcclusionScale;
             scoredNodes[i] = scored;
         }
