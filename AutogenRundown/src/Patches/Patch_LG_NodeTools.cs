@@ -31,7 +31,7 @@ public static class Patch_LG_NodeTools
     // Toggle each improvement independently
     private const bool UseHardDistanceFilter = true;       // #1
     private const bool UseIterativeRelaxation = true;      // #2
-    private const int  CandidatePoolSize = 60;            // #3 (vanilla: 30)
+    private const int  CandidatePoolSize = 100;            // #3 (vanilla: 30)
     private const bool UseCombinedScoring = true;           // #4
     private const bool UseGraphDistance = true;             // #5
 
@@ -39,9 +39,9 @@ public static class Patch_LG_NodeTools
     private const float RelaxationFactor = 0.75f;
     private const int   MaxRelaxationPasses = 3;
     private const float SourceDistanceWeight = 1.0f;
-    private const float SeparationWeight = 5.0f;
+    private const float SeparationWeight = 8.0f;
     private const float HardFilterFraction = 0.5f;
-    private const float OcclusionScale = 5f;
+    private const float OcclusionScale = 3f;
     private const float VanillaPenalty = 10f;
 
     // Diagnostics & circuit-breaker
