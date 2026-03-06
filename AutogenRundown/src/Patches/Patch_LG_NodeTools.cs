@@ -31,7 +31,7 @@ public static class Patch_LG_NodeTools
     // Toggle each improvement independently
     private const bool UseHardDistanceFilter = true;       // #1
     private const bool UseIterativeRelaxation = true;      // #2
-    private const int  CandidatePoolSize = 30;            // #3 (vanilla: 30)
+    private const int  CandidatePoolSize = 60;            // #3 (vanilla: 30)
     private const bool UseCombinedScoring = true;           // #4
     private const bool UseGraphDistance = true;             // #5
 
@@ -166,14 +166,7 @@ public static class Patch_LG_NodeTools
         Plugin.Logger.LogDebug($"[NodeTools] Candidate pool: {candidates.Count} nodes");
 
         // Step 3: Score candidates
-        if (UseCombinedScoring)
-        {
-            ScoreOnPreferredDistance_Combined(sourcePos, candidates, atRadiusFromSourcePos);
-        }
-        else
-        {
-            ScoreOnPreferredDistance_Combined(sourcePos, candidates, atRadiusFromSourcePos);
-        }
+        ScoreOnPreferredDistance_Combined(sourcePos, candidates, atRadiusFromSourcePos);
 
         // Step 4: Sort by score (ascending = best)
         candidates.Sort((a, b) => a.score.CompareTo(b.score));
@@ -241,6 +234,24 @@ public static class Patch_LG_NodeTools
 
         Plugin.Logger.LogDebug($"[NodeTools] Final: placed {positionsList.Count}/{wantedCount} positions");
 
+        if (placedPositions.Count > 1)
+        {
+            float minSep = float.MaxValue, maxSep = 0f, totalSep = 0f;
+            int sepCount = 0;
+            for (int i = 0; i < placedPositions.Count; i++)
+                for (int j = i + 1; j < placedPositions.Count; j++)
+                {
+                    float d = (placedPositions[i] - placedPositions[j]).magnitude;
+                    if (d < minSep) minSep = d;
+                    if (d > maxSep) maxSep = d;
+                    totalSep += d;
+                    sepCount++;
+                }
+            Plugin.Logger.LogDebug(
+                $"[NodeTools] Spread: min={minSep:F2} max={maxSep:F2} " +
+                $"mean={totalSep / sepCount:F2} (pairwise Euclidean)");
+        }
+
         return 1;
     }
 
@@ -295,22 +306,22 @@ public static class Patch_LG_NodeTools
                         continue;
                 }
 
-                float score = candidate.score;
-
+                float score;
                 if (UseCombinedScoring)
                 {
-                    // #4: Add separation penalty for candidates closer than desired.
-                    // Note: when UseHardDistanceFilter is active, all candidates with
-                    // minDistToPlaced < minDistance are already filtered above, so
-                    // deficit will always be 0 here. The penalty only has effect when
-                    // the hard filter is disabled.
-                    float deficit = Mathf.Max(0f, minDistance - minDistToPlaced);
-                    score += SeparationWeight * deficit;
+                    // Inverse separation: lower = better. Ranges (0, 1] for candidates passing hard filter.
+                    // Candidate at 50 units: 3/50 = 0.06. Candidate at 3.1 units: 3/3.1 = 0.97.
+                    float separationScore = (minDistance > 0.001f)
+                        ? minDistance / Mathf.Max(minDistToPlaced, 0.001f)
+                        : 1f / Mathf.Max(minDistToPlaced, 0.001f);
+
+                    score = SourceDistanceWeight * candidate.score
+                          + SeparationWeight * separationScore;
                 }
-                else if (!UseHardDistanceFilter)
+                else
                 {
-                    // Vanilla-style: soft penalty for being too close
-                    if (minDistToPlaced < minDistance)
+                    score = candidate.score;
+                    if (!UseHardDistanceFilter && minDistToPlaced < minDistance)
                         score += VanillaPenalty;
                 }
 
