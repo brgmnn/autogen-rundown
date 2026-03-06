@@ -42,9 +42,8 @@ public static class Patch_LG_NodeTools
     private const float OcclusionScale = 20f;
     private const float VanillaPenalty = 10f;
 
-    // NavMesh path computation (reusable buffers)
-    private static readonly NavMeshPath s_navPath = new NavMeshPath();
-    private static readonly Vector3[] s_corners = new Vector3[64];
+    // One-time NavMesh diagnostic
+    private static bool _loggedNavMeshStatus;
 
     private struct ScoredNode
     {
@@ -180,12 +179,9 @@ public static class Patch_LG_NodeTools
         float currentMinDistance = distanceFromEachother;
         var placedPositions = new List<Vector3>();
         var placedNodes = new List<AIG_INode>();
-        var graphDistanceCache = new Dictionary<(int, int), float>();
-
         int placed = PlaceCandidates(
             candidates, placedPositions, placedNodes,
-            wantedCount, currentMinDistance, sourcePos,
-            graphDistanceCache);
+            wantedCount, currentMinDistance, sourcePos);
 
         // Step 6: Iterative relaxation (#2)
         if (UseIterativeRelaxation && placed < wantedCount)
@@ -203,8 +199,7 @@ public static class Patch_LG_NodeTools
 
                 placed += PlaceCandidates(
                     remaining, placedPositions, placedNodes,
-                    wantedCount - placed, currentMinDistance, sourcePos,
-                    graphDistanceCache);
+                    wantedCount - placed, currentMinDistance, sourcePos);
             }
         }
 
@@ -252,8 +247,7 @@ public static class Patch_LG_NodeTools
         List<AIG_INode> placedNodes,
         int wantedCount,
         float minDistance,
-        Vector3 sourcePos,
-        Dictionary<(int, int), float> graphDistanceCache)
+        Vector3 sourcePos)
     {
         int placed = 0;
 
@@ -290,8 +284,7 @@ public static class Patch_LG_NodeTools
             {
                 var candidate = working[j];
                 float minDistToPlaced = GetMinDistanceToPlaced(
-                    candidate.node, placedPositions, placedNodes,
-                    graphDistanceCache);
+                    candidate.node, placedPositions, placedNodes);
 
                 if (UseHardDistanceFilter)
                 {
@@ -337,7 +330,7 @@ public static class Patch_LG_NodeTools
             float dSource = (bestNode.Position - sourcePos).magnitude;
             float dNearest = GetMinDistanceToPlaced(
                 bestNode, placedPositions, placedNodes,
-                graphDistanceCache, excludeSelf: true);
+                excludeSelf: true);
             Plugin.Logger.LogDebug(
                 $"[NodeTools]   Component {placedPositions.Count}: " +
                 $"distToSource={dSource:F2} distToNearest={dNearest:F2}");
@@ -350,7 +343,6 @@ public static class Patch_LG_NodeTools
         AIG_INode candidate,
         List<Vector3> placedPositions,
         List<AIG_INode> placedNodes,
-        Dictionary<(int, int), float> graphDistanceCache,
         bool excludeSelf = false)
     {
         float minDist = float.MaxValue;
@@ -363,7 +355,7 @@ public static class Patch_LG_NodeTools
             float dist;
             if (UseGraphDistance)
             {
-                dist = GetGraphDistance(candidate, placedNodes[i], graphDistanceCache);
+                dist = GetGraphDistance(candidate, placedNodes[i]);
             }
             else
             {
@@ -377,38 +369,44 @@ public static class Patch_LG_NodeTools
         return minDist;
     }
 
-    private static float GetGraphDistance(
-        AIG_INode from,
-        AIG_INode to,
-        Dictionary<(int, int), float> cache)
+    private static float GetGraphDistance(AIG_INode from, AIG_INode to)
     {
-        if (from.Position == to.Position)
+        var fromPos = from.Position;
+        var toPos = to.Position;
+
+        if (fromPos == toPos)
             return 0f;
 
-        int fromId = from.Position.GetHashCode();
-        int toId = to.Position.GetHashCode();
-        var key = fromId < toId ? (fromId, toId) : (toId, fromId);
+        if (!_loggedNavMeshStatus)
+        {
+            float navDist = GetNavMeshDistance(fromPos, toPos);
+            Plugin.Logger.LogDebug(
+                $"[NodeTools] NavMesh distance check: nav={navDist:F2} euclidean={(fromPos - toPos).magnitude:F2}");
+            _loggedNavMeshStatus = true;
+            if (navDist > 0f)
+                return navDist;
+        }
 
-        if (cache.TryGetValue(key, out float cached))
-            return cached;
+        float distance = GetNavMeshDistance(fromPos, toPos);
+        if (distance <= 0f)
+            distance = (fromPos - toPos).magnitude;
 
-        float distance = GetNavMeshDistance(from.Position, to.Position);
-        cache[key] = distance;
         return distance;
     }
 
     private static float GetNavMeshDistance(Vector3 from, Vector3 to)
     {
-        if (NavMesh.CalculatePath(from, to, -1, s_navPath)
-            && s_navPath.status == NavMeshPathStatus.PathComplete)
+        var path = new NavMeshPath();
+        if (NavMesh.CalculatePath(from, to, -1, path)
+            && path.status == NavMeshPathStatus.PathComplete
+            && path.corners.Length > 1)
         {
-            int count = s_navPath.GetCornersNonAlloc(s_corners);
             float dist = 0f;
-            for (int i = 1; i < count; i++)
-                dist += (s_corners[i] - s_corners[i - 1]).magnitude;
+            var corners = path.corners;
+            for (int i = 1; i < corners.Length; i++)
+                dist += (corners[i] - corners[i - 1]).magnitude;
             return dist;
         }
-        // Fallback to Euclidean if NavMesh path fails
         return (from - to).magnitude;
     }
 
