@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using AIGraph;
@@ -42,8 +43,10 @@ public static class Patch_LG_NodeTools
     private const float OcclusionScale = 20f;
     private const float VanillaPenalty = 10f;
 
-    // One-time NavMesh diagnostic
+    // Diagnostics & circuit-breaker
+    private static bool _loggedFirstCall;
     private static bool _loggedNavMeshStatus;
+    private static bool _navMeshFailed;
 
     private struct ScoredNode
     {
@@ -349,7 +352,7 @@ public static class Patch_LG_NodeTools
 
         for (int i = 0; i < placedNodes.Count; i++)
         {
-            if (excludeSelf && placedNodes[i].Position == candidate.Position)
+            if (excludeSelf && (candidate.Position - placedNodes[i].Position).sqrMagnitude < 0.0001f)
                 continue;
 
             float dist;
@@ -371,41 +374,76 @@ public static class Patch_LG_NodeTools
 
     private static float GetGraphDistance(AIG_INode from, AIG_INode to)
     {
-        var fromPos = from.Position;
-        var toPos = to.Position;
-
-        if (fromPos == toPos)
-            return 0f;
-
-        if (!_loggedNavMeshStatus)
+        try
         {
+            var fromPos = from.Position;
+            var toPos = to.Position;
+            var diff = fromPos - toPos;
+
+            if (!_loggedFirstCall)
+            {
+                _loggedFirstCall = true;
+                Plugin.Logger.LogDebug(
+                    $"[NodeTools] GetGraphDistance first call: " +
+                    $"from={fromPos} to={toPos} " +
+                    $"sqrDist={diff.sqrMagnitude:F6} " +
+                    $"eq={fromPos == toPos}");
+            }
+
+            if (diff.sqrMagnitude < 0.0001f)
+                return 0f;
+
+            if (_navMeshFailed)
+                return diff.magnitude;
+
             float navDist = GetNavMeshDistance(fromPos, toPos);
-            Plugin.Logger.LogDebug(
-                $"[NodeTools] NavMesh distance check: nav={navDist:F2} euclidean={(fromPos - toPos).magnitude:F2}");
-            _loggedNavMeshStatus = true;
-            if (navDist > 0f)
-                return navDist;
+
+            if (!_loggedNavMeshStatus)
+            {
+                _loggedNavMeshStatus = true;
+                Plugin.Logger.LogDebug(
+                    $"[NodeTools] NavMesh distance: " +
+                    $"nav={navDist:F2} euclidean={diff.magnitude:F2}");
+            }
+
+            return navDist;
         }
-
-        float distance = GetNavMeshDistance(fromPos, toPos);
-        if (distance <= 0f)
-            distance = (fromPos - toPos).magnitude;
-
-        return distance;
+        catch (Exception ex)
+        {
+            if (!_navMeshFailed)
+            {
+                _navMeshFailed = true;
+                Plugin.Logger.LogWarning(
+                    $"[NodeTools] GetGraphDistance threw, disabling NavMesh: {ex}");
+            }
+            try { return (from.Position - to.Position).magnitude; }
+            catch { return float.MaxValue; }
+        }
     }
 
     private static float GetNavMeshDistance(Vector3 from, Vector3 to)
     {
-        var path = new NavMeshPath();
-        if (NavMesh.CalculatePath(from, to, -1, path)
-            && path.status == NavMeshPathStatus.PathComplete
-            && path.corners.Length > 1)
+        try
         {
-            float dist = 0f;
-            var corners = path.corners;
-            for (int i = 1; i < corners.Length; i++)
-                dist += (corners[i] - corners[i - 1]).magnitude;
-            return dist;
+            var path = new NavMeshPath();
+            if (NavMesh.CalculatePath(from, to, -1, path)
+                && path.status == NavMeshPathStatus.PathComplete
+                && path.corners.Length > 1)
+            {
+                float dist = 0f;
+                var corners = path.corners;
+                for (int i = 1; i < corners.Length; i++)
+                    dist += (corners[i] - corners[i - 1]).magnitude;
+                return dist;
+            }
+        }
+        catch (Exception ex)
+        {
+            if (!_navMeshFailed)
+            {
+                _navMeshFailed = true;
+                Plugin.Logger.LogWarning($"[NodeTools] NavMesh.CalculatePath threw: {ex}");
+            }
         }
         return (from - to).magnitude;
     }
