@@ -40,6 +40,7 @@ public static class Patch_LG_NodeTools
     private const int   MaxRelaxationPasses = 3;
     private const float SourceDistanceWeight = 1.0f;
     private const float SeparationWeight = 5.0f;
+    private const float HardFilterFraction = 0.5f;
     private const float OcclusionScale = 5f;
     private const float VanillaPenalty = 10f;
 
@@ -302,18 +303,16 @@ public static class Patch_LG_NodeTools
 
                 if (UseHardDistanceFilter)
                 {
-                    if (minDistToPlaced < minDistance)
+                    if (minDistToPlaced < minDistance * HardFilterFraction)
                         continue;
                 }
 
                 float score;
                 if (UseCombinedScoring)
                 {
-                    // Inverse separation: lower = better. Ranges (0, 1] for candidates passing hard filter.
-                    // Candidate at 50 units: 3/50 = 0.06. Candidate at 3.1 units: 3/3.1 = 0.97.
-                    float separationScore = (minDistance > 0.001f)
-                        ? minDistance / Mathf.Max(minDistToPlaced, 0.001f)
-                        : 1f / Mathf.Max(minDistToPlaced, 0.001f);
+                    // Target-based: penalize deviation from desired distance (both too close and too far)
+                    // |dist - target| / target: candidate at target → 0, at 2x target → 1.0, at 0.5x → 0.5
+                    float separationScore = Mathf.Abs(minDistToPlaced - minDistance) / Mathf.Max(minDistance, 0.001f);
 
                     score = SourceDistanceWeight * candidate.score
                           + SeparationWeight * separationScore;
