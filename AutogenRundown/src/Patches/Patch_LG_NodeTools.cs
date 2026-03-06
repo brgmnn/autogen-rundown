@@ -39,8 +39,8 @@ public static class Patch_LG_NodeTools
     private const float RelaxationFactor = 0.75f;
     private const int   MaxRelaxationPasses = 3;
     private const float SourceDistanceWeight = 1.0f;
-    private const float SeparationWeight = 1.0f;
-    private const float OcclusionScale = 20f;
+    private const float SeparationWeight = 5.0f;
+    private const float OcclusionScale = 5f;
     private const float VanillaPenalty = 10f;
 
     // Diagnostics & circuit-breaker
