@@ -360,37 +360,56 @@ public partial record Zone : DataBlock<Zone>
             switch (level.Tier)
             {
                 case "A":
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(0.9, 1.05);
+                {
+                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(0.6, 0.8);
                     break;
+                }
+
                 case "B":
+                {
+                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(0.8, 1.0);
+
                     if (Generator.Flip(0.05))
-                        puzzle.WantedDistanceFromStartPos += Generator.Between(15, 20);
+                        puzzle.WantedDistanceFromStartPos += Generator.Between(10, 20);
                     break;
+                }
+
                 case "C":
+                {
                     if (Generator.Flip(0.2))
-                        puzzle.WantedDistanceFromStartPos += Generator.Between(20, 25);
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(1.0, 1.1);
+                        puzzle.WantedDistanceFromStartPos += Generator.Between(12, 25);
+
+                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(0.9, 1.1);
                     break;
+                }
+
                 case "D":
+                {
                     if (Generator.Flip(0.32))
-                        puzzle.WantedDistanceFromStartPos += Generator.Between(20, 25);
+                        puzzle.WantedDistanceFromStartPos += Generator.Between(15, 25);
+
                     puzzle.WantedDistanceBetweenPuzzleComponents *= puzzle.Puzzle.Count switch
                     {
-                        3 => Generator.NextDouble(1.5, 1.8),
-                        4 => Generator.NextDouble(1.2, 1.4),
+                        3 => Generator.NextDouble(1.2, 1.4),
+                        4 => Generator.NextDouble(1.1, 1.3),
                         _ => Generator.NextDouble(1.0, 1.2)
                     };
                     break;
+                }
+
                 case "E":
+                {
                     if (Generator.Flip(0.45))
                         puzzle.WantedDistanceFromStartPos += Generator.Between(20, 30);
+
                     puzzle.WantedDistanceBetweenPuzzleComponents *= puzzle.Puzzle.Count switch
                     {
-                        3 => Generator.NextDouble(1.6, 2.0),
-                        4 => Generator.NextDouble(1.3, 1.5),
-                        _ => Generator.NextDouble(1.1, 1.3)
+                        3 => Generator.NextDouble(1.40, 1.6),
+                        4 => Generator.NextDouble(1.25, 1.5),
+                        _ => Generator.NextDouble(1.10, 1.4)
                     };
                     break;
+                }
             }
         }
 
