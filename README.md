@@ -59,6 +59,7 @@ TODO:
   * Make generator distribution objective MAIN always have 2 or more generator cells
   * `GatherSmallItems` should probably not have error alarm on picking up the "last" objective item. Instead we should have it be done by the zones they have to open
   * Generator Cluster needs cells to be tightened up in their spawns
+  * Big security scans that move are too hard
 
   * Check SD6: 2 terminals on top of each other in overload
 
@@ -111,6 +112,7 @@ Check: https://discord.com/channels/782438773690597389/783918553626836992/140745
 Problems:
   - Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_portal_HA_01.prefab
     - Has some innacessible spawn locations where boxes and big pickups can spawn.
+      - Item spawn fix resolves this?
     - There are two side flanges next to the entry door for the portal room which are blocked but still marked as spawn locations
 
 
@@ -216,33 +218,9 @@ Levels and rundowns are designed to be similar and in the spirit of vanilla GTFO
 
 Go to the Autogen Rundown Thunderstore mod page (https://gtfo.thunderstore.io/package/the_tavern/AutogenRundown/) and install via your mod manager.
 
-<!-- ### Manual Installation 📦
-Download the latest version of the mods manual install zip from the [releases page](https://github.com/brgmnn/autogen-rundown/releases/latest).
-
-> [!IMPORTANT]
-> Backup your GTFO game folder before copying any mod files in so you can easily restore it
-
-1. Back up your GTFO game folder (`<Steam Location>\steamapps\common\GTFO`)
-  * Right click on GTFO in steam, select "properties", select "Installed Files"
-  * Click "Browse..." at the top
-  * Windows File Explorer will open inside the GTFO game folder. Navigate up one level and copy/paste the folder. Name it appropriately for your backup (eg. `GTFO_backup`).
-1. Extract the `Autogen_manual_install_<Version>.zip` archive into a folder. *Do not extract into the game folder*.
-2. Move the contents of `AutogenRundown_GTFO` into the GTFO game folder: `<Steam Location>\steamapps\common\GTFO`.
-3. Run the game. -->
-
 To check if the installation is successful, after the game launches you should see a watermark in the bottom right corner of the game identifying the mod version `AR <version>`. If you further select a level from one of the rundowns you should also see a watermark identifying the leve, the rundown, and the seed used for that rundown.
 
 ![GTFO Watermark](docs/watermark.jpg)
-
-<!-- #### Uninstalling the mod
-
-To uninstall the mod, open `<Steam Location>\steamapps\common` and delete the GTFO game folder `GTFO`. Then rename your backup GTFO game folder (eg. `GTFO_backup`) to `GTFO`.
-
-If you did not make a backup of the game: delete the GTFO game folder and run "Verify integrity of game files" from the Steam "Installed Files" properties menu. This will redownload the GTFO game folder.
-
-#### Updating to the latest mod version
-
-Follow the installation instructions again, check yes to overwrite all files. -->
 
 > [!CAUTION]
 > GTFO game and mod spoilers below!
