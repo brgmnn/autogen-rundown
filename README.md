@@ -62,6 +62,7 @@ TODO:
   * Big security scans that move are too hard
 
   * Check SD6: 2 terminals on top of each other in overload
+  * SC1: Main needs 1 more challenge of some kind. A hard extract perhaps?
 
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
