@@ -62,11 +62,8 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     /// You may take those wave settings already available in the vanilla datablocks into good
     /// use.
     /// </summary>
-    public uint SurvivalWaveSettings
-    {
-        get => Settings.PersistentId;
-        private set { }
-    }
+    [JsonProperty]
+    public uint SurvivalWaveSettings => Settings.PersistentId;
 
     [JsonIgnore]
     public WaveSettings Settings { get; set; } = WaveSettings.None;
@@ -74,11 +71,8 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     /// <summary>
     /// Determine what type(s) of enemy would spawn.
     /// </summary>
-    public uint SurvivalWavePopulation
-    {
-        get => Population.PersistentId;
-        private set { }
-    }
+    [JsonProperty]
+    public uint SurvivalWavePopulation => Population.PersistentId;
 
     [JsonIgnore]
     public WavePopulation Population { get; set; } = WavePopulation.None;
@@ -105,7 +99,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     /// <summary>
     /// Default = 20.0
     /// </summary>
-    public double WantedDistanceBetweenPuzzleComponents { get; set; } = 30.0;
+    public double WantedDistanceBetweenPuzzleComponents { get; set; } = 20.0;
 
     /// <summary>
     /// Determines the count and types of scans.
@@ -171,10 +165,16 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     ///     Adjustment factor for time components.
     /// </param>
     /// <param name="traverseFactor">
-    ///     Adjustment factor for traversing to the next puzzle coponent
+    ///     Adjustment factor for traversing to the next puzzle component. This defaults
+    ///     to the inverse of slightly faster than crouch walking speed, which is about how
+    ///     fast the reveal spline moves
+    ///
+    ///     Crouch speed = 2.0 / s
+    ///     Walk speed   = 3.5 / s
+    ///     Run speed    = 6.0 / s
     /// </param>
     /// <returns>Time to clear the alarm</returns>
-    public double ClearTime(double timeFactor = 1.20, double traverseFactor = 1.20)
+    public double ClearTime(double timeFactor = 1.20, double traverseFactor = 0.4)
         => Puzzle.Sum(component => component.Duration) * timeFactor +
            WantedDistanceFromStartPos * traverseFactor +
            (Puzzle.Count - 1) * WantedDistanceBetweenPuzzleComponents * traverseFactor;
@@ -670,7 +670,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
         WantedDistanceFromStartPos = 20,
-        WantedDistanceBetweenPuzzleComponents = 50.0,
+        WantedDistanceBetweenPuzzleComponents = 35.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -699,7 +699,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
         WantedDistanceFromStartPos = 20,
-        WantedDistanceBetweenPuzzleComponents = 50.0,
+        WantedDistanceBetweenPuzzleComponents = 35.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -729,7 +729,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
         WantedDistanceFromStartPos = 20,
-        WantedDistanceBetweenPuzzleComponents = 50.0,
+        WantedDistanceBetweenPuzzleComponents = 35.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -757,7 +757,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         Settings = WaveSettings.Baseline_VeryHard,
         Population = WavePopulation.Baseline,
         WantedDistanceFromStartPos = 20,
-        WantedDistanceBetweenPuzzleComponents = 50.0,
+        WantedDistanceBetweenPuzzleComponents = 35.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -784,7 +784,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline_Hybrids,
         WantedDistanceBetweenPuzzleComponents = 20.0,
-        WantedDistanceFromStartPos = 20.0,
+        WantedDistanceFromStartPos = 25.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllLarge,
@@ -798,7 +798,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline_Hybrids,
         WantedDistanceBetweenPuzzleComponents = 20.0,
-        WantedDistanceFromStartPos = 20.0,
+        WantedDistanceFromStartPos = 25.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllLarge,
@@ -813,7 +813,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         Settings = WaveSettings.Baseline_VeryHard,
         Population = WavePopulation.Baseline_Hybrids,
         WantedDistanceBetweenPuzzleComponents = 20.0,
-        WantedDistanceFromStartPos = 20.0,
+        WantedDistanceFromStartPos = 25.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllLarge,
@@ -829,7 +829,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         Settings = WaveSettings.Baseline_VeryHard,
         Population = WavePopulation.Baseline_Hybrids,
         WantedDistanceBetweenPuzzleComponents = 20.0,
-        WantedDistanceFromStartPos = 20.0,
+        WantedDistanceFromStartPos = 25.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllLarge,
@@ -848,7 +848,6 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class II Cluster Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 20.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -861,7 +860,6 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class III Cluster Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 20.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -875,7 +873,6 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class IV Cluster Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 20.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -890,7 +887,6 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class V Cluster Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 20.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -906,7 +902,6 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class VI Cluster Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 20.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -923,7 +918,6 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class VI Cluster Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 20.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -943,7 +937,6 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class III M Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 30.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -957,7 +950,6 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class IV M Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 30.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -972,7 +964,6 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class V M Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 40.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -988,7 +979,6 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class VI M Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 40.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -1005,7 +995,6 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class VII M Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 40.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.SustainedSmall,
@@ -1025,10 +1014,10 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class II Surge Alarm",
         Settings = WaveSettings.Surge,
         Population = WavePopulation.OnlyStrikers,
-        WantedDistanceFromStartPos = 10.0,
-        WantedDistanceBetweenPuzzleComponents = 30.0,
+        WantedDistanceFromStartPos = 15.0,
+        WantedDistanceBetweenPuzzleComponents = 25.0,
         FixedAlarm = true,
-        Puzzle = new List<PuzzleComponent>()
+        Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllLarge,
             PuzzleComponent.AllLarge
@@ -1040,10 +1029,10 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class III Surge Alarm",
         Settings = WaveSettings.Surge,
         Population = WavePopulation.OnlyStrikers,
-        WantedDistanceFromStartPos = 10.0,
-        WantedDistanceBetweenPuzzleComponents = 40.0,
+        WantedDistanceFromStartPos = 15.0,
+        WantedDistanceBetweenPuzzleComponents = 25.0,
         FixedAlarm = true,
-        Puzzle = new List<PuzzleComponent>()
+        Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllLarge,
             PuzzleComponent.AllLarge,
@@ -1059,10 +1048,10 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class IV Surge Alarm",
         Settings = WaveSettings.Surge,
         Population = WavePopulation.OnlyStrikers,
-        WantedDistanceFromStartPos = 10.0,
-        WantedDistanceBetweenPuzzleComponents = 40.0,
+        WantedDistanceFromStartPos = 15.0,
+        WantedDistanceBetweenPuzzleComponents = 25.0,
         FixedAlarm = true,
-        Puzzle = new List<PuzzleComponent>()
+        Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllLarge,
             PuzzleComponent.AllLarge,
@@ -1077,10 +1066,10 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class III Surge <color=orange>[EXTREME]</color> Alarm",
         Settings = WaveSettings.Surge,
         Population = WavePopulation.OnlyChargers,
-        WantedDistanceFromStartPos = 20.0,
-        WantedDistanceBetweenPuzzleComponents = 50.0,
+        WantedDistanceFromStartPos = 15.0,
+        WantedDistanceBetweenPuzzleComponents = 25.0,
         FixedAlarm = true,
-        Puzzle = new List<PuzzleComponent>()
+        Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllLarge,
             PuzzleComponent.AllLarge,
@@ -1095,10 +1084,10 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class III Surge <color=purple>[OVERLOAD]</color> Alarm",
         Settings = WaveSettings.Surge,
         Population = WavePopulation.OnlyNightmares,
-        WantedDistanceFromStartPos = 20.0,
-        WantedDistanceBetweenPuzzleComponents = 50.0,
+        WantedDistanceFromStartPos = 15.0,
+        WantedDistanceBetweenPuzzleComponents = 25.0,
         FixedAlarm = true,
-        Puzzle = new List<PuzzleComponent>()
+        Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllLarge,
             PuzzleComponent.AllLarge,
@@ -1114,9 +1103,9 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class S I Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceFromStartPos = 12.0,
+        WantedDistanceFromStartPos = 18.0,
         WantedDistanceBetweenPuzzleComponents = 2.0,
-        Puzzle = new List<PuzzleComponent>()
+        Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.Sustained
         }
@@ -1133,7 +1122,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         Population = WavePopulation.Baseline,
         WantedDistanceFromStartPos = 0.0,
         WantedDistanceBetweenPuzzleComponents = 0.0,
-        Puzzle = new List<PuzzleComponent>()
+        Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.SustainedMegaHuge
         }
@@ -1146,7 +1135,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         Population = WavePopulation.Baseline,
         WantedDistanceFromStartPos = 0.0,
         WantedDistanceBetweenPuzzleComponents = 0.0,
-        Puzzle = new List<PuzzleComponent>()
+        Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.SustainedZone
         }
@@ -1164,7 +1153,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         Settings = WaveSettings.Error_Easy,
         Population = WavePopulation.Baseline,
 
-        Puzzle = new List<PuzzleComponent>() { PuzzleComponent.AllLarge }
+        Puzzle = new List<PuzzleComponent> { PuzzleComponent.AllLarge }
     };
 
     public static readonly ChainedPuzzle AlarmError_Template = new()
@@ -1175,7 +1164,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         AlarmSoundStop = 1190355274,
         TriggerAlarmOnActivate = false,
         FixedAlarm = true,
-        Puzzle = new List<PuzzleComponent>() { PuzzleComponent.AllLarge }
+        Puzzle = new List<PuzzleComponent> { PuzzleComponent.AllLarge }
     };
     #endregion
 
@@ -1188,14 +1177,14 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         FixedAlarm = true,
         EventsOnDoorScanStart = new List<WardenObjectiveEvent>
         {
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.PlaySound,
                 Trigger = WardenObjectiveEventTrigger.OnStart,
                 SoundId = Sound.SheetMetalLand,
                 Delay = 27.0
             },
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.SpawnEnemyWave,
                 Delay = 32.0,
@@ -1206,13 +1195,13 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
                     TriggerAlarm = false,
                 }
             },
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.PlaySound,
                 SoundId = Sound.TankRoar,
                 Delay = 32.0
             },
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = 32.0,
@@ -1228,14 +1217,14 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         FixedAlarm = true,
         EventsOnDoorScanStart = new List<WardenObjectiveEvent>
         {
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.PlaySound,
                 Trigger = WardenObjectiveEventTrigger.OnStart,
                 SoundId = Sound.SheetMetalLand,
                 Delay = 15.0
             },
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.SpawnEnemyWave,
                 Delay = 20.0,
@@ -1246,13 +1235,13 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
                     TriggerAlarm = false,
                 }
             },
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.PlaySound,
                 SoundId = Sound.TankRoar,
                 Delay = 20.0
             },
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = 20.0,
@@ -1268,7 +1257,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         FixedAlarm = true,
         EventsOnOpenDoor = new List<WardenObjectiveEvent>
         {
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.PlaySound,
                 Trigger = WardenObjectiveEventTrigger.OnStart,
@@ -1276,20 +1265,20 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
                 SoundId = Sound.Environment_DoorUnstuck,
                 Delay = 5.0
             },
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.PlaySound,
                 Trigger = WardenObjectiveEventTrigger.OnStart,
                 SoundId = Sound.Enemies_DistantLowRoar,
                 Delay = 8.0
             },
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.SpawnEnemyWave,
                 Delay = 9.0,
                 EnemyWaveData = GenericWave.SingleTank
             },
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = 7.0,
@@ -1305,7 +1294,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         FixedAlarm = true,
         EventsOnOpenDoor = new List<WardenObjectiveEvent>
         {
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.PlaySound,
                 Trigger = WardenObjectiveEventTrigger.OnStart,
@@ -1313,20 +1302,20 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
                 SoundId = Sound.Environment_DoorUnstuck,
                 Delay = 5.0
             },
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.PlaySound,
                 Trigger = WardenObjectiveEventTrigger.OnStart,
                 SoundId = Sound.Enemies_DistantLowRoar,
                 Delay = 8.0
             },
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.SpawnEnemyWave,
                 Delay = 9.0,
                 EnemyWaveData = GenericWave.SingleMother
             },
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = 7.0,
@@ -1342,26 +1331,26 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         FixedAlarm = true,
         EventsOnDoorScanStart = new List<WardenObjectiveEvent>
         {
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.PlaySound,
                 Trigger = WardenObjectiveEventTrigger.OnStart,
                 SoundId = Sound.SheetMetalLand,
                 Delay = 15.0
             },
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.SpawnEnemyWave,
                 Delay = 20.0,
                 EnemyWaveData = GenericWave.GiantChargers_35pts
             },
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.PlaySound,
                 SoundId = Sound.TankRoar,
                 Delay = 20.0
             },
-            new WardenObjectiveEvent
+            new()
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = 20.0,
@@ -1382,7 +1371,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         UseRandomPositions = false,
         WantedDistanceFromStartPos = 0.0,
         WantedDistanceBetweenPuzzleComponents = 1.0,
-        Puzzle = new List<PuzzleComponent>()
+        Puzzle = new List<PuzzleComponent>
         {
             new() { PuzzleType = PuzzleType.ExpeditionExit }
         }
@@ -1396,7 +1385,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         WantedDistanceFromStartPos = 0.0,
         WantedDistanceBetweenPuzzleComponents = 0.0,
         OnlyShowHUDWhenPlayerIsClose = false,
-        Puzzle = new List<PuzzleComponent>()
+        Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.BulkheadMain
         }
@@ -1409,7 +1398,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         WantedDistanceFromStartPos = 0.0,
         WantedDistanceBetweenPuzzleComponents = 0.0,
         OnlyShowHUDWhenPlayerIsClose = false,
-        Puzzle = new List<PuzzleComponent>()
+        Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.BulkheadSecondary
         }
@@ -1422,7 +1411,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         WantedDistanceFromStartPos = 0.0,
         WantedDistanceBetweenPuzzleComponents = 0.0,
         OnlyShowHUDWhenPlayerIsClose = false,
-        Puzzle = new List<PuzzleComponent>()
+        Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.BulkheadOverload
         }
