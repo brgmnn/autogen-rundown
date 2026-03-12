@@ -87,26 +87,18 @@ public static class TravelPathGenerator
                 break;
             }
 
-            // Validate walkability with NavMesh
-            var navPath = new NavMeshPath();
-            if (NavMesh.CalculatePath(currentPos, bestNode.Position, -1, navPath)
-                && navPath.status == NavMeshPathStatus.PathComplete)
-            {
-                positions.Add(bestNode.Position);
-            }
-            else
-            {
-                // Accept it anyway - the scan movement uses lerp, not NavMesh walking
-                positions.Add(bestNode.Position);
-            }
+            // Pull waypoint away from NavMesh edges to avoid clipping geometry
+            var waypointPos = PullAwayFromEdge(
+                bestNode.Position, TravelScanRegistry.EdgeDistance);
+            positions.Add(waypointPos);
 
             // Update direction from previous to current (like base game)
-            var dir = (bestNode.Position - currentPos);
+            var dir = (waypointPos - currentPos);
             dir.y = 0f;
             if (dir.sqrMagnitude > 0.01f)
                 sourceDir = dir.normalized;
 
-            currentPos = bestNode.Position;
+            currentPos = waypointPos;
             currentNode = bestNode;
 
             VaryDirection(ref sourceDir, directionVariation);
@@ -232,6 +224,25 @@ public static class TravelPathGenerator
         }
 
         return bestNode;
+    }
+
+    private static Vector3 PullAwayFromEdge(Vector3 position, float minDistance)
+    {
+        if (!NavMesh.FindClosestEdge(position, out var hit, -1))
+            return position;
+
+        if (hit.distance >= minDistance)
+            return position;
+
+        // Move away from edge (hit.normal points away from edge)
+        var pullAmount = minDistance - hit.distance;
+        var newPos = position + hit.normal * pullAmount;
+
+        // Verify new position is still on NavMesh
+        if (NavMesh.SamplePosition(newPos, out var sample, 0.5f, -1))
+            return sample.position;
+
+        return position;
     }
 
     private static void VaryDirection(ref Vector3 dir, float amount)
