@@ -97,9 +97,9 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     public double WantedDistanceFromStartPos { get; set; } = 0.0;
 
     /// <summary>
-    /// Default = 20.0
+    /// Default = 30.0
     /// </summary>
-    public double WantedDistanceBetweenPuzzleComponents { get; set; } = 20.0;
+    public double WantedDistanceBetweenPuzzleComponents { get; set; } = 30.0;
 
     /// <summary>
     /// Determines the count and types of scans.
