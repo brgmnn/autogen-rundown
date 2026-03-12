@@ -20,9 +20,14 @@ public static class TravelPathGenerator
     private static readonly Queue<AIG_INode> SearchC = new();
     private static readonly Queue<AIG_INode> SearchD = new();
 
+    // Max additional waypoints for the closing leg to prevent runaway
+    private const int MaxClosingWaypoints = 40;
+
     /// <summary>
     /// Generates a looping path of waypoints through the source area.
-    /// The last waypoint will be biased back toward the start for smooth circular movement.
+    /// Phase 1: Outward exploration with direction variation.
+    /// Phase 2: Dynamic closing — generates additional waypoints biased toward start
+    ///          until the last waypoint is within stepDistance of sourcePos.
     /// </summary>
     public static List<Vector3> GenerateLoop(
         LG_Area sourceArea,
@@ -61,38 +66,25 @@ public static class TravelPathGenerator
         var currentPos = sourcePos;
         var currentNode = startNode;
 
-        // How many waypoints are "outward" before we start biasing back
-        int outwardCount = Mathf.CeilToInt(waypointCount * 0.75f);
-
+        // Phase 1: Outward exploration
         for (int wp = 0; wp < waypointCount; wp++)
         {
-            // For the closing leg, bias direction back toward start
-            if (wp >= outwardCount)
-            {
-                var toStart = (sourcePos - currentPos);
-                toStart.y = 0f;
-                if (toStart.sqrMagnitude > 0.01f)
-                    sourceDir = Vector3.Slerp(sourceDir, toStart.normalized, 0.6f).normalized;
-            }
-
             var bestNode = FindBestNode(
                 currentNode, currentPos, sourcePos, sourceDir,
                 stepDistance, stepDistSqr, clusterId,
-                closingLeg: wp >= outwardCount);
+                closingLeg: false);
 
             if (bestNode == null)
             {
                 Plugin.Logger.LogDebug(
-                    $"[TravelPath] Could not find waypoint {wp + 1}/{waypointCount}, stopping");
+                    $"[TravelPath] Could not find waypoint {wp + 1}/{waypointCount}, stopping outward phase");
                 break;
             }
 
-            // Pull waypoint away from NavMesh edges to avoid clipping geometry
             var waypointPos = PullAwayFromEdge(
                 bestNode.Position, TravelScanRegistry.EdgeDistance);
             positions.Add(waypointPos);
 
-            // Update direction from previous to current (like base game)
             var dir = (waypointPos - currentPos);
             dir.y = 0f;
             if (dir.sqrMagnitude > 0.01f)
@@ -105,14 +97,52 @@ public static class TravelPathGenerator
         }
 
         Plugin.Logger.LogDebug(
-            $"[TravelPath] Generated {positions.Count}/{waypointCount} waypoints");
+            $"[TravelPath] Outward phase: {positions.Count} waypoints");
 
-        if (positions.Count > 0)
+        // Phase 2: Close the loop — keep generating waypoints toward start
+        // until within stepDistance of sourcePos
+        float closingDist = (currentPos - sourcePos).magnitude;
+        int closingGenerated = 0;
+
+        while (closingDist > stepDistance && closingGenerated < MaxClosingWaypoints)
         {
-            float closingDist = (positions[positions.Count - 1] - sourcePos).magnitude;
-            Plugin.Logger.LogDebug(
-                $"[TravelPath] Loop closing distance: {closingDist:F2}m");
+            // Bias direction strongly toward start
+            var toStart = (sourcePos - currentPos);
+            toStart.y = 0f;
+            if (toStart.sqrMagnitude > 0.01f)
+                sourceDir = Vector3.Slerp(sourceDir, toStart.normalized, 0.7f).normalized;
+
+            var bestNode = FindBestNode(
+                currentNode, currentPos, sourcePos, sourceDir,
+                stepDistance, stepDistSqr, clusterId,
+                closingLeg: true);
+
+            if (bestNode == null)
+            {
+                Plugin.Logger.LogDebug(
+                    $"[TravelPath] Closing leg stalled at {closingDist:F2}m from start");
+                break;
+            }
+
+            var waypointPos = PullAwayFromEdge(
+                bestNode.Position, TravelScanRegistry.EdgeDistance);
+            positions.Add(waypointPos);
+
+            var dir = (waypointPos - currentPos);
+            dir.y = 0f;
+            if (dir.sqrMagnitude > 0.01f)
+                sourceDir = dir.normalized;
+
+            currentPos = waypointPos;
+            currentNode = bestNode;
+            closingGenerated++;
+
+            closingDist = (currentPos - sourcePos).magnitude;
         }
+
+        Plugin.Logger.LogDebug(
+            $"[TravelPath] Generated {positions.Count} total waypoints " +
+            $"({closingGenerated} closing), loop distance: {closingDist:F2}m");
 
         return positions;
     }
