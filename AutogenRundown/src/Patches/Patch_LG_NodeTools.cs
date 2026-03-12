@@ -298,20 +298,23 @@ public static class Patch_LG_NodeTools
         if (placedPositions.Count > 1)
         {
             // Consecutive distances (what the player walks scan-to-scan)
-            float minConsec = float.MaxValue, maxConsec = 0f, totalConsec = 0f;
-            for (int i = 1; i < placedNodes.Count; i++)
+            if (placedNodes.Count > 1)
             {
-                float d = UseGraphDistance
-                    ? GetGraphDistance(placedNodes[i], placedNodes[i - 1])
-                    : (placedPositions[i] - placedPositions[i - 1]).magnitude;
-                if (d < minConsec) minConsec = d;
-                if (d > maxConsec) maxConsec = d;
-                totalConsec += d;
+                float minConsec = float.MaxValue, maxConsec = 0f, totalConsec = 0f;
+                for (int i = 1; i < placedNodes.Count; i++)
+                {
+                    float d = UseGraphDistance
+                        ? GetGraphDistance(placedNodes[i], placedNodes[i - 1])
+                        : (placedPositions[i] - placedPositions[i - 1]).magnitude;
+                    if (d < minConsec) minConsec = d;
+                    if (d > maxConsec) maxConsec = d;
+                    totalConsec += d;
+                }
+                int consecCount = placedNodes.Count - 1;
+                Plugin.Logger.LogDebug(
+                    $"[NodeTools] Consecutive: min={minConsec:F2} max={maxConsec:F2} " +
+                    $"mean={totalConsec / consecCount:F2} (walk distance)");
             }
-            int consecCount = placedNodes.Count - 1;
-            Plugin.Logger.LogDebug(
-                $"[NodeTools] Consecutive: min={minConsec:F2} max={maxConsec:F2} " +
-                $"mean={totalConsec / consecCount:F2} (walk distance)");
 
             // Pairwise distances (minimum separation between any two scans)
             float minSep = float.MaxValue, maxSep = 0f, totalSep = 0f;
