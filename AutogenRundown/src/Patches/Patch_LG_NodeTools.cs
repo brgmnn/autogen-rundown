@@ -297,6 +297,23 @@ public static class Patch_LG_NodeTools
 
         if (placedPositions.Count > 1)
         {
+            // Consecutive distances (what the player walks scan-to-scan)
+            float minConsec = float.MaxValue, maxConsec = 0f, totalConsec = 0f;
+            for (int i = 1; i < placedNodes.Count; i++)
+            {
+                float d = UseGraphDistance
+                    ? GetGraphDistance(placedNodes[i], placedNodes[i - 1])
+                    : (placedPositions[i] - placedPositions[i - 1]).magnitude;
+                if (d < minConsec) minConsec = d;
+                if (d > maxConsec) maxConsec = d;
+                totalConsec += d;
+            }
+            int consecCount = placedNodes.Count - 1;
+            Plugin.Logger.LogDebug(
+                $"[NodeTools] Consecutive: min={minConsec:F2} max={maxConsec:F2} " +
+                $"mean={totalConsec / consecCount:F2} (walk distance)");
+
+            // Pairwise distances (minimum separation between any two scans)
             float minSep = float.MaxValue, maxSep = 0f, totalSep = 0f;
             int sepCount = 0;
             for (int i = 0; i < placedPositions.Count; i++)
@@ -309,8 +326,8 @@ public static class Patch_LG_NodeTools
                     sepCount++;
                 }
             Plugin.Logger.LogDebug(
-                $"[NodeTools] Spread: min={minSep:F2} max={maxSep:F2} " +
-                $"mean={totalSep / sepCount:F2} (pairwise Euclidean)");
+                $"[NodeTools] Pairwise: min={minSep:F2} max={maxSep:F2} " +
+                $"mean={totalSep / sepCount:F2} (Euclidean)");
         }
 
         return 1;
@@ -358,6 +375,8 @@ public static class Patch_LG_NodeTools
             for (int j = 0; j < working.Count; j++)
             {
                 var candidate = working[j];
+
+                // Hard filter: reject if too close to ANY placed scan (pairwise floor)
                 float minDistToPlaced = GetMinDistanceToPlaced(
                     candidate.node, placedPositions, placedNodes);
 
@@ -367,12 +386,16 @@ public static class Patch_LG_NodeTools
                         continue;
                 }
 
+                // Score by distance to the PREVIOUS consecutive scan (what the player walks)
+                var prevNode = placedNodes[placedNodes.Count - 1];
+                float distToPrev = UseGraphDistance
+                    ? GetGraphDistance(candidate.node, prevNode)
+                    : (candidate.node.Position - placedPositions[placedPositions.Count - 1]).magnitude;
+
                 float score;
                 if (UseCombinedScoring)
                 {
-                    // Target-based: penalize deviation from desired distance (both too close and too far)
-                    // |dist - target| / target: candidate at target → 0, at 2x target → 1.0, at 0.5x → 0.5
-                    float separationScore = Mathf.Abs(minDistToPlaced - minDistance) / Mathf.Max(minDistance, 0.001f);
+                    float separationScore = Mathf.Abs(distToPrev - minDistance) / Mathf.Max(minDistance, 0.001f);
 
                     score = SourceDistanceWeight * candidate.score
                           + SeparationWeight * separationScore;
@@ -380,7 +403,7 @@ public static class Patch_LG_NodeTools
                 else
                 {
                     score = candidate.score;
-                    if (!UseHardDistanceFilter && minDistToPlaced < minDistance)
+                    if (!UseHardDistanceFilter && distToPrev < minDistance)
                         score += VanillaPenalty;
                 }
 
@@ -404,9 +427,16 @@ public static class Patch_LG_NodeTools
             float dNearest = GetMinDistanceToPlaced(
                 bestNode, placedPositions, placedNodes,
                 excludeSelf: true);
+
+            // Distance to previous consecutive scan (what the player walks)
+            var logPrevNode = placedNodes[placedNodes.Count - 2];
+            float dPrev = UseGraphDistance
+                ? GetGraphDistance(bestNode, logPrevNode)
+                : (bestNode.Position - placedPositions[placedPositions.Count - 2]).magnitude;
+
             Plugin.Logger.LogDebug(
                 $"[NodeTools]   Component {placedPositions.Count}: " +
-                $"distToSource={dSource:F2} distToNearest={dNearest:F2}");
+                $"distToSource={dSource:F2} distToPrev={dPrev:F2} distToNearest={dNearest:F2}");
         }
 
         return placed;
