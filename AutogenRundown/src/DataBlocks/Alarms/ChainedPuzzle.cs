@@ -1193,6 +1193,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class T-I Alarm",
         Settings = WaveSettings.Baseline_Easy,
         Population = WavePopulation.Baseline,
+        OnlyShowHUDWhenPlayerIsClose = false,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.TravelBig
@@ -1207,6 +1208,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class T-II Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
+        OnlyShowHUDWhenPlayerIsClose = false,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.TravelBig
@@ -1221,6 +1223,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class T-I Team Alarm",
         Settings = WaveSettings.Baseline_Easy,
         Population = WavePopulation.Baseline,
+        OnlyShowHUDWhenPlayerIsClose = false,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.TravelTeam
@@ -1235,6 +1238,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class T-II Team Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
+        OnlyShowHUDWhenPlayerIsClose = false,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.TravelTeam
@@ -1249,6 +1253,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class T-III Team Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
+        OnlyShowHUDWhenPlayerIsClose = false,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.TravelTeam
