@@ -61,6 +61,8 @@ TODO:
   * Generator Cluster needs cells to be tightened up in their spawns
   * Big security scans that move are too hard
 
+  * Add a version of the scan wanted distance that takes a negative number which then finds a point thats a proportion of the total area away from the previous scan
+
   * Check SD6: 2 terminals on top of each other in overload
   * SC1: Main needs 1 more challenge of some kind. A hard extract perhaps?
 

@@ -45,13 +45,30 @@ public partial record WardenObjective
             return;
         }
 
-        PowerCellsToDistribute = director.Tier switch
+        PowerCellsToDistribute = (director.Tier, director.Bulkhead, level.HasPrisonerEfficiency) switch
         {
-            "A" => Generator.Between(1, 2),
-            "B" => Generator.Between(1, 3),
-            "C" => Generator.Between(2, 3),
-            "D" => Generator.Between(3, 4),
-            "E" => Generator.Between(3, 5),
+            ("A", Bulkhead.Main, _) => 2,
+            ("A",             _, _) => 1,
+
+            ("B", Bulkhead.Main,     _) => Generator.Between(2, 3),
+            ("B",             _, false) => 2,
+            ("B",             _,     _) => 1,
+
+            ("C", Bulkhead.Main,        _) => Generator.Between(2, 3),
+            ("C", Bulkhead.Extreme,     _) => 2,
+            ("C", Bulkhead.Overload, true) => 1,
+            ("C", Bulkhead.Overload,    _) => 2,
+
+            ("D", Bulkhead.Main,     false) => Generator.Between(3, 4),
+            ("D", Bulkhead.Main,         _) => 3,
+            ("D", Bulkhead.Extreme,  false) => Generator.Between(2, 3),
+            ("D",                _,      _) => 2,
+
+            ("E", Bulkhead.Main, false) => Generator.Between(3, 5),
+            ("E", Bulkhead.Main,  true) => Generator.Between(2, 4),
+            ("E",             _,  true) => Generator.Between(2, 3),
+            ("E",             _, false) => Generator.Between(2, 3),
+
             _ => 2
         };
     }
