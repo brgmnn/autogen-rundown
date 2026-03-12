@@ -98,9 +98,9 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     public double WantedDistanceFromStartPos { get; set; } = 0.0;
 
     /// <summary>
-    /// Default = 20.0
+    /// Default = 30.0
     /// </summary>
-    public double WantedDistanceBetweenPuzzleComponents { get; set; } = 20.0;
+    public double WantedDistanceBetweenPuzzleComponents { get; set; } = 30.0;
 
     /// <summary>
     /// Determines the count and types of scans.
@@ -302,7 +302,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
                 (0.5, 1, TeamScan),
 
                 // Stealth and Surprise scans
-                (0.8, 1, Generator.Flip() ? StealthScan4 : Secret_StealthScan4_NormalBaseline),
+                (0.8, 1, Generator.Flip(0.95) ? StealthScan4 : Secret_StealthScan4_NormalBaseline),
 
                 // Easy
                 (0.6, 1, AlarmClass2),
@@ -326,8 +326,8 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
                 (0.3, 2, TeamScan),
 
                 // Stealth and Surprise scans
-                (0.2, 1, StealthScan4),
-                (0.8, 1, Secret_StealthScan4_NormalBaseline),
+                (0.9, 1, StealthScan4),
+                (0.1, 1, Secret_StealthScan4_NormalBaseline),
 
                 // Easy
                 (1.0, 2, AlarmClass4),
@@ -353,10 +353,9 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
                 (0.2, 2, TeamScan),
 
                 // Stealth and Surprise scans
-                (0.3, 1, StealthScan4),
-                (1.0, 1, Secret_StealthScan4_WithChargers),
-                (1.0, 1, Secret_SpawnTank),
-                (0.1, 1, Secret_SpawnMother),
+                (1.0, 2, StealthScan4),
+                (0.2, 1, Secret_StealthScan4_WithChargers),
+                (0.1, 1, Generator.Flip() ? Secret_SpawnTank : Secret_SpawnMother),
 
                 // Easy
                 (0.2, 1, AlarmClass3_Cluster),
@@ -389,10 +388,10 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
                 (0.2, 2, TeamScan),
 
                 // Stealth and Surprise scans
-                (0.05, 1, StealthScan4),
-                (1.0,  1, Secret_StealthScan4_WithChargers),
-                (0.7,  1, Secret_SpawnTank),
-                (0.5,  1, Secret_SpawnMother),
+                (1.0, 1, StealthScan4),
+                (0.2, 1, Secret_StealthScan4_WithChargers),
+                (0.2, 1, Secret_SpawnTank),
+                (0.1, 1, Secret_SpawnMother),
 
                 // Easy
                 (0.9, 1, AlarmClass4),

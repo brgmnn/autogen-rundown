@@ -26,7 +26,9 @@ public enum WardenObjectiveType
 
     #region Autogen Custom objectives
 
-    ReachKdsDeep = 20             // K
+    ReachKdsDeep = 20,            // K
+
+    EscapeToPortal = 21,          // E
 
     #endregion
 }
