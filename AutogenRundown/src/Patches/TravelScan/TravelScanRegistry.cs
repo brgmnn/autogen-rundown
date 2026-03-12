@@ -23,8 +23,6 @@ public static class TravelScanRegistry
         60, // SecurityScan_Big_Movable_FadeIn_Slow
     };
 
-    public const int WaypointCount = 24;
     public const float StepDistance = 4f;
-    public const float DirectionVariation = 0.3f;
     public const float EdgeDistance = 1f;
 }

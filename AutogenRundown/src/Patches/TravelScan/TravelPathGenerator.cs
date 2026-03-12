@@ -7,34 +7,29 @@ using UnityEngine.AI;
 namespace AutogenRundown.Patches.TravelScan;
 
 /// <summary>
-/// Generates a looping walking path through a zone's AI graph nodes.
+/// Generates a looping walking path through a zone using NavMesh pathfinding.
 ///
-/// Reimplements the directional walk from LG_NodeTools.TryGetPlayerReachablePositionsWithProgressiveDistance
-/// but returns the positions and closes the loop for circular movement.
+/// Approach:
+///   1. Pick 2 destination nodes far from source and each other (by NavMesh distance)
+///   2. Pathfind 3 legs on the NavMesh: start → dest1 → dest2 → start
+///   3. Resample the combined path at fixed step intervals
+///   4. Pull each waypoint away from NavMesh edges
+///
+/// This guarantees a valid walkable cycle with no off-mesh shortcuts.
 /// </summary>
 public static class TravelPathGenerator
 {
-    // Priority queues for BFS traversal, ranked by directional alignment
-    private static readonly Queue<AIG_INode> SearchA = new();
-    private static readonly Queue<AIG_INode> SearchB = new();
-    private static readonly Queue<AIG_INode> SearchC = new();
-    private static readonly Queue<AIG_INode> SearchD = new();
-
-    // Max additional waypoints for the closing leg to prevent runaway
-    private const int MaxClosingWaypoints = 40;
+    // How many candidate nodes to evaluate with NavMesh distance
+    private const int CandidatePoolSize = 20;
 
     /// <summary>
     /// Generates a looping path of waypoints through the source area.
-    /// Phase 1: Outward exploration with direction variation.
-    /// Phase 2: Dynamic closing — generates additional waypoints biased toward start
-    ///          until the last waypoint is within stepDistance of sourcePos.
+    /// Returns waypoints resampled at stepDistance intervals along the NavMesh.
     /// </summary>
     public static List<Vector3> GenerateLoop(
         LG_Area sourceArea,
         Vector3 sourcePos,
-        int waypointCount = TravelScanRegistry.WaypointCount,
-        float stepDistance = TravelScanRegistry.StepDistance,
-        float directionVariation = TravelScanRegistry.DirectionVariation)
+        float stepDistance = TravelScanRegistry.StepDistance)
     {
         var positions = new List<Vector3>();
 
@@ -45,215 +40,224 @@ public static class TravelPathGenerator
         }
 
         var nodeCluster = sourceArea.m_courseNode.m_nodeCluster;
-        AIG_INode startNode;
-        if (!nodeCluster.TryGetClosestNodeInCluster(sourcePos, out startNode))
+        var clusterId = nodeCluster.ID;
+
+        // Gather candidate nodes: in-cluster, non-edge (>= 4 links)
+        var candidates = GatherCandidates(nodeCluster, clusterId);
+        if (candidates.Count < 2)
         {
-            Plugin.Logger.LogWarning("[TravelPath] No node found in cluster");
+            Plugin.Logger.LogWarning(
+                $"[TravelPath] Only {candidates.Count} candidate nodes, need at least 2");
             return positions;
         }
 
-        var clusterId = nodeCluster.ID;
-        var stepDistSqr = stepDistance * stepDistance;
+        // Pick 2 far-apart destination nodes
+        var (dest1, dest2) = PickDestinations(candidates, sourcePos);
 
-        // Pick initial direction using seeded random
-        var rng = Builder.SessionSeedRandom;
-        var sourceDir = new Vector3(
-            rng.Range(-1f, 1f), 0f, rng.Range(-1f, 1f)).normalized;
+        Plugin.Logger.LogDebug(
+            $"[TravelPath] Destinations: dest1={dest1}, dest2={dest2}");
 
-        if (sourceDir.sqrMagnitude < 0.01f)
-            sourceDir = Vector3.forward;
+        // Pathfind 3 legs: start → dest1 → dest2 → start
+        var rawPath = new List<Vector3>();
+        AppendNavMeshLeg(rawPath, sourcePos, dest1);
+        AppendNavMeshLeg(rawPath, dest1, dest2);
+        AppendNavMeshLeg(rawPath, dest2, sourcePos);
 
-        var currentPos = sourcePos;
-        var currentNode = startNode;
-
-        // Phase 1: Outward exploration
-        for (int wp = 0; wp < waypointCount; wp++)
+        if (rawPath.Count < 2)
         {
-            var bestNode = FindBestNode(
-                currentNode, currentPos, sourcePos, sourceDir,
-                stepDistance, stepDistSqr, clusterId,
-                closingLeg: false);
-
-            if (bestNode == null)
-            {
-                Plugin.Logger.LogDebug(
-                    $"[TravelPath] Could not find waypoint {wp + 1}/{waypointCount}, stopping outward phase");
-                break;
-            }
-
-            var waypointPos = PullAwayFromEdge(
-                bestNode.Position, TravelScanRegistry.EdgeDistance);
-            positions.Add(waypointPos);
-
-            var dir = (waypointPos - currentPos);
-            dir.y = 0f;
-            if (dir.sqrMagnitude > 0.01f)
-                sourceDir = dir.normalized;
-
-            currentPos = waypointPos;
-            currentNode = bestNode;
-
-            VaryDirection(ref sourceDir, directionVariation);
+            Plugin.Logger.LogWarning("[TravelPath] NavMesh pathing produced no usable path");
+            return positions;
         }
 
         Plugin.Logger.LogDebug(
-            $"[TravelPath] Outward phase: {positions.Count} waypoints");
+            $"[TravelPath] Raw NavMesh path: {rawPath.Count} corners");
 
-        // Phase 2: Close the loop — keep generating waypoints toward start
-        // until within stepDistance of sourcePos
-        float closingDist = (currentPos - sourcePos).magnitude;
-        int closingGenerated = 0;
-
-        while (closingDist > stepDistance && closingGenerated < MaxClosingWaypoints)
-        {
-            // Bias direction strongly toward start
-            var toStart = (sourcePos - currentPos);
-            toStart.y = 0f;
-            if (toStart.sqrMagnitude > 0.01f)
-                sourceDir = Vector3.Slerp(sourceDir, toStart.normalized, 0.7f).normalized;
-
-            var bestNode = FindBestNode(
-                currentNode, currentPos, sourcePos, sourceDir,
-                stepDistance, stepDistSqr, clusterId,
-                closingLeg: true);
-
-            if (bestNode == null)
-            {
-                Plugin.Logger.LogDebug(
-                    $"[TravelPath] Closing leg stalled at {closingDist:F2}m from start");
-                break;
-            }
-
-            var waypointPos = PullAwayFromEdge(
-                bestNode.Position, TravelScanRegistry.EdgeDistance);
-            positions.Add(waypointPos);
-
-            var dir = (waypointPos - currentPos);
-            dir.y = 0f;
-            if (dir.sqrMagnitude > 0.01f)
-                sourceDir = dir.normalized;
-
-            currentPos = waypointPos;
-            currentNode = bestNode;
-            closingGenerated++;
-
-            closingDist = (currentPos - sourcePos).magnitude;
-        }
+        // Resample at fixed step intervals and pull away from edges
+        positions = ResamplePath(rawPath, stepDistance);
 
         Plugin.Logger.LogDebug(
-            $"[TravelPath] Generated {positions.Count} total waypoints " +
-            $"({closingGenerated} closing), loop distance: {closingDist:F2}m");
+            $"[TravelPath] Resampled to {positions.Count} waypoints at {stepDistance}m intervals");
+
+        if (positions.Count > 0)
+        {
+            float closingDist = (positions[positions.Count - 1] - sourcePos).magnitude;
+            Plugin.Logger.LogDebug(
+                $"[TravelPath] Loop closing distance: {closingDist:F2}m");
+        }
 
         return positions;
     }
 
-    private static AIG_INode? FindBestNode(
-        AIG_INode fromNode,
-        Vector3 currentPos,
-        Vector3 sourcePos,
-        Vector3 sourceDir,
-        float stepDistance,
-        float stepDistSqr,
-        ushort clusterId,
-        bool closingLeg)
+    /// <summary>
+    /// Gathers reachable nodes in the area that are non-edge (>= 4 links).
+    /// </summary>
+    private static List<AIG_INode> GatherCandidates(
+        AIG_NodeCluster nodeCluster, ushort clusterId)
     {
-        SearchA.Clear();
-        SearchB.Clear();
-        SearchC.Clear();
-        SearchD.Clear();
+        var nodes = nodeCluster.m_reachableNodes;
+        if (nodes.Count < 2)
+            nodes = nodeCluster.m_nodes;
 
-        AIG_SearchID.IncrementSearchID();
-        var searchId = AIG_SearchID.SearchID;
-
-        fromNode.SearchID = searchId;
-        SearchA.Enqueue(fromNode);
-
-        AIG_INode? bestNode = null;
-        float bestScore = -1f;
-
-        int maxEval = 200;
-        int highScoreCount = 25;
-
-        while (maxEval > 0 && highScoreCount > 0)
+        var candidates = new List<AIG_INode>();
+        for (int i = 0; i < nodes.Count; i++)
         {
-            AIG_INode current;
-            if (SearchA.Count > 0)
-                current = SearchA.Dequeue();
-            else if (SearchB.Count > 0)
-                current = SearchB.Dequeue();
-            else if (SearchC.Count > 0)
-                current = SearchC.Dequeue();
-            else if (SearchD.Count > 0)
-                current = SearchD.Dequeue();
-            else
-                break;
+            var node = nodes[i];
+            if (node.ClusterID == clusterId && node.Links.Count >= 4)
+                candidates.Add(node);
+        }
 
-            for (int i = 0; i < current.Links.Count; i++)
+        return candidates;
+    }
+
+    /// <summary>
+    /// Picks 2 destination positions that are far from sourcePos and each other.
+    /// Pre-filters by Euclidean distance, then ranks finalists by NavMesh distance.
+    /// </summary>
+    private static (Vector3 dest1, Vector3 dest2) PickDestinations(
+        List<AIG_INode> candidates, Vector3 sourcePos)
+    {
+        // Sort by Euclidean distance from source (descending) and take top pool
+        candidates.Sort((a, b) =>
+        {
+            float da = (a.Position - sourcePos).sqrMagnitude;
+            float db = (b.Position - sourcePos).sqrMagnitude;
+            return db.CompareTo(da); // descending
+        });
+
+        int poolSize = Mathf.Min(CandidatePoolSize, candidates.Count);
+
+        // Pick dest1: highest NavMesh distance from source
+        Vector3 dest1 = candidates[0].Position;
+        float bestDist1 = 0f;
+
+        for (int i = 0; i < poolSize; i++)
+        {
+            float navDist = GetNavMeshDistance(sourcePos, candidates[i].Position);
+            if (navDist > bestDist1)
             {
-                var link = current.Links[i];
-                if (link.SearchID == searchId)
-                    continue;
-
-                link.SearchID = searchId;
-
-                // Stay within the source area's cluster and avoid edge nodes
-                if (link.ClusterID != clusterId || link.Links.Count < 4)
-                    continue;
-
-                maxEval--;
-
-                var position = link.Position;
-                var toNode = position - currentPos;
-                toNode.y *= 0.1f;
-
-                // Radius deviation score: how close is the distance to our target step distance
-                float radiusScore = 1f - Mathf.Clamp01(
-                    Mathf.Abs(toNode.magnitude - stepDistance) / 16f);
-
-                toNode.Normalize();
-
-                // Directional alignment score
-                float dot = Mathf.Max(0f, Vector3.Dot(toNode, sourceDir));
-                float dotSqr = dot * dot;
-
-                // Outside-radius bonus
-                float outsideBonus = (position - currentPos).sqrMagnitude > stepDistSqr
-                    ? 1f : 0f;
-
-                float score = outsideBonus + dotSqr + radiusScore;
-
-                // On closing leg, add proximity-to-start bonus
-                if (closingLeg)
-                {
-                    float distToStart = (position - sourcePos).magnitude;
-                    float closingScore = 1f - Mathf.Clamp01(distToStart / (stepDistance * 3f));
-                    score += closingScore * 0.5f;
-                }
-
-                if (score > bestScore)
-                {
-                    bestScore = score;
-                    bestNode = link;
-                    if (score > 2.8f)
-                        break;
-                }
-
-                if (score > 2.5f)
-                    highScoreCount--;
-
-                // Enqueue into priority queue based on directional alignment
-                if (dotSqr < 0.01f)
-                    SearchD.Enqueue(link);
-                else if (dotSqr < 0.5f)
-                    SearchC.Enqueue(link);
-                else if (dotSqr < 0.8f)
-                    SearchB.Enqueue(link);
-                else
-                    SearchA.Enqueue(link);
+                bestDist1 = navDist;
+                dest1 = candidates[i].Position;
             }
         }
 
-        return bestNode;
+        // Pick dest2: highest min(navDist to source, navDist to dest1)
+        Vector3 dest2 = candidates[0].Position;
+        float bestDist2 = 0f;
+
+        for (int i = 0; i < poolSize; i++)
+        {
+            var pos = candidates[i].Position;
+            // Skip if too close to dest1
+            if ((pos - dest1).sqrMagnitude < 1f)
+                continue;
+
+            float distToSource = GetNavMeshDistance(sourcePos, pos);
+            float distToDest1 = GetNavMeshDistance(dest1, pos);
+            // Maximize the minimum leg length to form a well-spread triangle
+            float score = Mathf.Min(distToSource, distToDest1);
+
+            if (score > bestDist2)
+            {
+                bestDist2 = score;
+                dest2 = pos;
+            }
+        }
+
+        Plugin.Logger.LogDebug(
+            $"[TravelPath] dest1 navDist={bestDist1:F1}m, " +
+            $"dest2 minLeg={bestDist2:F1}m");
+
+        return (dest1, dest2);
+    }
+
+    /// <summary>
+    /// Appends NavMesh path corners from 'from' to 'to' onto the path list.
+    /// Skips the first corner of subsequent legs to avoid duplicates.
+    /// </summary>
+    private static void AppendNavMeshLeg(List<Vector3> path, Vector3 from, Vector3 to)
+    {
+        var navPath = new NavMeshPath();
+        if (NavMesh.CalculatePath(from, to, -1, navPath)
+            && navPath.status == NavMeshPathStatus.PathComplete
+            && navPath.corners.Length >= 2)
+        {
+            int startIdx = path.Count == 0 ? 0 : 1; // skip first corner on subsequent legs
+            for (int i = startIdx; i < navPath.corners.Length; i++)
+                path.Add(navPath.corners[i]);
+        }
+        else
+        {
+            // Fallback: direct line (shouldn't happen for in-area nodes)
+            if (path.Count == 0)
+                path.Add(from);
+            path.Add(to);
+        }
+    }
+
+    /// <summary>
+    /// Resamples a path of corners at fixed distance intervals.
+    /// Each resampled point is pulled away from NavMesh edges.
+    /// </summary>
+    private static List<Vector3> ResamplePath(List<Vector3> corners, float stepDistance)
+    {
+        var resampled = new List<Vector3>();
+        if (corners.Count < 2)
+            return resampled;
+
+        float remaining = 0f;
+        var prev = corners[0];
+
+        // Add the starting point
+        resampled.Add(PullAwayFromEdge(prev, TravelScanRegistry.EdgeDistance));
+
+        for (int i = 1; i < corners.Count; i++)
+        {
+            var next = corners[i];
+            var segDir = next - prev;
+            float segLen = segDir.magnitude;
+
+            if (segLen < 0.001f)
+            {
+                prev = next;
+                continue;
+            }
+
+            segDir /= segLen; // normalize
+            float walked = remaining;
+
+            while (walked + stepDistance <= segLen)
+            {
+                walked += stepDistance;
+                var point = prev + segDir * walked;
+                resampled.Add(PullAwayFromEdge(point, TravelScanRegistry.EdgeDistance));
+            }
+
+            remaining = segLen - walked;
+            prev = next;
+        }
+
+        // Don't add the final corner — it's sourcePos (the scan's start position)
+        // which is already position[0] in the caller. This keeps the loop tight:
+        // the last resampled point will be within stepDistance of sourcePos.
+
+        return resampled;
+    }
+
+    private static float GetNavMeshDistance(Vector3 from, Vector3 to)
+    {
+        var path = new NavMeshPath();
+        if (NavMesh.CalculatePath(from, to, -1, path)
+            && path.status == NavMeshPathStatus.PathComplete
+            && path.corners.Length > 1)
+        {
+            float dist = 0f;
+            var corners = path.corners;
+            for (int i = 1; i < corners.Length; i++)
+                dist += (corners[i] - corners[i - 1]).magnitude;
+            return dist;
+        }
+
+        return (from - to).magnitude;
     }
 
     private static Vector3 PullAwayFromEdge(Vector3 position, float minDistance)
@@ -264,25 +268,12 @@ public static class TravelPathGenerator
         if (hit.distance >= minDistance)
             return position;
 
-        // Move away from edge (hit.normal points away from edge)
         var pullAmount = minDistance - hit.distance;
         var newPos = position + hit.normal * pullAmount;
 
-        // Verify new position is still on NavMesh
         if (NavMesh.SamplePosition(newPos, out var sample, 0.5f, -1))
             return sample.position;
 
         return position;
-    }
-
-    private static void VaryDirection(ref Vector3 dir, float amount)
-    {
-        if (amount < 0.01f)
-            return;
-
-        var rng = Builder.SessionSeedRandom;
-        var randomDir = new Vector3(
-            rng.Range(-1f, 1f), 0f, rng.Range(-1f, 1f)) * 2f;
-        dir = Vector3.Slerp(dir, randomDir, amount).normalized;
     }
 }
