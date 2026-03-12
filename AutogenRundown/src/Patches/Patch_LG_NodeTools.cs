@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using AIGraph;
 using BepInEx.Unity.IL2CPP.Hook;
+using ChainedPuzzles;
+using HarmonyLib;
 using Il2CppInterop.Common;
 using Il2CppInterop.Runtime.Runtime;
 using LevelGeneration;
@@ -88,6 +90,9 @@ public static class Patch_LG_NodeTools
     private static bool _loggedNavMeshStatus;
     private static bool _navMeshFailed;
 
+    // Set by Patch_CP_Cluster_Core to switch scoring mode for cluster sub-scans
+    internal static bool _isClusterPlacement;
+
     private struct ScoredNode
     {
         public AIG_INode node;
@@ -155,7 +160,8 @@ public static class Patch_LG_NodeTools
         Plugin.Logger.LogDebug(
             $"[NodeTools] Flags: HardFilter={UseHardDistanceFilter} " +
             $"Relaxation={UseIterativeRelaxation} Pool={CandidatePoolSize} " +
-            $"CombinedScore={UseCombinedScoring} GraphDist={UseGraphDistance}");
+            $"CombinedScore={UseCombinedScoring} GraphDist={UseGraphDistance} " +
+            $"ClusterFan={_isClusterPlacement}");
         Plugin.Logger.LogDebug(
             $"[NodeTools] wantedCount={wantedCount} radius={atRadiusFromSourcePos} " +
             $"minDist={distanceFromEachother} totalNodes={nodes.Count}");
@@ -389,16 +395,26 @@ public static class Patch_LG_NodeTools
                         continue;
                 }
 
-                // Score by distance to the PREVIOUS consecutive scan (what the player walks)
-                var prevNode = placedNodes[placedNodes.Count - 1];
-                float distToPrev = UseGraphDistance
-                    ? GetGraphDistance(candidate.node, prevNode)
-                    : (candidate.node.Position - placedPositions[placedPositions.Count - 1]).magnitude;
+                // Choose separation metric based on placement context
+                float separationDist;
+                if (_isClusterPlacement)
+                {
+                    // Fan scoring: maximize spread from ALL placed scans
+                    separationDist = minDistToPlaced;
+                }
+                else
+                {
+                    // Consecutive scoring: optimize walk path from previous scan
+                    var prevNode = placedNodes[placedNodes.Count - 1];
+                    separationDist = UseGraphDistance
+                        ? GetGraphDistance(candidate.node, prevNode)
+                        : (candidate.node.Position - placedPositions[placedPositions.Count - 1]).magnitude;
+                }
 
                 float score;
                 if (UseCombinedScoring)
                 {
-                    float separationScore = Mathf.Abs(distToPrev - minDistance) / Mathf.Max(minDistance, 0.001f);
+                    float separationScore = Mathf.Abs(separationDist - minDistance) / Mathf.Max(minDistance, 0.001f);
 
                     score = SourceDistanceWeight * candidate.score
                           + SeparationWeight * separationScore;
@@ -406,7 +422,7 @@ public static class Patch_LG_NodeTools
                 else
                 {
                     score = candidate.score;
-                    if (!UseHardDistanceFilter && distToPrev < minDistance)
+                    if (!UseHardDistanceFilter && separationDist < minDistance)
                         score += VanillaPenalty;
                 }
 
@@ -587,4 +603,16 @@ public static class Patch_LG_NodeTools
 
         return result;
     }
+}
+
+[HarmonyPatch(typeof(CP_Cluster_Core))]
+internal static class Patch_CP_Cluster_Core
+{
+    [HarmonyPrefix]
+    [HarmonyPatch(nameof(CP_Cluster_Core.Setup))]
+    static void Prefix() => Patch_LG_NodeTools._isClusterPlacement = true;
+
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(CP_Cluster_Core.Setup))]
+    static void Postfix() => Patch_LG_NodeTools._isClusterPlacement = false;
 }
