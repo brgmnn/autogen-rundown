@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.Extensions;
 using Newtonsoft.Json;
 
 namespace AutogenRundown.DataBlocks.Alarms;
@@ -128,28 +129,59 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     public UInt32 AlarmSoundStop = 42633153u;
     #endregion
 
-    // public virtual bool Equals(ChainedPuzzle? other)
-    // {
-    //     if (ReferenceEquals(this, other))
-    //         return true;
-    //     if (other is null || GetType() != other.GetType())
-    //         return false;
-    //
-    //     return PersistentId == other.PersistentId &&
-    //            TriggerAlarmOnActivate == other.TriggerAlarmOnActivate &&
-    //            Settings == other.Settings &&
-    //            Population == other.Population &&
-    //            Puzzle.SequenceEqual(other.Puzzle) &&
-    //            DisableSurvivalWaveOnComplete == other.DisableSurvivalWaveOnComplete &&
-    //            UseRandomPositions == other.UseRandomPositions &&
-    //            Utils.Math.Approximately(WantedDistanceFromStartPos, other.WantedDistanceFromStartPos) &&
-    //            Utils.Math.Approximately(WantedDistanceBetweenPuzzleComponents,
-    //                other.WantedDistanceBetweenPuzzleComponents) &&
-    //            OnlyShowHUDWhenPlayerIsClose == other.OnlyShowHUDWhenPlayerIsClose &&
-    //            SurvivalWaveAreaDistance == other.SurvivalWaveAreaDistance &&
-    //            AlarmSoundStart == other.AlarmSoundStart &&
-    //            AlarmSoundStart == other.AlarmSoundStop;
-    // }
+    public virtual bool Equals(ChainedPuzzle? other)
+    {
+        if (ReferenceEquals(this, other))
+            return true;
+        if (other is null || GetType() != other.GetType())
+            return false;
+
+        return PersistentId == other.PersistentId && RecordEqual(other);
+    }
+
+    public override int GetHashCode()
+    {
+        var hashCode = new HashCode();
+
+        hashCode.Add(base.GetHashCode());
+        hashCode.Add(PublicAlarmName);
+        hashCode.Add(TriggerAlarmOnActivate);
+        hashCode.Add(SurvivalWaveSettings);
+        hashCode.Add(SurvivalWavePopulation);
+        hashCode.Add(DisableSurvivalWaveOnComplete);
+        hashCode.Add(UseRandomPositions);
+        hashCode.Add(WantedDistanceFromStartPos);
+        hashCode.Add(WantedDistanceBetweenPuzzleComponents);
+        hashCode.Add(OnlyShowHUDWhenPlayerIsClose);
+        hashCode.Add(SurvivalWaveAreaDistance);
+        hashCode.Add(AlarmSoundStart);
+        hashCode.Add(AlarmSoundStop);
+
+        foreach (var component in Puzzle)
+            hashCode.Add(component);
+
+        return hashCode.ToHashCode();
+    }
+
+    public bool RecordEqual(ChainedPuzzle? other)
+    {
+        if (other is null || GetType() != other.GetType())
+            return false;
+
+        return PublicAlarmName == other.PublicAlarmName &&
+               TriggerAlarmOnActivate == other.TriggerAlarmOnActivate &&
+               SurvivalWaveSettings == other.SurvivalWaveSettings &&
+               SurvivalWavePopulation == other.SurvivalWavePopulation &&
+               DisableSurvivalWaveOnComplete == other.DisableSurvivalWaveOnComplete &&
+               UseRandomPositions == other.UseRandomPositions &&
+               WantedDistanceFromStartPos.ApproxEqual(other.WantedDistanceFromStartPos) &&
+               WantedDistanceBetweenPuzzleComponents.ApproxEqual(other.WantedDistanceBetweenPuzzleComponents) &&
+               Puzzle.SequenceEqual(other.Puzzle) &&
+               OnlyShowHUDWhenPlayerIsClose == other.OnlyShowHUDWhenPlayerIsClose &&
+               SurvivalWaveAreaDistance == other.SurvivalWaveAreaDistance &&
+               AlarmSoundStart == other.AlarmSoundStart &&
+               AlarmSoundStop == other.AlarmSoundStop;
+    }
 
     public override string ToString()
         => Comment is not null ?
@@ -200,7 +232,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         if (puzzle == None)
             return None;
 
-        var existingPuzzle = Bins.ChainedPuzzles.GetBlock(puzzle);
+        var existingPuzzle = Bins.ChainedPuzzles.GetBlock(puzzle.RecordEqual);
 
         if (existingPuzzle != null)
             return existingPuzzle;

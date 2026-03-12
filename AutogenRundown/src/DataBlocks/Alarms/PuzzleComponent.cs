@@ -112,4 +112,10 @@ public class PuzzleComponent
         PuzzleType = PuzzleType.Sustained_Zone,
         Duration = 120
     };
+
+    public override bool Equals(object? obj)
+        => obj is PuzzleComponent other && PuzzleType == other.PuzzleType;
+
+    public override int GetHashCode()
+        => PuzzleType.GetHashCode();
 }
