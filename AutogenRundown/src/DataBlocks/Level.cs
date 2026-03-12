@@ -71,6 +71,7 @@ public class Level
     /// <summary>
     ///
     /// </summary>
+    [JsonIgnore]
     public List<(double, ZoneNode)> ForwardExtractStartCandidates { get; set; } = new();
 
     [JsonIgnore]
@@ -79,6 +80,7 @@ public class Level
     /// <summary>
     /// Mainly used for calculating what the text should be for extract
     /// </summary>
+    [JsonIgnore]
     public ZoneNode ExtractionZone { get; set; } = new()
     {
         Bulkhead = Bulkhead.Main | Bulkhead.StartingArea,
