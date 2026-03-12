@@ -89,6 +89,23 @@ public enum PuzzleType : uint
 
     #endregion
 
+    #region Travel (Moving) scans
+    /// <summary>
+    /// Moving team scan (require all). Scan circle moves along a walking path.
+    /// </summary>
+    TravelTeam = 22,
+
+    /// <summary>
+    /// Moving solo-capable big scan. Scan circle moves along a walking path.
+    /// </summary>
+    TravelBig = 42,
+
+    /// <summary>
+    /// Moving solo-capable big scan variant A (slow). Scan circle moves along a walking path.
+    /// </summary>
+    TravelBig_A = 52,
+    #endregion
+
     // Checkpoints
     Checkpoint = 19,
 

@@ -113,6 +113,24 @@ public class PuzzleComponent
         Duration = 120
     };
 
+    /// <summary>
+    /// Travel team scan (require all, moving). ~45s duration.
+    /// </summary>
+    public static readonly PuzzleComponent TravelTeam = new()
+    {
+        PuzzleType = PuzzleType.TravelTeam,
+        Duration = 45
+    };
+
+    /// <summary>
+    /// Travel solo-capable big scan (moving). ~30s duration.
+    /// </summary>
+    public static readonly PuzzleComponent TravelBig = new()
+    {
+        PuzzleType = PuzzleType.TravelBig,
+        Duration = 30
+    };
+
     public override bool Equals(object? obj)
         => obj is PuzzleComponent other && PuzzleType == other.PuzzleType;
 

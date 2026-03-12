@@ -345,6 +345,9 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
                 (1.0, 1, AlarmClass2_Surge),
                 (0.7, 1, AlarmClass3_Surge),
                 (1.0, 1, AlarmClass1_Sustained),
+
+                // Travel
+                (0.5, 1, TravelAlarm_Solo_Easy),
             },
 
             ("D", _) => new List<(double chance, int count, ChainedPuzzle puzzle)>
@@ -380,6 +383,10 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
                 (1.0, 2, AlarmClass3_Surge),
                 (0.5, 1, AlarmClass3_Surge_Extreme),
                 (1.0, 2, AlarmClass1_Sustained),
+
+                // Travel
+                (0.7, 1, TravelAlarm_Solo_Normal),
+                (0.5, 1, TravelAlarm_Team_Easy),
             },
 
             ("E", _) => new List<(double chance, int count, ChainedPuzzle puzzle)>
@@ -417,6 +424,10 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
                 (0.7, 1, AlarmClass4_Surge),
                 (0.7, 1, AlarmClass3_Surge_Extreme),
                 (0.5, 1, AlarmClass3_Surge_Overload),
+
+                // Travel
+                (0.8, 1, TravelAlarm_Team_Normal),
+                (0.5, 1, TravelAlarm_Team_Hard),
             },
 
             _ => new List<(double chance, int count, ChainedPuzzle puzzle)>
@@ -1169,6 +1180,78 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.SustainedZone
+        }
+    };
+    #endregion
+
+    #region Alarms: Travel (Moving)
+    /// <summary>
+    /// Easy travel alarm with solo-capable moving scan. Light waves.
+    /// </summary>
+    public static readonly ChainedPuzzle TravelAlarm_Solo_Easy = new()
+    {
+        PublicAlarmName = "Class T-I Alarm",
+        Settings = WaveSettings.Baseline_Easy,
+        Population = WavePopulation.Baseline,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.TravelBig
+        }
+    };
+
+    /// <summary>
+    /// Normal travel alarm with solo-capable moving scan. Medium waves.
+    /// </summary>
+    public static readonly ChainedPuzzle TravelAlarm_Solo_Normal = new()
+    {
+        PublicAlarmName = "Class T-II Alarm",
+        Settings = WaveSettings.Baseline_Normal,
+        Population = WavePopulation.Baseline,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.TravelBig
+        }
+    };
+
+    /// <summary>
+    /// Easy travel alarm with team (require all) moving scan. Light waves.
+    /// </summary>
+    public static readonly ChainedPuzzle TravelAlarm_Team_Easy = new()
+    {
+        PublicAlarmName = "Class T-I Team Alarm",
+        Settings = WaveSettings.Baseline_Easy,
+        Population = WavePopulation.Baseline,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.TravelTeam
+        }
+    };
+
+    /// <summary>
+    /// Normal travel alarm with team (require all) moving scan. Medium waves.
+    /// </summary>
+    public static readonly ChainedPuzzle TravelAlarm_Team_Normal = new()
+    {
+        PublicAlarmName = "Class T-II Team Alarm",
+        Settings = WaveSettings.Baseline_Normal,
+        Population = WavePopulation.Baseline,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.TravelTeam
+        }
+    };
+
+    /// <summary>
+    /// Hard travel alarm with team (require all) moving scan. Heavy waves.
+    /// </summary>
+    public static readonly ChainedPuzzle TravelAlarm_Team_Hard = new()
+    {
+        PublicAlarmName = "Class T-III Team Alarm",
+        Settings = WaveSettings.Baseline_Hard,
+        Population = WavePopulation.Baseline,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.TravelTeam
         }
     };
     #endregion
