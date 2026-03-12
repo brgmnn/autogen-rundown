@@ -215,9 +215,30 @@ public static class Patch_LG_NodeTools
         float currentMinDistance = distanceFromEachother;
         var placedPositions = new List<Vector3>();
         var placedNodes = new List<AIG_INode>();
-        int placed = PlaceCandidates(
+        int placed = 0;
+
+        // When radius=0, game places component 0 at sourcePos (the door).
+        // Seed the anchor so separation is measured from the actual door position.
+        if (atRadiusFromSourcePos <= 0.01f && wantedCount > 0)
+        {
+            AIG_INode nearestNode = candidates[0].node;
+            float nearestDist = float.MaxValue;
+            for (int i = 0; i < candidates.Count; i++)
+            {
+                float d = (candidates[i].node.Position - sourcePos).sqrMagnitude;
+                if (d < nearestDist) { nearestDist = d; nearestNode = candidates[i].node; }
+            }
+            placedPositions.Add(sourcePos);
+            placedNodes.Add(nearestNode);
+            placed = 1;
+
+            Plugin.Logger.LogDebug(
+                $"[NodeTools]   Component 1 (seeded at source): distToSource=0.00");
+        }
+
+        placed += PlaceCandidates(
             candidates, placedPositions, placedNodes,
-            wantedCount, currentMinDistance, sourcePos);
+            wantedCount - placed, currentMinDistance, sourcePos);
 
         // Step 6: Iterative relaxation (#2)
         if (UseIterativeRelaxation && placed < wantedCount)
@@ -506,7 +527,13 @@ public static class Patch_LG_NodeTools
         {
             var scored = scoredNodes[i];
             float distToSource = (scored.node.Position - sourcePos).magnitude;
-            scored.score = Mathf.Abs(distToSource - preferredDistance) / Mathf.Max(preferredDistance, 0.001f)
+            // When radius=0, source distance is irrelevant (first scan is placed at
+            // the door by ChainedPuzzleInstance). Only score by occlusion.
+            float sourceScore = preferredDistance > 0.01f
+                ? Mathf.Abs(distToSource - preferredDistance) / preferredDistance
+                : 0f;
+
+            scored.score = sourceScore
                          + ((float)scored.node.OcclusionScore / 255f) * OcclusionScale;
             scoredNodes[i] = scored;
         }
