@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GTFO.API;
 
 namespace AutogenRundown.Patches.TravelScan;
 
@@ -46,4 +47,16 @@ public static class TravelScanRegistry
 
     public const float StepDistance = 3f;
     public const float EdgeDistance = 2f;
+
+    public static void Setup()
+    {
+        LevelAPI.OnLevelCleanup += Clear;
+    }
+
+    public static void Clear()
+    {
+        SustainedTravelInstances.Clear();
+        PendingSustainedTravel = false;
+        Patch_SustainedTravelReverse.Clear();
+    }
 }
