@@ -42,7 +42,7 @@ public static class Patch_SustainedTravelReverse
 
         bool wasReversing = _reversing.TryGetValue(__instance.Pointer, out var rev) && rev;
 
-        if (status == eBioscanStatus.Scanning && ReadPaused(movable))
+        if ((status == eBioscanStatus.Scanning || status == eBioscanStatus.Waiting) && ReadPaused(movable))
         {
             // Base game paused movement = not all requirements met
             float lerpAmount = ReadLerpAmount(movable);
