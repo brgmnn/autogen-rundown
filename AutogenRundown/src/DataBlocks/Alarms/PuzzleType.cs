@@ -104,6 +104,11 @@ public enum PuzzleType : uint
     /// Moving solo-capable big scan variant A (slow). Scan circle moves along a walking path.
     /// </summary>
     TravelBig_A = 52,
+
+    /// <summary>
+    /// Sustained scan with movement. Uses sustained prefab + runtime CP_BasicMovable injection.
+    /// </summary>
+    SustainedTravel = 100,
     #endregion
 
     // Checkpoints

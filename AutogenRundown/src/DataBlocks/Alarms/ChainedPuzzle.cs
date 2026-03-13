@@ -387,6 +387,9 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
                 // Travel
                 (0.7, 1, TravelAlarm_Solo_Normal),
                 (0.5, 1, TravelAlarm_Team_Easy),
+
+                // Sustained Travel
+                (0.3, 1, TravelAlarm_Sustained_Easy),
             },
 
             ("E", _) => new List<(double chance, int count, ChainedPuzzle puzzle)>
@@ -428,6 +431,10 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
                 // Travel
                 (0.8, 1, TravelAlarm_Team_Normal),
                 (0.5, 1, TravelAlarm_Team_Hard),
+
+                // Sustained Travel
+                (0.5, 1, TravelAlarm_Sustained_Normal),
+                (0.3, 1, TravelAlarm_Sustained_Hard),
             },
 
             _ => new List<(double chance, int count, ChainedPuzzle puzzle)>
@@ -1257,6 +1264,53 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.TravelTeam
+        }
+    };
+    #endregion
+
+    #region Alarms: Sustained Travel
+    /// <summary>
+    /// Easy sustained travel alarm. Sustained scan that moves along a walking path.
+    /// </summary>
+    public static readonly ChainedPuzzle TravelAlarm_Sustained_Easy = new()
+    {
+        PublicAlarmName = "Class ST-I Alarm",
+        Settings = WaveSettings.Baseline_Easy,
+        Population = WavePopulation.Baseline,
+        OnlyShowHUDWhenPlayerIsClose = false,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.SustainedTravel
+        }
+    };
+
+    /// <summary>
+    /// Normal sustained travel alarm. Sustained scan that moves along a walking path.
+    /// </summary>
+    public static readonly ChainedPuzzle TravelAlarm_Sustained_Normal = new()
+    {
+        PublicAlarmName = "Class ST-II Alarm",
+        Settings = WaveSettings.Baseline_Normal,
+        Population = WavePopulation.Baseline,
+        OnlyShowHUDWhenPlayerIsClose = false,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.SustainedTravel
+        }
+    };
+
+    /// <summary>
+    /// Hard sustained travel alarm. Sustained scan that moves along a walking path.
+    /// </summary>
+    public static readonly ChainedPuzzle TravelAlarm_Sustained_Hard = new()
+    {
+        PublicAlarmName = "Class ST-III Alarm",
+        Settings = WaveSettings.Baseline_Hard,
+        Population = WavePopulation.Baseline,
+        OnlyShowHUDWhenPlayerIsClose = false,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.SustainedTravel
         }
     };
     #endregion

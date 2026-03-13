@@ -131,6 +131,15 @@ public class PuzzleComponent
         Duration = 30
     };
 
+    /// <summary>
+    /// Sustained travel scan (moving sustained). ~120s duration.
+    /// </summary>
+    public static readonly PuzzleComponent SustainedTravel = new()
+    {
+        PuzzleType = PuzzleType.SustainedTravel,
+        Duration = 120
+    };
+
     public override bool Equals(object? obj)
         => obj is PuzzleComponent other && PuzzleType == other.PuzzleType;
 

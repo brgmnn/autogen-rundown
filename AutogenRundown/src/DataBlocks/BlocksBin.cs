@@ -56,6 +56,8 @@ public static class Bins
     public static BlocksBin<WavePopulation> WavePopulations { get; private set; }
         = new BlocksBin<WavePopulation>();
     public static LazyBlocksBin<WaveSettings> WaveSettings { get; private set; } = new();
+    public static BlocksBin<ChainedPuzzleType> ChainedPuzzleTypes { get; private set; }
+        = new BlocksBin<ChainedPuzzleType>();
     public static BlocksBin<GlobalWaveSettings> GlobalWaveSettings { get; private set; }
         = new BlocksBin<GlobalWaveSettings>();
 
@@ -79,6 +81,7 @@ public static class Bins
         EnemyPopulation.Setup();
         WavePopulation.Setup();
         Alarms.WaveSettings.Setup();
+        ChainedPuzzleType.Setup();
 
         ComplexResourceSet.SaveStatic();
         MiningMarker.SaveStatic();
@@ -131,6 +134,7 @@ public static class Bins
         WardenObjectives.Save("WardenObjective");
         WavePopulations.Save("SurvivalWavePopulation");
         WaveSettings.Save("SurvivalWaveSettings");
+        ChainedPuzzleTypes.Save("ChainedPuzzleType");
 
         // Mods
         GlobalWaveSettings.Save(
