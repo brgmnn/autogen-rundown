@@ -37,15 +37,17 @@ public static class Patch_SustainedTravelReverse
             return;
 
         var movable = __instance.m_movingComp;
+
         if (movable == null)
             return;
 
-        bool wasReversing = _reversing.TryGetValue(__instance.Pointer, out var rev) && rev;
+        var wasReversing = _reversing.TryGetValue(__instance.Pointer, out var rev) && rev;
 
         if ((status == eBioscanStatus.Scanning || status == eBioscanStatus.Waiting) && ReadPaused(movable))
         {
             // Base game paused movement = not all requirements met
-            float lerpAmount = ReadLerpAmount(movable);
+            var lerpAmount = ReadLerpAmount(movable);
+
             if (lerpAmount > 0f)
             {
                 if (!wasReversing)
@@ -81,41 +83,43 @@ public static class Patch_SustainedTravelReverse
             return;
 
         var movable = __instance.m_movingComp;
+
         if (movable == null)
             return;
 
-        float lerpAmount = ReadLerpAmount(movable);
+        var lerpAmount = ReadLerpAmount(movable);
+
         if (lerpAmount <= 0f)
             return;
 
-        int currentIndex = (int)lerpAmount;
-        int nextIndex = currentIndex + 1;
-        int amountOfPositions = movable.AmountOfPositions;
+        var currentIndex = (int)lerpAmount;
+        var nextIndex = currentIndex + 1;
+        var amountOfPositions = movable.AmountOfPositions;
 
         if (nextIndex >= amountOfPositions)
             nextIndex = 0;
 
         var positions = movable.ScanPositions;
-        float segmentDistance = Vector3.Distance(
+        var segmentDistance = Vector3.Distance(
             positions[currentIndex], positions[nextIndex]);
 
         if (segmentDistance < 0.001f)
             return;
 
-        float delta = Clock.Delta * TravelScanRegistry.SustainedTravelReverseSpeed / segmentDistance;
+        var delta = Clock.Delta * TravelScanRegistry.SustainedTravelReverseSpeed / segmentDistance;
         lerpAmount -= delta;
 
         if (lerpAmount < 0f)
             lerpAmount = 0f;
 
         // Recompute position from updated lerp
-        int newCurrentIndex = (int)lerpAmount;
-        int newNextIndex = newCurrentIndex + 1;
+        var newCurrentIndex = (int)lerpAmount;
+        var newNextIndex = newCurrentIndex + 1;
 
         if (newNextIndex >= amountOfPositions)
             newNextIndex = 0;
 
-        float t = lerpAmount % 1f;
+        var t = lerpAmount % 1f;
         movable.transform.position = Vector3.Lerp(
             positions[newCurrentIndex], positions[newNextIndex], t);
 
@@ -128,10 +132,12 @@ public static class Patch_SustainedTravelReverse
     private static unsafe float ReadLerpAmount(CP_BasicMovable movable)
     {
         EnsureOffsets();
+
         if (_lerpAmountOffset < 0)
             return 0f;
 
         var ptr = movable.Pointer;
+
         if (ptr == IntPtr.Zero)
             return 0f;
 
@@ -144,6 +150,7 @@ public static class Patch_SustainedTravelReverse
             return;
 
         var ptr = movable.Pointer;
+
         if (ptr == IntPtr.Zero)
             return;
 
@@ -156,6 +163,7 @@ public static class Patch_SustainedTravelReverse
             return;
 
         var ptr = movable.Pointer;
+
         if (ptr == IntPtr.Zero)
             return;
 
@@ -166,10 +174,12 @@ public static class Patch_SustainedTravelReverse
     private static unsafe bool ReadPaused(CP_BasicMovable movable)
     {
         EnsureOffsets();
+
         if (_currentStateOffset < 0)
             return false;
 
         var ptr = movable.Pointer;
+
         if (ptr == IntPtr.Zero)
             return false;
 
@@ -180,10 +190,12 @@ public static class Patch_SustainedTravelReverse
     private static unsafe void WriteReset(CP_BasicMovable movable, bool value)
     {
         EnsureOffsets();
+
         if (_resetOffset < 0)
             return;
 
         var ptr = movable.Pointer;
+
         if (ptr == IntPtr.Zero)
             return;
 
@@ -200,6 +212,7 @@ public static class Patch_SustainedTravelReverse
         try
         {
             var il2cppClass = Il2CppClassPointerStore<CP_BasicMovable>.NativeClassPtr;
+
             if (il2cppClass == IntPtr.Zero)
             {
                 Plugin.Logger.LogWarning("[SustainedTravel] Could not get IL2CPP class pointer for reverse offsets");
@@ -223,6 +236,7 @@ public static class Patch_SustainedTravelReverse
     private static int GetFieldOffset(IntPtr classPtr, string fieldName)
     {
         var fieldPtr = IL2CPP.il2cpp_class_get_field_from_name(classPtr, fieldName);
+
         if (fieldPtr == IntPtr.Zero)
         {
             Plugin.Logger.LogWarning($"[SustainedTravel] Field '{fieldName}' not found");

@@ -59,7 +59,7 @@ public static class Patch_SetupMovement
 
         // Set the scan positions via the interface property
         var il2cppPositions = new Il2CppSystem.Collections.Generic.List<Vector3>();
-        for (int i = 0; i < pathPositions.Count; i++)
+        for (var i = 0; i < pathPositions.Count; i++)
             il2cppPositions.Add(pathPositions[i]);
 
         movable.ScanPositions = il2cppPositions;
