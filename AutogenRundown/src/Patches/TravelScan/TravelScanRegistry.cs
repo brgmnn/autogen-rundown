@@ -23,6 +23,6 @@ public static class TravelScanRegistry
         60, // SecurityScan_Big_Movable_FadeIn_Slow
     };
 
-    public const float StepDistance = 4f;
-    public const float EdgeDistance = 1f;
+    public const float StepDistance = 3f;
+    public const float EdgeDistance = 2f;
 }
