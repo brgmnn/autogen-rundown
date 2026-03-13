@@ -50,6 +50,7 @@ public static class Patch_CP_Bioscan_Core_Setup
     private static int _amountOfPositionsOffset = -1;
     private static int _typeOfMovementOffset = -1;
     private static int _movementSpeedOffset = -1;
+    private static int _onlyMoveWhenScanningOffset = -1;
     private static bool _offsetsResolved;
 
     static void Prefix(CP_Bioscan_Core __instance)
@@ -85,7 +86,7 @@ public static class Patch_CP_Bioscan_Core_Setup
                 _offsetsResolved = true;
             }
 
-            if (_amountOfPositionsOffset < 0 || _typeOfMovementOffset < 0 || _movementSpeedOffset < 0)
+            if (_amountOfPositionsOffset < 0 || _typeOfMovementOffset < 0 || _movementSpeedOffset < 0 || _onlyMoveWhenScanningOffset < 0)
                 return false;
 
             var objectPtr = movable.Pointer;
@@ -100,6 +101,9 @@ public static class Patch_CP_Bioscan_Core_Setup
 
             // m_movementSpeed (float)
             *(float*)(objectPtr + _movementSpeedOffset) = TravelScanRegistry.SustainedTravelSpeed;
+
+            // m_onlyMoveWhenScanning (bool) — must be true for CP_Bioscan_Core to resume movement
+            *(bool*)(objectPtr + _onlyMoveWhenScanningOffset) = true;
 
             return true;
         }
@@ -124,10 +128,12 @@ public static class Patch_CP_Bioscan_Core_Setup
             _amountOfPositionsOffset = GetFieldOffset(il2cppClass, "m_amountOfPositions");
             _typeOfMovementOffset = GetFieldOffset(il2cppClass, "m_typeOfMovement");
             _movementSpeedOffset = GetFieldOffset(il2cppClass, "m_movementSpeed");
+            _onlyMoveWhenScanningOffset = GetFieldOffset(il2cppClass, "m_onlyMoveWhenScanning");
 
             Plugin.Logger.LogDebug(
                 $"[SustainedTravel] Field offsets: m_amountOfPositions={_amountOfPositionsOffset}, " +
-                $"m_typeOfMovement={_typeOfMovementOffset}, m_movementSpeed={_movementSpeedOffset}");
+                $"m_typeOfMovement={_typeOfMovementOffset}, m_movementSpeed={_movementSpeedOffset}, " +
+                $"m_onlyMoveWhenScanning={_onlyMoveWhenScanningOffset}");
         }
         catch (Exception ex)
         {
