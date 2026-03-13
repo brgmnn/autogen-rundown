@@ -21,6 +21,7 @@ public static class Patch_SetupMovement
     // Cached IL2CPP field offsets, resolved once at first use
     private static int _amountOfPositionsOffset = -1;
     private static int _typeOfMovementOffset = -1;
+    private static int _movementSpeedOffset = -1;
     private static bool _offsetsResolved;
 
     static bool Prefix(GameObject gameObject, LG_Area sourceArea)
@@ -36,6 +37,8 @@ public static class Patch_SetupMovement
         // Only override movable scans (prefabs with movement configured)
         if (!basicMovable.IsMoveConfigured)
             return true;
+
+        LogVanillaSpeed(basicMovable);
 
         Plugin.Logger.LogDebug(
             $"[TravelScan] Generating travel path for movable in area {sourceArea.name}");
@@ -126,15 +129,36 @@ public static class Patch_SetupMovement
 
             _amountOfPositionsOffset = GetFieldOffset(il2cppClass, "m_amountOfPositions");
             _typeOfMovementOffset = GetFieldOffset(il2cppClass, "m_typeOfMovement");
+            _movementSpeedOffset = GetFieldOffset(il2cppClass, "m_movementSpeed");
 
             Plugin.Logger.LogDebug(
                 $"[TravelScan] Field offsets: m_amountOfPositions={_amountOfPositionsOffset}, " +
-                $"m_typeOfMovement={_typeOfMovementOffset}");
+                $"m_typeOfMovement={_typeOfMovementOffset}, " +
+                $"m_movementSpeed={_movementSpeedOffset}");
         }
         catch (Exception ex)
         {
             Plugin.Logger.LogWarning($"[TravelScan] Failed to resolve field offsets: {ex.Message}");
         }
+    }
+
+    private static unsafe void LogVanillaSpeed(CP_BasicMovable movable)
+    {
+        if (!_offsetsResolved)
+        {
+            ResolveFieldOffsets();
+            _offsetsResolved = true;
+        }
+
+        if (_movementSpeedOffset < 0)
+            return;
+
+        var ptr = movable.Pointer;
+        if (ptr == IntPtr.Zero)
+            return;
+
+        float speed = *(float*)(ptr + _movementSpeedOffset);
+        Plugin.Logger.LogDebug($"[TravelScan] Vanilla m_movementSpeed = {speed}");
     }
 
     private static int GetFieldOffset(IntPtr classPtr, string fieldName)
