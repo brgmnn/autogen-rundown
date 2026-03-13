@@ -113,6 +113,59 @@ public partial record LevelLayout
 
     #endregion
 
+    #region Hard Alarm
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="start">Node to start in. Note this may convert the node to a hub</param>
+    /// <param name="population">
+    ///     Wave population to use, if null will be determined automatically
+    /// </param>
+    /// <param name="settings">
+    ///     Wave settings to use, if null will be determined automatically
+    /// </param>
+    /// <returns></returns>
+    public (ZoneNode, Zone) AddHardAlarm(
+        ZoneNode start,
+        WavePopulation? population = null,
+        WaveSettings? settings = null)
+    {
+        var (end, endZone) = AddZone(start, new ZoneNode());
+
+        // TODO: implement this
+
+        return (end, endZone);
+    }
+
+    #endregion
+
+    #region Travel Scan Alarms
+
+    /// <summary>
+    /// Adds a travel scan
+    /// </summary>
+    /// <param name="start">Node to start in. Note this may convert the node to a hub</param>
+    /// <param name="population">
+    ///     Wave population to use, if null will be determined automatically
+    /// </param>
+    /// <param name="settings">
+    ///     Wave settings to use, if null will be determined automatically
+    /// </param>
+    public (ZoneNode, Zone) AddTravelScanAlarm(
+        ZoneNode start,
+        WavePopulation? population = null,
+        WaveSettings? settings = null)
+    {
+        var (end, endZone) = AddZone(start, new ZoneNode());
+
+        // TODO: implement this
+
+        return (end, endZone);
+    }
+
+    #endregion
+
     #region Apex Alarms
     /// <summary>
     /// Add a BIG alarm in a big room that will be challenging to beat.

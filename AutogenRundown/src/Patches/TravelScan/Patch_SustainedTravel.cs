@@ -21,7 +21,7 @@ public static class Patch_ChainedPuzzleInstance_Setup
         if (data?.ChainedPuzzle == null)
             return;
 
-        for (int i = 0; i < data.ChainedPuzzle.Count; i++)
+        for (var i = 0; i < data.ChainedPuzzle.Count; i++)
         {
             if (TravelScanRegistry.SustainedTravelTypes.Contains(data.ChainedPuzzle[i].PuzzleType))
             {

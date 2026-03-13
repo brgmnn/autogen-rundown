@@ -80,7 +80,7 @@ public static class TravelPathGenerator
 
         if (positions.Count > 0)
         {
-            float closingDist = (positions[positions.Count - 1] - sourcePos).magnitude;
+            var closingDist = (positions[positions.Count - 1] - sourcePos).magnitude;
             Plugin.Logger.LogDebug(
                 $"[TravelPath] Loop closing distance: {closingDist:F2}m");
         }
@@ -99,7 +99,7 @@ public static class TravelPathGenerator
             nodes = nodeCluster.m_nodes;
 
         var candidates = new List<AIG_INode>();
-        for (int i = 0; i < nodes.Count; i++)
+        for (var i = 0; i < nodes.Count; i++)
         {
             var node = nodes[i];
             if (node.ClusterID == clusterId && node.Links.Count >= 4)
@@ -119,20 +119,20 @@ public static class TravelPathGenerator
         // Sort by Euclidean distance from source (descending) and take top pool
         candidates.Sort((a, b) =>
         {
-            float da = (a.Position - sourcePos).sqrMagnitude;
-            float db = (b.Position - sourcePos).sqrMagnitude;
+            var da = (a.Position - sourcePos).sqrMagnitude;
+            var db = (b.Position - sourcePos).sqrMagnitude;
             return db.CompareTo(da); // descending
         });
 
-        int poolSize = Mathf.Min(CandidatePoolSize, candidates.Count);
+        var poolSize = Mathf.Min(CandidatePoolSize, candidates.Count);
 
         // Pick dest1: highest NavMesh distance from source
-        Vector3 dest1 = candidates[0].Position;
-        float bestDist1 = 0f;
+        var dest1 = candidates[0].Position;
+        var bestDist1 = 0f;
 
-        for (int i = 0; i < poolSize; i++)
+        for (var i = 0; i < poolSize; i++)
         {
-            float navDist = GetNavMeshDistance(sourcePos, candidates[i].Position);
+            var navDist = GetNavMeshDistance(sourcePos, candidates[i].Position);
             if (navDist > bestDist1)
             {
                 bestDist1 = navDist;
@@ -141,20 +141,20 @@ public static class TravelPathGenerator
         }
 
         // Pick dest2: highest min(navDist to source, navDist to dest1)
-        Vector3 dest2 = candidates[0].Position;
-        float bestDist2 = 0f;
+        var dest2 = candidates[0].Position;
+        var bestDist2 = 0f;
 
-        for (int i = 0; i < poolSize; i++)
+        for (var i = 0; i < poolSize; i++)
         {
             var pos = candidates[i].Position;
             // Skip if too close to dest1
             if ((pos - dest1).sqrMagnitude < 1f)
                 continue;
 
-            float distToSource = GetNavMeshDistance(sourcePos, pos);
-            float distToDest1 = GetNavMeshDistance(dest1, pos);
+            var distToSource = GetNavMeshDistance(sourcePos, pos);
+            var distToDest1 = GetNavMeshDistance(dest1, pos);
             // Maximize the minimum leg length to form a well-spread triangle
-            float score = Mathf.Min(distToSource, distToDest1);
+            var score = Mathf.Min(distToSource, distToDest1);
 
             if (score > bestDist2)
             {
@@ -181,8 +181,8 @@ public static class TravelPathGenerator
             && navPath.status == NavMeshPathStatus.PathComplete
             && navPath.corners.Length >= 2)
         {
-            int startIdx = path.Count == 0 ? 0 : 1; // skip first corner on subsequent legs
-            for (int i = startIdx; i < navPath.corners.Length; i++)
+            var startIdx = path.Count == 0 ? 0 : 1; // skip first corner on subsequent legs
+            for (var i = startIdx; i < navPath.corners.Length; i++)
                 path.Add(navPath.corners[i]);
         }
         else
@@ -204,17 +204,17 @@ public static class TravelPathGenerator
         if (corners.Count < 2)
             return resampled;
 
-        float remaining = 0f;
+        var remaining = 0f;
         var prev = corners[0];
 
         // Add the starting point
         resampled.Add(PullAwayFromEdge(prev, TravelScanRegistry.EdgeDistance));
 
-        for (int i = 1; i < corners.Count; i++)
+        for (var i = 1; i < corners.Count; i++)
         {
             var next = corners[i];
             var segDir = next - prev;
-            float segLen = segDir.magnitude;
+            var segLen = segDir.magnitude;
 
             if (segLen < 0.001f)
             {
@@ -223,7 +223,7 @@ public static class TravelPathGenerator
             }
 
             segDir /= segLen; // normalize
-            float walked = remaining;
+            var walked = remaining;
 
             while (walked + stepDistance <= segLen)
             {
@@ -250,9 +250,9 @@ public static class TravelPathGenerator
             && path.status == NavMeshPathStatus.PathComplete
             && path.corners.Length > 1)
         {
-            float dist = 0f;
+            var dist = 0f;
             var corners = path.corners;
-            for (int i = 1; i < corners.Length; i++)
+            for (var i = 1; i < corners.Length; i++)
                 dist += (corners[i] - corners[i - 1]).magnitude;
             return dist;
         }
