@@ -73,6 +73,8 @@ public static class Patch_CP_Bioscan_Core_Setup
 
         __instance.m_movingComp = movable;
 
+        TravelScanRegistry.SustainedTravelInstances.Add(__instance.Pointer);
+
         Plugin.Logger.LogDebug("[SustainedTravel] CP_BasicMovable injected and assigned to m_movingComp");
     }
 

@@ -38,8 +38,6 @@ public static class Patch_SetupMovement
         if (!basicMovable.IsMoveConfigured)
             return true;
 
-        LogVanillaSpeed(basicMovable);
-
         Plugin.Logger.LogDebug(
             $"[TravelScan] Generating travel path for movable in area {sourceArea.name}");
 
@@ -140,25 +138,6 @@ public static class Patch_SetupMovement
         {
             Plugin.Logger.LogWarning($"[TravelScan] Failed to resolve field offsets: {ex.Message}");
         }
-    }
-
-    private static unsafe void LogVanillaSpeed(CP_BasicMovable movable)
-    {
-        if (!_offsetsResolved)
-        {
-            ResolveFieldOffsets();
-            _offsetsResolved = true;
-        }
-
-        if (_movementSpeedOffset < 0)
-            return;
-
-        var ptr = movable.Pointer;
-        if (ptr == IntPtr.Zero)
-            return;
-
-        float speed = *(float*)(ptr + _movementSpeedOffset);
-        Plugin.Logger.LogDebug($"[TravelScan] Vanilla m_movementSpeed = {speed}");
     }
 
     private static int GetFieldOffset(IntPtr classPtr, string fieldName)

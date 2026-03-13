@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace AutogenRundown.Patches.TravelScan;
@@ -35,7 +36,13 @@ public static class TravelScanRegistry
     /// </summary>
     public static bool PendingSustainedTravel;
 
-    public const float SustainedTravelSpeed = 1.0f;
+    /// <summary>
+    /// Tracks CP_Bioscan_Core IL2CPP pointers that are sustained travel instances.
+    /// </summary>
+    public static readonly HashSet<IntPtr> SustainedTravelInstances = new();
+
+    public const float SustainedTravelSpeed = 2.0f;
+    public const float SustainedTravelReverseSpeed = 1.0f;
 
     public const float StepDistance = 3f;
     public const float EdgeDistance = 2f;
