@@ -126,14 +126,78 @@ public partial record LevelLayout
     ///     Wave settings to use, if null will be determined automatically
     /// </param>
     /// <returns></returns>
-    public (ZoneNode, Zone) AddHardAlarm(
+    public (ZoneNode, Zone) AddHardAlarmZone(
         ZoneNode start,
         WavePopulation? population = null,
         WaveSettings? settings = null)
     {
+        start = planner.UpdateNode(start with { MaxConnections = 3 });
+        var startZone = planner.GetZone(start)!;
+        startZone.GenHubGeomorph(level.Complex);
+
         var (end, endZone) = AddZone(start, new ZoneNode());
 
-        // TODO: implement this
+        startZone.AmmoPacks += 2.0;
+        startZone.ToolPacks += 1.0;
+        if (startZone.InFog)
+            startZone.ConsumableDistributionInZone = ConsumableDistribution.Alarms_FogRepellers.PersistentId;
+
+        var puzzle = director.Tier switch
+        {
+            "A" => ChainedPuzzle.AlarmClass3_Mixed,
+            "B" => ChainedPuzzle.AlarmClass4_Mixed,
+            "C" => ChainedPuzzle.AlarmClass5_Mixed,
+            "D" => ChainedPuzzle.AlarmClass6_Mixed,
+            "E" => ChainedPuzzle.AlarmClass7_Mixed,
+            _   => ChainedPuzzle.AlarmClass5_Mixed,
+        };
+
+        population ??= WavePopulation.Baseline;
+        if (level.Settings.HasShadows())
+            population = Generator.Flip(0.6) ? WavePopulation.OnlyShadows : WavePopulation.Baseline_Shadows;
+        if (level.Settings.HasChargers())
+            population = WavePopulation.Baseline_Chargers;
+        else if (level.Settings.HasFlyers())
+            population = WavePopulation.Baseline_Flyers;
+
+        endZone.SecurityGateToEnter = SecurityGate.Security;
+        endZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle with
+        {
+            Population = population ?? puzzle.Population,
+            Settings = settings ?? puzzle.Settings
+        });
+
+        var clearTime = puzzle.ClearTime();
+
+        // ~35% through: warning sound + message
+        var surprise1 = clearTime * 0.35;
+        endZone.EventsOnDoorScanStart
+            .AddSound(Sound.SheetMetalLand, surprise1)
+            .AddMessage(":://WARNING - Biosign spike detected", surprise1 + 2.0);
+
+        // ~40% through: surprise wave spawn
+        var surpriseWaveSettings = director.Tier switch
+        {
+            "A" => WaveSettings.SingleWave_12pts,
+            "B" => WaveSettings.SingleWave_16pts,
+            "C" => WaveSettings.SingleWave_20pts,
+            "D" => WaveSettings.SingleWave_20pts,
+            "E" => WaveSettings.SingleWave_28pts,
+            _   => WaveSettings.SingleWave_16pts,
+        };
+        endZone.EventsOnDoorScanStart.AddSpawnWave(
+            new GenericWave { Settings = surpriseWaveSettings, Population = population },
+            surprise1 + 5.0);
+
+        // ~70% through: lights off + another wave
+        var surprise2 = clearTime * 0.70;
+        endZone.EventsOnDoorScanStart
+            .AddLightsOff(surprise2)
+            .AddSpawnWave(
+                new GenericWave { Settings = surpriseWaveSettings, Population = population },
+                surprise2 + 3.0);
+        endZone.EventsOnDoorScanDone
+            .AddLightsOn(1.0);
 
         return (end, endZone);
     }
@@ -157,9 +221,39 @@ public partial record LevelLayout
         WavePopulation? population = null,
         WaveSettings? settings = null)
     {
+        start = planner.UpdateNode(start with { MaxConnections = 3 });
+        var startZone = planner.GetZone(start)!;
+        startZone.GenHubGeomorph(level.Complex);
+
         var (end, endZone) = AddZone(start, new ZoneNode());
 
-        // TODO: implement this
+        startZone.AmmoPacks += 2.0;
+        startZone.ToolPacks += 1.0;
+
+        var puzzle = director.Tier switch
+        {
+            "A" => ChainedPuzzle.TravelAlarm_Solo_Easy,
+            "B" => ChainedPuzzle.TravelAlarm_Solo_Normal,
+            "C" => ChainedPuzzle.TravelAlarm_Team_Easy,
+            "D" => ChainedPuzzle.TravelAlarm_Team_Normal,
+            "E" => ChainedPuzzle.TravelAlarm_Team_Hard,
+            _   => ChainedPuzzle.TravelAlarm_Team_Easy,
+        };
+
+        population ??= WavePopulation.Baseline;
+        if (level.Settings.HasShadows())
+            population = Generator.Flip(0.6) ? WavePopulation.OnlyShadows : WavePopulation.Baseline_Shadows;
+        if (level.Settings.HasChargers())
+            population = WavePopulation.Baseline_Chargers;
+        else if (level.Settings.HasFlyers())
+            population = WavePopulation.Baseline_Flyers;
+
+        endZone.SecurityGateToEnter = SecurityGate.Security;
+        endZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle with
+        {
+            Population = population ?? puzzle.Population,
+            Settings = settings ?? puzzle.Settings
+        });
 
         return (end, endZone);
     }
@@ -292,9 +386,88 @@ public partial record LevelLayout
     /// Works somewhat like adding an Apex alarm except here we look to add a pretty difficult
     /// alarm from the scan list
     /// </summary>
-    public void AddHardAlarm()
+    public void AddHardAlarm(
+        ZoneNode lockedNode,
+        WavePopulation? population = null,
+        WaveSettings? settings = null)
     {
+        var lockedZone = planner.GetZone(lockedNode);
+        var setupish = planner.GetBuildFrom(lockedNode);
 
+        if (setupish == null)
+        {
+            Plugin.Logger.LogWarning($"AddHardAlarm() returned early: missing setup zone for locked={lockedNode}");
+            return;
+        }
+
+        var setupNode = (ZoneNode)setupish;
+        var setupZone = planner.GetZone(setupNode);
+
+        if (lockedZone == null || setupZone == null)
+        {
+            Plugin.Logger.LogWarning($"AddHardAlarm() returned early: missing zones locked={lockedZone}");
+            return;
+        }
+
+        setupNode = planner.UpdateNode(setupNode with { MaxConnections = 3 });
+        setupZone.GenHubGeomorph(level.Complex);
+
+        var puzzle = director.Tier switch
+        {
+            "A" => ChainedPuzzle.AlarmClass3_Mixed,
+            "B" => ChainedPuzzle.AlarmClass4_Mixed,
+            "C" => ChainedPuzzle.AlarmClass5_Mixed,
+            "D" => ChainedPuzzle.AlarmClass6_Mixed,
+            "E" => ChainedPuzzle.AlarmClass7_Mixed,
+            _   => ChainedPuzzle.AlarmClass5_Mixed,
+        };
+
+        if (population == null)
+        {
+            population = WavePopulation.Baseline;
+            if (level.Settings.HasShadows())
+                population = Generator.Flip(0.6) ? WavePopulation.OnlyShadows : WavePopulation.Baseline_Shadows;
+            if (level.Settings.HasChargers())
+                population = WavePopulation.Baseline_Chargers;
+            else if (level.Settings.HasFlyers())
+                population = WavePopulation.Baseline_Flyers;
+        }
+
+        lockedZone.SecurityGateToEnter = SecurityGate.Security;
+        lockedZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle with
+        {
+            Population = population ?? puzzle.Population,
+            Settings = settings ?? puzzle.Settings
+        });
+
+        var clearTime = puzzle.ClearTime();
+
+        var surprise1 = clearTime * 0.35;
+        lockedZone.EventsOnDoorScanStart
+            .AddSound(Sound.SheetMetalLand, surprise1)
+            .AddMessage(":://WARNING - Biosign spike detected", surprise1 + 2.0);
+
+        var surpriseWaveSettings = director.Tier switch
+        {
+            "A" => WaveSettings.SingleWave_12pts,
+            "B" => WaveSettings.SingleWave_16pts,
+            "C" => WaveSettings.SingleWave_20pts,
+            "D" => WaveSettings.SingleWave_20pts,
+            "E" => WaveSettings.SingleWave_28pts,
+            _   => WaveSettings.SingleWave_16pts,
+        };
+        lockedZone.EventsOnDoorScanStart.AddSpawnWave(
+            new GenericWave { Settings = surpriseWaveSettings, Population = population },
+            surprise1 + 5.0);
+
+        var surprise2 = clearTime * 0.70;
+        lockedZone.EventsOnDoorScanStart
+            .AddLightsOff(surprise2)
+            .AddSpawnWave(
+                new GenericWave { Settings = surpriseWaveSettings, Population = population },
+                surprise2 + 3.0);
+        lockedZone.EventsOnDoorScanDone
+            .AddLightsOn(1.0);
     }
     #endregion
 
