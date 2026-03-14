@@ -413,6 +413,7 @@ public record WaveSettings : DataBlock<WaveSettings>
         Bins.WaveSettings.AddBlock(Baseline_Hard);
         Bins.WaveSettings.AddBlock(Baseline_VeryHard);
         Bins.WaveSettings.AddBlock(MiniBoss_Hard);
+        Bins.WaveSettings.AddBlock(Surge_Easy);
 
         // Error
         Bins.WaveSettings.AddBlock(Error_Easy);
@@ -582,6 +583,25 @@ public record WaveSettings : DataBlock<WaveSettings>
         PopulationPointsPerWaveEnd = 28,
         PopulationRampOverTime = 100,
         Name = "MiniBoss_Hard"
+    };
+    #endregion
+
+    #region Surge_Easy
+    /// <summary>
+    /// Surge-like wave setting for travel scan alarms. Uses the same population filter as
+    /// Baseline_Normal (excludes Weakling and Boss) with Baseline_VeryHard population points
+    /// and ramp, but with a much shorter WavePauseMax (5s vs default 30s) for relentless
+    /// pressure through volume of standard/special/miniboss enemies.
+    /// </summary>
+    public static WaveSettings Surge_Easy = new()
+    {
+        PopulationFilter = { Enemies.EnemyType.Weakling, Enemies.EnemyType.Boss },
+        FilterType = PopulationFilterType.Exclude,
+        PopulationPointsPerWaveStart = 25,
+        PopulationPointsPerWaveEnd = 30,
+        PopulationRampOverTime = 45,
+        WavePauseMax = 5,
+        Name = "Surge_Easy"
     };
     #endregion
 
