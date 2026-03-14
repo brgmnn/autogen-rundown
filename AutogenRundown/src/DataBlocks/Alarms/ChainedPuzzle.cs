@@ -1192,9 +1192,26 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     #endregion
 
     #region Alarms: Travel (Moving)
+
+    /// <summary>
+    /// Base travel team alarm scan
+    /// </summary>
+    public static readonly ChainedPuzzle TravelAlarm_Team = new()
+    {
+        PublicAlarmName = "Class T Alarm",
+        Settings = WaveSettings.Baseline_Easy,
+        Population = WavePopulation.Baseline,
+        OnlyShowHUDWhenPlayerIsClose = false,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.TravelTeam_MediumGreen
+        }
+    };
+
     /// <summary>
     /// Easy travel alarm with solo-capable moving scan. Light waves.
     /// </summary>
+    [Obsolete("Use TravelAlarm_Team")]
     public static readonly ChainedPuzzle TravelAlarm_Solo_Easy = new()
     {
         PublicAlarmName = "Class T-I Alarm",
@@ -1210,6 +1227,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     /// <summary>
     /// Normal travel alarm with solo-capable moving scan. Medium waves.
     /// </summary>
+    [Obsolete("Use TravelAlarm_Team")]
     public static readonly ChainedPuzzle TravelAlarm_Solo_Normal = new()
     {
         PublicAlarmName = "Class T-II Alarm",
@@ -1225,6 +1243,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     /// <summary>
     /// Easy travel alarm with team (require all) moving scan. Light waves.
     /// </summary>
+    [Obsolete("Use TravelAlarm_Team")]
     public static readonly ChainedPuzzle TravelAlarm_Team_Easy = new()
     {
         PublicAlarmName = "Class T-I Team Alarm",
@@ -1240,6 +1259,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     /// <summary>
     /// Normal travel alarm with team (require all) moving scan. Medium waves.
     /// </summary>
+    [Obsolete("Use TravelAlarm_Team")]
     public static readonly ChainedPuzzle TravelAlarm_Team_Normal = new()
     {
         PublicAlarmName = "Class T-II Team Alarm",
@@ -1255,6 +1275,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     /// <summary>
     /// Hard travel alarm with team (require all) moving scan. Heavy waves.
     /// </summary>
+    [Obsolete("Use TravelAlarm_Team")]
     public static readonly ChainedPuzzle TravelAlarm_Team_Hard = new()
     {
         PublicAlarmName = "Class T-III Team Alarm",
@@ -1304,7 +1325,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     /// </summary>
     public static readonly ChainedPuzzle TravelAlarm_Sustained_Hard = new()
     {
-        PublicAlarmName = "Class ST-III Alarm",
+        PublicAlarmName = "Class S T Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
         OnlyShowHUDWhenPlayerIsClose = false,

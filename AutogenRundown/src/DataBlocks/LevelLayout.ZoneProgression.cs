@@ -230,14 +230,47 @@ public partial record LevelLayout
         startZone.AmmoPacks += 2.0;
         startZone.ToolPacks += 1.0;
 
-        var puzzle = director.Tier switch
+        var scanOptions = (level.Tier, director.Bulkhead) switch
         {
-            "A" => ChainedPuzzle.TravelAlarm_Solo_Easy,
-            "B" => ChainedPuzzle.TravelAlarm_Solo_Normal,
-            "C" => ChainedPuzzle.TravelAlarm_Team_Easy,
-            "D" => ChainedPuzzle.TravelAlarm_Team_Normal,
-            "E" => ChainedPuzzle.TravelAlarm_Team_Hard,
-            _   => ChainedPuzzle.TravelAlarm_Team_Easy,
+            ("A", _) => new List<(double, PuzzleComponent)>
+            {
+                (0.66, PuzzleComponent.TravelTeam_Short),
+                (0.33, PuzzleComponent.TravelTeam_MediumGreen)
+            },
+
+            ("B", _) => new List<(double, PuzzleComponent)>
+            {
+                (0.33, PuzzleComponent.TravelTeam_Short),
+                (0.66, PuzzleComponent.TravelTeam_MediumGreen)
+            },
+
+            ("C", _) => new List<(double, PuzzleComponent)>
+            {
+                (1.0, PuzzleComponent.TravelTeam_MediumGreen),
+                (1.0, PuzzleComponent.TravelTeam_LongGreen)
+            },
+
+            ("D", _) => new List<(double, PuzzleComponent)>
+            {
+                (1.0, PuzzleComponent.TravelTeam_LongGreen),
+                (1.0, PuzzleComponent.SustainedTravel)
+            },
+
+            ("E", _) => new List<(double, PuzzleComponent)>
+            {
+                (1.0, PuzzleComponent.TravelTeam_LongGreen),
+                (1.0, PuzzleComponent.SustainedTravel)
+            },
+
+            _ => new List<(double, PuzzleComponent)> { (1.0, PuzzleComponent.TravelTeam_MediumGreen) }
+        };
+
+        var scan = Generator.Select(scanOptions);
+
+        var puzzle = ChainedPuzzle.TravelAlarm_Team with
+        {
+            PublicAlarmName = scan == PuzzleComponent.SustainedTravel ? "Class S T Alarm" : "Class T Alarm",
+            Puzzle = new List<PuzzleComponent> { scan }
         };
 
         population ??= WavePopulation.Baseline;
@@ -245,13 +278,12 @@ public partial record LevelLayout
             population = Generator.Flip(0.6) ? WavePopulation.OnlyShadows : WavePopulation.Baseline_Shadows;
         if (level.Settings.HasChargers())
             population = WavePopulation.Baseline_Chargers;
-        else if (level.Settings.HasFlyers())
-            population = WavePopulation.Baseline_Flyers;
+        else
 
         endZone.SecurityGateToEnter = SecurityGate.Security;
         endZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle with
         {
-            Population = population ?? puzzle.Population,
+            Population = population,
             Settings = settings ?? puzzle.Settings
         });
 
