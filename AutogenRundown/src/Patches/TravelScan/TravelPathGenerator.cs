@@ -52,7 +52,7 @@ public static class TravelPathGenerator
         }
 
         // Pick 2 far-apart destination nodes
-        var (dest1, dest2) = PickDestinations(candidates, sourcePos);
+        var (dest1, dest2) = PickDestinations(candidates, sourcePos, sourceArea);
 
         Plugin.Logger.LogDebug(
             $"[TravelPath] Destinations: dest1={dest1}, dest2={dest2}");
@@ -114,7 +114,7 @@ public static class TravelPathGenerator
     /// Pre-filters by Euclidean distance, then ranks finalists by NavMesh distance.
     /// </summary>
     private static (Vector3 dest1, Vector3 dest2) PickDestinations(
-        List<AIG_INode> candidates, Vector3 sourcePos)
+        List<AIG_INode> candidates, Vector3 sourcePos, LG_Area sourceArea)
     {
         // Sort by Euclidean distance from source (descending) and take top pool
         candidates.Sort((a, b) =>
@@ -140,7 +140,16 @@ public static class TravelPathGenerator
             }
         }
 
-        // Pick dest2: highest min(navDist to source, navDist to dest1)
+        // Pick dest2: try gate-based placement first, then fall back to triangle spread
+        if (TryFindGateDestination(sourceArea, sourcePos, dest1, out var gateDest2))
+        {
+            Plugin.Logger.LogDebug(
+                $"[TravelPath] dest1 navDist={bestDist1:F1}m, " +
+                $"dest2 placed near gate");
+            return (dest1, gateDest2);
+        }
+
+        // Fallback: pick dest2 by triangle spread
         var dest2 = candidates[0].Position;
         var bestDist2 = 0f;
 
@@ -165,9 +174,116 @@ public static class TravelPathGenerator
 
         Plugin.Logger.LogDebug(
             $"[TravelPath] dest1 navDist={bestDist1:F1}m, " +
-            $"dest2 minLeg={bestDist2:F1}m");
+            $"dest2 minLeg={bestDist2:F1}m (triangle-spread fallback)");
 
         return (dest1, dest2);
+    }
+
+    /// <summary>
+    /// Tries to find a dest2 position near a gate where enemies enter.
+    /// Priority 1: the zone's source gate (previous zone entrance) if it's in this area.
+    /// Priority 2: any other gate in this area, preferring zone-crossing gates farthest from dest1.
+    /// </summary>
+    private static bool TryFindGateDestination(
+        LG_Area sourceArea, Vector3 sourcePos, Vector3 dest1, out Vector3 gatePos)
+    {
+        gatePos = default;
+
+        // Priority 1: zone source gate (previous zone entrance) in this area
+        var sourceGate = sourceArea.m_zone.m_sourceGate;
+        if (sourceGate != null)
+        {
+            var linksFrom = sourceGate.m_linksFrom;
+            var linksTo = sourceGate.m_linksTo;
+
+            if (linksFrom == sourceArea || linksTo == sourceArea)
+            {
+                if (TrySnapToNavMesh(sourceGate.GetPosition(), out var snapped))
+                {
+                    var distToSource = (snapped - sourcePos).magnitude;
+                    var distToDest1 = (snapped - dest1).magnitude;
+
+                    if (distToSource >= 3f && distToDest1 >= 1f && IsReachable(sourcePos, snapped))
+                    {
+                        gatePos = snapped;
+                        Plugin.Logger.LogDebug(
+                            "[TravelPath] dest2 placed near zone entrance gate");
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // Priority 2: any other gate in this area
+        if (sourceArea.m_gates == null || sourceArea.m_gates.Count == 0)
+            return false;
+
+        Vector3 bestGatePos = default;
+        var bestDist = -1f;
+        var bestCrossesZone = false;
+
+        for (var i = 0; i < sourceArea.m_gates.Count; i++)
+        {
+            var gate = sourceArea.m_gates[i];
+            if (gate == null)
+                continue;
+
+            if (!TrySnapToNavMesh(gate.GetPosition(), out var snapped))
+                continue;
+
+            var distToSource = (snapped - sourcePos).magnitude;
+            if (distToSource < 3f)
+                continue;
+
+            if (!IsReachable(sourcePos, snapped))
+                continue;
+
+            var crossesZone = gate.m_linksFrom?.m_zone != gate.m_linksTo?.m_zone;
+            var distToDest1 = (snapped - dest1).magnitude;
+
+            // Prefer zone-crossing gates, then pick farthest from dest1
+            if (crossesZone && !bestCrossesZone)
+            {
+                bestCrossesZone = true;
+                bestDist = distToDest1;
+                bestGatePos = snapped;
+            }
+            else if (crossesZone == bestCrossesZone && distToDest1 > bestDist)
+            {
+                bestDist = distToDest1;
+                bestGatePos = snapped;
+            }
+        }
+
+        if (bestDist >= 0f)
+        {
+            gatePos = bestGatePos;
+            Plugin.Logger.LogDebug(
+                $"[TravelPath] dest2 placed near area gate (crossesZone={bestCrossesZone})");
+            return true;
+        }
+
+        Plugin.Logger.LogDebug("[TravelPath] dest2 using triangle-spread fallback");
+        return false;
+    }
+
+    private static bool TrySnapToNavMesh(Vector3 position, out Vector3 snapped)
+    {
+        if (NavMesh.SamplePosition(position, out var hit, 3f, -1))
+        {
+            snapped = hit.position;
+            return true;
+        }
+
+        snapped = default;
+        return false;
+    }
+
+    private static bool IsReachable(Vector3 from, Vector3 to)
+    {
+        var path = new NavMeshPath();
+        return NavMesh.CalculatePath(from, to, -1, path)
+               && path.status == NavMeshPathStatus.PathComplete;
     }
 
     /// <summary>
