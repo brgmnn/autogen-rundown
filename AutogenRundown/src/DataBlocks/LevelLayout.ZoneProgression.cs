@@ -740,6 +740,8 @@ public partial record LevelLayout
             Settings = settings
         });
 
+        endZone.RollTravelAlarmModifiers(endZone.Alarm);
+
         Plugin.Logger.LogDebug($"Added Travel Scan challenge: zone = {end}, " +
                                $"scan = {endZone.Alarm.Puzzle.First().PuzzleType}, " +
                                $"settings = {endZone.Alarm.Settings} ");

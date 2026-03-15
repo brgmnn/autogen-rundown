@@ -592,6 +592,173 @@ public partial record Zone : DataBlock<Zone>
 
         Alarm = ChainedPuzzle.FindOrPersist(puzzle);
     }
+
+    /// <summary>
+    /// Rolls alarm modifiers for travel scan alarms. Same modifier types as RollAlarms
+    /// but with reduced probabilities for fog, sensors, pouncers, and tanks (75% of base).
+    /// Lights off and cycling lights keep the same probabilities.
+    /// </summary>
+    internal void RollTravelAlarmModifiers(ChainedPuzzle puzzle)
+    {
+        var isInfection = level.FogSettings.IsInfectious;
+
+        switch (level.Tier)
+        {
+            case "A":
+            {
+                if (Generator.Flip(0.03))
+                    AlarmModifier_CyclingLights();
+                break;
+            }
+
+            case "B":
+            {
+                if (Generator.Flip(0.05))
+                    AlarmModifier_CyclingLights();
+                else if (Generator.Flip(0.02))
+                    AlarmModifier_LightsOff();
+
+                if (!InFog && level.TrySetFogUsage(Levels.FogUsage.ShortDuration) && Generator.Flip(0.01))
+                    AlarmModifier_FogFlood(puzzle.ClearTime(1.2, 1.4));
+
+                if (Generator.Flip(0.015))
+                    AlarmModifier_SecuritySensors();
+
+                if (Generator.Flip(0.004))
+                    EventsOnApproachDoor.AddSpawnWave(
+                        GenericWave.SinglePouncer,
+                        Generator.Between(1, 6));
+
+                break;
+            }
+
+            case "C":
+            {
+                if (isInfection && !InFog && Generator.Flip(0.2))
+                    EventsOnDoorScanStart.AddGenericWave(new GenericWave
+                    {
+                        Population = WavePopulation.OnlyInfectedHybrids,
+                        Settings = Generator.Select(new List<(double, WaveSettings)>
+                        {
+                            (0.35, WaveSettings.SingleWave_MiniBoss_4pts),
+                            (0.65, WaveSettings.SingleWave_MiniBoss_8pts)
+                        })
+                    }, puzzle.ClearTime() * Generator.NextDouble(0.2, 0.6));
+
+                else if (Generator.Flip(0.07))
+                    AlarmModifier_CyclingLights();
+                else if (Generator.Flip(0.05))
+                    AlarmModifier_LightsOff();
+
+                if (!InFog && level.TrySetFogUsage(Levels.FogUsage.ShortDuration) && Generator.Flip(0.04))
+                    AlarmModifier_FogFlood(puzzle.ClearTime(1.2, 1.4));
+
+                if (Generator.Flip(0.04))
+                    AlarmModifier_SecuritySensors();
+
+                if (Generator.Flip(0.0075))
+                    EventsOnApproachDoor.AddSpawnWave(
+                        GenericWave.SinglePouncer,
+                        Generator.Between(1, 6));
+
+                break;
+            }
+
+            case "D":
+            {
+                if (isInfection && Generator.Flip(InFog ? 0.2 : 0.4))
+                    EventsOnDoorScanStart.AddGenericWave(new GenericWave
+                    {
+                        Population = WavePopulation.OnlyInfectedHybrids,
+                        Settings = Generator.Select(new List<(double, WaveSettings)>
+                        {
+                            (0.35, WaveSettings.SingleWave_MiniBoss_4pts),
+                            (0.60, WaveSettings.SingleWave_MiniBoss_8pts),
+                            (0.05, WaveSettings.SingleWave_MiniBoss_12pts)
+                        })
+                    }, puzzle.ClearTime() * Generator.NextDouble(0.2, 0.6));
+
+                if (Generator.Flip(0.12))
+                {
+                    AlarmModifier_LightsOff();
+
+                    if (Generator.Flip(0.1))
+                        EventsOnDoorScanStart.AddSpawnWave(
+                            GenericWave.SinglePouncerShadow,
+                            Generator.Between(4, 16));
+                }
+                else if (Generator.Flip(0.08))
+                    AlarmModifier_CyclingLights();
+
+                if (!InFog && level.TrySetFogUsage(Levels.FogUsage.ShortDuration) && Generator.Flip(0.045))
+                    AlarmModifier_FogFlood(puzzle.ClearTime(1.1, 1.3));
+
+                if (Generator.Flip(0.06))
+                    AlarmModifier_SecuritySensors();
+
+                if (Generator.Flip(0.0075))
+                    EventsOnApproachDoor.AddSpawnWave(
+                        Generator.Flip() ?
+                            GenericWave.SinglePouncerShadow :
+                            GenericWave.SinglePouncer,
+                        Generator.Between(1, 6));
+
+                if (Generator.Flip(0.0375))
+                    EventsOnDoorScanStart.AddSpawnWave(GenericWave.SingleTank, Generator.Between(1, 27));
+                break;
+            }
+
+            case "E":
+            {
+                if (isInfection && Generator.Flip(InFog ? 0.4 : 0.6))
+                    EventsOnDoorScanStart.AddGenericWave(new GenericWave
+                    {
+                        Population = WavePopulation.OnlyInfectedHybrids,
+                        Settings = Generator.Select(new List<(double, WaveSettings)>
+                        {
+                            (0.2, WaveSettings.SingleWave_MiniBoss_4pts),
+                            (0.6, WaveSettings.SingleWave_MiniBoss_8pts),
+                            (0.2, WaveSettings.SingleWave_MiniBoss_12pts)
+                        })
+                    }, puzzle.ClearTime() * Generator.NextDouble(0.2, 0.6));
+
+                if (Generator.Flip(0.12))
+                    AlarmModifier_CyclingLights();
+                else if (Generator.Flip(0.25))
+                {
+                    AlarmModifier_LightsOff();
+
+                    if (Generator.Flip(0.1))
+                        EventsOnDoorScanStart.AddSpawnWave(
+                            GenericWave.SinglePouncerShadow,
+                            Generator.Between(4, 16));
+                }
+
+                if (!InFog && level.TrySetFogUsage(Levels.FogUsage.ShortDuration) && Generator.Flip(0.08))
+                    AlarmModifier_FogFlood(puzzle.ClearTime(1.1, 1.1));
+
+                if (Generator.Flip(0.075))
+                    AlarmModifier_SecuritySensors();
+
+                if (Generator.Flip(0.015))
+                    EventsOnOpenDoor.AddSpawnWave(
+                        GenericWave.SinglePouncerShadow,
+                        Generator.Between(4, 16));
+                else if (Generator.Flip(0.0225))
+                    EventsOnApproachDoor.AddSpawnWave(
+                        Generator.Flip(0.7) ?
+                            GenericWave.SinglePouncerShadow :
+                            GenericWave.SinglePouncer,
+                        Generator.Between(1, 6));
+
+                if (Generator.Flip(0.0375))
+                    EventsOnDoorScanStart.AddSpawnWave(GenericWave.SingleTank, Generator.Between(5, 27));
+                else if (Generator.Flip(0.0225))
+                    EventsOnDoorScanStart.AddSpawnWave(GenericWave.SingleTankPotato, Generator.Between(5, 27));
+                break;
+            }
+        }
+    }
     #endregion
 
     #region Fog
