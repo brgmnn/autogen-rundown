@@ -238,6 +238,13 @@ public partial record LevelLayout
 
                         (cellNode, cellZone) = BuildChallenge_LockedTerminalDoor(mid, 0);
                     }),
+
+                    // Travel scan gate
+                    (0.5, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        (cellNode, cellZone) = AddZone(travelEnd);
+                    }),
                 });
 
                 if (altitude != null)
@@ -314,6 +321,13 @@ public partial record LevelLayout
                         AddSecuritySensors(mid);
                         (cellNode, cellZone) = AddZone(mid);
                     }),
+
+                    // Travel scan gate
+                    (0.5, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        (cellNode, cellZone) = AddZone(travelEnd);
+                    }),
                 });
 
                 if (altitude != null)
@@ -365,6 +379,13 @@ public partial record LevelLayout
                         AddSecuritySensors(mid);
                         (cellNode, cellZone) = BuildChallenge_KeycardInZone(mid);
                     }),
+
+                    // Travel scan gate
+                    (0.5, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        (cellNode, cellZone) = AddZone(travelEnd);
+                    }),
                 });
 
                 if (altitude != null)
@@ -410,6 +431,13 @@ public partial record LevelLayout
                         if (altitude != null) midZone.Altitude = altitude;
                         AddSecuritySensors(mid);
                         (cellNode, cellZone) = AddZone(mid);
+                    }),
+
+                    // Travel scan gate
+                    (0.5, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        (cellNode, cellZone) = AddZone(travelEnd);
                     }),
                 });
 
@@ -517,6 +545,13 @@ public partial record LevelLayout
                         AddSecuritySensors(mid);
                         (cellNode, cellZone) = BuildChallenge_KeycardInSide(mid, 1);
                     }),
+
+                    // Travel scan gate
+                    (0.5, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        (cellNode, cellZone) = AddZone(travelEnd);
+                    }),
                 });
 
                 if (altitude != null)
@@ -589,6 +624,13 @@ public partial record LevelLayout
                         if (altitude != null) midZone.Altitude = altitude;
                         AddSecuritySensors(mid);
                         (cellNode, cellZone) = BuildChallenge_KeycardInZone(mid);
+                    }),
+
+                    // Travel scan gate
+                    (0.5, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        (cellNode, cellZone) = AddZone(travelEnd);
                     }),
                 });
 
@@ -664,6 +706,13 @@ public partial record LevelLayout
                         if (altitude != null) midZone.Altitude = altitude;
                         AddSecuritySensors(mid);
                         (cellNode, cellZone) = AddZone(mid);
+                    }),
+
+                    // Travel scan gate
+                    (0.5, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        (cellNode, cellZone) = AddZone(travelEnd);
                     }),
                 });
 
@@ -790,6 +839,13 @@ public partial record LevelLayout
                         AddSecuritySensors(mid);
                         (cellNode, cellZone) = BuildChallenge_BossFight(mid);
                     }),
+
+                    // Travel scan gate
+                    (0.5, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        (cellNode, cellZone) = AddZone(travelEnd);
+                    }),
                 });
 
                 if (altitude != null)
@@ -862,6 +918,13 @@ public partial record LevelLayout
                         if (altitude != null) midZone.Altitude = altitude;
                         AddSecuritySensors(mid);
                         (cellNode, cellZone) = BuildChallenge_KeycardInZone(mid);
+                    }),
+
+                    // Travel scan gate
+                    (0.5, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        (cellNode, cellZone) = AddZone(travelEnd);
                     }),
                 });
 
@@ -937,6 +1000,13 @@ public partial record LevelLayout
                         if (altitude != null) midZone.Altitude = altitude;
                         AddSecuritySensors(mid);
                         (cellNode, cellZone) = AddZone(mid);
+                    }),
+
+                    // Travel scan gate
+                    (0.5, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        (cellNode, cellZone) = AddZone(travelEnd);
                     }),
                 });
 
@@ -1057,6 +1127,13 @@ public partial record LevelLayout
                         AddSecuritySensors(mid);
                         (cellNode, cellZone) = BuildChallenge_KeycardInSide(mid, 1);
                     }),
+
+                    // Travel scan gate
+                    (0.5, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        (cellNode, cellZone) = AddZone(travelEnd);
+                    }),
                 });
 
                 if (altitude != null)
@@ -1129,6 +1206,13 @@ public partial record LevelLayout
                         if (altitude != null) midZone.Altitude = altitude;
                         AddSecuritySensors(mid);
                         (cellNode, cellZone) = BuildChallenge_KeycardInZone(mid);
+                    }),
+
+                    // Travel scan gate
+                    (0.5, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        (cellNode, cellZone) = AddZone(travelEnd);
                     }),
                 });
 
@@ -1219,6 +1303,13 @@ public partial record LevelLayout
                         if (altitude != null) midZone.Altitude = altitude;
                         AddSecuritySensors(mid);
                         (cellNode, cellZone) = AddZone(mid);
+                    }),
+
+                    // Travel scan gate
+                    (0.5, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        (cellNode, cellZone) = AddZone(travelEnd);
                     }),
                 });
 

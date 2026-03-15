@@ -148,6 +148,13 @@ public partial record LevelLayout
             return;
         }
 
+        // Optional travel scan prelude
+        if (Generator.Flip(0.15))
+        {
+            var (travelEnd, _) = AddTravelScanAlarm(start);
+            start = travelEnd;
+        }
+
         // TODO: adjust this. Error should have less
         // Normal generation for this
         var nodes = AddBranch(start, director.ZoneCount, "special_terminal");
