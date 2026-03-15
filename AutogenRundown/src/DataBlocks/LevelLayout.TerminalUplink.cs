@@ -75,6 +75,14 @@ public partial record LevelLayout
                         // Add terminal zone after generator challenge
                         AddUplinkTerminalZones(end, objective);
                     }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (end, _) = AddTravelScanAlarm(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
                 });
                 break;
             }
@@ -103,6 +111,13 @@ public partial record LevelLayout
                         // Add terminal zone after keycard
                         AddUplinkTerminalZones(end, objective);
                     }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (end, _) = AddTravelScanAlarm(start);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
                 });
                 break;
             }
@@ -128,6 +143,13 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_LockedTerminalDoor(start, 1);
 
                         // Add terminal zone after terminal unlock
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (end, _) = AddTravelScanAlarm(start);
                         AddUplinkTerminalZones(end, objective);
                     }),
                 });
@@ -181,6 +203,14 @@ public partial record LevelLayout
                         AddSecuritySensors(nodes[^1]);
                         AddUplinkTerminalZones(nodes.Last(), objective);
                     }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                        var (end, _) = AddTravelScanAlarm(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
                 });
                 break;
             }
@@ -222,6 +252,14 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_GeneratorCellInZone(nodes.Last());
                         AddUplinkTerminalZones(end, objective);
                     }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (end, _) = AddTravelScanAlarm(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
                 });
                 break;
             }
@@ -254,6 +292,14 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, 1);
                         var (mid, _) = BuildChallenge_KeycardInSide(nodes.Last());
                         var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Travel scan + keycard gate
+                    (0.15, () =>
+                    {
+                        var (mid, _) = AddTravelScanAlarm(start);
+                        var (end, _) = BuildChallenge_KeycardInSide(mid);
                         AddUplinkTerminalZones(end, objective);
                     }),
                 };
@@ -311,6 +357,14 @@ public partial record LevelLayout
                     {
                         var nodes = AddBranch_Forward(start, Generator.Between(3, 4));
                         var (end, _) = BuildChallenge_KeycardInSide(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Travel scan + keycard gate
+                    (0.15, () =>
+                    {
+                        var (mid, _) = AddTravelScanAlarm(start);
+                        var (end, _) = BuildChallenge_KeycardInSide(mid);
                         AddUplinkTerminalZones(end, objective);
                     }),
                 };
@@ -392,6 +446,14 @@ public partial record LevelLayout
                             AddSecuritySensors(node);
                         AddUplinkTerminalZones(nodes.Last(), objective);
                     }),
+
+                    // Travel scan + generator gate
+                    (0.15, () =>
+                    {
+                        var (mid, _) = AddTravelScanAlarm(start);
+                        var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
                 });
                 break;
             }
@@ -428,6 +490,14 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, 1);
                         var (mid, _) = BuildChallenge_GeneratorCellInSide(nodes.Last());
                         var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Travel scan + keycard gate
+                    (0.15, () =>
+                    {
+                        var (mid, _) = AddTravelScanAlarm(start);
+                        var (end, _) = BuildChallenge_KeycardInSide(mid);
                         AddUplinkTerminalZones(end, objective);
                     }),
                 };
@@ -519,6 +589,14 @@ public partial record LevelLayout
                             terminalTurnoffZones: 1);
                         AddUplinkTerminalZones(end, objective);
                     }),
+
+                    // Travel scan + boss gate
+                    (0.10, () =>
+                    {
+                        var (mid, _) = AddTravelScanAlarm(start);
+                        var (end, _) = BuildChallenge_BossFight(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
                 });
                 break;
             }
@@ -575,6 +653,14 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_BossFight(nodes.Last());
                         AddUplinkTerminalZones(end, objective);
                     }),
+
+                    // Travel scan + boss gate
+                    (0.10, () =>
+                    {
+                        var (mid, _) = AddTravelScanAlarm(start);
+                        var (end, _) = BuildChallenge_BossFight(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
                 });
                 break;
             }
@@ -614,6 +700,17 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, 1);
                         var (mid, _) = BuildChallenge_BossFight(nodes.Last());
                         var (end, _) = BuildChallenge_KeycardInZone(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Travel scan + apex gate
+                    (0.10, () =>
+                    {
+                        var (mid, _) = AddTravelScanAlarm(start);
+                        var (end, _) = BuildChallenge_ApexAlarm(
+                            mid,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
                         AddUplinkTerminalZones(end, objective);
                     }),
                 };
@@ -688,6 +785,15 @@ public partial record LevelLayout
                             sideKeycardZones: 1,
                             terminalTurnoffZones: 1);
                         var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Travel scan + boss + keycard gate
+                    (0.10, () =>
+                    {
+                        var (mid, _) = AddTravelScanAlarm(start);
+                        var (mid2, _) = BuildChallenge_BossFight(mid);
+                        var (end, _) = BuildChallenge_KeycardInZone(mid2);
                         AddUplinkTerminalZones(end, objective);
                     }),
                 };
@@ -767,6 +873,17 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_BossFight(nodes.Last());
                         AddUplinkTerminalZones(end, objective);
                     }),
+
+                    // Travel scan + apex gate
+                    (0.10, () =>
+                    {
+                        var (mid, _) = AddTravelScanAlarm(start);
+                        var (end, _) = BuildChallenge_ApexAlarm(
+                            mid,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
                 };
 
                 // Generator + apex + keycard (single terminal only) (3+N zones)
@@ -818,6 +935,17 @@ public partial record LevelLayout
                     {
                         var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
                         var (mid, _) = BuildChallenge_GeneratorCellInZone(nodes.Last());
+                        var (end, _) = BuildChallenge_ApexAlarm(
+                            mid,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_VeryHard);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Travel scan + apex gate
+                    (0.10, () =>
+                    {
+                        var (mid, _) = AddTravelScanAlarm(start);
                         var (end, _) = BuildChallenge_ApexAlarm(
                             mid,
                             WavePopulation.Baseline_Hybrids,

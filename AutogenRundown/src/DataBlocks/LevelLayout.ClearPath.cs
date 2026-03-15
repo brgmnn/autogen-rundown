@@ -69,6 +69,12 @@ public partial record LevelLayout
                     {
                         var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
                         (exit, exitZone) = BuildChallenge_KeycardInSide(nodes.Last());
+                    }),
+
+                    // Travel scan to exit
+                    (0.15, () =>
+                    {
+                        (exit, exitZone) = AddTravelScanAlarm(start);
                     })
                 });
                 break;
@@ -138,6 +144,13 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
                         AddSecuritySensors(nodes.Last());
                         (exit, exitZone) = BuildChallenge_GeneratorCellInSide(nodes.Last());
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        (exit, exitZone) = AddTravelScanAlarm(nodes.Last());
                     })
                 });
                 break;
@@ -204,6 +217,14 @@ public partial record LevelLayout
                         var (mid, _) = BuildChallenge_KeycardInSide(nodes.Last());
                         var nodes2 = AddBranch_Forward(mid, 1);
                         (exit, exitZone) = BuildChallenge_GeneratorCellInSide(nodes2.Last());
+                    }),
+
+                    // Travel scan + keycard to exit
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, _) = AddTravelScanAlarm(nodes.Last());
+                        (exit, exitZone) = BuildChallenge_KeycardInSide(mid);
                     })
                 });
                 break;
@@ -343,6 +364,14 @@ public partial record LevelLayout
                             mid2,
                             WavePopulation.Baseline_Hybrids,
                             WaveSettings.Baseline_Hard);
+                    }),
+
+                    // Travel scan + boss to exit
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, _) = AddTravelScanAlarm(nodes.Last());
+                        (exit, exitZone) = BuildChallenge_BossFight(mid);
                     })
                 });
                 break;
@@ -485,6 +514,17 @@ public partial record LevelLayout
                             .AddUnlockDoor(director.Bulkhead, exit.ZoneNumber);
 
                         AddAlignedBossFight_MegaMom(boss, bossClearEvents);
+                    }),
+
+                    // Travel scan + apex to exit
+                    (0.10, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, _) = AddTravelScanAlarm(nodes.Last());
+                        (exit, exitZone) = BuildChallenge_ApexAlarm(
+                            mid,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_VeryHard);
                     })
                 });
                 break;
