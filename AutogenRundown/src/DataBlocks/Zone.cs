@@ -966,6 +966,9 @@ public partial record Zone : DataBlock<Zone>
 
     public bool SkipAutomaticProgressionObjective { get; set; } = false;
 
+    /// <summary>
+    /// Default = SecurityGate.Security
+    /// </summary>
     public SecurityGate SecurityGateToEnter { get; set; } = SecurityGate.Security;
 
     public bool UseStaticBioscanPointsInZone { get; set; } = false;

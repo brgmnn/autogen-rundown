@@ -734,12 +734,15 @@ public partial record LevelLayout
             }
         }
 
-        endZone.SecurityGateToEnter = SecurityGate.Security;
         endZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle with
         {
             Population = population,
             Settings = settings
         });
+
+        Plugin.Logger.LogDebug($"Added Travel Scan challenge: zone = {end}, " +
+                               $"scan = {endZone.Alarm.Puzzle.First().PuzzleType}, " +
+                               $"settings = {endZone.Alarm.Settings} ");
 
         return (end, endZone);
     }
