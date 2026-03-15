@@ -315,6 +315,109 @@ AddKeyedPuzzle(lockedNode, keyBranchLength: 2);
 
 ## Alarms (ZoneProgression.cs)
 
+### AddHardAlarmZone
+
+**Zones Added:** +1
+
+Creates a zone with a tier-appropriate class alarm (Class 3-7). Includes surprise wave spawns and a lights-off event partway through the scan. The non-travel counterpart to `AddTravelScanAlarm`.
+
+```csharp
+// Basic hard alarm zone
+var (end, endZone) = AddHardAlarmZone(start);
+
+// With custom population/settings
+var (end, endZone) = AddHardAlarmZone(start, WavePopulation.Baseline_Chargers, WaveSettings.Baseline_Hard);
+```
+
+**Tier Alarm Classes:**
+
+- A: Class 3
+- B: Class 4
+- C: Class 5
+- D: Class 6
+- E: Class 7
+
+**Side Effects:**
+
+- Hub geomorph on start zone, +2 ammo / +1 tool on start
+- SecurityGate.Security on end zone
+- Fog repellers added if zone is in fog
+- ~35% through scan: warning sound + biosign message
+- ~40% through scan: surprise wave spawn (tier-scaled 12-28 pts)
+- ~70% through scan: lights off + second surprise wave
+- Lights restored on scan complete
+
+**Returns:** `(ZoneNode end, Zone endZone)`
+
+---
+
+### AddHardAlarm
+
+Like `AddHardAlarmZone` but applies the alarm to an existing zone instead of creating one. Automatically finds the setup zone (build-from node) and converts it to a hub.
+
+```csharp
+// Apply hard alarm to an existing locked zone
+AddHardAlarm(lockedNode);
+
+// With custom population/settings
+AddHardAlarm(lockedNode, WavePopulation.OnlyShadows, WaveSettings.Baseline_VeryHard);
+```
+
+**Side Effects:** Same as `AddHardAlarmZone` (hub geomorph on setup zone, surprise waves, lights-off event)
+
+---
+
+### AddTravelScanAlarm
+
+**Zones Added:** +1
+
+Creates a walking/travel scan alarm — players must keep moving through the zone rather than standing in one spot. Start zone becomes a hub with resources; end zone gets the security scan door.
+
+```csharp
+// Basic travel scan (tier/bulkhead-appropriate)
+var (end, endZone) = AddTravelScanAlarm(start);
+
+// With custom population/settings override
+var (end, endZone) = AddTravelScanAlarm(start,
+    WavePopulation.Baseline_Chargers, WaveSettings.Baseline_VeryHard);
+```
+
+**Scan Type Selection** (tier × bulkhead → scan component):
+
+| Tier | Main | Extreme | Overload |
+| ---- | ---- | ------- | -------- |
+| A | Short 66% / MediumGreen 33% | MediumGreen 66% / Short 33% | MediumGreen 60% / LongGreen 40% |
+| B | Short 33% / MediumGreen 66% | MediumGreen 50% / LongGreen 50% | LongGreen 60% / SustainedTravel 40% |
+| C | MediumGreen 50% / LongGreen 50% | LongGreen 60% / SustainedTravel 40% | LongGreen 40% / SustainedTravel 60% |
+| D | LongGreen 50% / SustainedTravel 50% | SustainedTravel 60% / LongGreen 40% | SustainedTravel 100% |
+| E | LongGreen 40% / SustainedTravel 60% | SustainedTravel 70% / LongGreen 30% | SustainedTravel 100% |
+
+**Wave Settings** (tier × bulkhead → difficulty):
+
+| Tier | Main | Extreme | Overload |
+| ---- | ---- | ------- | -------- |
+| A | Normal 70% / Hard 30% | Hard 60% / Normal 40% | Hard 50% / VeryHard 50% |
+| B | Hard 60% / Normal 40% | Hard 40% / VeryHard 60% | VeryHard 60% / Hard 40% |
+| C | Hard 50% / VeryHard 50% | VeryHard 60% / Hard 40% | VeryHard 100% |
+| D | VeryHard 60% / Hard 40% | VeryHard 50% / Surge_Easy 50% | VeryHard 40% / Surge_Easy 60% |
+| E | VeryHard 50% / Surge_Easy 50% | VeryHard 40% / Surge_Easy 60% | Surge_Easy 70% / VeryHard 30% |
+
+**Wave Population:** Auto-selected based on level modifiers with precedence: Nightmares > InfectionHybrids > Chargers > Shadows > default. Each modifier has its own full tier × bulkhead table that escalates from baseline mixes (A/Main) to pure populations (D-E/Overload).
+
+**Side Effects:**
+
+- Hub geomorph on start zone
+- +2 ammo / +1 tool on start zone
+- SecurityGate.Security on end zone
+
+**Returns:** `(ZoneNode end, Zone endZone)`
+
+**Alarm Name:** "Class T Alarm" (or "Class S T Alarm" for SustainedTravel scans)
+
+**See also:** `AddHardAlarmZone` — the non-travel counterpart using stationary scans
+
+---
+
 ### AddApexAlarm
 
 Adds a large, difficult alarm scan. Creates a side spawn room to prevent C-foam holding.
