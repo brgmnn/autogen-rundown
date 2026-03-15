@@ -200,6 +200,8 @@ public static class TravelPathGenerator
             {
                 if (TrySnapToNavMesh(sourceGate.GetPosition(), out var snapped))
                 {
+                    snapped = OffsetFromGate(snapped, sourceArea.Position);
+
                     var distToSource = (snapped - sourcePos).magnitude;
                     var distToDest1 = (snapped - dest1).magnitude;
 
@@ -230,6 +232,8 @@ public static class TravelPathGenerator
 
             if (!TrySnapToNavMesh(gate.GetPosition(), out var snapped))
                 continue;
+
+            snapped = OffsetFromGate(snapped, sourceArea.Position);
 
             var distToSource = (snapped - sourcePos).magnitude;
             if (distToSource < 3f)
@@ -277,6 +281,17 @@ public static class TravelPathGenerator
 
         snapped = default;
         return false;
+    }
+
+    private static Vector3 OffsetFromGate(Vector3 gateSnapped, Vector3 areaCenter, float distance = 3f)
+    {
+        var direction = (areaCenter - gateSnapped).normalized;
+        var offset = gateSnapped + direction * distance;
+
+        if (TrySnapToNavMesh(offset, out var snapped))
+            return snapped;
+
+        return gateSnapped;
     }
 
     private static bool IsReachable(Vector3 from, Vector3 to)
