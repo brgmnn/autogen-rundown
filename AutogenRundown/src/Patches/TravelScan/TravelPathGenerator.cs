@@ -10,8 +10,8 @@ namespace AutogenRundown.Patches.TravelScan;
 /// Generates a looping walking path through a zone using NavMesh pathfinding.
 ///
 /// Approach:
-///   1. Pick 2 destination nodes far from source and each other (by NavMesh distance)
-///   2. Pathfind 3 legs on the NavMesh: start → dest1 → dest2 → start
+///   1. Pick 3 destination nodes far from source and each other (by NavMesh distance)
+///   2. Pathfind 4 legs on the NavMesh: start → dest1 → dest2 → dest3 → start
 ///   3. Resample the combined path at fixed step intervals
 ///   4. Pull each waypoint away from NavMesh edges
 ///
@@ -51,17 +51,18 @@ public static class TravelPathGenerator
             return positions;
         }
 
-        // Pick 2 far-apart destination nodes
-        var (dest1, dest2) = PickDestinations(candidates, sourcePos, sourceArea);
+        // Pick 3 far-apart destination nodes
+        var (dest1, dest2, dest3) = PickDestinations(candidates, sourcePos, sourceArea);
 
         Plugin.Logger.LogDebug(
-            $"[TravelPath] Destinations: dest1={dest1}, dest2={dest2}");
+            $"[TravelPath] Destinations: dest1={dest1}, dest2={dest2}, dest3={dest3}");
 
-        // Pathfind 3 legs: start → dest1 → dest2 → start
+        // Pathfind 4 legs: start → dest1 → dest2 → dest3 → start
         var rawPath = new List<Vector3>();
         AppendNavMeshLeg(rawPath, sourcePos, dest1);
         AppendNavMeshLeg(rawPath, dest1, dest2);
-        AppendNavMeshLeg(rawPath, dest2, sourcePos);
+        AppendNavMeshLeg(rawPath, dest2, dest3);
+        AppendNavMeshLeg(rawPath, dest3, sourcePos);
 
         if (rawPath.Count < 2)
         {
@@ -110,10 +111,10 @@ public static class TravelPathGenerator
     }
 
     /// <summary>
-    /// Picks 2 destination positions that are far from sourcePos and each other.
+    /// Picks 3 destination positions that are far from sourcePos and each other.
     /// Pre-filters by Euclidean distance, then ranks finalists by NavMesh distance.
     /// </summary>
-    private static (Vector3 dest1, Vector3 dest2) PickDestinations(
+    private static (Vector3 dest1, Vector3 dest2, Vector3 dest3) PickDestinations(
         List<AIG_INode> candidates, Vector3 sourcePos, LG_Area sourceArea)
     {
         // Sort by Euclidean distance from source (descending) and take top pool
@@ -141,17 +142,47 @@ public static class TravelPathGenerator
         }
 
         // Pick dest2: try gate-based placement first, then fall back to triangle spread
+        Vector3 dest2;
         if (TryFindGateDestination(sourceArea, sourcePos, dest1, out var gateDest2))
         {
             Plugin.Logger.LogDebug(
                 $"[TravelPath] dest1 navDist={bestDist1:F1}m, " +
                 $"dest2 placed near gate");
-            return (dest1, gateDest2);
+            dest2 = gateDest2;
+        }
+        else
+        {
+            // Fallback: pick dest2 by triangle spread
+            dest2 = candidates[0].Position;
+            var bestDist2 = 0f;
+
+            for (var i = 0; i < poolSize; i++)
+            {
+                var pos = candidates[i].Position;
+                // Skip if too close to dest1
+                if ((pos - dest1).sqrMagnitude < 1f)
+                    continue;
+
+                var distToSource = GetNavMeshDistance(sourcePos, pos);
+                var distToDest1 = GetNavMeshDistance(dest1, pos);
+                // Maximize the minimum leg length to form a well-spread triangle
+                var score = Mathf.Min(distToSource, distToDest1);
+
+                if (score > bestDist2)
+                {
+                    bestDist2 = score;
+                    dest2 = pos;
+                }
+            }
+
+            Plugin.Logger.LogDebug(
+                $"[TravelPath] dest1 navDist={bestDist1:F1}m, " +
+                $"dest2 minLeg={bestDist2:F1}m (triangle-spread fallback)");
         }
 
-        // Fallback: pick dest2 by triangle spread
-        var dest2 = candidates[0].Position;
-        var bestDist2 = 0f;
+        // Pick dest3: far from both source and dest1 (triangle spread)
+        var dest3 = candidates[0].Position;
+        var bestDist3 = 0f;
 
         for (var i = 0; i < poolSize; i++)
         {
@@ -162,21 +193,19 @@ public static class TravelPathGenerator
 
             var distToSource = GetNavMeshDistance(sourcePos, pos);
             var distToDest1 = GetNavMeshDistance(dest1, pos);
-            // Maximize the minimum leg length to form a well-spread triangle
             var score = Mathf.Min(distToSource, distToDest1);
 
-            if (score > bestDist2)
+            if (score > bestDist3)
             {
-                bestDist2 = score;
-                dest2 = pos;
+                bestDist3 = score;
+                dest3 = pos;
             }
         }
 
         Plugin.Logger.LogDebug(
-            $"[TravelPath] dest1 navDist={bestDist1:F1}m, " +
-            $"dest2 minLeg={bestDist2:F1}m (triangle-spread fallback)");
+            $"[TravelPath] dest3 minLeg={bestDist3:F1}m (triangle-spread)");
 
-        return (dest1, dest2);
+        return (dest1, dest2, dest3);
     }
 
     /// <summary>

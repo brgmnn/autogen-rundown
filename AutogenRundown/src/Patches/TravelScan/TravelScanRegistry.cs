@@ -45,7 +45,7 @@ public static class TravelScanRegistry
     public const float SustainedTravelSpeed = 2.0f;
     public const float SustainedTravelReverseSpeed = 1.0f;
 
-    public const float StepDistance = 3f;
+    public const float StepDistance = 1f;
     public const float EdgeDistance = 2f;
 
     public static void Setup()
