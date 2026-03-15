@@ -368,7 +368,7 @@ public static class TravelPathGenerator
         var prev = corners[0];
 
         // Add the starting point
-        resampled.Add(PullAwayFromEdge(prev, TravelScanRegistry.EdgeDistance));
+        resampled.Add(AdjustForEdges(prev, TravelScanRegistry.EdgeDistance));
 
         for (var i = 1; i < corners.Count; i++)
         {
@@ -389,7 +389,7 @@ public static class TravelPathGenerator
             {
                 walked += stepDistance;
                 var point = prev + segDir * walked;
-                resampled.Add(PullAwayFromEdge(point, TravelScanRegistry.EdgeDistance));
+                resampled.Add(AdjustForEdges(point, TravelScanRegistry.EdgeDistance));
             }
 
             remaining = segLen - walked;
@@ -400,6 +400,7 @@ public static class TravelPathGenerator
         // which is already position[0] in the caller. This keeps the loop tight:
         // the last resampled point will be within stepDistance of sourcePos.
 
+        resampled = RemoveBunchedPoints(resampled, stepDistance * 0.5f);
         return resampled;
     }
 
@@ -420,20 +421,74 @@ public static class TravelPathGenerator
         return (from - to).magnitude;
     }
 
-    private static Vector3 PullAwayFromEdge(Vector3 position, float minDistance)
+    private static Vector3 AdjustForEdges(Vector3 position, float minDistance)
     {
-        if (!NavMesh.FindClosestEdge(position, out var hit, -1))
+        if (!NavMesh.FindClosestEdge(position, out var hitNear, -1))
             return position;
 
-        if (hit.distance >= minDistance)
+        if (hitNear.distance >= minDistance)
             return position;
 
-        var pullAmount = minDistance - hit.distance;
-        var newPos = position + hit.normal * pullAmount;
+        // Measure distance to opposite wall via raycast in pull direction
+        var maxProbe = minDistance * 3f;
+        var rayTarget = position + hitNear.normal * maxProbe;
+        float distToFar;
 
-        if (NavMesh.SamplePosition(newPos, out var sample, 0.5f, -1))
-            return sample.position;
+        if (NavMesh.Raycast(position, rayTarget, out var rayHit, -1))
+            distToFar = rayHit.distance;
+        else
+            distToFar = maxProbe; // No opposite wall — wide open
+
+        var corridorWidth = hitNear.distance + distToFar;
+
+        if (corridorWidth >= minDistance * 2f)
+        {
+            // Wide enough for full pull
+            var pullAmount = minDistance - hitNear.distance;
+            var pulled = position + hitNear.normal * pullAmount;
+            if (NavMesh.SamplePosition(pulled, out var sample, 0.5f, -1))
+                return sample.position;
+            return position;
+        }
+
+        // Narrow corridor: center between the two walls
+        var targetDist = corridorWidth / 2f;
+        var shift = targetDist - hitNear.distance;
+        var centered = position + hitNear.normal * shift;
+
+        if (NavMesh.SamplePosition(centered, out var snap, 1f, -1))
+            return snap.position;
 
         return position;
+    }
+
+    private static List<Vector3> RemoveBunchedPoints(List<Vector3> points, float minSpacing)
+    {
+        if (points.Count < 3)
+            return points;
+
+        var minSpacingSqr = minSpacing * minSpacing;
+        var result = new List<Vector3>(points.Count) { points[0] };
+
+        for (var i = 1; i < points.Count; i++)
+        {
+            var prev = result[result.Count - 1];
+            var candidate = points[i];
+
+            if ((candidate - prev).sqrMagnitude < minSpacingSqr)
+                continue;
+
+            if (result.Count >= 2)
+            {
+                var forward = (prev - result[result.Count - 2]).normalized;
+                var toCandidate = (candidate - prev).normalized;
+                if (Vector3.Dot(forward, toCandidate) < -0.5f)
+                    continue; // Backtracking
+            }
+
+            result.Add(candidate);
+        }
+
+        return result;
     }
 }
