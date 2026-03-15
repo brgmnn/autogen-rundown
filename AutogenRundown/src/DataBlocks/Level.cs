@@ -71,6 +71,7 @@ public class Level
     /// <summary>
     ///
     /// </summary>
+    [JsonIgnore]
     public List<(double, ZoneNode)> ForwardExtractStartCandidates { get; set; } = new();
 
     [JsonIgnore]
@@ -79,6 +80,7 @@ public class Level
     /// <summary>
     /// Mainly used for calculating what the text should be for extract
     /// </summary>
+    [JsonIgnore]
     public ZoneNode ExtractionZone { get; set; } = new()
     {
         Bulkhead = Bulkhead.Main | Bulkhead.StartingArea,
@@ -1766,11 +1768,11 @@ public class Level
                 var puzzle = ChainedPuzzle.TeamScan;
 
                 if (z == 0)
-                    puzzle = ChainedPuzzle.StealthScan3 with { WantedDistanceBetweenPuzzleComponents = 1.0 };
+                    puzzle = ChainedPuzzle.TravelAlarm_Team;
                 else if (z == 1)
-                    puzzle = ChainedPuzzle.StealthScan3 with { WantedDistanceBetweenPuzzleComponents = 5.0 };
+                    puzzle = ChainedPuzzle.TravelAlarm_Sustained_Easy;
                 else if (z == 2)
-                    puzzle = ChainedPuzzle.StealthScan3 with { WantedDistanceBetweenPuzzleComponents = 10.0 };
+                    puzzle = ChainedPuzzle.None;
 
                 zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
 

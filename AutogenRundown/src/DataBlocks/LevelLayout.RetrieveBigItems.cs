@@ -178,6 +178,16 @@ public partial record LevelLayout
             return;
         }
 
+        // Optional travel scan prelude
+        if (Generator.Flip(0.15))
+        {
+            var (travelEnd, _) = AddTravelScanAlarm(entrance);
+            entrance = travelEnd;
+            entrance = planner.UpdateNode(entrance with { MaxConnections = 3 });
+
+            entranceZone = planner.GetZone(entrance)!;
+        }
+
         // Create base branches for each item
         for (var g = 0; g < Math.Min(itemCount, 3); g++)
         {

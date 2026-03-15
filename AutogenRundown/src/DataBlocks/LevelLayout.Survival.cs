@@ -98,7 +98,29 @@ public partial record LevelLayout
                                 arenaNodes.Add(mid2);
                             }),
                         });
-                    })
+                    }),
+
+                    // Travel scan approach
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+
+                        var (mid1, mid1Zone) = AddZone(travelEnd, new ZoneNode { Branch = "survival_arena" });
+                        arenaNodes.Add(mid1);
+
+                        var nodes = AddBranch_Forward(
+                            mid1,
+                            Generator.Between(2, 3),
+                            "survival_arena",
+                            (_, zone) =>
+                            {
+                                zone.AmmoPacks += 3;
+                                zone.ToolPacks += 2;
+                                zone.HealthPacks += 3;
+                            });
+
+                        arenaNodes.AddRange(nodes);
+                    }),
                 });
                 break;
             }
@@ -106,19 +128,42 @@ public partial record LevelLayout
 
             default:
             {
-                arenaNodes = AddBranch(
-                    start,
-                    director.ZoneCount,
-                    "survival_arena",
-                    (node, zone) =>
+                Generator.SelectRun(new List<(double, Action)>
+                {
+                    // Standard arena
+                    (0.85, () =>
                     {
-                        zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+                        arenaNodes = AddBranch(
+                            start,
+                            director.ZoneCount,
+                            "survival_arena",
+                            (node, zone) =>
+                            {
+                                zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+                                zone.AmmoPacks += 3;
+                                zone.ToolPacks += 2;
+                                zone.HealthPacks += 3;
+                            }).ToList();
+                    }),
 
-                        // Add extra resources to survival arena zones
-                        zone.AmmoPacks += 3;
-                        zone.ToolPacks += 2;
-                        zone.HealthPacks += 3;
-                    }).ToList();
+                    // Travel scan approach
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+
+                        arenaNodes = AddBranch(
+                            travelEnd,
+                            director.ZoneCount,
+                            "survival_arena",
+                            (node, zone) =>
+                            {
+                                zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+                                zone.AmmoPacks += 3;
+                                zone.ToolPacks += 2;
+                                zone.HealthPacks += 3;
+                            }).ToList();
+                    }),
+                });
                 break;
             }
         }

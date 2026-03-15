@@ -17,13 +17,13 @@ Level layouts should:
 
 Each tier represents increasing difficulty. Layouts should scale accordingly:
 
-| Tier | Difficulty | Zone Target Count | Challenge Types                           | Enemy Density |
-| ---- | ---------- | ----------------- | ----------------------------------------- | ------------- |
-| A    | Easy       | 2-4               | Simple keycards,                          | Low           |
-| B    | Normal     | 3-5               | Keycards                                  | Moderate      |
-| C    | Moderate   | 4-7               | Generator puzzles, class alarms           | Medium        |
-| D    | Hard       | 5-9               | Error alarms, terminal puzzles            | High          |
-| E    | Extreme    | 6-12+             | Apex alarms, boss fights, complex puzzles | Very High     |
+| Tier | Difficulty | Zone Target Count | Challenge Types                                          | Enemy Density |
+| ---- | ---------- | ----------------- | -------------------------------------------------------- | ------------- |
+| A    | Easy       | 2-4               | Simple keycards, travel scan alarms                      | Low           |
+| B    | Normal     | 3-5               | Keycards, travel scan alarms                             | Moderate      |
+| C    | Moderate   | 4-7               | Generator puzzles, class alarms, travel scan alarms      | Medium        |
+| D    | Hard       | 5-9               | Error alarms, terminal puzzles, travel scan alarms       | High          |
+| E    | Extreme    | 6-12+             | Apex alarms, boss fights, travel scan alarms, complex puzzles | Very High     |
 
 ### Progression Example
 
@@ -40,6 +40,8 @@ switch (level.Tier)
         // Add side branches
         start = planner.UpdateNode(start with { MaxConnections = 3 });
         var (end, _) = BuildChallenge_KeycardInSide(start, sideKeycardZones: 1);
+        // Or: lightweight travel scan as an alternative progression gate
+        // var (end, _) = AddTravelScanAlarm(start);
         break;
 
     case "C":
@@ -52,12 +54,17 @@ switch (level.Tier)
         // Error alarm with turn-off
         var (end, _) = BuildChallenge_ErrorWithOff_KeycardInSide(start,
             errorZones: 2, sideKeycardZones: 2, terminalTurnoffZones: 1);
+        // Or: travel scan alarm as an alternative progression gate
+        // var (end, _) = AddTravelScanAlarm(start);
         break;
 
     case "E":
         // Apex alarm, boss fight, complex multi-part
         var (mid, _) = BuildChallenge_ApexAlarm(start, WavePopulation.Baseline, WaveSettings.Apex_Normal);
         var (end, _) = BuildChallenge_BossFight(mid);
+        // Or: travel scan into apex for sustained pressure
+        // var (travelEnd, _) = AddTravelScanAlarm(start);
+        // var (end, _) = BuildChallenge_ApexAlarm(travelEnd, ...);
         break;
 }
 ```

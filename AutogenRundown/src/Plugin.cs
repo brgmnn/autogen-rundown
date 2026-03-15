@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.Components;
 using AutogenRundown.Managers;
 using AutogenRundown.Patches;
+using AutogenRundown.Patches.TravelScan;
 using AutogenRundown.Patches.ZoneSensors;
 using BepInEx;
 using BepInEx.Configuration;
@@ -118,6 +119,7 @@ public class Plugin : BasePlugin
         GameDataAPI.OnGameDataInitialized += Patch_CentralGeneratorCluster.Setup;
         GameDataAPI.OnGameDataInitialized += LogArchivistManager.Setup;
         GameDataAPI.OnGameDataInitialized += ZoneSensorManager.Setup;
+        GameDataAPI.OnGameDataInitialized += TravelScanRegistry.Setup;
 
         // LevelAPI.OnLevelCleanup += SignBorderManager.Clear;
         // LevelAPI.OnEnterLevel += () =>

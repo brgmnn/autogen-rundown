@@ -440,6 +440,7 @@ public partial record LevelLayout
         var prev = elevatorDrop;
         Zone nextZone = elevatorDropZone;
 
+        // Only place areas for the selected bulkheads
         for (var i = 0; i < minimumZones; i++)
         {
             var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
@@ -461,9 +462,21 @@ public partial record LevelLayout
             prev = next;
         }
 
-        // The final area also needs to be placed
-        if (toPlace.Count > 0)
-            InitializeBulkheadArea(level, Generator.Draw(toPlace), prev);
+        // Add a separate zone for main as in no bulkhead main missions it just grabs the last
+        // main zone for its build start
+        if (level is { HasExtreme: false, HasOverload: false })
+            return;
+
+        var main = new ZoneNode(Bulkhead.Main, level.Planner.NextIndex(Bulkhead.Main));
+        level.Planner.Connect(prev, main);
+
+        level.Planner.AddZone(
+            main,
+            new Zone(level, this)
+            {
+                Coverage = CoverageMinMax.GenNormalSize(),
+                LightSettings = Lights.GenRandomLight(),
+            });
     }
 
     /// <summary>

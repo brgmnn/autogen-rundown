@@ -173,6 +173,15 @@ public partial record LevelLayout
                             AddForwardExtractStart(last);
                         }
                     }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
+                        AddForwardExtractStart(genNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -205,6 +214,14 @@ public partial record LevelLayout
 
                         for (var g = 0; g < numGens; g++)
                             BuildGeneratorBranch(hub, $"generator_{g}");
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
                 break;
@@ -243,6 +260,14 @@ public partial record LevelLayout
 
                         for (var g = 1; g < numGens; g++)
                             BuildGeneratorBranch(hub, $"generator_{g}");
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
                 break;
@@ -331,6 +356,15 @@ public partial record LevelLayout
                             AddForwardExtractStart(last);
                         }
                     }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
+                        AddForwardExtractStart(genNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -364,6 +398,14 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_LockedTerminalDoor(start, 0);
                         var nodes = AddBranch(end, 1, "generator");
                         PlaceGeneratorsInZone(nodes.Last(), numGens);
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
                 break;
@@ -424,6 +466,14 @@ public partial record LevelLayout
 
                         for (var g = 1; g < numGens; g++)
                             BuildGeneratorBranch(hub, $"generator_{g}");
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
                 break;
@@ -540,6 +590,15 @@ public partial record LevelLayout
                             AddForwardExtractStart(last);
                         }
                     }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
+                        AddForwardExtractStart(genNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -597,6 +656,14 @@ public partial record LevelLayout
 
                         for (var g = 1; g < numGens; g++)
                             BuildGeneratorBranch(hub, $"generator_{g}");
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
                 break;
@@ -679,6 +746,14 @@ public partial record LevelLayout
 
                         for (var g = 2; g < numGens; g++)
                             BuildGeneratorBranch(hub, $"generator_{g}");
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
                 break;
@@ -867,6 +942,15 @@ public partial record LevelLayout
 
                         AddForwardExtractStart(hub, chance: 0.3);
                     }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
+                        AddForwardExtractStart(genNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -956,6 +1040,14 @@ public partial record LevelLayout
                         var overflowBase = errNodes.Last();
                         for (var g = 1; g < numGens; g++)
                             overflowBase = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
                 break;
@@ -1077,6 +1169,14 @@ public partial record LevelLayout
                         var overflowBase = apexNodes.Last();
                         for (var g = 2; g < numGens; g++)
                             overflowBase = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
                 break;
@@ -1312,6 +1412,15 @@ public partial record LevelLayout
 
                         AddForwardExtractStart(hub, chance: 0.3);
                     }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
+                        AddForwardExtractStart(genNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -1428,6 +1537,14 @@ public partial record LevelLayout
                         ZoneNode overflowBase = hub;
                         for (var g = 0; g < numGens; g++)
                             overflowBase = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
                 break;
@@ -1567,6 +1684,14 @@ public partial record LevelLayout
                         var overflowBase = apexNodes.Last();
                         for (var g = 2; g < numGens; g++)
                             overflowBase = BuildGeneratorBranch(g < 3 ? hub : overflowBase, $"generator_{g}");
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
                 break;

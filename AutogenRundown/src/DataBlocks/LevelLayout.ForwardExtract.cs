@@ -64,8 +64,17 @@ public partial record LevelLayout
                         exitZone = planner.GetZone(exit)!;
                     }),
 
+                    // Forward extract
+                    (0.20, () =>
+                    {
+                        exit = AddForwardExtract(startFrom);
+                        exitZone = planner.GetZone(exit)!;
+                        first = exit;
+                        firstZone = exitZone;
+                    }),
+
                     // Terminal door unlock
-                    (0.60, () =>
+                    (0.40, () =>
                     {
                         (first, firstZone) = AddZone(startFrom, new ZoneNode { Branch = "forward_extract" });
 
@@ -107,6 +116,14 @@ public partial record LevelLayout
                         firstZone.TerminalPlacements.Add(new TerminalPlacement());
 
                         (exit, exitZone) = BuildChallenge_LockedTerminalDoor(first, sideZones: 0);
+                    }),
+
+                    // Forward extract path
+                    (0.15, () =>
+                    {
+                        (first, firstZone) = AddZone_Forward(startFrom, new ZoneNode { Branch = "forward_extract" });
+                        exit = AddForwardExtract(first);
+                        exitZone = planner.GetZone(exit)!;
                     }),
 
                     // Key door unlock
@@ -163,6 +180,14 @@ public partial record LevelLayout
                         (exit, exitZone) = BuildChallenge_KeycardInZone(first);
                     }),
 
+                    // Forward extract path
+                    (0.15, () =>
+                    {
+                        (first, firstZone) = AddZone_Forward(startFrom, new ZoneNode { Branch = "forward_extract" });
+                        exit = AddForwardExtract(first, preludeZones: Generator.Between(0, 1));
+                        exitZone = planner.GetZone(exit)!;
+                    }),
+
                     // Error alarm, no turn off
                     // Note: this will be on top of the regular extract alarm!
                     (0.30, () =>
@@ -203,6 +228,15 @@ public partial record LevelLayout
                         firstZone.TerminalPlacements.Add(new TerminalPlacement());
 
                         (exit, exitZone) = BuildChallenge_LockedTerminalDoor(first, sideZones: 0);
+                    }),
+
+                    // Forward extract
+                    (0.15, () =>
+                    {
+                        exit = AddForwardExtract(startFrom);
+                        exitZone = planner.GetZone(exit)!;
+                        first = exit;
+                        firstZone = exitZone;
                     }),
 
                     // Key door unlock
@@ -267,6 +301,14 @@ public partial record LevelLayout
                         firstZone.Coverage = CoverageMinMax.Medium_56;
 
                         (exit, exitZone) = BuildChallenge_GeneratorCellInSide(first, sideCellZones: 1);
+                    }),
+
+                    // Forward extract path
+                    (0.10, () =>
+                    {
+                        (first, firstZone) = AddZone_Forward(startFrom, new ZoneNode { Branch = "forward_extract" });
+                        exit = AddForwardExtract(first, preludeZones: Generator.Between(0, 1));
+                        exitZone = planner.GetZone(exit)!;
                     }),
 
                     // Error alarm, no turn off
@@ -366,6 +408,14 @@ public partial record LevelLayout
                         (first, firstZone) = AddZone_Forward(startFrom, new ZoneNode { Branch = "forward_extract" });
 
                         (exit, exitZone) = BuildChallenge_GeneratorCellInZone(first);
+                    }),
+
+                    // Forward extract path
+                    (0.10, () =>
+                    {
+                        (first, firstZone) = AddZone_Forward(startFrom, new ZoneNode { Branch = "forward_extract" });
+                        exit = AddForwardExtract(first);
+                        exitZone = planner.GetZone(exit)!;
                     }),
 
                     // Error alarm, no turn off

@@ -2,6 +2,7 @@
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Terminals;
@@ -109,6 +110,641 @@ public partial record LevelLayout
                 Unit = StaticSpawnUnit.Respawner,
                 FixedSeed = Generator.Between(10, 150)
             });
+    }
+
+    #endregion
+
+    #region Hard Alarm
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="start">Node to start in. Note this may convert the node to a hub</param>
+    /// <param name="population">
+    ///     Wave population to use, if null will be determined automatically
+    /// </param>
+    /// <param name="settings">
+    ///     Wave settings to use, if null will be determined automatically
+    /// </param>
+    /// <returns></returns>
+    public (ZoneNode, Zone) AddHardAlarmZone(
+        ZoneNode start,
+        WavePopulation? population = null,
+        WaveSettings? settings = null)
+    {
+        start = planner.UpdateNode(start with { MaxConnections = 3 });
+        var startZone = planner.GetZone(start)!;
+        startZone.GenHubGeomorph(level.Complex);
+
+        var (end, endZone) = AddZone(start, new ZoneNode());
+
+        startZone.AmmoPacks += 2.0;
+        startZone.ToolPacks += 1.0;
+        if (startZone.InFog)
+            startZone.ConsumableDistributionInZone = ConsumableDistribution.Alarms_FogRepellers.PersistentId;
+
+        var puzzle = director.Tier switch
+        {
+            "A" => ChainedPuzzle.AlarmClass3_Mixed,
+            "B" => ChainedPuzzle.AlarmClass4_Mixed,
+            "C" => ChainedPuzzle.AlarmClass5_Mixed,
+            "D" => ChainedPuzzle.AlarmClass6_Mixed,
+            "E" => ChainedPuzzle.AlarmClass7_Mixed,
+            _   => ChainedPuzzle.AlarmClass5_Mixed,
+        };
+
+        population ??= WavePopulation.Baseline;
+        if (level.Settings.HasShadows())
+            population = Generator.Flip(0.6) ? WavePopulation.OnlyShadows : WavePopulation.Baseline_Shadows;
+        if (level.Settings.HasChargers())
+            population = WavePopulation.Baseline_Chargers;
+        else if (level.Settings.HasFlyers())
+            population = WavePopulation.Baseline_Flyers;
+
+        endZone.SecurityGateToEnter = SecurityGate.Security;
+        endZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle with
+        {
+            Population = population ?? puzzle.Population,
+            Settings = settings ?? puzzle.Settings
+        });
+
+        var clearTime = puzzle.ClearTime();
+
+        // ~35% through: warning sound + message
+        var surprise1 = clearTime * 0.35;
+        endZone.EventsOnDoorScanStart
+            .AddSound(Sound.SheetMetalLand, surprise1)
+            .AddMessage(":://WARNING - Biosign spike detected", surprise1 + 2.0);
+
+        // ~40% through: surprise wave spawn
+        var surpriseWaveSettings = director.Tier switch
+        {
+            "A" => WaveSettings.SingleWave_12pts,
+            "B" => WaveSettings.SingleWave_16pts,
+            "C" => WaveSettings.SingleWave_20pts,
+            "D" => WaveSettings.SingleWave_20pts,
+            "E" => WaveSettings.SingleWave_28pts,
+            _   => WaveSettings.SingleWave_16pts,
+        };
+        endZone.EventsOnDoorScanStart.AddSpawnWave(
+            new GenericWave { Settings = surpriseWaveSettings, Population = population },
+            surprise1 + 5.0);
+
+        // ~70% through: lights off + another wave
+        var surprise2 = clearTime * 0.70;
+        endZone.EventsOnDoorScanStart
+            .AddLightsOff(surprise2)
+            .AddSpawnWave(
+                new GenericWave { Settings = surpriseWaveSettings, Population = population },
+                surprise2 + 3.0);
+        endZone.EventsOnDoorScanDone
+            .AddLightsOn(1.0);
+
+        return (end, endZone);
+    }
+
+    #endregion
+
+    #region Travel Scan Alarms
+
+    /// <summary>
+    /// Adds a travel scan
+    /// </summary>
+    /// <param name="start">Node to start in. Note this may convert the node to a hub</param>
+    /// <param name="population">
+    ///     Wave population to use, if null will be determined automatically
+    /// </param>
+    /// <param name="settings">
+    ///     Wave settings to use, if null will be determined automatically
+    /// </param>
+    public (ZoneNode, Zone) AddTravelScanAlarm(
+        ZoneNode start,
+        WavePopulation? population = null,
+        WaveSettings? settings = null)
+    {
+        start = planner.UpdateNode(start with { MaxConnections = 3 });
+        var startZone = planner.GetZone(start)!;
+        startZone.GenHubGeomorph(level.Complex);
+
+        var (end, endZone) = AddZone(start, new ZoneNode());
+
+        startZone.AmmoPacks += 2.0;
+        startZone.ToolPacks += 1.0;
+
+        var scanOptions = (level.Tier, director.Bulkhead) switch
+        {
+            ("A", Bulkhead.Main) => new List<(double, PuzzleComponent)>
+            {
+                (0.66, PuzzleComponent.TravelTeam_Short),
+                (0.33, PuzzleComponent.TravelTeam_MediumGreen)
+            },
+            ("A", Bulkhead.Extreme) => new List<(double, PuzzleComponent)>
+            {
+                (0.66, PuzzleComponent.TravelTeam_MediumGreen),
+                (0.33, PuzzleComponent.TravelTeam_Short)
+            },
+            ("A", Bulkhead.Overload) => new List<(double, PuzzleComponent)>
+            {
+                (0.60, PuzzleComponent.TravelTeam_MediumGreen),
+                (0.40, PuzzleComponent.TravelTeam_LongGreen)
+            },
+
+            ("B", Bulkhead.Main) => new List<(double, PuzzleComponent)>
+            {
+                (0.33, PuzzleComponent.TravelTeam_Short),
+                (0.66, PuzzleComponent.TravelTeam_MediumGreen)
+            },
+            ("B", Bulkhead.Extreme) => new List<(double, PuzzleComponent)>
+            {
+                (0.50, PuzzleComponent.TravelTeam_MediumGreen),
+                (0.50, PuzzleComponent.TravelTeam_LongGreen)
+            },
+            ("B", Bulkhead.Overload) => new List<(double, PuzzleComponent)>
+            {
+                (0.60, PuzzleComponent.TravelTeam_LongGreen),
+                (0.40, PuzzleComponent.SustainedTravel)
+            },
+
+            ("C", Bulkhead.Main) => new List<(double, PuzzleComponent)>
+            {
+                (0.50, PuzzleComponent.TravelTeam_MediumGreen),
+                (0.50, PuzzleComponent.TravelTeam_LongGreen)
+            },
+            ("C", Bulkhead.Extreme) => new List<(double, PuzzleComponent)>
+            {
+                (0.60, PuzzleComponent.TravelTeam_LongGreen),
+                (0.40, PuzzleComponent.SustainedTravel)
+            },
+            ("C", Bulkhead.Overload) => new List<(double, PuzzleComponent)>
+            {
+                (0.40, PuzzleComponent.TravelTeam_LongGreen),
+                (0.60, PuzzleComponent.SustainedTravel)
+            },
+
+            ("D", Bulkhead.Main) => new List<(double, PuzzleComponent)>
+            {
+                (0.50, PuzzleComponent.TravelTeam_LongGreen),
+                (0.50, PuzzleComponent.SustainedTravel)
+            },
+            ("D", Bulkhead.Extreme) => new List<(double, PuzzleComponent)>
+            {
+                (0.60, PuzzleComponent.SustainedTravel),
+                (0.40, PuzzleComponent.TravelTeam_LongGreen)
+            },
+            ("D", Bulkhead.Overload) => new List<(double, PuzzleComponent)>
+            {
+                (1.0, PuzzleComponent.SustainedTravel)
+            },
+
+            ("E", Bulkhead.Main) => new List<(double, PuzzleComponent)>
+            {
+                (0.40, PuzzleComponent.TravelTeam_LongGreen),
+                (0.60, PuzzleComponent.SustainedTravel)
+            },
+            ("E", Bulkhead.Extreme) => new List<(double, PuzzleComponent)>
+            {
+                (0.70, PuzzleComponent.SustainedTravel),
+                (0.30, PuzzleComponent.TravelTeam_LongGreen)
+            },
+            ("E", Bulkhead.Overload) => new List<(double, PuzzleComponent)>
+            {
+                (1.0, PuzzleComponent.SustainedTravel)
+            },
+
+            _ => new List<(double, PuzzleComponent)> { (1.0, PuzzleComponent.TravelTeam_MediumGreen) }
+        };
+
+        var scan = Generator.Select(scanOptions);
+
+        var puzzle = ChainedPuzzle.TravelAlarm_Team with
+        {
+            PublicAlarmName = scan == PuzzleComponent.SustainedTravel ? "Class S T Alarm" : "Class T Alarm",
+            Puzzle = new List<PuzzleComponent> { scan }
+        };
+
+        // Wave settings — pushed one notch above normal BuildPack alarms
+        settings ??= Generator.Select((level.Tier, director.Bulkhead) switch
+        {
+            ("A", Bulkhead.Main) => new List<(double, WaveSettings)>
+            {
+                (0.70, WaveSettings.Baseline_Normal),
+                (0.30, WaveSettings.Baseline_Hard)
+            },
+            ("A", Bulkhead.Extreme) => new List<(double, WaveSettings)>
+            {
+                (0.60, WaveSettings.Baseline_Hard),
+                (0.40, WaveSettings.Baseline_Normal)
+            },
+            ("A", Bulkhead.Overload) => new List<(double, WaveSettings)>
+            {
+                (0.50, WaveSettings.Baseline_Hard),
+                (0.50, WaveSettings.Baseline_VeryHard)
+            },
+
+            ("B", Bulkhead.Main) => new List<(double, WaveSettings)>
+            {
+                (0.60, WaveSettings.Baseline_Hard),
+                (0.40, WaveSettings.Baseline_Normal)
+            },
+            ("B", Bulkhead.Extreme) => new List<(double, WaveSettings)>
+            {
+                (0.40, WaveSettings.Baseline_Hard),
+                (0.60, WaveSettings.Baseline_VeryHard)
+            },
+            ("B", Bulkhead.Overload) => new List<(double, WaveSettings)>
+            {
+                (0.60, WaveSettings.Baseline_VeryHard),
+                (0.40, WaveSettings.Baseline_Hard)
+            },
+
+            ("C", Bulkhead.Main) => new List<(double, WaveSettings)>
+            {
+                (0.50, WaveSettings.Baseline_Hard),
+                (0.50, WaveSettings.Baseline_VeryHard)
+            },
+            ("C", Bulkhead.Extreme) => new List<(double, WaveSettings)>
+            {
+                (0.60, WaveSettings.Baseline_VeryHard),
+                (0.40, WaveSettings.Baseline_Hard)
+            },
+            ("C", Bulkhead.Overload) => new List<(double, WaveSettings)>
+            {
+                (1.00, WaveSettings.Baseline_VeryHard)
+            },
+
+            ("D", Bulkhead.Main) => new List<(double, WaveSettings)>
+            {
+                (0.60, WaveSettings.Baseline_VeryHard),
+                (0.40, WaveSettings.Baseline_Hard)
+            },
+            ("D", Bulkhead.Extreme) => new List<(double, WaveSettings)>
+            {
+                (0.50, WaveSettings.Baseline_VeryHard),
+                (0.50, WaveSettings.Surge_Easy)
+            },
+            ("D", Bulkhead.Overload) => new List<(double, WaveSettings)>
+            {
+                (0.40, WaveSettings.Baseline_VeryHard),
+                (0.60, WaveSettings.Surge_Easy)
+            },
+
+            ("E", Bulkhead.Main) => new List<(double, WaveSettings)>
+            {
+                (0.50, WaveSettings.Baseline_VeryHard),
+                (0.50, WaveSettings.Surge_Easy)
+            },
+            ("E", Bulkhead.Extreme) => new List<(double, WaveSettings)>
+            {
+                (0.40, WaveSettings.Baseline_VeryHard),
+                (0.60, WaveSettings.Surge_Easy)
+            },
+            ("E", Bulkhead.Overload) => new List<(double, WaveSettings)>
+            {
+                (0.70, WaveSettings.Surge_Easy),
+                (0.30, WaveSettings.Baseline_VeryHard)
+            },
+
+            _ => new List<(double, WaveSettings)> { (1.0, WaveSettings.Baseline_Normal) }
+        });
+
+        // Wave population — modifier precedence: Nightmares > InfectionHybrids > Chargers > Shadows > default
+        if (population == null)
+        {
+            if (level.Settings.HasNightmares())
+            {
+                population = Generator.Select((level.Tier, director.Bulkhead) switch
+                {
+                    ("A" or "B", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (1.0, WavePopulation.Baseline_Nightmare)
+                    },
+                    ("A" or "B", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.60, WavePopulation.Baseline_Nightmare),
+                        (0.40, WavePopulation.Baseline_Nightmare_Hard)
+                    },
+                    ("A" or "B", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (1.0, WavePopulation.Baseline_Nightmare_Hard)
+                    },
+
+                    ("C", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (0.50, WavePopulation.Baseline_Nightmare),
+                        (0.50, WavePopulation.Baseline_Nightmare_Hard)
+                    },
+                    ("C", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.60, WavePopulation.Baseline_Nightmare_Hard),
+                        (0.40, WavePopulation.OnlyNightmares)
+                    },
+                    ("C", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (0.60, WavePopulation.OnlyNightmares),
+                        (0.40, WavePopulation.Baseline_Nightmare_Hard)
+                    },
+
+                    ("D" or "E", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (0.50, WavePopulation.Baseline_Nightmare_Hard),
+                        (0.50, WavePopulation.OnlyNightmares)
+                    },
+                    ("D" or "E", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.60, WavePopulation.OnlyNightmares),
+                        (0.40, WavePopulation.Baseline_Nightmare_Hard)
+                    },
+                    ("D" or "E", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (1.0, WavePopulation.OnlyNightmares)
+                    },
+
+                    _ => new List<(double, WavePopulation)> { (1.0, WavePopulation.Baseline_Nightmare) }
+                });
+            }
+            else if (level.Settings.Modifiers.Contains(LevelModifiers.InfectionHybrids))
+            {
+                population = Generator.Select((level.Tier, director.Bulkhead) switch
+                {
+                    ("A" or "B", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (0.60, WavePopulation.Baseline_InfectedHybrids),
+                        (0.40, WavePopulation.Baseline_Infested)
+                    },
+                    ("A" or "B", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.50, WavePopulation.Baseline_InfectedHybrids),
+                        (0.50, WavePopulation.OnlyInfectedHybrids)
+                    },
+                    ("A" or "B", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (0.60, WavePopulation.OnlyInfectedHybrids),
+                        (0.40, WavePopulation.Baseline_InfectedHybrids)
+                    },
+
+                    ("C", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (0.40, WavePopulation.Baseline_InfectedHybrids),
+                        (0.40, WavePopulation.OnlyInfectedHybrids),
+                        (0.20, WavePopulation.Baseline_Infested)
+                    },
+                    ("C", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.60, WavePopulation.OnlyInfectedHybrids),
+                        (0.40, WavePopulation.Baseline_InfectedHybrids)
+                    },
+                    ("C", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (0.70, WavePopulation.OnlyInfectedHybrids),
+                        (0.30, WavePopulation.Baseline_Infested)
+                    },
+
+                    ("D" or "E", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (0.50, WavePopulation.OnlyInfectedHybrids),
+                        (0.30, WavePopulation.Baseline_InfectedHybrids),
+                        (0.20, WavePopulation.Baseline_Infested)
+                    },
+                    ("D" or "E", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.70, WavePopulation.OnlyInfectedHybrids),
+                        (0.30, WavePopulation.Baseline_Infested)
+                    },
+                    ("D" or "E", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (1.0, WavePopulation.OnlyInfectedHybrids)
+                    },
+
+                    _ => new List<(double, WavePopulation)> { (1.0, WavePopulation.Baseline_InfectedHybrids) }
+                });
+            }
+            else if (level.Settings.HasChargers())
+            {
+                population = Generator.Select((level.Tier, director.Bulkhead) switch
+                {
+                    ("A" or "B", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (1.0, WavePopulation.Baseline_Chargers)
+                    },
+                    ("A" or "B", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.60, WavePopulation.Baseline_Chargers),
+                        (0.40, WavePopulation.Baseline_Chargers_Hard)
+                    },
+                    ("A" or "B", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (0.50, WavePopulation.Baseline_Chargers_Hard),
+                        (0.50, WavePopulation.OnlyChargers)
+                    },
+
+                    ("C", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (0.50, WavePopulation.Baseline_Chargers),
+                        (0.50, WavePopulation.Baseline_Chargers_Hard)
+                    },
+                    ("C", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.60, WavePopulation.Baseline_Chargers_Hard),
+                        (0.40, WavePopulation.OnlyChargers)
+                    },
+                    ("C", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (0.50, WavePopulation.OnlyChargers),
+                        (0.50, WavePopulation.Baseline_Chargers_Hard)
+                    },
+
+                    ("D" or "E", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (0.60, WavePopulation.Baseline_Chargers_Hard),
+                        (0.40, WavePopulation.OnlyChargers)
+                    },
+                    ("D" or "E", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.60, WavePopulation.OnlyChargers),
+                        (0.40, WavePopulation.Baseline_Chargers_Hard)
+                    },
+                    ("D" or "E", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (1.0, WavePopulation.OnlyChargers)
+                    },
+
+                    _ => new List<(double, WavePopulation)> { (1.0, WavePopulation.Baseline_Chargers) }
+                });
+            }
+            else if (level.Settings.HasShadows())
+            {
+                population = Generator.Select((level.Tier, director.Bulkhead) switch
+                {
+                    ("A" or "B", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (0.60, WavePopulation.Baseline_Shadows),
+                        (0.40, WavePopulation.OnlyShadows)
+                    },
+                    ("A" or "B", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.40, WavePopulation.Baseline_Shadows),
+                        (0.60, WavePopulation.OnlyShadows)
+                    },
+                    ("A" or "B", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (0.60, WavePopulation.OnlyShadows),
+                        (0.40, WavePopulation.Shadows_WithHybrids)
+                    },
+
+                    ("C", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (0.40, WavePopulation.Baseline_Shadows),
+                        (0.40, WavePopulation.OnlyShadows),
+                        (0.20, WavePopulation.Shadows_WithHybrids)
+                    },
+                    ("C", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.50, WavePopulation.OnlyShadows),
+                        (0.50, WavePopulation.Shadows_WithHybrids)
+                    },
+                    ("C", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (0.60, WavePopulation.Shadows_WithHybrids),
+                        (0.40, WavePopulation.OnlyShadows)
+                    },
+
+                    ("D" or "E", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (0.40, WavePopulation.OnlyShadows),
+                        (0.60, WavePopulation.Shadows_WithHybrids)
+                    },
+                    ("D" or "E", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.60, WavePopulation.Shadows_WithHybrids),
+                        (0.40, WavePopulation.OnlyShadows)
+                    },
+                    ("D" or "E", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (1.0, WavePopulation.Shadows_WithHybrids)
+                    },
+
+                    _ => new List<(double, WavePopulation)> { (1.0, WavePopulation.Baseline_Shadows) }
+                });
+            }
+            else
+            {
+                population = Generator.Select((level.Tier, director.Bulkhead) switch
+                {
+                    ("A", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (0.70, WavePopulation.Baseline),
+                        (0.30, WavePopulation.Baseline_Infested)
+                    },
+                    ("A", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.50, WavePopulation.Baseline),
+                        (0.50, WavePopulation.Baseline_Infested)
+                    },
+                    ("A", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (0.50, WavePopulation.Baseline_Infested),
+                        (0.50, WavePopulation.Baseline_Chargers)
+                    },
+
+                    ("B", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (0.40, WavePopulation.Baseline),
+                        (0.30, WavePopulation.Baseline_Infested),
+                        (0.30, WavePopulation.Baseline_Chargers)
+                    },
+                    ("B", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.40, WavePopulation.Baseline_Infested),
+                        (0.40, WavePopulation.Baseline_Chargers),
+                        (0.20, WavePopulation.Baseline)
+                    },
+                    ("B", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (0.40, WavePopulation.Baseline_Infested),
+                        (0.30, WavePopulation.Baseline_Chargers),
+                        (0.30, WavePopulation.Baseline_Hybrids)
+                    },
+
+                    ("C", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (0.30, WavePopulation.Baseline_Infested),
+                        (0.30, WavePopulation.Baseline_Chargers),
+                        (0.30, WavePopulation.Baseline_Hybrids),
+                        (0.10, WavePopulation.Baseline)
+                    },
+                    ("C", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.30, WavePopulation.Baseline_Infested),
+                        (0.30, WavePopulation.Baseline_Chargers),
+                        (0.40, WavePopulation.Baseline_Hybrids)
+                    },
+                    ("C", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (0.40, WavePopulation.Baseline_Hybrids),
+                        (0.30, WavePopulation.Baseline_Chargers_Hard),
+                        (0.30, WavePopulation.Baseline_Infested)
+                    },
+
+                    ("D", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (0.30, WavePopulation.Baseline_Infested),
+                        (0.30, WavePopulation.Baseline_Chargers_Hard),
+                        (0.30, WavePopulation.Baseline_Hybrids),
+                        (0.10, WavePopulation.Baseline_Nightmare)
+                    },
+                    ("D", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.30, WavePopulation.Baseline_Chargers_Hard),
+                        (0.30, WavePopulation.Baseline_Hybrids),
+                        (0.25, WavePopulation.Baseline_Infested),
+                        (0.15, WavePopulation.Baseline_Nightmare)
+                    },
+                    ("D", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (0.30, WavePopulation.Baseline_Chargers_Hard),
+                        (0.30, WavePopulation.Baseline_Hybrids),
+                        (0.25, WavePopulation.Baseline_Nightmare),
+                        (0.15, WavePopulation.Baseline_Infested)
+                    },
+
+                    ("E", Bulkhead.Main) => new List<(double, WavePopulation)>
+                    {
+                        (0.25, WavePopulation.Baseline_Chargers_Hard),
+                        (0.25, WavePopulation.Baseline_Hybrids),
+                        (0.30, WavePopulation.Baseline_Nightmare),
+                        (0.20, WavePopulation.Baseline_Infested)
+                    },
+                    ("E", Bulkhead.Extreme) => new List<(double, WavePopulation)>
+                    {
+                        (0.35, WavePopulation.Baseline_Nightmare),
+                        (0.25, WavePopulation.Baseline_Chargers_Hard),
+                        (0.25, WavePopulation.Baseline_Hybrids),
+                        (0.15, WavePopulation.Baseline_Infested)
+                    },
+                    ("E", Bulkhead.Overload) => new List<(double, WavePopulation)>
+                    {
+                        (0.35, WavePopulation.Baseline_Nightmare_Hard),
+                        (0.25, WavePopulation.Baseline_Chargers_Hard),
+                        (0.25, WavePopulation.Baseline_Hybrids),
+                        (0.15, WavePopulation.Baseline_Infested)
+                    },
+
+                    _ => new List<(double, WavePopulation)> { (1.0, WavePopulation.Baseline) }
+                });
+            }
+        }
+
+        endZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle with
+        {
+            Population = population,
+            Settings = settings
+        });
+
+        Plugin.Logger.LogDebug($"Added Travel Scan challenge: zone = {end}, " +
+                               $"scan = {endZone.Alarm.Puzzle.First().PuzzleType}, " +
+                               $"settings = {endZone.Alarm.Settings} ");
+
+        return (end, endZone);
     }
 
     #endregion
@@ -239,9 +875,88 @@ public partial record LevelLayout
     /// Works somewhat like adding an Apex alarm except here we look to add a pretty difficult
     /// alarm from the scan list
     /// </summary>
-    public void AddHardAlarm()
+    public void AddHardAlarm(
+        ZoneNode lockedNode,
+        WavePopulation? population = null,
+        WaveSettings? settings = null)
     {
+        var lockedZone = planner.GetZone(lockedNode);
+        var setupish = planner.GetBuildFrom(lockedNode);
 
+        if (setupish == null)
+        {
+            Plugin.Logger.LogWarning($"AddHardAlarm() returned early: missing setup zone for locked={lockedNode}");
+            return;
+        }
+
+        var setupNode = (ZoneNode)setupish;
+        var setupZone = planner.GetZone(setupNode);
+
+        if (lockedZone == null || setupZone == null)
+        {
+            Plugin.Logger.LogWarning($"AddHardAlarm() returned early: missing zones locked={lockedZone}");
+            return;
+        }
+
+        setupNode = planner.UpdateNode(setupNode with { MaxConnections = 3 });
+        setupZone.GenHubGeomorph(level.Complex);
+
+        var puzzle = director.Tier switch
+        {
+            "A" => ChainedPuzzle.AlarmClass3_Mixed,
+            "B" => ChainedPuzzle.AlarmClass4_Mixed,
+            "C" => ChainedPuzzle.AlarmClass5_Mixed,
+            "D" => ChainedPuzzle.AlarmClass6_Mixed,
+            "E" => ChainedPuzzle.AlarmClass7_Mixed,
+            _   => ChainedPuzzle.AlarmClass5_Mixed,
+        };
+
+        if (population == null)
+        {
+            population = WavePopulation.Baseline;
+            if (level.Settings.HasShadows())
+                population = Generator.Flip(0.6) ? WavePopulation.OnlyShadows : WavePopulation.Baseline_Shadows;
+            if (level.Settings.HasChargers())
+                population = WavePopulation.Baseline_Chargers;
+            else if (level.Settings.HasFlyers())
+                population = WavePopulation.Baseline_Flyers;
+        }
+
+        lockedZone.SecurityGateToEnter = SecurityGate.Security;
+        lockedZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle with
+        {
+            Population = population ?? puzzle.Population,
+            Settings = settings ?? puzzle.Settings
+        });
+
+        var clearTime = puzzle.ClearTime();
+
+        var surprise1 = clearTime * 0.35;
+        lockedZone.EventsOnDoorScanStart
+            .AddSound(Sound.SheetMetalLand, surprise1)
+            .AddMessage(":://WARNING - Biosign spike detected", surprise1 + 2.0);
+
+        var surpriseWaveSettings = director.Tier switch
+        {
+            "A" => WaveSettings.SingleWave_12pts,
+            "B" => WaveSettings.SingleWave_16pts,
+            "C" => WaveSettings.SingleWave_20pts,
+            "D" => WaveSettings.SingleWave_20pts,
+            "E" => WaveSettings.SingleWave_28pts,
+            _   => WaveSettings.SingleWave_16pts,
+        };
+        lockedZone.EventsOnDoorScanStart.AddSpawnWave(
+            new GenericWave { Settings = surpriseWaveSettings, Population = population },
+            surprise1 + 5.0);
+
+        var surprise2 = clearTime * 0.70;
+        lockedZone.EventsOnDoorScanStart
+            .AddLightsOff(surprise2)
+            .AddSpawnWave(
+                new GenericWave { Settings = surpriseWaveSettings, Population = population },
+                surprise2 + 3.0);
+        lockedZone.EventsOnDoorScanDone
+            .AddLightsOn(1.0);
     }
     #endregion
 
