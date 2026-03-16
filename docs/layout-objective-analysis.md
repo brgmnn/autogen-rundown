@@ -2,6 +2,8 @@
 
 Analysis of every objective type's LevelLayout and WardenObjective implementation, scored by sophistication, with rework prioritization.
 
+**Last updated: 2026-03-15** — Updated all metrics, line counts, SelectRun counts, and last-modified dates. Travel scan options have been added across most layouts since the original analysis.
+
 ## Scoring Methodology
 
 Each objective is scored 1-5 based on:
@@ -32,12 +34,12 @@ Each objective is scored 1-5 based on:
 | Metric                  | Value                               |
 | ----------------------- | ----------------------------------- |
 | Layout file             | `LevelLayout.TerminalUplink.cs`     |
-| Layout lines            | 869                                 |
-| Layout last modified    | 2026-01-28                          |
+| Layout lines            | 997                                 |
+| Layout last modified    | 2026-03-14                          |
 | Layout SelectRun count  | 15                                  |
 | Objective file          | `WardenObjective.TerminalUplink.cs` |
-| Objective lines         | 539                                 |
-| Objective last modified | 2026-01-15                          |
+| Objective lines         | 541                                 |
+| Objective last modified | 2026-02-25                          |
 | **Rating**              | **5**                               |
 
 **Layout:** The gold standard. Every tier (A-E) and every bulkhead (Main/Extreme/Overload) has its own `SelectRun` block with 3-6 weighted variants. Uses the full challenge toolkit: `BuildChallenge_KeycardInSide`, `BuildChallenge_GeneratorCellInSide`, `BuildChallenge_LockedTerminalDoor`, `BuildChallenge_BossFight`, `BuildChallenge_ApexAlarm`, `BuildChallenge_ErrorWithOff_*`, `AddSecuritySensors`. Conditional layouts based on terminal count. Hub-style layouts for multi-terminal runs.
@@ -53,12 +55,12 @@ Each objective is scored 1-5 based on:
 | Metric                  | Value                                        |
 | ----------------------- | -------------------------------------------- |
 | Layout file             | `LevelLayout.CentralGeneratorCluster.cs`     |
-| Layout lines            | 1564                                         |
-| Layout last modified    | 2026-01-31                                   |
-| Layout SelectRun count  | 23                                           |
+| Layout lines            | 1655                                         |
+| Layout last modified    | 2026-03-14                                   |
+| Layout SelectRun count  | 23                                            |
 | Objective file          | `WardenObjective.CentralGeneratorCluster.cs` |
-| Objective lines         | 327                                          |
-| Objective last modified | 2026-01-11                                   |
+| Objective lines         | 330                                          |
+| Objective last modified | 2026-02-25                                   |
 | **Rating**              | **5**                                        |
 
 **Layout:** Highest SelectRun count of any objective. Extensive tier/bulkhead coverage. Complex fog progression system with ascending/descending shapes. Multiple generator counts (2-5) scaled by tier. Power cell delivery + fog mechanic creates unique gameplay.
@@ -74,12 +76,12 @@ Each objective is scored 1-5 based on:
 | Metric                  | Value                              |
 | ----------------------- | ---------------------------------- |
 | Layout file             | `LevelLayout.HsuFindSample.cs`     |
-| Layout lines            | 1216                               |
-| Layout last modified    | 2026-01-31                         |
+| Layout lines            | 1346                               |
+| Layout last modified    | 2026-03-14                         |
 | Layout SelectRun count  | 13                                 |
 | Objective file          | `WardenObjective.HsuFindSample.cs` |
 | Objective lines         | 188                                |
-| Objective last modified | 2025-12-10                         |
+| Objective last modified | 2026-02-25                         |
 | **Rating**              | **5**                              |
 
 **Layout:** Comprehensive tier coverage with SelectRun per tier. Uses challenge helpers, has a `_Fast` variant for sub-objectives. Rich layout ideas documented in comments (error alarms, locked zones, class 10 alarm paths). Good variety of approaches per tier.
@@ -95,12 +97,12 @@ Each objective is scored 1-5 based on:
 | Metric                  | Value                                 |
 | ----------------------- | ------------------------------------- |
 | Layout file             | `LevelLayout.GatherSmallItems.cs`     |
-| Layout lines            | 1106                                  |
-| Layout last modified    | 2025-12-10                            |
+| Layout lines            | 1247                                  |
+| Layout last modified    | 2026-03-14                            |
 | Layout SelectRun count  | 15                                    |
 | Objective file          | `WardenObjective.GatherSmallItems.cs` |
-| Objective lines         | 318                                   |
-| Objective last modified | 2025-12-10                            |
+| Objective lines         | 327                                   |
+| Objective last modified | 2026-02-25                            |
 | **Rating**              | **4**                                 |
 
 **Layout:** Strong SelectRun usage with 15 blocks. Handles multiple item types (IDs, decoders, drives, GLPs, data cubes). Has AlphaSix portal variant with MatterWaveProjector geomorph. Good variety.
@@ -116,12 +118,12 @@ Each objective is scored 1-5 based on:
 | Metric                  | Value                                        |
 | ----------------------- | -------------------------------------------- |
 | Layout file             | `LevelLayout.CorruptedTerminalUplink.cs`     |
-| Layout lines            | 774                                          |
-| Layout last modified    | 2026-01-31                                   |
+| Layout lines            | 866                                          |
+| Layout last modified    | 2026-03-14                                   |
 | Layout SelectRun count  | 10                                           |
 | Objective file          | `WardenObjective.CorruptedTerminalUplink.cs` |
 | Objective lines         | 539                                          |
-| Objective last modified | 2026-01-15                                   |
+| Objective last modified | 2026-02-25                                   |
 | **Rating**              | **4**                                        |
 
 **Layout:** Good SelectRun coverage per tier. Uses challenge helpers. Handles terminal count variations. Has TODO to flesh out D/E tier more, especially E-tier with 3 terminals.
@@ -137,8 +139,8 @@ Each objective is scored 1-5 based on:
 | Metric                  | Value                          |
 | ----------------------- | ------------------------------ |
 | Layout file             | `LevelLayout.ClearPath.cs`     |
-| Layout lines            | 514                            |
-| Layout last modified    | 2026-01-31                     |
+| Layout lines            | 554                            |
+| Layout last modified    | 2026-03-14                     |
 | Layout SelectRun count  | 7                              |
 | Objective file          | `WardenObjective.ClearPath.cs` |
 | Objective lines         | 312                            |
@@ -158,12 +160,12 @@ Each objective is scored 1-5 based on:
 | Metric                  | Value                                 |
 | ----------------------- | ------------------------------------- |
 | Layout file             | `LevelLayout.HsuActivateSmall.cs`     |
-| Layout lines            | 509                                   |
-| Layout last modified    | 2025-12-10                            |
+| Layout lines            | 559                                   |
+| Layout last modified    | 2026-03-14                            |
 | Layout SelectRun count  | 7                                     |
 | Objective file          | `WardenObjective.HsuActivateSmall.cs` |
 | Objective lines         | 166                                   |
-| Objective last modified | 2025-12-10                            |
+| Objective last modified | 2026-02-25                            |
 | **Rating**              | **4**                                 |
 
 **Layout:** Per-tier SelectRun with multiple variants. Uses challenge helpers (generator, keycard, boss, apex). Structured similarly to ClearPath with exit zone placement.
@@ -179,12 +181,12 @@ Each objective is scored 1-5 based on:
 | Metric                  | Value                               |
 | ----------------------- | ----------------------------------- |
 | Layout file             | `LevelLayout.GatherTerminal.cs`     |
-| Layout lines            | 430                                 |
-| Layout last modified    | 2026-01-28                          |
-| Layout SelectRun count  | 5                                   |
+| Layout lines            | 522                                 |
+| Layout last modified    | 2026-03-14                          |
+| Layout SelectRun count  | 6                                   |
 | Objective file          | `WardenObjective.GatherTerminal.cs` |
-| Objective lines         | 478                                 |
-| Objective last modified | 2025-12-10                          |
+| Objective lines         | 480                                 |
+| Objective last modified | 2026-02-25                          |
 | **Rating**              | **3**                               |
 
 **Layout:** Has SelectRun but organized by tier+bulkhead combos with spawn counts (3-spawn, 4-spawn, 6-spawn). Hub+branches topology with dead-end geomorphs. Has `_Fast` variant. Security sensor variants for D-Overload and E-Overload. TODO for 6-spawn E-Main (commented out). Forward extract candidates.
@@ -204,8 +206,8 @@ Each objective is scored 1-5 based on:
 | Layout last modified    | 2026-01-19                        |
 | Layout SelectRun count  | 5                                 |
 | Objective file          | `WardenObjective.ReachKdsDeep.cs` |
-| Objective lines         | 429                               |
-| Objective last modified | 2025-12-10                        |
+| Objective lines         | 430                               |
+| Objective last modified | 2026-02-19                        |
 | **Rating**              | **3**                             |
 
 **Layout:** Custom R8E1-style exit sequence with portal geomorphs, MatterWaveProjector, Garganta warning. Uses SelectRun for mid-level variants. Lore-heavy with custom terminal commands (ADMIN_TEMP_OVERRIDE). Unique mechanics: error alarm chase, reactor explosion, WinOnDeath timer.
@@ -221,19 +223,19 @@ Each objective is scored 1-5 based on:
 | Metric                  | Value                         |
 | ----------------------- | ----------------------------- |
 | Layout file             | `LevelLayout.Survival.cs`     |
-| Layout lines            | 292                           |
-| Layout last modified    | 2026-01-19                    |
-| Layout SelectRun count  | 2                             |
+| Layout lines            | 337                           |
+| Layout last modified    | 2026-03-14                    |
+| Layout SelectRun count  | 3                             |
 | Objective file          | `WardenObjective.Survival.cs` |
 | Objective lines         | 360                           |
 | Objective last modified | 2025-12-10                    |
 | **Rating**              | **3**                         |
 
-**Layout:** Has an E-tier SelectRun with boss error + puzzle variants (generator or keycard). Default tier uses basic `AddBranch` with resource boosts. Interesting security control side-zone with OVERRIDE_LOCKDOWN_PROTOCOL terminal command, event loops for flashing lights, and hybrid wave escalation. Exit zone with locked door.
+**Layout:** Has an E-tier SelectRun with boss error + puzzle variants (generator or keycard). Default tier has a SelectRun with standard arena (85%) vs travel scan approach (15%). Security control side-zone with OVERRIDE_LOCKDOWN_PROTOCOL terminal command, event loops for flashing lights, and hybrid wave escalation. Exit zone with locked door.
 
 **Objective:** Timed survival with force-open-doors shortcut. AWO event loops. TODO: limit bosses, maybe restrict error alarm to E-tier.
 
-**Deficiencies:** Only E-tier has SelectRun; A-D all use the same default branch. `if (true)` guard on security control zone (TODO: don't always spawn). Limited layout variety for most tiers.
+**Deficiencies:** A-D default path only varies between standard and travel scan — no tier-specific challenge composition or zone structures. `if (true)` guard on security control zone (TODO: don't always spawn). E-tier is the only one with real layout variety via nested SelectRun.
 
 ---
 
@@ -242,15 +244,15 @@ Each objective is scored 1-5 based on:
 | Metric                  | Value                                       |
 | ----------------------- | ------------------------------------------- |
 | Layout file             | `LevelLayout.SpecialTerminalCommand.cs`     |
-| Layout lines            | 166                                         |
-| Layout last modified    | 2025-12-10                                  |
+| Layout lines            | 173                                         |
+| Layout last modified    | 2026-03-14                                  |
 | Layout SelectRun count  | 1 (empty!)                                  |
 | Objective file          | `WardenObjective.SpecialTerminalCommand.cs` |
-| Objective lines         | 1238                                        |
-| Objective last modified | 2025-12-10                                  |
+| Objective lines         | 1271                                        |
+| Objective last modified | 2026-02-28                                  |
 | **Rating**              | **2**                                       |
 
-**Layout:** Has one SelectRun block that is **completely empty** (A-tier case with empty list). KingOfTheHill path is the most developed with hill geomorph, spawn zones, and locked door events. ErrorAlarm sub-method exists but has TODO about adjusting. Normal path is barebones: `AddBranch` + keycard puzzle + forward extract. Has `_Fast` variant.
+**Layout:** Has one SelectRun block that is **completely empty** (A-tier case with empty list). KingOfTheHill path is the most developed with hill geomorph, spawn zones, and locked door events. ErrorAlarm sub-method exists but has TODO about adjusting. Normal path is barebones: `AddBranch` + keycard puzzle + forward extract + optional travel scan prelude (15%, added Mar 14). Has `_Fast` variant.
 
 **Objective:** Actually complex (1238 lines). 4 command types with tier-weighted probabilities. KingOfTheHill has full AWO integration. Extensive TODO wishlist: spawn boss, fog mechanics, error alarm variants, unit waves, survival mega wave.
 
@@ -267,8 +269,8 @@ Each objective is scored 1-5 based on:
 | Layout last modified    | 2026-01-19                                 |
 | Layout SelectRun count  | 0                                          |
 | Objective file          | `WardenObjective.TimedTerminalSequence.cs` |
-| Objective lines         | 487                                        |
-| Objective last modified | 2025-12-10                                 |
+| Objective lines         | 491                                        |
+| Objective last modified | 2026-02-19                                 |
 | **Rating**              | **2**                                      |
 
 **Layout:** Single deterministic layout. Corridor entrance -> hub -> branches (one per terminal). No SelectRun at all. Has error alarm variant for D/E tiers with an alarm control turn-off zone. TODO: "don't always do triple error alarms".
@@ -284,19 +286,19 @@ Each objective is scored 1-5 based on:
 | Metric                  | Value                                 |
 | ----------------------- | ------------------------------------- |
 | Layout file             | `LevelLayout.RetrieveBigItems.cs`     |
-| Layout lines            | 236                                   |
-| Layout last modified    | 2025-12-10                            |
+| Layout lines            | 246                                   |
+| Layout last modified    | 2026-03-14                            |
 | Layout SelectRun count  | 0                                     |
 | Objective file          | `WardenObjective.RetrieveBigItems.cs` |
-| Objective lines         | 720                                   |
-| Objective last modified | 2025-12-10                            |
+| Objective lines         | 721                                   |
+| Objective last modified | 2026-02-28                            |
 | **Rating**              | **2**                                 |
 
-**Layout:** No SelectRun. MatterWaveProjector gets a special path (corridor -> MWP geomorph with tier-scaled enemies), everything else gets a hub+branches loop. Has ~30 lines of commented-out code (old corridor/hub approach). TODO: "re-evaluate this objective". Entrance zone is a coin flip between hub and large zone.
+**Layout:** No SelectRun. MatterWaveProjector gets a special path (corridor -> MWP geomorph with tier-scaled enemies), everything else gets a hub+branches loop. Has ~30 lines of commented-out code (old corridor/hub approach). TODO: "re-evaluate this objective". Entrance zone is a coin flip between hub and large zone. Has optional travel scan prelude (15% chance, added Mar 14) for non-MWP items.
 
 **Objective:** 1-4 items based on tier (DataSphere, CargoCrate, CryoCase, MatterWaveProjector). Solid item type variety but simple placement.
 
-**Deficiencies:** Zero SelectRun. Commented-out dead code. Same layout regardless of tier. No challenge composition (no keycards, generators, alarms). MatterWaveProjector variant has tier-scaled enemies but all other items get generic branch layout.
+**Deficiencies:** Zero SelectRun. Commented-out dead code. Same layout regardless of tier apart from travel scan coin flip. No challenge composition (no keycards, generators, alarms). MatterWaveProjector variant has tier-scaled enemies but all other items get generic branch layout.
 
 ---
 
@@ -305,12 +307,12 @@ Each objective is scored 1-5 based on:
 | Metric                  | Value                                      |
 | ----------------------- | ------------------------------------------ |
 | Layout file             | `LevelLayout.PowerCellDistribution.cs`     |
-| Layout lines            | 1593                                       |
-| Layout last modified    | 2026-02-15                                 |
+| Layout lines            | 1718                                       |
+| Layout last modified    | 2026-03-14                                 |
 | Layout SelectRun count  | 15                                         |
 | Objective file          | `WardenObjective.PowerCellDistribution.cs` |
-| Objective lines         | 417                                        |
-| Objective last modified | 2025-12-10                                 |
+| Objective lines         | 436                                        |
+| Objective last modified | 2026-03-12                                 |
 | **Rating**              | **5**                                      |
 
 **Layout:** Full tier/bulkhead coverage with 15 SelectRun blocks covering all tier/bulkhead combos (A-E × Main/Extreme/Overload), providing ~71 weighted variants. Full challenge composition toolkit: KeycardInSide, KeycardInZone, BossFight, ApexAlarm, ErrorWithOff_KeycardInSide, ErrorWithOff_GeneratorCellCarry, GeneratorCellInSide, LockedTerminalDoor, LockedTerminalPasswordInSide, SecuritySensors. Hub+branches, linear, clustered, and double-hub topologies. Overflow chaining for D/E tier variants with 4-5 generators. Forward extract candidates via `AddForwardExtractStart`. `_Fast` variant preserved for sub-objectives.
@@ -330,8 +332,8 @@ Each objective is scored 1-5 based on:
 | Layout last modified    | 2025-12-10                          |
 | Layout SelectRun count  | 0                                   |
 | Objective file          | `WardenObjective.ReactorStartup.cs` |
-| Objective lines         | 1713                                |
-| Objective last modified | 2025-12-10                          |
+| Objective lines         | 1718                                |
+| Objective last modified | 2026-02-19                          |
 | **Rating**              | **2**                               |
 
 **Layout:** No SelectRun. Two methods: `_Simple` (prelude zones -> reactor) and `_FetchCodes` (reactor -> fetch branches). Simple variant scales prelude count by tier. FetchCodes variant creates terminal branches per fetch wave with extra terminals for confusion, locked entrances, and event-driven door opening. Tier-aware branch sizing and open-door chances.
@@ -347,8 +349,8 @@ Each objective is scored 1-5 based on:
 | Metric                  | Value                                |
 | ----------------------- | ------------------------------------ |
 | Layout file             | `LevelLayout.ReactorShutdown.cs`     |
-| Layout lines            | 1224                                 |
-| Layout last modified    | 2026-02-15                           |
+| Layout lines            | 1372                                 |
+| Layout last modified    | 2026-03-14                           |
 | Layout SelectRun count  | 15                                   |
 | Objective file          | `WardenObjective.ReactorShutdown.cs` |
 | Objective lines         | 989                                  |
@@ -365,24 +367,26 @@ Each objective is scored 1-5 based on:
 
 ## Summary Table
 
-| #   | Objective               | Layout Lines | SelectRun | Obj Lines | Last Modified | Rating |
-| --- | ----------------------- | ------------ | --------- | --------- | ------------- | ------ |
-| 1   | TerminalUplink          | 869          | 15        | 539       | Jan 28        | **5**  |
-| 2   | CentralGeneratorCluster | 1564         | 23        | 327       | Jan 31        | **5**  |
-| 3   | HsuFindSample           | 1216         | 13        | 188       | Jan 31        | **5**  |
-| 16  | ReactorShutdown         | 1224         | 15        | 989       | Feb 15        | **5**  |
-| 14  | PowerCellDistribution   | 1593         | 15        | 417       | Feb 15        | **5**  |
-| 4   | GatherSmallItems        | 1106         | 15        | 318       | Dec 10        | **4**  |
-| 5   | CorruptedTerminalUplink | 774          | 10        | 539       | Jan 31        | **4**  |
-| 6   | ClearPath               | 514          | 7         | 312       | Jan 31        | **4**  |
-| 7   | HsuActivateSmall        | 509          | 7         | 166       | Dec 10        | **4**  |
-| 8   | GatherTerminal          | 430          | 5         | 478       | Jan 28        | **3**  |
-| 9   | ReachKdsDeep            | 731          | 5         | 429       | Jan 19        | **3**  |
-| 10  | Survival                | 292          | 2         | 360       | Jan 19        | **3**  |
-| 11  | SpecialTerminalCommand  | 166          | 1 (empty) | 1238      | Dec 10        | **2**  |
-| 12  | TimedTerminalSequence   | 147          | 0         | 487       | Jan 19        | **2**  |
-| 13  | RetrieveBigItems        | 236          | 0         | 720       | Dec 10        | **2**  |
-| 15  | ReactorStartup          | 156          | 0         | 1713      | Dec 10        | **2**  |
+| #   | Objective               | Layout Lines | SelectRun | Obj Lines | Layout Modified | Obj Modified | Rating |
+| --- | ----------------------- | ------------ | --------- | --------- | --------------- | ------------ | ------ |
+| 1   | TerminalUplink          | 997          | 15        | 541       | Mar 14          | Feb 25       | **5**  |
+| 2   | CentralGeneratorCluster | 1655         | 23        | 330       | Mar 14          | Feb 25       | **5**  |
+| 3   | HsuFindSample           | 1346         | 13        | 188       | Mar 14          | Feb 25       | **5**  |
+| 4   | ReactorShutdown         | 1372         | 15        | 989       | Mar 14          | Feb 15       | **5**  |
+| 5   | PowerCellDistribution   | 1718         | 15        | 436       | Mar 14          | Mar 12       | **5**  |
+| 6   | GatherSmallItems        | 1247         | 15        | 327       | Mar 14          | Feb 25       | **4**  |
+| 7   | CorruptedTerminalUplink | 866          | 10        | 539       | Mar 14          | Feb 25       | **4**  |
+| 8   | ClearPath               | 554          | 7         | 312       | Mar 14          | Dec 10       | **4**  |
+| 9   | HsuActivateSmall        | 559          | 7         | 166       | Mar 14          | Feb 25       | **4**  |
+| 10  | GatherTerminal          | 522          | 6         | 480       | Mar 14          | Feb 25       | **3**  |
+| 11  | ReachKdsDeep            | 731          | 5         | 430       | Jan 19          | Feb 19       | **3**  |
+| 12  | Survival                | 337          | 3         | 360       | Mar 14          | Dec 10       | **3**  |
+| 13  | SpecialTerminalCommand  | 173          | 1 (empty) | 1271      | Mar 14          | Feb 28       | **2**  |
+| 14  | TimedTerminalSequence   | 147          | 0         | 491       | Jan 19          | Feb 19       | **2**  |
+| 15  | RetrieveBigItems        | 246          | 0         | 721       | Mar 14          | Feb 28       | **2**  |
+| 16  | ReactorStartup          | 156          | 0         | 1718      | Dec 10          | Feb 19       | **2**  |
+
+> **Note (Mar 15):** Many layout files show "Mar 14" as last modified due to the travel scan rollout (`AddTravelScanAlarm` added as a `Generator.Flip(0.15)` option). This was a cross-cutting addition, not a layout-specific overhaul. The substantive overhaul dates for each layout remain as described in the per-objective sections below.
 
 ---
 
@@ -390,38 +394,38 @@ Each objective is scored 1-5 based on:
 
 ### Priority 1: ReactorStartup
 
-- **Current state:** 156 lines, 0 SelectRun, rating 2. Two methods but both deterministic.
-- **Why rework second:** Same reactor mismatch problem. The objective file (1713 lines!) is the most complex in the project, but layouts are either "prelude -> reactor" or "reactor -> branches". Pairs naturally with ReactorShutdown rework. Also the most complex objective type that players spend the most time in.
+- **Current state:** 156 lines, 0 SelectRun, rating 2. Two methods but both deterministic. Layout last substantively modified Dec 2025.
+- **Why priority 1:** The objective file (1718 lines!) is the most complex in the project, but layouts are either "prelude -> reactor" or "reactor -> branches". ReactorShutdown was fully reworked in Feb 2026 — ReactorStartup is now the glaring gap. Also the most complex objective type that players spend the most time in.
 - **Rework scope:** Add SelectRun for prelude approaches (challenge composition before reaching the reactor). For fetch codes, vary the branch topology (hub-and-spoke vs. sequential vs. mixed). Consider tier-specific branch challenges.
 
 ### Priority 2: RetrieveBigItems
 
-- **Current state:** 236 lines, 0 SelectRun, rating 2. Has commented-out code and TODO.
-- **Why rework fourth:** The TODO says "re-evaluate this objective". Has dead code suggesting previous rework was abandoned. MatterWaveProjector variant is decent but the generic path is hub+branches with no variety.
+- **Current state:** 246 lines, 0 SelectRun, rating 2. Has commented-out code and TODO. Travel scan (15%) added Mar 14.
+- **Why priority 2:** The TODO says "re-evaluate this objective". Has dead code suggesting previous rework was abandoned. MatterWaveProjector variant is decent but the generic path is hub+branches with no variety.
 - **Rework scope:** Clean up commented-out code. Add SelectRun per tier. Item type could influence layout (e.g., CryoCase through fog zones, DataSphere through sensor corridors). Add challenge composition.
 
 ### Priority 3: SpecialTerminalCommand
 
-- **Current state:** 166 lines, 1 SelectRun (empty!), rating 2. KingOfTheHill path is good, everything else is generic.
-- **Why rework fifth:** The objective file is massive (1238 lines) with 4 command types, but the layout is nearly identical for all. The empty SelectRun block for A-tier suggests rework was started but abandoned. Large TODO wishlist in the objective file.
+- **Current state:** 173 lines, 1 SelectRun (empty!), rating 2. KingOfTheHill path is good, everything else is generic. Travel scan (15%) added Mar 14.
+- **Why priority 3:** The objective file is massive (1271 lines) with 4 command types, but the layout is nearly identical for all. The empty SelectRun block for A-tier suggests rework was started but abandoned. Large TODO wishlist in the objective file.
 - **Rework scope:** Fill in the empty SelectRun blocks. Add per-tier layouts. Different command types could drive different layouts (e.g., FillWithFog could use fog-themed zones, LightsOff could have dark zones with sensors). ErrorAlarm sub-method needs adjustment per its own TODO.
 
 ### Priority 4: TimedTerminalSequence
 
-- **Current state:** 147 lines, 0 SelectRun, rating 2. Always corridor-hub-branches.
-- **Why rework sixth:** Same problem as PowerCellDistribution - every run has the same hub+branches structure. The error alarm variant for D/E is nice but the base layout never varies. TODO: "don't always do triple error alarms".
+- **Current state:** 147 lines, 0 SelectRun, rating 2. Always corridor-hub-branches. Not touched since Jan 2026 (localized text fix).
+- **Why priority 4:** Every run has the same hub+branches structure. The error alarm variant for D/E is nice but the base layout never varies. TODO: "don't always do triple error alarms".
 - **Rework scope:** Add SelectRun per tier. Vary topology (some linear sequences, some hub-and-spoke). Add challenge composition to reach terminal zones. Consider tiered error alarm configurations instead of always triple.
 
 ### Priority 5: Survival (partial)
 
-- **Current state:** 292 lines, 2 SelectRun, rating 3. E-tier is good, A-D all the same.
-- **Why partially rework:** E-tier has good SelectRun with boss error + puzzle variants. A-D all use the same default branch. The security control zone always spawns (TODO note). Lower priority because the survival objective's variety comes more from wave configuration than zone layout.
+- **Current state:** 337 lines, 3 SelectRun, rating 3. E-tier is good. A-D default now has standard (85%) vs travel scan (15%) SelectRun, but no tier-specific layouts or challenge composition.
+- **Why partial rework:** E-tier has good SelectRun with boss error + puzzle variants. A-D all use the same default branch (travel scan is the only alternative). The security control zone always spawns (TODO note). Lower priority because the survival objective's variety comes more from wave configuration than zone layout.
 - **Rework scope:** Add SelectRun for C-D tiers (currently only E has it). Make security control zone spawn probabilistic. Add sensor or challenge variants for C-D.
 
 ### Priority 6: GatherTerminal (partial)
 
-- **Current state:** 430 lines, 5 SelectRun, rating 3. Good for covered combos, gaps elsewhere.
-- **Why partially rework:** Several tier/bulkhead combos have good SelectRun (B-Main, C/D-Main, D/E-Overload). E-Main 6-spawn is commented out (TODO). Many combos fall to default linear branch.
+- **Current state:** 522 lines, 6 SelectRun, rating 3. Good for covered combos, gaps elsewhere. Travel scan (15%) added Mar 14.
+- **Why partial rework:** Several tier/bulkhead combos have good SelectRun (B-Main, C/D-Main, D/E-Overload). E-Main 6-spawn is commented out (TODO). Many combos fall to default linear branch.
 - **Rework scope:** Implement E-Main 6-spawn. Fill in remaining tier/bulkhead gaps with per-combo SelectRun.
 
 ---
