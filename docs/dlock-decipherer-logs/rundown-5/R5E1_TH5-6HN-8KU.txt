@@ -1,0 +1,75 @@
+../BIOCOM
+illicit communication
+meta3.date_stamp(531013.130946)
+concern begins/..
+
+D-Lock Block Cipher
+alias:int_server.1024_ciph.D017.tier4.a_charapon.flagged
+
+Hey Art,
+
+Sorry I've been out of touch. Working. I never get to see you now as I'm always deep.
+
+I checked the injured list and didn't see your name on it so I assume you're fine after the blasts. I'm sure you're wondering what happened. Gianna's team found a new natural chamber - only it wasn't natural. Unfortunately, I didn't get a chance to look inside it before Insight closed off the area.
+
+They weren't telling me anything, and I was getting frustrated... then I remembered that Hearsay backdoor you told me about, so...
+
+I had a listen to their comms. Sorry. I was careful. It won't come back to you.
+
+I heard Insight sending in a probe to inspect the chamber. They found a few Sleepers then suddenly they lost signal with the probe. A few seconds later, the blast happened. I know you must have felt it. I thought the walls were going to collapse. Everything smelled like burning metal - which I didn't know was a smell until I smelled it.
+
+We have literally no idea what caused the blast, or how it caused such destruction. Whatever it was originated from that chamber, or close to it. It killed a lot of the creatures (and a few of our people). To me, it looked deliberate. It was aimed at the creatures. We're finding dozens of molten passages and there's always a creature corpse nearby (if we find them before they disappear). We lost some people (including Harris if you haven't heard) but I think they were accidental. We weren't the target.
+
+With Harris gone, I need a new pit boss. Interested?
+
+Shafe.
+
+../BIOCOM
+personnel files updated
+alert system flagged
+concern ends/..
+05ALT_540407_01_t
+TERMINAL ID: TJR-YTX-XK9
+D-Lock Block Cipher
+alias:int_server.1024_ciph.tier5.kds_ops/HLordeB273.flagged
+
+Harriet,
+
+That’s a BIOCOM access key. BIOCOM is a self-governing DI entity. I don’t run it. No one “runs” it. If it needs more power, it tries to get it. Other than that I have no idea why it made this request. If you have any more questions, run them by a flagged supervisor first. I'm busy keeping you alive.
+
+Andre
+
+-----------------------
+D-Lock Block Cipher
+alias:int_server.1024_ciph.tier5.kds_ops/APirosA134.flagged
+
+Mr. Piros,
+
+I have been alerted to multiple attempts to access Garganta’s power control system. This system is, as far as I know, entirely off-limits to KDS and yet, as you can see below - you are attempting to reroute power to unit B-7 (that's KDS Deep) for some reason. Had the system approved the request, the grid would have overloaded and almost every subsystem in the entire facility would have shut down.
+
+Care to explain?
+
+PCS alert: *unauthorized access logged*
+Date: 04/05/2054
+AccessID#: 29$525GVTHR2%456FS
+WRDN: override
+Request received:
+generator_A-01, redirect(HSU vault)
+generator_A-03, redirect(HSU vault)
+generator_A-05, redirect(HSU vault)
+generator_A-07, redirect(HSU vault)
+Request denied. Limits exceeded. PID override false.
+Request received:
+generator_A-01, redirect(HSU vault)
+generator_A-03, redirect(HSU vault)
+generator_A-05, redirect(HSU vault)
+generator_A-07, redirect(HSU vault
+Request denied. Limits exceeded. PID override false.
+Request received:
+generator_A-01, redirect(HSU vault)
+generator_A-03, redirect(HSU vault)
+generator_A-05, redirect(HSU vault)
+generator_A-07, redirect(HSU vault
+Request denied. Limits exceeded. PID override false.
+Port closed.
+Please contact a CPDS administrator.

@@ -1,0 +1,6 @@
+//HearSay auto-transcript begins//
+
+MALE VOICE 1
+Hearsay on. I have selected the operatives I want to work with. They are at the top of the efficiency list, according to the Warden's records. They have completed more rundowns - which I assume means missions - than any other squad. I don't know if the same operatives need to work together in this system, but I'm not going to risk breaking it. I will need to undo their programming. The problem is, three of the four of them have been in hydrostasis for many years so I need to be cautious not to cause any further psychological damage. I doubt if they have any long-term memory left at all. If I can expose them to their personal records maybe something will stick? It has to be better than just screaming "WAKE UP" at them. Not to mention less dangerous. These are not stable people, but they are effective. I'll dig through the Biocom database and see what I can find out about them. Whatever is in their past, they can’t possibly deserve what's happened to them. I hope.
+
+//HearSay auto-transcript ends//

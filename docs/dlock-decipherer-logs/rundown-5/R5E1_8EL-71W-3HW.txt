@@ -1,0 +1,6 @@
+//HearSay auto-transcript begins//
+
+VOICE 1
+Hearsay on. I'm seeing a repeated phrase in Warden's terminal logs. Influx protocol. I still can't decipher the code, but I do see repeated terminology. Conduit. Specimen. Membrane, and this new one: Influx Protocol. The Warden currently has the mercenaries clearing a path and routing power towards my location. But I don't think it's coming for me, I think it's pushing them towards KDS Deep. I don't know what it wants there, but I don't see it as a threat. I think it just wants more mercenaries. More resources to gather DNA specimens, route power, uplink databases, clear out creatures, and everything else. It needs more mercenaries to reach its goal. So what is its goal?
+
+//HearSay auto-transcript ends//

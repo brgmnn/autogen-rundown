@@ -1,0 +1,16 @@
+D-Lock Block Cipher
+Sender: Ellis Carnegie
+Receiver: Angela Klein A106
+Date: March 13th 2051
+Subject: Sec-B-M Chip 2.7.4 has been shipped
+
+Ms. Klein,
+
+The new Sec-B-M chips have been sent out. The first shipment will contain 120,000 chips ready for installation. These chips will allow you to increase the PRDM upload speed to 1300MB/s without any risk of overloading the subject.
+
+I have forwarded the installation instructions to your cybernetics team, though it's much the same as all the 2.7's. There may be a slight protuberance once implanted as the chips use the new integrated 3d structure, making them slightly thicker. We have reinforced the shell to account for the reduced sub-dermal depth. The new chips are more vulnerable to magnetism, so they'll need to be checked if the subject is exposed to any field in excess of 25,000g.
+
+Please be careful with over pasting. Dots not crosses.
+
+Ellis Carnegie
+Kovac Research, Pretoria

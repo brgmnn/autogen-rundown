@@ -1,0 +1,19 @@
+Analyst Report
+Reported by: Boris Stanovich C066 (Report Analyst, Medical Dept.)
+Date of Report: September 21st 2053
+Report:	#SAMD-C047-15
+
+Report Summary
+My report on Medical Response Team activity during August 2053 follows:
+
+During the first week of August, MRT responded on-site to 32 incidents. Gaining access to the mines is challenging due to the recent increase in security measures. Since the second week of August the mines have been designated as an exclusion zone and are now under the direct control of Kovac's resource management system, BIOCOM. There are indications that dozens of incidents have not been reported, or at least that Kovac Defense Services have elected not to disclose to MRT.
+
+Comparing the admissions data from the Medical Center with the official incident reports, it is clear that at least 114 incidents have occurred within BIOCOM controlled areas, all without any official report or further explanation. These incidents range from burns and broken bones to psychosis, hallucinations and suicide attempts. Without an official incident report, the MRT is forced to deal with patients without context or preparation. The victims are delivered to the nearest medical center, where they are treated without detailed information on how they experienced their trauma, other than the patient's own recollection.
+
+The Medical Department has requested transparency from KDS, and demanded that they follow protocol with regards to incident reporting, but this demand is not being met. When Anders Johanson was asked for a direct response to the situation, he informed us that “KDS is a security firm. We decide what information is disseminated to which departments. Your job is to treat the wounded, not to analyze the battlefield. Patch them up and send them back.”
+
+At this point, it is impossible for the MRT to prepare for emergencies if they are not made aware of the risks the mine workers face. The medical staff do not know when the exploration teams are setting out, what their destination is, or what environmental or pathogenic dangers they are facing. They have also been denied any data from the autopsy of the creatures Project Insight and Dr. Hammerstein has been collecting, despite the potential for the transmission of bacteria or viruses. KDS are now actively denying the existence of such creatures, despite several medical staff having had direct encounters with these creatures.
+
+The medical department reports that they cannot do their job while working under the restrictions placed by the KDS. KDS are rewriting facts at their own discretion, and are quoting the primary BIOCOM directive when additional information is requested. KSO operatives who have been admitted to the trauma center do not speak to the medical staff, and when questioned offer no information on what is happening within the BIOCOM controlled exclusion zone. It is possible that they are as unaware of the primary objective set by the BIOCOM as the medical staff, and this analyst, are.
+
+We also need to order more supplies.

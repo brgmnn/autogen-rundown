@@ -1,0 +1,19 @@
+Private encryption//SMC mail server
+From: Howard Stokes B341
+To: Gallus Hammerstein B014
+Date: March 24th 2052
+Subject: Analysis complete
+
+Dr. Hammerstein,
+
+Please find attached the spectroscopy report on sample L18-AT07-A004-UBK. We has some issues breaking down the sample but were ultimately successful using the laser cutter. You may wish to consider getting one on site for specimen analysis (we use a Nyxos ML-302).
+
+The specimen is truly unique. As far as we can tell, this is an entirely new material. I recommend we double team this one. I would like our lab to try and replicate compositing the alloy (we think that's what it is) from the materials we have managed to recognize so far, while you start searching for the materials listed as "UNKNOWN" in the attached report.
+
+We are assuming those materials are local to the Garganta operation, probably of extra-terrestrial origin dispersed during the Chicxulub impact event. Meteorite samples recovered from nearby sites do indicate traces of similar unknown materials, but we assumed they were nominal errors due to the fractional percentage of the composition. Now that we have a sample that is comprised of almost 24% unknown material, I'm not so sure. We have a mystery on our hands.
+
+Please review the attached report and get back to me at your earliest convenience.
+
+Howard Stokes
+
+[File too big. Attachment removed]

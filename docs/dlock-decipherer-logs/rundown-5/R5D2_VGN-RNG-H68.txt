@@ -1,0 +1,29 @@
+Incident Report
+Reported by: Gianna Hilton D043 (Mine Team 5 Supervisor)
+Date of Report: August 11th 2053
+Incident: #L27-B1-279
+
+Incident Details
+Date of Incident: August 11th 2053
+Time of Incident: 14:50
+Location of incident: Level 27, section B-1
+
+Incident Description
+
+During second shift (approximately 13:27) the mole seized up due to a build up of slurry on the cutting head. After shutting down the mole, we attempted to clear as much of the material by hand as possible. We determined that as the slurry composition was primarily consolidated rock with Cretasium fragments, manual removal would not be sufficient. We contacted engineering, who suggested chemical removal.
+
+Engineering sent Jordy (E257) and Gus (E431) to spray the mole head with a hydrochloric acid wash. Second shift crew helped set up the spray tent then cleared the area to let Jordy and Gus set up acid jets aimed at the mole head. After setting up the jets, Gus exited the spray tent and waited for the all clear. Jordy zipped up the tent and called the all clear.
+
+Gus started the jets, drenching the mole head with acid. A few seconds after the spraying started, Jordy walked back to the tent. Gus shouted at him to stop, but Jordy continued to the tent and unzipped it. He then entered the tent and walked in front of the jets, into the acid stream.
+
+I hit the exposure alarm as Gus stopped the jet. After a few seconds, Jordy started screaming once the acid had burned through his hazmat suit. The blast door began to close. Gus and I ran to the blast door and just made it out in time. Jordy's screaming grew more intense and the filtration pumps automatically turned on, drowning out Jordy's screams as the blast door closed.
+
+9 minutes later the filtration pumps stopped and the blast door opened. Jordy must have walked out of the tent because his remains were close to the blast door.
+
+Medical arrived but there was nothing of Jordy left and I was told to write up this incident report.
+
+The mole still needs to be serviced and cleaned.
+
+Actions taken after incident:
+
+Psych evals ordered for Gus Addison (E431) and Gianna Hilton (D043).

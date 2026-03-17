@@ -1,0 +1,58 @@
+../BIOCOM
+
+meta3.date_stamp(521229.143308)
+
+validating files...
+
+
+Adam Strauss D144 - Santonian Mining Company - Mining Team 3 Supervisor
+
+Andrew Clinton B035 - Santonian Mining Company - Project Manager
+
+Artus Chaparon D017 - Santonian Mining Company - Systems Engineer
+
+August Teale B203 - Santonian Mining Company - Psychologist
+
+Boris Stanovich C066 - Santonian Mining Company - Report Analyst
+
+Bruce Keith C237 - Santonian Mining Company - Engineer
+
+Edgar Soweta E105 - Santonian Mining Company - Mechanic
+
+Gallius Hammerstein B013 - Santonian Mining Company - Geologist
+
+Gianna Hilton D043 - Santonian Mining Company - Mining Team 5 Supervisor
+
+Gus Addison E431 - Santonian Mining Company - Mining Engineer
+
+Harriet Lorde B273 - Santonian Mining Company - Scheduling Department
+
+Howard Stokes B341 - Santonian Mining Company - Geologist
+
+Ian Glencoe B551 - Santonian Mining Company - Medical Research
+
+Igor Rostok C122 - Santonian Mining Company - Engineer
+
+John Masterson E162 - Santonian Mining Company - Sanitation
+
+John Schaeffer C067 - Santonian Mining Company - Operations Lead
+
+Jordy Fontella E257 - Santonian Mining Company - Mining Engineer
+
+Kat Edison B062 - Santonian Mining Company - Geologist
+
+Michel LeFavre B028 - Santonian Mining Company - Medical Director
+
+Otto Richtofer B029 - Santonian Mining Company - Geologist
+
+Phil Decker C085 - Santonian Mining Company - Engineer
+
+Susan Greyson C222 - Santonian Mining Company - Medical Administrator
+
+Vitori Molina C158 - Santonian Mining Company - Contractor Foreman
+
+writing...
+
+personnel files updated
+
+../BIOCOM

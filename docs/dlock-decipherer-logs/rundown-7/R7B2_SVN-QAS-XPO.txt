@@ -1,0 +1,46 @@
+D-Lock Block Cipher
+
+alias:int_server.1024_ciph.tier5.high_core/APirosA134.flagged
+
+
+From:	Anders Johanson A029
+
+To:	Andre Piros A134
+
+Date:	August 08th 2053
+
+Subject:
+
+
+Unless you get approached about this matter, no further action is needed on your part.
+
+
+Anders.
+
+
+-----------------------------------------------------------------------------------------------------
+
+D-Lock Block Cipher
+
+alias:int_server.1024_ciph.tier5.med_core/AJohansonA029.flagged
+
+
+Mr Johanson,
+
+
+On August 8th at 07:48 a Santonian employee was discovered in the hydrostasis unit storage area
+
+
+Mr. Piros has advised me of your request for more Kovac involvement in future expeditions. The current approach to operative debriefing, situation training, and resource management will not scale well for your proposed usage. However, we do have a command system that will fit your needs.
+
+
+BIOCOM. Managing operations through BIOCOM would ensure full coverage for all future expeditions, coordinate additional stationed security posts throughout the facility, and provide round the clock protection or surveillance for all POIs within the theatre of operation (currently Garganta itself and the red zone on the peninsula). BIOCOM is a DI that will take control of resource tracking, supply management, objective specific training, operative briefing, and rapid response deployment.
+
+
+That's the pitch done. The long and the short of it is BIOCOM handles things better than any human can. It doesn't sleep, doesn't make bad decisions based on compassion, and unlike human COs, has a 100% success rate for all fifteen of its deployments (if you need to know more, we'll have to do some paperwork). It still requires human oversight to handle some of the more sensitive ethical considerations, but even that can be pre-programmed to fit your ruleset.
+
+
+It would take a few months to transition over. We should start now.
+
+
+Anders Johanson

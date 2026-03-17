@@ -1,0 +1,83 @@
+../BIOCOM
+shortwave transmission intercepted@29mhz
+meta3.date_stamp(570609.161143)
+
+//transcript follows...
+
+MALE VOICE 1
+State of Truth AM. People, I have... I have found something that has rocked me to my core. I don't know if I'm... Am I losing my mind? Or... are there other factors... agents, at play here. Let me... let me play something for you.
+[unknown sound]
+MALE VOICE 1
+Hey you’re on the air with State of Truth AM.
+MALE VOICE 2
+Hey am I on?
+MALE VOICE 1
+Yup, you’re on air buddy. What have you got?
+MALE VOICE 2
+Okay. Okay, I don’t have much time. There’s a… I don’t know if you can hear that… there’s a helicopter been circling for over an hour right above me.
+MALE VOICE 1
+Yeah I don’t hear anything Caller. You told our screener you had information on the SMC, right?
+MALE VOICE 2
+Right. Santonian Mining Company. Oh man, I don’t know where to start--
+MALE VOICE 1
+To be clear, you mean Dreyfus Industries, right? I mean, we’re talking about the same company here and I want to start getting people used to the idea that there’s a big daddy controlling all of this.
+MALE VOICE 2
+Dreyfus Industries, right. There’s some crazy stuff happening there--
+MALE VOICE 1
+Where?
+MALE VOICE 2
+Garganta, man! The Throat. We call it the Facility; it’s got a lot of names--
+MALE VOICE 1
+We? You work for Dreyfus?
+MALE VOICE 2
+No. I mean, yes. I worked for SMC but I’m out, man. I had to go. They’re… they’re burning bodies down there…
+MALE VOICE 1
+Burning bodies, what do you mean?
+MALE VOICE 2
+They got these explorations, right? They’re digging into something down near Chicxulub--
+MALE VOICE 1
+Chicxulub, that’s the town they took over, right?
+MALE VOICE 2
+Yeah, well it’s a town and that big crater, right? Down in the Yucatan--
+MALE VOICE 1
+Right, we’ve talked about that on air--
+MALE VOICE 2
+Yeah well, they’re poking around down there and finding all kinds of weird stuff. People going crazy and coming back all mangled and--
+MALE VOICE 1
+Mangled? What does that mean?
+MALE VOICE 2
+Like mangled, mutilated. Bones bent and broken, skin changing into I don’t know what… that’s why they’re burning the bodies, to get rid of the evidence.
+MALE VOICE 1
+What happened to them?
+MALE VOICE 2
+I don’t know. We thought… my colleagues thought maybe they found something. You know they’re mining for iridium, right?
+MALE VOICE 1
+Right, but does iridium exposure do that to a body? We don’t know exactly--
+MALE VOICE 2
+No man, it's not the iridium! That’s what I’m saying! They found something down there!
+MALE VOICE 1
+You’re saying they found something else?
+MALE VOICE 2
+No doubt in my mind. We all knew it. That’s why they tightened security. They stopped letting people in… wait--
+MALE VOICE 1
+Caller? Where’d you go, I lost you?
+MALE VOICE 2
+Thought I heard something. That helicopter’s freaking me out.
+MALE VOICE 1
+Okay, try to stay calm, okay pal?
+MALE VOICE 2
+Okay… okay--
+MALE VOICE 1
+You said they tightened security? You mean they stopped you from going into parts of the facility?
+MALE VOICE 2
+Yeah, and they wouldn’t let us leave. I had to escape. Me and a couple of others found a way out and tried to make it to the border--
+MALE VOICE 1
+Okay there are more of you? Hello? Caller? Did we lose him? Can we get him back? All right, we’ll be back in a moment here. Stay tuned.
+[unknown sound]
+MALE VOICE 1
+I do not remember that, at all. I do not remember the caller, I do not remember saying those words, I do not... No. That is not me. It can't be. It doesn't make any sense... uhh... We'll... we'll be right back.
+
+../BIOCOM.
+.. transcript ends//
+intercept log updated
+alert system flagged

@@ -1,0 +1,33 @@
+Mambo Media Services mail server
+
+From: Franke Fischer
+To: Derek Larwood
+Date: August 15th 2042
+Attachment: UnDoIt Recovery file #B-10374-NXZ-06
+
+RE: Hydrostasis article
+
+Derek,
+
+Finding this article was a nightmare. It wasn't listed anywhere in the Mambo registry. I only found it because I ran a query through UndoIt. If I were a conspiracy theorist...
+
+Franke
+
+/snippysnip
+
+Science Weekly
+November 2nd, 2042
+
+Wake Me When We Get There
+Report from Lance Overmars, ESA correspondent, Kourou Spaceport
+
+Next month will see the launch of ESA’s Red Alpha manned mission to Mars. Some unexpected investors will be backing the historic flight to our celestial neighbor.
+
+Red Alpha is scheduled to take flight on December 14th. The long journey to Mars will begin with a nerve-racking countdown from the Kourou Spaceport Mission Control. At t-minus zero (yes, they really do say that) there will be a thunderous roar as the Phoenix engines ignite their 400,000 kg payload of LOX and RP-2 fuel, sending the massive Red Alpha rocket screaming up and out of the atmosphere. There will be a tense few moments as dozens of 50lb brains nervously remember the doomed Hercules launch, but all going well, a riotous round of applause will be heard from mission control and the viewing gallery. At least, that’s what the ESA hopes will happen. Despite the Hercules tragedy, the ESA's recent track record suggests this launch should be executed without a hitch. A visit to the ESA museum in Luxembourg will tell you how they evolved from the tragic loss of Hercules, and how that disaster reshaped their approach to long haul space flight, revamped of safety procedures, and how out of the ashes rose the Phoenix engine.
+
+The only major difference between this launch and the previous six test flights using the Phoenix engines (apart from the significance of the first manned flight to our scarlet brother) will be who is watching the proceedings. The standard dignitaries will be there of course, and many of the 2,000 ESA support staff will have a front row seat; but there will be two surprising guests observing proceedings from Flight Control.
+
+One is Janson Davies, CTO of Dreyfus Industries. Perhaps that is not so surprising given that Dreyfus seem to have a hand in everything these days (and Davies himself is a known space fanatic). Next to him, a seat has been reserved for a representative from Kovac Defense Services. Yes, that Kovac Defense Services, the company that offers dubiously dubbed “security services” for over 150 of the Fortune 500 companies and several less-than-democratic governments. KDS also run multiple correctional facilities across the globe, including the US, Russia, Saudi Arabia, and Brazil. Their detention methods have come under the scrutiny of lawmakers in the European Union, but despite the distaste many Brussels politicians have for KDS, they will have a seat at the launch party. They’ll insist on it, in fact, and no one at the ESA is going to argue with the people who write the checks. Ethics be damned in the name of science, apparently.
+
+The crew members of Red Alpha will sleep through much of the 4-month journey to Mars, thanks to the new Hydrostasis Hibernation Chambers on board. This breakthrough technology has been funded almost entirely by Dreyfus Industries and KDS. Plenty of rumors abound regarding the reason for --
+[Encryption checksum mismatch. Contact your IT administrator]

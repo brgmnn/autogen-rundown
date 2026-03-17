@@ -1,0 +1,13 @@
+../BIOCOM
+shortwave transmission intercepted@27mhz
+meta3.date_stamp(570429.162633)
+
+//transcript follows...
+
+UNIDENTIFIED MALE
+This is Francisco Del Pireo, Interim Director WHO Europe, broadcasting from our Milan [inaudible] on behalf of Dr. Rutermayer. On the 28th April, 2057, the Milan office received a [inaudible] transmission from the head of the Daylight Mission team. They have [inaudible] city of Progreso in the Yucatan Peninsula, near the mining facility known as Garganta. The team encountered no resistance during their journey, and report that all team members are healthy and continuing the search for a vaccine to the NAM virus.
+
+../BIOCOM.
+.. transcript ends//
+intercept log updated
+alert system flagged

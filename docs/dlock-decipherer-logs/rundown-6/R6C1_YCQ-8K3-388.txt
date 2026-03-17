@@ -1,0 +1,77 @@
+../BIOCOM
+audio intercept
+meta3.date_stamp(561125.160643)
+concern begins/..
+
+//transcript follows...
+
+D017
+You're not listening to me. I am getting no response at all, not a bounce back. The message is getting there nothing is coming back, so it.
+
+RESPONSE COORDINATOR
+What you're reporting sounds like a BIOCOM network issue.
+
+D017
+Right, so is the network down on your end.
+
+RESPONSE COORDINATOR
+BIOCOM doesn't have network issues. Have you logged out and back in.
+
+D017
+I tried that. I tried everything at my tier. Blast doors, media [inaudible], temperature con.
+
+RESPONSE COORDINATOR
+Did you say media server.
+
+D017
+Yes, temperature control... I can't even turn on the fucking lights.
+
+RESPONSE COORDINATOR
+Have you tried accessing BIOCOM from a different terminal. You may need to ascend.
+
+D01
+How the fuck do I do that when there is no elevator. I have no power. Fuck are you even listening to me. I am trapped down.
+
+RESPONSE COORDINATOR
+I don't see what that has to do with BIOCOM
+
+D017
+You know as well as I do there is only one thing that can override every system in the place and that's [biocom], but I can't find any controllers down.
+
+RESPONSE COORDINATOR
+If you're locked out, it's because you're supposed to be locked out. BIOCOM doesn't make mistakes, sir.
+
+D017
+So it's not even possible it could go wrong. I am the one who is stuck here you fucking asshole. Oh no.
+
+RESPONSE COORDINATOR
+You don't need to speak to me like that. Okay, I'm logging off.
+
+D017
+Oh jesus christ, no. What the hell is that. Please come and get me. Please, I am begging you.
+
+RESPONSE COORDINATOR
+You need to trust the protocol. If BIOCOM has locked you out you just need to wait until.
+
+D017
+Oh no, please, you fucking assholes.
+
+RESPONSE COORDINATOR
+If BIOCOM has locked you out you need to wait until it sends a KSO quad to extract you. We have to follow protocol.
+
+D017
+[inaudible]
+
+RESPONSE COORDINATOR
+I can't understand you.
+
+D017
+[inaudible]
+
+RESPONSE COORDINATOR
+Okay. I don't have to listen to that. I'm logging off. Good luck.
+
+../BIOCOM
+personnel files updated
+alert system flagged
+concern ends/..

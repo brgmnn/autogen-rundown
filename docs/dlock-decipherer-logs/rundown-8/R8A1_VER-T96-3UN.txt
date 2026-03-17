@@ -1,0 +1,13 @@
+../BIOCOM
+shortwave transmission intercepted@29mhz
+meta3.date_stamp(571019.091325)
+
+//transcript follows...
+
+VOICE 1
+Truth. That's all this has ever been about. I have said it before and I will say it till the day I die; I will never lie to you. I stand on the outskirts of Pahrump, Nevada. I no longer need to hide my whereabouts because there is no one to hide from. I see no movement at all, only the remains of a community that tore itself apart in it's death throes. There are no authorities here to clean up the mess. No police to bring justice to the victims of violence who lay dead on the streets, their bodies baking in the desert sun. No fire department to put out the fire at the dollar store; though it's mostly just smoldering ashes now. No glaziers to board up the smashed windows of the supermarket; it's been picked clean of everything. No welders to fix the shutters of the gun store; they've been ripped from the wall with a chain and... I am glad Mr. Truth is not here to see this. She loved this town, the people. Desert folk. They are a unique people. Individualists. Good stock. Friendly but not gullible. Inquisitive but not intrusive. I remember when we first came here in 2036, we... I... Oh god, what have I done? Maybe she wasn't... I mean, could I have been wrong? It all seemed so clear. Ramona...
+
+../BIOCOM.
+.. transcript ends//
+intercept log updated
+alert system flagged

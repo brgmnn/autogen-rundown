@@ -1,0 +1,15 @@
+D-Lock Block Cipher
+alias:int_server.1024_ciph.tier5.med_core/RStokesB162.flagged
+
+Dr Stokes,
+
+We've analyzed the limited telemetry we have from EF-01. Although we still don't know how the tether became uncoupled, we have found a recording stored in the Matter Wave Projector memory bank. It got fragmented at some point, but I've been working on reassembling it for several days. t's a message from Dr. Durant. I know it's too little too late, but I thought you'd want to hear it. I believe there's a second recording buried in there too. I'm working on it.
+
+Nolan Connor
+
+//audio file attached
+
+//transcript follows...
+
+DURANT
+Two separate areas please! I don't want to contaminate any samples. This is Dr. Durant. E-F-Zero-One have arrived. We're in a jungle, of sorts. A lot of vegetation, some of which looks familiar, most of which doesn't. I... I don't think this is earth. Amazing. Let me check my notes... so far, no sign of fauna but Ben and Gustavo are searching. This environment is rich and vibrant; it's teeming with life! I'm sure it's only a matter of time before we find animals. We have lost our link to Garganta. No comms, no telemetry, no quantum tether. Our local chronometers are operating at normal speed but the mission clock, which was tethered to Garganta's quantum frequency, hasn't moved since we got here. So either we've lost synchronization, or it broke during the jump, or it's running slow. Very slow. Alice is looking into it, but we may be here a while. We're going to proceed under the assumption of worst-case scenario. We will make a permanent camp, establish a perimeter to defend if necessary, and settle in for the long haul. There's water here. The temperature is hot, but tolerable. We have rations for several weeks if we don't find food but I see fruit bearing trees and with all this water I'm confident we'll find a way. We have left earth.

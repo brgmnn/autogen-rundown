@@ -1,0 +1,21 @@
+Mambo Media Services
+Science Weekly Inside
+June 14th 2054
+
+A global meta-analysis of the NAM-V incubation period and its effects
+Cheng Zhu, Jarrod Brinn, Sean McNally, Chi Wai Ho, Boris Fokker
+
+--- ABSTRACT ---
+Background
+In this study, we studied the incubation period of NAM-V, using studies collected globally from 96 countries. The incubation period is vital to our understanding of the NAM-V, and a crucial index of epidemiology in understanding the spread of the virus.
+
+Methods
+The included studies were published between the dates of March 3rd 2053 and July 18th 2054 in various medical databases including Pubmed, the Cochrane Library, Embase and the CMB Project. After obtaining a meta-analytic aggregate, a meta-regression was used to explore the sources of heterogeneity. The results of the studies were collated with 28,000 additional patients from Asia and Africa that were not otherwise included in any of the studies.
+
+Results
+A total of 5713 studies were searched, with 74 of those studies meeting the criteria for inclusion in the meta-analysis. From our analysis, the pooled mean incubation period of NAM-V was 18.0 days (62% confidence interval [CI] 16.8–19.7) globally. The incubation period varied with age (P = 0.03). However, the incubation appears to be affected by a "stall" in 46% of cases. The "stall" can last anywhere from 18 days to up to 12 months, with some patients still carrying the virus without symptoms. Patients who experienced a longer incubation period were statistically more likely to show signs of cellular mutation, though the cause of this is still unknown.
+
+Conclusions
+The incubation of NAM-V cannot be reliably quoted, and the causes of the "stall" behavior are not yet fully understood. Patients who test positive for NAM-V may not exhibit symptoms for an unknown period of time up to 12 months. The need for constant, repeated testing is required to limit the continued spread of the virus.
+
+//end of file

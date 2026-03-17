@@ -1,0 +1,21 @@
+Analyst Report
+Reported by: Boris Stanovich C066 (Report Analyst, Medical Dept.)
+Date of Report: March 19th 2052
+Report: #QRTC-B419-01
+
+Report Summary
+Following the discovery of the area detailed in report #G06-A3-181, concerns were raised regarding the quarantine protocols exercised by the research team during the collection of artifacts from the area. This report outlines the issues and suggested practices following that incident.
+
+Although there was no reason to suspect any biological or viral threat in quadrant 18, the SMC Operations Manual clearly states that any “unexpected volumes” or “uncharted regions” are to be evaluated under Hazard Level 3 Quarantine restrictions (yellow tag). Namely:
+
+Hazmat suits are to be worn at all times in the Uncharted Volume (UV) if it has not been evaluated by BioHaz. (section 12b paragraph 1)
+
+Where possible, hermetic seals should surround the UV and be locked with Tier 4 access codes. (section 18a paragraph 3)
+
+Any items retrieved from a UV must be appropriately bagged and sealed to prevent contamination (section 23a paragraph 2).
+
+During the incident detailed in report #G06-A3-181, no such measures were taken. Researchers from the Material Spectroscopy Laboratories entered the area without suitable protection, and no seals were placed to protect the area from further contamination from access tunnel AT06. The lack of care taken when collecting the samples either compromised the integrity of the collected items or risked contaminating the entire facility with any pathogens found at the site. Although the artifacts were bagged and sealed, at the point of their quarantine, the UV had already been compromised.
+
+2 researchers from the team reported minor flu-like symptoms in the weeks following the incident. While these symptoms appear to be unrelated to the lack of care taken during the collection procedure, it must be assumed that the team contaminated the site to some degree. Standard DNA analysis of the artifacts has been compromised, and any biological material found on the artifacts or in the UV must be regarded with suspicion. Any biological data extracted from the area is therefore useless.
+
+It is recommended that the research team be stripped of their Tier 4 clearance privilege, and that in the future all UV surveys require not only BioHaz clearance, but also approval from the SMC Operations board. The board should also consider forming a separate department or entity to handle all investigation of such anomalies. Having a dedicated team will not only ensure the correct protocols are followed but will also offer deeper insight into any such discoveries.

@@ -1,0 +1,14 @@
+../BIOCOM
+audio intercept
+meta3.date_stamp(541118.130856)
+concern begins/..
+
+//transcript follows...
+
+STOKES
+Hearsay on. This is Dr. Stokes. I umm... I have some thoughts on artifacts 13, 14 and 17. I'm referring to these items as the Data blocks because they hold a remarkable resemblance to the data sticks we use here, but they're larger and more... well, alien. My theory is that the blocks hold digital data of some description. We haven't found a way to access that data yet but I have James working on an interface. The blocks share design aesthetics with the Matter Wave Projector, and as far as I can tell they are constructed of similar materials. Dr Hammerstein disagrees, but he always does, so... useless. I'm confident the blocks are supposed to attach to the Matter Wave Projector, though as we can't touch these objects without someone disappearing, I can't yet confirm that. I have had all the items electron mapped and printed so we can at least feel the replicas and see if that ignites a few ideas. Unfortunately, the workers who discovered these artifacts also disappeared so we must presume they suffered the same fate as the workers who discovered the Matter Wave Projector. The fact that they can't be found anywhere in Garganta, and that BIOCOM has literally no trace of their biosigs anywhere in the facility is remarkable. I'm trying not to speculate too much, but they went... somewhere. We're storing the blocks in remote areas of the facility as the interaction radius of the items fluctuates. Another thing we don't understand. Exciting, and frustrating. We're looking into the possibility that the behavior of the artifacts may be inhibited or regulated in some manner by Cretasium 77a. It has been found in large quantities throughout the Fossil and it's the only material that does not disappear when introduced to the... Hello. Hello. Dr. Hammerstein. Umm.. where was I. Ugh... pause recording.
+
+../BIOCOM
+personnel files updated
+alert system flagged
+concern ends/..

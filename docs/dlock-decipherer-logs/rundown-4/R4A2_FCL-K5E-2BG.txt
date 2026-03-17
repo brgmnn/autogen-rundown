@@ -1,0 +1,13 @@
+../BIOCOM
+shortwave transmission intercepted@27mhz
+meta3.date_stamp(570517.140547)
+ping location: -89.830, 21.372
+
+//transcript follows...
+
+UNIDENTIFIED MALE
+This is Matthew Aaron of the Daylight Mission. We have reached Garganta and have established a base camp on what used to be the sea floor. It's... disconcerting, knowing that the only thing holding back the entire ocean are these concrete walls. It feels like they might cave in at any moment. The entrance to the mine is drill hole into the bedrock. I'm guessing it's about 100 feet across. Looking into the hole is... unnerving, but impressive. None of us are excited about having to go down there. There's a smell coming up from that bottomless black pit. We know what it is, but we're not talking about it. There are 3 freight elevators around the perimeter of the opening. There's also several satellite buildings under the shadow of the sea walls: a triage center, a few military huts and a barracks, security checkpoints around each elevator, an area that looks like holding or containment cells, and storage depots. There's no people here. No bodies, nothing. If they evacuated the facility they left a lot behind - including a fueled Chinook. Captain Puente has stayed up at sea level. He said the men won't come down here. I don't blame them. We haven't found a way through their security systems yet. They're using biometric MFA protocols and multi-tiered network segmentation. It's going to take time to get to their medical records. Everything seems to be controlled by a program or machine called Biocom, but we're struggling to find a way into it.  There are a few open areas in the upper levels that are accessible via stairwells. It's possible any survivors went deeper into the facility, but until we get control of the elevators and go down there, there's no way of knowing for sure. We keep hearing what sounds like motors or... winches, maybe? Lots of them. Whatever they are, they move fast. They're active for a few seconds, then silent for a few hours, then they start again. This goes on day and night. I'll report in once I have something more. Message ends.
+../BIOCOM.
+.. transcript ends//
+intercept log updated
+alert system flagged

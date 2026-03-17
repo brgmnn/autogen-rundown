@@ -1,0 +1,11 @@
+Log E105-016
+Date: February 24th 2053
+Patient: Employee E105 (Edgar Soweta)
+Att. Phys: Dr. August Teale B023
+
+//HearSay auto-transcript begins//
+
+TEALE
+Update to medical record for patient Edgar Soweta. Patient presents with visual and auditory hallucinations, with potential psychosis and irrational paranoia more pronounced at night. Treatment has been attempted with Haloperidol, Thorazine and currently Clozapine at 700mg per day. I have increased the dosage but am reluctant to push it any further, as the effect seems to be minimal. Edgar is complaining of nausea and lethargy, and is unable to continue his duties. I will be recommending he is removed from the facility and taken to… hello. Could have sworn I… okay. Umm… yes. I’m recommending Edgar be removed immediately. His irrational behavior will likely affect those around him and it’s… err… a little edgy here at the moment. Okay, so, Edgar. Right. Personal note, I now have 14 patients all presenting with the same symptoms. I have my team researching common denominators in their… umm… possible… what is that. Can you stop that noise please. I’m trying to work here. I think there’s something in the wall or… I don’t know. I need to get engineering in to look at… actually, Susan, just come and see me to finish this report. I need to collect my thoughts. Hearsay off.
+
+//HearSay auto-transcript ends//

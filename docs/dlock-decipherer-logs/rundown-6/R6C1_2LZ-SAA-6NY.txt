@@ -1,0 +1,30 @@
+D-Lock Block Cipher
+alias:int_server.1024_ciph.tier5.kds_ops/DLockwoodA074.flagged
+
+Dean,
+
+I assume you are paying attention to this? A special program to gain more insight into this material seems warranted. At the very least, let's keep the circle small on this one. Hammerstein is a blowhard.
+
+Janson
+
+--------------------------------------------------------------------------------
+
+Incident Report
+Reported by: Dr. Gallus Hammerstein B014
+Date of Report: March 7th 2052
+Incident: #E11-C4-094
+
+Incident Details
+Date of Incident: March 6th 2052
+Time of Incident: 15:00
+Location of incident: Material Spectroscopy Laboratory
+
+Incident Description
+Artifacts taken from L18-AT06 were delivered to the MSL for analysis. After cataloging the samples and performing several surface scans, Dr. Richtofer and I agreed that the material was unknown to us, and proper analysis required breaking one of the artifacts down so a full spectroscopy could be performed. Dr. Richtofer placed one of the artifacts into the Jaw Crusher. The machine, though functioning perfectly well, had no effect on the artifact at all. It remained intact and untarnished despite the crusher operating at full power.
+
+Dr. Richtofer attempted to force the sample into the crusher, but in doing so the artifacts lodged between the crusher plates, causing the mechanism to overload. The hydraulic hoses driving the vibrating plate shattered, and the flying debris hit Dr. Richtofer in the left eye, causing a globe luxation.
+
+We replaced the Doctor’s eye as quickly as possible, but it is likely that his vision will be lost. The artifact remains unbroken.
+
+Actions taken after incident
+Dr. Richtofer has been placed on medical recovery (on-site). A new crusher has been ordered. The artifacts have been sent to SMC headquarters off-site for further analysis. In Dr. Hammerstein's opinion, the material does not appear to be from Earth.

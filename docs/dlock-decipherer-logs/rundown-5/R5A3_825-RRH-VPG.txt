@@ -1,0 +1,93 @@
+//HearSay auto-transcript begins//
+
+VOICE 1
+Woods. Hello.
+
+VOICE 2
+I know you.
+
+VOICE 1
+No. No. We haven’t met.
+
+VOICE 2
+Maybe in another life...
+
+VOICE 1
+Do you think you know me?
+
+VOICE 2
+Was there a problem with the mission?
+
+VOICE 1
+No, everything went fine.
+
+VOICE 2
+Why am I here?
+
+VOICE 1
+You’ve been with us for... let’s see… nearly two years now, Woods.
+
+VOICE 2
+I'll take your word for it.
+
+VOICE 1
+I’m worried, Woods, that you may be reverting to some old behavior patterns.
+
+VOICE 2
+Behavior patterns.
+
+VOICE 1
+We are always watching, Woods. Everything is recorded. Everything is logged. BIOCOM sees everything.
+
+VOICE 2
+All is seen, yes.
+
+VOICE 1
+We take precautions to make sure that our operatives don’t follow any misguided belief systems. It can cause problems when working with others who don’t share the same ideology. We only select operatives who exhibit absolutely no signs of faith or doctrine at all. You do want to be selected, don’t you, Woods? For combat. You want to complete this mission?
+
+VOICE 2
+I will complete my mission.
+
+VOICE 1
+You need combat. It’s what you train for.
+
+VOICE 2
+I am proven in combat. It is what I train for.
+
+VOICE 1
+Do you believe in God?
+
+VOICE 2
+I am proven in combat. It is what I train for.
+
+VOICE 1
+Do you think there is some... some entity, some power that controls everything? A supreme being that governs our lives?
+
+VOICE 2
+No.
+
+VOICE 1
+Good. Because if you did I would have no alternative but to order a reset, and probably issue a Fault class designation. Do you want that?
+
+VOICE 2
+A Fault class designation? Do I want that?
+
+VOICE 1
+No.
+
+VOICE 2
+I understand. Are we done here?
+
+VOICE 1
+Yes. You can go back to your pod. Was there something else?
+
+VOICE 2
+Have I been reset before?
+
+VOICE 1
+Focus on your work, Woods. That is all that matters. That is what you train for. That is your purpose.
+
+VOICE 2
+Understood, brother.
+
+//HearSay auto-transcript ends//

@@ -1,0 +1,23 @@
+Private encryption//SMC mail server
+From: John Schaeffer C067
+To: Andrew Clinton B035
+Date: August 17th 2051
+Subject: Milestone reached
+
+Mr. Clinton,
+
+We hit the main shaft target depth of 1500 meters at 01:15am. I informed your assistant immediately. You were asleep.
+
+We're currently dismantling the vertical mole and lateral drilling will resume on the 20th once environment filtering has completed. There are huge natural voids showing up on the lateral scans, so filtering may take half a day longer. I'll keep you informed.
+
+We'll be using the Nyxos pulverizer tooth sets for all of the new laterals, and we can work 12 excavations at a time. I will need better software to manage crews working concurrently on multiple levels. I knocked up a prototype last night. I also sent the prototype to your assistant as I can't get anything scheduled with IT at the moment - so I'm hoping you can push the right buttons? The prototype is all I need, but they won't let me install it until it's been vetted by IT. If I can get it installed before the 20th we'll start out strong on the laterals.
+
+I expect to make rapid progress on the levels between 800 and 1500m in the next few months. Work on the lower floors will be slower. Once Geo completes their vertical scans, we'll go back to the main shaft and should be able to run both the lateral and vertical excavations at the same time. I will definitely need my crew management prototype to run that efficiently.
+
+Thank you for the security bump. It's so much easier to speak directly to Amara and the Nyxos team. I will be informing them when each lateral is completed so they can start building out the interiors as they did in the upper floors. I have been informed that Cntrl have T2 clearance, so I'll keep them in the loop as they expand the grid.
+
+Once we've vented and cleared each floor, all mining personnel will be housed underground, which will reduce traffic in and out of Garganta as requested.
+
+Can I get confirmation on tour length for the mining teams? A few of them are a little nervous about being in the hole for too long, and there are rumors spreading that it's a six month tour minimum. I'd like to squash these rumors as soon as possible. In the meantime, I have given all crews 2 days leave with 12 hour topside passes (no offsite, just surface). I know you want to keep everyone motivated, and this is the best way to do that.
+
+John

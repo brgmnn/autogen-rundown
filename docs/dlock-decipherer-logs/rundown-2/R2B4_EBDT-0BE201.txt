@@ -1,0 +1,17 @@
+>>EBDT FRAGMENT 0BE201 START
+
+>>ENC: [corrupted]rivate encryption//SMC mail server
+From: Andrew Clinton B035
+To: Janson Davies A001
+Date: August 03rd 20[corrupted]0
+Subject: Progress Update.
+
+Mr. Davies,
+
+Construction is moving along swiftly. The se[corrupted] walls have been completed and we will begin primary drilling by the beginning of Oct[corrupted]ber once the walls have cured.
+
+The incident at pum[corrupted]
+
+>>ENC://
+
+>>EBDT FRAGMENT END

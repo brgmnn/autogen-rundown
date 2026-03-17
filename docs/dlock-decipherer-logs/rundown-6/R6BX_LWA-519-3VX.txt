@@ -1,0 +1,49 @@
+D-Lock Block Cipher
+alias:int_server.1024_ciph.tier5.high_core/AJohansonsA029.flagged
+
+This needs to go up the chain. Thanks for the info - we'll get back to you.
+
+Dean
+
+-----------------------------------------------------------------------------------------------------
+
+D-Lock Block Cipher
+alias:int_server.1024_ciph.tier5.med_core/DLockwoodA074.flagged
+
+Dean,
+
+Mr. Piros has advised me of your request for more Kovac involvement in future expeditions. The current approach to operative debriefing, situation training, and resource management will not scale well for your proposed usage. However, we do have a command system that will fit your needs.
+
+BIOCOM. Managing operations through BIOCOM would ensure full coverage for all future expeditions, coordinate additional stationed security posts throughout the facility, and provide round the clock protection or surveillance for all POIs within the theatre of operation (currently Garganta itself and the red zone on the peninsula). BIOCOM is a DI that will take control of resource tracking, supply management, objective specific training, operative briefing, and rapid response deployment.
+
+That's the pitch done. The long and the short of it is BIOCOM handles things better than any human can. It doesn't sleep, doesn't make bad decisions based on compassion, and unlike human COs, has a 100% success rate for all fifteen of its deployments (if you need to know more, we'll have to do some paperwork). It still requires human oversight to handle some of the more sensitive ethical considerations, but even that can be pre-programmed to fit your ruleset.
+
+It would take a few months to transition over. We should start now.
+
+Anders Johanson
+
+-----------------------------------------------------------------------------------------------------
+
+D-Lock Block Cipher
+alias:int_server.1024_ciph.tier5.high_core/DLockwoodA074.flagged
+
+PIROS.
+
+I have made Mr. Johanson aware of your concerns. Expect a response from him shortly.
+
+Andre Piros A134
+
+-----------------------------------------------------------------------------------------------------
+
+D-Lock Block Cipher
+alias:int_server.1024_ciph.tier5.high_core/APirosA134.flagged
+
+Mr Prios,
+
+I have received reports of fishing vessels entering the restricted zone with one ship making it to within 0.5 kilometers of the sea walls. I have also received reports from our ground crews both at Merida and Chicxulub that there are still locals wandering around despite Kovac's assurances that the area is clear of civilians. There have been several violent incidents among my staff over the last few weeks, one of them resulting in an altercation that required a medical evac. We had two incidents in our deep lateral excavations on Tuesday alone. These issues have occurred when there has been no active KSO presence despite the assurances I received from Mr. Johanson that there would be a KSO posted at every excavation site, to every mining team, and at each security checkpoint from here to the exclusion perimeter.
+
+Mr. Dreyfus himself assured me that Kovac's presence would make my life easier and that you would handle all of our security concerns both in the facility and at our ground excavations. This is not happening. Kovac are not providing adequate security for my operation, and our work is suffering.
+
+I would like a meeting with you to discuss these matters.
+
+Dean Lockwood A074

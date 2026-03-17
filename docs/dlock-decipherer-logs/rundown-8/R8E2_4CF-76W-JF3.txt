@@ -1,0 +1,20 @@
+D-Lock Block Cipher
+alias:int_server.1024_ciph.tier5.exec_branch/MGantusB623.flagged
+
+From: Christopher Getz B488
+To: Marcus Gantus B623
+Date: September 11th 2053
+Subject: BIOCOM permissions
+
+Marcus,
+
+We've been having some issues with the BIOCOM interface in Overflow Vault 3. I'm seeing a lot of signal interference between the mainframe nexus point in the storage vault and the HSU dispersal bank. We have hundreds of HSUs throwing up signal degradation alerts (and I assume you're seeing the warnings on your end too).
+
+I don't think it's a shielding issue. I think the run from the mainframe to the vault is just too long and I believe you must construct additional pylons. To gather the resources needed for an additional pylons I need approval from you of course.
+
+I'm worried if we don't solve this issue, we may end up with a failure cascade. The Overflow Vault 3 HSUs are all F/Infected classification so I guess it wouldn't be the end of the world if we lost the meat, but the freezers may come in handy someday - or at least we may end up needing them as Deep backups or organ donations etc.
+
+LMK
+
+Chris Getz B488
+HSU Maintenance
