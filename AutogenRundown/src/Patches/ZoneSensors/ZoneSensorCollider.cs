@@ -31,11 +31,49 @@ public class ZoneSensorCollider : MonoBehaviour
     public float Radius = 2.3f;
 
     private const float CHECK_INTERVAL = 0.1f;
+    private const float GRACE_PERIOD = 1.0f;
+    private static readonly Color GraceColor = new(0.5f, 0.5f, 0.5f, 0.4f);
+
     private float checkTimer = 0f;
     private int lastPlayerCount = 0;
 
+    private float graceTimer = -1f;
+    private bool isFirstActivation = true;
+
+    // Cached visual references (set via SetVisualReferences)
+    private Renderer sensorRenderer;
+    private Color originalColor;
+    private ZoneSensorTextAnimator textAnimator;
+    private TMPro.TextMeshPro textComponent;
+    private string originalText;
+    private Color originalTextColor;
+
+    public void SetVisualReferences(Renderer renderer, Color color,
+        ZoneSensorTextAnimator animator, TMPro.TextMeshPro text,
+        string textStr, Color textColor)
+    {
+        sensorRenderer = renderer;
+        originalColor = color;
+        textAnimator = animator;
+        textComponent = text;
+        originalText = textStr;
+        originalTextColor = textColor;
+    }
+
     void Update()
     {
+        // Handle grace period countdown
+        if (graceTimer > 0f)
+        {
+            graceTimer -= Time.deltaTime;
+            if (graceTimer <= 0f)
+            {
+                graceTimer = -1f;
+                RestoreVisuals();
+            }
+            return;
+        }
+
         checkTimer += Time.deltaTime;
         if (checkTimer < CHECK_INTERVAL)
             return;
@@ -97,11 +135,50 @@ public class ZoneSensorCollider : MonoBehaviour
 
     /// <summary>
     /// Resets the player count (call when sensor is re-enabled).
+    /// Starts a grace period on re-enable (skipped on initial spawn).
     /// </summary>
     public void ResetState()
     {
         lastPlayerCount = 0;
         checkTimer = 0f;
+
+        if (isFirstActivation)
+        {
+            isFirstActivation = false;
+            return;
+        }
+
+        graceTimer = GRACE_PERIOD;
+        ApplyGraceVisuals();
+    }
+
+    private void ApplyGraceVisuals()
+    {
+        if (sensorRenderer != null)
+            sensorRenderer.material.SetColor("_ColorA", GraceColor);
+
+        if (textAnimator != null)
+            textAnimator.enabled = false;
+
+        if (textComponent != null)
+            textComponent.SetText("");
+    }
+
+    private void RestoreVisuals()
+    {
+        if (sensorRenderer != null)
+            sensorRenderer.material.SetColor("_ColorA", originalColor);
+
+        if (textAnimator != null)
+        {
+            // Animator handles its own text content
+            textAnimator.enabled = true;
+        }
+        else if (textComponent != null)
+        {
+            textComponent.SetText(originalText);
+            textComponent.m_fontColor = textComponent.m_fontColor32 = originalTextColor;
+        }
     }
 
     static ZoneSensorCollider()
