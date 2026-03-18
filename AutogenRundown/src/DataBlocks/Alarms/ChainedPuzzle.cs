@@ -941,8 +941,8 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
             PuzzleComponent.AllBig,
             PuzzleComponent.Cluster,
             PuzzleComponent.Cluster,
-            PuzzleComponent.Cluster,
-            PuzzleComponent.Cluster,
+            PuzzleComponent.ClusterMega,
+            PuzzleComponent.AllBig,
         },
     };
 
@@ -956,8 +956,8 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
             PuzzleComponent.AllBig,
             PuzzleComponent.Cluster,
             PuzzleComponent.Cluster,
-            PuzzleComponent.Cluster,
-            PuzzleComponent.Cluster,
+            PuzzleComponent.AllBig,
+            PuzzleComponent.ClusterMega,
             PuzzleComponent.AllBig,
         },
     };
@@ -971,10 +971,10 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         {
             PuzzleComponent.AllBig,
             PuzzleComponent.Cluster,
-            PuzzleComponent.Cluster,
+            PuzzleComponent.ClusterMega,
             PuzzleComponent.AllBig,
             PuzzleComponent.Cluster,
-            PuzzleComponent.Cluster,
+            PuzzleComponent.ClusterMega,
             PuzzleComponent.AllBig,
         },
     };
@@ -1192,7 +1192,6 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     #endregion
 
     #region Alarms: Travel (Moving)
-
     /// <summary>
     /// Base travel team alarm scan
     /// </summary>
