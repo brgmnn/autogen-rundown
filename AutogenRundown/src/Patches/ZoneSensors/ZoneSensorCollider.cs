@@ -40,25 +40,11 @@ public class ZoneSensorCollider : MonoBehaviour
     private float graceTimer = -1f;
     private bool isFirstActivation = true;
 
-    // Cached visual references (set via SetVisualReferences)
-    private Renderer sensorRenderer;
-    private Color originalColor;
-    private ZoneSensorTextAnimator textAnimator;
-    private TMPro.TextMeshPro textComponent;
-    private string originalText;
-    private Color originalTextColor;
-
-    public void SetVisualReferences(Renderer renderer, Color color,
-        ZoneSensorTextAnimator animator, TMPro.TextMeshPro text,
-        string textStr, Color textColor)
-    {
-        sensorRenderer = renderer;
-        originalColor = color;
-        textAnimator = animator;
-        textComponent = text;
-        originalText = textStr;
-        originalTextColor = textColor;
-    }
+    /// <summary>
+    /// Plain C# object holding visual references. Not an IL2CPP field —
+    /// avoids ClassInjector trampoline issues with abstract/injected types.
+    /// </summary>
+    public SensorVisualRefs Visuals;
 
     void Update()
     {
@@ -154,30 +140,34 @@ public class ZoneSensorCollider : MonoBehaviour
 
     private void ApplyGraceVisuals()
     {
-        if (sensorRenderer != null)
-            sensorRenderer.material.SetColor("_ColorA", GraceColor);
+        if (Visuals == null) return;
 
-        if (textAnimator != null)
-            textAnimator.enabled = false;
+        if (Visuals.Renderer != null)
+            Visuals.Renderer.material.SetColor("_ColorA", GraceColor);
 
-        if (textComponent != null)
-            textComponent.SetText("");
+        if (Visuals.TextAnimator != null)
+            Visuals.TextAnimator.enabled = false;
+
+        if (Visuals.TextComponent != null)
+            Visuals.TextComponent.SetText("");
     }
 
     private void RestoreVisuals()
     {
-        if (sensorRenderer != null)
-            sensorRenderer.material.SetColor("_ColorA", originalColor);
+        if (Visuals == null) return;
 
-        if (textAnimator != null)
+        if (Visuals.Renderer != null)
+            Visuals.Renderer.material.SetColor("_ColorA", Visuals.OriginalColor);
+
+        if (Visuals.TextAnimator != null)
         {
             // Animator handles its own text content
-            textAnimator.enabled = true;
+            Visuals.TextAnimator.enabled = true;
         }
-        else if (textComponent != null)
+        else if (Visuals.TextComponent != null)
         {
-            textComponent.SetText(originalText);
-            textComponent.m_fontColor = textComponent.m_fontColor32 = originalTextColor;
+            Visuals.TextComponent.SetText(Visuals.OriginalText);
+            Visuals.TextComponent.m_fontColor = Visuals.TextComponent.m_fontColor32 = Visuals.OriginalTextColor;
         }
     }
 
@@ -185,4 +175,18 @@ public class ZoneSensorCollider : MonoBehaviour
     {
         ClassInjector.RegisterTypeInIl2Cpp<ZoneSensorCollider>();
     }
+}
+
+/// <summary>
+/// Plain C# class (not registered with ClassInjector) to hold sensor visual references.
+/// This avoids IL2CPP trampoline generation issues with abstract/injected parameter types.
+/// </summary>
+public class SensorVisualRefs
+{
+    public Renderer Renderer;
+    public Color OriginalColor;
+    public ZoneSensorTextAnimator TextAnimator;
+    public TMPro.TextMeshPro TextComponent;
+    public string OriginalText;
+    public Color OriginalTextColor;
 }

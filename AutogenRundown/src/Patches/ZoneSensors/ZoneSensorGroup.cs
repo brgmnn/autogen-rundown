@@ -603,7 +603,15 @@ public class ZoneSensorGroup
         collider.SensorIndex = sensorIndex;
         collider.TriggerEach = groupDef.TriggerEach;
         collider.Radius = (float)groupDef.Radius;
-        collider.SetVisualReferences(renderer, sensorColor, textAnimator, textComp, textStr, textColor);
+        collider.Visuals = new SensorVisualRefs
+        {
+            Renderer = renderer,
+            OriginalColor = sensorColor,
+            TextAnimator = textAnimator,
+            TextComponent = textComp,
+            OriginalText = textStr,
+            OriginalTextColor = textColor,
+        };
 
         // Late joiners create sensors inactive - they'll be activated when state is received
         if (isLateJoinerSpawn)
