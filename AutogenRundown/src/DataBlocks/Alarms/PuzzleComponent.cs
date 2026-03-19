@@ -18,35 +18,59 @@ public class PuzzleComponent
     public static readonly PuzzleComponent BulkheadSecondary = new() { PuzzleType = PuzzleType.BulkheadSecondary };
     public static readonly PuzzleComponent BulkheadOverload  = new() { PuzzleType = PuzzleType.BulkheadOverload };
 
-    // Unused?
+    /// <summary>
+    /// Single small circle: red when alarmed, blue (stealth) otherwise. Usually not used much.
+    ///
+    /// Unused?
+    /// </summary>
     public static readonly PuzzleComponent ScanSmall = new()
     {
         PuzzleType = PuzzleType.Small
     };
 
+    /// <summary>
+    /// Single large circle: red when alarmed, blue (stealth) otherwise.
+    /// </summary>
     public static readonly PuzzleComponent ScanLarge = new()
     {
         PuzzleType = PuzzleType.Large
         // TODO: Add Duration measurement
     };
 
+    /// <summary>
+    /// 4 small red circles
+    /// </summary>
     public static readonly PuzzleComponent ClusterSmall = new()
     {
         PuzzleType = PuzzleType.ClusterSmall,
         Duration = 12
     };
+
+    /// <summary>
+    /// 2 large PuzzleType.Large circles
+    /// </summary>
     public static readonly PuzzleComponent ClusterLarge = new()
     {
         PuzzleType = PuzzleType.ClusterLarge,
         Duration = 15
     };
+
+    /// <summary>
+    /// 8 small clusters, blue when non-alarm orange otherwise.
+    /// </summary>
     public static readonly PuzzleComponent Cluster = new()
     {
-        PuzzleType = PuzzleType.Cluster
+        PuzzleType = PuzzleType.Cluster,
+        Duration = 15
     };
+
+    /// <summary>
+    /// 25 small clusters, blue when non-alarm orange otherwise.
+    /// </summary>
     public static readonly PuzzleComponent ClusterMega = new()
     {
-        PuzzleType = PuzzleType.ClusterMega
+        PuzzleType = PuzzleType.ClusterMega,
+        Duration = 40
     };
 
     /// <summary>
@@ -60,7 +84,8 @@ public class PuzzleComponent
 
     public static readonly PuzzleComponent AllBig_GreenActive = new()
     {
-        PuzzleType = PuzzleType.AllBig_GreenActive
+        PuzzleType = PuzzleType.AllBig_GreenActive,
+        Duration = 8
     };
 
     /// <summary>

@@ -1119,11 +1119,8 @@ public partial record Zone : DataBlock<Zone>
     /// <summary>
     /// Which security scan to use to enter
     /// </summary>
-    public uint ChainedPuzzleToEnter
-    {
-        get => Alarm.PersistentId;
-        private set { }
-    }
+    [JsonProperty]
+    public uint ChainedPuzzleToEnter => Alarm.PersistentId;
     #endregion
 
     #region Security door
