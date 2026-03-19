@@ -89,8 +89,8 @@ public partial record WardenObjective
         var exitZone = level.Planner.GetZones(director.Bulkhead, "exit").First();
 
         MainObjective = new Text(() => $"Find a way to stay alive during Warden Protocol DECOY, and make your way to {Intel.Zone(exitZone, level.Planner)} for extraction");
-        Survival_TimerTitle = "Time until allowed extraction:";
-        Survival_TimerToActivateTitle = "<color=red>WARNING!</color> Warden Protocol <color=orange>DECOY</color> will commence in: ";
+        Survival_TimerTitle = new Text("Time until allowed extraction:");
+        Survival_TimerToActivateTitle = new Text("<color=red>WARNING!</color> Warden Protocol <color=orange>DECOY</color> will commence in: ");
 
         GoToWinCondition_Elevator = new Text(() => $"Go to the forward exit point in {Intel.Zone(exitZone, level.Planner)}");
         GoToWinCondition_CustomGeo = new Text(() => $"Go to the forward exit point in {Intel.Zone(exitZone, level.Planner)}");

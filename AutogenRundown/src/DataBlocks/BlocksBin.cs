@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Markers;
+using AutogenRundown.Json;
 using BepInEx;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -149,6 +150,7 @@ public static class Bins
 
 public class BlocksBin<T> where T : DataBlock<T>
 {
+    private static readonly AutogenContractResolver ContractResolver = new();
     /// <summary>
     /// Not sure what this is for yet
     /// </summary>
@@ -215,7 +217,11 @@ public class BlocksBin<T> where T : DataBlock<T>
     /// <param name="name"></param>
     public void Save(string name)
     {
-        var serializer = new JsonSerializer { Formatting = Formatting.Indented };
+        var serializer = new JsonSerializer
+        {
+            Formatting = Formatting.Indented,
+            ContractResolver = ContractResolver
+        };
 
         // Replace with Plugin.GameRevision to avoid interop dependency
         var revision = CellBuildData.GetRevision();
@@ -240,7 +246,11 @@ public class BlocksBin<T> where T : DataBlock<T>
     /// <param name="filename"></param>
     public void Save(string dir, string filename)
     {
-        var serializer = new JsonSerializer { Formatting = Formatting.Indented };
+        var serializer = new JsonSerializer
+        {
+            Formatting = Formatting.Indented,
+            ContractResolver = ContractResolver
+        };
         var path = Path.Combine(dir, filename);
 
         // Ensure the directory exists

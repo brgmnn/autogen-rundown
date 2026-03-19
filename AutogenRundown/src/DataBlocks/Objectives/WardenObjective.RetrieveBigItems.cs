@@ -74,9 +74,8 @@ public partial record WardenObjective
         var item = RetrieveItems.First();
 
         MainObjective = new Text(() => $"Find [ALL_ITEMS] and bring it to the extraction scan in {Intel.Zone(level.ExtractionZone, level.Planner)}");
-        FindLocationInfo = "Gather information about the location of [ALL_ITEMS]";
-        FindLocationInfoHelp = "Access more data in the terminal maintenance system";
-        InZoneFindItem = "Find [ALL_ITEMS] somewhere inside [ITEM_ZONE]";
+        FindLocationInfo = new Text("Gather information about the location of [ALL_ITEMS]");
+        InZoneFindItem = new Text("Find [ALL_ITEMS] somewhere inside [ITEM_ZONE]");
 
         if (RetrieveItems.Count == 1)
         {
@@ -87,8 +86,8 @@ public partial record WardenObjective
                 var zoneNumber = dataLayer.ObjectiveData.ZonePlacementDatas[0][0].LocalIndex;
 
                 GoToZone = new Text(() => $"Navigate to {Intel.Zone(layout.ZoneAliasStart + zoneNumber)} and find [ALL_ITEMS]");
-                GoToZoneHelp = $"Use information in the environment to find {zone}";
-                InZoneFindItem = $"Find [ALL_ITEMS] somewhere inside {zone}";
+                GoToZoneHelp = new Text($"Use information in the environment to find {zone}");
+                InZoneFindItem = new Text($"Find [ALL_ITEMS] somewhere inside {zone}");
             }
             else
             {
@@ -104,17 +103,17 @@ public partial record WardenObjective
 
                     return $"Navigate to and find [ALL_ITEMS] in one of zones {zones}";
                 });
-                GoToZoneHelp = $"Use information in the environment to find {zones}";
+                GoToZoneHelp = new Text($"Use information in the environment to find {zones}");
             }
         }
         else
         {
             GoToZone = new Text("Navigate to and find [ALL_ITEMS]");
-            GoToZoneHelp = "Use information in the environment to find each item zone";
+            GoToZoneHelp = new Text("Use information in the environment to find each item zone");
         }
 
-        SolveItem = "WARNING - Hisec Cargo misplaced - ENGAGING SECURITY PROTOCOLS";
-        InZoneFindItemHelp = "Use maintenance terminal command PING to find [ALL_ITEMS]";
+        SolveItem = new Text("WARNING - Hisec Cargo misplaced - ENGAGING SECURITY PROTOCOLS");
+        InZoneFindItemHelp = new Text("Use maintenance terminal command PING to find [ALL_ITEMS]");
 
         if (RetrieveItems.Count() > 1)
         {
@@ -130,8 +129,6 @@ public partial record WardenObjective
             GoToWinCondition_CustomGeo = new Text(() =>
                 $"Bring the [ALL_ITEMS] to the forward exit point in {Intel.Zone(level.ExtractionZone, level.Planner)}");
         }
-
-        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
 
         // TODO: Switch and combine with the generic exit waves objective
         switch (item)
@@ -382,10 +379,10 @@ public partial record WardenObjective
                 // Manually set the zones as the inbuilt ITEM_ZONE doesn't seem to
                 // work correctly for MWP
                 GoToZone = new Text(() => $"Navigate to {Intel.Zone(layout.ZoneAliasStart + zoneIndex)} and find [ALL_ITEMS]");
-                GoToZoneHelp = $"Use information in the environment to find [ZONE_{zoneIndex}]";
-                InZoneFindItem = $"Find [ALL_ITEMS] somewhere inside [ZONE_{zoneIndex}]";
+                GoToZoneHelp = new Text($"Use information in the environment to find [ZONE_{zoneIndex}]");
+                InZoneFindItem = new Text($"Find [ALL_ITEMS] somewhere inside [ZONE_{zoneIndex}]");
 
-                SolveItem = "WARNING - Matter Wave Projector misplaced - ENGAGING SECURITY PROTOCOLS";
+                SolveItem = new Text("WARNING - Matter Wave Projector misplaced - ENGAGING SECURITY PROTOCOLS");
 
                 break;
             }

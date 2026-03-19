@@ -7,6 +7,7 @@ using AutogenRundown.DataBlocks.Objectives.CentralGeneratorCluster;
 using AutogenRundown.DataBlocks.Objectives.Reactor;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
+using AutogenRundown.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -821,7 +822,9 @@ public partial record WardenObjective : DataBlock<WardenObjective>
 
         GoToWinCondition_Elevator  = new Text(() => $"Return to the point of entrance in {Intel.Zone(level.ExtractionZone, level.Planner)}");
         GoToWinCondition_CustomGeo = new Text(() => $"Go to the forward exit point in {Intel.Zone(level.ExtractionZone, level.Planner)}");
-        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition";
+        GoToWinCondition_ToMainLayer = new Text("Go back to the main objective and complete the expedition");
+        FindLocationInfoHelp = new Text("Access more data in the terminal maintenance system");
+        GoToWinConditionHelp_ToMainLayer = new Text("Go back to the main objective and complete the expedition.");
 
         // Set the level description if there's no description provided already
         if (director.Bulkhead.HasFlag(Bulkhead.Main) && level.Description == 0)
@@ -1127,58 +1130,68 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     public WardenObjectiveSubType SubType { get; set; } = WardenObjectiveSubType.Default;
 
     #region Information and display strings
-    [JsonIgnore]
+    [JsonTextId]
     public Text MainObjective { get; set; } = Text.None;
 
-    [JsonProperty("MainObjective")]
-    public uint MainObjectiveId => MainObjective.PersistentId;
+    [JsonTextId]
+    public Text FindLocationInfo { get; set; } = Text.None;
 
-    public string FindLocationInfo { get; set; } = "";
-    public string FindLocationInfoHelp { get; set; } = "Access more data in the terminal maintenance system";
+    [JsonTextId]
+    public Text FindLocationInfoHelp { get; set; } = Text.None;
 
-    [JsonIgnore]
+    [JsonTextId]
     public Text GoToZone { get; set; } = Text.None;
 
-    [JsonProperty("GoToZone")]
-    public uint GoToZoneId => GoToZone.PersistentId;
+    [JsonTextId]
+    public Text GoToZoneHelp { get; set; } = Text.None;
 
-    public string GoToZoneHelp { get; set; } = "";
-    public string InZoneFindItem { get; set; } = "";
-    public string InZoneFindItemHelp { get; set; } = "";
-    public string SolveItem { get; set; } = "";
-    public string SolveItemHelp { get; set; } = "";
+    [JsonTextId]
+    public Text InZoneFindItem { get; set; } = Text.None;
+
+    [JsonTextId]
+    public Text InZoneFindItemHelp { get; set; } = Text.None;
+
+    [JsonTextId]
+    public Text SolveItem { get; set; } = Text.None;
+
+    [JsonTextId]
+    public Text SolveItemHelp { get; set; } = Text.None;
 
     /// <summary>
     /// Default = "Return to the point of entrance in [EXTRACTION_ZONE]"
     /// </summary>
-    [JsonIgnore]
+    [JsonTextId]
     public Text GoToWinCondition_Elevator { get; set; } = Text.None;
 
-    [JsonProperty("GoToWinCondition_Elevator")]
-    public uint GoToWinCondition_ElevatorId => GoToWinCondition_Elevator.PersistentId;
-
-    public string GoToWinConditionHelp_Elevator { get; set; } = "";
+    [JsonTextId]
+    public Text GoToWinConditionHelp_Elevator { get; set; } = Text.None;
 
     /// <summary>
     /// Default = "Go to the forward exit point in [EXTRACTION_ZONE]"
     /// </summary>
-    [JsonIgnore]
+    [JsonTextId]
     public Text GoToWinCondition_CustomGeo { get; set; } = Text.None;
 
-    [JsonProperty("GoToWinCondition_CustomGeo")]
-    public uint GoToWinCondition_CustomGeoId => GoToWinCondition_CustomGeo.PersistentId;
+    [JsonTextId]
+    public Text GoToWinConditionHelp_CustomGeo { get; set; } = Text.None;
 
-    public string GoToWinConditionHelp_CustomGeo { get; set; } = "";
-    public string GoToWinCondition_ToMainLayer { get; set; } = "";
+    [JsonTextId]
+    public Text GoToWinCondition_ToMainLayer { get; set; } = Text.None;
 
     /// <summary>
     /// Default = "Go back to the main objective and complete the expedition."
     /// </summary>
-    public string GoToWinConditionHelp_ToMainLayer { get; set; } = "Go back to the main objective and complete the expedition.";
+    [JsonTextId]
+    public Text GoToWinConditionHelp_ToMainLayer { get; set; } = Text.None;
 
-    public string WaveOnElevatorWardenIntel { get; set; } = "";
-    public string Survival_TimerTitle { get; set; } = "";
-    public string Survival_TimerToActivateTitle { get; set; } = "";
+    [JsonTextId]
+    public Text WaveOnElevatorWardenIntel { get; set; } = Text.None;
+
+    [JsonTextId]
+    public Text Survival_TimerTitle { get; set; } = Text.None;
+
+    [JsonTextId]
+    public Text Survival_TimerToActivateTitle { get; set; } = Text.None;
 
     /// <summary>
     /// Default = 180
@@ -1191,10 +1204,9 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     /// <summary>
     ///
     /// </summary>
-    [JsonIgnore]
+    [JsonConverter(typeof(PersistentIdConverter<Fog>))]
+    [JsonProperty("FogTransitionDataOnGotoWin")]
     public Fog FogOnGotoWin { get; set; } = Fog.None;
-
-    public uint FogTransitionDataOnGotoWin => FogOnGotoWin.PersistentId;
 
     public double FogTransitionDurationOnGotoWin { get; set; } = 0.0;
 

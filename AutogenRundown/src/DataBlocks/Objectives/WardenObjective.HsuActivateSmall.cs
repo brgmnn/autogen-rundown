@@ -37,7 +37,7 @@ public partial record WardenObjective
             case Items.Item.DataSphere:
             {
                 MainObjective = new Text("Bring the Data sphere to [ITEM_SERIAL] to unlock its data encryption");
-                SolveItem = $"Insert Data Sphere into {HsuActivateSmall_MachineName} [ITEM_SERIAL]";
+                SolveItem = new Text($"Insert Data Sphere into {HsuActivateSmall_MachineName} [ITEM_SERIAL]");
                 GoToWinCondition_Elevator = new Text(() =>
                     $"Return the Data Sphere to the point of entrance in {Intel.Zone(level.ExtractionZone, level.Planner)}");
                 GoToWinCondition_CustomGeo = new Text(() =>
@@ -48,7 +48,7 @@ public partial record WardenObjective
             case Items.Item.NeonateHsu_Stage1:
             {
                 MainObjective = new Text("Bring the Neonate to [ITEM_SERIAL] to reactivate it");
-                SolveItem = $"Insert Neonate into {HsuActivateSmall_MachineName} [ITEM_SERIAL]";
+                SolveItem = new Text($"Insert Neonate into {HsuActivateSmall_MachineName} [ITEM_SERIAL]");
                 GoToWinCondition_Elevator = new Text(() =>
                     $"Return the Neonate to the point of entrance in {Intel.Zone(level.ExtractionZone, level.Planner)}");
                 GoToWinCondition_CustomGeo = new Text(() =>
@@ -57,14 +57,12 @@ public partial record WardenObjective
             }
         }
 
-        FindLocationInfo = "Gather information about the location of [ITEM_SERIAL]";
-        FindLocationInfoHelp = "Access more data in the terminal maintenance system";
+        FindLocationInfo = new Text("Gather information about the location of [ITEM_SERIAL]");
         GoToZone = new Text("Navigate to [ITEM_ZONE] and find [ITEM_SERIAL]");
-        GoToZoneHelp = "Use information in the environment to find [ITEM_ZONE]";
-        InZoneFindItem = "Find [ITEM_SERIAL] inside [ITEM_ZONE]";
-        GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
-        GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
-        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+        GoToZoneHelp = new Text("Use information in the environment to find [ITEM_ZONE]");
+        InZoneFindItem = new Text("Find [ITEM_SERIAL] inside [ITEM_ZONE]");
+        GoToWinConditionHelp_Elevator = new Text("Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back");
+        GoToWinConditionHelp_CustomGeo = new Text("Use the navigational beacon and the information in the surroundings to find the exit point");
 
         ActivateHSU_BringItemInElevator = true;
         ActivateHSU_MarkItemInElevatorAsWardenObjective = false;

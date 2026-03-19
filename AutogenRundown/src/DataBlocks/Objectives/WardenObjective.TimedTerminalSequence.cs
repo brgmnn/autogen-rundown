@@ -26,8 +26,7 @@ public partial record WardenObjective
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
         MainObjective = new Text("Find [ITEM_SERIAL] and initiate timed sequence protocol.");
-        FindLocationInfo = "Gather information about the location of [ITEM_SERIAL]";
-        FindLocationInfoHelp = "Access more data in the terminal maintenance system";
+        FindLocationInfo = new Text("Gather information about the location of [ITEM_SERIAL]");
 
         TimedTerminalSequence_TimeForConfirmation = 10.0;
         //TimedTerminalSequence_TimeForConfirmation = 120.0; // DEBUG

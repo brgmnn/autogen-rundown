@@ -78,11 +78,10 @@ public partial record WardenObjective
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
         MainObjective = new Text("Distribute Power Cells from the elevator cargo container to [ALL_ITEMS]");
-        FindLocationInfo = "Locate the Generators and bring the Power Cells to them";
-        FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
-        GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
-        GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
-        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+        FindLocationInfo = new Text("Locate the Generators and bring the Power Cells to them");
+        FindLocationInfoHelp = new Text("Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]");
+        GoToWinConditionHelp_Elevator = new Text("Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back");
+        GoToWinConditionHelp_CustomGeo = new Text("Use the navigational beacon and the information in the surroundings to find the exit point");
 
         if (!director.Bulkhead.HasFlag(Bulkhead.Main))
         {

@@ -59,31 +59,29 @@ public partial record WardenObjective
         if (Uplink_NumberOfTerminals > 1)
         {
             MainObjective = new Text("Find the <u>Uplink Terminals</u> [ALL_ITEMS] and establish an external uplink from each terminal");
-            FindLocationInfo = "Gather information about the location of the terminals";
+            FindLocationInfo = new Text("Gather information about the location of the terminals");
         }
         else
         {
             MainObjective = new Text("Find the <u>Uplink Terminal</u> [ALL_ITEMS] and establish an external uplink");
-            FindLocationInfo = "Gather information about the location of the terminal";
+            FindLocationInfo = new Text("Gather information about the location of the terminal");
         }
 
-        FindLocationInfoHelp = "Access more data in the terminal maintenance system";
         GoToZone = new Text("Navigate to [ITEM_ZONE] and find [ALL_ITEMS]");
-        GoToZoneHelp = "Use information in the environment to find [ITEM_ZONE]";
-        InZoneFindItem = "Use maintenance terminal command PING to find [ITEM_SERIAL]";
-        InZoneFindItemHelp = "CORTEX INTERFACE ESTABLISHED";
-        SolveItem = "Use [ITEM_SERIAL] to create an uplink to [UPLINK_ADDRESS]";
-        SolveItemHelp = "Use the UPLINK_CONNECT command to establish the connection";
+        GoToZoneHelp = new Text("Use information in the environment to find [ITEM_ZONE]");
+        InZoneFindItem = new Text("Use maintenance terminal command PING to find [ITEM_SERIAL]");
+        InZoneFindItemHelp = new Text("CORTEX INTERFACE ESTABLISHED");
+        SolveItem = new Text("Use [ITEM_SERIAL] to create an uplink to [UPLINK_ADDRESS]");
+        SolveItemHelp = new Text("Use the UPLINK_CONNECT command to establish the connection");
 
         GoToWinCondition_Elevator = new Text(() =>
             $"Neural Imprinting Protocols retrieved. Return to the point of entrance in {Intel.Zone(level.ExtractionZone, level.Planner)}");
         GoToWinConditionHelp_Elevator =
-            "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
+            new Text("Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back");
         GoToWinCondition_CustomGeo = new Text(() =>
             $"Neural Imprinting Protocols retrieved. Go to the forward exit point in {Intel.Zone(level.ExtractionZone, level.Planner)}");
         GoToWinConditionHelp_CustomGeo =
-            "Use the navigational beacon and the information in the surroundings to find the exit point";
-        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition";
+            new Text("Use the navigational beacon and the information in the surroundings to find the exit point");
 
         var nodes = level.Planner.GetZonesByTag(director.Bulkhead, "uplink_terminal")
             .TakeLast(Uplink_NumberOfTerminals).ToList();

@@ -151,8 +151,7 @@ public partial record WardenObjective
     /// <param name="level"></param>
     private void Build_ReactorShutdown(BuildDirector director, Level level)
     {
-        FindLocationInfo = "Make sure the Reactor is fully shut down before leaving";
-        GoToWinConditionHelp_ToMainLayer = "Go back to the main objective and complete the expedition.";
+        FindLocationInfo = new Text("Make sure the Reactor is fully shut down before leaving");
 
         LightsOnFromBeginning = true;
         LightsOnDuringIntro = true;

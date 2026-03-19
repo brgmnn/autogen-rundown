@@ -106,17 +106,15 @@ public partial record WardenObjective
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
         MainObjective = new Text("Find Computer terminal [ITEM_SERIAL] and input the backdoor command [SPECIAL_COMMAND]");
-        FindLocationInfo = "Gather information about the location of [ITEM_SERIAL]";
-        FindLocationInfoHelp = "Access more data in the terminal maintenance system";
+        FindLocationInfo = new Text("Gather information about the location of [ITEM_SERIAL]");
         GoToZone = new Text("Navigate to [ITEM_ZONE] and find [ITEM_SERIAL]");
-        GoToZoneHelp = "Use information in the environment to find [ITEM_ZONE]";
-        InZoneFindItem = "Find [ITEM_SERIAL] somewhere inside [ITEM_ZONE]";
-        InZoneFindItemHelp = "Use maintenance terminal command PING to find [ITEM_SERIAL]";
-        SolveItem = "Proceed to input the backdoor command [SPECIAL_COMMAND] in [ITEM_SERIAL]";
+        GoToZoneHelp = new Text("Use information in the environment to find [ITEM_ZONE]");
+        InZoneFindItem = new Text("Find [ITEM_SERIAL] somewhere inside [ITEM_ZONE]");
+        InZoneFindItemHelp = new Text("Use maintenance terminal command PING to find [ITEM_SERIAL]");
+        SolveItem = new Text("Proceed to input the backdoor command [SPECIAL_COMMAND] in [ITEM_SERIAL]");
 
-        GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
-        GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
-        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+        GoToWinConditionHelp_Elevator = new Text("Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back");
+        GoToWinConditionHelp_CustomGeo = new Text("Use the navigational beacon and the information in the surroundings to find the exit point");
 
         // Place the terminal in the last zone
         var node = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "special_terminal")!;

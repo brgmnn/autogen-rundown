@@ -101,8 +101,8 @@ public partial record WardenObjective
                 new Text("Gather [COUNT_REQUIRED] Data cubes and return the cubes for inspection."),
             _ => new Text("Gather items")
         };
-        FindLocationInfo = $"Look for {name}s in the complex";
-        FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
+        FindLocationInfo = new Text($"Look for {name}s in the complex");
+        FindLocationInfoHelp = new Text("Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]");
 
         GatherItemId = (uint)itemId;
 
