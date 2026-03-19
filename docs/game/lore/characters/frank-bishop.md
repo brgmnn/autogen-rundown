@@ -4,15 +4,15 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Frank Bishop |
-| **KSO Designation** | GO-1395 (Ground Operative) |
-| **Genesis ID** | Genesis 1395 |
-| **Quad Assignment** | B452 |
-| **Affiliation** | KSO / Project Legion / EF-01 Expedition |
-| **Status** | Active (deployed ~2063) |
-| **Active Period** | Pre-2050 (SSIC employee) through 2063 (Warden deployment) |
+| Field               | Value                                                     |
+| ------------------- | --------------------------------------------------------- |
+| **Full Name**       | Frank Bishop                                              |
+| **KSO Designation** | GO-1395 (Ground Operative)                                |
+| **Genesis ID**      | Genesis 1395                                              |
+| **Quad Assignment** | B452                                                      |
+| **Affiliation**     | KSO / Project Legion / EF-01 Expedition                   |
+| **Status**          | Active (deployed ~2063)                                   |
+| **Active Period**   | Pre-2050 (SSIC employee) through 2063 (Warden deployment) |
 
 ## Background
 
@@ -47,17 +47,17 @@ Bishop was later assigned to the EF-01 expedition through the Matter Wave Projec
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R2 | R2B2_000-000-000 | BIOCOM membrane database: multiple entries for "Frank Bishop" across dimensions with varying GO- designations and statuses (Active/Inactive/Deceased) |
-| R5 | R5A2_2ZL-HSD-CSE | HearSay transcript of Bishop's interrogation in Valencia. Identity erasure revealed. Sent to Legion. |
-| R5 | R5A3_JK6-809-BB8 | Genesis 1395 evaluation after 12 months incubation. Retains memories of Davies. Sedated. |
-| R5 | R5A3_7UJ-39J-JF2 | KDS-Deep scene: Bishop enters HSU as operatives fall back. Called up by name. |
-| R6 | R6C2_H9K-HYR-1TE | EF-01 expedition: Durant's first recording from the alien jungle world. Bishop present as KSO security. |
-| R6 | R6D1_295-H65-V3N | Durant's second recording: Bishop touches data cubes and vanishes. Durant mourns the loss. |
-| R6 | R6CX_W35-9BV-EUV | Stokes's audio log: Bishop returns alone via Matter Wave Projector. Seized by Piros. |
-| R1 | R1B1_834-786-873 | Connor's investigation: second mask with Bishop's DNA found under launch platform. Different design, all original gear accounted for. Dimensional duplication implied. |
-| R8 | R8D1_WKH-N2E-TAZ | BIOCOM deployment log: Quad B452 assigned -- Bishop GO-1395. Status: Seek and Destroy. |
+| Rundown | Log ID           | Description                                                                                                                                                            |
+| ------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R2      | R2B2_000-000-000 | BIOCOM membrane database: multiple entries for "Frank Bishop" across dimensions with varying GO- designations and statuses (Active/Inactive/Deceased)                  |
+| R5      | R5A2_2ZL-HSD-CSE | HearSay transcript of Bishop's interrogation in Valencia. Identity erasure revealed. Sent to Legion.                                                                   |
+| R5      | R5A3_JK6-809-BB8 | Genesis 1395 evaluation after 12 months incubation. Retains memories of Davies. Sedated.                                                                               |
+| R5      | R5A3_7UJ-39J-JF2 | KDS-Deep scene: Bishop enters HSU as operatives fall back. Called up by name.                                                                                          |
+| R6      | R6C2_H9K-HYR-1TE | EF-01 expedition: Durant's first recording from the alien jungle world. Bishop present as KSO security.                                                                |
+| R6      | R6D1_295-H65-V3N | Durant's second recording: Bishop touches data cubes and vanishes. Durant mourns the loss.                                                                             |
+| R6      | R6CX_W35-9BV-EUV | Stokes's audio log: Bishop returns alone via Matter Wave Projector. Seized by Piros.                                                                                   |
+| R1      | R1B1_834-786-873 | Connor's investigation: second mask with Bishop's DNA found under launch platform. Different design, all original gear accounted for. Dimensional duplication implied. |
+| R8      | R8D1_WKH-N2E-TAZ | BIOCOM deployment log: Quad B452 assigned -- Bishop GO-1395. Status: Seek and Destroy.                                                                                 |
 
 ## Notable Quotes
 

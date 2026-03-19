@@ -57,7 +57,7 @@ Each objective is scored 1-5 based on:
 | Layout file             | `LevelLayout.CentralGeneratorCluster.cs`     |
 | Layout lines            | 1655                                         |
 | Layout last modified    | 2026-03-14                                   |
-| Layout SelectRun count  | 23                                            |
+| Layout SelectRun count  | 23                                           |
 | Objective file          | `WardenObjective.CentralGeneratorCluster.cs` |
 | Objective lines         | 330                                          |
 | Objective last modified | 2026-02-25                                   |

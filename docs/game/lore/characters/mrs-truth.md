@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Ramona (surname unknown) |
-| **Employee ID** | N/A (external civilian) |
-| **Role** | Wife of Mr. Truth; co-survivalist |
-| **Affiliation** | State of Truth AM (by association) |
-| **Status** | Deceased; died in or near Pahrump, Nevada |
-| **Active Period** | Referenced from pre-2036 through ~2057 |
+| Field             | Value                                     |
+| ----------------- | ----------------------------------------- |
+| **Full Name**     | Ramona (surname unknown)                  |
+| **Employee ID**   | N/A (external civilian)                   |
+| **Role**          | Wife of Mr. Truth; co-survivalist         |
+| **Affiliation**   | State of Truth AM (by association)        |
+| **Status**        | Deceased; died in or near Pahrump, Nevada |
+| **Active Period** | Referenced from pre-2036 through ~2057    |
 
 ## Background
 
@@ -49,13 +49,13 @@ When their compound was raided by FBI and Kovac Defense Services in the early 20
 
 Mrs. Truth never appears directly in any log. She is referenced in the following broadcasts by Mr. Truth:
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R1 | R1D1_K94-6ER-ESF | Referenced: tells Mr. Truth his false memories are "in my imagination" |
-| R2 | R2E1_76Y-TTF-FWW | Referenced: flees compound with Mr. Truth when KDS/FBI raid |
-| R3 | R3C1_21W-SOL-9NY | Referenced: "Mrs. Truth and I are still on the road" |
-| R8 | R8A1_VER-T96-3UN | Referenced: dead in Pahrump; "She loved this town"; Mr. Truth calls her "Ramona" |
-| R8 | R8A2_VAB-FF6-NKK | Referenced: "Mrs. Truth and I have been busy establishing a secondary base of operations" |
+| Rundown | Log ID           | Description                                                                               |
+| ------- | ---------------- | ----------------------------------------------------------------------------------------- |
+| R1      | R1D1_K94-6ER-ESF | Referenced: tells Mr. Truth his false memories are "in my imagination"                    |
+| R2      | R2E1_76Y-TTF-FWW | Referenced: flees compound with Mr. Truth when KDS/FBI raid                               |
+| R3      | R3C1_21W-SOL-9NY | Referenced: "Mrs. Truth and I are still on the road"                                      |
+| R8      | R8A1_VER-T96-3UN | Referenced: dead in Pahrump; "She loved this town"; Mr. Truth calls her "Ramona"          |
+| R8      | R8A2_VAB-FF6-NKK | Referenced: "Mrs. Truth and I have been busy establishing a secondary base of operations" |
 
 ## Notable Quotes
 

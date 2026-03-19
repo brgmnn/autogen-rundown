@@ -17,12 +17,12 @@ Level layouts should:
 
 Each tier represents increasing difficulty. Layouts should scale accordingly:
 
-| Tier | Difficulty | Zone Target Count | Challenge Types                                          | Enemy Density |
-| ---- | ---------- | ----------------- | -------------------------------------------------------- | ------------- |
-| A    | Easy       | 2-4               | Simple keycards, travel scan alarms                      | Low           |
-| B    | Normal     | 3-5               | Keycards, travel scan alarms                             | Moderate      |
-| C    | Moderate   | 4-7               | Generator puzzles, class alarms, travel scan alarms      | Medium        |
-| D    | Hard       | 5-9               | Error alarms, terminal puzzles, travel scan alarms       | High          |
+| Tier | Difficulty | Zone Target Count | Challenge Types                                               | Enemy Density |
+| ---- | ---------- | ----------------- | ------------------------------------------------------------- | ------------- |
+| A    | Easy       | 2-4               | Simple keycards, travel scan alarms                           | Low           |
+| B    | Normal     | 3-5               | Keycards, travel scan alarms                                  | Moderate      |
+| C    | Moderate   | 4-7               | Generator puzzles, class alarms, travel scan alarms           | Medium        |
+| D    | Hard       | 5-9               | Error alarms, terminal puzzles, travel scan alarms            | High          |
 | E    | Extreme    | 6-12+             | Apex alarms, boss fights, travel scan alarms, complex puzzles | Very High     |
 
 ### Progression Example
@@ -315,27 +315,27 @@ switch (level.Tier, director.Bulkhead)
 
 These files demonstrate best practices with extensive `SelectRun()` usage and full tier/bulkhead coverage:
 
-| File                                     | Lines | Notes                                    |
-| ---------------------------------------- | ----- | ---------------------------------------- |
-| `LevelLayout.CentralGeneratorCluster.cs` | ~1425 | Full A-E x Main/Extreme/Overload matrix  |
-| `LevelLayout.HsuFindSample.cs`           | ~1010 | Extensive SelectRun with full coverage   |
-| `LevelLayout.GatherSmallItems.cs`        | ~1106 | Full coverage with many layout variants  |
-| `LevelLayout.CorruptedTerminalUplink.cs` | ~685  | Tier x terminal count variants           |
-| `LevelLayout.HsuActivateSmall.cs`        | ~509  | A-E tiers with multiple challenge paths  |
-| `LevelLayout.ForwardExtract.cs`          | ~468  | Tier x Bulkhead combinations             |
-| `LevelLayout.ClearPath.cs`               | ~460  | A-E tiers with boss fights, error alarms |
+| File                                     | Lines | Notes                                               |
+| ---------------------------------------- | ----- | --------------------------------------------------- |
+| `LevelLayout.CentralGeneratorCluster.cs` | ~1425 | Full A-E x Main/Extreme/Overload matrix             |
+| `LevelLayout.HsuFindSample.cs`           | ~1010 | Extensive SelectRun with full coverage              |
+| `LevelLayout.GatherSmallItems.cs`        | ~1106 | Full coverage with many layout variants             |
+| `LevelLayout.CorruptedTerminalUplink.cs` | ~685  | Tier x terminal count variants                      |
+| `LevelLayout.HsuActivateSmall.cs`        | ~509  | A-E tiers with multiple challenge paths             |
+| `LevelLayout.ForwardExtract.cs`          | ~468  | Tier x Bulkhead combinations                        |
+| `LevelLayout.ClearPath.cs`               | ~460  | A-E tiers with boss fights, error alarms            |
 | `LevelLayout.ReactorShutdown.cs`         | ~1224 | Full A-E × Main/Extreme/Overload, 3 placement modes |
-| `LevelLayout.ReachKdsDeep.cs`            | ~731  | Tier differentiation with KDS modules    |
+| `LevelLayout.ReachKdsDeep.cs`            | ~731  | Tier differentiation with KDS modules               |
 
 ### Moderately Developed
 
 These have some differentiation but could use more variants:
 
-| File                             | Lines | Notes                                                 |
-| -------------------------------- | ----- | ----------------------------------------------------- |
-| `LevelLayout.Survival.cs`        | ~292  | Has tier differentiation, could add bulkhead variants |
-| `LevelLayout.GatherTerminal.cs`  | ~237  | Basic tier switching                                  |
-| `LevelLayout.ReactorStartup.cs`  | ~157  | Code count variants, limited tier variety             |
+| File                            | Lines | Notes                                                 |
+| ------------------------------- | ----- | ----------------------------------------------------- |
+| `LevelLayout.Survival.cs`       | ~292  | Has tier differentiation, could add bulkhead variants |
+| `LevelLayout.GatherTerminal.cs` | ~237  | Basic tier switching                                  |
+| `LevelLayout.ReactorStartup.cs` | ~157  | Code count variants, limited tier variety             |
 
 ### Needs Updates (Priority)
 

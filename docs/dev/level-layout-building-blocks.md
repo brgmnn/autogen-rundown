@@ -384,23 +384,23 @@ var (end, endZone) = AddTravelScanAlarm(start,
 
 **Scan Type Selection** (tier × bulkhead → scan component):
 
-| Tier | Main | Extreme | Overload |
-| ---- | ---- | ------- | -------- |
-| A | Short 66% / MediumGreen 33% | MediumGreen 66% / Short 33% | MediumGreen 60% / LongGreen 40% |
-| B | Short 33% / MediumGreen 66% | MediumGreen 50% / LongGreen 50% | LongGreen 60% / SustainedTravel 40% |
-| C | MediumGreen 50% / LongGreen 50% | LongGreen 60% / SustainedTravel 40% | LongGreen 40% / SustainedTravel 60% |
-| D | LongGreen 50% / SustainedTravel 50% | SustainedTravel 60% / LongGreen 40% | SustainedTravel 100% |
-| E | LongGreen 40% / SustainedTravel 60% | SustainedTravel 70% / LongGreen 30% | SustainedTravel 100% |
+| Tier | Main                                | Extreme                             | Overload                            |
+| ---- | ----------------------------------- | ----------------------------------- | ----------------------------------- |
+| A    | Short 66% / MediumGreen 33%         | MediumGreen 66% / Short 33%         | MediumGreen 60% / LongGreen 40%     |
+| B    | Short 33% / MediumGreen 66%         | MediumGreen 50% / LongGreen 50%     | LongGreen 60% / SustainedTravel 40% |
+| C    | MediumGreen 50% / LongGreen 50%     | LongGreen 60% / SustainedTravel 40% | LongGreen 40% / SustainedTravel 60% |
+| D    | LongGreen 50% / SustainedTravel 50% | SustainedTravel 60% / LongGreen 40% | SustainedTravel 100%                |
+| E    | LongGreen 40% / SustainedTravel 60% | SustainedTravel 70% / LongGreen 30% | SustainedTravel 100%                |
 
 **Wave Settings** (tier × bulkhead → difficulty):
 
-| Tier | Main | Extreme | Overload |
-| ---- | ---- | ------- | -------- |
-| A | Normal 70% / Hard 30% | Hard 60% / Normal 40% | Hard 50% / VeryHard 50% |
-| B | Hard 60% / Normal 40% | Hard 40% / VeryHard 60% | VeryHard 60% / Hard 40% |
-| C | Hard 50% / VeryHard 50% | VeryHard 60% / Hard 40% | VeryHard 100% |
-| D | VeryHard 60% / Hard 40% | VeryHard 50% / Surge_Easy 50% | VeryHard 40% / Surge_Easy 60% |
-| E | VeryHard 50% / Surge_Easy 50% | VeryHard 40% / Surge_Easy 60% | Surge_Easy 70% / VeryHard 30% |
+| Tier | Main                          | Extreme                       | Overload                      |
+| ---- | ----------------------------- | ----------------------------- | ----------------------------- |
+| A    | Normal 70% / Hard 30%         | Hard 60% / Normal 40%         | Hard 50% / VeryHard 50%       |
+| B    | Hard 60% / Normal 40%         | Hard 40% / VeryHard 60%       | VeryHard 60% / Hard 40%       |
+| C    | Hard 50% / VeryHard 50%       | VeryHard 60% / Hard 40%       | VeryHard 100%                 |
+| D    | VeryHard 60% / Hard 40%       | VeryHard 50% / Surge_Easy 50% | VeryHard 40% / Surge_Easy 60% |
+| E    | VeryHard 50% / Surge_Easy 50% | VeryHard 40% / Surge_Easy 60% | Surge_Easy 70% / VeryHard 30% |
 
 **Wave Population:** Auto-selected based on level modifiers with precedence: Nightmares > InfectionHybrids > Chargers > Shadows > default. Each modifier has its own full tier × bulkhead table that escalates from baseline mixes (A/Main) to pure populations (D-E/Overload).
 
@@ -673,6 +673,7 @@ AddForwardExtractStart(reactor, chance: 0.3);
 - Unlike `AddForwardExtract` which creates extraction zones directly, this registers candidates for the system to choose from later
 
 **Example from ReactorShutdown D/E Main:**
+
 ```csharp
 // Password terminal is always a candidate
 AddForwardExtractStart(pwNodes.Last());

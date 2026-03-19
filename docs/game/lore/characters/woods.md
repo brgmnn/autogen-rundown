@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Isiah Woods |
-| **KSO Designation** | F-2056 (Field Operative) |
-| **Quad Assignment** | B452 |
-| **Affiliation** | KSO / Project Legion |
-| **Status** | Active (deployed ~2063) |
-| **Active Period** | Pre-2050 (military service) through 2063 (Warden deployment) |
+| Field               | Value                                                        |
+| ------------------- | ------------------------------------------------------------ |
+| **Full Name**       | Isiah Woods                                                  |
+| **KSO Designation** | F-2056 (Field Operative)                                     |
+| **Quad Assignment** | B452                                                         |
+| **Affiliation**     | KSO / Project Legion                                         |
+| **Status**          | Active (deployed ~2063)                                      |
+| **Active Period**   | Pre-2050 (military service) through 2063 (Warden deployment) |
 
 ## Background
 
@@ -46,13 +46,13 @@ Within the Legion program, Woods adapted to his conditioning with unsettling com
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R2 | R2B2_000-000-000 | BIOCOM membrane database: dozens of entries for "Isiah Woods" across dimensions with varying F- designations and statuses |
-| R5 | R5A2_TY6-274-NFG | HearSay transcript of Woods's military interrogation. Killings at Larnaca. "Miracle Mile" in Turkey. Prophetic declaration about the plague. Sent to Legion. |
-| R5 | R5A3_825-RRH-VPG | KSO behavioral evaluation (~2 years into service). Questioned about faith. Deflects with programmed responses. Asks "Have I been reset before?" |
-| R5 | R5A3_7UJ-39J-JF2 | KDS-Deep evacuation. Woods saves Dauda from Hackett. Orders Dauda into HSU. Assigns resource designation T-3701. |
-| R8 | R8D1_WKH-N2E-TAZ | BIOCOM deployment log: Quad B452 assigned -- Woods F-2056. Status: Seek and Destroy. |
+| Rundown | Log ID           | Description                                                                                                                                                  |
+| ------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| R2      | R2B2_000-000-000 | BIOCOM membrane database: dozens of entries for "Isiah Woods" across dimensions with varying F- designations and statuses                                    |
+| R5      | R5A2_TY6-274-NFG | HearSay transcript of Woods's military interrogation. Killings at Larnaca. "Miracle Mile" in Turkey. Prophetic declaration about the plague. Sent to Legion. |
+| R5      | R5A3_825-RRH-VPG | KSO behavioral evaluation (~2 years into service). Questioned about faith. Deflects with programmed responses. Asks "Have I been reset before?"              |
+| R5      | R5A3_7UJ-39J-JF2 | KDS-Deep evacuation. Woods saves Dauda from Hackett. Orders Dauda into HSU. Assigns resource designation T-3701.                                             |
+| R8      | R8D1_WKH-N2E-TAZ | BIOCOM deployment log: Quad B452 assigned -- Woods F-2056. Status: Seek and Destroy.                                                                         |
 
 ## Notable Quotes
 

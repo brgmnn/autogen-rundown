@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Ellis Carnegie |
-| **Employee ID** | None (no facility ID in logs) |
-| **Role** | Cybernetics Specialist / Behavioral Encoding Designer |
-| **Affiliation** | Kovac Research / Cybernetics Division (Pretoria) |
-| **Status** | Unknown |
-| **Active Period** | 2050 - 2054+ |
+| Field             | Value                                                 |
+| ----------------- | ----------------------------------------------------- |
+| **Full Name**     | Ellis Carnegie                                        |
+| **Employee ID**   | None (no facility ID in logs)                         |
+| **Role**          | Cybernetics Specialist / Behavioral Encoding Designer |
+| **Affiliation**   | Kovac Research / Cybernetics Division (Pretoria)      |
+| **Status**        | Unknown                                               |
+| **Active Period** | 2050 - 2054+                                          |
 
 ## Background
 
@@ -40,11 +40,11 @@ Carnegie operated primarily from outside Garganta, communicating with on-site pe
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R6 | R6C2_UFR-710-NHA | Referenced indirectly; this log features Klein's investigation into pathogen survival in hydrostasis, which intersects with Carnegie's behavioral assessment work |
-| R6 | R6D3_HAS-I5T-DAY | Letter to Johanson analyzing operative quad psychology, Genesis/Faulty classifications, and predictions for Rise operative behavioral challenges |
-| R7 | R7D2_98R-T5B-N57 | Recipient of Klein's report on Sigma generation PolyFoam improvisation and cross-operative behavior transmission |
+| Rundown | Log ID           | Description                                                                                                                                                       |
+| ------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R6      | R6C2_UFR-710-NHA | Referenced indirectly; this log features Klein's investigation into pathogen survival in hydrostasis, which intersects with Carnegie's behavioral assessment work |
+| R6      | R6D3_HAS-I5T-DAY | Letter to Johanson analyzing operative quad psychology, Genesis/Faulty classifications, and predictions for Rise operative behavioral challenges                  |
+| R7      | R7D2_98R-T5B-N57 | Recipient of Klein's report on Sigma generation PolyFoam improvisation and cross-operative behavior transmission                                                  |
 
 ## Notable Quotes
 

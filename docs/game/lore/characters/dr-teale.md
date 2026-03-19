@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Dr. August Teale |
-| **Employee ID** | B023 |
-| **Role** | Psychotherapist / Facility Psychiatrist |
-| **Affiliation** | Santonian Mining Company, Medical Department |
-| **Status** | Unknown (last recorded April 2053, likely dead or infected) |
-| **Active Period** | Pre-2052 through at least April 2053 |
+| Field             | Value                                                       |
+| ----------------- | ----------------------------------------------------------- |
+| **Full Name**     | Dr. August Teale                                            |
+| **Employee ID**   | B023                                                        |
+| **Role**          | Psychotherapist / Facility Psychiatrist                     |
+| **Affiliation**   | Santonian Mining Company, Medical Department                |
+| **Status**        | Unknown (last recorded April 2053, likely dead or infected) |
+| **Active Period** | Pre-2052 through at least April 2053                        |
 
 ## Background
 
@@ -43,12 +43,12 @@ His patient caseload included Mia, a worker who believed a bug had burrowed into
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R4 | R4B3_XMN-GBB-8B5 | Mia therapy session. Body horror escalation. Bug under the skin. "It's in all of us." Teale calls for Dr. Banks |
-| R6 | R6AX_QKL-RFH-4ZX | Soweta session update (February 2053). 14 patients with identical symptoms. Teale hears noises from the walls. First sign of his own deterioration |
-| R7 | R7B2_T0L-4Y4-R1H | Soweta session (January 2053). Medication refusal. "They're not hallucinations." Teale places Soweta on medical leave |
-| R7 | R7C2_D3T-INI-FNI | Final recording (April 2053). Soweta removed by KDS. Teale's stream-of-consciousness breakdown. Paranoia about Susan, BIOCOM, being a test subject. "I have to get out of here" |
+| Rundown | Log ID           | Description                                                                                                                                                                     |
+| ------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R4      | R4B3_XMN-GBB-8B5 | Mia therapy session. Body horror escalation. Bug under the skin. "It's in all of us." Teale calls for Dr. Banks                                                                 |
+| R6      | R6AX_QKL-RFH-4ZX | Soweta session update (February 2053). 14 patients with identical symptoms. Teale hears noises from the walls. First sign of his own deterioration                              |
+| R7      | R7B2_T0L-4Y4-R1H | Soweta session (January 2053). Medication refusal. "They're not hallucinations." Teale places Soweta on medical leave                                                           |
+| R7      | R7C2_D3T-INI-FNI | Final recording (April 2053). Soweta removed by KDS. Teale's stream-of-consciousness breakdown. Paranoia about Susan, BIOCOM, being a test subject. "I have to get out of here" |
 
 ## Notable Quotes
 

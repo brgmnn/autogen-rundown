@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Dean Lockwood |
-| **Employee ID** | A074 |
-| **Role** | Senior Facility Authority / Project Management |
-| **Affiliation** | Santonian Mining Company / Garganta Facility Administration |
-| **Status** | Unknown (last referenced 2054) |
-| **Active Period** | 2050 - 2054+ |
+| Field             | Value                                                       |
+| ----------------- | ----------------------------------------------------------- |
+| **Full Name**     | Dean Lockwood                                               |
+| **Employee ID**   | A074                                                        |
+| **Role**          | Senior Facility Authority / Project Management              |
+| **Affiliation**   | Santonian Mining Company / Garganta Facility Administration |
+| **Status**        | Unknown (last referenced 2054)                              |
+| **Active Period** | 2050 - 2054+                                                |
 
 ## Background
 
@@ -42,14 +42,14 @@ After Andrew Clinton's death in the October 2053 energy surge, Lockwood assumed 
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R1 | R1B2_3NY-798-65Y | Lockwood reports intercepted unknown signal to Piros; Piros confirms investigating |
-| R4 | R4D1_7JH-PPP-SAD | Directive to Andrew Clinton banning colloquial virus names, mandating "NAM-V" terminology |
-| R6 | R6B2_34R-OKJ-992 | Email to Piros cataloguing Kovac security failures: civilian breaches, staff violence, missing KSO coverage |
-| R6 | R6BX_LWA-519-3VX | Email chain where Piros forwards Lockwood's security complaints to Johanson, who responds with BIOCOM pitch |
-| R6 | R6C2_DTR-298-4VL | Rise Project HSU shipment chain; Lockwood asks what Rise Project is, Piros tells him to ask his superiors |
-| R6 | R6D1_D1H-J34-5XX | News article about the "Florida Flu" lockdown (contextual -- virus reaching the surface world Lockwood tried to contain) |
+| Rundown | Log ID           | Description                                                                                                              |
+| ------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| R1      | R1B2_3NY-798-65Y | Lockwood reports intercepted unknown signal to Piros; Piros confirms investigating                                       |
+| R4      | R4D1_7JH-PPP-SAD | Directive to Andrew Clinton banning colloquial virus names, mandating "NAM-V" terminology                                |
+| R6      | R6B2_34R-OKJ-992 | Email to Piros cataloguing Kovac security failures: civilian breaches, staff violence, missing KSO coverage              |
+| R6      | R6BX_LWA-519-3VX | Email chain where Piros forwards Lockwood's security complaints to Johanson, who responds with BIOCOM pitch              |
+| R6      | R6C2_DTR-298-4VL | Rise Project HSU shipment chain; Lockwood asks what Rise Project is, Piros tells him to ask his superiors                |
+| R6      | R6D1_D1H-J34-5XX | News article about the "Florida Flu" lockdown (contextual -- virus reaching the surface world Lockwood tried to contain) |
 
 ## Notable Quotes
 

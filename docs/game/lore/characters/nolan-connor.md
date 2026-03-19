@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Nolan Connor |
-| **Employee ID** | B229 |
-| **Role** | Communications and investigations, Project Insight |
-| **Affiliation** | Project Insight, Garganta Complex |
-| **Status** | Presumed dead; participated in final stand at the Inner (November 2056) |
-| **Active Period** | ~2054-2056 |
+| Field             | Value                                                                   |
+| ----------------- | ----------------------------------------------------------------------- |
+| **Full Name**     | Nolan Connor                                                            |
+| **Employee ID**   | B229                                                                    |
+| **Role**          | Communications and investigations, Project Insight                      |
+| **Affiliation**   | Project Insight, Garganta Complex                                       |
+| **Status**        | Presumed dead; participated in final stand at the Inner (November 2056) |
+| **Active Period** | ~2054-2056                                                              |
 
 ## Background
 
@@ -40,12 +40,12 @@ Beyond his forensic work, Connor was emotionally restrained but not detached. He
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R1 | R1B1_834-786-873 | Email to Stokes: anomalous Bishop mask found under translocation platform, different design, DNA match |
-| R6 | R6C2_H9K-HYR-1TE | Cover note to Stokes: recovered first Durant recording from Matter Wave Projector memory bank |
-| R6 | R6D1_295-H65-V3N | Cover note to Stokes: recovered second Durant recording documenting Bishop's disappearance |
-| R8 | R8C1_AKK-3XW-EEB | Final journal entry: acknowledges world's destruction, describes sealed Inner chamber, volunteers for final stand |
+| Rundown | Log ID           | Description                                                                                                       |
+| ------- | ---------------- | ----------------------------------------------------------------------------------------------------------------- |
+| R1      | R1B1_834-786-873 | Email to Stokes: anomalous Bishop mask found under translocation platform, different design, DNA match            |
+| R6      | R6C2_H9K-HYR-1TE | Cover note to Stokes: recovered first Durant recording from Matter Wave Projector memory bank                     |
+| R6      | R6D1_295-H65-V3N | Cover note to Stokes: recovered second Durant recording documenting Bishop's disappearance                        |
+| R8      | R8C1_AKK-3XW-EEB | Final journal entry: acknowledges world's destruction, describes sealed Inner chamber, volunteers for final stand |
 
 ## Notable Quotes
 

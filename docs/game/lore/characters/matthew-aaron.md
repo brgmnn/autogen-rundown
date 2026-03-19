@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Matthew Aaron |
-| **Employee ID** | N/A (external; WHO personnel) |
-| **Role** | Operations lead, Daylight Mission |
-| **Affiliation** | World Health Organization (WHO) |
-| **Status** | Presumed dead; last known location inside Garganta Complex, 2057 |
-| **Active Period** | April-May 2057 |
+| Field             | Value                                                            |
+| ----------------- | ---------------------------------------------------------------- |
+| **Full Name**     | Matthew Aaron                                                    |
+| **Employee ID**   | N/A (external; WHO personnel)                                    |
+| **Role**          | Operations lead, Daylight Mission                                |
+| **Affiliation**   | World Health Organization (WHO)                                  |
+| **Status**        | Presumed dead; last known location inside Garganta Complex, 2057 |
+| **Active Period** | April-May 2057                                                   |
 
 ## Background
 
@@ -40,10 +40,10 @@ Captain Puente's soldiers refuse to descend further, staying at sea level. Aaron
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R3 | R3B1_57H-K78-EVR | First field report: arrival at Progreso, abandoned city, loss of Dr. Wilkins, "chichiricu" creature sightings, NAM-V viral loads in corpses |
-| R4 | R4A2_FCL-K5E-2BG | Second field report: arrival at Garganta surface, 100-foot drill hole, abandoned infrastructure, BIOCOM security systems, mysterious mechanical sounds |
+| Rundown | Log ID           | Description                                                                                                                                            |
+| ------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| R3      | R3B1_57H-K78-EVR | First field report: arrival at Progreso, abandoned city, loss of Dr. Wilkins, "chichiricu" creature sightings, NAM-V viral loads in corpses            |
+| R4      | R4A2_FCL-K5E-2BG | Second field report: arrival at Garganta surface, 100-foot drill hole, abandoned infrastructure, BIOCOM security systems, mysterious mechanical sounds |
 
 ## Notable Quotes
 

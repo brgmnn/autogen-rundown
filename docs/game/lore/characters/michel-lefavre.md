@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Michel LeFavre |
-| **Employee ID** | B028 |
-| **Role** | Medical Director |
-| **Affiliation** | Santonian Mining Company (SMC) |
-| **Status** | Unknown (presumed dead) |
-| **Active Period** | ~2050-2054 |
+| Field             | Value                          |
+| ----------------- | ------------------------------ |
+| **Full Name**     | Michel LeFavre                 |
+| **Employee ID**   | B028                           |
+| **Role**          | Medical Director               |
+| **Affiliation**   | Santonian Mining Company (SMC) |
+| **Status**        | Unknown (presumed dead)        |
+| **Active Period** | ~2050-2054                     |
 
 ## Background
 
@@ -35,11 +35,11 @@ His response to this crisis was to issue a memo that included the dictionary def
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R7 | R7B1_SM1-X918-XWM | Facility-wide memo demanding attendance at mandatory psychiatric evaluations. Includes dictionary definition of "mandatory." |
-| R7 | R7D1_7TR-VST-RBY | Mambo Media Services news wire on the Kvitoya DNA Vault closure (December 2054). LeFavre is not the author but the log shares the R7D1 slot. |
-| R1 | R1D1_K94-5ER-ESF | Listed on the SMC personnel manifest as "Michel LeFavre B028 - Santonian Mining Company - Medical Director." |
+| Rundown | Log ID            | Description                                                                                                                                  |
+| ------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| R7      | R7B1_SM1-X918-XWM | Facility-wide memo demanding attendance at mandatory psychiatric evaluations. Includes dictionary definition of "mandatory."                 |
+| R7      | R7D1_7TR-VST-RBY  | Mambo Media Services news wire on the Kvitoya DNA Vault closure (December 2054). LeFavre is not the author but the log shares the R7D1 slot. |
+| R1      | R1D1_K94-5ER-ESF  | Listed on the SMC personnel manifest as "Michel LeFavre B028 - Santonian Mining Company - Medical Director."                                 |
 
 ## Notable Quotes
 

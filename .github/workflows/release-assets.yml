@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version'
+        description: "Version"
         required: false
-        default: ''
+        default: ""
 
 jobs:
   attach-assets:

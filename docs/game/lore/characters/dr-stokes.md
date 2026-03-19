@@ -4,13 +4,13 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Dr. Rebecca Stokes |
-| **Employee ID** | B162 (also referenced as B193) |
-| **Role** | Analysis Overseer, then Lead Researcher, Project Insight |
-| **Affiliation** | Project Insight / Santonian Mining Company |
-| **Status** | Unknown (last recorded June 2055, presumed dead or lost) |
+| Field             | Value                                                            |
+| ----------------- | ---------------------------------------------------------------- |
+| **Full Name**     | Dr. Rebecca Stokes                                               |
+| **Employee ID**   | B162 (also referenced as B193)                                   |
+| **Role**          | Analysis Overseer, then Lead Researcher, Project Insight         |
+| **Affiliation**   | Project Insight / Santonian Mining Company                       |
+| **Status**        | Unknown (last recorded June 2055, presumed dead or lost)         |
 | **Active Period** | September 2054 (arrival from Houston) through at least June 2055 |
 
 ## Background
@@ -44,14 +44,14 @@ Before Hammerstein's death, Stokes was already his most vocal challenger. In a d
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R3 | R3A3_21M-CEW-49B | Draft rebuttal to Hammerstein. Human DNA evidence in creatures. RNA editing hypothesis. "Gallus Stokus" dig. File ends mid-sentence |
-| R4 | R4D2_EYY-GBB-18P | Draft death announcement for Hammerstein's team. Professional veneer collapses into rage and self-loathing. "I AM A LIAR" |
-| R6 | R6BX_D34-4HG-8AE | First audio log. Arrival at Garganta. Begins Matter Wave Projector examination. Notes Kovac is "dealing with" witnesses |
-| R6 | R6C1_2LZ-SAA-6NY | (Hammerstein's artifact incident report -- Stokes context via forwarding chain with Janson Davies and Lockwood) |
-| R7 | R7B3_2CB-5U8-DBK | Quantum frequency discovery. EF-01 data burst analysis. "1 second in our quantum frequency is about 115 seconds in Durant's quantum frequency" |
-| R7 | R7D1_2MD-N3H-SYH | Extended theoretical monologue on quantum superposition across dimensions, Matter Wave Projector mechanics, and Durant's possible fate |
+| Rundown | Log ID           | Description                                                                                                                                    |
+| ------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| R3      | R3A3_21M-CEW-49B | Draft rebuttal to Hammerstein. Human DNA evidence in creatures. RNA editing hypothesis. "Gallus Stokus" dig. File ends mid-sentence            |
+| R4      | R4D2_EYY-GBB-18P | Draft death announcement for Hammerstein's team. Professional veneer collapses into rage and self-loathing. "I AM A LIAR"                      |
+| R6      | R6BX_D34-4HG-8AE | First audio log. Arrival at Garganta. Begins Matter Wave Projector examination. Notes Kovac is "dealing with" witnesses                        |
+| R6      | R6C1_2LZ-SAA-6NY | (Hammerstein's artifact incident report -- Stokes context via forwarding chain with Janson Davies and Lockwood)                                |
+| R7      | R7B3_2CB-5U8-DBK | Quantum frequency discovery. EF-01 data burst analysis. "1 second in our quantum frequency is about 115 seconds in Durant's quantum frequency" |
+| R7      | R7D1_2MD-N3H-SYH | Extended theoretical monologue on quantum superposition across dimensions, Matter Wave Projector mechanics, and Durant's possible fate         |
 
 ## Notable Quotes
 

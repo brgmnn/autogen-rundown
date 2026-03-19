@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Susan Nesbitt |
-| **Employee ID** | B081 |
-| **Role** | Researcher (Botanical / Genetic Sciences) |
-| **Affiliation** | Project Insight / SMC |
-| **Status** | Unknown (did not join EF-01 expedition; presumed dead in Garganta or during NAM-V pandemic) |
-| **Active Period** | ~2050-2055+ |
+| Field             | Value                                                                                       |
+| ----------------- | ------------------------------------------------------------------------------------------- |
+| **Full Name**     | Susan Nesbitt                                                                               |
+| **Employee ID**   | B081                                                                                        |
+| **Role**          | Researcher (Botanical / Genetic Sciences)                                                   |
+| **Affiliation**   | Project Insight / SMC                                                                       |
+| **Status**        | Unknown (did not join EF-01 expedition; presumed dead in Garganta or during NAM-V pandemic) |
+| **Active Period** | ~2050-2055+                                                                                 |
 
 ## Background
 
@@ -38,9 +38,9 @@ Durant never returned. The EF-01 team was stranded on an alien jungle world with
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R7 | R7A1_CJ9-GVT-ERB | Email chain between Nesbitt and Durant. Three messages: Nesbitt announces protein sequencer breakthrough, Durant asks her to join EF-01, Nesbitt declines but promises a hydroponics lab for his return. |
+| Rundown | Log ID           | Description                                                                                                                                                                                              |
+| ------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R7      | R7A1_CJ9-GVT-ERB | Email chain between Nesbitt and Durant. Three messages: Nesbitt announces protein sequencer breakthrough, Durant asks her to join EF-01, Nesbitt declines but promises a hydroponics lab for his return. |
 
 ## Notable Quotes
 

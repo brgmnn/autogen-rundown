@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Mia (surname unknown) |
-| **Employee ID** | N/A (not referenced) |
-| **Role** | Garganta worker / Patient |
-| **Affiliation** | Santonian Mining Company (SMC) |
-| **Status** | Unknown (presumed dead or infected) |
-| **Active Period** | ~2052 |
+| Field             | Value                               |
+| ----------------- | ----------------------------------- |
+| **Full Name**     | Mia (surname unknown)               |
+| **Employee ID**   | N/A (not referenced)                |
+| **Role**          | Garganta worker / Patient           |
+| **Affiliation**   | Santonian Mining Company (SMC)      |
+| **Status**        | Unknown (presumed dead or infected) |
+| **Active Period** | ~2052                               |
 
 ## Background
 
@@ -37,9 +37,9 @@ Mia's final words in the transcript are the session's most important: "It's in a
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R4 | R4B3_XMN-GBB-8B5 | Psychotherapy session transcript. Body horror escalation from itching to burrowing parasite to physical confrontation. Ends with "It's in all of us." |
+| Rundown | Log ID           | Description                                                                                                                                           |
+| ------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R4      | R4B3_XMN-GBB-8B5 | Psychotherapy session transcript. Body horror escalation from itching to burrowing parasite to physical confrontation. Ends with "It's in all of us." |
 
 ## Notable Quotes
 

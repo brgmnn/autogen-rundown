@@ -4,15 +4,15 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Dr. Abeo Dauda |
-| **Civilian ID** | A153 (Scientist) |
-| **KSO Designation** | T-3701 (Tactical Operative) |
-| **Quad Assignment** | B452 |
-| **Affiliation** | Project Insight (scientist) / KSO / Project Legion |
-| **Status** | Active (deployed ~2063) |
-| **Active Period** | Pre-2054 (virus researcher) through 2063 (Warden deployment) |
+| Field               | Value                                                        |
+| ------------------- | ------------------------------------------------------------ |
+| **Full Name**       | Dr. Abeo Dauda                                               |
+| **Civilian ID**     | A153 (Scientist)                                             |
+| **KSO Designation** | T-3701 (Tactical Operative)                                  |
+| **Quad Assignment** | B452                                                         |
+| **Affiliation**     | Project Insight (scientist) / KSO / Project Legion           |
+| **Status**          | Active (deployed ~2063)                                      |
+| **Active Period**   | Pre-2054 (virus researcher) through 2063 (Warden deployment) |
 
 ## Background
 
@@ -47,14 +47,14 @@ When the facility collapsed and creatures overran the Complex, Dauda's civilian 
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R1 | R1B1_834-786-872 | Durant's virus analysis references "Dr. Dauda's theory" on virus-parasite evolution and "Dr. Dauda's research" on viral resilience. |
-| R2 | R2B2_000-000-000 | BIOCOM membrane database: multiple entries for "Abeo Dauda" across dimensions with varying T- designations and statuses |
-| R5 | R5A3_7UJ-39J-JF2 | KDS-Deep evacuation. Dauda identifies himself as a doctor. Nearly shot by Hackett. Saved by Woods. Assigned T-3701. |
-| R7 | R7E1_60F-056-HNK | Dauda's virus research report to Lockwood. Details NAM-V transmission, 85% infection rate. Calls the virus "perfectly designed." |
-| R8 | R8B3_60F-056-HNK | Duplicate of R7E1 research report. |
-| R8 | R8D1_WKH-N2E-TAZ | BIOCOM deployment log: Quad B452 assigned -- Dauda T-3701. Status: Seek and Destroy. |
+| Rundown | Log ID           | Description                                                                                                                         |
+| ------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| R1      | R1B1_834-786-872 | Durant's virus analysis references "Dr. Dauda's theory" on virus-parasite evolution and "Dr. Dauda's research" on viral resilience. |
+| R2      | R2B2_000-000-000 | BIOCOM membrane database: multiple entries for "Abeo Dauda" across dimensions with varying T- designations and statuses             |
+| R5      | R5A3_7UJ-39J-JF2 | KDS-Deep evacuation. Dauda identifies himself as a doctor. Nearly shot by Hackett. Saved by Woods. Assigned T-3701.                 |
+| R7      | R7E1_60F-056-HNK | Dauda's virus research report to Lockwood. Details NAM-V transmission, 85% infection rate. Calls the virus "perfectly designed."    |
+| R8      | R8B3_60F-056-HNK | Duplicate of R7E1 research report.                                                                                                  |
+| R8      | R8D1_WKH-N2E-TAZ | BIOCOM deployment log: Quad B452 assigned -- Dauda T-3701. Status: Seek and Destroy.                                                |
 
 ## Notable Quotes
 

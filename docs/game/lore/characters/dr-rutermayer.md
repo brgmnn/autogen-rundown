@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Dr. Gloria Rutermayer |
-| **Employee ID** | N/A (external to Garganta) |
-| **Role** | WHO Regional Director for Europe; later WHO Global Director |
-| **Affiliation** | World Health Organization (WHO) |
-| **Status** | Unknown (last referenced in communications through 2055; likely dead) |
-| **Active Period** | 2053-2055 (documented) |
+| Field             | Value                                                                 |
+| ----------------- | --------------------------------------------------------------------- |
+| **Full Name**     | Dr. Gloria Rutermayer                                                 |
+| **Employee ID**   | N/A (external to Garganta)                                            |
+| **Role**          | WHO Regional Director for Europe; later WHO Global Director           |
+| **Affiliation**   | World Health Organization (WHO)                                       |
+| **Status**        | Unknown (last referenced in communications through 2055; likely dead) |
+| **Active Period** | 2053-2055 (documented)                                                |
 
 ## Background
 
@@ -52,12 +52,12 @@ The report cuts off mid-sentence with a corruption marker after mentioning a sec
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R6 | R6BX_J77-MNB-CXZ | WHO statement declaring NAM-V a phase 6 global pandemic (March 14, 2053). R-naught of 17. Search for Patient Zero announced. |
-| R8 | R8A1_56G-75H-Y78 | WHO statement recommending European border closures and community isolation (October 28, 2053). |
-| R2 | R2B2_UJ7-OYT-REH | Monthly epidemiological update, Edition 31 (September 6, 2055). 4.8 billion confirmed cases, 2.27 billion deaths. File corrupted before completion. |
-| R3 | R3B2_76H-S3Q-156 | Shortwave transmission from Francisco Del Pireo, broadcasting on behalf of Rutermayer regarding the Daylight Mission's arrival at Progreso (April 2057). |
+| Rundown | Log ID           | Description                                                                                                                                              |
+| ------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R6      | R6BX_J77-MNB-CXZ | WHO statement declaring NAM-V a phase 6 global pandemic (March 14, 2053). R-naught of 17. Search for Patient Zero announced.                             |
+| R8      | R8A1_56G-75H-Y78 | WHO statement recommending European border closures and community isolation (October 28, 2053).                                                          |
+| R2      | R2B2_UJ7-OYT-REH | Monthly epidemiological update, Edition 31 (September 6, 2055). 4.8 billion confirmed cases, 2.27 billion deaths. File corrupted before completion.      |
+| R3      | R3B2_76H-S3Q-156 | Shortwave transmission from Francisco Del Pireo, broadcasting on behalf of Rutermayer regarding the Daylight Mission's arrival at Progreso (April 2057). |
 
 ## Notable Quotes
 

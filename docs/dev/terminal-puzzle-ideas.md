@@ -6,7 +6,7 @@ warden events, log files, passwords, and timed mechanics.
 
 ## 1. Terminal Relay Chain (Scavenger Hunt)
 
-Each terminal gives a command name that must be executed on a *different* terminal.
+Each terminal gives a command name that must be executed on a _different_ terminal.
 Terminal A's logs say "Execute OVERRIDE_RELAY on TERMINAL_347", which unlocks
 Terminal B's logs pointing to Terminal C, etc. Final terminal opens the objective
 door. Wrong commands on wrong terminals spawn enemies.
@@ -56,7 +56,7 @@ number or zone position).
 
 A terminal initiates a "signal broadcast" that must be amplified by executing
 commands on relay terminals within a time window. Similar to timed terminal
-sequence but with a twist: each relay terminal is in a *different* zone, and the
+sequence but with a twist: each relay terminal is in a _different_ zone, and the
 order is randomized. Miss the window and the sequence resets with enemies. Forces
 the team to split up and coordinate over comms.
 

@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Aiden Hackett |
-| **KSO Designation** | O-4711 (Standard Operative) |
-| **Quad Assignment** | B452 |
-| **Affiliation** | KSO / Project Legion (voluntary) |
-| **Status** | Active (deployed ~2063) |
-| **Active Period** | Born ~2020, active through 2063 (Warden deployment) |
+| Field               | Value                                               |
+| ------------------- | --------------------------------------------------- |
+| **Full Name**       | Aiden Hackett                                       |
+| **KSO Designation** | O-4711 (Standard Operative)                         |
+| **Quad Assignment** | B452                                                |
+| **Affiliation**     | KSO / Project Legion (voluntary)                    |
+| **Status**          | Active (deployed ~2063)                             |
+| **Active Period**   | Born ~2020, active through 2063 (Warden deployment) |
 
 ## Background
 
@@ -45,13 +45,13 @@ Despite the hydrostasis conditioning, Hackett could not recall his family when p
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R2 | R2B2_000-000-000 | BIOCOM membrane database: multiple entries for "Aiden Hackett" across dimensions with varying O- designations and statuses |
-| R5 | R5A2_W48-W2K-JKZ | Mambo Media Services article (2032): "The Mallacht of Colt." Details the Hackett family's cursed history, Aiden's mother's death, and Cormac's shooting. |
-| R5 | R5A3_ER9-HYF-RD7 | HearSay transcript of Hackett's six-month evaluation. Aggressive, profane. Remembers his name. Cannot recall family. Subjected to further conditioning. |
-| R5 | R5A3_7UJ-39J-JF2 | KDS-Deep evacuation. Almost shoots Dauda. Overridden by Woods. "Your lucky day." |
-| R8 | R8D1_WKH-N2E-TAZ | BIOCOM deployment log: Quad B452 assigned -- Hackett O-4711. Status: Seek and Destroy. |
+| Rundown | Log ID           | Description                                                                                                                                              |
+| ------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R2      | R2B2_000-000-000 | BIOCOM membrane database: multiple entries for "Aiden Hackett" across dimensions with varying O- designations and statuses                               |
+| R5      | R5A2_W48-W2K-JKZ | Mambo Media Services article (2032): "The Mallacht of Colt." Details the Hackett family's cursed history, Aiden's mother's death, and Cormac's shooting. |
+| R5      | R5A3_ER9-HYF-RD7 | HearSay transcript of Hackett's six-month evaluation. Aggressive, profane. Remembers his name. Cannot recall family. Subjected to further conditioning.  |
+| R5      | R5A3_7UJ-39J-JF2 | KDS-Deep evacuation. Almost shoots Dauda. Overridden by Woods. "Your lucky day."                                                                         |
+| R8      | R8D1_WKH-N2E-TAZ | BIOCOM deployment log: Quad B452 assigned -- Hackett O-4711. Status: Seek and Destroy.                                                                   |
 
 ## Notable Quotes
 

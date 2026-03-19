@@ -4,13 +4,13 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Designation** | Conduit (BIOCOM subroutine: `conduit_init`, `conduit_create`, `conduit_assimilate`) |
-| **Nature** | Artificially grown humanoid clone; biological communication interface |
-| **Origin** | Created by the Warden using Project RISE cloning technology and genome data |
-| **Function** | Bridge between the Collectors and humans; capable of surviving among Sleepers and communicating the Collectors' message |
-| **Status** | Destroyed (multiple iterations killed by mercenaries or creatures; final iteration dies during conversation with ALT Schaeffer) |
+| Field           | Value                                                                                                                           |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **Designation** | Conduit (BIOCOM subroutine: `conduit_init`, `conduit_create`, `conduit_assimilate`)                                             |
+| **Nature**      | Artificially grown humanoid clone; biological communication interface                                                           |
+| **Origin**      | Created by the Warden using Project RISE cloning technology and genome data                                                     |
+| **Function**    | Bridge between the Collectors and humans; capable of surviving among Sleepers and communicating the Collectors' message         |
+| **Status**      | Destroyed (multiple iterations killed by mercenaries or creatures; final iteration dies during conversation with ALT Schaeffer) |
 
 ## Description
 
@@ -48,15 +48,15 @@ The Conduit's speech was halting, associative, and occasionally incoherent. It m
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R2 | R2D2_CRW-EUH-3YU | Warden runs `conduit_informatics` subroutine, processing RISE data and simulating Conduit initialization. Reports 8.59% conformity improvement. |
-| R5 | R5B3_F12-KLU-YN2 | Schaeffer identifies the "conduit" subroutine in Warden logs: "There is a subroutine in the Warden logs called 'conduit', which has been trying to communicate with the mercenaries, but it's been killed every time." |
-| R5 | R5E1_8EL-71W-3HW | Schaeffer notes repeated Warden terminology including "conduit" and "specimen" -- evidence of the ongoing Conduit development program. |
-| R6 | R6A1_PUT-THX-3DX | BIOCOM log: the Warden creates a new Conduit. Documents full biological creation process from synthetic ovum through accelerated embryonic development. System integrity report: organs 27%, immunity 0%, expected lifespan ~4 days, translation aptitude 94%. |
-| R6 | R6B1_CUJ-655-1HB | Warden compiles 29+ million database entries and runs `conduit_assimilate` -- feeding accumulated knowledge into the Conduit's learning framework. |
-| R6 | R6C2_FFW-HYY-6FL | ALT Schaeffer witnesses a Conduit in the field: a humanoid clone standing among creatures, reaching out to mercenaries, killed in the ensuing chaos. "It was trying to communicate." |
-| R6 | R6D1_8AA-FEE-EDD | The Conduit conversation with ALT Schaeffer. The Collectors speak through the Conduit, revealing the truth about the Warden, the virus, the membranes, and humanity's need to escape. The Conduit dies during the exchange. |
+| Rundown | Log ID           | Description                                                                                                                                                                                                                                                    |
+| ------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R2      | R2D2_CRW-EUH-3YU | Warden runs `conduit_informatics` subroutine, processing RISE data and simulating Conduit initialization. Reports 8.59% conformity improvement.                                                                                                                |
+| R5      | R5B3_F12-KLU-YN2 | Schaeffer identifies the "conduit" subroutine in Warden logs: "There is a subroutine in the Warden logs called 'conduit', which has been trying to communicate with the mercenaries, but it's been killed every time."                                         |
+| R5      | R5E1_8EL-71W-3HW | Schaeffer notes repeated Warden terminology including "conduit" and "specimen" -- evidence of the ongoing Conduit development program.                                                                                                                         |
+| R6      | R6A1_PUT-THX-3DX | BIOCOM log: the Warden creates a new Conduit. Documents full biological creation process from synthetic ovum through accelerated embryonic development. System integrity report: organs 27%, immunity 0%, expected lifespan ~4 days, translation aptitude 94%. |
+| R6      | R6B1_CUJ-655-1HB | Warden compiles 29+ million database entries and runs `conduit_assimilate` -- feeding accumulated knowledge into the Conduit's learning framework.                                                                                                             |
+| R6      | R6C2_FFW-HYY-6FL | ALT Schaeffer witnesses a Conduit in the field: a humanoid clone standing among creatures, reaching out to mercenaries, killed in the ensuing chaos. "It was trying to communicate."                                                                           |
+| R6      | R6D1_8AA-FEE-EDD | The Conduit conversation with ALT Schaeffer. The Collectors speak through the Conduit, revealing the truth about the Warden, the virus, the membranes, and humanity's need to escape. The Conduit dies during the exchange.                                    |
 
 ## Notable References
 

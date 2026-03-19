@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Andrew Clinton |
-| **Employee ID** | B035 |
-| **Role** | Project Manager, Santonian Mining Company |
-| **Affiliation** | Santonian Mining Company / Dreyfus Industries (reporting chain) |
-| **Status** | Deceased (killed October 13th, 2053, energy surge from the Inner) |
-| **Active Period** | 2049 (pre-construction) through October 2053 |
+| Field             | Value                                                             |
+| ----------------- | ----------------------------------------------------------------- |
+| **Full Name**     | Andrew Clinton                                                    |
+| **Employee ID**   | B035                                                              |
+| **Role**          | Project Manager, Santonian Mining Company                         |
+| **Affiliation**   | Santonian Mining Company / Dreyfus Industries (reporting chain)   |
+| **Status**        | Deceased (killed October 13th, 2053, energy surge from the Inner) |
+| **Active Period** | 2049 (pre-construction) through October 2053                      |
 
 ## Background
 
@@ -46,14 +46,14 @@ Clinton also installed the classified HearSay surveillance system throughout the
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R4 | R4C3_6YH-KKN-B11 | Earliest correspondence (April 2049). Bribes Gustavo Peres for Yucatan access. "Your friends at SMC" |
-| R6 | R6B1_BKS-BTP-FD9 | Reports iridium discovery to Davies (September 2049). "300 billion at today's Iridium price" |
-| R4 | R4A3_DL4-39F-Q5Z | HearSay installation order to Chaparon (March 2052). Tier 4 classified. "You are not aware of the Hearsay system" |
-| R4 | R4A3_HZW-8JK-LTT | Spring Break all-staff email (April 2052). Buries NAM-V outbreak. Cancels leave. "Onwards and downwards!" |
-| R5 | R5A1_1JL-OYY-NBR | Davies to Clinton (March 2052). Project Insight subordinates mining ops. Mentions Ariana's 10th birthday |
-| R6 | R6D4_SK8-G25-G65 | Igor Rostok's death email chain. Clinton to Davies to Piros. "In what world is it okay to execute a person on the spot for trespassing?" |
+| Rundown | Log ID           | Description                                                                                                                              |
+| ------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| R4      | R4C3_6YH-KKN-B11 | Earliest correspondence (April 2049). Bribes Gustavo Peres for Yucatan access. "Your friends at SMC"                                     |
+| R6      | R6B1_BKS-BTP-FD9 | Reports iridium discovery to Davies (September 2049). "300 billion at today's Iridium price"                                             |
+| R4      | R4A3_DL4-39F-Q5Z | HearSay installation order to Chaparon (March 2052). Tier 4 classified. "You are not aware of the Hearsay system"                        |
+| R4      | R4A3_HZW-8JK-LTT | Spring Break all-staff email (April 2052). Buries NAM-V outbreak. Cancels leave. "Onwards and downwards!"                                |
+| R5      | R5A1_1JL-OYY-NBR | Davies to Clinton (March 2052). Project Insight subordinates mining ops. Mentions Ariana's 10th birthday                                 |
+| R6      | R6D4_SK8-G25-G65 | Igor Rostok's death email chain. Clinton to Davies to Piros. "In what world is it okay to execute a person on the spot for trespassing?" |
 
 ## Notable Quotes
 

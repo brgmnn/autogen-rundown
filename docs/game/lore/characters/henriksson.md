@@ -4,13 +4,13 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Henriksson (first name unknown) |
-| **Employee ID** | N/A (not referenced in logs) |
-| **Role** | Engineer / Civilian Specialist |
-| **Affiliation** | Formerly SMC; later allied with John Schaeffer |
-| **Status** | Dead -- murdered by OG Schaeffer (Rundown 8) |
+| Field             | Value                                                         |
+| ----------------- | ------------------------------------------------------------- |
+| **Full Name**     | Henriksson (first name unknown)                               |
+| **Employee ID**   | N/A (not referenced in logs)                                  |
+| **Role**          | Engineer / Civilian Specialist                                |
+| **Affiliation**   | Formerly SMC; later allied with John Schaeffer                |
+| **Status**        | Dead -- murdered by OG Schaeffer (Rundown 8)                  |
 | **Active Period** | Pre-collapse (civilian career) through ~2063 (post-awakening) |
 
 ## Background
@@ -45,12 +45,12 @@ Schaeffer discovered the betrayal. In the mission following Henriksson's attempt
 
 Henriksson has no authored D-Lock logs. His story is conveyed through gameplay events and environmental storytelling:
 
-| Rundown | Context | Description |
-|---------|---------|-------------|
-| R7 | Gameplay (Original Worldline) | Players free Henriksson from an HSU and remove his control chip at Schaeffer's direction. |
-| R7 | Gameplay (Original Worldline) | Henriksson works with Schaeffer and the players to inject a virus into the Warden system. |
-| R8 | A2 (Second Half) | Henriksson contacts the players, attempting to arrange a meeting to betray Schaeffer. |
-| R8 | B2 (Second Half) | Players discover Henriksson's ID badge, a bloody pipe, and a blood trail -- evidence of his murder by Schaeffer. |
+| Rundown | Context                       | Description                                                                                                      |
+| ------- | ----------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| R7      | Gameplay (Original Worldline) | Players free Henriksson from an HSU and remove his control chip at Schaeffer's direction.                        |
+| R7      | Gameplay (Original Worldline) | Henriksson works with Schaeffer and the players to inject a virus into the Warden system.                        |
+| R8      | A2 (Second Half)              | Henriksson contacts the players, attempting to arrange a meeting to betray Schaeffer.                            |
+| R8      | B2 (Second Half)              | Players discover Henriksson's ID badge, a bloody pipe, and a blood trail -- evidence of his murder by Schaeffer. |
 
 ## Notable Quotes
 

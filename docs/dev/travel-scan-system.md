@@ -69,23 +69,23 @@ LevelAPI.OnLevelCleanup → TravelScanRegistry.Clear()
 
 ### Naturally Movable (prefab includes CP_BasicMovable)
 
-| ID | Name | Description |
-|----|------|-------------|
-| 22 | `SecurityScan_Big_RequireAll_Movable` | Big scan, require all, moving |
-| 31 | `SecurityScan_Big_Movable_FadeIn` | Big movable, fade-in visual |
-| 38 | `SecurityScan_Big_Movable_FadeIn_RequireAll` | Fade-in, require all |
-| 42 | `SecurityScan_Big_Movable` | Big movable scan |
-| 43 | `SecurityScan_Movable_Small` | Small movable scan |
-| 52 | `SecurityScan_Big_Movable_Slow` | Big movable, slow speed |
-| 60 | `SecurityScan_Big_Movable_FadeIn_Slow` | Fade-in, slow speed |
+| ID  | Name                                         | Description                   |
+| --- | -------------------------------------------- | ----------------------------- |
+| 22  | `SecurityScan_Big_RequireAll_Movable`        | Big scan, require all, moving |
+| 31  | `SecurityScan_Big_Movable_FadeIn`            | Big movable, fade-in visual   |
+| 38  | `SecurityScan_Big_Movable_FadeIn_RequireAll` | Fade-in, require all          |
+| 42  | `SecurityScan_Big_Movable`                   | Big movable scan              |
+| 43  | `SecurityScan_Movable_Small`                 | Small movable scan            |
+| 52  | `SecurityScan_Big_Movable_Slow`              | Big movable, slow speed       |
+| 60  | `SecurityScan_Big_Movable_FadeIn_Slow`       | Fade-in, slow speed           |
 
 These types already have `CP_BasicMovable` on their prefab with `IsMoveConfigured = true`. Patch_SetupMovement intercepts all of them to replace radial position generation with NavMesh circuits.
 
 ### Runtime-Injected (type 100)
 
-| ID | Name | Duration | Speed |
-|----|------|----------|-------|
-| 100 | `SustainedTravel` | 120s | 2.0 m/s |
+| ID  | Name              | Duration | Speed   |
+| --- | ----------------- | -------- | ------- |
+| 100 | `SustainedTravel` | 120s     | 2.0 m/s |
 
 Type 100 is special: the base game sustained scan prefab has no `CP_BasicMovable` component. The system injects one at runtime via `AddComponent<CP_BasicMovable>()` and writes its serialized fields through IL2CPP pointer arithmetic. This is the only type that also gets the reverse mechanic.
 
@@ -123,20 +123,20 @@ Reverse movement runs **master-only** (`SNet.IsMaster`). The master writes `m_le
 
 ## File Map
 
-| File | Purpose |
-|------|---------|
-| `TravelScanRegistry.cs` | Constants, type sets, instance tracking, lifecycle hooks |
-| `Patch_SustainedTravel.cs` | Runtime CP_BasicMovable injection for type 100 |
-| `Patch_SetupMovement.cs` | Replaces radial positions with NavMesh loops (all movable types) |
-| `Patch_SustainedTravelReverse.cs` | Reverse movement when players leave scan (type 100 only) |
-| `TravelPathGenerator.cs` | NavMesh pathfinding, destination selection, resampling |
+| File                              | Purpose                                                          |
+| --------------------------------- | ---------------------------------------------------------------- |
+| `TravelScanRegistry.cs`           | Constants, type sets, instance tracking, lifecycle hooks         |
+| `Patch_SustainedTravel.cs`        | Runtime CP_BasicMovable injection for type 100                   |
+| `Patch_SetupMovement.cs`          | Replaces radial positions with NavMesh loops (all movable types) |
+| `Patch_SustainedTravelReverse.cs` | Reverse movement when players leave scan (type 100 only)         |
+| `TravelPathGenerator.cs`          | NavMesh pathfinding, destination selection, resampling           |
 
 ## Key Constants
 
-| Constant | Value | Location |
-|----------|-------|----------|
-| `SustainedTravelSpeed` | 2.0 m/s | `TravelScanRegistry` |
-| `SustainedTravelReverseSpeed` | 1.0 m/s | `TravelScanRegistry` |
-| `StepDistance` | 3.0 m | `TravelScanRegistry` |
-| `EdgeDistance` | 2.0 m | `TravelScanRegistry` |
-| `CandidatePoolSize` | 20 | `TravelPathGenerator` |
+| Constant                      | Value   | Location              |
+| ----------------------------- | ------- | --------------------- |
+| `SustainedTravelSpeed`        | 2.0 m/s | `TravelScanRegistry`  |
+| `SustainedTravelReverseSpeed` | 1.0 m/s | `TravelScanRegistry`  |
+| `StepDistance`                | 3.0 m   | `TravelScanRegistry`  |
+| `EdgeDistance`                | 2.0 m   | `TravelScanRegistry`  |
+| `CandidatePoolSize`           | 20      | `TravelPathGenerator` |

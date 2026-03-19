@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Otto Richtofer |
-| **Employee ID** | B029 |
-| **Role** | Geologist |
-| **Affiliation** | Santonian Mining Company (SMC) |
-| **Status** | Unknown (suffered globe luxation of left eye in March 2052; placed on medical recovery on-site) |
-| **Active Period** | ~2050-2052+ |
+| Field             | Value                                                                                           |
+| ----------------- | ----------------------------------------------------------------------------------------------- |
+| **Full Name**     | Otto Richtofer                                                                                  |
+| **Employee ID**   | B029                                                                                            |
+| **Role**          | Geologist                                                                                       |
+| **Affiliation**   | Santonian Mining Company (SMC)                                                                  |
+| **Status**        | Unknown (suffered globe luxation of left eye in March 2052; placed on medical recovery on-site) |
+| **Active Period** | ~2050-2052+                                                                                     |
 
 ## Background
 
@@ -41,10 +41,10 @@ The artifact samples were sent to SMC headquarters off-site for further analysis
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R6 | R6C1_2LZ-SAA-6NY | Incident report (authored by Hammerstein) documenting Richtofer's globe luxation during artifact analysis. Includes Janson Davies' response directing a restricted investigation. |
-| R1 | R1D1_K94-5ER-ESF | Listed on the SMC personnel manifest as "Otto Richtofer B029 - Santonian Mining Company - Geologist." |
+| Rundown | Log ID           | Description                                                                                                                                                                       |
+| ------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R6      | R6C1_2LZ-SAA-6NY | Incident report (authored by Hammerstein) documenting Richtofer's globe luxation during artifact analysis. Includes Janson Davies' response directing a restricted investigation. |
+| R1      | R1D1_K94-5ER-ESF | Listed on the SMC personnel manifest as "Otto Richtofer B029 - Santonian Mining Company - Geologist."                                                                             |
 
 ## Notable Quotes
 

@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Janson Davies |
-| **Employee ID** | A001 |
-| **Role** | Executive / Facility Director (advisory capacity) |
-| **Affiliation** | Dreyfus Industries (parent corporation of Santonian Mining Company) |
-| **Status** | Unknown (last referenced August 2053) |
-| **Active Period** | 2050 - 2053+ |
+| Field             | Value                                                               |
+| ----------------- | ------------------------------------------------------------------- |
+| **Full Name**     | Janson Davies                                                       |
+| **Employee ID**   | A001                                                                |
+| **Role**          | Executive / Facility Director (advisory capacity)                   |
+| **Affiliation**   | Dreyfus Industries (parent corporation of Santonian Mining Company) |
+| **Status**        | Unknown (last referenced August 2053)                               |
+| **Active Period** | 2050 - 2053+                                                        |
 
 ## Background
 
@@ -41,12 +41,12 @@ When Andrew Clinton brought the execution of Igor Rostok to Davies's attention, 
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R2 | R2B4_EBDT-0BE201 | EBDT fragment: Clinton's construction progress update to Davies |
-| R2 | R2C1_EBDT-0BE202 | EBDT fragment: Clinton managing "Problem #12," assuring Davies the matter is resolved |
-| R5 | R5A1_1JL-OYY-NBR | Davies establishes D-Lock protocols; disclaims involvement while outlining Project Insight's authority over mining operations |
-| R6 | R6D4_SK8-G25-G65 | Email chain: Clinton reports Rostok's execution; Davies forwards to Piros with disclaimer |
+| Rundown | Log ID           | Description                                                                                                                   |
+| ------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| R2      | R2B4_EBDT-0BE201 | EBDT fragment: Clinton's construction progress update to Davies                                                               |
+| R2      | R2C1_EBDT-0BE202 | EBDT fragment: Clinton managing "Problem #12," assuring Davies the matter is resolved                                         |
+| R5      | R5A1_1JL-OYY-NBR | Davies establishes D-Lock protocols; disclaims involvement while outlining Project Insight's authority over mining operations |
+| R6      | R6D4_SK8-G25-G65 | Email chain: Clinton reports Rostok's execution; Davies forwards to Piros with disclaimer                                     |
 
 ## Notable Quotes
 

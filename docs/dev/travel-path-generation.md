@@ -20,6 +20,7 @@ source ——————— dest2
 ```
 
 Why a triangle instead of a random walk or two-point path:
+
 - **Two points** (out-and-back) doubles back on itself — players walk the same corridor twice
 - **Random walk** has no guaranteed loop closure — the last leg might be a long straight line
 - **Triangle** covers three distinct routes through the zone with guaranteed closure back to source
@@ -103,14 +104,14 @@ Scans have a radius. If a waypoint is right at a NavMesh edge, players standing 
 
 ## Graceful Degradation
 
-| Condition | Behavior |
-|-----------|----------|
-| `sourceArea.m_courseNode` not valid | Returns empty list → base game fallback |
-| < 2 candidate nodes (small/degenerate zone) | Returns empty list → base game fallback |
-| `NavMesh.CalculatePath` fails for a leg | Direct line fallback for that leg |
-| `NavMesh.CalculatePath` returns partial path | Treated as failure, uses direct line |
-| Edge pull lands off-mesh | Keeps original position |
-| < 2 resampled positions | `Patch_SetupMovement` returns `true` → base game |
+| Condition                                    | Behavior                                         |
+| -------------------------------------------- | ------------------------------------------------ |
+| `sourceArea.m_courseNode` not valid          | Returns empty list → base game fallback          |
+| < 2 candidate nodes (small/degenerate zone)  | Returns empty list → base game fallback          |
+| `NavMesh.CalculatePath` fails for a leg      | Direct line fallback for that leg                |
+| `NavMesh.CalculatePath` returns partial path | Treated as failure, uses direct line             |
+| Edge pull lands off-mesh                     | Keeps original position                          |
+| < 2 resampled positions                      | `Patch_SetupMovement` returns `true` → base game |
 
 The system never crashes on bad geometry — it falls back to base game behavior at every level.
 

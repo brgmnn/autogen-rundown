@@ -132,6 +132,7 @@ WriteCurrentStateLerp(movable, lerpAmount); // m_currentState.lerp
 - `m_currentState.lerp` is used by `pMovableStateSync` for network replication. Clients receive this value to update their local position.
 
 Missing either causes:
+
 - Without `m_lerpAmount`: forward movement resumes from the pre-reverse position (visual snap)
 - Without `m_currentState.lerp`: clients don't see the reverse movement (host/client desync)
 
@@ -157,15 +158,15 @@ IL2CPP field offsets are resolved by name but stored as byte offsets. If `CP_Bas
 
 Fields used across both injection and reverse patches:
 
-| Field | Used By | Type |
-|-------|---------|------|
-| `m_amountOfPositions` | Injection, SetupMovement | int |
-| `m_typeOfMovement` | Injection, SetupMovement | int (enum) |
-| `m_movementSpeed` | Injection | float |
-| `m_onlyMoveWhenScanning` | Injection | bool |
-| `m_lerpAmount` | Reverse | float |
-| `m_reset` | Reverse | bool |
-| `m_currentState` | Reverse | pMovableStateSync struct |
+| Field                    | Used By                  | Type                     |
+| ------------------------ | ------------------------ | ------------------------ |
+| `m_amountOfPositions`    | Injection, SetupMovement | int                      |
+| `m_typeOfMovement`       | Injection, SetupMovement | int (enum)               |
+| `m_movementSpeed`        | Injection                | float                    |
+| `m_onlyMoveWhenScanning` | Injection                | bool                     |
+| `m_lerpAmount`           | Reverse                  | float                    |
+| `m_reset`                | Reverse                  | bool                     |
+| `m_currentState`         | Reverse                  | pMovableStateSync struct |
 
 ### Paused-Detection Timing
 

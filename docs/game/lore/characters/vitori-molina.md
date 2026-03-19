@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Vitori Molina |
-| **Employee ID** | C158 |
-| **Role** | Contractor Foreman |
-| **Affiliation** | Santonian Mining Company (SMC) |
-| **Status** | Unknown (presumed dead) |
-| **Active Period** | ~2050-2053 |
+| Field             | Value                          |
+| ----------------- | ------------------------------ |
+| **Full Name**     | Vitori Molina                  |
+| **Employee ID**   | C158                           |
+| **Role**          | Contractor Foreman             |
+| **Affiliation**   | Santonian Mining Company (SMC) |
+| **Status**        | Unknown (presumed dead)        |
+| **Active Period** | ~2050-2053                     |
 
 ## Background
 
@@ -35,10 +35,10 @@ The incident report Molina filed about this event reveals the institutional mach
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R7 | R7B1_HBR-YH6-D88 | Incident report documenting physical assault by KSO, room search, deletion of two months of correspondence, and installation of surveillance equipment. Molina subsequently scheduled for disciplinary hearing. |
-| R1 | R1D1_K94-5ER-ESF | Listed on the SMC personnel manifest as "Vitori Molina C158 - Santonian Mining Company - Contractor Foreman." |
+| Rundown | Log ID           | Description                                                                                                                                                                                                     |
+| ------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R7      | R7B1_HBR-YH6-D88 | Incident report documenting physical assault by KSO, room search, deletion of two months of correspondence, and installation of surveillance equipment. Molina subsequently scheduled for disciplinary hearing. |
+| R1      | R1D1_K94-5ER-ESF | Listed on the SMC personnel manifest as "Vitori Molina C158 - Santonian Mining Company - Contractor Foreman."                                                                                                   |
 
 ## Notable Quotes
 

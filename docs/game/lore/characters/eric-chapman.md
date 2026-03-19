@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Eric Chapman |
-| **Employee ID** | C368 |
-| **Role** | Medical Records Clerk |
-| **Affiliation** | Santonian Mining Company (SMC) |
-| **Status** | Unknown (presumed dead) |
-| **Active Period** | ~2050-2053 |
+| Field             | Value                          |
+| ----------------- | ------------------------------ |
+| **Full Name**     | Eric Chapman                   |
+| **Employee ID**   | C368                           |
+| **Role**          | Medical Records Clerk          |
+| **Affiliation**   | Santonian Mining Company (SMC) |
+| **Status**        | Unknown (presumed dead)        |
+| **Active Period** | ~2050-2053                     |
 
 ## Background
 
@@ -35,9 +35,9 @@ This detail connects Chapman to the broader pattern of auditory phenomena that p
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R4 | R4D1_XDL-9YD-1QA | Letter of introduction to Boris Stanovich. Proposes friendship based on logical compatibility assessment. Reveals shared experience of unexplained noises in the mass spectrometry laboratory. |
+| Rundown | Log ID           | Description                                                                                                                                                                                    |
+| ------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R4      | R4D1_XDL-9YD-1QA | Letter of introduction to Boris Stanovich. Proposes friendship based on logical compatibility assessment. Reveals shared experience of unexplained noises in the mass spectrometry laboratory. |
 
 ## Notable Quotes
 

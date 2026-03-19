@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Anders Johanson |
-| **Employee ID** | A029 |
-| **Role** | KDS Senior Leader / Strategic Decision-Maker |
-| **Affiliation** | Kovac Defense Services (KDS) |
-| **Status** | Unknown (last referenced mid-2053) |
-| **Active Period** | 2044 - 2053+ |
+| Field             | Value                                        |
+| ----------------- | -------------------------------------------- |
+| **Full Name**     | Anders Johanson                              |
+| **Employee ID**   | A029                                         |
+| **Role**          | KDS Senior Leader / Strategic Decision-Maker |
+| **Affiliation**   | Kovac Defense Services (KDS)                 |
+| **Status**        | Unknown (last referenced mid-2053)           |
+| **Active Period** | 2044 - 2053+                                 |
 
 ## Background
 
@@ -42,13 +42,13 @@ Prior to Garganta, Johanson's reputation was already controversial. The "Johanso
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R6 | R6AX_R5L-NLL-023 | Email chain with Harriet Lorde demanding KDS-Deep excavation begin immediately |
-| R6 | R6BX_LWA-519-3VX | Email chain pitching BIOCOM to Lockwood; includes Piros forwarding Lockwood's security concerns |
-| R6 | R6BX_20V-M6M-2X9 | Initial pitch letter to Janson Davies offering KDS services, listing Dreyfus's exposed secrets |
-| R6 | R6D3_HAS-I5T-DAY | Instructs Piros to suppress incident of Santonian employee found in hydrostasis storage |
-| R7 | R7B2_SVN-QAS-XPO | Duplicate of BIOCOM pitch; Johanson's sales letter to Lockwood on BIOCOM capabilities |
+| Rundown | Log ID           | Description                                                                                     |
+| ------- | ---------------- | ----------------------------------------------------------------------------------------------- |
+| R6      | R6AX_R5L-NLL-023 | Email chain with Harriet Lorde demanding KDS-Deep excavation begin immediately                  |
+| R6      | R6BX_LWA-519-3VX | Email chain pitching BIOCOM to Lockwood; includes Piros forwarding Lockwood's security concerns |
+| R6      | R6BX_20V-M6M-2X9 | Initial pitch letter to Janson Davies offering KDS services, listing Dreyfus's exposed secrets  |
+| R6      | R6D3_HAS-I5T-DAY | Instructs Piros to suppress incident of Santonian employee found in hydrostasis storage         |
+| R7      | R7B2_SVN-QAS-XPO | Duplicate of BIOCOM pitch; Johanson's sales letter to Lockwood on BIOCOM capabilities           |
 
 ## Notable Quotes
 

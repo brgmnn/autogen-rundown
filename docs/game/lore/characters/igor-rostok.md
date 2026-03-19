@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Igor Rostok |
-| **Employee ID** | C122 |
-| **Role** | Generalist Engineer |
-| **Affiliation** | Santonian Mining Company (SMC) |
-| **Status** | Dead -- shot and killed by a KSO on July 28th, 2053 |
-| **Active Period** | ~2050-2053 |
+| Field             | Value                                               |
+| ----------------- | --------------------------------------------------- |
+| **Full Name**     | Igor Rostok                                         |
+| **Employee ID**   | C122                                                |
+| **Role**          | Generalist Engineer                                 |
+| **Affiliation**   | Santonian Mining Company (SMC)                      |
+| **Status**        | Dead -- shot and killed by a KSO on July 28th, 2053 |
+| **Active Period** | ~2050-2053                                          |
 
 ## Background
 
@@ -44,13 +44,13 @@ Igor's death was the catalyst for Andrew Clinton's decision to go to the surface
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R4 | R4C1_G62-988-G2Q | Detailed spatial audit of Garganta's facilities sent to Phil Decker. Reveals 185K sq/m unregistered space and KDS information blackout. |
-| R7 | R7B1_B47-EH6-REG | Email to Andrew Clinton denouncing HearSay surveillance, KDS intimidation, and Project Insight elitism. Pleads for action. |
-| R6 | R6D4_SK8-G25-G65 | Email chain: Clinton reports Igor's killing to Davies, Davies deflects to Piros, Piros cites contractual justification for the execution. |
-| R6 | R6C3_MQQ-792-B8L | Corrupted fragment of Hammerstein's report on the Inner exploration. Igor is not directly mentioned but the restricted areas he may have entered are described. |
-| R1 | R1D1_K94-5ER-ESF | Listed on the SMC personnel manifest as "Igor Rostok C122 - Santonian Mining Company - Engineer." |
+| Rundown | Log ID           | Description                                                                                                                                                     |
+| ------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R4      | R4C1_G62-988-G2Q | Detailed spatial audit of Garganta's facilities sent to Phil Decker. Reveals 185K sq/m unregistered space and KDS information blackout.                         |
+| R7      | R7B1_B47-EH6-REG | Email to Andrew Clinton denouncing HearSay surveillance, KDS intimidation, and Project Insight elitism. Pleads for action.                                      |
+| R6      | R6D4_SK8-G25-G65 | Email chain: Clinton reports Igor's killing to Davies, Davies deflects to Piros, Piros cites contractual justification for the execution.                       |
+| R6      | R6C3_MQQ-792-B8L | Corrupted fragment of Hammerstein's report on the Inner exploration. Igor is not directly mentioned but the restricted areas he may have entered are described. |
+| R1      | R1D1_K94-5ER-ESF | Listed on the SMC personnel manifest as "Igor Rostok C122 - Santonian Mining Company - Engineer."                                                               |
 
 ## Notable Quotes
 

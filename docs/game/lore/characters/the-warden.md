@@ -4,13 +4,13 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Designation** | WRDN |
-| **Nature** | Alien/digital hybrid intelligence; extension of the Collectors |
-| **Origin** | The Collectors' technology, interfacing through the BIOCOM network |
-| **Function** | Facility control, prisoner deployment, Conduit development, dimensional escape orchestration |
-| **Status** | Active (~2063); defeated in OG timeline (R7), operational in ALT timeline through R8 |
+| Field           | Value                                                                                        |
+| --------------- | -------------------------------------------------------------------------------------------- |
+| **Designation** | WRDN                                                                                         |
+| **Nature**      | Alien/digital hybrid intelligence; extension of the Collectors                               |
+| **Origin**      | The Collectors' technology, interfacing through the BIOCOM network                           |
+| **Function**    | Facility control, prisoner deployment, Conduit development, dimensional escape orchestration |
+| **Status**      | Active (~2063); defeated in OG timeline (R7), operational in ALT timeline through R8         |
 
 ## Description
 
@@ -51,20 +51,20 @@ The Warden also exhibits behaviors well beyond the scope of any conventional AI.
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R2 | R2D2_CRW-EUH-3YU | BIOCOM quad tracking log: Warden monitors Schaeffer's squad (T-3894) in Zone 32. All resources lost. Also accesses RISE project data and runs `conduit_informatics` subroutine. |
-| R2 | R2E1_76Y-TTF-FWW | BIOCOM navigation data retrieval under WRDN override. Schaeffer's quad status degrades from Combat to RESOURCE NOT FOUND. |
-| R2 | R2B4_FER-WI9-053 | Warden processes 622,811 membrane entries, discovers 42,188 new membranes, begins updating across 1+ billion local instances. |
-| R3 | R3C1_B94-E5W-52K | Schaeffer's first recording. The Warden's voice intrudes constantly: "EXTRACT! RETREAT! COMPLY!" |
-| R4 | R4C1_4HB-6UR-YTE | Schaeffer discovers the Warden program has hijacked BIOCOM. Identifies it as an invasive program with governing authority over the entire network. |
-| R5 | R5E1_TH5-6HN-8KU | Email chain revealing the Warden's repeated unauthorized attempts to reroute power to KDS Deep (HSU vault). Piros deflects questions. |
-| R5 | R5B3_F12-KLU-YN2 | Schaeffer's analysis: Warden re-categorized mercenaries as "prisoners," has a "conduit" subroutine, extracts RISE genome data. "This is not AI." |
-| R5 | R5E1_8EL-71W-3HW | Schaeffer identifies repeated Warden terminology: conduit, specimen, membrane, influx protocol. Observes the Warden pushing prisoners toward KDS Deep. |
-| R6 | R6A1_PUT-THX-3DX | BIOCOM log showing the Warden creating a new Conduit: gathering biological materials, monitoring system integrity, initiating accelerated embryonic development. |
-| R6 | R6B1_CUJ-655-1HB | Warden compiles 29+ million GLM database entries, runs `conduit_assimilate` to feed data into the Conduit's learning systems. |
-| R6 | R6D1_8AA-FEE-EDD | The Conduit conversation: "The Warden is of us." The Warden's true nature as an extension of the Collectors is revealed. |
-| R8 | R8D1_WKH-N2E-TAZ | BIOCOM deployment: Warden assigns Quad B452 (Bishop, Woods, Hackett, Dauda) with Seek and Destroy status. |
+| Rundown | Log ID           | Description                                                                                                                                                                     |
+| ------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R2      | R2D2_CRW-EUH-3YU | BIOCOM quad tracking log: Warden monitors Schaeffer's squad (T-3894) in Zone 32. All resources lost. Also accesses RISE project data and runs `conduit_informatics` subroutine. |
+| R2      | R2E1_76Y-TTF-FWW | BIOCOM navigation data retrieval under WRDN override. Schaeffer's quad status degrades from Combat to RESOURCE NOT FOUND.                                                       |
+| R2      | R2B4_FER-WI9-053 | Warden processes 622,811 membrane entries, discovers 42,188 new membranes, begins updating across 1+ billion local instances.                                                   |
+| R3      | R3C1_B94-E5W-52K | Schaeffer's first recording. The Warden's voice intrudes constantly: "EXTRACT! RETREAT! COMPLY!"                                                                                |
+| R4      | R4C1_4HB-6UR-YTE | Schaeffer discovers the Warden program has hijacked BIOCOM. Identifies it as an invasive program with governing authority over the entire network.                              |
+| R5      | R5E1_TH5-6HN-8KU | Email chain revealing the Warden's repeated unauthorized attempts to reroute power to KDS Deep (HSU vault). Piros deflects questions.                                           |
+| R5      | R5B3_F12-KLU-YN2 | Schaeffer's analysis: Warden re-categorized mercenaries as "prisoners," has a "conduit" subroutine, extracts RISE genome data. "This is not AI."                                |
+| R5      | R5E1_8EL-71W-3HW | Schaeffer identifies repeated Warden terminology: conduit, specimen, membrane, influx protocol. Observes the Warden pushing prisoners toward KDS Deep.                          |
+| R6      | R6A1_PUT-THX-3DX | BIOCOM log showing the Warden creating a new Conduit: gathering biological materials, monitoring system integrity, initiating accelerated embryonic development.                |
+| R6      | R6B1_CUJ-655-1HB | Warden compiles 29+ million GLM database entries, runs `conduit_assimilate` to feed data into the Conduit's learning systems.                                                   |
+| R6      | R6D1_8AA-FEE-EDD | The Conduit conversation: "The Warden is of us." The Warden's true nature as an extension of the Collectors is revealed.                                                        |
+| R8      | R8D1_WKH-N2E-TAZ | BIOCOM deployment: Warden assigns Quad B452 (Bishop, Woods, Hackett, Dauda) with Seek and Destroy status.                                                                       |
 
 ## Notable References
 

@@ -4,13 +4,13 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Designation** | The Collectors |
-| **Nature** | Extraterrestrial entities; interdimensional travelers |
-| **Origin** | Unknown home dimension; crashed on Earth ~65 million years ago at the Chicxulub site |
-| **Function** | Virus collection and containment across dimensions; orchestration of humanity's escape to a clean membrane |
-| **Status** | Active (operating through the Warden and the Conduit as of ~2063) |
+| Field           | Value                                                                                                      |
+| --------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Designation** | The Collectors                                                                                             |
+| **Nature**      | Extraterrestrial entities; interdimensional travelers                                                      |
+| **Origin**      | Unknown home dimension; crashed on Earth ~65 million years ago at the Chicxulub site                       |
+| **Function**    | Virus collection and containment across dimensions; orchestration of humanity's escape to a clean membrane |
+| **Status**      | Active (operating through the Warden and the Conduit as of ~2063)                                          |
 
 ## Description
 
@@ -54,15 +54,15 @@ The Collectors' ultimate conclusion was grim: the Collection could not be comple
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R2 | R2D2_CRW-EUH-3YU | Warden accesses RISE project data and runs `conduit_informatics` -- the Collectors learning about human cloning to develop their communication bridge. |
-| R2 | R2B4_FER-WI9-053 | Warden processes 622,811+ membrane entries -- the Collectors' dimensional database being updated through BIOCOM. |
-| R5 | R5B3_F12-KLU-YN2 | Schaeffer's analysis identifies the Warden as something beyond AI: "It has agency and purpose and is flexible." He documents the "conduit" subroutine and RISE data extraction -- all Collector operations. |
-| R5 | R5E1_TH5-6HN-8KU | The QGP explosion aftermath: Schaeffer documents the directed nature of the blasts, noting they targeted creatures and spared humans. "It looked deliberate." |
-| R6 | R6A1_PUT-THX-3DX | The Warden creates a new Conduit using RISE cloning technology -- the Collectors building their biological communication bridge. |
-| R6 | R6C2_FFW-HYY-6FL | ALT Schaeffer witnesses the Conduit for the first time: a humanoid clone standing among creatures unharmed, reaching out to a squad of mercenaries, trying to communicate before being killed. |
-| R6 | R6D1_8AA-FEE-EDD | The Conduit conversation: the Collectors speak through the Conduit, revealing their identity, their mission, the impurity of the Collection, and their plan for humanity's escape. |
+| Rundown | Log ID           | Description                                                                                                                                                                                                 |
+| ------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R2      | R2D2_CRW-EUH-3YU | Warden accesses RISE project data and runs `conduit_informatics` -- the Collectors learning about human cloning to develop their communication bridge.                                                      |
+| R2      | R2B4_FER-WI9-053 | Warden processes 622,811+ membrane entries -- the Collectors' dimensional database being updated through BIOCOM.                                                                                            |
+| R5      | R5B3_F12-KLU-YN2 | Schaeffer's analysis identifies the Warden as something beyond AI: "It has agency and purpose and is flexible." He documents the "conduit" subroutine and RISE data extraction -- all Collector operations. |
+| R5      | R5E1_TH5-6HN-8KU | The QGP explosion aftermath: Schaeffer documents the directed nature of the blasts, noting they targeted creatures and spared humans. "It looked deliberate."                                               |
+| R6      | R6A1_PUT-THX-3DX | The Warden creates a new Conduit using RISE cloning technology -- the Collectors building their biological communication bridge.                                                                            |
+| R6      | R6C2_FFW-HYY-6FL | ALT Schaeffer witnesses the Conduit for the first time: a humanoid clone standing among creatures unharmed, reaching out to a squad of mercenaries, trying to communicate before being killed.              |
+| R6      | R6D1_8AA-FEE-EDD | The Conduit conversation: the Collectors speak through the Conduit, revealing their identity, their mission, the impurity of the Collection, and their plan for humanity's escape.                          |
 
 ## Notable References
 

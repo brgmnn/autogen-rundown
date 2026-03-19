@@ -4,13 +4,13 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | James Durant |
-| **Employee ID** | B255 |
-| **Role** | Virus researcher, EF-01 expedition leader |
-| **Affiliation** | Project Insight, Garganta Complex |
-| **Status** | Alive on an alien jungle world (alternate dimension) |
+| Field             | Value                                                          |
+| ----------------- | -------------------------------------------------------------- |
+| **Full Name**     | James Durant                                                   |
+| **Employee ID**   | B255                                                           |
+| **Role**          | Virus researcher, EF-01 expedition leader                      |
+| **Affiliation**   | Project Insight, Garganta Complex                              |
+| **Status**        | Alive on an alien jungle world (alternate dimension)           |
 | **Active Period** | ~2054-2055 at Garganta; years-long survival on the Destination |
 
 ## Background
@@ -45,13 +45,13 @@ Beyond his scientific work, Durant was a man capable of warmth and deep connecti
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R1 | R1B1_834-786-872 | Email to Lockwood: definitive NAM-V analysis, extraterrestrial origin, symbiotic mechanism, no cure |
-| R6 | R6C2_H9K-HYR-1TE | Audio recording recovered by Connor: EF-01 arrives in alien jungle, comms severed, establishes camp |
-| R6 | R6CX_W35-9BV-EUV | Audio log (via Stokes): Bishop returns to Garganta after Matter Wave Projector incident, taken by Piros |
-| R6 | R6D1_295-H65-V3N | Second recording recovered by Connor: Bishop lost to datacubes, Durant orders everyone to stay away |
-| R7 | R7B1_B47-EH6-REG | Email chain with Susan Nesbitt: romance, EF-01 invitation declined, her protein sequencer breakthrough |
+| Rundown | Log ID           | Description                                                                                             |
+| ------- | ---------------- | ------------------------------------------------------------------------------------------------------- |
+| R1      | R1B1_834-786-872 | Email to Lockwood: definitive NAM-V analysis, extraterrestrial origin, symbiotic mechanism, no cure     |
+| R6      | R6C2_H9K-HYR-1TE | Audio recording recovered by Connor: EF-01 arrives in alien jungle, comms severed, establishes camp     |
+| R6      | R6CX_W35-9BV-EUV | Audio log (via Stokes): Bishop returns to Garganta after Matter Wave Projector incident, taken by Piros |
+| R6      | R6D1_295-H65-V3N | Second recording recovered by Connor: Bishop lost to datacubes, Durant orders everyone to stay away     |
+| R7      | R7B1_B47-EH6-REG | Email chain with Susan Nesbitt: romance, EF-01 invitation declined, her protein sequencer breakthrough  |
 
 ## Notable Quotes
 

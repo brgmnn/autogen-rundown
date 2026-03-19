@@ -13,18 +13,18 @@ const run = async ({ github, context, core, io, fetch }) => {
 
   for await (const dependency of dependencies) {
     const [, team, package, version] = dependency.match(
-      /^([a-zA-Z0-9_]*)-([a-zA-Z0-9_]*)-([0-9.]*)$/
+      /^([a-zA-Z0-9_]*)-([a-zA-Z0-9_]*)-([0-9.]*)$/,
     );
 
     console.log(`   -> Fetching: ${team}-${package} @ ${version}`);
 
     const response = await fetch(
-      `https://gcdn.thunderstore.io/live/repository/packages/${dependency}.zip`
+      `https://gcdn.thunderstore.io/live/repository/packages/${dependency}.zip`,
     );
 
     // Create a write stream for the output file
     const dest = fs.createWriteStream(
-      path.resolve(".", "deps", `${team}-${package}.zip`)
+      path.resolve(".", "deps", `${team}-${package}.zip`),
     );
 
     await new Promise((resolve, reject) => {

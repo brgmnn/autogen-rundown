@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Angela Klein |
-| **Employee ID** | A106 |
-| **Role** | Behavioral Scientist, Legion Program |
-| **Affiliation** | Kovac Defense Services (KDS) / Project RISE |
-| **Status** | Unknown (last referenced late 2054) |
-| **Active Period** | 2051 - 2054+ |
+| Field             | Value                                       |
+| ----------------- | ------------------------------------------- |
+| **Full Name**     | Angela Klein                                |
+| **Employee ID**   | A106                                        |
+| **Role**          | Behavioral Scientist, Legion Program        |
+| **Affiliation**   | Kovac Defense Services (KDS) / Project RISE |
+| **Status**        | Unknown (last referenced late 2054)         |
+| **Active Period** | 2051 - 2054+                                |
 
 ## Background
 
@@ -43,13 +43,13 @@ Separately, Klein investigated whether biological factors -- specifically pathog
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R1 | R1D1_TAB-GTG-YUM | Field promotion orders for KDS operatives; routine administrative correspondence |
-| R6 | R6C2_FFW-HYY-6FL | HearSay transcript: an observer (likely Schaeffer) describes a Rise clone standing among creatures unattacked |
-| R6 | R6C2_UFR-710-NHA | Exchange with Hutcherson about pathogens surviving hydrostasis; Klein demands complete testing records |
-| R7 | R7D2_98R-T5B-N57 | Report to Ellis Carnegie on Sigma operative improvising PolyFoam technique and cross-quad behavior transmission |
-| R8 | R8C1_LUM-3SS-6ZN | Letter to Giraud criticizing 60-day maturity timeline; advocates for longer development and quality over speed |
+| Rundown | Log ID           | Description                                                                                                     |
+| ------- | ---------------- | --------------------------------------------------------------------------------------------------------------- |
+| R1      | R1D1_TAB-GTG-YUM | Field promotion orders for KDS operatives; routine administrative correspondence                                |
+| R6      | R6C2_FFW-HYY-6FL | HearSay transcript: an observer (likely Schaeffer) describes a Rise clone standing among creatures unattacked   |
+| R6      | R6C2_UFR-710-NHA | Exchange with Hutcherson about pathogens surviving hydrostasis; Klein demands complete testing records          |
+| R7      | R7D2_98R-T5B-N57 | Report to Ellis Carnegie on Sigma operative improvising PolyFoam technique and cross-quad behavior transmission |
+| R8      | R8C1_LUM-3SS-6ZN | Letter to Giraud criticizing 60-day maturity timeline; advocates for longer development and quality over speed  |
 
 ## Notable Quotes
 

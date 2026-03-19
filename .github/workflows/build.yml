@@ -1,7 +1,6 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-
 # Build flow:
 #   https GET https://gtfo.thunderstore.io/api/experimental/package/BepInEx/BepInExPack_GTFO/3.2.1/
 #
@@ -17,69 +16,69 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 6.0.x
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
 
-    # Get AutogenRundown mod version
-    - name: Get version
-      id: version
-      run: echo "version=$(jq -r .version_number manifest.json)" >> "$GITHUB_OUTPUT"
+      # Get AutogenRundown mod version
+      - name: Get version
+        id: version
+        run: echo "version=$(jq -r .version_number manifest.json)" >> "$GITHUB_OUTPUT"
 
-    # Download all manifest dependencies from Thunderstore.
-    - id: deps
-      name: List mod dependencies
-      run: jq .dependencies ${{ github.workspace }}/manifest.json > .deps.json
-    - uses: actions/cache@v4
-      id: thunderstore-cache
-      name: Cache thunderstore dependencies
-      with:
-        path: deps/*.zip
-        key: ${{ runner.os }}-thunderstore-${{ hashFiles('.deps.json') }}
-    - uses: actions/github-script@v6
-      name: Download thunderstore dependencies
-      if: steps.thunderstore-cache.outputs.cache-hit != 'true'
-      with:
-        script: |
-          const script = require("${{ github.workspace }}/.github/actions/thunderstore-download.js");
-          script({ github, context, core, glob, io, exec, fetch, require });
-    - name: Unzip thunderstore dependencies
-      run: |
-        echo ":: Extracting dependencies";
-        for z in deps/*.zip; do
-          echo "::group::  -> $z";
-          unzip "$z" -d "${z%.zip}";
-          echo "::endgroup::";
-        done
+      # Download all manifest dependencies from Thunderstore.
+      - id: deps
+        name: List mod dependencies
+        run: jq .dependencies ${{ github.workspace }}/manifest.json > .deps.json
+      - uses: actions/cache@v4
+        id: thunderstore-cache
+        name: Cache thunderstore dependencies
+        with:
+          path: deps/*.zip
+          key: ${{ runner.os }}-thunderstore-${{ hashFiles('.deps.json') }}
+      - uses: actions/github-script@v6
+        name: Download thunderstore dependencies
+        if: steps.thunderstore-cache.outputs.cache-hit != 'true'
+        with:
+          script: |
+            const script = require("${{ github.workspace }}/.github/actions/thunderstore-download.js");
+            script({ github, context, core, glob, io, exec, fetch, require });
+      - name: Unzip thunderstore dependencies
+        run: |
+          echo ":: Extracting dependencies";
+          for z in deps/*.zip; do
+            echo "::group::  -> $z";
+            unzip "$z" -d "${z%.zip}";
+            echo "::endgroup::";
+          done
 
-    # Test thunderstore-toolkit
-    - name: Test thunderstore-toolkit
-      uses: brgmnn/thunderstore-toolkit@v0.4.0
-      with:
-        command: gen-manifest
-        toml-path: ${{ github.workspace }}/thunderstore.toml
+      # Test thunderstore-toolkit
+      - name: Test thunderstore-toolkit
+        uses: brgmnn/thunderstore-toolkit@v0.4.0
+        with:
+          command: gen-manifest
+          toml-path: ${{ github.workspace }}/thunderstore.toml
 
-    # Build the mod.
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: |
-        dotnet build --no-restore \
-          --configuration Release \
-          --property:Debug=false
+      # Build the mod.
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: |
+          dotnet build --no-restore \
+            --configuration Release \
+            --property:Debug=false
 
-    # Run the unit tests
-    - name: Test
-      run: |
-        dotnet test --no-build \
-          --configuration Release \
-          --property:Debug=false \
-          --verbosity normal
+      # Run the unit tests
+      - name: Test
+        run: |
+          dotnet test --no-build \
+            --configuration Release \
+            --property:Debug=false \
+            --verbosity normal
 
-    # Package the mod.
-    - uses: actions/upload-artifact@v4
-      with:
-        name: AutogenRundown_${{ steps.version.outputs.version }}
-        path: ${{ github.workspace }}/build/*
+      # Package the mod.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AutogenRundown_${{ steps.version.outputs.version }}
+          path: ${{ github.workspace }}/build/*

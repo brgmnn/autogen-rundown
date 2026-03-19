@@ -4,15 +4,15 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | John Schaeffer |
-| **Employee ID** | C067 |
-| **KSO Designation** | T-3894 (Tactical) |
-| **Role** | Generalist Engineer (pre-hydrostasis), KSO Operative (post-hydrostasis), Independent Rebel |
-| **Affiliation** | Santonian Mining Company / KDS Legion Program (involuntary) |
-| **Status** | Deceased (killed by OG Prisoners in Rundown 8, D2) |
-| **Active Period** | Pre-2050 (SMC engineer) through ~2063 (rebel operations) |
+| Field               | Value                                                                                      |
+| ------------------- | ------------------------------------------------------------------------------------------ |
+| **Full Name**       | John Schaeffer                                                                             |
+| **Employee ID**     | C067                                                                                       |
+| **KSO Designation** | T-3894 (Tactical)                                                                          |
+| **Role**            | Generalist Engineer (pre-hydrostasis), KSO Operative (post-hydrostasis), Independent Rebel |
+| **Affiliation**     | Santonian Mining Company / KDS Legion Program (involuntary)                                |
+| **Status**          | Deceased (killed by OG Prisoners in Rundown 8, D2)                                         |
+| **Active Period**   | Pre-2050 (SMC engineer) through ~2063 (rebel operations)                                   |
 
 ## Background
 
@@ -52,16 +52,16 @@ When he finally reached KDS-Deep, the horror of what he found crystallized his r
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R2 | R2D2_CRW-EUH-3YU | BIOCOM quad tracking: Schaeffer T-3894 listed in a lost squad, Zone 32. Status: "Resource lost" |
-| R3 | R3C1_B94-E5W-52K | First recording. Confused awakening. Fights implant voice. "My name is John Schaeffer." |
-| R3 | R3D1_HW5-BI7-120 | Post-implant removal. Describes his situation, observes other operatives, notes sickness |
-| R3 | R3D1_POI-M7Y-THE | Destroys a Warden relay or device. Defiant act of physical rebellion against the system |
-| R4 | R4B1_6J8-9NK-8YT | Four days post-removal. Memory returning. Discovers Garganta, the creatures, "the Warden" |
-| R4 | R4C1_4HB-6UR-YTE | Hacks into BIOCOM network. Discovers Warden hijack, KDS-Deep, Project Rise. Creates network credentials |
-| R4 | R4E1_M7B-NHG-F27 | Reaches KDS-Deep. Finds the hydrostasis crypt. Discovers he was frozen for seven years. Vows to escape |
-| R6 | R6BX_D34-4HG-8AE | Referenced as C067, one of two witnesses to the Matter Wave Projector disappearances |
+| Rundown | Log ID           | Description                                                                                             |
+| ------- | ---------------- | ------------------------------------------------------------------------------------------------------- |
+| R2      | R2D2_CRW-EUH-3YU | BIOCOM quad tracking: Schaeffer T-3894 listed in a lost squad, Zone 32. Status: "Resource lost"         |
+| R3      | R3C1_B94-E5W-52K | First recording. Confused awakening. Fights implant voice. "My name is John Schaeffer."                 |
+| R3      | R3D1_HW5-BI7-120 | Post-implant removal. Describes his situation, observes other operatives, notes sickness                |
+| R3      | R3D1_POI-M7Y-THE | Destroys a Warden relay or device. Defiant act of physical rebellion against the system                 |
+| R4      | R4B1_6J8-9NK-8YT | Four days post-removal. Memory returning. Discovers Garganta, the creatures, "the Warden"               |
+| R4      | R4C1_4HB-6UR-YTE | Hacks into BIOCOM network. Discovers Warden hijack, KDS-Deep, Project Rise. Creates network credentials |
+| R4      | R4E1_M7B-NHG-F27 | Reaches KDS-Deep. Finds the hydrostasis crypt. Discovers he was frozen for seven years. Vows to escape  |
+| R6      | R6BX_D34-4HG-8AE | Referenced as C067, one of two witnesses to the Matter Wave Projector disappearances                    |
 
 ## Notable Quotes
 

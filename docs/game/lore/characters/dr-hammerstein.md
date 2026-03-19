@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Dr. Gallus Hammerstein |
-| **Employee ID** | B014 |
-| **Role** | Lead Researcher and Founder (or "co-founder according to some"), Project Insight |
-| **Affiliation** | Project Insight / Santonian Mining Company / Dreyfus Industries |
-| **Status** | Deceased (killed by creatures, June 12th 2055, Intrepid Chamber, Shaft 17b) |
-| **Active Period** | ~2051 (Project Insight founding) through June 2055 |
+| Field             | Value                                                                            |
+| ----------------- | -------------------------------------------------------------------------------- |
+| **Full Name**     | Dr. Gallus Hammerstein                                                           |
+| **Employee ID**   | B014                                                                             |
+| **Role**          | Lead Researcher and Founder (or "co-founder according to some"), Project Insight |
+| **Affiliation**   | Project Insight / Santonian Mining Company / Dreyfus Industries                  |
+| **Status**        | Deceased (killed by creatures, June 12th 2055, Intrepid Chamber, Shaft 17b)      |
+| **Active Period** | ~2051 (Project Insight founding) through June 2055                               |
 
 ## Background
 
@@ -43,14 +43,14 @@ However, Hammerstein was dismissive of colleagues who challenged him, particular
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R1 | R1C2_23G-B8E-MGK | Weekly notes (Dec 2053). Book title brainstorming, taxonomy breakthroughs, "Non ducor, duco," plans to cull rivals |
-| R3 | R3A1_7GY-HYP-SDW | Creature taxonomy notes (Dec 2054). Gallus genus entries, species classifications, "remove that woman from the team," file ends abruptly |
-| R4 | R4D2_EYY-GBB-18P | Stokes's draft death announcement. Reveals Hammerstein died in Intrepid Chamber. Stokes's fury exposed beneath the eulogy |
-| R6 | R6C1_2LZ-SAA-6NY | Hammerstein's incident report on the unbreakable artifact L18-AT06. Dr. Richtofer loses an eye. Hammerstein concludes the material is not from Earth |
-| R6 | R6C3_EEA-2UN-577 | (Sec-B-M chip shipment from Kovac Research -- Hammerstein not directly present but contextual) |
-| R7 | R7B3_QSW-EQW-S99 | Weekly notes (Oct 2053). Announces frequency experiment plan. "The Hammerstein Collection." "It should be perfectly safe if everyone does as I say." |
+| Rundown | Log ID           | Description                                                                                                                                          |
+| ------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R1      | R1C2_23G-B8E-MGK | Weekly notes (Dec 2053). Book title brainstorming, taxonomy breakthroughs, "Non ducor, duco," plans to cull rivals                                   |
+| R3      | R3A1_7GY-HYP-SDW | Creature taxonomy notes (Dec 2054). Gallus genus entries, species classifications, "remove that woman from the team," file ends abruptly             |
+| R4      | R4D2_EYY-GBB-18P | Stokes's draft death announcement. Reveals Hammerstein died in Intrepid Chamber. Stokes's fury exposed beneath the eulogy                            |
+| R6      | R6C1_2LZ-SAA-6NY | Hammerstein's incident report on the unbreakable artifact L18-AT06. Dr. Richtofer loses an eye. Hammerstein concludes the material is not from Earth |
+| R6      | R6C3_EEA-2UN-577 | (Sec-B-M chip shipment from Kovac Research -- Hammerstein not directly present but contextual)                                                       |
+| R7      | R7B3_QSW-EQW-S99 | Weekly notes (Oct 2053). Announces frequency experiment plan. "The Hammerstein Collection." "It should be perfectly safe if everyone does as I say." |
 
 ## Notable Quotes
 

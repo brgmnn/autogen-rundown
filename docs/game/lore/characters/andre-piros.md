@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Andre Piros |
-| **Employee ID** | A134 |
-| **Role** | KDS Operational Commander |
-| **Affiliation** | Kovac Defense Services (KDS) |
-| **Status** | Unknown (last referenced August 2053) |
-| **Active Period** | 2050 - 2053+ |
+| Field             | Value                                 |
+| ----------------- | ------------------------------------- |
+| **Full Name**     | Andre Piros                           |
+| **Employee ID**   | A134                                  |
+| **Role**          | KDS Operational Commander             |
+| **Affiliation**   | Kovac Defense Services (KDS)          |
+| **Status**        | Unknown (last referenced August 2053) |
+| **Active Period** | 2050 - 2053+                          |
 
 ## Background
 
@@ -42,15 +42,15 @@ Piros also served as the intermediary between Lockwood and Johanson. When Lockwo
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R1 | R1B2_3NY-798-65Y | Reports unknown signal broadcasting from within the facility to Lockwood |
-| R1 | R1C2_LB2-4BK-902 | Authorizes all-points search for escaped target carrying hazardous material (Patient Zero) |
-| R6 | R6B2_34R-OKJ-992 | Receives Lockwood's complaints about KDS security failures; forwards to Johanson |
-| R6 | R6BX_LWA-519-3VX | Forwards Lockwood's concerns to Johanson; Johanson responds with BIOCOM pitch |
-| R6 | R6C2_DTR-298-4VL | Directs Lockwood on Rise Project HSU shipments; stonewalls questions about the program |
-| R6 | R6D3_HAS-I5T-DAY | Receives Johanson's instruction to suppress hydrostasis storage incident |
-| R6 | R6D4_SK8-G25-G65 | Defends KSO execution of Igor Rostok, citing martial law contract provisions |
+| Rundown | Log ID           | Description                                                                                |
+| ------- | ---------------- | ------------------------------------------------------------------------------------------ |
+| R1      | R1B2_3NY-798-65Y | Reports unknown signal broadcasting from within the facility to Lockwood                   |
+| R1      | R1C2_LB2-4BK-902 | Authorizes all-points search for escaped target carrying hazardous material (Patient Zero) |
+| R6      | R6B2_34R-OKJ-992 | Receives Lockwood's complaints about KDS security failures; forwards to Johanson           |
+| R6      | R6BX_LWA-519-3VX | Forwards Lockwood's concerns to Johanson; Johanson responds with BIOCOM pitch              |
+| R6      | R6C2_DTR-298-4VL | Directs Lockwood on Rise Project HSU shipments; stonewalls questions about the program     |
+| R6      | R6D3_HAS-I5T-DAY | Receives Johanson's instruction to suppress hydrostasis storage incident                   |
+| R6      | R6D4_SK8-G25-G65 | Defends KSO execution of Igor Rostok, citing martial law contract provisions               |
 
 ## Notable Quotes
 

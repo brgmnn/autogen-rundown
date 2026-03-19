@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Howard Stokes |
-| **Employee ID** | B341 |
-| **Role** | Geologist |
-| **Affiliation** | Santonian Mining Company (SMC), off-site researcher |
-| **Status** | Unknown |
-| **Active Period** | ~2050-2054 |
+| Field             | Value                                               |
+| ----------------- | --------------------------------------------------- |
+| **Full Name**     | Howard Stokes                                       |
+| **Employee ID**   | B341                                                |
+| **Role**          | Geologist                                           |
+| **Affiliation**   | Santonian Mining Company (SMC), off-site researcher |
+| **Status**        | Unknown                                             |
+| **Active Period** | ~2050-2054                                          |
 
 ## Background
 
@@ -35,11 +35,11 @@ Later, Rebecca Stokes referenced sending samples to Howard for analysis of the M
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R6 | R6C2_UFR-710-NHA | Email to Hammerstein reporting spectroscopy results on artifact sample. Confirms ~24% unknown material composition and extra-terrestrial origin hypothesis. |
-| R6 | R6BX_D34-4HG-8AE | Referenced by Rebecca Stokes in her audio log on the Matter Wave Projector. She plans to send him samples for analysis. |
-| R1 | R1D1_K94-5ER-ESF | Listed on the SMC personnel manifest as "Howard Stokes B341 - Santonian Mining Company - Geologist." |
+| Rundown | Log ID           | Description                                                                                                                                                 |
+| ------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R6      | R6C2_UFR-710-NHA | Email to Hammerstein reporting spectroscopy results on artifact sample. Confirms ~24% unknown material composition and extra-terrestrial origin hypothesis. |
+| R6      | R6BX_D34-4HG-8AE | Referenced by Rebecca Stokes in her audio log on the Matter Wave Projector. She plans to send him samples for analysis.                                     |
+| R1      | R1D1_K94-5ER-ESF | Listed on the SMC personnel manifest as "Howard Stokes B341 - Santonian Mining Company - Geologist."                                                        |
 
 ## Notable Quotes
 

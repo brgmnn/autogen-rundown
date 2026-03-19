@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Edgar Soweta |
-| **Employee ID** | E105 |
-| **Role** | Mechanic |
-| **Affiliation** | Santonian Mining Company (SMC) |
-| **Status** | Removed from the complex by KDS (April 2053). Fate unknown. |
-| **Active Period** | ~2050-2053 |
+| Field             | Value                                                       |
+| ----------------- | ----------------------------------------------------------- |
+| **Full Name**     | Edgar Soweta                                                |
+| **Employee ID**   | E105                                                        |
+| **Role**          | Mechanic                                                    |
+| **Affiliation**   | Santonian Mining Company (SMC)                              |
+| **Status**        | Removed from the complex by KDS (April 2053). Fate unknown. |
+| **Active Period** | ~2050-2053                                                  |
 
 ## Background
 
@@ -45,12 +45,12 @@ Teale's final reflection on Soweta's case tips into full paranoia: "What if Edga
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R7 | R7B2_T0L-4Y4-R1H | Session log (E105-014). Soweta refuses medication, insists his experiences are not hallucinations. Teale threatens medical leave. |
-| R6 | R6AX_QKL-RFH-4ZX | Session log (E105-016). Teale documents failed treatment regimen and his own growing distress. Notes hearing noises in the walls during Soweta's session update. |
-| R7 | R7C2_D3T-INI-FNI | Session log (E105-023). Teale records Soweta's removal by KDS. Teale's narration collapses into paranoid stream-of-consciousness. "I have to get out of here." |
-| R1 | R1D1_K94-5ER-ESF | Listed on the SMC personnel manifest as "Edgar Soweta E105 - Santonian Mining Company - Mechanic." |
+| Rundown | Log ID           | Description                                                                                                                                                      |
+| ------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R7      | R7B2_T0L-4Y4-R1H | Session log (E105-014). Soweta refuses medication, insists his experiences are not hallucinations. Teale threatens medical leave.                                |
+| R6      | R6AX_QKL-RFH-4ZX | Session log (E105-016). Teale documents failed treatment regimen and his own growing distress. Notes hearing noises in the walls during Soweta's session update. |
+| R7      | R7C2_D3T-INI-FNI | Session log (E105-023). Teale records Soweta's removal by KDS. Teale's narration collapses into paranoid stream-of-consciousness. "I have to get out of here."   |
+| R1      | R1D1_K94-5ER-ESF | Listed on the SMC personnel manifest as "Edgar Soweta E105 - Santonian Mining Company - Mechanic."                                                               |
 
 ## Notable Quotes
 

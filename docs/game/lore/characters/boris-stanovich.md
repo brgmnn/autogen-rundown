@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Boris Stanovich |
-| **Employee ID** | C066 |
-| **Role** | Report Analyst, Medical Department |
-| **Affiliation** | Medical Department, Garganta Complex (SMC) |
-| **Status** | Unknown; last report dated September 2053 |
-| **Active Period** | ~2052-2053 |
+| Field             | Value                                      |
+| ----------------- | ------------------------------------------ |
+| **Full Name**     | Boris Stanovich                            |
+| **Employee ID**   | C066                                       |
+| **Role**          | Report Analyst, Medical Department         |
+| **Affiliation**   | Medical Department, Garganta Complex (SMC) |
+| **Status**        | Unknown; last report dated September 2053  |
+| **Active Period** | ~2052-2053                                 |
 
 ## Background
 
@@ -40,12 +40,12 @@ What makes Stanovich distinctive is the tension between the professional format 
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R4 | R4B2_KAL-P48-7FR | Analyst report: 34.4% psychological disturbance rate, "Garganta Flu," suicide spike, sunlight recommendation |
-| R4 | R4C2_T87-OPE-NAW | Lockdown procedures: comprehensive facility-wide protocols compiled under duress, multiple department non-responses |
-| R6 | R6C1_WYP-9KB-3VV | (Referenced via Stokes log) Data blocks discovery, artifact analysis context |
-| R6 | R6D4_FTJ-8GE-T1R | Analyst report: 114+ unreported incidents in BIOCOM zones, KDS denies creature existence, Johanson's dismissal |
+| Rundown | Log ID           | Description                                                                                                         |
+| ------- | ---------------- | ------------------------------------------------------------------------------------------------------------------- |
+| R4      | R4B2_KAL-P48-7FR | Analyst report: 34.4% psychological disturbance rate, "Garganta Flu," suicide spike, sunlight recommendation        |
+| R4      | R4C2_T87-OPE-NAW | Lockdown procedures: comprehensive facility-wide protocols compiled under duress, multiple department non-responses |
+| R6      | R6C1_WYP-9KB-3VV | (Referenced via Stokes log) Data blocks discovery, artifact analysis context                                        |
+| R6      | R6D4_FTJ-8GE-T1R | Analyst report: 114+ unreported incidents in BIOCOM zones, KDS denies creature existence, Johanson's dismissal      |
 
 ## Notable Quotes
 

@@ -4,14 +4,14 @@
 
 ## Overview
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | Unknown (alias: Mr. Truth) |
-| **Employee ID** | N/A (external civilian) |
-| **Role** | Host of State of Truth AM, independent shortwave radio |
-| **Affiliation** | State of Truth AM (independent broadcast) |
-| **Status** | Alive as of ~2057; last known location Pahrump, Nevada |
-| **Active Period** | Pre-2049 through at least 2057 |
+| Field             | Value                                                  |
+| ----------------- | ------------------------------------------------------ |
+| **Full Name**     | Unknown (alias: Mr. Truth)                             |
+| **Employee ID**   | N/A (external civilian)                                |
+| **Role**          | Host of State of Truth AM, independent shortwave radio |
+| **Affiliation**   | State of Truth AM (independent broadcast)              |
+| **Status**        | Alive as of ~2057; last known location Pahrump, Nevada |
+| **Active Period** | Pre-2049 through at least 2057                         |
 
 ## Background
 
@@ -47,17 +47,17 @@ As the NAM-V pandemic spread, Mr. Truth shifted from investigator to survivalist
 
 ## Appearances
 
-| Rundown | Log ID | Description |
-|---------|--------|-------------|
-| R1 | R1D1_K94-6ER-ESF | False memories broadcast: recalls Merida quake on wrong date, asks listeners if they share the experience |
-| R2 | R2E1_76Y-TTF-FWW | Fleeing compound: FBI and KDS vehicles approach, escapes with Mrs. Truth |
-| R2 | R2E1_JN8-M96-M31 | On the road: mass graves, funeral pyres, apocalyptic witness; "Don't touch that dial" |
-| R3 | R3C1_21W-SOL-9NY | Still traveling with Mrs. Truth, describes bodies and societal collapse, addresses the "seers & prophets" |
-| R4 | R4B3_YTG-N60-439 | Returns after 70 days in wilderness, broadcasting from "Castle Truth," "Babylon is burning" |
-| R7 | R7A1_CJ9-GVT-ERB | Merida earthquake analysis: 9.8 in inactive seismic zone, questions SMC involvement |
-| R7 | R7C1_2W1-EW2-1PT | NAM-V population statistics: US drops from 474M to 302M, urges isolation and self-defense |
-| R8 | R8A1_VER-T96-3UN | Pahrump, Nevada: Mrs. Truth is dead, town is destroyed, existential collapse |
-| R8 | R8A2_VAB-FF6-NKK | "Mr. Court" parable: diner allegory about exploitation; origins of State of Truth philosophy |
+| Rundown | Log ID           | Description                                                                                               |
+| ------- | ---------------- | --------------------------------------------------------------------------------------------------------- |
+| R1      | R1D1_K94-6ER-ESF | False memories broadcast: recalls Merida quake on wrong date, asks listeners if they share the experience |
+| R2      | R2E1_76Y-TTF-FWW | Fleeing compound: FBI and KDS vehicles approach, escapes with Mrs. Truth                                  |
+| R2      | R2E1_JN8-M96-M31 | On the road: mass graves, funeral pyres, apocalyptic witness; "Don't touch that dial"                     |
+| R3      | R3C1_21W-SOL-9NY | Still traveling with Mrs. Truth, describes bodies and societal collapse, addresses the "seers & prophets" |
+| R4      | R4B3_YTG-N60-439 | Returns after 70 days in wilderness, broadcasting from "Castle Truth," "Babylon is burning"               |
+| R7      | R7A1_CJ9-GVT-ERB | Merida earthquake analysis: 9.8 in inactive seismic zone, questions SMC involvement                       |
+| R7      | R7C1_2W1-EW2-1PT | NAM-V population statistics: US drops from 474M to 302M, urges isolation and self-defense                 |
+| R8      | R8A1_VER-T96-3UN | Pahrump, Nevada: Mrs. Truth is dead, town is destroyed, existential collapse                              |
+| R8      | R8A2_VAB-FF6-NKK | "Mr. Court" parable: diner allegory about exploitation; origins of State of Truth philosophy              |
 
 ## Notable Quotes
 
