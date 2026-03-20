@@ -3,6 +3,7 @@ using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
+using AutogenRundown.PeerMods;
 using AutogenRundown.Utils;
 
 namespace AutogenRundown.DataBlocks;
@@ -96,7 +97,21 @@ public partial record LevelLayout
         }
 
         // Resources
-        medZone.ConsumableDistributionInZone = ConsumableDistribution.MedicalBay_Consumables.PersistentId;
+        if (Peers.HasMod("GTFriendlyO")
+            && ConsumableDistribution.MedicalBay_GTFriendlyO_Healing is not null
+            && ConsumableDistribution.MedicalBay_GTFriendlyO_Combat is not null)
+        {
+            medZone.ConsumableDistributionInZone = Generator.Pick(new List<uint>
+            {
+                ConsumableDistribution.MedicalBay_Consumables.PersistentId,
+                ConsumableDistribution.MedicalBay_GTFriendlyO_Healing.PersistentId,
+                ConsumableDistribution.MedicalBay_GTFriendlyO_Combat.PersistentId,
+            });
+        }
+        else
+        {
+            medZone.ConsumableDistributionInZone = ConsumableDistribution.MedicalBay_Consumables.PersistentId;
+        }
 
         medZone.HealthPacks = 10;
         medZone.DisinfectPacks = 6;

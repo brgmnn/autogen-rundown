@@ -98,6 +98,16 @@ public enum Item : uint
     #endregion
 
     #region === MODs: Carb_Crusaders/GTFriendlyO
+    // Key Themes
+    //
+    // - Pure utility: 140 (heal), 229 (disinfect), 271 (heal+disinfect+regen)
+    // - Risk/reward tradeoffs: 225 (speed+regen but infection), 230 (full heal but delayed DOT), 232 (massive buffs but kills you at 600s), 233 (ammo refill but DOT+infection)
+    // - Resource conversion: 227 drains ammo/tool for health+disinfect
+    // - Suicide bombs: 228 (small bomb) and 234 (big nuke) — self-destruct with area damage
+    // - Speed buffs: 224 (fast burst), 225 (moderate sustained), 142 (long duration)
+    // - Recovery: 231 (slow but safe regen) and 241 (better regen, more speed penalty)
+    //
+    // IDs 140 and 142 are vanilla game syringes; all others (224+) are custom additions from the GTFriendlyO mod.
 
     /// <summary>
     /// Speed Syringe
