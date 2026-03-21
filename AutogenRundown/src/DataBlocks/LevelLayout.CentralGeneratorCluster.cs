@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using AutogenRundown.DataBlocks.Alarms;
-using AutogenRundown.DataBlocks.Items;
+﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.CentralGeneratorCluster;
 using AutogenRundown.DataBlocks.Zones;
@@ -30,7 +28,6 @@ public partial record LevelLayout
         GeneratorFogShape shape,
         int numberOfSteps)
     {
-        var defaultAltitude = level.FogSettings.DensityHeightAltitude;
         var infectious = level.FogSettings.IsInfectious;
         var generators = objective.CentralGeneratorCluster_NumberOfGenerators;
 

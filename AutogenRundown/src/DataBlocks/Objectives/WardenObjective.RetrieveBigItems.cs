@@ -138,6 +138,7 @@ public partial record WardenObjective
                 if (RetrieveItems.Count == 1)
                     AddCompletedObjectiveChallenge(level, director);
 
+                // TODO: add something here for count != 1
                 break;
             }
 
