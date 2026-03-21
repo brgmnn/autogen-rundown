@@ -31,8 +31,8 @@ public class ZoneSensorCollider : MonoBehaviour
     public float Radius = 2.3f;
 
     private const float CHECK_INTERVAL = 0.1f;
-    private const float GRACE_PERIOD = 1.0f;
-    private static readonly Color GraceColor = new(0.5f, 0.5f, 0.5f, 0.4f);
+    private const float GRACE_PERIOD = 1.5f;
+    private static readonly Color GraceColor = new(0.0f, 0.7f, 1.0f, 0.6f);
 
     private float checkTimer = 0f;
     private int lastPlayerCount = 0;
