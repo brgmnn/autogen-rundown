@@ -136,9 +136,211 @@ public partial record WardenObjective
             case WardenObjectiveItem.CryoCase:
             {
                 if (RetrieveItems.Count == 1)
+                {
                     AddCompletedObjectiveChallenge(level, director);
+                    break;
+                }
 
-                // TODO: add something here for count != 1
+                // Multi-item CryoCase: tier-scaled exit waves, one notch lighter
+                // than CargoCrate since transporting multiple big items is already
+                // punishing (no weapons, slow speed).
+                switch (level.Tier)
+                {
+                    case "A":
+                    {
+                        if (director.Bulkhead == Bulkhead.Main)
+                            WavesOnGotoWin.Add(new GenericWave
+                            {
+                                Settings = WaveSettings.Exit_Objective_Easy,
+                                Population = WavePopulation.Baseline,
+                                SpawnDelay = 10.0,
+                                TriggerAlarm = true
+                            });
+                        break;
+                    }
+
+                    case "B":
+                    {
+                        WavesOnGotoWin.Add(new GenericWave
+                        {
+                            Settings = director.Bulkhead == Bulkhead.Main
+                                ? WaveSettings.Exit_Objective_Easy
+                                : WaveSettings.SingleWave_28pts,
+                            Population = WavePopulation.Baseline,
+                            SpawnDelay = 10.0,
+                            TriggerAlarm = true
+                        });
+
+                        if (Generator.Flip(0.4))
+                            EventsOnGotoWin.AddLightsOff(Generator.Between(2, 35));
+
+                        break;
+                    }
+
+                    case "C":
+                    {
+                        if (level.Settings.Modifiers.Contains(LevelModifiers.Chargers) && Generator.Flip(0.1))
+                            WavesOnGotoWin.Add(new GenericWave
+                            {
+                                Settings = WaveSettings.Exit_Objective_Easy,
+                                Population = WavePopulation.OnlyChargers,
+                                SpawnDelay = 6.0,
+                                TriggerAlarm = true
+                            });
+                        else
+                            WavesOnGotoWin.Add(new GenericWave
+                            {
+                                Settings = director.Bulkhead == Bulkhead.Main
+                                    ? WaveSettings.Exit_Objective_Medium
+                                    : WaveSettings.Exit_Objective_Easy,
+                                Population = WavePopulation.Baseline,
+                                SpawnDelay = 6.0,
+                                TriggerAlarm = true
+                            });
+
+                        if (Generator.Flip(0.25))
+                            EventsOnGotoWin.AddLightsOff(Generator.Between(2, 35));
+
+                        break;
+                    }
+
+                    case "D":
+                    {
+                        if (level.Settings.Modifiers.Contains(LevelModifiers.Shadows) && Generator.Flip(0.3) ||
+                            level.Settings.Modifiers.Contains(LevelModifiers.ManyShadows))
+                            WavesOnGotoWin.Add(new GenericWave
+                            {
+                                Settings = director.Bulkhead == Bulkhead.Main
+                                    ? WaveSettings.Exit_Objective_Medium
+                                    : WaveSettings.Exit_Objective_Easy,
+                                Population = WavePopulation.OnlyShadows,
+                                SpawnDelay = 6.0,
+                                TriggerAlarm = true
+                            });
+                        else if (level.Settings.Modifiers.Contains(LevelModifiers.Chargers) && Generator.Flip(0.3) ||
+                                 level.Settings.Modifiers.Contains(LevelModifiers.ManyChargers))
+                            WavesOnGotoWin.Add(new GenericWave
+                            {
+                                Settings = director.Bulkhead == Bulkhead.Main
+                                    ? WaveSettings.Exit_Objective_Easy
+                                    : WaveSettings.SingleWave_35pts,
+                                Population = WavePopulation.OnlyChargers,
+                                SpawnDelay = 6.0,
+                                TriggerAlarm = true
+                            });
+                        else if (level.Settings.Modifiers.Contains(LevelModifiers.Nightmares) && Generator.Flip(0.3) ||
+                                 level.Settings.Modifiers.Contains(LevelModifiers.ManyNightmares))
+                            WavesOnGotoWin.Add(new GenericWave
+                            {
+                                Settings = WaveSettings.Exit_Objective_Easy,
+                                Population = WavePopulation.OnlyNightmares,
+                                SpawnDelay = 6.0,
+                                TriggerAlarm = true
+                            });
+                        else
+                            WavesOnGotoWin.Add(new GenericWave
+                            {
+                                Settings = director.Bulkhead == Bulkhead.Main
+                                    ? WaveSettings.Exit_Objective_Medium
+                                    : WaveSettings.Exit_Objective_Easy,
+                                Population = WavePopulation.Baseline,
+                                SpawnDelay = 6.0,
+                                TriggerAlarm = true
+                            });
+
+                        if (Generator.Flip(0.05))
+                            WavesOnGotoWin.Add(GenericWave.SingleTank with
+                            {
+                                SpawnDelay = Generator.Between(25, 55),
+                                TriggerAlarm = false
+                            });
+                        else if (Generator.Flip(0.02))
+                            WavesOnGotoWin.Add(GenericWave.SingleMother with
+                            {
+                                SpawnDelay = Generator.Between(55, 95),
+                                TriggerAlarm = false
+                            });
+
+                        if (FogUsage == FogUsage.LongDuration)
+                            EventsOnGotoWin.AddFillFog(10.0, 30 * 60);
+                        else if (Generator.Flip(0.5))
+                            EventsOnGotoWin.AddLightsOff(Generator.Between(2, 35));
+
+                        break;
+                    }
+
+                    case "E":
+                    {
+                        if (level.Settings.Modifiers.Contains(LevelModifiers.Shadows) && Generator.Flip(0.5) ||
+                            level.Settings.Modifiers.Contains(LevelModifiers.ManyShadows))
+                            WavesOnGotoWin.Add(new GenericWave
+                            {
+                                Settings = director.Bulkhead == Bulkhead.Main
+                                    ? WaveSettings.Exit_Objective_Medium
+                                    : WaveSettings.Exit_Objective_Easy,
+                                Population = WavePopulation.OnlyShadows,
+                                SpawnDelay = 5.0,
+                                TriggerAlarm = true
+                            });
+                        else if (level.Settings.Modifiers.Contains(LevelModifiers.Chargers) && Generator.Flip(0.3) ||
+                                 level.Settings.Modifiers.Contains(LevelModifiers.ManyChargers))
+                            WavesOnGotoWin.Add(new GenericWave
+                            {
+                                Settings = director.Bulkhead == Bulkhead.Main
+                                    ? WaveSettings.Exit_Objective_Easy
+                                    : WaveSettings.SingleWave_35pts,
+                                Population = WavePopulation.OnlyChargers,
+                                SpawnDelay = 5.0,
+                                TriggerAlarm = true
+                            });
+                        else if (level.Settings.Modifiers.Contains(LevelModifiers.Nightmares) && Generator.Flip(0.3) ||
+                                 level.Settings.Modifiers.Contains(LevelModifiers.ManyNightmares))
+                            WavesOnGotoWin.Add(new GenericWave
+                            {
+                                Settings = WaveSettings.Exit_Objective_Easy,
+                                Population = WavePopulation.OnlyNightmares,
+                                SpawnDelay = 5.0,
+                                TriggerAlarm = true
+                            });
+                        else
+                            WavesOnGotoWin.Add(new GenericWave
+                            {
+                                Settings = director.Bulkhead == Bulkhead.Main
+                                    ? WaveSettings.Exit_Objective_Hard
+                                    : WaveSettings.Exit_Objective_Medium,
+                                Population = WavePopulation.Baseline,
+                                SpawnDelay = 5.0,
+                                TriggerAlarm = true
+                            });
+
+                        if (Generator.Flip(0.08))
+                            WavesOnGotoWin.Add(GenericWave.SingleTank with
+                            {
+                                SpawnDelay = Generator.Between(25, 55),
+                                TriggerAlarm = false
+                            });
+                        else if (Generator.Flip(0.06))
+                            WavesOnGotoWin.Add(GenericWave.SingleMother with
+                            {
+                                SpawnDelay = Generator.Between(55, 95),
+                                TriggerAlarm = false
+                            });
+                        else if (Generator.Flip(0.02))
+                            WavesOnGotoWin.Add(GenericWave.SinglePMother with
+                            {
+                                SpawnDelay = Generator.Between(15, 50),
+                                TriggerAlarm = false
+                            });
+
+                        if (FogUsage == FogUsage.LongDuration)
+                            EventsOnGotoWin.AddFillFog(10.0, 30 * 60);
+                        else if (Generator.Flip(0.35))
+                            EventsOnGotoWin.AddLightsOff(Generator.Between(2, 35));
+
+                        break;
+                    }
+                }
+
                 break;
             }
 
