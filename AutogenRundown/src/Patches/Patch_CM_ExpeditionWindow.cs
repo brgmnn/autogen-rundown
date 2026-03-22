@@ -1,5 +1,7 @@
 ﻿using AutogenRundown.Components;
+using AutogenRundown.Managers;
 using CellMenu;
+using Expedition;
 using GameData;
 using HarmonyLib;
 using UnityEngine;
@@ -49,7 +51,18 @@ internal static class Patch_CM_ExpeditionWindow
         if (complexBlock == null)
             return;
 
-        __instance.m_depthTitle.text += $"\nComplex: <color=yellow>{complexBlock.ComplexType}</color>";
+        var targetSector = complexBlock.ComplexType switch
+        {
+            Complex.Mining => "Mining & Storage",
+            Complex.Tech => "Datacenter & Labs",
+            Complex.Service => "Floodways",
+
+            _ => "Unknown"
+        };
+
+        __instance.m_depthTitle.fontSize = 16.0f;
+        __instance.m_depthTitle.text += $"\nTarget sector: <color=yellow>{targetSector}</color>" +
+                                        $"\nLogs: ";
 
         // Remove artifact heat text to prevent overlap
         __instance.m_artifactHeatTitle.text = "";
