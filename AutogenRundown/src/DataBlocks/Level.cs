@@ -1768,9 +1768,9 @@ public class Level
                 var puzzle = ChainedPuzzle.TeamScan;
 
                 if (z == 0)
-                    puzzle = ChainedPuzzle.TravelAlarm_Team;
+                    puzzle = ChainedPuzzle.TeamScan;
                 else if (z == 1)
-                    puzzle = ChainedPuzzle.TravelAlarm_Sustained_Easy;
+                    puzzle = ChainedPuzzle.TravelAlarm_Team;
                 else if (z == 2)
                     puzzle = ChainedPuzzle.None;
 
@@ -1805,43 +1805,46 @@ public class Level
                 //         EventsOnTrigger = sensorEvents
                 //     });
                 // }
-
-
             }
 
-            // var sensorEvents2 = new List<WardenObjectiveEvent>();
-            //
-            // sensorEvents2
-            //     .AddSound(Sound.LightsOff)
-            //     .AddSpawnWave(new GenericWave
-            //     {
-            //         Population = WavePopulation.Baseline,
-            //         Settings = WaveSettings.SingleMiniBoss
-            //     }, 1.0);
+            var sensorEvents2 = new List<WardenObjectiveEvent>();
 
-            // level.ZoneSensors.Add(new ZoneSensorDefinition
-            // {
-            //     Id = 123,
-            //     ZoneNumber = 0,
-            //     Bulkhead = Bulkhead.Main,
-            //     SensorGroups = new List<ZoneSensorGroupDefinition>
-            //     {
-            //         new ZoneSensorGroupDefinition
-            //         {
-            //             TriggerEach = true,
-            //             // Count = 128,
-            //             Density = SensorDensity.Low,
-            //             Moving = 3,
-            //             Speed = 0.5,
-            //             // Radius = 2.0,
-            //             EdgeDistance = 0.7,
-            //             AreaIndex = 1,
-            //             EncryptedText = true,
-            //         }
-            //     },
-            //
-            //     EventsOnTrigger = sensorEvents2
-            // });
+            sensorEvents2
+                .AddSound(Sound.LightsOff)
+                .AddSpawnWave(new GenericWave
+                {
+                    Population = WavePopulation.Baseline,
+                    Settings = WaveSettings.SingleMiniBoss
+                }, 1.0);
+
+            level.ZoneSensors.Add(new ZoneSensorDefinition
+            {
+                Id = 123,
+                ZoneNumber = 0,
+                Bulkhead = Bulkhead.Main,
+                SensorGroups = new List<ZoneSensorGroupDefinition>
+                {
+                    new ZoneSensorGroupDefinition
+                    {
+                        TriggerEach = false,
+                        // Count = 128,
+                        Density = SensorDensity.High,
+                        Moving = 3,
+                        Speed = 0.5,
+                        // Radius = 2.0,
+                        EdgeDistance = 0.7,
+                        AreaIndex = 1,
+                        EncryptedText = true,
+                    }
+                },
+
+                EventsOnTrigger = sensorEvents2
+            });
+
+            var resetTime = 5;
+            sensorEvents2
+                .EnableZoneSensorsWithReset(123, resetTime)
+                .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
 
             // var (med, medZone) = layout.BuildOptional_MedicalBay(elevatorDrop);
             // layout.Zones.Add(medZone);

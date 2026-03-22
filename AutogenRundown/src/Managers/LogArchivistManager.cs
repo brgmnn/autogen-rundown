@@ -129,10 +129,10 @@ public static class LogArchivistManager
         UpdateIcon(icon.DataBlock.LevelLayoutData);
     }
 
-    public static string PrintLogsRead(uint mainId)
+    public static string? PrintLogsRead(uint mainId)
     {
         if (!archivesByLevel.TryGetValue(mainId, out var logs))
-            return "<color=#777777>No logs</color>";
+            return null;
 
         if (logs.Logs.Count == 0)
             return "<color=#777777>No logs</color>";

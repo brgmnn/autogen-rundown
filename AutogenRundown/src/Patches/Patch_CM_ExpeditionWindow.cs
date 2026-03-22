@@ -54,15 +54,19 @@ internal static class Patch_CM_ExpeditionWindow
         var targetSector = complexBlock.ComplexType switch
         {
             Complex.Mining => "Mining & Storage",
-            Complex.Tech => "Datacenter & Labs",
-            Complex.Service => "Floodways",
+            Complex.Tech => "Data Center & Labs",
+            Complex.Service => "Service Floodways",
 
             _ => "Unknown"
         };
 
         __instance.m_depthTitle.fontSize = 16.0f;
-        __instance.m_depthTitle.text += $"\nTarget sector: <color=yellow>{targetSector}</color>" +
-                                        $"\nLogs: ";
+        __instance.m_depthTitle.text += $"\nTarget sector: <color=yellow>{targetSector}</color>";
+
+        var logs = LogArchivistManager.PrintLogsRead(data.LevelLayoutData);
+
+        if (logs != null)
+            __instance.m_depthTitle.text += $"\nLogs retrieved: {logs}";
 
         // Remove artifact heat text to prevent overlap
         __instance.m_artifactHeatTitle.text = "";
