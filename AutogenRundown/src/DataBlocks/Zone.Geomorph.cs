@@ -141,6 +141,9 @@ public partial record Zone
                     // donan3967
                     (SubComplex.DataCenter, "Assets/geo_64x64_tech_data_center_hub_DS_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
 
+                    // Flowaria
+                    (SubComplex.Lab, "Assets/CustomPrefabs/CollisionGeos/geo_lab_FA_hub_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+
                     // Red_Leicester_Cheese
                     // (SubComplex.Lab, "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_Hub_RLC_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }), // Disabled due to functioning NCR machine
                     (SubComplex.DataCenter, "Assets/Bundles/RLC_Tech/geo_64x64_tech_data_center_hub_JG_RLC_02_v3.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
