@@ -50,5 +50,8 @@ internal static class Patch_CM_ExpeditionWindow
             return;
 
         __instance.m_depthTitle.text += $"\nComplex: <color=yellow>{complexBlock.ComplexType}</color>";
+
+        // Remove artifact heat text to prevent overlap
+        __instance.m_artifactHeatTitle.text = "";
     }
 }
