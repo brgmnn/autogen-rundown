@@ -1229,6 +1229,17 @@ public static class RundownFactory
 
         Bins.Save();
 
+        // Save rundown display metadata for RegenerateOnStartup=false restarts
+        new RundownMetadata
+        {
+            WeekNumber = Generator.WeekNumber,
+            Rundowns = Bins.Rundowns.Blocks.Select(r => new RundownMetadataEntry
+            {
+                PersistentId = r.PersistentId,
+                Title = r.Title
+            }).ToList()
+        }.Save();
+
         EnemyCustomization.Ability.Save();
         EnemyCustomization.EnemyAbility.Save();
         EnemyCustomization.Model.Save();

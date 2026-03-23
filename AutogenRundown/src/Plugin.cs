@@ -110,6 +110,22 @@ public class Plugin : BasePlugin
                 seasonalSeed: seedSeasonalConfig.Value,
                 unlockAll: useUnlocks.Value);
         }
+        else
+        {
+            var metadata = DataBlocks.RundownMetadata.Load();
+            if (metadata != null)
+            {
+                foreach (var entry in metadata.Rundowns)
+                {
+                    DataBlocks.Bins.Rundowns.AddBlock(new DataBlocks.Rundown
+                    {
+                        PersistentId = entry.PersistentId,
+                        Title = entry.Title
+                    });
+                }
+                Generator.WeekNumber = metadata.WeekNumber;
+            }
+        }
 
         PlayFabManager.add_OnTitleDataUpdated((Action)RundownNames.OnTitleDataUpdated);
 
