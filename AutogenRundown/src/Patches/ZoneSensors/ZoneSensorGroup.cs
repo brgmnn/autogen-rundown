@@ -474,6 +474,10 @@ public class ZoneSensorGroup
         // Apply current group state to newly spawned sensors
         // For late joiners, currentState already contains the correct state from recall
         // For host with startEnabled=false, this deactivates the sensor GameObjects
+        // Reset previousState to ensure disabled→enabled transition is detected, even if
+        // a replicator callback updated previousState before sensors were spawned (client bug
+        // where isFirstActivation wasn't consumed, causing first re-enable to skip grace period)
+        previousState = new ZoneSensorGroupState(false);
         UpdateVisualsUnsynced(currentState);
         Plugin.Logger.LogDebug($"ZoneSensorGroup {Id}: Applied state to spawned sensors (isRecall={isRecall})");
 
