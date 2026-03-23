@@ -22,7 +22,95 @@ AutogenRundown supports the following 3rd party peer mods. You can install them 
 
 ## Customizing Autogen Datablocks
 
+You can override any generated datablock or custom JSON file by placing partial files in a `GameData-Custom` folder. Your changes are **deep-merged** into the generated output — you only need to specify the properties you want to change. Everything else is preserved.
 
+Custom overrides are applied **last**, after all rundown generation and peer mod configuration.
+
+### Setup
+
+Create the folder:
+
+```
+BepInEx/GameData-Custom/
+```
+
+This folder mirrors the structure of `BepInEx/GameData/{revision}/`. Place your override files using the same relative paths. For example:
+
+```
+BepInEx/
+  GameData-Custom/
+    GameData_EnemyBalancingDataBlock_bin.json
+    GameData_FogSettingsDataBlock_bin.json
+    Custom/
+      ExtraEnemyCustomization/
+        Property.json
+```
+
+### Modifying Datablocks (persistentID matching)
+
+Datablock files (`GameData_*DataBlock_bin.json`) contain a `Blocks` array where each block has a `persistentID`. Your override file only needs the blocks you want to change, with only the properties you want to modify.
+
+**Example** — Make Strikers have 999 health and add a custom enemy:
+
+```json
+{
+  "Blocks": [
+    { "persistentID": 13, "Health": { "HealthMax": 999 } },
+    {
+      "persistentID": 50000,
+      "name": "Custom",
+      "internalEnabled": true,
+      "Health": { "HealthMax": 100 }
+    }
+  ]
+}
+```
+
+- **Block 13** (Striker): Only `HealthMax` is changed. All other Striker properties (armor, name, etc.) are preserved.
+- **Block 50000**: New block, appended to the array since no existing block has this ID.
+- `LastPersistentID` is automatically recalculated.
+
+### Modifying Arrays by Index (\_\_index)
+
+For JSON files where array elements don't have a `persistentID` (such as files in `Custom/`), you can target specific array positions using `__index`. The `__index` property is stripped from the final output.
+
+**Example** — Change the cost of the second spawn cost entry:
+
+```json
+{
+  "SpawnCost": [{ "__index": 1, "Cost": 25 }]
+}
+```
+
+This merges into the object at position 1 of the `SpawnCost` array, changing only `Cost` while preserving all other properties at that index.
+
+### Replacing Arrays
+
+If your override array contains elements **without** `persistentID` or `__index`, the entire target array is replaced.
+
+```json
+{
+  "tags": ["new_tag_a", "new_tag_b"]
+}
+```
+
+### Non-JSON Files
+
+Non-JSON files (images, icons, etc.) are copied directly into the target directory, overwriting any existing file. New files with no matching target are also copied as-is.
+
+### Merge Rules Summary
+
+| Scenario                           | Behavior                                         |
+| ---------------------------------- | ------------------------------------------------ |
+| Object property exists in both     | Deep-merged recursively                          |
+| Object property only in override   | Added                                            |
+| Object property only in generated  | Preserved                                        |
+| Array elements have `persistentID` | Matched by ID, deep-merged; new IDs appended     |
+| Array elements have `__index`      | Merged at specified position; `__index` stripped |
+| Array elements have neither        | Entire array replaced                            |
+| Scalar values                      | Override replaces generated                      |
+| JSON file with no existing target  | Copied as new file                               |
+| Non-JSON file                      | Copied with overwrite                            |
 
 <hr>
 
