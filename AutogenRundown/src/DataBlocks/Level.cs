@@ -1765,7 +1765,7 @@ public class Level
 
                 layout.Zones.Add(zone);
 
-                var puzzle = ChainedPuzzle.TeamScan with
+                var puzzle = ChainedPuzzle.TravelAlarm_Team with
                 {
                     PublicAlarmName = "Class S T Alarm",
                     Puzzle = new List<PuzzleComponent>
