@@ -1252,6 +1252,9 @@ public static class RundownFactory
         EnemyCustomization.Property.Save();
         GlobalConfig.Save();
         ItemSpawns.Save();
+
+        // Apply any user custom GameData overrides (loaded last, after everything else)
+        CustomGameData.Apply();
     }
 }
 
