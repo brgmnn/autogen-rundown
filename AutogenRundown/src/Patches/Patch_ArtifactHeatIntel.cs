@@ -34,8 +34,7 @@ internal static class Patch_ArtifactHeatIntel
             if (logsRead == null)
                 return false;
 
-            intel = $"<size=200%><color=white>>Logs: {logsRead}</color></size>";
-            return true;
+            intel = $"Log Archive Progress: {logsRead}";
         }
 
         return true;
