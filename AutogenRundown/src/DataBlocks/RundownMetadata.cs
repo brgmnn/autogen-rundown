@@ -13,6 +13,12 @@ public record RundownMetadata
     public List<RundownMetadataEntry> Rundowns { get; set; } = new();
     public int WeekNumber { get; set; } = -1;
 
+    public string InputDailySeed { get; set; } = "";
+    public string InputWeeklySeed { get; set; } = "";
+    public string InputMonthlySeed { get; set; } = "";
+    public string SeasonalSeason { get; set; } = "";
+    public int SeasonalYear { get; set; } = 1;
+
     private static string MetadataPath =>
         Path.Combine(Plugin.GameDataPath, "autogen_metadata.json");
 

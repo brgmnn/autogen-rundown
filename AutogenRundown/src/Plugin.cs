@@ -124,6 +124,11 @@ public class Plugin : BasePlugin
                     });
                 }
                 Generator.WeekNumber = metadata.WeekNumber;
+                Generator.InputDailySeed = metadata.InputDailySeed;
+                Generator.InputWeeklySeed = metadata.InputWeeklySeed;
+                Generator.InputMonthlySeed = metadata.InputMonthlySeed;
+                Generator.SeasonalSeason = metadata.SeasonalSeason;
+                Generator.SeasonalYear = metadata.SeasonalYear;
             }
         }
 

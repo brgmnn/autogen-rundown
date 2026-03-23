@@ -1233,6 +1233,11 @@ public static class RundownFactory
         new RundownMetadata
         {
             WeekNumber = Generator.WeekNumber,
+            InputDailySeed = Generator.InputDailySeed,
+            InputWeeklySeed = Generator.InputWeeklySeed,
+            InputMonthlySeed = Generator.InputMonthlySeed,
+            SeasonalSeason = Generator.SeasonalSeason,
+            SeasonalYear = Generator.SeasonalYear,
             Rundowns = Bins.Rundowns.Blocks.Select(r => new RundownMetadataEntry
             {
                 PersistentId = r.PersistentId,
