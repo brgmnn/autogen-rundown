@@ -1765,14 +1765,21 @@ public class Level
 
                 layout.Zones.Add(zone);
 
-                var puzzle = ChainedPuzzle.TeamScan;
+                var puzzle = ChainedPuzzle.TravelAlarm_Team with
+                {
+                    PublicAlarmName = "Class S T Alarm",
+                    Puzzle = new List<PuzzleComponent>
+                    {
+                        PuzzleComponent.SustainedTravel
+                    }
+                };
 
-                if (z == 0)
-                    puzzle = ChainedPuzzle.TeamScan;
-                else if (z == 1)
-                    puzzle = ChainedPuzzle.TravelAlarm_Team;
-                else if (z == 2)
-                    puzzle = ChainedPuzzle.None;
+                // if (z == 0)
+                //     puzzle = ChainedPuzzle.TravelAlarm_Team;
+                // else if (z == 1)
+                //     puzzle = ChainedPuzzle.TravelAlarm_Team;
+                // else if (z == 2)
+                //     puzzle = ChainedPuzzle.None;
 
                 zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
 
