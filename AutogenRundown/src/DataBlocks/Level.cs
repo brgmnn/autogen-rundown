@@ -1768,7 +1768,7 @@ public class Level
                 var puzzle = ChainedPuzzle.TeamScan;
 
                 if (z == 0)
-                    puzzle = ChainedPuzzle.TeamScan;
+                    puzzle = ChainedPuzzle.TravelAlarm_Team;
                 else if (z == 1)
                     puzzle = ChainedPuzzle.TravelAlarm_Team;
                 else if (z == 2)
