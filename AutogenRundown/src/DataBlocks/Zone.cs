@@ -339,6 +339,7 @@ public partial record Zone : DataBlock<Zone>
         }
         else
         {
+            puzzle = puzzle with { };
             Plugin.Logger.LogDebug($"Zone {LocalIndex} alarm(fixed): {puzzle}");
         }
 
@@ -354,59 +355,80 @@ public partial record Zone : DataBlock<Zone>
         var parent = level.Planner.GetBuildFrom(new ZoneNode { Bulkhead = Bulkhead.Extreme, ZoneNumber = LocalIndex });
         var isInfection = level.FogSettings.IsInfectious;
 
-        // Scale distances per tier for all alarms (including surge/fixed alarms)
+        // Scale distances per tier for all alarms (including surge/fixed alarms).
+        // Uses `with` expressions to create new instances rather than mutating in place.
         if (puzzle.TriggerAlarmOnActivate)
         {
             switch (level.Tier)
             {
                 case "A":
                 {
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(0.6, 0.8);
+                    puzzle = puzzle with
+                    {
+                        WantedDistanceBetweenPuzzleComponents =
+                            puzzle.WantedDistanceBetweenPuzzleComponents * Generator.NextDouble(0.6, 0.8)
+                    };
                     break;
                 }
 
                 case "B":
                 {
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(0.8, 1.0);
-
-                    if (Generator.Flip(0.05))
-                        puzzle.WantedDistanceFromStartPos += Generator.Between(10, 20);
+                    puzzle = puzzle with
+                    {
+                        WantedDistanceBetweenPuzzleComponents =
+                            puzzle.WantedDistanceBetweenPuzzleComponents * Generator.NextDouble(0.8, 1.0),
+                        WantedDistanceFromStartPos = Generator.Flip(0.05)
+                            ? puzzle.WantedDistanceFromStartPos + Generator.Between(10, 20)
+                            : puzzle.WantedDistanceFromStartPos
+                    };
                     break;
                 }
 
                 case "C":
                 {
-                    if (Generator.Flip(0.2))
-                        puzzle.WantedDistanceFromStartPos += Generator.Between(12, 25);
-
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= Generator.NextDouble(0.9, 1.1);
+                    puzzle = puzzle with
+                    {
+                        WantedDistanceFromStartPos = Generator.Flip(0.2)
+                            ? puzzle.WantedDistanceFromStartPos + Generator.Between(12, 25)
+                            : puzzle.WantedDistanceFromStartPos,
+                        WantedDistanceBetweenPuzzleComponents =
+                            puzzle.WantedDistanceBetweenPuzzleComponents * Generator.NextDouble(0.9, 1.1)
+                    };
                     break;
                 }
 
                 case "D":
                 {
-                    if (Generator.Flip(0.32))
-                        puzzle.WantedDistanceFromStartPos += Generator.Between(15, 25);
-
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= puzzle.Puzzle.Count switch
+                    puzzle = puzzle with
                     {
-                        3 => Generator.NextDouble(1.2, 1.4),
-                        4 => Generator.NextDouble(1.1, 1.3),
-                        _ => Generator.NextDouble(1.0, 1.2)
+                        WantedDistanceFromStartPos = Generator.Flip(0.32)
+                            ? puzzle.WantedDistanceFromStartPos + Generator.Between(15, 25)
+                            : puzzle.WantedDistanceFromStartPos,
+                        WantedDistanceBetweenPuzzleComponents =
+                            puzzle.WantedDistanceBetweenPuzzleComponents * (puzzle.Puzzle.Count switch
+                            {
+                                3 => Generator.NextDouble(1.2, 1.4),
+                                4 => Generator.NextDouble(1.1, 1.3),
+                                _ => Generator.NextDouble(1.0, 1.2)
+                            })
                     };
                     break;
                 }
 
                 case "E":
                 {
-                    if (Generator.Flip(0.45))
-                        puzzle.WantedDistanceFromStartPos += Generator.Between(20, 30);
-
-                    puzzle.WantedDistanceBetweenPuzzleComponents *= puzzle.Puzzle.Count switch
+                    puzzle = puzzle with
                     {
-                        3 => Generator.NextDouble(1.40, 1.6),
-                        4 => Generator.NextDouble(1.25, 1.5),
-                        _ => Generator.NextDouble(1.10, 1.4)
+                        WantedDistanceFromStartPos = Generator.Flip(0.45)
+                            ? puzzle.WantedDistanceFromStartPos + Generator.Between(20, 30)
+                            : puzzle.WantedDistanceFromStartPos,
+                        WantedDistanceBetweenPuzzleComponents =
+                            puzzle.WantedDistanceBetweenPuzzleComponents * (puzzle.Puzzle.Count switch
+                            {
+                                3 => Generator.NextDouble(1.40, 1.6),
+                                4 => Generator.NextDouble(1.25, 1.5),
+                                _ => Generator.NextDouble(1.10, 1.4)
+                            })
                     };
                     break;
                 }

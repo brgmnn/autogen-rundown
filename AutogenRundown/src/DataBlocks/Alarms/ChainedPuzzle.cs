@@ -39,14 +39,14 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     /// Whether this alarm can be used as a base to roll new settings/pops on
     /// </summary>
     [JsonIgnore]
-    public bool FixedAlarm { get; set; } = false;
+    public bool FixedAlarm { get; init; } = false;
     #endregion
 
     #region Properties
     /// <summary>
     /// The Alarm name. For example, Class S Surge Alarm
     /// </summary>
-    public string PublicAlarmName { get; set; } = "Alarm";
+    public string PublicAlarmName { get; init; } = "Alarm";
 
     /// <summary>
     /// Whether to trigger alarm when the puzzle starts. Typically set to false for scans
@@ -54,7 +54,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     /// don't specify the enemy wave for the puzzle via the following fields. In that case,
     /// there will still be alarm sound but no enemy waves.
     /// </summary>
-    public bool TriggerAlarmOnActivate { get; set; } = true;
+    public bool TriggerAlarmOnActivate { get; init; } = true;
 
     /// <summary>
     /// Determine how the wave spawns. You set this field to make the wave either a relatively
@@ -67,7 +67,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     public uint SurvivalWaveSettings => Settings.PersistentId;
 
     [JsonIgnore]
-    public WaveSettings Settings { get; set; } = WaveSettings.None;
+    public WaveSettings Settings { get; init; } = WaveSettings.None;
 
     /// <summary>
     /// Determine what type(s) of enemy would spawn.
@@ -76,13 +76,13 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     public uint SurvivalWavePopulation => Population.PersistentId;
 
     [JsonIgnore]
-    public WavePopulation Population { get; set; } = WavePopulation.None;
+    public WavePopulation Population { get; init; } = WavePopulation.None;
 
     /// <summary>
     /// Specify whether to stop the wave after Chained Puzzle Completion. Typically set to
     /// false for ://ERROR! alarm.
     /// </summary>
-    public bool DisableSurvivalWaveOnComplete { get; set; } = true;
+    public bool DisableSurvivalWaveOnComplete { get; init; } = true;
 
     /// <summary>
     /// Whether to use random position for each scan. Usually set to true.
@@ -90,17 +90,17 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     /// By setting this field to false, the scan position for each puzzle would be relatively
     /// static, i.e. it's not static all the time.
     /// </summary>
-    public bool UseRandomPositions { get; set; } = true;
+    public bool UseRandomPositions { get; init; } = true;
 
     /// <summary>
     ///
     /// </summary>
-    public double WantedDistanceFromStartPos { get; set; } = 0.0;
+    public double WantedDistanceFromStartPos { get; init; } = 0.0;
 
     /// <summary>
     /// Default = 30.0
     /// </summary>
-    public double WantedDistanceBetweenPuzzleComponents { get; set; } = 30.0;
+    public double WantedDistanceBetweenPuzzleComponents { get; init; } = 30.0;
 
     /// <summary>
     /// Determines the count and types of scans.
@@ -114,7 +114,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     ///
     /// Typically set to false for regular scan, and true for extraction scan.
     /// </summary>
-    public bool OnlyShowHUDWhenPlayerIsClose { get; set; } = true;
+    public bool OnlyShowHUDWhenPlayerIsClose { get; init; } = true;
 
     /// <summary>
     /// Just return the persistent ID as the name
@@ -124,7 +124,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     #endregion
 
     #region Rarely set by us
-    public int SurvivalWaveAreaDistance { get; set; } = 2;
+    public int SurvivalWaveAreaDistance { get; init; } = 2;
     public UInt32 AlarmSoundStart = 3339129407u;
     public UInt32 AlarmSoundStop = 42633153u;
     #endregion
