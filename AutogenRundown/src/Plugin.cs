@@ -148,8 +148,6 @@ public class Plugin : BasePlugin
         //     SignBorderManager.SetBorderColor(0, new Color { r = 1.0f, b = 0.0f, g = 0.0f });
         // };
 
-        RundownTierMarkerArchivist.PluginSetup();
-
         AssetAPI.OnAssetBundlesLoaded += ExpeditionSuccessPage_ArchivistIcon.OnAssetBundlesLoaded;
         AssetAPI.OnAssetBundlesLoaded += RundownTierMarkerArchivist.OnAssetBundlesLoaded;
         AssetAPI.OnAssetBundlesLoaded += ZoneSensorAssets.Init;
