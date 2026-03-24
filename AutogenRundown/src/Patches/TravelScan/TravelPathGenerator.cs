@@ -478,14 +478,6 @@ public static class TravelPathGenerator
             if ((candidate - prev).sqrMagnitude < minSpacingSqr)
                 continue;
 
-            if (result.Count >= 2)
-            {
-                var forward = (prev - result[result.Count - 2]).normalized;
-                var toCandidate = (candidate - prev).normalized;
-                if (Vector3.Dot(forward, toCandidate) < -0.5f)
-                    continue; // Backtracking
-            }
-
             result.Add(candidate);
         }
 
