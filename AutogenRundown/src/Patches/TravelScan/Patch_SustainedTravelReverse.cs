@@ -83,13 +83,12 @@ public static class Patch_SustainedTravelReverse
 
         if (!SNet.IsMaster)
         {
-            // Client: update visual position from master-synced m_lerpAmount while paused.
-            // During reverse the coroutine is paused and doesn't update transform.position,
-            // so we derive position from the replicator-synced lerp value each frame.
+            // Client: independently drive reverse movement per-frame while paused.
+            // The master's periodic sync (~0.3s) corrects drift via OnStateChange.
             if (!ReadPaused(movable))
                 return;
 
-            UpdatePositionFromLerp(movable);
+            ReverseMovement(movable, writeSyncState: false);
             return;
         }
 
@@ -97,6 +96,11 @@ public static class Patch_SustainedTravelReverse
         if (!_reversing.TryGetValue(__instance.Pointer, out var rev) || !rev)
             return;
 
+        ReverseMovement(movable, writeSyncState: true);
+    }
+
+    private static void ReverseMovement(CP_BasicMovable movable, bool writeSyncState)
+    {
         var lerpAmount = ReadLerpAmount(movable);
 
         if (lerpAmount <= 0f)
@@ -133,30 +137,12 @@ public static class Patch_SustainedTravelReverse
         movable.transform.position = Vector3.Lerp(
             positions[newCurrentIndex], positions[newNextIndex], t);
 
-        // Write back via IL2CPP (bypass property setter to avoid triggering SyncUpdate
-        // on every frame — we write m_currentState.lerp directly for the sync routine)
+        // Write m_lerpAmount so the next frame reads the decremented value.
+        // On master, also write m_currentState.lerp for the sync routine.
         WriteLerpAmount(movable, lerpAmount);
-        WriteCurrentStateLerp(movable, lerpAmount);
-    }
 
-    private static void UpdatePositionFromLerp(CP_BasicMovable movable)
-    {
-        var lerpAmount = ReadLerpAmount(movable);
-
-        if (lerpAmount < 0f)
-            return;
-
-        var amountOfPositions = movable.AmountOfPositions;
-        var currentIndex = (int)lerpAmount;
-        var nextIndex = currentIndex + 1;
-
-        if (nextIndex >= amountOfPositions)
-            nextIndex = 0;
-
-        var t = lerpAmount % 1f;
-        var positions = movable.ScanPositions;
-        movable.transform.position = Vector3.Lerp(
-            positions[currentIndex], positions[nextIndex], t);
+        if (writeSyncState)
+            WriteCurrentStateLerp(movable, lerpAmount);
     }
 
     private static unsafe float ReadLerpAmount(CP_BasicMovable movable)
