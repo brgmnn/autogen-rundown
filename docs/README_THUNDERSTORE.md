@@ -126,18 +126,18 @@ Non-JSON files (images, icons, etc.) are copied directly into the target directo
 
 ### Merge Rules Summary
 
-| Scenario                           | Behavior                                         |
-| ---------------------------------- | ------------------------------------------------ |
-| Object property exists in both     | Deep-merged recursively                          |
-| Object property only in override   | Added                                            |
-| Object property only in generated  | Preserved                                        |
-| Array elements have `persistentID` | Matched by ID, deep-merged; new IDs appended     |
-| Array elements have `__index`      | Merged at specified position; `__index` stripped |
+| Scenario                           | Behavior                                          |
+| ---------------------------------- | ------------------------------------------------- |
+| Object property exists in both     | Deep-merged recursively                           |
+| Object property only in override   | Added                                             |
+| Object property only in generated  | Preserved                                         |
+| Array elements have `persistentID` | Matched by ID, deep-merged; new IDs appended      |
+| Array elements have `__index`      | Merged at specified position; `__index` stripped  |
 | Array contains `__existing` marker | Original items placed at marker; new items around |
-| Array elements have neither        | Entire array replaced                            |
-| Scalar values                      | Override replaces generated                      |
-| JSON file with no existing target  | Copied as new file                               |
-| Non-JSON file                      | Copied with overwrite                            |
+| Array elements have neither        | Entire array replaced                             |
+| Scalar values                      | Override replaces generated                       |
+| JSON file with no existing target  | Copied as new file                                |
+| Non-JSON file                      | Copied with overwrite                             |
 
 <hr>
 
