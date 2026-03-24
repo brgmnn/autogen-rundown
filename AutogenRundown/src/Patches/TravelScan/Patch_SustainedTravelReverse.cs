@@ -26,13 +26,11 @@ public static class Patch_SustainedTravelReverse
 
     [HarmonyPostfix]
     [HarmonyPatch("OnSyncStateChange")]
+    [HarmonyPriority(Priority.Low)] // Run after other postfixes (e.g., LobbyExpansion)
     static void OnSyncStateChange_Postfix(
         CP_Bioscan_Core __instance,
         eBioscanStatus status)
     {
-        if (!SNet.IsMaster)
-            return;
-
         if (!TravelScanRegistry.SustainedTravelInstances.Contains(__instance.Pointer))
             return;
 
@@ -41,11 +39,36 @@ public static class Patch_SustainedTravelReverse
         if (movable == null)
             return;
 
+        // Derive movement decision from authoritative sync state, not from the paused
+        // field which other mods (e.g., LobbyExpansion) may have modified using
+        // physical-position counting that oscillates for moving scans.
+        var shouldMove = false;
+
+        if (status == eBioscanStatus.Scanning && movable.OnlyMoveWhenScannig)
+        {
+            var state = __instance.State;
+            var requirement = __instance.PlayerScanner.ScanPlayersRequired;
+
+            shouldMove = requirement == PlayerRequirement.None ||
+                         (requirement.RequireAllPlayers() && state.playersInScan == state.playersMax) ||
+                         (requirement.RequireSoloPlayer() && state.playersInScan == 1);
+        }
+
+        // Override pause/resume on all machines so the client-side Update_Postfix
+        // (which reads paused) also sees the correct state.
+        if (shouldMove)
+            movable.ResumeMovement();
+        else if (status == eBioscanStatus.Scanning || status == eBioscanStatus.Waiting)
+            movable.PauseMovement();
+
+        // Reverse logic is master-only
+        if (!SNet.IsMaster)
+            return;
+
         var wasReversing = _reversing.TryGetValue(__instance.Pointer, out var rev) && rev;
 
-        if ((status == eBioscanStatus.Scanning || status == eBioscanStatus.Waiting) && ReadPaused(movable))
+        if (!shouldMove && (status == eBioscanStatus.Scanning || status == eBioscanStatus.Waiting))
         {
-            // Base game paused movement = not all requirements met
             var lerpAmount = ReadLerpAmount(movable);
 
             if (lerpAmount > 0f)
