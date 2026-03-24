@@ -73,18 +73,28 @@ public static class Patch_SustainedTravelReverse
     [HarmonyPatch(nameof(CP_Bioscan_Core.Update))]
     static void Update_Postfix(CP_Bioscan_Core __instance)
     {
-        if (!SNet.IsMaster)
-            return;
-
         if (!TravelScanRegistry.SustainedTravelInstances.Contains(__instance.Pointer))
-            return;
-
-        if (!_reversing.TryGetValue(__instance.Pointer, out var rev) || !rev)
             return;
 
         var movable = __instance.m_movingComp;
 
         if (movable == null)
+            return;
+
+        if (!SNet.IsMaster)
+        {
+            // Client: update visual position from master-synced m_lerpAmount while paused.
+            // During reverse the coroutine is paused and doesn't update transform.position,
+            // so we derive position from the replicator-synced lerp value each frame.
+            if (!ReadPaused(movable))
+                return;
+
+            UpdatePositionFromLerp(movable);
+            return;
+        }
+
+        // Master: drive reverse movement
+        if (!_reversing.TryGetValue(__instance.Pointer, out var rev) || !rev)
             return;
 
         var lerpAmount = ReadLerpAmount(movable);
@@ -127,6 +137,26 @@ public static class Patch_SustainedTravelReverse
         // on every frame — we write m_currentState.lerp directly for the sync routine)
         WriteLerpAmount(movable, lerpAmount);
         WriteCurrentStateLerp(movable, lerpAmount);
+    }
+
+    private static void UpdatePositionFromLerp(CP_BasicMovable movable)
+    {
+        var lerpAmount = ReadLerpAmount(movable);
+
+        if (lerpAmount < 0f)
+            return;
+
+        var amountOfPositions = movable.AmountOfPositions;
+        var currentIndex = (int)lerpAmount;
+        var nextIndex = currentIndex + 1;
+
+        if (nextIndex >= amountOfPositions)
+            nextIndex = 0;
+
+        var t = lerpAmount % 1f;
+        var positions = movable.ScanPositions;
+        movable.transform.position = Vector3.Lerp(
+            positions[currentIndex], positions[nextIndex], t);
     }
 
     private static unsafe float ReadLerpAmount(CP_BasicMovable movable)
@@ -187,7 +217,7 @@ public static class Patch_SustainedTravelReverse
         return *(bool*)(ptr + _currentStateOffset + 4);
     }
 
-    private static unsafe void WriteReset(CP_BasicMovable movable, bool value)
+    internal static unsafe void WriteReset(CP_BasicMovable movable, bool value)
     {
         EnsureOffsets();
 
@@ -249,5 +279,37 @@ public static class Patch_SustainedTravelReverse
     public static void Clear()
     {
         _reversing.Clear();
+    }
+}
+
+/// <summary>
+/// Resets the movement coroutine on clients when a sustained travel scan transitions
+/// from paused (reversing) to unpaused (forward). Without this, the client's
+/// DoMoveScanner coroutine retains stale captured segment endpoints and diverges
+/// from the master's position.
+/// </summary>
+[HarmonyPatch(typeof(CP_BasicMovable), nameof(CP_BasicMovable.OnStateChange))]
+public static class Patch_BasicMovable_OnStateChange
+{
+    static void Postfix(
+        CP_BasicMovable __instance,
+        pMovableStateSync oldState,
+        pMovableStateSync newState,
+        bool isRecall)
+    {
+        if (SNet.IsMaster)
+            return;
+
+        if (isRecall)
+            return;
+
+        if (!TravelScanRegistry.SustainedTravelMovables.Contains(__instance.Pointer))
+            return;
+
+        // Detect pause → unpause transition (reverse stopped, forward resuming)
+        if (oldState.paused && !newState.paused)
+        {
+            Patch_SustainedTravelReverse.WriteReset(__instance, true);
+        }
     }
 }

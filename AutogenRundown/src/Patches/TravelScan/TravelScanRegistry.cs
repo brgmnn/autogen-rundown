@@ -42,6 +42,12 @@ public static class TravelScanRegistry
     /// </summary>
     public static readonly HashSet<IntPtr> SustainedTravelInstances = new();
 
+    /// <summary>
+    /// Tracks CP_BasicMovable IL2CPP pointers for sustained travel instances.
+    /// Keyed on movable pointer for O(1) lookup from movable-side patches.
+    /// </summary>
+    public static readonly HashSet<IntPtr> SustainedTravelMovables = new();
+
     public const float SustainedTravelSpeed = 2.0f;
     public const float SustainedTravelReverseSpeed = 1.0f;
 
@@ -56,6 +62,7 @@ public static class TravelScanRegistry
     public static void Clear()
     {
         SustainedTravelInstances.Clear();
+        SustainedTravelMovables.Clear();
         PendingSustainedTravel = false;
         Patch_SustainedTravelReverse.Clear();
     }
