@@ -84,9 +84,31 @@ For JSON files where array elements don't have a `persistentID` (such as files i
 
 This merges into the object at position 1 of the `SpawnCost` array, changing only `Cost` while preserving all other properties at that index.
 
+### Appending to Arrays (\_\_existing)
+
+To add items to an array while keeping the original contents, use the `"__existing"` string marker. It expands to the full original array at that position — items before it are prepended, items after are appended.
+
+**Example** — Append a new enemy to an existing list:
+
+```json
+{
+  "enemies": ["__existing", { "name": "CustomBoss", "hp": 500 }]
+}
+```
+
+**Example** — Prepend and append:
+
+```json
+{
+  "enemies": [{ "name": "First" }, "__existing", { "name": "Last" }]
+}
+```
+
+If `"__existing"` is omitted, the array is replaced entirely (see below).
+
 ### Replacing Arrays
 
-If your override array contains elements **without** `persistentID` or `__index`, the entire target array is replaced.
+If your override array contains elements **without** `persistentID`, `__index`, or `__existing`, the entire target array is replaced.
 
 ```json
 {
@@ -107,6 +129,7 @@ Non-JSON files (images, icons, etc.) are copied directly into the target directo
 | Object property only in generated  | Preserved                                        |
 | Array elements have `persistentID` | Matched by ID, deep-merged; new IDs appended     |
 | Array elements have `__index`      | Merged at specified position; `__index` stripped |
+| Array contains `__existing` marker | Original items placed at marker; new items around |
 | Array elements have neither        | Entire array replaced                            |
 | Scalar values                      | Override replaces generated                      |
 | JSON file with no existing target  | Copied as new file                               |

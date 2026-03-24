@@ -156,13 +156,14 @@ public static class CustomGameData
     }
 
     /// <summary>
-    /// Merges a patch array into the target array using one of three modes.
+    /// Merges a patch array into the target array using one of four modes.
     /// </summary>
     private static void MergeArray(JArray target, JArray patch)
     {
         // Detect merge mode from patch elements
         var hasPersistentId = false;
         var hasIndex = false;
+        var hasExisting = false;
 
         foreach (var item in patch)
         {
@@ -173,12 +174,18 @@ public static class CustomGameData
                 if (obj.ContainsKey("__index"))
                     hasIndex = true;
             }
+            else if (item.Type == JTokenType.String && item.Value<string>() == "__existing")
+            {
+                hasExisting = true;
+            }
         }
 
         if (hasPersistentId)
             MergeArray_ByPersistentId(target, patch);
         else if (hasIndex)
             MergeArray_ByIndex(target, patch);
+        else if (hasExisting)
+            MergeArray_Splice(target, patch);
         else
             MergeArray_Replace(target, patch);
     }
@@ -257,6 +264,33 @@ public static class CustomGameData
                     $"GameData-Custom: __index={index} is out of bounds (array has {target.Count} elements)");
             }
         }
+    }
+
+    /// <summary>
+    /// Splice mode: the patch array contains an "__existing" string marker that expands
+    /// to all original target elements. Items before it are prepended, items after are appended.
+    /// </summary>
+    private static void MergeArray_Splice(JArray target, JArray patch)
+    {
+        var result = new JArray();
+
+        foreach (var item in patch)
+        {
+            if (item.Type == JTokenType.String && item.Value<string>() == "__existing")
+            {
+                // Expand original array contents at this position
+                foreach (var existing in target)
+                    result.Add(existing.DeepClone());
+            }
+            else
+            {
+                result.Add(item.DeepClone());
+            }
+        }
+
+        target.Clear();
+        foreach (var item in result)
+            target.Add(item);
     }
 
     /// <summary>

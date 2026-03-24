@@ -573,4 +573,110 @@ public class CustomGameData_Tests
     }
 
     #endregion
+
+    #region Array merge — __existing splice mode
+
+    [TestMethod]
+    public void Test_Existing_Append()
+    {
+        var target = JToken.Parse(@"{ ""items"": [1, 2, 3] }");
+        var patch = JToken.Parse(@"{ ""items"": [""__existing"", 4, 5] }");
+
+        var result = (JObject)CustomGameData.DeepMerge(target, patch);
+        var items = (JArray)result["items"]!;
+
+        Assert.AreEqual(5, items.Count);
+        Assert.AreEqual(1, items[0].Value<int>());
+        Assert.AreEqual(2, items[1].Value<int>());
+        Assert.AreEqual(3, items[2].Value<int>());
+        Assert.AreEqual(4, items[3].Value<int>());
+        Assert.AreEqual(5, items[4].Value<int>());
+    }
+
+    [TestMethod]
+    public void Test_Existing_Prepend()
+    {
+        var target = JToken.Parse(@"{ ""items"": [1, 2, 3] }");
+        var patch = JToken.Parse(@"{ ""items"": [{ ""new"": true }, ""__existing""] }");
+
+        var result = (JObject)CustomGameData.DeepMerge(target, patch);
+        var items = (JArray)result["items"]!;
+
+        Assert.AreEqual(4, items.Count);
+        Assert.AreEqual(true, items[0]["new"]!.Value<bool>());
+        Assert.AreEqual(1, items[1].Value<int>());
+        Assert.AreEqual(2, items[2].Value<int>());
+        Assert.AreEqual(3, items[3].Value<int>());
+    }
+
+    [TestMethod]
+    public void Test_Existing_Surround()
+    {
+        var target = JToken.Parse(@"{ ""items"": [""a"", ""b""] }");
+        var patch = JToken.Parse(@"{ ""items"": [""first"", ""__existing"", ""last""] }");
+
+        var result = (JObject)CustomGameData.DeepMerge(target, patch);
+        var items = (JArray)result["items"]!;
+
+        Assert.AreEqual(4, items.Count);
+        Assert.AreEqual("first", items[0].Value<string>());
+        Assert.AreEqual("a", items[1].Value<string>());
+        Assert.AreEqual("b", items[2].Value<string>());
+        Assert.AreEqual("last", items[3].Value<string>());
+    }
+
+    [TestMethod]
+    public void Test_Existing_EmptyOriginalArray()
+    {
+        var target = JToken.Parse(@"{ ""items"": [] }");
+        var patch = JToken.Parse(@"{ ""items"": [""__existing"", { ""new"": true }] }");
+
+        var result = (JObject)CustomGameData.DeepMerge(target, patch);
+        var items = (JArray)result["items"]!;
+
+        Assert.AreEqual(1, items.Count);
+        Assert.AreEqual(true, items[0]["new"]!.Value<bool>());
+    }
+
+    [TestMethod]
+    public void Test_Existing_WithObjects()
+    {
+        var target = JToken.Parse(@"{
+            ""enemies"": [
+                { ""name"": ""Striker"", ""hp"": 20 },
+                { ""name"": ""Shooter"", ""hp"": 15 }
+            ]
+        }");
+        var patch = JToken.Parse(@"{
+            ""enemies"": [
+                ""__existing"",
+                { ""name"": ""CustomBoss"", ""hp"": 500 }
+            ]
+        }");
+
+        var result = (JObject)CustomGameData.DeepMerge(target, patch);
+        var enemies = (JArray)result["enemies"]!;
+
+        Assert.AreEqual(3, enemies.Count);
+        Assert.AreEqual("Striker", enemies[0]["name"]!.Value<string>());
+        Assert.AreEqual("Shooter", enemies[1]["name"]!.Value<string>());
+        Assert.AreEqual("CustomBoss", enemies[2]["name"]!.Value<string>());
+    }
+
+    [TestMethod]
+    public void Test_Existing_OnlyMarker_PreservesOriginal()
+    {
+        var target = JToken.Parse(@"{ ""items"": [1, 2, 3] }");
+        var patch = JToken.Parse(@"{ ""items"": [""__existing""] }");
+
+        var result = (JObject)CustomGameData.DeepMerge(target, patch);
+        var items = (JArray)result["items"]!;
+
+        Assert.AreEqual(3, items.Count);
+        Assert.AreEqual(1, items[0].Value<int>());
+        Assert.AreEqual(2, items[1].Value<int>());
+        Assert.AreEqual(3, items[2].Value<int>());
+    }
+
+    #endregion
 }
