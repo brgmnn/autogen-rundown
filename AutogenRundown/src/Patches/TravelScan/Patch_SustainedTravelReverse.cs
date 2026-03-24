@@ -122,37 +122,6 @@ public static class Patch_SustainedTravelReverse
         ReverseMovement(movable, writeSyncState: true);
     }
 
-    /// <summary>
-    /// Computes the new lerp value after a reverse movement tick.
-    /// Pure math — no runtime dependencies.
-    /// </summary>
-    internal static float CalculateReverseLerp(
-        float currentLerp, float timeDelta, float reverseSpeed, float segmentDistance)
-    {
-        if (segmentDistance < 0.001f)
-            return currentLerp;
-
-        var delta = timeDelta * reverseSpeed / segmentDistance;
-        var newLerp = currentLerp - delta;
-        return newLerp < 0f ? 0f : newLerp;
-    }
-
-    /// <summary>
-    /// Returns the segment index, next index (with circular wrap), and interpolation
-    /// fraction for a given lerp amount.
-    /// </summary>
-    internal static (int current, int next, float t) GetSegmentAndFraction(
-        float lerpAmount, int amountOfPositions)
-    {
-        var current = (int)lerpAmount;
-        var next = current + 1;
-
-        if (next >= amountOfPositions)
-            next = 0;
-
-        return (current, next, lerpAmount % 1f);
-    }
-
     private static void ReverseMovement(CP_BasicMovable movable, bool writeSyncState)
     {
         var lerpAmount = ReadLerpAmount(movable);
@@ -160,18 +129,34 @@ public static class Patch_SustainedTravelReverse
         if (lerpAmount <= 0f)
             return;
 
+        var currentIndex = (int)lerpAmount;
+        var nextIndex = currentIndex + 1;
         var amountOfPositions = movable.AmountOfPositions;
-        var (currentIndex, nextIndex, _) = GetSegmentAndFraction(lerpAmount, amountOfPositions);
+
+        if (nextIndex >= amountOfPositions)
+            nextIndex = 0;
 
         var positions = movable.ScanPositions;
         var segmentDistance = Vector3.Distance(
             positions[currentIndex], positions[nextIndex]);
 
-        lerpAmount = CalculateReverseLerp(
-            lerpAmount, Clock.Delta, TravelScanRegistry.SustainedTravelReverseSpeed, segmentDistance);
+        if (segmentDistance < 0.001f)
+            return;
+
+        var delta = Clock.Delta * TravelScanRegistry.SustainedTravelReverseSpeed / segmentDistance;
+        lerpAmount -= delta;
+
+        if (lerpAmount < 0f)
+            lerpAmount = 0f;
 
         // Recompute position from updated lerp
-        var (newCurrentIndex, newNextIndex, t) = GetSegmentAndFraction(lerpAmount, amountOfPositions);
+        var newCurrentIndex = (int)lerpAmount;
+        var newNextIndex = newCurrentIndex + 1;
+
+        if (newNextIndex >= amountOfPositions)
+            newNextIndex = 0;
+
+        var t = lerpAmount % 1f;
         movable.transform.position = Vector3.Lerp(
             positions[newCurrentIndex], positions[newNextIndex], t);
 
