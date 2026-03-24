@@ -1,0 +1,13 @@
+../BIOCOM
+shortwave transmission intercepted@27mhz
+meta3.date_stamp(570420.114318)
+
+//transcript follows...
+
+VOICE 1
+This is [inaudible] Sakura broadcasting from Geneva on behalf of the World Health Organization we are broadcasting on short [inaudible] radio [inaudible] every day the World Health Organization recommends all people remain isolated until further notice there is still no treatment for the nam vee [inaudible] currently no vaccination [inaudible] misinformation and misdiagnosis [inaudible[ there is no naturally occurring immunity from nam vee due [inaudible] the world health [inaudible]  has authorized an [inaudible] to find the origins of the virus it is believed to be located in the Yucatan peninsula possibly near the [inaudible] access to a radio transmission device please contact us [inaudible] frequency at any time this station is monitored twenty [inaudible] will reach the peninsula in the three days [inaudible] staff do not have access to food or water and will be there exclusively to search for the origins of [inaudible] however representatives will have details of all operational evac centers and can provide details on the location [inaudible] will repeat on the hour every hour this is the world [inaudible]
+
+../BIOCOM.
+.. transcript ends//
+intercept log updated
+alert system flagged

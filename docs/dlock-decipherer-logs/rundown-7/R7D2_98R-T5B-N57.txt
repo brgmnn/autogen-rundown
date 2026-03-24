@@ -1,0 +1,21 @@
+TERMINAL ID: 98R-T5B-N57
+D-Lock Block Cipher
+Sender: Angela Klein A106
+Receiver: Ellis Carnegie
+Date: August 30th 2054
+Subject: Unexpected Sigma behavior recorded!
+
+Ellis,
+
+Something remarkable for you to investigate. Prioritize this.
+
+During a routine mission, one of our Sigma generation operatives ordered a retreat of the quad. This falls in line with expected behavior given that the operative had been dosed with standard PRDM boosters and was following an unedited S&D objective stack. However, during the retreat, the operative (who had naturally assumed command by this point) diverted the quad through a security door, ordered a team mate to close the door, then sealed the door using PolyFoam. PolyFoam is a construction material used by the mining industry to temporarily secure structurally unsound bulkheads.
+
+The operative should have had no knowledge of this material, or of the tool that dispenses the foam, and yet they improvised. The only way the operative could have known about the foam is from observation during a previous mission, which in turn means that despite a period of hydrostasis (I'm still trying to find out how long they were in stasis between missions) the operative remembered knowledge of the foam and improvised a new use for it.
+
+It doesn't stop there. On a later mission, a Sigma gen from a different quad exhibited the same behavior. He secured a bulkhead door using a PolyFoam gun he found in a storeroom of mining equipment. This not only indicates a peri-stasis behavior continuance, it implies an unknown method of trans-operative communication. The only way for that behavior to have passed between KSOs is through BIOCOM, and BIOCOM only passes on new behavior after it has been approved by us.
+
+If you could come to Garganta to see the behavior it would help. I can arrange the necessary clearance.
+
+Angela Klein A106
+Behavioral Science, Legion Program

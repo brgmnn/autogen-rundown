@@ -1,0 +1,22 @@
+>>EBDT FRAGMENT 33FK-017 START
+
+>>ENC: D-Lock Block Cipher
+
+Sender: CJ Mortimer
+Receiver: Scott Weaver
+Date: September 30th 2052
+Subject: Re: Re: Re: Syringes
+
+Scott,
+
+I’ve increased the duration of the IIx drug effect – fast-twitch muscle power has increased by another 8 seconds. As suggested, it will come in handy for if the pneumatic tools can't be used for whatever reason. A miner can take a hit of the FTF booster syringe and smash the rock with a sledgehammer.
+
+I am concerned with the desire to make the boost last longer. There are side effects that become more prevalent when the duration of the effect is extended. I'll keep researching, but don't expect miracles. Just tell the miners to manage their doses well.
+
+The side effects noted with the Injury Infection Liquid Pharmacon (I2-LP), are seemingly random and I haven’t yet found a way to resolve the issue. I’ll keep working on it.
+
+CJ
+
+>>ENC://
+
+>>EBDT FRAGMENT END

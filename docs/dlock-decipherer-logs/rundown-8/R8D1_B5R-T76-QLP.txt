@@ -1,0 +1,13 @@
+../BIOCOM
+shortwave transmission intercepted@29mhz
+meta3.date_stamp(571209.062912)
+
+//transcript follows...
+
+VOICE 1
+State... State of Truth. I don't care... I don't care anymore. I know they'll never find me, but they don't need to. Listeners... is there anyone left? All is silent. Mrs. Truth... gone. I lost... I lost Rocker. My other dog, Billy, died a few weeks ago, and now Rocker. He got... I don't know... I think he had NAM-V. Dogs can get it... I don't know. Excuse me-- Ugh... yeah. Yeah, I guess you know now. I got it. Like everyone else. God knows how. Maybe from Billy. There are no people I could have... I mean, there's nobody left. I'm... I'm going to die. I know that. I have... ah... I have a system set up. A thing... what do you call that... a dead man's switch. When I go, this whole place will burn. I got to do my part. No one else, if there is anyone else, is going to catch it from me, and when my mind goes I don't want to be a Stooper. I can't... I can't think properly so... If you're listening, and you're still healthy, stay away from the animals. It's not just humans, it feeds on life, man. You can't defeat it. Just... hide. That's all I can tell you. Hide. Don't come out, for anything. I think... maybe tonight, it'll be over. Yeah. Tonight. This is my last broadcast. I'm sorry I can't... I wish I had more time with you, but all things must end. I did good work. I'll die with my hand on my heart. Seek the truth America. This is Mr. Truth signing off.
+
+../BIOCOM.
+.. transcript ends//
+intercept log updated
+alert system flagged

@@ -66,6 +66,16 @@ public partial record LevelLayout
                         end = nodes.Last();
                         endZone = planner.GetZone(end)!;
                     }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
+                        end = endNodes.Last();
+                        endZone = planner.GetZone(end)!;
+                    }),
                 });
 
                 planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
@@ -139,7 +149,17 @@ public partial record LevelLayout
                             AddSecuritySensors(nodes[i]);
                         end = nodes.Last();
                         endZone = planner.GetZone(end)!;
-                    })
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
+                        end = endNodes.Last();
+                        endZone = planner.GetZone(end)!;
+                    }),
                 });
 
                 planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
@@ -232,7 +252,20 @@ public partial record LevelLayout
 
                         planner.UpdateNode(mid with { Tags = mid.Tags.Extend("uplink_terminal") });
                         planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
-                    })
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var endNodes = AddBranch_Forward(travelEnd, 1);
+                        end = endNodes.Last();
+                        endZone = planner.GetZone(end)!;
+
+                        planner.UpdateNode(travelEnd with { Tags = travelEnd.Tags.Extend("uplink_terminal") });
+                        planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
+                    }),
                 });
                 break;
             }
@@ -301,7 +334,17 @@ public partial record LevelLayout
                         var nodes2 = AddBranch_Forward(mid, 1);
                         (end, endZone) = BuildChallenge_GeneratorCellInSide(nodes2.Last());
                         AddSecuritySensors(end);
-                    })
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
+                        end = endNodes.Last();
+                        endZone = planner.GetZone(end)!;
+                    }),
                 });
 
                 planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
@@ -394,7 +437,20 @@ public partial record LevelLayout
                         }
 
                         planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
-                    })
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var endNodes = AddBranch_Forward(travelEnd, 1);
+                        end = endNodes.Last();
+                        endZone = planner.GetZone(end)!;
+
+                        planner.UpdateNode(travelEnd with { Tags = travelEnd.Tags.Extend("uplink_terminal") });
+                        planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
+                    }),
                 });
                 break;
             }
@@ -531,7 +587,17 @@ public partial record LevelLayout
                             sideKeycardZones: 1,
                             terminalTurnoffZones: 1);
                         (end, endZone) = AddZone(mid);
-                    })
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
+                        end = endNodes.Last();
+                        endZone = planner.GetZone(end)!;
+                    }),
                 });
 
                 planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
@@ -606,6 +672,19 @@ public partial record LevelLayout
 
                         planner.UpdateNode(start with { Tags = start.Tags.Extend("uplink_terminal") });
                         planner.UpdateNode(mid with { Tags = mid.Tags.Extend("uplink_terminal") });
+                        planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+                        var endNodes = AddBranch_Forward(travelEnd, 1);
+                        end = endNodes.Last();
+                        endZone = planner.GetZone(end)!;
+
+                        planner.UpdateNode(start with { Tags = start.Tags.Extend("uplink_terminal") });
+                        planner.UpdateNode(travelEnd with { Tags = travelEnd.Tags.Extend("uplink_terminal") });
                         planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
                     }),
                 });
@@ -765,7 +844,20 @@ public partial record LevelLayout
 
                         planner.UpdateNode(mid2 with { Tags = mid2.Tags.Extend("uplink_terminal") });
                         planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
-                    })
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var endNodes = AddBranch_Forward(travelEnd, 1);
+                        end = endNodes.Last();
+                        endZone = planner.GetZone(end)!;
+
+                        planner.UpdateNode(travelEnd with { Tags = travelEnd.Tags.Extend("uplink_terminal") });
+                        planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
+                    }),
                 });
                 break;
             }

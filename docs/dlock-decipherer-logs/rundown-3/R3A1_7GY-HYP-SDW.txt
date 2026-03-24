@@ -1,0 +1,56 @@
+../BIOCOM
+Unauthorized encyption
+meta3.date_stamp(550102.135402)
+folder.ghammerstein/documents/sxv4y486ertg6/private_vault
+open.personal_notes.md.
+reading...
+
+---
+Created: December 22nd 2054
+Modified: December 24th 2054
+---
+
+
+## Concerns
+I cannot shake this sickness. I feel better for short periods but then it returns. My head is heavy. My brain feels damp. At times I feel like something is living inside me. Ugh. There is too much work to do, and too many leeches sucking on my blood. Physical weakness is a vulnerability to these parasites.
+My ethological study of the creatures is almost ready for peer review, such as they are. I suppose I will take some interest in seeing how the scientific community reacts to my work. They will either recognize the wisdom of it or pick it apart to quell the bitterness they feel from their own lackluster achievements. Regardless, in the end, the work will out, and I shall be recognized.
+
+## Next month
+#todo
+
+### Entry: Gallus {genus}
+Poss. intro? fix end bit
+/quote
+There are cross-species behavioral distinctions that separate all species within the genus. The dark-skinned variants tend to be more active hunters, suggesting the darker pigmentation is a product of natural selection. They are harder to see and therefore more successful predators. The light skinned breed are still vicious and will attack at the slightest provocation, but they do not seek the prey as actively, they are more disposed to sedentary, almost somnific, behavior. They wait, and strike when roused.
+/quote
+
+### Entry: Gallus Reptus
+Paragraph on:
+- Reptus show little signs of intelligence beyond their predatory instincts. Clarify the intraspecific devolution theory?
+- possibility of structured hierarchy among the pack, and the role of Reptus in that hierarchy
+- possibility that Reptus are a post-metamorphic stage of Jaculus? Note no confirmed sightings of Jaculus in a pupal state.
+- NEED DNA SAMPLE
+
+### Entry: Gallus Jaculus
+- more intelligent than Reptus, or given a more strategic role in the hive?
+- what are the implications of emergent intelligence.
+- potential human connection/influence. Mimicry or symbiont relationship with parasite?
+- remove that woman from the team
+
+### Entry: Gallus Capreolatus
+Name options:
+- Capreolatus
+- Cirrhus
+- Pampinarii
+- Clavicula
+Discuss tendril hypotheses :
+- diphyllobothrium latum mimicry?
+- siphonophore/zooids theory
+- NEED DNA SAMPLE
+
+### Gallus Horridus
+- advanced predation techniques
+- purpose of keratinous growths unclear. does it charge under threat?
+- NEED DNA SAM
+
+[file ends]

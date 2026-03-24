@@ -40,7 +40,6 @@ public partial record WardenObjective
 
         MainObjective = new Text("Reach and enter KDS Deep");
         // FindLocationInfo = "Gather information about the location of [ITEM_SERIAL]";
-        FindLocationInfoHelp = "Access more data in the terminal maintenance system";
 
         dataLayer.ObjectiveData.WinCondition = WardenObjectiveWinCondition.GoToExitGeo;
 

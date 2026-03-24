@@ -701,6 +701,16 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
             Asset = "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_elevator_shaft_01.prefab",
             SubComplex = SubComplex.DataCenter
         });
+
+
+        #region CollisionGeos
+        // Collision Geos
+        Tech.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/CustomPrefabs/CollisionGeos/geo_lab_FA_hub_01.prefab",
+            SubComplex = SubComplex.Lab
+        });
+        #endregion
         #endregion
 
         #region MODDER: Red_Leicester_Cheese

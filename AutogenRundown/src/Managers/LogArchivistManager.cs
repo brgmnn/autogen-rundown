@@ -129,6 +129,35 @@ public static class LogArchivistManager
         UpdateIcon(icon.DataBlock.LevelLayoutData);
     }
 
+    public static string? PrintLogsRead(uint mainId)
+    {
+        if (!archivesByLevel.TryGetValue(mainId, out var logs))
+            return null;
+
+        if (logs.Logs.Count == 0)
+            return "<color=#777777>No logs</color>";
+
+        var completed = 0;
+
+        if (readRecordsByLevel.TryGetValue(mainId, out var readLogs))
+            completed = Math.Min(readLogs.Count, logs.Logs.Count);
+
+        var completedString = $"{completed}";
+
+        if (completed == 0)
+            completedString = $"<color=red>{completedString}</color>";
+        else if (completed < logs.Logs.Count)
+            completedString = $"<color=orange>{completedString}</color>";
+
+        if (WeeklyLogRecord.ReadAllLogsLevels.Contains(mainId) ||
+            MonthlyLogRecord.ReadAllLogsLevels.Contains(mainId) ||
+            SeasonalLogRecord.ReadAllLogsLevels.Contains(mainId))
+            completedString = $"{logs.Logs.Count}";
+
+        return $"{completedString}/{logs.Logs.Count}";
+
+    }
+
     private static void UpdateIcon(uint mainId)
     {
         if (!icons.TryGetValue(mainId, out var icon))

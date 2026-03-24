@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Items;
+using AutogenRundown.PeerMods;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -129,8 +130,96 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
         )
     };
 
+    public static ConsumableDistribution? MedicalBay_GTFriendlyO_Healing;
+    public static ConsumableDistribution? MedicalBay_GTFriendlyO_Combat;
+
     public new static void SaveStatic()
     {
+        if (Peers.HasMod("GTFriendlyO"))
+        {
+            // Enhance existing distributions with custom syringes
+            Baseline.SpawnData.AddRange(new List<ItemSpawn>
+            {
+                new() { Weight = 0.2, Item = Items.Item.Syringe_Health },
+                new() { Weight = 0.2, Item = Items.Item.Syringe_Melee },
+                new() { Weight = 0.1, Item = Items.Item.ModGtfriendly_Syringe_Speed },
+                new() { Weight = 0.1, Item = Items.Item.ModGtfriendly_Syringe_Adrenaline },
+                new() { Weight = 0.1, Item = Items.Item.ModGtfriendly_Syringe_Antibiotic },
+                new() { Weight = 0.1, Item = Items.Item.ModGtfriendly_Syringe_Recovery },
+                new() { Weight = 0.1, Item = Items.Item.ModGtfriendly_Syringe_Recovery2 },
+                new() { Weight = 0.1, Item = Items.Item.ModGtfriendly_Syringe_AntibioticIX },
+            });
+
+            Baseline_TechComplex.SpawnData.AddRange(new List<ItemSpawn>
+            {
+                new() { Weight = 0.7, Item = Items.Item.ModGtfriendly_Syringe_Speed },
+                new() { Weight = 0.7, Item = Items.Item.ModGtfriendly_Syringe_Antibiotic },
+                new() { Weight = 0.5, Item = Items.Item.ModGtfriendly_Syringe_Recovery },
+                new() { Weight = 0.1, Item = Items.Item.ModGtfriendly_Syringe_Adrenaline },
+                new() { Weight = 0.1, Item = Items.Item.ModGtfriendly_Syringe_HealMunitionsDrain },
+                new() { Weight = 0.1, Item = Items.Item.ModGtfriendly_Syringe_VirusBomb },
+                new() { Weight = 0.1, Item = Items.Item.ModGtfriendly_Syringe_HealthSurge },
+                new() { Weight = 0.1, Item = Items.Item.ModGtfriendly_Syringe_Recovery2 },
+                new() { Weight = 0.1, Item = Items.Item.ModGtfriendly_Syringe_Rage },
+                new() { Weight = 0.1, Item = Items.Item.ModGtfriendly_Syringe_AmmoSymbiotic },
+                new() { Weight = 0.1, Item = Items.Item.ModGtfriendly_Syringe_VirusNuke },
+                new() { Weight = 0.1, Item = Items.Item.ModGtfriendly_Syringe_AntibioticIX },
+            });
+
+            Baseline_Syringes.SpawnData.AddRange(new List<ItemSpawn>
+            {
+                new() { Weight = 0.8, Item = Items.Item.ModGtfriendly_Syringe_Speed },
+                new() { Weight = 0.8, Item = Items.Item.ModGtfriendly_Syringe_Antibiotic },
+                new() { Weight = 0.6, Item = Items.Item.ModGtfriendly_Syringe_Recovery },
+                new() { Weight = 0.5, Item = Items.Item.ModGtfriendly_Syringe_Adrenaline },
+            });
+
+            MedicalBay_Consumables.SpawnData.AddRange(new List<ItemSpawn>
+            {
+                new() { Weight = 2.0, Item = Items.Item.ModGtfriendly_Syringe_Antibiotic },
+                new() { Weight = 1.5, Item = Items.Item.ModGtfriendly_Syringe_Recovery },
+                new() { Weight = 1.5, Item = Items.Item.ModGtfriendly_Syringe_AntibioticIX },
+            });
+
+            // New syringe-only med bay distributions
+            MedicalBay_GTFriendlyO_Healing = new()
+            {
+                SpawnsPerZone = 10,
+                SpawnData = new List<ItemSpawn>
+                {
+                    new() { Weight = 5.0, Item = Items.Item.Syringe_Health },
+                    new() { Weight = 4.0, Item = Items.Item.ModGtfriendly_Syringe_Antibiotic },
+                    new() { Weight = 2.5, Item = Items.Item.ModGtfriendly_Syringe_Recovery },
+                    new() { Weight = 2.0, Item = Items.Item.ModGtfriendly_Syringe_Recovery2 },
+                    new() { Weight = 2.0, Item = Items.Item.ModGtfriendly_Syringe_AntibioticIX },
+                    new() { Weight = 1.5, Item = Items.Item.ModGtfriendly_Syringe_HealMunitionsDrain },
+                    new() { Weight = 1.5, Item = Items.Item.ModGtfriendly_Syringe_Adrenaline },
+                    new() { Weight = 1.0, Item = Items.Item.FogRepeller },
+                }
+            };
+
+            MedicalBay_GTFriendlyO_Combat = new()
+            {
+                SpawnsPerZone = 10,
+                SpawnData = new List<ItemSpawn>
+                {
+                    new() { Weight = 4.0, Item = Items.Item.Syringe_Health },
+                    new() { Weight = 3.0, Item = Items.Item.Syringe_Melee },
+                    new() { Weight = 2.5, Item = Items.Item.ModGtfriendly_Syringe_Speed },
+                    new() { Weight = 2.0, Item = Items.Item.ModGtfriendly_Syringe_Adrenaline },
+                    new() { Weight = 1.5, Item = Items.Item.ModGtfriendly_Syringe_HealthSurge },
+                    new() { Weight = 1.0, Item = Items.Item.ModGtfriendly_Syringe_AmmoSymbiotic },
+                    new() { Weight = 1.0, Item = Items.Item.ModGtfriendly_Syringe_Rage },
+                    new() { Weight = 0.5, Item = Items.Item.ModGtfriendly_Syringe_VirusBomb },
+                    new() { Weight = 0.5, Item = Items.Item.ModGtfriendly_Syringe_VirusNuke },
+                    new() { Weight = 1.0, Item = Items.Item.FogRepeller },
+                }
+            };
+
+            Bins.ConsumableDistributions.AddBlock(MedicalBay_GTFriendlyO_Healing);
+            Bins.ConsumableDistributions.AddBlock(MedicalBay_GTFriendlyO_Combat);
+        }
+
         Bins.ConsumableDistributions.AddBlock(Baseline);
         Bins.ConsumableDistributions.AddBlock(Baseline_TechComplex);
         Bins.ConsumableDistributions.AddBlock(Baseline_FogRepellers);

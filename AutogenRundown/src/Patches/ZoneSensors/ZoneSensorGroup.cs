@@ -474,6 +474,10 @@ public class ZoneSensorGroup
         // Apply current group state to newly spawned sensors
         // For late joiners, currentState already contains the correct state from recall
         // For host with startEnabled=false, this deactivates the sensor GameObjects
+        // Reset previousState to ensure disabled→enabled transition is detected, even if
+        // a replicator callback updated previousState before sensors were spawned (client bug
+        // where isFirstActivation wasn't consumed, causing first re-enable to skip grace period)
+        previousState = new ZoneSensorGroupState(false);
         UpdateVisualsUnsynced(currentState);
         Plugin.Logger.LogDebug($"ZoneSensorGroup {Id}: Applied state to spawned sensors (isRecall={isRecall})");
 
@@ -544,6 +548,12 @@ public class ZoneSensorGroup
         corruptedTMPro.transform.SetParent(null);
         UnityEngine.Object.Destroy(corruptedTMPro);
 
+        // Track text visual references for grace period
+        ZoneSensorTextAnimator textAnimator = null;
+        TMPro.TextMeshPro textComp = null;
+        string textStr = null;
+        var textColor = Color.white;
+
         if (groupDef.HideText)
         {
             Plugin.Logger.LogDebug($"ZoneSensor: Sensor {sensorIndex} has hidden text");
@@ -553,14 +563,15 @@ public class ZoneSensorGroup
             var tmproGO = GtfoTextMeshPro.Instantiate(infoGO.gameObject);
             if (tmproGO != null)
             {
-                var text = tmproGO.GetComponent<TMPro.TextMeshPro>();
-                if (text != null)
+                textComp = tmproGO.GetComponent<TMPro.TextMeshPro>();
+                if (textComp != null)
                 {
                     var normalColor = new Color(
                         (float)groupDef.TextColor.Red,
                         (float)groupDef.TextColor.Green,
                         (float)groupDef.TextColor.Blue,
                         (float)groupDef.TextColor.Alpha);
+                    textColor = normalColor;
 
                     if (groupDef.EncryptedText)
                     {
@@ -570,25 +581,41 @@ public class ZoneSensorGroup
                             (float)groupDef.EncryptedTextColor.Blue,
                             (float)groupDef.EncryptedTextColor.Alpha);
 
-                        var animator = sensorGO.AddComponent<ZoneSensorTextAnimator>();
-                        var sensorText = groupDef.Text ?? GetRandomSensorText(groupIndex, sensorIndex);
-                        animator.Initialize(sensorText, normalColor, encryptedColor, text);
+                        textAnimator = sensorGO.AddComponent<ZoneSensorTextAnimator>();
+                        textStr = groupDef.Text ?? GetRandomSensorText(groupIndex, sensorIndex);
+                        textAnimator.Initialize(textStr, normalColor, encryptedColor, textComp);
                     }
                     else
                     {
-                        text.SetText(groupDef.Text ?? GetRandomSensorText(groupIndex, sensorIndex));
-                        text.m_fontColor = text.m_fontColor32 = normalColor;
+                        textStr = groupDef.Text ?? GetRandomSensorText(groupIndex, sensorIndex);
+                        textComp.SetText(textStr);
+                        textComp.m_fontColor = textComp.m_fontColor32 = normalColor;
                     }
                 }
             }
         }
 
         // Add detection collider
+        var sensorColor = new Color(
+            (float)groupDef.Color.Red,
+            (float)groupDef.Color.Green,
+            (float)groupDef.Color.Blue,
+            (float)groupDef.Color.Alpha);
+
         var collider = sensorGO.AddComponent<ZoneSensorCollider>();
         collider.Id = groupIndex;
         collider.SensorIndex = sensorIndex;
         collider.TriggerEach = groupDef.TriggerEach;
         collider.Radius = (float)groupDef.Radius;
+        collider.Visuals = new SensorVisualRefs
+        {
+            Renderer = renderer,
+            OriginalColor = sensorColor,
+            TextAnimator = textAnimator,
+            TextComponent = textComp,
+            OriginalText = textStr,
+            OriginalTextColor = textColor,
+        };
 
         // Late joiners create sensors inactive - they'll be activated when state is received
         if (isLateJoinerSpawn)

@@ -1,0 +1,59 @@
+//HearSay auto-transcript begins//
+
+VOICE 1
+If anyone finds this, we are no longer in control. The creatures have overrun us. The power is turning off in every sector. The security doors have all been locked. There is no way to the surface. We are trapped. I have followed a group of security operatives to a location called KDS Deep. It is so big; I cannot see the length of it. There are several guards waiting here. Every few moments, a mechanical arm delivers an empty hydrostasis unit. The guards climb into it, and then the arm takes them away into the darkness.
+The mechanical arm brings another HSU.
+VOICE 2
+Bishop, you're up.
+VOICE 3
+Yup.
+VOICE 1
+I must talk to them. Come on, Abeo, you can do this.
+VOICE 2
+Hackett!
+VOICE 4
+'Bout fucking time.
+VOICE 1
+Hello! Please do not shoot me!
+VOICE 2
+Identify yourself!
+VOICE 4
+Who the fuck are you?
+VOICE 1
+I am Dr. Abeo Dauda! I am not a threat to you!
+VOICE 4
+You are not supposed to be here. Leave, now. I will not tell you twice.
+VOICE 1
+Please, the creatures, they are everywhere. If you do not--
+VOICE 4
+Your choice--
+VOICE 1
+No! Please--
+VOICE 2
+Stop!
+VOICE 4
+What the are you doing Woods? The stack is clear.
+VOICE 2
+Exfil, soldier.
+VOICE 4
+Your lucky day.
+VOICE 1
+What are you going to do to me?
+VOICE 2
+Get in.
+VOICE 1
+Into... into this?
+VOICE 2
+Yes.
+VOICE 1
+I--
+VOICE 2
+Or you can die, brother.
+VOICE 1
+Okay... okay.
+VOICE 1
+What will happen to us? Are we going to be evac--
+VOICE 2
+Stack update. New resource designation. T-3701, assigned. Extract.
+
+//HearSay auto-transcript ends//

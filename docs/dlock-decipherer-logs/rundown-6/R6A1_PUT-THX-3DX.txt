@@ -1,0 +1,53 @@
+ACCESS -BIOCOM -29$525GVTHR2%456FS
+Instantiating BIOCOM.net(CLI)...
+ready:_
+conduit_gather()
+executing...
+validating dict[ ]…
+asset: cerebrospinal_fluid, 15000/15000
+asset: X-gen_compound_catalyst, 15000/15000
+asset: N-33S_endocrine_stimulator, 15000/15000
+asset: NGF_protein, 15000/15000
+asset: Nyxos_HSU_NN3_unit, 15000/15000
+resources exhausted
+
+locate()
+scanning possible locations…
+asset[0] - 0 entries
+asset[1] - 0 entries
+asset[2] - 0 entries
+asset[3] - 0 entries
+asset[4] - 0 entries
+no locations found
+
+generating continuance evaluation (1)...
+wait()
+system integrity:
+Organs 27%
+Musculoskeletal 94%
+Cardiovascular 78%
+Respiratory 82%
+Nervous 49%
+Digestive 14%
+Urinary 63%
+Endocrine 86%
+Lymphatic 97%
+Reproductive 2%
+Integumentary 15%
+Expected lifespan 345600 +/- 2500
+Immunity 0%
+Translation aptitude 94%
+Comprehension ability 83%
+
+conduit_create(2)
+executing...
+preparing synthovum..
+isolating nucleus..
+fusing...
+transporting zygote...
+blastocyst formation...
+implanting...
+transporting to amniotic sac
+replicating chorion...
+accelerated embryonic development cycle initiated.
+wait()

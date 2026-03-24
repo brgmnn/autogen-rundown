@@ -1,0 +1,28 @@
+D-Lock Block Cipher
+alias:int_server.1024_ciph.tier5.kds_ops/MGantusB623.flagged
+
+From: Angela Klein A106
+To: Marcus Gantus B623
+Date: May 4th 2054
+Subject: Re: Odd log entries - please review
+
+Marcus,
+
+We have seen similar issues with operatives making statements that seem to come out of nowhere, but that's usually related to some outside stimulus or a poorly structured objective module. Please send me the ID of the operative so I can offline them and research. As for the other issue - maybe the schematics it had were corrupted and it thought the closet was a waypoint? I doubt if we need to worry about it.
+
+Angela.
+
+-----------------------
+
+D-Lock Block Cipher
+alias:int_server.1024_ciph.tier5.kds_ops/AKleinA106.flagged
+
+Ms. Klein,
+
+I've been going through the Biocom logs from last month (March-April 2054). I do this every so often to confirm that objective stacking and prioritization is functioning as expected. It's usually all fine except for the odd hiccup if an operative has an unexpected reaction to a PRDM or a temperature dropped in their pod or something - meaning it's invariably an outside issue and not Biocom related.
+
+But last month we had two issues with the objective stack which seem to come directly from Biocom. These are two separate operatives of different generations, using different boosters, on two unrelated missions.
+
+The first issue I noticed was that the operative was ordered to escort a group of environment techs through a restricted zone, surveil them as they cleared some blockage in a vent, then escort them out of the restricted zone. The operative completed the first four entries on the objective stack, but then added a new objective to the stack. It went to a storage closet, unlocked the door, waited for 6 minutes inside the closet, then returned to the environment tech and continued with the original stack. It didn't take anything from the closet, didn't speak to anyone, and didn't initiate any combat. It's very weird. I don't know where the new objective came from, or how it slotted into the stack so easily - but only Biocom can do this. It's almost as if someone was testing me to see if we'd notice. I'd appreciate it if you told me if this was a test of some kind. I don't want to burn hours on something like this if it was contrived.
+
+The second issue is likely more related to you. An operative told the scientist they were guarding that Project Insight "you must stop". The scientist asked the KSO to repeat the statement, but the KSO ignored him and resumed its patrol.

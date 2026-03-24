@@ -1,0 +1,66 @@
+//HearSay auto-transcript begins//
+
+VOICE 1
+You can do it from this terminal?
+
+VOICE 2
+I think so, yes.
+
+VOICE 1
+So BIOCOM is the program that runs all the systems here? Or just security?
+
+VOICE 2
+Security.
+
+VOICE 1
+But it has access to everything, correct? It has access to the medical records?
+
+VOICE 2
+Yep.
+
+VOICE 1
+So the BIOCOM network is our backdoor into the medical database, and we can get a list of names? Today?
+
+VOICE 2
+That's the plan.
+
+VOICE 1
+Great. Do it. What was that?
+
+VOICE 2
+Let's see... what is this? W-R-D-N?
+
+VOICE 1
+You didn't hear that?
+
+VOICE 2
+No. There's a... this doesn't make any sense. There's a... process running here that shouldn't be able to--
+
+VOICE 1
+Can you download the database or not?
+
+VOICE 2
+I'm working on it!
+
+VOICE 1
+What is that?! Hello? Is there someone there?
+
+VOICE 3
+Destination reached.
+
+VOICE 4
+Holding.
+
+VOICE 1
+My god... we didn't think anyone was... we're from the World Health Organization. Are you--
+
+VOICE 4
+Stack updated.
+
+VOICE 3
+Engaging.
+
+VOICE 1
+Hey whoa! What are you doing--
+
+//HearSay auto-transcript ends//

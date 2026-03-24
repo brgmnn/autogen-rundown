@@ -65,7 +65,17 @@ public partial record LevelLayout
                     {
                         var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
                         (end, endZone) = BuildChallenge_KeycardInSide(nodes.Last());
-                    })
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
+                        end = endNodes.Last();
+                        endZone = planner.GetZone(end)!;
+                    }),
                 });
                 break;
             }
@@ -126,7 +136,17 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
                         (end, endZone) = BuildChallenge_KeycardInSide(nodes.Last());
 
-                    })
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
+                        end = endNodes.Last();
+                        endZone = planner.GetZone(end)!;
+                    }),
                 });
                 break;
             }
@@ -196,7 +216,17 @@ public partial record LevelLayout
 
                         end = nodes.Last();
                         endZone = planner.GetZone(end)!;
-                    })
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
+                        end = endNodes.Last();
+                        endZone = planner.GetZone(end)!;
+                    }),
                 });
                 break;
             }
@@ -319,7 +349,17 @@ public partial record LevelLayout
                             .AddUnlockDoor(director.Bulkhead, end.ZoneNumber);
 
                         AddAlignedBossFight_MegaMom(boss, bossClearEvents);
-                    })
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
+                        end = endNodes.Last();
+                        endZone = planner.GetZone(end)!;
+                    }),
                 });
                 break;
             }
@@ -442,7 +482,17 @@ public partial record LevelLayout
                             .AddUnlockDoor(director.Bulkhead, end.ZoneNumber);
 
                         AddAlignedBossFight_MegaMom(boss, bossClearEvents);
-                    })
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
+                        end = endNodes.Last();
+                        endZone = planner.GetZone(end)!;
+                    }),
                 });
                 break;
             }

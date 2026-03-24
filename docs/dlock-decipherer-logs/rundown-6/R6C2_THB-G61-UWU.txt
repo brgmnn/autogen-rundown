@@ -1,0 +1,114 @@
+//HearSay auto-transcript begins//
+
+GARGANTA ALERT SYSTEM
+All personnel clear the operations floor. All personnel clear the operations floor.
+
+STOKES
+Settle down everyone!  I need final checks from all systems. Telemetry?
+
+VOICE 2
+Online.
+
+STOKES
+Wave stabilizers?
+
+VOICE 3
+Check.
+
+STOKES
+Temporal regulators?
+
+VOICE 4
+Good to go.
+
+STOKES
+Quantum tethering?
+
+VOICE 3
+Secured and locked.
+
+STOKES
+Frequency modulation?
+
+VOICE 2
+Low standard deviation... we are good to go.
+
+STOKES
+Mission team?
+
+BISHOP
+BIOCOM command, this Security Operative Bishop requesting E-F-Zero One clearance. Clearance has been granted. E-F-Zero One is operational. You may proceed Dr. Stokes.
+
+STOKES
+Thank you, Sergeant. Chrono, start the mission clock.
+
+VOICE 2
+Clock is running.
+
+STOKES
+Good luck everyone.
+
+GARGANTA ALERT SYSTEM
+Translocational jump sequence... initiated.
+
+VOICE 2
+The gate is open!
+
+VOICE 3
+Matter wave capacitors at forty percent!
+
+VOICE 2
+Chrono is slowing down doctor! Should we
+
+STOKES
+No! Keep going!
+
+VOICE 3
+Matter wave capacitors at eighty percent!
+
+STOKES
+Bishop! Keep everyone within the projection radius!
+
+VOICE 3
+Chrono has stopped! I'm getting no temporal progression!
+
+VOICE 4
+Quantum tether is holding!
+
+VOICE 3
+Matter wave capacitors are primed! Ready to discharge!
+
+STOKES
+This is it. Go! Comms?
+
+VOICE 2
+Searching...
+
+STOKES
+Telemetry?
+
+VOICE 3
+Nothing.
+
+STOKES
+Did we lose the frequency?
+
+VOICE 4
+I've got no signal.
+
+STOKES
+Widen the scope.
+
+VOICE 4
+It's at full.
+
+STOKES
+Damn it! Comms?
+
+VOICE 2
+Nothing.
+
+STOKES
+God damn it! Power down. All departments. Briefing room, NOW!
+
+//HearSay auto-transcript ends//

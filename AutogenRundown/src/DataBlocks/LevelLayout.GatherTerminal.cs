@@ -111,6 +111,23 @@ public partial record LevelLayout
                         objective.PlacementNodes.Add(end1);
                         objective.PlacementNodes.Add(end2);
                     }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+
+                        SetGatherTerminal(travelEnd.ZoneNumber);
+                        objective.PlacementNodes.Add(travelEnd);
+
+                        var nodes = AddBranch_Forward(travelEnd, objective.GatherTerminal_SpawnCount - 1, "primary", (node, zone) =>
+                        {
+                            SetGatherTerminal(node.ZoneNumber);
+                            objective.PlacementNodes.Add(node);
+                        });
+
+                        AddForwardExtractStart(nodes.Last());
+                    }),
                 });
                 break;
             }
@@ -213,6 +230,23 @@ public partial record LevelLayout
 
                         AddForwardExtractStart(nodes.Last());
                     }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+
+                        SetGatherTerminal(travelEnd.ZoneNumber);
+                        objective.PlacementNodes.Add(travelEnd);
+
+                        var nodes = AddBranch_Forward(travelEnd, objective.GatherTerminal_SpawnCount - 1, "primary", (node, zone) =>
+                        {
+                            SetGatherTerminal(node.ZoneNumber);
+                            objective.PlacementNodes.Add(node);
+                        });
+
+                        AddForwardExtractStart(nodes.Last());
+                    }),
                 });
                 break;
             }
@@ -253,6 +287,23 @@ public partial record LevelLayout
                         objective.PlacementNodes.Add(end1);
                         objective.PlacementNodes.Add(end2);
                         objective.PlacementNodes.Add(end3);
+                    }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+
+                        SetGatherTerminal(travelEnd.ZoneNumber);
+                        objective.PlacementNodes.Add(travelEnd);
+
+                        var nodes = AddBranch_Forward(travelEnd, objective.GatherTerminal_SpawnCount - 1, "primary", (node, zone) =>
+                        {
+                            SetGatherTerminal(node.ZoneNumber);
+                            objective.PlacementNodes.Add(node);
+                        });
+
+                        AddForwardExtractStart(nodes.Last());
                     }),
                 });
                 break;
@@ -348,6 +399,23 @@ public partial record LevelLayout
 
                         AddForwardExtractStart(nodes.Last());
                     }),
+
+                    // Travel scan gate
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+
+                        SetGatherTerminal(travelEnd.ZoneNumber);
+                        objective.PlacementNodes.Add(travelEnd);
+
+                        var nodes = AddBranch_Forward(travelEnd, objective.GatherTerminal_SpawnCount - 1, "primary", (node, zone) =>
+                        {
+                            SetGatherTerminal(node.ZoneNumber);
+                            objective.PlacementNodes.Add(node);
+                        });
+
+                        AddForwardExtractStart(nodes.Last());
+                    }),
                 });
                 break;
             }
@@ -365,15 +433,39 @@ public partial record LevelLayout
             // Most of the smaller levels will use this default linear branch
             default:
             {
-                SetGatherTerminal(start.ZoneNumber);
-
-                var nodes = AddBranch(start, objective.GatherTerminal_SpawnCount - 1, "primary", (node, zone) =>
+                Generator.SelectRun(new List<(double, Action)>
                 {
-                    SetGatherTerminal(node.ZoneNumber);
-                    objective.PlacementNodes.Add(node);
-                });
+                    // Standard linear branch
+                    (0.85, () =>
+                    {
+                        SetGatherTerminal(start.ZoneNumber);
 
-                AddForwardExtractStart(nodes.Last());
+                        var nodes = AddBranch(start, objective.GatherTerminal_SpawnCount - 1, "primary", (node, zone) =>
+                        {
+                            SetGatherTerminal(node.ZoneNumber);
+                            objective.PlacementNodes.Add(node);
+                        });
+
+                        AddForwardExtractStart(nodes.Last());
+                    }),
+
+                    // Travel scan prelude
+                    (0.15, () =>
+                    {
+                        var (travelEnd, _) = AddTravelScanAlarm(start);
+
+                        SetGatherTerminal(travelEnd.ZoneNumber);
+                        objective.PlacementNodes.Add(travelEnd);
+
+                        var nodes = AddBranch_Forward(travelEnd, objective.GatherTerminal_SpawnCount - 1, "primary", (node, zone) =>
+                        {
+                            SetGatherTerminal(node.ZoneNumber);
+                            objective.PlacementNodes.Add(node);
+                        });
+
+                        AddForwardExtractStart(nodes.Last());
+                    }),
+                });
                 break;
             }
         }

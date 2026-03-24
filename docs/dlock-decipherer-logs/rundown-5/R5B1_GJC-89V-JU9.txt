@@ -1,0 +1,21 @@
+D-Lock Block Cipher
+Sender: Andre Piros A134
+Receiver: Anders Johanson A029
+Date: September 3rd 2051
+Subject: Moving schedule
+
+Mr. Johanson,
+
+We will have all of the equipment moved from the Belarus facility to storage hangar 3 by next week. BIOCOM installation in hangar 4 will start immediately after. The hangar will be a portable installation without any infrastructure routing. BIOCOM will not be handling any objective stacks yet. We only need it to maintain HSU storage so a full installation is unnecessary until Deep is ready.
+
+Once the brain is up and running the HSUs can be safely moved into Deep. We will have space for 8,000 units by December, and a further 24,000 by March 2052. Once all of the HSUs are in Deep, we will start the full BIOCOM installation.
+
+The first KSOs should be ready for deployment by the start of 2052. The Sigma and Tau generations are currently being coded for Garganta security operations.
+
+It has taken longer than expected due to the flooding caused by hurricane Orwell. The causeway to Garganta is now clear, so we are back at full speed. I have ordered the air division to heli-freight equipment down to the hangars, which will skip the causeway and elevators entirely. This will get us back on schedule.
+
+The Gum Shoes have rolled out the new security protocols, so all personnel will need to have a pre-approved Legion ID code to enter the Legion facilities. Travel in and out of Garganta itself will be unaffected by the new protocols (SMC will not need to update their clearance levels yet).
+
+I’ll keep you posted.
+
+Andre Piros A134

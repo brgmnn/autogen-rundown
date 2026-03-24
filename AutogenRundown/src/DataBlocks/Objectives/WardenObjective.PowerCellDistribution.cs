@@ -45,13 +45,30 @@ public partial record WardenObjective
             return;
         }
 
-        PowerCellsToDistribute = director.Tier switch
+        PowerCellsToDistribute = (director.Tier, director.Bulkhead, level.HasPrisonerEfficiency) switch
         {
-            "A" => Generator.Between(1, 2),
-            "B" => Generator.Between(1, 3),
-            "C" => Generator.Between(2, 3),
-            "D" => Generator.Between(3, 4),
-            "E" => Generator.Between(3, 5),
+            ("A", Bulkhead.Main, _) => 2,
+            ("A",             _, _) => 1,
+
+            ("B", Bulkhead.Main,     _) => Generator.Between(2, 3),
+            ("B",             _, false) => 2,
+            ("B",             _,     _) => 1,
+
+            ("C", Bulkhead.Main,        _) => Generator.Between(2, 3),
+            ("C", Bulkhead.Extreme,     _) => 2,
+            ("C", Bulkhead.Overload, true) => 1,
+            ("C", Bulkhead.Overload,    _) => 2,
+
+            ("D", Bulkhead.Main,     false) => Generator.Between(3, 4),
+            ("D", Bulkhead.Main,         _) => 3,
+            ("D", Bulkhead.Extreme,  false) => Generator.Between(2, 3),
+            ("D",                _,      _) => 2,
+
+            ("E", Bulkhead.Main, false) => Generator.Between(3, 4),
+            ("E", Bulkhead.Main,  true) => Generator.Between(2, 4),
+            ("E",             _,  true) => Generator.Between(2, 3),
+            ("E",             _, false) => Generator.Between(2, 3),
+
             _ => 2
         };
     }
@@ -61,11 +78,10 @@ public partial record WardenObjective
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
         MainObjective = new Text("Distribute Power Cells from the elevator cargo container to [ALL_ITEMS]");
-        FindLocationInfo = "Locate the Generators and bring the Power Cells to them";
-        FindLocationInfoHelp = "Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]";
-        GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
-        GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
-        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+        FindLocationInfo = new Text("Locate the Generators and bring the Power Cells to them");
+        FindLocationInfoHelp = new Text("Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]");
+        GoToWinConditionHelp_Elevator = new Text("Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back");
+        GoToWinConditionHelp_CustomGeo = new Text("Use the navigational beacon and the information in the surroundings to find the exit point");
 
         if (!director.Bulkhead.HasFlag(Bulkhead.Main))
         {

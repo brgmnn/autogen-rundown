@@ -1,0 +1,45 @@
+D-Lock Block: *unauthorized access... logging*
+WRDN: override
+ACCESS -BIOCOM -29$525GVTHR2%456FS
+Instantiating BIOCOM.net(CLI)...
+ready:_
+authorized…
+connecting...
+\\Root\?_
+\\Root\EXPAND query 104366A2A7 #0093
+-------------------
+Extracting...
+[corrupted] an exhaustive list, and all of the important details on the RISE project will be sent to you through D-Lock, but I wanted to give you a quick rundown of the project pillars so we're on the same page:
+
+1) Project RISE will produce resources of much higher quality traditionally procured assets.
+2) Project RISE will ensure KDS can replenish and resupply ongoing operations regardless of unreliable government policy or third party sabotage.
+3) Project RISE will produce assets targeted to specific duties with higher precision and consistency than traditional mercenaries.
+4) Project RISE will protect KDS from unfounded and predatory litigation from resource relations and interested parties.
+
+Taking these one by one:
+
+1) The AlphaGen prototypes are already showing the advantages an artificially grown resource offers over a procured asset. With RISE resources there is no risk of unknown medical complications or pre-existing conditions. RISE resources come from stock that can be refined and curated generation after generation to produce better and better results.
+
+Psychologically, they are clean slates. There is no deconstruction or social programming to break. From conception, RISE resources are ours to mold into per[corrupted]
+
+Extracting...
+[corrupted] means we can create resources that are immune to disease and viruses (one of the leading causes of procured asset loss), or that can operate in extreme environmental conditions. We can alter their pheromonic signature to deter scent tracking, or mimic biometric data to bypass security systems. We can shape their physiology to create a perfect sniper, or the perfect hand to hand combat specialist. We can sculpt them cosmetically to create aesthetics that trigger trust and confidence, or produce panic and fear.
+
+In RISE, we have been given the clay to fashion the perfect merc[corrupted]
+
+//end file
+-------------------
+WRDN: ready:_
+conduit_informatics(104366A2A7)
+Processing new data...
+Updating ALP...
+simulate(conduit_init(ALP))…
+simulating...
+...
+8.59% conformity improvement
+updating framework...
+validating new entry…
+abductive_logic_program(update)
+conduit_init(update)
+Processing...
+WRDN: ready:_

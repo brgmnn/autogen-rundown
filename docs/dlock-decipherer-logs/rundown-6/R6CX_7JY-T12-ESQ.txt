@@ -1,0 +1,20 @@
+Mambo Media Services news wire
+Science Weekly
+Tuesday June 23rd, 2044
+Lance Overmars, ESA correspondent, Kourou Spaceport
+
+**ESA To Pull Hydrostasis Funding**
+
+Yesterday, the European Space Agency severed all ties and pulled funding from military contractor giants Kovac Defense Services. The decision comes in the wake of the so-called "Johanson Papers" published by Infoleak last week. Those papers revealed that Kovac's enigmatic leader, Anders Johanson, brokered a deal with the ESA despite knowing that Hydrostasis severely inhibits long-term memory retention. The ESA is out, and they are out now.
+
+Kovac has been researching Hydrostasis for decades; indeed, a reference to Amniotic Suspension (as it was then called) was noted as a "technology to watch" in our Near Horizons edition from 2026. Since then, Kovac continued its research and development program and has evolved the technology into its current form; Hydrostasis. Internal emails revealed by the Johanson Papers reveal that prior to the ESA deal, Mr. Johanson was under significant pressure from investors to show justification for the expense of Hydrostasis program. Selling the technology to the ESA for the Red Alpha mission almost certainly eased the pressure on Mr. Johanson, albeit temporarily.
+
+While there is no concrete evidence that the use of Hydrostasis had anything to do with the failure of the Red Alpha mission, there are still many questions left to be answered. The investigation into the crash landing on Mars lays the blame on "human error", citing "security concerns" as the reason a more detailed explanation will not be forthcoming. There is data available for the public to review - but there are no black box recordings in the hours leading up to the uncontrolled descent through the Martian atmosphere. Whatever the crew said or did remains a mystery to anyone outside of the ESA and will likely remain that way for the foreseeable future. Funding for the ESA remains under tight scrutiny, and it is natural to assume they will continue to suppress any revelations that may damage their reputation.
+
+What is known for sure is that the crew successfully woke from Hydrostasis 72 hours before the scheduled Martian descent. There was no indication of any issues with the ship, and the automated guidance system had put them exactly where they needed to be. We know that the ship had an internal temperature of 23 Celsius, as expected. We know that the water electrolysis system was working and producing oxygen in precise quantities. We even know what time the interior lighting system was simulating - 08:00 UTC to be precise. We know atmospheric filtering showed exactly the right amount of carbon dioxide present in the cabin, suggesting that all six of the crew were up and moving around the ship within a few hours. What we don't know is why Red Alpha went from mission normal to mission critical by 14:00 UTC that same day.
+
+First the ship drifted from its programmed orbit, something that could only happen if the navigation system failed, or by human intervention. Next, the communication relays stopped sending telemetry to Kourou, again either by catastrophic failure, or someone pulled the plug. At 11:57 UTC, the primary propulsion engines were ignited, and the ship started its final, fatal journey. There, the knowledge of anyone outside of the ESA ends.
+
+The revelation that Hydrostasis causes long-term memory damage may offer some insight into the problems on board Red Alpha on the day of
+
+//file ends.

@@ -1,0 +1,19 @@
+../BIOCOM
+
+audio intercept
+
+meta3.date_stamp(551112.070000)
+
+concern begins/..
+
+
+//transcript follows...
+
+VOICE 1
+
+This is a nationwide broadcast of the Emergency Alert System. This is not a test. In response to the spread of the NAM-V virus, a 24-hour national curfew is now in effect. All citizens are to remain indoors until further advised by federal authorities. Any citizens found breaking the curfew will be detained and held in isolation at a secured government location until the curfew has been lifted. If a member of your household displays any symptoms of the NAM-V virus, isolate the person immediately, and call the Viral Response Service by dialing 211 from any telephone. Symptoms include hemoptysis, muscular spasms, frothing at the mouth, deformation of the spine, violent behavior, extreme lethargy or drowsiness, depression, and vomiting. Anyone exposed to a confirmed NAM-V case should remain in isolation until the Viral Response Service has been notified. This guidance has been issued by the United States federal government for your protection.
+
+../BIOCOM
+personnel files updated
+alert system flagged
+concern ends/..

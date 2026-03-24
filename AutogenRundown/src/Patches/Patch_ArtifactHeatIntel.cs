@@ -1,9 +1,11 @@
+using AutogenRundown.Managers;
 using HarmonyLib;
 
 namespace AutogenRundown.Patches;
 
 /// <summary>
-/// Removes the "Artifact heat at..." warden intel message shown during the elevator ride.
+/// Replaces the "Artifact heat at..." warden intel message shown during the elevator ride
+/// with the current log read count for the level.
 /// Matches based on TextDataBlock ID 802 to work with any localization.
 /// </summary>
 [HarmonyPatch]
@@ -11,7 +13,7 @@ internal static class Patch_ArtifactHeatIntel
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(PlayerGuiLayer), nameof(PlayerGuiLayer.ShowWardenIntel))]
-    internal static bool Pre_ShowWardenIntel(string intel)
+    internal static bool Pre_ShowWardenIntel(ref string intel)
     {
         if (string.IsNullOrEmpty(intel))
             return true;
@@ -21,7 +23,19 @@ internal static class Patch_ArtifactHeatIntel
         var placeholderIndex = template.IndexOf("{0}");
 
         if (placeholderIndex >= 0 && intel.Contains(template.Substring(0, placeholderIndex)))
-            return false;
+        {
+            var mainId = RundownManager.ActiveExpedition?.LevelLayoutData ?? 0;
+
+            if (mainId == 0)
+                return true;
+
+            var logsRead = LogArchivistManager.PrintLogsRead(mainId);
+
+            if (logsRead == null)
+                return false;
+
+            intel = $"Log Archive Progress: {logsRead}";
+        }
 
         return true;
     }

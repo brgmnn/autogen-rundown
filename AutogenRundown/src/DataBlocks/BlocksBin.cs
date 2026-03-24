@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Markers;
+using AutogenRundown.Json;
 using BepInEx;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -56,6 +57,8 @@ public static class Bins
     public static BlocksBin<WavePopulation> WavePopulations { get; private set; }
         = new BlocksBin<WavePopulation>();
     public static LazyBlocksBin<WaveSettings> WaveSettings { get; private set; } = new();
+    public static BlocksBin<ChainedPuzzleType> ChainedPuzzleTypes { get; private set; }
+        = new BlocksBin<ChainedPuzzleType>();
     public static BlocksBin<GlobalWaveSettings> GlobalWaveSettings { get; private set; }
         = new BlocksBin<GlobalWaveSettings>();
 
@@ -79,6 +82,7 @@ public static class Bins
         EnemyPopulation.Setup();
         WavePopulation.Setup();
         Alarms.WaveSettings.Setup();
+        ChainedPuzzleType.Setup();
 
         ComplexResourceSet.SaveStatic();
         MiningMarker.SaveStatic();
@@ -131,6 +135,7 @@ public static class Bins
         WardenObjectives.Save("WardenObjective");
         WavePopulations.Save("SurvivalWavePopulation");
         WaveSettings.Save("SurvivalWaveSettings");
+        ChainedPuzzleTypes.Save("ChainedPuzzleType");
 
         // Mods
         GlobalWaveSettings.Save(
@@ -145,6 +150,7 @@ public static class Bins
 
 public class BlocksBin<T> where T : DataBlock<T>
 {
+    private static readonly AutogenContractResolver ContractResolver = new();
     /// <summary>
     /// Not sure what this is for yet
     /// </summary>
@@ -211,7 +217,11 @@ public class BlocksBin<T> where T : DataBlock<T>
     /// <param name="name"></param>
     public void Save(string name)
     {
-        var serializer = new JsonSerializer { Formatting = Formatting.Indented };
+        var serializer = new JsonSerializer
+        {
+            Formatting = Formatting.Indented,
+            ContractResolver = ContractResolver
+        };
 
         // Replace with Plugin.GameRevision to avoid interop dependency
         var revision = CellBuildData.GetRevision();
@@ -236,7 +246,11 @@ public class BlocksBin<T> where T : DataBlock<T>
     /// <param name="filename"></param>
     public void Save(string dir, string filename)
     {
-        var serializer = new JsonSerializer { Formatting = Formatting.Indented };
+        var serializer = new JsonSerializer
+        {
+            Formatting = Formatting.Indented,
+            ContractResolver = ContractResolver
+        };
         var path = Path.Combine(dir, filename);
 
         // Ensure the directory exists

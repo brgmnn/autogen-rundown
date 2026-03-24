@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.Components;
 using AutogenRundown.Managers;
 using AutogenRundown.Patches;
+using AutogenRundown.Patches.TravelScan;
 using AutogenRundown.Patches.ZoneSensors;
 using BepInEx;
 using BepInEx.Configuration;
@@ -29,7 +30,7 @@ namespace AutogenRundown;
 [BepInDependency("Amor.AmorLib", BepInDependency.DependencyFlags.HardDependency)]
 public class Plugin : BasePlugin
 {
-    public const string Version = "0.82.0";
+    public const string Version = "0.83.0";
 
     public const string Name = "the_tavern-AutogenRundown";
 
@@ -109,6 +110,27 @@ public class Plugin : BasePlugin
                 seasonalSeed: seedSeasonalConfig.Value,
                 unlockAll: useUnlocks.Value);
         }
+        else
+        {
+            var metadata = DataBlocks.RundownMetadata.Load();
+            if (metadata != null)
+            {
+                foreach (var entry in metadata.Rundowns)
+                {
+                    DataBlocks.Bins.Rundowns.AddBlock(new DataBlocks.Rundown
+                    {
+                        PersistentId = entry.PersistentId,
+                        Title = entry.Title
+                    });
+                }
+                Generator.WeekNumber = metadata.WeekNumber;
+                Generator.InputDailySeed = metadata.InputDailySeed;
+                Generator.InputWeeklySeed = metadata.InputWeeklySeed;
+                Generator.InputMonthlySeed = metadata.InputMonthlySeed;
+                Generator.SeasonalSeason = metadata.SeasonalSeason;
+                Generator.SeasonalYear = metadata.SeasonalYear;
+            }
+        }
 
         PlayFabManager.add_OnTitleDataUpdated((Action)RundownNames.OnTitleDataUpdated);
 
@@ -118,14 +140,13 @@ public class Plugin : BasePlugin
         GameDataAPI.OnGameDataInitialized += Patch_CentralGeneratorCluster.Setup;
         GameDataAPI.OnGameDataInitialized += LogArchivistManager.Setup;
         GameDataAPI.OnGameDataInitialized += ZoneSensorManager.Setup;
+        GameDataAPI.OnGameDataInitialized += TravelScanRegistry.Setup;
 
         // LevelAPI.OnLevelCleanup += SignBorderManager.Clear;
         // LevelAPI.OnEnterLevel += () =>
         // {
         //     SignBorderManager.SetBorderColor(0, new Color { r = 1.0f, b = 0.0f, g = 0.0f });
         // };
-
-        RundownTierMarkerArchivist.PluginSetup();
 
         AssetAPI.OnAssetBundlesLoaded += ExpeditionSuccessPage_ArchivistIcon.OnAssetBundlesLoaded;
         AssetAPI.OnAssetBundlesLoaded += RundownTierMarkerArchivist.OnAssetBundlesLoaded;

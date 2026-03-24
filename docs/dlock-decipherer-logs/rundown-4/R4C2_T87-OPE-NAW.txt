@@ -1,0 +1,81 @@
+Analyst Report
+Reported by: Boris Stanovich C066 (Report Analyst, Medical Dept.)
+Date of Report: October 07th 2053
+Report:	 #SAMD-C066-32
+
+Due to recent events I have been asked to compile a lock down procedure for the Garganta Facility. I advise that all procedures here should be cross checked against existing department procedures as my ability to collate information is somewhat compromised given the current situation. Many departments did not respond to my request for information, so the following procedures are drawn from existing data found in departmental handbooks, and personal communications with those departments who did respond.
+
+MEDICAL:
+All Schedule 1, 2 and 3 substances to be secured in approved containers. Approved containers include medbay lock boxes, emergency lock boxes, narcotic cabinets fully contained within class A storage conditions, KDS approved safe rooms, KDS approved armored storage enclosures, Project Insight flagged drop boxes.
+
+All magnetic devices that register more than 3,000 gauss to be powered down and covered with MagShield kevlar jackets.
+
+All med station equipment (excepting classified substances) may be dispensed as needed without the need for formal clearance.
+
+All pressurized gases and volatile substances to be properly secured in an approved location. Ensure all tank straps and release valves are secured properly.
+
+All Radioactive equipment and substances to be chambered permanently and labelled according to current H&S guidelines. Containment chambers must then be located within 15 meters of an appropriate CMS Silo.
+
+ENGINEERING & POWER:
+All Containment Material Silos (CMS) to be unlocked and available for free use as needed. This includes Water , Sand, Clay, and Boron silos.
+
+Containment Procedure guidance posters to be clearly visible upon accessing all CMS locations.
+
+All satellite power generators (gasoline, nuclear and geothermal) to be switched to low power mode. Automatic maintenance and calibration cycles set to 14 days.
+
+All Jefferies Tubes to be depressurized. All JT hatches welded shut and appropriately tagged.
+
+Reactor 1 to be set to low output mode with coolant pump priority. Thermal trips to be set at 50% of peak load. Reactor 1 containment doors to be secured.
+
+Sarcophagi to be deployed at Reactors 2, 3, and 4. Override clearance set to Class A ONLY. Containment doors for Reactors 2, 3 and 4 to be welded shut.
+
+Do not weld the containment doors at Reactor 1.
+
+Do not weld the containment doors at Reactor 1. (this information is presented twice in the department handbook - C066)
+
+ENVIRONMENT CONTROL:
+Flush and seal the cooling tubes for the auxiliary cooling system, use the C67 or C67B procedure depending on the cooling tube design.
+
+Air intake diverted to only use green tagged locations.
+
+Green tags at intake locations may only be applied once the location has been physically inspected and decontaminated using DeVac procedures.
+
+Diurnal Illumination System Control (DISC) service disabled. If the Emergency Lighting Grid (ELG) does not initiate immediately upon DISC shutdown, it must be manually initiated from the Level 3 Environment Control Center.
+
+ELG power feed diverted to Reactor 1. Priority set to "Motion Detect" for all floors (note that floors designated as Project Insight or KDS controlled may retain their own ELG power priority).
+
+COMMUNICATIONS:
+Hearsay logs to be localized and vaulted.
+
+Hearsay servers taken offline (check with department leads for updated protocols as this may have changed)
+
+Central surveillance records to be encrypted using KDS D-Lock cipher @2048k.
+
+Inter-deck communications to be limited to A, B Class personnel only. All other inter-deck comms by approval only.
+
+Cell grid deactivated. Faraday Lock engaged. All external communication networks routed through COMSAT for approval.
+
+Communications Array to be locked down to all communication authorizations except tier 5.
+
+SECURITY:
+Rescind pre-approved gate clearance for all personnel. Passes must be shown. Visual approval is rescinded.
+
+Biometric scanners to auto-engage sentry turrets as necessary (make sure your biometric records are UP TO DATE).
+
+Clear local cache on all Retinal/Fingerprint/DNA scanner units after every use. No historical data to be stored on any devices, other than the BIOCOM database.
+
+Seal all bulkhead doors and isolate central control to A class personnel only. Local control set to C class minimum.
+
+All personnel are limited to (1) N-137B Storage Unit for personal belongings. All N-137Bs must be screened for biological and radioactive matter then tagged with a PID number. The units can then be claimed at the appropriate Pneumatic Delivery center on the surface. Any unmarked N-137Bs will be sealed in the sub-level 02 vault indefinitely.
+
+Any person attempting to transport contraband out of the facility should be moved to a KDS holding cell. The confiscated items should be locked in the KDS vault, and the on-duty KDS officer should be notified.
+
+KOVAC DEFENSE SERVICES:
+KSO Procedure ITS-01 initiated (I have no further details on this protocol - C066)
+
+KDS Procedure RISE-XFIL initiated (I have no further details on this protocol - C066)
+
+PROJECT INSIGHT:
+Protocol PX-048 (I have no further details on this protocol - C066)
+
+Protocol PX-052 (I have no further details on this protocol - C066)

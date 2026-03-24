@@ -1,0 +1,102 @@
+//HearSay auto-transcript begins//
+
+VOICE 1
+Interview with Operative 4711... that’s... oh! Hackett. Where are we? 6 months. Good. Okay. Wake him up.
+
+VOICE 2
+Ugh…ah shit!
+
+VOICE 1
+Are you okay?
+
+VOICE 2
+Yeah. Who the fuck are you?
+
+VOICE 1
+You’re probably feeling a little confused.
+
+VOICE 2
+No. Not at all. Where the fuck am I?
+
+VOICE 1
+You don’t remember?
+
+VOICE 2
+I just fucking asked you, didn't I?
+
+VOICE 1
+Can you give me your name please?
+
+VOICE 2
+How about you give me yours?
+
+VOICE 1
+Do you know where you are?
+
+VOICE 2
+What are these straps for?
+
+VOICE 1
+They’re for your safety.
+
+VOICE 2
+Oh yeah? Or yours. Aiden Hackett. That’s my name.
+
+VOICE 1
+Interesting.
+
+VOICE 2
+Why… why can't I remember anything? What is this place?
+
+VOICE 1
+This is a clinic. Of sorts.
+
+VOICE 2
+What kind of fucking clinic? What happened to me?
+
+VOICE 1
+You’re having trouble remembering things. What can you tell me about your father?
+
+VOICE 2
+Nothing. I don't know who that is. Now, how about you undo these straps?
+
+VOICE 1
+Or your brothers? Cormac, Rory and... Killian. Do those names jog any memories?
+
+VOICE 2
+No. Look, you can trust me. Just take off the straps.
+
+VOICE 1
+The names don't stimulate any feelings?
+
+VOICE 2
+No. No feelings at all. Now look, where the fuck am I?
+
+VOICE 1
+You are in a special program that is designed to help with memory loss.
+
+VOICE 2
+Oh yeah? Okay. And how did I lose my memories?
+
+VOICE 1
+Ah, no. We’re trying to make sure you lose them.
+
+VOICE 2
+What? That doesn't make sense. Tell me why the fuck I’m here!
+
+VOICE 1
+I’ll explain everything soon enough, Mr. Hackett.
+
+VOICE 2
+That is not an answer!
+
+VOICE 1
+We’re going to show you some images, and play some sounds for you. Afterwards, we can talk again, see how you feel then. Close it up.
+
+VOICE 2
+Hey, no! Don't you fucking close that lid. No! Don't you--
+
+VOICE 1
+Let’s give him... 2 of the NGF protein clusters and 1 of the serotonin, then run program Semantic-02 on him.
+
+//HearSay auto-transcript ends//

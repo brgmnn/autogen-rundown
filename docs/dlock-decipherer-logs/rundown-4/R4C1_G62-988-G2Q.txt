@@ -1,0 +1,30 @@
+D-Lock Block Cipher
+alias:int_server.1024_ciph.tier5.phys_ops/PDeckerC085.flagged
+
+Decker,
+
+Here are the stats as of July 2053. So many unknowns - much of this is best guess.
+
+General admin: 11,000 sq/m (offices, meeting rooms etc)
+Habitation: 28,000 sq/m (dorms and private)
+Recreational: 4,000 sq/m (rest areas, leisure spaces)
+Medical: 14,000 sq/m (includes topside clinic and evac station)
+Services: 9,000 sq/m (transit, power, water, environment control etc)
+Utility & Access: 160,000 sq/m (utilities, access tunnels)
+Mineral & Ore processing: 325,000 sq/m (mostly iridium and platinoid processing, some specialist facilities not explained in the directory)
+Material research: 205,000 sq/m (can't get in to these so who knows?)
+Storage & shipping: 485,000 sq/m (mostly topside and upper levels)
+Modular Enterprise space: 315,000 sq/m (this is that Project Insight space we discussed, and something called RISE)
+BioEngineering facilities: 90,000 sq/m (Hammerstein weirdness)
+Affiliate allocation (Nyxos): 45,000 sq/m
+Affiliate allocation (Rockford): 20,000 sq/m
+Affiliate allocation (McCallister): 3,000 sq/m
+Affiliate allocation (Kovac): ? (can't find ANYTHING on this, but there's several levels of excavation they have completely taken over)
+Affiliate allocation (Unregistered): 185,000 sq/m (not specified, but we're still not allowed in)
+Deepest point: Shaft 17b 4200m (we may have gone deeper. The drill never stops)
+Largest natural void: Valiant Chamber 7,364,250 cu/m (latest numbers, they're still exploring)
+Largest excavation by volume: Probably KDS Deep? KDS Deep location was approximately 4,000,000 cu/m before Kovac rescinded record access.
+
+I'll fill in the blanks if I get KDS clearance. Or maybe I'll just walk in like I own the place ;/
+
+Igor

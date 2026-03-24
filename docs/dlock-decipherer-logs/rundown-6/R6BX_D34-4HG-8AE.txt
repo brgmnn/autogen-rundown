@@ -1,0 +1,13 @@
+../BIOCOM
+audio intercept
+meta3.date_stamp(540904.124417)
+concern begins/..
+
+//transcript follows...
+
+STOKES
+Hearsay on. This is Dr. Rebecca Stokes. I have just arrived from Houston and have joined Project Insight as the new analysis overseer. I am going to be working my way through the Hammerstein collection item by item over the next few weeks. Okay, let's start with artifact 7 of the collection. This is now being called the "Matter Wave Projector". It was found in subsection G-4 of... the inner. The inner... I need to find out what that means. Anyway, the team have coated the artifact with a silicon resin to prevent further accidents. Explanation... the two employees, both mining engineers, who first discovered the object disappeared as soon as they touched it. Okay. We know this because there were two witnesses to the event... C067 and C085. There is a note on their personnel files that says... Kovac is quote dealing with them unquote. I'm not going to think about what that means. Next steps I am going to place the artifact in a vacuum chamber and use a Leonardo Arm to run preliminary tests on it. I think a good start is to interface the Matter Wave Projector with a variety of objects. That will establish a base criteria of the circumstances under which the artifact self-initiates, the distances it operates in, the effect of different materials on it and so on. I hope that will give me a basic understanding of the... process. Event. I don't know what to call it. I need to establish a whole new lexicon for this research. If I can gather material samples of the artifact without setting the thing off I'll send them to Howie to see... Dr. Howard Stokes, to see what this thing is made of. Right. Time to get to work.
+
+../BIOCOM
+personnel files updated
+alert system flagged

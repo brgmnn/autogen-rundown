@@ -1,0 +1,26 @@
+GAO-47-026-B
+**This report is temporarily restricted while under agency review**
+
+July 2nd, 2047
+
+RE: Congressional Requesters report on private sector defense contracts 2045-2046
+
+Purpose:
+
+This document represents the findings of the GAO investigation into Department of Defense support of GDIT (Generative Digital Intelligence Technology) within the private sector. The report is an evaluation of the financial burden of continuing support of the Kovac Defense Services GDIT program, and an investigation into the ethical implications of using GDIT to oversee resource management in future state funded combat operations.
+
+Financial Summation:
+
+Kovac received $432 billion in congressionally approved funding for the fiscal year 2045. A comprehensive audit of Kovac's financial records indicates the actual expenditure for the year was $626 billion. There is no indication of unreported funding from any US government agency, suggesting that Kovac has additional financial support from one or more outside entities. Given the size of the additional funding, it can be presumed that the additional funds are coming from a non-US government agency. External influence on US supported research programs presents a significant national security risk and compromises the value of any programs deriving from said research.
+
+Immediate cessation of all congressional funding is highly recommended. Full disambiguation and potential non-destructive resolutions are presented in Section 3.
+
+Ethical Summation:
+
+Kovac's Biogenesis Combat Operations Management system was used extensively by the private sector in 2045. Operations conducted along the Caucus borders, along the Iran-Iraq DMZ and during the Belarus Insurgency have been labelled as "operationally successful" by the Armed Services report (ID# ASGAR-T-044-KDS-03), particularly as the system reported a 100% uptime and was not compromised once despite being exposed to several EMP attacks during its tenure as operations lead for federal forces. The use of BIOCOM rendered all EMP strategy ineffective and allowed KDS to return control of the DMZ to federal authorities.
+
+However, those operations have also received significant criticism from international organizations, including the United Nations, Amnesty International, Policy Watch, and the Hague Assembly. Critics of BIOCOM highlight concerns over the use of an "equivalency algorithm', the mathematical principle used by BIOCOM to gauge mission success by projected casualties. There is also growing concern over the practice of Martial Trafficking, as many of the operatives used by BIOCOM (designated as Kovac Security Operatives) come from unknown origins, have no legal rights or status, and have been trained using methods that break the Zurich Concord of 2042.
+
+Immediate cessation of all congressional funding is highly recommended. Full disambiguation and potential non-destructive resolutions are presented in Section 4.
+
+//file ends.

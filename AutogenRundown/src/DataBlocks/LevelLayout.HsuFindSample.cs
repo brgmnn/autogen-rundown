@@ -107,7 +107,14 @@ public partial record LevelLayout
                     {
                         var last = BuildBranch(start, 2);
                         planner.UpdateNode(last with { Branch = "hsu_sample" });
-                    })
+                    }),
+
+                    // Travel scan to HSU
+                    (0.15, () =>
+                    {
+                        var (end, _) = AddTravelScanAlarm(start);
+                        planner.UpdateNode(end with { Branch = "hsu_sample" });
+                    }),
                 });
 
                 break;
@@ -136,7 +143,14 @@ public partial record LevelLayout
                     {
                         var last = BuildBranch(start, Generator.Between(0, 1));
                         planner.UpdateNode(last with { Branch = "hsu_sample" });
-                    })
+                    }),
+
+                    // Travel scan to HSU
+                    (0.15, () =>
+                    {
+                        var (end, _) = AddTravelScanAlarm(start);
+                        planner.UpdateNode(end with { Branch = "hsu_sample" });
+                    }),
                 });
                 break;
             }
@@ -248,7 +262,19 @@ public partial record LevelLayout
                         var keycard = BuildBranch(start, 1, "keycard");
 
                         AddKeycardPuzzle(locked, keycard);
-                    })
+                    }),
+
+                    // Travel scan + keycard to HSU
+                    (0.15, () =>
+                    {
+                        var (mid, midZone) = AddTravelScanAlarm(start);
+                        planner.UpdateNode(mid with { MaxConnections = 3 });
+                        midZone.GenHubGeomorph(level.Complex);
+
+                        var (locked, _) = AddZone(mid, new ZoneNode { Branch = "hsu_sample" });
+                        var keycard = BuildBranch(mid, 1, "keycard");
+                        AddKeycardPuzzle(locked, keycard);
+                    }),
                 });
                 break;
             }
@@ -308,7 +334,14 @@ public partial record LevelLayout
                         var cell = BuildBranch(start, 2, "power_cell");
 
                         AddGeneratorPuzzle(locked, cell);
-                    })
+                    }),
+
+                    // Travel scan to HSU
+                    (0.15, () =>
+                    {
+                        var (end, _) = AddTravelScanAlarm(start);
+                        planner.UpdateNode(end with { Branch = "hsu_sample" });
+                    }),
                 });
                 break;
             }
@@ -483,7 +516,19 @@ public partial record LevelLayout
                         hsuZone.Coverage = CoverageMinMax.Medium;
 
                         AddKeycardPuzzle(hsu, keycard2);
-                    })
+                    }),
+
+                    // Travel scan + keycard to HSU
+                    (0.10, () =>
+                    {
+                        var (mid, midZone) = AddTravelScanAlarm(start);
+                        planner.UpdateNode(mid with { MaxConnections = 3 });
+                        midZone.GenHubGeomorph(level.Complex);
+
+                        var (locked, _) = AddZone(mid, new ZoneNode { Branch = "hsu_sample" });
+                        var keycard = BuildBranch(mid, 1, "keycard");
+                        AddKeycardPuzzle(locked, keycard);
+                    }),
                 });
                 break;
             }
@@ -549,7 +594,14 @@ public partial record LevelLayout
                         var keycard = BuildBranch(start, Generator.Between(1, 2), "keycard");
 
                         AddKeycardPuzzle(locked, keycard);
-                    })
+                    }),
+
+                    // Travel scan to HSU
+                    (0.15, () =>
+                    {
+                        var (end, _) = AddTravelScanAlarm(start);
+                        planner.UpdateNode(end with { Branch = "hsu_sample" });
+                    }),
                 });
                 break;
             }
@@ -632,6 +684,17 @@ public partial record LevelLayout
                             population = WavePopulation.Baseline_Flyers;
 
                         AddApexAlarm(lockedApex, population, WaveSettings.Baseline_Normal);
+                    }),
+
+                    // Travel scan to HSU
+                    (0.15, () =>
+                    {
+                        var (end, endZone) = AddTravelScanAlarm(start);
+                        planner.UpdateNode(end with { Branch = "hsu_sample" });
+
+                        endZone.HealthPacks += 3;
+                        endZone.ToolPacks += 2;
+                        endZone.AmmoPacks += 3;
                     }),
                 });
                 break;
@@ -759,7 +822,19 @@ public partial record LevelLayout
 
                         var cell = BuildBranch(prelude, Generator.Between(2, 3), "power_cell");
                         AddGeneratorPuzzle(hsu, cell);
-                    })
+                    }),
+
+                    // Travel scan + keycard to HSU
+                    (0.10, () =>
+                    {
+                        var (mid, midZone) = AddTravelScanAlarm(start);
+                        planner.UpdateNode(mid with { MaxConnections = 3 });
+                        midZone.GenHubGeomorph(level.Complex);
+
+                        var (locked, _) = AddZone(mid, new ZoneNode { Branch = "hsu_sample" });
+                        var keycard = BuildBranch(mid, 1, "keycard");
+                        AddKeycardPuzzle(locked, keycard);
+                    }),
                 });
                 break;
             }
@@ -818,6 +893,13 @@ public partial record LevelLayout
                         var keycard = BuildBranch(start, Generator.Between(1, 2), "keycard");
 
                         AddKeycardPuzzle(locked, keycard);
+                    }),
+
+                    // Travel scan to HSU
+                    (0.15, () =>
+                    {
+                        var (end, _) = AddTravelScanAlarm(start);
+                        planner.UpdateNode(end with { Branch = "hsu_sample" });
                     }),
                 });
                 break;
@@ -910,6 +992,17 @@ public partial record LevelLayout
                             population = WavePopulation.Baseline_Flyers;
 
                         AddApexAlarm(lockedApex, population, WaveSettings.Baseline_Normal);
+                    }),
+
+                    // Travel scan + apex to HSU
+                    (0.15, () =>
+                    {
+                        var (mid, _) = AddTravelScanAlarm(start);
+                        var (end, _) = BuildChallenge_ApexAlarm(
+                            mid,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_Hard);
+                        planner.UpdateNode(end with { Branch = "hsu_sample" });
                     }),
                 });
                 break;
@@ -1043,7 +1136,26 @@ public partial record LevelLayout
                         hsuZone.Coverage = CoverageMinMax.Medium;
 
                         AddKeycardPuzzle(hsu, keycard2);
-                    })
+                    }),
+
+                    // Travel scan + 2 keycards to HSU
+                    (0.10, () =>
+                    {
+                        var (mid, midZone) = AddTravelScanAlarm(start);
+                        planner.UpdateNode(mid with { MaxConnections = 3 });
+                        midZone.GenHubGeomorph(level.Complex);
+
+                        var (node2, zone2) = AddZone(mid, new ZoneNode { Branch = "primary", MaxConnections = 3 });
+                        zone2.GenHubGeomorph(level.Complex);
+
+                        var keycard1 = BuildBranch(mid, 1, "keycard_1");
+                        AddKeycardPuzzle(node2, keycard1);
+
+                        var keycard2 = BuildBranch(node2, 1, "keycard_2");
+                        var (hsu, hsuZone) = AddZone(node2, new ZoneNode { Branch = "hsu_sample" });
+                        hsuZone.Coverage = CoverageMinMax.Medium;
+                        AddKeycardPuzzle(hsu, keycard2);
+                    }),
                 });
                 break;
             }
@@ -1103,6 +1215,13 @@ public partial record LevelLayout
                         var cell = BuildBranch(prelude, 2, "power_cell");
 
                         AddGeneratorPuzzle(locked, cell);
+                    }),
+
+                    // Travel scan to HSU
+                    (0.15, () =>
+                    {
+                        var (end, _) = AddTravelScanAlarm(start);
+                        planner.UpdateNode(end with { Branch = "hsu_sample" });
                     }),
                 });
                 break;
@@ -1197,6 +1316,17 @@ public partial record LevelLayout
                             population = WavePopulation.Baseline_Flyers;
 
                         AddApexAlarm(lockedApex, population, WaveSettings.Baseline_Normal);
+                    }),
+
+                    // Travel scan + apex to HSU
+                    (0.15, () =>
+                    {
+                        var (mid, _) = AddTravelScanAlarm(start);
+                        var (end, _) = BuildChallenge_ApexAlarm(
+                            mid,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_VeryHard);
+                        planner.UpdateNode(end with { Branch = "hsu_sample" });
                     }),
                 });
                 break;

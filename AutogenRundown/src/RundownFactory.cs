@@ -191,7 +191,9 @@ public static class RundownFactory
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab",
+                // "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab",
+                // "Assets/Custom Geo's/Digsite/digsite_x_tile_1/digsite_x_tile_1.prefab",
+                "Assets/CustomPrefabs/CollisionGeos/geo_lab_FA_hub_01.prefab",
                 // "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_01.prefab",
                 // "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_01.prefab",
 
@@ -199,12 +201,12 @@ public static class RundownFactory
                 {
                     Tier = "A",
                     Name = "Debug Test",
-                    Complex = Complex.Mining,
+                    Complex = Complex.Tech,
                     Settings = settings,
                     Index = rundown.TierA_Count + 1,
                     // Accessibility = Accessibility.BlockedAndScrambled,
                     IsTest = true
-                }, 3);
+                }, 1);
 
             rundown.AddLevel(testLevel);
         }
@@ -490,11 +492,11 @@ public static class RundownFactory
             {
                 "SPRING_2026", new List<List<int>>
                 {
-                    new() { 1, 1, 1, 2, 1 },
-                    new() { 4, 1, 1, 3, 1, 2 },
-                    new() { 2, 1, 1, 1, 4, 4 },
-                    new() { 1, 1, 5, 3, 3, 4 },
-                    new() { 2, 6, 1, 1, 5 }
+                    new() { 1,  1, 1, 2, 1 },
+                    new() { 4,  1, 1, 3, 1, 3 },
+                    new() { 4,  5, 3, 1, 5, 4 },
+                    new() { 2,  1, 7, 3, 3, 4 },
+                    new() { 4, 10, 3, 1, 5 }
                 }
             }
         };
@@ -511,7 +513,7 @@ public static class RundownFactory
                 /* Tier B */ new() { 1, 1, 1, 1, 1, 1 },
                 /* Tier C */ new() { 1, 1, 1, 1, 1, 1 },
                 /* Tier D */ new() { 1, 1, 1, 1, 1, 1 },
-                /* Tier E */ new() { 1, 1, 1, 1 }
+                /* Tier E */ new() { 1, 1, 1, 1, 1 }
             };
 
         // Define a rundown global pool of objectives for the main objective.
@@ -836,9 +838,9 @@ public static class RundownFactory
                 {
                     new() { 1, 1 },
                     new() { 1, 1, 1 },
-                    new() { 1, 2, 1, 1 },
-                    new() { 2, 5, 4, 1 },
-                    new() { 2, 1 }
+                    new() { 3, 3, 1, 1 },
+                    new() { 3, 5, 5, 1 },
+                    new() { 3, 1 }
                 }
             }
         };
@@ -1227,6 +1229,22 @@ public static class RundownFactory
 
         Bins.Save();
 
+        // Save rundown display metadata for RegenerateOnStartup=false restarts
+        new RundownMetadata
+        {
+            WeekNumber = Generator.WeekNumber,
+            InputDailySeed = Generator.InputDailySeed,
+            InputWeeklySeed = Generator.InputWeeklySeed,
+            InputMonthlySeed = Generator.InputMonthlySeed,
+            SeasonalSeason = Generator.SeasonalSeason,
+            SeasonalYear = Generator.SeasonalYear,
+            Rundowns = Bins.Rundowns.Blocks.Select(r => new RundownMetadataEntry
+            {
+                PersistentId = r.PersistentId,
+                Title = r.Title
+            }).ToList()
+        }.Save();
+
         EnemyCustomization.Ability.Save();
         EnemyCustomization.EnemyAbility.Save();
         EnemyCustomization.Model.Save();
@@ -1234,6 +1252,9 @@ public static class RundownFactory
         EnemyCustomization.Property.Save();
         GlobalConfig.Save();
         ItemSpawns.Save();
+
+        // Apply any user custom GameData overrides (loaded last, after everything else)
+        CustomGameData.Apply();
     }
 }
 

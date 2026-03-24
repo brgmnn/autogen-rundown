@@ -65,15 +65,13 @@ public partial record WardenObjective
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
         MainObjective = new Text("Find the <u>Uplink Terminals</u> [ALL_ITEMS] and establish an external uplink from each terminal");
-        FindLocationInfo = "Gather information about the location of [ALL_ITEMS]";
-        FindLocationInfoHelp = "Access more data in the terminal maintenance system";
-        SolveItem = "Use [ITEM_SERIAL] to create an uplink to [UPLINK_ADDRESS]";
-        SolveItemHelp = "Use the UPLINK_CONNECT command to establish the connection";
+        FindLocationInfo = new Text("Gather information about the location of [ALL_ITEMS]");
+        SolveItem = new Text("Use [ITEM_SERIAL] to create an uplink to [UPLINK_ADDRESS]");
+        SolveItemHelp = new Text("Use the UPLINK_CONNECT command to establish the connection");
 
         GoToWinCondition_Elevator = new Text(() => $"Neural Imprinting Protocols retrieved. Return to the point of entrance in {Intel.Zone(level.ExtractionZone, level.Planner)}");
-        GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
-        GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
-        GoToWinCondition_ToMainLayer = "Go back to the main objective and complete the expedition.";
+        GoToWinConditionHelp_Elevator = new Text("Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back");
+        GoToWinConditionHelp_CustomGeo = new Text("Use the navigational beacon and the information in the surroundings to find the exit point");
 
         // Require a team scan to start the uplink
         StartPuzzle = ChainedPuzzle.TeamScan;

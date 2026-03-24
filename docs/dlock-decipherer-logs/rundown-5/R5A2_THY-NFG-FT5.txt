@@ -1,0 +1,42 @@
+//HearSay auto-transcript begins//
+
+VOICE 1
+You don’t mind if I record this?
+
+VOICE 2
+Why the fuck would you want to do that?
+
+VOICE 1
+Ok I just want to make sure we have... multiple records of this. It’s a rather unusual request.
+
+VOICE 2
+Ah look can we just get on with the paperwork or what?
+
+VOICE 1
+Just a few more questions. You do understand what joining Legion means, don’t you?
+
+VOICE 2
+I work for Kovac. Of course I know what it means. You think I'd be signing paperwork if I didn't know what Legion was? I'm making a choice. I want out, and there's fuck all else I can do so this is my way out. Let’s go.
+
+VOICE 1
+It’s common for veterans to suffer post-traumatic stress when they return from combat. Looking at your file, you have seen a lot of action. Perhaps you need a break?
+
+VOICE 2
+Oh, really? And you can give me that break, can you? Think you can fix me? That part of your training? Let me tell you something love. I've done things that would make you shit your little nappies. You've got my records. You know about Delbaran. You know what I did.
+
+VOICE 1
+So you were upset that you failed your mission?
+
+VOICE 2
+I killed twenty-three innocent people in that village, and the only reason I'm not rotting away in a jail cell is because it's bad for fucking business. Look, I know I'm fucked in the head. I want out, and there's no way Kovac's going to let me out with what I done, and what I know about Anderson. I'm not doing this shit anymore. I’ve already tried to call last orders on myself and I couldn't pull the trigger, so come on, let’s go, let's get this done.
+
+VOICE 1
+Maybe you just need to go home for a bit? Get away from combat? I see your father is still alive? Perhaps you could visit him--
+
+VOICE 2
+Go home for a bit? What the fuck is wrong with you? Why the fuck would you ask me to go see my father when you have no idea what kind of man he is, or what the fuck I'm going to do to him if I ever see him again? Your job is to shuffle paperwork and make sure the pens don't run out of ink. Stick to your fucking lane. Now where do I sign before I run out patience with you?
+
+VOICE 1
+Yes, of course. Follow me. End interview.
+
+//HearSay auto-transcript ends//

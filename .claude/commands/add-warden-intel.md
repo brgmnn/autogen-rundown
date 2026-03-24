@@ -12,6 +12,7 @@ Your task is to generate NEW warden intel messages and add them to the appropria
 You are generating warden intel messages for: **{{args}}**
 
 The args should specify:
+
 1. **What the messages are about** - The context/objective/feature (e.g., "reactor startup", "fog zones", "security sensors")
 2. **Where to add them** - File path, method name, or code location (e.g., "WardenObjective.Reactor.cs", "AddFogZone method", "LevelLayout.SecuritySensors.cs line 120")
 3. **Optionally: how many messages to add** -
@@ -85,56 +86,62 @@ level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new L
 ## Steps to Complete
 
 1. **Identify the target location from args**:
-  - Parse {{args}} to extract both the context (what it's about) and location (where to add)
-  - If a specific file/method is mentioned in args, navigate to that location
-  - If no location is specified, search for the most appropriate place:
-    - Use Grep to find where `level.ElevatorDropWardenIntel` is used related to the context
-    - Search in `AutogenRundown/src/DataBlocks/` directory
-    - Look for relevant objective or feature files
+
+- Parse {{args}} to extract both the context (what it's about) and location (where to add)
+- If a specific file/method is mentioned in args, navigate to that location
+- If no location is specified, search for the most appropriate place:
+  - Use Grep to find where `level.ElevatorDropWardenIntel` is used related to the context
+  - Search in `AutogenRundown/src/DataBlocks/` directory
+  - Look for relevant objective or feature files
 
 2. **Review objective documentation in docs folder**:
-  - **Check `docs/game/objectives/` for relevant objective information**
-  - Read the relevant doc file to understand:
-    - **Objective mechanics and phases**: What happens during the mission
-    - **Common challenges**: What players struggle with (wave overwhelm, resource depletion, timer pressure, etc.)
-    - **Core mechanics**: Specific game mechanics involved (verification codes, bioscans, alarms, etc.)
-    - **Enemy types**: What enemies appear in this objective
-    - **Atmosphere and tone**: The tension and situations players face
-  - Use this information to make intel messages contextually accurate and atmospheric
+
+- **Check `docs/game/objectives/` for relevant objective information**
+- Read the relevant doc file to understand:
+  - **Objective mechanics and phases**: What happens during the mission
+  - **Common challenges**: What players struggle with (wave overwhelm, resource depletion, timer pressure, etc.)
+  - **Core mechanics**: Specific game mechanics involved (verification codes, bioscans, alarms, etc.)
+  - **Enemy types**: What enemies appear in this objective
+  - **Atmosphere and tone**: The tension and situations players face
+- Use this information to make intel messages contextually accurate and atmospheric
 
 3. **Review the target location**:
-  - Read the file and understand the surrounding code
-  - Look for existing `#region Warden Intel Messages` blocks nearby
-    - If it exists, look for comments like `// add warden intel here`, `// TODO: add warden intel`, or `// claude add intel here` and ONLY ADD THE WARDEN INTEL MESSAGES THERE.
-  - Understand what the method/function does to ensure messages are contextually appropriate
-  - If adding to a WardenObjective file and there's no existing input, usually it should be added at the end of the `Build_*` method.
+
+- Read the file and understand the surrounding code
+- Look for existing `#region Warden Intel Messages` blocks nearby
+  - If it exists, look for comments like `// add warden intel here`, `// TODO: add warden intel`, or `// claude add intel here` and ONLY ADD THE WARDEN INTEL MESSAGES THERE.
+- Understand what the method/function does to ensure messages are contextually appropriate
+- If adding to a WardenObjective file and there's no existing input, usually it should be added at the end of the `Build_*` method.
 
 4. **Review existing examples for style**:
-  - Read `kb/vanilla_warden_drop_intel.txt` for inspiration and tone
-  - Look at existing custom messages in the codebase for style consistency
-  - Match the tone and theme of the context
+
+- Read `kb/vanilla_warden_drop_intel.txt` for inspiration and tone
+- Look at existing custom messages in the codebase for style consistency
+- Match the tone and theme of the context
 
 5. **Generate the 200 (or specified) new messages** that:
-  - Relate specifically to the context from {{args}}
-  - **Incorporate details from the objective docs** (if applicable):
-    - Reference specific mechanics (verification codes, bioscans, wave timers, fog, etc.)
-    - Mention specific challenges (timer pressure, code retrieval, resource depletion, etc.)
-    - Include relevant enemy types (Giants, Chargers, Mothers, Tanks, etc.)
-    - Capture the specific atmosphere of that objective type
-  - Follow the exact format above
-  - Capture the GTFO atmosphere: tense, scary, desperate, chaotic
-  - Include relevant sound effects and actions
-  - Have one dramatic red text section per message
-  - Hint at what players will face without being too explicit
+
+- Relate specifically to the context from {{args}}
+- **Incorporate details from the objective docs** (if applicable):
+  - Reference specific mechanics (verification codes, bioscans, wave timers, fog, etc.)
+  - Mention specific challenges (timer pressure, code retrieval, resource depletion, etc.)
+  - Include relevant enemy types (Giants, Chargers, Mothers, Tanks, etc.)
+  - Capture the specific atmosphere of that objective type
+- Follow the exact format above
+- Capture the GTFO atmosphere: tense, scary, desperate, chaotic
+- Include relevant sound effects and actions
+- Have one dramatic red text section per message
+- Hint at what players will face without being too explicit
 
 6. **Add ONLY the new messages** at the specified location:
-  - Use the `#region Warden Intel Messages` and `#endregion` wrapper if it doesn't exist
-  - Add the `level.ElevatorDropWardenIntel.Add(...)` block
-  - Place it in the appropriate location within the method/function specified in args
-  - Show the exact line number where it was added
-  - **DO NOT modify any other code**
-  - **DO NOT refactor existing messages**
-  - **DO NOT reorganize the file structure**
+
+- Use the `#region Warden Intel Messages` and `#endregion` wrapper if it doesn't exist
+- Add the `level.ElevatorDropWardenIntel.Add(...)` block
+- Place it in the appropriate location within the method/function specified in args
+- Show the exact line number where it was added
+- **DO NOT modify any other code**
+- **DO NOT refactor existing messages**
+- **DO NOT reorganize the file structure**
 
 ## Reference Examples from Vanilla Game
 
@@ -151,16 +158,19 @@ Review `kb/vanilla_warden_drop_intel.txt` for tone and style. Key patterns:
 When generating messages, use the `docs/game/objectives/` files to add specific, contextually accurate details:
 
 **Reactor Startup Example** (from `reactor-startup.md`):
+
 - References waves, verification codes, timer pressure
 - `>... Wave four incoming!\r\n>... <size=200%><color=red>Where's the verification code?!</color></size>\r\n>... [frantic typing]`
 - `>... The verification timer!\r\n>... <size=200%><color=red>We're out of time!</color></size>\r\n>... [alarm blaring]`
 
 **Terminal Uplink Example** (from `terminal-uplink.md`):
+
 - References IP addresses, UPLINK commands, alarm triggers
 - `>... UPLINK_CONNECT entered.\r\n>... <size=200%><color=red>Alarm's triggered!</color></size>\r\n>... [klaxon blaring]`
 - `>... Code's not matching!\r\n>... X04... where's X04?!\r\n>... <size=200%><color=red>Stage reset!</color></size>`
 
 **Survival Example** (from `survival.md`):
+
 - References timer countdown, position defense, environmental changes
 - `>... Thirty seconds left!\r\n>... <size=200%><color=red>Hold the position!</color></size>\r\n>... [gunfire intensifies]`
 - `>... Security doors opening!\r\n>... New spawn points!\r\n>... <size=200%><color=red>Reposition!</color></size>`

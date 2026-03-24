@@ -45,12 +45,12 @@ public partial record WardenObjective
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
         MainObjective = new Text(() => $"Find [COUNT_REQUIRED] Power Cells and bring them to the Central Generator Cluster in {Intel.Zone(GeneratorClusterNode, level.Planner)}");
-        FindLocationInfo = "Locate the Power Cells and use them to power up the Generator Cluster";
-        FindLocationInfoHelp = "Generators Online: [COUNT_CURRENT] / [COUNT_REQUIRED]";
+        FindLocationInfo = new Text("Locate the Power Cells and use them to power up the Generator Cluster");
+        FindLocationInfoHelp = new Text("Generators Online: [COUNT_CURRENT] / [COUNT_REQUIRED]");
         // TODO: this key_map doesn't work?
-        GoToWinConditionHelp_Elevator = "Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back";
-        GoToWinConditionHelp_CustomGeo = "Use the navigational beacon and the information in the surroundings to find the exit point";
-        GoToWinCondition_ToMainLayer = "Malfunction in air purification system. Make your way for the forward emergency exit.";
+        GoToWinConditionHelp_Elevator = new Text("Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back");
+        GoToWinConditionHelp_CustomGeo = new Text("Use the navigational beacon and the information in the surroundings to find the exit point");
+        GoToWinCondition_ToMainLayer = new Text("Malfunction in air purification system. Make your way for the forward emergency exit.");
 
         MidPuzzle = level.Tier switch
         {

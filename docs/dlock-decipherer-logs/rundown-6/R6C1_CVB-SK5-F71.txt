@@ -1,0 +1,19 @@
+D-Lock Block Cipher
+alias:int_server.1024_ciph.tier5.exec_branch/APirosA134.flagged
+
+From: Marcus Gantus B623
+To: Andre Piros A134
+Date: March 8th 2052
+Subject: Issues with BIOCOM network
+
+Mr. Piros,
+
+I've been running extended tests on the BIOCOM infrastructure to make sure signal integrity is consistent throughout the facility. All of our boosters are working and positioned correctly, and the chronoregulators are synchronizing all data transmissions and maintaining a propagation delay of no more than 0.5 microseconds. This should result in a network wide ping of 2ms; however, that is not what we're seeing. Below 500 meters the ping fluctuates between 2ms up to 25ms. Despite installing additional boosters and chronoregulators, we are unable to get a consistent PDT. Something is affecting our transfer speeds.
+
+So, I took it upon myself to conduct a physical inspection of our FO network, and have found something I can't explain. In several locations (schematics attached) the optical cables have somehow enmeshed with the surrounding rock. I don't know much about geology, but the rock looks crystalline to me. Perhaps this is the Cretasium substance I have heard about? Whatever it is, it is enmeshing itself with the BIOCOM network infrastructure and affecting ping times. The system is running fine, but I thought you should know. I don't see how it could be considered a security risk, but there are places where our physical network is - for want of a better word - vulnerable.
+
+We can handle up to a 45ms ping deviance in software so it's not an emergency, but I wanted to put you in the loop. Let me know how you'd like me to proceed.
+
+Marcus
+
+[File too big. Attachment removed]

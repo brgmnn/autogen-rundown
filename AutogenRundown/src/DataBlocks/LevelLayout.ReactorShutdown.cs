@@ -167,6 +167,18 @@ public partial record LevelLayout
                         reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                         AddForwardExtractStart(reactor);
                     }),
+
+                    // Travel scan + password: Reactor → TravelScanAlarm → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var (end, _) = AddTravelScanAlarm(reactor);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                        AddForwardExtractStart(pwNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -202,6 +214,14 @@ public partial record LevelLayout
                         var nodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
                     }),
+
+                    // Travel scan + password: Reactor → TravelScanAlarm → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var (end, _) = AddTravelScanAlarm(reactor);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -230,6 +250,14 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_LockedTerminalDoor(reactor, 0);
                         var nodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
+                    }),
+
+                    // Travel scan + password: Reactor → TravelScanAlarm → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var (end, _) = AddTravelScanAlarm(reactor);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
                 });
                 break;
@@ -324,6 +352,18 @@ public partial record LevelLayout
                         AddKeycardPuzzle(reactor, end);
                         AddForwardExtractStart(end);
                     }),
+
+                    // Travel scan + password: Reactor → TravelScanAlarm → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var (end, _) = AddTravelScanAlarm(reactor);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                        AddForwardExtractStart(pwNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -373,6 +413,14 @@ public partial record LevelLayout
                         var pwNodes = AddBranch(nodes.Last(), 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
+
+                    // Travel scan + password: Reactor → TravelScanAlarm → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var (end, _) = AddTravelScanAlarm(reactor);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -409,6 +457,14 @@ public partial record LevelLayout
                     {
                         var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_LockedTerminalPasswordInSide(deep.Last());
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
+
+                    // Travel scan + password: Reactor → TravelScanAlarm → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var (end, _) = AddTravelScanAlarm(reactor);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
@@ -522,6 +578,19 @@ public partial record LevelLayout
                         reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                         AddForwardExtractStart(reactor);
                     }),
+
+                    // Travel scan + keycard side + password: Reactor → TravelScanAlarm → KeycardInSide → PasswordTerminal
+                    (0.10, () =>
+                    {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var (mid, _) = AddTravelScanAlarm(reactor);
+                        var (end, _) = BuildChallenge_KeycardInSide(mid);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                        AddForwardExtractStart(pwNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -576,6 +645,17 @@ public partial record LevelLayout
                         reactorNode = reactor;
                         reactorDefinition.ZoneNumber = reactor.ZoneNumber;
                     }),
+
+                    // Travel scan + password: Reactor → TravelScanAlarm → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var (end, _) = AddTravelScanAlarm(reactor);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -628,6 +708,14 @@ public partial record LevelLayout
                     {
                         var deep = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_LockedTerminalDoor(deep.Last(), 1);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
+
+                    // Travel scan + password: Reactor → TravelScanAlarm → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var (end, _) = AddTravelScanAlarm(reactor);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
@@ -755,6 +843,17 @@ public partial record LevelLayout
                         AddKeycardPuzzle(reactor, end);
                         AddForwardExtractStart(end);
                     }),
+
+                    // Travel scan + boss + password: Reactor → TravelScanAlarm → BossFight → PasswordTerminal
+                    (0.10, () =>
+                    {
+                        var (mid, _) = AddTravelScanAlarm(reactor);
+                        var (end, _) = BuildChallenge_BossFight(mid);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                        AddForwardExtractStart(pwNodes.Last());
+                        AddForwardExtractStart(reactor, chance: 0.3);
+                    }),
                 });
                 break;
             }
@@ -817,6 +916,14 @@ public partial record LevelLayout
                     {
                         var nodes = AddBranch(reactor, 1, "reactor_deep");
                         var (end, _) = BuildChallenge_LockedTerminalDoor(nodes.Last(), 1);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
+
+                    // Travel scan + password: Reactor → TravelScanAlarm → PasswordTerminal
+                    (0.10, () =>
+                    {
+                        var (end, _) = AddTravelScanAlarm(reactor);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
@@ -903,6 +1010,14 @@ public partial record LevelLayout
                             WaveSettings.Baseline_Hard);
                         var cellNodes = AddBranch(apexEnd, 1, "power_cell");
                         AddGeneratorPuzzle(reactor, cellNodes.Last());
+                    }),
+
+                    // Travel scan + password: Reactor → TravelScanAlarm → PasswordTerminal
+                    (0.10, () =>
+                    {
+                        var (end, _) = AddTravelScanAlarm(reactor);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
                 });
                 break;
@@ -1028,6 +1143,18 @@ public partial record LevelLayout
                         AddKeycardPuzzle(reactor, end);
                         AddForwardExtractStart(end);
                     }),
+
+                    // Travel scan + boss + password: Reactor → TravelScanAlarm → BossFight → KeycardInZone → PasswordTerminal
+                    (0.10, () =>
+                    {
+                        var (mid, _) = AddTravelScanAlarm(reactor);
+                        var (mid2, _) = BuildChallenge_BossFight(mid);
+                        var (end, _) = BuildChallenge_KeycardInZone(mid2);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                        AddForwardExtractStart(pwNodes.Last());
+                        AddForwardExtractStart(reactor, chance: 0.3);
+                    }),
                 });
                 break;
             }
@@ -1112,6 +1239,18 @@ public partial record LevelLayout
                         var cellNodes = AddBranch(bossEnd, 1, "power_cell");
                         AddGeneratorPuzzle(reactor, cellNodes.Last());
                     }),
+
+                    // Travel scan + apex + password: Reactor → TravelScanAlarm → ApexAlarm → PasswordTerminal
+                    (0.10, () =>
+                    {
+                        var (mid, _) = AddTravelScanAlarm(reactor);
+                        var (end, _) = BuildChallenge_ApexAlarm(
+                            mid,
+                            WavePopulation.Baseline_Hybrids,
+                            WaveSettings.Baseline_VeryHard);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -1193,6 +1332,15 @@ public partial record LevelLayout
                             nodes.Last(),
                             WavePopulation.Baseline_Hybrids,
                             WaveSettings.Baseline_VeryHard);
+                        var reactor = BuildReactor(end);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                    }),
+
+                    // Travel scan: TravelScanAlarm → Reactor (no password)
+                    (0.15, () =>
+                    {
+                        var (end, _) = AddTravelScanAlarm(start);
                         var reactor = BuildReactor(end);
                         reactorNode = reactor;
                         reactorDefinition.ZoneNumber = reactor.ZoneNumber;
