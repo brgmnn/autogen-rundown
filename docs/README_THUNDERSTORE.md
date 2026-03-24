@@ -22,9 +22,9 @@ AutogenRundown supports the following 3rd party peer mods. You can install them 
 
 ## Customizing Autogen Datablocks
 
-You can override any generated datablock or custom JSON file by placing partial files in a `GameData-Custom` folder. Your changes are **deep-merged** into the generated output — you only need to specify the properties you want to change. Everything else is preserved.
+You can override any generated datablock or custom JSON file by placing partial files in the `GameData-Custom` folder in the BepInEx folder for your mod profile. Your changes are merged deeply into the generated datablocks. You only need to specify the properties you want to change. Everything else is preserved.
 
-Custom overrides are applied **last**, after all rundown generation and peer mod configuration.
+Custom overrides are applied **last**, after all rundown generation and copied peer mod configuration files.
 
 ### Setup
 
@@ -50,9 +50,10 @@ BepInEx/
 
 Datablock files (`GameData_*DataBlock_bin.json`) contain a `Blocks` array where each block has a `persistentID`. Your override file only needs the blocks you want to change, with only the properties you want to modify.
 
-**Example** — Make Strikers have 999 health and add a custom enemy:
+**Example**: Make Strikers have 999 health and add a custom enemy:
 
 ```json
+// GameData-Custom/GameData_EnemyBalancingDataBlock_bin.json
 {
   "Blocks": [
     { "persistentID": 13, "Health": { "HealthMax": 999 } },
@@ -74,21 +75,24 @@ Datablock files (`GameData_*DataBlock_bin.json`) contain a `Blocks` array where 
 
 For JSON files where array elements don't have a `persistentID` (such as files in `Custom/`), you can target specific array positions using `__index`. The `__index` property is stripped from the final output.
 
-**Example** — Change the cost of the second spawn cost entry:
+**Example**: Increase Mega-Mother children spawns to 50 max and 20 min in ExtraEnemyCustomization:
 
 ```json
+// GameData-Custom/Custom/ExtraEnemyCustomization/Ability.json
 {
-  "SpawnCost": [{ "__index": 1, "Cost": 25 }]
+  "BirthingCustom": [
+    { "__index": 0, "ChildrenPerBirthMin": 20, "ChildrenMax": 50 }
+  ]
 }
 ```
 
-This merges into the object at position 1 of the `SpawnCost` array, changing only `Cost` while preserving all other properties at that index.
+This merges into the object at position 0 of the `BirthingCustom` array, changing `ChildrenPerBirthMin` and `ChildrenMax` while preserving all other properties at that index.
 
 ### Appending to Arrays (\_\_existing)
 
-To add items to an array while keeping the original contents, use the `"__existing"` string marker. It expands to the full original array at that position — items before it are prepended, items after are appended.
+To add items to an array while keeping the original contents, use the `"__existing"` string marker. It expands to the full original array at that position. Items before it are prepended, items after are appended.
 
-**Example** — Append a new enemy to an existing list:
+**Example**: Append a new enemy to an existing list:
 
 ```json
 {
@@ -96,7 +100,7 @@ To add items to an array while keeping the original contents, use the `"__existi
 }
 ```
 
-**Example** — Prepend and append:
+**Example**: Prepend and append:
 
 ```json
 {
