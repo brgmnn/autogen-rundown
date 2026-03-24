@@ -358,7 +358,11 @@ public static class TravelPathGenerator
     /// Resamples a path of corners at fixed distance intervals.
     /// Each resampled point is pulled away from NavMesh edges.
     /// </summary>
-    private static List<Vector3> ResamplePath(List<Vector3> corners, float stepDistance)
+    /// <summary>
+    /// Resamples a path at fixed step intervals without any NavMesh edge adjustment.
+    /// Pure math — no runtime dependencies.
+    /// </summary>
+    internal static List<Vector3> ResamplePathRaw(List<Vector3> corners, float stepDistance)
     {
         var resampled = new List<Vector3>();
         if (corners.Count < 2)
@@ -367,8 +371,7 @@ public static class TravelPathGenerator
         var remaining = 0f;
         var prev = corners[0];
 
-        // Add the starting point
-        resampled.Add(AdjustForEdges(prev, TravelScanRegistry.EdgeDistance));
+        resampled.Add(prev);
 
         for (var i = 1; i < corners.Count; i++)
         {
@@ -382,19 +385,29 @@ public static class TravelPathGenerator
                 continue;
             }
 
-            segDir /= segLen; // normalize
+            segDir /= segLen;
             var walked = remaining;
 
             while (walked + stepDistance <= segLen)
             {
                 walked += stepDistance;
-                var point = prev + segDir * walked;
-                resampled.Add(AdjustForEdges(point, TravelScanRegistry.EdgeDistance));
+                resampled.Add(prev + segDir * walked);
             }
 
             remaining = segLen - walked;
             prev = next;
         }
+
+        return resampled;
+    }
+
+    private static List<Vector3> ResamplePath(List<Vector3> corners, float stepDistance)
+    {
+        var resampled = ResamplePathRaw(corners, stepDistance);
+
+        // Pull each waypoint away from NavMesh edges
+        for (var i = 0; i < resampled.Count; i++)
+            resampled[i] = AdjustForEdges(resampled[i], TravelScanRegistry.EdgeDistance);
 
         // Don't add the final corner — it's sourcePos (the scan's start position)
         // which is already position[0] in the caller. This keeps the loop tight:
@@ -462,7 +475,7 @@ public static class TravelPathGenerator
         return position;
     }
 
-    private static List<Vector3> RemoveBunchedPoints(List<Vector3> points, float minSpacing)
+    internal static List<Vector3> RemoveBunchedPoints(List<Vector3> points, float minSpacing)
     {
         if (points.Count < 3)
             return points;
