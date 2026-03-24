@@ -3,7 +3,58 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
-## [v0.82.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.82.0) — February 28, 2026
+## [v0.83.0 – Travel Scans](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.83.0) — March 24, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Added Travel Scans ➡️🟠
+  * Travel (T) scans can now appear in level generation. They are able to appear in any tile.
+  * Reworked pathing logic for Travel scans is now dynamic within the area it's patrolling
+* Added Sustained Travel Scans ➡️🟣
+  * New scan type for Autogen, functions like a sustained scan that moves like a travel scan
+  * Has the same movement logic that the newly added Travel scans have
+  * Team members exiting the scan will cause the scan to move backwards slowly
+    * Scan will stop moving at 0% progress
+* Overhauled alarm scan placement logic 🟠
+  * Alarm scans now target `WantedDistanceBetweenPuzzleComponents` and `WantedDistanceFromStartPos` as the distance to place scans instead of using those values as minimums when selecting placements.
+    * Distance of 10 units should take approximately 5 seconds to walk while crouched
+  * Alarm scans placement now uses navmesh path distance instead of direct euclidean distance when evaluating scan positions
+    * No more "short" distance scans that require circling the room to get to the floor above!
+  * Larger selection of candidate placements used when searching for scan placements, this should reduce bad placements that usually end up right next to existing scans
+  * All alarm scans have had their target distances reworked to account for these new changes
+* New layout generation for `SpecialTerminalCommand` objective (lights off, king of the hill scan, fog flood etc) 
+* [GTFriendlyO](https://thunderstore.io/c/gtfo/p/Carb_Crusaders/GTFriendlyO/) syringes are now supported
+  * MedBay can spawn all syringes, with a variety of options for what will spawn
+  * Tech complex can spawn all syringes with at least a low chance
+  * Other complexes can spawn many of the syringes
+* Added [CollisionGeos](https://thunderstore.io/c/gtfo/p/Flowaria/CollisionGeos/)
+  * One new lab hub tile added
+* Add support for customizing datablocks locally
+  * Drop you custom files into `GameData-Custom` and see your changes apply
+  * See [Customizing Autogen Datablocks](https://github.com/brgmnn/autogen-rundown?tab=readme-ov-file#customizing-autogen-datablocks) for more information
+
+### Changes
+
+* Balance: `PowerCellDistribution` cell count adjusted based on Secondary/Overload/PE as well as level tier 
+  * In general cell count is reduced to alleviate long levels, no more 4 or 5 cell distributions on secondary
+  * 5 cell objectives have been removed entirely
+* Balance: Stealth scans are now majority free and only occasionally contain surprise waves. This inverts the current behavior where they usually contained surprise waves with a small chance of being actually free.
+* Change: Security Sensors now have a 1.5 second grace period when re-appearing, they will appear blue and are not able to be activated
+* Change: Reworked some of the Cluster alarms to include the mega cluster puzzle component (25 scans instead of 8)
+* Change: Updated "Expedition Metrics" on the rundown screen to remove artifact heat and show level complex and number of retrieved logs (if the level supports logs)
+* Change: Log progress is now reported during level drop after intercepted transmission (where artifact heat used to be)
+* Fix: Added missing objective completion events when picking up multiple cryo cases
+* Fix: Added some missing scan duration numbers, improving timer accuracy
+* Fix: Bug with start area build logic for levels with no main bulkheads could sometimes fail
+* Fix: Rundown names not appearing when `RegenerateOnStartup` is set to false
+* Fix: Bug with some survival duration timers being far larger than expected
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.82.0...v0.83.0
+
+
+## [v0.82.0 – Syringes & Reactor Shutdowns](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.82.0) — February 28, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
 
@@ -20,7 +71,6 @@ See more at https://github.com/brgmnn/autogen-rundown
 
 ### Changes
 
-* Balance: Increased elevator exclusion area for zone security sensors. This should help unavoidable security sensor activation.
 * Balance: Added more exit waves and challenges on several objectives
 * Balance: Reworked scout waves to have much more variety and increased scout wave points:
   * Normal difficulty waves from `15` to `18` points
@@ -78,7 +128,7 @@ Fix: Resolve slow client loading issue with security sensors not loading for the
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.81.0...v0.81.1
 
 
-## [v0.81.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.0) — January 31, 2026
+## [v0.81.0 – Zone Security Sensors](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.81.0) — January 31, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
 
@@ -188,7 +238,7 @@ As of this release Autogen now no longer depends on [EOSExt_SecuritySensor](http
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.80.0...v0.80.1
 
 
-## [v0.80.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.80.0) — December 11, 2025
+## [v0.80.0 – "Valiant"](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.80.0) — December 11, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
 
