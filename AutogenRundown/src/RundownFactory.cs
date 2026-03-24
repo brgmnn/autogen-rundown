@@ -492,11 +492,11 @@ public static class RundownFactory
             {
                 "SPRING_2026", new List<List<int>>
                 {
-                    new() { 1, 1, 1, 2, 1 },
-                    new() { 4, 1, 1, 3, 1, 2 },
-                    new() { 2, 1, 1, 1, 4, 4 },
-                    new() { 1, 1, 5, 3, 3, 4 },
-                    new() { 2, 6, 1, 1, 5 }
+                    new() { 1,  1, 1, 2, 1 },
+                    new() { 4,  1, 1, 3, 1, 3 },
+                    new() { 4,  5, 3, 1, 5, 4 },
+                    new() { 2,  1, 7, 3, 3, 4 },
+                    new() { 4, 10, 3, 1, 5 }
                 }
             }
         };
@@ -513,7 +513,7 @@ public static class RundownFactory
                 /* Tier B */ new() { 1, 1, 1, 1, 1, 1 },
                 /* Tier C */ new() { 1, 1, 1, 1, 1, 1 },
                 /* Tier D */ new() { 1, 1, 1, 1, 1, 1 },
-                /* Tier E */ new() { 1, 1, 1, 1 }
+                /* Tier E */ new() { 1, 1, 1, 1, 1 }
             };
 
         // Define a rundown global pool of objectives for the main objective.

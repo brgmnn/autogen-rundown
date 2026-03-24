@@ -59,8 +59,9 @@ TODO:
   * `GatherSmallItems` should probably not have error alarm on picking up the "last" objective item. Instead we should have it be done by the zones they have to open
   * Generator Cluster needs cells to be tightened up in their spawns
   * Big security scans that move are too hard
-  * Add a version of travel scan where lights go out but only lights by the scan are lit up
+  * Fix uplink text for case where there's one terminal
 
+  * Add a version of travel scan where lights go out but only lights by the scan are lit up
   * Add a version of the scan wanted distance that takes a negative number which then finds a point thats a proportion of the total area away from the previous scan
 
   * Check SD6: 2 terminals on top of each other in overload
