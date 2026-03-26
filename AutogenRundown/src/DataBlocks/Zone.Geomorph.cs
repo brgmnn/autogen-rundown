@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Custom.AutogenRundown.TerminalPlacements;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Patches.CustomTerminals;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -627,13 +628,13 @@ public partial record Zone
         };
 
         if (CustomGeomorph is not null)
-            level.TerminalPlacements.Placements.Add(new TerminalPosition
+            CustomTerminalSpawnManager.AddSpawnRequest(level.LevelLayoutData, new CustomTerminalSpawnRequest
             {
                 Bulkhead = director.Bulkhead,
                 LocalIndex = LocalIndex,
-                Geomorph = CustomGeomorph ?? "",
-                Position = position,
-                Rotation = rotation
+                GeomorphName = CustomGeomorph ?? "",
+                LocalPosition = position,
+                LocalRotation = rotation
             });
     }
 
