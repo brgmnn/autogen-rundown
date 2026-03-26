@@ -131,7 +131,7 @@ public class PuzzleComponent
     public static readonly PuzzleComponent SustainedMegaHuge = new()
     {
         PuzzleType = PuzzleType.SustainedMegaHuge,
-        Duration = 300
+        Duration = 300 // Really 240? 4 mins
     };
     public static readonly PuzzleComponent SustainedBig_Cluster = new()
     {
