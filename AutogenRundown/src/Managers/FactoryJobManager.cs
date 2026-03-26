@@ -1,6 +1,7 @@
 ﻿using System;
 using AIGraph;
 using AutogenRundown.Patches;
+using AutogenRundown.Patches.CustomTerminals;
 using CellMenu;
 using Enemies;
 using AmorLib.API;
