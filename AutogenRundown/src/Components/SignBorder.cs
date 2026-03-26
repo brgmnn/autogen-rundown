@@ -131,9 +131,9 @@ internal class SignBorder : MonoBehaviour
         var min = bounds.min;
         var max = bounds.max;
 
-        float p = Padding;
-        float t = LineWidth;
-        float z = ZOffset;
+        var p = Padding;
+        var t = LineWidth;
+        var z = ZOffset;
 
         meshFilter.mesh = BuildBorderMesh(
             min.x - p, min.y - p,
@@ -174,10 +174,10 @@ internal class SignBorder : MonoBehaviour
         verts[14] = new Vector3(right, top - thickness, z);
         verts[15] = new Vector3(right - thickness, top - thickness, z);
 
-        for (int i = 0; i < 4; i++)
+        for (var i = 0; i < 4; i++)
         {
-            int vi = i * 4;
-            int ti = i * 6;
+            var vi = i * 4;
+            var ti = i * 6;
             tris[ti]     = vi;     tris[ti + 1] = vi + 2; tris[ti + 2] = vi + 1;
             tris[ti + 3] = vi;     tris[ti + 4] = vi + 3; tris[ti + 5] = vi + 2;
         }
@@ -186,14 +186,14 @@ internal class SignBorder : MonoBehaviour
         mesh.triangles = tris;
 
         var normals = new Vector3[16];
-        for (int i = 0; i < 16; i++)
+        for (var i = 0; i < 16; i++)
             normals[i] = new Vector3(0, 0, -1);
         mesh.normals = normals;
 
         var uvs = new Vector2[16];
-        for (int i = 0; i < 4; i++)
+        for (var i = 0; i < 4; i++)
         {
-            int vi = i * 4;
+            var vi = i * 4;
             uvs[vi]     = new Vector2(0, 0);
             uvs[vi + 1] = new Vector2(1, 0);
             uvs[vi + 2] = new Vector2(1, 1);
@@ -215,15 +215,15 @@ internal class SignBorder : MonoBehaviour
         var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
         var offset = new Vector2(seed * 17.3f, seed * 31.7f);
 
-        for (int y = 0; y < size; y++)
-        for (int x = 0; x < size; x++)
+        for (var y = 0; y < size; y++)
+        for (var x = 0; x < size; x++)
         {
-            float u = x / (float)size;
-            float v = y / (float)size;
+            var u = x / (float)size;
+            var v = y / (float)size;
 
             // Multi-octave Perlin noise
             float noise = 0f, amp = 1f, freq = 1f;
-            for (int o = 0; o < octaves; o++)
+            for (var o = 0; o < octaves; o++)
             {
                 noise += amp * Mathf.PerlinNoise(
                     u * baseScale * freq + offset.x,
@@ -233,10 +233,10 @@ internal class SignBorder : MonoBehaviour
             }
 
             // Edge fade — paint wears more at edges
-            float edgeDist = Mathf.Min(Mathf.Min(u, 1f - u), Mathf.Min(v, 1f - v));
-            float edgeFade = Mathf.SmoothStep(0f, 0.3f, edgeDist);
+            var edgeDist = Mathf.Min(Mathf.Min(u, 1f - u), Mathf.Min(v, 1f - v));
+            var edgeFade = Mathf.SmoothStep(0f, 0.3f, edgeDist);
 
-            float alpha = Mathf.Clamp01(noise * edgeFade);
+            var alpha = Mathf.Clamp01(noise * edgeFade);
             tex.SetPixel(x, y, new Color(1f, 1f, 1f, alpha));
         }
 
