@@ -27,7 +27,7 @@ namespace AutogenRundown;
 [BepInPlugin("000-the_tavern-AutogenRundown", "AutogenRundown", Version)]
 [BepInProcess("GTFO.exe")]
 [BepInDependency("dev.gtfomodding.gtfo-api")]
-[BepInDependency("Amor.AmorLib", BepInDependency.DependencyFlags.HardDependency)]
+[BepInDependency("Amor.AmorLib")]
 public class Plugin : BasePlugin
 {
     public const string Version = "0.83.1";

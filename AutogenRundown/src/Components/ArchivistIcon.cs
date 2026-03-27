@@ -78,7 +78,7 @@ namespace AutogenRundown.Components;
         m_archivistIcon = m_page.m_guiLayer.AddRectComp(Icon, GuiAnchor.TopLeft,
             new Vector2(1200f, 0f), m_page.m_sectorIconAlign).Cast<CM_ExpeditionSectorIcon>();
 
-        Wrapper = new(m_archivistIcon.gameObject);
+        Wrapper = new ArchivistIconWrapper(m_archivistIcon.gameObject);
 
         m_bg = Wrapper.BGGO.GetComponent<SpriteRenderer>();
         m_icon = Wrapper.IconGO.GetComponent<SpriteRenderer>();
@@ -119,7 +119,7 @@ namespace AutogenRundown.Components;
         // +1 for local progression
         positionIndex += 1;
 
-        float delay = m_page.m_time_sectorIcon + positionIndex * 0.7f;
+        var delay = m_page.m_time_sectorIcon + positionIndex * 0.7f;
 
         SetupIcon(true);
 
@@ -144,8 +144,8 @@ namespace AutogenRundown.Components;
         var cIcon = m_icon.color;
         var cBg = m_bg.color;
 
-        m_icon.color = new(cIcon.r, cIcon.g, cIcon.b, boosterUnused ? 1.0f : 0.4f);
-        m_bg.color = new(cBg.r, cBg.g, cBg.b, boosterUnused ? 1.0f : 0.3f);
+        m_icon.color = new Color(cIcon.r, cIcon.g, cIcon.b, boosterUnused ? 1.0f : 0.4f);
+        m_bg.color = new Color(cBg.r, cBg.g, cBg.b, boosterUnused ? 1.0f : 0.3f);
         m_title.alpha = (boosterUnused ? 1f : 0.2f);
 
         icon.m_titleVisible = true;
