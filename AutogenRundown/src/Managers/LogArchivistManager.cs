@@ -78,6 +78,11 @@ public static class LogArchivistManager
         foreach (var layoutId in SeasonalLogRecord.ReadLogs.Keys)
             readRecordsByLevel[layoutId] = SeasonalLogRecord.ReadLogs[layoutId];
 
+        // Reconcile ReadAllLogsLevels for levels where preserved count >= new archive count
+        ReconcileReadState(WeeklyLogRecord);
+        ReconcileReadState(MonthlyLogRecord);
+        ReconcileReadState(SeasonalLogRecord);
+
         // Ensure we update the icons when finishing a level
         LevelAPI.OnLevelCleanup += OnLevelCleanup;
 
@@ -283,10 +288,41 @@ public static class LogArchivistManager
             if (record.ReadAllLogsLevels.Contains(mainId))
                 continue;
 
-            read += logs.Count;
+            if (archivesByLevel.TryGetValue(mainId, out var levelLogs))
+                read += Math.Min(logs.Count, levelLogs.Logs.Count);
+            else
+                read += logs.Count;
         }
 
         return (read, total);
+    }
+
+    /// <summary>
+    /// On startup, check if any levels now qualify as "all read" due to re-roll reducing
+    /// the archive count below the preserved read count. Only adds to ReadAllLogsLevels,
+    /// never removes (completion is permanent).
+    /// </summary>
+    private static void ReconcileReadState(RundownLogRecord record)
+    {
+        var changed = false;
+
+        foreach (var (layoutId, logs) in record.ReadLogs)
+        {
+            if (record.ReadAllLogsLevels.Contains(layoutId))
+                continue;
+
+            if (!archivesByLevel.TryGetValue(layoutId, out var levelLogs))
+                continue;
+
+            if (levelLogs.Logs.Count > 0 && logs.Count >= levelLogs.Logs.Count)
+            {
+                record.ReadAllLogsLevels.Add(layoutId);
+                changed = true;
+            }
+        }
+
+        if (changed)
+            Save(record.Name, record);
     }
 
     /// <summary>
