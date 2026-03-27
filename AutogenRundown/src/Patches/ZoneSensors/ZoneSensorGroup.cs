@@ -1,3 +1,4 @@
+using AIGraph;
 using AmorLib.Networking.StateReplicators;
 using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Objectives;
@@ -97,6 +98,7 @@ public class ZoneSensorGroup
     // Pending spawn data - stored until positions are received
     private LG_Zone? pendingZone;
     private List<ZoneSensorGroupDefinition>? pendingGroupDefinitions;
+    private AIG_CourseNode? elevatorCourseNode;
     private bool sensorsSpawned = false;
 
     // Batch tracking for multi-replicator position sync
@@ -254,10 +256,11 @@ public class ZoneSensorGroup
     /// <summary>
     /// Sets the pending spawn data. Sensors will be spawned when positions are received.
     /// </summary>
-    public void SetPendingSpawnData(LG_Zone zone, List<ZoneSensorGroupDefinition> groupDefinitions)
+    public void SetPendingSpawnData(LG_Zone zone, List<ZoneSensorGroupDefinition> groupDefinitions, AIG_CourseNode? elevatorNode = null)
     {
         pendingZone = zone;
         pendingGroupDefinitions = groupDefinitions;
+        elevatorCourseNode = elevatorNode;
     }
 
     /// <summary>
@@ -677,7 +680,11 @@ public class ZoneSensorGroup
             }
             else
             {
-                var randomAreaIndex = sensorRandom.Next(0, zone.m_areas.Count);
+                var minAreaIndex = (elevatorCourseNode != null
+                    && zone.m_areas.Count > 1
+                    && zone.m_areas[0].m_courseNode.Pointer == elevatorCourseNode.Pointer)
+                    ? 1 : 0;
+                var randomAreaIndex = sensorRandom.Next(minAreaIndex, zone.m_areas.Count);
                 var area = zone.m_areas[randomAreaIndex];
                 pos = GetRandomPositionInArea(area, sensorRandom);
             }

@@ -330,7 +330,7 @@ public sealed class ZoneSensorManager
                 totalSensors, hasMovingSensors, dimensionIndex, layerType, localZoneIndex, definition.StartEnabled);
 
             // Set pending spawn data (sensors will spawn when positions are received)
-            sensorGroup.SetPendingSpawnData(zone, definition.SensorGroups);
+            sensorGroup.SetPendingSpawnData(zone, definition.SensorGroups, elevatorCourseNode);
 
             // Host generates random positions and triggers spawning on all clients
             if (SNet.IsMaster)
