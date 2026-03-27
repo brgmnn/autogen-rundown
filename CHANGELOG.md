@@ -3,6 +3,31 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.83.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.83.1) — March 26, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Balance: Zone Security Scan density values lowered
+  * Low unchanged at `1.5` scans per unit
+  * Medium from `3.0` to `2.375` scans per unit
+  * High from `4.5` to `3.125` scans per unit
+  * Very High from `6.0` to `4.0` scans per unit
+* Fix: Zone Security Scans will now no longer appear in the first area of the elevator zone
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.83.0...v0.83.1
+
+
+## [v0.84.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.84.0) — March 26, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.83.0...v0.84.0
+
+
 ## [v0.83.0 – Travel Scans](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.83.0) — March 24, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
@@ -411,7 +436,7 @@ As of this release Autogen now no longer depends on [EOSExt_SecuritySensor](http
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.77.0...v0.77.1
 
 
-## [v0.77.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.77.0) — September 30, 2025
+## [v0.77.0 – D-Lock Block Decipherer](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.77.0) — September 30, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
 
@@ -454,7 +479,7 @@ As of this release Autogen now no longer depends on [EOSExt_SecuritySensor](http
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.76.0...v0.76.1
 
 
-## [v0.76.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.76.0) — September 06, 2025
+## [v0.76.0 – Pushing Forward](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.76.0) — September 06, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
 
@@ -544,7 +569,7 @@ As of this release Autogen now no longer depends on [EOSExt_SecuritySensor](http
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.75.0...v0.75.1
 
 
-## [v0.75.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.75.0) — August 29, 2025
+## [v0.75.0 – Seasons](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.75.0) — August 29, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
 
@@ -574,7 +599,7 @@ As of this release Autogen now no longer depends on [EOSExt_SecuritySensor](http
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.74.0...v0.75.0
 
 
-## [v0.74.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.74.0) — August 26, 2025
+## [v0.74.0 – Generator Cluster](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.74.0) — August 26, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
 
@@ -690,7 +715,7 @@ _No user facing changes in this release_
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.69.0...v0.70.0
 
 
-## [v0.69.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.69.0) — June 11, 2025
+## [v0.69.0 – Infestation](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.69.0) — June 11, 2025
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
 
