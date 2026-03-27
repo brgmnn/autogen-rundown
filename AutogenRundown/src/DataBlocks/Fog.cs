@@ -548,6 +548,15 @@ public record Fog : DataBlock<Fog>
                Infection.ApproxEqual(other.Infection);
     }
 
+    public override int GetHashCode()
+    {
+        var hashCode = new HashCode();
+
+        hashCode.Add(base.GetHashCode());
+
+        return hashCode.ToHashCode();
+    }
+
     public void Persist(BlocksBin<Fog>? bin = null)
     {
         bin ??= Bins.Fogs;

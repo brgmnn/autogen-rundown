@@ -184,6 +184,8 @@ public partial record LevelLayout
         if (shouldCycle)
         {
             var loopIndex = 300 + level.ZoneSensors.Count;
+            // var offTime = Generator.Between(50, 70);
+            // var onTime = Generator.Between(15, 30);
             var offTime = Generator.Between(3, 18);
             var onTime = Generator.Between(8, 25);
             var cycleTime = offTime + onTime;
