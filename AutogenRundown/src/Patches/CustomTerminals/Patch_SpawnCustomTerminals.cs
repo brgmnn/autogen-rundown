@@ -106,8 +106,10 @@ internal static class Patch_SpawnCustomTerminals
             return;
         }
 
-        // Instantiate the terminal
-        var terminalGO = UnityEngine.Object.Instantiate(prefab, worldPos, worldRot);
+        // Instantiate the terminal as a child of the area so that
+        // LG_GenerateNavigationInfoJob finds its LG_ComputerTerminalMapLookatRevealer
+        // via area.GetComponentsInChildren and adds it to the map.
+        var terminalGO = UnityEngine.Object.Instantiate(prefab, worldPos, worldRot, targetArea.transform);
         var terminal = terminalGO.GetComponentInChildren<LG_ComputerTerminal>();
 
         if (terminal == null)
