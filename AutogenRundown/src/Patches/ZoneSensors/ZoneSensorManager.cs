@@ -330,7 +330,7 @@ public sealed class ZoneSensorManager
                 totalSensors, hasMovingSensors, dimensionIndex, layerType, localZoneIndex, definition.StartEnabled);
 
             // Set pending spawn data (sensors will spawn when positions are received)
-            sensorGroup.SetPendingSpawnData(zone, definition.SensorGroups);
+            sensorGroup.SetPendingSpawnData(zone, definition.SensorGroups, elevatorCourseNode);
 
             // Host generates random positions and triggers spawning on all clients
             if (SNet.IsMaster)
@@ -443,7 +443,11 @@ public sealed class ZoneSensorManager
                     }
                     else
                     {
-                        var randomAreaIndex = rng.Next(0, zone.m_areas.Count);
+                        var minAreaIndex = (elevatorCourseNode != null
+                            && zone.m_areas.Count > 1
+                            && zone.m_areas[0].m_courseNode.Pointer == elevatorCourseNode.Pointer)
+                            ? 1 : 0;
+                        var randomAreaIndex = rng.Next(minAreaIndex, zone.m_areas.Count);
                         var area = zone.m_areas[randomAreaIndex];
                         position = area.m_courseNode.GetRandomPositionInside();
                     }

@@ -4,21 +4,21 @@ namespace AutogenRundown.Managers;
 
 public static class EventManager
 {
-    private static CM_PageRundown_New page;
+    private static CM_PageRundown_New? page;
 
-    public static event Action OnSelectRundown;
+    public static event Action OnSelectRundown = delegate { };
 
-    public static event Action OnClearRundown;
+    public static event Action OnClearRundown = delegate { };
 
     // Check when Rundown_Surface_SelectionALT_R1 becomes visible
-    public static event Action OnScreen_RundownSelection;
+    public static event Action OnScreen_RundownSelection = delegate { };
 
     // Check when GUIX_layer_Tier_1 becomes visible
-    public static event Action OnScreen_ViewRundown;
+    public static event Action OnScreen_ViewRundown = delegate { };
 
-    public static event Action<PluginRundown> OnRundownUpdate;
+    public static event Action<PluginRundown> OnRundownUpdate = delegate { };
 
-    public static event Action OnFactoryDone;
+    public static event Action OnFactoryDone = delegate { };
 
     public static void Setup()
     {
