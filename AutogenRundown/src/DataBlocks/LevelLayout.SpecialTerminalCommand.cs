@@ -1071,7 +1071,7 @@ public partial record LevelLayout
 
         AddForwardExtractStart(hillNodes.First());
 
-        hillZone.GenKingOfTheHillGeomorph(level, director);
+        hillZone.GenKingOfTheHillGeomorph(PersistentId, director);
         hillZone.TerminalPlacements = new List<TerminalPlacement>
         {
             new() { PlacementWeights = ZonePlacementWeights.AtEnd }

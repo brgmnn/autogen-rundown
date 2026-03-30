@@ -546,7 +546,7 @@ public partial record Zone
     /// Creates a Geomorph used as a primary objective point
     /// </summary>
     /// <param name="complex"></param>
-    public void GenKingOfTheHillGeomorph(Level level, BuildDirector director)
+    public void GenKingOfTheHillGeomorph(uint layoutId, BuildDirector director)
     {
         switch (director.Complex)
         {
@@ -628,7 +628,7 @@ public partial record Zone
         };
 
         if (CustomGeomorph is not null)
-            CustomTerminalSpawnManager.AddSpawnRequest(level.LevelLayoutData, new CustomTerminalSpawnRequest
+            CustomTerminalSpawnManager.AddSpawnRequest(layoutId, new CustomTerminalSpawnRequest
             {
                 Bulkhead = director.Bulkhead,
                 LocalIndex = LocalIndex,
