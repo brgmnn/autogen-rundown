@@ -1072,12 +1072,19 @@ public partial record LevelLayout
 
         AddForwardExtractStart(hillNodes.First());
 
-        hillZone.GenKingOfTheHillGeomorph(PersistentId, director);
+        var (terminalPos, terminalRot) = hillZone.GenKingOfTheHillGeomorph(director);
 
-        // Mark the custom terminal as the warden objective terminal
-        var spawnRequests = CustomTerminalSpawnManager.GetRequests(PersistentId);
-        if (spawnRequests.Count > 0)
-            spawnRequests.Last().IsWardenObjective = true;
+        // Create a custom terminal spawn in the center of the geo as the warden objective terminal
+        if (hillZone.CustomGeomorph is not null)
+            CustomTerminalSpawnManager.AddSpawnRequest(PersistentId, new CustomTerminalSpawnRequest
+            {
+                Bulkhead = director.Bulkhead,
+                LocalIndex = hillZone.LocalIndex,
+                GeomorphName = hillZone.CustomGeomorph,
+                LocalPosition = terminalPos,
+                LocalRotation = terminalRot,
+                IsWardenObjective = true
+            });
 
         hillZone.TerminalPlacements = new List<TerminalPlacement>
         {
