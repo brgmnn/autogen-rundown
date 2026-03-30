@@ -18,6 +18,7 @@ internal static class Patch_SpawnCustomTerminals
     // in the same zone. Scoped to zone (not layer) to avoid blocking legitimate
     // multi-objective setups on different zones within the same layer.
     private static readonly HashSet<(LG_LayerType, int)> CustomWardenObjectiveZones = new();
+    private static uint _lastBuildLayoutId;
 
     /// <summary>
     /// Postfix on LG_DistributionSetup.Build() which runs in the DistributionSetup batch (14).
@@ -30,11 +31,16 @@ internal static class Patch_SpawnCustomTerminals
     [HarmonyPatch(typeof(LG_DistributionSetup), nameof(LG_DistributionSetup.Build))]
     private static void Post_LG_DistributionSetup_Build(LG_DistributionSetup __instance)
     {
-        CustomWardenObjectiveZones.Clear();
-
         var mainLayoutId = RundownManager.ActiveExpedition?.LevelLayoutData ?? 0;
         if (mainLayoutId == 0)
             return;
+
+        // Clear once per level build, not per layer
+        if (mainLayoutId != _lastBuildLayoutId)
+        {
+            CustomWardenObjectiveZones.Clear();
+            _lastBuildLayoutId = mainLayoutId;
+        }
 
         var requests = CustomTerminalSpawnManager.GetRequests(mainLayoutId);
         if (requests.Count == 0)
