@@ -2,6 +2,7 @@ using GameData;
 using GTFO.API;
 using HarmonyLib;
 using LevelGeneration;
+using Localization;
 using UnityEngine;
 
 namespace AutogenRundown.Patches.CustomTerminals;
@@ -124,12 +125,29 @@ internal static class Patch_SpawnCustomTerminals
         foreach (var handler in terminalGO.GetComponentsInChildren<iLG_SpawnedInNodeHandler>())
             handler.SpawnNode = targetArea.m_courseNode;
 
-        terminal.Setup();
+        // Build game-native terminal data from spawn request
+        var startStateData = BuildStartStateData(request);
+        var placementData = BuildPlacementData(request);
+
+        terminal.Setup(startStateData, placementData);
+
+        // Add log files to the terminal
+        foreach (var logFile in request.LogFiles)
+        {
+            var logFileData = BuildLogFileData(logFile);
+            if (logFileData != null)
+                terminal.AddLocalLog(logFileData);
+        }
+
+        // Set up as warden objective terminal if flagged
+        if (request.IsWardenObjective)
+            terminal.SetupAsWardenObjectiveSpecialCommand(0);
+
         targetZone.TerminalsSpawnedInZone.Add(terminal);
 
         Plugin.Logger.LogInfo(
             $"[CustomTerminal] Spawned terminal at {worldPos} in zone {request.LocalIndex} " +
-            $"(geo: {Path.GetFileName(request.GeomorphName)})");
+            $"(geo: {Path.GetFileName(request.GeomorphName)}, wardenObj: {request.IsWardenObjective})");
     }
 
     private static void ClearNearbyMarkers(LG_Area area, Vector3 worldPos, float radius)
@@ -168,5 +186,75 @@ internal static class Patch_SpawnCustomTerminals
 
         Plugin.Logger.LogDebug(
             $"[CustomTerminal] Cleared {toRemove.Count} markers within {radius}m of {worldPos}");
+    }
+
+    private static TerminalStartStateData? BuildStartStateData(CustomTerminalSpawnRequest request)
+    {
+        var src = request.StartingStateData;
+        if (src == null)
+            return null;
+
+        return new TerminalStartStateData
+        {
+            StartingState = (TERM_State)src.StartingState,
+            AudioEventEnter = (uint)src.AudioEventEnter,
+            AudioEventExit = (uint)src.AudioEventExit,
+            PasswordProtected = src.PasswordProtected,
+            PasswordHintText = src.PasswordHintText,
+            GeneratePassword = src.GeneratePassword,
+            PasswordPartCount = src.PasswordPartCount,
+            ShowPasswordLength = src.ShowPasswordLength,
+            ShowPasswordPartPositions = src.ShowPasswordPartPositions
+        };
+    }
+
+    private static TerminalPlacementData? BuildPlacementData(CustomTerminalSpawnRequest request)
+    {
+        if (request.UniqueCommands.Count == 0)
+            return null;
+
+        var placementData = new TerminalPlacementData();
+
+        foreach (var cmd in request.UniqueCommands)
+        {
+            var gameCmd = new GameData.CustomTerminalCommand
+            {
+                Command = cmd.Command,
+                CommandDesc = cmd.CommandDescId,
+                SpecialCommandRule = (TERM_CommandRule)cmd.SpecialCommandRule
+            };
+            placementData.UniqueCommands.Add(gameCmd);
+        }
+
+        return placementData;
+    }
+
+    private static TerminalLogFileData? BuildLogFileData(AutogenRundown.DataBlocks.Terminals.LogFile logFile)
+    {
+        if (logFile.FileContentId == 0)
+            return null;
+
+        // Resolve text content from the game's text datablock system
+        var textBlock = GameDataBlockBase<TextDataBlock>.GetBlock(logFile.FileContentId);
+        if (textBlock == null)
+        {
+            Plugin.Logger.LogWarning(
+                $"[CustomTerminal] Could not resolve text block {logFile.FileContentId} " +
+                $"for log file '{logFile.FileName}'");
+            return null;
+        }
+
+        return new TerminalLogFileData
+        {
+            FileName = logFile.FileName,
+            FileContent = new LocalizedText
+            {
+                Id = logFile.FileContentId,
+                UntranslatedText = textBlock.English
+            },
+            AttachedAudioFile = (uint)logFile.AttachedAudioFile,
+            AttachedAudioByteSize = logFile.AttachedAudioByteSize,
+            PlayerDialogToTriggerAfterAudio = (uint)logFile.PlayerDialogToTriggerAfterAudio
+        };
     }
 }

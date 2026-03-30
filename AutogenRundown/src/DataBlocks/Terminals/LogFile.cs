@@ -39,8 +39,15 @@ public class LogFile
     [JsonIgnore]
     public Text FileContent { set; get; } = Text.None;
 
+    [JsonIgnore]
+    private uint _fileContentId;
+
     [JsonProperty("FileContent")]
-    public uint FileContentId => FileContent.PersistentId;
+    public uint FileContentId
+    {
+        get => FileContent.PersistentId != 0 ? FileContent.PersistentId : _fileContentId;
+        set => _fileContentId = value;
+    }
 
     /// <summary>
     ///

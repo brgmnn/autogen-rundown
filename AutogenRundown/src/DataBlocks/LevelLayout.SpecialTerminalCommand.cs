@@ -1,4 +1,5 @@
 using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.Patches.CustomTerminals;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
@@ -1072,6 +1073,12 @@ public partial record LevelLayout
         AddForwardExtractStart(hillNodes.First());
 
         hillZone.GenKingOfTheHillGeomorph(PersistentId, director);
+
+        // Mark the custom terminal as the warden objective terminal
+        var spawnRequests = CustomTerminalSpawnManager.GetRequests(PersistentId);
+        if (spawnRequests.Count > 0)
+            spawnRequests.Last().IsWardenObjective = true;
+
         hillZone.TerminalPlacements = new List<TerminalPlacement>
         {
             new() { PlacementWeights = ZonePlacementWeights.AtEnd }

@@ -1,6 +1,7 @@
 ﻿using System.Resources;
 using System.Text.RegularExpressions;
 using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.Patches.CustomTerminals;
 using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
@@ -1287,6 +1288,19 @@ public class Level
                 Definitions = ZoneSensors
             };
             levelZoneSensors.Save();
+        }
+
+        // Save custom terminal spawn requests to JSON for runtime loading
+        var customTerminalRequests = CustomTerminalSpawnManager.GetRequests(LevelLayoutData);
+        if (customTerminalRequests.Any())
+        {
+            var levelCustomTerminals = new LevelCustomTerminals
+            {
+                Name = $"{Tier}{Index}_{fsName}",
+                MainLevelLayout = LevelLayoutData,
+                Requests = customTerminalRequests
+            };
+            levelCustomTerminals.Save();
         }
     }
 
