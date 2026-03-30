@@ -144,8 +144,6 @@ public class Plugin : BasePlugin
         GameDataAPI.OnGameDataInitialized += TravelScanRegistry.Setup;
         GameDataAPI.OnGameDataInitialized += CustomTerminalSpawnManager.Setup;
 
-        LevelAPI.OnLevelCleanup += CustomTerminalSpawnManager.Clear;
-
         // LevelAPI.OnLevelCleanup += SignBorderManager.Clear;
         // LevelAPI.OnEnterLevel += () =>
         // {
