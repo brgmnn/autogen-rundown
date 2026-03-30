@@ -13,9 +13,11 @@ internal static class Patch_SpawnCustomTerminals
     private const string TerminalPrefab =
         "Assets/AssetPrefabs/Complex/Generic/FunctionMarkers/Terminal_Floor.prefab";
 
-    // Track layers where a custom terminal has claimed the warden objective,
-    // so the game's standard distribution doesn't duplicate it.
-    private static readonly HashSet<LG_LayerType> CustomWardenObjectiveLayers = new();
+    // Track zones where a custom terminal has claimed the warden objective,
+    // so the game's standard distribution doesn't duplicate it on another terminal
+    // in the same zone. Scoped to zone (not layer) to avoid blocking legitimate
+    // multi-objective setups on different zones within the same layer.
+    private static readonly HashSet<(LG_LayerType, int)> CustomWardenObjectiveZones = new();
 
     /// <summary>
     /// Postfix on LG_DistributionSetup.Build() which runs in the DistributionSetup batch (14).
@@ -28,7 +30,7 @@ internal static class Patch_SpawnCustomTerminals
     [HarmonyPatch(typeof(LG_DistributionSetup), nameof(LG_DistributionSetup.Build))]
     private static void Post_LG_DistributionSetup_Build(LG_DistributionSetup __instance)
     {
-        CustomWardenObjectiveLayers.Clear();
+        CustomWardenObjectiveZones.Clear();
 
         var mainLayoutId = RundownManager.ActiveExpedition?.LevelLayoutData ?? 0;
         if (mainLayoutId == 0)
@@ -58,11 +60,13 @@ internal static class Patch_SpawnCustomTerminals
     private static bool Pre_SetupAsWardenObjectiveSpecialCommand(LG_ComputerTerminal __instance)
     {
         var layerType = __instance.SpawnNode.LayerType;
-        if (CustomWardenObjectiveLayers.Contains(layerType))
+        var zoneIndex = (int)__instance.SpawnNode.m_zone.LocalIndex;
+
+        if (CustomWardenObjectiveZones.Contains((layerType, zoneIndex)))
         {
             Plugin.Logger.LogDebug(
                 $"[CustomTerminal] Skipping duplicate warden objective setup on {__instance.name} " +
-                $"— custom terminal already owns layer {layerType}");
+                $"— custom terminal already owns zone {__instance.SpawnNode.m_zone.LocalIndex} in {layerType}");
             return false;
         }
 
@@ -169,7 +173,8 @@ internal static class Patch_SpawnCustomTerminals
         if (request.IsWardenObjective)
         {
             terminal.SetupAsWardenObjectiveSpecialCommand(0);
-            CustomWardenObjectiveLayers.Add(request.LayerType);
+            var zoneIndex = (int)targetZone.LocalIndex;
+            CustomWardenObjectiveZones.Add((request.LayerType, zoneIndex));
         }
 
         targetZone.TerminalsSpawnedInZone.Add(terminal);
