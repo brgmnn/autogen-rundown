@@ -13,6 +13,10 @@ internal static class Patch_SpawnCustomTerminals
     private const string TerminalPrefab =
         "Assets/AssetPrefabs/Complex/Generic/FunctionMarkers/Terminal_Floor.prefab";
 
+    // Track layers where a custom terminal has claimed the warden objective,
+    // so the game's standard distribution doesn't duplicate it.
+    private static readonly HashSet<LG_LayerType> CustomWardenObjectiveLayers = new();
+
     /// <summary>
     /// Postfix on LG_DistributionSetup.Build() which runs in the DistributionSetup batch (14).
     /// At this point all areas and marker spawners exist, but terminal distribution (batch 15)
@@ -24,6 +28,8 @@ internal static class Patch_SpawnCustomTerminals
     [HarmonyPatch(typeof(LG_DistributionSetup), nameof(LG_DistributionSetup.Build))]
     private static void Post_LG_DistributionSetup_Build(LG_DistributionSetup __instance)
     {
+        CustomWardenObjectiveLayers.Clear();
+
         var mainLayoutId = RundownManager.ActiveExpedition?.LevelLayoutData ?? 0;
         if (mainLayoutId == 0)
             return;
@@ -41,6 +47,26 @@ internal static class Patch_SpawnCustomTerminals
 
             SpawnTerminalForRequest(layer, request);
         }
+    }
+
+    /// <summary>
+    /// Prevents the game's standard distribution from setting up a second warden objective
+    /// terminal when a custom terminal has already claimed that role for the layer.
+    /// </summary>
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(LG_ComputerTerminal), nameof(LG_ComputerTerminal.SetupAsWardenObjectiveSpecialCommand))]
+    private static bool Pre_SetupAsWardenObjectiveSpecialCommand(LG_ComputerTerminal __instance)
+    {
+        var layerType = __instance.SpawnNode.LayerType;
+        if (CustomWardenObjectiveLayers.Contains(layerType))
+        {
+            Plugin.Logger.LogDebug(
+                $"[CustomTerminal] Skipping duplicate warden objective setup on {__instance.name} " +
+                $"— custom terminal already owns layer {layerType}");
+            return false;
+        }
+
+        return true;
     }
 
     private static void SpawnTerminalForRequest(LG_Layer layer, CustomTerminalSpawnRequest request)
@@ -141,7 +167,10 @@ internal static class Patch_SpawnCustomTerminals
 
         // Set up as warden objective terminal if flagged
         if (request.IsWardenObjective)
+        {
             terminal.SetupAsWardenObjectiveSpecialCommand(0);
+            CustomWardenObjectiveLayers.Add(request.LayerType);
+        }
 
         targetZone.TerminalsSpawnedInZone.Add(terminal);
 
