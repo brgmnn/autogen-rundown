@@ -137,7 +137,10 @@ internal static class Patch_SpawnCustomTerminals
 
         // Collect all nearby spawners across ALL function types, then remove them.
         // This prevents any marker-spawned object from colliding with our terminal.
-        var toRemove = new HashSet<IntPtr>();
+        // NOTE: GetAllMarkerSpawners returns the internal list, so we must NOT modify
+        // it during iteration. Collect first, then remove.
+        var toRemove = new List<LG_MarkerSpawner>();
+        var seen = new HashSet<IntPtr>();
         var functions = System.Enum.GetValues(typeof(ExpeditionFunction));
 
         foreach (ExpeditionFunction func in functions)
@@ -148,17 +151,18 @@ internal static class Patch_SpawnCustomTerminals
 
             foreach (var spawner in spawners)
             {
-                if (toRemove.Contains(spawner.Pointer))
+                if (seen.Contains(spawner.Pointer))
                     continue;
+                seen.Add(spawner.Pointer);
 
                 var spawnerWorldPos = spawner.m_parent.transform.TransformPoint(spawner.m_localPosition);
                 if (Vector3.Distance(spawnerWorldPos, worldPos) < radius)
-                {
-                    toRemove.Add(spawner.Pointer);
-                    area.RemoveMarkerSpawner(spawner);  // removes from all function groups
-                }
+                    toRemove.Add(spawner);
             }
         }
+
+        foreach (var spawner in toRemove)
+            area.RemoveMarkerSpawner(spawner);
 
         Plugin.Logger.LogDebug(
             $"[CustomTerminal] Cleared {toRemove.Count} markers within {radius}m of {worldPos}");
