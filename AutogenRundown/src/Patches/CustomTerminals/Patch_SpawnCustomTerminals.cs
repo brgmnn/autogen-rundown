@@ -62,7 +62,7 @@ internal static class Patch_SpawnCustomTerminals
     /// terminal when a custom terminal has already claimed that role for the layer.
     /// </summary>
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(LG_ComputerTerminal), nameof(LG_ComputerTerminal.SetupAsWardenObjectiveSpecialCommand))]
+    [HarmonyPatch(typeof(LG_ComputerTerminal), nameof(LG_ComputerTerminal.SetupAsWardenObjectiveSpecialCommand), new Type[] { typeof(int) })]
     private static bool Pre_SetupAsWardenObjectiveSpecialCommand(LG_ComputerTerminal __instance)
     {
         var layerType = __instance.SpawnNode.LayerType;
