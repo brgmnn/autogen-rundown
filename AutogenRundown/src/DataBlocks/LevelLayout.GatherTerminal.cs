@@ -484,12 +484,13 @@ public partial record LevelLayout
             FileName = $"DEC_KEY_INVENTORY-{Generator.ShortHexHash()}",
             FileContent = new Text(() =>
             {
-                // TODO: join every group of 4 zones by a new line and 2 spaces
                 var zones = string.Join(
-                    ", ",
-                    objective.PlacementNodes.Select(node => Intel.Zone(node, planner, underscore: true)));
+                    ",\n  ",
+                    objective.PlacementNodes
+                        .Select(node => Intel.Zone(node, planner, underscore: true))
+                        .Chunk(4)
+                        .Select(group => string.Join(", ", group)));
 
-                // TODO: deal with how we would gather 5. It will be longer than 43 chars
                 return $"-------------------------------------------\n" +
                        $"          Data redundancy system          \n\n" +
                        $"Backup decryption keys stored in mirror\n" +
