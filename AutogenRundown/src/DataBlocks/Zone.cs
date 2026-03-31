@@ -317,11 +317,7 @@ public partial record Zone : DataBlock<Zone>
         // Grab a random puzzle from the puzzle pack
         var puzzle = Generator.DrawSelect(layout.PuzzlePack);
 
-        // TODO: remove once we are happy for re-rolls to happen
-        var puzzleIsNone = puzzle == ChainedPuzzle.None;
-
-        // if (puzzle == null || puzzle == ChainedPuzzle.None)
-        if (puzzle == null)
+        if (puzzle == null || puzzle == ChainedPuzzle.None)
             return;
 
         // TODO: Randomize things like travel distance here
@@ -617,9 +613,6 @@ public partial record Zone : DataBlock<Zone>
             Plugin.Logger.LogInfo($"Zone {LocalIndex} alarm reassigned: {puzzle}");
 
         Alarm = ChainedPuzzle.FindOrPersist(puzzle);
-
-        if (puzzleIsNone)
-            Alarm = ChainedPuzzle.None;
     }
 
     /// <summary>
