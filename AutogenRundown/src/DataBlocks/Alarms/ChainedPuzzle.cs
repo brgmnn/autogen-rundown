@@ -229,7 +229,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     public static ChainedPuzzle FindOrPersist(ChainedPuzzle puzzle)
     {
         // We specifically don't want to persist none, as we want to set the PersistentID to 0
-        if (puzzle == None)
+        if (puzzle == None || puzzle.Puzzle.Count == 0)
             return None;
 
         var existingPuzzle = Bins.ChainedPuzzles.GetBlock(puzzle.RecordEqual);
@@ -443,6 +443,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     {
         PersistentId = 0,
         PublicAlarmName = "None",
+        TriggerAlarmOnActivate = false,
         FixedAlarm = true
     };
 

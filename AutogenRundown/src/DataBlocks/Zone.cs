@@ -317,7 +317,7 @@ public partial record Zone : DataBlock<Zone>
         // Grab a random puzzle from the puzzle pack
         var puzzle = Generator.DrawSelect(layout.PuzzlePack);
 
-        if (puzzle == null)
+        if (puzzle == null || puzzle == ChainedPuzzle.None)
             return;
 
         // TODO: Randomize things like travel distance here
