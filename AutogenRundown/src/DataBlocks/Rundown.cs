@@ -4,6 +4,7 @@ using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Terminals;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.Extensions;
+using AutogenRundown.Patches.CustomTerminals;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -219,7 +220,7 @@ public record Rundown : DataBlock<Rundown>
 
         foreach (var level in levels)
         {
-            var terminals = new List<(Bulkhead, Zone, TerminalPlacement)>();
+            var terminals = new List<(Bulkhead Bulkhead, int ZoneIndex, List<LogFile> LogFiles, TerminalStartingState StartingState)>();
             var bulkheads =  new List<Bulkhead> { Bulkhead.Main, Bulkhead.Extreme, Bulkhead.Overload };
 
             // Logs are distributed as follows in levels across all rundowns. We weight number of
@@ -253,35 +254,40 @@ public record Rundown : DataBlock<Rundown>
 
                 foreach (var zone in layout.Zones)
                     foreach (var terminal in zone.TerminalPlacements)
-                        terminals.Add((bulkhead, zone, terminal));
+                        terminals.Add((bulkhead, zone.LocalIndex, terminal.LogFiles, terminal.StartingStateData));
             }
+
+            // Include custom terminal spawn requests in the log distribution pool
+            var customRequests = CustomTerminalSpawnManager.GetRequests(level.LevelLayoutData);
+            foreach (var request in customRequests)
+                terminals.Add((request.Bulkhead, request.LocalIndex, request.LogFiles, request.StartingStateData));
 
             var toPlace = terminals.Shuffle().Take(totalLogs);
 
-            foreach (var (bulkhead, zone, terminal) in toPlace)
+            foreach (var (bulkhead, zoneIndex, logFiles, startingState) in toPlace)
             {
                 var lorelog = logs.PickRandom();
 
                 if (lorelog != null)
                 {
-                    terminal.LogFiles.Add(lorelog);
+                    logFiles.Add(lorelog);
 
                     level.LogArchives.Logs.Add(new Log
                     {
                         Bulkhead = bulkhead,
-                        ZoneNumber = zone.LocalIndex,
+                        ZoneNumber = zoneIndex,
                         FileName = lorelog.FileName
                     });
 
                     if (lorelog.AttachedAudioFile != Sound.None &&
-                        terminal.StartingStateData.StartingState == TerminalState.Sleeping)
+                        startingState.StartingState == TerminalState.Sleeping)
                     {
-                        terminal.StartingStateData.StartingState = TerminalState.AudioLoopError;
-                        Plugin.Logger.LogDebug($" -> {bulkhead}, ZONE_{zone.LocalIndex}, with audio");
+                        startingState.StartingState = TerminalState.AudioLoopError;
+                        Plugin.Logger.LogDebug($" -> {bulkhead}, ZONE_{zoneIndex}, with audio");
                     }
                     else
                     {
-                        Plugin.Logger.LogDebug($" -> {bulkhead}, ZONE_{zone.LocalIndex}");
+                        Plugin.Logger.LogDebug($" -> {bulkhead}, ZONE_{zoneIndex}");
                     }
                 }
             }
