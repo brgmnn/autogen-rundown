@@ -69,6 +69,8 @@ public class RundownNames
                 var rundownData = Bins.Rundowns.Find(Rundown.R_Weekly);
 
                 rundown.m_rundownText.text = $"<size=70%><color=green>WEEK #{Generator.WeekNumber}</color><color=#444444>:</color> {rundownData?.Title}</size>";
+                //
+                // rundown.m_rundownText.text = $"<size=70%><color=#ff3311>Autogen</color> Rundown</size>";
             }
             // Rundown 4
             ///

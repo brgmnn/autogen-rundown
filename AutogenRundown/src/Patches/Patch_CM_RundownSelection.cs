@@ -89,6 +89,12 @@ public class Patch_CM_RundownSelection
     // [HarmonyPatch(typeof(GUIX_Layer), nameof(GUIX_Layer.Setup))]
     // public static void GUIX_Layer_SetRadarColors(GUIX_Layer __instance)
     // {
+    //     // if (LayerHasParent(__instance, RundownSelection.R2.UnityName))
+    //     // {
+    //     //     SetLineSubsetColor(__instance, 120, new Color { r = 0.9509804f, g = 0.158823538f, b = 0.158823538f, a = 1.0f }, randomWeekly);
+    //     //     SetRadarColor(__instance, new Color { r = 0.9509804f, g = 0.158823538f, b = 0.158823538f, a = 1.0f });
+    //     // }
+    //
     //     if (LayerHasParent(__instance, RundownSelection.R1.UnityName))
     //         SetLineSubsetColor(__instance, 90, new Color { r = 0.8509804f, g = 0.4190196f, b = 0.158823538f, a = 1.0f }, randomDaily);
     //     if (LayerHasParent(__instance, RundownSelection.R2.UnityName))
