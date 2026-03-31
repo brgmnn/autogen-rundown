@@ -26,6 +26,8 @@ public record CustomTerminalSpawnRequest
 
     public bool IsWardenObjective { get; set; } = false;
 
+    public DataBlocks.Enums.DimensionIndex DimensionIndex { get; set; } = DataBlocks.Enums.DimensionIndex.Reality;
+
     public LG_LayerType LayerType => Bulkhead switch
     {
         Bulkhead.Main => LG_LayerType.MainLayer,
