@@ -1076,7 +1076,9 @@ public partial record LevelLayout
 
         // Create a custom terminal spawn in the center of the geo as the warden objective terminal
         if (hillZone.CustomGeomorph is not null)
-            CustomTerminalSpawnManager.AddSpawnRequest(level.LevelLayoutData, new CustomTerminalSpawnRequest
+            CustomTerminalSpawnManager.AddSpawnRequest(
+                director.Bulkhead == Bulkhead.Main ? PersistentId : level.LevelLayoutData,
+                new CustomTerminalSpawnRequest
             {
                 Bulkhead = director.Bulkhead,
                 LocalIndex = hillZone.LocalIndex,
