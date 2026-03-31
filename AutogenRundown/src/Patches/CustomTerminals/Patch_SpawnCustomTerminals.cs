@@ -48,7 +48,10 @@ internal static class Patch_SpawnCustomTerminals
 
         var layer = __instance.m_layer;
 
-        var dimensionIndex = (eDimensionIndex)layer.m_dimension.DimensionIndex;
+        // Get dimension from the layer's first zone (safe IL2CPP access)
+        var dimensionIndex = layer.m_zones.Count > 0
+            ? layer.m_zones[0].DimensionIndex
+            : eDimensionIndex.Reality;
 
         foreach (var request in requests)
         {
