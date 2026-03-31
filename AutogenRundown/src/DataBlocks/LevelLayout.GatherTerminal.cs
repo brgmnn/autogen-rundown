@@ -484,6 +484,7 @@ public partial record LevelLayout
             FileName = $"DEC_KEY_INVENTORY-{Generator.ShortHexHash()}",
             FileContent = new Text(() =>
             {
+                // TODO: join every group of 4 zones by a new line and 2 spaces
                 var zones = string.Join(
                     ", ",
                     objective.PlacementNodes.Select(node => Intel.Zone(node, planner, underscore: true)));
