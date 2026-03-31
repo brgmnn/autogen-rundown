@@ -13,4 +13,10 @@ public class RundownLogRecord
     /// A list of level main id layouts which have all been read
     /// </summary>
     public HashSet<uint> ReadAllLogsLevels { get; set; } = new();
+
+    /// <summary>
+    /// Maps MainLevelLayout PID to tier+index (e.g. "A1", "B3"). Updated each startup
+    /// so that progress can be migrated when PIDs shift due to generator changes.
+    /// </summary>
+    public Dictionary<uint, string> LevelKeys { get; set; } = new();
 }
