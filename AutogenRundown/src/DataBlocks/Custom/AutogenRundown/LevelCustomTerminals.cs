@@ -43,8 +43,17 @@ public record LevelCustomTerminals
 
         return geomorph switch
         {
+            "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Boss_Arena.prefab" => new List<(Vector3 Position, Vector3 Rotation)>
+            {
+                // Central, the vanilla location
+                (new Vector3 { X = 33.9, Y = 6.1, Z = -0.92 }, new Vector3 { Y = -90 }),
+            },
+
             "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab" => new List<(Vector3, Vector3)>
             {
+                // Pretty central outside with backplate (the vanilla location)
+                (new Vector3 { X = 11.4, Y = 747.4, Z = 11.7 }, new Vector3()),
+
                 // By the balcony
                 (new Vector3 { X =  8.8, Y = 747.5, Z = 27.8 }, new Vector3 { Y = -90 }),
 
@@ -53,9 +62,6 @@ public record LevelCustomTerminals
 
                 // Up on the roof by the two ladders
                 (new Vector3 { X = -9.4, Y = 749.3, Z = -5.8 }, new Vector3 { Y = 90 }),
-
-                // Pretty central outside with backplate
-                (new Vector3 { X = 11.4, Y = 747.4, Z = 11.7 }, new Vector3()),
             },
 
             _ => new List<(Vector3, Vector3)> { (Vector3.Zero(), Vector3.Zero()) }
