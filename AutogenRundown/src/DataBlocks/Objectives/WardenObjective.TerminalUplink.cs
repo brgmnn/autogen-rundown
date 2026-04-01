@@ -64,8 +64,17 @@ public partial record WardenObjective
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
-        MainObjective = new Text("Find the <u>Uplink Terminals</u> [ALL_ITEMS] and establish an external uplink from each terminal");
-        FindLocationInfo = new Text("Gather information about the location of [ALL_ITEMS]");
+        if (Uplink_NumberOfTerminals > 1)
+        {
+            MainObjective = new Text("Find the <u>Uplink Terminals</u> [ALL_ITEMS] and establish an external uplink from each terminal");
+            FindLocationInfo = new Text("Gather information about the location of the terminals");
+        }
+        else
+        {
+            MainObjective = new Text("Find the <u>Uplink Terminal</u> [ALL_ITEMS] and establish an external uplink");
+            FindLocationInfo = new Text("Gather information about the location of the terminal");
+        }
+
         SolveItem = new Text("Use [ITEM_SERIAL] to create an uplink to [UPLINK_ADDRESS]");
         SolveItemHelp = new Text("Use the UPLINK_CONNECT command to establish the connection");
 
