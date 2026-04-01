@@ -1679,33 +1679,49 @@ public class Level
 
             // level.GlobalWaveSettings = GlobalWaveSettings.HighCap_40pts;
 
+            var dimensionIndex = DimensionIndex.Dimension1;
+            var dimensionLayout = LevelLayout.BuildDimension(level, director, objective, dimensionIndex);
+
+            dimensionLayout.Zones.Add(
+                new Zone(level, dimensionLayout)
+                {
+
+                });
+
             var dimension = new Dimension
             {
-                Data = Dimensions.DimensionData.AlphaThree_Top,
-                PersistentId = 2,
+                Data = new Dimensions.DimensionData
+                {
+                    LevelLayoutData = dimensionLayout.PersistentId,
+                    DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab",
+                    DimensionResourceSetID = (int)Complex.Mining,
+                },
+
+                // Data = Dimensions.DimensionData.AlphaOne,
+                PersistentId = 3,
             };
             // dimension.FindOrPersist();
             dimension.Persist();
 
             level.DimensionDatas.Add(new Levels.DimensionData
             {
-                Dimension = DimensionIndex.Dimension2,
+                Dimension = dimensionIndex,
                 Data = dimension
             });
 
-            var (position, rotation) = LevelCustomTerminals.GetCandidates(dimension.Data.DimensionGeomorph).First();
+            // var (position, rotation) = LevelCustomTerminals.GetCandidates(dimension.Data.DimensionGeomorph).First();
 
-            CustomTerminalSpawnManager.AddSpawnRequest(
-                level.LevelLayoutData,
-                new CustomTerminalSpawnRequest
-                {
-                    Bulkhead = director.Bulkhead,
-                    DimensionIndex = DimensionIndex.Dimension2,
-                    LocalIndex = 0,
-                    GeomorphName = dimension.Data.DimensionGeomorph,
-                    LocalPosition = position,
-                    LocalRotation = rotation
-                });
+            // CustomTerminalSpawnManager.AddSpawnRequest(
+            //     level.LevelLayoutData,
+            //     new CustomTerminalSpawnRequest
+            //     {
+            //         Bulkhead = director.Bulkhead,
+            //         DimensionIndex = DimensionIndex.Dimension1,
+            //         LocalIndex = 0,
+            //         GeomorphName = dimension.Data.DimensionGeomorph,
+            //         LocalPosition = position,
+            //         LocalRotation = rotation
+            //     });
 
 
 

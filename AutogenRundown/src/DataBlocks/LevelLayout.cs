@@ -1286,10 +1286,31 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         }
 
         // TODO: most or all of these need to be moved
-        // layout.RollErrorAlarm(); // Deprecated
         layout.RollAlarms();
         layout.RollBloodDoors();
         layout.RollEnemies(director);
+
+        Bins.LevelLayouts.AddBlock(layout);
+
+        return layout;
+    }
+
+    public static LevelLayout BuildDimension(
+        Level level,
+        BuildDirector director,
+        WardenObjective objective,
+        DimensionIndex dimension)
+    {
+        var direction = level.Settings.GetDirections(director.Bulkhead);
+        var layout = new LevelLayout(level, director, objective, level.Settings, level.Planner)
+        {
+            Name = $"{level.Tier}{level.Index} {level.Name} {director.Bulkhead} -- Dimension {dimension}",
+            direction = direction,
+
+            PuzzlePack = ChainedPuzzle.BuildPack(level.Tier, director.Bulkhead, level.Settings),
+            WavePopulationPack = WavePopulation.BuildPack(level.Tier, level.Settings),
+            WaveSettingsPack = WaveSettings.BuildPack(level.Tier)
+        };
 
         Bins.LevelLayouts.AddBlock(layout);
 

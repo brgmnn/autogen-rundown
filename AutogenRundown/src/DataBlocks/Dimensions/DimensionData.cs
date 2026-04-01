@@ -7,7 +7,7 @@ public record DimensionData
 {
     #region Properties
 
-    public int LevelLayoutData { get; set; } = 0;
+    public uint LevelLayoutData { get; set; } = 0;
 
     public string DimensionGeomorph { get; set; } =
         "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_01.prefab";
@@ -288,6 +288,9 @@ public record DimensionData
         LinkedToLayer = 0
     };
 
+    /// <summary>
+    /// This is where you fight the fliers
+    /// </summary>
     public static readonly DimensionData Unknown_Three = new()
     {
         LevelLayoutData = 0,

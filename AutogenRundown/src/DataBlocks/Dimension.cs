@@ -107,10 +107,12 @@ public record Dimension : DataBlock<Dimension>
         return Data == other.Data;
     }
 
-    public void Persist(BlocksBin<Dimension>? bin = null)
+    public Dimension Persist(BlocksBin<Dimension>? bin = null)
     {
         bin ??= Bins.Dimensions;
         bin.AddBlock(this);
+
+        return this;
     }
 
     public static Dimension FindOrPersist(Dimension dimension)
