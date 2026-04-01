@@ -61,6 +61,9 @@ TODO:
   * Big security scans that move are too hard
   * Fix uplink text for case where there's one terminal
 
+  * Fix the doors not working on Valiant Seasonal D3
+  * See if we can fix enemies not navigating through the final door in D3
+
   * Fix the cycling of security scans having global sound! Really annoying right now
   * Really fix the security scans appearing in the elevator first zone
   * Tone down higher density of scans, especially for moving ones

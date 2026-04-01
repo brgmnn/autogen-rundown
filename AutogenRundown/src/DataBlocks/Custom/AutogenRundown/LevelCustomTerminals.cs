@@ -23,6 +23,49 @@ public record LevelCustomTerminals
     public List<CustomTerminalSpawnRequest> Requests { get; set; } = new();
     #endregion
 
+    #region Terminal positions
+
+    /// <summary>
+    ///
+    /// We want to have at least 4 candidates per geomorph
+    ///
+    /// This will let us have some kind of interesting multi-terminal challenge
+    /// </summary>
+    /// <param name="geomorph"></param>
+    /// <returns></returns>
+    public static List<(Vector3 Position, Vector3 Rotation)> GetCandidates(string geomorph)
+    {
+        // Position terminal
+        // X -> +left/-right
+        // Y -> +up/-down
+        // Z -> +backward/-forward
+        // Rotate Y -> -right/+left
+
+        return geomorph switch
+        {
+            "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab" => new List<(Vector3, Vector3)>
+            {
+                // By the balcony
+                (new Vector3 { X =  8.8, Y = 747.5, Z = 27.8 }, new Vector3 { Y = -90 }),
+
+                // Inside the smaller building by the stairs
+                (new Vector3 { X = -8.6, Y = 745.2, Z = -7.6 }, new Vector3 { Y = 200 }),
+
+                // Up on the roof by the two ladders
+                (new Vector3 { X = -9.4, Y = 749.3, Z = -5.8 }, new Vector3 { Y = 90 }),
+
+                // Pretty central outside with backplate
+                (new Vector3 { X = 11.4, Y = 747.4, Z = 11.7 }, new Vector3()),
+            },
+
+            _ => new List<(Vector3, Vector3)> { (Vector3.Zero(), Vector3.Zero()) }
+        };
+    }
+
+    #endregion
+
+    #region Filesystem
+
     public static List<LevelCustomTerminals> LoadAll()
     {
         var results = new List<LevelCustomTerminals>();
@@ -83,4 +126,6 @@ public record LevelCustomTerminals
         serializer.Serialize(writer, this);
         stream.Flush();
     }
+
+    #endregion
 }

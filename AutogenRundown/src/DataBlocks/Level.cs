@@ -1679,25 +1679,35 @@ public class Level
 
             // level.GlobalWaveSettings = GlobalWaveSettings.HighCap_40pts;
 
-            // var dimension = new Dimension
-            // {
-            //     Data = new Dimensions.DimensionData
-            //     {
-            //         // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_01.prefab",
-            //         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab",
-            //         DimensionResourceSetID = 47,
-            //         IsStaticDimension = true
-            //     },
-            //     PersistentId = 2,
-            // };
-            // // dimension.FindOrPersist();
-            // dimension.Persist();
-            //
-            // level.DimensionDatas.Add(new Levels.DimensionData
-            // {
-            //     Dimension = DimensionIndex.Dimension1,
-            //     Data = dimension
-            // });
+            var dimension = new Dimension
+            {
+                Data = Dimensions.DimensionData.AlphaThree_Top,
+                PersistentId = 2,
+            };
+            // dimension.FindOrPersist();
+            dimension.Persist();
+
+            level.DimensionDatas.Add(new Levels.DimensionData
+            {
+                Dimension = DimensionIndex.Dimension2,
+                Data = dimension
+            });
+
+            var (position, rotation) = LevelCustomTerminals.GetCandidates(dimension.Data.DimensionGeomorph).First();
+
+            CustomTerminalSpawnManager.AddSpawnRequest(
+                level.LevelLayoutData,
+                new CustomTerminalSpawnRequest
+                {
+                    Bulkhead = director.Bulkhead,
+                    DimensionIndex = DimensionIndex.Dimension2,
+                    LocalIndex = 0,
+                    GeomorphName = dimension.Data.DimensionGeomorph,
+                    LocalPosition = position,
+                    LocalRotation = rotation
+                });
+
+
 
             // The zones
             var elevatorDrop = new ZoneNode(Bulkhead.Main, level.Planner.NextIndex(Bulkhead.Main));
@@ -1779,14 +1789,14 @@ public class Level
 
                 layout.Zones.Add(zone);
 
-                var puzzle = ChainedPuzzle.TravelAlarm_Team with
-                {
-                    PublicAlarmName = "Class S T Alarm",
-                    Puzzle = new List<PuzzleComponent>
-                    {
-                        PuzzleComponent.SustainedTravel
-                    }
-                };
+                // var puzzle = ChainedPuzzle.TravelAlarm_Team with
+                // {
+                //     PublicAlarmName = "Class S T Alarm",
+                //     Puzzle = new List<PuzzleComponent>
+                //     {
+                //         PuzzleComponent.SustainedTravel
+                //     }
+                // };
 
                 // if (z == 0)
                 //     puzzle = ChainedPuzzle.TravelAlarm_Team;
@@ -1795,7 +1805,7 @@ public class Level
                 // else if (z == 2)
                 //     puzzle = ChainedPuzzle.None;
 
-                zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
+                // zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
 
                 // zone.ChainedPuzzleToEnter =
 
@@ -1828,44 +1838,44 @@ public class Level
                 // }
             }
 
-            var sensorEvents2 = new List<WardenObjectiveEvent>();
-
-            sensorEvents2
-                .AddSound(Sound.LightsOff)
-                .AddSpawnWave(new GenericWave
-                {
-                    Population = WavePopulation.Baseline,
-                    Settings = WaveSettings.SingleMiniBoss
-                }, 1.0);
-
-            level.ZoneSensors.Add(new ZoneSensorDefinition
-            {
-                Id = 123,
-                ZoneNumber = 0,
-                Bulkhead = Bulkhead.Main,
-                SensorGroups = new List<ZoneSensorGroupDefinition>
-                {
-                    new ZoneSensorGroupDefinition
-                    {
-                        TriggerEach = false,
-                        // Count = 128,
-                        Density = SensorDensity.High,
-                        Moving = 3,
-                        Speed = 0.5,
-                        // Radius = 2.0,
-                        EdgeDistance = 0.7,
-                        AreaIndex = 1,
-                        EncryptedText = true,
-                    }
-                },
-
-                EventsOnTrigger = sensorEvents2
-            });
-
-            var resetTime = 5;
-            sensorEvents2
-                .EnableZoneSensorsWithReset(123, resetTime)
-                .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
+            // var sensorEvents2 = new List<WardenObjectiveEvent>();
+            //
+            // sensorEvents2
+            //     .AddSound(Sound.LightsOff)
+            //     .AddSpawnWave(new GenericWave
+            //     {
+            //         Population = WavePopulation.Baseline,
+            //         Settings = WaveSettings.SingleMiniBoss
+            //     }, 1.0);
+            //
+            // level.ZoneSensors.Add(new ZoneSensorDefinition
+            // {
+            //     Id = 123,
+            //     ZoneNumber = 0,
+            //     Bulkhead = Bulkhead.Main,
+            //     SensorGroups = new List<ZoneSensorGroupDefinition>
+            //     {
+            //         new ZoneSensorGroupDefinition
+            //         {
+            //             TriggerEach = false,
+            //             // Count = 128,
+            //             Density = SensorDensity.High,
+            //             Moving = 3,
+            //             Speed = 0.5,
+            //             // Radius = 2.0,
+            //             EdgeDistance = 0.7,
+            //             AreaIndex = 1,
+            //             EncryptedText = true,
+            //         }
+            //     },
+            //
+            //     EventsOnTrigger = sensorEvents2
+            // });
+            //
+            // var resetTime = 5;
+            // sensorEvents2
+            //     .EnableZoneSensorsWithReset(123, resetTime)
+            //     .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
 
             // var (med, medZone) = layout.BuildOptional_MedicalBay(elevatorDrop);
             // layout.Zones.Add(medZone);
@@ -1875,83 +1885,83 @@ public class Level
 
             // medZone.EventsOnOpenDoor.AddCyclingFog(level);
 
-            elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
-                new CustomTerminalCommand
-                {
-                    Command = "DEACTIVATE_SENSORS",
-                    CommandDesc = new Text($"Deactivate security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
-                    CommandEvents = new List<WardenObjectiveEvent>()
-                        // .AddStopLoop(263, 0.4)
-                        .DisableZoneSensors(123, 1.4)
-                        .ToList(),
-                    PostCommandOutputs = new List<TerminalOutput>
-                    {
-                        new()
-                        {
-                            Output = "Authenticating with BIOCOM...",
-                            Type = LineType.SpinningWaitNoDone,
-                            Time = 1.0
-                        },
-                        new()
-                        {
-                            Output = "Done.",
-                            Type = LineType.Normal,
-                            Time = 1.0
-                        },
-                    }
-                });
-
-            elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
-                new CustomTerminalCommand
-                {
-                    Command = "ACTIVATE_SENSORS",
-                    CommandDesc = new Text($"Activate security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
-                    CommandEvents = new List<WardenObjectiveEvent>()
-                        // .AddStopLoop(263, 0.4)
-                        .EnableZoneSensors(123, 1.4)
-                        .ToList(),
-                    PostCommandOutputs = new List<TerminalOutput>
-                    {
-                        new()
-                        {
-                            Output = "Authenticating with BIOCOM...",
-                            Type = LineType.SpinningWaitNoDone,
-                            Time = 1.0
-                        },
-                        new()
-                        {
-                            Output = "Done.",
-                            Type = LineType.Normal,
-                            Time = 1.0
-                        },
-                    }
-                });
-
-            elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
-                new CustomTerminalCommand
-                {
-                    Command = "RESET_SENSORS",
-                    CommandDesc = new Text($"Fully reset security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
-                    CommandEvents = new List<WardenObjectiveEvent>()
-                        // .AddStopLoop(263, 0.4)
-                        .EnableZoneSensorsWithReset(123, 1.4)
-                        .ToList(),
-                    PostCommandOutputs = new List<TerminalOutput>
-                    {
-                        new()
-                        {
-                            Output = "Authenticating with BIOCOM...",
-                            Type = LineType.SpinningWaitNoDone,
-                            Time = 1.0
-                        },
-                        new()
-                        {
-                            Output = "Done.",
-                            Type = LineType.Normal,
-                            Time = 1.0
-                        },
-                    }
-                });
+            // elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
+            //     new CustomTerminalCommand
+            //     {
+            //         Command = "DEACTIVATE_SENSORS",
+            //         CommandDesc = new Text($"Deactivate security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
+            //         CommandEvents = new List<WardenObjectiveEvent>()
+            //             // .AddStopLoop(263, 0.4)
+            //             .DisableZoneSensors(123, 1.4)
+            //             .ToList(),
+            //         PostCommandOutputs = new List<TerminalOutput>
+            //         {
+            //             new()
+            //             {
+            //                 Output = "Authenticating with BIOCOM...",
+            //                 Type = LineType.SpinningWaitNoDone,
+            //                 Time = 1.0
+            //             },
+            //             new()
+            //             {
+            //                 Output = "Done.",
+            //                 Type = LineType.Normal,
+            //                 Time = 1.0
+            //             },
+            //         }
+            //     });
+            //
+            // elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
+            //     new CustomTerminalCommand
+            //     {
+            //         Command = "ACTIVATE_SENSORS",
+            //         CommandDesc = new Text($"Activate security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
+            //         CommandEvents = new List<WardenObjectiveEvent>()
+            //             // .AddStopLoop(263, 0.4)
+            //             .EnableZoneSensors(123, 1.4)
+            //             .ToList(),
+            //         PostCommandOutputs = new List<TerminalOutput>
+            //         {
+            //             new()
+            //             {
+            //                 Output = "Authenticating with BIOCOM...",
+            //                 Type = LineType.SpinningWaitNoDone,
+            //                 Time = 1.0
+            //             },
+            //             new()
+            //             {
+            //                 Output = "Done.",
+            //                 Type = LineType.Normal,
+            //                 Time = 1.0
+            //             },
+            //         }
+            //     });
+            //
+            // elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
+            //     new CustomTerminalCommand
+            //     {
+            //         Command = "RESET_SENSORS",
+            //         CommandDesc = new Text($"Fully reset security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
+            //         CommandEvents = new List<WardenObjectiveEvent>()
+            //             // .AddStopLoop(263, 0.4)
+            //             .EnableZoneSensorsWithReset(123, 1.4)
+            //             .ToList(),
+            //         PostCommandOutputs = new List<TerminalOutput>
+            //         {
+            //             new()
+            //             {
+            //                 Output = "Authenticating with BIOCOM...",
+            //                 Type = LineType.SpinningWaitNoDone,
+            //                 Time = 1.0
+            //             },
+            //             new()
+            //             {
+            //                 Output = "Done.",
+            //                 Type = LineType.Normal,
+            //                 Time = 1.0
+            //             },
+            //         }
+            //     });
 
             // layout.AddSecuritySensors_SinglePouncerShadow((0, 1));
 
