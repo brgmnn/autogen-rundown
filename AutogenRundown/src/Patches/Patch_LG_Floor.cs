@@ -27,18 +27,30 @@ internal static class Patch_LG_Floor
     }
 
     /// <summary>
-    /// Debug: dump the full state of a dimension's origin tile after CreateDimension.
-    /// Compare output between elevator shaft (works) and regular geomorph (void).
+    /// After CreateDimension, if the origin tile is a regular geomorph (not an elevator
+    /// shaft), its LG_PrefabSpawners haven't been registered with the factory pipeline.
+    /// Regular geomorphs have 0 baked MeshRenderers — all visual content comes from
+    /// PrefabSpawners that must be built during level gen. Elevator shafts have their
+    /// geometry baked directly and don't need this.
     /// </summary>
     [HarmonyPatch(typeof(LG_Floor), nameof(LG_Floor.CreateDimension))]
     [HarmonyPostfix]
-    static void CreateDimension_Postfix(LG_Floor __instance, eDimensionIndex dimensionIndex, bool arenaDimension, int __result)
+    static void CreateDimension_Postfix(LG_Floor __instance, uint seed, eDimensionIndex dimensionIndex, bool arenaDimension, int __result)
     {
         if (arenaDimension) return;
 
         if (!__instance.GetDimension(dimensionIndex, out var dim)) return;
         var ft = dim.m_startTransition;
-        if (ft == null) { Plugin.Logger.LogError($"[DimDebug] {dimensionIndex}: m_startTransition is NULL"); return; }
+        if (ft == null) return;
+
+        // If the origin tile has no baked MeshRenderers, it needs its PrefabSpawners built.
+        // This is the case for regular zone geomorphs used as dimension origins.
+        var renderers = ft.GetComponentsInChildren<MeshRenderer>(true);
+        if (renderers.Length == 0)
+        {
+            Plugin.Logger.LogDebug($"[DimDebug] {dimensionIndex}: origin tile has 0 MeshRenderers, injecting PrefabSpawner jobs");
+            LG_Factory.FindAndBuildSelectorsAndSpawners(ft.gameObject, seed);
+        }
 
         var go = ft.gameObject;
         Plugin.Logger.LogDebug($"[DimDebug] === {dimensionIndex} origin tile: {go.name} ===");
@@ -112,14 +124,14 @@ internal static class Patch_LG_Floor
         }
 
         // MeshRenderers
-        var renderers = go.GetComponentsInChildren<MeshRenderer>();
+        var dbgRenderers = go.GetComponentsInChildren<MeshRenderer>();
         int enabledCount = 0, disabledCount = 0, staticCount = 0;
-        foreach (var r in renderers)
+        foreach (var r in dbgRenderers)
         {
             if (r.enabled) enabledCount++; else disabledCount++;
             if (r.gameObject.isStatic) staticCount++;
         }
-        Plugin.Logger.LogDebug($"[DimDebug]   MeshRenderers: total={renderers.Length} enabled={enabledCount} disabled={disabledCount} static={staticCount}");
+        Plugin.Logger.LogDebug($"[DimDebug]   MeshRenderers: total={dbgRenderers.Length} enabled={enabledCount} disabled={disabledCount} static={staticCount}");
 
         // Dimension root state
         var root = dim.DimensionRootTemp;
