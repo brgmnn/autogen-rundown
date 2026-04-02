@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.ZoneData;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks.Dimensions;
@@ -16,7 +17,11 @@ public record DimensionData
 
     public double VerticalExtentsDown { get; set; } = 50.0;
 
-    public int DimensionResourceSetID { get; set; } = 51;
+    [JsonIgnore]
+    public ComplexResourceSet ResourceSet { get; set; } = ComplexResourceSet.Dimensions;
+
+    [JsonProperty]
+    public uint DimensionResourceSetID => ResourceSet.PersistentId;
 
     public uint DimensionFogData { get; set; } = 81;
 
@@ -154,7 +159,6 @@ public record DimensionData
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Boss_flash.prefab",
         VerticalExtentsUp = 100.0,
         VerticalExtentsDown = 50.0,
-        DimensionResourceSetID = 47,
         DimensionFogData = 94,
         EnvironmentWetness = 0.0,
         DustColor = new Color { Alpha = 1.0, Red = 0.5, Green = 0.5, Blue = 0.5 },
@@ -227,7 +231,6 @@ public record DimensionData
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_02.prefab",
         VerticalExtentsUp = 100.0,
         VerticalExtentsDown = 55.0,
-        DimensionResourceSetID = 47,
         DimensionFogData = 92,
         EnvironmentWetness = 0.0,
         DustColor = new Color { Alpha = 1.0, Red = 0.5019608, Green = 0.446603864, Blue = 0.3558902 },
@@ -297,7 +300,6 @@ public record DimensionData
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R7B3.prefab",
         VerticalExtentsUp = 50.0,
         VerticalExtentsDown = 10.0,
-        DimensionResourceSetID = 47,
         DimensionFogData = 93,
         EnvironmentWetness = 0.199,
         DustColor = new Color { Alpha = 1.0, Red = 0.65, Green = 0.6042968, Blue = 0.487499952 },
@@ -369,7 +371,6 @@ public record DimensionData
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Boss_Arena.prefab",
         VerticalExtentsUp = 100.0,
         VerticalExtentsDown = 40.0,
-        DimensionResourceSetID = 47,
         DimensionFogData = 88,
         EnvironmentWetness = 0.0,
         DustColor = new Color { Alpha = 1.0, Red = 0.5, Green = 0.351260275, Blue = 0.2523585 },
@@ -445,7 +446,6 @@ public record DimensionData
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_01.prefab",
         VerticalExtentsUp = 30.0,
         VerticalExtentsDown = 30.0,
-        DimensionResourceSetID = 47,
         DimensionFogData = 87,
         EnvironmentWetness = 0.0,
         DustColor = new Color { Alpha = 1.0, Red = 0.5, Green = 0.37109375, Blue = 0.25 },
@@ -517,7 +517,6 @@ public record DimensionData
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab",
         VerticalExtentsUp = 50.0,
         VerticalExtentsDown = 10.0,
-        DimensionResourceSetID = 47,
         DimensionFogData = 109,
         EnvironmentWetness = 0.0,
         DustColor = new Color { Alpha = 0.129411772, Red = 0.6981132, Green = 0.6952906, Blue = 0.68823427 },
@@ -592,7 +591,6 @@ public record DimensionData
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Mining_Shaft.prefab",
         VerticalExtentsUp = 100.0,
         VerticalExtentsDown = 50.0,
-        DimensionResourceSetID = 47,
         DimensionFogData = 106,
         EnvironmentWetness = 0.0118,
         DustColor = new Color { Alpha = 1.0, Red = 0.5, Green = 0.351260275, Blue = 0.2523585 },
@@ -671,7 +669,6 @@ public record DimensionData
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Dune_camp_03.prefab",
         VerticalExtentsUp = 100.0,
         VerticalExtentsDown = 55.0,
-        DimensionResourceSetID = 47,
         DimensionFogData = Fog.AlphaSix.PersistentId,
         DustColor = new Color { Alpha = 1.0, Red = 0.5019608, Green = 0.446603864, Blue = 0.3558902 },
         DustAlphaBoost = 5.0,

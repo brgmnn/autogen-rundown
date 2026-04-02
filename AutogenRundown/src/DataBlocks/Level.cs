@@ -1679,13 +1679,27 @@ public class Level
 
             // level.GlobalWaveSettings = GlobalWaveSettings.HighCap_40pts;
 
+
+
+
+
+
+            var dim1ResourceSet = ComplexResourceSet.Mining.Duplicate();
+
+            dim1ResourceSet.CustomGeomorphs.Add(new Prefab
+            {
+                Asset = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_mining_01.prefab",
+                SubComplex = SubComplex.Storage,
+                Shard = 17
+            });
+
+
             var dimensionIndex = DimensionIndex.Dimension1;
             var dimensionLayout = LevelLayout.BuildDimension(level, director, objective, dimensionIndex);
 
             dimensionLayout.Zones.Add(
                 new Zone(level, dimensionLayout)
                 {
-
                 });
 
             var dimension = new Dimension
@@ -1693,8 +1707,10 @@ public class Level
                 Data = new Dimensions.DimensionData
                 {
                     LevelLayoutData = dimensionLayout.PersistentId,
-                    DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab",
-                    DimensionResourceSetID = (int)Complex.Mining,
+                    // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab",
+                    DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_mining_01.prefab",
+                    ResourceSet = dim1ResourceSet
+                    // DimensionResourceSetID = (int)Complex.Mining,
                 },
 
                 // Data = Dimensions.DimensionData.AlphaOne,
