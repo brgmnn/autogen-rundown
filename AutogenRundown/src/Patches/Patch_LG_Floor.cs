@@ -59,23 +59,13 @@ internal static class Patch_LG_Floor
             return true;
 
         // --- Custom handling for geomorphs without LG_FloorTransition ---
-        var xxHash = new XXHashSequence(seed);
+        // Let GOUtil spawn the object so it performs any hidden setup (parenting,
+        // layers, static flags, etc.) that Object.Instantiate would miss.
+        // GOUtil returns null for LG_FloorTransition but the object is spawned —
+        // LG_Geomorph.Awake() fires and sets s_last to the original component.
+        GOUtil.SpawnChildAndGetComp<LG_FloorTransition>(transitionOverridePrefab, pos, rotation);
+        var spawned = LG_Geomorph.s_last.gameObject;
 
-        if ((dimension == null || dimension.IsMainDimension)
-            && Builder.LayerBuildDatas[0].m_zoneBuildDatas != null
-            && Builder.LayerBuildDatas[0].m_zoneBuildDatas.Count > 0)
-        {
-            _ = (int)Builder.LayerBuildDatas[0].m_zoneBuildDatas[0].SubComplex;
-        }
-
-        var seed1 = xxHash.NextSubSeed();
-
-        if (transitionOverridePrefab == null)
-            transitionOverridePrefab = Builder.ComplexResourceSetBlock.GetElevatorTile(seed1);
-        if (transitionOverridePrefab == null)
-            throw new System.Exception("ERROR : No start tile found in LG_SetupFloor!");
-
-        var spawned = UnityEngine.Object.Instantiate(transitionOverridePrefab, pos, rotation);
         var comp = spawned.AddComponent<LG_FloorTransition>();
         comp.m_transitionType = LG_FloorTransitionType.Elevator;
 
@@ -87,13 +77,16 @@ internal static class Patch_LG_Floor
         spawnPoint.localRotation = Quaternion.identity;
         comp.m_spawnPoints = new Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppReferenceArray<Transform>(new[] { spawnPoint });
 
+        // Consume the same seeds the original method would
+        var xxHash = new XXHashSequence(seed);
+        xxHash.NextSubSeed();
+
         comp.m_geoPrefab = transitionOverridePrefab;
         comp.SetupAreas(xxHash.NextSubSeed());
 
-        // Sync areas/plugs to the original LG_Geomorph. Code that calls
-        // GetComponent<LG_Geomorph>() finds the original (first added), not our
-        // LG_FloorTransition. Without valid data on both, the node volume and
-        // culling traversal finds empty areas and the origin tile is invisible.
+        // Sync areas/plugs to the original LG_Geomorph so that code using
+        // GetComponent<LG_Geomorph>() (which finds the original first) still
+        // gets valid area data for culling and node traversal.
         var originalGeo = spawned.GetComponent<LG_Geomorph>();
         if (originalGeo != null && originalGeo != comp)
         {
