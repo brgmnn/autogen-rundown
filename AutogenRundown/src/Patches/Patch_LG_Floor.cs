@@ -75,6 +75,15 @@ internal static class Patch_LG_Floor
 
             comp = spawned.AddComponent<LG_FloorTransition>();
             comp.m_transitionType = LG_FloorTransitionType.Elevator;
+
+            // Regular geomorphs don't have spawn points. Create one at the geomorph's
+            // center so dimension warps have a valid destination. Without this, players
+            // warp to (0,0,0) in Reality's space instead of the dimension.
+            var spawnPoint = new GameObject("DimensionSpawnPoint_0").transform;
+            spawnPoint.SetParent(spawned.transform);
+            spawnPoint.localPosition = Vector3.zero;
+            spawnPoint.localRotation = Quaternion.identity;
+            comp.m_spawnPoints = new Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppReferenceArray<Transform>(new[] { spawnPoint });
         }
 
         comp.m_geoPrefab = transitionOverridePrefab;
