@@ -288,12 +288,12 @@ public partial record LevelLayout
             EnemyPointsMultiplier = 0.6
         };
 
-        switch (level.Complex)
+        switch (Complex)
         {
             case Complex.Mining:
             case Complex.Tech:
             case Complex.Service:
-                elevatorDropZone.GenHubGeomorph(level.Complex);
+                elevatorDropZone.GenHubGeomorph(Complex);
                 break;
         }
 
@@ -340,7 +340,7 @@ public partial record LevelLayout
             EnemyPointsMultiplier = 0.5
         };
 
-        switch (level.Complex)
+        switch (Complex)
         {
             case Complex.Mining:
             {
@@ -354,7 +354,7 @@ public partial record LevelLayout
                 }
                 else
                 {
-                    elevatorDropZone.GenHubGeomorph(level.Complex);
+                    elevatorDropZone.GenHubGeomorph(Complex);
                 }
 
                 break;
@@ -362,7 +362,7 @@ public partial record LevelLayout
 
             case Complex.Tech:
             case Complex.Service:
-                elevatorDropZone.GenHubGeomorph(level.Complex);
+                elevatorDropZone.GenHubGeomorph(Complex);
                 break;
         }
 

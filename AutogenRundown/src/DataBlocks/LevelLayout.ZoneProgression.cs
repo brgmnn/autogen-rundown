@@ -134,7 +134,7 @@ public partial record LevelLayout
     {
         start = planner.UpdateNode(start with { MaxConnections = 3 });
         var startZone = planner.GetZone(start)!;
-        startZone.GenHubGeomorph(level.Complex);
+        startZone.GenHubGeomorph(Complex);
 
         var (end, endZone) = AddZone(start, new ZoneNode());
 
@@ -224,7 +224,7 @@ public partial record LevelLayout
     {
         start = planner.UpdateNode(start with { MaxConnections = 3 });
         var startZone = planner.GetZone(start)!;
-        startZone.GenHubGeomorph(level.Complex);
+        startZone.GenHubGeomorph(Complex);
 
         var (end, endZone) = AddZone(start, new ZoneNode());
 
@@ -786,7 +786,7 @@ public partial record LevelLayout
         }
 
         setupNode = planner.UpdateNode(setupNode with { MaxConnections = 3 });
-        setupZone.GenKingOfTheHillGeomorph(level.GetDirector(setupNode.Bulkhead));
+        setupZone.GenKingOfTheHillGeomorph();
 
         // We want a side spawn room to make it basically impossible to C-foam hold this alarm
         // NOTE: the side spawn room CAN have blood doors roll on it!
@@ -799,7 +799,7 @@ public partial record LevelLayout
                 Tags = new Tags("no_enemies")
             });
 
-        sideSpawnZone.GenDeadEndGeomorph(level.Complex);
+        sideSpawnZone.GenDeadEndGeomorph(Complex);
         sideSpawnZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
 
         var puzzle = director.Tier switch
@@ -901,7 +901,7 @@ public partial record LevelLayout
         }
 
         setupNode = planner.UpdateNode(setupNode with { MaxConnections = 3 });
-        setupZone.GenHubGeomorph(level.Complex);
+        setupZone.GenHubGeomorph(Complex);
 
         var puzzle = director.Tier switch
         {
@@ -976,7 +976,7 @@ public partial record LevelLayout
         var exit = nodes.Last();
         var exitZone = planner.GetZone(exit)!;
 
-        exitZone.GenExitGeomorph(level.Complex);
+        exitZone.GenExitGeomorph(Complex);
 
         return exit;
     }
@@ -1000,7 +1000,7 @@ public partial record LevelLayout
             return bossNode;
         }
 
-        zone.GenBossGeomorph(level.Complex);
+        zone.GenBossGeomorph(Complex);
 
         // Disable any scouts on anything except E-tier
         if (level.Tier != "E")
@@ -1216,7 +1216,7 @@ public partial record LevelLayout
         }
 
         // We pick the specific tiles we want ourselves
-        (zone.SubComplex, zone.CustomGeomorph, zone.Coverage) = level.Complex switch
+        (zone.SubComplex, zone.CustomGeomorph, zone.Coverage) = Complex switch
         {
             Complex.Mining => (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_06.prefab", new CoverageMinMax { Min = 30, Max = 70 }),
             Complex.Tech => (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_01_R3D1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
@@ -1403,7 +1403,7 @@ public partial record LevelLayout
         node = planner.UpdateNode(node with { Tags = node.Tags.Extend("no_enemies", "no_scouts") });
 
         // Set a big open geomorph
-        zone.GenHubGeomorph(level.Complex);
+        zone.GenHubGeomorph(Complex);
 
         zone.EnemySpawningInZone.Add(EnemySpawningData.Scout with
         {
@@ -1913,7 +1913,7 @@ public partial record LevelLayout
     {
         var (node, zone) = AddZone(start, new ZoneNode { MaxConnections = 0 });
 
-        switch (level.Complex)
+        switch (Complex)
         {
             case Complex.Mining:
                 break;
@@ -1940,7 +1940,7 @@ public partial record LevelLayout
     {
         var (_, zone) = AddZone(start, new ZoneNode { MaxConnections = 0 });
 
-        switch (level.Complex)
+        switch (Complex)
         {
             case Complex.Mining:
                 zone.SubComplex = SubComplex.Storage;

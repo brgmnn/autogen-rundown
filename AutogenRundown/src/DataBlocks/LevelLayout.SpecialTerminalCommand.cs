@@ -1072,7 +1072,7 @@ public partial record LevelLayout
 
         AddForwardExtractStart(hillNodes.First());
 
-        var (terminalPos, terminalRot) = hillZone.GenKingOfTheHillGeomorph(director);
+        var (terminalPos, terminalRot) = hillZone.GenKingOfTheHillGeomorph();
 
         // Create a custom terminal spawn in the center of the geo as the warden objective terminal
         if (hillZone.CustomGeomorph is not null)
@@ -1115,7 +1115,7 @@ public partial record LevelLayout
                 LightSettings = Lights.GenRandomLight(),
             };
             zone.RollFog(level);
-            zone.GenDeadEndGeomorph(director.Complex);
+            zone.GenDeadEndGeomorph(Complex);
 
             // No terminals needed in the spawn zones
             zone.TerminalPlacements = new List<TerminalPlacement>();

@@ -1320,7 +1320,7 @@ public partial record Zone : DataBlock<Zone>
         LightsSubSeed = Generator.Between(10, 999);
 
         // 70% chance to add more syringes in tech complex zones
-        if (level.Complex == Complex.Tech && Generator.Flip(0.7))
+        if (layout.Complex == Complex.Tech && Generator.Flip(0.7))
             ConsumableDistributionInZone = ConsumableDistribution.Baseline_TechComplex.PersistentId;
 
         // Always ensure a terminal is placed in the zone

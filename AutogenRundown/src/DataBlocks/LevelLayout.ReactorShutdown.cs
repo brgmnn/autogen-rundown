@@ -38,7 +38,7 @@ public partial record LevelLayout
         if (Generator.Flip(0.66))
         {
             var codeTerminalZoneData = planner.GetZone(codeTerminalZone)!;
-            codeTerminalZoneData.GenGardenGeomorph(level.Complex);
+            codeTerminalZoneData.GenGardenGeomorph(Complex);
         }
     }
 
@@ -346,7 +346,7 @@ public partial record LevelLayout
 
                         var entranceNode = planner.GetZones(director.Bulkhead, "reactor_entrance").First();
                         entranceNode = planner.UpdateNode(entranceNode with { MaxConnections = 3 });
-                        planner.GetZone(entranceNode)!.GenHubGeomorph(level.Complex);
+                        planner.GetZone(entranceNode)!.GenHubGeomorph(Complex);
 
                         var (end, _) = BuildChallenge_KeycardInSide(entranceNode);
                         AddKeycardPuzzle(reactor, end);
@@ -561,7 +561,7 @@ public partial record LevelLayout
 
                         var entranceNode = planner.GetZones(director.Bulkhead, "reactor_entrance").First();
                         entranceNode = planner.UpdateNode(entranceNode with { MaxConnections = 3 });
-                        planner.GetZone(entranceNode)!.GenHubGeomorph(level.Complex);
+                        planner.GetZone(entranceNode)!.GenHubGeomorph(Complex);
 
                         var cellNodes = AddBranch(entranceNode, Generator.Between(1, 2), "power_cell");
                         AddGeneratorPuzzle(reactor, cellNodes.Last());
@@ -835,7 +835,7 @@ public partial record LevelLayout
                     {
                         var entranceNode = planner.GetZones(director.Bulkhead, "reactor_entrance").First();
                         entranceNode = planner.UpdateNode(entranceNode with { MaxConnections = 3 });
-                        planner.GetZone(entranceNode)!.GenHubGeomorph(level.Complex);
+                        planner.GetZone(entranceNode)!.GenHubGeomorph(Complex);
 
                         var nodes = AddBranch(entranceNode, 1, "reactor_unlock");
                         var (mid, _) = BuildChallenge_BossFight(nodes.Last());
@@ -1002,7 +1002,7 @@ public partial record LevelLayout
                     {
                         var entranceNode = planner.GetZones(director.Bulkhead, "reactor_entrance").First();
                         entranceNode = planner.UpdateNode(entranceNode with { MaxConnections = 3 });
-                        planner.GetZone(entranceNode)!.GenHubGeomorph(level.Complex);
+                        planner.GetZone(entranceNode)!.GenHubGeomorph(Complex);
 
                         var (apexEnd, _) = BuildChallenge_ApexAlarm(
                             entranceNode,
@@ -1133,7 +1133,7 @@ public partial record LevelLayout
                     {
                         var entranceNode = planner.GetZones(director.Bulkhead, "reactor_entrance").First();
                         entranceNode = planner.UpdateNode(entranceNode with { MaxConnections = 3 });
-                        planner.GetZone(entranceNode)!.GenHubGeomorph(level.Complex);
+                        planner.GetZone(entranceNode)!.GenHubGeomorph(Complex);
 
                         var (end, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
                             entranceNode,
@@ -1233,7 +1233,7 @@ public partial record LevelLayout
                     {
                         var entranceNode = planner.GetZones(director.Bulkhead, "reactor_entrance").First();
                         entranceNode = planner.UpdateNode(entranceNode with { MaxConnections = 3 });
-                        planner.GetZone(entranceNode)!.GenHubGeomorph(level.Complex);
+                        planner.GetZone(entranceNode)!.GenHubGeomorph(Complex);
 
                         var (bossEnd, _) = BuildChallenge_BossFight(entranceNode);
                         var cellNodes = AddBranch(bossEnd, 1, "power_cell");

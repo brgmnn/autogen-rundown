@@ -166,7 +166,7 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, 1);
                         var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last());
 
-                        midZone.GenCorridorGeomorph(level.Complex);
+                        midZone.GenCorridorGeomorph(Complex);
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -240,7 +240,7 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, 1);
                         var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last(), Generator.Between(1, 2));
 
-                        midZone.GenCorridorGeomorph(level.Complex);
+                        midZone.GenCorridorGeomorph(Complex);
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -258,7 +258,7 @@ public partial record LevelLayout
 
                         var (mid, midZone) = BuildChallenge_BossFight(nodes.Last());
 
-                        midZone.GenCorridorGeomorph(level.Complex);
+                        midZone.GenCorridorGeomorph(Complex);
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -355,7 +355,7 @@ public partial record LevelLayout
                         var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last(), Generator.Between(1, 2));
                         AddSecuritySensors(mid);
 
-                        midZone.GenCorridorGeomorph(level.Complex);
+                        midZone.GenCorridorGeomorph(Complex);
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -387,7 +387,7 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, 1);
                         var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last(), Generator.Between(1, 2));
 
-                        midZone.GenCorridorGeomorph(level.Complex);
+                        midZone.GenCorridorGeomorph(Complex);
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -408,7 +408,7 @@ public partial record LevelLayout
 
                         var (mid, midZone) = BuildChallenge_BossFight(nodes.Last());
 
-                        midZone.GenCorridorGeomorph(level.Complex);
+                        midZone.GenCorridorGeomorph(Complex);
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -449,7 +449,7 @@ public partial record LevelLayout
                         AddSecuritySensors(nodes.First());
 
                         var (mid, midZone) = BuildChallenge_BossFight(nodes.Last());
-                        midZone.GenCorridorGeomorph(level.Complex);
+                        midZone.GenCorridorGeomorph(Complex);
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -538,7 +538,7 @@ public partial record LevelLayout
             MaxConnections = 0,
             Tags = exit.Tags.Extend("exit_elevator")
         });
-        exitZone.GenExitGeomorph(level.Complex);
+        exitZone.GenExitGeomorph(Complex);
         exitZone.Coverage = new() { Min = 64, Max = 64 };
 
         // Ensure there's a nice spicy hoard at the end

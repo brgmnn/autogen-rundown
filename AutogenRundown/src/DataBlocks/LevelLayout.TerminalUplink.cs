@@ -383,7 +383,7 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
                         var hub = nodes.Last();
                         hub = planner.UpdateNode(hub with { MaxConnections = objective.Uplink_NumberOfTerminals + 1 });
-                        planner.GetZone(hub)!.GenHubGeomorph(level.Complex);
+                        planner.GetZone(hub)!.GenHubGeomorph(Complex);
 
                         // Add each terminal in its own end zone
                         for (var i = 0; i < objective.Uplink_NumberOfTerminals; i++)
@@ -881,7 +881,7 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(mid, Generator.Between(1, 2));
                         var hub = nodes.Last();
                         hub = planner.UpdateNode(hub with { MaxConnections = objective.Uplink_NumberOfTerminals + 1 });
-                        planner.GetZone(hub)!.GenHubGeomorph(level.Complex);
+                        planner.GetZone(hub)!.GenHubGeomorph(Complex);
 
                         for (var i = 0; i < objective.Uplink_NumberOfTerminals; i++)
                         {

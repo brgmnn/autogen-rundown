@@ -107,7 +107,7 @@ public partial record LevelLayout
 
             // Set the last zone potentially to a garden tile
             if (fetchCount - b - 1 < 3 && Generator.Flip(0.33))
-                lastZone.GenGardenGeomorph(level.Complex);
+                lastZone.GenGardenGeomorph(Complex);
 
             // Add some extra terminals for confusion. All at the back.
             lastZone.TerminalPlacements = new List<TerminalPlacement>();

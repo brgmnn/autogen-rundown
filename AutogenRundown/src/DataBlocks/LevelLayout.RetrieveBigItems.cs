@@ -46,7 +46,7 @@ public partial record LevelLayout
         corridor.MaxConnections = 1;
 
         var corridorZone = new Zone(level, this) { LightSettings = Lights.GenRandomLight() };
-        corridorZone.GenCorridorGeomorph(director.Complex);
+        corridorZone.GenCorridorGeomorph(Complex);
         corridorZone.RollFog(level);
 
         level.Planner.Connect(prev, corridor);
@@ -58,7 +58,7 @@ public partial record LevelLayout
         mwp.MaxConnections = 3;
 
         var mwpZone = new Zone(level, this) { LightSettings = Lights.GenRandomLight() };
-        mwpZone.GenMatterWaveProjectorGeomorph(director.Complex);
+        mwpZone.GenMatterWaveProjectorGeomorph(Complex);
         mwpZone.RollFog(level);
 
         level.Planner.Connect(corridor, mwp);
@@ -138,7 +138,7 @@ public partial record LevelLayout
 
         if (Generator.Flip())
         {
-            entranceZone.GenHubGeomorph(director.Complex);
+            entranceZone.GenHubGeomorph(Complex);
             entrance.MaxConnections = 3;
         }
         else
@@ -154,7 +154,7 @@ public partial record LevelLayout
         // corridor.MaxConnections = 1;
         //
         // var corridorZone = new Zone { LightSettings = Lights.GenRandomLight() };
-        // //corridorZone.GenCorridorGeomorph(director.Complex);
+        // //corridorZone.GenCorridorGeomorph(Complex);
         // corridorZone.RollFog(level);
         //
         // level.Planner.Connect(entrance, corridor);
@@ -166,7 +166,7 @@ public partial record LevelLayout
         // hub.MaxConnections = 3;
         //
         // var zone = new Zone { LightSettings = Lights.GenRandomLight() };
-        // zone.GenHubGeomorph(director.Complex);
+        // zone.GenHubGeomorph(Complex);
         // zone.RollFog(level);
         //
         // level.Planner.Connect(corridor, hub);
@@ -222,7 +222,7 @@ public partial record LevelLayout
         hub2.MaxConnections = 3;
 
         var zoneHub2 = new Zone(level, this) { LightSettings = Lights.GenRandomLight() };
-        zoneHub2.GenHubGeomorph(director.Complex);
+        zoneHub2.GenHubGeomorph(Complex);
         zoneHub2.RollFog(level);
 
         level.Planner.Connect(secondHubBase, hub2);

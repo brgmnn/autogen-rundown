@@ -546,9 +546,9 @@ public partial record Zone
     /// Creates a Geomorph used as a primary objective point
     /// </summary>
     /// <param name="complex"></param>
-    public (Vector3 Position, Vector3 Rotation) GenKingOfTheHillGeomorph(BuildDirector director)
+    public (Vector3 Position, Vector3 Rotation) GenKingOfTheHillGeomorph()
     {
-        switch (director.Complex)
+        switch (layout.Complex)
         {
             case Complex.Mining:
                 (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
@@ -780,7 +780,7 @@ public partial record Zone
     /// </summary>
     public void GenPortalGeomorph()
     {
-        switch (level.Complex)
+        switch (layout.Complex)
         {
             // This tile contains a possible path forward.
             case Complex.Mining:

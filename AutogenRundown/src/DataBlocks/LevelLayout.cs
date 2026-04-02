@@ -39,6 +39,9 @@ public partial record LevelLayout : DataBlock<LevelLayout>
     internal readonly BuildDirector director;
 
     [JsonIgnore]
+    internal Complex Complex { get; init; }
+
+    [JsonIgnore]
     private readonly WardenObjective objective;
 
     [JsonIgnore]
@@ -81,6 +84,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
 
         this.director = director;
         this.level = level;
+        this.Complex = level.Complex;
         this.objective = objective;
         this.planner = planner;
         this.settings = settings;
@@ -1309,12 +1313,14 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         Level level,
         BuildDirector director,
         WardenObjective objective,
-        DimensionIndex dimension)
+        DimensionIndex dimension,
+        Complex? complex = null)
     {
         var direction = level.Settings.GetDirections(director.Bulkhead);
         var layout = new LevelLayout(level, director, objective, level.Settings, level.Planner)
         {
             Name = $"{level.Tier}{level.Index} {level.Name} {director.Bulkhead} -- Dimension {dimension}",
+            Complex = complex ?? level.Complex,
             direction = direction,
 
             PuzzlePack = ChainedPuzzle.BuildPack(level.Tier, director.Bulkhead, level.Settings),

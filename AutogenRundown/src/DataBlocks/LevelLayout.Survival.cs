@@ -188,7 +188,7 @@ public partial record LevelLayout
             LightSettings = Lights.GenRandomLight()
         };
 
-        exitZone.GenExitGeomorph(director.Complex);
+        exitZone.GenExitGeomorph(Complex);
 
         // Exit scan will be HARD
         exitZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;

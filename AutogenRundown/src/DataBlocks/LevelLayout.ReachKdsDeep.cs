@@ -340,7 +340,7 @@ public partial record LevelLayout
                 {
                     node = planner.UpdateNode(node with { MaxConnections = 1 });
                     planner.AddTags(node, "no_enemies", "no_blood_door");
-                    zone.GenCorridorGeomorph(level.Complex);
+                    zone.GenCorridorGeomorph(Complex);
                     zone.HealthPacks = 0.0;
                     zone.ToolPacks = 0.0;
                     zone.AmmoPacks = 1.0;
@@ -350,7 +350,7 @@ public partial record LevelLayout
                 var (turn1, turn1Zone) = AddZone_Forward(
                     segment1.Last(),
                     new ZoneNode { MaxConnections = 3, Tags = new Tags("no_enemies") });
-                turn1Zone.GenHubGeomorph(level.Complex);
+                turn1Zone.GenHubGeomorph(Complex);
                 turn1Zone.HealthPacks = 1.0;
                 turn1Zone.ToolPacks = 1.0;
                 turn1Zone.AmmoPacks = 3.0;
@@ -367,7 +367,7 @@ public partial record LevelLayout
                 {
                     node = planner.UpdateNode(node with { MaxConnections = 1 });
                     planner.AddTags(node, "no_enemies");
-                    zone.GenCorridorGeomorph(level.Complex);
+                    zone.GenCorridorGeomorph(Complex);
                     zone.HealthPacks = 1.0;
                     zone.ToolPacks = 0.0;
                     zone.AmmoPacks = 1.0;
@@ -663,7 +663,7 @@ public partial record LevelLayout
                 {
                     node = planner.UpdateNode(node with { MaxConnections = 1 });
                     planner.AddTags(node, "no_enemies", "no_blood_door");
-                    zone.GenCorridorGeomorph(level.Complex);
+                    zone.GenCorridorGeomorph(Complex);
                     zone.ConsumableDistributionInZone = 0;
                     zone.HealthPacks = 0.0;
                     zone.ToolPacks = 0.0;
@@ -704,7 +704,7 @@ public partial record LevelLayout
                     Tags = new Tags("no_enemies", "no_blood_door")
 
                 });
-                hubZone.GenHubGeomorph(level.Complex);
+                hubZone.GenHubGeomorph(Complex);
                 hubZone.HealthPacks = 4.0;
                 hubZone.ToolPacks = 8.0;
                 hubZone.AmmoPacks = 8.0;
