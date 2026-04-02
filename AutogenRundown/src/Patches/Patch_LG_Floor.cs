@@ -48,8 +48,11 @@ internal static class Patch_LG_Floor
         var renderers = ft.GetComponentsInChildren<MeshRenderer>(true);
         if (renderers.Length == 0)
         {
-            Plugin.Logger.LogDebug($"[DimDebug] {dimensionIndex}: origin tile has 0 MeshRenderers, injecting PrefabSpawner jobs");
-            LG_Factory.FindAndBuildSelectorsAndSpawners(ft.gameObject, seed);
+            Plugin.Logger.LogDebug($"[DimDebug] {dimensionIndex}: origin tile has 0 MeshRenderers, building PrefabSpawners immediately");
+            LG_Factory.FindAndBuildSelectorsAndSpawners(ft.gameObject, seed, buildSpawnersInstantly: true);
+
+            var postSpawnRenderers = ft.GetComponentsInChildren<MeshRenderer>(true);
+            Plugin.Logger.LogWarning($"[DimDebug] {dimensionIndex}: after spawner build: MeshRenderers={postSpawnRenderers.Length}");
         }
 
         var go = ft.gameObject;
