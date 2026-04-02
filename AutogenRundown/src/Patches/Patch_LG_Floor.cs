@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using LevelGeneration;
 using UnityEngine;
+using XXHashing;
 
 namespace AutogenRundown.Patches;
 
@@ -59,7 +60,7 @@ internal static class Patch_LG_Floor
         if (transitionOverridePrefab == null)
             throw new System.Exception("ERROR : No start tile found in LG_SetupFloor!");
 
-        var spawned = Object.Instantiate(transitionOverridePrefab, pos, rotation);
+        var spawned = UnityEngine.Object.Instantiate(transitionOverridePrefab, pos, rotation);
         var comp = spawned.GetComponent<LG_FloorTransition>();
 
         if (comp == null)
