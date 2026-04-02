@@ -167,15 +167,21 @@ internal static class Patch_LG_Floor
             return true;
 
         // --- Custom handling for geomorphs without LG_FloorTransition ---
+
+        // Debug: inspect the prefab BEFORE instantiation
+        var prefabRenderers = transitionOverridePrefab.GetComponentsInChildren<MeshRenderer>(true);
+        var prefabTransforms = transitionOverridePrefab.GetComponentsInChildren<Transform>(true);
+        Plugin.Logger.LogWarning($"[DimDebug] PREFAB '{transitionOverridePrefab.name}': MeshRenderers={prefabRenderers.Length} Transforms={prefabTransforms.Length} children={transitionOverridePrefab.transform.childCount}");
+
         var spawned = UnityEngine.Object.Instantiate(transitionOverridePrefab, pos, rotation);
+
+        // Debug: inspect IMMEDIATELY after instantiation
+        var spawnedRenderers = spawned.GetComponentsInChildren<MeshRenderer>(true);
+        var spawnedTransforms = spawned.GetComponentsInChildren<Transform>(true);
+        Plugin.Logger.LogWarning($"[DimDebug] SPAWNED '{spawned.name}': MeshRenderers={spawnedRenderers.Length} Transforms={spawnedTransforms.Length} children={spawned.transform.childCount}");
 
         var comp = spawned.AddComponent<LG_FloorTransition>();
         comp.m_transitionType = LG_FloorTransitionType.Elevator;
-
-        // Don't set m_spawnPoints — without them, GetValidDimensionWarpPoint()
-        // falls through to the CourseGraph fallback which picks the first valid
-        // course node. This lands the player in a generated zone where culling
-        // is properly initialized, avoiding the black void on the origin tile.
 
         // Consume the same seeds the original method would
         var xxHash = new XXHashSequence(seed);
@@ -183,6 +189,11 @@ internal static class Patch_LG_Floor
 
         comp.m_geoPrefab = transitionOverridePrefab;
         comp.SetupAreas(xxHash.NextSubSeed());
+
+        // Debug: inspect after SetupAreas
+        var postSetupRenderers = spawned.GetComponentsInChildren<MeshRenderer>(true);
+        var selectors = spawned.GetComponentsInChildren<LG_RandomAreaSelector>(true);
+        Plugin.Logger.LogWarning($"[DimDebug] AFTER SETUP: MeshRenderers={postSetupRenderers.Length} RandomAreaSelectors={selectors.Length}");
 
         // Sync areas/plugs to the original LG_Geomorph so that code using
         // GetComponent<LG_Geomorph>() (which finds the original first) still
