@@ -69,13 +69,10 @@ internal static class Patch_LG_Floor
         var comp = spawned.AddComponent<LG_FloorTransition>();
         comp.m_transitionType = LG_FloorTransitionType.Elevator;
 
-        // Regular geomorphs don't have spawn points. Create one at the geomorph's
-        // center so dimension warps have a valid destination.
-        var spawnPoint = new GameObject("DimensionSpawnPoint_0").transform;
-        spawnPoint.SetParent(spawned.transform);
-        spawnPoint.localPosition = Vector3.zero;
-        spawnPoint.localRotation = Quaternion.identity;
-        comp.m_spawnPoints = new Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppReferenceArray<Transform>(new[] { spawnPoint });
+        // Don't set m_spawnPoints — without them, GetValidDimensionWarpPoint()
+        // falls through to the CourseGraph fallback which picks the first valid
+        // course node. This lands the player in a generated zone where culling
+        // is properly initialized, avoiding the black void on the origin tile.
 
         // Consume the same seeds the original method would
         var xxHash = new XXHashSequence(seed);
