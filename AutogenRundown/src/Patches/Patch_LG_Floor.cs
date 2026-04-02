@@ -167,12 +167,7 @@ internal static class Patch_LG_Floor
             return true;
 
         // --- Custom handling for geomorphs without LG_FloorTransition ---
-        // Let GOUtil spawn the object so it performs any hidden setup (parenting,
-        // layers, static flags, etc.) that Object.Instantiate would miss.
-        // GOUtil returns null for LG_FloorTransition but the object is spawned —
-        // LG_Geomorph.Awake() fires and sets s_last to the original component.
-        GOUtil.SpawnChildAndGetComp<LG_FloorTransition>(transitionOverridePrefab, pos, rotation);
-        var spawned = LG_Geomorph.s_last.gameObject;
+        var spawned = UnityEngine.Object.Instantiate(transitionOverridePrefab, pos, rotation);
 
         var comp = spawned.AddComponent<LG_FloorTransition>();
         comp.m_transitionType = LG_FloorTransitionType.Elevator;
