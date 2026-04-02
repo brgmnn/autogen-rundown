@@ -90,6 +90,18 @@ internal static class Patch_LG_Floor
         comp.m_geoPrefab = transitionOverridePrefab;
         comp.SetupAreas(xxHash.NextSubSeed());
 
+        // Sync areas/plugs to the original LG_Geomorph. Code that calls
+        // GetComponent<LG_Geomorph>() finds the original (first added), not our
+        // LG_FloorTransition. Without valid data on both, the node volume and
+        // culling traversal finds empty areas and the origin tile is invisible.
+        var originalGeo = spawned.GetComponent<LG_Geomorph>();
+        if (originalGeo != null && originalGeo != comp)
+        {
+            originalGeo.m_areas = comp.m_areas;
+            originalGeo.m_plugs = comp.m_plugs;
+            originalGeo.m_geoPrefab = transitionOverridePrefab;
+        }
+
         if (!isStatic)
             comp.SetPlaced();
 
