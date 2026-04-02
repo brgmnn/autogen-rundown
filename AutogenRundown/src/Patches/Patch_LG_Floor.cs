@@ -52,21 +52,6 @@ internal static class Patch_LG_Floor
             LG_Factory.FindAndBuildSelectorsAndSpawners(ft.gameObject, seed, buildSpawnersInstantly: true);
         }
 
-        // Sync critical state from the LG_FloorTransition to the original LG_Geomorph.
-        // GetComponent<LG_Geomorph>() returns the original (first added), and the culling
-        // system skips geomorphs with placed=false or nodeVolume=null.
-        var syncGeos = ft.gameObject.GetComponents<LG_Geomorph>();
-        if (syncGeos.Length > 1)
-        {
-            var original = syncGeos[0];
-            original.m_placed = ft.m_placed;
-            original.m_nodeVolume = ft.m_nodeVolume;
-            original.m_tile = ft.m_tile;
-            original.m_zone = ft.m_zone;
-            original.m_geoPrefab = ft.m_geoPrefab;
-            original.m_areas = ft.m_areas;
-            original.m_plugs = ft.m_plugs;
-        }
 
         var go = ft.gameObject;
         Plugin.Logger.LogDebug($"[DimDebug] === {dimensionIndex} origin tile: {go.name} ===");
@@ -195,18 +180,16 @@ internal static class Patch_LG_Floor
             return true;
 
         // --- Custom handling for geomorphs without LG_FloorTransition ---
-
-        // Debug: inspect the prefab BEFORE instantiation
-        var prefabRenderers = transitionOverridePrefab.GetComponentsInChildren<MeshRenderer>(true);
-        var prefabTransforms = transitionOverridePrefab.GetComponentsInChildren<Transform>(true);
-        Plugin.Logger.LogWarning($"[DimDebug] PREFAB '{transitionOverridePrefab.name}': MeshRenderers={prefabRenderers.Length} Transforms={prefabTransforms.Length} children={transitionOverridePrefab.transform.childCount}");
-
         var spawned = UnityEngine.Object.Instantiate(transitionOverridePrefab, pos, rotation);
 
-        // Debug: inspect IMMEDIATELY after instantiation
-        var spawnedRenderers = spawned.GetComponentsInChildren<MeshRenderer>(true);
-        var spawnedTransforms = spawned.GetComponentsInChildren<Transform>(true);
-        Plugin.Logger.LogWarning($"[DimDebug] SPAWNED '{spawned.name}': MeshRenderers={spawnedRenderers.Length} Transforms={spawnedTransforms.Length} children={spawned.transform.childCount}");
+        // Destroy the original LG_Geomorph so there's only one LG_Geomorph-derived
+        // component. With two, GetComponent<LG_Geomorph>() returns the original
+        // (with placed=false, nodeVol=null) causing the culling system to skip the tile.
+        // This is safe because the prefab has 0 baked MeshRenderers — all visual content
+        // comes from PrefabSpawners that are built later in the postfix.
+        var existingGeo = spawned.GetComponent<LG_Geomorph>();
+        if (existingGeo != null)
+            UnityEngine.Object.DestroyImmediate(existingGeo);
 
         var comp = spawned.AddComponent<LG_FloorTransition>();
         comp.m_transitionType = LG_FloorTransitionType.Elevator;
@@ -217,22 +200,6 @@ internal static class Patch_LG_Floor
 
         comp.m_geoPrefab = transitionOverridePrefab;
         comp.SetupAreas(xxHash.NextSubSeed());
-
-        // Debug: inspect after SetupAreas
-        var postSetupRenderers = spawned.GetComponentsInChildren<MeshRenderer>(true);
-        var selectors = spawned.GetComponentsInChildren<LG_RandomAreaSelector>(true);
-        Plugin.Logger.LogWarning($"[DimDebug] AFTER SETUP: MeshRenderers={postSetupRenderers.Length} RandomAreaSelectors={selectors.Length}");
-
-        // Sync areas/plugs to the original LG_Geomorph so that code using
-        // GetComponent<LG_Geomorph>() (which finds the original first) still
-        // gets valid area data for culling and node traversal.
-        var originalGeo = spawned.GetComponent<LG_Geomorph>();
-        if (originalGeo != null && originalGeo != comp)
-        {
-            originalGeo.m_areas = comp.m_areas;
-            originalGeo.m_plugs = comp.m_plugs;
-            originalGeo.m_geoPrefab = transitionOverridePrefab;
-        }
 
         if (!isStatic)
             comp.SetPlaced();
