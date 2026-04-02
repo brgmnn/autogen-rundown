@@ -1695,7 +1695,7 @@ public class Level
 
 
             var dimensionIndex = DimensionIndex.Dimension1;
-            var dimensionLayout = LevelLayout.BuildDimension(level, director, objective, dimensionIndex);
+            var dimensionLayout = LevelLayout.BuildDimension(level, director, objective, dimensionIndex, Complex.Mining);
 
             dimensionLayout.Zones.Add(
                 new Zone(level, dimensionLayout)
