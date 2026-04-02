@@ -65,6 +65,14 @@ internal static class Patch_LG_Floor
 
         if (comp == null)
         {
+            // The geomorph has LG_Geomorph but not LG_FloorTransition. Destroy the
+            // original so we don't end up with two LG_Geomorph-derived components —
+            // that causes GetComponent<LG_Geomorph>() to find the wrong (uninitialised)
+            // one, breaking gate dimension linking, culling, and node volumes.
+            var existingGeo = spawned.GetComponent<LG_Geomorph>();
+            if (existingGeo != null)
+                UnityEngine.Object.DestroyImmediate(existingGeo);
+
             comp = spawned.AddComponent<LG_FloorTransition>();
             comp.m_transitionType = LG_FloorTransitionType.Elevator;
         }
