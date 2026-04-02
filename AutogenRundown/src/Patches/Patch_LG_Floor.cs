@@ -14,9 +14,6 @@ internal static class Patch_LG_Floor
     /// are made the pouncer dimensions are visible on many of those levels as floating
     /// black boxes in the sky.
     /// </summary>
-    /// <param name="dimensionIndex"></param>
-    /// <param name="arenaDimension"></param>
-    /// <param name="position"></param>
     [HarmonyPatch(typeof(LG_Floor), nameof(LG_Floor.CreateDimension))]
     [HarmonyPrefix]
     static void CreateDimension_Prefix(eDimensionIndex dimensionIndex, bool arenaDimension, ref Vector3 position)
@@ -25,5 +22,59 @@ internal static class Patch_LG_Floor
         {
             position += new Vector3 { y = -500f };
         }
+    }
+
+    /// <summary>
+    /// The vanilla CreateFloorTransition crashes with a NullReferenceException when the
+    /// geomorph prefab doesn't have an LG_FloorTransition component. This happens when
+    /// using regular zone geomorphs as the DimensionGeomorph for generated dimensions.
+    ///
+    /// This patch adds the LG_FloorTransition component at runtime if it's missing,
+    /// allowing any geomorph to be used as a dimension origin.
+    /// </summary>
+    [HarmonyPatch(typeof(LG_Floor), "CreateFloorTransition")]
+    [HarmonyPrefix]
+    static bool CreateFloorTransition_Prefix(
+        ref LG_FloorTransition __result,
+        uint seed,
+        Dimension dimension,
+        Vector3 pos,
+        Quaternion rotation,
+        GameObject transitionOverridePrefab,
+        bool isStatic)
+    {
+        var xxHash = new XXHashSequence(seed);
+
+        if ((dimension == null || dimension.IsMainDimension)
+            && Builder.LayerBuildDatas[0].m_zoneBuildDatas != null
+            && Builder.LayerBuildDatas[0].m_zoneBuildDatas.Count > 0)
+        {
+            _ = (int)Builder.LayerBuildDatas[0].m_zoneBuildDatas[0].SubComplex;
+        }
+
+        var seed1 = xxHash.NextSubSeed();
+
+        if (transitionOverridePrefab == null)
+            transitionOverridePrefab = Builder.ComplexResourceSetBlock.GetElevatorTile(seed1);
+        if (transitionOverridePrefab == null)
+            throw new System.Exception("ERROR : No start tile found in LG_SetupFloor!");
+
+        var spawned = Object.Instantiate(transitionOverridePrefab, pos, rotation);
+        var comp = spawned.GetComponent<LG_FloorTransition>();
+
+        if (comp == null)
+        {
+            comp = spawned.AddComponent<LG_FloorTransition>();
+            comp.m_transitionType = LG_FloorTransitionType.Elevator;
+        }
+
+        comp.m_geoPrefab = transitionOverridePrefab;
+        comp.SetupAreas(xxHash.NextSubSeed());
+
+        if (!isStatic)
+            comp.SetPlaced();
+
+        __result = comp;
+        return false;
     }
 }
