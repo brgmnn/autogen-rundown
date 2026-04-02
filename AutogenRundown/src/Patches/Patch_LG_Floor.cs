@@ -216,7 +216,8 @@ internal static class Patch_LG_Floor
     /// warp so the player can see the environment. The culler takes over naturally
     /// as the player moves between rooms.
     /// </summary>
-    [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.TryWarpTo))]
+    [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.TryWarpTo),
+        new[] { typeof(eDimensionIndex), typeof(Vector3), typeof(Vector3), typeof(bool) })]
     [HarmonyPostfix]
     static void TryWarpTo_Postfix(bool __result, eDimensionIndex dimensionIndex)
     {
