@@ -50,9 +50,22 @@ internal static class Patch_LG_Floor
         {
             Plugin.Logger.LogDebug($"[DimDebug] {dimensionIndex}: origin tile has 0 MeshRenderers, building PrefabSpawners immediately");
             LG_Factory.FindAndBuildSelectorsAndSpawners(ft.gameObject, seed, buildSpawnersInstantly: true);
+        }
 
-            var postSpawnRenderers = ft.GetComponentsInChildren<MeshRenderer>(true);
-            Plugin.Logger.LogWarning($"[DimDebug] {dimensionIndex}: after spawner build: MeshRenderers={postSpawnRenderers.Length}");
+        // Sync critical state from the LG_FloorTransition to the original LG_Geomorph.
+        // GetComponent<LG_Geomorph>() returns the original (first added), and the culling
+        // system skips geomorphs with placed=false or nodeVolume=null.
+        var syncGeos = ft.gameObject.GetComponents<LG_Geomorph>();
+        if (syncGeos.Length > 1)
+        {
+            var original = syncGeos[0];
+            original.m_placed = ft.m_placed;
+            original.m_nodeVolume = ft.m_nodeVolume;
+            original.m_tile = ft.m_tile;
+            original.m_zone = ft.m_zone;
+            original.m_geoPrefab = ft.m_geoPrefab;
+            original.m_areas = ft.m_areas;
+            original.m_plugs = ft.m_plugs;
         }
 
         var go = ft.gameObject;
