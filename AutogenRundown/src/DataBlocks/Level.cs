@@ -1706,14 +1706,15 @@ public class Level
             {
                 Data = new Dimensions.DimensionData
                 {
-                    LevelLayoutData = dimensionLayout.PersistentId,
-                    // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab",
-                    DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_mining_01.prefab",
+                    Layout = dimensionLayout,
+                    DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab",
+                    // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_mining_01.prefab",
+                    DimensionFogData = Fog.DefaultFog.PersistentId,
                     ResourceSet = dim1ResourceSet
-                    // DimensionResourceSetID = (int)Complex.Mining,
                 },
 
-                // Data = Dimensions.DimensionData.AlphaOne,
+                // Data = Dimensions.DimensionData.Unknown_Three,
+
                 PersistentId = 3,
             };
             // dimension.FindOrPersist();

@@ -8,7 +8,11 @@ public record DimensionData
 {
     #region Properties
 
-    public uint LevelLayoutData { get; set; } = 0;
+    [JsonIgnore]
+    public LevelLayout Layout { get; set; } = LevelLayout.None;
+
+    [JsonProperty]
+    public uint LevelLayoutData => Layout.PersistentId;
 
     public string DimensionGeomorph { get; set; } =
         "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_01.prefab";
@@ -155,7 +159,6 @@ public record DimensionData
     /// </summary>
     public static readonly DimensionData Unknown_One = new()
     {
-        LevelLayoutData = 0,
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Boss_flash.prefab",
         VerticalExtentsUp = 100.0,
         VerticalExtentsDown = 50.0,
@@ -227,7 +230,6 @@ public record DimensionData
     /// </summary>
     public static readonly DimensionData Unknown_Two = new()
     {
-        LevelLayoutData = 0,
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_02.prefab",
         VerticalExtentsUp = 100.0,
         VerticalExtentsDown = 55.0,
@@ -296,7 +298,6 @@ public record DimensionData
     /// </summary>
     public static readonly DimensionData Unknown_Three = new()
     {
-        LevelLayoutData = 0,
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R7B3.prefab",
         VerticalExtentsUp = 50.0,
         VerticalExtentsDown = 10.0,
@@ -367,7 +368,6 @@ public record DimensionData
     /// </summary>
     public static readonly DimensionData AlphaOne = new()
     {
-        LevelLayoutData = 0,
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Boss_Arena.prefab",
         VerticalExtentsUp = 100.0,
         VerticalExtentsDown = 40.0,
@@ -442,7 +442,6 @@ public record DimensionData
     /// </summary>
     public static readonly DimensionData AlphaTwo = new()
     {
-        LevelLayoutData = 0,
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_01.prefab",
         VerticalExtentsUp = 30.0,
         VerticalExtentsDown = 30.0,
@@ -513,7 +512,7 @@ public record DimensionData
     /// </summary>
     public static readonly DimensionData AlphaThree_Top = new()
     {
-        LevelLayoutData = 1398700845,
+        // LevelLayoutData = 1398700845,
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab",
         VerticalExtentsUp = 50.0,
         VerticalExtentsDown = 10.0,
@@ -587,7 +586,6 @@ public record DimensionData
     /// </summary>
     public static readonly DimensionData AlphaThree_Shaft = new()
     {
-        LevelLayoutData = 0,
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Mining_Shaft.prefab",
         VerticalExtentsUp = 100.0,
         VerticalExtentsDown = 50.0,

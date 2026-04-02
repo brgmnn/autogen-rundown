@@ -21,6 +21,16 @@ public enum SizeFactor
 
 public partial record LevelLayout : DataBlock<LevelLayout>
 {
+    public static readonly LevelLayout None = new(
+        new Level("A"),
+        new BuildDirector(),
+        new WardenObjective(),
+        new LevelSettings("A"),
+        new LayoutPlanner())
+    {
+        PersistentId = 0
+    };
+
     #region hidden data
     [JsonIgnore]
     private readonly Level level;

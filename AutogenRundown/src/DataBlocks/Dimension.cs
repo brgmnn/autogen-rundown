@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AutogenRundown.DataBlocks.Enums;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks;
@@ -31,7 +32,6 @@ public record Dimension : DataBlock<Dimension>
         Name = "Dimension_Pouncer_Arena",
         Data = new Dimensions.DimensionData
         {
-            LevelLayoutData = 0,
             DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/PouncerArena/Dimension_Pouncer_Arena_01.prefab",
             VerticalExtentsUp = 50.0,
             VerticalExtentsDown = 10.0,
@@ -143,4 +143,39 @@ public record Dimension : DataBlock<Dimension>
     /// </summary>
     /// <returns></returns>
     public Dimension FindOrPersist() => FindOrPersist(this);
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="resourceSet"></param>
+    /// <param name="geomorph"></param>
+    /// <returns></returns>
+    public static Dimension Build(
+        Level level,
+        DimensionIndex index,
+        ComplexResourceSet resourceSet,
+        string geomorph)
+    {
+        var resource = resourceSet.Duplicate();
+
+        var dimension = new Dimension
+        {
+            Data = new Dimensions.DimensionData
+            {
+                DimensionGeomorph = geomorph,
+                ResourceSet = resource
+            }
+        };
+
+        dimension.FindOrPersist();
+
+        level.DimensionDatas.Add(new Levels.DimensionData
+        {
+            Dimension = index,
+            Data = dimension
+        });
+
+        return dimension;
+    }
 }
