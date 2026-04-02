@@ -1,6 +1,7 @@
 ﻿using AIGraph;
 using HarmonyLib;
 using LevelGeneration;
+using Player;
 using UnityEngine;
 using XXHashing;
 
@@ -206,5 +207,31 @@ internal static class Patch_LG_Floor
 
         __result = comp;
         return false;
+    }
+
+    /// <summary>
+    /// When warping to a non-Reality dimension, the C_MovingCuller occlusion system
+    /// may not recognize the origin tile's rooms — causing a black void even though
+    /// geometry exists. Force-enable all MeshRenderers in the target dimension after
+    /// warp so the player can see the environment. The culler takes over naturally
+    /// as the player moves between rooms.
+    /// </summary>
+    [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.TryWarpTo))]
+    [HarmonyPostfix]
+    static void TryWarpTo_Postfix(bool __result, eDimensionIndex dimensionIndex)
+    {
+        if (!__result || dimensionIndex == eDimensionIndex.Reality) return;
+
+        Dimension dim;
+        if (!Dimension.GetDimension(dimensionIndex, out dim)) return;
+
+        var root = dim.DimensionRootTemp;
+        if (root == null) return;
+
+        var renderers = root.GetComponentsInChildren<MeshRenderer>(true);
+        foreach (var r in renderers)
+            r.enabled = true;
+
+        Plugin.Logger.LogDebug($"[DimWarp] Force-enabled {renderers.Length} MeshRenderers in {dimensionIndex}");
     }
 }
