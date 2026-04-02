@@ -30,8 +30,9 @@ internal static class Patch_LG_Floor
     /// geomorph prefab doesn't have an LG_FloorTransition component. This happens when
     /// using regular zone geomorphs as the DimensionGeomorph for generated dimensions.
     ///
-    /// This patch adds the LG_FloorTransition component at runtime if it's missing,
-    /// allowing any geomorph to be used as a dimension origin.
+    /// This patch only intercepts when the prefab lacks LG_FloorTransition, adding the
+    /// component at runtime. Prefabs that already have it (elevator shafts, dimension
+    /// prefabs) pass through to the original method untouched.
     /// </summary>
     [HarmonyPatch(typeof(LG_Floor), "CreateFloorTransition")]
     [HarmonyPrefix]
@@ -44,6 +45,20 @@ internal static class Patch_LG_Floor
         GameObject transitionOverridePrefab,
         bool isStatic)
     {
+        // Resolve the prefab the same way the original does
+        if (transitionOverridePrefab == null)
+        {
+            var tempHash = new XXHashSequence(seed);
+            tempHash.NextSubSeed(); // consume the same seed the original would
+            transitionOverridePrefab = Builder.ComplexResourceSetBlock.GetElevatorTile(tempHash.NextSubSeed());
+        }
+
+        // If the prefab already has LG_FloorTransition, let the original method handle it
+        if (transitionOverridePrefab == null ||
+            transitionOverridePrefab.GetComponent<LG_FloorTransition>() != null)
+            return true;
+
+        // --- Custom handling for geomorphs without LG_FloorTransition ---
         var xxHash = new XXHashSequence(seed);
 
         if ((dimension == null || dimension.IsMainDimension)
@@ -61,22 +76,16 @@ internal static class Patch_LG_Floor
             throw new System.Exception("ERROR : No start tile found in LG_SetupFloor!");
 
         var spawned = UnityEngine.Object.Instantiate(transitionOverridePrefab, pos, rotation);
-        var comp = spawned.GetComponent<LG_FloorTransition>();
+        var comp = spawned.AddComponent<LG_FloorTransition>();
+        comp.m_transitionType = LG_FloorTransitionType.Elevator;
 
-        if (comp == null)
-        {
-            comp = spawned.AddComponent<LG_FloorTransition>();
-            comp.m_transitionType = LG_FloorTransitionType.Elevator;
-
-            // Regular geomorphs don't have spawn points. Create one at the geomorph's
-            // center so dimension warps have a valid destination. Without this, players
-            // warp to (0,0,0) in Reality's space instead of the dimension.
-            var spawnPoint = new GameObject("DimensionSpawnPoint_0").transform;
-            spawnPoint.SetParent(spawned.transform);
-            spawnPoint.localPosition = Vector3.zero;
-            spawnPoint.localRotation = Quaternion.identity;
-            comp.m_spawnPoints = new Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppReferenceArray<Transform>(new[] { spawnPoint });
-        }
+        // Regular geomorphs don't have spawn points. Create one at the geomorph's
+        // center so dimension warps have a valid destination.
+        var spawnPoint = new GameObject("DimensionSpawnPoint_0").transform;
+        spawnPoint.SetParent(spawned.transform);
+        spawnPoint.localPosition = Vector3.zero;
+        spawnPoint.localRotation = Quaternion.identity;
+        comp.m_spawnPoints = new Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppReferenceArray<Transform>(new[] { spawnPoint });
 
         comp.m_geoPrefab = transitionOverridePrefab;
         comp.SetupAreas(xxHash.NextSubSeed());
