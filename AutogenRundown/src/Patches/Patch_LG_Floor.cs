@@ -252,5 +252,15 @@ internal static class Patch_LG_Floor
         }
 
         Plugin.Logger.LogDebug($"[DimWarp] Force-enabled {enabled}/{renderers.Length} MeshRenderers in {dimensionIndex}");
+
+        // Force the environment state to update for this dimension.
+        // Normally lights/fog are applied on zone entry, but the origin tile
+        // has no zone so the state never triggers until the player walks through a door.
+        try
+        {
+            EnvironmentStateManager.Current.UpdateFogSettingsForState(
+                EnvironmentStateManager.Current.m_stateReplicator.State);
+        }
+        catch { /* May not be available in all states */ }
     }
 }
