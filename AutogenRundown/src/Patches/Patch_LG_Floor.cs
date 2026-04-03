@@ -201,7 +201,7 @@ internal static class Patch_LG_Floor
             UnityEngine.Object.DestroyImmediate(existingGeo);
 
         var comp = spawned.AddComponent<LG_FloorTransition>();
-        comp.m_transitionType = LG_FloorTransitionType.Elevator;
+        comp.m_transitionType = LG_FloorTransitionType.Node;
 
         // Consume the same seeds the original method would
         var xxHash = new XXHashSequence(seed);
