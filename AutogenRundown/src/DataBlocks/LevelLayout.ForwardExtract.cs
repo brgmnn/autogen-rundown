@@ -34,12 +34,12 @@ public partial record LevelLayout
 
         if (level.ForwardExtractStartCandidates.Any())
             startFrom = level.ForwardExtractStartCandidates.SelectRandom();
-        else if (planner.GetLeafZones(Bulkhead.Main).Any())
-            startFrom = planner.GetLeafZones(Bulkhead.Main).Last();
-        else if (planner.GetOpenZones(Bulkhead.Main).Any())
-            startFrom = planner.GetOpenZones(Bulkhead.Main).PickRandom();
+        else if (planner.GetLeafZones(Bulkhead.Main, dimension: Dimension).Any())
+            startFrom = planner.GetLeafZones(Bulkhead.Main, dimension: Dimension).Last();
+        else if (planner.GetOpenZones(Bulkhead.Main, dimension: Dimension).Any())
+            startFrom = planner.GetOpenZones(Bulkhead.Main, dimension: Dimension).PickRandom();
         else
-            startFrom = planner.GetLastNode(Bulkhead.Main, null);
+            startFrom = planner.GetLastNode(Bulkhead.Main, null, dimension: Dimension);
 
         var first = new ZoneNode();
         var exit = new ZoneNode();

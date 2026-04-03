@@ -44,8 +44,9 @@ public partial record LevelLayout
         // Create the reactor zone
         var reactorNode = new ZoneNode(
             director.Bulkhead,
-            level.Planner.NextIndex(director.Bulkhead),
-            "reactor");
+            level.Planner.NextIndex(director.Bulkhead, Dimension),
+            "reactor",
+            Dimension: Dimension);
         reactorNode.Tags.Add("reactor");
 
         var reactor = new Zone(level, this)

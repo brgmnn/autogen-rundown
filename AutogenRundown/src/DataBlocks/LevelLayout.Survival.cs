@@ -173,11 +173,12 @@ public partial record LevelLayout
 
         #region Exit Zone
         // We need an exit zone as prisoners have to run to the exit
-        var exitIndex = level.Planner.NextIndex(director.Bulkhead);
+        var exitIndex = level.Planner.NextIndex(director.Bulkhead, Dimension);
         var exitNode = new ZoneNode()
         {
             Bulkhead = director.Bulkhead,
             ZoneNumber = exitIndex,
+            Dimension = Dimension,
             Branch = "exit",
             Tags = new Tags("exit_elevator"),
             MaxConnections = 0
@@ -211,8 +212,9 @@ public partial record LevelLayout
         {
             var securityControlNode = new ZoneNode(
                 director.Bulkhead,
-                level.Planner.NextIndex(director.Bulkhead),
-                "arena_security_control");
+                level.Planner.NextIndex(director.Bulkhead, Dimension),
+                "arena_security_control",
+                Dimension: Dimension);
             securityControlNode.Tags.Add("no_enemies");
 
             var securityControlZone = new Zone(level, this)

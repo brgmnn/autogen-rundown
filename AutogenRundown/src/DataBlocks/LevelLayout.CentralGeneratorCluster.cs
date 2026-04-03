@@ -159,7 +159,7 @@ public partial record LevelLayout
         var cellNode = new ZoneNode();
         var cellZone = new Zone(level, this);
 
-        var zoneCount = planner.GetZones(Bulkhead.All, null).Count;
+        var zoneCount = planner.GetZones(Bulkhead.All, null, dimension: Dimension).Count;
 
         // If we are in this case, we don't want to add any more zones so just stick the cell
         // in the start area

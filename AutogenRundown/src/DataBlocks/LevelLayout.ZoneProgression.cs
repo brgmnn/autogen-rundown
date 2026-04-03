@@ -1864,13 +1864,13 @@ public partial record LevelLayout
             var branchIndex = 1;
 
             // Find a valid branch name
-            while (level.Planner.GetZones(Bulkhead.All, $"key_{branchIndex}").Any())
+            while (level.Planner.GetZones(Bulkhead.All, $"key_{branchIndex}", dimension: Dimension).Any())
                 branchIndex++;
 
             var branch = $"key_{branchIndex}";
             var last = BuildBranch(branchBase, branchLength, branch);
 
-            var branchFirstNode = level.Planner.GetZones(director.Bulkhead, branch).First();
+            var branchFirstNode = level.Planner.GetZones(director.Bulkhead, branch, dimension: Dimension).First();
             var firstZone = level.Planner.GetZone(branchFirstNode)!;
             var branchBaseZone = level.Planner.GetZone(branchBase)!;
 

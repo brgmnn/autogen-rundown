@@ -1106,8 +1106,8 @@ public partial record LevelLayout
         for (var num = 0; num < spawnZoneCount; num++)
         {
             const string branch = "hill_spawn";
-            var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-            var node = new ZoneNode(director.Bulkhead, zoneIndex, branch, 0);
+            var zoneIndex = level.Planner.NextIndex(director.Bulkhead, Dimension);
+            var node = new ZoneNode(director.Bulkhead, zoneIndex, branch, 0, Dimension);
             node.Tags.Add("no_enemies");
 
             var zone = new Zone(level, this)

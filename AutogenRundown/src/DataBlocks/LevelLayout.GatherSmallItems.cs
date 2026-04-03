@@ -348,7 +348,7 @@ public partial record LevelLayout
                     {
                         (last, lastZone) = BuildChallenge_KeycardInSide(start);
 
-                        var keycard = planner.GetLastNode(director.Bulkhead, "keycard");
+                        var keycard = planner.GetLastNode(director.Bulkhead, "keycard", dimension: Dimension);
                         var (second, _) = AddZone(keycard);
 
                         objective.Gather_PlacementNodes.Add(last);
@@ -601,7 +601,7 @@ public partial record LevelLayout
                     {
                         (last, lastZone) = BuildChallenge_KeycardInSide(start, 3);
 
-                        var keycard = planner.GetLastNode(director.Bulkhead, "keycard");
+                        var keycard = planner.GetLastNode(director.Bulkhead, "keycard", dimension: Dimension);
                         var (second, _) = AddZone(keycard);
 
                         objective.Gather_PlacementNodes.Add(last);
@@ -985,7 +985,7 @@ public partial record LevelLayout
 
                         objective.Gather_PlacementNodes.Add(mid);
                         objective.Gather_PlacementNodes.Add(
-                            planner.GetZones(director.Bulkhead, null)
+                            planner.GetZones(director.Bulkhead, null, dimension: Dimension)
                                 .Where(node => node != mid)
                                 .PickRandom());
                     }),
@@ -1003,7 +1003,7 @@ public partial record LevelLayout
 
                         objective.Gather_PlacementNodes.Add(mid);
                         objective.Gather_PlacementNodes.Add(
-                            planner.GetZones(director.Bulkhead, null)
+                            planner.GetZones(director.Bulkhead, null, dimension: Dimension)
                                 .Where(node => node != mid)
                                 .PickRandom());
                     }),

@@ -25,8 +25,8 @@ public partial record LevelLayout
         // Generate some zones leading to the objective
         for (int i = 0; i < branchZoneCount; i++)
         {
-            var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-            var next = new ZoneNode(director.Bulkhead, zoneIndex);
+            var zoneIndex = level.Planner.NextIndex(director.Bulkhead, Dimension);
+            var next = new ZoneNode(director.Bulkhead, zoneIndex, Dimension: Dimension);
             var nextZone = new Zone(level, this)
             {
                 Coverage = CoverageMinMax.GenNormalSize(),
@@ -41,8 +41,8 @@ public partial record LevelLayout
         }
 
         // Penultimate zone is an I-corridor
-        var corridorIndex = level.Planner.NextIndex(director.Bulkhead);
-        var corridor = new ZoneNode(director.Bulkhead, corridorIndex);
+        var corridorIndex = level.Planner.NextIndex(director.Bulkhead, Dimension);
+        var corridor = new ZoneNode(director.Bulkhead, corridorIndex, Dimension: Dimension);
         corridor.MaxConnections = 1;
 
         var corridorZone = new Zone(level, this) { LightSettings = Lights.GenRandomLight() };
@@ -53,8 +53,8 @@ public partial record LevelLayout
         level.Planner.AddZone(corridor, corridorZone);
 
         // Final zone is the matter wave projector
-        var mwpIndex = level.Planner.NextIndex(director.Bulkhead);
-        var mwp = new ZoneNode(director.Bulkhead, mwpIndex);
+        var mwpIndex = level.Planner.NextIndex(director.Bulkhead, Dimension);
+        var mwp = new ZoneNode(director.Bulkhead, mwpIndex, Dimension: Dimension);
         mwp.MaxConnections = 3;
 
         var mwpZone = new Zone(level, this) { LightSettings = Lights.GenRandomLight() };
@@ -215,10 +215,10 @@ public partial record LevelLayout
             return;
 
         // We have more than 3 items and so need to place more zones
-        var secondHubBase = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "bigitem_2")!;
+        var secondHubBase = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "bigitem_2", dimension: Dimension)!;
 
         // Case where we want two more zones. Add a hub with two more cells
-        var hub2 = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead));
+        var hub2 = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead, Dimension), Dimension: Dimension);
         hub2.MaxConnections = 3;
 
         var zoneHub2 = new Zone(level, this) { LightSettings = Lights.GenRandomLight() };

@@ -20,8 +20,8 @@ public partial record LevelLayout
             newNode = new ZoneNode();
 
         var node = (ZoneNode)newNode;
-        var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-        var next = node with { Bulkhead = director.Bulkhead, ZoneNumber = zoneIndex };
+        var zoneIndex = level.Planner.NextIndex(director.Bulkhead, Dimension);
+        var next = node with { Bulkhead = director.Bulkhead, ZoneNumber = zoneIndex, Dimension = Dimension };
 
         if (next.Tags == null)
             next.Tags = new Tags();
@@ -106,8 +106,8 @@ public partial record LevelLayout
         // Generate the zones for this branch
         for (var i = 0; i < zoneCount; i++)
         {
-            var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-            var next = new ZoneNode(director.Bulkhead, zoneIndex, branch);
+            var zoneIndex = level.Planner.NextIndex(director.Bulkhead, Dimension);
+            var next = new ZoneNode(director.Bulkhead, zoneIndex, branch, Dimension: Dimension);
             var nextZone = new Zone(level, this)
             {
                 Coverage = CoverageMinMax.GenNormalSize(),
@@ -263,7 +263,7 @@ public partial record LevelLayout
             };
 
         var node = (ZoneNode)newNode;
-        var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
+        var zoneIndex = level.Planner.NextIndex(Bulkhead.Main, Dimension);
 
         if (zoneIndex != 0)
         {
@@ -274,7 +274,8 @@ public partial record LevelLayout
         var elevator = node with
         {
             Bulkhead = Bulkhead.Main | Bulkhead.StartingArea,
-            ZoneNumber = zoneIndex
+            ZoneNumber = zoneIndex,
+            Dimension = Dimension
         };
         elevator.Tags ??= new Tags();
 

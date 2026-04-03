@@ -84,7 +84,7 @@ public partial record LevelLayout
         for (var b = 0; b < fetchCount; b++)
         {
             var branch = $"reactor_code_{b}";
-            var baseNode = b < 3 ? reactor : (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, $"reactor_code_{b - 3}")!;
+            var baseNode = b < 3 ? reactor : (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, $"reactor_code_{b - 3}", dimension: Dimension)!;
 
             var branchNodes = AddBranch(
                 baseNode,

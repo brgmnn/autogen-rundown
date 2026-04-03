@@ -51,6 +51,9 @@ public partial record LevelLayout : DataBlock<LevelLayout>
     private readonly LayoutPlanner planner;
 
     [JsonIgnore]
+    public DimensionIndex Dimension { get; init; } = DimensionIndex.Reality;
+
+    [JsonIgnore]
     private readonly LevelSettings settings;
 
     [JsonIgnore]
@@ -519,7 +522,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         // We want to shuffle this list for the same reason as when we roll blood doors and door
         // alarms. It stops pack draws being weighted differently at the start and end of the
         // layout zones.
-        var zoneNodes = planner.GetZones(director.Bulkhead, null).Shuffle();
+        var zoneNodes = planner.GetZones(director.Bulkhead, null, Dimension).Shuffle();
 
         foreach (var node in zoneNodes)
         {
@@ -908,11 +911,11 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             // Give a flat chance of being able to turn off the alarm.
             if (Generator.Flip(0.7))
             {
-                var branchOpenZones = planner.GetOpenZones(director.Bulkhead, node.Branch);
+                var branchOpenZones = planner.GetOpenZones(director.Bulkhead, node.Branch, Dimension);
 
                 // Fallback if there's no open zones in this branch. This will be _hard_.
                 if (branchOpenZones.Count < 1)
-                    branchOpenZones = planner.GetOpenZones(director.Bulkhead);
+                    branchOpenZones = planner.GetOpenZones(director.Bulkhead, dimension: Dimension);
 
                 // There's no open zones anywhere on this bulkhead. So bad luck this alarm can't be turned off.
                 // TODO: we could fall back to setting the turnoff in an existing forward zone?
@@ -920,7 +923,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                     continue;
 
                 var baseNode = Generator.Pick(branchOpenZones);
-                var turnOff = new ZoneNode(director.Bulkhead, planner.NextIndex(director.Bulkhead), $"error_off_{i}");
+                var turnOff = new ZoneNode(director.Bulkhead, planner.NextIndex(director.Bulkhead, Dimension), $"error_off_{i}", Dimension: Dimension);
 
                 planner.Connect(baseNode, turnOff);
                 planner.AddZone(
@@ -1046,163 +1049,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         };
         #endregion
 
-        switch (director.Objective)
-        {
-            /**
-             * Reactor startup has quite a complicated layout construction for the fetch codes version
-             * */
-            case WardenObjectiveType.ReactorStartup:
-                {
-                    if (objective.ReactorStartupGetCodes)
-                        layout.BuildLayout_ReactorStartup_FetchCodes(director, objective, start);
-                    else
-                        layout.BuildLayout_ReactorStartup_Simple(director, objective, start);
-
-                    break;
-                }
-
-            /**
-             * In some ways similar to the ReactorStartup mission but much shorter/simpler
-             * */
-            case WardenObjectiveType.ReactorShutdown:
-            {
-                layout.BuildLayout_ReactorShutdown(director, objective, start);
-                break;
-            }
-
-            /**
-             * Clear Path expeditions should generally be a lot of fun and tough to clear through
-             * */
-            case WardenObjectiveType.ClearPath:
-            {
-                layout.BuildLayout_ClearPath(director, objective, start);
-                break;
-            }
-
-            /**
-             * These all involve entering a command on a terminal, though this includes things
-             * like King of the Hill
-             */
-            case WardenObjectiveType.SpecialTerminalCommand:
-            {
-                layout.BuildLayout_SpecialTerminalCommand(director, objective, start);
-                break;
-            }
-
-            /**
-             * Big items are often single, but we can spawn multiple big items (up to 4 for
-             * E levels). Custom logic for interesting geo's should be added here.
-             * */
-            case WardenObjectiveType.RetrieveBigItems:
-                {
-                    layout.BuildLayout_RetrieveBigItems(director, objective, start);
-                    break;
-                }
-
-            /**
-             * When building the power cell distribution layout, here we are modelling a hub with offshoot zones.
-             * */
-            case WardenObjectiveType.PowerCellDistribution:
-                {
-                    layout.BuildLayout_PowerCellDistribution(director, objective, start);
-                    break;
-                }
-
-            /**
-             * Central cluster of generators with cell fetching
-             * */
-            case WardenObjectiveType.CentralGeneratorCluster:
-            {
-                layout.BuildLayout_CentralGeneratorCluster(director, objective, start);
-                break;
-            }
-
-            /**
-             * Survival is a very custom objective
-             */
-            case WardenObjectiveType.Survival:
-            {
-                layout.BuildLayout_Survival(director, objective, start);
-                break;
-            }
-
-            /*
-             *
-             */
-            case WardenObjectiveType.HsuActivateSmall:
-            {
-                layout.BuildLayout_HsuActivateSmall(director, objective, start);
-                break;
-            }
-
-            /**
-             * Terminal Uplink
-             */
-            case WardenObjectiveType.TerminalUplink:
-            {
-                layout.BuildLayout_TerminalUplink(director, objective, start);
-                break;
-            }
-
-            case WardenObjectiveType.GatherTerminal:
-            {
-                layout.BuildLayout_GatherTerminal(director, objective, start);
-                break;
-            }
-
-            case WardenObjectiveType.CorruptedTerminalUplink:
-            {
-                layout.BuildLayout_CorruptedTerminalUplink(director, objective, start);
-                break;
-            }
-
-            /**
-             * Survival is a very custom objective
-             */
-            case WardenObjectiveType.TimedTerminalSequence:
-            {
-                layout.BuildLayout_TimedTerminalSequence(director, objective, (ZoneNode)start);
-                break;
-            }
-
-            /**
-             * This is finding the HSU
-             */
-            case WardenObjectiveType.HsuFindSample:
-            {
-                layout.BuildLayout_HsuFindSample(director, objective, (ZoneNode)start);
-                break;
-            }
-
-            /**
-             * Gather small items such as GLPs or plant samples
-             */
-            case WardenObjectiveType.GatherSmallItems:
-            {
-                layout.BuildLayout_GatherSmallItems(director, objective, (ZoneNode)start);
-                break;
-            }
-
-            #region Autogen Custom Objectives
-
-            /*
-             * Modeled after R8E1 / R8E2 / R5E1
-             */
-            case WardenObjectiveType.ReachKdsDeep:
-            {
-                layout.BuildLayout_ReachKdsDeep(director, objective, start);
-                break;
-            }
-
-            #endregion
-
-            // Something has gone wrong if we are reaching this
-            default:
-            {
-                layout.BuildBranch((ZoneNode)start, director.ZoneCount, "find_items");
-                break;
-            }
-        }
+        layout.BuildZonesForObjective(director, objective, start);
 
         if (director.Bulkhead == Bulkhead.Main)
             layout.BuildLayout_ForwardExtract(objective);
@@ -1210,10 +1057,10 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         layout.TryAddMedicalBay();
 
         // Attempt to reduce the chance of generation locking where zones cannot be placed
-        level.Planner.PlanBulkheadPlacements(director.Bulkhead, direction);
+        level.Planner.PlanBulkheadPlacements(director.Bulkhead, direction, layout.Dimension);
 
         var numberOfFogZones = level.Planner
-            .GetZones(director.Bulkhead, null)
+            .GetZones(director.Bulkhead, null, layout.Dimension)
             .Select(node => level.Planner.GetZone(node))
             .Count(zone => zone is { InFog: true });
 
@@ -1230,7 +1077,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         if (level.Settings.HasFog() && level.FogSettings.IsInfectious)
         {
             foreach (var zone in level.Planner
-                         .GetZones(director.Bulkhead, null)
+                         .GetZones(director.Bulkhead, null, layout.Dimension)
                          .Select(zone => level.Planner.GetZone(zone))
                          .Where(zone => zone is { InFog: true })
                          .Cast<Zone>())
@@ -1260,55 +1107,147 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         if (director.Bulkhead == Bulkhead.Main && numberOfFogZones > 0)
         {
             // Add the fog turbine to the last starting area
-            var lastNode = level.Planner.GetZones(Bulkhead.StartingArea, null).Last();
+            var lastNode = level.Planner.GetZones(Bulkhead.StartingArea, null, layout.Dimension).Last();
             var lastZone = level.Planner.GetZone(lastNode)!;
             lastZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
 
             // TODO: move this somewhere else? Currently it will only apply in main
             if (level.FogSettings.IsInfectious && Generator.Flip(disinfectChance))
             {
-                var open = level.Planner.GetOpenZones(Bulkhead.All, null).Take(4);
+                var open = level.Planner.GetOpenZones(Bulkhead.All, null, layout.Dimension).Take(4);
                 var from = Generator.Pick(open);
 
                 layout.AddDisinfectionZone(from);
             }
         }
 
-        // Write the zones
-        foreach (var node in level.Planner.GetZones(director.Bulkhead, null))
+        layout.FinalizeLayout();
+
+        return layout;
+    }
+
+    /// <summary>
+    /// Writes zones from the planner to this layout, then rolls alarms, blood doors, and
+    /// enemies. Finally persists the layout to the data block bin. Called by both Build()
+    /// and BuildDimension() after zone structure has been planned.
+    /// </summary>
+    public void FinalizeLayout()
+    {
+        foreach (var node in level.Planner.GetZones(director.Bulkhead, null, Dimension))
         {
             var zone = level.Planner.GetZone(node);
 
             if (zone != null)
             {
-                // Crude way to force the direction of zones for now
-                // TODO: This should live in the zone node building process. We should be able to set the direction
-                //       of these more dynamically
-                // TODO: we probably want to remove this
                 if (node.Branch == "primary")
                     zone.ZoneExpansion = direction.Forward;
 
-                layout.Zones.Add(zone);
+                Zones.Add(zone);
 
                 Plugin.Logger.LogDebug(
-                    $"{layout.Name} -- Zone_{zone.LocalIndex} " +
-                    $"number={layout.ZoneAliasStart + zone.LocalIndex} " +
+                    $"{Name} -- Zone_{zone.LocalIndex} " +
+                    $"number={ZoneAliasStart + zone.LocalIndex} " +
                     $"pid={zone.PersistentId} -- " +
                     $"branch={node.Branch} -- " +
                     $"Lights={zone.LightSettings}, InFog={zone.InFog}, Tags={node.Tags}");
             }
         }
 
-        // TODO: most or all of these need to be moved
-        layout.RollAlarms();
-        layout.RollBloodDoors();
-        layout.RollEnemies(director);
+        RollAlarms();
+        RollBloodDoors();
+        RollEnemies(director);
 
-        Bins.LevelLayouts.AddBlock(layout);
-
-        return layout;
+        Bins.LevelLayouts.AddBlock(this);
     }
 
+    /// <summary>
+    /// Dispatches to the appropriate objective layout builder based on the director's objective type.
+    /// Shared by Build() and BuildDimension() to avoid duplicating the objective switch.
+    /// </summary>
+    private void BuildZonesForObjective(BuildDirector director, WardenObjective objective, ZoneNode start)
+    {
+        switch (director.Objective)
+        {
+            case WardenObjectiveType.ReactorStartup:
+            {
+                if (objective.ReactorStartupGetCodes)
+                    BuildLayout_ReactorStartup_FetchCodes(director, objective, start);
+                else
+                    BuildLayout_ReactorStartup_Simple(director, objective, start);
+                break;
+            }
+
+            case WardenObjectiveType.ReactorShutdown:
+                BuildLayout_ReactorShutdown(director, objective, start);
+                break;
+
+            case WardenObjectiveType.ClearPath:
+                BuildLayout_ClearPath(director, objective, start);
+                break;
+
+            case WardenObjectiveType.SpecialTerminalCommand:
+                BuildLayout_SpecialTerminalCommand(director, objective, start);
+                break;
+
+            case WardenObjectiveType.RetrieveBigItems:
+                BuildLayout_RetrieveBigItems(director, objective, start);
+                break;
+
+            case WardenObjectiveType.PowerCellDistribution:
+                BuildLayout_PowerCellDistribution(director, objective, start);
+                break;
+
+            case WardenObjectiveType.CentralGeneratorCluster:
+                BuildLayout_CentralGeneratorCluster(director, objective, start);
+                break;
+
+            case WardenObjectiveType.Survival:
+                BuildLayout_Survival(director, objective, start);
+                break;
+
+            case WardenObjectiveType.HsuActivateSmall:
+                BuildLayout_HsuActivateSmall(director, objective, start);
+                break;
+
+            case WardenObjectiveType.TerminalUplink:
+                BuildLayout_TerminalUplink(director, objective, start);
+                break;
+
+            case WardenObjectiveType.GatherTerminal:
+                BuildLayout_GatherTerminal(director, objective, start);
+                break;
+
+            case WardenObjectiveType.CorruptedTerminalUplink:
+                BuildLayout_CorruptedTerminalUplink(director, objective, start);
+                break;
+
+            case WardenObjectiveType.TimedTerminalSequence:
+                BuildLayout_TimedTerminalSequence(director, objective, (ZoneNode)start);
+                break;
+
+            case WardenObjectiveType.HsuFindSample:
+                BuildLayout_HsuFindSample(director, objective, (ZoneNode)start);
+                break;
+
+            case WardenObjectiveType.GatherSmallItems:
+                BuildLayout_GatherSmallItems(director, objective, (ZoneNode)start);
+                break;
+
+            case WardenObjectiveType.ReachKdsDeep:
+                BuildLayout_ReachKdsDeep(director, objective, start);
+                break;
+
+            default:
+                BuildBranch((ZoneNode)start, director.ZoneCount, "find_items");
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Builds a full dimension layout with zones, alarms, and enemies. Unlike Build(),
+    /// this skips the elevator starting area, forward extract, medical bay, and fog handling
+    /// since those are Reality-specific.
+    /// </summary>
     public static LevelLayout BuildDimension(
         Level level,
         BuildDirector director,
@@ -1317,10 +1256,12 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         Complex? complex = null)
     {
         var direction = level.Settings.GetDirections(director.Bulkhead);
+
         var layout = new LevelLayout(level, director, objective, level.Settings, level.Planner)
         {
             Name = $"{level.Tier}{level.Index} {level.Name} {director.Bulkhead} -- Dimension {dimension}",
             Complex = complex ?? level.Complex,
+            Dimension = dimension,
             direction = direction,
 
             PuzzlePack = ChainedPuzzle.BuildPack(level.Tier, director.Bulkhead, level.Settings),
@@ -1328,7 +1269,24 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             WaveSettingsPack = WaveSettings.BuildPack(level.Tier)
         };
 
-        Bins.LevelLayouts.AddBlock(layout);
+        director.GenZones();
+
+        Plugin.Logger.LogDebug($"Building dimension layout ({layout.Name}), Objective = {objective.Type}");
+
+        // Dimensions don't have elevator starting areas -- just get/create zone 0
+        var (start, startZone) = layout.StartingArea_GetBuildStart(director.Bulkhead);
+        startZone.ZoneExpansion = direction.Forward;
+
+        // Build zones using standard objective layout builders
+        layout.BuildZonesForObjective(director, objective, start);
+
+        level.Planner.PlanBulkheadPlacements(director.Bulkhead, direction, dimension);
+
+        // Finalize: write zones, roll alarms/enemies, persist
+        layout.FinalizeLayout();
+
+        // Track on level
+        level.SetDimensionLayout(dimension, director.Bulkhead, layout);
 
         return layout;
     }

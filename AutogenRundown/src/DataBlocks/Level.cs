@@ -122,6 +122,9 @@ public class Level
     public LayoutPlanner Planner { get; set; } = new();
 
     [JsonIgnore]
+    public Dictionary<DimensionIndex, Dictionary<Bulkhead, LevelLayout>> DimensionLayouts { get; } = new();
+
+    [JsonIgnore]
     public LevelSettings Settings { get; set; }
 
     [JsonIgnore]
@@ -1039,6 +1042,36 @@ public class Level
             _ => Bins.LevelLayouts.Find(LevelLayoutData)
         };
 
+    public void SetDimensionLayout(DimensionIndex dimension, Bulkhead bulkhead, LevelLayout layout)
+    {
+        if (!DimensionLayouts.TryGetValue(dimension, out var layouts))
+        {
+            layouts = new Dictionary<Bulkhead, LevelLayout>();
+            DimensionLayouts[dimension] = layouts;
+        }
+        layouts[bulkhead] = layout;
+    }
+
+    public LevelLayout? GetDimensionLayout(DimensionIndex dimension, Bulkhead bulkhead)
+    {
+        if (dimension == DimensionIndex.Reality)
+            return GetLevelLayout(bulkhead);
+        return DimensionLayouts.TryGetValue(dimension, out var layouts)
+            && layouts.TryGetValue(bulkhead, out var layout) ? layout : null;
+    }
+
+    /// <summary>
+    /// Returns all layouts (Reality + all dimensions) for iteration
+    /// </summary>
+    public IEnumerable<(Bulkhead Bulkhead, LevelLayout Layout)> GetAllLayouts()
+    {
+        foreach (var kvp in Layouts)
+            yield return (kvp.Key, kvp.Value);
+        foreach (var dimEntry in DimensionLayouts)
+            foreach (var layoutEntry in dimEntry.Value)
+                yield return (layoutEntry.Key, layoutEntry.Value);
+    }
+
     /// <summary>
     /// Prebuild one of the layouts, this is needed for setting up the objectives which is then used for level
     /// generation across all the other layouts
@@ -1211,7 +1244,7 @@ public class Level
 
         var usedCustomGeos = new HashSet<string>();
 
-        foreach (var layout in Layouts.Values)
+        foreach (var (_, layout) in GetAllLayouts())
             foreach (var zone in layout.Zones)
                 if (zone.CustomGeomorph is not null)
                     usedCustomGeos.Add(zone.CustomGeomorph);

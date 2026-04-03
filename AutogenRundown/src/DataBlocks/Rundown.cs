@@ -245,13 +245,8 @@ public record Rundown : DataBlock<Rundown>
 
             Plugin.Logger.LogDebug($"Placing {totalLogs} logs in \"{level.Tier}{level.Index} {level.Name}\", logs located at:");
 
-            foreach (var bulkhead in bulkheads)
+            foreach (var (bulkhead, layout) in level.GetAllLayouts())
             {
-                var layout = level.GetLevelLayout(bulkhead);
-
-                if (layout == null)
-                    continue;
-
                 foreach (var zone in layout.Zones)
                     foreach (var terminal in zone.TerminalPlacements)
                         terminals.Add((bulkhead, zone.LocalIndex, terminal.LogFiles, terminal.StartingStateData));
