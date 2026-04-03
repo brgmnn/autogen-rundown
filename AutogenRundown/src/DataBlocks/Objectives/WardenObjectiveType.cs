@@ -38,7 +38,6 @@ public enum WardenObjectiveType
     /// </summary>
     Cryptomnesia = 21,            // C
 
-    
     EscapeToPortal = 22,          // E
 
     #endregion

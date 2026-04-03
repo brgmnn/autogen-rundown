@@ -1479,9 +1479,12 @@ public class Level
     /// <returns></returns>
     public static Level Build(Level level)
     {
-        // TODO: remove this in the future after we are done testing it
-        if (level.MainDirector.Objective == WardenObjectiveType.ReachKdsDeep)
-            level.Name = "Valiant";
+        level.Name = level.MainDirector.Objective switch
+        {
+            WardenObjectiveType.Cryptomnesia => "Cryptomnesia",
+            WardenObjectiveType.ReachKdsDeep => "Valiant",
+            _ => level.Name
+        };
 
         if (level.Name == "")
             level.Name = Generator.Pick(Words.NounsLevel) ?? "";
@@ -1725,6 +1728,12 @@ public class Level
                 SubComplex = SubComplex.Storage,
                 Shard = 17
             });
+            dim1ResourceSet.CustomGeomorphs.Add(new Prefab
+            {
+                Asset = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_HA_02.prefab",
+                SubComplex = SubComplex.DigSite,
+                Shard = 17
+            });
 
 
             var dimensionIndex = DimensionIndex.Dimension1;
@@ -1741,8 +1750,11 @@ public class Level
                 Data = new Dimensions.DimensionData
                 {
                     Layout = dimensionLayout,
-                    DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab",
+
+                    DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_HA_02.prefab",
+                    // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab",
                     // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_mining_01.prefab",
+
                     DimensionFogData = Fog.HeavyFullFog_Infectious.PersistentId,
                     ResourceSet = dim1ResourceSet
                 },
