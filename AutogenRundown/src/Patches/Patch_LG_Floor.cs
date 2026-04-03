@@ -281,4 +281,24 @@ internal static class Patch_LG_Floor
 
         Plugin.Logger.LogDebug($"[DimWarp] Force-enabled {enabledRenderers}/{renderers.Length} renderers in {dimensionIndex}");
     }
+
+    /// <summary>
+    /// The game places a bulkhead gate on the first zone of each layer (IsLayerSource).
+    /// For non-Reality dimensions this is wrong — the origin tile connects to zone 0
+    /// which IS the first zone, but there's no bulkhead controller to go with it.
+    /// Skip bulkhead gate placement for non-Reality dimensions.
+    /// </summary>
+    [HarmonyPatch(typeof(LG_ZoneExpander), nameof(LG_ZoneExpander.IsLayerSource), new Type[0])]
+    [HarmonyPrefix]
+    static bool IsLayerSource_Prefix(LG_ZoneExpander __instance, ref bool __result)
+    {
+        // Only intercept for non-Reality dimensions
+        if (__instance.m_linksTo?.m_zone != null
+            && __instance.m_linksTo.m_zone.DimensionIndex != eDimensionIndex.Reality)
+        {
+            __result = false;
+            return false;
+        }
+        return true;
+    }
 }
