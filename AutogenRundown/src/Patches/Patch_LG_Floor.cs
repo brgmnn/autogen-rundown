@@ -239,6 +239,7 @@ internal static class Patch_LG_Floor
         var root = dim.DimensionRootTemp;
         if (root == null) return;
 
+        // Force-enable MeshRenderers — the culling system culls them on the origin tile.
         int enabledRenderers = 0;
         var renderers = root.GetComponentsInChildren<MeshRenderer>(true);
         foreach (var r in renderers)
@@ -248,26 +249,36 @@ internal static class Patch_LG_Floor
             enabledRenderers++;
         }
 
-        // Also force-enable Light components — the culling system manages both
-        // MeshRenderers and Lights, so lights are also culled on the origin tile.
-        int enabledLights = 0;
-        var lights = root.GetComponentsInChildren<Light>(true);
-        foreach (var l in lights)
+        // Force the player's C_MovingCuller to detect a node in a generated zone
+        // (not the origin tile). This triggers the full culling pipeline including
+        // light source nodes, beams, bloom, and volumetrics — same as walking through
+        // a door. Without this, only raw Light components are on but not properly
+        // integrated with the C_Light system.
+        var player = PlayerManager.GetLocalPlayerAgent();
+        if (player != null && dim.Layers.Count > 0)
         {
-            l.enabled = true;
-            enabledLights++;
+            // Find a valid cull node in any generated zone
+            for (int i = 0; i < dim.Layers.Count && i < 1; i++)
+            {
+                var layer = dim.Layers[i];
+                for (int j = 0; j < layer.m_zones.Count; j++)
+                {
+                    var zone = layer.m_zones[j];
+                    for (int k = 0; k < zone.m_courseNodes.Count; k++)
+                    {
+                        var cn = zone.m_courseNodes[k];
+                        if (cn?.m_cullNode != null)
+                        {
+                            player.m_movingCuller.SetCurrentNode(cn.m_cullNode);
+                            Plugin.Logger.LogDebug($"[DimWarp] Forced culler to node in {zone.LocalIndex} of {dimensionIndex}");
+                            goto cullerDone;
+                        }
+                    }
+                }
+            }
         }
+        cullerDone:
 
-        Plugin.Logger.LogDebug($"[DimWarp] Force-enabled {enabledRenderers}/{renderers.Length} renderers, {enabledLights} lights in {dimensionIndex}");
-
-        // Force the environment state to update for this dimension.
-        // Normally lights/fog are applied on zone entry, but the origin tile
-        // has no zone so the state never triggers until the player walks through a door.
-        try
-        {
-            EnvironmentStateManager.Current.UpdateFogSettingsForState(
-                EnvironmentStateManager.Current.m_stateReplicator.State);
-        }
-        catch { /* May not be available in all states */ }
+        Plugin.Logger.LogDebug($"[DimWarp] Force-enabled {enabledRenderers}/{renderers.Length} renderers in {dimensionIndex}");
     }
 }
