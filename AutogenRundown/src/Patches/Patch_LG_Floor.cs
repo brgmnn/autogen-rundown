@@ -239,19 +239,26 @@ internal static class Patch_LG_Floor
         var root = dim.DimensionRootTemp;
         if (root == null) return;
 
-        int enabled = 0;
+        int enabledRenderers = 0;
         var renderers = root.GetComponentsInChildren<MeshRenderer>(true);
         foreach (var r in renderers)
         {
-            // Skip renderers with no material — these are collision/proxy meshes
-            // that show as bright pink if enabled.
             if (r.sharedMaterial == null) continue;
-
             r.enabled = true;
-            enabled++;
+            enabledRenderers++;
         }
 
-        Plugin.Logger.LogDebug($"[DimWarp] Force-enabled {enabled}/{renderers.Length} MeshRenderers in {dimensionIndex}");
+        // Also force-enable Light components — the culling system manages both
+        // MeshRenderers and Lights, so lights are also culled on the origin tile.
+        int enabledLights = 0;
+        var lights = root.GetComponentsInChildren<Light>(true);
+        foreach (var l in lights)
+        {
+            l.enabled = true;
+            enabledLights++;
+        }
+
+        Plugin.Logger.LogDebug($"[DimWarp] Force-enabled {enabledRenderers}/{renderers.Length} renderers, {enabledLights} lights in {dimensionIndex}");
 
         // Force the environment state to update for this dimension.
         // Normally lights/fog are applied on zone entry, but the origin tile
