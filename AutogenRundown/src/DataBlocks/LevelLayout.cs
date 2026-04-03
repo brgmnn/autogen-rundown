@@ -1233,6 +1233,10 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 BuildLayout_GatherSmallItems(director, objective, (ZoneNode)start);
                 break;
 
+            case WardenObjectiveType.Cryptomnesia:
+                BuildLayout_Cryptomnesia(director, objective, start);
+                break;
+
             case WardenObjectiveType.ReachKdsDeep:
                 BuildLayout_ReachKdsDeep(director, objective, start);
                 break;

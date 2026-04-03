@@ -714,6 +714,10 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 objective.PreBuild_GatherSmallItems(director, level);
                 break;
 
+            case WardenObjectiveType.Cryptomnesia:
+                objective.PreBuild_Cryptomnesia(director, level);
+                break;
+
             case WardenObjectiveType.SpecialTerminalCommand:
                 objective.PreBuild_SpecialTerminalCommand(director, level);
                 break;
@@ -774,6 +778,7 @@ public partial record WardenObjective : DataBlock<WardenObjective>
             case WardenObjectiveType.TerminalUplink:
             case WardenObjectiveType.CorruptedTerminalUplink:
             case WardenObjectiveType.GatherSmallItems:
+            case WardenObjectiveType.Cryptomnesia:
                 objective.PreReserveObjectiveFog(level, director);
                 break;
         }
@@ -877,6 +882,12 @@ public partial record WardenObjective : DataBlock<WardenObjective>
             case WardenObjectiveType.GatherSmallItems:
             {
                 Build_GatherSmallItems(director, level);
+                break;
+            }
+
+            case WardenObjectiveType.Cryptomnesia:
+            {
+                Build_Cryptomnesia(director, level);
                 break;
             }
 
@@ -1030,6 +1041,10 @@ public partial record WardenObjective : DataBlock<WardenObjective>
 
             case WardenObjectiveType.GatherSmallItems:
                 PostBuildIntel_GatherSmallItems(level);
+                break;
+
+            case WardenObjectiveType.Cryptomnesia:
+                PostBuildIntel_Cryptomnesia(level);
                 break;
 
             case WardenObjectiveType.ClearPath:
