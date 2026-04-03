@@ -96,6 +96,7 @@ public class BuildDirector
             objectives.RemoveAll(t => t.objective == WardenObjectiveType.ClearPath);
             objectives.RemoveAll(t => t.objective == WardenObjectiveType.Survival);
             objectives.RemoveAll(t => t.objective == WardenObjectiveType.ReachKdsDeep);
+            objectives.RemoveAll(t => t.objective == WardenObjectiveType.Cryptomnesia);
         }
 
         // These objectives are really intended as side quests.
