@@ -229,10 +229,20 @@ internal static class Patch_LG_Floor
         var root = dim.DimensionRootTemp;
         if (root == null) return;
 
+        int enabled = 0;
         var renderers = root.GetComponentsInChildren<MeshRenderer>(true);
         foreach (var r in renderers)
-            r.enabled = true;
+        {
+            // Skip renderers with missing/invalid materials (collision proxies,
+            // debug meshes, etc.) — these show as bright pink if enabled.
+            if (r.sharedMaterial == null) continue;
+            var shader = r.sharedMaterial.shader;
+            if (shader == null || shader.name.Contains("Error") || shader.name.Contains("Hidden")) continue;
 
-        Plugin.Logger.LogDebug($"[DimWarp] Force-enabled {renderers.Length} MeshRenderers in {dimensionIndex}");
+            r.enabled = true;
+            enabled++;
+        }
+
+        Plugin.Logger.LogDebug($"[DimWarp] Force-enabled {enabled}/{renderers.Length} MeshRenderers in {dimensionIndex}");
     }
 }
