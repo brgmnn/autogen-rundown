@@ -10,6 +10,10 @@ namespace AutogenRundown.Patches;
 [HarmonyPatch]
 internal static class Patch_LG_Floor
 {
+    // Track dimensions that used our patched CreateFloorTransition (non-elevator origin).
+    // Only these need the force-enable renderer workaround on warp.
+    private static readonly HashSet<eDimensionIndex> _patchedDimensions = new();
+
     /// <summary>
     /// This just moves the pouncer dimensions down to be below the reality dimension.
     ///
@@ -181,6 +185,10 @@ internal static class Patch_LG_Floor
             return true;
 
         // --- Custom handling for geomorphs without LG_FloorTransition ---
+        // Track this dimension so the TryWarpTo postfix knows to force-enable renderers.
+        if (dimension != null)
+            _patchedDimensions.Add(dimension.DimensionIndex);
+
         var spawned = UnityEngine.Object.Instantiate(transitionOverridePrefab, pos, rotation);
 
         // Destroy the original LG_Geomorph so there's only one LG_Geomorph-derived
@@ -221,7 +229,9 @@ internal static class Patch_LG_Floor
     [HarmonyPostfix]
     static void TryWarpTo_Postfix(bool __result, eDimensionIndex dimensionIndex)
     {
-        if (!__result || dimensionIndex == eDimensionIndex.Reality) return;
+        // Only force-enable for dimensions that used our patched CreateFloorTransition.
+        // Elevator shaft dimensions handle culling correctly on their own.
+        if (!__result || !_patchedDimensions.Contains(dimensionIndex)) return;
 
         Dimension dim;
         if (!Dimension.GetDimension(dimensionIndex, out dim)) return;
@@ -233,11 +243,9 @@ internal static class Patch_LG_Floor
         var renderers = root.GetComponentsInChildren<MeshRenderer>(true);
         foreach (var r in renderers)
         {
-            // Skip renderers with missing/invalid materials (collision proxies,
-            // debug meshes, etc.) — these show as bright pink if enabled.
+            // Skip renderers with no material — these are collision/proxy meshes
+            // that show as bright pink if enabled.
             if (r.sharedMaterial == null) continue;
-            var shader = r.sharedMaterial.shader;
-            if (shader == null || shader.name.Contains("Error") || shader.name.Contains("Hidden")) continue;
 
             r.enabled = true;
             enabled++;
