@@ -74,7 +74,8 @@ TODO:
   * SC1: Main needs 1 more challenge of some kind. A hard extract perhaps?
 
 NOTE
-  * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
+  * Cryptomensia - GatherSmallItems only 1 objective in 42 uses the dimensions for cryptomensia for it
+
 
 Idea:
   * Secondary survival that procs on door open

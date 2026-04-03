@@ -1700,6 +1700,7 @@ public class Level
             dimensionLayout.Zones.Add(
                 new Zone(level, dimensionLayout)
                 {
+                    LightSettings = Lights.Light.HeavyRedToCyan_1
                 });
 
             var dimension = new Dimension
@@ -1709,7 +1710,7 @@ public class Level
                     Layout = dimensionLayout,
                     DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab",
                     // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_mining_01.prefab",
-                    DimensionFogData = Fog.DefaultFog.PersistentId,
+                    DimensionFogData = Fog.HeavyFullFog_Infectious.PersistentId,
                     ResourceSet = dim1ResourceSet
                 },
 
