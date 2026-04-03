@@ -20,7 +20,8 @@ public partial record LevelLayout
         if (director.Objective is
             WardenObjectiveType.ClearPath or
             WardenObjectiveType.Survival or
-            WardenObjectiveType.ReachKdsDeep)
+            WardenObjectiveType.ReachKdsDeep or
+            WardenObjectiveType.Cryptomnesia)
             return;
 
         // Random chance for us to skip doing this all together

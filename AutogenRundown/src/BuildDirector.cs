@@ -104,11 +104,12 @@ public class BuildDirector
 
         // --- Specific main objectives ---
 
-        // Reach KDS Deep
-        if (exclude.Contains(WardenObjectiveType.ReachKdsDeep))
+        // Reach KDS Deep / Cryptomnesia
+        if (exclude.Contains(WardenObjectiveType.ReachKdsDeep)
+            || exclude.Contains(WardenObjectiveType.Cryptomnesia))
         {
-            // These objectives will have special logic for when they're part of KDS deep to be
-            // very short objectives that can possibly fit within the run time
+            // These objectives will have special logic for when they're part of KDS deep or
+            // Cryptomnesia to be very short objectives that can fit within the run time
             objectives = new List<(double weight, WardenObjectiveType objective)>
             {
                 (1.0, WardenObjectiveType.SpecialTerminalCommand),

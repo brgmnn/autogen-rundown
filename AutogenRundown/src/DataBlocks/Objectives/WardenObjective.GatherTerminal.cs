@@ -13,7 +13,7 @@ public partial record WardenObjective
     private void PreBuild_GatherTerminal(BuildDirector director, Level level)
     {
         // Fast version of this objective
-        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep)
+        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep or WardenObjectiveType.Cryptomnesia)
         {
             GatherTerminal_SpawnCount = GatherTerminal_RequiredCount = level.Tier switch
             {

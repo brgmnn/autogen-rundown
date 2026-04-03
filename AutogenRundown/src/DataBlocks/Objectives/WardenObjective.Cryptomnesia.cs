@@ -13,6 +13,8 @@ public partial record WardenObjective
 {
     public void PreBuild_Cryptomnesia(BuildDirector director, Level level)
     {
+        director.DisableStartingArea = true;
+
         GatherRequiredCount = 1;
         GatherSpawnCount = 1;
     }

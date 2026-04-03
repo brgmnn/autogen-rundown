@@ -88,7 +88,7 @@ public partial record LevelLayout
         var start = (ZoneNode)startish;
 
         // --- Fast version ---
-        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep)
+        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep or WardenObjectiveType.Cryptomnesia)
         {
             BuildLayout_ReactorShutdown_Fast(start);
             return;

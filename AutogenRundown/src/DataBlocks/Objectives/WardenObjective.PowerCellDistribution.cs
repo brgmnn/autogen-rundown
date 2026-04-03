@@ -27,7 +27,7 @@ public partial record WardenObjective
     public void PreBuild_PowerCellDistribution(BuildDirector director, Level level)
     {
         // Fast version of this objective
-        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep)
+        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep or WardenObjectiveType.Cryptomnesia)
         {
             PowerCellsToDistribute = director.Tier switch
             {

@@ -37,10 +37,11 @@ public partial record LevelLayout
 
         var start = (ZoneNode)startish;
 
-        // Fast path for Survival/ReachKdsDeep secondary objectives
+        // Fast path for Survival/ReachKdsDeep/Cryptomnesia secondary objectives
         if (level.MainDirector.Objective
             is WardenObjectiveType.Survival
-            or WardenObjectiveType.ReachKdsDeep)
+            or WardenObjectiveType.ReachKdsDeep
+            or WardenObjectiveType.Cryptomnesia)
         {
             BuildLayout_SpecialTerminalCommand_Fast(start);
             return;

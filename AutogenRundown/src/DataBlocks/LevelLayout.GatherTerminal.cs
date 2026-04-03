@@ -52,7 +52,7 @@ public partial record LevelLayout
         var startZone = planner.GetZone(start)!;
 
         // --- Fast version ---
-        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep)
+        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep or WardenObjectiveType.Cryptomnesia)
         {
             BuildLayout_GatherTerminal_Fast(start);
 
