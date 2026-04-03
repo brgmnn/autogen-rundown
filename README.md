@@ -73,8 +73,13 @@ TODO:
   * Check SD6: 2 terminals on top of each other in overload
   * SC1: Main needs 1 more challenge of some kind. A hard extract perhaps?
 
+TODO for 1.0
+  New Objectives!
+    * Alpha / static dimension objective with portal / matter wave projector / something big in the dimension
+    * Cryptomnesia objective main, recreate R6D4
+
 NOTE
-  * Cryptomensia - GatherSmallItems only 1 objective in 42 uses the dimensions for cryptomensia for it
+  * Cryptomnesia - GatherSmallItems only 1 objective in 42 uses the dimensions for cryptomensia for it
 
 
 Idea:

@@ -26,9 +26,20 @@ public enum WardenObjectiveType
 
     #region Autogen Custom objectives
 
+    /// <summary>
+    /// Modeled after R8E1 (and R8E2 in the future)
+    /// </summary>
     ReachKdsDeep = 20,            // K
 
-    EscapeToPortal = 21,          // E
+    /// <summary>
+    /// Modeled after R6D4
+    ///
+    /// Effectively a gather small items objective across dimensions
+    /// </summary>
+    Cryptomnesia = 21,            // C
+
+    
+    EscapeToPortal = 22,          // E
 
     #endregion
 }
