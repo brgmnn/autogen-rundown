@@ -965,4 +965,36 @@ public static class WardenObjectiveEventCollections
     }
 
     #endregion
+
+    #region Dimensions
+    public static ICollection<WardenObjectiveEvent> AddDimensionWarp(
+        this ICollection<WardenObjectiveEvent> events,
+        DimensionIndex dimension,
+        double delay = 0.0,
+        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.DimensionWarpTeam,
+                Trigger = trigger,
+                Dimension = dimension,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> AddEventBreak(
+        this ICollection<WardenObjectiveEvent> events)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.EventBreak
+            });
+
+        return events;
+    }
+    #endregion
 }
