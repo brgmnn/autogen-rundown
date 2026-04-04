@@ -521,7 +521,11 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     /// </summary>
     public void AddCompletedObjectiveChallenge(Level level, BuildDirector director)
     {
-        var entranceZone = level.Planner.GetZone((ZoneNode)level.Planner.GetBulkheadFirstZone(director.Bulkhead)!);
+        var firstZone = level.Planner.GetBulkheadFirstZone(director.Bulkhead, dimension: null);
+        if (firstZone == null)
+            return;
+
+        var entranceZone = level.Planner.GetZone((ZoneNode)firstZone);
 
         // Extraction waves. These are progressively harder
         // Overload is balanced to get harder error waves when getting the sample
