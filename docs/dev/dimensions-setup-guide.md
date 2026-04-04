@@ -357,6 +357,29 @@ level.DimensionDatas.Add(new Levels.DimensionData
 });
 ```
 
+## Game Engine Limitations
+
+### Secondary/Overload layers must build from Reality
+
+The game engine's `BuildLayerFromData` structure (used by `BuildSecondaryFrom` / `BuildThirdFrom`) only has `LayerType` (bulkhead) and `Zone` (zone index) — **there is no dimension field**. The engine always resolves the "build from" zone in Reality, regardless of what dimension the zone was created in.
+
+This means:
+- **Extreme and Overload layouts must always branch from Reality zones.** They cannot be built from zones in alternate dimensions.
+- When picking a source zone for `InitializeBulkheadArea`, always filter to `DimensionIndex.Reality`.
+- Main objective zones can exist in any dimension, but the bulkhead entrance that connects to Extreme/Overload must be in Reality.
+
+This is enforced in `StartingArea_GetBuildStart` — even for Cryptomnesia levels that span multiple dimensions, secondary/overload objectives are placed on Reality zones.
+
+Source: `BuildLayerFromData` in decompiled `Modules-ASM/GameData/BuildLayerFromData.cs`:
+```csharp
+public class BuildLayerFromData
+{
+    public LG_LayerType LayerType { set; get; }
+    public eLocalZoneIndex Zone { set; get; }
+    // No dimension field
+}
+```
+
 ## Notes
 
 - The **Pouncer Arena** is registered on all levels by default (`DimensionIndex.Arena`). You don't need to add it manually.
