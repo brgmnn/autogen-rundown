@@ -30,8 +30,9 @@ public partial record WardenObjective
         FindLocationInfoHelp = new Text("Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]");
 
         var placements = Gather_PlacementNodes
-            .Select(node => new ZonePlacementData()
+            .Select(node => new ZonePlacementData
             {
+                Dimension = node.Dimension,
                 LocalIndex = node.ZoneNumber,
                 Weights = ZonePlacementWeights.EvenlyDistributed
             }).ToList();
