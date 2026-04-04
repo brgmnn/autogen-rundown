@@ -42,12 +42,14 @@ public partial record WardenObjective
         Plugin.Logger.LogDebug($"Cryptomnesia: GatherMaxPerZone = {GatherMaxPerZone}");
         Plugin.Logger.LogDebug($"Cryptomnesia: Placements = [{Gather_PlacementNodes.Print()}]");
 
+        Type = WardenObjectiveType.GatherSmallItems;
+
         AddCompletedObjectiveChallenge(level, director);
     }
 
     private void PostBuildIntel_Cryptomnesia(Level level)
     {
-        level.ElevatorDropWardenIntel.Add((0, Generator.Pick(new List<string>
+        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Pick(new List<string>
         {
             ">... The cubes are scattered across dimensions!\r\n>... <size=200%><color=red>Stay together!</color></size>\r\n>... [static]",
             ">... Reality is shifting...\r\n>... <size=200%><color=red>Find the data cubes!</color></size>\r\n>... [alarm blaring]",
