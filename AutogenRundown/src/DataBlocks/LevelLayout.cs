@@ -65,6 +65,9 @@ public partial record LevelLayout : DataBlock<LevelLayout>
     [JsonIgnore]
     public List<(double chance, int count, WaveSettings)> WaveSettingsPack { get; set; } = new();
 
+    [JsonIgnore]
+    public bool SkipRollEnemies { get; set; }
+
     #endregion
 
     /// <summary>
@@ -1155,7 +1158,9 @@ public partial record LevelLayout : DataBlock<LevelLayout>
 
         RollAlarms();
         RollBloodDoors();
-        RollEnemies(director);
+
+        if (!SkipRollEnemies)
+            RollEnemies(director);
 
         Bins.LevelLayouts.AddBlock(this);
     }

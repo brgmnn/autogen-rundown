@@ -62,6 +62,12 @@ public partial record LevelLayout
         // --- Dimensions: build (count - 1) dimensions, each with 1 data cube ---
         var dimensionCount = objective.GatherRequiredCount - 1;
 
+        // Select unique themes: 1 for Reality + 1 per dimension
+        var themes = SelectCryptomnesiaThemes(dimensionCount + 1);
+
+        // Apply Reality theme before dimension loop
+        ApplyCryptomnesiaTheme(themes[0], this, null, level, director);
+
         for (var i = 0; i < dimensionCount; i++)
         {
             var dimensionIndex = (DimensionIndex)(i + 1); // Dimension1, Dimension2, Dimension3
@@ -110,11 +116,15 @@ public partial record LevelLayout
             if (lastDimNode != null)
                 objective.Gather_PlacementNodes.Add((ZoneNode)lastDimNode);
 
-            // Finalize: write zones to layout, roll alarms/enemies, persist
+            // Apply dimension theme before finalization
+            ApplyCryptomnesiaTheme(themes[i + 1], dimLayout, dimension, level, director);
+
+            // Finalize: write zones to layout, roll alarms/blood doors, persist
             dimLayout.FinalizeLayout();
 
             Plugin.Logger.LogDebug(
                 $"Cryptomnesia: Built dimension {dimensionIndex} with {dimLayout.Zones.Count} zones" +
+                $" theme={themes[i + 1]}" +
                 $"{(objective.Cryptomnesia_MatchLayout ? " (matched layout)" : "")}");
         }
 
