@@ -1263,6 +1263,10 @@ public class Level
                 if (zone.CustomGeomorph is not null)
                     usedCustomGeos.Add(zone.CustomGeomorph);
 
+        // Keep any custom geos used as dimension origin tiles
+        foreach (var dimData in DimensionDatas)
+            usedCustomGeos.Add(dimData.Data.Data.DimensionGeomorph);
+
         ResourceSet.CustomGeomorphs.RemoveAll(prefab => !usedCustomGeos.Contains(prefab.Asset));
     }
 
