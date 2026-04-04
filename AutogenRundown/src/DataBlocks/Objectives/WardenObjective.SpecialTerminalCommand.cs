@@ -117,7 +117,7 @@ public partial record WardenObjective
         GoToWinConditionHelp_CustomGeo = new Text("Use the navigational beacon and the information in the surroundings to find the exit point");
 
         // Place the terminal in the last zone
-        var node = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "special_terminal")!;
+        var node = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "special_terminal", dimension: null)!;
         var zoneIndex = node.ZoneNumber;
 
         dataLayer.ObjectiveData.ZonePlacementDatas.Add(
@@ -170,7 +170,7 @@ public partial record WardenObjective
                 SpecialTerminalCommandDesc = "Divert atmospheric control system to initiate environmental maintenance procedures.";
 
                 // Add a fog turbine in the first zone.
-                var firstNode = level.Planner.GetZones(director.Bulkhead, null).First()!;
+                var firstNode = level.Planner.GetZones(director.Bulkhead, null, dimension: null).First()!;
                 var firstZone = level.Planner.GetZone(firstNode)!;
                 firstZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
 

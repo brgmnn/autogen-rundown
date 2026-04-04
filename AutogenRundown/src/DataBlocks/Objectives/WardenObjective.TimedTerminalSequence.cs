@@ -36,7 +36,7 @@ public partial record WardenObjective
         // Calculate round time based on max time to clear a zone
         for (int i = 0; i < TimedTerminalSequence_NumberOfTerminals; i++)
         {
-            var nodes = level.Planner.GetZones(director.Bulkhead, $"timed_terminal_{i}");
+            var nodes = level.Planner.GetZones(director.Bulkhead, $"timed_terminal_{i}", dimension: null);
             var total = 0.0;
 
             foreach (var node in nodes)
@@ -119,7 +119,7 @@ public partial record WardenObjective
             {
                 for (var t = 0; t < TimedTerminalSequence_NumberOfTerminals; t++)
                 {
-                    var first = level.Planner.GetZones(director.Bulkhead, $"timed_terminal_{t}").First();
+                    var first = level.Planner.GetZones(director.Bulkhead, $"timed_terminal_{t}", dimension: null).First();
                     EventBuilder.AddUnlockDoor(onStart, director.Bulkhead, first.ZoneNumber);
                 }
             }
@@ -134,7 +134,7 @@ public partial record WardenObjective
             TimedTerminalSequence_EventsOnSequenceStart.Add(onStart);
         }
 
-        var turnOff = level.Planner.GetZones(director.Bulkhead, "timed_terminal_error_off");
+        var turnOff = level.Planner.GetZones(director.Bulkhead, "timed_terminal_error_off", dimension: null);
 
         // Add event to unlock error alarm disable (if we have the timed terminal error off zone)
         if (turnOff.Any())

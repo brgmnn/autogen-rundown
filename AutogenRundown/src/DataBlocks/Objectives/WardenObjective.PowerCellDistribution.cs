@@ -86,7 +86,7 @@ public partial record WardenObjective
         if (!director.Bulkhead.HasFlag(Bulkhead.Main))
         {
             // Place the cells in the first zone of the bulkhead if we are not in Main
-            var node = level.Planner.GetZones(director.Bulkhead).First();
+            var node = level.Planner.GetZones(director.Bulkhead, dimension: null).First();
             var zone = level.Planner.GetZone(node)!;
 
             switch (PowerCellsToDistribute)

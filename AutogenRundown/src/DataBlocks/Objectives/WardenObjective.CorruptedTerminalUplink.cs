@@ -83,7 +83,7 @@ public partial record WardenObjective
         GoToWinConditionHelp_CustomGeo =
             new Text("Use the navigational beacon and the information in the surroundings to find the exit point");
 
-        var nodes = level.Planner.GetZonesByTag(director.Bulkhead, "uplink_terminal")
+        var nodes = level.Planner.GetZonesByTag(director.Bulkhead, "uplink_terminal", dimension: null)
             .TakeLast(Uplink_NumberOfTerminals).ToList();
 
         for (var i = 0; i < Uplink_NumberOfTerminals; i++)

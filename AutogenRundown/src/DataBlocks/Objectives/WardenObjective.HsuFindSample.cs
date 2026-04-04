@@ -23,7 +23,7 @@ public partial record WardenObjective
         StartPuzzle = ChainedPuzzle.FindOrPersist(ChainedPuzzle.TeamScan);
 
         // Place HSU's within the objective zone
-        var zn = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "hsu_sample")!;
+        var zn = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "hsu_sample", dimension: null)!;
         var zoneIndex = zn.ZoneNumber;
 
         dataLayer.ObjectiveData.ZonePlacementDatas.Add(

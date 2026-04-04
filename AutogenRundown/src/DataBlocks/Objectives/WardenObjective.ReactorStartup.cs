@@ -1313,9 +1313,9 @@ public partial record WardenObjective
 
         // Spread resources to do the waves within the reactor area
         var entrance = level.Planner.GetZone(
-                level.Planner.GetZones(director.Bulkhead, "reactor_entrance").First())!;
+                level.Planner.GetZones(director.Bulkhead, "reactor_entrance", dimension: null).First())!;
         var reactor = level.Planner.GetZone(
-            level.Planner.GetZones(director.Bulkhead, "reactor").First())!;
+            level.Planner.GetZones(director.Bulkhead, "reactor", dimension: null).First())!;
 
         var baseResourcesMulti = reactorWavePoints / 35.0;
 
@@ -1385,7 +1385,7 @@ public partial record WardenObjective
             var wave = fetchWaves[b];
             var branch = $"reactor_code_{b}";
 
-            var branchNodes = level.Planner.GetZones(director.Bulkhead, branch);
+            var branchNodes = level.Planner.GetZones(director.Bulkhead, branch, dimension: null);
             var branchZones = branchNodes.Select(node => level.Planner.GetZone(node))
                                          .Where(zone => zone != null)
                                          .OfType<Zone>()
