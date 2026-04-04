@@ -44,6 +44,8 @@ public partial record LevelLayout
         // Set the level's resource set to the pruned clone
         level.ResourceSet = resourceSet;
 
+        #region Dimension = Reality
+
         // --- Reality: build zones and place 1 data cube ---
         var realityNodes = AddBranch(start, Generator.Between(2, 4), "find_items", (node, zone) =>
         {
@@ -52,6 +54,10 @@ public partial record LevelLayout
 
         // Place the data cube in the last reality zone
         objective.Gather_PlacementNodes.Add(realityNodes.Last());
+
+        #endregion
+
+        #region Dimension = 1+
 
         // --- Dimensions: build (count - 1) dimensions, each with 1 data cube ---
         var dimensionCount = objective.GatherRequiredCount - 1;
@@ -111,6 +117,8 @@ public partial record LevelLayout
                 $"Cryptomnesia: Built dimension {dimensionIndex} with {dimLayout.Zones.Count} zones" +
                 $"{(objective.Cryptomnesia_MatchLayout ? " (matched layout)" : "")}");
         }
+
+        #endregion
     }
 
     /// <summary>
