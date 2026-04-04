@@ -89,6 +89,10 @@ public partial record WardenObjective
             var node = level.Planner.GetZones(director.Bulkhead, dimension: null).First();
             var zone = level.Planner.GetZone(node)!;
 
+            var plural = PowerCellsToDistribute > 1;
+
+            MainObjective = new Text(() => $"Find the Power Cell{(plural ? "s" : "")} in {Intel.Zone(node, level.Planner)} and {(plural ? "distribute them to" : "use it to power")} [ALL_ITEMS]");
+
             switch (PowerCellsToDistribute)
             {
                 case 1:
