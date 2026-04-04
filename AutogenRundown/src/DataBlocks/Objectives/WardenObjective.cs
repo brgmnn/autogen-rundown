@@ -1515,6 +1515,12 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     [JsonIgnore]
     public bool Cryptomnesia_MatchLayout { get; set; } = true;
 
+    [JsonIgnore]
+    public Dictionary<DimensionIndex, List<WardenObjectiveEvent>> Cryptomnesia_EnterEvents { get; set; } = new();
+
+    [JsonIgnore]
+    public Dictionary<DimensionIndex, List<WardenObjectiveEvent>> Cryptomnesia_ExitEvents { get; set; } = new();
+
     #endregion
 
     #region Expedition exit

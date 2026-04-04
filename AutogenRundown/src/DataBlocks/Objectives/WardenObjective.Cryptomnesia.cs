@@ -38,13 +38,38 @@ public partial record WardenObjective
             }).ToList();
         dataLayer.ObjectiveData.ZonePlacementDatas.Add(placements);
 
+        // Build the event chain from per-dimension enter/exit events.
+        // Order: [Reality exit] → warp(Dim1) → [Dim1 enter] → break → [Dim1 exit] → warp(Dim2) → ...
+        // Reality's enter events go to EventsOnElevatorLand instead.
+
+        // Reality enter events → elevator landing
+        if (Cryptomnesia_EnterEvents.TryGetValue(DimensionIndex.Reality, out var realityEnter))
+            EventsOnElevatorLand.AddRange(realityEnter);
+
+        // Reality exit events start the activate chain
+        if (Cryptomnesia_ExitEvents.TryGetValue(DimensionIndex.Reality, out var realityExit))
+            foreach (var e in realityExit)
+                EventsOnActivate.Add(e);
+
+        // Each dimension: warp → enter → break → exit
         foreach (var zoneNode in Gather_PlacementNodes.TakeLast(GatherSpawnCount - 1))
         {
-            EventsOnActivate
-                .AddDimensionWarp(zoneNode.Dimension)
-                .AddEventBreak();
+            var dim = zoneNode.Dimension;
+
+            EventsOnActivate.AddDimensionWarp(dim);
+
+            if (Cryptomnesia_EnterEvents.TryGetValue(dim, out var enterEvents))
+                foreach (var e in enterEvents)
+                    EventsOnActivate.Add(e);
+
+            EventsOnActivate.AddEventBreak();
+
+            if (Cryptomnesia_ExitEvents.TryGetValue(dim, out var exitEvents))
+                foreach (var e in exitEvents)
+                    EventsOnActivate.Add(e);
         }
 
+        // Final warp back to Reality
         EventsOnActivate.AddDimensionWarp(DimensionIndex.Reality);
 
         OnActivateOnSolveItem = true;

@@ -1,9 +1,12 @@
 using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
+
+using WardenObjective = Objectives.WardenObjective;
 
 public partial record LevelLayout
 {
@@ -35,20 +38,23 @@ public partial record LevelLayout
 
     /// <summary>
     /// Applies a Cryptomnesia theme to a layout. Must be called AFTER zones are created
-    /// but BEFORE FinalizeLayout(). Sets SkipRollEnemies and populates enemies directly.
+    /// but BEFORE FinalizeLayout(). Sets SkipRollEnemies, populates enemies directly,
+    /// and initializes enter/exit event lists on the objective for this dimension.
     /// </summary>
-    /// <param name="theme">The theme to apply</param>
-    /// <param name="layout">The layout to apply the theme to</param>
-    /// <param name="dimension">The dimension object, or null for Reality</param>
-    /// <param name="level">The level</param>
-    /// <param name="director">The build director</param>
     public static void ApplyCryptomnesiaTheme(
         CryptomnesiaTheme theme,
         LevelLayout layout,
         Dimension? dimension,
         Level level,
-        BuildDirector director)
+        BuildDirector director,
+        WardenObjective objective)
     {
+        var dimIndex = layout.Dimension;
+
+        // Initialize the enter/exit event lists for this dimension
+        objective.Cryptomnesia_EnterEvents[dimIndex] = new List<WardenObjectiveEvent>();
+        objective.Cryptomnesia_ExitEvents[dimIndex] = new List<WardenObjectiveEvent>();
+
         switch (theme)
         {
             case CryptomnesiaTheme.ErrorAlarm:

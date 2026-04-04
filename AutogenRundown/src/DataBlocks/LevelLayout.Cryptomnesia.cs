@@ -66,7 +66,7 @@ public partial record LevelLayout
         var themes = SelectCryptomnesiaThemes(dimensionCount + 1);
 
         // Apply Reality theme before dimension loop
-        ApplyCryptomnesiaTheme(themes[0], this, null, level, director);
+        ApplyCryptomnesiaTheme(themes[0], this, null, level, director, objective);
 
         for (var i = 0; i < dimensionCount; i++)
         {
@@ -117,7 +117,7 @@ public partial record LevelLayout
                 objective.Gather_PlacementNodes.Add((ZoneNode)lastDimNode);
 
             // Apply dimension theme before finalization
-            ApplyCryptomnesiaTheme(themes[i + 1], dimLayout, dimension, level, director);
+            ApplyCryptomnesiaTheme(themes[i + 1], dimLayout, dimension, level, director, objective);
 
             // Finalize: write zones to layout, roll alarms/blood doors, persist
             dimLayout.FinalizeLayout();
