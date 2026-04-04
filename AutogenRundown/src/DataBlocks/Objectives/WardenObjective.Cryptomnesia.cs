@@ -51,6 +51,10 @@ public partial record WardenObjective
     {
         level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Pick(new List<string>
         {
+            // Vanilla intel
+            ">... We're... back...\r\n>... This will go quick then!\r\n>... No, <size=200%><color=red>wait-</color></size>\r\n>...[screeching, gunfire]",
+
+            // Generated intel
             ">... The cubes are scattered across dimensions!\r\n>... <size=200%><color=red>Stay together!</color></size>\r\n>... [static]",
             ">... Reality is shifting...\r\n>... <size=200%><color=red>Find the data cubes!</color></size>\r\n>... [alarm blaring]",
             ">... Dimensional anomalies detected!\r\n>... <size=200%><color=red>Retrieve the cubes!</color></size>\r\n>... [creatures shrieking]",

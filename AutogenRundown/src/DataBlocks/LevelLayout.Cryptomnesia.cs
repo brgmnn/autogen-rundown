@@ -35,6 +35,7 @@ public partial record LevelLayout
 
         resourceSet.ElevatorShafts_1x1.Clear();
         resourceSet.ElevatorShafts_1x1.Add(elevator);
+        resourceSet.CustomGeomorphs.Add(elevator);
 
         // Set the level's resource set to the pruned clone
         level.ResourceSet = resourceSet;
