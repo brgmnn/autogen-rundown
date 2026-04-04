@@ -123,7 +123,7 @@ public partial record LevelLayout
     private (ZoneNode, Zone) StartingArea_GetBuildStart(Bulkhead bulkhead)
     {
         var existing = director is { Bulkhead: Bulkhead.Main, DisableStartingArea: true }
-            ? level.Planner.GetZoneNode(0)
+            ? level.Planner.GetZoneNode(0, Dimension)
             : level.Planner.GetLastZoneExact(director.Bulkhead, dimension: Dimension);
 
         if (existing is not null)

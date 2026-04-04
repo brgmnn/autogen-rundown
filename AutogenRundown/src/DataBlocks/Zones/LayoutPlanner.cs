@@ -268,8 +268,9 @@ public class LayoutPlanner
     /// </summary>
     /// <param name="index"></param>
     /// <returns></returns>
-    public ZoneNode GetZoneNode(int index)
-        => graph.Keys.First(node => node.ZoneNumber == index);
+    public ZoneNode GetZoneNode(int index, DimensionIndex? dimension = DimensionIndex.Reality)
+        => graph.Keys.First(node => node.ZoneNumber == index
+            && (dimension == null || node.Dimension == dimension));
 
     /// <summary>
     /// Gets the ZoneNode for a given Zone

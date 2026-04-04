@@ -381,7 +381,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         // Do not add blood doors to Zone 0, these are always either the elevator or bulkhead doors.
         // Do not add blood doors to Apex security doors
         foreach (var zone in zones)
-            if (!planner.GetZoneNode(zone.LocalIndex).Tags.Contains("no_blood_door") &&
+            if (!planner.GetZoneNode(zone.LocalIndex, Dimension).Tags.Contains("no_blood_door") &&
                 zone is { LocalIndex: > 0, SecurityGateToEnter: SecurityGate.Security } &&
                 Generator.Flip(chance) &&
                 (count++ < max || max == -1))
@@ -902,7 +902,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 return;
             }
 
-            var node = planner.GetZoneNode(zone.LocalIndex);
+            var node = planner.GetZoneNode(zone.LocalIndex, Dimension);
             var terminal = (ZoneNode?)null;
             // zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
 
