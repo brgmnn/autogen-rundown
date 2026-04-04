@@ -1,3 +1,4 @@
+using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 
@@ -8,22 +9,91 @@ using WardenObjective = Objectives.WardenObjective;
 public partial record LevelLayout
 {
     /// <summary>
-    /// Builds the layout for the Cryptomnesia objective. For now this is a basic
-    /// GatherSmallItems layout with zones in Reality. Later this will be expanded
-    /// to build zones across multiple dimensions.
+    /// Elevator shaft geomorphs per complex type for use as dimension origins.
+    /// </summary>
+    private static string GetElevatorGeomorph(Complex complex) => complex switch
+    {
+        Complex.Mining => "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_mining_01.prefab",
+        Complex.Tech => "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_elevator_shaft_01.prefab",
+        Complex.Service => "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_elevator_shaft_Gardens_01.prefab",
+        _ => "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_mining_01.prefab"
+    };
+
+    /// <summary>
+    /// Builds the layout for the Cryptomnesia objective.
+    ///
+    /// Places 1 data cube in Reality and 1 in each of (GatherRequiredCount - 1) dimensions.
+    /// All dimensions share the same complex and resource set as Reality.
+    /// Each dimension uses an elevator geomorph as its origin tile.
     /// </summary>
     public void BuildLayout_Cryptomnesia(BuildDirector director, WardenObjective objective, ZoneNode start)
     {
         var startZone = level.Planner.GetZone(start)!;
 
-        // Build a short branch for the items
-        var nodes = AddBranch(start, Generator.Between(1, 3), "find_items", (node, zone) =>
+        // Clone the resource set once -- shared across Reality and all dimensions
+        var resourceSet = (level.Complex switch
         {
-            zone.Coverage = objective.GatherRequiredCount > 3
-                ? CoverageMinMax.Large_100
-                : CoverageMinMax.Medium;
+            Complex.Mining => ComplexResourceSet.Mining,
+            Complex.Tech => ComplexResourceSet.Tech,
+            Complex.Service => ComplexResourceSet.Service,
+            _ => ComplexResourceSet.Mining
+        }).Duplicate();
 
-            objective.Gather_PlacementNodes.Add(node);
+        // --- Reality: build zones and place 1 data cube ---
+        var realityNodes = AddBranch(start, Generator.Between(2, 4), "find_items", (node, zone) =>
+        {
+            zone.Coverage = CoverageMinMax.Medium;
         });
+
+        // Place the data cube in the last reality zone
+        objective.Gather_PlacementNodes.Add(realityNodes.Last());
+
+        // --- Dimensions: build (count - 1) dimensions, each with 1 data cube ---
+        var dimensionCount = objective.GatherRequiredCount - 1;
+        var geomorph = GetElevatorGeomorph(level.Complex);
+
+        for (var i = 0; i < dimensionCount; i++)
+        {
+            var dimensionIndex = (DimensionIndex)(i + 1); // Dimension1, Dimension2, Dimension3
+
+            // Register the dimension on the level with shared resource set
+            var dimension = new Dimension
+            {
+                Data = new Dimensions.DimensionData
+                {
+                    DimensionGeomorph = geomorph,
+                    ResourceSet = resourceSet
+                }
+            };
+            dimension.FindOrPersist();
+
+            level.DimensionDatas.Add(new Levels.DimensionData
+            {
+                Dimension = dimensionIndex,
+                Data = dimension
+            });
+
+            // Initialize the dimension layout with a starting zone
+            var (dimLayout, dimStart) = LevelLayout.BuildDimension(
+                level, director, objective, dimensionIndex, level.Complex);
+
+            // Link the layout to the dimension
+            dimension.Data.Layout = dimLayout;
+
+            // Build zones in this dimension
+            var dimNodes = dimLayout.AddBranch(dimStart, Generator.Between(1, 3), "find_items", (node, zone) =>
+            {
+                zone.Coverage = CoverageMinMax.Medium;
+            });
+
+            // Place a data cube in the last zone
+            objective.Gather_PlacementNodes.Add(dimNodes.Last());
+
+            // Finalize: write zones to layout, roll alarms/enemies, persist
+            dimLayout.FinalizeLayout();
+
+            Plugin.Logger.LogDebug(
+                $"Cryptomnesia: Built dimension {dimensionIndex} with {dimLayout.Zones.Count} zones");
+        }
     }
 }

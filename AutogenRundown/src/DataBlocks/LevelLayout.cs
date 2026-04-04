@@ -1248,11 +1248,13 @@ public partial record LevelLayout : DataBlock<LevelLayout>
     }
 
     /// <summary>
-    /// Builds a full dimension layout with zones, alarms, and enemies. Unlike Build(),
-    /// this skips the elevator starting area, forward extract, medical bay, and fog handling
-    /// since those are Reality-specific.
+    /// Creates and initializes a dimension layout with a starting zone (zone 0).
+    /// Does NOT build objective zones, roll alarms, or finalize -- the caller is
+    /// responsible for building zones on the returned layout and calling
+    /// FinalizeLayout() when done.
     /// </summary>
-    public static LevelLayout BuildDimension(
+    /// <returns>A tuple of the layout and its starting zone node.</returns>
+    public static (LevelLayout layout, ZoneNode start) BuildDimension(
         Level level,
         BuildDirector director,
         WardenObjective objective,
@@ -1273,25 +1275,27 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             WaveSettingsPack = WaveSettings.BuildPack(level.Tier)
         };
 
-        director.GenZones();
+        Plugin.Logger.LogDebug($"Building dimension layout ({layout.Name})");
 
-        Plugin.Logger.LogDebug($"Building dimension layout ({layout.Name}), Objective = {objective.Type}");
+        // Create the dimension's starting zone (zone 0)
+        var startNode = new ZoneNode(
+            Bulkhead.Main | Bulkhead.StartingArea,
+            level.Planner.NextIndex(Bulkhead.Main, dimension),
+            "primary", 2, dimension);
 
-        // Dimensions don't have elevator starting areas -- just get/create zone 0
-        var (start, startZone) = layout.StartingArea_GetBuildStart(director.Bulkhead);
-        startZone.ZoneExpansion = direction.Forward;
+        var startZone = new Zone(level, layout)
+        {
+            Coverage = CoverageMinMax.Medium,
+            LightSettings = Lights.GenRandomLight(),
+        };
+        startZone.RollFog(level);
 
-        // Build zones using standard objective layout builders
-        layout.BuildZonesForObjective(director, objective, start);
-
-        level.Planner.PlanBulkheadPlacements(director.Bulkhead, direction, dimension);
-
-        // Finalize: write zones, roll alarms/enemies, persist
-        layout.FinalizeLayout();
+        level.Planner.Connect(startNode);
+        level.Planner.AddZone(startNode, startZone);
 
         // Track on level
         level.SetDimensionLayout(dimension, director.Bulkhead, layout);
 
-        return layout;
+        return (layout, startNode);
     }
 }
