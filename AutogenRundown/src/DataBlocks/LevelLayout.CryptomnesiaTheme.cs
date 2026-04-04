@@ -3,6 +3,7 @@ using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -58,7 +59,7 @@ public partial record LevelLayout
         switch (theme)
         {
             case CryptomnesiaTheme.ErrorAlarm:
-                ApplyTheme_ErrorAlarm(layout, level, director);
+                ApplyTheme_ErrorAlarm(layout, level, director, objective, dimIndex);
                 break;
             case CryptomnesiaTheme.Giants:
                 ApplyTheme_Giants(layout, level, director);
@@ -83,10 +84,12 @@ public partial record LevelLayout
     #region Theme Implementations
 
     /// <summary>
-    /// Error Alarm theme: base strikers/shooters sleeping in zones, plus an error alarm
-    /// on a middle zone.
+    /// Error Alarm theme: base strikers/shooters sleeping in zones. The error alarm
+    /// starts on entering this dimension and stops on exiting via enter/exit events.
     /// </summary>
-    private static void ApplyTheme_ErrorAlarm(LevelLayout layout, Level level, BuildDirector director)
+    private static void ApplyTheme_ErrorAlarm(
+        LevelLayout layout, Level level, BuildDirector director,
+        WardenObjective objective, DimensionIndex dimIndex)
     {
         layout.SkipRollEnemies = true;
 
@@ -104,20 +107,20 @@ public partial record LevelLayout
             zone.EnemySpawningInZone.Add(EnemySpawningData.Shooter with { Points = points / 2 });
         }
 
-        // Place error alarm on a middle zone (not first, not last)
-        if (zoneNodes.Count < 2)
-            return;
+        // Start error alarm on enter
+        var enterEvents = objective.Cryptomnesia_EnterEvents[dimIndex];
+        enterEvents.AddSound(Sound.Alarms_Error_AmbientLoop, 1.0);
+        enterEvents.AddSpawnWave(new GenericWave
+        {
+            Settings = WaveSettings.Error_Normal,
+            Population = WavePopulation.Baseline,
+            TriggerAlarm = true
+        }, 1.0, "error_alarms");
 
-        var candidates = zoneNodes
-            .Where(n => n.ZoneNumber != zoneNodes.First().ZoneNumber
-                     && n.ZoneNumber != zoneNodes.Last().ZoneNumber)
-            .ToList();
-
-        if (!candidates.Any())
-            candidates = zoneNodes.Skip(1).ToList();
-
-        var alarmNode = Generator.Pick(candidates);
-        layout.AddErrorAlarm(alarmNode, null, WaveSettings.Error_Normal, WavePopulation.Baseline);
+        // Stop error alarm on exit
+        var exitEvents = objective.Cryptomnesia_ExitEvents[dimIndex];
+        exitEvents.AddTurnOffAlarms(0.0, "error_alarms");
+        exitEvents.AddSound(Sound.Alarms_Error_AmbientStop, 0.5);
     }
 
     /// <summary>
