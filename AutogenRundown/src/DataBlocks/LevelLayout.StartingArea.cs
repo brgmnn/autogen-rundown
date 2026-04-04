@@ -20,7 +20,10 @@ public partial record LevelLayout
         ZoneNode from,
         Zone? zone = null)
     {
-        var bulkheadNode = new ZoneNode(bulkhead, level.Planner.NextIndex(bulkhead, Dimension), Dimension: Dimension);
+        var bulkheadNode = new ZoneNode(
+            bulkhead,
+            level.Planner.NextIndex(bulkhead, from.Dimension),
+            Dimension: from.Dimension);
         level.Planner.Connect(from, bulkheadNode);
 
         level.Planner.AddZone(
@@ -127,11 +130,12 @@ public partial record LevelLayout
         if (level.MainDirector.Objective == WardenObjectiveType.Cryptomnesia
             && !director.Bulkhead.HasFlag(Bulkhead.Main))
         {
-            var allMainZones = level.Planner.GetZones(Bulkhead.Main, null, dimension: null);
+            var allMainZones = level.Planner.GetZones(Bulkhead.Main, null, dimension: DimensionIndex.Reality);
 
             if (allMainZones.Count > 0)
             {
                 var picked = Generator.Pick(allMainZones);
+
                 InitializeBulkheadArea(level, bulkhead, picked);
 
                 var bulkheadNode = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, dimension: picked.Dimension)!;

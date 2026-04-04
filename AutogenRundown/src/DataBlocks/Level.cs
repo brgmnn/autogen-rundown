@@ -1072,6 +1072,7 @@ public class Level
     {
         foreach (var kvp in Layouts)
             yield return (kvp.Key, kvp.Value);
+
         foreach (var dimEntry in DimensionLayouts)
             foreach (var layoutEntry in dimEntry.Value)
                 yield return (layoutEntry.Key, layoutEntry.Value);
