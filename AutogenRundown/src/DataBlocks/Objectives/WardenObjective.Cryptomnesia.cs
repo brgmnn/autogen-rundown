@@ -1,3 +1,4 @@
+using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
 
@@ -37,6 +38,29 @@ public partial record WardenObjective
                 Weights = ZonePlacementWeights.EvenlyDistributed
             }).ToList();
         dataLayer.ObjectiveData.ZonePlacementDatas.Add(placements);
+
+        foreach (var zoneNode in Gather_PlacementNodes.TakeLast(GatherSpawnCount - 1))
+        {
+            EventsOnActivate.Add(new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.DimensionWarpTeam,
+                Trigger = WardenObjectiveEventTrigger.OnStart,
+                Dimension = zoneNode.Dimension
+            });
+            EventsOnActivate.Add(new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.EventBreak
+            });
+        }
+
+        EventsOnActivate.Add(new WardenObjectiveEvent
+        {
+            Type = WardenObjectiveEventType.DimensionWarpTeam,
+            Trigger = WardenObjectiveEventTrigger.OnStart,
+            Dimension = DimensionIndex.Reality
+        });
+
+        OnActivateOnSolveItem = true;
 
         GatherMaxPerZone = (int)Math.Ceiling((double)GatherSpawnCount / Math.Max(1, placements.Count));
 
