@@ -1506,6 +1506,13 @@ public partial record WardenObjective : DataBlock<WardenObjective>
 
     #endregion
 
+    #region Type=21: -CUSTOM- Cryptomnesia
+
+    [JsonIgnore]
+    public bool Cryptomnesia_MatchLayout { get; set; } = true;
+
+    #endregion
+
     #region Expedition exit
     /// <summary>
     /// What exit scan to use at the exit

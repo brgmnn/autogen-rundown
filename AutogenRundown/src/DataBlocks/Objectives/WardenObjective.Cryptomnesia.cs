@@ -1,5 +1,4 @@
 using AutogenRundown.DataBlocks.Enums;
-using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks.Objectives;

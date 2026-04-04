@@ -354,6 +354,8 @@ public static class RundownFactory
         #endregion
         #endregion
 
+        mainObjectivesPool.Add((100.0, 1, WardenObjectiveType.Cryptomnesia));
+
         #region D-Tier Levels
         // D levels
         for (int i = 1; i < rundown.TierD_Count + 1; i++)
