@@ -9,22 +9,12 @@ using WardenObjective = Objectives.WardenObjective;
 public partial record LevelLayout
 {
     /// <summary>
-    /// Elevator shaft geomorphs per complex type for use as dimension origins.
-    /// </summary>
-    private static string GetElevatorGeomorph(Complex complex) => complex switch
-    {
-        Complex.Mining => "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_mining_01.prefab",
-        Complex.Tech => "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_elevator_shaft_01.prefab",
-        Complex.Service => "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_elevator_shaft_Gardens_01.prefab",
-        _ => "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_mining_01.prefab"
-    };
-
-    /// <summary>
     /// Builds the layout for the Cryptomnesia objective.
     ///
     /// Places 1 data cube in Reality and 1 in each of (GatherRequiredCount - 1) dimensions.
     /// All dimensions share the same complex and resource set as Reality.
-    /// Each dimension uses an elevator geomorph as its origin tile.
+    /// A single elevator geomorph is randomly selected from the resource set and used as
+    /// the origin tile for each dimension (and the only elevator available in Reality).
     /// </summary>
     public void BuildLayout_Cryptomnesia(BuildDirector director, WardenObjective objective, ZoneNode start)
     {
@@ -39,6 +29,16 @@ public partial record LevelLayout
             _ => ComplexResourceSet.Mining
         }).Duplicate();
 
+        // Pick one elevator geomorph and strip all others so Reality and dimensions share it
+        var elevator = Generator.Pick(resourceSet.ElevatorShafts_1x1);
+        var elevatorGeo = elevator.Asset;
+
+        resourceSet.ElevatorShafts_1x1.Clear();
+        resourceSet.ElevatorShafts_1x1.Add(elevator);
+
+        // Set the level's resource set to the pruned clone
+        level.ResourceSet = resourceSet;
+
         // --- Reality: build zones and place 1 data cube ---
         var realityNodes = AddBranch(start, Generator.Between(2, 4), "find_items", (node, zone) =>
         {
@@ -50,18 +50,17 @@ public partial record LevelLayout
 
         // --- Dimensions: build (count - 1) dimensions, each with 1 data cube ---
         var dimensionCount = objective.GatherRequiredCount - 1;
-        var geomorph = GetElevatorGeomorph(level.Complex);
 
         for (var i = 0; i < dimensionCount; i++)
         {
             var dimensionIndex = (DimensionIndex)(i + 1); // Dimension1, Dimension2, Dimension3
 
-            // Register the dimension on the level with shared resource set
+            // Register the dimension on the level with shared resource set and elevator geo
             var dimension = new Dimension
             {
                 Data = new Dimensions.DimensionData
                 {
-                    DimensionGeomorph = geomorph,
+                    DimensionGeomorph = elevatorGeo,
                     ResourceSet = resourceSet
                 }
             };
@@ -93,7 +92,8 @@ public partial record LevelLayout
             dimLayout.FinalizeLayout();
 
             Plugin.Logger.LogDebug(
-                $"Cryptomnesia: Built dimension {dimensionIndex} with {dimLayout.Zones.Count} zones");
+                $"Cryptomnesia: Built dimension {dimensionIndex} with {dimLayout.Zones.Count} zones, " +
+                $"elevator={elevatorGeo}");
         }
     }
 }
