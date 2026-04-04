@@ -552,7 +552,7 @@ public partial record LevelLayout
 
         layerData.ObjectiveData.ZonePlacementDatas.Add(new List<ZonePlacementData>
         {
-            new() { LocalIndex = end.ZoneNumber }
+            new() { Dimension = end.Dimension, LocalIndex = end.ZoneNumber }
         });
         #endregion
     }

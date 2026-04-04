@@ -1808,7 +1808,7 @@ public partial record LevelLayout
             PuzzleType = ProgressionPuzzleType.Keycard,
             ZonePlacementData = new List<ZonePlacementData>
             {
-                new() { LocalIndex = keycardZone.LocalIndex }
+                new() { Dimension = Dimension, LocalIndex = keycardZone.LocalIndex }
             }
         };
     }
@@ -1898,7 +1898,7 @@ public partial record LevelLayout
             PuzzleType = ProgressionPuzzleType.Keycard,
             ZonePlacementData = new List<ZonePlacementData>
             {
-                new() { LocalIndex = keyZoneNumber }
+                new() { Dimension = Dimension, LocalIndex = keyZoneNumber }
             }
         };
     }

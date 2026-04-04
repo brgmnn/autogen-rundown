@@ -31,6 +31,7 @@ public partial record WardenObjective
             {
                 new()
                 {
+                    Dimension = zn.Dimension,
                     LocalIndex = zoneIndex,
                     Weights = ZonePlacementWeights.NotAtStart
                 }

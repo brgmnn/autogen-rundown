@@ -70,6 +70,7 @@ public partial record LevelLayout
             {
                 new ZonePlacementData
                 {
+                    Dimension = mwp.Dimension,
                     LocalIndex = mwp.ZoneNumber,
                     Weights = ZonePlacementWeights.NotAtStart
                 }
@@ -205,6 +206,7 @@ public partial record LevelLayout
                 {
                     new()
                     {
+                        Dimension = zoneNode.Dimension,
                         LocalIndex = zoneNode.ZoneNumber,
                         Weights = ZonePlacementWeights.NotAtStart
                     }
@@ -237,6 +239,7 @@ public partial record LevelLayout
                 {
                     new()
                     {
+                        Dimension = zoneNode.Dimension,
                         LocalIndex = zoneNode.ZoneNumber,
                         Weights = ZonePlacementWeights.NotAtStart
                     }

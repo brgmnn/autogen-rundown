@@ -30,6 +30,7 @@ public partial record LevelLayout
             {
                 new()
                 {
+                    Dimension = node.Dimension,
                     LocalIndex = node.ZoneNumber,
                     Weights = ZonePlacementWeights.NotAtStart
                 }
@@ -78,6 +79,7 @@ public partial record LevelLayout
                 {
                     new()
                     {
+                        Dimension = start.Dimension,
                         LocalIndex = start.ZoneNumber,
                         Weights = ZonePlacementWeights.NotAtStart
                     }

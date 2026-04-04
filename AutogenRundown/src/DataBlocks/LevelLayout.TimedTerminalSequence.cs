@@ -38,6 +38,7 @@ public partial record LevelLayout
             {
                 new()
                 {
+                    Dimension = hub.Dimension,
                     LocalIndex = hubIndex,
                     Weights = ZonePlacementWeights.EvenlyDistributed
                 }
@@ -96,6 +97,7 @@ public partial record LevelLayout
                 {
                     new()
                     {
+                        Dimension = end.Dimension,
                         LocalIndex = end.ZoneNumber,
                         Weights = ZonePlacementWeights.NotAtStart
                     }

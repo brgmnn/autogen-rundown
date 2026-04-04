@@ -958,12 +958,13 @@ public class Level
         if (candidates.Count == 0)
             return new List<ZonePlacementData>
             {
-                new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+                new() { Dimension = DimensionIndex.Reality, LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
             };
 
         if (candidates.Count <= 3)
             return candidates.Select(c => new ZonePlacementData
             {
+                Dimension = c.Dimension,
                 LocalIndex = c.ZoneNumber,
                 Weights = ZonePlacementWeights.EvenlyDistributed
             }).ToList();
@@ -973,30 +974,33 @@ public class Level
         var mid = candidates.Skip(third).Take(third).ToList();
         var deep = candidates.Skip(third * 2).ToList();
 
+        ZonePlacementData FromNode(ZoneNode n, ZonePlacementWeights w) =>
+            new() { Dimension = n.Dimension, LocalIndex = n.ZoneNumber, Weights = w };
+
         var alternatives = Tier switch
         {
             "A" or "B" => new List<ZonePlacementData>
             {
-                new() { LocalIndex = Generator.Pick(early)!.ZoneNumber, Weights = ZonePlacementWeights.EvenlyDistributed },
-                new() { LocalIndex = Generator.Pick(early.Concat(mid).ToList())!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart }
+                FromNode(Generator.Pick(early)!, ZonePlacementWeights.EvenlyDistributed),
+                FromNode(Generator.Pick(early.Concat(mid).ToList())!, ZonePlacementWeights.NotAtStart)
             },
             "C" => new List<ZonePlacementData>
             {
-                new() { LocalIndex = Generator.Pick(early)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart },
-                new() { LocalIndex = Generator.Pick(mid)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart },
-                new() { LocalIndex = Generator.Pick(deep)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart }
+                FromNode(Generator.Pick(early)!, ZonePlacementWeights.NotAtStart),
+                FromNode(Generator.Pick(mid)!, ZonePlacementWeights.NotAtStart),
+                FromNode(Generator.Pick(deep)!, ZonePlacementWeights.NotAtStart)
             },
             "D" => new List<ZonePlacementData>
             {
-                new() { LocalIndex = Generator.Pick(mid)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart },
-                new() { LocalIndex = Generator.Pick(deep)!.ZoneNumber, Weights = ZonePlacementWeights.AtEnd },
-                new() { LocalIndex = Generator.Pick(mid.Concat(deep).ToList())!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart }
+                FromNode(Generator.Pick(mid)!, ZonePlacementWeights.NotAtStart),
+                FromNode(Generator.Pick(deep)!, ZonePlacementWeights.AtEnd),
+                FromNode(Generator.Pick(mid.Concat(deep).ToList())!, ZonePlacementWeights.NotAtStart)
             },
             _ => new List<ZonePlacementData>
             {
-                new() { LocalIndex = Generator.Pick(deep)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart },
-                new() { LocalIndex = Generator.Pick(mid.Concat(deep).ToList())!.ZoneNumber, Weights = ZonePlacementWeights.AtEnd },
-                new() { LocalIndex = Generator.Pick(deep)!.ZoneNumber, Weights = ZonePlacementWeights.AtEnd }
+                FromNode(Generator.Pick(deep)!, ZonePlacementWeights.NotAtStart),
+                FromNode(Generator.Pick(mid.Concat(deep).ToList())!, ZonePlacementWeights.AtEnd),
+                FromNode(Generator.Pick(deep)!, ZonePlacementWeights.AtEnd)
             }
         };
 
@@ -1018,6 +1022,7 @@ public class Level
             {
                 new()
                 {
+                    Dimension = node.Dimension,
                     LocalIndex = node.ZoneNumber,
                     Weights = weights ?? ZonePlacementWeights.NotAtStart
                 }

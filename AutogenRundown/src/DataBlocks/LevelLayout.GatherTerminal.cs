@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Objectives;
+﻿using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Terminals;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
@@ -508,7 +509,8 @@ public partial record LevelLayout
     /// <param name="distribution"></param>
     private void SetGatherTerminal(
         int zoneNumber,
-        ZonePlacementWeights? distribution = null)
+        ZonePlacementWeights? distribution = null,
+        DimensionIndex dimension = DimensionIndex.Reality)
     {
         var dataLayer = level.GetObjectiveLayerData(director.Bulkhead);
 
@@ -516,6 +518,7 @@ public partial record LevelLayout
         {
             new()
             {
+                Dimension = dimension,
                 LocalIndex = zoneNumber,
                 Weights = distribution ?? ZonePlacementWeights.EvenlyDistributed
             }
