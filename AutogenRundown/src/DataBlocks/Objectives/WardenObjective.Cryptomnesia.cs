@@ -40,24 +40,12 @@ public partial record WardenObjective
 
         foreach (var zoneNode in Gather_PlacementNodes.TakeLast(GatherSpawnCount - 1))
         {
-            EventsOnActivate.Add(new WardenObjectiveEvent
-            {
-                Type = WardenObjectiveEventType.DimensionWarpTeam,
-                Trigger = WardenObjectiveEventTrigger.OnStart,
-                Dimension = zoneNode.Dimension
-            });
-            EventsOnActivate.Add(new WardenObjectiveEvent
-            {
-                Type = WardenObjectiveEventType.EventBreak
-            });
+            EventsOnActivate
+                .AddDimensionWarp(zoneNode.Dimension)
+                .AddEventBreak();
         }
 
-        EventsOnActivate.Add(new WardenObjectiveEvent
-        {
-            Type = WardenObjectiveEventType.DimensionWarpTeam,
-            Trigger = WardenObjectiveEventTrigger.OnStart,
-            Dimension = DimensionIndex.Reality
-        });
+        EventsOnActivate.AddDimensionWarp(DimensionIndex.Reality);
 
         OnActivateOnSolveItem = true;
 
