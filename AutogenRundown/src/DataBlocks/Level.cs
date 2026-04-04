@@ -1236,14 +1236,23 @@ public class Level
     /// </summary>
     private void FinalizeComplexResourceSet()
     {
-        ResourceSet = Complex switch
-        {
-            Complex.Mining => ComplexResourceSet.Mining,
-            Complex.Tech => ComplexResourceSet.Tech,
-            Complex.Service => ComplexResourceSet.Service,
-        };
+        // If the resource set was already customized (e.g. by Cryptomnesia to pin the
+        // elevator geo), keep it. Otherwise clone from the base complex resource set.
+        var isCustom = ResourceSet.PersistentId != ComplexResourceSet.Mining.PersistentId
+                    && ResourceSet.PersistentId != ComplexResourceSet.Tech.PersistentId
+                    && ResourceSet.PersistentId != ComplexResourceSet.Service.PersistentId;
 
-        ResourceSet = ResourceSet.Duplicate();
+        if (!isCustom)
+        {
+            ResourceSet = Complex switch
+            {
+                Complex.Mining => ComplexResourceSet.Mining,
+                Complex.Tech => ComplexResourceSet.Tech,
+                Complex.Service => ComplexResourceSet.Service,
+            };
+
+            ResourceSet = ResourceSet.Duplicate();
+        }
 
         ResourceSet.BlockName = $"{ResourceSet.BlockName}_{Tier}{Index}_{Filesystem.Filename(Name)}";
 
