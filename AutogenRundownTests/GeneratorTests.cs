@@ -3,7 +3,7 @@ using AutogenRundown;
 namespace AutogenRundownTests;
 
 [TestClass]
-public class Generator_Tests
+public partial class Generator_Tests
 {
     [TestMethod]
     public void Test_NewPuzzlesGetNoPersistentId()
