@@ -1,12 +1,14 @@
 using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 
+using LightSettings = Light.LightSettings;
 using WardenObjective = Objectives.WardenObjective;
 
 public partial record LevelLayout
@@ -191,6 +193,9 @@ public partial record LevelLayout
             var points = director.GetPoints(zone);
             if (points < 3) continue;
 
+            var redLight = Generator.Pick(LightSettings.RedThemeLights);
+            zone.LightSettings = (Lights.Light)redLight.PersistentId;
+
             zone.EnemySpawningInZone.Add(EnemySpawningData.Charger with { Points = (int)(points * 0.6) });
             zone.EnemySpawningInZone.Add(EnemySpawningData.ChargerGiant with { Points = (int)(points * 0.4) });
 
@@ -283,6 +288,9 @@ public partial record LevelLayout
 
             var points = director.GetPoints(zone);
             if (points < 3) continue;
+
+            var greenLight = Generator.Pick(LightSettings.GreenThemeLights);
+            zone.LightSettings = (Lights.Light)greenLight.PersistentId;
 
             zone.EnemySpawningInZone.Add(new EnemySpawningData
             {
