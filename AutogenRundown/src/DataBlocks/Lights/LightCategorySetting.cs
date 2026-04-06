@@ -44,7 +44,7 @@ public record LightCategorySetting
 
     #endregion
 
-    public static LightCategorySetting Off(LightCategory category) => new() { Category = category, Chance = 0.0 };
+    public static LightCategorySetting Off(LightCategory category) => new() { Category = category, Chance = 0.0, Color = new() { Alpha = 0.0 } };
 
     public static LightCategorySetting SecurityDoor_White => new()
     {
