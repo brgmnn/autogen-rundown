@@ -16,8 +16,10 @@ public enum Complexity
 /// </summary>
 public class BuildDirector
 {
+    [Obsolete("Not really used")]
     public int Points { get; set; } = 0;
 
+    [Obsolete("Not really used")]
     public Complexity Complexity { get; set; } = Complexity.Low;
 
     public string Tier { get; set; } = "A";
@@ -137,6 +139,7 @@ public class BuildDirector
         Objective = Generator.Select(objectives);
     }
 
+    [Obsolete("Not really used")]
     public void GenPoints()
     {
         Points = (Tier, Bulkhead) switch
