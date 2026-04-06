@@ -175,7 +175,6 @@ public record LightSettings : DataBlock<LightSettings>
         PersistentId = Generator.GetPersistentId(),
         CategorySettings = new List<LightCategorySetting>()
         {
-            // LightCategorySetting.Off(LightCategory.General),
             new()
             {
                 Color = new() { Red = 1.0, Green = 0.6, Blue = 0.15 },
@@ -214,6 +213,14 @@ public record LightSettings : DataBlock<LightSettings>
 
         ErrorFlashOn.Persist();
         AlarmCycling_Amber.Persist();
+
+        #region Red Theme
+
+        #endregion
+
+        #region Green Theme
+
+        #endregion
     }
 
     /// <summary>

@@ -210,7 +210,7 @@ public record WavePopulation : DataBlock<WavePopulation>
         WaveRoleSpecial = Enemy.Shooter_Wave,
         WaveRoleMiniBoss = Enemy.ShooterGiant,
         WaveRoleBoss = Enemy.ShooterGiant,
-        Name = "Baseline"
+        Name = "Baseline_Shooters"
     };
 
     public static WavePopulation Baseline_Infested = new()
