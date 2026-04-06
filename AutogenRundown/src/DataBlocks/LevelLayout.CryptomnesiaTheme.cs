@@ -16,25 +16,56 @@ public partial record LevelLayout
 {
     /// <summary>
     /// Selects unique themes from the available pool for Cryptomnesia layouts.
-    /// Uses Generator.Draw for seed-deterministic selection without replacement.
+    /// Returns a list where index 0 = Reality and the last index = final dimension.
+    ///
+    /// Placement rules:
+    ///   - InfectionFog can only be placed in the final dimension (last slot)
+    ///   - Nightmares cannot be placed on Reality (index 0)
+    ///   - ErrorAlarm has a higher chance of being picked for Reality
     /// </summary>
     public static List<CryptomnesiaTheme> SelectCryptomnesiaThemes(int count)
     {
-        var pool = new List<CryptomnesiaTheme>
+        var pool = new List<(double weight, CryptomnesiaTheme theme)>
         {
-            CryptomnesiaTheme.ErrorAlarm,
-            CryptomnesiaTheme.Giants,
-            CryptomnesiaTheme.Chargers,
-            CryptomnesiaTheme.InfectionFog,
-            CryptomnesiaTheme.Shadows,
-            CryptomnesiaTheme.Nightmares,
+            (1.0, CryptomnesiaTheme.ErrorAlarm),
+            (1.0, CryptomnesiaTheme.Giants),
+            (1.0, CryptomnesiaTheme.Chargers),
+            (1.0, CryptomnesiaTheme.InfectionFog),
+            (1.0, CryptomnesiaTheme.Shadows),
+            (1.0, CryptomnesiaTheme.Nightmares),
         };
 
         var selected = new List<CryptomnesiaTheme>();
+
         for (int i = 0; i < count && pool.Count > 0; i++)
         {
-            var theme = Generator.Draw(pool)!;
-            selected.Add(theme);
+            bool isReality = i == 0;
+            bool isFinalDimension = i == count - 1 && count >= 2;
+
+            // Build a filtered/weighted view for this slot
+            var slotPool = new List<(double, CryptomnesiaTheme)>();
+
+            foreach (var (weight, theme) in pool)
+            {
+                // InfectionFog can only go in the final dimension slot
+                if (theme == CryptomnesiaTheme.InfectionFog && !isFinalDimension)
+                    continue;
+
+                // Nightmares can't go on Reality
+                if (theme == CryptomnesiaTheme.Nightmares && isReality)
+                    continue;
+
+                // ErrorAlarm gets boosted weight on Reality
+                var slotWeight = (theme == CryptomnesiaTheme.ErrorAlarm && isReality)
+                    ? weight * 2.0
+                    : weight;
+
+                slotPool.Add((slotWeight, theme));
+            }
+
+            var pick = Generator.Select(slotPool);
+            selected.Add(pick);
+            pool.RemoveAll(t => t.theme == pick);
         }
 
         return selected;
