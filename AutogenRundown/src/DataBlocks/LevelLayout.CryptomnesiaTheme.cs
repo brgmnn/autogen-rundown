@@ -3,6 +3,7 @@ using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
 
@@ -254,6 +255,27 @@ public partial record LevelLayout
 
             zone.InFog = true;
             zone.DisinfectPacks += Generator.Between(2, 4);
+
+            // Spitters per zone: 30% none, 40% some, 30% lots
+            var spitterCount = Generator.Select(new List<(double, int)>
+            {
+                (0.30, 0),
+                (0.40, 100),
+                (0.30, 250),
+            });
+            if (spitterCount > 0)
+            {
+                zone.StaticSpawnDataContainers.Add(new StaticSpawnDataContainer
+                {
+                    Count = spitterCount,
+                    DistributionWeightType = 0,
+                    DistributionWeight = 1.0,
+                    DistributionRandomBlend = 0.0,
+                    DistributionResultPow = 2.0,
+                    Unit = StaticSpawnUnit.Spitter,
+                    FixedSeed = Generator.Between(10, 150)
+                });
+            }
 
             var points = director.GetPoints(zone);
             if (points < 3) continue;
