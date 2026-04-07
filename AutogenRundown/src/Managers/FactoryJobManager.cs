@@ -123,6 +123,16 @@ public static class FactoryJobManager
         MapDataManager.Current.OnLevelCleanup();
         CM_PageMap.Current.OnLevelCleanup();
 
+        // --- DimensionMaps compatibility ---
+        // Reset stale batch tracking to prevent NavMeshBuildDone firing prematurely on rebuild.
+        // DimensionMaps' NextBatch postfix tracks _lastBatch but never resets it between builds.
+        var dmPatchType = Type.GetType("DimensionMaps.Patches.LG_Factory__NextBatch__Patch, GTFO_DimensionMaps");
+        if (dmPatchType != null)
+        {
+            var lastBatchField = AccessTools.Field(dmPatchType, "_lastBatch");
+            lastBatchField?.SetValue(null, default(LG_Factory.BatchName));
+        }
+
         // --- Terminals ---
         // Remove terminals/uplinks from previous attempts
         foreach (var terminal in UnityEngine.Object.FindObjectsOfType<LG_ComputerTerminal>())
