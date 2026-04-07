@@ -285,6 +285,11 @@ public partial record LevelLayout
 
         var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);
 
+        // Place a fog turbine in the first (elevator) zone
+        var firstZone = level.Planner.GetZone(zoneNodes.First());
+        if (firstZone != null)
+            firstZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
+
         foreach (var node in zoneNodes)
         {
             var zone = level.Planner.GetZone(node);
