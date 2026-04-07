@@ -756,13 +756,14 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
             SubComplex = SubComplex.Lab
         });
 
-        // A completely remade elevator tile, multiple levels for verticality. Made to look
-        // abandoned yet still maintained.
-        Tech.ElevatorShafts_1x1.Insert(0, new Prefab()
-        {
-            Asset = "Assets/Custom Geo's/Labs/Labs Elevator V2/Labs_elevator_V2.prefab",
-            SubComplex = SubComplex.Lab
-        });
+        // TODO: disabled for now as it extends well beyond the 64x64 dimensions and causes problems
+        // // A completely remade elevator tile, multiple levels for verticality. Made to look
+        // // abandoned yet still maintained.
+        // Tech.ElevatorShafts_1x1.Insert(0, new Prefab()
+        // {
+        //     Asset = "Assets/Custom Geo's/Labs/Labs Elevator V2/Labs_elevator_V2.prefab",
+        //     SubComplex = SubComplex.Lab
+        // });
 
         // A big tile with three depressurizer's that are randomized every time. It is an open
         // tile with multiple pathways and three floors.
