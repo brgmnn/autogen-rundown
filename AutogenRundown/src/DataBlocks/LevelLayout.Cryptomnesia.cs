@@ -16,9 +16,9 @@ public partial record LevelLayout
     /// A single elevator geomorph is randomly selected from the resource set and used as
     /// the origin tile for each dimension (and the only elevator available in Reality).
     ///
-    /// When Cryptomnesia_MatchLayout is true, each dimension mirrors the Reality zone
-    /// structure (same zone count, coverage, geomorphs, build directions, and subseeds)
-    /// but with independently rolled enemies, alarms, and blood doors.
+    /// Each dimension mirrors the Reality zone structure (same zone count, coverage,
+    /// geomorphs, build directions, and subseeds) but with independently rolled enemies,
+    /// alarms, and blood doors.
     /// </summary>
     public void BuildLayout_Cryptomnesia(BuildDirector director, WardenObjective objective, ZoneNode start)
     {
@@ -100,19 +100,8 @@ public partial record LevelLayout
             // Link the layout to the dimension
             dimension.Data.Layout = dimLayout;
 
-            if (objective.Cryptomnesia_MatchLayout)
-            {
-                // Mirror Reality zone structure into this dimension
-                CopyRealityLayout(dimLayout, dimStart, realityNodes, start, dimensionIndex);
-            }
-            else
-            {
-                // Build independent zones
-                dimLayout.AddBranch(dimStart, Generator.Between(1, 3), "find_items", (node, zone) =>
-                {
-                    zone.Coverage = CoverageMinMax.Medium;
-                });
-            }
+            // Mirror Reality zone structure into this dimension
+            CopyRealityLayout(dimLayout, dimStart, realityNodes, start, dimensionIndex);
 
             // Place a data cube in the last find_items zone
             var lastDimNode = level.Planner.GetLastZone(
@@ -128,8 +117,7 @@ public partial record LevelLayout
 
             Plugin.Logger.LogDebug(
                 $"Cryptomnesia: Built dimension {dimensionIndex} with {dimLayout.Zones.Count} zones" +
-                $" theme={themes[i + 1]}" +
-                $"{(objective.Cryptomnesia_MatchLayout ? " (matched layout)" : "")}");
+                $" theme={themes[i + 1]}");
         }
 
         #endregion

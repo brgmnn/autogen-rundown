@@ -1513,9 +1513,6 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     #region Type=21: -CUSTOM- Cryptomnesia
 
     [JsonIgnore]
-    public bool Cryptomnesia_MatchLayout { get; set; } = true;
-
-    [JsonIgnore]
     public Dictionary<DimensionIndex, List<WardenObjectiveEvent>> Cryptomnesia_EnterEvents { get; set; } = new();
 
     [JsonIgnore]
