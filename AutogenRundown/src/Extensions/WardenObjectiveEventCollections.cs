@@ -344,18 +344,21 @@ public static class WardenObjectiveEventCollections
     /// <param name="events"></param>
     /// <param name="delay"></param>
     /// <param name="trigger"></param>
+    /// <param name="dimension"></param>
     /// <returns></returns>
     public static ICollection<WardenObjectiveEvent> AddAllLightsOff(
         this ICollection<WardenObjectiveEvent> events,
         double delay = 0.0,
-        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart)
+        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
+        DimensionIndex dimension = DimensionIndex.Reality)
     {
         events.Add(
             new WardenObjectiveEvent
             {
                 Type = WardenObjectiveEventType.AllLightsOff,
                 Trigger = trigger,
-                Delay = delay
+                Delay = delay,
+                Dimension = dimension,
             });
 
         return events;
@@ -985,6 +988,32 @@ public static class WardenObjectiveEventCollections
         return events;
     }
 
+    /// <summary>
+    /// An event to kill all enemies brutally in a dimension.
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="dimension"></param>
+    /// <param name="delay"></param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddClearDimension(
+        this ICollection<WardenObjectiveEvent> events,
+        DimensionIndex dimension,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ClearDimension,
+                Dimension = dimension,
+                Delay = delay
+            });
+
+        return events;
+    }
+    #endregion
+
+    #region Utilities
+
     public static ICollection<WardenObjectiveEvent> AddEventBreak(
         this ICollection<WardenObjectiveEvent> events)
     {
@@ -996,5 +1025,6 @@ public static class WardenObjectiveEventCollections
 
         return events;
     }
+
     #endregion
 }

@@ -90,6 +90,12 @@ public partial record LevelLayout
         objective.Cryptomnesia_EnterEvents[dimIndex] = new List<WardenObjectiveEvent>();
         objective.Cryptomnesia_ExitEvents[dimIndex] = new List<WardenObjectiveEvent>();
 
+        // Clean all enemies from non-reality dimensions on exit (as players won't be going back)
+        if (dimIndex != DimensionIndex.Reality)
+            objective.Cryptomnesia_ExitEvents[dimIndex]
+                .AddClearDimension(dimIndex, 2.0)
+                .AddAllLightsOff(2.0, dimension: dimIndex);
+
         switch (theme)
         {
             case CryptomnesiaTheme.ErrorAlarm:
