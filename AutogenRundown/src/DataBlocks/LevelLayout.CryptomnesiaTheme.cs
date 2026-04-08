@@ -273,7 +273,23 @@ public partial record LevelLayout
 
         // Set fog on the dimension
         if (layout.LinkedDimension != null)
-            layout.LinkedDimension.Data.Fog = Fog.NormalInfectious_Altitude_8;
+        {
+            var data = layout.LinkedDimension.Data;
+
+            // Set up infectious fog
+            data.Fog = Fog.NormalInfectious_Altitude_8;
+
+            // Set up stinky dust
+            data.DustColor = new Color
+            {
+                Alpha = 1.0,
+                Red = 0.78,
+                Green = 1.0,
+                Blue = 0.89,
+            };
+            data.DustAlphaBoost = 5.0;
+            data.DustTurbulence = 0.3;
+        }
 
         var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);
 
@@ -384,6 +400,32 @@ public partial record LevelLayout
 
         var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);
         var scoutPlaced = false;
+
+
+        // R8B1 dimension 1 dust settings
+        // "DustColor": {
+        //     "a": 1.0,
+        //     "r": 0.8160377,
+        //     "g": 1.0,
+        //     "b": 0.8286283
+        // },
+        // "DustAlphaBoost": 8.0,
+        // "DustTurbulence": 5.0,
+
+        if (layout.LinkedDimension != null)
+        {
+            var data = layout.LinkedDimension.Data;
+
+            data.DustColor = new Color
+            {
+                Alpha = 1.0,
+                Red = 1.0,
+                Green = 0.9286283,
+                Blue = 0.8160377,
+            };
+            data.DustAlphaBoost = 4.0;
+            data.DustTurbulence = 5.0;
+        }
 
         foreach (var node in zoneNodes)
         {
