@@ -273,11 +273,9 @@ public partial record LevelLayout
     {
         layout.SkipRollEnemies = true;
 
-        // Set fog on the dimension or on the level for Reality
+        // Set fog on the dimension
         if (dimension != null)
-        {
-            dimension.Data.DimensionFogData = Fog.FullFog_Infectious.PersistentId;
-        }
+            dimension.Data.Fog = Fog.NormalInfectious_Altitude_8;
 
         var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);
 

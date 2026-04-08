@@ -27,7 +27,11 @@ public record DimensionData
     [JsonProperty]
     public uint DimensionResourceSetID => ResourceSet.PersistentId;
 
-    public uint DimensionFogData { get; set; } = 81;
+    [JsonIgnore]
+    public Fog Fog { get; set; } = Fog.DefaultFog;
+
+    [JsonProperty]
+    public uint DimensionFogData => Fog.PersistentId;
 
     public double EnvironmentWetness { get; set; } = 0.0;
 
@@ -162,7 +166,7 @@ public record DimensionData
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Boss_flash.prefab",
         VerticalExtentsUp = 100.0,
         VerticalExtentsDown = 50.0,
-        DimensionFogData = 94,
+        Fog = new Fog { PersistentId = 94 },
         EnvironmentWetness = 0.0,
         DustColor = new Color { Alpha = 1.0, Red = 0.5, Green = 0.5, Blue = 0.5 },
         DustAlphaBoost = 0.0,
@@ -233,7 +237,7 @@ public record DimensionData
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_02.prefab",
         VerticalExtentsUp = 100.0,
         VerticalExtentsDown = 55.0,
-        DimensionFogData = 92,
+        Fog = new Fog { PersistentId = 92 },
         EnvironmentWetness = 0.0,
         DustColor = new Color { Alpha = 1.0, Red = 0.5019608, Green = 0.446603864, Blue = 0.3558902 },
         DustAlphaBoost = 5.0,
@@ -301,7 +305,7 @@ public record DimensionData
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R7B3.prefab",
         VerticalExtentsUp = 50.0,
         VerticalExtentsDown = 10.0,
-        DimensionFogData = 93,
+        Fog = new Fog { PersistentId = 93 },
         EnvironmentWetness = 0.199,
         DustColor = new Color { Alpha = 1.0, Red = 0.65, Green = 0.6042968, Blue = 0.487499952 },
         DustAlphaBoost = 0.0,
@@ -371,7 +375,7 @@ public record DimensionData
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Boss_Arena.prefab",
         VerticalExtentsUp = 100.0,
         VerticalExtentsDown = 40.0,
-        DimensionFogData = 88,
+        Fog = new Fog { PersistentId = 88 },
         EnvironmentWetness = 0.0,
         DustColor = new Color { Alpha = 1.0, Red = 0.5, Green = 0.351260275, Blue = 0.2523585 },
         DustAlphaBoost = 4.0,
@@ -445,7 +449,7 @@ public record DimensionData
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_01.prefab",
         VerticalExtentsUp = 30.0,
         VerticalExtentsDown = 30.0,
-        DimensionFogData = 87,
+        Fog = new Fog { PersistentId = 87 },
         EnvironmentWetness = 0.0,
         DustColor = new Color { Alpha = 1.0, Red = 0.5, Green = 0.37109375, Blue = 0.25 },
         DustAlphaBoost = 2.0,
@@ -516,7 +520,7 @@ public record DimensionData
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab",
         VerticalExtentsUp = 50.0,
         VerticalExtentsDown = 10.0,
-        DimensionFogData = 109,
+        Fog = new Fog { PersistentId = 109 },
         EnvironmentWetness = 0.0,
         DustColor = new Color { Alpha = 0.129411772, Red = 0.6981132, Green = 0.6952906, Blue = 0.68823427 },
         DustAlphaBoost = 1.0,
@@ -589,7 +593,7 @@ public record DimensionData
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Mining_Shaft.prefab",
         VerticalExtentsUp = 100.0,
         VerticalExtentsDown = 50.0,
-        DimensionFogData = 106,
+        Fog = new Fog { PersistentId = 106 },
         EnvironmentWetness = 0.0118,
         DustColor = new Color { Alpha = 1.0, Red = 0.5, Green = 0.351260275, Blue = 0.2523585 },
         DustAlphaBoost = 2.0,
@@ -667,7 +671,7 @@ public record DimensionData
         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Dune_camp_03.prefab",
         VerticalExtentsUp = 100.0,
         VerticalExtentsDown = 55.0,
-        DimensionFogData = Fog.AlphaSix.PersistentId,
+        Fog = Fog.AlphaSix,
         DustColor = new Color { Alpha = 1.0, Red = 0.5019608, Green = 0.446603864, Blue = 0.3558902 },
         DustAlphaBoost = 5.0,
         DustTurbulence = 100.0,

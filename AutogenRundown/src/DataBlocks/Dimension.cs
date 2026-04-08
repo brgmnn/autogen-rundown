@@ -35,7 +35,7 @@ public record Dimension : DataBlock<Dimension>
             DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/PouncerArena/Dimension_Pouncer_Arena_01.prefab",
             VerticalExtentsUp = 50.0,
             VerticalExtentsDown = 10.0,
-            DimensionFogData = 93,
+            Fog = new Fog { PersistentId = 93 },
             EnvironmentWetness = 0.199,
             DustColor = new Color { Alpha = 1.0, Red = 0.65, Green = 0.6042968, Blue = 0.487499952 },
             DustAlphaBoost = 0.0,

@@ -84,7 +84,7 @@ public partial record LevelLayout
                 {
                     DimensionGeomorph = elevatorGeo,
                     ResourceSet = resourceSet,
-                    DimensionFogData = Fog.Randomized().Persist().PersistentId
+                    Fog = Fog.Randomized().Persist()
                 }
             };
 

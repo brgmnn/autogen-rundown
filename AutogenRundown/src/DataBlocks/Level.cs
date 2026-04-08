@@ -1712,7 +1712,7 @@ public class Level
                     // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab",
                     // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_mining_01.prefab",
 
-                    DimensionFogData = Fog.HeavyFullFog_Infectious.PersistentId,
+                    Fog = Fog.HeavyFullFog_Infectious,
                     ResourceSet = dim1ResourceSet
                 },
 
