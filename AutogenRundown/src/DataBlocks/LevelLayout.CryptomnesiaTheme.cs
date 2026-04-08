@@ -435,6 +435,48 @@ public partial record LevelLayout
             var orangeLight = Generator.Pick(LightSettings.OrangeThemeLights);
             zone.LightSettings = (Lights.Light)orangeLight.PersistentId;
 
+            // Corpses per zone: 30% none, 40% some, 30% lots
+            var corpseCount = Generator.Select(new List<(double, int)>
+            {
+                (0.30, 0),
+                (0.40, 100),
+                (0.30, 250),
+            });
+            if (corpseCount > 0)
+            {
+                zone.StaticSpawnDataContainers.Add(new StaticSpawnDataContainer
+                {
+                    Count = corpseCount,
+                    DistributionWeightType = 0,
+                    DistributionWeight = 1.0,
+                    DistributionRandomBlend = 0.0,
+                    DistributionResultPow = 2.0,
+                    Unit = StaticSpawnUnit.Corpses,
+                    FixedSeed = Generator.Between(10, 150)
+                });
+            }
+
+            // Parasites per zone: 50% none, 35% some, 15% lots
+            var parasiteCount = Generator.Select(new List<(double, int)>
+            {
+                (0.50, 0),
+                (0.35, 50),
+                (0.15, 120),
+            });
+            if (parasiteCount > 0)
+            {
+                zone.StaticSpawnDataContainers.Add(new StaticSpawnDataContainer
+                {
+                    Count = parasiteCount,
+                    DistributionWeightType = 0,
+                    DistributionWeight = 1.0,
+                    DistributionRandomBlend = 0.0,
+                    DistributionResultPow = 2.0,
+                    Unit = StaticSpawnUnit.Parasite,
+                    FixedSeed = Generator.Between(10, 150)
+                });
+            }
+
             var points = director.GetPoints(zone);
             if (points < 3) continue;
 
