@@ -126,7 +126,7 @@ public record Dimension : DataBlock<Dimension>
             return existing;
 
         if (dimension.PersistentId == 0)
-            dimension.PersistentId = Generator.GetPersistentId(PidOffsets.WaveSettings);
+            dimension.PersistentId = Generator.GetPersistentId(PidOffsets.WaveSettings); // TODO: why is this using wave settings?
 
         dimension.Persist();
 

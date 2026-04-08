@@ -655,6 +655,7 @@ public static class RundownFactory
         }
 
         mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.ReachKdsDeep));
+        mainObjectivesPool.Add((100.0, 3, WardenObjectiveType.Cryptomnesia));
 
         // --- D-Tier Levels ---
         for (var i = 0; i < rundown.TierD_Count; i++)

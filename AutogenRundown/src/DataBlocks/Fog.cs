@@ -557,10 +557,12 @@ public record Fog : DataBlock<Fog>
         return hashCode.ToHashCode();
     }
 
-    public void Persist(BlocksBin<Fog>? bin = null)
+    public Fog Persist(BlocksBin<Fog>? bin = null)
     {
         bin ??= Bins.Fogs;
         bin.AddBlock(this);
+
+        return this;
     }
 
     /// <summary>
