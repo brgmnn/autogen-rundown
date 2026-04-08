@@ -32,7 +32,9 @@ public record LightSettings : DataBlock<LightSettings>
         CategorySettings = new List<LightCategorySetting>
         {
             new() { Category = LightCategory.General, Color = new() { Red = 0.86, Green = 0.30, Blue = 0.30 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.6 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.90, Green = 0.40, Blue = 0.20 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.55 },
             new() { Category = LightCategory.Special, Color = new() { Red = 0.90, Green = 0.76, Blue = 0.76, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.7 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.92, Green = 0.82, Blue = 0.78, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.6 },
             LightCategorySetting.Off(LightCategory.Emergency),
             new() { Category = LightCategory.Independent, Color = new() { Red = 0.90, Green = 0.23, Blue = 0.23 }, Chance = 0.5, Intensity = 0.7 },
             new() { Category = LightCategory.Door, Color = new() { Red = 0.63, Green = 0.13, Blue = 0.13 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.7 },
@@ -50,7 +52,9 @@ public record LightSettings : DataBlock<LightSettings>
         CategorySettings = new List<LightCategorySetting>
         {
             new() { Category = LightCategory.General, Color = new() { Red = 0.90, Green = 0.20, Blue = 0.20 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.15 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.70, Green = 0.15, Blue = 0.15 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.2 },
             new() { Category = LightCategory.Special, Color = new() { Red = 0.90, Green = 0.76, Blue = 0.76, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.5 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.80, Green = 0.65, Blue = 0.62, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.4 },
             LightCategorySetting.Off(LightCategory.Emergency),
             new() { Category = LightCategory.Independent, Color = new() { Red = 0.90, Green = 0.20, Blue = 0.20 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.6 },
             new() { Category = LightCategory.Door, Color = new() { Red = 0.63, Green = 0.06, Blue = 0.06 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 1.0 },
@@ -68,7 +72,9 @@ public record LightSettings : DataBlock<LightSettings>
         CategorySettings = new List<LightCategorySetting>
         {
             new() { Category = LightCategory.General, Color = new() { Red = 0.90, Green = 0.32, Blue = 0.32 }, Chance = 0.5, ChanceBroken = 0.5, Intensity = 0.4 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.88, Green = 0.38, Blue = 0.18 }, Chance = 0.5, ChanceBroken = 0.5, Intensity = 0.35 },
             new() { Category = LightCategory.Special, Color = new() { Red = 0.90, Green = 0.76, Blue = 0.76, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.8 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.90, Green = 0.80, Blue = 0.72, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.7 },
             LightCategorySetting.Off(LightCategory.Emergency),
             new() { Category = LightCategory.Independent, Color = new() { Red = 0.90, Green = 0.27, Blue = 0.27 }, Chance = 0.5, Intensity = 0.3 },
             new() { Category = LightCategory.Door, Color = new() { Red = 0.63, Green = 0.13, Blue = 0.13 }, Chance = 0.5, ChanceBroken = 0.5, Intensity = 0.5 },
@@ -86,7 +92,9 @@ public record LightSettings : DataBlock<LightSettings>
         CategorySettings = new List<LightCategorySetting>
         {
             new() { Category = LightCategory.General, Color = new() { Red = 0.90, Green = 0.20, Blue = 0.20 }, Chance = 0.5, ChanceBroken = 0.5, Intensity = 1.0 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.75, Green = 0.12, Blue = 0.12 }, Chance = 0.5, ChanceBroken = 0.5, Intensity = 0.8 },
             new() { Category = LightCategory.Special, Color = new() { Red = 0.90, Green = 0.76, Blue = 0.76, Alpha = 0.0 }, Chance = 0.5, Intensity = 1.0 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.82, Green = 0.60, Blue = 0.58, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.8 },
             LightCategorySetting.Off(LightCategory.Emergency),
             new() { Category = LightCategory.Independent, Color = new() { Red = 0.90, Green = 0.20, Blue = 0.20 }, Chance = 0.5, Intensity = 1.0 },
             new() { Category = LightCategory.Door, Color = new() { Red = 0.63, Green = 0.06, Blue = 0.06 }, Chance = 0.5, ChanceBroken = 0.5, Intensity = 1.0 },
@@ -104,7 +112,9 @@ public record LightSettings : DataBlock<LightSettings>
         CategorySettings = new List<LightCategorySetting>
         {
             new() { Category = LightCategory.General, Color = new() { Red = 0.90, Green = 0.35, Blue = 0.18 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.55 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.88, Green = 0.22, Blue = 0.22 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.5 },
             new() { Category = LightCategory.Special, Color = new() { Red = 0.85, Green = 0.45, Blue = 0.30, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.6 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.92, Green = 0.82, Blue = 0.72, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.55 },
             LightCategorySetting.Off(LightCategory.Emergency),
             new() { Category = LightCategory.Independent, Color = new() { Red = 0.90, Green = 0.30, Blue = 0.15 }, Chance = 0.5, Intensity = 0.6 },
             new() { Category = LightCategory.Door, Color = new() { Red = 0.70, Green = 0.20, Blue = 0.10 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.7 },
@@ -133,7 +143,9 @@ public record LightSettings : DataBlock<LightSettings>
         CategorySettings = new List<LightCategorySetting>
         {
             new() { Category = LightCategory.General, Color = new() { Red = 0.35, Green = 0.68, Blue = 0.55 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.7 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.22, Green = 0.55, Blue = 0.58 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.6 },
             new() { Category = LightCategory.Special, Color = new() { Red = 0.65, Green = 0.85, Blue = 0.78, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.7 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.78, Green = 0.88, Blue = 0.84, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.6 },
             LightCategorySetting.Off(LightCategory.Emergency),
             new() { Category = LightCategory.Independent, Color = new() { Red = 0.18, Green = 0.58, Blue = 0.42 }, Chance = 0.5, Intensity = 0.7 },
             new() { Category = LightCategory.Door, Color = new() { Red = 0.75, Green = 0.85, Blue = 0.82 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.7 },
@@ -151,7 +163,9 @@ public record LightSettings : DataBlock<LightSettings>
         CategorySettings = new List<LightCategorySetting>
         {
             new() { Category = LightCategory.General, Color = new() { Red = 0.13, Green = 0.28, Blue = 0.20 }, Chance = 0.3, ChanceBroken = 0.3, Intensity = 0.25 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.10, Green = 0.22, Blue = 0.25 }, Chance = 0.3, ChanceBroken = 0.3, Intensity = 0.2 },
             new() { Category = LightCategory.Special, Color = new() { Red = 0.30, Green = 0.40, Blue = 0.38, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.25 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.45, Green = 0.55, Blue = 0.52, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.2 },
             LightCategorySetting.Off(LightCategory.Emergency),
             new() { Category = LightCategory.Independent, Color = new() { Red = 0.11, Green = 0.35, Blue = 0.26 }, Chance = 0.5, Intensity = 0.25 },
             new() { Category = LightCategory.Door, Color = new() { Red = 0.75, Green = 0.85, Blue = 0.82 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.5 },
@@ -169,7 +183,9 @@ public record LightSettings : DataBlock<LightSettings>
         CategorySettings = new List<LightCategorySetting>
         {
             new() { Category = LightCategory.General, Color = new() { Red = 0.28, Green = 0.60, Blue = 0.48 }, Chance = 0.5, ChanceBroken = 0.5, Intensity = 0.4 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.20, Green = 0.50, Blue = 0.52 }, Chance = 0.5, ChanceBroken = 0.5, Intensity = 0.35 },
             new() { Category = LightCategory.Special, Color = new() { Red = 0.50, Green = 0.75, Blue = 0.68, Alpha = 0.0 }, Chance = 0.5, ChanceBroken = 0.3, Intensity = 0.5 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.72, Green = 0.82, Blue = 0.78, Alpha = 0.0 }, Chance = 0.5, ChanceBroken = 0.3, Intensity = 0.45 },
             LightCategorySetting.Off(LightCategory.Emergency),
             new() { Category = LightCategory.Independent, Color = new() { Red = 0.18, Green = 0.50, Blue = 0.38 }, Chance = 0.5, ChanceBroken = 0.5, Intensity = 0.35 },
             new() { Category = LightCategory.Door, Color = new() { Red = 0.65, Green = 0.80, Blue = 0.75 }, Chance = 0.5, ChanceBroken = 0.5, Intensity = 0.45 },
@@ -187,7 +203,9 @@ public record LightSettings : DataBlock<LightSettings>
         CategorySettings = new List<LightCategorySetting>
         {
             new() { Category = LightCategory.General, Color = new() { Red = 0.20, Green = 0.52, Blue = 0.55 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.5 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.15, Green = 0.42, Blue = 0.50 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.45 },
             new() { Category = LightCategory.Special, Color = new() { Red = 0.42, Green = 0.70, Blue = 0.72, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.55 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.80, Green = 0.88, Blue = 0.90, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.5 },
             LightCategorySetting.Off(LightCategory.Emergency),
             new() { Category = LightCategory.Independent, Color = new() { Red = 0.15, Green = 0.45, Blue = 0.50 }, Chance = 0.5, Intensity = 0.45 },
             new() { Category = LightCategory.Door, Color = new() { Red = 0.60, Green = 0.78, Blue = 0.80 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.55 },
@@ -205,7 +223,9 @@ public record LightSettings : DataBlock<LightSettings>
         CategorySettings = new List<LightCategorySetting>
         {
             new() { Category = LightCategory.General, Color = new() { Red = 0.22, Green = 0.75, Blue = 0.35 }, Chance = 0.5, ChanceBroken = 0.1, Intensity = 0.55 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.35, Green = 0.65, Blue = 0.25 }, Chance = 0.5, ChanceBroken = 0.1, Intensity = 0.5 },
             new() { Category = LightCategory.Special, Color = new() { Red = 0.45, Green = 0.80, Blue = 0.50, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.6 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.75, Green = 0.85, Blue = 0.65, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.55 },
             LightCategorySetting.Off(LightCategory.Emergency),
             new() { Category = LightCategory.Independent, Color = new() { Red = 0.20, Green = 0.65, Blue = 0.30 }, Chance = 0.5, Intensity = 0.5 },
             new() { Category = LightCategory.Door, Color = new() { Red = 0.42, Green = 0.72, Blue = 0.45 }, Chance = 0.5, ChanceBroken = 0.1, Intensity = 0.6 },
@@ -234,7 +254,9 @@ public record LightSettings : DataBlock<LightSettings>
         CategorySettings = new List<LightCategorySetting>
         {
             new() { Category = LightCategory.General, Color = new() { Red = 0.90, Green = 0.55, Blue = 0.15 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.6 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.92, Green = 0.68, Blue = 0.30 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.55 },
             new() { Category = LightCategory.Special, Color = new() { Red = 0.92, Green = 0.70, Blue = 0.40, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.7 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.94, Green = 0.88, Blue = 0.75, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.6 },
             LightCategorySetting.Off(LightCategory.Emergency),
             new() { Category = LightCategory.Independent, Color = new() { Red = 0.90, Green = 0.50, Blue = 0.12 }, Chance = 0.5, Intensity = 0.65 },
             new() { Category = LightCategory.Door, Color = new() { Red = 0.85, Green = 0.50, Blue = 0.15 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.7 },
@@ -252,7 +274,9 @@ public record LightSettings : DataBlock<LightSettings>
         CategorySettings = new List<LightCategorySetting>
         {
             new() { Category = LightCategory.General, Color = new() { Red = 0.85, Green = 0.45, Blue = 0.10 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.35 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.80, Green = 0.35, Blue = 0.08 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.3 },
             new() { Category = LightCategory.Special, Color = new() { Red = 0.88, Green = 0.58, Blue = 0.28, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.5 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.88, Green = 0.75, Blue = 0.55, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.45 },
             LightCategorySetting.Off(LightCategory.Emergency),
             new() { Category = LightCategory.Independent, Color = new() { Red = 0.82, Green = 0.40, Blue = 0.08 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.5 },
             new() { Category = LightCategory.Door, Color = new() { Red = 0.80, Green = 0.42, Blue = 0.10 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.6 },
@@ -270,7 +294,9 @@ public record LightSettings : DataBlock<LightSettings>
         CategorySettings = new List<LightCategorySetting>
         {
             new() { Category = LightCategory.General, Color = new() { Red = 0.88, Green = 0.50, Blue = 0.13 }, Chance = 0.5, ChanceBroken = 0.4, Intensity = 0.45 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.90, Green = 0.40, Blue = 0.10 }, Chance = 0.5, ChanceBroken = 0.4, Intensity = 0.4 },
             new() { Category = LightCategory.Special, Color = new() { Red = 0.90, Green = 0.65, Blue = 0.35, Alpha = 0.0 }, Chance = 0.5, ChanceBroken = 0.3, Intensity = 0.55 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.90, Green = 0.82, Blue = 0.68, Alpha = 0.0 }, Chance = 0.5, ChanceBroken = 0.3, Intensity = 0.5 },
             LightCategorySetting.Off(LightCategory.Emergency),
             new() { Category = LightCategory.Independent, Color = new() { Red = 0.85, Green = 0.45, Blue = 0.10 }, Chance = 0.5, ChanceBroken = 0.4, Intensity = 0.4 },
             new() { Category = LightCategory.Door, Color = new() { Red = 0.82, Green = 0.48, Blue = 0.14 }, Chance = 0.5, ChanceBroken = 0.3, Intensity = 0.5 },
@@ -288,7 +314,9 @@ public record LightSettings : DataBlock<LightSettings>
         CategorySettings = new List<LightCategorySetting>
         {
             new() { Category = LightCategory.General, Color = new() { Red = 0.95, Green = 0.90, Blue = 0.75 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.5 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.95, Green = 0.85, Blue = 0.70 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.45 },
             new() { Category = LightCategory.Special, Color = new() { Red = 0.96, Green = 0.92, Blue = 0.80, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.6 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.94, Green = 0.93, Blue = 0.88, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.55 },
             LightCategorySetting.Off(LightCategory.Emergency),
             new() { Category = LightCategory.Independent, Color = new() { Red = 0.94, Green = 0.88, Blue = 0.72 }, Chance = 0.5, Intensity = 0.55 },
             new() { Category = LightCategory.Door, Color = new() { Red = 0.92, Green = 0.88, Blue = 0.78 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.6 },
@@ -306,7 +334,9 @@ public record LightSettings : DataBlock<LightSettings>
         CategorySettings = new List<LightCategorySetting>
         {
             new() { Category = LightCategory.General, Color = new() { Red = 0.90, Green = 0.92, Blue = 0.88 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.5 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.88, Green = 0.86, Blue = 0.82 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.45 },
             new() { Category = LightCategory.Special, Color = new() { Red = 0.92, Green = 0.94, Blue = 0.90, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.6 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.92, Green = 0.93, Blue = 0.92, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.55 },
             LightCategorySetting.Off(LightCategory.Emergency),
             new() { Category = LightCategory.Independent, Color = new() { Red = 0.88, Green = 0.90, Blue = 0.86 }, Chance = 0.5, Intensity = 0.55 },
             new() { Category = LightCategory.Door, Color = new() { Red = 0.90, Green = 0.90, Blue = 0.88 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.6 },
