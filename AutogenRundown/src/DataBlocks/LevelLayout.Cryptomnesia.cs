@@ -77,7 +77,7 @@ public partial record LevelLayout
         {
             var dimensionIndex = (DimensionIndex)(i + 1); // Dimension1, Dimension2, Dimension3
 
-            // Register the dimension on the level with shared resource set and elevator geo
+            // Create the dimension with shared resource set and elevator geo
             var dimension = new Dimension
             {
                 Data = new Dimensions.DimensionData
@@ -87,13 +87,6 @@ public partial record LevelLayout
                     DimensionFogData = Fog.Randomized().Persist().PersistentId
                 }
             };
-            dimension.FindOrPersist();
-
-            level.DimensionDatas.Add(new Levels.DimensionData
-            {
-                Dimension = dimensionIndex,
-                Data = dimension
-            });
 
             // Initialize the dimension layout with a starting zone
             var (dimLayout, dimStart) = LevelLayout.BuildDimension(
@@ -113,6 +106,15 @@ public partial record LevelLayout
 
             // Apply dimension theme before finalization
             ApplyCryptomnesiaTheme(themes[i + 1], dimLayout, dimension, level, director, objective);
+
+            // Persist after all configuration so DimensionFogData, Layout, etc. are final
+            dimension.FindOrPersist();
+
+            level.DimensionDatas.Add(new Levels.DimensionData
+            {
+                Dimension = dimensionIndex,
+                Data = dimension
+            });
 
             // Finalize: write zones to layout, roll alarms/blood doors, persist
             dimLayout.FinalizeLayout();
