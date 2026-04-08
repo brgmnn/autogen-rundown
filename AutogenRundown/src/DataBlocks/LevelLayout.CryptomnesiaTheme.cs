@@ -93,8 +93,8 @@ public partial record LevelLayout
         // Clean all enemies from non-reality dimensions on exit (as players won't be going back)
         if (dimIndex != DimensionIndex.Reality)
             objective.Cryptomnesia_ExitEvents[dimIndex]
-                .AddClearDimension(dimIndex, 2.0)
-                .AddAllLightsOff(2.0, dimension: dimIndex);
+                .AddClearDimension(dimIndex, 1.0)
+                .AddAllLightsOff(1.0, dimension: dimIndex);
 
         switch (theme)
         {
@@ -276,11 +276,7 @@ public partial record LevelLayout
         // Set fog on the dimension or on the level for Reality
         if (dimension != null)
         {
-            dimension.Data.DimensionFogData = Fog.FullFog_Infectious.PersistentId;
-        }
-        else
-        {
-            level.FogSettings = Fog.FindOrPersist(Fog.FullFog_Infectious);
+            dimension.Data.DimensionFogData = Fog.InvertedInfectious_Altitude_minus8.PersistentId;
         }
 
         var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);

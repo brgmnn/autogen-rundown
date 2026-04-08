@@ -43,6 +43,7 @@ public partial record LevelLayout
 
         // Set the level's resource set to the pruned clone
         level.ResourceSet = resourceSet;
+        level.FogSettings = Fog.Randomized();
 
         #region Dimension = Reality
 
