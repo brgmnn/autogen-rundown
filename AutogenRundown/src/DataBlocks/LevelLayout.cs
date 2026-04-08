@@ -66,6 +66,9 @@ public partial record LevelLayout : DataBlock<LevelLayout>
     public List<(double chance, int count, WaveSettings)> WaveSettingsPack { get; set; } = new();
 
     [JsonIgnore]
+    public Dimension? LinkedDimension { get; set; }
+
+    [JsonIgnore]
     public bool SkipRollEnemies { get; set; }
 
     #endregion

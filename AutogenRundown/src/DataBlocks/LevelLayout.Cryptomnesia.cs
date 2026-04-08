@@ -71,7 +71,7 @@ public partial record LevelLayout
             string.Concat(themes.Skip(1).Select((t, i) => $", Dimension{i + 1}={t}")));
 
         // Apply Reality theme before dimension loop
-        ApplyCryptomnesiaTheme(themes[0], this, null, level, director, objective);
+        ApplyCryptomnesiaTheme(themes[0], this, level, director, objective);
 
         for (var i = 0; i < dimensionCount; i++)
         {
@@ -92,8 +92,9 @@ public partial record LevelLayout
             var (dimLayout, dimStart) = LevelLayout.BuildDimension(
                 level, director, objective, dimensionIndex, level.Complex);
 
-            // Link the layout to the dimension
+            // Link the layout and dimension to each other
             dimension.Data.Layout = dimLayout;
+            dimLayout.LinkedDimension = dimension;
 
             // Mirror Reality zone structure into this dimension
             CopyRealityLayout(dimLayout, dimStart, realityNodes, start, dimensionIndex);
@@ -105,7 +106,7 @@ public partial record LevelLayout
                 objective.Gather_PlacementNodes.Add((ZoneNode)lastDimNode);
 
             // Apply dimension theme before finalization
-            ApplyCryptomnesiaTheme(themes[i + 1], dimLayout, dimension, level, director, objective);
+            ApplyCryptomnesiaTheme(themes[i + 1], dimLayout, level, director, objective);
 
             // Persist after all configuration so DimensionFogData, Layout, etc. are final
             dimension.FindOrPersist();
