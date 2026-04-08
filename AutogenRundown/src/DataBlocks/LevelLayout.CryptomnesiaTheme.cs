@@ -297,6 +297,7 @@ public partial record LevelLayout
         var firstZone = level.Planner.GetZone(zoneNodes.First())!;
 
         firstZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
+        firstZone.ConsumableDistributionInZone = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
         firstZone.DisinfectPacks += 4;
 
         foreach (var node in zoneNodes)
