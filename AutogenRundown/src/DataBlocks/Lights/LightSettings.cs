@@ -224,6 +224,107 @@ public record LightSettings : DataBlock<LightSettings>
     };
     #endregion
 
+    #region Orange Theme Lights
+    /// <summary>
+    /// Bright warm orange
+    /// </summary>
+    public static readonly LightSettings OrangeTheme_Bright = new()
+    {
+        PersistentId = Generator.GetPersistentId(),
+        CategorySettings = new List<LightCategorySetting>
+        {
+            new() { Category = LightCategory.General, Color = new() { Red = 0.90, Green = 0.55, Blue = 0.15 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.6 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.92, Green = 0.70, Blue = 0.40, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.7 },
+            LightCategorySetting.Off(LightCategory.Emergency),
+            new() { Category = LightCategory.Independent, Color = new() { Red = 0.90, Green = 0.50, Blue = 0.12 }, Chance = 0.5, Intensity = 0.65 },
+            new() { Category = LightCategory.Door, Color = new() { Red = 0.85, Green = 0.50, Blue = 0.15 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.7 },
+            new() { Category = LightCategory.Sign, Color = new() { Red = 0.88, Green = 0.52, Blue = 0.13 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.7 },
+            new() { Category = LightCategory.DoorImportant, Color = new() { Red = 0.92, Green = 0.85, Blue = 0.72 }, Chance = 1.0, Intensity = 0.7 },
+        }
+    };
+
+    /// <summary>
+    /// Deep amber, moodier and darker
+    /// </summary>
+    public static readonly LightSettings OrangeTheme_Amber = new()
+    {
+        PersistentId = Generator.GetPersistentId(),
+        CategorySettings = new List<LightCategorySetting>
+        {
+            new() { Category = LightCategory.General, Color = new() { Red = 0.85, Green = 0.45, Blue = 0.10 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.35 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.88, Green = 0.58, Blue = 0.28, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.5 },
+            LightCategorySetting.Off(LightCategory.Emergency),
+            new() { Category = LightCategory.Independent, Color = new() { Red = 0.82, Green = 0.40, Blue = 0.08 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.5 },
+            new() { Category = LightCategory.Door, Color = new() { Red = 0.80, Green = 0.42, Blue = 0.10 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.6 },
+            new() { Category = LightCategory.Sign, Color = new() { Red = 0.82, Green = 0.44, Blue = 0.10 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.55 },
+            new() { Category = LightCategory.DoorImportant, Color = new() { Red = 0.90, Green = 0.82, Blue = 0.68 }, Chance = 1.0, Intensity = 0.6 },
+        }
+    };
+
+    /// <summary>
+    /// Flickering orange, unsettling atmosphere
+    /// </summary>
+    public static readonly LightSettings OrangeTheme_Flickering = new()
+    {
+        PersistentId = Generator.GetPersistentId(),
+        CategorySettings = new List<LightCategorySetting>
+        {
+            new() { Category = LightCategory.General, Color = new() { Red = 0.88, Green = 0.50, Blue = 0.13 }, Chance = 0.5, ChanceBroken = 0.4, Intensity = 0.45 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.90, Green = 0.65, Blue = 0.35, Alpha = 0.0 }, Chance = 0.5, ChanceBroken = 0.3, Intensity = 0.55 },
+            LightCategorySetting.Off(LightCategory.Emergency),
+            new() { Category = LightCategory.Independent, Color = new() { Red = 0.85, Green = 0.45, Blue = 0.10 }, Chance = 0.5, ChanceBroken = 0.4, Intensity = 0.4 },
+            new() { Category = LightCategory.Door, Color = new() { Red = 0.82, Green = 0.48, Blue = 0.14 }, Chance = 0.5, ChanceBroken = 0.3, Intensity = 0.5 },
+            new() { Category = LightCategory.Sign, Color = new() { Red = 0.85, Green = 0.50, Blue = 0.12 }, Chance = 0.5, ChanceBroken = 0.4, Intensity = 0.45 },
+            new() { Category = LightCategory.DoorImportant, Color = new() { Red = 0.90, Green = 0.82, Blue = 0.68 }, Chance = 1.0, Intensity = 0.65 },
+        }
+    };
+
+    /// <summary>
+    /// Warm cream white — provides contrast to orange zones
+    /// </summary>
+    public static readonly LightSettings OrangeTheme_Cream = new()
+    {
+        PersistentId = Generator.GetPersistentId(),
+        CategorySettings = new List<LightCategorySetting>
+        {
+            new() { Category = LightCategory.General, Color = new() { Red = 0.95, Green = 0.90, Blue = 0.75 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.5 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.96, Green = 0.92, Blue = 0.80, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.6 },
+            LightCategorySetting.Off(LightCategory.Emergency),
+            new() { Category = LightCategory.Independent, Color = new() { Red = 0.94, Green = 0.88, Blue = 0.72 }, Chance = 0.5, Intensity = 0.55 },
+            new() { Category = LightCategory.Door, Color = new() { Red = 0.92, Green = 0.88, Blue = 0.78 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.6 },
+            new() { Category = LightCategory.Sign, Color = new() { Red = 0.94, Green = 0.90, Blue = 0.76 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.55 },
+            new() { Category = LightCategory.DoorImportant, Color = new() { Red = 0.95, Green = 0.92, Blue = 0.82 }, Chance = 1.0, Intensity = 0.65 },
+        }
+    };
+
+    /// <summary>
+    /// Pale cool white — neutral contrast to orange zones
+    /// </summary>
+    public static readonly LightSettings OrangeTheme_PaleWhite = new()
+    {
+        PersistentId = Generator.GetPersistentId(),
+        CategorySettings = new List<LightCategorySetting>
+        {
+            new() { Category = LightCategory.General, Color = new() { Red = 0.90, Green = 0.92, Blue = 0.88 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.5 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.92, Green = 0.94, Blue = 0.90, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.6 },
+            LightCategorySetting.Off(LightCategory.Emergency),
+            new() { Category = LightCategory.Independent, Color = new() { Red = 0.88, Green = 0.90, Blue = 0.86 }, Chance = 0.5, Intensity = 0.55 },
+            new() { Category = LightCategory.Door, Color = new() { Red = 0.90, Green = 0.90, Blue = 0.88 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.6 },
+            new() { Category = LightCategory.Sign, Color = new() { Red = 0.88, Green = 0.90, Blue = 0.86 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.55 },
+            new() { Category = LightCategory.DoorImportant, Color = new() { Red = 0.92, Green = 0.93, Blue = 0.90 }, Chance = 1.0, Intensity = 0.65 },
+        }
+    };
+
+    public static List<LightSettings> OrangeThemeLights { get; } = new()
+    {
+        OrangeTheme_Bright,
+        OrangeTheme_Amber,
+        OrangeTheme_Flickering,
+        OrangeTheme_Cream,
+        OrangeTheme_PaleWhite,
+    };
+    #endregion
+
     #region Generator Lights
     /// <summary>
     /// The Auxiliary Power light is supposed to be used for illuminating a zone after a generator
@@ -422,6 +523,10 @@ public record LightSettings : DataBlock<LightSettings>
 
         #region Green Theme
         foreach (var light in GreenThemeLights) light.Persist();
+        #endregion
+
+        #region Orange Theme
+        foreach (var light in OrangeThemeLights) light.Persist();
         #endregion
     }
 

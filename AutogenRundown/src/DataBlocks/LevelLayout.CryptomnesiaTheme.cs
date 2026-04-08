@@ -392,6 +392,9 @@ public partial record LevelLayout
             var zone = level.Planner.GetZone(node);
             if (zone == null) continue;
 
+            var orangeLight = Generator.Pick(LightSettings.OrangeThemeLights);
+            zone.LightSettings = (Lights.Light)orangeLight.PersistentId;
+
             var points = director.GetPoints(zone);
             if (points < 3) continue;
 
