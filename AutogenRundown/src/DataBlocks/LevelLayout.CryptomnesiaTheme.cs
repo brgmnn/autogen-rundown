@@ -276,7 +276,7 @@ public partial record LevelLayout
         // Set fog on the dimension or on the level for Reality
         if (dimension != null)
         {
-            dimension.Data.DimensionFogData = Fog.InvertedInfectious_Altitude_minus8.PersistentId;
+            dimension.Data.DimensionFogData = Fog.FullFog_Infectious.PersistentId;
         }
 
         var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);
