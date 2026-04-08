@@ -564,6 +564,75 @@ public record Fog : DataBlock<Fog>
     }
 
     /// <summary>
+    /// Generates a randomized ambient fog with varied density, color, noise, and direction.
+    /// Used for NoFog levels to add visual variety without gameplay-affecting fog.
+    /// </summary>
+    public static Fog Randomized()
+    {
+        var density = Generator.Select(new List<(double chance, double density)>
+        {
+            // Low density
+            (0.2, 0.00010),
+            (0.9, 0.00016),
+            (1.0, 0.00024),
+
+            // Medium density
+            (1.0, 0.00033),
+            (0.9, 0.00045),
+
+            // High density
+            (0.3, 0.00070),
+            (0.1, 0.00100), // This is about as dense as you want to go
+        });
+
+        return FindOrPersist(new Fog
+        {
+            FogColor = Generator.Select(new List<(double chance, Color color)>
+            {
+                // Light white
+                (1.0, new Color { Alpha = 0.0, Red = 0.91, Green = 0.97, Blue = 1.0 }),
+
+                // Light blue
+                (1.0, new Color { Alpha = 0.0, Red = 0.72, Green = 0.91, Blue = 1.0 }),
+
+                // light yellow
+                (1.0, new Color { Alpha = 0.0, Red = 1.00, Green = 0.96, Blue = 0.85 })
+            }),
+            FogDensity = density,
+            DensityNoiseSpeed = Generator.Select(new List<(double chance, double speed)>
+            {
+                (0.7, 0.022),
+                (0.9, 0.038),
+                (1.0, 0.055),
+                (1.0, 0.067),
+                (1.0, 0.074),
+                (0.2, 0.100),
+            }),
+            DensityNoiseScale = Generator.Select(new List<(double chance, double scale)>
+            {
+                (1.0, 0.025),
+                (1.0, 0.045),
+                (1.0, 0.073),
+                (1.0, 0.073),
+                (1.0, 0.131),
+                (1.0, 0.300),
+                (1.0, 0.500)
+            }),
+            DensityNoiseDirection = Generator.Select(new List<(double chance, Vector3 direction)>
+            {
+                (1.0, new Vector3 { Y =  1.0 }), // Down
+                (1.0, new Vector3 { Y = -1.0 }), // Up
+                (0.5, new Vector3 { X =  1.0 }),
+                (0.5, new Vector3 { X = -1.0 }),
+                (0.5, new Vector3 { Z =  1.0 }),
+                (0.5, new Vector3 { Z = -1.0 }),
+            }),
+            DensityHeightMaxBoost = density * 5.0,
+            DensityHeightAltitude = -5.2
+        });
+    }
+
+    /// <summary>
     /// Given a puzzle, either find it's duplicate and use that or persist this one and return that
     /// instance.
     /// </summary>
