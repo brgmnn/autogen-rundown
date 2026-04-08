@@ -99,22 +99,22 @@ public partial record LevelLayout
         switch (theme)
         {
             case CryptomnesiaTheme.ErrorAlarm:
-                ApplyTheme_ErrorAlarm(layout, level, director, objective, dimIndex);
+                ApplyTheme_ErrorAlarm(layout, dimension, level, director, objective, dimIndex);
                 break;
             case CryptomnesiaTheme.Giants:
-                ApplyTheme_Giants(layout, level, director);
+                ApplyTheme_Giants(layout, dimension, level, director);
                 break;
             case CryptomnesiaTheme.Chargers:
-                ApplyTheme_Chargers(layout, level, director);
+                ApplyTheme_Chargers(layout, dimension, level, director);
                 break;
             case CryptomnesiaTheme.InfectionFog:
                 ApplyTheme_InfectionFog(layout, dimension, level, director);
                 break;
             case CryptomnesiaTheme.Shadows:
-                ApplyTheme_Shadows(layout, level, director);
+                ApplyTheme_Shadows(layout, dimension, level, director);
                 break;
             case CryptomnesiaTheme.Nightmares:
-                ApplyTheme_Nightmares(layout, level, director);
+                ApplyTheme_Nightmares(layout, dimension, level, director);
                 break;
         }
 
@@ -128,7 +128,7 @@ public partial record LevelLayout
     /// starts on entering this dimension and stops on exiting via enter/exit events.
     /// </summary>
     private static void ApplyTheme_ErrorAlarm(
-        LevelLayout layout, Level level, BuildDirector director,
+        LevelLayout layout, Dimension? dimension, Level level, BuildDirector director,
         WardenObjective objective, DimensionIndex dimIndex)
     {
         layout.SkipRollEnemies = true;
@@ -167,7 +167,7 @@ public partial record LevelLayout
     /// Giants theme: StrikerGiant and ShooterGiant in every zone. One zone becomes a
     /// "heavy scout room" with ~6 regular scouts plus giants.
     /// </summary>
-    private static void ApplyTheme_Giants(LevelLayout layout, Level level, BuildDirector director)
+    private static void ApplyTheme_Giants(LevelLayout layout, Dimension? dimension, Level level, BuildDirector director)
     {
         layout.SkipRollEnemies = true;
 
@@ -215,7 +215,7 @@ public partial record LevelLayout
     /// Chargers theme: Chargers and ChargerGiants throughout. One zone gets a Tank,
     /// another gets a ChargerScout.
     /// </summary>
-    private static void ApplyTheme_Chargers(LevelLayout layout, Level level, BuildDirector director)
+    private static void ApplyTheme_Chargers(LevelLayout layout, Dimension? dimension, Level level, BuildDirector director)
     {
         layout.SkipRollEnemies = true;
 
@@ -332,7 +332,7 @@ public partial record LevelLayout
     /// <summary>
     /// Shadows theme: Shadow and ShadowGiant enemies throughout with a ShadowScout.
     /// </summary>
-    private static void ApplyTheme_Shadows(LevelLayout layout, Level level, BuildDirector director)
+    private static void ApplyTheme_Shadows(LevelLayout layout, Dimension? dimension, Level level, BuildDirector director)
     {
         layout.SkipRollEnemies = true;
 
@@ -380,7 +380,7 @@ public partial record LevelLayout
     /// Nightmares theme: NightmareStriker, NightmareShooter, and NightmareGiant.
     /// One zone gets a NightmareScout.
     /// </summary>
-    private static void ApplyTheme_Nightmares(LevelLayout layout, Level level, BuildDirector director)
+    private static void ApplyTheme_Nightmares(LevelLayout layout, Dimension? dimension, Level level, BuildDirector director)
     {
         layout.SkipRollEnemies = true;
 
