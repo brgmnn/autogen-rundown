@@ -45,16 +45,26 @@ public partial record LevelLayout
         level.ResourceSet = resourceSet;
         level.FogSettings = Fog.Randomized();
 
-        #region Dimension = Reality
-
-        // --- Reality: build zones and place 1 data cube ---
-        var realityNodes = AddBranch(start, Generator.Between(2, 4), "find_items", (node, zone) =>
+        // Select layout type -- shared between Reality and all dimensions
+        var layoutType = Generator.Select(new List<(double, CryptomnesiaLayout)>
         {
-            zone.Coverage = CoverageMinMax.Medium;
+            (1.0, CryptomnesiaLayout.HubChain),
+            (1.0, CryptomnesiaLayout.ForwardSplit),
         });
 
-        // Place the data cube in the last reality zone
-        objective.Gather_PlacementNodes.Add(realityNodes.Last());
+        Plugin.Logger.LogDebug($"Cryptomnesia: Selected layout type: {layoutType}");
+
+        #region Dimension = Reality
+
+        // --- Reality: build zones based on layout type and place 1 data cube ---
+        var realityDataCubeNode = layoutType switch
+        {
+            CryptomnesiaLayout.HubChain => BuildCryptomnesia_HubChain(start),
+            CryptomnesiaLayout.ForwardSplit => BuildCryptomnesia_ForwardSplit(start),
+            _ => BuildCryptomnesia_HubChain(start)
+        };
+
+        objective.Gather_PlacementNodes.Add(realityDataCubeNode);
 
         #endregion
 
@@ -71,7 +81,7 @@ public partial record LevelLayout
             string.Concat(themes.Skip(1).Select((t, i) => $", Dimension{i + 1}={t}")));
 
         // Apply Reality theme before dimension loop
-        ApplyCryptomnesiaTheme(themes[0], this, level, director, objective);
+        ApplyCryptomnesiaTheme(themes[0], layoutType, this, level, director, objective);
 
         for (var i = 0; i < dimensionCount; i++)
         {
@@ -97,7 +107,7 @@ public partial record LevelLayout
             dimLayout.LinkedDimension = dimension;
 
             // Mirror Reality zone structure into this dimension
-            CopyRealityLayout(dimLayout, dimStart, realityNodes, start, dimensionIndex);
+            CopyRealityLayout(dimLayout, dimStart, start, dimensionIndex);
 
             // Place a data cube in the last find_items zone
             var lastDimNode = level.Planner.GetLastZone(
@@ -106,7 +116,7 @@ public partial record LevelLayout
                 objective.Gather_PlacementNodes.Add((ZoneNode)lastDimNode);
 
             // Apply dimension theme before finalization
-            ApplyCryptomnesiaTheme(themes[i + 1], dimLayout, level, director, objective);
+            ApplyCryptomnesiaTheme(themes[i + 1], layoutType, dimLayout, level, director, objective);
 
             // Persist after all configuration so DimensionFogData, Layout, etc. are final
             dimension.FindOrPersist();
@@ -122,22 +132,75 @@ public partial record LevelLayout
 
             Plugin.Logger.LogDebug(
                 $"Cryptomnesia: Built dimension {dimensionIndex} with {dimLayout.Zones.Count} zones" +
-                $" theme={themes[i + 1]}");
+                $" theme={themes[i + 1]} layout={layoutType}");
         }
 
         #endregion
     }
 
+    #region Cryptomnesia Layout Builders
+
+    /// <summary>
+    /// HubChain: A chain of 2-4 hub zones connected in sequence.
+    /// Each zone uses GenHubGeomorph for large, open rooms.
+    /// </summary>
+    /// <returns>The last zone node (for data cube placement).</returns>
+    private ZoneNode BuildCryptomnesia_HubChain(ZoneNode start)
+    {
+        var nodes = AddBranch(start, Generator.Between(2, 4), "find_items", (node, zone) =>
+        {
+            zone.Coverage = CoverageMinMax.Medium;
+            zone.GenHubGeomorph(Complex);
+        });
+
+        return nodes.Last();
+    }
+
+    /// <summary>
+    /// ForwardSplit: A central hub with two arms going left and right.
+    /// The hub has MaxConnections=3 to support two outgoing branches.
+    /// Each arm is 1-3 zones. Data cube placed in a randomly chosen arm's last zone.
+    /// </summary>
+    /// <returns>A leaf node from a randomly chosen arm (for data cube placement).</returns>
+    private ZoneNode BuildCryptomnesia_ForwardSplit(ZoneNode start)
+    {
+        // Create the central hub
+        var (hub, hubZone) = AddZone(start, new ZoneNode
+        {
+            Branch = "find_items",
+            MaxConnections = 3
+        });
+        hubZone.GenHubGeomorph(Complex);
+
+        // Left arm: 1-3 zones
+        var leftArm = AddBranch_Left(hub, Generator.Between(1, 3), "find_items", (node, zone) =>
+        {
+            zone.Coverage = CoverageMinMax.Medium;
+        });
+
+        // Right arm: 1-3 zones
+        var rightArm = AddBranch_Right(hub, Generator.Between(1, 3), "find_items", (node, zone) =>
+        {
+            zone.Coverage = CoverageMinMax.Medium;
+        });
+
+        // Place data cube at the end of a randomly chosen arm
+        return Generator.Flip() ? leftArm.Last() : rightArm.Last();
+    }
+
+    #endregion
+
+    #region Cryptomnesia Layout Copying
+
     /// <summary>
     /// Copies the spatial structure of Reality zones into a dimension layout.
-    /// For each Reality zone in the branch, creates a matching dimension zone with the
-    /// same coverage, geomorph, build directions, altitude, and subseeds. Enemies,
-    /// alarms, blood doors, and lights are left for FinalizeLayout to roll independently.
+    /// Recursively walks the planner graph to handle any zone topology (linear,
+    /// branching, hub chains, etc.). Enemies, alarms, blood doors, and lights
+    /// are left for FinalizeLayout to roll independently.
     /// </summary>
     private void CopyRealityLayout(
         LevelLayout dimLayout,
         ZoneNode dimStart,
-        List<ZoneNode> realityNodes,
         ZoneNode realityStart,
         DimensionIndex dimensionIndex)
     {
@@ -146,24 +209,44 @@ public partial record LevelLayout
         var dimStartZone = level.Planner.GetZone(dimStart)!;
         CopyZoneSpatialProperties(realityStartZone, dimStartZone);
 
-        // Build matching zones for each Reality branch zone
-        var prevDimNode = dimStart;
+        // Recursively copy all children
+        CopyRealityChildren(dimLayout, dimStart, realityStart, dimensionIndex);
+    }
 
-        foreach (var realityNode in realityNodes)
+    /// <summary>
+    /// Recursively walks the planner graph from a reality node and creates matching
+    /// zones in the dimension layout. Handles branching zone graphs.
+    /// </summary>
+    private void CopyRealityChildren(
+        LevelLayout dimLayout,
+        ZoneNode dimParent,
+        ZoneNode realityParent,
+        DimensionIndex dimensionIndex)
+    {
+        var realityChildren = level.Planner.GetConnections(realityParent, branch: null);
+
+        // If the reality parent has multiple children, ensure the dim parent
+        // has enough MaxConnections to accommodate them
+        if (realityChildren.Count > 1 && dimParent.MaxConnections < realityChildren.Count + 1)
         {
-            var realityZone = level.Planner.GetZone(realityNode)!;
+            dimParent = dimParent with { MaxConnections = realityChildren.Count + 1 };
+            level.Planner.UpdateNode(dimParent);
+        }
 
-            // Create a new zone in the dimension with fresh enemy/alarm state
-            var (dimNode, dimZone) = dimLayout.AddZone(prevDimNode, new ZoneNode
+        foreach (var realityChild in realityChildren)
+        {
+            var realityZone = level.Planner.GetZone(realityChild)!;
+
+            var (dimChild, dimZone) = dimLayout.AddZone(dimParent, new ZoneNode
             {
-                Branch = realityNode.Branch,
-                MaxConnections = realityNode.MaxConnections
+                Branch = realityChild.Branch,
+                MaxConnections = realityChild.MaxConnections
             });
 
-            // Copy the spatial properties from the Reality zone
             CopyZoneSpatialProperties(realityZone, dimZone);
 
-            prevDimNode = dimNode;
+            // Recurse into children of this node
+            CopyRealityChildren(dimLayout, dimChild, realityChild, dimensionIndex);
         }
     }
 
@@ -187,4 +270,6 @@ public partial record LevelLayout
         target.SubSeed = source.SubSeed;
         target.MarkerSubSeed = source.MarkerSubSeed;
     }
+
+    #endregion
 }

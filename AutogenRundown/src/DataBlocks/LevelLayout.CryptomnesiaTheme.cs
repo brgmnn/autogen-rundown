@@ -78,6 +78,7 @@ public partial record LevelLayout
     /// </summary>
     public static void ApplyCryptomnesiaTheme(
         CryptomnesiaTheme theme,
+        CryptomnesiaLayout layoutType,
         LevelLayout layout,
         Level level,
         BuildDirector director,
