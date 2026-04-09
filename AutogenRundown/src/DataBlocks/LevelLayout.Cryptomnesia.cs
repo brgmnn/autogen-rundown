@@ -57,14 +57,28 @@ public partial record LevelLayout
         #region Dimension = Reality
 
         // --- Reality: build zones based on layout type and place 1 data cube ---
-        var realityDataCubeNode = layoutType switch
+        // Reality cube branch (by layout type)
+        var realityCubeBranch = layoutType switch
         {
-            CryptomnesiaLayout.HubChain => BuildCryptomnesia_HubChain(start),
-            CryptomnesiaLayout.ForwardSplit => BuildCryptomnesia_ForwardSplit(start),
-            _ => BuildCryptomnesia_HubChain(start)
+            CryptomnesiaLayout.HubChain => "hub_3",
+            CryptomnesiaLayout.ForwardSplit => "find_items",
+            _ => "find_items"
         };
 
-        objective.Gather_PlacementNodes.Add(realityDataCubeNode);
+        switch (layoutType)
+        {
+            case CryptomnesiaLayout.HubChain:
+                BuildCryptomnesia_HubChain(start);
+                break;
+            case CryptomnesiaLayout.ForwardSplit:
+                BuildCryptomnesia_ForwardSplit(start);
+                break;
+        }
+
+        var realityCubeNode = level.Planner.GetLastZone(
+            director.Bulkhead, realityCubeBranch, DimensionIndex.Reality);
+        if (realityCubeNode != null)
+            objective.Gather_PlacementNodes.Add((ZoneNode)realityCubeNode);
 
         #endregion
 
@@ -72,6 +86,14 @@ public partial record LevelLayout
 
         // --- Dimensions: build (count - 1) dimensions, each with 1 data cube ---
         var dimensionCount = objective.GatherRequiredCount - 1;
+
+        // Data cube placement branches per dimension (by layout type)
+        var cubeBranches = layoutType switch
+        {
+            CryptomnesiaLayout.HubChain => new[] { "side_2", "side_3a", "side_1" },
+            CryptomnesiaLayout.ForwardSplit => new[] { "find_items", "find_items", "find_items" },
+            _ => new[] { "find_items", "find_items", "find_items" }
+        };
 
         // Select unique themes: 1 for Reality + 1 per dimension
         var themes = SelectCryptomnesiaThemes(dimensionCount + 1);
@@ -109,11 +131,12 @@ public partial record LevelLayout
             // Mirror Reality zone structure into this dimension
             CopyRealityLayout(dimLayout, dimStart, start, dimensionIndex);
 
-            // Place a data cube in the last find_items zone
-            var lastDimNode = level.Planner.GetLastZone(
-                director.Bulkhead, "find_items", dimensionIndex);
-            if (lastDimNode != null)
-                objective.Gather_PlacementNodes.Add((ZoneNode)lastDimNode);
+            // Place a data cube in the dimension-specific branch zone
+            var cubeBranch = cubeBranches[Math.Min(i, cubeBranches.Length - 1)];
+            var cubeNode = level.Planner.GetLastZone(
+                director.Bulkhead, cubeBranch, dimensionIndex);
+            if (cubeNode != null)
+                objective.Gather_PlacementNodes.Add((ZoneNode)cubeNode);
 
             // Apply dimension theme before finalization
             ApplyCryptomnesiaTheme(themes[i + 1], layoutType, dimLayout, level, director, objective);
