@@ -49,7 +49,7 @@ public partial record LevelLayout
         var layoutType = Generator.Select(new List<(double, CryptomnesiaLayout)>
         {
             (1.0, CryptomnesiaLayout.HubChain),
-            (1.0, CryptomnesiaLayout.ForwardSplit),
+            // (1.0, CryptomnesiaLayout.ForwardSplit),
         });
 
         Plugin.Logger.LogDebug($"Cryptomnesia: Selected layout type: {layoutType}");
@@ -147,13 +147,66 @@ public partial record LevelLayout
     /// <returns>The last zone node (for data cube placement).</returns>
     private ZoneNode BuildCryptomnesia_HubChain(ZoneNode start)
     {
-        var nodes = AddBranch(start, Generator.Between(2, 4), "find_items", (node, zone) =>
-        {
-            zone.Coverage = CoverageMinMax.Medium;
-            zone.GenHubGeomorph(Complex);
-        });
+        #region Phase 1
 
-        return nodes.Last();
+        var (hub1, hub1Zone) = AddZone_Forward(start, new ZoneNode { Branch = "hub_1", MaxConnections = 3 });
+        hub1Zone.GenHubGeomorph(Complex);
+
+        var (side1, side1Zone) = AddZone_Side(hub1, new ZoneNode { Branch = "side_1" });
+
+        side1Zone.Coverage = CoverageMinMax.Large_80;
+        side1Zone.ZoneExpansion = ZoneExpansion.Expansional;
+
+        #endregion
+
+
+        #region Phase 2
+
+        var (hub2, hub2Zone) = AddZone_Forward(hub1, new ZoneNode { Branch = "hub_2", MaxConnections = 3 });
+        hub2Zone.GenHubGeomorph(Complex);
+
+        var (side2, side2Zone) = AddZone_Left(hub2, new ZoneNode { Branch = "side_2", MaxConnections = 3 });
+        side2Zone.GenHubGeomorph(Complex);
+
+        var (side3a, side3aZone) = AddZone_Right(hub2, new ZoneNode { Branch = "side_3a", MaxConnections = 1 });
+        var (side3b, side3bZone) = AddZone_Right(side3a, new ZoneNode { Branch = "side_3b" });
+
+        #endregion
+
+        #region Phase 3
+
+        var (hub3, hub3Zone) = AddZone_Forward(hub2, new ZoneNode { Branch = "hub_3", MaxConnections = 3 });
+        hub3Zone.GenHubGeomorph(Complex);
+
+        var (side4, side4Zone) = AddZone_Forward(hub3, new ZoneNode { Branch = "side_4", MaxConnections = 3 });
+
+        #endregion
+
+        #region Forward extract
+
+        var (forwardExtract, forwardExtractZone) = AddZone_Left(
+            hub3,
+            new ZoneNode { Branch = "forward_extract", MaxConnections = 1 });
+
+        if (Generator.Flip())
+            forwardExtractZone.GenCorridorGeomorph(Complex);
+        else
+        {
+            forwardExtractZone.Coverage = CoverageMinMax.Medium_56;
+            forwardExtractZone.ZoneExpansion = ZoneExpansion.Expansional;
+        }
+
+        var (extraction, extractionZone) = AddZone_Left(
+            forwardExtract,
+            new ZoneNode { Branch = "extraction_elevator", MaxConnections = 0 });
+
+        extractionZone.GenExitGeomorph(Complex);
+
+        level.ExtractionZone = extraction;
+
+        #endregion
+
+        return hub3;
     }
 
     /// <summary>
