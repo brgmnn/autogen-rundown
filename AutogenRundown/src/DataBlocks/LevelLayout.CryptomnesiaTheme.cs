@@ -294,18 +294,19 @@ public partial record LevelLayout
 
         var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);
 
-        // Place a fog turbine and fog repellers in the first (elevator) zone
-        var firstZone = level.Planner.GetZone(zoneNodes.First());
-        if (firstZone != null)
-        {
-            firstZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
-            firstZone.ConsumableDistributionInZone = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
-        }
+        // Place a fog turbine in the first (elevator) zone
+        var firstZone = level.Planner.GetZone(zoneNodes.First())!;
+
+        firstZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
+        firstZone.ConsumableDistributionInZone = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
+        firstZone.DisinfectPacks += 4;
 
         foreach (var node in zoneNodes)
         {
             var zone = level.Planner.GetZone(node);
-            if (zone == null) continue;
+
+            if (zone == null)
+                continue;
 
             zone.InFog = true;
             zone.DisinfectPacks += Generator.Between(2, 4);
@@ -446,6 +447,7 @@ public partial record LevelLayout
                 (0.40, 100),
                 (0.30, 250),
             });
+
             if (corpseCount > 0)
             {
                 zone.StaticSpawnDataContainers.Add(new StaticSpawnDataContainer
