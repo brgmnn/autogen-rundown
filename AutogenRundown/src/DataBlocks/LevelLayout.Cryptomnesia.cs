@@ -149,7 +149,9 @@ public partial record LevelLayout
     {
         #region Phase 1
 
-        var (hub1, hub1Zone) = AddZone_Forward(start, new ZoneNode { Branch = "hub_1", MaxConnections = 3 });
+        var hub1 = planner.UpdateNode(start with { MaxConnections = 3 });
+        var hub1Zone = planner.GetZone(hub1)!;
+
         hub1Zone.GenHubGeomorph(Complex);
 
         var (side1, side1Zone) = AddZone_Side(hub1, new ZoneNode { Branch = "side_1" });
