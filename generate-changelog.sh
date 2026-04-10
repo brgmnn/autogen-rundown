@@ -1,6 +1,6 @@
 #!/bin/bash
 
-releases=$(gh release list --json name,publishedAt,tagName --limit 10000)
+releases=$(gh release list --exclude-drafts --json name,publishedAt,tagName --limit 10000)
 
 # Generate the header
 cat <<-EOF > CHANGELOG.md

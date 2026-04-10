@@ -5,7 +5,7 @@
 #   https GET https://gtfo.thunderstore.io/api/experimental/package/BepInEx/BepInExPack_GTFO/3.2.1/
 #
 
-name: .NET
+name: Build .NET
 
 on:
   push:

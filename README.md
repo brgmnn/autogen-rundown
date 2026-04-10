@@ -62,15 +62,14 @@ TODO:
   * Fix uplink text for case where there's one terminal
 
   * See if we can fix enemies not navigating through the final door in D3
+  * Check terminal stacking on 0.84.0
 
   * Fix the cycling of security scans having global sound! Really annoying right now
-  * Really fix the security scans appearing in the elevator first zone
   * Tone down higher density of scans, especially for moving ones
 
   * Add a version of travel scan where lights go out but only lights by the scan are lit up
   * Add a version of the scan wanted distance that takes a negative number which then finds a point thats a proportion of the total area away from the previous scan
 
-  * Check SD6: 2 terminals on top of each other in overload
   * SC1: Main needs 1 more challenge of some kind. A hard extract perhaps?
 
 TODO for 1.0

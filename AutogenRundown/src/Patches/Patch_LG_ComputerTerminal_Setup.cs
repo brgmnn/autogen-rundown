@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Custom.AutogenRundown;
+using GTFO.API;
 using HarmonyLib;
 using LevelGeneration;
 using UnityEngine;
@@ -18,10 +19,15 @@ internal static class Patch_LG_ComputerTerminal_Setup
 {
     private static List<LevelTerminalPlacements> _levelPlacements = new();
 
+    private static readonly HashSet<int> PlacedAreas = new();
+
     // private
     public static void Setup()
     {
         _levelPlacements = LevelTerminalPlacements.LoadAll();
+
+        LevelAPI.OnLevelCleanup += PlacedAreas.Clear;
+        LevelAPI.OnBuildDone += PlacedAreas.Clear;
     }
 
     [HarmonyPostfix]
@@ -54,7 +60,12 @@ internal static class Patch_LG_ComputerTerminal_Setup
             var placement = positions.Find(terminal =>
                 terminal.HasGeomorphName(area.m_geomorph.name));
 
+            var areaId = area.GetInstanceID();
+
             if (placement is null)
+                continue;
+
+            if (!PlacedAreas.Add(areaId))
                 continue;
 
             var localPosition = new Vector3
@@ -74,36 +85,6 @@ internal static class Patch_LG_ComputerTerminal_Setup
             __instance.transform.rotation = rotation;
 
             Plugin.Logger.LogInfo($"Repositioned Terminal {__instance.name} {{ Position = {position} }}");
-
-            // [HarmonyPatch(typeof(LG_WardenObjective_Reactor), nameof(LG_WardenObjective_Reactor.GenericObjectiveSetup))]
-            // static class Inject_LG_Reactor
-            // {
-            //     const string TERMINAL_PREFAB = "ASSETS/ASSETPREFABS/COMPLEX/GENERIC/FUNCTIONMARKERS/TERMINAL_FLOOR.PREFAB";
-            //
-            //     static void Prefix(LG_WardenObjective_Reactor __instance)
-            //     {
-            //         if (__instance.m_terminalPrefab == null)
-            //         {
-            //             var ter = AssetAPI.GetLoadedAsset<GameObject>(TERMINAL_PREFAB);
-            //             __instance.m_terminalPrefab = ter;
-            //             FlowGeosLogger.Info("Terminal Prefab Resolved!");
-            //         }
-            //     }
-            // }
-
-            // var prefab = AssetAPI.
-            // var ter = AssetAPI.GetLoadedAsset<GameObject>(TERMINAL_PREFAB);
-            // __instance.m_terminalPrefab = ter;
-            // FlowGeosLogger.Info("Terminal Prefab Resolved!");
-
-            // var terminal = GOUtil.SpawnChildAndGetComp<LG_ComputerTerminal>(
-            //     ter,
-            //     new Transform
-            //     {
-            //         position = position,
-            //         rotation = rotation,
-            //     });
-            // terminal.Setup();
         }
     }
 }
