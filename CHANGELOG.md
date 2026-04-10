@@ -3,6 +3,18 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.83.3](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.83.3) — April 09, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fix: Resolved an issue with terminals being stacked on top of each other on some tiles
+* Other: Fixed the CHANGELOG page including unreleased releases
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.83.2...v0.83.3
+
+
 ## [v0.83.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.83.2) — March 30, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
@@ -30,19 +42,6 @@ See more at https://github.com/brgmnn/autogen-rundown
 * Fix: Zone Security Scans will now no longer appear in the first area of the elevator zone
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.83.0...v0.83.1
-
-
-## [v0.84.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.84.0) — March 30, 2026
-
-<!-- Release notes generated using configuration in .github/release.yml at main -->
-
-### Changes
-
-* Change: D-Lock Block Decipherer logs can now spawn on fixed spawn terminals
-* Fix: Some king of the hill terminals would collide with other scenery
-* Fix: King of the hill terminals would sometimes be just a screen and keyboard on the floor instead of a full terminal
-
-**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.83.0...v0.84.0
 
 
 ## [v0.83.0 – Travel Scans](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.83.0) — March 24, 2026
