@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.Extensions;
+using SmartFormat;
 
 namespace AutogenRundown.DataBlocks.Objectives;
 
@@ -75,10 +76,14 @@ public partial record WardenObjective
 
     public void Build_PowerCellDistribution(BuildDirector director, Level level)
     {
-        var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
+        MainObjective = new Text(() => Smart.Format(
+            "Distribute Power {count:Cell|Cells} from the elevator cargo container to [ALL_ITEMS]",
+            new { count = PowerCellsToDistribute }));
 
-        MainObjective = new Text("Distribute Power Cells from the elevator cargo container to [ALL_ITEMS]");
-        FindLocationInfo = new Text("Locate the Generators and bring the Power Cells to them");
+        FindLocationInfo = new Text(() => Smart.Format(
+            "Locate the {count:Generator|Generators} and bring the Power {count:Cell|Cells} to {count:it|them}",
+            new { count = PowerCellsToDistribute }));
+
         FindLocationInfoHelp = new Text("Current progress: [COUNT_CURRENT] / [COUNT_REQUIRED]");
         GoToWinConditionHelp_Elevator = new Text("Use the navigational beacon and the floor map ([KEY_MAP]) to find the way back");
         GoToWinConditionHelp_CustomGeo = new Text("Use the navigational beacon and the information in the surroundings to find the exit point");
@@ -88,6 +93,10 @@ public partial record WardenObjective
             // Place the cells in the first zone of the bulkhead if we are not in Main
             var node = level.Planner.GetZones(director.Bulkhead).First();
             var zone = level.Planner.GetZone(node)!;
+
+            MainObjective = new Text(() => Smart.Format(
+                    "Find the Power {count:Cell|Cells} in {zone} and {count:use it to power|distribute them to} [ALL_ITEMS]",
+                    new { count = PowerCellsToDistribute, zone = Intel.Zone(node, level.Planner) }));
 
             switch (PowerCellsToDistribute)
             {

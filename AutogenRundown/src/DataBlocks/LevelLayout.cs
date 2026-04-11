@@ -1017,6 +1017,9 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         // the first zone hasn't been set up yet
         var (start, startZone) = layout.StartingArea_GetBuildStart(director.Bulkhead);
 
+        // Fixes the start zone to have the correct layout
+        startZone.layout = layout;
+
         #region Set the right directions
         /*
          * Attempt to set the very first zones build expansion and direction
