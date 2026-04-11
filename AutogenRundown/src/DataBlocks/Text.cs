@@ -5,6 +5,8 @@ namespace AutogenRundown.DataBlocks;
 public record LanguageData
 {
     public string Translation { get; set; } = "";
+
+    // TODO: do we need to set this to false?
     public bool ShouldTranslate => true;
 }
 

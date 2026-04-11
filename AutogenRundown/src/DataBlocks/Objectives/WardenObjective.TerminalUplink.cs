@@ -62,6 +62,8 @@ public partial record WardenObjective
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
+        // TODO: pluralize
+
         MainObjective = new Text("Find the <u>Uplink Terminals</u> [ALL_ITEMS] and establish an external uplink from each terminal");
         FindLocationInfo = new Text("Gather information about the location of [ALL_ITEMS]");
         SolveItem = new Text("Use [ITEM_SERIAL] to create an uplink to [UPLINK_ADDRESS]");
