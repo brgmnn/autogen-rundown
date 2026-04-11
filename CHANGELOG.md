@@ -3,6 +3,19 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.83.4](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.83.4) — April 11, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Change: Bump mod dependencies
+* Fix: Resolved typos and incorrect objective intel for `DistributePowerCells` in non-main missions. It now now longer instructs players to bring cells from the elevator but instead from the first zone.
+* Fix: Incorrect zone number used for some objective texts in the first zone of extreme/overload
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.83.3...v0.83.4
+
+
 ## [v0.83.3](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.83.3) — April 09, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
