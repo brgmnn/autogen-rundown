@@ -328,7 +328,7 @@ public static class LogArchivistManager
     /// <summary>
     /// Records a log read attempt. Will save to disk as soon as method is called for a valid log file
     /// </summary>
-    /// <param name="rundown"></param>
+    /// <param name="rundownKey"></param>
     /// <param name="mainLayout"></param>
     /// <param name="logName"></param>
     public static void RecordRead(string rundownKey, uint mainLayout, string? logName)
