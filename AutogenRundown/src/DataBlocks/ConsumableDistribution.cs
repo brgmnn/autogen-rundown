@@ -12,6 +12,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
     /// </summary>
     public static ConsumableDistribution Baseline = new()
     {
+        PersistentId = 500,
         SpawnsPerZone = 6,
         SpawnData = Collections.Flatten(
             ItemSpawn.GlowSticks(8.0),
@@ -31,6 +32,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
     /// </summary>
     public static ConsumableDistribution Baseline_TechComplex = new()
     {
+        PersistentId = 502,
         SpawnsPerZone = 6,
         SpawnData = Collections.Flatten(
             ItemSpawn.GlowSticks(8.0),
@@ -48,6 +50,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
 
     public static ConsumableDistribution Baseline_Syringes = new()
     {
+        PersistentId = 504,
         SpawnsPerZone = 6,
         SpawnData = Collections.Flatten(
             ItemSpawn.GlowSticks(2.0),
@@ -64,6 +67,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
     /// </summary>
     public static ConsumableDistribution Baseline_FogRepellers = new()
     {
+        PersistentId = 505,
         SpawnsPerZone = 8,
         SpawnData = Collections.Flatten(
             ItemSpawn.GlowSticks(3.0),
@@ -76,6 +80,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
 
     public static ConsumableDistribution Baseline_LockMelters = new()
     {
+        PersistentId = 506,
         SpawnsPerZone = 6,
         SpawnData = Collections.Flatten(
             ItemSpawn.GlowSticks(2.0),
@@ -91,6 +96,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
     /// </summary>
     public static ConsumableDistribution Alarms_FogRepellers = new()
     {
+        PersistentId = 550,
         SpawnsPerZone = 12,
         SpawnData = Collections.Flatten(
             ItemSpawn.GlowSticks(),
@@ -106,6 +112,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
     /// </summary>
     public static ConsumableDistribution Reactor_FogRepellers = new()
     {
+        PersistentId = 590,
         SpawnsPerZone = 10,
         SpawnData = Collections.Flatten(
             ItemSpawn.GlowSticks(2.0),
@@ -120,6 +127,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
     /// </summary>
     public static ConsumableDistribution MedicalBay_Consumables = new()
     {
+        PersistentId = 610,
         SpawnsPerZone = 8,
         SpawnData = Collections.Flatten(
             new List<ItemSpawn> {
@@ -184,6 +192,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
             // New syringe-only med bay distributions
             MedicalBay_GTFriendlyO_Healing = new()
             {
+                PersistentId = 800,
                 SpawnsPerZone = 10,
                 SpawnData = new List<ItemSpawn>
                 {
@@ -200,6 +209,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
 
             MedicalBay_GTFriendlyO_Combat = new()
             {
+                PersistentId = 801,
                 SpawnsPerZone = 10,
                 SpawnData = new List<ItemSpawn>
                 {
