@@ -117,7 +117,7 @@ public record Rundown : DataBlock<Rundown>
                 TierDVisuals = new
                 {
                     Color = Color.MenuVisuals,
-                    Scale = Math.Max(0.5, ScaleTierWidth(TierD.Count)),
+                    Scale = ScaleTierWidth(TierD.Count),
                     ScaleYModifier = 0.3
                 },
                 TierEVisuals = new
