@@ -21,12 +21,6 @@ public class Patch_CM_PageRundown_New
     private static void Post_PlaceRundown(CM_PageRundown_New __instance)
     {
         EventManager.UpdateRundown();
-
-        CenterTierIcons(__instance.m_expIconsTier1);
-        CenterTierIcons(__instance.m_expIconsTier2);
-        CenterTierIcons(__instance.m_expIconsTier3);
-        CenterTierIcons(__instance.m_expIconsTier4);
-        CenterTierIcons(__instance.m_expIconsTier5);
     }
 
     [HarmonyPatch(typeof(CM_PageRundown_New), nameof(CM_PageRundown_New.OnEnable))]
@@ -36,21 +30,16 @@ public class Patch_CM_PageRundown_New
         EventManager.UpdateRundown();
     }
 
-    private static void CenterTierIcons(Il2CppSystem.Collections.Generic.List<CM_ExpeditionIcon_New> icons)
+    /// <summary>
+    /// When a tier has a single expedition (expCount == 0), the game places it
+    /// at ratio=0 which is the left edge of the arc. This patch moves it to
+    /// ratio=0.5, the center/front of the ellipse: (0, -ovalSize.y).
+    /// </summary>
+    [HarmonyPatch(typeof(CM_PageRundown_New), "GetExpIconLocalPos")]
+    [HarmonyPostfix]
+    private static void Post_GetExpIconLocalPos(int expCount, Vector2 ovalSize, ref Vector3 __result)
     {
-        if (icons == null || icons.Count == 0)
-            return;
-
-        var sumX = 0f;
-        for (var i = 0; i < icons.Count; i++)
-            sumX += icons[i].transform.localPosition.x;
-
-        var avgX = sumX / icons.Count;
-
-        for (var i = 0; i < icons.Count; i++)
-        {
-            var pos = icons[i].transform.localPosition;
-            icons[i].transform.localPosition = new Vector3(pos.x - avgX, pos.y, pos.z);
-        }
+        if (expCount == 0)
+            __result = new Vector3(0f, -ovalSize.y, 0f);
     }
 }
