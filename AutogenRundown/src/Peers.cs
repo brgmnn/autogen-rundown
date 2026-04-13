@@ -61,6 +61,7 @@ public static class Peers
         Arsenality.Configure();
         ArsenalityRebalance.Configure();
         GTFriendlyO.Configure();
+        GTFuckingXP.Configure();
         OmegaWeapons.Configure();
         VanillaReloaded.Configure();
     }
