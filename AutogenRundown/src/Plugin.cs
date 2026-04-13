@@ -141,7 +141,6 @@ public class Plugin : BasePlugin
         GameDataAPI.OnGameDataInitialized += LogArchivistManager.Setup;
         GameDataAPI.OnGameDataInitialized += ZoneSensorManager.Setup;
         GameDataAPI.OnGameDataInitialized += TravelScanRegistry.Setup;
-        GameDataAPI.OnGameDataInitialized += Patch_GTFuckingXP.Setup;
 
         // LevelAPI.OnLevelCleanup += SignBorderManager.Clear;
         // LevelAPI.OnEnterLevel += () =>

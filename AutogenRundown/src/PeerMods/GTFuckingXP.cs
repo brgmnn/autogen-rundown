@@ -1,5 +1,8 @@
 namespace AutogenRundown.PeerMods;
 
+/// <summary>
+///
+/// </summary>
 public class GTFuckingXP : SupportedMod
 {
     private GTFuckingXP()

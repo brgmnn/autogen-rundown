@@ -1,6 +1,4 @@
-using GTFO.API;
 using HarmonyLib;
-using UnityEngine;
 
 namespace AutogenRundown.Patches;
 
@@ -8,19 +6,6 @@ namespace AutogenRundown.Patches;
 public static class Patch_GTFuckingXP
 {
     private static bool _done;
-    private static int _searchFrames;
-    private const int MaxSearchFrames = 300;
-
-    public static void Setup()
-    {
-        LevelAPI.OnLevelCleanup += Reset;
-    }
-
-    private static void Reset()
-    {
-        _done = false;
-        _searchFrames = 0;
-    }
 
     public static void Postfix(PlayerGuiLayer __instance)
     {
@@ -29,14 +14,6 @@ public static class Patch_GTFuckingXP
 
         if (!Peers.HasMod("GTFuckingXP"))
         {
-            _done = true;
-            return;
-        }
-
-        _searchFrames++;
-        if (_searchFrames > MaxSearchFrames)
-        {
-            Plugin.Logger.LogWarning("GTFuckingXP: XpText not found after timeout");
             _done = true;
             return;
         }
@@ -53,8 +30,8 @@ public static class Patch_GTFuckingXP
         if (xpText == null)
             return;
 
-        xpText.Translate(0f, 100f, 0f);
+        xpText.Translate(120f, 60f, 0f);
+
         _done = true;
-        Plugin.Logger.LogDebug("GTFuckingXP: Repositioned XpText +100 Y");
     }
 }
