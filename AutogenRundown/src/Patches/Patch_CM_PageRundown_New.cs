@@ -1,6 +1,7 @@
-﻿using AutogenRundown.Managers;
+using AutogenRundown.Managers;
 using CellMenu;
 using HarmonyLib;
+using UnityEngine;
 
 namespace AutogenRundown.Patches;
 
@@ -20,6 +21,12 @@ public class Patch_CM_PageRundown_New
     private static void Post_PlaceRundown(CM_PageRundown_New __instance)
     {
         EventManager.UpdateRundown();
+
+        CenterTierIcons(__instance.m_expIconsTier1);
+        CenterTierIcons(__instance.m_expIconsTier2);
+        CenterTierIcons(__instance.m_expIconsTier3);
+        CenterTierIcons(__instance.m_expIconsTier4);
+        CenterTierIcons(__instance.m_expIconsTier5);
     }
 
     [HarmonyPatch(typeof(CM_PageRundown_New), nameof(CM_PageRundown_New.OnEnable))]
@@ -27,5 +34,23 @@ public class Patch_CM_PageRundown_New
     private static void Post_OnEnable(CM_PageRundown_New __instance)
     {
         EventManager.UpdateRundown();
+    }
+
+    private static void CenterTierIcons(Il2CppSystem.Collections.Generic.List<CM_ExpeditionIcon_New> icons)
+    {
+        if (icons == null || icons.Count == 0)
+            return;
+
+        float sumX = 0f;
+        for (int i = 0; i < icons.Count; i++)
+            sumX += icons[i].transform.localPosition.x;
+
+        float avgX = sumX / icons.Count;
+
+        for (int i = 0; i < icons.Count; i++)
+        {
+            var pos = icons[i].transform.localPosition;
+            icons[i].transform.localPosition = new Vector3(pos.x - avgX, pos.y, pos.z);
+        }
     }
 }
