@@ -12,6 +12,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
     /// </summary>
     public static ConsumableDistribution Baseline = new()
     {
+        Name = "Baseline",
         PersistentId = 500,
         SpawnsPerZone = 6,
         SpawnData = Collections.Flatten(
@@ -32,6 +33,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
     /// </summary>
     public static ConsumableDistribution Baseline_TechComplex = new()
     {
+        Name = "Baseline_TechComplex",
         PersistentId = 502,
         SpawnsPerZone = 6,
         SpawnData = Collections.Flatten(
@@ -50,6 +52,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
 
     public static ConsumableDistribution Baseline_Syringes = new()
     {
+        Name = "Baseline_Syringes",
         PersistentId = 504,
         SpawnsPerZone = 6,
         SpawnData = Collections.Flatten(
@@ -67,6 +70,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
     /// </summary>
     public static ConsumableDistribution Baseline_FogRepellers = new()
     {
+        Name = "Baseline_FogRepellers",
         PersistentId = 505,
         SpawnsPerZone = 8,
         SpawnData = Collections.Flatten(
@@ -80,6 +84,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
 
     public static ConsumableDistribution Baseline_LockMelters = new()
     {
+        Name = "Baseline_LockMelters",
         PersistentId = 506,
         SpawnsPerZone = 6,
         SpawnData = Collections.Flatten(
@@ -96,6 +101,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
     /// </summary>
     public static ConsumableDistribution Alarms_FogRepellers = new()
     {
+        Name = "Alarms_FogRepellers",
         PersistentId = 550,
         SpawnsPerZone = 12,
         SpawnData = Collections.Flatten(
@@ -112,6 +118,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
     /// </summary>
     public static ConsumableDistribution Reactor_FogRepellers = new()
     {
+        Name = "Reactor_FogRepellers",
         PersistentId = 590,
         SpawnsPerZone = 10,
         SpawnData = Collections.Flatten(
@@ -127,6 +134,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
     /// </summary>
     public static ConsumableDistribution MedicalBay_Consumables = new()
     {
+        Name = "MedicalBay_Consumables",
         PersistentId = 610,
         SpawnsPerZone = 8,
         SpawnData = Collections.Flatten(
@@ -192,6 +200,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
             // New syringe-only med bay distributions
             MedicalBay_GTFriendlyO_Healing = new()
             {
+                Name = "MedicalBay_GTFriendlyO_Healing",
                 PersistentId = 800,
                 SpawnsPerZone = 10,
                 SpawnData = new List<ItemSpawn>
@@ -209,6 +218,7 @@ public record ConsumableDistribution : DataBlock<ConsumableDistribution>
 
             MedicalBay_GTFriendlyO_Combat = new()
             {
+                Name = "MedicalBay_GTFriendlyO_Combat",
                 PersistentId = 801,
                 SpawnsPerZone = 10,
                 SpawnData = new List<ItemSpawn>
