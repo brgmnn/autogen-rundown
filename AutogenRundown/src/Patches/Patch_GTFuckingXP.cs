@@ -22,7 +22,7 @@ public static class Patch_GTFuckingXP
         _searchFrames = 0;
     }
 
-    public static void Postfix()
+    public static void Postfix(PlayerGuiLayer __instance)
     {
         if (_done)
             return;
@@ -41,13 +41,20 @@ public static class Patch_GTFuckingXP
             return;
         }
 
-        var xpText = GameObject.Find("XpText");
+        var root = __instance.GuiLayerBase;
+        if (root == null)
+            return;
+
+        var movementRoot = root.transform.FindChild("MovementRoot");
+        if (movementRoot == null)
+            return;
+
+        var xpText = movementRoot.FindChild("XpText");
         if (xpText == null)
             return;
 
-        xpText.transform.Translate(0f, 100f, 0f);
+        xpText.Translate(0f, 100f, 0f);
         _done = true;
-
         Plugin.Logger.LogDebug("GTFuckingXP: Repositioned XpText +100 Y");
     }
 }
