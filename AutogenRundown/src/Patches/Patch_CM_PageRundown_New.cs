@@ -41,13 +41,13 @@ public class Patch_CM_PageRundown_New
         if (icons == null || icons.Count == 0)
             return;
 
-        float sumX = 0f;
-        for (int i = 0; i < icons.Count; i++)
+        var sumX = 0f;
+        for (var i = 0; i < icons.Count; i++)
             sumX += icons[i].transform.localPosition.x;
 
-        float avgX = sumX / icons.Count;
+        var avgX = sumX / icons.Count;
 
-        for (int i = 0; i < icons.Count; i++)
+        for (var i = 0; i < icons.Count; i++)
         {
             var pos = icons[i].transform.localPosition;
             icons[i].transform.localPosition = new Vector3(pos.x - avgX, pos.y, pos.z);

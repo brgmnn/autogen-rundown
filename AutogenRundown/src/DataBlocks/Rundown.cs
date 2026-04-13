@@ -51,7 +51,6 @@ public record Rundown : DataBlock<Rundown>
     [JsonIgnore]
     public string StoryTitle { get; set; } = string.Empty;
 
-
     // Values we just leave as is
     public bool NeverShowRundownTree = false;
     public int VanityItemLayerDropDataBlock = 0;
@@ -83,8 +82,7 @@ public record Rundown : DataBlock<Rundown>
     [JsonIgnore]
     public Color VisualsETier { get; set; } = Color.MenuVisuals;
 
-    public JObject StorytellingData {
-        get => JObject.FromObject(new
+    public JObject StorytellingData => JObject.FromObject(new
         {
             Title = StoryTitle,
             TextLog = 1268,
@@ -119,13 +117,13 @@ public record Rundown : DataBlock<Rundown>
                 TierDVisuals = new
                 {
                     Color = Color.MenuVisuals,
-                    Scale = ScaleTierWidth(TierD.Count),
+                    Scale = Math.Max(0.5, ScaleTierWidth(TierD.Count)),
                     ScaleYModifier = 0.3
                 },
                 TierEVisuals = new
                 {
                     Color = VisualsETier,
-                    Scale = ScaleTierWidth(TierE.Count),
+                    Scale = Math.Max(0.4, ScaleTierWidth(TierE.Count)),
                     ScaleYModifier = 0.3
                 },
             },
@@ -139,8 +137,6 @@ public record Rundown : DataBlock<Rundown>
             SurfaceDescription = 1267,
             ExternalExpTitle = 3901084012
         });
-        private set { }
-    }
 
     [JsonIgnore]
     public string DisplaySeed { get; set; } = "";
