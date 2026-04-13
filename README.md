@@ -71,6 +71,8 @@ TODO:
 
   * SC1: Main needs 1 more challenge of some kind. A hard extract perhaps?
 
+  * Querying a reactor crashes. From twitch
+
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
 
