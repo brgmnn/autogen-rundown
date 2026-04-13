@@ -3,6 +3,20 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.83.5](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.83.5) — April 13, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Change: Add fixed PersistentID's for consumables for reliable overriding via `GameData-Custom`
+* Change: Add adjustments for [GTFuckingXP](https://thunderstore.io/c/gtfo/p/Endskill/GTFuckingXP/) watermark UI to prevent overlapping with other watermarks (Fixes #28)
+* Change: Add rundown tier graphics for rundowns with a single E-tier level
+* Fix: Incorrect pluralization on `TerminalUplink` objective intel
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.83.4...v0.83.5
+
+
 ## [v0.83.4](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.83.4) — April 11, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
