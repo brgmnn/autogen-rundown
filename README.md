@@ -60,18 +60,14 @@ TODO:
   * Generator Cluster needs cells to be tightened up in their spawns
   * Big security scans that move are too hard
   * Fix uplink text for case where there's one terminal
-
-  * Check terminal stacking on 0.84.0
+  * SC1: Main needs 1 more challenge of some kind. A hard extract perhaps?
+  * Querying a reactor crashes. From twitch
 
   * Fix the cycling of security scans having global sound! Really annoying right now
   * Tone down higher density of scans, especially for moving ones
 
   * Add a version of travel scan where lights go out but only lights by the scan are lit up
   * Add a version of the scan wanted distance that takes a negative number which then finds a point thats a proportion of the total area away from the previous scan
-
-  * SC1: Main needs 1 more challenge of some kind. A hard extract perhaps?
-
-  * Querying a reactor crashes. From twitch
 
 NOTE
   * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
