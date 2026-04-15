@@ -125,7 +125,7 @@ public static class Patch_LG_NodeTools
         var ptrField = Il2CppInteropUtils
             .GetIl2CppMethodInfoPointerFieldForGeneratedMethod(method);
         var methodInfoPtr = (IntPtr)ptrField.GetValue(null);
-        nint functionPtr = *(nint*)(nint)methodInfoPtr;
+        var functionPtr = *(nint*)(nint)methodInfoPtr;
 
         _detour = INativeDetour.CreateAndApply(
             functionPtr, Detour_TryGetPositions, out _original);
@@ -167,8 +167,8 @@ public static class Patch_LG_NodeTools
             $"minDist={distanceFromEachother} totalNodes={nodes.Count}");
 
         // Build candidate list directly from nodes (replaces TryGetScoreNodes + ShrinkRandomly/ShrinkEvenly)
-        int poolSize = CandidatePoolSize;
-        int randomSeed = fixedSeed == 0
+        var poolSize = CandidatePoolSize;
+        var randomSeed = fixedSeed == 0
             ? Builder.SessionSeedRandom.Range(0, int.MaxValue)
             : fixedSeed;
 
@@ -177,20 +177,20 @@ public static class Patch_LG_NodeTools
         if (nodes.Count <= poolSize)
         {
             // All nodes fit in pool
-            for (int i = 0; i < nodes.Count; i++)
+            for (var i = 0; i < nodes.Count; i++)
                 candidates.Add(new ScoredNode { node = nodes[i], score = 0f });
         }
         else if (useRandomPosition != 0)
         {
             // ShrinkRandomly equivalent: Fisher-Yates sampling
             var indices = new List<int>(nodes.Count);
-            for (int i = 0; i < nodes.Count; i++)
+            for (var i = 0; i < nodes.Count; i++)
                 indices.Add(i);
 
             UnityEngine.Random.InitState(randomSeed);
-            for (int i = 0; i < poolSize && indices.Count > 0; i++)
+            for (var i = 0; i < poolSize && indices.Count > 0; i++)
             {
-                int pick = UnityEngine.Random.Range(0, indices.Count);
+                var pick = UnityEngine.Random.Range(0, indices.Count);
                 candidates.Add(new ScoredNode { node = nodes[indices[pick]], score = 0f });
                 indices.RemoveAt(pick);
             }
@@ -198,10 +198,10 @@ public static class Patch_LG_NodeTools
         else
         {
             // ShrinkEvenly equivalent: uniform stride sampling
-            float step = (float)nodes.Count / poolSize;
-            float f = 0f;
-            int idx = 0;
-            for (int i = 0; idx < nodes.Count && i < poolSize; i++)
+            var step = (float)nodes.Count / poolSize;
+            var f = 0f;
+            var idx = 0;
+            for (var i = 0; idx < nodes.Count && i < poolSize; i++)
             {
                 candidates.Add(new ScoredNode { node = nodes[idx], score = 0f });
                 f += step;
@@ -218,28 +218,34 @@ public static class Patch_LG_NodeTools
         candidates.Sort((a, b) => a.score.CompareTo(b.score));
 
         // Step 5: Placement loop with distance enforcement
-        float currentMinDistance = distanceFromEachother;
+        var currentMinDistance = distanceFromEachother;
         var placedPositions = new List<Vector3>();
         var placedNodes = new List<AIG_INode>();
-        int placed = 0;
+        var placed = 0;
 
         // When radius=0, game places component 0 at sourcePos (the door).
         // Seed the anchor so separation is measured from the actual door position.
         if (atRadiusFromSourcePos <= 0.01f && wantedCount > 0)
         {
-            AIG_INode nearestNode = candidates[0].node;
-            float nearestDist = float.MaxValue;
-            for (int i = 0; i < candidates.Count; i++)
+            var nearestNode = candidates[0].node;
+            var nearestDist = float.MaxValue;
+
+            for (var i = 0; i < candidates.Count; i++)
             {
-                float d = (candidates[i].node.Position - sourcePos).sqrMagnitude;
-                if (d < nearestDist) { nearestDist = d; nearestNode = candidates[i].node; }
+                var d = (candidates[i].node.Position - sourcePos).sqrMagnitude;
+
+                if (d >= nearestDist)
+                    continue;
+
+                nearestDist = d;
+                nearestNode = candidates[i].node;
             }
+
             placedPositions.Add(sourcePos);
             placedNodes.Add(nearestNode);
             placed = 1;
 
-            Plugin.Logger.LogDebug(
-                $"[NodeTools]   Component 1 (seeded at source): distToSource=0.00");
+            Plugin.Logger.LogDebug("[NodeTools]   Component 1 (seeded at source): distToSource=0.00");
         }
 
         placed += PlaceCandidates(
@@ -249,7 +255,7 @@ public static class Patch_LG_NodeTools
         // Step 6: Iterative relaxation (#2)
         if (UseIterativeRelaxation && placed < wantedCount)
         {
-            for (int pass = 0; pass < MaxRelaxationPasses && placed < wantedCount; pass++)
+            for (var pass = 0; pass < MaxRelaxationPasses && placed < wantedCount; pass++)
             {
                 currentMinDistance *= RelaxationFactor;
                 Plugin.Logger.LogDebug(
@@ -257,6 +263,7 @@ public static class Patch_LG_NodeTools
                     $"reduced minDist to {currentMinDistance:F2}, placed={placed}/{wantedCount}");
 
                 var remaining = RebuildCandidates(candidates, placedNodes);
+
                 if (remaining.Count == 0)
                     break;
 
@@ -277,8 +284,8 @@ public static class Patch_LG_NodeTools
                 UnityEngine.Random.InitState(fixedSeed);
                 for (; placed < wantedCount; placed++)
                 {
-                    var node = reachableNodes[
-                        UnityEngine.Random.Range(0, int.MaxValue) % reachableNodes.Count];
+                    var node = reachableNodes[UnityEngine.Random.Range(0, int.MaxValue) % reachableNodes.Count];
+
                     placedPositions.Add(node.Position);
                 }
             }
@@ -286,15 +293,16 @@ public static class Patch_LG_NodeTools
             {
                 for (; placed < wantedCount; placed++)
                 {
-                    var node = reachableNodes[
-                        Builder.SessionSeedRandom.Range(0, int.MaxValue) % reachableNodes.Count];
+                    var node = reachableNodes[Builder.SessionSeedRandom.Range(0, int.MaxValue) % reachableNodes.Count];
+
                     placedPositions.Add(node.Position);
                 }
             }
         }
 
         var positionsList = new Il2CppSystem.Collections.Generic.List<Vector3>();
-        for (int i = 0; i < placedPositions.Count; i++)
+
+        for (var i = 0; i < placedPositions.Count; i++)
             positionsList.Add(placedPositions[i]);
 
         *positions = positionsList.Pointer;
@@ -307,16 +315,17 @@ public static class Patch_LG_NodeTools
             if (placedNodes.Count > 1)
             {
                 float minConsec = float.MaxValue, maxConsec = 0f, totalConsec = 0f;
-                for (int i = 1; i < placedNodes.Count; i++)
+
+                for (var i = 1; i < placedNodes.Count; i++)
                 {
-                    float d = UseGraphDistance
+                    var d = UseGraphDistance
                         ? GetGraphDistance(placedNodes[i], placedNodes[i - 1])
                         : (placedPositions[i] - placedPositions[i - 1]).magnitude;
                     if (d < minConsec) minConsec = d;
                     if (d > maxConsec) maxConsec = d;
                     totalConsec += d;
                 }
-                int consecCount = placedNodes.Count - 1;
+                var consecCount = placedNodes.Count - 1;
                 Plugin.Logger.LogDebug(
                     $"[NodeTools] Consecutive: min={minConsec:F2} max={maxConsec:F2} " +
                     $"mean={totalConsec / consecCount:F2} (walk distance)");
@@ -324,11 +333,12 @@ public static class Patch_LG_NodeTools
 
             // Pairwise distances (minimum separation between any two scans)
             float minSep = float.MaxValue, maxSep = 0f, totalSep = 0f;
-            int sepCount = 0;
-            for (int i = 0; i < placedPositions.Count; i++)
-                for (int j = i + 1; j < placedPositions.Count; j++)
+            var sepCount = 0;
+
+            for (var i = 0; i < placedPositions.Count; i++)
+                for (var j = i + 1; j < placedPositions.Count; j++)
                 {
-                    float d = (placedPositions[i] - placedPositions[j]).magnitude;
+                    var d = (placedPositions[i] - placedPositions[j]).magnitude;
                     if (d < minSep) minSep = d;
                     if (d > maxSep) maxSep = d;
                     totalSep += d;
@@ -350,12 +360,12 @@ public static class Patch_LG_NodeTools
         float minDistance,
         Vector3 sourcePos)
     {
-        int placed = 0;
+        var placed = 0;
 
         // Work on a mutable copy
         var working = new List<ScoredNode>(candidates);
 
-        for (int i = 0; i < wantedCount; i++)
+        for (var i = 0; i < wantedCount; i++)
         {
             if (working.Count == 0)
                 break;
@@ -370,30 +380,27 @@ public static class Patch_LG_NodeTools
                 placedNodes.Add(best.node);
                 placed++;
 
-                float distToSource = (best.node.Position - sourcePos).magnitude;
+                var distToSource = (best.node.Position - sourcePos).magnitude;
                 Plugin.Logger.LogDebug(
                     $"[NodeTools]   Component {placedPositions.Count}: distToSource={distToSource:F2}");
                 continue;
             }
 
-            // Find best candidate considering distance to placed positions
+            // Find the best candidate considering distance to placed positions
             AIG_INode bestNode = null;
-            float bestScore = float.MaxValue;
-            int bestIdx = -1;
+            var bestScore = float.MaxValue;
+            var bestIdx = -1;
 
-            for (int j = 0; j < working.Count; j++)
+            for (var j = 0; j < working.Count; j++)
             {
                 var candidate = working[j];
 
                 // Hard filter: reject if too close to ANY placed scan (pairwise floor)
-                float minDistToPlaced = GetMinDistanceToPlaced(
-                    candidate.node, placedPositions, placedNodes);
+                var minDistToPlaced = GetMinDistanceToPlaced(candidate.node, placedPositions, placedNodes);
 
                 if (UseHardDistanceFilter)
-                {
                     if (minDistToPlaced < minDistance * HardFilterFraction)
                         continue;
-                }
 
                 // Choose separation metric based on placement context
                 float separationDist;
@@ -414,7 +421,7 @@ public static class Patch_LG_NodeTools
                 float score;
                 if (UseCombinedScoring)
                 {
-                    float separationScore = Mathf.Abs(separationDist - minDistance) / Mathf.Max(minDistance, 0.001f);
+                    var separationScore = Mathf.Abs(separationDist - minDistance) / Mathf.Max(minDistance, 0.001f);
 
                     score = SourceDistanceWeight * candidate.score
                           + SeparationWeight * separationScore;
@@ -442,14 +449,14 @@ public static class Patch_LG_NodeTools
             placedNodes.Add(bestNode);
             placed++;
 
-            float dSource = (bestNode.Position - sourcePos).magnitude;
-            float dNearest = GetMinDistanceToPlaced(
+            var dSource = (bestNode.Position - sourcePos).magnitude;
+            var dNearest = GetMinDistanceToPlaced(
                 bestNode, placedPositions, placedNodes,
                 excludeSelf: true);
 
             // Distance to previous consecutive scan (what the player walks)
             var logPrevNode = placedNodes[placedNodes.Count - 2];
-            float dPrev = UseGraphDistance
+            var dPrev = UseGraphDistance
                 ? GetGraphDistance(bestNode, logPrevNode)
                 : (bestNode.Position - placedPositions[placedPositions.Count - 2]).magnitude;
 
@@ -467,22 +474,18 @@ public static class Patch_LG_NodeTools
         List<AIG_INode> placedNodes,
         bool excludeSelf = false)
     {
-        float minDist = float.MaxValue;
+        var minDist = float.MaxValue;
 
-        for (int i = 0; i < placedNodes.Count; i++)
+        for (var i = 0; i < placedNodes.Count; i++)
         {
             if (excludeSelf && (candidate.Position - placedNodes[i].Position).sqrMagnitude < 0.0001f)
                 continue;
 
             float dist;
-            if (UseGraphDistance)
-            {
-                dist = GetGraphDistance(candidate, placedNodes[i]);
-            }
-            else
-            {
-                dist = (candidate.Position - placedPositions[i]).magnitude;
-            }
+
+            dist = UseGraphDistance
+                ? GetGraphDistance(candidate, placedNodes[i])
+                : (candidate.Position - placedPositions[i]).magnitude;
 
             if (dist < minDist)
                 minDist = dist;
@@ -515,7 +518,7 @@ public static class Patch_LG_NodeTools
             if (_navMeshFailed)
                 return diff.magnitude;
 
-            float navDist = GetNavMeshDistance(fromPos, toPos);
+            var navDist = GetNavMeshDistance(fromPos, toPos);
 
             if (!_loggedNavMeshStatus)
             {
@@ -549,10 +552,12 @@ public static class Patch_LG_NodeTools
                 && path.status == NavMeshPathStatus.PathComplete
                 && path.corners.Length > 1)
             {
-                float dist = 0f;
+                var dist = 0f;
                 var corners = path.corners;
-                for (int i = 1; i < corners.Length; i++)
+
+                for (var i = 1; i < corners.Length; i++)
                     dist += (corners[i] - corners[i - 1]).magnitude;
+
                 return dist;
             }
         }
@@ -572,13 +577,13 @@ public static class Patch_LG_NodeTools
         List<ScoredNode> scoredNodes,
         float preferredDistance)
     {
-        for (int i = 0; i < scoredNodes.Count; i++)
+        for (var i = 0; i < scoredNodes.Count; i++)
         {
             var scored = scoredNodes[i];
-            float distToSource = (scored.node.Position - sourcePos).magnitude;
+            var distToSource = (scored.node.Position - sourcePos).magnitude;
             // When radius=0, source distance is irrelevant (first scan is placed at
             // the door by ChainedPuzzleInstance). Only score by occlusion.
-            float sourceScore = preferredDistance > 0.01f
+            var sourceScore = preferredDistance > 0.01f
                 ? Mathf.Abs(distToSource - preferredDistance) / preferredDistance
                 : 0f;
 
@@ -595,11 +600,9 @@ public static class Patch_LG_NodeTools
         var excludeSet = new HashSet<AIG_INode>(excludeNodes);
         var result = new List<ScoredNode>();
 
-        for (int i = 0; i < original.Count; i++)
-        {
+        for (var i = 0; i < original.Count; i++)
             if (!excludeSet.Contains(original[i].node))
                 result.Add(original[i]);
-        }
 
         return result;
     }
