@@ -533,23 +533,36 @@ public static class Patch_LG_NodeTools
         List<Vector3> placedPositions)
     {
         var cDir = new Vector2(candidatePos.x - sourcePos.x, candidatePos.z - sourcePos.z);
-        if (cDir.sqrMagnitude < AngularEpsilon * AngularEpsilon) return 0f;
+
+        if (cDir.sqrMagnitude < AngularEpsilon * AngularEpsilon)
+            return 0f;
+
         cDir.Normalize();
 
         var maxDot = -1f;
+
         for (var i = 0; i < placedPositions.Count; i++)
         {
             var pDir = new Vector2(
                 placedPositions[i].x - sourcePos.x,
                 placedPositions[i].z - sourcePos.z);
-            if (pDir.sqrMagnitude < AngularEpsilon * AngularEpsilon) continue;
+
+            if (pDir.sqrMagnitude < AngularEpsilon * AngularEpsilon)
+                continue;
+
             pDir.Normalize();
+
             var dot = Mathf.Clamp(Vector2.Dot(cDir, pDir), -1f, 1f);
-            if (dot > maxDot) maxDot = dot;
+
+            if (dot > maxDot)
+                maxDot = dot;
         }
-        if (maxDot < -0.9999f) return 0f;
+
+        if (maxDot < -0.9999f)
+            return 0f;
 
         var minAngle = Mathf.Acos(maxDot);
+
         return 1f - (minAngle / Mathf.PI);
     }
 
