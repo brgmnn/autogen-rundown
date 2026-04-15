@@ -484,6 +484,7 @@ Non-JSON files (images, icons, etc.) are copied directly into the target directo
 
 Many thanks to the modding community for making GTFO modding possible, and a special thank you to the following creators for work that this mod depends on:
 
+- Amor's [AmorLib](https://thunderstore.io/c/gtfo/p/Amorously/AmorLib/) and [ExcellentObjectiveSetup](https://thunderstore.io/c/gtfo/p/Amorously/ExcellentObjectiveSetup/)
 - Dak's [MTFO](https://thunderstore.io/c/gtfo/p/dakkhuza/MTFO/) and [Geomorph Pack](https://thunderstore.io/c/gtfo/p/dakkhuza/DakGeos/)
 - Inas07's [many mods](https://thunderstore.io/c/gtfo/p/Inas07/)
   - Notably [LocalProgression](https://thunderstore.io/c/gtfo/p/Inas07/LocalProgression/) and [ExtraObjectiveSetup](https://thunderstore.io/c/gtfo/p/Inas07/ExtraObjectiveSetup/)
