@@ -81,6 +81,18 @@ public static class Patch_LG_NodeTools
     // Bonus for nodes with higher occlusion — favors visually interesting placements.
     private const float OcclusionScale = 3f;
 
+    // Weight of the angular-diversity term in the combined placement score.
+    // Only applies when atRadiusFromSourcePos > 0 (Mode B: a puzzle type laying out
+    // its own sub-scans around a single landing point, e.g. CP_Cluster_Core).
+    // Penalizes candidates whose XZ direction from sourcePos is near an already-placed
+    // direction — produces equidistant spread around the circle.
+    // Sits between SourceDistanceWeight (1.0) and SeparationWeight (8.0).
+    private const float AngularDiversityWeight = 5.0f;
+
+    // Direction vectors with XZ magnitude below this are treated as "at source"
+    // and skipped from angular scoring (angle is ill-defined at the origin).
+    private const float AngularEpsilon = 0.01f;
+
     // Flat penalty added in vanilla-style scoring when a candidate is too close
     // to a placed node. Only used when UseCombinedScoring is false.
     private const float VanillaPenalty = 10f;
@@ -251,7 +263,7 @@ public static class Patch_LG_NodeTools
 
         placed += PlaceCandidates(
             candidates, placedPositions, placedNodes,
-            wantedCount - placed, currentMinDistance, sourcePos);
+            wantedCount - placed, currentMinDistance, sourcePos, atRadiusFromSourcePos);
 
         // Step 6: Iterative relaxation (#2)
         if (UseIterativeRelaxation && placed < wantedCount)
@@ -270,7 +282,7 @@ public static class Patch_LG_NodeTools
 
                 placed += PlaceCandidates(
                     remaining, placedPositions, placedNodes,
-                    wantedCount - placed, currentMinDistance, sourcePos);
+                    wantedCount - placed, currentMinDistance, sourcePos, atRadiusFromSourcePos);
             }
         }
 
@@ -359,7 +371,8 @@ public static class Patch_LG_NodeTools
         List<AIG_INode> placedNodes,
         int wantedCount,
         float minDistance,
-        Vector3 sourcePos)
+        Vector3 sourcePos,
+        float atRadiusFromSourcePos)
     {
         var placed = 0;
 
@@ -391,6 +404,7 @@ public static class Patch_LG_NodeTools
             AIG_INode bestNode = null;
             var bestScore = float.MaxValue;
             var bestIdx = -1;
+            var bestAngularScore = 0f;
 
             for (var j = 0; j < working.Count; j++)
             {
@@ -419,13 +433,21 @@ public static class Patch_LG_NodeTools
                         : (candidate.node.Position - placedPositions[placedPositions.Count - 1]).magnitude;
                 }
 
+                // Angular diversity (Mode B only): reward candidates whose direction
+                // from sourcePos is far from any already-placed direction.
+                var angularScore = 0f;
+                if (atRadiusFromSourcePos > 0.01f && placedPositions.Count > 0)
+                    angularScore = GetAngularDiversityScore(
+                        candidate.node.Position, sourcePos, placedPositions);
+
                 float score;
                 if (UseCombinedScoring)
                 {
                     var separationScore = Mathf.Abs(separationDist - minDistance) / Mathf.Max(minDistance, 0.001f);
 
                     score = SourceDistanceWeight * candidate.score
-                          + SeparationWeight * separationScore;
+                          + SeparationWeight * separationScore
+                          + AngularDiversityWeight * angularScore;
                 }
                 else
                 {
@@ -439,6 +461,7 @@ public static class Patch_LG_NodeTools
                     bestScore = score;
                     bestNode = candidate.node;
                     bestIdx = j;
+                    bestAngularScore = angularScore;
                 }
             }
 
@@ -461,9 +484,14 @@ public static class Patch_LG_NodeTools
                 ? GetGraphDistance(bestNode, logPrevNode)
                 : (bestNode.Position - placedPositions[placedPositions.Count - 2]).magnitude;
 
+            var angleSuffix = atRadiusFromSourcePos > 0.01f
+                ? $" minAngleToPlaced={(1f - bestAngularScore) * 180f:F0}°"
+                : "";
+
             Plugin.Logger.LogDebug(
                 $"[NodeTools]   Component {placedPositions.Count}: " +
-                $"distToSource={dSource:F2} distToPrev={dPrev:F2} distToNearest={dNearest:F2}");
+                $"distToSource={dSource:F2} distToPrev={dPrev:F2} distToNearest={dNearest:F2}" +
+                angleSuffix);
         }
 
         return placed;
@@ -493,6 +521,36 @@ public static class Patch_LG_NodeTools
         }
 
         return minDist;
+    }
+
+    // Returns 0 when candidate direction is opposite to all placed directions (ideal
+    // spread), 1 when candidate sits on top of a placed direction (worst). XZ-projected
+    // — levels can be multi-floor and angular spread in the horizontal plane is what
+    // matters for gameplay. Returns 0 when no valid placed direction exists.
+    private static float GetAngularDiversityScore(
+        Vector3 candidatePos,
+        Vector3 sourcePos,
+        List<Vector3> placedPositions)
+    {
+        var cDir = new Vector2(candidatePos.x - sourcePos.x, candidatePos.z - sourcePos.z);
+        if (cDir.sqrMagnitude < AngularEpsilon * AngularEpsilon) return 0f;
+        cDir.Normalize();
+
+        var maxDot = -1f;
+        for (var i = 0; i < placedPositions.Count; i++)
+        {
+            var pDir = new Vector2(
+                placedPositions[i].x - sourcePos.x,
+                placedPositions[i].z - sourcePos.z);
+            if (pDir.sqrMagnitude < AngularEpsilon * AngularEpsilon) continue;
+            pDir.Normalize();
+            var dot = Mathf.Clamp(Vector2.Dot(cDir, pDir), -1f, 1f);
+            if (dot > maxDot) maxDot = dot;
+        }
+        if (maxDot < -0.9999f) return 0f;
+
+        var minAngle = Mathf.Acos(maxDot);
+        return 1f - (minAngle / Mathf.PI);
     }
 
     private static float GetGraphDistance(AIG_INode from, AIG_INode to)
