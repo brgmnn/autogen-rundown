@@ -30,7 +30,7 @@ namespace AutogenRundown;
 [BepInDependency("Amor.AmorLib")]
 public class Plugin : BasePlugin
 {
-    public const string Version = "0.83.5";
+    public const string Version = "0.83.6";
 
     public const string Name = "the_tavern-AutogenRundown";
 
