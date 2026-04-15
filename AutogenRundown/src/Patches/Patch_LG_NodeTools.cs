@@ -417,9 +417,14 @@ public static class Patch_LG_NodeTools
                     if (minDistToPlaced < minDistance * HardFilterFraction)
                         continue;
 
+                // Mode B = radius > 0: a puzzle type fanning sub-scans around a single
+                // source point (CP_Cluster_Core, bulkhead door controller, SetupMovement).
+                // Mode A = radius ≈ 0: top-level alarm distributing along a walk path.
+                var isFanMode = atRadiusFromSourcePos > 0.01f;
+
                 // Choose separation metric based on placement context
                 float separationDist;
-                if (_isClusterPlacement)
+                if (isFanMode || _isClusterPlacement)
                 {
                     // Fan scoring: maximize spread from ALL placed scans
                     separationDist = minDistToPlaced;
@@ -436,14 +441,22 @@ public static class Patch_LG_NodeTools
                 // Angular diversity (Mode B only): reward candidates whose direction
                 // from sourcePos is far from any already-placed direction.
                 var angularScore = 0f;
-                if (atRadiusFromSourcePos > 0.01f && placedPositions.Count > 0)
+                if (isFanMode && placedPositions.Count > 0)
                     angularScore = GetAngularDiversityScore(
                         candidate.node.Position, sourcePos, placedPositions);
 
                 float score;
                 if (UseCombinedScoring)
                 {
-                    var separationScore = Mathf.Abs(separationDist - minDistance) / Mathf.Max(minDistance, 0.001f);
+                    // Mode A targets an ideal consecutive spacing = minDistance.
+                    // Mode B treats minDistance as a FLOOR and rewards extra spread —
+                    // the target-based formula would punish well-fanned candidates
+                    // and fight the angular term.
+                    float separationScore;
+                    if (isFanMode)
+                        separationScore = minDistance / Mathf.Max(separationDist, minDistance);
+                    else
+                        separationScore = Mathf.Abs(separationDist - minDistance) / Mathf.Max(minDistance, 0.001f);
 
                     score = SourceDistanceWeight * candidate.score
                           + SeparationWeight * separationScore
