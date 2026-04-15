@@ -1015,7 +1015,7 @@ public partial record Zone : DataBlock<Zone>
     internal Level level { get; init; }
 
     [JsonIgnore]
-    internal LevelLayout layout { get; init; }
+    internal LevelLayout layout { get; set; }
 
     /// <summary>
     /// Flags whether the zone is in fog or not.

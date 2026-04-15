@@ -1,9 +1,8 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
-using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.Extensions;
 using AutogenRundown.Patches;
-using BepInEx.Logging;
+using SmartFormat;
 
 namespace AutogenRundown.DataBlocks.Objectives;
 
@@ -64,16 +63,13 @@ public partial record WardenObjective
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
-        if (Uplink_NumberOfTerminals > 1)
-        {
-            MainObjective = new Text("Find the <u>Uplink Terminals</u> [ALL_ITEMS] and establish an external uplink from each terminal");
-            FindLocationInfo = new Text("Gather information about the location of the terminals");
-        }
-        else
-        {
-            MainObjective = new Text("Find the <u>Uplink Terminal</u> [ALL_ITEMS] and establish an external uplink");
-            FindLocationInfo = new Text("Gather information about the location of the terminal");
-        }
+        MainObjective = new Text(() => Smart.Format(
+            "Find the <u>Uplink {count:Terminal|Terminals}</u> [ALL_ITEMS] and establish an external uplink from {count:the|each} terminal",
+            new { count = Uplink_NumberOfTerminals }));
+
+        FindLocationInfo = new Text(() => Smart.Format(
+            "Gather information about the location of {count:the terminal|[ALL_ITEMS]}",
+            new { count = Uplink_NumberOfTerminals }));
 
         SolveItem = new Text("Use [ITEM_SERIAL] to create an uplink to [UPLINK_ADDRESS]");
         SolveItemHelp = new Text("Use the UPLINK_CONNECT command to establish the connection");
