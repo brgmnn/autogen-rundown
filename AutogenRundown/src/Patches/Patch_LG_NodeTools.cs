@@ -101,6 +101,7 @@ public static class Patch_LG_NodeTools
 
     // IL2CPP native delegate — matches the platform ABI:
     //   bool → byte, IL2CPP objects → IntPtr, out → pointer
+    // TODO: use atRadiusFromSourcePos
     private unsafe delegate byte d_TryGetPositions(
         IntPtr area,
         Vector3 sourcePos,
