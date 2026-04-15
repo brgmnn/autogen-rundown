@@ -87,7 +87,7 @@ public static class Patch_LG_NodeTools
     // Penalizes candidates whose XZ direction from sourcePos is near an already-placed
     // direction — produces equidistant spread around the circle.
     // Sits between SourceDistanceWeight (1.0) and SeparationWeight (8.0).
-    private const float AngularDiversityWeight = 5.0f;
+    private const float AngularDiversityWeight = 0.5f;
 
     // Direction vectors with XZ magnitude below this are treated as "at source"
     // and skipped from angular scoring (angle is ill-defined at the origin).
@@ -458,8 +458,10 @@ public static class Patch_LG_NodeTools
                     else
                         separationScore = Mathf.Abs(separationDist - minDistance) / Mathf.Max(minDistance, 0.001f);
 
+                    var separationWeight = isFanMode ? 1.0f : SeparationWeight;
+
                     score = SourceDistanceWeight * candidate.score
-                          + SeparationWeight * separationScore
+                          + separationWeight * separationScore
                           + AngularDiversityWeight * angularScore;
                 }
                 else
