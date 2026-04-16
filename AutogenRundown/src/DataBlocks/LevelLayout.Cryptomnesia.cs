@@ -58,11 +58,19 @@ public partial record LevelLayout
         var dimensionCount = objective.GatherRequiredCount - 1;
 
         // Data cube placement branches per dimension (by layout type)
-        var cubeBranches = layoutType switch
+        CryptomnesiaCubeBranches = layoutType switch
         {
-            CryptomnesiaLayout.HubChain => new[] { "hub_3", "side_2", "side_3a", "side_1" },
-            CryptomnesiaLayout.ForwardSplit => new[] { "find_items", "find_items", "find_items", "find_items" },
-            _ => new[] { "find_items", "find_items", "find_items" }
+            CryptomnesiaLayout.HubChain => Generator.Pick(
+                new List<List<string>>
+                {
+                    new() { "hub_3", "side_2",  "side_3a", "side_1" },
+                    new() { "hub_3", "side_3a", "side_1",  "side_2" },
+                    new() { "hub_3", "side_1",  "side_2",  "side_3a" }
+                })!,
+
+            // CryptomnesiaLayout.ForwardSplit => new() { "find_items", "find_items", "find_items", "find_items" },
+
+            _ => new() { "find_items", "find_items", "find_items", "find_items" }
         };
 
         #region Dimension = Reality
@@ -78,7 +86,7 @@ public partial record LevelLayout
         }
 
         // Place a data cube in the dimension-specific branch zone
-        var realityCubeNode = level.Planner.GetLastZone(director.Bulkhead, cubeBranches.First());
+        var realityCubeNode = level.Planner.GetLastZone(director.Bulkhead, CryptomnesiaCubeBranches.First());
 
         if (realityCubeNode != null)
             objective.Gather_PlacementNodes.Add((ZoneNode)realityCubeNode);
@@ -124,7 +132,7 @@ public partial record LevelLayout
             CopyRealityLayout(dimLayout, dimStart, start, dimensionIndex);
 
             // Place a data cube in the dimension-specific branch zone
-            var cubeBranch = cubeBranches[Math.Min(i + 1, cubeBranches.Length - 1)];
+            var cubeBranch = CryptomnesiaCubeBranches[Math.Min(i + 1, CryptomnesiaCubeBranches.Count - 1)];
             var cubeNode = level.Planner.GetLastZone(director.Bulkhead, cubeBranch, dimensionIndex);
 
             if (cubeNode != null)

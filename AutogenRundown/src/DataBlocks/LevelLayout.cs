@@ -31,7 +31,8 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         PersistentId = 0
     };
 
-    #region hidden data
+    #region Internal hidden data
+
     [JsonIgnore]
     private readonly Level level;
 
@@ -70,6 +71,9 @@ public partial record LevelLayout : DataBlock<LevelLayout>
 
     [JsonIgnore]
     public bool SkipRollEnemies { get; set; }
+
+    [JsonIgnore]
+    public List<string> CryptomnesiaCubeBranches { get; set; } = new();
 
     #endregion
 
