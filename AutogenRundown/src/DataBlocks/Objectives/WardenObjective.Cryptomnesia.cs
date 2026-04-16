@@ -69,8 +69,14 @@ public partial record WardenObjective
                     EventsOnActivate.Add(e);
         }
 
+        var forwardExtract = level.Planner
+            .GetZones(branch: "forward_extract", dimension: DimensionIndex.Reality)
+            .First();
+
         // Final warp back to Reality
-        EventsOnActivate.AddDimensionWarp(DimensionIndex.Reality);
+        EventsOnActivate
+            .AddDimensionWarp(DimensionIndex.Reality)
+            .AddUnlockDoor(Bulkhead.Main, forwardExtract.ZoneNumber, delay: 1.0);
 
         OnActivateOnSolveItem = true;
 

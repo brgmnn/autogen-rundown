@@ -204,6 +204,8 @@ public partial record LevelLayout
             hub3,
             new ZoneNode { Branch = "forward_extract", MaxConnections = 1 });
 
+        forwardExtractZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
+
         if (Generator.Flip())
             forwardExtractZone.GenCorridorGeomorph(Complex);
         else
@@ -304,9 +306,6 @@ public partial record LevelLayout
 
         foreach (var realityChild in realityChildren)
         {
-            if (realityChild.Branch == "extraction_elevator")
-                continue;
-
             var realityZone = level.Planner.GetZone(realityChild)!;
 
             var (dimChild, dimZone) = dimLayout.AddZone(dimParent, new ZoneNode
@@ -316,6 +315,24 @@ public partial record LevelLayout
             });
 
             CopyZoneSpatialProperties(realityZone, dimZone);
+
+            switch (realityChild.Branch)
+            {
+                case "forward_extract":
+                {
+                    dimZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
+
+                    break;
+                }
+
+                case "extraction_elevator":
+                {
+                    dimZone.CustomGeomorph = null;
+                    dimZone.Coverage = CoverageMinMax.Tiny_3;
+
+                    break;
+                }
+            }
 
             // Recurse into children of this node
             CopyRealityChildren(dimLayout, dimChild, realityChild, dimensionIndex);
