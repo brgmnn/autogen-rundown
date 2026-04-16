@@ -34,7 +34,7 @@ public partial record WardenObjective
             {
                 Dimension = node.Dimension,
                 LocalIndex = node.ZoneNumber,
-                Weights = ZonePlacementWeights.EvenlyDistributed
+                Weights = ZonePlacementWeights.NotAtStart
             }).ToList();
         dataLayer.ObjectiveData.ZonePlacementDatas.Add(placements);
 
