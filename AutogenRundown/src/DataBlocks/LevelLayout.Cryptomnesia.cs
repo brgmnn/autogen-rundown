@@ -158,6 +158,22 @@ public partial record LevelLayout
     /// <summary>
     /// HubChain: A chain of 2-4 hub zones connected in sequence.
     /// Each zone uses GenHubGeomorph for large, open rooms.
+    ///
+    /// "hub_3", "side_2", "side_3a", "side_1"
+    ///
+    /// Layout map:
+    ///
+    ///   start
+    ///   ├── side_1                            -> Dimension3 Cube
+    ///   └── hub_2
+    ///       ├── side_2                        -> Dimension1 Cube
+    ///       ├── side_3a                       -> Dimension2 Cube
+    ///       │   └── side_3b
+    ///       └── hub_3                         -> Reality Cube
+    ///           ├── side_4
+    ///           └── forward_extract
+    ///               └── extraction_elevator
+    ///
     /// </summary>
     /// <returns>The last zone node (for data cube placement).</returns>
     private ZoneNode BuildCryptomnesia_HubChain(ZoneNode start)
