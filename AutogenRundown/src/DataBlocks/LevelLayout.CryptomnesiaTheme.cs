@@ -118,6 +118,9 @@ public partial record LevelLayout
                 break;
         }
 
+        if (layoutType == CryptomnesiaLayout.HubChain)
+            SetupHubChain(theme, layout, level, director, objective);
+
         Plugin.Logger.LogDebug($"Cryptomnesia: Applied theme {theme} to {layout.Name}");
     }
 
@@ -172,7 +175,6 @@ public partial record LevelLayout
         layout.SkipRollEnemies = true;
 
         var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);
-        var scoutRoomPicked = false;
 
         foreach (var node in zoneNodes)
         {
@@ -194,20 +196,6 @@ public partial record LevelLayout
                 Difficulty = (uint)Enemy.ShooterGiant,
                 Points = points / 2
             });
-
-            // One non-first zone becomes the scout room
-            if (!scoutRoomPicked && node.ZoneNumber != zoneNodes.First().ZoneNumber)
-            {
-                scoutRoomPicked = true;
-
-                for (int i = 0; i < 6; i++)
-                    zone.EnemySpawningInZone.Add(
-                        EnemySpawningData.Scout with
-                        {
-                            Distribution = EnemyZoneDistribution.ForceOne,
-                            Points = 25
-                        });
-            }
         }
     }
 
@@ -220,8 +208,6 @@ public partial record LevelLayout
         layout.SkipRollEnemies = true;
 
         var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);
-        var tankPlaced = false;
-        var scoutPlaced = false;
 
         foreach (var node in zoneNodes)
         {
@@ -236,28 +222,6 @@ public partial record LevelLayout
 
             zone.EnemySpawningInZone.Add(EnemySpawningData.Charger with { Points = (int)(points * 0.6) });
             zone.EnemySpawningInZone.Add(EnemySpawningData.ChargerGiant with { Points = (int)(points * 0.4) });
-
-            // Place a tank in one non-first zone
-            if (!tankPlaced && node.ZoneNumber != zoneNodes.First().ZoneNumber)
-            {
-                tankPlaced = true;
-                zone.EnemySpawningInZone.Add(EnemySpawningData.Tank with
-                {
-                    Distribution = EnemyZoneDistribution.ForceOne,
-                    Points = 25
-                });
-            }
-
-            // Place a charger scout in a different non-first zone
-            if (tankPlaced && !scoutPlaced && node.ZoneNumber != zoneNodes.First().ZoneNumber)
-            {
-                scoutPlaced = true;
-                zone.EnemySpawningInZone.Add(EnemySpawningData.ScoutCharger with
-                {
-                    Distribution = EnemyZoneDistribution.ForceOne,
-                    Points = 25
-                });
-            }
         }
     }
 
@@ -356,7 +320,6 @@ public partial record LevelLayout
         layout.SkipRollEnemies = true;
 
         var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);
-        var scoutPlaced = false;
 
         foreach (var node in zoneNodes)
         {
@@ -381,17 +344,6 @@ public partial record LevelLayout
                 Difficulty = (uint)Enemy.ShadowGiant,
                 Points = (int)(points * 0.4)
             });
-
-            // Place a shadow scout in one non-first zone
-            if (!scoutPlaced && node.ZoneNumber != zoneNodes.First().ZoneNumber)
-            {
-                scoutPlaced = true;
-                zone.EnemySpawningInZone.Add(EnemySpawningData.ScoutShadow with
-                {
-                    Distribution = EnemyZoneDistribution.ForceOne,
-                    Points = 25
-                });
-            }
         }
     }
 
@@ -404,7 +356,6 @@ public partial record LevelLayout
         layout.SkipRollEnemies = true;
 
         var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);
-        var scoutPlaced = false;
 
 
         // R8B1 dimension 1 dust settings
@@ -502,17 +453,6 @@ public partial record LevelLayout
             {
                 Points = (int)(points * 0.3)
             });
-
-            // Place a nightmare scout in one non-first zone
-            if (!scoutPlaced && node.ZoneNumber != zoneNodes.First().ZoneNumber)
-            {
-                scoutPlaced = true;
-                zone.EnemySpawningInZone.Add(EnemySpawningData.ScoutNightmare with
-                {
-                    Distribution = EnemyZoneDistribution.ForceOne,
-                    Points = 25
-                });
-            }
         }
     }
 

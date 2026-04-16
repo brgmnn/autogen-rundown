@@ -72,9 +72,6 @@ public partial record LevelLayout : DataBlock<LevelLayout>
     [JsonIgnore]
     public bool SkipRollEnemies { get; set; }
 
-    [JsonIgnore]
-    public List<string> CryptomnesiaCubeBranches { get; set; } = new();
-
     #endregion
 
     /// <summary>

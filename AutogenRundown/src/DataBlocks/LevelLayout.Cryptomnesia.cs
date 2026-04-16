@@ -58,7 +58,7 @@ public partial record LevelLayout
         var dimensionCount = objective.GatherRequiredCount - 1;
 
         // Data cube placement branches per dimension (by layout type)
-        CryptomnesiaCubeBranches = layoutType switch
+        objective.Cryptomnesia_CubeBranches = layoutType switch
         {
             CryptomnesiaLayout.HubChain => Generator.Pick(
                 new List<List<string>>
@@ -86,7 +86,7 @@ public partial record LevelLayout
         }
 
         // Place a data cube in the dimension-specific branch zone
-        var realityCubeNode = level.Planner.GetLastZone(director.Bulkhead, CryptomnesiaCubeBranches.First());
+        var realityCubeNode = level.Planner.GetLastZone(director.Bulkhead, objective.Cryptomnesia_CubeBranches.First());
 
         if (realityCubeNode != null)
             objective.Gather_PlacementNodes.Add((ZoneNode)realityCubeNode);
@@ -132,7 +132,7 @@ public partial record LevelLayout
             CopyRealityLayout(dimLayout, dimStart, start, dimensionIndex);
 
             // Place a data cube in the dimension-specific branch zone
-            var cubeBranch = CryptomnesiaCubeBranches[Math.Min(i + 1, CryptomnesiaCubeBranches.Count - 1)];
+            var cubeBranch = objective.Cryptomnesia_CubeBranches[Math.Min(i + 1, objective.Cryptomnesia_CubeBranches.Count - 1)];
             var cubeNode = level.Planner.GetLastZone(director.Bulkhead, cubeBranch, dimensionIndex);
 
             if (cubeNode != null)
