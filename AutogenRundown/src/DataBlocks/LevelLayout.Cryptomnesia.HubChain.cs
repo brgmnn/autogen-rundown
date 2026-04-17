@@ -202,9 +202,19 @@ public partial record LevelLayout
         var zone = ZoneByBranch(level, director, dim, branch);
         if (zone == null) return;
 
-        // Tier-scaled apex-style alarm. hub_3 is one tier weaker than hub_2 (e.g. to keep
-        // Reality's cube grab survivable since the cube lives in hub_3).
-        var puzzle = (level.Tier, weakerTier) switch
+        // 40% of hub doors get a hard travel scan instead of a door apex alarm.
+        // Travel scans scale by tier, same as AddTravelScanAlarm does.
+        var puzzle = Generator.Flip(0.4)
+            ? BuildHardTravelScan(level.Tier, weakerTier, theme)
+            : BuildApexAlarm(level.Tier, weakerTier, theme);
+
+        zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
+    }
+
+    /// <summary>Themed apex alarm for hub entry doors. Mixes baseline strikers with theme-specific enemies.</summary>
+    private static ChainedPuzzle BuildApexAlarm(string tier, bool weaker, CryptomnesiaTheme theme)
+    {
+        var basePuzzle = (tier, weaker) switch
         {
             ("A", false) => ChainedPuzzle.AlarmClass3_Mixed,
             ("A", true) => ChainedPuzzle.AlarmClass2,
@@ -216,11 +226,99 @@ public partial record LevelLayout
             ("D", true) => ChainedPuzzle.AlarmClass5_Mixed,
             ("E", false) => ChainedPuzzle.AlarmClass7_Mixed,
             ("E", true) => ChainedPuzzle.AlarmClass6_Mixed,
-            _ => weakerTier ? ChainedPuzzle.AlarmClass3_Mixed : ChainedPuzzle.AlarmClass4_Mixed
+            _ => weaker ? ChainedPuzzle.AlarmClass3_Mixed : ChainedPuzzle.AlarmClass4_Mixed
         };
 
-        zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
-        _ = theme; // reserved -- themed population is already carried by the puzzle constant
+        return basePuzzle with { Population = ThemedPopulation(theme, tier) };
+    }
+
+    /// <summary>Hard travel scan in the room as an alternative to an apex door alarm.</summary>
+    private static ChainedPuzzle BuildHardTravelScan(string tier, bool weaker, CryptomnesiaTheme theme)
+    {
+        var scanOptions = (tier, weaker) switch
+        {
+            ("A", _) => new List<(double, PuzzleComponent)>
+            {
+                (0.66, PuzzleComponent.TravelTeam_Short),
+                (0.34, PuzzleComponent.TravelTeam_MediumGreen),
+            },
+            ("B", false) => new List<(double, PuzzleComponent)>
+            {
+                (0.60, PuzzleComponent.TravelTeam_MediumGreen),
+                (0.40, PuzzleComponent.TravelTeam_LongGreen),
+            },
+            ("B", true) => new List<(double, PuzzleComponent)>
+            {
+                (0.70, PuzzleComponent.TravelTeam_Short),
+                (0.30, PuzzleComponent.TravelTeam_MediumGreen),
+            },
+            ("C", false) => new List<(double, PuzzleComponent)>
+            {
+                (0.50, PuzzleComponent.TravelTeam_MediumGreen),
+                (0.50, PuzzleComponent.TravelTeam_LongGreen),
+            },
+            ("C", true) => new List<(double, PuzzleComponent)>
+            {
+                (0.60, PuzzleComponent.TravelTeam_MediumGreen),
+                (0.40, PuzzleComponent.TravelTeam_LongGreen),
+            },
+            ("D", false) => new List<(double, PuzzleComponent)>
+            {
+                (0.40, PuzzleComponent.TravelTeam_LongGreen),
+                (0.60, PuzzleComponent.SustainedTravel),
+            },
+            ("D", true) => new List<(double, PuzzleComponent)>
+            {
+                (0.70, PuzzleComponent.TravelTeam_LongGreen),
+                (0.30, PuzzleComponent.SustainedTravel),
+            },
+            ("E", false) => new List<(double, PuzzleComponent)>
+            {
+                (0.30, PuzzleComponent.TravelTeam_LongGreen),
+                (0.70, PuzzleComponent.SustainedTravel),
+            },
+            ("E", true) => new List<(double, PuzzleComponent)>
+            {
+                (0.60, PuzzleComponent.TravelTeam_LongGreen),
+                (0.40, PuzzleComponent.SustainedTravel),
+            },
+            _ => new List<(double, PuzzleComponent)> { (1.0, PuzzleComponent.TravelTeam_MediumGreen) }
+        };
+
+        var scan = Generator.Select(scanOptions);
+        var isSustained = scan == PuzzleComponent.SustainedTravel;
+
+        return ChainedPuzzle.TravelAlarm_Team with
+        {
+            PublicAlarmName = isSustained ? "Class S T Alarm" : "Class T Alarm",
+            Puzzle = new List<PuzzleComponent> { scan },
+            Population = ThemedPopulation(theme, tier),
+            Settings = (tier, weaker) switch
+            {
+                ("D" or "E", false) => WaveSettings.Baseline_Hard,
+                _ => WaveSettings.Baseline_Normal
+            }
+        };
+    }
+
+    /// <summary>
+    /// Picks a themed wave population. Per user guidance: "standards as normal wave strikers
+    /// and the rest as themed enemies" -- i.e. mixed baseline + theme flavour, not pure-theme.
+    /// Uses the hard variants for tiers D/E where available.
+    /// </summary>
+    private static WavePopulation ThemedPopulation(CryptomnesiaTheme theme, string tier)
+    {
+        var hard = tier is "D" or "E";
+        return theme switch
+        {
+            CryptomnesiaTheme.Chargers => hard ? WavePopulation.Baseline_Chargers_Hard : WavePopulation.Baseline_Chargers,
+            CryptomnesiaTheme.Shadows => WavePopulation.Baseline_Shadows,
+            CryptomnesiaTheme.Nightmares => hard ? WavePopulation.Baseline_Nightmare_Hard : WavePopulation.Baseline_Nightmare,
+            CryptomnesiaTheme.InfectionFog => WavePopulation.Baseline_Infested,
+            // Giants theme pairs with baseline since there's no "Baseline_Giants" pool;
+            // the dimension already has hibernate giants in every zone via the theme.
+            _ => WavePopulation.Baseline
+        };
     }
 
     #endregion
@@ -353,12 +451,8 @@ public partial record LevelLayout
                     dim, cubeBranch, cubeZone, onRoute);
 
             case HubChainSecondary.TerminalLock:
-                cubeZone.ProgressionPuzzleToEnter = new ProgressionPuzzle
-                {
-                    PuzzleType = ProgressionPuzzleType.Locked,
-                    CustomText = "<color=red>://ERROR: Door in temporary lockdown. Authorisation required.</color>"
-                };
-                return null;
+                return ApplyTerminalLock(
+                    layout, level, director, dim, cubeBranch, onRoute);
 
             case HubChainSecondary.Sensors:
                 // Place sensors in an upstream route zone (not the cube zone itself so
@@ -370,15 +464,16 @@ public partial record LevelLayout
                 return null;
 
             case HubChainSecondary.ShortError:
-                // Short tagged error alarm on the cube door. Stopped on dim exit.
-                var tag = $"crypto_{cubeBranch}_error_{dim}";
-                cubeZone.Alarm = ChainedPuzzle.FindOrPersist(ChainedPuzzle.AlarmError_Baseline);
-                if (objective.Cryptomnesia_ExitEvents.TryGetValue(dim, out var exitEvents))
+                // Short error alarm on the cube door. The puzzle's own survival wave is
+                // disabled on scan completion (DisableSurvivalWaveOnComplete = true) so it
+                // self-terminates once the scan finishes -- no exit-event cleanup needed.
+                cubeZone.Alarm = ChainedPuzzle.FindOrPersist(ChainedPuzzle.AlarmError_Baseline with
                 {
-                    exitEvents.AddTurnOffAlarms(0.0, tag);
-                    exitEvents.AddSound(Sound.Alarms_Error_AmbientStop, 0.5);
-                }
-                _ = theme;
+                    PublicAlarmName = "Class ://ERROR! (short)",
+                    Puzzle = new List<PuzzleComponent> { PuzzleComponent.ScanSmall },
+                    Settings = WaveSettings.Error_Easy,
+                    DisableSurvivalWaveOnComplete = true
+                });
                 return null;
 
             case HubChainSecondary.MiniBoss:
@@ -407,8 +502,7 @@ public partial record LevelLayout
     /// <summary>
     /// Wires a keycard / generator door onto the cube zone and picks a holder zone for
     /// the key/cell. On-route holders are preferred; with a small probability an off-route
-    /// detour zone is selected instead (at most one detour per dim). Reality may route the
-    /// holder through side_4 since side_4 is a direct sibling of hub_3.
+    /// detour zone is selected instead (at most one detour per dim).
     /// </summary>
     private static string? ApplyPuzzleDoor(
         ProgressionPuzzleType type,
@@ -420,35 +514,9 @@ public partial record LevelLayout
         Zone cubeZone,
         HashSet<string> onRoute)
     {
-        // Candidate holder branches. Reality (cube=hub_3) can use side_4 directly.
-        var onRouteHolders = onRoute.Where(b => b != cubeBranch && b != "hub_1").ToList();
-        var detourOptions = DetourOptionsFor(cubeBranch, dim);
-
-        string holderBranch;
-        if (onRouteHolders.Count > 0 && Generator.Flip(0.7))
-        {
-            holderBranch = Generator.Pick(onRouteHolders)!;
-        }
-        else if (detourOptions.Count > 0 && (onRouteHolders.Count == 0 || Generator.Flip(0.5)))
-        {
-            holderBranch = Generator.Pick(detourOptions)!;
-        }
-        else if (onRouteHolders.Count > 0)
-        {
-            holderBranch = Generator.Pick(onRouteHolders)!;
-        }
-        else
-        {
-            // Fallback: hub_1 as the start zone (always reachable).
-            holderBranch = "hub_1";
-        }
-
-        var holderNode = level.Planner.GetLastZone(director.Bulkhead, holderBranch, dim);
-        if (!holderNode.HasValue)
-        {
-            // Couldn't resolve holder -- skip the puzzle rather than place an unreachable key.
+        var (holderBranch, holderNode) = PickHolder(level, director, dim, cubeBranch, onRoute);
+        if (holderBranch == null || !holderNode.HasValue)
             return null;
-        }
 
         cubeZone.ProgressionPuzzleToEnter = new ProgressionPuzzle
         {
@@ -467,6 +535,67 @@ public partial record LevelLayout
 
         _ = layout;
         return holderBranch;
+    }
+
+    /// <summary>
+    /// Wires a terminal-activation door onto the cube zone. The terminal that unlocks
+    /// the door is placed in a separate reachable zone (same holder-selection logic as
+    /// keycard/generator). Uses AddTerminalUnlockPuzzle to install the ACTIVATE_DOOR
+    /// terminal command.
+    /// </summary>
+    private static string? ApplyTerminalLock(
+        LevelLayout layout,
+        Level level,
+        BuildDirector director,
+        DimensionIndex dim,
+        string cubeBranch,
+        HashSet<string> onRoute)
+    {
+        var cubeNode = level.Planner.GetLastZone(director.Bulkhead, cubeBranch, dim);
+        if (!cubeNode.HasValue) return null;
+
+        var (holderBranch, holderNode) = PickHolder(level, director, dim, cubeBranch, onRoute);
+        if (holderBranch == null || !holderNode.HasValue) return null;
+
+        layout.AddTerminalUnlockPuzzle(cubeNode.Value, holderNode.Value);
+        return holderBranch;
+    }
+
+    /// <summary>
+    /// Shared holder-zone picker for keycard / generator / terminal puzzles. Prefers an
+    /// on-route branch (so the player passes it on the way to the cube); with ~35% chance
+    /// rolls a single off-route detour branch instead, never exceeding one detour per dim.
+    /// </summary>
+    private static (string? branch, ZoneNode? node) PickHolder(
+        Level level,
+        BuildDirector director,
+        DimensionIndex dim,
+        string cubeBranch,
+        HashSet<string> onRoute)
+    {
+        var onRouteHolders = onRoute.Where(b => b != cubeBranch && b != "hub_1").ToList();
+        var detourOptions = DetourOptionsFor(cubeBranch, dim);
+
+        string holderBranch;
+        if (onRouteHolders.Count > 0 && Generator.Flip(0.65))
+        {
+            holderBranch = Generator.Pick(onRouteHolders)!;
+        }
+        else if (detourOptions.Count > 0)
+        {
+            holderBranch = Generator.Pick(detourOptions)!;
+        }
+        else if (onRouteHolders.Count > 0)
+        {
+            holderBranch = Generator.Pick(onRouteHolders)!;
+        }
+        else
+        {
+            holderBranch = "hub_1";
+        }
+
+        var node = level.Planner.GetLastZone(director.Bulkhead, holderBranch, dim);
+        return node.HasValue ? (holderBranch, node) : (null, null);
     }
 
     /// <summary>
