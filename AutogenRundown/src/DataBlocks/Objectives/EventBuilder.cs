@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Enums;
 
 namespace AutogenRundown.DataBlocks.Objectives;
 
@@ -17,9 +18,10 @@ public static class EventCollectionExtensions
         int zoneIndex,
         string? message = null,
         WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
-        double delay = 0.0)
+        double delay = 0.0,
+        DimensionIndex dimension = DimensionIndex.Reality)
     {
-        EventBuilder.AddUnlockDoor(events, bulkhead, zoneIndex, message, trigger, delay);
+        EventBuilder.AddUnlockDoor(events, bulkhead, zoneIndex, message, trigger, delay, dimension);
 
         return events;
     }
@@ -230,7 +232,8 @@ public class EventBuilder
         int zoneIndex,
         string? message = null,
         WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
-        double delay = 0.0)
+        double delay = 0.0,
+        DimensionIndex dimension = DimensionIndex.Reality)
     {
         events.Add(
             new WardenObjectiveEvent
@@ -238,6 +241,7 @@ public class EventBuilder
                 Type = WardenObjectiveEventType.UnlockSecurityDoor,
                 LocalIndex = zoneIndex,
                 Layer = GetLayerFromBulkhead(bulkhead),
+                Dimension = dimension,
                 Delay = message != null ? delay + 1.0 : delay,
                 Trigger = trigger,
             });

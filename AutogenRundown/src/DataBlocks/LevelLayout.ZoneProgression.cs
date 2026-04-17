@@ -2009,7 +2009,8 @@ public partial record LevelLayout
                             lockedNode.ZoneNumber,
                             null,
                             WardenObjectiveEventTrigger.OnStart,
-                            10)
+                            10,
+                            lockedNode.Dimension)
                         .ToList(),
                     PostCommandOutputs = new List<TerminalOutput>
                     {
@@ -2044,7 +2045,7 @@ public partial record LevelLayout
         });
 
         var terminalSerial = Lore.TerminalSerial(
-            "Reality",
+            terminalNode.Dimension.ToString(),
             terminalNode.Bulkhead,
             terminalNode.ZoneNumber,
             terminalZone.TerminalPlacements.Count - 1);
