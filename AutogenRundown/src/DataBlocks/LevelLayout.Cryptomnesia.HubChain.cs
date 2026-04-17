@@ -341,12 +341,15 @@ public partial record LevelLayout
             case CryptomnesiaTheme.Giants:
                 AddScoutRoom(cubeZone, EnemySpawningData.Scout, count: 6);
                 break;
+
             case CryptomnesiaTheme.Chargers:
                 AddScoutRoom(cubeZone, EnemySpawningData.ScoutCharger, count: 6);
                 break;
+
             case CryptomnesiaTheme.Shadows:
                 AddScoutRoom(cubeZone, EnemySpawningData.ScoutShadow, count: 6);
                 break;
+
             case CryptomnesiaTheme.Nightmares:
                 // Mixed scout room: 1-2 nightmares + 4-5 zoomers (6 total) for pressure
                 // without overloading the zone with full nightmare elites.
@@ -354,6 +357,7 @@ public partial record LevelLayout
                 AddScoutRoom(cubeZone, EnemySpawningData.ScoutNightmare, count: nightmareCount);
                 AddScoutRoom(cubeZone, EnemySpawningData.ScoutZoomer, count: 6 - nightmareCount);
                 break;
+
             case CryptomnesiaTheme.InfectionFog:
                 // Extra dense spitters at the climax zone (theme already seeds baseline).
                 cubeZone.StaticSpawnDataContainers.Add(new StaticSpawnDataContainer
@@ -368,11 +372,13 @@ public partial record LevelLayout
                 });
                 cubeZone.DisinfectPacks += 2;
                 break;
+
             case CryptomnesiaTheme.ErrorAlarm:
                 // Theme already installs a dimension-wide ambient error alarm; no extra
                 // climax needed. (Adding another sustained error wave here would stack.)
                 break;
         }
+
         _ = level; _ = director; _ = objective; _ = dim; _ = cubeBranch;
     }
 
