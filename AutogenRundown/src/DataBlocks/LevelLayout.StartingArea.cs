@@ -130,7 +130,7 @@ public partial record LevelLayout
         if (level.MainDirector.Objective == WardenObjectiveType.Cryptomnesia
             && !director.Bulkhead.HasFlag(Bulkhead.Main))
         {
-            var allMainZones = level.Planner.GetZones(Bulkhead.Main, null, dimension: DimensionIndex.Reality);
+            var allMainZones = level.Planner.GetOpenZones(Bulkhead.Main, null, dimension: DimensionIndex.Reality);
 
             if (allMainZones.Count > 0)
             {
