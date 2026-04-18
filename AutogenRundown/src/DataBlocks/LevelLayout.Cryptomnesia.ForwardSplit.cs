@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Zones;
+﻿using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -55,7 +56,8 @@ public partial record LevelLayout
 
         AddZone_Backward(leftHub, new ZoneNode { Branch = "side_1" });
         AddZone_Left(leftHub, new ZoneNode { Branch = "side_2" });
-        AddZone_Forward(leftHub, new ZoneNode { Branch = "side_3" });
+        var (_, side3Zone) = AddZone_Forward(leftHub, new ZoneNode { Branch = "side_3" });
+        side3Zone.SecurityGateToEnter = SecurityGate.FreePassage;
 
         #endregion
 
