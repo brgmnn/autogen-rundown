@@ -8,6 +8,11 @@ using WardenObjective = Objectives.WardenObjective;
 
 public partial record LevelLayout
 {
+    // Planner tags used by the Cryptomnesia post-setup prune to identify must-keep zones.
+    private const string CryptoTag_Cube = "crypto:cube";
+    private const string CryptoTag_KeyHolder = "crypto:key_holder";
+    private const string CryptoTag_Extraction = "crypto:extraction";
+
     /// <summary>
     /// Builds the layout for the Cryptomnesia objective.
     ///
@@ -89,7 +94,10 @@ public partial record LevelLayout
         var realityCubeNode = level.Planner.GetLastZone(director.Bulkhead, objective.Cryptomnesia_CubeBranches.First());
 
         if (realityCubeNode != null)
-            objective.Gather_PlacementNodes.Add((ZoneNode)realityCubeNode);
+        {
+            var taggedCube = level.Planner.AddTags((ZoneNode)realityCubeNode, CryptoTag_Cube);
+            objective.Gather_PlacementNodes.Add(taggedCube);
+        }
 
         #endregion
 
@@ -136,10 +144,18 @@ public partial record LevelLayout
             var cubeNode = level.Planner.GetLastZone(director.Bulkhead, cubeBranch, dimensionIndex);
 
             if (cubeNode != null)
-                objective.Gather_PlacementNodes.Add((ZoneNode)cubeNode);
+            {
+                var taggedCube = level.Planner.AddTags((ZoneNode)cubeNode, CryptoTag_Cube);
+                objective.Gather_PlacementNodes.Add(taggedCube);
+            }
 
             // Apply dimension theme before finalization
             ApplyCryptomnesiaTheme(themes[i + 1], layoutType, dimLayout, level, director, objective);
+
+            // Prune unreachable zones before the dimension is finalized so alarms,
+            // blood doors, and enemies aren't rolled on zones players can't visit.
+            if (layoutType == CryptomnesiaLayout.HubChain)
+                PruneCryptomnesiaDimension(dimLayout, dimensionIndex);
 
             // Persist after all configuration so DimensionFogData, Layout, etc. are final
             dimension.FindOrPersist();
@@ -159,7 +175,95 @@ public partial record LevelLayout
         }
 
         #endregion
+
+        // Reality prune runs AFTER the dimension loop because CopyRealityLayout reads
+        // Reality's planner graph to mirror each dimension -- pruning Reality earlier
+        // would strip zones the dimensions still need to copy.
+        if (layoutType == CryptomnesiaLayout.HubChain)
+            PruneCryptomnesiaDimension(this, DimensionIndex.Reality);
     }
+
+    #region Cryptomnesia Prune
+
+    /// <summary>
+    /// Removes zones from a Cryptomnesia dimension that players cannot reach. Keeps
+    /// the cube zone, any key-holder zone, (Reality only) the extraction chain, and
+    /// every ancestor of those up to the elevator. Immediate children of any kept
+    /// zone are retained as locked decoys so players still see a sealed door one
+    /// zone beyond their accessible area. Must be called AFTER SetupHubChain but
+    /// BEFORE FinalizeLayout so pruned zones don't get alarms/enemies rolled.
+    /// </summary>
+    private void PruneCryptomnesiaDimension(LevelLayout dimLayout, DimensionIndex dim)
+    {
+        var bulkhead = dimLayout.director.Bulkhead;
+        var planner = level.Planner;
+
+        var allZones = planner.GetZones(bulkhead, branch: null, dimension: dim);
+        if (allZones.Count == 0)
+            return;
+
+        // 1. Seed must-traverse with tagged anchor zones for this dimension.
+        var mustTraverse = new HashSet<ZoneNode>();
+
+        foreach (var cube in planner.GetZonesByTag(bulkhead, CryptoTag_Cube, branch: null, dimension: dim))
+            mustTraverse.Add(cube);
+
+        foreach (var holder in planner.GetZonesByTag(bulkhead, CryptoTag_KeyHolder, branch: null, dimension: dim))
+            mustTraverse.Add(holder);
+
+        if (dim == DimensionIndex.Reality)
+            foreach (var ext in planner.GetZonesByTag(bulkhead, CryptoTag_Extraction, branch: null, dimension: dim))
+                mustTraverse.Add(ext);
+
+        if (mustTraverse.Count == 0)
+        {
+            Plugin.Logger.LogWarning(
+                $"Cryptomnesia prune: dim={dim} has no tagged anchor zones; skipping prune.");
+            return;
+        }
+
+        // 2. Expand each anchor back to the elevator.
+        var seeds = mustTraverse.ToList();
+        foreach (var seed in seeds)
+            foreach (var ancestor in planner.TraverseToElevator(seed))
+                mustTraverse.Add(ancestor);
+
+        // 3. Collect immediate children of must-traverse that aren't themselves must-traverse.
+        var lockedDecoys = new HashSet<ZoneNode>();
+        foreach (var node in mustTraverse)
+            foreach (var child in planner.GetConnections(node, branch: null))
+                if (!mustTraverse.Contains(child))
+                    lockedDecoys.Add(child);
+
+        // 4. Apply ProgressionPuzzle.Locked to each decoy (idempotent if already locked).
+        foreach (var decoy in lockedDecoys)
+        {
+            var zone = planner.GetZone(decoy);
+            if (zone != null)
+                zone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
+        }
+
+        // 5. Remove everything else.
+        var keep = new HashSet<ZoneNode>(mustTraverse);
+        keep.UnionWith(lockedDecoys);
+
+        var pruned = 0;
+        foreach (var node in allZones)
+        {
+            if (keep.Contains(node))
+                continue;
+
+            planner.Remove(node);
+            pruned++;
+        }
+
+        Plugin.Logger.LogDebug(
+            $"Cryptomnesia prune: dim={dim} " +
+            $"kept={mustTraverse.Count} locked_decoys={lockedDecoys.Count} pruned={pruned} " +
+            $"(total was {allZones.Count})");
+    }
+
+    #endregion
 
     #region Cryptomnesia Layout Copying
 

@@ -189,6 +189,20 @@ public class LayoutPlanner
         => UpdateNode(node with { Tags = node.Tags.Extend(tags) });
 
     /// <summary>
+    /// Removes a node from the planner entirely: drops its zone, its outgoing edges,
+    /// and any inbound edges pointing at it. Used by post-generation prune passes
+    /// (e.g. Cryptomnesia) that need to cut unreachable branches.
+    /// </summary>
+    public void Remove(ZoneNode node)
+    {
+        blocks.Remove(node);
+        graph.Remove(node);
+
+        foreach (var key in graph.Keys.ToList())
+            graph[key].RemoveAll(child => child == node);
+    }
+
+    /// <summary>
     /// Handles assigning the right local index and build from index.
     /// </summary>
     /// <param name="node"></param>

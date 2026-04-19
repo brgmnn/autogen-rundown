@@ -79,6 +79,7 @@ public partial record LevelLayout
             new ZoneNode { Branch = "forward_extract", MaxConnections = 1 });
 
         forwardExtractZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
+        forwardExtract = planner.AddTags(forwardExtract, CryptoTag_Extraction);
 
         if (Generator.Flip())
             forwardExtractZone.GenCorridorGeomorph(Complex);
@@ -93,6 +94,8 @@ public partial record LevelLayout
             new ZoneNode { Branch = "extraction_elevator", MaxConnections = 0 });
 
         extractionZone.GenExitGeomorph(Complex);
+
+        extraction = planner.AddTags(extraction, CryptoTag_Extraction);
 
         level.ExtractionZone = extraction;
 
@@ -539,6 +542,8 @@ public partial record LevelLayout
             }
         };
 
+        level.Planner.AddTags(holderNode.Value, CryptoTag_KeyHolder);
+
         _ = layout;
         return holderBranch;
     }
@@ -564,6 +569,7 @@ public partial record LevelLayout
         if (holderBranch == null || !holderNode.HasValue) return null;
 
         layout.AddTerminalUnlockPuzzle(cubeNode.Value, holderNode.Value);
+        level.Planner.AddTags(holderNode.Value, CryptoTag_KeyHolder);
         return holderBranch;
     }
 
