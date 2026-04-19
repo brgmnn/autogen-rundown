@@ -1,6 +1,9 @@
+using Expedition;
 using GameData;
+using GTFO.API;
 using HarmonyLib;
 using LevelGeneration;
+using UnityEngine;
 
 namespace AutogenRundown.Patches;
 
@@ -86,5 +89,56 @@ public static class Patch_LG_BuildGateJob_OpenPath
 
         __result = true;
         return false;
+    }
+
+    // Vanilla "portal" plug prefabs. Both are members of StraightPlugsWithGates in vanilla
+    // ComplexResourceSetDataBlocks (Tech_Portal = SubComplex 10, Mining portal at SubComplex 12).
+    // They're styled with trim around the opening, which reads better as an open archway than
+    // a plain with_gate plug when no door is instantiated.
+    private const string TechPortalPrefab =
+        "Assets/AssetPrefabs/Complex/Tech/Plugs/env_plug_8mheight_flat_tech_portal_01.prefab";
+    private const string MiningPortalPrefab =
+        "Assets/AssetPrefabs/Complex/Mining/Plugs/env_plug_8mheight_flat_mining_portal_01.prefab";
+
+    /// <summary>
+    /// Swaps in a styled portal plug prefab for zone-source plugs whose target zone is flagged
+    /// FreePassage. Without this, the FreePassage gate leaves a raw rectangular cutout in a
+    /// generic with_gate plug; the portal variants have decorative framing around the opening.
+    ///
+    /// Only affects flat (same-altitude) plugs. Dropped plugs keep their vanilla prefab since
+    /// the portal variants are flat-only and swapping them in would produce broken geometry.
+    /// </summary>
+    [HarmonyPatch(typeof(LG_BuildPlugBaseJob), nameof(LG_BuildPlugBaseJob.SpawnPlug))]
+    [HarmonyPrefix]
+    public static void Pre_SpawnPlug(LG_Plug plug, ref GameObject prefab)
+    {
+        if (plug == null || !plug.m_isZoneSource)
+            return;
+
+        var zoneData = plug.m_linksTo?.m_zone?.m_settings?.m_zoneData;
+        if (zoneData == null || zoneData.SecurityGateToEnter != FreePassageSentinel)
+            return;
+
+        // Skip dropped plugs — the flat portal prefab would clip through.
+        if (plug.m_pariedWith != null
+            && !Mathf.Approximately(plug.transform.position.y, plug.m_pariedWith.transform.position.y))
+        {
+            return;
+        }
+
+        var path = plug.m_subComplex switch
+        {
+            SubComplex.DigSite or SubComplex.Refinery or SubComplex.Storage
+                or SubComplex.Mining_Reactor => MiningPortalPrefab,
+            _ => TechPortalPrefab,
+        };
+
+        var replacement = AssetAPI.GetLoadedAsset<GameObject>(path);
+        if (replacement != null)
+        {
+            prefab = replacement;
+            Plugin.Logger.LogDebug(
+                $"[OpenPath] Zone {plug.m_linksTo.m_zone.Alias}: swapped plug prefab to {path}");
+        }
     }
 }
