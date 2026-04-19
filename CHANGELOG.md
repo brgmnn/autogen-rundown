@@ -3,6 +3,20 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.83.6](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.83.6) — April 19, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Change: Added angular spread ranking for scan placements for multiple scan puzzle components (cluster, 4x red scan etc) to encourage scans to fan out
+  * This should help stop alarm scans with multiple scans from all being placed in a cluster, especially smaller clusters
+* Switched to [ExcellentObjectiveSetup](https://thunderstore.io/c/gtfo/p/Amorously/ExcellentObjectiveSetup/) for objective customization
+  * Includes a fix for the reactor query crash bug 
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.83.5...v0.83.6
+
+
 ## [v0.83.5](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.83.5) — April 13, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
