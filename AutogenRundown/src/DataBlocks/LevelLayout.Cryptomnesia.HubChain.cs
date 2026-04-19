@@ -212,6 +212,9 @@ public partial record LevelLayout
             : BuildApexAlarm(level.Tier, weakerTier, theme);
 
         zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
+
+        zone.AmmoPacks += 3.0;
+        zone.ToolPacks += 2.0;
     }
 
     /// <summary>Themed apex alarm for hub entry doors. Mixes baseline strikers with theme-specific enemies.</summary>
