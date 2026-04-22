@@ -70,7 +70,7 @@ TODO:
   * Add a version of travel scan where lights go out but only lights by the scan are lit up
   * Add a version of the scan wanted distance that takes a negative number which then finds a point thats a proportion of the total area away from the previous scan
 
-  * SC1: Main needs 1 more challenge of some kind. A hard extract perhaps?
+  * Check SC1: Seemed like no enemies after doing secondary?
 
 TODO for 1.0
   New Objectives!
