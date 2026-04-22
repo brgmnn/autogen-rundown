@@ -199,8 +199,8 @@ public partial record LevelLayout
 
             eventLoop.EventsToActivate
                 .DisableZoneSensors(sensorDef.Id, 0.4)
-                .AddSound(Sound.LightsOn_Vol4)
-                .AddSound(Sound.LightsOn_Vol4, offTime - 0.4);
+                .AddZoneSound(Sound.LightsOn_Vol4, sensorDef)
+                .AddZoneSound(Sound.LightsOn_Vol4, sensorDef, offTime - 0.4);
 
             if (triggerEach)
                 eventLoop.EventsToActivate.EnableZoneSensors(sensorDef.Id, offTime);
@@ -219,7 +219,7 @@ public partial record LevelLayout
         // 8. Build trigger events
         var sensorEvents = new List<WardenObjectiveEvent>();
         sensorEvents
-            .AddSound(Sound.LightsOff)
+            .AddZoneSound(Sound.LightsOff, sensorDef)
             .AddSpawnWave(selectedWave, 2.0);
 
         if (!shouldCycle && !triggerEach)
@@ -227,7 +227,7 @@ public partial record LevelLayout
             var resetTime = Generator.Between(8, 15);
             sensorEvents
                 .EnableZoneSensorsWithReset(sensorDef.Id, resetTime)
-                .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
+                .AddZoneSound(Sound.LightsOn_Vol4, sensorDef, resetTime - 0.4);
         }
 
         sensorDef.EventsOnTrigger = sensorEvents;

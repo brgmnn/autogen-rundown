@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks;
 using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
+using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
@@ -915,6 +916,61 @@ public static class WardenObjectiveEventCollections
 
         return events;
     }
+
+    /// <summary>
+    /// Queue a sound to play at the center of a target zone. Dispatch is handled by
+    /// Patch_ZoneSensorToggle — the game itself ignores this event type, so the sound
+    /// is posted directly through SoundPlayer with the zone's CenterPosition as the
+    /// 3D emitter.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> AddZoneSound(
+        this ICollection<WardenObjectiveEvent> events,
+        Sound sound,
+        Bulkhead bulkhead,
+        int zoneNumber,
+        double delay = 0.0,
+        DimensionIndex dimension = DimensionIndex.Reality)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.PlayZoneSound,
+                Dimension = dimension,
+                Layer = GetLayerFromBulkhead(bulkhead),
+                LocalIndex = zoneNumber,
+                SoundId = sound,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Convenience overload that reads bulkhead/zone/dimension off a ZoneSensorDefinition.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> AddZoneSound(
+        this ICollection<WardenObjectiveEvent> events,
+        Sound sound,
+        ZoneSensorDefinition sensorDef,
+        double delay = 0.0)
+        => events.AddZoneSound(sound, sensorDef.Bulkhead, sensorDef.ZoneNumber, delay,
+                               ParseDimension(sensorDef.DimensionIndex));
+
+    private static DimensionIndex ParseDimension(string? name) => name switch
+    {
+        "Reality" => DimensionIndex.Reality,
+        "Dimension_1" => DimensionIndex.Dimension1,
+        "Dimension_2" => DimensionIndex.Dimension2,
+        "Dimension_3" => DimensionIndex.Dimension3,
+        "Dimension_4" => DimensionIndex.Dimension4,
+        "Dimension_5" => DimensionIndex.Dimension5,
+        "Dimension_6" => DimensionIndex.Dimension6,
+        "Dimension_7" => DimensionIndex.Dimension7,
+        "Dimension_8" => DimensionIndex.Dimension8,
+        "Dimension_9" => DimensionIndex.Dimension9,
+        "Dimension_10" => DimensionIndex.Dimension10,
+        _ => DimensionIndex.Reality
+    };
 
     #endregion
 

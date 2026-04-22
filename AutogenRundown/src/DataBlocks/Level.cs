@@ -1817,7 +1817,7 @@ public class Level
             var sensorEvents2 = new List<WardenObjectiveEvent>();
 
             sensorEvents2
-                .AddSound(Sound.LightsOff)
+                .AddZoneSound(Sound.LightsOff, Bulkhead.Main, 0)
                 .AddSpawnWave(new GenericWave
                 {
                     Population = WavePopulation.Baseline,
@@ -1851,7 +1851,7 @@ public class Level
             var resetTime = 5;
             sensorEvents2
                 .EnableZoneSensorsWithReset(123, resetTime)
-                .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
+                .AddZoneSound(Sound.LightsOn_Vol4, Bulkhead.Main, 0, resetTime - 0.4);
 
             // var (med, medZone) = layout.BuildOptional_MedicalBay(elevatorDrop);
             // layout.Zones.Add(medZone);
