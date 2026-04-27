@@ -937,7 +937,7 @@ public class Level
 
     private List<ZoneNode> GetKeyPlacementCandidates(Bulkhead keyFor)
     {
-        return keyFor switch
+        var candidates = keyFor switch
         {
             Bulkhead.Main when HasMainBulkheadDoor
                 => Planner.GetZones(Bulkhead.StartingArea, null),
@@ -951,6 +951,10 @@ public class Level
                 => Planner.GetZones(Bulkhead.Main, null),
             _ => Planner.GetZones(Bulkhead.Main, null)
         };
+
+        return candidates
+            .Where(n => !n.Tags.Contains("no_access"))
+            .ToList();
     }
 
     private List<ZonePlacementData> BuildKeyAlternatives(List<ZoneNode> candidates)

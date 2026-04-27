@@ -215,6 +215,14 @@ public partial record LevelLayout
             foreach (var ext in planner.GetZonesByTag(bulkhead, CryptoTag_Extraction, branch: null, dimension: dim))
                 mustTraverse.Add(ext);
 
+        // Bulkhead-DC FROM zones must remain reachable so secondary bulkhead doors
+        // stay connected to a traversable origin. Without this, a layout where the
+        // DC FROM zone (or its descendants) carries no CryptoTag_* anchor would
+        // orphan the bulkhead door or get the FROM zone tagged no_access.
+        foreach (var dc in level.GetObjectiveLayerData(bulkhead).BulkheadDoorControllerPlacements)
+            foreach (var node in allZones.Where(n => n.ZoneNumber == dc.ZoneIndex))
+                mustTraverse.Add(node);
+
         if (mustTraverse.Count == 0)
         {
             Plugin.Logger.LogWarning(
@@ -235,12 +243,15 @@ public partial record LevelLayout
                 if (!mustTraverse.Contains(child))
                     lockedDecoys.Add(child);
 
-        // 4. Apply ProgressionPuzzle.Locked to each decoy (idempotent if already locked).
+        // 4. Apply ProgressionPuzzle.Locked to each decoy (idempotent if already locked)
+        //    and tag it so downstream placement (e.g. bulkhead keys) skips it.
         foreach (var decoy in lockedDecoys)
         {
             var zone = planner.GetZone(decoy);
             if (zone != null)
                 zone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
+
+            planner.AddTags(decoy, "no_access");
         }
 
         // 5. Remove everything else.
