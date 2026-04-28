@@ -59,9 +59,8 @@ TODO:
   * `GatherSmallItems` should probably not have error alarm on picking up the "last" objective item. Instead we should have it be done by the zones they have to open
   * Generator Cluster needs cells to be tightened up in their spawns
   * Big security scans that move are too hard
-  * Fix uplink text for case where there's one terminal
-  * SC1: Main needs 1 more challenge of some kind. A hard extract perhaps?
-  * Querying a reactor crashes. From twitch
+  * Seems that Valiant objectives fail a lot
+
 
   * Fix the cycling of security scans having global sound! Really annoying right now
   * Tone down higher density of scans, especially for moving ones
