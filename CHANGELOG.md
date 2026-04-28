@@ -3,6 +3,17 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v0.83.7](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.83.7) — April 27, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Rolled May 2026 monthly seeds
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.83.6...v0.83.7
+
+
 ## [v0.83.6](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.83.6) — April 19, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
