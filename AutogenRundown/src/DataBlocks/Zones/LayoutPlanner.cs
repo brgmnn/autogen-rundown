@@ -424,12 +424,16 @@ public class LayoutPlanner
     }
 
     /// <summary>
-    /// Find all zones that are leaf nodes, or dead ends. I.e. they only have one connection
-    /// from their previous zone.
+    /// Find all leaf zones that can still accept another child — i.e. they have no outgoing
+    /// connections AND their MaxConnections is greater than zero. Leaves-by-design
+    /// (MaxConnections == 0) like dead-end objective rooms are intentionally excluded so
+    /// callers using this as an anchor for new branches don't try to attach children to a
+    /// node that has no remaining tile-expander capacity.
     /// </summary>
     /// <returns></returns>
     public List<ZoneNode> GetLeafZones(Bulkhead bulkhead = Bulkhead.All, string? branch = "primary")
         => graph.Where(node => node.Value.Count == 0)
+            .Where(node => node.Key.MaxConnections > 0)
             .Where(node => (node.Key.Bulkhead & bulkhead) != 0)
             .Where(node => branch == null || node.Key.Branch == branch)
             .Select(node => node.Key)
