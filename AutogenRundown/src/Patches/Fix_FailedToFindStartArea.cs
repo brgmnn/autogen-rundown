@@ -1,4 +1,5 @@
-﻿using AutogenRundown.Managers;
+﻿using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Managers;
 using AutogenRundown.Utils;
 using GameData;
 using HarmonyLib;
@@ -24,6 +25,30 @@ public class Fix_FailedToFindStartArea
     private const uint kFatalThreshold = 500;
 
     /// <summary>
+    /// Cycles StartExpansion through the four cardinal directions plus Random. Indexed by
+    /// (rollCount - kBroadenThreshold) / kDirectionStride so each direction gets multiple
+    /// rebuild attempts before rotating.
+    /// </summary>
+    private static readonly ZoneBuildExpansion[] kDirectionCycle =
+    {
+        ZoneBuildExpansion.Random,
+        ZoneBuildExpansion.Forward,
+        ZoneBuildExpansion.Backward,
+        ZoneBuildExpansion.Left,
+        ZoneBuildExpansion.Right,
+    };
+
+    private const uint kDirectionStride = 10;
+
+    /// <summary>
+    /// Tracks which (zone, expansion) pairs we've already logged the diagnostic for to avoid
+    /// flooding the log with thousands of identical expander dumps.
+    /// </summary>
+    private static readonly HashSet<(eDimensionIndex, LG_LayerType, eLocalZoneIndex)> diagnosticsLogged = new();
+
+    public static void ResetDiagnostics() => diagnosticsLogged.Clear();
+
+    /// <summary>
     /// Catches zones that fail to find valid start areas and triggers a proper subseed reroll.
     /// The reroll is persisted via ZoneSeedManager so it survives level rebuilds.
     /// </summary>
@@ -45,6 +70,11 @@ public class Fix_FailedToFindStartArea
         zoneFailures[zoneKey] = rollCount + 1;
 
         Plugin.Logger.LogWarning($"Zone {zone.LocalIndex} failed to find start area (attempt {rollCount}). Triggering subseed reroll.");
+
+        // One-shot diagnostic: dump source zone's expander state to confirm whether it's a
+        // tile-level expander shortage (no free plugs/gates on any area) vs a directional
+        // filter wipe.
+        LogSourceExpanderDiagnostic(__instance, zone);
 
         if (rollCount > kFatalThreshold)
         {
@@ -98,6 +128,91 @@ public class Fix_FailedToFindStartArea
                         ZoneSeedManager.Reroll_SubSeed(z);
                 }
             }
+
+            // Direction cycling: the directional ScoreData filter inside ScoreAreas can wipe
+            // every fringe candidate before FixDeadEndZoneExpansion's plug-bias gets to run.
+            // Cycle the StartExpansion of the failing zone and the same-layer Zone_0 (the
+            // immediate ancestor whose start-area pick is the actual failure point for
+            // secondary bulkheads) through the cardinals + Random so we eventually try every
+            // side of the source tile.
+            var cycleIndex = (int)((rollCount - kBroadenThreshold) / kDirectionStride) % kDirectionCycle.Length;
+            var nextDirection = kDirectionCycle[cycleIndex];
+
+            ZoneSeedManager.Override_StartExpansion(zone, nextDirection);
+            Plugin.Logger.LogWarning(
+                $"Direction cycling: forcing StartExpansion={nextDirection} on Zone_{zone.LocalIndex} " +
+                $"in {zone.Layer.m_type} (cycle {cycleIndex})");
+
+            if (zone.LocalIndex != eLocalZoneIndex.Zone_0)
+            {
+                ZoneSeedManager.Override_StartExpansion(
+                    eLocalZoneIndex.Zone_0,
+                    zone.DimensionIndex,
+                    zone.Layer.m_type,
+                    nextDirection);
+                Plugin.Logger.LogDebug(
+                    $"Direction cycling: forcing StartExpansion={nextDirection} on Zone_0 in {zone.Layer.m_type}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Dumps the source (build-from) zone's areas and expander link state on the first
+    /// failure for a given (dimension, layer, zone) key. Used to confirm whether the failure
+    /// is a tile-level expander shortage (every expander already linked) vs a directional
+    /// scoring filter wipe.
+    /// </summary>
+    private static void LogSourceExpanderDiagnostic(LG_ZoneJob_CreateExpandFromData job, LG_Zone zone)
+    {
+        var key = (zone.m_dimensionIndex, zone.m_layer.m_type, zone.LocalIndex);
+        if (!diagnosticsLogged.Add(key))
+            return;
+
+        var src = job.m_buildFromZone;
+
+        if (src == null)
+        {
+            Plugin.Logger.LogInfo($"[ExpanderDiag] {zone.LocalIndex} in {zone.m_layer.m_type}: m_buildFromZone is null");
+            return;
+        }
+
+        Plugin.Logger.LogInfo(
+            $"[ExpanderDiag] {zone.LocalIndex} in {zone.m_layer.m_type} failed building from " +
+            $"{src.LocalIndex} ({src.m_layer?.m_type}); src has {src.m_areas?.Count ?? 0} area(s); " +
+            $"requested StartExpansion={job.m_zoneData?.StartExpansion}, " +
+            $"currentBuildDirection={job.m_currentBuildDirection}");
+
+        if (src.m_areas == null)
+            return;
+
+        for (var i = 0; i < src.m_areas.Count; i++)
+        {
+            var area = src.m_areas[i];
+            if (area?.m_zoneExpanders == null)
+                continue;
+
+            var freeCount = 0;
+            var totalCount = area.m_zoneExpanders.Count;
+
+            for (var j = 0; j < totalCount; j++)
+            {
+                var exp = area.m_zoneExpanders[j];
+                if (exp == null)
+                    continue;
+
+                var linksToZone = exp.m_linksTo?.m_zone;
+                var isFree = linksToZone == null;
+                if (isFree)
+                    freeCount++;
+
+                Plugin.Logger.LogInfo(
+                    $"  area[{i}] expander[{j}] type={exp.ExpanderType} " +
+                    (isFree
+                        ? "FREE"
+                        : $"linkedTo={linksToZone.LocalIndex} ({linksToZone.m_layer?.m_type})"));
+            }
+
+            Plugin.Logger.LogInfo($"  area[{i}] free={freeCount}/{totalCount}");
         }
     }
 

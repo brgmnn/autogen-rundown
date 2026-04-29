@@ -59,9 +59,11 @@ public static class FactoryJobManager
         RebuildCount = 0;
 
         ZoneSeedManager.SubSeeds.Clear();
+        ZoneSeedManager.StartExpansionOverrides.Clear();
         Fix_NavMeshMarkerSubSeed.TargetsDetected.Clear();
         Fix_NavMeshMarkerSubSeed.MarkerSubSeeds.Clear();
         Fix_NavMeshMarkerSubSeed.ZoneAttempts.Clear();
+        Fix_FailedToFindStartArea.ResetDiagnostics();
         Fix_FailedToFindStartArea.zoneFailures.Clear();
     }
 
@@ -202,9 +204,11 @@ public static class FactoryJobManager
 
             // TODO: move this logic to the respective managers
             ZoneSeedManager.SubSeeds.Clear();
+            ZoneSeedManager.StartExpansionOverrides.Clear();
             Fix_NavMeshMarkerSubSeed.TargetsDetected.Clear();
             Fix_NavMeshMarkerSubSeed.MarkerSubSeeds.Clear();
             Fix_NavMeshMarkerSubSeed.ZoneAttempts.Clear();
+            Fix_FailedToFindStartArea.ResetDiagnostics();
             Fix_FailedToFindStartArea.zoneFailures.Clear();
         }
     }
