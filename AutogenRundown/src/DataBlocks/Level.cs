@@ -28,7 +28,7 @@ public class BuildFrom
     public int Zone { get; set; } = 0;
 }
 
-public class Level
+public partial class Level
 {
     #region Filler settings that won't change
     public bool Enabled = true;

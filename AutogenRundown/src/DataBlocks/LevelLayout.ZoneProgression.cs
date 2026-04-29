@@ -785,8 +785,7 @@ public partial record LevelLayout
             return;
         }
 
-        setupNode = planner.UpdateNode(setupNode with { MaxConnections = 3 });
-        setupZone.GenKingOfTheHillGeomorph(level, level.GetDirector(setupNode.Bulkhead));
+        setupNode = level.GenKingOfTheHillGeomorph(setupNode, level.GetDirector(setupNode.Bulkhead));
 
         // We want a side spawn room to make it basically impossible to C-foam hold this alarm
         // NOTE: the side spawn room CAN have blood doors roll on it!
@@ -799,7 +798,7 @@ public partial record LevelLayout
                 Tags = new Tags("no_enemies")
             });
 
-        sideSpawnZone.GenDeadEndGeomorph(level.Complex);
+        sideSpawn = level.GenDeadEndGeomorph(sideSpawn);
         sideSpawnZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
 
         var puzzle = director.Tier switch
@@ -974,9 +973,7 @@ public partial record LevelLayout
         var nodes = AddBranch_Forward(start, 1 + preludeZones);
 
         var exit = nodes.Last();
-        var exitZone = planner.GetZone(exit)!;
-
-        exitZone.GenExitGeomorph(level.Complex);
+        exit = level.GenExitGeomorph(exit);
 
         return exit;
     }
@@ -1000,7 +997,7 @@ public partial record LevelLayout
             return bossNode;
         }
 
-        zone.GenBossGeomorph(level.Complex);
+        bossNode = level.GenBossGeomorph(bossNode);
 
         // Disable any scouts on anything except E-tier
         if (level.Tier != "E")

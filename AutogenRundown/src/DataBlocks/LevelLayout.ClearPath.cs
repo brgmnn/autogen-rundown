@@ -535,10 +535,9 @@ public partial record LevelLayout
         exit = planner.UpdateNode(exit with
         {
             Branch = "exit",
-            MaxConnections = 0,
             Tags = exit.Tags.Extend("exit_elevator")
         });
-        exitZone.GenExitGeomorph(level.Complex);
+        exit = level.GenExitGeomorph(exit);
         exitZone.Coverage = new() { Min = 64, Max = 64 };
 
         // Ensure there's a nice spicy hoard at the end

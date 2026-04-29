@@ -101,10 +101,10 @@ public partial record LevelLayout
                         objective.PlacementNodes.Add(hub);
 
                         var (end1, end1Zone) = AddZone(hub);
-                        end1Zone.GenDeadEndGeomorph(level.Complex);
+                        end1 = level.GenDeadEndGeomorph(end1);
 
                         var (end2, end2Zone) = AddZone(hub);
-                        end2Zone.GenDeadEndGeomorph(level.Complex);
+                        end2 = level.GenDeadEndGeomorph(end2);
 
                         SetGatherTerminal(end1.ZoneNumber);
                         SetGatherTerminal(end2.ZoneNumber);
@@ -170,10 +170,10 @@ public partial record LevelLayout
                         objective.PlacementNodes.Add(hub);
 
                         var (end1, end1Zone) = AddZone(hub);
-                        end1Zone.GenDeadEndGeomorph(level.Complex);
+                        end1 = level.GenDeadEndGeomorph(end1);
 
                         var (end2, end2Zone) = AddZone(hub);
-                        end2Zone.GenDeadEndGeomorph(level.Complex);
+                        end2 = level.GenDeadEndGeomorph(end2);
 
                         SetGatherTerminal(end1.ZoneNumber);
                         SetGatherTerminal(end2.ZoneNumber);
@@ -201,11 +201,11 @@ public partial record LevelLayout
                         objective.PlacementNodes.Add(hub);
 
                         var (end1, end1Zone) = AddZone(hub);
-                        end1Zone.GenDeadEndGeomorph(level.Complex);
+                        end1 = level.GenDeadEndGeomorph(end1);
                         AddSecuritySensors(end1);
 
                         var (end2, end2Zone) = AddZone(hub);
-                        end2Zone.GenDeadEndGeomorph(level.Complex);
+                        end2 = level.GenDeadEndGeomorph(end2);
                         AddSecuritySensors(end2);
 
                         SetGatherTerminal(end1.ZoneNumber);
@@ -270,11 +270,11 @@ public partial record LevelLayout
 
                         var (end1, end1Zone) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_1" });
-                        end1Zone.GenDeadEndGeomorph(level.Complex);
+                        end1 = level.GenDeadEndGeomorph(end1);
 
                         var (end2, end2Zone) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_2" });
-                        end2Zone.GenDeadEndGeomorph(level.Complex);
+                        end2 = level.GenDeadEndGeomorph(end2);
 
                         var (end3, _) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_3" });
@@ -327,11 +327,11 @@ public partial record LevelLayout
 
                         var (end1, end1Zone) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_1" });
-                        end1Zone.GenDeadEndGeomorph(level.Complex);
+                        end1 = level.GenDeadEndGeomorph(end1);
 
                         var (end2, end2Zone) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_2" });
-                        end2Zone.GenDeadEndGeomorph(level.Complex);
+                        end2 = level.GenDeadEndGeomorph(end2);
 
                         var (end3, _) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_3" });
@@ -361,12 +361,12 @@ public partial record LevelLayout
 
                         var (end1, end1Zone) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_1" });
-                        end1Zone.GenDeadEndGeomorph(level.Complex);
+                        end1 = level.GenDeadEndGeomorph(end1);
                         AddSecuritySensors(end1);
 
                         var (end2, end2Zone) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_2" });
-                        end2Zone.GenDeadEndGeomorph(level.Complex);
+                        end2 = level.GenDeadEndGeomorph(end2);
                         AddSecuritySensors(end2);
 
                         var (end3, _) =

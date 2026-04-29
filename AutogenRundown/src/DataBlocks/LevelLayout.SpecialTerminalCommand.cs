@@ -1067,11 +1067,11 @@ public partial record LevelLayout
         var hillForwardCount = director.Bulkhead == Bulkhead.Main ? 2 : 1;
         var hillNodes = AddBranch_Forward(hillStart, hillForwardCount, "special_terminal");
         var hill = hillNodes.Last();
-        var hillZone = planner.GetZone(hill)!;
 
         AddForwardExtractStart(hillNodes.First());
 
-        hillZone.GenKingOfTheHillGeomorph(level, director);
+        hill = level.GenKingOfTheHillGeomorph(hill, director);
+        var hillZone = planner.GetZone(hill)!;
         hillZone.TerminalPlacements = new List<TerminalPlacement>
         {
             new() { PlacementWeights = ZonePlacementWeights.AtEnd }
