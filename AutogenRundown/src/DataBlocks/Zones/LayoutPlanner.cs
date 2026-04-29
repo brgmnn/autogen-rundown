@@ -158,6 +158,9 @@ public class LayoutPlanner
             label.Append($"<br/>max: {node.MaxConnections}");
 
             sb.AppendLine($"    {NodeId(node)}[\"{label}\"]:::{CssClass(node.Bulkhead)}");
+
+            if (graph[node].Count >= node.MaxConnections)
+                sb.AppendLine($"    class {NodeId(node)} closed");
         }
 
         foreach (var (parent, children) in graph)
@@ -182,9 +185,10 @@ public class LayoutPlanner
         }
 
         sb.AppendLine("    classDef main fill:#cfe8ff,stroke:#1f6feb");
-        sb.AppendLine("    classDef extreme fill:#ffd8a8,stroke:#cc6600");
-        sb.AppendLine("    classDef overload fill:#e3c8ff,stroke:#6f42c1");
-        sb.AppendLine("    classDef startingArea fill:#dddddd,stroke:#666666");
+        sb.AppendLine("    classDef extreme fill:#e3c8ff,stroke:#6f42c1");
+        sb.AppendLine("    classDef overload fill:#ffd8a8,stroke:#cc6600");
+        sb.AppendLine("    classDef startingArea fill:#c8e6c9,stroke:#2e7d32");
+        sb.AppendLine("    classDef closed stroke:#888888,stroke-width:2px");
 
         return sb.ToString();
     }
