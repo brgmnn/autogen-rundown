@@ -134,14 +134,16 @@ public partial record LevelLayout
         {
             case BukheadStrategy.MainOnly_NoBulkhead:
             {
-                var lastNode = (ZoneNode)level.Planner.GetLastZone(Bulkhead.Main)!;
+                var primaryNodes = level.Planner.GetOpenZones(Bulkhead.Main);
+                var lastNode = (primaryNodes.Any() ? primaryNodes : level.Planner.GetOpenZones(Bulkhead.Main, null)).Last();
 
                 return (lastNode, level.Planner.GetZone(lastNode)!);
             }
 
             case BukheadStrategy.Default_NoMainBulkhead:
             {
-                var lastNode = (ZoneNode)level.Planner.GetLastZone(Bulkhead.Main)!;
+                var primaryNodes = level.Planner.GetOpenZones(Bulkhead.Main);
+                var lastNode = (primaryNodes.Any() ? primaryNodes : level.Planner.GetOpenZones(Bulkhead.Main, null)).Last();
 
                 if (bulkhead == Bulkhead.Main)
                     return (lastNode, level.Planner.GetZone(lastNode)!);

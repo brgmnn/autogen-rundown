@@ -61,6 +61,8 @@ TODO:
   * Big security scans that move are too hard
   * Seems that Valiant objectives fail a lot
 
+  * Distribute power cells is _really_ short on main only missions now
+
 
   * Fix the cycling of security scans having global sound! Really annoying right now
   * Tone down higher density of scans, especially for moving ones
