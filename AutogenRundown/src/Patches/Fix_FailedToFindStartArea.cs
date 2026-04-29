@@ -80,7 +80,13 @@ public class Fix_FailedToFindStartArea
         {
             Plugin.Logger.LogError(
                 $"Zone {zone.LocalIndex} in {zone.m_layer.m_type} (dim {zone.m_dimensionIndex}) " +
-                $"exhausted {kFatalThreshold} reroll attempts — giving up on this seed");
+                $"exhausted {kFatalThreshold} reroll attempts — stopping further rerolls and " +
+                $"triggering a rebuild with the accumulated overrides");
+
+            // Stop scheduling more subseed / expansion rerolls (further attempts won't help
+            // and would just spam the log) but DO trigger a rebuild so the build pipeline
+            // restarts with whatever overrides have already been accumulated.
+            FactoryJobManager.MarkForRebuild();
             return;
         }
 
