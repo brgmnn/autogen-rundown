@@ -117,6 +117,79 @@ public class LayoutPlanner
     }
 
     /// <summary>
+    /// Renders the zone graph as a Mermaid `flowchart LR` diagram. Bulkheads are color-coded
+    /// via classDef styling, each node label includes branch / tags / max-connections, and
+    /// edges are labeled with the child's requested StartExpansion direction. Cross-bulkhead
+    /// edges are flagged with a `bulkhead` prefix in the edge label.
+    /// </summary>
+    public string ToMermaidChart()
+    {
+        static string Prefix(Bulkhead b) => b switch
+        {
+            Bulkhead.Main => "M",
+            Bulkhead.Extreme => "E",
+            Bulkhead.Overload => "O",
+            Bulkhead.StartingArea => "S",
+            _ => "X",
+        };
+        static string CssClass(Bulkhead b) => b switch
+        {
+            Bulkhead.Main => "main",
+            Bulkhead.Extreme => "extreme",
+            Bulkhead.Overload => "overload",
+            Bulkhead.StartingArea => "startingArea",
+            _ => "main",
+        };
+        static string NodeId(ZoneNode n) => $"{Prefix(n.Bulkhead)}_{n.ZoneNumber}";
+
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine("flowchart LR");
+
+        foreach (var node in graph.Keys)
+        {
+            var label = new System.Text.StringBuilder();
+            label.Append($"{node.Bulkhead} {node.ZoneNumber}");
+            label.Append($"<br/>branch: {node.Branch}");
+
+            var tagsStr = node.Tags.ToString();
+            if (tagsStr != "{}")
+                label.Append($"<br/>tags: {tagsStr}");
+
+            label.Append($"<br/>max: {node.MaxConnections}");
+
+            sb.AppendLine($"    {NodeId(node)}[\"{label}\"]:::{CssClass(node.Bulkhead)}");
+        }
+
+        foreach (var (parent, children) in graph)
+        {
+            foreach (var child in children)
+            {
+                var dir = GetZone(child)?.StartExpansion ?? ZoneBuildExpansion.Random;
+                var crossBulkhead = parent.Bulkhead != child.Bulkhead;
+
+                string edge;
+                if (crossBulkhead && dir != ZoneBuildExpansion.Random)
+                    edge = $"-->|\"bulkhead, {dir}\"|";
+                else if (crossBulkhead)
+                    edge = "-->|bulkhead|";
+                else if (dir != ZoneBuildExpansion.Random)
+                    edge = $"-->|{dir}|";
+                else
+                    edge = "-->";
+
+                sb.AppendLine($"    {NodeId(parent)} {edge} {NodeId(child)}");
+            }
+        }
+
+        sb.AppendLine("    classDef main fill:#cfe8ff,stroke:#1f6feb");
+        sb.AppendLine("    classDef extreme fill:#ffd8a8,stroke:#cc6600");
+        sb.AppendLine("    classDef overload fill:#e3c8ff,stroke:#6f42c1");
+        sb.AppendLine("    classDef startingArea fill:#dddddd,stroke:#666666");
+
+        return sb.ToString();
+    }
+
+    /// <summary>
     /// Connects two zones unidirectionally. If the second zone is not specified then the
     /// first zone is just added as an open zone.
     /// </summary>
