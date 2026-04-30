@@ -81,7 +81,7 @@ public class Fix_FailedToFindStartArea
             Plugin.Logger.LogError(
                 $"Zone {zone.LocalIndex} in {zone.m_layer.m_type} (dim {zone.m_dimensionIndex}) " +
                 $"exhausted {kFatalThreshold} reroll attempts — short-circuiting this job " +
-                $"and forcing a rebuild with the accumulated overrides");
+                $"and marking for rebuild with the accumulated overrides");
 
             // Keep the accumulated subseed / expansion overrides — those are real progress.
             // But reset the per-zone failure counters so the next rebuild gets a fresh
@@ -90,18 +90,21 @@ public class Fix_FailedToFindStartArea
             zoneFailures.Clear();
             diagnosticsLogged.Clear();
 
-            // The engine is stuck cycling FindStartArea -> FindZoneToBuildFrom -> back, never
-            // letting Build() return true and never reaching FactoryDone naturally. Setting
-            // __result = true forces this Build() call to report job-complete so the engine
-            // moves on instead of re-entering the same retry loop on the next tick.
+            // The engine is stuck cycling FindStartArea -> FindZoneToBuildFrom -> back,
+            // never letting this job's Build() report complete. Setting __result = true
+            // tells the engine THIS job is done so it dequeues the next job instead of
+            // re-entering the same retry loop on the next tick. As remaining jobs in the
+            // batch each fail and short-circuit, the engine naturally drains its queues
+            // and reaches LG_Factory.FactoryDone() on its own — at which point our
+            // OnDoneValidate hook sees the non-empty FailedSubSeeds and triggers the
+            // actual LevelCleanup() + Builder.Current.Build() rebuild path.
+            //
+            // We deliberately do NOT call LG_Factory.Current.FactoryDone() here — forcing
+            // it from mid-build means BuildDone-time handlers (Builder.BuildDone,
+            // ElevatorShaftLanding.OnBuildDone, EnvironmentStateManager.OnFactoryBuildDone)
+            // run with incomplete state and produce a flood of NullReferenceExceptions.
             __result = true;
-
-            // Same pattern as Fix_SourceExpanderNull: with the job marked complete, force
-            // FactoryDone() to run validators now. FailedSubSeeds is non-empty (we've been
-            // accumulating during the cascade), so ValidateSubSeeds returns false and the
-            // rebuild path fires — which is exactly the loop break we need.
             FactoryJobManager.MarkForRebuild();
-            LG_Factory.Current.FactoryDone();
             return;
         }
 
