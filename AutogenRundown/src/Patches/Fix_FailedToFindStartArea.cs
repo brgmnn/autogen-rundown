@@ -56,7 +56,7 @@ public class Fix_FailedToFindStartArea
     /// <param name="__exception"></param>
     [HarmonyPatch(typeof(LG_ZoneJob_CreateExpandFromData), nameof(LG_ZoneJob_CreateExpandFromData.Build))]
     [HarmonyFinalizer]
-    public static void Post_LG_ZoneJob_CreateExpandFromData_Build(LG_ZoneJob_CreateExpandFromData __instance, ref Exception? __exception)
+    public static void Post_LG_ZoneJob_CreateExpandFromData_Build(LG_ZoneJob_CreateExpandFromData __instance, ref bool __result, ref Exception? __exception)
     {
         if (__instance.m_mainStatus != LG_ZoneJob_CreateExpandFromData.MainStatus.FindStartArea ||
             __instance.m_subStatus != LG_ZoneJob_CreateExpandFromData.SubStatus.SelectArea ||
@@ -80,8 +80,8 @@ public class Fix_FailedToFindStartArea
         {
             Plugin.Logger.LogError(
                 $"Zone {zone.LocalIndex} in {zone.m_layer.m_type} (dim {zone.m_dimensionIndex}) " +
-                $"exhausted {kFatalThreshold} reroll attempts — resetting per-zone failure " +
-                $"counters and triggering a rebuild with the accumulated overrides");
+                $"exhausted {kFatalThreshold} reroll attempts — short-circuiting this job " +
+                $"and forcing a rebuild with the accumulated overrides");
 
             // Keep the accumulated subseed / expansion overrides — those are real progress.
             // But reset the per-zone failure counters so the next rebuild gets a fresh
@@ -90,7 +90,18 @@ public class Fix_FailedToFindStartArea
             zoneFailures.Clear();
             diagnosticsLogged.Clear();
 
+            // The engine is stuck cycling FindStartArea -> FindZoneToBuildFrom -> back, never
+            // letting Build() return true and never reaching FactoryDone naturally. Setting
+            // __result = true forces this Build() call to report job-complete so the engine
+            // moves on instead of re-entering the same retry loop on the next tick.
+            __result = true;
+
+            // Same pattern as Fix_SourceExpanderNull: with the job marked complete, force
+            // FactoryDone() to run validators now. FailedSubSeeds is non-empty (we've been
+            // accumulating during the cascade), so ValidateSubSeeds returns false and the
+            // rebuild path fires — which is exactly the loop break we need.
             FactoryJobManager.MarkForRebuild();
+            LG_Factory.Current.FactoryDone();
             return;
         }
 
