@@ -191,6 +191,17 @@ public static class FactoryJobManager
             Rebuilding = true;
 
             LevelCleanup();
+
+            // Reset before kicking off the inner build. ShouldRebuild is sticky and would
+            // otherwise stay true through the inner Builder.Build() call, causing
+            // Patch_LG_Factory.Prefix_FactoryDone to suppress the inner build's natural
+            // FactoryDone — even if the inner build succeeded. Without that suppression
+            // lifted, dimensions never finalize their alias names, OnFactoryBuildDone
+            // never fires, and Builder.BuildDone / ElevatorShaftLanding handlers NRE on
+            // unfinalized state. If the inner build also fails, the cascade inside it
+            // will re-set ShouldRebuild via Reroll_SubSeed -> MarkForRebuild.
+            ShouldRebuild = false;
+
             Rebuild();
 
             Rebuilding = false;
