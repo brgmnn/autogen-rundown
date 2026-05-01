@@ -34,11 +34,11 @@ public partial record LevelLayout
 
         // portalZone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_portal_HA_01.prefab";
         // portalZone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_portal_HA_01.prefab";
-        portalZone.GenPortalGeomorph();
+        portal = level.GenPortalGeomorph(portal);
 
         var (mwp, mwpZone) = BuildChallenge_Small(portal);
 
-        mwpZone.GenMatterWaveProjectorGeomorph(Complex);
+        mwp = level.GenMatterWaveProjectorGeomorph(mwp);
         mwpZone.BigPickupDistributionInZone = BigPickupDistribution.MatterWaveProjector.PersistentId;
 
         mwpZone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer);
@@ -149,10 +149,10 @@ public partial record LevelLayout
                         startZone.GenHubGeomorph(Complex);
 
                         var (end1, end1Zone) = AddZone(start);
-                        end1Zone.GenDeadEndGeomorph(Complex);
+                        end1 = level.GenDeadEndGeomorph(end1);
 
                         var (end2, end2Zone) = AddZone(start);
-                        end2Zone.GenDeadEndGeomorph(Complex);
+                        end2 = level.GenDeadEndGeomorph(end2);
 
                         objective.Gather_PlacementNodes.Add(end1);
                         objective.Gather_PlacementNodes.Add(end2);
@@ -223,7 +223,7 @@ public partial record LevelLayout
                     (0.2, () =>
                     {
                         (last, lastZone) = AddZone(start);
-                        lastZone.GenDeadEndGeomorph(Complex);
+                        last = level.GenDeadEndGeomorph(last);
                         objective.Gather_PlacementNodes.Add(last);
                     }),
 
@@ -247,7 +247,7 @@ public partial record LevelLayout
                     (0.3, () =>
                     {
                         (last, lastZone) = AddZone(start);
-                        lastZone.GenDeadEndGeomorph(Complex);
+                        last = level.GenDeadEndGeomorph(last);
                         objective.Gather_PlacementNodes.Add(last);
                     }),
 
@@ -293,10 +293,10 @@ public partial record LevelLayout
                             startZone.GenHubGeomorph(Complex);
 
                             var (end1, end1Zone) = AddZone(start);
-                            end1Zone.GenDeadEndGeomorph(Complex);
+                            end1 = level.GenDeadEndGeomorph(end1);
 
                             var (end2, end2Zone) = AddZone(start);
-                            end2Zone.GenDeadEndGeomorph(Complex);
+                            end2 = level.GenDeadEndGeomorph(end2);
 
                             objective.Gather_PlacementNodes.Add(end1);
                             objective.Gather_PlacementNodes.Add(end2);
@@ -309,13 +309,13 @@ public partial record LevelLayout
                             hubZone.GenHubGeomorph(Complex);
 
                             var (end1, end1Zone) = AddZone(hub);
-                            end1Zone.GenDeadEndGeomorph(Complex);
+                            end1 = level.GenDeadEndGeomorph(end1);
 
                             var (end2, end2Zone) = AddZone(hub);
-                            end2Zone.GenDeadEndGeomorph(Complex);
+                            end2 = level.GenDeadEndGeomorph(end2);
 
                             var (end3, end3Zone) = AddZone(hub);
-                            end3Zone.GenDeadEndGeomorph(Complex);
+                            end3 = level.GenDeadEndGeomorph(end3);
 
                             objective.Gather_PlacementNodes.Add(end1);
                             objective.Gather_PlacementNodes.Add(end2);
@@ -371,7 +371,7 @@ public partial record LevelLayout
                         objective.Gather_PlacementNodes.Add(last);
 
                         if (Generator.Flip(0.4))
-                            lastZone.GenDeadEndGeomorph(Complex);
+                            last = level.GenDeadEndGeomorph(last);
                     }),
 
                     // Single boss fight
@@ -416,14 +416,14 @@ public partial record LevelLayout
                         objective.Gather_PlacementNodes.Add(last);
 
                         if (Generator.Flip(0.4))
-                            lastZone.GenDeadEndGeomorph(Complex);
+                            last = level.GenDeadEndGeomorph(last);
                     }),
 
                     // Fetch from the second room, but it's a dead end
                     (0.2, () =>
                     {
                         (last, lastZone) = AddZone(start);
-                        lastZone.GenDeadEndGeomorph(Complex);
+                        last = level.GenDeadEndGeomorph(last);
 
                         objective.Gather_PlacementNodes.Add(last);
                     }),
@@ -520,10 +520,10 @@ public partial record LevelLayout
                             startZone.GenHubGeomorph(Complex);
 
                             var (end1, end1Zone) = AddZone(start);
-                            end1Zone.GenDeadEndGeomorph(Complex);
+                            end1 = level.GenDeadEndGeomorph(end1);
 
                             var (end2, end2Zone) = AddZone(start);
-                            end2Zone.GenDeadEndGeomorph(Complex);
+                            end2 = level.GenDeadEndGeomorph(end2);
 
                             objective.Gather_PlacementNodes.Add(end1);
                             objective.Gather_PlacementNodes.Add(end2);
@@ -536,13 +536,13 @@ public partial record LevelLayout
                             hubZone.GenHubGeomorph(Complex);
 
                             var (end1, end1Zone) = AddZone(hub);
-                            end1Zone.GenDeadEndGeomorph(Complex);
+                            end1 = level.GenDeadEndGeomorph(end1);
 
                             var (end2, end2Zone) = AddZone(hub);
-                            end2Zone.GenDeadEndGeomorph(Complex);
+                            end2 = level.GenDeadEndGeomorph(end2);
 
                             var (end3, end3Zone) = AddZone(hub);
-                            end3Zone.GenDeadEndGeomorph(Complex);
+                            end3 = level.GenDeadEndGeomorph(end3);
 
                             objective.Gather_PlacementNodes.Add(end1);
                             objective.Gather_PlacementNodes.Add(end2);
@@ -800,7 +800,7 @@ public partial record LevelLayout
                             });
 
                         objective.Gather_PlacementNodes.Add(last);
-                        lastZone.GenDeadEndGeomorph(Complex);
+                        last = level.GenDeadEndGeomorph(last);
                     }),
 
                     // Keycard to Apex alarm

@@ -29,7 +29,7 @@ public class BuildFrom
     public int Zone { get; set; } = 0;
 }
 
-public class Level
+public partial class Level
 {
     #region Filler settings that won't change
     public bool Enabled = true;
@@ -1613,7 +1613,9 @@ public class Level
         level.FinalizeComplexResourceSet();
         #endregion
 
-        Plugin.Logger.LogDebug($"Level={level.Tier}{level.Index} level plan: {level.Planner}");
+        Plugin.Logger.LogDebug(
+            $"Level={level.Tier}{level.Index} level plan: {level.Planner}\n" +
+            $"==========\n{level.Planner.ToMermaidChart()}==========");
 
         return level;
     }

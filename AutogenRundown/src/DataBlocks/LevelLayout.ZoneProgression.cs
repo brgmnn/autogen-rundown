@@ -799,7 +799,7 @@ public partial record LevelLayout
                 Tags = new Tags("no_enemies")
             });
 
-        sideSpawnZone.GenDeadEndGeomorph(Complex);
+        sideSpawn = level.GenDeadEndGeomorph(sideSpawn);
         sideSpawnZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
 
         var puzzle = director.Tier switch
@@ -974,9 +974,7 @@ public partial record LevelLayout
         var nodes = AddBranch_Forward(start, 1 + preludeZones);
 
         var exit = nodes.Last();
-        var exitZone = planner.GetZone(exit)!;
-
-        exitZone.GenExitGeomorph(Complex);
+        exit = level.GenExitGeomorph(exit);
 
         return exit;
     }
@@ -1000,7 +998,7 @@ public partial record LevelLayout
             return bossNode;
         }
 
-        zone.GenBossGeomorph(Complex);
+        bossNode = level.GenBossGeomorph(bossNode);
 
         // Disable any scouts on anything except E-tier
         if (level.Tier != "E")

@@ -34,5 +34,12 @@ internal static class Patch_LG_Layer
 
             Plugin.Logger.LogDebug($"Applied override m_subSeed={overrideSubSeed} to Zone_{zoneData.LocalIndex}");
         }
+
+        if (ZoneSeedManager.StartExpansionOverrides.TryGetValue(zoneKey, out var overrideExpansion))
+        {
+            zoneData.StartExpansion = (eZoneBuildFromExpansionType)overrideExpansion;
+
+            Plugin.Logger.LogDebug($"Applied override StartExpansion={overrideExpansion} to Zone_{zoneData.LocalIndex}");
+        }
     }
 }

@@ -620,7 +620,7 @@ public partial record LevelLayout
                         planner.UpdateNode(hub with { Tags = hub.Tags.Extend("uplink_terminal") });
 
                         var (side1, side1Zone) = AddZone(hub);
-                        side1Zone.GenDeadEndGeomorph(Complex);
+                        side1 = level.GenDeadEndGeomorph(side1);
                         planner.UpdateNode(hub with { Tags = hub.Tags.Extend("uplink_terminal") });
 
                         var nodes = AddBranch_Forward(

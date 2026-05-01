@@ -43,26 +43,27 @@ public partial record LevelLayout
         // Penultimate zone is an I-corridor
         var corridorIndex = level.Planner.NextIndex(director.Bulkhead, Dimension);
         var corridor = new ZoneNode(director.Bulkhead, corridorIndex, Dimension: Dimension);
-        corridor.MaxConnections = 1;
 
         var corridorZone = new Zone(level, this) { LightSettings = Lights.GenRandomLight() };
-        corridorZone.GenCorridorGeomorph(Complex);
         corridorZone.RollFog(level);
 
         level.Planner.Connect(prev, corridor);
         level.Planner.AddZone(corridor, corridorZone);
 
-        // Final zone is the matter wave projector
+        corridor = level.GenCorridorGeomorph(corridor);
+
+        // Final zone is the matter wave projector. The Tech variant of the MWP geomorph is a
+        // dead-end room — no children must attach. The wrapper enforces MaxConnections = 0.
         var mwpIndex = level.Planner.NextIndex(director.Bulkhead, Dimension);
         var mwp = new ZoneNode(director.Bulkhead, mwpIndex, Dimension: Dimension);
-        mwp.MaxConnections = 3;
 
         var mwpZone = new Zone(level, this) { LightSettings = Lights.GenRandomLight() };
-        mwpZone.GenMatterWaveProjectorGeomorph(Complex);
         mwpZone.RollFog(level);
 
         level.Planner.Connect(corridor, mwp);
         level.Planner.AddZone(mwp, mwpZone);
+
+        mwp = level.GenMatterWaveProjectorGeomorph(mwp);
 
         // Assign the zone placement data for the objective text
         objectiveLayerData.ObjectiveData.ZonePlacementDatas.Add(

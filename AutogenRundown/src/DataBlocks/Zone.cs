@@ -263,14 +263,14 @@ public partial record Zone : DataBlock<Zone>
         // Sensor trigger events: disable sensor + spawn enemies
         var sensorEvents = new List<WardenObjectiveEvent>();
         sensorEvents
-            .AddSound(Sound.LightsOff)
+            .AddZoneSound(Sound.LightsOff, sensorDef)
             .AddSpawnWave(wave, 2.0);
 
         if (resetTime >= 1.0)
             sensorEvents
                 .DisableZoneSensors(sensorDef.Id, 0.1)
                 .EnableZoneSensorsWithReset(sensorDef.Id, resetTime)
-                .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
+                .AddZoneSound(Sound.LightsOn_Vol4, sensorDef, resetTime - 0.4);
 
         sensorDef.EventsOnTrigger = sensorEvents;
         level.ZoneSensors.Add(sensorDef);
@@ -279,7 +279,7 @@ public partial record Zone : DataBlock<Zone>
         var sensorStart = Generator.Between(2, 5);
         EventsOnDoorScanStart
             .EnableZoneSensorsWithReset(sensorDef.Id, sensorStart)
-            .AddSound(Sound.LightsOn_Vol4, sensorStart)
+            .AddZoneSound(Sound.LightsOn_Vol4, sensorDef, sensorStart)
             .AddMessage(":://WARNING - SECURITY SCAN SYSTEM CORRUPTED", sensorStart - 1);
 
         // Disable sensors when alarm scan completes

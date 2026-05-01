@@ -185,7 +185,9 @@ public partial record LevelLayout
                 // Fall back to adding the area in main
                 if (!candidates.Any())
                 {
-                    Plugin.Logger.LogDebug($"No open zones for bulkhead {bulkhead}, planner = {level.Planner}");
+                    Plugin.Logger.LogDebug(
+                        $"No open zones for bulkhead {bulkhead}, planner = {level.Planner}\n" +
+                        $"==========\n{level.Planner.ToMermaidChart()}==========");
                     candidates = level.Planner.GetOpenZones(Bulkhead.Main, null, dimension: Dimension);
                 }
 

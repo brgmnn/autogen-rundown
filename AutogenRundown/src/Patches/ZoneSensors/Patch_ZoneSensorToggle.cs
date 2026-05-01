@@ -1,18 +1,18 @@
+using AutogenRundown.DataBlocks;
+using AutogenRundown.Utils;
 using GameData;
 using HarmonyLib;
 using Il2CppInterop.Runtime.Injection;
+using LevelGeneration;
 using SNetwork;
 using UnityEngine;
 
 namespace AutogenRundown.Patches.ZoneSensors;
 
 /// <summary>
-/// Event types for zone sensor toggle operations.
-/// 400: Standard toggle (resets all sensors on enable)
-/// 401: Toggle preserving triggered state (only re-enable untriggered sensors)
-/// 402: Toggle with reset (clear triggered state, then enable all)
-/// 403: Disable sensor group (preserves triggered state)
-/// 404: Enable sensor group (only untriggered sensors appear)
+/// Event types the mod intercepts in the 400-series warden-event range.
+/// 400-404: Sensor toggle variants (see ZoneSensorManager).
+/// 405:     Generic — play a Wwise sound at the center of a target zone.
 /// </summary>
 public static class ZoneSensorEventTypes
 {
@@ -21,6 +21,7 @@ public static class ZoneSensorEventTypes
     public const int ToggleResetTriggered = 402;
     public const int Disable = 403;
     public const int Enable = 404;
+    public const int PlayZoneSound = 405;
 }
 
 /// <summary>
@@ -45,12 +46,13 @@ public static class Patch_ZoneSensorToggle
 
         var eventType = (int)eventToTrigger.Type;
 
-        // Only intercept zone sensor events (400-404)
+        // Only intercept mod-owned 400-series events
         if (eventType != ZoneSensorEventTypes.Toggle &&
             eventType != ZoneSensorEventTypes.TogglePreserveTriggered &&
             eventType != ZoneSensorEventTypes.ToggleResetTriggered &&
             eventType != ZoneSensorEventTypes.Disable &&
-            eventType != ZoneSensorEventTypes.Enable)
+            eventType != ZoneSensorEventTypes.Enable &&
+            eventType != ZoneSensorEventTypes.PlayZoneSound)
             return true;
 
         // Handle trigger check (same as vanilla)
@@ -60,6 +62,32 @@ public static class Patch_ZoneSensorToggle
         // Handle delay check (same as vanilla)
         if (currentDuration != 0f && eventToTrigger.Delay <= currentDuration)
             return false;
+
+        // PlayZoneSound: resolve the target zone, post the sound at its center via SoundPlayer.
+        // CellSound.PostDelayed handles the delay natively, so no custom scheduler is needed.
+        if (eventType == ZoneSensorEventTypes.PlayZoneSound)
+        {
+            var soundDelay = Mathf.Max(eventToTrigger.Delay - currentDuration, 0f);
+
+            if (Builder.CurrentFloor != null &&
+                Builder.CurrentFloor.TryGetZoneByLocalIndex(
+                    eventToTrigger.DimensionIndex,
+                    eventToTrigger.Layer,
+                    eventToTrigger.LocalIndex,
+                    out var soundZone) &&
+                soundZone != null)
+            {
+                SoundPlayer.PlayDelayed((Sound)eventToTrigger.SoundID, soundZone.CenterPosition, soundDelay);
+            }
+            else
+            {
+                Plugin.Logger.LogWarning(
+                    $"PlayZoneSound: could not resolve zone (dim={eventToTrigger.DimensionIndex}, " +
+                    $"layer={eventToTrigger.Layer}, zone={eventToTrigger.LocalIndex})");
+            }
+
+            return false;
+        }
 
         // Determine flags based on event type
         bool enabled;

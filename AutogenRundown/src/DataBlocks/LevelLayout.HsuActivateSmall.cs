@@ -550,6 +550,11 @@ public partial record LevelLayout
             }
         }
 
+        // The end zone uses a dead-end / single-expander geomorph in every complex. Lock the
+        // node down so nothing else attaches children to it.
+        end = end with { MaxConnections = 0 };
+        planner.UpdateNode(end);
+
         layerData.ObjectiveData.ZonePlacementDatas.Add(new List<ZonePlacementData>
         {
             new() { Dimension = end.Dimension, LocalIndex = end.ZoneNumber }

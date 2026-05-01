@@ -64,6 +64,11 @@ TODO:
   * See if we can fix enemies not navigating through the final door in D3
   * Check terminal stacking on 0.84.0
 
+  * Seems that Valiant objectives fail a lot
+
+  * Distribute power cells is _really_ short on main only missions now
+
+
   * Fix the cycling of security scans having global sound! Really annoying right now
   * Tone down higher density of scans, especially for moving ones
 

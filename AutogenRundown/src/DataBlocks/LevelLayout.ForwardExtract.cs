@@ -514,6 +514,6 @@ public partial record LevelLayout
 
         level.ExtractionZone = exit;
 
-        exitZone.GenExitGeomorph(Complex);
+        exit = level.GenExitGeomorph(exit);
     }
 }

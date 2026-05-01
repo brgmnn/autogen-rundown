@@ -66,6 +66,13 @@ public enum WardenObjectiveEventType : uint
     /// Enable a security sensor group (only untriggered sensors appear)
     /// </summary>
     EnableSecuritySensor = 404,
+
+    /// <summary>
+    /// Play a Wwise sound at the center of a target zone. Handled exclusively by the mod
+    /// (Patch_ZoneSensorToggle) — the game does not dispatch this type, so the sound is
+    /// posted directly via SoundPlayer using the zone's CenterPosition as the 3D emitter.
+    /// </summary>
+    PlayZoneSound = 405,
     #endregion
 
     #region MOD: AdvancedWardenObjective
