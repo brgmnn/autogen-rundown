@@ -46,6 +46,17 @@ public class Fix_FailedToFindStartArea
     /// </summary>
     private static readonly HashSet<(eDimensionIndex, LG_LayerType, eLocalZoneIndex)> diagnosticsLogged = new();
 
+    /// <summary>
+    /// Set when the fatal threshold is hit on any zone. While set, every subsequent
+    /// finalizer call in the same build pass short-circuits with __result=true so the
+    /// engine drains its remaining job batches quickly without re-running the cascade
+    /// (which would be wasted work — a rebuild is already pending).
+    ///
+    /// Cleared at the start of every Builder.Build call (fresh or rebuild) so the next
+    /// attempt runs its cascade normally.
+    /// </summary>
+    public static bool fatalReached = false;
+
     public static void ResetDiagnostics() => diagnosticsLogged.Clear();
 
     /// <summary>
@@ -62,6 +73,16 @@ public class Fix_FailedToFindStartArea
             __instance.m_subStatus != LG_ZoneJob_CreateExpandFromData.SubStatus.SelectArea ||
             __instance.m_scoredStartAreas.Count >= 1)
             return;
+
+        // A prior zone in this same build pass already hit the fatal threshold and a
+        // rebuild is pending. Short-circuit every subsequent failing job too so the engine
+        // drains its job queues fast and reaches FactoryDone naturally — re-running the
+        // cascade here would just be wasted work.
+        if (fatalReached)
+        {
+            __result = true;
+            return;
+        }
 
         var zone = __instance.m_zone;
         var zoneKey = (zone.m_dimensionIndex, zone.m_layer.m_type, zone.LocalIndex);
@@ -89,6 +110,10 @@ public class Fix_FailedToFindStartArea
             // very first failure on the next pass would re-trigger this branch immediately.
             zoneFailures.Clear();
             diagnosticsLogged.Clear();
+
+            // Set the gate so any other failing zones in this same build pass also
+            // short-circuit instead of doing more cascade work.
+            fatalReached = true;
 
             // The engine is stuck cycling FindStartArea -> FindZoneToBuildFrom -> back,
             // never letting this job's Build() report complete. Setting __result = true
