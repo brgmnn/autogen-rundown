@@ -110,7 +110,7 @@ public partial record LevelLayout
     {
         start = planner.UpdateNode(start with { MaxConnections = 3 });
         var startZone = planner.GetZone(start)!;
-        startZone.GenHubGeomorph(Complex);
+        start = level.GenHubGeomorph(start);
 
         var (end, endZone) = AddZone(start, new ZoneNode());
         var keycardNodes = AddBranch(start, sideCellZones, "power_cell");
@@ -164,7 +164,7 @@ public partial record LevelLayout
     {
         start = planner.UpdateNode(start with { MaxConnections = 3 });
         var startZone = planner.GetZone(start)!;
-        startZone.GenHubGeomorph(Complex);
+        start = level.GenHubGeomorph(start);
 
         var (end, endZone) = AddZone(start, new ZoneNode());
         var keycardNodes = AddBranch(start, sideKeycardZones, "keycard");
@@ -214,7 +214,7 @@ public partial record LevelLayout
     {
         start = planner.UpdateNode(start with { MaxConnections = 3 });
         var startZone = planner.GetZone(start)!;
-        startZone.GenHubGeomorph(Complex);
+        start = level.GenHubGeomorph(start);
 
         var (end, endZone) = AddZone(start);
 
@@ -259,7 +259,7 @@ public partial record LevelLayout
     {
         start = planner.UpdateNode(start with { MaxConnections = 3 });
         var startZone = planner.GetZone(start)!;
-        startZone.GenHubGeomorph(Complex);
+        start = level.GenHubGeomorph(start);
 
         var (end, endZone) = AddZone(start, new ZoneNode());
 
@@ -525,7 +525,7 @@ public partial record LevelLayout
         // Make start a hub with enough connections for all relay branches + forward
         start = planner.UpdateNode(start with { MaxConnections = relayCount + 1 });
         var startZone = planner.GetZone(start)!;
-        startZone.GenHubGeomorph(Complex);
+        start = level.GenHubGeomorph(start);
 
         // Create the locked forward door
         var (end, endZone) = AddZone(start, new ZoneNode());
@@ -743,7 +743,7 @@ public partial record LevelLayout
         // Make start a hub with enough connections
         start = planner.UpdateNode(start with { MaxConnections = sectorCount + 1 });
         var startZone = planner.GetZone(start)!;
-        startZone.GenHubGeomorph(Complex);
+        start = level.GenHubGeomorph(start);
 
         // Create locked forward door
         var (end, endZone) = AddZone(start, new ZoneNode());
@@ -1077,7 +1077,7 @@ public partial record LevelLayout
         // Make start a hub
         start = planner.UpdateNode(start with { MaxConnections = terminalCount + 1 });
         var startZone = planner.GetZone(start)!;
-        startZone.GenHubGeomorph(Complex);
+        start = level.GenHubGeomorph(start);
 
         // Create the locked forward door
         var (end, endZone) = AddZone(start, new ZoneNode());
@@ -1202,7 +1202,7 @@ public partial record LevelLayout
         // Make start a hub
         start = planner.UpdateNode(start with { MaxConnections = terminalCount + 1 });
         var startZone = planner.GetZone(start)!;
-        startZone.GenHubGeomorph(Complex);
+        start = level.GenHubGeomorph(start);
 
         // Create the locked forward door
         var (end, endZone) = AddZone(start, new ZoneNode());

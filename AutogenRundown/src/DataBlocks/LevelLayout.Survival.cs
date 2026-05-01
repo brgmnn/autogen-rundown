@@ -189,14 +189,14 @@ public partial record LevelLayout
             LightSettings = Lights.GenRandomLight()
         };
 
-        exitZone.GenExitGeomorph(Complex);
-
         // Exit scan will be HARD
         exitZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
         exitZone.Alarm = ChainedPuzzle.SkipZone;
 
         level.Planner.Connect(last, exitNode);
         level.Planner.AddZone(exitNode, exitZone);
+
+        exitNode = level.GenExitGeomorph(exitNode);
         #endregion
 
         #region Alarm Skip -- Security Disable Side Zone

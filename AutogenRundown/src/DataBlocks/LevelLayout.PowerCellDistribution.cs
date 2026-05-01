@@ -129,7 +129,7 @@ public partial record LevelLayout
                     (0.25, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         for (var g = 0; g < numGens; g++)
                         {
@@ -160,7 +160,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // First branch gated by keycard
                         var (kcEnd, _) = BuildChallenge_KeycardInZone(hub);
@@ -212,7 +212,7 @@ public partial record LevelLayout
                     (0.25, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         for (var g = 0; g < numGens; g++)
                             BuildGeneratorBranch(hub, $"generator_{g}");
@@ -254,7 +254,7 @@ public partial record LevelLayout
                     (0.30, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         var (kcEnd, _) = BuildChallenge_KeycardInZone(hub);
                         var kcNodes = AddBranch(kcEnd, 1, "generator_0");
@@ -286,7 +286,7 @@ public partial record LevelLayout
                     (0.20, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // First branch gated by keycard
                         var (kcEnd, _) = BuildChallenge_KeycardInZone(hub);
@@ -318,7 +318,7 @@ public partial record LevelLayout
                         AddSecuritySensors(approach.Last());
 
                         var (hub, hubZone) = AddZone(approach.Last(), new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         for (var g = 0; g < numGens; g++)
                         {
@@ -340,7 +340,7 @@ public partial record LevelLayout
                     (0.20, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // First branch: plain generator
                         var last0 = BuildGeneratorBranch(hub, "generator_0");
@@ -380,7 +380,7 @@ public partial record LevelLayout
                     (0.40, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         for (var g = 0; g < numGens; g++)
                             BuildGeneratorBranch(hub, $"generator_{g}");
@@ -424,7 +424,7 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_KeycardInSide(start);
 
                         var (hub, hubZone) = AddZone(end, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         for (var g = 0; g < numGens; g++)
                             BuildGeneratorBranch(hub, $"generator_{g}");
@@ -436,7 +436,7 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_LockedTerminalDoor(start, 1);
 
                         var (hub, hubZone) = AddZone(end, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         for (var g = 0; g < numGens; g++)
                             BuildGeneratorBranch(hub, $"generator_{g}");
@@ -449,7 +449,7 @@ public partial record LevelLayout
                         AddSecuritySensors(approach.Last());
 
                         var (hub, hubZone) = AddZone(approach.Last(), new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         for (var g = 0; g < numGens; g++)
                             BuildGeneratorBranch(hub, $"generator_{g}");
@@ -459,7 +459,7 @@ public partial record LevelLayout
                     (0.25, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // First branch behind locked terminal
                         var (ltEnd, _) = BuildChallenge_LockedTerminalDoor(hub, 0);
@@ -494,7 +494,7 @@ public partial record LevelLayout
                         var corridor = AddBranch(start, 1, "corridor");
 
                         var (hub, hubZone) = AddZone(corridor.Last(), new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // First branch gated by KeycardInSide
                         var (kcEnd, _) = BuildChallenge_KeycardInSide(hub);
@@ -513,7 +513,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // First branch behind locked terminal
                         var (ltEnd, _) = BuildChallenge_LockedTerminalDoor(hub, 1);
@@ -544,7 +544,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Boss branch with gen at end
                         var (bossEnd, _) = BuildChallenge_BossFight(hub);
@@ -578,7 +578,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Generator puzzle branch: side zone provides extra cell
                         var (genPuzzleEnd, _) = BuildChallenge_GeneratorCellInSide(hub);
@@ -614,7 +614,7 @@ public partial record LevelLayout
                     (0.30, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // First branch with keycard
                         var (kcEnd, _) = BuildChallenge_KeycardInZone(hub);
@@ -631,7 +631,7 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_KeycardInSide(start);
 
                         var (hub, hubZone) = AddZone(end, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         for (var g = 0; g < numGens; g++)
                             BuildGeneratorBranch(hub, $"generator_{g}");
@@ -649,7 +649,7 @@ public partial record LevelLayout
                     (0.20, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // First branch with sensors
                         var sensorNodes = AddBranch(hub, Generator.Between(1, 2), "generator_0");
@@ -680,7 +680,7 @@ public partial record LevelLayout
                     (0.25, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         var (errEnd, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
                             hub,
@@ -698,7 +698,7 @@ public partial record LevelLayout
                     (0.25, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Boss branch
                         var (bossEnd, _) = BuildChallenge_BossFight(hub);
@@ -734,7 +734,7 @@ public partial record LevelLayout
                     (0.25, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Locked terminal branch
                         var (ltEnd, _) = BuildChallenge_LockedTerminalDoor(hub, 1);
@@ -775,7 +775,7 @@ public partial record LevelLayout
                         var corridor = AddBranch(start, 1, "corridor");
 
                         var (hub, hubZone) = AddZone(corridor.Last(), new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Branch 1: KeycardInSide
                         var (kcEnd, _) = BuildChallenge_KeycardInSide(hub);
@@ -809,7 +809,7 @@ public partial record LevelLayout
                         var clusteredCount = Math.Min(numGens - 1, 3);
                         var (genZone, genZoneData) = AddZone(approach.Last(), new ZoneNode { Branch = "generator_cluster", MaxConnections = 3 });
                         genZoneData.Coverage = CoverageMinMax.Large;
-                        genZoneData.GenHubGeomorph(Complex);
+                        genZone = level.GenHubGeomorph(genZone);
                         PlaceGeneratorsInZone(genZone, clusteredCount);
                         AddForwardExtractStart(genZone);
 
@@ -827,7 +827,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Error branch
                         var (errEnd, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
@@ -866,7 +866,7 @@ public partial record LevelLayout
                         var mid = AddBranch(kcEnd, 1, "mid");
 
                         var (hub, hubZone) = AddZone(mid.Last(), new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         ZoneNode overflowBase = hub;
                         for (var g = 0; g < numGens; g++)
@@ -902,7 +902,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (hub1, hub1Zone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hub1Zone.GenHubGeomorph(Complex);
+                        hub1 = level.GenHubGeomorph(hub1);
 
                         // First 2 gens in hub1 branches
                         var last0 = BuildGeneratorBranch(hub1, "generator_0");
@@ -911,7 +911,7 @@ public partial record LevelLayout
 
                         // Hub2 off the end of branch 1
                         var (hub2, hub2Zone) = AddZone(last1, new ZoneNode { MaxConnections = 3 });
-                        hub2Zone.GenHubGeomorph(Complex);
+                        hub2 = level.GenHubGeomorph(hub2);
 
                         for (var g = 2; g < numGens; g++)
                         {
@@ -926,7 +926,7 @@ public partial record LevelLayout
                     (0.10, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Generator puzzle branch
                         var (genPuzzleEnd, _) = BuildChallenge_GeneratorCellInSide(hub);
@@ -966,7 +966,7 @@ public partial record LevelLayout
                     (0.25, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // First branch gated by KeycardInSide
                         var (kcEnd, _) = BuildChallenge_KeycardInSide(hub);
@@ -982,7 +982,7 @@ public partial record LevelLayout
                     (0.20, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Boss branch
                         var (bossEnd, _) = BuildChallenge_BossFight(hub);
@@ -1008,7 +1008,7 @@ public partial record LevelLayout
                     (0.20, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Sensors branch
                         var sensorNodes = AddBranch(hub, Generator.Between(1, 2), "generator_0");
@@ -1029,7 +1029,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         var (errEnd, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
                             hub,
@@ -1078,7 +1078,7 @@ public partial record LevelLayout
                     (0.20, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Error branch
                         var (errEnd, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
@@ -1108,7 +1108,7 @@ public partial record LevelLayout
                     (0.20, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Apex branch
                         var (apexEnd, _) = BuildChallenge_ApexAlarm(
@@ -1141,7 +1141,7 @@ public partial record LevelLayout
                         AddSecuritySensors(sensorNodes.Last());
 
                         var (hub, hubZone) = AddZone(sensorNodes.Last(), new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         ZoneNode overflowBase = hub;
                         for (var g = 0; g < numGens; g++)
@@ -1153,7 +1153,7 @@ public partial record LevelLayout
                     (0.20, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Locked terminal password branch
                         var (ltEnd, _) = BuildChallenge_LockedTerminalPasswordInSide(hub);
@@ -1197,7 +1197,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Error branch
                         var (errEnd, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
@@ -1259,7 +1259,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (hub1, hub1Zone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hub1Zone.GenHubGeomorph(Complex);
+                        hub1 = level.GenHubGeomorph(hub1);
 
                         // Boss branch off hub1
                         var (bossEnd, _) = BuildChallenge_BossFight(hub1);
@@ -1275,7 +1275,7 @@ public partial record LevelLayout
 
                         // Hub2 off the sensor approach end
                         var (hub2, hub2Zone) = AddZone(sensorNodes.Last(), new ZoneNode { MaxConnections = 3 });
-                        hub2Zone.GenHubGeomorph(Complex);
+                        hub2 = level.GenHubGeomorph(hub2);
 
                         // Apex branch off hub2
                         var (apexEnd, _) = BuildChallenge_ApexAlarm(
@@ -1298,7 +1298,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Generator puzzle branch
                         var (genPuzzleEnd, _) = BuildChallenge_GeneratorCellInSide(hub);
@@ -1352,7 +1352,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Error carry branch
                         var (errEnd, _) = BuildChallenge_ErrorWithOff_GeneratorCellCarry(
@@ -1385,7 +1385,7 @@ public partial record LevelLayout
                     (0.10, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Keycard + boss chain
                         var (kcEnd, _) = BuildChallenge_KeycardInSide(hub);
@@ -1436,7 +1436,7 @@ public partial record LevelLayout
                     (0.25, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // KeycardInSide branch
                         var (kcEnd, _) = BuildChallenge_KeycardInSide(hub);
@@ -1473,7 +1473,7 @@ public partial record LevelLayout
                     (0.20, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Error branch
                         var (errEnd, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
@@ -1500,7 +1500,7 @@ public partial record LevelLayout
                     (0.20, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Apex branch
                         var (apexEnd, _) = BuildChallenge_ApexAlarm(
@@ -1534,7 +1534,7 @@ public partial record LevelLayout
                         var (kcEnd, _) = BuildChallenge_KeycardInSide(approach.Last());
 
                         var (hub, hubZone) = AddZone(kcEnd, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         ZoneNode overflowBase = hub;
                         for (var g = 0; g < numGens; g++)
@@ -1577,7 +1577,7 @@ public partial record LevelLayout
                     (0.20, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Error branch
                         var (errEnd, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
@@ -1611,7 +1611,7 @@ public partial record LevelLayout
                     (0.20, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Boss + sensors chain
                         var (bossEnd, _) = BuildChallenge_BossFight(hub);
@@ -1655,7 +1655,7 @@ public partial record LevelLayout
                             WaveSettings.Baseline_VeryHard);
 
                         var (hub, hubZone) = AddZone(apexEnd, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         ZoneNode overflowBase = hub;
                         for (var g = 0; g < numGens; g++)
@@ -1667,7 +1667,7 @@ public partial record LevelLayout
                     (0.20, () =>
                     {
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Generator puzzle + boss chain
                         var (genPuzzleEnd, _) = BuildChallenge_GeneratorCellInSide(hub);
@@ -1704,7 +1704,7 @@ public partial record LevelLayout
             default:
             {
                 var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                hubZone.GenHubGeomorph(Complex);
+                hub = level.GenHubGeomorph(hub);
 
                 ZoneNode overflowBase = hub;
                 for (var g = 0; g < numGens; g++)

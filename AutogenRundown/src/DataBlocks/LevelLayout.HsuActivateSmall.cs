@@ -161,7 +161,7 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, 1);
                         var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last());
 
-                        midZone.GenCorridorGeomorph(Complex);
+                        mid = level.GenCorridorGeomorph(mid);
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -241,7 +241,7 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, 1);
                         var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last(), Generator.Between(1, 2));
 
-                        midZone.GenCorridorGeomorph(Complex);
+                        mid = level.GenCorridorGeomorph(mid);
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -260,7 +260,7 @@ public partial record LevelLayout
 
                         var (mid, midZone) = BuildChallenge_BossFight(nodes.Last());
 
-                        midZone.GenCorridorGeomorph(Complex);
+                        mid = level.GenCorridorGeomorph(mid);
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -374,7 +374,7 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, 1);
                         var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last(), Generator.Between(1, 2));
 
-                        midZone.GenCorridorGeomorph(Complex);
+                        mid = level.GenCorridorGeomorph(mid);
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -393,7 +393,7 @@ public partial record LevelLayout
 
                         var (mid, midZone) = BuildChallenge_BossFight(nodes.Last());
 
-                        midZone.GenCorridorGeomorph(Complex);
+                        mid = level.GenCorridorGeomorph(mid);
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;

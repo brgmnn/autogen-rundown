@@ -81,7 +81,7 @@ public partial record LevelLayout
                         // Lock the first zone
                         AddGeneratorPuzzle(locked, cell);
 
-                        startZone.GenTGeomorph(Complex);
+                        start = level.GenTGeomorph(start);
                     }),
 
                     // Build keycard locked puzzle
@@ -93,7 +93,7 @@ public partial record LevelLayout
 
                         // Update number of connections for hub zone
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
 
                         var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
                         var keycard = BuildBranch(start, 1, "keycard");
@@ -220,7 +220,7 @@ public partial record LevelLayout
                         // Lock the first zone
                         AddGeneratorPuzzle(locked, cell);
 
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
                     }),
 
                     // Build keycard locked puzzle
@@ -232,7 +232,7 @@ public partial record LevelLayout
 
                         // Update number of connections for hub zone
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
 
                         var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
                         var keycard = BuildBranch(start, 1, "keycard");
@@ -255,7 +255,7 @@ public partial record LevelLayout
                         startZone = planner.GetZone(start)!;
 
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
                         AddSecuritySensors(start);
 
                         var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
@@ -269,7 +269,7 @@ public partial record LevelLayout
                     {
                         var (mid, midZone) = AddTravelScanAlarm(start);
                         planner.UpdateNode(mid with { MaxConnections = 3 });
-                        midZone.GenHubGeomorph(Complex);
+                        mid = level.GenHubGeomorph(mid);
 
                         var (locked, _) = AddZone(mid, new ZoneNode { Branch = "hsu_sample" });
                         var keycard = BuildBranch(mid, 1, "keycard");
@@ -295,7 +295,7 @@ public partial record LevelLayout
                         // Lock the first zone
                         AddGeneratorPuzzle(locked, cell);
 
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
                     }),
 
                     // Build keycard locked puzzle
@@ -307,7 +307,7 @@ public partial record LevelLayout
 
                         // Update number of connections for hub zone
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
 
                         var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
                         var keycard = BuildBranch(start, 1, "keycard");
@@ -327,7 +327,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
                         AddSecuritySensors(start);
 
                         var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
@@ -416,7 +416,7 @@ public partial record LevelLayout
                             Branch = "primary",
                             MaxConnections = 3
                         });
-                        preludeZone.GenTGeomorph(Complex);
+                        prelude = level.GenTGeomorph(prelude);
 
                         var (locked, _) = AddZone(prelude, new ZoneNode { Branch = "hsu_sample" });
                         var cell = BuildBranch(prelude, 2, "power_cell");
@@ -434,7 +434,7 @@ public partial record LevelLayout
 
                         // Update number of connections for hub zone
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
 
                         var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
                         var keycard = BuildBranch(start, Generator.Between(1, 2), "keycard");
@@ -448,11 +448,11 @@ public partial record LevelLayout
                     {
                         // Update number of connections for hub zone
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
 
                         // Second area, with also a locked zone
                         var (node2, zone2) = AddZone(start, new ZoneNode { Branch = "primary", MaxConnections = 3 });
-                        zone2.GenHubGeomorph(Complex);
+                        node2 = level.GenHubGeomorph(node2);
 
                         var keycard1 = BuildBranch(start, 1, "keycard_1");
 
@@ -502,11 +502,11 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
                         AddSecuritySensors(start);
 
                         var (node2, zone2) = AddZone(start, new ZoneNode { Branch = "primary", MaxConnections = 3 });
-                        zone2.GenHubGeomorph(Complex);
+                        node2 = level.GenHubGeomorph(node2);
 
                         var keycard1 = BuildBranch(start, 1, "keycard_1");
                         AddKeycardPuzzle(node2, keycard1);
@@ -523,7 +523,7 @@ public partial record LevelLayout
                     {
                         var (mid, midZone) = AddTravelScanAlarm(start);
                         planner.UpdateNode(mid with { MaxConnections = 3 });
-                        midZone.GenHubGeomorph(Complex);
+                        mid = level.GenHubGeomorph(mid);
 
                         var (locked, _) = AddZone(mid, new ZoneNode { Branch = "hsu_sample" });
                         var keycard = BuildBranch(mid, 1, "keycard");
@@ -546,7 +546,7 @@ public partial record LevelLayout
                             Branch = "primary",
                             MaxConnections = 3
                         });
-                        preludeZone.GenTGeomorph(Complex);
+                        prelude = level.GenTGeomorph(prelude);
 
                         var (locked, _) = AddZone(prelude, new ZoneNode { Branch = "hsu_sample" });
                         var cell = BuildBranch(prelude, 2, "power_cell");
@@ -564,7 +564,7 @@ public partial record LevelLayout
 
                         // Update number of connections for hub zone
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
 
                         var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
                         var keycard = BuildBranch(start, Generator.Between(1, 2), "keycard");
@@ -587,7 +587,7 @@ public partial record LevelLayout
                         startZone = planner.GetZone(start)!;
 
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
                         AddSecuritySensors(start);
 
                         var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
@@ -742,7 +742,7 @@ public partial record LevelLayout
                             Branch = "primary",
                             MaxConnections = 3
                         });
-                        preludeZone.GenTGeomorph(Complex);
+                        prelude = level.GenTGeomorph(prelude);
 
                         var (hsu, hsuZone) = AddZone(prelude, new ZoneNode { Branch = "hsu_sample" });
                         hsuZone.Coverage = CoverageMinMax.Medium;
@@ -758,11 +758,11 @@ public partial record LevelLayout
                     {
                         // Update number of connections for hub zone
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
 
                         // Second area, with also a locked zone
                         var (node2, zone2) = AddZone(start, new ZoneNode { Branch = "primary", MaxConnections = 3 });
-                        zone2.GenHubGeomorph(Complex);
+                        node2 = level.GenHubGeomorph(node2);
 
                         var keycard1 = BuildBranch(start, 1, "keycard_1");
 
@@ -814,7 +814,7 @@ public partial record LevelLayout
                             Branch = "primary",
                             MaxConnections = 3
                         });
-                        preludeZone.GenTGeomorph(Complex);
+                        prelude = level.GenTGeomorph(prelude);
                         AddSecuritySensors(prelude);
 
                         var (hsu, hsuZone) = AddZone(prelude, new ZoneNode { Branch = "hsu_sample" });
@@ -829,7 +829,7 @@ public partial record LevelLayout
                     {
                         var (mid, midZone) = AddTravelScanAlarm(start);
                         planner.UpdateNode(mid with { MaxConnections = 3 });
-                        midZone.GenHubGeomorph(Complex);
+                        mid = level.GenHubGeomorph(mid);
 
                         var (locked, _) = AddZone(mid, new ZoneNode { Branch = "hsu_sample" });
                         var keycard = BuildBranch(mid, 1, "keycard");
@@ -852,7 +852,7 @@ public partial record LevelLayout
                             Branch = "primary",
                             MaxConnections = 3
                         });
-                        preludeZone.GenTGeomorph(Complex);
+                        prelude = level.GenTGeomorph(prelude);
 
                         var (locked, _) = AddZone(prelude, new ZoneNode { Branch = "hsu_sample" });
                         var cell = BuildBranch(prelude, 2, "power_cell");
@@ -870,7 +870,7 @@ public partial record LevelLayout
 
                         // Update number of connections for hub zone
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
 
                         var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
                         var keycard = BuildBranch(start, Generator.Between(1, 2), "keycard");
@@ -886,7 +886,7 @@ public partial record LevelLayout
                         startZone = planner.GetZone(start)!;
 
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
                         AddSecuritySensors(start);
 
                         var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
@@ -1053,7 +1053,7 @@ public partial record LevelLayout
                             Branch = "primary",
                             MaxConnections = 3
                         });
-                        preludeZone.GenTGeomorph(Complex);
+                        prelude = level.GenTGeomorph(prelude);
 
                         var (locked, _) = AddZone(prelude, new ZoneNode { Branch = "hsu_sample" });
                         var cell = BuildBranch(prelude, 3, "power_cell");
@@ -1067,11 +1067,11 @@ public partial record LevelLayout
                     {
                         // Update number of connections for hub zone
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
 
                         // Second area, with also a locked zone
                         var (node2, zone2) = AddZone(start, new ZoneNode { Branch = "primary", MaxConnections = 3 });
-                        zone2.GenHubGeomorph(Complex);
+                        node2 = level.GenHubGeomorph(node2);
 
                         var keycard1 = BuildBranch(start, 1, "keycard_1");
 
@@ -1121,11 +1121,11 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
                         AddSecuritySensors(start);
 
                         var (node2, zone2) = AddZone(start, new ZoneNode { Branch = "primary", MaxConnections = 3 });
-                        zone2.GenHubGeomorph(Complex);
+                        node2 = level.GenHubGeomorph(node2);
                         AddSecuritySensors(node2);
 
                         var keycard1 = BuildBranch(start, 1, "keycard_1");
@@ -1143,10 +1143,10 @@ public partial record LevelLayout
                     {
                         var (mid, midZone) = AddTravelScanAlarm(start);
                         planner.UpdateNode(mid with { MaxConnections = 3 });
-                        midZone.GenHubGeomorph(Complex);
+                        mid = level.GenHubGeomorph(mid);
 
                         var (node2, zone2) = AddZone(mid, new ZoneNode { Branch = "primary", MaxConnections = 3 });
-                        zone2.GenHubGeomorph(Complex);
+                        node2 = level.GenHubGeomorph(node2);
 
                         var keycard1 = BuildBranch(mid, 1, "keycard_1");
                         AddKeycardPuzzle(node2, keycard1);
@@ -1173,7 +1173,7 @@ public partial record LevelLayout
                             Branch = "primary",
                             MaxConnections = 3
                         });
-                        preludeZone.GenTGeomorph(Complex);
+                        prelude = level.GenTGeomorph(prelude);
 
                         var (locked, _) = AddZone(prelude, new ZoneNode { Branch = "hsu_sample" });
                         var cell = BuildBranch(prelude, 2, "power_cell");
@@ -1191,7 +1191,7 @@ public partial record LevelLayout
 
                         // Update number of connections for hub zone
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(Complex);
+                        start = level.GenHubGeomorph(start);
 
                         var (locked, _) = AddZone(start, new ZoneNode { Branch = "hsu_sample" });
                         var keycard = BuildBranch(start, Generator.Between(1, 2), "keycard");
@@ -1208,7 +1208,7 @@ public partial record LevelLayout
                             Branch = "primary",
                             MaxConnections = 3
                         });
-                        preludeZone.GenTGeomorph(Complex);
+                        prelude = level.GenTGeomorph(prelude);
                         AddSecuritySensors(prelude);
 
                         var (locked, _) = AddZone(prelude, new ZoneNode { Branch = "hsu_sample" });

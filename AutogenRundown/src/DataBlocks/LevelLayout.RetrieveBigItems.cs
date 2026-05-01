@@ -140,7 +140,7 @@ public partial record LevelLayout
 
         if (Generator.Flip())
         {
-            entranceZone.GenHubGeomorph(Complex);
+            entrance = level.GenHubGeomorph(entrance);
             entrance.MaxConnections = 3;
         }
         else
@@ -156,7 +156,7 @@ public partial record LevelLayout
         // corridor.MaxConnections = 1;
         //
         // var corridorZone = new Zone { LightSettings = Lights.GenRandomLight() };
-        // //corridorZone.GenCorridorGeomorph(Complex);
+        // //corridor = level.GenCorridorGeomorph(corridor);
         // corridorZone.RollFog(level);
         //
         // level.Planner.Connect(entrance, corridor);
@@ -222,14 +222,14 @@ public partial record LevelLayout
 
         // Case where we want two more zones. Add a hub with two more cells
         var hub2 = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead, Dimension), Dimension: Dimension);
-        hub2.MaxConnections = 3;
 
         var zoneHub2 = new Zone(level, this) { LightSettings = Lights.GenRandomLight() };
-        zoneHub2.GenHubGeomorph(Complex);
         zoneHub2.RollFog(level);
 
         level.Planner.Connect(secondHubBase, hub2);
         level.Planner.AddZone(hub2, zoneHub2);
+
+        hub2 = level.GenHubGeomorph(hub2);
 
         for (var g = 3; g < objective.RetrieveItems.Count; g++)
         {

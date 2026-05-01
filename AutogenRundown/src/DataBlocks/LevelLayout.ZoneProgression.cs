@@ -134,7 +134,7 @@ public partial record LevelLayout
     {
         start = planner.UpdateNode(start with { MaxConnections = 3 });
         var startZone = planner.GetZone(start)!;
-        startZone.GenHubGeomorph(Complex);
+        start = level.GenHubGeomorph(start);
 
         var (end, endZone) = AddZone(start, new ZoneNode());
 
@@ -224,7 +224,7 @@ public partial record LevelLayout
     {
         start = planner.UpdateNode(start with { MaxConnections = 3 });
         var startZone = planner.GetZone(start)!;
-        startZone.GenHubGeomorph(Complex);
+        start = level.GenHubGeomorph(start);
 
         var (end, endZone) = AddZone(start, new ZoneNode());
 
@@ -900,8 +900,7 @@ public partial record LevelLayout
             return;
         }
 
-        setupNode = planner.UpdateNode(setupNode with { MaxConnections = 3 });
-        setupZone.GenHubGeomorph(Complex);
+        setupNode = level.GenHubGeomorph(setupNode);
 
         var puzzle = director.Tier switch
         {
@@ -1401,7 +1400,7 @@ public partial record LevelLayout
         node = planner.UpdateNode(node with { Tags = node.Tags.Extend("no_enemies", "no_scouts") });
 
         // Set a big open geomorph
-        zone.GenHubGeomorph(Complex);
+        node = level.GenHubGeomorph(node);
 
         zone.EnemySpawningInZone.Add(EnemySpawningData.Scout with
         {

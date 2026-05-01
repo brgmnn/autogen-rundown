@@ -40,7 +40,7 @@ public partial record LevelLayout
         var hub1 = planner.UpdateNode(start with { MaxConnections = 3 });
         var hub1Zone = planner.GetZone(hub1)!;
 
-        hub1Zone.GenHubGeomorph(Complex);
+        hub1 = level.GenHubGeomorph(hub1);
 
         var (side1, side1Zone) = AddZone_Side(hub1, new ZoneNode { Branch = "side_1" });
 
@@ -53,10 +53,10 @@ public partial record LevelLayout
         #region Phase 2
 
         var (hub2, hub2Zone) = AddZone_Forward(hub1, new ZoneNode { Branch = "hub_2", MaxConnections = 3 });
-        hub2Zone.GenHubGeomorph(Complex);
+        hub2 = level.GenHubGeomorph(hub2);
 
         var (side2, side2Zone) = AddZone_Left(hub2, new ZoneNode { Branch = "side_2", MaxConnections = 3 });
-        side2Zone.GenHubGeomorph(Complex);
+        side2 = level.GenHubGeomorph(side2);
 
         var (side3a, side3aZone) = AddZone_Right(hub2, new ZoneNode { Branch = "side_3a", MaxConnections = 1 });
         var (side3b, side3bZone) = AddZone_Right(side3a, new ZoneNode { Branch = "side_3b" });
@@ -66,7 +66,7 @@ public partial record LevelLayout
         #region Phase 3
 
         var (hub3, hub3Zone) = AddZone_Forward(hub2, new ZoneNode { Branch = "hub_3", MaxConnections = 3 });
-        hub3Zone.GenHubGeomorph(Complex);
+        hub3 = level.GenHubGeomorph(hub3);
 
         var (side4, side4Zone) = AddZone_Forward(hub3, new ZoneNode { Branch = "side_4", MaxConnections = 3 });
 
@@ -82,7 +82,7 @@ public partial record LevelLayout
         forwardExtract = planner.AddTags(forwardExtract, CryptoTag_Extraction);
 
         if (Generator.Flip())
-            forwardExtractZone.GenCorridorGeomorph(Complex);
+            forwardExtract = level.GenCorridorGeomorph(forwardExtract);
         else
         {
             forwardExtractZone.Coverage = CoverageMinMax.Medium_56;
@@ -93,7 +93,7 @@ public partial record LevelLayout
             forwardExtract,
             new ZoneNode { Branch = "extraction_elevator", MaxConnections = 0 });
 
-        extractionZone.GenExitGeomorph(Complex);
+        extraction = level.GenExitGeomorph(extraction);
 
         extraction = planner.AddTags(extraction, CryptoTag_Extraction);
 

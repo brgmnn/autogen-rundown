@@ -18,18 +18,14 @@ public partial record LevelLayout
 
         // Set entrance zone to corridor
         var entranceZone = level.Planner.GetZone(start)!;
-        entranceZone.GenCorridorGeomorph(Complex);
+        start = level.GenCorridorGeomorph(start);
         entranceZone.RollFog(level);
-        start.MaxConnections = 1;
-        level.Planner.UpdateNode(start);
 
         // Create hub zone
         var hubIndex = level.Planner.NextIndex(director.Bulkhead, Dimension);
         var hub = new ZoneNode(director.Bulkhead, hubIndex, "timed_terminal_hub", Dimension: Dimension);
-        hub.MaxConnections = 3;
 
         var zone = new Zone(level, this) { LightSettings = Lights.GenRandomLight() };
-        zone.GenHubGeomorph(Complex);
         zone.SetOutOfFog(level);
 
         // Place first terminal in the hub
@@ -46,6 +42,8 @@ public partial record LevelLayout
 
         level.Planner.Connect(start, hub);
         level.Planner.AddZone(hub, zone);
+
+        hub = level.GenHubGeomorph(hub);
 
         var hasAllErrorAlarms = level.Tier switch
         {

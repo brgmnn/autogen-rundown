@@ -1116,7 +1116,6 @@ public partial record LevelLayout
                 LightSettings = Lights.GenRandomLight(),
             };
             zone.RollFog(level);
-            zone.GenDeadEndGeomorph(Complex);
 
             // No terminals needed in the spawn zones
             zone.TerminalPlacements = new List<TerminalPlacement>();
@@ -1130,6 +1129,8 @@ public partial record LevelLayout
 
             level.Planner.Connect(hill, node);
             level.Planner.AddZone(node, zone);
+
+            node = level.GenDeadEndGeomorph(node);
         }
     }
 

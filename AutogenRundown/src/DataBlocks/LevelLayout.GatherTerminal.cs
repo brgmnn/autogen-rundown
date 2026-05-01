@@ -87,16 +87,16 @@ public partial record LevelLayout
                     // start -> Hub -> end1,end2
                     (0.75, () =>
                     {
-                        startZone.GenCorridorGeomorph(Complex);
+                        start = level.GenCorridorGeomorph(start);
 
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
 
                         AddForwardExtractStart(hub);
 
                         if (Generator.Flip(0.4))
-                            hubZone.GenTGeomorph(Complex);
+                            hub = level.GenTGeomorph(hub);
                         else
-                            hubZone.GenHubGeomorph(Complex);
+                            hub = level.GenHubGeomorph(hub);
 
                         SetGatherTerminal(hub.ZoneNumber);
                         objective.PlacementNodes.Add(hub);
@@ -156,16 +156,16 @@ public partial record LevelLayout
                     // start -> Hub -> end1,end2
                     (0.30, () =>
                     {
-                        startZone.GenCorridorGeomorph(Complex);
+                        start = level.GenCorridorGeomorph(start);
 
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
 
                         AddForwardExtractStart(hub);
 
                         if (Generator.Flip(0.4))
-                            hubZone.GenTGeomorph(Complex);
+                            hub = level.GenTGeomorph(hub);
                         else
-                            hubZone.GenHubGeomorph(Complex);
+                            hub = level.GenHubGeomorph(hub);
 
                         SetGatherTerminal(hub.ZoneNumber);
                         objective.PlacementNodes.Add(hub);
@@ -185,7 +185,7 @@ public partial record LevelLayout
                     // Sensor fortress hub - sensors on all zones
                     (0.35, () =>
                     {
-                        startZone.GenCorridorGeomorph(Complex);
+                        start = level.GenCorridorGeomorph(start);
                         AddSecuritySensors(start);
 
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
@@ -193,9 +193,9 @@ public partial record LevelLayout
                         AddForwardExtractStart(hub);
 
                         if (Generator.Flip(0.4))
-                            hubZone.GenTGeomorph(Complex);
+                            hub = level.GenTGeomorph(hub);
                         else
-                            hubZone.GenHubGeomorph(Complex);
+                            hub = level.GenHubGeomorph(hub);
 
                         AddSecuritySensors(hub);
                         SetGatherTerminal(hub.ZoneNumber);
@@ -261,10 +261,10 @@ public partial record LevelLayout
                     // start -> Hub -> end1,end2,end3
                     (1.0, () =>
                     {
-                        startZone.GenCorridorGeomorph(Complex);
+                        start = level.GenCorridorGeomorph(start);
 
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         SetGatherTerminal(hub.ZoneNumber);
                         objective.PlacementNodes.Add(hub);
@@ -318,10 +318,10 @@ public partial record LevelLayout
                     // start -> Hub -> end1,end2,end3
                     (0.35, () =>
                     {
-                        startZone.GenCorridorGeomorph(Complex);
+                        start = level.GenCorridorGeomorph(start);
 
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         SetGatherTerminal(hub.ZoneNumber);
                         objective.PlacementNodes.Add(hub);
@@ -350,11 +350,11 @@ public partial record LevelLayout
                     // Sensor fortress hub - sensors on all zones (4 spawn)
                     (0.40, () =>
                     {
-                        startZone.GenCorridorGeomorph(Complex);
+                        start = level.GenCorridorGeomorph(start);
                         AddSecuritySensors(start);
 
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(Complex);
+                        hub = level.GenHubGeomorph(hub);
                         AddSecuritySensors(hub);
 
                         SetGatherTerminal(hub.ZoneNumber);

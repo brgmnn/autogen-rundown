@@ -36,7 +36,7 @@ public partial record LevelLayout
         var hub1 = planner.UpdateNode(start with { MaxConnections = 3 });
         var hub1Zone = planner.GetZone(hub1)!;
 
-        hub1Zone.GenHubGeomorph(Complex);
+        hub1 = level.GenHubGeomorph(hub1);
 
         #region Left side
 
@@ -45,14 +45,14 @@ public partial record LevelLayout
             Branch = "left_corridor",
             MaxConnections = 1
         });
-        leftCorridorZone.GenCorridorGeomorph(Complex);
+        leftCorridor = level.GenCorridorGeomorph(leftCorridor);
 
         var (leftHub, leftHubZone) = AddZone_Left(leftCorridor, new ZoneNode
         {
             Branch = "left_hub",
             MaxConnections = 3
         });
-        leftHubZone.GenHubGeomorph(Complex);
+        leftHub = level.GenHubGeomorph(leftHub);
 
         AddZone_Backward(leftHub, new ZoneNode { Branch = "side_1" });
         AddZone_Left(leftHub, new ZoneNode { Branch = "side_2" });
@@ -68,14 +68,14 @@ public partial record LevelLayout
             Branch = "right_corridor",
             MaxConnections = 1
         });
-        leftCorridorZone.GenCorridorGeomorph(Complex);
+        leftCorridor = level.GenCorridorGeomorph(leftCorridor);
 
         var (rightHub, rightHubZone) = AddZone_Right(rightCorridor, new ZoneNode
         {
             Branch = "right_hub",
             MaxConnections = 3
         });
-        leftHubZone.GenHubGeomorph(Complex);
+        leftHub = level.GenHubGeomorph(leftHub);
 
         AddZone_Backward(rightHub, new ZoneNode { Branch = "side_4" });
         AddZone_Right(rightHub, new ZoneNode { Branch = "side_5" });
@@ -91,7 +91,7 @@ public partial record LevelLayout
         forwardExtractZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
 
         if (Generator.Flip())
-            forwardExtractZone.GenCorridorGeomorph(Complex);
+            forwardExtract = level.GenCorridorGeomorph(forwardExtract);
         else
         {
             forwardExtractZone.Coverage = CoverageMinMax.Medium_56;
@@ -102,7 +102,7 @@ public partial record LevelLayout
             forwardExtract,
             new ZoneNode { Branch = "extraction_elevator", MaxConnections = 0 });
 
-        extractionZone.GenExitGeomorph(Complex);
+        extraction = level.GenExitGeomorph(extraction);
 
         level.ExtractionZone = extraction;
 

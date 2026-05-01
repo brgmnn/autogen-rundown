@@ -1351,7 +1351,7 @@ public partial record LevelLayout
         var startZone = planner.GetZone(start)!;
 
         if (Generator.Flip(0.7))
-            startZone.GenCorridorGeomorph(Complex);
+            start = level.GenCorridorGeomorph(start);
         else
             startZone.Coverage = CoverageMinMax.Large_80;
 
@@ -1420,7 +1420,7 @@ public partial record LevelLayout
                     // and we let the fog rise during scan
                     (1.0, () =>
                     {
-                        startZone.GenGeneratorClusterGeomorph(Complex);
+                        start = level.GenGeneratorClusterGeomorph(start);
                         startZone.Altitude = Altitude.OnlyMid;
                         objective.GeneratorClusterNode = start;
 
@@ -1464,7 +1464,7 @@ public partial record LevelLayout
                     // and we let the fog rise during scan
                     (1.0, () =>
                     {
-                        startZone.GenGeneratorClusterGeomorph(Complex);
+                        start = level.GenGeneratorClusterGeomorph(start);
                         startZone.Altitude = Altitude.OnlyMid;
                         objective.GeneratorClusterNode = start;
 
@@ -1508,7 +1508,7 @@ public partial record LevelLayout
                     // and we let the fog rise during scan
                     (1.0, () =>
                     {
-                        startZone.GenGeneratorClusterGeomorph(Complex);
+                        start = level.GenGeneratorClusterGeomorph(start);
                         startZone.Altitude = Altitude.OnlyMid;
                         objective.GeneratorClusterNode = start;
 
@@ -1558,7 +1558,7 @@ public partial record LevelLayout
                     // and we let the fog rise during scan
                     (1.0, () =>
                     {
-                        startZone.GenGeneratorClusterGeomorph(Complex);
+                        start = level.GenGeneratorClusterGeomorph(start);
                         startZone.Altitude = Altitude.OnlyMid;
                         objective.GeneratorClusterNode = start;
 
@@ -1608,7 +1608,7 @@ public partial record LevelLayout
                     // and we let the fog rise during scan
                     (1.0, () =>
                     {
-                        startZone.GenGeneratorClusterGeomorph(Complex);
+                        start = level.GenGeneratorClusterGeomorph(start);
                         startZone.Altitude = Altitude.OnlyMid;
                         objective.GeneratorClusterNode = start;
 

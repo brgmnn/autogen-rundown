@@ -317,7 +317,7 @@ public partial record LevelLayout
             case Complex.Mining:
             case Complex.Tech:
             case Complex.Service:
-                elevatorDropZone.GenHubGeomorph(Complex);
+                elevatorDrop = level.GenHubGeomorph(elevatorDrop);
                 break;
         }
 
@@ -379,7 +379,7 @@ public partial record LevelLayout
                 }
                 else
                 {
-                    elevatorDropZone.GenHubGeomorph(Complex);
+                    elevatorDrop = level.GenHubGeomorph(elevatorDrop);
                 }
 
                 break;
@@ -387,7 +387,7 @@ public partial record LevelLayout
 
             case Complex.Tech:
             case Complex.Service:
-                elevatorDropZone.GenHubGeomorph(Complex);
+                elevatorDrop = level.GenHubGeomorph(elevatorDrop);
                 break;
         }
 
