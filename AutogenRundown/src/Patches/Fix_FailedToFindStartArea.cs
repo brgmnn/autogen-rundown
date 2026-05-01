@@ -115,21 +115,19 @@ public class Fix_FailedToFindStartArea
             // short-circuit instead of doing more cascade work.
             fatalReached = true;
 
-            // The engine is stuck cycling FindStartArea -> FindZoneToBuildFrom -> back,
-            // never letting this job's Build() report complete. Setting __result = true
-            // tells the engine THIS job is done so it dequeues the next job instead of
-            // re-entering the same retry loop on the next tick. As remaining jobs in the
-            // batch each fail and short-circuit, the engine naturally drains its queues
-            // and reaches LG_Factory.FactoryDone() on its own — at which point our
-            // OnDoneValidate hook sees the non-empty FailedSubSeeds and triggers the
-            // actual LevelCleanup() + Builder.Current.Build() rebuild path.
+            // Setting __result = true alone isn't enough — even with each zone job
+            // reporting complete, the engine's later batches (FinalLogicLinking, culling
+            // setup) iterate over the broken zones and never finish, so FactoryDone is
+            // never reached and the rebuild never fires. Force LG_Factory.FactoryDone()
+            // ourselves to short-circuit straight to the rebuild path.
             //
-            // We deliberately do NOT call LG_Factory.Current.FactoryDone() here — forcing
-            // it from mid-build means BuildDone-time handlers (Builder.BuildDone,
-            // ElevatorShaftLanding.OnBuildDone, EnvironmentStateManager.OnFactoryBuildDone)
-            // run with incomplete state and produce a flood of NullReferenceExceptions.
+            // ShouldRebuild is set above via MarkForRebuild() so Patch_LG_Factory's
+            // Prefix_FactoryDone will suppress the engine's own FactoryDone body (and
+            // therefore the BuildDone / ElevatorShaftLanding handlers that would otherwise
+            // NRE on broken state).
             __result = true;
             FactoryJobManager.MarkForRebuild();
+            LG_Factory.Current.FactoryDone();
             return;
         }
 
