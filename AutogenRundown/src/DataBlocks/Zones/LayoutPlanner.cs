@@ -125,10 +125,12 @@ public class LayoutPlanner
     }
 
     /// <summary>
-    /// Renders the zone graph as a Mermaid `flowchart LR` diagram. Bulkheads are color-coded
-    /// via classDef styling, each node label includes branch / tags / max-connections, and
-    /// edges are labeled with the child's requested StartExpansion direction. Cross-bulkhead
-    /// edges are flagged with a `bulkhead` prefix in the edge label.
+    /// Renders the zone graph as a Mermaid `flowchart LR` diagram. Each dimension is grouped
+    /// into its own subgraph so cross-dimension portals show up as edges that cross subgraph
+    /// boundaries. Bulkheads are color-coded via classDef styling, each node label includes
+    /// branch / tags / max-connections, and edges are labeled with the child's requested
+    /// StartExpansion direction. Cross-bulkhead edges are flagged with a `bulkhead` prefix
+    /// and cross-dimension edges with a `dimension` prefix.
     /// </summary>
     public string ToMermaidChart()
     {
@@ -148,27 +150,40 @@ public class LayoutPlanner
             Bulkhead.StartingArea => "startingArea",
             _ => "main",
         };
-        static string NodeId(ZoneNode n) => $"{Prefix(n.Bulkhead)}_{n.ZoneNumber}";
+        static string NodeId(ZoneNode n) => $"D{(int)n.Dimension}_{Prefix(n.Bulkhead)}_{n.ZoneNumber}";
 
         var sb = new System.Text.StringBuilder();
         sb.AppendLine("flowchart LR");
 
-        foreach (var node in graph.Keys)
+        // Group nodes by dimension and render each dimension as its own subgraph so the
+        // viewer can tell at a glance which zones belong to which dimension.
+        var byDimension = graph.Keys
+            .GroupBy(n => n.Dimension)
+            .OrderBy(g => (int)g.Key);
+
+        foreach (var dimGroup in byDimension)
         {
-            var label = new System.Text.StringBuilder();
-            label.Append($"{node.Bulkhead} {node.ZoneNumber}");
-            label.Append($"<br/>branch: {node.Branch}");
+            sb.AppendLine($"    subgraph dim_{(int)dimGroup.Key}[\"Dimension: {dimGroup.Key}\"]");
 
-            var tagsStr = node.Tags.ToString();
-            if (tagsStr != "{}")
-                label.Append($"<br/>tags: {tagsStr}");
+            foreach (var node in dimGroup)
+            {
+                var label = new System.Text.StringBuilder();
+                label.Append($"{node.Bulkhead} {node.ZoneNumber}");
+                label.Append($"<br/>branch: {node.Branch}");
 
-            label.Append($"<br/>max: {node.MaxConnections}");
+                var tagsStr = node.Tags.ToString();
+                if (tagsStr != "{}")
+                    label.Append($"<br/>tags: {tagsStr}");
 
-            sb.AppendLine($"    {NodeId(node)}[\"{label}\"]:::{CssClass(node.Bulkhead)}");
+                label.Append($"<br/>max: {node.MaxConnections}");
 
-            if (graph[node].Count >= node.MaxConnections)
-                sb.AppendLine($"    class {NodeId(node)} closed");
+                sb.AppendLine($"        {NodeId(node)}[\"{label}\"]:::{CssClass(node.Bulkhead)}");
+
+                if (graph[node].Count >= node.MaxConnections)
+                    sb.AppendLine($"        class {NodeId(node)} closed");
+            }
+
+            sb.AppendLine("    end");
         }
 
         foreach (var (parent, children) in graph)
@@ -177,16 +192,16 @@ public class LayoutPlanner
             {
                 var dir = GetZone(child)?.StartExpansion ?? ZoneBuildExpansion.Random;
                 var crossBulkhead = parent.Bulkhead != child.Bulkhead;
+                var crossDimension = parent.Dimension != child.Dimension;
 
-                string edge;
-                if (crossBulkhead && dir != ZoneBuildExpansion.Random)
-                    edge = $"-->|\"bulkhead, {dir}\"|";
-                else if (crossBulkhead)
-                    edge = "-->|bulkhead|";
-                else if (dir != ZoneBuildExpansion.Random)
-                    edge = $"-->|{dir}|";
-                else
-                    edge = "-->";
+                var prefixes = new List<string>();
+                if (crossDimension) prefixes.Add("dimension");
+                if (crossBulkhead) prefixes.Add("bulkhead");
+                if (dir != ZoneBuildExpansion.Random) prefixes.Add(dir.ToString());
+
+                var edge = prefixes.Count == 0
+                    ? "-->"
+                    : $"-->|\"{string.Join(", ", prefixes)}\"|";
 
                 sb.AppendLine($"    {NodeId(parent)} {edge} {NodeId(child)}");
             }
