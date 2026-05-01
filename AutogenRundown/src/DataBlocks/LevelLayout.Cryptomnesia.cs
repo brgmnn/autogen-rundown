@@ -176,11 +176,56 @@ public partial record LevelLayout
 
         #endregion
 
+        // Pre-place secondary bulkhead FROM zones BEFORE the Reality prune runs so:
+        //  (a) the prune's BulkheadDoorControllerPlacements carve-out keeps them reachable
+        //      from the elevator, and
+        //  (b) we never land on a locked decoy (decoys don't exist in Reality yet).
+        // Without this, the secondary director's StartingArea_GetBuildStart picks AFTER
+        // the prune has tagged Locked decoys and can attach the secondary bulkhead --
+        // and thus the secondary objective -- behind a locked door.
+        PrePlaceCryptomnesiaSecondaryBulkheads();
+
         // Reality prune runs AFTER the dimension loop because CopyRealityLayout reads
         // Reality's planner graph to mirror each dimension -- pruning Reality earlier
         // would strip zones the dimensions still need to copy.
         if (layoutType == CryptomnesiaLayout.HubChain)
             PruneCryptomnesiaDimension(this, DimensionIndex.Reality);
+    }
+
+    /// <summary>
+    /// For each non-Main bulkhead on the level, picks a Reality main zone and calls
+    /// <see cref="InitializeBulkheadArea"/> to attach the secondary bulkhead. Must
+    /// run before the Reality prune so the prune's BulkheadDoorControllerPlacements
+    /// carve-out keeps the FROM zone reachable from the elevator.
+    /// </summary>
+    private void PrePlaceCryptomnesiaSecondaryBulkheads()
+    {
+        var secondaryBulkheads = new[] { Bulkhead.Extreme, Bulkhead.Overload }
+            .Where(b => level.Settings.Bulkheads.HasFlag(b))
+            .ToList();
+
+        if (secondaryBulkheads.Count == 0)
+            return;
+
+        var pool = level.Planner.GetOpenZones(
+            Bulkhead.Main, branch: null, dimension: DimensionIndex.Reality);
+
+        foreach (var sb in secondaryBulkheads)
+        {
+            if (pool.Count == 0)
+            {
+                Plugin.Logger.LogWarning(
+                    $"Cryptomnesia: no Reality zones available to host secondary bulkhead {sb}");
+                break;
+            }
+
+            var picked = Generator.Pick(pool)!;
+            InitializeBulkheadArea(level, sb, picked);
+
+            // Don't stack two bulkhead doors on the same FROM zone if both Extreme
+            // and Overload are present.
+            pool.Remove(picked);
+        }
     }
 
     #region Cryptomnesia Prune

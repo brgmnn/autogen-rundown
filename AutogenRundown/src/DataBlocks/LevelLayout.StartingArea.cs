@@ -125,24 +125,6 @@ public partial record LevelLayout
     /// <returns></returns>
     private (ZoneNode, Zone) StartingArea_GetBuildStart(Bulkhead bulkhead)
     {
-        // For Cryptomnesia secondary/overload objectives: pick a random zone from any
-        // dimension (including Reality) and create the bulkhead zone off it
-        if (level.MainDirector.Objective == WardenObjectiveType.Cryptomnesia
-            && !director.Bulkhead.HasFlag(Bulkhead.Main))
-        {
-            var allMainZones = level.Planner.GetOpenZones(Bulkhead.Main, null, dimension: DimensionIndex.Reality);
-
-            if (allMainZones.Count > 0)
-            {
-                var picked = Generator.Pick(allMainZones);
-
-                InitializeBulkheadArea(level, bulkhead, picked);
-
-                var bulkheadNode = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, dimension: picked.Dimension)!;
-                return (bulkheadNode, level.Planner.GetZone(bulkheadNode)!);
-            }
-        }
-
         var existing = director is { Bulkhead: Bulkhead.Main, DisableStartingArea: true }
             ? level.Planner.GetZoneNode(0, Dimension)
             : level.Planner.GetLastZoneExact(director.Bulkhead, dimension: Dimension);
