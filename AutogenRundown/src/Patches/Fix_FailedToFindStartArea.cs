@@ -133,19 +133,19 @@ public class Fix_FailedToFindStartArea
             // short-circuit instead of doing more cascade work.
             fatalReached = true;
 
-            // Setting __result = true alone isn't enough — even with each zone job
-            // reporting complete, the engine's later batches (FinalLogicLinking, culling
-            // setup) iterate over the broken zones and never finish, so FactoryDone is
-            // never reached and the rebuild never fires. Force LG_Factory.FactoryDone()
-            // ourselves to short-circuit straight to the rebuild path.
+            // Just signal this job complete and mark for rebuild. The engine drains its
+            // remaining batches naturally and reaches LG_Factory.FactoryDone() on its
+            // own, where Patch_LG_Factory's Prefix_FactoryDone sees ShouldRebuild=true,
+            // runs validators, and triggers the actual rebuild via OnFactoryDone.
             //
-            // ShouldRebuild is set above via MarkForRebuild() so Patch_LG_Factory's
-            // Prefix_FactoryDone will suppress the engine's own FactoryDone body (and
-            // therefore the BuildDone / ElevatorShaftLanding handlers that would otherwise
-            // NRE on broken state).
+            // Forcing LG_Factory.Current.FactoryDone() from here was tried and reverted:
+            // it triggers the rebuild prematurely on a half-finished engine state, and
+            // the resulting LevelCleanup() + inner Builder.Build() produces empty batches
+            // (jobs are wiped but never re-populated), leaving the inner build with no
+            // floor data and the engine's BuildDone / ElevatorShaftLanding handlers
+            // NRE on the broken state.
             __result = true;
             FactoryJobManager.MarkForRebuild();
-            LG_Factory.Current.FactoryDone();
             return;
         }
 
