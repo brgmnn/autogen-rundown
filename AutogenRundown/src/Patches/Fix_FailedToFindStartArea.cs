@@ -69,6 +69,24 @@ public class Fix_FailedToFindStartArea
     [HarmonyFinalizer]
     public static void Post_LG_ZoneJob_CreateExpandFromData_Build(LG_ZoneJob_CreateExpandFromData __instance, ref bool __result, ref Exception? __exception)
     {
+        // Catch fake-completed zones: the engine's failed-state fallback pass can transition
+        // a job to MainStatus.Done with zero areas in the zone (m_inFailFallbackPass with a
+        // very low minCoverage). The next zone that tries to build from this empty zone will
+        // fail forever. Mark this zone for reroll so the next rebuild gets a different
+        // geomorph that can actually accommodate the connections.
+        if (__instance.m_mainStatus == LG_ZoneJob_CreateExpandFromData.MainStatus.Done)
+        {
+            var doneZone = __instance.m_zone;
+            if (doneZone != null && (doneZone.m_areas?.Count ?? 0) == 0)
+            {
+                Plugin.Logger.LogWarning(
+                    $"Zone {doneZone.LocalIndex} in {doneZone.m_layer?.m_type} fake-completed " +
+                    $"with 0 areas — marking for reroll");
+                ZoneSeedManager.Reroll_SubSeed(doneZone);
+            }
+            return;
+        }
+
         if (__instance.m_mainStatus != LG_ZoneJob_CreateExpandFromData.MainStatus.FindStartArea ||
             __instance.m_subStatus != LG_ZoneJob_CreateExpandFromData.SubStatus.SelectArea ||
             __instance.m_scoredStartAreas.Count >= 1)

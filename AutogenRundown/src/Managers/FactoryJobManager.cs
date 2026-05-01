@@ -171,23 +171,36 @@ public static class FactoryJobManager
         if (Rebuilding)
             return;
 
-        var delegates = OnDoneValidate.GetInvocationList();
-        var results = new List<bool>(delegates.Length);
+        // Retry up to this many times if each rebuild attempt also produces a broken
+        // level (inner build's cascade detects fake-completed zones via the new
+        // MainStatus.Done + 0 areas check, or the existing validators flag broken state).
+        // Without this, a single rebuild's broken state would slip through to the engine's
+        // BuildDone handlers and produce a flood of NREs on unfinalized state.
+        const int kMaxRebuildAttempts = 5;
 
-        foreach (var @delegate in delegates)
+        for (var attempt = 0; attempt < kMaxRebuildAttempts; attempt++)
         {
-            var check = (Func<bool>)@delegate;
-            var result = check();
+            var delegates = OnDoneValidate.GetInvocationList();
+            var results = new List<bool>(delegates.Length);
 
-            results.Add(result);
+            foreach (var @delegate in delegates)
+            {
+                var check = (Func<bool>)@delegate;
+                var result = check();
 
-            // Fast fail, mark the manager as attempting a rebuild
-            if (!result)
-                ShouldRebuild = true;
-        }
+                results.Add(result);
 
-        if (results.Any(r => !r))
-        {
+                // Fast fail, mark the manager as attempting a rebuild
+                if (!result)
+                    ShouldRebuild = true;
+            }
+
+            if (!results.Any(r => !r))
+            {
+                // All validators passed — break out and run the success path below.
+                break;
+            }
+
             Rebuilding = true;
 
             LevelCleanup();
@@ -205,8 +218,30 @@ public static class FactoryJobManager
             Rebuild();
 
             Rebuilding = false;
+
+            // After Rebuild() returns, ShouldRebuild may be true again if the inner build
+            // produced broken state (e.g. fake-completed zones). Loop and re-run validators
+            // — if they pass we exit; if they fail again, retry the rebuild.
+            if (!ShouldRebuild)
+                break;
+
+            Plugin.Logger.LogWarning(
+                $"Rebuild attempt {attempt + 1} still produced a broken level — retrying " +
+                $"(max {kMaxRebuildAttempts})");
         }
-        else
+
+        // If after all retries ShouldRebuild is still true, give up — the prefix will
+        // suppress the engine's original FactoryDone to avoid NREs but the level will be
+        // unplayable. Logged loudly so the user sees it.
+        if (ShouldRebuild)
+        {
+            Plugin.Logger.LogError(
+                $"OnFactoryDone exhausted {kMaxRebuildAttempts} rebuild attempts without " +
+                $"producing a clean level — suppressing engine FactoryDone to prevent NRE flood");
+            return;
+        }
+
+        // Validators passed — run the success path.
         {
             // Only re-enable the handlers when all validation checks pass
             ShouldRebuild = false;
