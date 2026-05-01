@@ -22,7 +22,7 @@ public class Fix_FailedToFindStartArea
     /// Hard ceiling on retries. Beyond this we stop scheduling rerolls and emit a fatal log
     /// rather than spinning forever.
     /// </summary>
-    private const uint kFatalThreshold = 500;
+    private const uint kFatalThreshold = 50;
 
     /// <summary>
     /// Cycles StartExpansion through the four cardinal directions plus Random. Indexed by
