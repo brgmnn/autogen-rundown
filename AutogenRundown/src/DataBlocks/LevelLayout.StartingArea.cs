@@ -312,6 +312,9 @@ public partial record LevelLayout
             EnemyPointsMultiplier = 0.6
         };
 
+        level.Planner.Connect(elevatorDrop);
+        level.Planner.AddZone(elevatorDrop, elevatorDropZone);
+
         switch (Complex)
         {
             case Complex.Mining:
@@ -320,9 +323,6 @@ public partial record LevelLayout
                 elevatorDrop = level.GenHubGeomorph(elevatorDrop);
                 break;
         }
-
-        level.Planner.Connect(elevatorDrop);
-        level.Planner.AddZone(elevatorDrop, elevatorDropZone);
 
         var secondBulkhead = level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme) ?
             Bulkhead.Extreme : Bulkhead.Overload;
@@ -365,6 +365,9 @@ public partial record LevelLayout
             EnemyPointsMultiplier = 0.5
         };
 
+        level.Planner.Connect(elevatorDrop);
+        level.Planner.AddZone(elevatorDrop, elevatorDropZone);
+
         switch (Complex)
         {
             case Complex.Mining:
@@ -390,9 +393,6 @@ public partial record LevelLayout
                 elevatorDrop = level.GenHubGeomorph(elevatorDrop);
                 break;
         }
-
-        level.Planner.Connect(elevatorDrop);
-        level.Planner.AddZone(elevatorDrop, elevatorDropZone);
 
         var sensorChance = this.level.Tier switch
         {
