@@ -398,6 +398,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         // Do not add blood doors to Apex security doors
         foreach (var zone in zones)
             if (!planner.GetZoneNode(zone.LocalIndex, Dimension).Tags.Contains("no_blood_door") &&
+                !planner.GetZoneNode(zone.LocalIndex, Dimension).Tags.Contains("no_access") &&
                 zone is { LocalIndex: > 0, SecurityGateToEnter: SecurityGate.Security } &&
                 Generator.Flip(chance) &&
                 (count++ < max || max == -1))
