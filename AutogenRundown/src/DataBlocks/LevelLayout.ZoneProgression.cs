@@ -1935,7 +1935,11 @@ public partial record LevelLayout
     /// <param name="start">ZoneNode to build the side disinfection station from</param>
     public void AddDisinfectionZone(ZoneNode start)
     {
-        var (_, zone) = AddZone(start, new ZoneNode { MaxConnections = 0 });
+        var (_, zone) = AddZone(start, new ZoneNode
+        {
+            MaxConnections = 0,
+            Tags = new Tags("no_scouts")
+        });
 
         switch (Complex)
         {
