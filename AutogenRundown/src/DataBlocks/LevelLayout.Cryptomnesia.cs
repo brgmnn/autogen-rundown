@@ -284,10 +284,13 @@ public partial record LevelLayout
                 mustTraverse.Add(ancestor);
 
         // 3. Collect immediate children of must-traverse that aren't themselves must-traverse.
+        //    Restrict to the bulkhead being pruned -- secondary bulkheads' first zones are
+        //    attached as graph children of Main zones (see PrePlaceCryptomnesiaSecondaryBulkheads),
+        //    and we must NOT mark them as locked decoys.
         var lockedDecoys = new HashSet<ZoneNode>();
         foreach (var node in mustTraverse)
             foreach (var child in planner.GetConnections(node, branch: null))
-                if (!mustTraverse.Contains(child))
+                if (child.Bulkhead == bulkhead && !mustTraverse.Contains(child))
                     lockedDecoys.Add(child);
 
         // 4. Apply ProgressionPuzzle.Locked to each decoy (idempotent if already locked),
