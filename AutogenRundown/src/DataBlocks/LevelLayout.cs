@@ -69,8 +69,17 @@ public partial record LevelLayout : DataBlock<LevelLayout>
     [JsonIgnore]
     public Dimension? LinkedDimension { get; set; }
 
+    /// <summary>
+    /// When set, replaces the standard modifier-derived hibernating enemy roll with the
+    /// supplied weighted choices. Each entry is `(chance, spawns)` where `Generator.Select`
+    /// picks one option per zone; the spawns list is then emitted for that zone, with each
+    /// spawn's `Points` field treated as a relative weight against the zone's adjusted
+    /// budget. A spawn whose `Difficulty` is an `AutogenDifficulty` group flag (Base /
+    /// Chargers / Hybrids = 0, or has bits in the 0xC0 mask) gets ORed with the current
+    /// tier bits; specific enemy IDs (0x01-0x3F) are written through unchanged.
+    /// </summary>
     [JsonIgnore]
-    public bool SkipRollEnemies { get; set; }
+    public List<(double chance, List<EnemySpawningData> spawns)>? EnemyChoicesOverride { get; set; }
 
     #endregion
 
@@ -582,47 +591,9 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             if (zone.BloodDoor.Enabled)
                 points = (int)(points * 0.66);
 
-            #region Charger roll check
-            var chargerChance = 0.0;
-
-            if (settings.Modifiers.Contains(LevelModifiers.Chargers))
-                chargerChance = 0.2;
-
-            if (settings.Modifiers.Contains(LevelModifiers.ManyChargers))
-                chargerChance = 0.5;
-            #endregion
-
-            #region Shadows roll check
-            var shadowChance = 0.0;
-
-            if (settings.Modifiers.Contains(LevelModifiers.Shadows))
-                shadowChance = 0.15;
-
-            if (settings.Modifiers.Contains(LevelModifiers.ManyShadows))
-                shadowChance = 0.5;
-            #endregion
-
-            #region Hybrid roll check
-            var hybridChance = 0.0;
-
-            if (settings.Modifiers.Contains(LevelModifiers.Hybrids))
-                hybridChance = 0.3;
-
             var infectionHybridChance = 0.0;
-
             if (settings.Modifiers.Contains(LevelModifiers.InfectionHybrids))
                 infectionHybridChance = zone.InFog ? 0.4 : 0.15;
-            #endregion
-
-            #region Nightmares roll check
-            var nightmaresChance = 0.0;
-
-            if (settings.Modifiers.Contains(LevelModifiers.Nightmares))
-                nightmaresChance = 0.2;
-
-            if (settings.Modifiers.Contains(LevelModifiers.ManyNightmares))
-                nightmaresChance = 0.5;
-            #endregion
 
             // Boss settings
             // TODO: don't have totally independent of zone points
@@ -637,120 +608,8 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 }
             }
 
-            var groupChoices = new List<(double chance, List<AutogenDifficulty> groups)>
-            {
-                (1.0, new List<AutogenDifficulty> { AutogenDifficulty.Base }),
-
-                // Chargers
-                (chargerChance, new List<AutogenDifficulty> { AutogenDifficulty.Chargers }),
-                (chargerChance, new List<AutogenDifficulty>
-                {
-                    AutogenDifficulty.Base,
-                    AutogenDifficulty.Chargers
-                }),
-
-                // Shadows
-                (shadowChance, new List<AutogenDifficulty> { AutogenDifficulty.Shadows }),
-                (shadowChance, new List<AutogenDifficulty>
-                {
-                    AutogenDifficulty.Base,
-                    AutogenDifficulty.Shadows
-                }),
-
-                // Hybrid is always mixed
-                (hybridChance, new List<AutogenDifficulty>
-                {
-                    AutogenDifficulty.Base,
-                    AutogenDifficulty.Hybrids
-                }),
-
-                // Nightmares
-                (nightmaresChance, new List<AutogenDifficulty> { AutogenDifficulty.Nightmares }),
-                (nightmaresChance, new List<AutogenDifficulty>
-                {
-                    AutogenDifficulty.Base,
-                    AutogenDifficulty.Nightmares
-                }),
-            };
-
-            if (chargerChance > 0 && hybridChance > 0)
-                groupChoices.Add(
-                    (0.1, new List<AutogenDifficulty>
-                    {
-                        AutogenDifficulty.Base,
-                        AutogenDifficulty.Chargers,
-                        AutogenDifficulty.Hybrids
-                    }));
-
-            // if (chargerChance > 0 && shadowChance > 0)
-            //     groupChoices.Add(
-            //         (0.2, new List<AutogenDifficulty>
-            //             {
-            //                 AutogenDifficulty.Base,
-            //                 AutogenDifficulty.Chargers,
-            //                 AutogenDifficulty.Shadows
-            //             }));
-
-            // if (chargerChance > 0 && nightmaresChance > 0)
-            //     groupChoices.Add(
-            //         (0.2, new List<AutogenDifficulty>
-            //         {
-            //             AutogenDifficulty.Base,
-            //             AutogenDifficulty.Chargers,
-            //             AutogenDifficulty.Nightmares
-            //         }));
-
-            // if (shadowChance > 0 && nightmaresChance > 0)
-            //     groupChoices.Add(
-            //         (0.2, new List<AutogenDifficulty>
-            //         {
-            //             AutogenDifficulty.Base,
-            //             AutogenDifficulty.Shadows,
-            //             AutogenDifficulty.Nightmares
-            //         }));
-
-            // if (chargerChance > 0 && shadowChance > 0 && hybridChance > 0)
-            //     groupChoices.Add(
-            //         (0.1, new List<AutogenDifficulty>
-            //             {
-            //                 AutogenDifficulty.Chargers,
-            //                 AutogenDifficulty.Shadows,
-            //                 AutogenDifficulty.Hybrids
-            //             }));
-
-            // if (chargerChance > 0 && nightmaresChance > 0 && hybridChance > 0)
-            //     groupChoices.Add(
-            //         (0.1, new List<AutogenDifficulty>
-            //         {
-            //             AutogenDifficulty.Chargers,
-            //             AutogenDifficulty.Nightmares,
-            //             AutogenDifficulty.Hybrids
-            //         }));
-
-            // if (shadowChance > 0 && nightmaresChance > 0 && hybridChance > 0)
-            //     groupChoices.Add(
-            //         (0.1, new List<AutogenDifficulty>
-            //         {
-            //             AutogenDifficulty.Shadows,
-            //             AutogenDifficulty.Nightmares,
-            //             AutogenDifficulty.Hybrids
-            //         }));
-
-            // // TODO: TBD if we like having a room with literally everything in it
-            // // We don't
-            // if (chargerChance > 0 && shadowChance > 0 && nightmaresChance > 0 && hybridChance > 0)
-            //     groupChoices.Add(
-            //         (0.1, new List<AutogenDifficulty>
-            //         {
-            //             AutogenDifficulty.Chargers,
-            //             AutogenDifficulty.Shadows,
-            //             AutogenDifficulty.Nightmares,
-            //             AutogenDifficulty.Hybrids
-            //         }));
-
-
-            var groups = Generator.Select(groupChoices);
-            var displayGroups = groups.Select(difficulty => difficulty.ToString()).ToList();
+            var choices = EnemyChoicesOverride ?? BuildStandardChoices(director);
+            var spawns = Generator.Select(choices);
 
             if (Generator.Flip(infectionHybridChance))
             {
@@ -777,41 +636,140 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                             _ => 8
                         },
                     });
-                displayGroups.Add("HybridInfected");
             }
 
-            Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} has {points}pts for enemies. Groups: {string.Join(", ", displayGroups)}");
+            // Each spawn's Points field is treated as a relative weight against the zone's
+            // adjusted point budget. Caller-supplied AutogenDifficulty group flags (Base /
+            // Chargers / Hybrids = 0, or any of Shadows / Nightmares / Flyers in the 0xC0
+            // mask) get ORed with the current tier bits; specific enemy IDs (0x01-0x3F) are
+            // written through unchanged. This unifies the standard modifier-driven roll
+            // with theme-specific overrides (e.g. Cryptomnesia) under one emit path.
+            var totalWeight = spawns.Sum(s => s.Points > 0 ? (double)s.Points : 1.0);
+            var displaySpawns = new List<string>();
 
-            // TODO: reduce number of groups
+            foreach (var spawn in spawns)
+            {
+                var weight = spawn.Points > 0 ? (double)spawn.Points : 1.0;
+                var groupFlag = TryAsGroupFlag(spawn.Difficulty);
 
-            // By default we will just let the spawning data allocate out groups. If there
-            // are multiple groups we just spawn equal numbers of them and let the game
-            // divide that up into portions.
-            foreach (var group in groups)
-                zone.EnemySpawningInZone.Add(
-                    new EnemySpawningData
-                    {
-                        GroupType = EnemyGroupType.Hibernate,
-                        Difficulty = director.Tier switch
-                        {
-                            "A" => (uint)(AutogenDifficulty.TierA | group),
-                            "B" => (uint)(AutogenDifficulty.TierB | group),
-                            "C" => (uint)(AutogenDifficulty.TierC | group),
-                            "D" => (uint)(AutogenDifficulty.TierD | group),
-                            "E" => (uint)(AutogenDifficulty.TierE | group),
-                            _ => (uint)(AutogenDifficulty.TierC | group)
-                        },
-                        // We manually do some point adjustment, as some enemy spawns
-                        // (nightmares) are far harder than others. And others are easier
-                        Points = (int)((group, level.Tier) switch
-                        {
-                            (AutogenDifficulty.Nightmares, "C") => points / 1.2,
-                            (AutogenDifficulty.Shadows, "E") => points * 1.2,
+                var adjusted = (groupFlag, level.Tier) switch
+                {
+                    (AutogenDifficulty.Nightmares, "C") => points / 1.2,
+                    (AutogenDifficulty.Shadows, "E") => points * 1.2,
+                    _ => (double)points
+                };
 
-                            _ => points
-                        } / groups.Count)
-                    });
+                var finalDifficulty = groupFlag is { } g
+                    ? TierBits(director.Tier) | (uint)g
+                    : spawn.Difficulty;
+
+                zone.EnemySpawningInZone.Add(spawn with
+                {
+                    Difficulty = finalDifficulty,
+                    Points = (int)(adjusted * weight / totalWeight)
+                });
+
+                displaySpawns.Add(groupFlag?.ToString() ?? $"0x{spawn.Difficulty:X2}");
+            }
+
+            Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} has {points}pts for enemies. Spawns: {string.Join(", ", displaySpawns)}");
         }
+    }
+
+    /// <summary>
+    /// Builds the standard modifier-derived weighted-choice list for hibernating enemy
+    /// rolls — the per-zone selection between Base / Chargers / Shadows / Hybrids /
+    /// Nightmares group combinations driven by `settings.Modifiers`. Used as the default
+    /// when `EnemyChoicesOverride` is null.
+    /// </summary>
+    private List<(double chance, List<EnemySpawningData> spawns)> BuildStandardChoices(BuildDirector director)
+    {
+        var chargerChance = 0.0;
+        if (settings.Modifiers.Contains(LevelModifiers.Chargers))
+            chargerChance = 0.2;
+        if (settings.Modifiers.Contains(LevelModifiers.ManyChargers))
+            chargerChance = 0.5;
+
+        var shadowChance = 0.0;
+        if (settings.Modifiers.Contains(LevelModifiers.Shadows))
+            shadowChance = 0.15;
+        if (settings.Modifiers.Contains(LevelModifiers.ManyShadows))
+            shadowChance = 0.5;
+
+        var hybridChance = 0.0;
+        if (settings.Modifiers.Contains(LevelModifiers.Hybrids))
+            hybridChance = 0.3;
+
+        var nightmaresChance = 0.0;
+        if (settings.Modifiers.Contains(LevelModifiers.Nightmares))
+            nightmaresChance = 0.2;
+        if (settings.Modifiers.Contains(LevelModifiers.ManyNightmares))
+            nightmaresChance = 0.5;
+
+        static EnemySpawningData Group(AutogenDifficulty g) => new()
+        {
+            GroupType = EnemyGroupType.Hibernate,
+            Difficulty = (uint)g,
+            Points = 0
+        };
+
+        var choices = new List<(double chance, List<EnemySpawningData> spawns)>
+        {
+            (1.0, new() { Group(AutogenDifficulty.Base) }),
+
+            // Chargers
+            (chargerChance, new() { Group(AutogenDifficulty.Chargers) }),
+            (chargerChance, new() { Group(AutogenDifficulty.Base), Group(AutogenDifficulty.Chargers) }),
+
+            // Shadows
+            (shadowChance, new() { Group(AutogenDifficulty.Shadows) }),
+            (shadowChance, new() { Group(AutogenDifficulty.Base), Group(AutogenDifficulty.Shadows) }),
+
+            // Hybrid is always mixed
+            (hybridChance, new() { Group(AutogenDifficulty.Base), Group(AutogenDifficulty.Hybrids) }),
+
+            // Nightmares
+            (nightmaresChance, new() { Group(AutogenDifficulty.Nightmares) }),
+            (nightmaresChance, new() { Group(AutogenDifficulty.Base), Group(AutogenDifficulty.Nightmares) }),
+        };
+
+        if (chargerChance > 0 && hybridChance > 0)
+            choices.Add((0.1, new()
+            {
+                Group(AutogenDifficulty.Base),
+                Group(AutogenDifficulty.Chargers),
+                Group(AutogenDifficulty.Hybrids)
+            }));
+
+        return choices;
+    }
+
+    /// <summary>
+    /// Maps a tier letter to its `AutogenDifficulty.TierX` bit value. Falls back to TierC
+    /// for unknown tiers, matching the legacy switch in <see cref="RollEnemies"/>.
+    /// </summary>
+    private static uint TierBits(string tier) => tier switch
+    {
+        "A" => (uint)AutogenDifficulty.TierA,
+        "B" => (uint)AutogenDifficulty.TierB,
+        "C" => (uint)AutogenDifficulty.TierC,
+        "D" => (uint)AutogenDifficulty.TierD,
+        "E" => (uint)AutogenDifficulty.TierE,
+        _ => (uint)AutogenDifficulty.TierC,
+    };
+
+    /// <summary>
+    /// Returns the <see cref="AutogenDifficulty"/> group flag a Difficulty value represents,
+    /// or null if the value is a specific enemy ID (and should pass through unchanged).
+    /// Group flags occupy the 0xC0 mask (Shadows / Nightmares / Flyers) or are zero
+    /// (Base / Chargers / Hybrids); specific enemy IDs live in 0x01-0x3F per
+    /// <see cref="AutogenDifficulty"/>.
+    /// </summary>
+    private static AutogenDifficulty? TryAsGroupFlag(uint difficulty)
+    {
+        if (difficulty != 0 && (difficulty & 0xC0) == 0)
+            return null;
+        return (AutogenDifficulty)difficulty;
     }
 
     /// <summary>
@@ -1167,9 +1125,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
 
         RollAlarms();
         RollBloodDoors();
-
-        if (!SkipRollEnemies)
-            RollEnemies(director);
+        RollEnemies(director);
 
         Bins.LevelLayouts.AddBlock(this);
     }

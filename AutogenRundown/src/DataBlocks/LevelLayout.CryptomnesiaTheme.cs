@@ -73,8 +73,10 @@ public partial record LevelLayout
 
     /// <summary>
     /// Applies a Cryptomnesia theme to a layout. Must be called AFTER zones are created
-    /// but BEFORE FinalizeLayout(). Sets SkipRollEnemies, populates enemies directly,
-    /// and initializes enter/exit event lists on the objective for this dimension.
+    /// but BEFORE FinalizeLayout(). Applies per-zone flavor (lights, fog, dust, statics)
+    /// directly, sets the layout's EnemyChoicesOverride so the standard RollEnemies
+    /// pipeline emits the theme's enemy mix, and initializes enter/exit event lists on
+    /// the objective for this dimension.
     /// </summary>
     public static void ApplyCryptomnesiaTheme(
         CryptomnesiaTheme theme,
@@ -134,21 +136,14 @@ public partial record LevelLayout
         LevelLayout layout, Level level, BuildDirector director,
         WardenObjective objective, DimensionIndex dimIndex)
     {
-        layout.SkipRollEnemies = true;
-
-        var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);
-
-        foreach (var node in zoneNodes)
+        layout.EnemyChoicesOverride = new()
         {
-            var zone = level.Planner.GetZone(node);
-            if (zone == null) continue;
-
-            var points = director.GetPoints(zone);
-            if (points < 3) continue;
-
-            zone.EnemySpawningInZone.Add(EnemySpawningData.Striker with { Points = points / 2 });
-            zone.EnemySpawningInZone.Add(EnemySpawningData.Shooter with { Points = points / 2 });
-        }
+            (1.0, new()
+            {
+                EnemySpawningData.Striker with { Points = 50 },
+                EnemySpawningData.Shooter with { Points = 50 },
+            })
+        };
 
         // Start error alarm on enter
         var enterEvents = objective.Cryptomnesia_EnterEvents[dimIndex];
@@ -172,31 +167,24 @@ public partial record LevelLayout
     /// </summary>
     private static void ApplyTheme_Giants(LevelLayout layout, Level level, BuildDirector director)
     {
-        layout.SkipRollEnemies = true;
-
-        var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);
-
-        foreach (var node in zoneNodes)
+        layout.EnemyChoicesOverride = new()
         {
-            var zone = level.Planner.GetZone(node);
-            if (zone == null) continue;
-
-            var points = director.GetPoints(zone);
-            if (points < 3) continue;
-
-            zone.EnemySpawningInZone.Add(new EnemySpawningData
+            (1.0, new()
             {
-                GroupType = EnemyGroupType.Hibernate,
-                Difficulty = (uint)Enemy.StrikerGiant,
-                Points = points / 2
-            });
-            zone.EnemySpawningInZone.Add(new EnemySpawningData
-            {
-                GroupType = EnemyGroupType.Hibernate,
-                Difficulty = (uint)Enemy.ShooterGiant,
-                Points = points / 2
-            });
-        }
+                new EnemySpawningData
+                {
+                    GroupType = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)Enemy.StrikerGiant,
+                    Points = 50
+                },
+                new EnemySpawningData
+                {
+                    GroupType = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)Enemy.ShooterGiant,
+                    Points = 50
+                },
+            })
+        };
     }
 
     /// <summary>
@@ -205,8 +193,6 @@ public partial record LevelLayout
     /// </summary>
     private static void ApplyTheme_Chargers(LevelLayout layout, Level level, BuildDirector director)
     {
-        layout.SkipRollEnemies = true;
-
         var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);
 
         foreach (var node in zoneNodes)
@@ -214,15 +200,18 @@ public partial record LevelLayout
             var zone = level.Planner.GetZone(node);
             if (zone == null) continue;
 
-            var points = director.GetPoints(zone);
-            if (points < 3) continue;
-
             var redLight = Generator.Pick(LightSettings.RedThemeLights);
             zone.LightSettings = (Lights.Light)redLight.PersistentId;
-
-            zone.EnemySpawningInZone.Add(EnemySpawningData.Charger with { Points = (int)(points * 0.6) });
-            zone.EnemySpawningInZone.Add(EnemySpawningData.ChargerGiant with { Points = (int)(points * 0.4) });
         }
+
+        layout.EnemyChoicesOverride = new()
+        {
+            (1.0, new()
+            {
+                EnemySpawningData.Charger with { Points = 60 },
+                EnemySpawningData.ChargerGiant with { Points = 40 },
+            })
+        };
     }
 
     /// <summary>
@@ -234,8 +223,6 @@ public partial record LevelLayout
         Level level,
         BuildDirector director)
     {
-        layout.SkipRollEnemies = true;
-
         // Set fog on the dimension
         if (layout.LinkedDimension != null)
         {
@@ -295,13 +282,16 @@ public partial record LevelLayout
                     FixedSeed = Generator.Between(10, 150)
                 });
             }
-
-            var points = director.GetPoints(zone);
-            if (points < 3) continue;
-
-            zone.EnemySpawningInZone.Add(EnemySpawningData.Shooter with { Points = (int)(points * 0.6) });
-            zone.EnemySpawningInZone.Add(EnemySpawningData.Striker with { Points = (int)(points * 0.4) });
         }
+
+        layout.EnemyChoicesOverride = new()
+        {
+            (1.0, new()
+            {
+                EnemySpawningData.Shooter with { Points = 60 },
+                EnemySpawningData.Striker with { Points = 40 },
+            })
+        };
 
         // Add a disinfection station side room
         var openZones = level.Planner.GetOpenZones(director.Bulkhead, null, layout.Dimension);
@@ -317,8 +307,6 @@ public partial record LevelLayout
     /// </summary>
     private static void ApplyTheme_Shadows(LevelLayout layout, Level level, BuildDirector director)
     {
-        layout.SkipRollEnemies = true;
-
         var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);
 
         foreach (var node in zoneNodes)
@@ -326,25 +314,28 @@ public partial record LevelLayout
             var zone = level.Planner.GetZone(node);
             if (zone == null) continue;
 
-            var points = director.GetPoints(zone);
-            if (points < 3) continue;
-
             var greenLight = Generator.Pick(LightSettings.GreenThemeLights);
             zone.LightSettings = (Lights.Light)greenLight.PersistentId;
-
-            zone.EnemySpawningInZone.Add(new EnemySpawningData
-            {
-                GroupType = EnemyGroupType.Hibernate,
-                Difficulty = (uint)Enemy.Shadow,
-                Points = (int)(points * 0.6)
-            });
-            zone.EnemySpawningInZone.Add(new EnemySpawningData
-            {
-                GroupType = EnemyGroupType.Hibernate,
-                Difficulty = (uint)Enemy.ShadowGiant,
-                Points = (int)(points * 0.4)
-            });
         }
+
+        layout.EnemyChoicesOverride = new()
+        {
+            (1.0, new()
+            {
+                new EnemySpawningData
+                {
+                    GroupType = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)Enemy.Shadow,
+                    Points = 60
+                },
+                new EnemySpawningData
+                {
+                    GroupType = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)Enemy.ShadowGiant,
+                    Points = 40
+                },
+            })
+        };
     }
 
     /// <summary>
@@ -353,8 +344,6 @@ public partial record LevelLayout
     /// </summary>
     private static void ApplyTheme_Nightmares(LevelLayout layout, Level level, BuildDirector director)
     {
-        layout.SkipRollEnemies = true;
-
         var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);
 
 
@@ -445,27 +434,27 @@ public partial record LevelLayout
                     FixedSeed = Generator.Between(10, 150)
                 });
             }
-
-            var points = director.GetPoints(zone);
-            if (points < 3) continue;
-
-            zone.EnemySpawningInZone.Add(new EnemySpawningData
-            {
-                GroupType = EnemyGroupType.Hibernate,
-                Difficulty = (uint)Enemy.NightmareStriker,
-                Points = (int)(points * 0.4)
-            });
-            zone.EnemySpawningInZone.Add(new EnemySpawningData
-            {
-                GroupType = EnemyGroupType.Hibernate,
-                Difficulty = (uint)Enemy.NightmareShooter,
-                Points = (int)(points * 0.3)
-            });
-            zone.EnemySpawningInZone.Add(EnemySpawningData.NightmareGiant with
-            {
-                Points = (int)(points * 0.3)
-            });
         }
+
+        layout.EnemyChoicesOverride = new()
+        {
+            (1.0, new()
+            {
+                new EnemySpawningData
+                {
+                    GroupType = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)Enemy.NightmareStriker,
+                    Points = 40
+                },
+                new EnemySpawningData
+                {
+                    GroupType = EnemyGroupType.Hibernate,
+                    Difficulty = (uint)Enemy.NightmareShooter,
+                    Points = 30
+                },
+                EnemySpawningData.NightmareGiant with { Points = 30 },
+            })
+        };
     }
 
     #endregion
