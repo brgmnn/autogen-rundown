@@ -355,6 +355,122 @@ public record LightSettings : DataBlock<LightSettings>
     };
     #endregion
 
+    #region White Theme Lights
+    /// <summary>
+    /// Clean off-white, mostly desaturated. The signature look for the Giants theme — reads
+    /// as sterile/clinical without leaning into another colour. General/Independent stay
+    /// neutral; a faint warm tint is allowed in the rarely-seen Sign category.
+    /// </summary>
+    public static readonly LightSettings WhiteTheme_Bright = new()
+    {
+        PersistentId = Generator.GetPersistentId(),
+        CategorySettings = new List<LightCategorySetting>
+        {
+            new() { Category = LightCategory.General, Color = new() { Red = 0.92, Green = 0.92, Blue = 0.90 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.7 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.88, Green = 0.90, Blue = 0.92 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.65 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.92, Green = 0.93, Blue = 0.92, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.7 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.95, Green = 0.95, Blue = 0.93, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.65 },
+            LightCategorySetting.Off(LightCategory.Emergency),
+            new() { Category = LightCategory.Independent, Color = new() { Red = 0.90, Green = 0.90, Blue = 0.88 }, Chance = 0.5, Intensity = 0.65 },
+            new() { Category = LightCategory.Door, Color = new() { Red = 0.92, Green = 0.92, Blue = 0.92 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.7 },
+            // Rare warm accent in the sign light only
+            new() { Category = LightCategory.Sign, Color = new() { Red = 0.94, Green = 0.86, Blue = 0.70 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.65 },
+            new() { Category = LightCategory.DoorImportant, Color = new() { Red = 0.94, Green = 0.94, Blue = 0.92 }, Chance = 1.0, Intensity = 0.7 },
+        }
+    };
+
+    /// <summary>
+    /// Cool grey-white. Slightly more blue-leaning than Bright, intensity dialled down a touch.
+    /// </summary>
+    public static readonly LightSettings WhiteTheme_Cool = new()
+    {
+        PersistentId = Generator.GetPersistentId(),
+        CategorySettings = new List<LightCategorySetting>
+        {
+            new() { Category = LightCategory.General, Color = new() { Red = 0.82, Green = 0.86, Blue = 0.90 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.6 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.80, Green = 0.84, Blue = 0.88 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.55 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.85, Green = 0.88, Blue = 0.92, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.6 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.90, Green = 0.92, Blue = 0.94, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.55 },
+            LightCategorySetting.Off(LightCategory.Emergency),
+            new() { Category = LightCategory.Independent, Color = new() { Red = 0.80, Green = 0.84, Blue = 0.88 }, Chance = 0.5, Intensity = 0.55 },
+            new() { Category = LightCategory.Door, Color = new() { Red = 0.85, Green = 0.88, Blue = 0.90 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.6 },
+            new() { Category = LightCategory.Sign, Color = new() { Red = 0.84, Green = 0.86, Blue = 0.90 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.6 },
+            new() { Category = LightCategory.DoorImportant, Color = new() { Red = 0.92, Green = 0.93, Blue = 0.95 }, Chance = 1.0, Intensity = 0.65 },
+        }
+    };
+
+    /// <summary>
+    /// Dim grey, low intensity throughout. Reads as power-saving / standby lighting.
+    /// </summary>
+    public static readonly LightSettings WhiteTheme_Dim = new()
+    {
+        PersistentId = Generator.GetPersistentId(),
+        CategorySettings = new List<LightCategorySetting>
+        {
+            new() { Category = LightCategory.General, Color = new() { Red = 0.55, Green = 0.55, Blue = 0.55 }, Chance = 0.4, ChanceBroken = 0.2, Intensity = 0.3 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.50, Green = 0.52, Blue = 0.55 }, Chance = 0.4, ChanceBroken = 0.2, Intensity = 0.25 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.65, Green = 0.65, Blue = 0.65, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.3 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.70, Green = 0.70, Blue = 0.70, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.28 },
+            LightCategorySetting.Off(LightCategory.Emergency),
+            new() { Category = LightCategory.Independent, Color = new() { Red = 0.55, Green = 0.55, Blue = 0.53 }, Chance = 0.5, Intensity = 0.3 },
+            new() { Category = LightCategory.Door, Color = new() { Red = 0.75, Green = 0.75, Blue = 0.74 }, Chance = 0.5, ChanceBroken = 0.1, Intensity = 0.5 },
+            new() { Category = LightCategory.Sign, Color = new() { Red = 0.62, Green = 0.62, Blue = 0.60 }, Chance = 0.5, ChanceBroken = 0.1, Intensity = 0.35 },
+            new() { Category = LightCategory.DoorImportant, Color = new() { Red = 0.88, Green = 0.88, Blue = 0.86 }, Chance = 1.0, Intensity = 0.55 },
+        }
+    };
+
+    /// <summary>
+    /// Flickering off-white. Same neutral palette as Bright but unstable.
+    /// </summary>
+    public static readonly LightSettings WhiteTheme_Flickering = new()
+    {
+        PersistentId = Generator.GetPersistentId(),
+        CategorySettings = new List<LightCategorySetting>
+        {
+            new() { Category = LightCategory.General, Color = new() { Red = 0.90, Green = 0.90, Blue = 0.88 }, Chance = 0.5, ChanceBroken = 0.5, Intensity = 0.5 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.86, Green = 0.88, Blue = 0.90 }, Chance = 0.5, ChanceBroken = 0.5, Intensity = 0.45 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.90, Green = 0.91, Blue = 0.90, Alpha = 0.0 }, Chance = 0.5, ChanceBroken = 0.3, Intensity = 0.55 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.94, Green = 0.94, Blue = 0.92, Alpha = 0.0 }, Chance = 0.5, ChanceBroken = 0.3, Intensity = 0.5 },
+            LightCategorySetting.Off(LightCategory.Emergency),
+            new() { Category = LightCategory.Independent, Color = new() { Red = 0.88, Green = 0.88, Blue = 0.86 }, Chance = 0.5, ChanceBroken = 0.5, Intensity = 0.45 },
+            new() { Category = LightCategory.Door, Color = new() { Red = 0.90, Green = 0.90, Blue = 0.88 }, Chance = 0.5, ChanceBroken = 0.5, Intensity = 0.5 },
+            new() { Category = LightCategory.Sign, Color = new() { Red = 0.88, Green = 0.90, Blue = 0.92 }, Chance = 0.5, ChanceBroken = 0.5, Intensity = 0.5 },
+            new() { Category = LightCategory.DoorImportant, Color = new() { Red = 0.94, Green = 0.94, Blue = 0.92 }, Chance = 1.0, Intensity = 0.6 },
+        }
+    };
+
+    /// <summary>
+    /// Warm cream-white with a faint amber accent on the sign light. The sole "with colour"
+    /// variant in the pool — kept rare so the theme reads predominantly neutral.
+    /// </summary>
+    public static readonly LightSettings WhiteTheme_Warm = new()
+    {
+        PersistentId = Generator.GetPersistentId(),
+        CategorySettings = new List<LightCategorySetting>
+        {
+            new() { Category = LightCategory.General, Color = new() { Red = 0.92, Green = 0.90, Blue = 0.84 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.65 },
+            new() { Category = LightCategory.General, Color = new() { Red = 0.93, Green = 0.91, Blue = 0.86 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.6 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.94, Green = 0.92, Blue = 0.86, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.65 },
+            new() { Category = LightCategory.Special, Color = new() { Red = 0.95, Green = 0.94, Blue = 0.90, Alpha = 0.0 }, Chance = 0.5, Intensity = 0.6 },
+            LightCategorySetting.Off(LightCategory.Emergency),
+            new() { Category = LightCategory.Independent, Color = new() { Red = 0.92, Green = 0.90, Blue = 0.84 }, Chance = 0.5, Intensity = 0.6 },
+            new() { Category = LightCategory.Door, Color = new() { Red = 0.92, Green = 0.90, Blue = 0.86 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.65 },
+            // Rare amber accent
+            new() { Category = LightCategory.Sign, Color = new() { Red = 0.92, Green = 0.72, Blue = 0.40 }, Chance = 0.5, ChanceBroken = 0.05, Intensity = 0.65 },
+            new() { Category = LightCategory.DoorImportant, Color = new() { Red = 0.94, Green = 0.92, Blue = 0.88 }, Chance = 1.0, Intensity = 0.7 },
+        }
+    };
+
+    public static List<LightSettings> WhiteThemeLights { get; } = new()
+    {
+        WhiteTheme_Bright,
+        WhiteTheme_Cool,
+        WhiteTheme_Dim,
+        WhiteTheme_Flickering,
+        WhiteTheme_Warm,
+    };
+    #endregion
+
     #region Generator Lights
     /// <summary>
     /// The Auxiliary Power light is supposed to be used for illuminating a zone after a generator
@@ -557,6 +673,10 @@ public record LightSettings : DataBlock<LightSettings>
 
         #region Orange Theme
         foreach (var light in OrangeThemeLights) light.Persist();
+        #endregion
+
+        #region White Theme
+        foreach (var light in WhiteThemeLights) light.Persist();
         #endregion
     }
 

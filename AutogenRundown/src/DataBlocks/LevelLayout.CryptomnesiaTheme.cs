@@ -167,6 +167,17 @@ public partial record LevelLayout
     /// </summary>
     private static void ApplyTheme_Giants(LevelLayout layout, Level level, BuildDirector director)
     {
+        var zoneNodes = level.Planner.GetZones(director.Bulkhead, null, layout.Dimension);
+
+        foreach (var node in zoneNodes)
+        {
+            var zone = level.Planner.GetZone(node);
+            if (zone == null) continue;
+
+            var whiteLight = Generator.Pick(LightSettings.WhiteThemeLights);
+            zone.LightSettings = (Lights.Light)whiteLight.PersistentId;
+        }
+
         layout.EnemyChoicesOverride = new()
         {
             (1.0, new()
