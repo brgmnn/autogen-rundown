@@ -1,5 +1,6 @@
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
@@ -297,12 +298,27 @@ public partial record LevelLayout
         foreach (var decoy in lockedDecoys)
         {
             var zone = planner.GetZone(decoy);
+
             if (zone != null)
             {
                 zone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
                 zone.SubComplex = decoySubComplex;
                 zone.CustomGeomorph = decoyGeo;
                 zone.Coverage = new CoverageMinMax { Min = 5, Max = 10 };
+
+                // Remove all resources
+                zone.AmmoPacks = 0;
+                zone.DisinfectPacks = 0;
+                zone.HealthPacks = 0;
+                zone.ToolPacks = 0;
+                zone.ConsumableDistributionInZone = 0;
+
+                // Remove terminals // TODO: breaks an objective?
+                // zone.TerminalPlacements.Clear();
+
+                // Remove enemies
+                zone.EnemySpawningInZone.Clear();
+                zone.BloodDoor = BloodDoor.None;
             }
 
             planner.AddTags(decoy, "no_access");

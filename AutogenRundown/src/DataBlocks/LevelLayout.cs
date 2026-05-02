@@ -543,7 +543,9 @@ public partial record LevelLayout : DataBlock<LevelLayout>
 
             // Skip adding any enemies to the reactor area
             // TODO: we may want to add a chance for some enemies here
-            if (node.Tags.Contains("reactor") || node.Tags.Contains("no_enemies"))
+            if (node.Tags.Contains("reactor") ||
+                node.Tags.Contains("no_enemies") ||
+                node.Tags.Contains("no_access"))
                 continue;
 
             var points = director.GetPoints(zone);
