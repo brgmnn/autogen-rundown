@@ -1,4 +1,5 @@
 using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Light;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
@@ -319,6 +320,12 @@ public partial record LevelLayout
                 // Remove enemies
                 zone.EnemySpawningInZone.Clear();
                 zone.BloodDoor = BloodDoor.None;
+
+                // Most of these rooms read better as dead/unpowered space behind the
+                // sealed door; leave a third with their inherited lights so it's not
+                // uniformly black across the level.
+                if (Generator.Flip(0.66))
+                    zone.LightSettings = (Lights.Light)LightSettings.LightsOff.PersistentId;
             }
 
             planner.AddTags(decoy, "no_access");
