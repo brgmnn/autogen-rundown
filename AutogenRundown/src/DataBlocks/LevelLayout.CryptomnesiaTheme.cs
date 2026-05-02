@@ -383,12 +383,24 @@ public partial record LevelLayout
             data.DustTurbulence = 5.0;
         }
 
+        // Strict-orange subset for the elevator zone (zone 0): the cream and pale-white
+        // variants don't read as "orange" at a glance, so the dim's first impression
+        // wouldn't telegraph the Nightmare theme. Other zones still pick from the full
+        // OrangeThemeLights pool for visual variety.
+        var elevatorOranges = new List<LightSettings>
+        {
+            LightSettings.OrangeTheme_Bright,
+            LightSettings.OrangeTheme_Amber,
+        };
+
         foreach (var node in zoneNodes)
         {
             var zone = level.Planner.GetZone(node);
             if (zone == null) continue;
 
-            var orangeLight = Generator.Pick(LightSettings.OrangeThemeLights);
+            var orangeLight = node.ZoneNumber == 0
+                ? Generator.Pick(elevatorOranges)
+                : Generator.Pick(LightSettings.OrangeThemeLights);
             zone.LightSettings = (Lights.Light)orangeLight.PersistentId;
 
             // Corpses per zone: 30% none, 40% some, 30% lots

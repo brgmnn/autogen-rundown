@@ -288,13 +288,22 @@ public partial record LevelLayout
                 if (!mustTraverse.Contains(child))
                     lockedDecoys.Add(child);
 
-        // 4. Apply ProgressionPuzzle.Locked to each decoy (idempotent if already locked)
-        //    and tag it so downstream placement (e.g. bulkhead keys) skips it.
+        // 4. Apply ProgressionPuzzle.Locked to each decoy (idempotent if already locked),
+        //    swap its geomorph to a small dead-end tile so the locked door visually
+        //    signals "nothing useful past here", and tag it so downstream placement
+        //    (e.g. bulkhead keys) skips it.
+        var (decoySubComplex, decoyGeo) = NoAccessDeadEndGeo(dimLayout.Complex);
+
         foreach (var decoy in lockedDecoys)
         {
             var zone = planner.GetZone(decoy);
             if (zone != null)
+            {
                 zone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
+                zone.SubComplex = decoySubComplex;
+                zone.CustomGeomorph = decoyGeo;
+                zone.Coverage = new CoverageMinMax { Min = 5, Max = 10 };
+            }
 
             planner.AddTags(decoy, "no_access");
         }
@@ -318,6 +327,30 @@ public partial record LevelLayout
             $"kept={mustTraverse.Count} locked_decoys={lockedDecoys.Count} pruned={pruned} " +
             $"(total was {allZones.Count})");
     }
+
+    /// <summary>
+    /// Per-complex small dead-end geomorph used for no_access locked-decoy zones so the
+    /// sealed door behind a kept zone reads as "nothing past here" instead of a full
+    /// hub/T/corridor tile.
+    /// </summary>
+    private static (SubComplex, string) NoAccessDeadEndGeo(Complex complex) => complex switch
+    {
+        Complex.Mining => (
+            SubComplex.Storage,
+            "Assets/Prefabs/Geomorph/Mining/geo_storage_FA_dead_end_01.prefab"),
+
+        Complex.Tech => (
+            SubComplex.Lab,
+            "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_dead_end_HA_03.prefab"),
+
+        Complex.Service => (
+            SubComplex.Floodways,
+            "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_dead_end_HA_01.prefab"),
+
+        _ => (
+            SubComplex.Lab,
+            "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_dead_end_HA_03.prefab"),
+    };
 
     #endregion
 
