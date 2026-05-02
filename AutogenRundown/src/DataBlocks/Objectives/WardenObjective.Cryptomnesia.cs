@@ -91,15 +91,26 @@ public partial record WardenObjective
 
     private void PostBuildIntel_Cryptomnesia(Level level)
     {
-        level.ElevatorDropWardenIntel.Add((Generator.Between(1, 10), Generator.Pick(new List<string>
-        {
-            // Vanilla intel
-            ">... We're... back...\r\n>... This will go quick then!\r\n>... No, <size=200%><color=red>wait-</color></size>\r\n>...[screeching, gunfire]",
+        var realityTheme = Cryptomnesia_SelectedThemes.FirstOrDefault();
+        var themePool = ThemeIntelPool(realityTheme);
 
-            // Generated intel
-            ">... The cubes are scattered across dimensions!\r\n>... <size=200%><color=red>Stay together!</color></size>\r\n>... [static]",
-            ">... Reality is shifting...\r\n>... <size=200%><color=red>Find the data cubes!</color></size>\r\n>... [alarm blaring]",
-            ">... Dimensional anomalies detected!\r\n>... <size=200%><color=red>Retrieve the cubes!</color></size>\r\n>... [creatures shrieking]",
-        })!));
+        // 70% theme-aware, 30% neutral — the elevator drop usually telegraphs the
+        // Reality theme but Cryptomnesia's loop / cube / cognition motifs still
+        // surface for variety.
+        var pool = Generator.Flip(0.7) ? themePool : CryptomnesiaIntel_Neutral;
+
+        level.ElevatorDropWardenIntel.Add(
+            (Generator.Between(1, 10), Generator.Pick(pool)!));
     }
+
+    private static List<string> ThemeIntelPool(CryptomnesiaTheme theme) => theme switch
+    {
+        CryptomnesiaTheme.ErrorAlarm   => CryptomnesiaIntel_ErrorAlarm,
+        CryptomnesiaTheme.Giants       => CryptomnesiaIntel_Giants,
+        CryptomnesiaTheme.Chargers     => CryptomnesiaIntel_Chargers,
+        CryptomnesiaTheme.InfectionFog => CryptomnesiaIntel_InfectionFog,
+        CryptomnesiaTheme.Shadows      => CryptomnesiaIntel_Shadows,
+        CryptomnesiaTheme.Nightmares   => CryptomnesiaIntel_Nightmares,
+        _                              => CryptomnesiaIntel_Neutral,
+    };
 }

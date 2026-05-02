@@ -107,6 +107,7 @@ public partial record LevelLayout
 
         // Select unique themes: 1 for Reality + 1 per dimension
         var themes = SelectCryptomnesiaThemes(dimensionCount + 1);
+        objective.Cryptomnesia_SelectedThemes = themes;
 
         Plugin.Logger.LogDebug(
             $"Cryptomnesia: Selected themes: Reality={themes[0]}" +

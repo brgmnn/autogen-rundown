@@ -1521,6 +1521,14 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     [JsonIgnore]
     public List<string> Cryptomnesia_CubeBranches { get; set; } = new();
 
+    /// <summary>
+    /// Themes selected for the level: index 0 = Reality, index 1+ = each dimension.
+    /// Populated in BuildLayout_Cryptomnesia after SelectCryptomnesiaThemes runs.
+    /// Used by PostBuildIntel_Cryptomnesia to bias intel toward the Reality theme.
+    /// </summary>
+    [JsonIgnore]
+    public List<Enums.CryptomnesiaTheme> Cryptomnesia_SelectedThemes { get; set; } = new();
+
     #endregion
 
     #region Expedition exit
