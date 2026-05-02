@@ -77,7 +77,7 @@ public partial record LevelLayout
 
             // CryptomnesiaLayout.ForwardSplit => new() { "find_items", "find_items", "find_items", "find_items" },
 
-            _ => new() { "find_items", "find_items", "find_items", "find_items" }
+            _ => throw new ArgumentException($"Implementation missing for {layoutType}")
         };
 
         #region Dimension = Reality

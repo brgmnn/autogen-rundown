@@ -7,7 +7,6 @@ namespace AutogenRundown.DataBlocks.Objectives;
 /// Objective: Cryptomnesia
 ///
 /// Modeled after R6D4. Gather tampered data cubes across multiple dimensions.
-/// For now this is a basic GatherSmallItems variant with 1 item in Reality.
 /// </summary>
 public partial record WardenObjective
 {
