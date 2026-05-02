@@ -1559,7 +1559,7 @@ public partial record LevelLayout
             });
 
         // TODO: support other dimensions
-        var terminalSerial = Lore.TerminalSerial("Reality", terminalNode.Bulkhead, terminalNode.ZoneNumber);
+        var terminalSerial = Lore.TerminalSerial(DimensionIndex.Reality, terminalNode.Bulkhead, terminalNode.ZoneNumber);
 
         customDoor.InteractionMessage += $"<color=red> DEACTIVATE ALARM ON {terminalSerial}</color>";
         lockedZone.EventsOnDoorScanStart.AddCustomHudText($"<color=red>Deactivate alarm on {terminalSerial}</color>");
@@ -1692,7 +1692,7 @@ public partial record LevelLayout
             });
 
         // TODO: support other dimensions
-        var terminalSerial = Lore.TerminalSerial("Reality", terminalNode.Bulkhead, terminalNode.ZoneNumber);
+        var terminalSerial = Lore.TerminalSerial(DimensionIndex.Reality, terminalNode.Bulkhead, terminalNode.ZoneNumber);
 
         customDoor.InteractionMessage += $"<color=red> DEACTIVATE ALARM ON {terminalSerial}</color>";
         lockedZone.EventsOnDoorScanStart.AddCustomHudText($"<color=red>Deactivate alarm on {terminalSerial}</color>");
@@ -2042,7 +2042,7 @@ public partial record LevelLayout
         });
 
         var terminalSerial = Lore.TerminalSerial(
-            terminalNode.Dimension.ToString(),
+            terminalNode.Dimension,
             terminalNode.Bulkhead,
             terminalNode.ZoneNumber,
             terminalZone.TerminalPlacements.Count - 1);

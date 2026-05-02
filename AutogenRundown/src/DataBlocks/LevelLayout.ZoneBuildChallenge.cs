@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Logs;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Terminals;
@@ -586,7 +587,7 @@ public partial record LevelLayout
             }
 
             var terminalSerial = Lore.TerminalSerial(
-                "Reality", relayNodes[i].Bulkhead, relayNodes[i].ZoneNumber, 0);
+                DimensionIndex.Reality, relayNodes[i].Bulkhead, relayNodes[i].ZoneNumber, 0);
 
             // Log content describing the relay protocol
             var logContent = isLast
@@ -1151,7 +1152,7 @@ public partial record LevelLayout
 
         // Lock the forward door
         var terminalSerial = Lore.TerminalSerial(
-            "Reality", start.Bulkhead, start.ZoneNumber,
+            DimensionIndex.Reality, start.Bulkhead, start.ZoneNumber,
             startZone.TerminalPlacements.Count - 1);
 
         endZone.ProgressionPuzzleToEnter = new ProgressionPuzzle
@@ -1280,7 +1281,7 @@ public partial record LevelLayout
 
         // Lock the forward door
         var terminalSerial = Lore.TerminalSerial(
-            "Reality", start.Bulkhead, start.ZoneNumber,
+            DimensionIndex.Reality, start.Bulkhead, start.ZoneNumber,
             startZone.TerminalPlacements.Count - 1);
 
         endZone.ProgressionPuzzleToEnter = new ProgressionPuzzle
