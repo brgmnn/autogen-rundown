@@ -804,6 +804,12 @@ public record EnemyGroup : DataBlock<EnemyGroup>
 
             // Nightmares
             (EnemyRole.Melee, Enemy.NightmareStriker, 4.0),
+            (EnemyRole.Melee, Enemy.NightmareStriker, 6.0),
+            (EnemyRole.Melee, Enemy.NightmareStriker, 10.0),
+
+            (EnemyRole.Ranged, Enemy.NightmareShooter, 4.0),
+            (EnemyRole.Ranged, Enemy.NightmareShooter, 6.0),
+            (EnemyRole.Ranged, Enemy.NightmareShooter, 10.0),
 
             // Giants always spawn in pairs
             (EnemyRole.Melee,  Enemy.StrikerGiant, 8.0),
@@ -833,6 +839,8 @@ public record EnemyGroup : DataBlock<EnemyGroup>
             (EnemyRole.PureSneak, (Enemy)Enemy_New.HybridInfected.PersistentId, 4.0),
 
             (EnemyRole.Melee, (Enemy)Enemy_New.NightmareGiant.PersistentId, 4.0),
+            (EnemyRole.Melee, (Enemy)Enemy_New.NightmareGiant.PersistentId, 6.0),
+            (EnemyRole.Melee, (Enemy)Enemy_New.NightmareGiant.PersistentId, 10.0),
 
             (EnemyRole.Melee, (Enemy)Enemy_New.StrikerInfested.PersistentId, 4.0),
             (EnemyRole.Melee, (Enemy)Enemy_New.StrikerInfested.PersistentId, 6.0),

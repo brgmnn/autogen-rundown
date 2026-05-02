@@ -444,13 +444,13 @@ public partial record LevelLayout
                 {
                     GroupType = EnemyGroupType.Hibernate,
                     Difficulty = (uint)Enemy.NightmareStriker,
-                    Points = 40
+                    Points = 40,
                 },
                 new EnemySpawningData
                 {
                     GroupType = EnemyGroupType.Hibernate,
                     Difficulty = (uint)Enemy.NightmareShooter,
-                    Points = 30
+                    Points = 30,
                 },
                 EnemySpawningData.NightmareGiant with { Points = 30 },
             })

@@ -761,16 +761,18 @@ public partial record LevelLayout : DataBlock<LevelLayout>
     /// <summary>
     /// Returns the <see cref="AutogenDifficulty"/> group flag a Difficulty value represents,
     /// or null if the value is a specific enemy ID (and should pass through unchanged).
-    /// Group flags occupy the 0xC0 mask (Shadows / Nightmares / Flyers) or are zero
-    /// (Base / Chargers / Hybrids); specific enemy IDs live in 0x01-0x3F per
-    /// <see cref="AutogenDifficulty"/>.
+    /// Only the exact group-flag values are recognised; everything else — including
+    /// dynamically-allocated specific enemy PersistentIds that happen to occupy the 0xC0
+    /// bits (e.g. `NightmareGiant = 76 = 0x4C`) — is treated as a specific enemy ID.
     /// </summary>
-    private static AutogenDifficulty? TryAsGroupFlag(uint difficulty)
+    private static AutogenDifficulty? TryAsGroupFlag(uint difficulty) => difficulty switch
     {
-        if (difficulty != 0 && (difficulty & 0xC0) == 0)
-            return null;
-        return (AutogenDifficulty)difficulty;
-    }
+        0x00 => AutogenDifficulty.Base, // Base / Chargers / Hybrids all share value 0
+        0x40 => AutogenDifficulty.Shadows,
+        0x80 => AutogenDifficulty.Nightmares,
+        0xC0 => AutogenDifficulty.Flyers,
+        _ => null,
+    };
 
     /// <summary>
     /// Rolls for whether we should add an error alarm to this level layout.
