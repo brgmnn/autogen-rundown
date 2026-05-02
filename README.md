@@ -22,22 +22,11 @@ TODO:
     * Needs something to happen when completing all the cells ideally
     * Would be good if the fog could rise or lower when inserting the cells
   * Add more disinfection options for infection levels and hybrids
-  * Special Terminal Command:
-    * REROUTE_POWER - Should probably have more severe consequences then just turning the lights off?
-    * REROUTE_POWER - Main - Is too many sequential zones. 6 zones in a row to go through
-  * Matter Wave Projector - Needs slightly less zones to go through. Very linear
-  * Bring big pickup for scan
   * Add more variety on fog for vibes
-  * Rework the special command layout
-  * King of the Hill terminal spawns are... dodgy
-    * They often spawn inside things.
   * Uplink objectives stop ALL WAVES after completing them. Got to figure out a way to not do that.
   * Retrieve big item:
     * A-tier main only rolled no exit alarm.
   * Add "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_AW_01.prefab", the giant HSU pit. Technically an I-tile
-  * Weekly #40 A1 failed to generate objective room
-  * Error thrown from EventManager.UpdateRundown. I suspect it might be from the daily.
-  * Check out Seasonal D4. End room that does nothing?
   * Add support for text data block mergers. It should be relatively safe to do this even with overwrites
   * Make E-tier shorter but harder. E4 Seasonal extreme has too many extra zones
   * Shorter (or longer?) warden protocol startup times?
@@ -62,7 +51,6 @@ TODO:
   * Fix uplink text for case where there's one terminal
 
   * See if we can fix enemies not navigating through the final door in D3
-  * Check terminal stacking on 0.84.0
 
   * Seems that Valiant objectives fail a lot
 
