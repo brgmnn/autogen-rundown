@@ -43,12 +43,23 @@ public record LevelCustomTerminals
 
         return geomorph switch
         {
+            // AlphaOne
             "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Boss_Arena.prefab" => new List<(Vector3 Position, Vector3 Rotation)>
             {
+                // Central level to the left
+                (new Vector3 { X = 37.45, Y = 7.4, Z = 16.5 }, new Vector3 { Y = 190 }),
+
+                // Top, middle of a container
+                (new Vector3 { X = 30.05, Y = 18.0, Z = -3.5 }, new Vector3 { Y = -100 }),
+
+                // Far left corner, lower level
+                (new Vector3 { X = 56.14, Y = -2.7, Z = 32.2 }, new Vector3 { Y = 180 }),
+
                 // Central, the vanilla location
                 (new Vector3 { X = 33.9, Y = 6.1, Z = -0.92 }, new Vector3 { Y = -90 }),
             },
 
+            // AlphaThree_Top
             "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab" => new List<(Vector3, Vector3)>
             {
                 // Pretty central outside with backplate (the vanilla location)

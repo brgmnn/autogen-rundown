@@ -1710,19 +1710,19 @@ public partial class Level
 
             var dimension = new Dimension
             {
-                Data = new Dimensions.DimensionData
-                {
-                    Layout = dimensionLayout,
+                // Data = new Dimensions.DimensionData
+                // {
+                //     Layout = dimensionLayout,
+                //
+                //     DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_HA_02.prefab",
+                //     // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab",
+                //     // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_mining_01.prefab",
+                //
+                //     Fog = Fog.HeavyFullFog_Infectious,
+                //     ResourceSet = dim1ResourceSet
+                // },
 
-                    DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_HA_02.prefab",
-                    // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab",
-                    // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_mining_01.prefab",
-
-                    Fog = Fog.HeavyFullFog_Infectious,
-                    ResourceSet = dim1ResourceSet
-                },
-
-                // Data = Dimensions.DimensionData.Unknown_Three,
+                Data = Dimensions.DimensionData.AlphaOne,
 
                 PersistentId = 3,
             };
@@ -1735,19 +1735,19 @@ public partial class Level
                 Data = dimension
             });
 
-            // var (position, rotation) = LevelCustomTerminals.GetCandidates(dimension.Data.DimensionGeomorph).First();
+            var (position, rotation) = LevelCustomTerminals.GetCandidates(dimension.Data.DimensionGeomorph).First();
 
-            // CustomTerminalSpawnManager.AddSpawnRequest(
-            //     level.LevelLayoutData,
-            //     new CustomTerminalSpawnRequest
-            //     {
-            //         Bulkhead = director.Bulkhead,
-            //         DimensionIndex = DimensionIndex.Dimension1,
-            //         LocalIndex = 0,
-            //         GeomorphName = dimension.Data.DimensionGeomorph,
-            //         LocalPosition = position,
-            //         LocalRotation = rotation
-            //     });
+            CustomTerminalSpawnManager.AddSpawnRequest(
+                level.LevelLayoutData,
+                new CustomTerminalSpawnRequest
+                {
+                    Bulkhead = director.Bulkhead,
+                    DimensionIndex = DimensionIndex.Dimension1,
+                    LocalIndex = 0,
+                    GeomorphName = dimension.Data.DimensionGeomorph,
+                    LocalPosition = position,
+                    LocalRotation = rotation
+                });
 
 
 
