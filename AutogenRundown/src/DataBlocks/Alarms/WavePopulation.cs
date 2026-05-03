@@ -168,6 +168,7 @@ public record WavePopulation : DataBlock<WavePopulation>
         Bins.WavePopulations.AddBlock(OnlyGiantShooters);
         Bins.WavePopulations.AddBlock(OnlyChargers);
         Bins.WavePopulations.AddBlock(OnlyFlyers);
+        Bins.WavePopulations.AddBlock(AlphaSwarm);
         Bins.WavePopulations.AddBlock(OnlyHybrids);
         Bins.WavePopulations.AddBlock(OnlyInfectedHybrids);
         Bins.WavePopulations.AddBlock(OnlyShadows);
@@ -354,6 +355,20 @@ public record WavePopulation : DataBlock<WavePopulation>
         WaveRoleSpecial = Enemy.Flyer,
         WaveRoleMiniBoss = Enemy.FlyerBig,
         Name = "OnlyFlyers"
+    };
+
+    /// <summary>
+    /// Used by the AlphaTerminalCommand objective: standard flyers with strikers
+    /// as the special pressure and big flyers as the mini-boss.
+    /// </summary>
+    public static WavePopulation AlphaSwarm = new()
+    {
+        WaveRoleWeakling = Enemy.Flyer,
+        WaveRoleStandard = Enemy.Flyer,
+        WaveRoleSpecial = Enemy.Striker_Wave,
+        WaveRoleMiniBoss = Enemy.FlyerBig,
+        WaveRoleBoss = Enemy.FlyerBig,
+        Name = "AlphaSwarm"
     };
 
     public static WavePopulation OnlyHybrids = new()

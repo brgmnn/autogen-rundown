@@ -1214,6 +1214,10 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 BuildLayout_ReachKdsDeep(director, objective, start);
                 break;
 
+            case WardenObjectiveType.AlphaTerminalCommand:
+                BuildLayout_AlphaTerminalCommand(director, objective, start);
+                break;
+
             default:
                 BuildBranch((ZoneNode)start, director.ZoneCount, "find_items");
                 break;

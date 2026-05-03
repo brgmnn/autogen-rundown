@@ -40,5 +40,16 @@ public enum WardenObjectiveType
 
     EscapeToPortal = 22,          // E
 
+    /// <summary>
+    /// Carry the Matter Wave Projector to a portal in Reality, warp to a static
+    /// alpha dimension, find a custom alpha terminal, execute a backdoor command
+    /// to start a data transfer (error wave + countdown), then warp back to
+    /// Reality to extract.
+    ///
+    /// Internally serialized as SpecialTerminalCommand so the game handles the
+    /// terminal command input natively.
+    /// </summary>
+    AlphaTerminalCommand = 23,    // A
+
     #endregion
 }

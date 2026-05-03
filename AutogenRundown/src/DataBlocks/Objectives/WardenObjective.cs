@@ -766,6 +766,10 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 objective.PreBuild_ReachKdsDeep(director, level);
                 break;
 
+            case WardenObjectiveType.AlphaTerminalCommand:
+                objective.PreBuild_AlphaTerminalCommand(director, level);
+                break;
+
             #endregion
 
             default:
@@ -1000,6 +1004,10 @@ public partial record WardenObjective : DataBlock<WardenObjective>
 
             case WardenObjectiveType.ReachKdsDeep:
                 Build_ReachKdsDeep(director, level);
+                break;
+
+            case WardenObjectiveType.AlphaTerminalCommand:
+                Build_AlphaTerminalCommand(director, level);
                 break;
 
             #endregion
