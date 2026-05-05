@@ -234,24 +234,5 @@ public partial record LevelLayout
             Dimension = DimensionIndex.Dimension1,
             Data = new Dimension { Data = dimensionData }.FindOrPersist(),
         });
-
-        // Spawn the alpha terminal at a random pre-defined candidate position
-        // inside the dimension geomorph. IsWardenObjective=true tells the game
-        // that this terminal is the SpecialTerminalCommand objective terminal,
-        // so the chosen [SPECIAL_COMMAND] gets bound to it.
-        var candidates = LevelCustomTerminals.GetCandidates(dimensionData.DimensionGeomorph);
-        var (terminalPos, terminalRot) = Generator.Pick(candidates);
-
-        CustomTerminalSpawnManager.AddSpawnRequest(
-            level.LevelLayoutData,
-            new CustomTerminalSpawnRequest
-            {
-                Bulkhead = director.Bulkhead,
-                DimensionIndex = DimensionIndex.Dimension1,
-                LocalIndex = 0,
-                GeomorphName = dimensionData.DimensionGeomorph,
-                LocalPosition = terminalPos,
-                LocalRotation = terminalRot,
-            });
     }
 }

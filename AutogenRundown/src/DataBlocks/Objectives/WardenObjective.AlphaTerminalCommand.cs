@@ -1,9 +1,11 @@
 using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
+using AutogenRundown.Patches.CustomTerminals;
 
 namespace AutogenRundown.DataBlocks.Objectives;
 
@@ -61,6 +63,28 @@ public partial record WardenObjective
         SpecialTerminalCommand_Type = SpecialCommand.ErrorAlarm;
 
         StartPuzzle = ChainedPuzzle.TeamScan;
+
+        var dim = level.DimensionDatas.Find(d => d.Dimension == DimensionIndex.Dimension1)!;
+        var dimensionData = dim.Data.Data;
+
+        // Spawn the alpha terminal at a random pre-defined candidate position
+        // inside the dimension geomorph. IsWardenObjective=true tells the game
+        // that this terminal is the SpecialTerminalCommand objective terminal,
+        // so the chosen [SPECIAL_COMMAND] gets bound to it.
+        var candidates = LevelCustomTerminals.GetCandidates(dimensionData.DimensionGeomorph);
+        var (terminalPos, terminalRot) = Generator.Pick(candidates);
+
+        CustomTerminalSpawnManager.AddSpawnRequest(
+            level.LevelLayoutData,
+            new CustomTerminalSpawnRequest
+            {
+                Bulkhead = director.Bulkhead,
+                DimensionIndex = DimensionIndex.Dimension1,
+                LocalIndex = 0,
+                GeomorphName = dimensionData.DimensionGeomorph,
+                LocalPosition = terminalPos,
+                LocalRotation = terminalRot,
+            });
 
         // Tier-scaled wave + transfer timer.
         var (waveSettings, transferDuration) = level.Tier switch
