@@ -90,6 +90,9 @@ public class Patch_CentralGeneratorCluster
     /// Service Complex geomorphs to be able to spawn the generator cluster marker.
     ///
     /// It can be called multiple times, but once after the datablocks are loaded is sufficient.
+    ///
+    /// TODO: I think this needs to be called for our service marker data block _before_ it gets copied?!
+    ///       This may be causing generator cluster levels to fail with the certain prefab
     /// </summary>
     public static void Setup()
     {
