@@ -31,21 +31,31 @@ public partial record LevelLayout
         if (director.Bulkhead != Bulkhead.Main)
             return;
 
-        var startZone = planner.GetZone(start)!;
-        startZone.Coverage = CoverageMinMax.Large_100;
+        // Drop the Matter Wave Projector into the actual elevator drop zone
+        // (zone 0 in Reality), regardless of what `start` is. The bulkhead
+        // strategy decides whether `start` is the elevator drop or a separate
+        // bulkhead first zone — going through zone 0 directly avoids that
+        // ambiguity and keeps the pickup in the elevator like the spec asks.
+        var elevatorDrop = level.Planner.GetZoneNode(0, DimensionIndex.Reality);
+        var elevatorDropZone = level.Planner.GetZone(elevatorDrop)!;
+        elevatorDropZone.BigPickupDistributionInZone = BigPickupDistribution.MatterWaveProjector.PersistentId;
 
-        // Drop the Matter Wave Projector into the elevator zone so the team
-        // picks it up the moment they land.
-        startZone.BigPickupDistributionInZone = BigPickupDistribution.MatterWaveProjector.PersistentId;
+        // Insert a corridor zone immediately after `start` before any challenge
+        // is built. Most challenge helpers call level.GenHubGeomorph(start)
+        // which overwrites the source zone's geomorph -- doing that on the
+        // elevator drop wipes out the elevator and Builder.GetElevatorArea()
+        // returns null. The corridor isolates the elevator/bulkhead start zone
+        // from challenge geomorph rewrites.
+        var corridorNodes = AddBranch_Forward(start, 1);
+        var challengeRoot = corridorNodes.Last();
+        var challengeRootZone = planner.GetZone(challengeRoot)!;
+        challengeRootZone.Coverage = CoverageMinMax.Medium;
 
-        // Make the start zone a hub so it can fan out into the challenge chain.
-        start = planner.UpdateNode(start with { MaxConnections = 3 });
-
-        // Beyond the elevator we need an interesting traversal challenge before
+        // Beyond the corridor we need an interesting traversal challenge before
         // the portal — modeled after HsuFindSample's tier-driven SelectRun. The
         // last node in the chain (`beforePortal`) is what the portal is built
         // from.
-        var beforePortal = start;
+        var beforePortal = challengeRoot;
 
         switch (level.Tier)
         {
@@ -57,20 +67,20 @@ public partial record LevelLayout
                     // Straight shot, 1 zone of corridor before the portal
                     (0.30, () =>
                     {
-                        beforePortal = AddBranch_Forward(start, 1).Last();
+                        beforePortal = AddBranch_Forward(challengeRoot, 1).Last();
                     }),
 
                     // Keycard in side
                     (0.40, () =>
                     {
-                        var (locked, _) = BuildChallenge_KeycardInSide(start);
+                        var (locked, _) = BuildChallenge_KeycardInSide(challengeRoot);
                         beforePortal = locked;
                     }),
 
                     // Generator cell in side
                     (0.30, () =>
                     {
-                        var (locked, _) = BuildChallenge_GeneratorCellInSide(start);
+                        var (locked, _) = BuildChallenge_GeneratorCellInSide(challengeRoot);
                         beforePortal = locked;
                     }),
                 });
@@ -85,25 +95,25 @@ public partial record LevelLayout
                 {
                     (0.30, () =>
                     {
-                        var (locked, _) = BuildChallenge_KeycardInSide(start);
+                        var (locked, _) = BuildChallenge_KeycardInSide(challengeRoot);
                         beforePortal = locked;
                     }),
 
                     (0.30, () =>
                     {
-                        var (locked, _) = BuildChallenge_GeneratorCellInSide(start);
+                        var (locked, _) = BuildChallenge_GeneratorCellInSide(challengeRoot);
                         beforePortal = locked;
                     }),
 
                     (0.20, () =>
                     {
-                        var (locked, _) = BuildChallenge_LockedTerminalDoor(start, sideZones: 1);
+                        var (locked, _) = BuildChallenge_LockedTerminalDoor(challengeRoot, sideZones: 1);
                         beforePortal = locked;
                     }),
 
                     (0.20, () =>
                     {
-                        var (mid, _) = AddTravelScanAlarm(start);
+                        var (mid, _) = AddTravelScanAlarm(challengeRoot);
                         beforePortal = AddBranch_Forward(mid, 1).Last();
                     }),
                 });
@@ -119,7 +129,7 @@ public partial record LevelLayout
                     // 1 prelude zone, then keycard locked
                     (0.25, () =>
                     {
-                        var prelude = AddBranch_Forward(start, 1).Last();
+                        var prelude = AddBranch_Forward(challengeRoot, 1).Last();
                         var (locked, _) = BuildChallenge_KeycardInSide(prelude);
                         beforePortal = locked;
                     }),
@@ -163,7 +173,7 @@ public partial record LevelLayout
                     // Error alarm with turnoff + keycard, leading to portal
                     (0.30, () =>
                     {
-                        var (locked, _) = BuildChallenge_ErrorWithOff_KeycardInSide(start, errorZones: 2, sideKeycardZones: 1, terminalTurnoffZones: 1);
+                        var (locked, _) = BuildChallenge_ErrorWithOff_KeycardInSide(challengeRoot, errorZones: 2, sideKeycardZones: 1, terminalTurnoffZones: 1);
                         beforePortal = locked;
                     }),
 
@@ -181,14 +191,14 @@ public partial record LevelLayout
 
                         var settings = level.Tier == "E" ? WaveSettings.Baseline_VeryHard : WaveSettings.Baseline_Hard;
 
-                        var (locked, _) = BuildChallenge_ApexAlarm(start, population, settings);
+                        var (locked, _) = BuildChallenge_ApexAlarm(challengeRoot, population, settings);
                         beforePortal = locked;
                     }),
 
                     // Generator chain: prelude → generator-cell-in-side → keycard
                     (0.25, () =>
                     {
-                        var (gen, _) = BuildChallenge_GeneratorCellInSide(start);
+                        var (gen, _) = BuildChallenge_GeneratorCellInSide(challengeRoot);
                         var (locked, _) = BuildChallenge_KeycardInSide(gen);
                         beforePortal = locked;
                     }),
@@ -196,8 +206,8 @@ public partial record LevelLayout
                     // Sensors + locked door
                     (0.15, () =>
                     {
-                        AddSecuritySensors(start);
-                        var (locked, _) = BuildChallenge_KeycardInSide(start);
+                        AddSecuritySensors(challengeRoot);
+                        var (locked, _) = BuildChallenge_KeycardInSide(challengeRoot);
                         beforePortal = locked;
                     }),
                 });
@@ -207,7 +217,7 @@ public partial record LevelLayout
 
             default:
             {
-                beforePortal = AddBranch_Forward(start, 1).Last();
+                beforePortal = AddBranch_Forward(challengeRoot, 1).Last();
                 break;
             }
         }
