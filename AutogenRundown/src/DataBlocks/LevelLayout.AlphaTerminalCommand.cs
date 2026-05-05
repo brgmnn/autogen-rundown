@@ -220,7 +220,7 @@ public partial record LevelLayout
         portal = level.GenPortalGeomorph(portal, maxConnections: level.Complex == Complex.Mining ? 1 : 0);
 
         // portalZone.EventsOnPortalWarp.AddTurnOffAlarms(1.0);
-        portalZone.EventsOnPortalWarp.AddMessage("activated now", 3.0);
+        portalZone.EventsOnPortalWarp.AddMessage("activated now", 5.0);
 
         // Choose the static alpha dimension.
         var dimensionData = Generator.Pick(new List<Dimensions.DimensionData>
@@ -252,22 +252,6 @@ public partial record LevelLayout
                 GeomorphName = dimensionData.DimensionGeomorph,
                 LocalPosition = terminalPos,
                 LocalRotation = terminalRot,
-                IsWardenObjective = true,
-            });
-
-        // Tell the warden-objective system that the terminal lives in
-        // Dimension1, zone 0 (static dimensions are always a single zone).
-        var dataLayer = level.GetObjectiveLayerData(director.Bulkhead);
-
-        dataLayer.ObjectiveData.ZonePlacementDatas.Add(
-            new List<ZonePlacementData>
-            {
-                new()
-                {
-                    Dimension = DimensionIndex.Reality,
-                    LocalIndex = 0,
-                    Weights = ZonePlacementWeights.NotAtStart,
-                },
             });
     }
 }
