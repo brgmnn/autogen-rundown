@@ -124,31 +124,31 @@ public partial record LevelLayout
                         beforePortal = locked;
                     }),
 
-                    // 1 prelude zone, then generator locked
-                    (0.25, () =>
-                    {
-                        var prelude = AddBranch_Forward(start, 1).Last();
-                        var (locked, _) = BuildChallenge_GeneratorCellInSide(prelude);
-                        beforePortal = locked;
-                    }),
-
-                    // Apex alarm into the portal hub
-                    (0.25, () =>
-                    {
-                        var population = level.Settings.HasFlyers()
-                            ? WavePopulation.Baseline_Flyers
-                            : WavePopulation.Baseline;
-                        var (locked, _) = BuildChallenge_ApexAlarm(start, population, WaveSettings.Baseline_Normal);
-                        beforePortal = locked;
-                    }),
-
-                    // Travel scan + keycard
-                    (0.25, () =>
-                    {
-                        var (mid, _) = AddTravelScanAlarm(start);
-                        var (locked, _) = BuildChallenge_KeycardInSide(mid);
-                        beforePortal = locked;
-                    }),
+                    // // 1 prelude zone, then generator locked
+                    // (0.25, () =>
+                    // {
+                    //     var prelude = AddBranch_Forward(start, 1).Last();
+                    //     var (locked, _) = BuildChallenge_GeneratorCellInSide(prelude);
+                    //     beforePortal = locked;
+                    // }),
+                    //
+                    // // Apex alarm into the portal hub
+                    // (0.25, () =>
+                    // {
+                    //     var population = level.Settings.HasFlyers()
+                    //         ? WavePopulation.Baseline_Flyers
+                    //         : WavePopulation.Baseline;
+                    //     var (locked, _) = BuildChallenge_ApexAlarm(start, population, WaveSettings.Baseline_Normal);
+                    //     beforePortal = locked;
+                    // }),
+                    //
+                    // // Travel scan + keycard
+                    // (0.25, () =>
+                    // {
+                    //     var (mid, _) = AddTravelScanAlarm(start);
+                    //     var (locked, _) = BuildChallenge_KeycardInSide(mid);
+                    //     beforePortal = locked;
+                    // }),
                 });
                 break;
             }
@@ -216,7 +216,7 @@ public partial record LevelLayout
         // option of returning out the front door rather than the elevator. The
         // game falls back to the elevator zone when no forward candidate is
         // selected, giving us "both forward and entrance" extracts in practice.
-        AddForwardExtractStart(start);
+        // AddForwardExtractStart(start);
 
         // The portal zone itself — Tech variant is a dead end (no further
         // outgoing connections), Mining has a forward expander.
@@ -228,7 +228,8 @@ public partial record LevelLayout
 
         // Inserting the MWP and walking through the portal warps the team into
         // Dimension1 (the alpha dimension).
-        portalZone.EventsOnPortalWarp.AddDimensionWarp(DimensionIndex.Dimension1, delay: 1.5);
+        // NOTE: We don't need this the geo does it for us
+        // portalZone.EventsOnPortalWarp.AddDimensionWarp(DimensionIndex.Dimension1, delay: 1.5);
 
         // Choose the static alpha dimension.
         var dimensionData = Generator.Pick(new List<Dimensions.DimensionData>
@@ -253,28 +254,29 @@ public partial record LevelLayout
         var candidates = LevelCustomTerminals.GetCandidates(dimensionData.DimensionGeomorph);
         var (terminalPos, terminalRot) = Generator.Pick(candidates);
 
-        CustomTerminalSpawnManager.AddSpawnRequest(
-            level.LevelLayoutData,
-            new CustomTerminalSpawnRequest
-            {
-                Bulkhead = director.Bulkhead,
-                DimensionIndex = DimensionIndex.Dimension1,
-                LocalIndex = 0,
-                GeomorphName = dimensionData.DimensionGeomorph,
-                LocalPosition = terminalPos,
-                LocalRotation = terminalRot,
-                IsWardenObjective = true,
-            });
+        // CustomTerminalSpawnManager.AddSpawnRequest(
+        //     level.LevelLayoutData,
+        //     new CustomTerminalSpawnRequest
+        //     {
+        //         Bulkhead = director.Bulkhead,
+        //         DimensionIndex = DimensionIndex.Dimension1,
+        //         LocalIndex = 0,
+        //         GeomorphName = dimensionData.DimensionGeomorph,
+        //         LocalPosition = terminalPos,
+        //         LocalRotation = terminalRot,
+        //         IsWardenObjective = true,
+        //     });
 
         // Tell the warden-objective system that the terminal lives in
         // Dimension1, zone 0 (static dimensions are always a single zone).
         var dataLayer = level.GetObjectiveLayerData(director.Bulkhead);
+
         dataLayer.ObjectiveData.ZonePlacementDatas.Add(
             new List<ZonePlacementData>
             {
                 new()
                 {
-                    Dimension = DimensionIndex.Dimension1,
+                    Dimension = DimensionIndex.Reality,
                     LocalIndex = 0,
                     Weights = ZonePlacementWeights.NotAtStart,
                 },

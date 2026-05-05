@@ -1504,6 +1504,7 @@ public partial class Level
     {
         level.Name = level.MainDirector.Objective switch
         {
+            WardenObjectiveType.AlphaTerminalCommand => "Alpha One",
             WardenObjectiveType.Cryptomnesia => "Cryptomnesia",
             WardenObjectiveType.ReachKdsDeep => "Valiant",
             _ => level.Name

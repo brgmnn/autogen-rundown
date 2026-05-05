@@ -623,6 +623,8 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
+        mainObjectivesPool.Add((400.0, 6, WardenObjectiveType.AlphaTerminalCommand));
+
         // --- C-Tier Levels ---
         for (var i = 0; i < rundown.TierC_Count; i++)
         {
