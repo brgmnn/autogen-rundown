@@ -112,6 +112,8 @@ public partial record WardenObjective
         // win condition (extract) once EventsOnActivate has fired.
         OnActivateOnSolveItem = true;
 
+        GenericItemFromStart = Items.Item.MatterWaveProjector;
+
         // Extract alarm at the elevator/forward-extract point.
         ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
 
@@ -119,6 +121,6 @@ public partial record WardenObjective
         AddCompletedObjectiveChallenge(level, director);
 
         // Game-side serialization: this is a special terminal command objective.
-        Type = WardenObjectiveType.SpecialTerminalCommand;
+        Type = WardenObjectiveType.Empty;
     }
 }

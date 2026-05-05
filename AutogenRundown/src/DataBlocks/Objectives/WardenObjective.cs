@@ -1156,6 +1156,11 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     [JsonIgnore]
     public WardenObjectiveSubType SubType { get; set; } = WardenObjectiveSubType.Default;
 
+    /// <summary>
+    /// Big pickup items to send in the elevator
+    /// </summary>
+    public Items.Item GenericItemFromStart = Items.Item.None;
+
     #region Information and display strings
     [JsonTextId]
     public Text MainObjective { get; set; } = Text.None;
@@ -1555,7 +1560,6 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     #region Fields not yet implemented
 
     public int WardenObjectiveSpecialUpdateType = 0;
-    public int GenericItemFromStart = 0;
     public bool DoNotMarkPickupItemsAsWardenObjectives = false;
     public bool OverrideNoRequiredItemsForExit = false;
     public int FogTransitionDataOnElevatorLand = 0;

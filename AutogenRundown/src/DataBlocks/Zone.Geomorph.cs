@@ -780,6 +780,8 @@ public partial record Zone
     /// </summary>
     public void GenPortalGeomorph()
     {
+        Coverage = new CoverageMinMax { Min = 25, Max = 35 };
+
         switch (layout.Complex)
         {
             // This tile contains a possible path forward.

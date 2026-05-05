@@ -31,15 +31,6 @@ public partial record LevelLayout
         if (director.Bulkhead != Bulkhead.Main)
             return;
 
-        // Drop the Matter Wave Projector into the actual elevator drop zone
-        // (zone 0 in Reality), regardless of what `start` is. The bulkhead
-        // strategy decides whether `start` is the elevator drop or a separate
-        // bulkhead first zone — going through zone 0 directly avoids that
-        // ambiguity and keeps the pickup in the elevator like the spec asks.
-        var elevatorDrop = level.Planner.GetZoneNode(0, DimensionIndex.Reality);
-        var elevatorDropZone = level.Planner.GetZone(elevatorDrop)!;
-        elevatorDropZone.BigPickupDistributionInZone = BigPickupDistribution.MatterWaveProjector.PersistentId;
-
         // Insert a corridor zone immediately after `start` before any challenge
         // is built. Most challenge helpers call level.GenHubGeomorph(start)
         // which overwrites the source zone's geomorph -- doing that on the
@@ -129,9 +120,10 @@ public partial record LevelLayout
                     // 1 prelude zone, then keycard locked
                     (0.25, () =>
                     {
-                        var prelude = AddBranch_Forward(challengeRoot, 1).Last();
-                        var (locked, _) = BuildChallenge_KeycardInSide(prelude);
-                        beforePortal = locked;
+                        var prelude = AddBranch_Forward(challengeRoot, 2).Last();
+                        // var (locked, _) = BuildChallenge_KeycardInSide(prelude);
+                        // beforePortal = locked;
+                        beforePortal = prelude;
                     }),
 
                     // // 1 prelude zone, then generator locked
@@ -222,24 +214,13 @@ public partial record LevelLayout
             }
         }
 
-        // Forward extract candidate — placed near the start so the team has the
-        // option of returning out the front door rather than the elevator. The
-        // game falls back to the elevator zone when no forward candidate is
-        // selected, giving us "both forward and entrance" extracts in practice.
-        // AddForwardExtractStart(start);
-
         // The portal zone itself — Tech variant is a dead end (no further
         // outgoing connections), Mining has a forward expander.
         var (portal, portalZone) = AddZone_Forward(beforePortal);
-        var portalConnections = level.Complex == Complex.Mining ? 1 : 0;
-        portal = level.GenPortalGeomorph(portal, maxConnections: portalConnections);
+        portal = level.GenPortalGeomorph(portal, maxConnections: level.Complex == Complex.Mining ? 1 : 0);
 
-        portalZone.Coverage = new CoverageMinMax { Min = 25, Max = 35 };
-
-        // Inserting the MWP and walking through the portal warps the team into
-        // Dimension1 (the alpha dimension).
-        // NOTE: We don't need this the geo does it for us
-        // portalZone.EventsOnPortalWarp.AddDimensionWarp(DimensionIndex.Dimension1, delay: 1.5);
+        // portalZone.EventsOnPortalWarp.AddTurnOffAlarms(1.0);
+        portalZone.EventsOnPortalWarp.AddMessage("activated now", 3.0);
 
         // Choose the static alpha dimension.
         var dimensionData = Generator.Pick(new List<Dimensions.DimensionData>
@@ -248,13 +229,10 @@ public partial record LevelLayout
             Dimensions.DimensionData.AlphaThree_Top,
         })!;
 
-        var dimension = new Dimension { Data = dimensionData };
-        dimension.FindOrPersist();
-
         level.DimensionDatas.Add(new Levels.DimensionData
         {
             Dimension = DimensionIndex.Dimension1,
-            Data = dimension,
+            Data = new Dimension { Data = dimensionData }.FindOrPersist(),
         });
 
         // Spawn the alpha terminal at a random pre-defined candidate position
@@ -264,18 +242,18 @@ public partial record LevelLayout
         var candidates = LevelCustomTerminals.GetCandidates(dimensionData.DimensionGeomorph);
         var (terminalPos, terminalRot) = Generator.Pick(candidates);
 
-        // CustomTerminalSpawnManager.AddSpawnRequest(
-        //     level.LevelLayoutData,
-        //     new CustomTerminalSpawnRequest
-        //     {
-        //         Bulkhead = director.Bulkhead,
-        //         DimensionIndex = DimensionIndex.Dimension1,
-        //         LocalIndex = 0,
-        //         GeomorphName = dimensionData.DimensionGeomorph,
-        //         LocalPosition = terminalPos,
-        //         LocalRotation = terminalRot,
-        //         IsWardenObjective = true,
-        //     });
+        CustomTerminalSpawnManager.AddSpawnRequest(
+            level.LevelLayoutData,
+            new CustomTerminalSpawnRequest
+            {
+                Bulkhead = director.Bulkhead,
+                DimensionIndex = DimensionIndex.Dimension1,
+                LocalIndex = 0,
+                GeomorphName = dimensionData.DimensionGeomorph,
+                LocalPosition = terminalPos,
+                LocalRotation = terminalRot,
+                IsWardenObjective = true,
+            });
 
         // Tell the warden-objective system that the terminal lives in
         // Dimension1, zone 0 (static dimensions are always a single zone).
