@@ -271,10 +271,62 @@ internal static class Patch_SpawnCustomTerminals
                 CommandDesc = cmd.CommandDescId,
                 SpecialCommandRule = (TERM_CommandRule)cmd.SpecialCommandRule
             };
+
+            // Translate the mod-side WardenObjectiveEvent list into game-side
+            // WardenObjectiveEventData and attach it as the command's events.
+            // LG_TerminalUniqueCommandsSetupJob.Build forwards these to
+            // m_command.AddCommand at level build time, which is what makes
+            // pressing the command on the terminal actually do anything.
+            //
+            // Vanilla event types only -- mod-side payloads such as Countdown
+            // (10010, AWO) have no field equivalent on the game-side
+            // WardenObjectiveEventData and would silently no-op.
+            foreach (var ev in cmd.CommandEvents)
+                gameCmd.CommandEvents.Add(ConvertEvent(ev));
+
             placementData.UniqueCommands.Add(gameCmd);
         }
 
         return placementData;
+    }
+
+    private static WardenObjectiveEventData ConvertEvent(
+        DataBlocks.Objectives.WardenObjectiveEvent src)
+    {
+        var dst = new WardenObjectiveEventData
+        {
+            Trigger = (eWardenObjectiveEventTrigger)(int)src.Trigger,
+            Type = (eWardenObjectiveEventType)(uint)src.Type,
+            Layer = (LG_LayerType)src.Layer,
+            DimensionIndex = (eDimensionIndex)(int)src.Dimension,
+            LocalIndex = (eLocalZoneIndex)src.LocalIndex,
+            Delay = (float)src.Delay,
+            Duration = (float)src.Duration,
+            ClearDimension = src.ClearDimension,
+            SoundID = (uint)src.SoundId,
+            DialogueID = src.DialogueId,
+            FogSetting = src.FogSetting,
+            FogTransitionDuration = (float)src.FogTransitionDuration,
+            ChainPuzzle = src.ChainPuzzle,
+            UseStaticBioscanPoints = src.UseStaticBioscanPoints,
+        };
+
+        if (!string.IsNullOrEmpty(src.WardenIntel))
+            dst.WardenIntel = new LocalizedText { Id = 0, UntranslatedText = src.WardenIntel };
+
+        // EnemyWaveData is non-null on the game side (its ctor allocates one).
+        // Mirror the mod-side wave parameters when an event references one --
+        // SpawnEnemyWave is the most common case but Survival waves and others
+        // also use it.
+        if (src.EnemyWaveData != null)
+        {
+            dst.EnemyWaveData.WaveSettings = src.EnemyWaveData.SurvivalWaveSettings;
+            dst.EnemyWaveData.WavePopulation = src.EnemyWaveData.SurvivalWavePopulation;
+            dst.EnemyWaveData.SpawnDelay = (float)src.EnemyWaveData.SpawnDelay;
+            dst.EnemyWaveData.TriggerAlarm = src.EnemyWaveData.TriggerAlarm;
+        }
+
+        return dst;
     }
 
     private static TerminalLogFileData? BuildLogFileData(AutogenRundown.DataBlocks.Terminals.LogFile logFile)
