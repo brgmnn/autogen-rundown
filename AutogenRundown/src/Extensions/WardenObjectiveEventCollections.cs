@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks;
+using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Enemies;
@@ -974,6 +975,34 @@ public static class WardenObjectiveEventCollections
         "Dimension_10" => DimensionIndex.Dimension10,
         _ => DimensionIndex.Reality
     };
+
+    #endregion
+
+    #region Terminals
+
+    /// <summary>
+    /// When used with a terminal it will spawn the scan on the terminals static bioscan point
+    /// and block the rest of the events until the scan is done
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="puzzle"></param>
+    /// <param name="delay"></param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddScan(
+        this ICollection<WardenObjectiveEvent> events,
+        ChainedPuzzle puzzle,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.None,
+                ChainPuzzle = puzzle.PersistentId,
+                Delay = delay,
+            });
+
+        return events;
+    }
 
     #endregion
 

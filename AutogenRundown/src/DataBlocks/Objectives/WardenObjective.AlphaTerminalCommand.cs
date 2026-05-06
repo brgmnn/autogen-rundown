@@ -111,13 +111,15 @@ public partial record WardenObjective
             _   => (WaveSettings.Baseline_Normal,   120.0)
         };
 
-        // Build the event chain that fires when the player runs the command.
-        // No Countdown UI -- AWO's Countdown event has no game-side equivalent
-        // on WardenObjectiveEventData and the patch's converter is vanilla-only.
-        // Progress is communicated via warden-intel pings at 25/50/75% instead.
         var commandEvents = new List<WardenObjectiveEvent>();
+        var eventsOnDone = new List<WardenObjectiveEvent>();
 
-        commandEvents.AddMessage(":://DATA TRANSFER INITIATED", delay: 0.5);
+        commandEvents
+            .AddScan(ChainedPuzzle.TeamScan)
+            .AddUpdateSubObjective(
+                description: new Text("Translocation tether resolving. Wait."),
+                intel: "Translocation tether resolving",
+                delay: 1.0);
 
         // The error wave needs to spawn IN the alpha dimension. The
         // AddSpawnWave helper doesn't take a Dimension parameter, so build
@@ -125,7 +127,7 @@ public partial record WardenObjective
         commandEvents.Add(new WardenObjectiveEvent
         {
             Type = WardenObjectiveEventType.SpawnEnemyWave,
-            Delay = 3.0,
+            Delay = 2.0,
             Dimension = DimensionIndex.Dimension1,
             SoundId = Sound.Enemies_DistantLowRoar,
             EnemyWaveData = new GenericWave
@@ -136,15 +138,16 @@ public partial record WardenObjective
             },
         });
 
+        // TODO: it would be nice to have a progress bar here
         commandEvents.AddCountup(100, new WardenObjectiveEventCountup
         {
             StartValue = 0.0,
-            Speed = 10.0,
-            Title = new Text("Data transfer progress"),
-            BodyText = "[COUNTUP]%",
-            TimerColor = "orange",
+            Speed = 100.0 / transferDuration,
+            BodyText = "<size=30>Data transfer progress\n<color=orange>[COUNTUP]%</color></size>",
+            TimerColor = "white",
             DecimalPoints = 1,
-        }, delay: 0.5);
+            EventsOnDone = eventsOnDone
+        }, delay: 3.0);
 
         // Transfer complete: stop alarms, clear Dim1, warp the team back to
         // Reality, message, then force-complete the objective.
@@ -194,10 +197,12 @@ public partial record WardenObjective
         // Team drops in already carrying the MWP -- no in-level pickup needed.
         GenericItemFromStart = Items.Item.MatterWaveProjector;
 
-        // Extract scan at the elevator/forward-extract point. The default
-        // win condition (GoToElevator) takes the team back to extract once
-        // ForceCompleteObjective fires from the command chain.
-        ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
+        AddCompletedObjectiveChallenge(level, director);
+
+        // // Extract scan at the elevator/forward-extract point. The default
+        // // win condition (GoToElevator) takes the team back to extract once
+        // // ForceCompleteObjective fires from the command chain.
+        // ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
 
         // Type stays Empty -- the entire flow is driven by the CommandEvents
         // above, not by any objective-type machinery.
