@@ -1070,6 +1070,29 @@ public static class WardenObjectiveEventCollections
         return events;
     }
 
+    /// <summary>
+    /// Renders a horizontal progress fill bar at the top of the HUD — the same primitive used
+    /// by bioscans and reactor startup waves (GuiManager.InteractionLayer.SetMessageTimer).
+    /// The Message string can embed [TIMER] (mm:ss) and [PERCENT] placeholders.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> AddSpecialHudTimer(
+        this ICollection<WardenObjectiveEvent> events,
+        double duration,
+        WardenObjectiveEventSpecialHudTimer hud,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SpecialHudTimer,
+                Delay = delay,
+                Duration = duration,
+                SpecialHudTimer = hud
+            });
+
+        return events;
+    }
+
     #endregion
 
     #region Dimensions

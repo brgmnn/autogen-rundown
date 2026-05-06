@@ -58,6 +58,47 @@ public record WardenObjectiveEventCustomHudText
     public string Body { get; set; } = "";
 }
 
+public enum SpecialHudTimerType : byte
+{
+    StartTimer = 0,
+    StartIndexTimer = 1,
+    StartPersistent = 2,
+    StopIndex = 3,
+    StopAll = 4
+}
+
+public enum PUIMessageStyle : byte
+{
+    Default = 0,
+    Message = 1,
+    Bioscan = 2,
+    Warning = 3,
+    BioscanAlarm = 4
+}
+
+public record WardenObjectiveEventSpecialHudTimer
+{
+    public double Duration { get; set; } = 0.0;
+
+    public SpecialHudTimerType Type { get; set; } = SpecialHudTimerType.StartTimer;
+
+    public int Index { get; set; } = 0;
+
+    public string Message { get; set; } = "";
+
+    public PUIMessageStyle Style { get; set; } = PUIMessageStyle.Default;
+
+    public int Priority { get; set; } = -2;
+
+    public bool ShowTimeInProgressBar { get; set; } = true;
+
+    public bool InvertProgress { get; set; } = false;
+
+    public List<ProgressEvent> EventsOnProgress { get; set; } = new();
+
+    public List<WardenObjectiveEvent> EventsOnDone { get; set; } = new();
+}
+
 public record WardenObjectiveEvent
 {
     public WardenObjectiveEventType Type { get; set; } = WardenObjectiveEventType.None;
@@ -248,6 +289,15 @@ public record WardenObjectiveEvent
     /// </summary>
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
     public WardenObjectiveEventCustomHudText? CustomHudText { get; set; }
+
+    /// <summary>
+    /// Renders a horizontal progress fill bar via GuiManager.InteractionLayer.SetMessageTimer
+    /// — the same UI primitive used by bioscans and reactor startup waves. The Message string
+    /// supports [TIMER] (mm:ss) and [PERCENT] placeholders that AWO substitutes live as the
+    /// bar fills.
+    /// </summary>
+    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    public WardenObjectiveEventSpecialHudTimer? SpecialHudTimer { get; set; }
 
     #endregion
 }

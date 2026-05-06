@@ -138,32 +138,35 @@ public partial record WardenObjective
             },
         });
 
-        // TODO: it would be nice to have a progress bar here
-        commandEvents.AddCountup(100, new WardenObjectiveEventCountup
-        {
-            StartValue = 0.0,
-            Speed = 100.0 / transferDuration,
-            BodyText = "<size=30>Data transfer progress\n<color=orange>[COUNTUP]%</color></size>",
-            TimerColor = "white",
-            DecimalPoints = 1,
-            EventsOnDone = eventsOnDone
-        }, delay: 3.0);
-
-        // Transfer complete: stop alarms, clear Dim1, warp the team back to
-        // Reality, message, then force-complete the objective.
-        commandEvents.AddTurnOffAlarms(delay: transferDuration);
-        commandEvents.AddClearDimension(DimensionIndex.Dimension1, delay: transferDuration + 0.5);
-        commandEvents.AddDimensionWarp(DimensionIndex.Reality, delay: transferDuration + 1.5);
-        commandEvents.AddMessage(":://TRANSFER COMPLETE — RETURN TO EXTRACTION", delay: transferDuration + 2.5);
+        // Transfer complete cleanup -- delays are relative to bar completion,
+        // not absolute. AWO's SpecialHudTimerEvent fires EventsOnDone once the
+        // bar reaches full, so the chain runs after the player has watched it
+        // hit 100%.
+        eventsOnDone.AddTurnOffAlarms();
+        eventsOnDone.AddClearDimension(DimensionIndex.Dimension1, delay: 0.5);
+        eventsOnDone.AddDimensionWarp(DimensionIndex.Reality, delay: 1.5);
+        eventsOnDone.AddMessage(":://TRANSFER COMPLETE — RETURN TO EXTRACTION", delay: 2.5);
 
         // ForceCompleteObjective is what tells the game the objective is solved
         // and the team should head to extract. With Type=Empty there's no
         // OnActivateOnSolveItem flow to flip the win condition automatically.
-        commandEvents.Add(new WardenObjectiveEvent
+        eventsOnDone.Add(new WardenObjectiveEvent
         {
             Type = WardenObjectiveEventType.ForceCompleteObjective,
-            Delay = transferDuration + 3.0,
+            Delay = 3.0,
         });
+
+        // Drives a horizontal fill bar at the top of the HUD via the same UI
+        // primitive bioscans and reactor waves use. [PERCENT] and [TIMER] are
+        // substituted live as the bar fills.
+        commandEvents.AddSpecialHudTimer(transferDuration, new WardenObjectiveEventSpecialHudTimer
+        {
+            Type = SpecialHudTimerType.StartTimer,
+            Message = "<size=30>Data transfer progress\n<color=orange>[PERCENT] — [TIMER]</color></size>",
+            Style = PUIMessageStyle.Bioscan,
+            ShowTimeInProgressBar = true,
+            EventsOnDone = eventsOnDone,
+        }, delay: 3.0);
 
         var candidates = LevelCustomTerminals.GetCandidates(AlphaTerminal_Dimension.DimensionGeomorph);
         var (terminalPos, terminalRot) = Generator.Pick(candidates);

@@ -105,6 +105,7 @@ public enum WardenObjectiveEventType : uint
     ShakeScreen = 20011,
 
     CustomHudText = 20017,
+    SpecialHudTimer = 20018,
     #endregion
     #endregion
 }
