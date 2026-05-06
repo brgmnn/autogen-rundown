@@ -31,6 +31,11 @@ namespace AutogenRundown.DataBlocks.Objectives;
 /// </summary>
 public partial record WardenObjective
 {
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="director"></param>
+    /// <param name="level"></param>
     public void PreBuild_AlphaTerminalCommand(BuildDirector director, Level level)
     {
         if (director.Bulkhead != Bulkhead.Main)
@@ -40,45 +45,71 @@ public partial record WardenObjective
         // level rolled Service, swap it out before any layout builds run.
         if (level.Complex == Complex.Service)
             level.Complex = Generator.Flip() ? Complex.Mining : Complex.Tech;
+
+        // Choose the static alpha dimension.
+        // TODO: add AlphaTwo (supports fliers)
+        AlphaTerminal_Dimension = Generator.Pick(new List<Dimensions.DimensionData>
+        {
+            Dimensions.DimensionData.AlphaOne,
+            Dimensions.DimensionData.AlphaThree_Top,
+        })!;
+
+        // Pick the backdoor command name + description.
+        (AlphaTerminalCommand, AlphaTerminalCommandDesc) = Generator.Pick(new List<(string, Text)>
+        {
+            ("OVERRIDE_INITIALIZATION",    new Text("Initialize alpha-dimension data transfer override.")),
+            ("EXEC_OVERRIDE",              new Text("Execute Warden override and begin transfer protocol.")),
+            ("INTERPRET_NAV_DATA",         new Text("Interpret recovered navigational data block.")),
+            ("COPY_GEN_INDEX_COMPLETE_DB", new Text("Copy complete genome-index database to host.")),
+        })!;
+
+        AlphaTerminal_DimensionName = AlphaTerminal_Dimension.DimensionGeomorph switch
+        {
+            "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Boss_Arena.prefab" => "Alpha One",
+            "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab" => "Alpha Three",
+            _ => ""
+        };
+        AlphaTerminal_DimensionName = $"<color=orange>{AlphaTerminal_DimensionName}</color>";
     }
 
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="director"></param>
+    /// <param name="level"></param>
     public void Build_AlphaTerminalCommand(BuildDirector director, Level level)
     {
-        var (dataLayer, _) = GetObjectiveLayerAndLayout(director, level);
+        var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
-        // Display strings -- with Type=Empty the [SPECIAL_COMMAND] / [ITEM_SERIAL]
-        // placeholders aren't resolved by the SpecialTerminalCommand machinery,
-        // so the command name is interpolated into the strings directly.
-        MainObjective = new Text("Carry the Matter Wave Projector to the portal, traverse to the alpha dimension, and execute the override command on the alpha terminal");
-        FindLocationInfo = new Text("Reach the portal and warp to the alpha dimension");
-        FindLocationInfoHelp = new Text("Locate the alpha terminal in the alpha dimension");
-        GoToZone = new Text("Insert the Matter Wave Projector into the portal");
-        InZoneFindItem = new Text("Locate the alpha terminal in the alpha dimension");
-        SolveItem = new Text("Execute the backdoor command on the alpha terminal to start the data transfer");
+        MainObjective = new Text($"Locate terminal in {AlphaTerminal_DimensionName} and begin transfer " +
+                                 $"of data cube coordinates");
+
+        FindLocationInfo = new Text(() => $"Transport {Intel.ObjectiveItem("Matter Wave Projector")} to " +
+                                          $"Jump Gate in {Intel.Zone(layout.ZoneAliasStart + PlacementNodes.First().ZoneNumber)}");
+        FindLocationInfoHelp = new Text("Access more data in the terminal maintenance system");
+
+        // MainObjective = new Text(() => $"Bring the {Intel.ObjectiveItem("Matter Wave Projector")} " +
+        //                                $"to the portal, traverse to the alpha dimension, and execute " +
+        //                                $"the override command on [TERMINAL_1_0_0_0]");
 
         StartPuzzle = ChainedPuzzle.TeamScan;
 
-        // Tier-scaled wave + data-transfer duration. The duration governs the
-        // total length of the command's event chain (mid-progress pings,
-        // alarm-off, dim-clear, warp-back, force-complete).
+        var wavePopulation = AlphaTerminal_DimensionName switch
+        {
+            "Alpha One" => WavePopulation.AlphaSwarm,
+
+            _ => WavePopulation.Baseline
+        };
         var (waveSettings, transferDuration) = level.Tier switch
         {
-            "A" => (WaveSettings.Error_Easy,     90.0),
-            "B" => (WaveSettings.Error_Easy,     120.0),
-            "C" => (WaveSettings.Error_Normal,   150.0),
-            "D" => (WaveSettings.Error_Hard,     180.0),
-            "E" => (WaveSettings.Error_VeryHard, 210.0),
-            _   => (WaveSettings.Error_Normal,   120.0),
-        };
+            "A" => (WaveSettings.Baseline_Easy,     90.0),
+            "B" => (WaveSettings.Baseline_Normal,   120.0),
+            "C" => (WaveSettings.Baseline_Hard,     150.0),
+            "D" => (WaveSettings.Baseline_Hard,     180.0),
+            "E" => (WaveSettings.Baseline_VeryHard, 210.0),
 
-        // Pick the backdoor command name + description.
-        var (commandName, commandDescText) = Generator.Pick(new List<(string, string)>
-        {
-            ("OVERRIDE_INITIALIZATION",   "Initialize alpha-dimension data transfer override."),
-            ("EXEC_OVERRIDE",             "Execute Warden override and begin transfer protocol."),
-            ("INTERPRET_NAV_DATA",        "Interpret recovered navigational data block."),
-            ("COPY_GEN_INDEX_COMPLETE_DB", "Copy complete genome-index database to host."),
-        })!;
+            _   => (WaveSettings.Baseline_Normal,   120.0)
+        };
 
         // Build the event chain that fires when the player runs the command.
         // No Countdown UI -- AWO's Countdown event has no game-side equivalent
@@ -99,17 +130,21 @@ public partial record WardenObjective
             SoundId = Sound.Enemies_DistantLowRoar,
             EnemyWaveData = new GenericWave
             {
-                Population = WavePopulation.AlphaSwarm,
+                Population = wavePopulation,
                 Settings = waveSettings,
                 TriggerAlarm = true,
             },
         });
 
-        // Mid-progress flavor pings. These are pure cosmetic feedback since
-        // there's no HUD timer.
-        commandEvents.AddMessage(":://TRANSFER 25%", delay: transferDuration * 0.25);
-        commandEvents.AddMessage(":://TRANSFER 50%", delay: transferDuration * 0.50);
-        commandEvents.AddMessage(":://TRANSFER 75%", delay: transferDuration * 0.75);
+        commandEvents.AddCountup(100, new WardenObjectiveEventCountup
+        {
+            StartValue = 0.0,
+            Speed = 10.0,
+            Title = new Text("Data transfer progress"),
+            BodyText = "[COUNTUP]%",
+            TimerColor = "orange",
+            DecimalPoints = 1,
+        }, delay: 0.5);
 
         // Transfer complete: stop alarms, clear Dim1, warp the team back to
         // Reality, message, then force-complete the objective.
@@ -127,13 +162,7 @@ public partial record WardenObjective
             Delay = transferDuration + 3.0,
         });
 
-        // Resolve the dimension geomorph so we can pick a candidate terminal
-        // position on it. The dimension itself is registered earlier (in
-        // BuildLayout_AlphaTerminalCommand).
-        var dim = level.DimensionDatas.Find(d => d.Dimension == DimensionIndex.Dimension1)!;
-        var dimensionData = dim.Data.Data;
-
-        var candidates = LevelCustomTerminals.GetCandidates(dimensionData.DimensionGeomorph);
+        var candidates = LevelCustomTerminals.GetCandidates(AlphaTerminal_Dimension.DimensionGeomorph);
         var (terminalPos, terminalRot) = Generator.Pick(candidates);
 
         // Spawn the alpha terminal in Dim1 with the backdoor command attached.
@@ -147,15 +176,15 @@ public partial record WardenObjective
                 Bulkhead = director.Bulkhead,
                 DimensionIndex = DimensionIndex.Dimension1,
                 LocalIndex = 0,
-                GeomorphName = dimensionData.DimensionGeomorph,
+                GeomorphName = AlphaTerminal_Dimension.DimensionGeomorph,
                 LocalPosition = terminalPos,
                 LocalRotation = terminalRot,
                 UniqueCommands = new List<CustomTerminalCommand>
                 {
                     new()
                     {
-                        Command = commandName,
-                        CommandDesc = new Text(commandDescText),
+                        Command = AlphaTerminalCommand,
+                        CommandDesc = AlphaTerminalCommandDesc,
                         SpecialCommandRule = CommandRule.Normal,
                         CommandEvents = commandEvents,
                     },

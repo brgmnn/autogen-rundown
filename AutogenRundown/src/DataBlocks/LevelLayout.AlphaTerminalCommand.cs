@@ -121,36 +121,35 @@ public partial record LevelLayout
                     (0.25, () =>
                     {
                         var prelude = AddBranch_Forward(challengeRoot, 2).Last();
-                        // var (locked, _) = BuildChallenge_KeycardInSide(prelude);
-                        // beforePortal = locked;
-                        beforePortal = prelude;
+                        var (locked, _) = BuildChallenge_KeycardInSide(prelude);
+                        beforePortal = locked;
                     }),
 
-                    // // 1 prelude zone, then generator locked
-                    // (0.25, () =>
-                    // {
-                    //     var prelude = AddBranch_Forward(start, 1).Last();
-                    //     var (locked, _) = BuildChallenge_GeneratorCellInSide(prelude);
-                    //     beforePortal = locked;
-                    // }),
-                    //
-                    // // Apex alarm into the portal hub
-                    // (0.25, () =>
-                    // {
-                    //     var population = level.Settings.HasFlyers()
-                    //         ? WavePopulation.Baseline_Flyers
-                    //         : WavePopulation.Baseline;
-                    //     var (locked, _) = BuildChallenge_ApexAlarm(start, population, WaveSettings.Baseline_Normal);
-                    //     beforePortal = locked;
-                    // }),
-                    //
-                    // // Travel scan + keycard
-                    // (0.25, () =>
-                    // {
-                    //     var (mid, _) = AddTravelScanAlarm(start);
-                    //     var (locked, _) = BuildChallenge_KeycardInSide(mid);
-                    //     beforePortal = locked;
-                    // }),
+                    // 1 prelude zone, then generator locked
+                    (0.25, () =>
+                    {
+                        var prelude = AddBranch_Forward(start, 1).Last();
+                        var (locked, _) = BuildChallenge_GeneratorCellInSide(prelude);
+                        beforePortal = locked;
+                    }),
+
+                    // Apex alarm into the portal hub
+                    (0.25, () =>
+                    {
+                        var population = level.Settings.HasFlyers()
+                            ? WavePopulation.Baseline_Flyers
+                            : WavePopulation.Baseline;
+                        var (locked, _) = BuildChallenge_ApexAlarm(start, population, WaveSettings.Baseline_Normal);
+                        beforePortal = locked;
+                    }),
+
+                    // Travel scan + keycard
+                    (0.25, () =>
+                    {
+                        var (mid, _) = AddTravelScanAlarm(start);
+                        var (locked, _) = BuildChallenge_KeycardInSide(mid);
+                        beforePortal = locked;
+                    }),
                 });
                 break;
             }
@@ -217,22 +216,27 @@ public partial record LevelLayout
         // The portal zone itself — Tech variant is a dead end (no further
         // outgoing connections), Mining has a forward expander.
         var (portal, portalZone) = AddZone_Forward(beforePortal);
-        portal = level.GenPortalGeomorph(portal, maxConnections: level.Complex == Complex.Mining ? 1 : 0);
+        portal = level.GenPortalGeomorph(portal);
 
-        // portalZone.EventsOnPortalWarp.AddTurnOffAlarms(1.0);
-        portalZone.EventsOnPortalWarp.AddMessage("activated now", 5.0);
+        objective.PlacementNodes.Add(portal);
 
-        // Choose the static alpha dimension.
-        var dimensionData = Generator.Pick(new List<Dimensions.DimensionData>
-        {
-            Dimensions.DimensionData.AlphaOne,
-            Dimensions.DimensionData.AlphaThree_Top,
-        })!;
+        portalZone.EventsOnOpenDoor.AddUpdateSubObjective(
+            header: new Text($"Insert the {Intel.ObjectiveItem("Matter Wave Projector")} into the portal"),
+            intel: "Insert the Matter Wave Projector",
+            delay: 3.0);
+
+        portalZone.EventsOnPortalWarp
+            .AddTurnOffAlarms(5.5)
+            .AddUpdateSubObjective(
+                header: new Text("Find [TERMINAL_1_0_0_0] and start data transfer"),
+                description: new Text($"Search for the terminal and enter {objective.AlphaTerminalCommand} to initiate the transfer"),
+                intel: "Find the terminal",
+                delay: 7.0);
 
         level.DimensionDatas.Add(new Levels.DimensionData
         {
             Dimension = DimensionIndex.Dimension1,
-            Data = new Dimension { Data = dimensionData }.FindOrPersist(),
+            Data = new Dimension { Data = objective.AlphaTerminal_Dimension }.FindOrPersist(),
         });
     }
 }
