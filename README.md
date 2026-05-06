@@ -53,11 +53,7 @@ TODO:
   * See if we can fix enemies not navigating through the final door in D3
 
   * Seems that Valiant objectives fail a lot
-
-  * Distribute power cells is _really_ short on main only missions now
-
-
-  * Fix the cycling of security scans having global sound! Really annoying right now
+  
   * Tone down higher density of scans, especially for moving ones
 
   * Add a version of travel scan where lights go out but only lights by the scan are lit up
@@ -67,8 +63,13 @@ TODO:
 
 TODO for 1.0
   New Objectives!
-    * Alpha / static dimension objective with portal / matter wave projector / something big in the dimension
-    * Cryptomnesia objective main, recreate R6D4
+    [ ] Alpha / static dimension objective with portal / matter wave projector / something big in the dimension
+    [x] Cryptomnesia objective main, recreate R6D4
+  [ ] Distribute power cells is _really_ short on main only missions now
+  [ ] Fix the cycling of security scans having global sound! Really annoying right now
+
+TODO post 1.0
+  * See about adding terminal decorations to terminal spawn manager
 
 NOTE
   * Cryptomnesia - GatherSmallItems only 1 objective in 42 uses the dimensions for cryptomensia for it
