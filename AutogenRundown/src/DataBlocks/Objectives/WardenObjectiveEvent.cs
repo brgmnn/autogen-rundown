@@ -29,6 +29,28 @@ public record WardenObjectiveEventCountdown
     public List<WardenObjectiveEvent> EventsOnDone { get; set; } = new();
 }
 
+public record WardenObjectiveEventCountup
+{
+    public double StartValue { get; set; } = 0.0;
+
+    public double Speed { get; set; } = 1.0;
+
+    public uint TitleText => Title.PersistentId;
+
+    [JsonIgnore]
+    public Text Title { get; set; } = Text.None;
+
+    public string BodyText { get; set; } = "[COUNTUP]";
+
+    public string TimerColor { get; set; } = "red";
+
+    public int DecimalPoints { get; set; } = 0;
+
+    public List<ProgressEvent> EventsOnProgress { get; set; } = new();
+
+    public List<WardenObjectiveEvent> EventsOnDone { get; set; } = new();
+}
+
 public record WardenObjectiveEventCustomHudText
 {
     public string Title { get; set; } = "";
@@ -173,7 +195,7 @@ public record WardenObjectiveEvent
     ///
     /// </summary>
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-    public string? SpecialText { get; set; } = null;
+    public string? SpecialText { get; set; }
 
     /// <summary>
     /// Used in conjunction with EventType.SetLightDataInZone (10016) to update the lights in a
@@ -195,7 +217,7 @@ public record WardenObjectiveEvent
     /// ```
     /// </summary>
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-    public SetZoneLight SetZoneLight { get; set; } = new();
+    public SetZoneLight? SetZoneLight { get; set; }
 
     /// <summary>
     ///
@@ -213,13 +235,19 @@ public record WardenObjectiveEvent
     ///
     /// </summary>
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-    public WardenObjectiveEventCountdown Countdown { get; set; } = new();
+    public WardenObjectiveEventCountdown? Countdown { get; set; }
 
     /// <summary>
     ///
     /// </summary>
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-    public WardenObjectiveEventCustomHudText CustomHudText { get; set; }
+    public WardenObjectiveEventCountup? Countup { get; set; }
+
+    /// <summary>
+    ///
+    /// </summary>
+    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    public WardenObjectiveEventCustomHudText? CustomHudText { get; set; }
 
     #endregion
 }
