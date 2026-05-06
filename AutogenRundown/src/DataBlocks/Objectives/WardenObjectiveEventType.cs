@@ -86,6 +86,7 @@ public enum WardenObjectiveEventType : uint
     LockSecurityDoor = 10001,
     ForceCompleteLevel = 10008,
     Countdown = 10010,
+    Countup = 20008,
     SetLightDataInZone = 10016,
     AlertEnemiesInZone = 10017,
 

@@ -1023,6 +1023,24 @@ public static class WardenObjectiveEventCollections
         return events;
     }
 
+    public static ICollection<WardenObjectiveEvent> AddCountup(
+        this ICollection<WardenObjectiveEvent> events,
+        double duration,
+        WardenObjectiveEventCountup countup,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.Countup,
+                Delay = delay,
+                Duration = duration,
+                Countup = countup
+            });
+
+        return events;
+    }
+
     #endregion
 
     #region Dimensions

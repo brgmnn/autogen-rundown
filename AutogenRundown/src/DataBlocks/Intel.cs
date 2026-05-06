@@ -81,6 +81,9 @@ public class Intel
         return $"[TERMINAL_0_{layer}_{node.ZoneNumber}_{terminalIndex}]";
     }
 
+    public static string ObjectiveItem(string objective)
+        => $"<u>{objective}</u>";
+
     public static string ZoneRaw(int number, bool underscore = false)
         => $"ZONE{(underscore ? "_" : " ")}{number}";
 

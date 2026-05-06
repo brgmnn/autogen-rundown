@@ -1,3 +1,4 @@
+using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundown.DataBlocks;
@@ -178,8 +179,10 @@ public partial class Level
     /// Portal tile. Tech variant is a dead end so the default is 0 outgoing connections —
     /// callers using Mining (which has a forward expander) should pass 1.
     /// </summary>
-    public ZoneNode GenPortalGeomorph(ZoneNode node, int maxConnections = 0)
+    public ZoneNode GenPortalGeomorph(ZoneNode node)
     {
+        var maxConnections = Complex == Complex.Mining ? 1 : 0;
+
         var zone = Planner.GetZone(node)!;
         zone.GenPortalGeomorph();
 

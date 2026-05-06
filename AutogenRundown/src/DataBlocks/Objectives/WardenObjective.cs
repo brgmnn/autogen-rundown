@@ -1544,6 +1544,28 @@ public partial record WardenObjective : DataBlock<WardenObjective>
 
     #endregion
 
+    #region Type=23: -CUSTOM- AlphaTerminalCommand
+
+    [JsonIgnore]
+    public Dimensions.DimensionData? AlphaTerminal_Dimension { get; set; } = null;
+
+    [JsonIgnore]
+    public string AlphaTerminal_DimensionName { get; set; } = "";
+
+    /// <summary>
+    /// The Special terminal command players have to enter
+    /// </summary>
+    [JsonIgnore]
+    public string AlphaTerminalCommand { get; set; } = "";
+
+    /// <summary>
+    /// Description displayed in the terminal COMMANDs listing
+    /// </summary>
+    [JsonIgnore]
+    public Text AlphaTerminalCommandDesc { get; set; } = Text.None;
+
+    #endregion
+
     #region Expedition exit
     /// <summary>
     /// What exit scan to use at the exit
