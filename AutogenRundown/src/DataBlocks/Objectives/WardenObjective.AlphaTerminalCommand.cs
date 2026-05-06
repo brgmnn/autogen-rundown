@@ -46,6 +46,9 @@ public partial record WardenObjective
         if (level.Complex == Complex.Service)
             level.Complex = Generator.Flip() ? Complex.Mining : Complex.Tech;
 
+        // Team drops in already carrying the MWP
+        GenericItemFromStart = Items.Item.MatterWaveProjector;
+
         // Choose the static alpha dimension.
         // TODO: add AlphaTwo (supports fliers)
         AlphaTerminal_Dimension = Generator.Pick(new List<Dimensions.DimensionData>
@@ -113,11 +116,14 @@ public partial record WardenObjective
 
         var commandEvents = new List<WardenObjectiveEvent>();
         var eventsOnDone = new List<WardenObjectiveEvent>();
+        var eventsOnProgress = new List<ProgressEvent>();
+
+        #region Command Events
 
         commandEvents
             .AddScan(ChainedPuzzle.TeamScan)
             .AddUpdateSubObjective(
-                description: new Text("Translocation tether resolving. Wait."),
+                header: new Text("Translocation tether resolving. Wait."),
                 intel: "Translocation tether resolving",
                 delay: 1.0);
 
@@ -138,43 +144,63 @@ public partial record WardenObjective
             },
         });
 
-        // Transfer complete cleanup -- delays are relative to bar completion,
-        // not absolute. AWO's SpecialHudTimerEvent fires EventsOnDone once the
-        // bar reaches full, so the chain runs after the player has watched it
-        // hit 100%.
-        eventsOnDone.AddTurnOffAlarms();
-        eventsOnDone.AddClearDimension(DimensionIndex.Dimension1, delay: 0.5);
-        eventsOnDone.AddDimensionWarp(DimensionIndex.Reality, delay: 1.5);
-        eventsOnDone.AddMessage(":://TRANSFER COMPLETE — RETURN TO EXTRACTION", delay: 2.5);
+        #endregion
 
-        // ForceCompleteObjective is what tells the game the objective is solved
-        // and the team should head to extract. With Type=Empty there's no
-        // OnActivateOnSolveItem flow to flip the win condition automatically.
+        #region Progress events
+
+        // TODO: add variety of fun enemy combinations to spawn here.
+        // Ideas:
+        //      * Many hybrids
+        //      * Many infested strikers
+        //
+        // Absolutely keep the immortal boss here because he's in a controlled environment where
+        // he will be removed once players are teleported out
+        eventsOnProgress.Add(new ProgressEvent
+        {
+            Progress = (transferDuration - 20.0) / transferDuration, // TODO: spawned after the scan was done?
+            Events = new List<WardenObjectiveEvent>()
+                .AddGenericWave(
+                    new GenericWave
+                    {
+                        Population = WavePopulation.SingleEnemy_Immortal,
+                        Settings = WaveSettings.SingleWave_MiniBoss_4pts
+                    }).ToList()
+        });
+
+        #endregion
+
+        #region Done events
+
+        eventsOnDone
+            .AddUpdateSubObjective(
+                header: new Text("Transfer complete"),
+                delay: 0.7)
+            .AddDimensionWarp(DimensionIndex.Reality, delay: 1.5)
+            .AddTurnOffAlarms(2.0)
+            .AddClearDimension(DimensionIndex.Dimension1, delay: 5.0);
+
         eventsOnDone.Add(new WardenObjectiveEvent
         {
             Type = WardenObjectiveEventType.ForceCompleteObjective,
             Delay = 3.0,
         });
 
-        // Drives a horizontal fill bar at the top of the HUD via the same UI
-        // primitive bioscans and reactor waves use. [PERCENT] and [TIMER] are
-        // substituted live as the bar fills.
+        #endregion
+
+        // Drives a horizontal fill bar at the top of the HUD
         commandEvents.AddSpecialHudTimer(transferDuration, new WardenObjectiveEventSpecialHudTimer
         {
             Type = SpecialHudTimerType.StartTimer,
-            Message = "<size=30>Data transfer progress\n<color=orange>[PERCENT] — [TIMER]</color></size>",
-            Style = PUIMessageStyle.Bioscan,
+            Message = "Data transfer progress - <color=white>[PERCENT]</color>",
+            Style = PUIMessageStyle.Message,
             ShowTimeInProgressBar = true,
+            EventsOnProgress = eventsOnProgress,
             EventsOnDone = eventsOnDone,
-        }, delay: 3.0);
+        }, delay: 1.5);
 
         var candidates = LevelCustomTerminals.GetCandidates(AlphaTerminal_Dimension.DimensionGeomorph);
         var (terminalPos, terminalRot) = Generator.Pick(candidates);
 
-        // Spawn the alpha terminal in Dim1 with the backdoor command attached.
-        // CommandEvents above is what fires when the player runs the command.
-        // No IsWardenObjective flag -- we are NOT routing through the
-        // SpecialTerminalCommand objective machinery.
         CustomTerminalSpawnManager.AddSpawnRequest(
             level.LevelLayoutData,
             new CustomTerminalSpawnRequest
@@ -197,18 +223,9 @@ public partial record WardenObjective
                 },
             });
 
-        // Team drops in already carrying the MWP -- no in-level pickup needed.
-        GenericItemFromStart = Items.Item.MatterWaveProjector;
-
         AddCompletedObjectiveChallenge(level, director);
 
-        // // Extract scan at the elevator/forward-extract point. The default
-        // // win condition (GoToElevator) takes the team back to extract once
-        // // ForceCompleteObjective fires from the command chain.
-        // ChainedPuzzleAtExit = ChainedPuzzle.ExitAlarm.PersistentId;
-
-        // Type stays Empty -- the entire flow is driven by the CommandEvents
-        // above, not by any objective-type machinery.
+        // Type stays Empty - the entire flow is driven by the CommandEvents
         Type = WardenObjectiveType.Empty;
     }
 }

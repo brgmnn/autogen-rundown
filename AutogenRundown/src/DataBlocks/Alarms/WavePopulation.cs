@@ -183,6 +183,7 @@ public record WavePopulation : DataBlock<WavePopulation>
         Bins.WavePopulations.AddBlock(SingleEnemy_PMother);
         Bins.WavePopulations.AddBlock(SingleEnemy_Tank);
         Bins.WavePopulations.AddBlock(SingleEnemy_TankPotato);
+        Bins.WavePopulations.AddBlock(SingleEnemy_Immortal);
         Bins.WavePopulations.AddBlock(SingleEnemy_Pouncer);
         Bins.WavePopulations.AddBlock(SingleEnemy_PouncerShadow);
     }
@@ -446,6 +447,7 @@ public record WavePopulation : DataBlock<WavePopulation>
 
     public static WavePopulation SingleEnemy_Tank =       new() { WaveRoleMiniBoss = Enemy.Tank,       Name = "SingleEnemy_Tank" };
     public static WavePopulation SingleEnemy_TankPotato = new() { WaveRoleMiniBoss = Enemy.TankPotato, Name = "SingleEnemy_TankPotato" };
+    public static WavePopulation SingleEnemy_Immortal =   new() { WaveRoleMiniBoss = Enemy.TankBoss,   Name = "SingleEnemy_TankImmortal" };
 
     public static WavePopulation SingleEnemy_Pouncer =       new() { WaveRoleMiniBoss = Enemy.Pouncer, Name = "SingleEnemy_Pouncer" };
     public static WavePopulation SingleEnemy_PouncerShadow = new()
