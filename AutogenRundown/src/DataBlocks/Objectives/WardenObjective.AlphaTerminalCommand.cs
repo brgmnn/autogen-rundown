@@ -91,15 +91,9 @@ public partial record WardenObjective
                                           $"Jump Gate in {Intel.Zone(layout.ZoneAliasStart + PlacementNodes.First().ZoneNumber)}");
         FindLocationInfoHelp = new Text("Access more data in the terminal maintenance system");
 
-        // MainObjective = new Text(() => $"Bring the {Intel.ObjectiveItem("Matter Wave Projector")} " +
-        //                                $"to the portal, traverse to the alpha dimension, and execute " +
-        //                                $"the override command on [TERMINAL_1_0_0_0]");
-
-        StartPuzzle = ChainedPuzzle.TeamScan;
-
         var wavePopulation = AlphaTerminal_DimensionName switch
         {
-            "Alpha One" => WavePopulation.AlphaSwarm,
+            // "Alpha One" => WavePopulation.AlphaSwarm,
 
             _ => WavePopulation.Baseline
         };
@@ -123,7 +117,8 @@ public partial record WardenObjective
         commandEvents
             .AddScan(ChainedPuzzle.TeamScan)
             .AddUpdateSubObjective(
-                header: new Text("Translocation tether resolving. Wait."),
+                header: new Text("Translocation tether resolving"),
+                description: new Text("Wait for translocation to complete"),
                 intel: "Translocation tether resolving",
                 delay: 1.0);
 
@@ -155,16 +150,25 @@ public partial record WardenObjective
         //
         // Absolutely keep the immortal boss here because he's in a controlled environment where
         // he will be removed once players are teleported out
-        eventsOnProgress.Add(new ProgressEvent
+
+        Generator.SelectRun(new List<(double, Action)>
         {
-            Progress = (transferDuration - 20.0) / transferDuration, // TODO: spawned after the scan was done?
-            Events = new List<WardenObjectiveEvent>()
-                .AddGenericWave(
-                    new GenericWave
-                    {
-                        Population = WavePopulation.SingleEnemy_Immortal,
-                        Settings = WaveSettings.SingleWave_MiniBoss_4pts
-                    }).ToList()
+            // Immortal spawn (Pablo)
+            (0.40, () =>
+            {
+                eventsOnProgress.Add(new ProgressEvent
+                {
+                    Progress = (transferDuration - 30.0) / transferDuration,
+                    Events = new List<WardenObjectiveEvent>()
+                        .AddGenericWave(
+                            new GenericWave
+                            {
+                                Population = WavePopulation.SingleEnemy_Immortal,
+                                Settings = WaveSettings.SingleWave_MiniBoss_4pts
+                            },
+                            delay: 0).ToList()
+                });
+            }),
         });
 
         #endregion

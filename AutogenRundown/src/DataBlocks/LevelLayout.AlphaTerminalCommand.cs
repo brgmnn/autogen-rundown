@@ -7,6 +7,7 @@ using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Extensions;
 using AutogenRundown.Patches.CustomTerminals;
+using AutogenRundown.Utils;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -215,7 +216,10 @@ public partial record LevelLayout
 
         // The portal zone itself — Tech variant is a dead end (no further
         // outgoing connections), Mining has a forward expander.
-        var (portal, portalZone) = AddZone_Forward(beforePortal);
+        var (portal, portalZone) = AddZone_Forward(beforePortal, new ZoneNode
+        {
+            Tags = new Tags("no_enemies")
+        });
         portal = level.GenPortalGeomorph(portal);
 
         objective.PlacementNodes.Add(portal);

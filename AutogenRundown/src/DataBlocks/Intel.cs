@@ -82,7 +82,7 @@ public class Intel
     }
 
     public static string ObjectiveItem(string objective)
-        => $"<u>{objective}</u>";
+        => $"<color=orange>{objective}</color>";
 
     public static string ZoneRaw(int number, bool underscore = false)
         => $"ZONE{(underscore ? "_" : " ")}{number}";
