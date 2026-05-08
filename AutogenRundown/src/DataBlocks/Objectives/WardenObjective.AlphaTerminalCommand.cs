@@ -120,7 +120,7 @@ public partial record WardenObjective
                 header: new Text("Translocation tether resolving"),
                 description: new Text("Wait for translocation to complete"),
                 intel: "Translocation tether resolving",
-                delay: 1.0);
+                delay: 3.0);
 
         // The error wave needs to spawn IN the alpha dimension. The
         // AddSpawnWave helper doesn't take a Dimension parameter, so build
