@@ -73,6 +73,8 @@ public partial record WardenObjective
             _ => ""
         };
         AlphaTerminal_DimensionName = $"<color=orange>{AlphaTerminal_DimensionName}</color>";
+
+        level.Name = AlphaTerminal_DimensionName;
     }
 
     /// <summary>
@@ -116,6 +118,16 @@ public partial record WardenObjective
 
         commandEvents
             .AddScan(ChainedPuzzle.TeamScan)
+            .AddSpecialHudTimer(transferDuration, new WardenObjectiveEventSpecialHudTimer
+                {
+                    Type = SpecialHudTimerType.StartTimer,
+                    Message = "Data transfer progress - <color=white>[PERCENT]</color>",
+                    Style = PUIMessageStyle.Message,
+                    ShowTimeInProgressBar = true,
+                    EventsOnProgress = eventsOnProgress,
+                    EventsOnDone = eventsOnDone,
+                },
+                delay: 1.5)
             .AddUpdateSubObjective(
                 header: new Text("Translocation tether resolving"),
                 description: new Text("Wait for translocation to complete"),
@@ -150,7 +162,7 @@ public partial record WardenObjective
         {
             eventsOnProgress.Add(new ProgressEvent
             {
-                Progress = (transferDuration - 30.0) / transferDuration,
+                Progress = (transferDuration - 50.0) / transferDuration,
                 Events = new List<WardenObjectiveEvent>()
                     .AddGenericWave(
                         new GenericWave
@@ -209,16 +221,6 @@ public partial record WardenObjective
 
         #endregion
 
-        // Drives a horizontal fill bar at the top of the HUD
-        commandEvents.AddSpecialHudTimer(transferDuration, new WardenObjectiveEventSpecialHudTimer
-        {
-            Type = SpecialHudTimerType.StartTimer,
-            Message = "Data transfer progress - <color=white>[PERCENT]</color>",
-            Style = PUIMessageStyle.Message,
-            ShowTimeInProgressBar = true,
-            EventsOnProgress = eventsOnProgress,
-            EventsOnDone = eventsOnDone,
-        }, delay: 1.5);
 
         var candidates = LevelCustomTerminals.GetCandidates(AlphaTerminal_Dimension.DimensionGeomorph);
         var (terminalPos, terminalRot) = Generator.Pick(candidates);
