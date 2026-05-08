@@ -13,6 +13,7 @@ namespace AutogenRundown.Patches.ZoneSensors;
 /// Event types the mod intercepts in the 400-series warden-event range.
 /// 400-404: Sensor toggle variants (see ZoneSensorManager).
 /// 405:     Generic — play a Wwise sound at the center of a target zone.
+/// 406:     Disable + drop pending Enable toggles for the same id.
 /// </summary>
 public static class ZoneSensorEventTypes
 {
@@ -22,6 +23,7 @@ public static class ZoneSensorEventTypes
     public const int Disable = 403;
     public const int Enable = 404;
     public const int PlayZoneSound = 405;
+    public const int DisableCancelPending = 406;
 }
 
 /// <summary>
@@ -52,7 +54,8 @@ public static class Patch_ZoneSensorToggle
             eventType != ZoneSensorEventTypes.ToggleResetTriggered &&
             eventType != ZoneSensorEventTypes.Disable &&
             eventType != ZoneSensorEventTypes.Enable &&
-            eventType != ZoneSensorEventTypes.PlayZoneSound)
+            eventType != ZoneSensorEventTypes.PlayZoneSound &&
+            eventType != ZoneSensorEventTypes.DisableCancelPending)
             return true;
 
         // Handle trigger check (same as vanilla)
@@ -93,11 +96,18 @@ public static class Patch_ZoneSensorToggle
         bool enabled;
         bool preserveTriggered;
         var resetTriggered = false;
+        var cancelPendingEnable = false;
 
         if (eventType == ZoneSensorEventTypes.Disable)
         {
             enabled = false;
             preserveTriggered = false;  // N/A when disabling
+        }
+        else if (eventType == ZoneSensorEventTypes.DisableCancelPending)
+        {
+            enabled = false;
+            preserveTriggered = false;
+            cancelPendingEnable = true;
         }
         else if (eventType == ZoneSensorEventTypes.Enable)
         {
@@ -119,7 +129,7 @@ public static class Patch_ZoneSensorToggle
         if (eventToTrigger.Count > 0)
         {
             // ID targeting: Count IS the definition ID (direct targeting)
-            ZoneSensorToggleScheduler.Schedule(eventToTrigger.Count, enabled, delaySeconds, preserveTriggered, resetTriggered);
+            ZoneSensorToggleScheduler.Schedule(eventToTrigger.Count, enabled, delaySeconds, preserveTriggered, resetTriggered, cancelPendingEnable);
         }
         else
         {
@@ -135,7 +145,7 @@ public static class Patch_ZoneSensorToggle
             }
             foreach (var definitionId in definitionIds)
             {
-                ZoneSensorToggleScheduler.Schedule(definitionId, enabled, delaySeconds, preserveTriggered, resetTriggered);
+                ZoneSensorToggleScheduler.Schedule(definitionId, enabled, delaySeconds, preserveTriggered, resetTriggered, cancelPendingEnable);
             }
         }
 
@@ -166,7 +176,7 @@ public class ZoneSensorToggleScheduler : MonoBehaviour
         ClassInjector.RegisterTypeInIl2Cpp<ZoneSensorToggleScheduler>();
     }
 
-    public static void Schedule(int definitionId, bool enabled, float delaySeconds, bool preserveTriggered = false, bool resetTriggered = false)
+    public static void Schedule(int definitionId, bool enabled, float delaySeconds, bool preserveTriggered = false, bool resetTriggered = false, bool cancelPendingEnable = false)
     {
         EnsureInstance();
 
@@ -174,6 +184,15 @@ public class ZoneSensorToggleScheduler : MonoBehaviour
         {
             Plugin.Logger.LogError("ZoneSensorToggleScheduler: Failed to create instance");
             return;
+        }
+
+        // Opt-in: a Disable that should override an in-flight cycle re-enable drops any
+        // queued Enable for the same id before being added itself.
+        if (cancelPendingEnable)
+        {
+            var removed = instance.pendingToggles.RemoveAll(t => t.Id == definitionId && t.Enabled);
+            if (removed > 0)
+                Plugin.Logger.LogDebug($"ZoneSensor: Dropped {removed} pending Enable(s) for group {definitionId} on cancel-pending Disable");
         }
 
         instance.pendingToggles.Add(new PendingToggle

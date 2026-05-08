@@ -282,8 +282,10 @@ public partial record Zone : DataBlock<Zone>
             .AddZoneSound(Sound.LightsOn_Vol4, sensorDef, sensorStart)
             .AddMessage(":://WARNING - SECURITY SCAN SYSTEM CORRUPTED", sensorStart - 1);
 
-        // Disable sensors when alarm scan completes
-        EventsOnDoorScanDone.DisableZoneSensors(sensorDef.Id);
+        // Disable sensors when alarm scan completes. cancelPendingEnable defeats any
+        // in-flight cycle re-enable from a sensor trigger that's still pending — without
+        // it, sensors get stuck on if the alarm finishes before resetTime elapses.
+        EventsOnDoorScanDone.DisableZoneSensors(sensorDef.Id, cancelPendingEnable: true);
 
         Plugin.Logger.LogDebug($"{Name} -- Alarm Security Sensors: zone={LocalIndex}, density={density}, " +
                                $"moving={false}, triggerEach={resetTime < 1.0}, id={sensorDef.Id}");

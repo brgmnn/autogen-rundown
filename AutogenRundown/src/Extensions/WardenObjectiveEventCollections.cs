@@ -659,15 +659,23 @@ public static class WardenObjectiveEventCollections
     /// <summary>
     /// Disable a sensor by ID.
     /// </summary>
+    /// <param name="cancelPendingEnable">
+    /// When true, any queued Enable toggle for the same sensor id is dropped before this
+    /// Disable runs. Use for alarm-end / out-of-band hooks that must defeat an in-flight
+    /// cycle re-enable. Default false preserves existing scheduler behavior.
+    /// </param>
     public static ICollection<WardenObjectiveEvent> DisableZoneSensors(
         this ICollection<WardenObjectiveEvent> events,
         int sensorId,
-        double delay = 0.0)
+        double delay = 0.0,
+        bool cancelPendingEnable = false)
     {
         events.Add(
             new WardenObjectiveEvent
             {
-                Type = WardenObjectiveEventType.DisableSecuritySensor,
+                Type = cancelPendingEnable
+                    ? WardenObjectiveEventType.DisableSecuritySensorCancelPending
+                    : WardenObjectiveEventType.DisableSecuritySensor,
                 Count = sensorId,
                 Delay = delay
             });
