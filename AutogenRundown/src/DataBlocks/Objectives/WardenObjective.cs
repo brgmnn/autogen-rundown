@@ -1106,6 +1106,10 @@ public partial record WardenObjective : DataBlock<WardenObjective>
             case WardenObjectiveType.ReachKdsDeep:
                 PostBuildIntel_ReachKdsDeep(level);
                 break;
+
+            case WardenObjectiveType.AlphaTerminalCommand:
+                PostBuildIntel_AlphaTerminalCommand(level);
+                break;
         }
     }
 
