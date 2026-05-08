@@ -143,33 +143,51 @@ public partial record WardenObjective
 
         #region Progress events
 
-        // TODO: add variety of fun enemy combinations to spawn here.
-        // Ideas:
-        //      * Many hybrids
-        //      * Many infested strikers
-        //
-        // Absolutely keep the immortal boss here because he's in a controlled environment where
-        // he will be removed once players are teleported out
+        // Scary one-shot waves are safe here: the dimension is cleared on teleport,
+        // so anything spawned in the alpha dimension is removed when the team warps out.
 
-        Generator.SelectRun(new List<(double, Action)>
+        void SpawnVariant(WavePopulation population, WaveSettings settings)
         {
-            // Immortal spawn (Pablo)
-            (0.40, () =>
+            eventsOnProgress.Add(new ProgressEvent
             {
-                eventsOnProgress.Add(new ProgressEvent
-                {
-                    Progress = (transferDuration - 30.0) / transferDuration,
-                    Events = new List<WardenObjectiveEvent>()
-                        .AddGenericWave(
-                            new GenericWave
-                            {
-                                Population = WavePopulation.SingleEnemy_Immortal,
-                                Settings = WaveSettings.SingleWave_MiniBoss_4pts
-                            },
-                            delay: 0).ToList()
-                });
-            }),
-        });
+                Progress = (transferDuration - 30.0) / transferDuration,
+                Events = new List<WardenObjectiveEvent>()
+                    .AddGenericWave(
+                        new GenericWave
+                        {
+                            Population = population,
+                            Settings = settings
+                        },
+                        delay: 0).ToList()
+            });
+        }
+
+        var spawnVariants = level.Tier switch
+        {
+            "D" or "E" => new List<(double, Action)>
+            {
+                // Pablo (immortal Tank Boss)
+                (0.25, () => SpawnVariant(WavePopulation.SingleEnemy_Immortal,    WaveSettings.SingleWave_MiniBoss_4pts)),
+                // Hybrid Volley — ranged projectile pressure forces cover
+                (0.15, () => SpawnVariant(WavePopulation.OnlyHybrids,             WaveSettings.SingleWave_20pts)),
+                // Infested Bloom — killing them spawns babies + persistent fog
+                (0.20, () => SpawnVariant(WavePopulation.OnlyInfestedStrikers,    WaveSettings.SingleWave_20pts)),
+                // Nightmare Tanks — 2x Potato Tanks
+                (0.20, () => SpawnVariant(WavePopulation.SingleEnemy_TankPotato,  WaveSettings.SingleWave_MiniBoss_4pts)),
+                // Mother's Brood — stationary spawners with chasing children
+                (0.20, () => SpawnVariant(WavePopulation.SingleEnemy_Mother,      WaveSettings.SingleWave_MiniBoss_4pts)),
+            },
+            _ => new List<(double, Action)>
+            {
+                (0.35, () => SpawnVariant(WavePopulation.SingleEnemy_Immortal,    WaveSettings.SingleWave_MiniBoss_4pts)),
+                (0.20, () => SpawnVariant(WavePopulation.OnlyHybrids,             WaveSettings.SingleWave_20pts)),
+                (0.15, () => SpawnVariant(WavePopulation.OnlyInfestedStrikers,    WaveSettings.SingleWave_20pts)),
+                (0.15, () => SpawnVariant(WavePopulation.SingleEnemy_TankPotato,  WaveSettings.SingleWave_MiniBoss_4pts)),
+                (0.15, () => SpawnVariant(WavePopulation.SingleEnemy_Mother,      WaveSettings.SingleWave_MiniBoss_4pts)),
+            }
+        };
+
+        Generator.SelectRun(spawnVariants);
 
         #endregion
 
