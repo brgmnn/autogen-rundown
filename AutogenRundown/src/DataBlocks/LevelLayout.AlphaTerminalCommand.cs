@@ -105,7 +105,8 @@ public partial record LevelLayout
 
                     (0.20, () =>
                     {
-                        var (mid, _) = AddTravelScanAlarm(challengeRoot);
+                        var hub = level.GenHubGeomorph(challengeRoot);
+                        var (mid, _) = AddTravelScanAlarm(hub);
                         beforePortal = AddBranch_Forward(mid, 1).Last();
                     }),
                 });

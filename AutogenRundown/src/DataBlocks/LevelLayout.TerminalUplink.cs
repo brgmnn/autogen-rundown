@@ -80,7 +80,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        var (end, _) = AddTravelScanAlarm(nodes.Last());
+                        var (end, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         AddUplinkTerminalZones(end, objective);
                     }),
                 });
@@ -208,7 +208,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
-                        var (end, _) = AddTravelScanAlarm(nodes.Last());
+                        var (end, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         AddUplinkTerminalZones(end, objective);
                     }),
 
@@ -264,7 +264,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        var (end, _) = AddTravelScanAlarm(nodes.Last());
+                        var (end, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         AddUplinkTerminalZones(end, objective);
                     }),
                 });

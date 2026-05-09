@@ -150,7 +150,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        (exit, exitZone) = AddTravelScanAlarm(nodes.Last());
+                        (exit, exitZone) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                     })
                 });
                 break;
@@ -223,7 +223,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        var (mid, _) = AddTravelScanAlarm(nodes.Last());
+                        var (mid, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         (exit, exitZone) = BuildChallenge_KeycardInSide(mid);
                     })
                 });
@@ -370,7 +370,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        var (mid, _) = AddTravelScanAlarm(nodes.Last());
+                        var (mid, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         (exit, exitZone) = BuildChallenge_BossFight(mid);
                     })
                 });
@@ -520,7 +520,7 @@ public partial record LevelLayout
                     (0.10, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        var (mid, _) = AddTravelScanAlarm(nodes.Last());
+                        var (mid, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         (exit, exitZone) = BuildChallenge_ApexAlarm(
                             mid,
                             WavePopulation.Baseline_Hybrids,

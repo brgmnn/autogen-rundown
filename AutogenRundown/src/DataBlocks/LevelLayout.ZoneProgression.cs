@@ -208,9 +208,15 @@ public partial record LevelLayout
     #region Travel Scan Alarms
 
     /// <summary>
-    /// Adds a travel scan
+    /// Adds a travel scan from <paramref name="start"/> into a new forward zone.
+    ///
+    /// The caller owns <paramref name="start"/>'s geomorph and MaxConnections — this method does
+    /// not modify them. The caller must ensure <paramref name="start"/> has a free outbound
+    /// connection slot so the new forward zone can be attached. Hub-shaped helpers
+    /// (<see cref="Level.GenHubGeomorph"/>, <see cref="Level.GenGeneratorClusterGeomorph"/>,
+    /// <see cref="Level.GenReactorGeomorph"/>, etc.) already set MaxConnections to 3.
     /// </summary>
-    /// <param name="start">Node to start in. Note this may convert the node to a hub</param>
+    /// <param name="start">Node to start the scan from. Not modified.</param>
     /// <param name="population">
     ///     Wave population to use, if null will be determined automatically
     /// </param>
@@ -222,9 +228,7 @@ public partial record LevelLayout
         WavePopulation? population = null,
         WaveSettings? settings = null)
     {
-        start = planner.UpdateNode(start with { MaxConnections = 3 });
         var startZone = planner.GetZone(start)!;
-        start = level.GenHubGeomorph(start);
 
         var (end, endZone) = AddZone(start, new ZoneNode());
 

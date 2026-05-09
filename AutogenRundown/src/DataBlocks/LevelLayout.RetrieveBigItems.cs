@@ -183,6 +183,8 @@ public partial record LevelLayout
         // Optional travel scan prelude
         if (Generator.Flip(0.15))
         {
+            entrance = level.GenHubGeomorph(entrance);
+
             var (travelEnd, _) = AddTravelScanAlarm(entrance);
             entrance = travelEnd;
             entrance = planner.UpdateNode(entrance with { MaxConnections = 3 });

@@ -71,7 +71,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var (travelEnd, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
                         end = endNodes.Last();
                         endZone = planner.GetZone(end)!;
@@ -142,7 +142,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var (travelEnd, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
                         end = endNodes.Last();
                         endZone = planner.GetZone(end)!;
@@ -222,7 +222,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var (travelEnd, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
                         end = endNodes.Last();
                         endZone = planner.GetZone(end)!;
@@ -355,7 +355,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var (travelEnd, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
                         end = endNodes.Last();
                         endZone = planner.GetZone(end)!;
@@ -488,7 +488,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        var (travelEnd, _) = AddTravelScanAlarm(nodes.Last());
+                        var (travelEnd, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
                         end = endNodes.Last();
                         endZone = planner.GetZone(end)!;
