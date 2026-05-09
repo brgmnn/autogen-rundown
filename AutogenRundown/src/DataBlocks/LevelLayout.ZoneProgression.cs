@@ -806,23 +806,7 @@ public partial record LevelLayout
         sideSpawn = level.GenDeadEndGeomorph(sideSpawn);
         sideSpawnZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
 
-        var puzzle = director.Tier switch
-        {
-            "A" => ChainedPuzzle.AlarmClass8,
-            "B" => ChainedPuzzle.AlarmClass9,
-            "C" => ChainedPuzzle.AlarmClass10,
-            "D" => ChainedPuzzle.AlarmClass11,
-            "E" => ChainedPuzzle.AlarmClass12,
-
-            _ => ChainedPuzzle.AlarmClass10,
-        };
-
-        lockedZone.SecurityGateToEnter = SecurityGate.Apex;
-        lockedZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle with
-        {
-            Population = population ?? puzzle.Population,
-            Settings = settings ?? puzzle.Settings
-        });
+        ConfigureApexAlarm(setupZone, lockedZone, population, settings);
 
         // Force open the side room
         lockedZone.EventsOnDoorScanStart.AddOpenDoor(director.Bulkhead, sideSpawn.ZoneNumber);
@@ -831,8 +815,6 @@ public partial record LevelLayout
     /// <summary>
     /// Adds an Apex Alarm to a door, this does not modify the source zone at all. Good for
     /// certain objectives where we already have the start zone setup for something else.
-    ///
-    /// TODO: replace other ApexAlarm builders with this
     /// </summary>
     /// <param name="start"></param>
     /// <param name="population"></param>
@@ -853,8 +835,15 @@ public partial record LevelLayout
 
         var (end, endZone) = AddZone(start, new ZoneNode());
 
-        startZone.AmmoPacks += 3.0;
-        startZone.ToolPacks += 2.0;
+        ConfigureApexAlarm(startZone, endZone, population, settings);
+
+        return (end, endZone);
+    }
+
+    private void ConfigureApexAlarm(Zone source, Zone target, WavePopulation? population, WaveSettings? settings)
+    {
+        source.AmmoPacks += 3.0;
+        source.ToolPacks += 2.0;
 
         var puzzle = director.Tier switch
         {
@@ -867,14 +856,12 @@ public partial record LevelLayout
             _ => ChainedPuzzle.AlarmClass10,
         };
 
-        endZone.SecurityGateToEnter = SecurityGate.Apex;
-        endZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle with
+        target.SecurityGateToEnter = SecurityGate.Apex;
+        target.Alarm = ChainedPuzzle.FindOrPersist(puzzle with
         {
             Population = population ?? puzzle.Population,
             Settings = settings ?? puzzle.Settings
         });
-
-        return (end, endZone);
     }
 
     /// <summary>

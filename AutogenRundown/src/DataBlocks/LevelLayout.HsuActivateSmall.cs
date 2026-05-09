@@ -91,12 +91,6 @@ public partial record LevelLayout
                         end = nodes.Last();
                         endZone = planner.GetZone(end)!;
 
-                        var hub = nodes.ElementAt(nodes.Count - 2);
-                        var hubZone = planner.GetZone(hub)!;
-
-                        hubZone.AmmoPacks += 3.0;
-                        hubZone.ToolPacks += 2.0;
-
                         var population = WavePopulation.Baseline;
                         var settings = WaveSettings.Baseline_Normal;
 

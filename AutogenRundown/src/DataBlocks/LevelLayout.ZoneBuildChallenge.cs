@@ -264,9 +264,6 @@ public partial record LevelLayout
 
         var (end, endZone) = AddZone(start, new ZoneNode());
 
-        startZone.AmmoPacks += 3.0;
-        startZone.ToolPacks += 2.0;
-
         // TODO: consider adding a disinfect station somewhere for this
         if (startZone.InFog)
             startZone.ConsumableDistributionInZone = ConsumableDistribution.Alarms_FogRepellers.PersistentId;
