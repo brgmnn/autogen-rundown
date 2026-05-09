@@ -224,6 +224,11 @@ public partial record LevelLayout
 
         objective.PlacementNodes.Add(portal);
 
+        portalZone.AliasPrefix = "Jump Gate, ZONE";
+        portalZone.ConsumableDistributionInZone = 0;
+        portalZone.AmmoPacks = 2;
+        portalZone.ToolPacks = 2;
+
         portalZone.EventsOnOpenDoor.AddUpdateSubObjective(
             header: new Text($"Insert the {Intel.ObjectiveItem("Matter Wave Projector")} into the portal"),
             intel: "Insert the Matter Wave Projector",
@@ -233,7 +238,9 @@ public partial record LevelLayout
             .AddTurnOffAlarms(5.5)
             .AddUpdateSubObjective(
                 header: new Text("Find [TERMINAL_1_0_0_0] and start data transfer"),
-                description: new Text($"Search for the terminal and enter {objective.AlphaTerminalCommand} to initiate the transfer"),
+                description: new Text($"Search for the terminal and enter " +
+                                      $"<color=orange>{objective.AlphaTerminalCommand}</color> " +
+                                      $"to initiate the transfer"),
                 intel: "Find the terminal",
                 delay: 7.0);
 

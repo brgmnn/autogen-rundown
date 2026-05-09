@@ -72,7 +72,6 @@ public partial record WardenObjective
             "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab" => "Alpha Three",
             _ => ""
         };
-        AlphaTerminal_DimensionName = $"<color=orange>{AlphaTerminal_DimensionName}</color>";
 
         level.Name = AlphaTerminal_DimensionName;
     }
@@ -86,7 +85,7 @@ public partial record WardenObjective
     {
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
-        MainObjective = new Text($"Locate terminal in {AlphaTerminal_DimensionName} and begin transfer " +
+        MainObjective = new Text($"Locate terminal in <color=orange>{AlphaTerminal_DimensionName}</color> and begin transfer " +
                                  $"of data cube coordinates");
 
         FindLocationInfo = new Text(() => $"Transport {Intel.ObjectiveItem("Matter Wave Projector")} to " +
@@ -95,7 +94,7 @@ public partial record WardenObjective
 
         var wavePopulation = AlphaTerminal_DimensionName switch
         {
-            // "Alpha One" => WavePopulation.AlphaSwarm,
+            "Alpha One" => WavePopulation.AlphaSwarm,
 
             _ => WavePopulation.Baseline
         };
@@ -162,7 +161,7 @@ public partial record WardenObjective
         {
             eventsOnProgress.Add(new ProgressEvent
             {
-                Progress = (transferDuration - 50.0) / transferDuration,
+                Progress = (transferDuration - 35.0) / transferDuration,
                 Events = new List<WardenObjectiveEvent>()
                     .AddGenericWave(
                         new GenericWave
