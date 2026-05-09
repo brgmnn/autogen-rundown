@@ -258,10 +258,7 @@ public partial record LevelLayout
         WavePopulation population,
         WaveSettings settings)
     {
-        start = planner.UpdateNode(start with { MaxConnections = 3 });
         var startZone = planner.GetZone(start)!;
-        start = level.GenHubGeomorph(start);
-
         var (end, endZone) = AddZone(start, new ZoneNode());
 
         // TODO: consider adding a disinfect station somewhere for this
