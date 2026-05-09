@@ -81,6 +81,12 @@ public class BuildDirector
             (1.0, WardenObjectiveType.TimedTerminalSequence),
         };
 
+        if (Tier is "C" or "D" or "E" && Complex is Complex.Mining or Complex.Tech)
+            objectives.Add((1.0, WardenObjectiveType.AlphaTerminalCommand));
+
+        if (Tier is "C" or "D" or "E")
+            objectives.Add((1.0, WardenObjectiveType.Cryptomnesia));
+
         if (Tier is "C" or "D" or "E" && Complex == Complex.Mining)
             objectives.Add(Tier switch
             {
@@ -98,6 +104,7 @@ public class BuildDirector
             objectives.RemoveAll(t => t.objective == WardenObjectiveType.ClearPath);
             objectives.RemoveAll(t => t.objective == WardenObjectiveType.Survival);
             objectives.RemoveAll(t => t.objective == WardenObjectiveType.ReachKdsDeep);
+            objectives.RemoveAll(t => t.objective == WardenObjectiveType.AlphaTerminalCommand);
             objectives.RemoveAll(t => t.objective == WardenObjectiveType.Cryptomnesia);
         }
 

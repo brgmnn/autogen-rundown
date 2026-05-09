@@ -592,6 +592,8 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.AlphaTerminalCommand));
+
         // --- B-Tier Levels ---
         for (var i = 0; i < rundown.TierB_Count; i++)
         {
@@ -623,7 +625,8 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
-        mainObjectivesPool.Add((400.0, 6, WardenObjectiveType.AlphaTerminalCommand));
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.Cryptomnesia));
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.AlphaTerminalCommand));
 
         // --- C-Tier Levels ---
         for (var i = 0; i < rundown.TierC_Count; i++)
@@ -656,8 +659,9 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
-        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.ReachKdsDeep));
-        mainObjectivesPool.Add((100.0, 3, WardenObjectiveType.Cryptomnesia));
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.AlphaTerminalCommand));
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.Cryptomnesia));
+        mainObjectivesPool.Add((1.2, 1, WardenObjectiveType.ReachKdsDeep));
 
         // --- D-Tier Levels ---
         for (var i = 0; i < rundown.TierD_Count; i++)
@@ -951,6 +955,8 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.AlphaTerminalCommand));
+
         // --- B-Tier Levels ---
         for (var i = 0; i < rundown.TierB_Count; i++)
         {
@@ -981,6 +987,8 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.Cryptomnesia));
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.AlphaTerminalCommand));
         mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.ReachKdsDeep));
 
         // --- C-Tier Levels ---
@@ -1016,6 +1024,9 @@ public static class RundownFactory
 
             rundown.AddLevel(level);
         }
+
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.AlphaTerminalCommand));
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.Cryptomnesia));
 
         // --- D-Tier Levels ---
         for (var i = 0; i < rundown.TierD_Count; i++)
