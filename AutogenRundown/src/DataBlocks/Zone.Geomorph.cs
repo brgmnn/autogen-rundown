@@ -701,6 +701,45 @@ public partial record Zone
     }
 
     /// <summary>
+    /// Multi-room enemy spawn behind a door. Picks a small, generic starter tile
+    /// (NOT a dead-end, NOT a corridor) with at least one free plug besides the
+    /// entrance, so the LG expander has surface to grow off. The companion
+    /// ForceMinAreaCount patch then keeps expansion running until the recorded
+    /// area count is reached, producing a tight 2-room spawn pocket from the
+    /// regular SubComplex pool.
+    /// </summary>
+    /// <param name="complex"></param>
+    public void GenMultiRoomSpawnGeomorph(Complex complex)
+    {
+        switch (complex)
+        {
+            case Complex.Mining:
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                {
+                    (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_02.prefab", new CoverageMinMax { Min = 15, Max = 20 }),
+                    (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_06.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+                    (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_04.prefab", new CoverageMinMax { Min = 20, Max = 50 }),
+                });
+                break;
+
+            case Complex.Tech:
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                {
+                    (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_02.prefab", new CoverageMinMax { Min = 15, Max = 30 }),
+                    (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_02.prefab", new CoverageMinMax { Min = 20, Max = 40 }),
+                });
+                break;
+
+            case Complex.Service:
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                {
+                    (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03.prefab", new CoverageMinMax { Min = 30, Max = 50 }),
+                });
+                break;
+        }
+    }
+
+    /// <summary>
     /// Make this a boss spawn zone
     /// </summary>
     /// <param name="complex"></param>

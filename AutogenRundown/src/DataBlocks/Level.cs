@@ -298,6 +298,14 @@ public partial class Level
     [JsonIgnore]
     public LevelTerminalPlacements TerminalPlacements { get; private set; } = new();
 
+    /// <summary>
+    /// Per-zone minimum tile (area) counts. Zones registered here will have their
+    /// LG tile-expansion loop kept running until m_areas.Count reaches the recorded
+    /// Count, regardless of coverage. Opt-in via Level.GenMultiRoomSpawnGeomorph().
+    /// </summary>
+    [JsonIgnore]
+    public LevelAreaCounts AreaCounts { get; private set; } = new();
+
     #endregion
 
     #region ExtraObjectiveSetup Definitions
@@ -1301,6 +1309,9 @@ public partial class Level
         TerminalPlacements.Name = $"{Tier}{Index}_{fsName}";
         TerminalPlacements.MainLevelLayout = LevelLayoutData;
 
+        AreaCounts.Name = $"{Tier}{Index}_{fsName}";
+        AreaCounts.MainLevelLayout = LevelLayoutData;
+
         EOS_EventsOnBossDeath.Name = $"{Tier}{Index}_{fsName}";
         EOS_EventsOnBossDeath.MainLevelLayout = LevelLayoutData;
 
@@ -1318,6 +1329,7 @@ public partial class Level
 
         SecurityDoors.Save();
         TerminalPlacements.Save();
+        AreaCounts.Save();
 
         if (EOS_EventsOnBossDeath.Definitions.Any())
             EOS_EventsOnBossDeath.Save();

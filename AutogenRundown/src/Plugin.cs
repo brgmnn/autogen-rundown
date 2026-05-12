@@ -143,6 +143,7 @@ public class Plugin : BasePlugin
         GameDataAPI.OnGameDataInitialized += ZoneSensorManager.Setup;
         GameDataAPI.OnGameDataInitialized += TravelScanRegistry.Setup;
         GameDataAPI.OnGameDataInitialized += CustomTerminalSpawnManager.Setup;
+        GameDataAPI.OnGameDataInitialized += Patch_ForceMinAreaCount.Setup;
 
         // LevelAPI.OnLevelCleanup += SignBorderManager.Clear;
         // LevelAPI.OnEnterLevel += () =>

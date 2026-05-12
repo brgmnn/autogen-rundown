@@ -803,7 +803,7 @@ public partial record LevelLayout
                 Tags = new Tags("no_enemies")
             });
 
-        sideSpawn = level.GenDeadEndGeomorph(sideSpawn);
+        sideSpawn = level.GenMultiRoomSpawnGeomorph(sideSpawn);
         sideSpawnZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
 
         ConfigureApexAlarm(setupZone, lockedZone, population, settings);

@@ -1,3 +1,4 @@
+using AutogenRundown.DataBlocks.Custom.AutogenRundown.AreaCounts;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Zones;
 
@@ -140,6 +141,31 @@ public partial class Level
     {
         var zone = Planner.GetZone(node)!;
         zone.GenDeadEndGeomorph(Complex);
+
+        node = node with { MaxConnections = maxConnections };
+        Planner.UpdateNode(node);
+
+        return node;
+    }
+
+    /// <summary>
+    /// Multi-room enemy spawn behind a door (apex side-spawn, KoH spawn pockets,
+    /// etc.). Picks a small generic starter tile and registers the zone with
+    /// AreaCounts so the ForceMinAreaCount patch keeps the LG expander running
+    /// until <paramref name="areaCount"/> tiles have been placed. Default 2.
+    /// </summary>
+    public ZoneNode GenMultiRoomSpawnGeomorph(ZoneNode node, int areaCount = 2, int maxConnections = 0)
+    {
+        var zone = Planner.GetZone(node)!;
+        zone.GenMultiRoomSpawnGeomorph(Complex);
+
+        AreaCounts.Zones.Add(new AreaCountZone
+        {
+            Bulkhead = node.Bulkhead,
+            ZoneNumber = node.ZoneNumber,
+            Dimension = node.Dimension,
+            Count = areaCount,
+        });
 
         node = node with { MaxConnections = maxConnections };
         Planner.UpdateNode(node);
