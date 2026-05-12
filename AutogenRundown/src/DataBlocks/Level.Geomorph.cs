@@ -150,14 +150,20 @@ public partial class Level
 
     /// <summary>
     /// Multi-room enemy spawn behind a door (apex side-spawn, KoH spawn pockets,
-    /// etc.). Picks a small generic starter tile and registers the zone with
-    /// AreaCounts so the ForceMinAreaCount patch keeps the LG expander running
-    /// until <paramref name="areaCount"/> tiles have been placed. Default 2.
+    /// etc.). Picks a small generic starter prefab and registers the zone with
+    /// AreaCounts. The picked prefab path is stored on the AreaCountZone JSON
+    /// record (NOT on Zone.CustomGeomorph — that triggers the game's atomic
+    /// prefab dump which defeats area-count enforcement). At build time
+    /// Patch_ForceMinAreaCount substitutes this prefab as the first tile via
+    /// the LG_Floor.FindExternalArea → ComplexResourceSetDataBlock.GetGeomorphTile
+    /// path, then its m_minCoverage bump forces the expander to add additional
+    /// tiles until <paramref name="areaCount"/> total areas are reached.
+    /// Default 2.
     /// </summary>
     public ZoneNode GenMultiRoomSpawnGeomorph(ZoneNode node, int areaCount = 2, int maxConnections = 0)
     {
         var zone = Planner.GetZone(node)!;
-        zone.GenMultiRoomSpawnGeomorph(Complex);
+        var prefab = zone.GenMultiRoomSpawnGeomorph(Complex);
 
         AreaCounts.Zones.Add(new AreaCountZone
         {
@@ -165,6 +171,7 @@ public partial class Level
             ZoneNumber = node.ZoneNumber,
             Dimension = node.Dimension,
             Count = areaCount,
+            Geomorph = prefab,
         });
 
         node = node with { MaxConnections = maxConnections };

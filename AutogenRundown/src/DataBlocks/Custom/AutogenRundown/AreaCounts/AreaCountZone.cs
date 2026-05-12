@@ -20,4 +20,12 @@ public record AreaCountZone
     public DimensionIndex Dimension { get; set; } = DimensionIndex.Reality;
 
     public int Count { get; set; } = 2;
+
+    /// <summary>
+    /// Optional. Asset path of the prefab to use as the FIRST tile of this
+    /// zone. When non-null, Patch_ForceMinAreaCount intercepts the first
+    /// GetGeomorphTile call for this zone and substitutes this prefab.
+    /// Subsequent tiles come from the normal SubComplex pool.
+    /// </summary>
+    public string? Geomorph { get; set; } = null;
 }

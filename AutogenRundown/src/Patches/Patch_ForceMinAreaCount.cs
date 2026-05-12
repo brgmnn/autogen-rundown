@@ -1,32 +1,56 @@
 using AutogenRundown.DataBlocks.Custom.AutogenRundown;
+using GameData;
 using GTFO.API;
 using HarmonyLib;
 using LevelGeneration;
+using UnityEngine;
 
 namespace AutogenRundown.Patches;
 
 /// <summary>
-/// Forces zones registered in LevelAreaCounts to have at least N areas (tiles)
-/// regardless of coverage. The game's LG_ZoneJob_CreateExpandFromData.Build state
-/// machine exits as soon as coverage lands in the [min, max] band, which can
-/// produce single-tile zones for small-coverage spawn rooms behind doors. This
-/// patch temporarily inflates m_minCoverage on each Build() invocation while the
-/// zone still has fewer than the required areas, so the game's own CoverageStatus
-/// returns NotEnough and expansion continues. Once the area count is satisfied,
-/// the original min coverage is restored and the loop completes normally.
+/// Two coordinated behaviors for zones registered in LevelAreaCounts:
+///
+/// 1) Force first tile: if an override prefab path is registered, intercept
+///    the first tile pick for that zone in LG_Floor.FindExternalArea and
+///    substitute our prefab via the ComplexResourceSetDataBlock.GetGeomorphTile
+///    postfix. Reuses Builder.ComplexResourceSetBlock.GetCustomGeomorph to
+///    resolve the asset path (same resolver vanilla uses for
+///    Zone.CustomGeomorph in LG_ZoneSettings.CustomGeomorphPrefab).
+///
+/// 2) Force min area count: while m_zone.m_areas.Count is below the recorded
+///    Count, bump m_minCoverage above current coverage on Build() so the
+///    game's CoverageStatus returns NotEnough and the expansion loop keeps
+///    running. Restored in the postfix.
+///
+/// (1) is required because setting Zone.CustomGeomorph triggers an atomic
+/// prefab dump (LG_ZoneJob_CreateExpandFromData.cs:340, 848) that bypasses
+/// the expander and the m_minCoverage bump entirely; routing through the
+/// normal pick path keeps us inside the coverage-driven build loop.
 /// </summary>
 [HarmonyPatch]
 internal static class Patch_ForceMinAreaCount
 {
     private static List<LevelAreaCounts> _levelAreaCounts = new();
-    private static readonly Dictionary<(int dim, int layer, int zone), int> _map = new();
+    private static readonly Dictionary<(int dim, int layer, int zone), (int Count, string? Geo)> _map = new();
+
+    /// <summary>
+    /// Bridges Pre_FindExternalArea (decides we want an override for the next
+    /// pick) to Post_GetGeomorphTile (substitutes the prefab in the result).
+    /// ThreadStatic because Unity builds the level on the main thread but we
+    /// don't want any leakage if anyone ever calls these off-thread.
+    /// </summary>
+    [ThreadStatic] private static GameObject? _pendingFirstTilePrefab;
 
     internal static void Setup()
     {
         _levelAreaCounts = LevelAreaCounts.LoadAll();
 
         LevelAPI.OnBuildDone += BuildMap;
-        LevelAPI.OnLevelCleanup += () => _map.Clear();
+        LevelAPI.OnLevelCleanup += () =>
+        {
+            _map.Clear();
+            _pendingFirstTilePrefab = null;
+        };
     }
 
     private static void BuildMap()
@@ -42,8 +66,50 @@ internal static class Patch_ForceMinAreaCount
             return;
 
         foreach (var z in lac.Zones)
-            _map[((int)z.Dimension, z.Layer, z.ZoneNumber)] = z.Count;
+            _map[((int)z.Dimension, z.Layer, z.ZoneNumber)] = (z.Count, z.Geomorph);
     }
+
+    #region First-tile override
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(LG_Floor), nameof(LG_Floor.FindExternalArea))]
+    public static void Pre_FindExternalArea(LG_Zone zone)
+    {
+        if (zone == null || zone.m_areas.Count != 0)
+            return;
+
+        var key = ((int)zone.DimensionIndex, (int)zone.Layer.m_type, (int)zone.LocalIndex);
+        if (!_map.TryGetValue(key, out var entry) || string.IsNullOrEmpty(entry.Geo))
+            return;
+
+        var prefab = Builder.ComplexResourceSetBlock.GetCustomGeomorph(entry.Geo);
+        if (prefab != null)
+            _pendingFirstTilePrefab = prefab;
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(LG_Floor), nameof(LG_Floor.FindExternalArea))]
+    public static void Post_FindExternalArea()
+    {
+        // Safety: drop the override if GetGeomorphTile wasn't reached (e.g.
+        // FindExternalArea took the HasCustomGeomorphPrefab branch).
+        _pendingFirstTilePrefab = null;
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(ComplexResourceSetDataBlock), nameof(ComplexResourceSetDataBlock.GetGeomorphTile))]
+    public static void Post_GetGeomorphTile(ref GameObject __result)
+    {
+        if (_pendingFirstTilePrefab == null)
+            return;
+
+        __result = _pendingFirstTilePrefab;
+        _pendingFirstTilePrefab = null;
+    }
+
+    #endregion
+
+    #region Min-area-count enforcement
 
     public record struct ForceState(bool Bumped, float OriginalMin);
 
@@ -59,10 +125,10 @@ internal static class Patch_ForceMinAreaCount
             return;
 
         var key = ((int)zone.DimensionIndex, (int)zone.Layer.m_type, (int)zone.LocalIndex);
-        if (!_map.TryGetValue(key, out var required))
+        if (!_map.TryGetValue(key, out var entry))
             return;
 
-        if (zone.m_areas.Count >= required)
+        if (zone.m_areas.Count >= entry.Count)
             return;
 
         // Bump min coverage just above current so the game's CoverageStatus
@@ -82,4 +148,6 @@ internal static class Patch_ForceMinAreaCount
         if (zs != null)
             zs.m_minCoverage = __state.OriginalMin;
     }
+
+    #endregion
 }
