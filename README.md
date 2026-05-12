@@ -63,7 +63,7 @@ TODO:
 
 TODO for 1.0
   New Objectives!
-    [ ] Alpha / static dimension objective with portal / matter wave projector / something big in the dimension
+    [x] Alpha / static dimension objective with portal / matter wave projector / something big in the dimension
     [x] Cryptomnesia objective main, recreate R6D4
   [ ] Distribute power cells is _really_ short on main only missions now
   [ ] Fix the cycling of security scans having global sound! Really annoying right now

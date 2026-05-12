@@ -15,9 +15,17 @@ namespace AutogenRundown.Patches;
 [HarmonyPatch]
 public static class TerminalUplink
 {
-    private static string[] Ipv6Prefixes => new[] { "2001:db8", "fc00", "fd00", "fe80" };
+    private static string[] Ipv6Prefixes => new[]
+    {
+        "2001:db8",
+        "fc00",
+        "fd00",
+        "fe80"
+    };
 
-    // These are the base game words
+    /// <summary>
+    /// These are the base game words
+    /// </summary>
     public static string[] FourLetterWords => new[]
     {
         "able", "acid", "aged", "airy", "ally", "anti", "area", "army", "atom", "auto",
@@ -95,6 +103,9 @@ public static class TerminalUplink
         "yard", "yarn", "yawn", "year", "yell", "yeti", "yoga", "your", "zone", "zoom"
     };
 
+    /// <summary>
+    /// About 1000 words
+    /// </summary>
     public static string[] FiveLetterWords => new[]
     {
         "about", "actor", "adapt", "adieu", "adobe", "aeons", "after", "again", "agape",
