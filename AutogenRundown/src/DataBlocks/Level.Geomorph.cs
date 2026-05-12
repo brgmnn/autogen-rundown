@@ -162,16 +162,12 @@ public partial class Level
     /// </summary>
     public ZoneNode GenMultiRoomSpawnGeomorph(ZoneNode node, int areaCount = 2, int maxConnections = 0)
     {
-        var zone = Planner.GetZone(node)!;
-        var prefab = zone.GenMultiRoomSpawnGeomorph(Complex);
-
         AreaCounts.Zones.Add(new AreaCountZone
         {
             Bulkhead = node.Bulkhead,
             ZoneNumber = node.ZoneNumber,
             Dimension = node.Dimension,
-            Count = areaCount,
-            Geomorph = prefab,
+            Count = areaCount
         });
 
         node = node with { MaxConnections = maxConnections };
