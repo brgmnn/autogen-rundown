@@ -248,13 +248,13 @@ To check if the installation is successful, after the game launches you should s
   - Lights
     - [x] Random lights selection
     - [x] Reactor specific lights
-    - [ ] Fog specific lights
+    - [x] Fog specific lights
     - [x] Custom lights(?)
   - Zones
     - Custom Geomorphs
       - [x] Hubs
       - [x] I's (corridors)
-      - [ ] Warp portals
+      - [x] Warp portals
       - [x] Rundown 8 Geomorphs
     - Curated event layouts
       - [x] Class 10+ alarm room
@@ -268,7 +268,15 @@ To check if the installation is successful, after the game launches you should s
     - [x] Fog
     - [x] Infectious fog
     - [x] Security Sensors
-  - [ ] Dimensions
+  - [x] Dimensions
+    - [x] Alpha One - R6D1
+    - [ ] Alpha Two - R6B1
+    - [x] Alpha Three (Top) - R6AX
+    - [ ] Alpha Three (Turbine Shaft) - R6CX
+    - [ ] Alpha Six - R7C2
+    - [ ] Unknown One - R6C1
+    - [ ] Unknown Two - R6A1
+    - [ ] Unknown Three - R7B3
 - Objectives
   - [x] Clear Path — _Navigate through the zones to a separate extraction elevator_
   - [x] Gather Small Items — _IDs, GLPs etc._
@@ -296,6 +304,8 @@ To check if the installation is successful, after the game launches you should s
     - [x] Shadows
     - [x] Beserkers
     - [x] Hybrids
+    - [x] Flyers
+      - [x] Big Flyers
     - [x] Scouts
       - [x] Regular
       - [x] Zoomer
@@ -308,7 +318,7 @@ To check if the installation is successful, after the game launches you should s
       - [x] Nightmare Mother
     - [x] Tanks
       - [x] Tank
-      - [ ] Immortal Tank
+      - [x] Immortal Tank
       - [x] Potato Tank
     - [x] Pouncers (Snatchers)
   - Custom enemy spawning
