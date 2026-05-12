@@ -109,9 +109,11 @@ internal static class Patch_ForceMinAreaCount
 
     #endregion
 
-    #region Min-area-count enforcement
+    #region Area-count enforcement (bidirectional)
 
-    public record struct ForceState(bool Bumped, float OriginalMin);
+    public enum ForceMode { None, BumpMin, CapMax }
+
+    public record struct ForceState(ForceMode Mode, float OriginalMin, float OriginalMax);
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(LG_ZoneJob_CreateExpandFromData), nameof(LG_ZoneJob_CreateExpandFromData.Build))]
@@ -128,25 +130,38 @@ internal static class Patch_ForceMinAreaCount
         if (!_map.TryGetValue(key, out var entry))
             return;
 
-        if (zone.m_areas.Count >= entry.Count)
-            return;
-
-        // Bump min coverage just above current so the game's CoverageStatus
-        // returns NotEnough, keeping the expansion loop running for this tick.
-        __state = new ForceState(true, zs.m_minCoverage);
-        zs.m_minCoverage = zone.m_coverage + 1f;
+        if (zone.m_areas.Count < entry.Count)
+        {
+            // Force NotEnough → keep expanding. Bump min just above current
+            // coverage so CoverageStatus returns NotEnough on this tick.
+            __state = new ForceState(ForceMode.BumpMin, zs.m_minCoverage, zs.m_maxCoverage);
+            zs.m_minCoverage = zone.m_coverage + 1f;
+        }
+        else
+        {
+            // Force Enough → exit now. CoverageStatus checks min < coverage
+            // FIRST (line 862), so we must pin both ends below current
+            // coverage; otherwise the original min could still trigger
+            // NotEnough and the game would place another tile.
+            __state = new ForceState(ForceMode.CapMax, zs.m_minCoverage, zs.m_maxCoverage);
+            zs.m_minCoverage = 0f;
+            zs.m_maxCoverage = -1f;
+        }
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(LG_ZoneJob_CreateExpandFromData), nameof(LG_ZoneJob_CreateExpandFromData.Build))]
     public static void Post_Build(LG_ZoneJob_CreateExpandFromData __instance, ForceState __state)
     {
-        if (!__state.Bumped)
+        if (__state.Mode == ForceMode.None)
             return;
 
         var zs = __instance.m_zoneSettings;
-        if (zs != null)
-            zs.m_minCoverage = __state.OriginalMin;
+        if (zs == null)
+            return;
+
+        zs.m_minCoverage = __state.OriginalMin;
+        zs.m_maxCoverage = __state.OriginalMax;
     }
 
     #endregion
