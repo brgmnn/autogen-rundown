@@ -108,6 +108,7 @@ public partial record Zone
                     (SubComplex.Refinery, "Assets/Bundles/RLC_Mining/geo_64x64_mining_refinery_X_RLC_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
 
                     // SamDB v1
+                    (SubComplex.DigSite, "Assets/Custom Geo's/Digsite/digsite_x_tile_1/digsite_x_tile_1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.DigSite, "Assets/Custom Geo's/Digsite/digsite_x_tile_1_V3/digsite_x_tile_1_V3.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.DigSite, "Assets/Custom Geo's/Digsite/Disite generator/Digsite_X_Tile_Generator.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
 
@@ -174,7 +175,9 @@ public partial record Zone
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_1/floodways_x_tile_1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_2/floodways_x_tile_2.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_3/floodways_x_tile_3.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_4/floodway_x_tile_4.prefab",  new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_5/Floodways_x_tile_5.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_HUB/Floodways_hub.prefab",           new CoverageMinMax { Min = 30, Max = 40 }),
 
                     // SamDB v2
                     (SubComplex.Floodways, "Assets/SamdownGeos/Floodways Scaffolding HUB/Floodways_Scaffolding_HUB.prefab", new CoverageMinMax { Min = 30, Max = 40 }),

@@ -127,10 +127,6 @@ Monthly April
 Missing tiles to add
   * Add R8A1 garden hub tile to hubs
 
-Remove intel in elevator drop that shows:
-  "Artifact Heat at"
-Maybe replace with number of logs?
-
 Enemies:
   A:
     * Baseline
@@ -184,11 +180,12 @@ To check if the installation is successful, after the game launches you should s
 ## Base game features
 
 - Levels
-  - [x] A Tier
-  - [x] B Tier
-  - [x] C Tier
-  - [x] D Tier
-  - [x] E Tier
+  - Difficulty tiers
+    - [x] A Tier
+    - [x] B Tier
+    - [x] C Tier
+    - [x] D Tier
+    - [x] E Tier
   - Additional objectives
     - [x] Secondary
     - [x] Overload
@@ -300,16 +297,10 @@ To check if the installation is successful, after the game launches you should s
     - [x] Christmas (red)
     - [x] Player colored glowsticks (client side)
   - Inserting generator cells turns on emergency lights
+- Enemies
+  - New custom enemies that fit with the existing enemies
 - Lore
   - Custom Warden intel messages
-    - [x] General
-    - [ ] Objectives
-      - [x] HSU Find Sample
-      - [ ] Clear Path
-      - [ ] Reactor Startup
-      - [ ] Reactor Shutdown
-      - [ ] Distribute Power Cells
-      - [ ] Central Generator Cluster
 
 ## 3rd Party Mod Support
 
