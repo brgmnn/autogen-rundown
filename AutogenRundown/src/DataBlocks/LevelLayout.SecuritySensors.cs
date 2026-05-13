@@ -198,9 +198,7 @@ public partial record LevelLayout
             };
 
             eventLoop.EventsToActivate
-                .DisableZoneSensors(sensorDef.Id, 0.4)
-                .AddZoneSound(Sound.LightsOn_Vol4, sensorDef)
-                .AddZoneSound(Sound.LightsOn_Vol4, sensorDef, offTime - 0.4);
+                .DisableZoneSensors(sensorDef.Id, 0.4);
 
             if (triggerEach)
                 eventLoop.EventsToActivate.EnableZoneSensors(sensorDef.Id, offTime);
