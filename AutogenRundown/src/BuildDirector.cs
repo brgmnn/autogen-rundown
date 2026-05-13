@@ -64,6 +64,7 @@ public class BuildDirector
     {
         var objectives = new List<(double weight, WardenObjectiveType objective)>
         {
+            // Base game objectives
             (1.0, WardenObjectiveType.HsuFindSample),
             (1.0, WardenObjectiveType.ReactorStartup),
             (1.0, WardenObjectiveType.ReactorShutdown),
@@ -90,8 +91,8 @@ public class BuildDirector
         if (Tier is "C" or "D" or "E" && Complex == Complex.Mining)
             objectives.Add(Tier switch
             {
-                "C" => (0.45, WardenObjectiveType.ReachKdsDeep),
-                "D" => (0.70, WardenObjectiveType.ReachKdsDeep),
+                "C" => (0.65, WardenObjectiveType.ReachKdsDeep),
+                "D" => (0.87, WardenObjectiveType.ReachKdsDeep),
                 "E" => (1.00, WardenObjectiveType.ReachKdsDeep),
 
                 _ => (0.0, WardenObjectiveType.ReachKdsDeep)
