@@ -806,6 +806,8 @@ public partial record LevelLayout
         sideSpawn = level.GenMultiRoomSpawnGeomorph(sideSpawn);
         sideSpawnZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
 
+        Plugin.Logger.LogDebug($"Created multiroom spawn: {sideSpawn}");
+
         ConfigureApexAlarm(setupZone, lockedZone, population, settings);
 
         // Force open the side room

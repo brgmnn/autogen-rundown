@@ -162,6 +162,9 @@ public partial class Level
     /// </summary>
     public ZoneNode GenMultiRoomSpawnGeomorph(ZoneNode node, int areaCount = 2, int maxConnections = 0)
     {
+        var zone = Planner.GetZone(node)!;
+        zone.Coverage = new CoverageMinMax { Min = 1.0, Max = 1.0 };
+
         AreaCounts.Zones.Add(new AreaCountZone
         {
             Bulkhead = node.Bulkhead,
