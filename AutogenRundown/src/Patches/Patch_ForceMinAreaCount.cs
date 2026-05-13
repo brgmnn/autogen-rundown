@@ -45,7 +45,12 @@ internal static class Patch_ForceMinAreaCount
     {
         _levelAreaCounts = LevelAreaCounts.LoadAll();
 
-        LevelAPI.OnBuildDone += BuildMap;
+        // OnBuildStart (not OnBuildDone): _map must be populated BEFORE
+        // LG_ZoneJob_CreateExpandFromData.Build runs for any zone. OnBuildDone
+        // fires after the entire build is complete, by which point every
+        // Pre_Build prefix has already executed against an empty _map and
+        // done nothing.
+        LevelAPI.OnBuildStart += BuildMap;
         LevelAPI.OnLevelCleanup += () =>
         {
             _map.Clear();
