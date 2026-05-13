@@ -1130,7 +1130,7 @@ public partial record LevelLayout
             level.Planner.Connect(hill, node);
             level.Planner.AddZone(node, zone);
 
-            node = level.GenDeadEndGeomorph(node);
+            node = level.GenMultiRoomSpawnGeomorph(node);
         }
     }
 
