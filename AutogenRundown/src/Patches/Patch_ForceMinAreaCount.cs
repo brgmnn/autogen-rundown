@@ -109,11 +109,11 @@ internal static class Patch_ForceMinAreaCount
 
     #endregion
 
-    #region Area-count enforcement (bidirectional)
+    #region Area-count enforcement
 
-    public enum ForceMode { None, BumpMin, CapMax }
+    public enum ForceMode { None, BumpMin }
 
-    public record struct ForceState(ForceMode Mode, float OriginalMin, float OriginalMax);
+    public record struct ForceState(ForceMode Mode, float OriginalMin);
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(LG_ZoneJob_CreateExpandFromData), nameof(LG_ZoneJob_CreateExpandFromData.Build))]
@@ -130,38 +130,41 @@ internal static class Patch_ForceMinAreaCount
         if (!_map.TryGetValue(key, out var entry))
             return;
 
-        if (zone.m_areas.Count < entry.Count)
+        if (zone.m_areas.Count >= entry.Count)
         {
-            // Force NotEnough → keep expanding. Bump min just above current
-            // coverage so CoverageStatus returns NotEnough on this tick.
-            __state = new ForceState(ForceMode.BumpMin, zs.m_minCoverage, zs.m_maxCoverage);
-            zs.m_minCoverage = zone.m_coverage + 1f;
+            // Hard stop. The outer switch in Build() has no `case Done`, so
+            // the method returns immediately and the game's external loop
+            // stops calling Build for this zone. Coverage manipulation
+            // can't beat this because ExpandZone places a tile inside the
+            // same tick it computes CoverageResult — capping max only
+            // takes effect AFTER the tile has already been added to
+            // m_areas. Forcing Done at the start of the tick prevents
+            // any further state transitions, and in particular prevents
+            // any further ExpandZone calls.
+            __instance.m_mainStatus = LG_ZoneJob_CreateExpandFromData.MainStatus.Done;
+            return;
         }
-        else
-        {
-            // Force Enough → exit now. CoverageStatus checks min < coverage
-            // FIRST (line 862), so we must pin both ends below current
-            // coverage; otherwise the original min could still trigger
-            // NotEnough and the game would place another tile.
-            __state = new ForceState(ForceMode.CapMax, zs.m_minCoverage, zs.m_maxCoverage);
-            zs.m_minCoverage = 0f;
-            zs.m_maxCoverage = -1f;
-        }
+
+        // Force NotEnough on every CoverageStatus call during this tick.
+        // Must be high enough that ExpandZone's mid-tick placement can't
+        // grow m_coverage past it; otherwise CoverageStatus falls through
+        // to the max check and a small Zone.Coverage.Max (e.g. 1 from the
+        // user's test case) returns Enough → Done → only 1 tile placed.
+        // 1e9 is comfortably above any vanilla total coverage.
+        __state = new ForceState(ForceMode.BumpMin, zs.m_minCoverage);
+        zs.m_minCoverage = 1e9f;
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(LG_ZoneJob_CreateExpandFromData), nameof(LG_ZoneJob_CreateExpandFromData.Build))]
     public static void Post_Build(LG_ZoneJob_CreateExpandFromData __instance, ForceState __state)
     {
-        if (__state.Mode == ForceMode.None)
+        if (__state.Mode != ForceMode.BumpMin)
             return;
 
         var zs = __instance.m_zoneSettings;
-        if (zs == null)
-            return;
-
-        zs.m_minCoverage = __state.OriginalMin;
-        zs.m_maxCoverage = __state.OriginalMax;
+        if (zs != null)
+            zs.m_minCoverage = __state.OriginalMin;
     }
 
     #endregion
