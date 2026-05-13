@@ -14,10 +14,7 @@ Check Alarm Persistent IDs for levellayout
 
 
 TODO:
-  * Use https://thunderstore.io/c/gtfo/p/randomguy0753/ZoneScan/ for full room scanning
-  * Make extract scan short if there's no extract alarm (Don't do it just based on level tier)
   * Add a way to automatically install deps?
-  * GIGA Infection Hybrid blood door might be _too_ much, it's like 12 hybrids
   * Objective: Distribute Power Cells
     * Needs something to happen when completing all the cells ideally
     * Would be good if the fog could rise or lower when inserting the cells
@@ -36,28 +33,16 @@ TODO:
     * Needs extract or finish objective modifier
   * Might consider if we even need an error alarm turnoff for levels in main where it goes all the way to the end?
   * VERY SLIGHT increase in Apex alarm wave pops
-  * No sound playing for clients
-  * Investigate some kind of grace period for scans coming back on
-  * Check if I broke something with uplinks where host and client get desynced for where an uplink is. We had it where host didn't get the verify coming through
   * Increase exclusion zone around elevator for security scans
   * E-tier had gather 3 samples
   * E-tier valiant way too easy
-    * enemies get bugged
   * Have a challenge like halfway through the fog starts rising and you can turn off the fog in a zone
-  * Make generator distribution objective MAIN always have 2 or more generator cells
-  * `GatherSmallItems` should probably not have error alarm on picking up the "last" objective item. Instead we should have it be done by the zones they have to open
   * Generator Cluster needs cells to be tightened up in their spawns
   * Big security scans that move are too hard
-  * Fix uplink text for case where there's one terminal
 
   * See if we can fix enemies not navigating through the final door in D3
 
-  * Seems that Valiant objectives fail a lot
-  
   * Tone down higher density of scans, especially for moving ones
-
-  * Add a version of travel scan where lights go out but only lights by the scan are lit up
-  * Add a version of the scan wanted distance that takes a negative number which then finds a point thats a proportion of the total area away from the previous scan
 
   * Check SC1: Seemed like no enemies after doing secondary?
 
@@ -84,6 +69,8 @@ Idea:
     * Keep putting in command to keep surge error at bay
   * Clear path to a warp portal that jumps you to the success screen
   * Add bonus terminals in reactor zones
+  * Add a version of travel scan where lights go out but only lights by the scan are lit up
+  * Add a version of the scan wanted distance that takes a negative number which then finds a point thats a proportion of the total area away from the previous scan
 
 # Datasphere color pack
 https://thunderstore.io/c/gtfo/p/ProjectZaero/Data_Sphere_Flavor_Pack/
@@ -91,13 +78,6 @@ https://thunderstore.io/c/gtfo/p/ProjectZaero/Data_Sphere_Flavor_Pack/
 # Geo pack ideas
 https://thunderstore.io/c/gtfo/p/TheDoggyDoge/DogsTilePack/
 https://thunderstore.io/c/gtfo/p/xiaoyao/XAOYAO_developer_package/
-
-
-Weekly missing geo seed B1:
-    2025_11_05
-
-Monthly missing nav mesh A1:
-    2025_10
 
 
 E-tier analysis
@@ -110,11 +90,7 @@ E-tier analysis
 * R8E2 - Release
 
 
-
 Requests:
-  * Add support for VanillaReloaded mod
-    * https://discord.com/channels/782438773690597389/1342735255009755227/1373594263019061281
-
 Check: https://discord.com/channels/782438773690597389/783918553626836992/1407457297889890530
 
 
@@ -128,30 +104,6 @@ Problems:
 2025_08_31
   * Seasonal Fall_2025 - A4 Decaying Banishment: Pretty much perfect short A level. 26 mins, 5 zones, straight forward clear path
     * Maybe too high scan levels? 2 class 5 and 2 class 3
-
-2025_08_27
-  * Generator cluster needs a little less zones
-
-2025_08_17
-  * Reduce number of gather so we have to do all objectives
-  * Why does D2 only have onion shooters on first alarm door in extreme
-
-2025_04_29
-  * D1: Error alarm with no turn off is quite a bit harder
-    * Probably we need a few less alarms
-    * Might want to have fewer enemies on reactor fetch code tiles
-    * D1 had A LOT of zones to run through, may want to not have multiple zones of fetch codes and do single zone fetch codes
-    * For fetch codes that have zones not starting at reactor, need to factor traverse time to get there and back
-  * D1 (or D2?)
-    * Need to fix the zone count for layout for reactors
-      * Maybe consider using a different layout for it?
-    * Consider if we reduce number of fetch codes from 6 to 5
-    * May need to BUFF the reactor waves a little
-
-Weekly 9-A1 bug:
-  * Doesn't seem to be the chained puzzles.. Unclear for now
-  * Disappears if I disable EITHER overload or secondary
-  * It appears to be the map layout. I suspect it's the door not having a place to place though
 
 Exit Geo failures to spawn:
   * Assets/Bundles/RLC_Mining/geo_64x64_mining_storage_exit_hub_RLC_01.prefab
@@ -171,11 +123,6 @@ Monthly April
   [ ] E1 - Maybe a bit too easy?
   [ ] D1 - Activate small HSU doesn't require the objective to exit
       - Can we exclude double mother / double tank from first zone
-
-Monthly Feb
-  * Double cargo B1 -- Not sure why?
-  * Reactor D2
-    [ ] Mother wave had good amount of time. DONT CHANGE
 
 Missing tiles to add
   * Add R8A1 garden hub tile to hubs
