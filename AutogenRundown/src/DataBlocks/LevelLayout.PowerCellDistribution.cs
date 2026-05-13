@@ -528,10 +528,10 @@ public partial record LevelLayout
                         }
                     }),
 
-                    // Clustered + sensors — start → 1 zone [sensors] → large zone (2-3 gens clustered)
+                    // Clustered + sensors — start → 1-2 zones [sensors] → large zone (2-3 gens clustered)
                     (0.20, () =>
                     {
-                        var approach = AddBranch(start, 1, "approach");
+                        var approach = AddBranch(start, Generator.Between(1, 2), "approach");
                         AddSecuritySensors(approach.Last());
 
                         var (genZone, genZoneData) = AddZone(approach.Last(), new ZoneNode { Branch = "generator" });
@@ -593,13 +593,22 @@ public partial record LevelLayout
                         }
                     }),
 
-                    // Travel scan gate
+                    // Travel scan gate — scan → 1-2 approach zones → 2 gen zones (gens split across both)
                     (0.15, () =>
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
-                        var genNodes = AddBranch(travelEnd, 1, "generator");
-                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
-                        AddForwardExtractStart(genNodes.Last());
+                        var approach = AddBranch(travelEnd, Generator.Between(1, 2), "approach");
+
+                        var firstCount = numGens / 2;
+                        var secondCount = numGens - firstCount;
+
+                        var genZoneA = AddBranch(approach.Last(), 1, "generator_a");
+                        PlaceGeneratorsInZone(genZoneA.Last(), firstCount);
+                        AddForwardExtractStart(genZoneA.Last());
+
+                        var genZoneB = AddBranch(genZoneA.Last(), 1, "generator_b");
+                        PlaceGeneratorsInZone(genZoneB.Last(), secondCount);
+                        AddForwardExtractStart(genZoneB.Last());
                     }),
                 });
                 break;
@@ -945,13 +954,22 @@ public partial record LevelLayout
                         AddForwardExtractStart(hub, chance: 0.3);
                     }),
 
-                    // Travel scan gate
+                    // Travel scan gate — scan → 1-2 approach zones → 2 gen zones (gens split across both)
                     (0.15, () =>
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
-                        var genNodes = AddBranch(travelEnd, 1, "generator");
-                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
-                        AddForwardExtractStart(genNodes.Last());
+                        var approach = AddBranch(travelEnd, Generator.Between(1, 2), "approach");
+
+                        var firstCount = numGens / 2;
+                        var secondCount = numGens - firstCount;
+
+                        var genZoneA = AddBranch(approach.Last(), 1, "generator_a");
+                        PlaceGeneratorsInZone(genZoneA.Last(), firstCount);
+                        AddForwardExtractStart(genZoneA.Last());
+
+                        var genZoneB = AddBranch(genZoneA.Last(), 1, "generator_b");
+                        PlaceGeneratorsInZone(genZoneB.Last(), secondCount);
+                        AddForwardExtractStart(genZoneB.Last());
                     }),
                 });
                 break;
@@ -1415,13 +1433,22 @@ public partial record LevelLayout
                         AddForwardExtractStart(hub, chance: 0.3);
                     }),
 
-                    // Travel scan gate
+                    // Travel scan gate — scan → 1-2 approach zones → 2 gen zones (gens split across both)
                     (0.15, () =>
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
-                        var genNodes = AddBranch(travelEnd, 1, "generator");
-                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
-                        AddForwardExtractStart(genNodes.Last());
+                        var approach = AddBranch(travelEnd, Generator.Between(1, 2), "approach");
+
+                        var firstCount = numGens / 2;
+                        var secondCount = numGens - firstCount;
+
+                        var genZoneA = AddBranch(approach.Last(), 1, "generator_a");
+                        PlaceGeneratorsInZone(genZoneA.Last(), firstCount);
+                        AddForwardExtractStart(genZoneA.Last());
+
+                        var genZoneB = AddBranch(genZoneA.Last(), 1, "generator_b");
+                        PlaceGeneratorsInZone(genZoneB.Last(), secondCount);
+                        AddForwardExtractStart(genZoneB.Last());
                     }),
                 });
                 break;

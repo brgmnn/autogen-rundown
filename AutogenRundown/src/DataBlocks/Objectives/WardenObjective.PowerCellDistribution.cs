@@ -46,6 +46,8 @@ public partial record WardenObjective
             return;
         }
 
+        var isMainOnly = level.Settings.Bulkheads == Bulkhead.Main;
+
         PowerCellsToDistribute = (director.Tier, director.Bulkhead, level.HasPrisonerEfficiency) switch
         {
             ("A", Bulkhead.Main, _) => 2,
@@ -55,7 +57,7 @@ public partial record WardenObjective
             ("B",             _, false) => 2,
             ("B",             _,     _) => 1,
 
-            ("C", Bulkhead.Main,        _) => Generator.Between(2, 3),
+            ("C", Bulkhead.Main,        _) => isMainOnly ? Generator.Between(3, 4) : Generator.Between(2, 3),
             ("C", Bulkhead.Extreme,     _) => 2,
             ("C", Bulkhead.Overload, true) => 1,
             ("C", Bulkhead.Overload,    _) => 2,
