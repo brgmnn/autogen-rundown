@@ -42,6 +42,7 @@ public class Patch_LG_Factory
         // already covers fresh builds; this catches the rebuild path too so the new
         // attempt's cascade can run normally.
         Fix_FailedToFindStartArea.fatalReached = false;
+        Fix_DistributionOnBrokenZones.ResetDiagnostics();
     }
 
     /// <summary>
