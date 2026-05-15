@@ -81,20 +81,17 @@ public partial record WardenObjective
         {
             if (dataLayer.ObjectiveData.ZonePlacementDatas[0].Count == 1)
             {
-                var zone = Intel.Zone(dataLayer.ObjectiveData.ZonePlacementDatas[0][0].LocalIndex +
-                                      layout.ZoneAliasStart);
                 var zoneNumber = dataLayer.ObjectiveData.ZonePlacementDatas[0][0].LocalIndex;
 
-                GoToZone = new Text(() => $"Navigate to {Intel.Zone(layout.ZoneAliasStart + zoneNumber)} and find [ALL_ITEMS]");
-                GoToZoneHelp = new Text($"Use information in the environment to find {zone}");
-                InZoneFindItem = new Text($"Find [ALL_ITEMS] somewhere inside {zone}");
+                GoToZone = new Text(() =>
+                    $"Navigate to {Intel.Zone(layout.ZoneAliasStart + zoneNumber)} and find [ALL_ITEMS]");
+                GoToZoneHelp = new Text(() =>
+                    $"Use information in the environment to find {Intel.Zone(layout.ZoneAliasStart + zoneNumber)}");
+                InZoneFindItem = new Text(() =>
+                    $"Find [ALL_ITEMS] somewhere inside {Intel.Zone(layout.ZoneAliasStart + zoneNumber)}");
             }
             else
             {
-                var zones = string.Join(", ",
-                    dataLayer.ObjectiveData.ZonePlacementDatas[0].Select(placement =>
-                        Intel.Zone(placement.LocalIndex + layout.ZoneAliasStart)));
-
                 GoToZone = new Text(() =>
                 {
                     var zones = string.Join(", ",
@@ -103,7 +100,14 @@ public partial record WardenObjective
 
                     return $"Navigate to and find [ALL_ITEMS] in one of zones {zones}";
                 });
-                GoToZoneHelp = new Text($"Use information in the environment to find {zones}");
+                GoToZoneHelp = new Text(() =>
+                {
+                    var zones = string.Join(", ",
+                        dataLayer.ObjectiveData.ZonePlacementDatas[0].Select(placement =>
+                            Intel.Zone(placement.LocalIndex + layout.ZoneAliasStart)));
+
+                    return $"Use information in the environment to find {zones}";
+                });
             }
         }
         else
@@ -115,7 +119,7 @@ public partial record WardenObjective
         SolveItem = new Text("WARNING - Hisec Cargo misplaced - ENGAGING SECURITY PROTOCOLS");
         InZoneFindItemHelp = new Text("Use maintenance terminal command PING to find [ALL_ITEMS]");
 
-        if (RetrieveItems.Count() > 1)
+        if (RetrieveItems.Count > 1)
         {
             GoToWinCondition_Elevator = new Text(() =>
                 $"Return [ALL_ITEMS] to the extraction point in {Intel.Zone(level.ExtractionZone, level.Planner)}");
