@@ -49,10 +49,9 @@ public class Fix_NullSourceExpanderInCourseGraph
                 var src = zone.m_sourceExpander;
                 if (src == null || src.m_linksFrom == null || src.m_linksTo == null)
                 {
-                    Plugin.Logger.LogWarning(
+                    Plugin.Logger.LogDebug(
                         $"Skipping GeographicalChildZones link for {zone.name} " +
-                        $"(LocalIndex={zone.LocalIndex}) — m_sourceExpander chain has null. " +
-                        $"ShouldRebuild={FactoryJobManager.ShouldRebuild}");
+                        $"(LocalIndex={zone.LocalIndex}) — m_sourceExpander chain has null.");
                     continue;
                 }
 

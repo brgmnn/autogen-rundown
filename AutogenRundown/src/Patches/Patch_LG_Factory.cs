@@ -43,7 +43,6 @@ public class Patch_LG_Factory
         // attempt's cascade can run normally.
         Fix_FailedToFindStartArea.fatalReached = false;
         Fix_DistributionOnBrokenZones.ResetDiagnostics();
-        Fix_WardenObjectiveDistributionOnBrokenZones.ResetDiagnostics();
         Fix_FactoryJobExceptionCatchAll.ResetDiagnostics();
     }
 

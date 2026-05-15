@@ -35,10 +35,9 @@ public class Fix_DistributionOnBrokenZones
         var key = jobName.GetHashCode() ^ (zone?.GetInstanceID() ?? 0);
         if (s_loggedBrokenJobs.Add(key))
         {
-            Plugin.Logger.LogWarning(
+            Plugin.Logger.LogDebug(
                 $"Skipping {jobName} for {zone?.name ?? "<null>"} " +
-                $"(LocalIndex={zone?.LocalIndex.ToString() ?? "?"}) — zone has no areas. " +
-                $"ShouldRebuild={FactoryJobManager.ShouldRebuild}");
+                $"(LocalIndex={zone?.LocalIndex.ToString() ?? "?"}) — zone has no areas.");
         }
         return true;
     }
