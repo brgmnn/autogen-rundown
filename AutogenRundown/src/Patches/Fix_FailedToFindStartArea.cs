@@ -14,9 +14,11 @@ public class Fix_FailedToFindStartArea
 
     /// <summary>
     /// Once per-zone failures exceed this, also bulk-reroll all MainLayer zones in the
-    /// dimension to force broader topology variation across rebuilds.
+    /// dimension to force broader topology variation across rebuilds. Must be strictly less
+    /// than kFatalThreshold — otherwise the fatal-threshold check returns first and the
+    /// broaden + direction-cycle escalation never runs.
     /// </summary>
-    private const uint kBroadenThreshold = 50;
+    private const uint kBroadenThreshold = 20;
 
     /// <summary>
     /// Hard ceiling on retries. Beyond this we stop scheduling rerolls and emit a fatal log
