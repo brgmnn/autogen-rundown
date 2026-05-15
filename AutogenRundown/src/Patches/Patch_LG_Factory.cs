@@ -44,6 +44,7 @@ public class Patch_LG_Factory
         Fix_FailedToFindStartArea.fatalReached = false;
         Fix_DistributionOnBrokenZones.ResetDiagnostics();
         Fix_WardenObjectiveDistributionOnBrokenZones.ResetDiagnostics();
+        Fix_FactoryJobExceptionCatchAll.ResetDiagnostics();
     }
 
     /// <summary>
