@@ -1165,7 +1165,11 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             if (finalCount <= 0)
                 continue;
 
-            SetInfectionVibe(zone, finalCount);
+            SetInfectionVibe(
+                zone,
+                spitters: finalCount,
+                setLights: Generator.Flip(isHeavy ? 0.4 : 0.7));
+
             perZoneCounts.Add(finalCount);
         }
 

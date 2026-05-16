@@ -50,17 +50,18 @@ public partial record LevelLayout
             });
     }
 
-    private static void SetInfectionVibe(Zone zone, int spitters = 100)
+    private static void SetInfectionVibe(Zone zone, int spitters = 100, bool setLights = true)
     {
-        // Pick some mother like lights
-        zone.LightSettings = Generator.Pick(new List<Lights.Light>
-        {
-            Lights.Light.Monochrome_Green,
-            Lights.Light.Monochrome_YellowToGreen,
-            Lights.Light.DarkGreenToRed_1,
-            Lights.Light.camo_green_R4E1,
-            Lights.Light.BlueToGreen_1
-        });
+        // Pick some infection lights
+        if (setLights)
+            zone.LightSettings = Generator.Pick(new List<Lights.Light>
+            {
+                Lights.Light.Monochrome_Green,
+                Lights.Light.Monochrome_YellowToGreen,
+                Lights.Light.DarkGreenToRed_1,
+                Lights.Light.camo_green_R4E1,
+                Lights.Light.BlueToGreen_1
+            });
 
         // Add mother egg sacks to the zone
         zone.StaticSpawnDataContainers.Add(
