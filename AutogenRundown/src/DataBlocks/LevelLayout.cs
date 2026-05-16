@@ -332,7 +332,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 //         (1.5, 1, EnemyGroup.BloodDoor_FlyerBig)
                 //     });
 
-                if (level.Settings.HasFog() && level.FogSettings.IsInfectious)
+                if (level.Settings.HasInfection)
                     doorPack.AddRange(new List<(double, int, EnemyGroup)>
                     {
                         (2.0, 1, EnemyGroup.BloodDoor_HybridInfected_Normal),
@@ -381,7 +381,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 //         (2.0, 2, EnemyGroup.BloodDoor_FlyerBig)
                 //     });
 
-                if (level.Settings.HasFog() && level.FogSettings.IsInfectious)
+                if (level.Settings.HasInfection)
                     doorPack.AddRange(new List<(double, int, EnemyGroup)>
                     {
                         (3.0, 2, EnemyGroup.BloodDoor_HybridInfected_Hard)
@@ -1047,7 +1047,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         };
 
         // Add disinfect packs
-        if (level.Settings.HasFog() && level.FogSettings.IsInfectious)
+        if (level.Settings.HasInfection)
         {
             foreach (var zone in level.Planner
                          .GetZones(director.Bulkhead, null, layout.Dimension)
@@ -1085,7 +1085,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             lastZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
 
             // TODO: move this somewhere else? Currently it will only apply in main
-            if (level.FogSettings.IsInfectious && Generator.Flip(disinfectChance))
+            if (level.Settings.HasInfection && Generator.Flip(disinfectChance))
             {
                 var open = level.Planner.GetOpenZones(Bulkhead.All, null, layout.Dimension).Take(4);
                 var from = Generator.Pick(open);

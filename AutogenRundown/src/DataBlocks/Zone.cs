@@ -355,7 +355,7 @@ public partial record Zone : DataBlock<Zone>
         EventsOnDoorScanDone.AddRange(puzzle.EventsOnDoorScanDone);
 
         var parent = level.Planner.GetBuildFrom(new ZoneNode { Bulkhead = Bulkhead.Extreme, ZoneNumber = LocalIndex });
-        var isInfection = level.FogSettings.IsInfectious;
+        var isInfection = level.Settings.HasInfection;
 
         // Scale distances per tier for all alarms (including surge/fixed alarms).
         // Uses `with` expressions to create new instances rather than mutating in place.
@@ -624,7 +624,7 @@ public partial record Zone : DataBlock<Zone>
     /// </summary>
     internal void RollTravelAlarmModifiers(ChainedPuzzle puzzle)
     {
-        var isInfection = level.FogSettings.IsInfectious;
+        var isInfection = level.Settings.HasInfection;
 
         switch (level.Tier)
         {

@@ -451,7 +451,7 @@ public partial record WardenObjective
                                 SpawnTime = 45
                             }
                         }),
-                        (level.FogSettings.IsInfectious ? 0.10 : 0.25, new List<ReactorEnemyWave>
+                        (level.Settings.HasInfection ? 0.10 : 0.25, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_Medium,
                             ReactorEnemyWave.MiniBoss_12pts with
@@ -460,7 +460,7 @@ public partial record WardenObjective
                                 SpawnTime = 20
                             }
                         }),
-                        (level.FogSettings.IsInfectious ? 0.15 : 0, new List<ReactorEnemyWave>
+                        (level.Settings.HasInfection ? 0.15 : 0, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_Medium,
                             ReactorEnemyWave.MiniBoss_12pts with
@@ -523,7 +523,7 @@ public partial record WardenObjective
                                 SpawnTime = 45
                             }
                         }),
-                        (level.FogSettings.IsInfectious ? 0.15 : 0, new List<ReactorEnemyWave>
+                        (level.Settings.HasInfection ? 0.15 : 0, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_Medium,
                             ReactorEnemyWave.MiniBoss_12pts with
@@ -537,7 +537,7 @@ public partial record WardenObjective
                                 SpawnTime = 32
                             }
                         }),
-                        (level.FogSettings.IsInfectious ? 0.05 : 0.20, new List<ReactorEnemyWave>
+                        (level.Settings.HasInfection ? 0.05 : 0.20, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_Medium,
                             ReactorEnemyWave.SingleTankPotato with { SpawnTime = 35 }
@@ -597,7 +597,7 @@ public partial record WardenObjective
                         {
                             ReactorEnemyWave.Baseline_Medium with { Population = WavePopulation.Baseline_Nightmare }
                         }),
-                        (level.FogSettings.IsInfectious ? 1.0 : 0, new List<ReactorEnemyWave>
+                        (level.Settings.HasInfection ? 1.0 : 0, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_Medium with { Population = WavePopulation.Baseline_Hybrids },
                             ReactorEnemyWave.MiniBoss_12pts with
@@ -630,7 +630,7 @@ public partial record WardenObjective
                         {
                             ReactorEnemyWave.Baseline_Medium with { Population = WavePopulation.OnlyNightmares }
                         }),
-                        (level.FogSettings.IsInfectious ? 1.0 : 0, new List<ReactorEnemyWave>
+                        (level.Settings.HasInfection ? 1.0 : 0, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_Medium with { Population = WavePopulation.Baseline_Hybrids },
                             ReactorEnemyWave.MiniBoss_16pts with
@@ -712,7 +712,7 @@ public partial record WardenObjective
                                 SpawnTime = 25
                             },
                         }),
-                        (level.FogSettings.IsInfectious ? 0.5 : 0, new List<ReactorEnemyWave>
+                        (level.Settings.HasInfection ? 0.5 : 0, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_Hard with { Population = WavePopulation.Baseline_Hybrids },
                             ReactorEnemyWave.MiniBoss_12pts with
@@ -793,7 +793,7 @@ public partial record WardenObjective
                                 SpawnTime = 45
                             }
                         }),
-                        (level.FogSettings.IsInfectious ? 1.0 : 0, new List<ReactorEnemyWave>
+                        (level.Settings.HasInfection ? 1.0 : 0, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_Hard with { Population = WavePopulation.Baseline_Hybrids },
                             ReactorEnemyWave.MiniBoss_12pts with
@@ -856,7 +856,7 @@ public partial record WardenObjective
                                 SpawnTime = 60
                             }
                         }),
-                        (level.FogSettings.IsInfectious ? 1.0 : 0, new List<ReactorEnemyWave>
+                        (level.Settings.HasInfection ? 1.0 : 0, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_VeryHard with { Population = WavePopulation.Baseline_InfectedHybrids },
                             ReactorEnemyWave.MiniBoss_12pts with
@@ -948,7 +948,7 @@ public partial record WardenObjective
                             ReactorEnemyWave.SingleShadowPouncer with { SpawnTime = 35 },
                             ReactorEnemyWave.SingleShadowPouncer with { SpawnTime = 65, Duration = 0 }
                         }),
-                        (level.FogSettings.IsInfectious ? 1.0 : 0, new List<ReactorEnemyWave>
+                        (level.Settings.HasInfection ? 1.0 : 0, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_VeryHard with
                             {
@@ -960,7 +960,7 @@ public partial record WardenObjective
                                 SpawnTime = 25
                             }
                         }),
-                        (level.FogSettings.IsInfectious ? 0.5 : 0, new List<ReactorEnemyWave>
+                        (level.Settings.HasInfection ? 0.5 : 0, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_VeryHard with
                             {
@@ -1069,7 +1069,7 @@ public partial record WardenObjective
                                 SpawnTime = 45
                             }
                         }),
-                        (level.FogSettings.IsInfectious ? 1.0 : 0, new List<ReactorEnemyWave>
+                        (level.Settings.HasInfection ? 1.0 : 0, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_VeryHard with { Population = WavePopulation.Baseline_InfectedHybrids },
                             ReactorEnemyWave.MiniBoss_16pts with
@@ -1153,7 +1153,7 @@ public partial record WardenObjective
                                 SpawnTime = 50
                             }
                         }),
-                        (level.FogSettings.IsInfectious ? 1.0 : 0, new List<ReactorEnemyWave>
+                        (level.Settings.HasInfection ? 1.0 : 0, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_SurgeHard with { Population = WavePopulation.Baseline_InfectedHybrids },
                             ReactorEnemyWave.MiniBoss_12pts with
@@ -1261,7 +1261,7 @@ public partial record WardenObjective
                             ReactorEnemyWave.SingleShadowPouncer with { SpawnTime = 25 },
                             ReactorEnemyWave.SingleShadowPouncer with { SpawnTime = 65, Duration = 0 }
                         }),
-                        (level.FogSettings.IsInfectious ? 0.5 : 0, new List<ReactorEnemyWave>
+                        (level.Settings.HasInfection ? 0.5 : 0, new List<ReactorEnemyWave>
                         {
                             ReactorEnemyWave.Baseline_SurgeVeryHard with
                             {
