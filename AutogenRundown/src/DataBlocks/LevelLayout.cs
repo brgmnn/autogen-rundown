@@ -1100,6 +1100,83 @@ public partial record LevelLayout : DataBlock<LevelLayout>
     }
 
     /// <summary>
+    /// If the level has the Infection or HeavyInfection modifier, seeds spitter static
+    /// spawns into a random subset of this layout's zones (skipping the elevator and any
+    /// zone that already has Spitter spawns). The Spitters / ManySpitters / NoSpitters
+    /// modifiers act as a density multiplier on top.
+    ///
+    /// Independent of fog: does not influence FogSettings.IsInfectious — pair with
+    /// LevelModifiers.FogIsInfectious if infectious fog is also wanted.
+    /// </summary>
+    private void ApplyInfectionLevelModifier()
+    {
+        var modifiers = level.Settings.Modifiers;
+
+        var isHeavy = modifiers.Contains(LevelModifiers.HeavyInfection);
+        var isLight = modifiers.Contains(LevelModifiers.Infection);
+
+        if (!isHeavy && !isLight)
+            return;
+
+        if (modifiers.Contains(LevelModifiers.NoSpitters))
+            return;
+
+        var density = modifiers.Contains(LevelModifiers.ManySpitters) ? 2.0 : 1.0;
+
+        var nodes = level.Planner.GetZones(director.Bulkhead, null, Dimension).ToList();
+        if (nodes.Count <= 1)
+            return;
+
+        var candidates = nodes
+            .Skip(1)
+            .Select(node => level.Planner.GetZone(node))
+            .Where(zone => zone != null)
+            .Cast<Zone>()
+            .Where(zone => !zone.StaticSpawnDataContainers.Any(c => c.Unit == StaticSpawnUnit.Spitter))
+            .ToList();
+
+        if (candidates.Count == 0)
+            return;
+
+        var targetCount = isHeavy ? Generator.Between(4, 6) : Generator.Between(2, 4);
+        if (targetCount > candidates.Count)
+            targetCount = candidates.Count;
+
+        var picked = Generator.Shuffle(candidates).Take(targetCount).ToList();
+        var perZoneCounts = new List<int>();
+
+        foreach (var zone in picked)
+        {
+            var baseCount = isHeavy
+                ? Generator.Select(new List<(double, int)>
+                {
+                    (0.20, 100),
+                    (0.50, 150),
+                    (0.30, 250),
+                })
+                : Generator.Select(new List<(double, int)>
+                {
+                    (0.30, 50),
+                    (0.50, 100),
+                    (0.20, 150),
+                });
+
+            var finalCount = (int)(baseCount * density);
+            if (finalCount <= 0)
+                continue;
+
+            SetInfectionVibe(zone, finalCount);
+            perZoneCounts.Add(finalCount);
+        }
+
+        Plugin.Logger.LogDebug(
+            $"{Name} -- Infection modifier applied: " +
+            $"intensity={(isHeavy ? "HeavyInfection" : "Infection")} " +
+            $"density={density}x zones={perZoneCounts.Count} " +
+            $"counts=[{string.Join(", ", perZoneCounts)}]");
+    }
+
+    /// <summary>
     /// Writes zones from the planner to this layout, then rolls alarms, blood doors, and
     /// enemies. Finally persists the layout to the data block bin. Called by both Build()
     /// and BuildDimension() after zone structure has been planned.
@@ -1128,6 +1205,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
 
         RollAlarms();
         RollBloodDoors();
+        ApplyInfectionLevelModifier();
         RollEnemies(director);
 
         Bins.LevelLayouts.AddBlock(this);
