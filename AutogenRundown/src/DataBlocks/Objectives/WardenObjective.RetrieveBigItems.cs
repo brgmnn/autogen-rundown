@@ -81,14 +81,17 @@ public partial record WardenObjective
         {
             if (dataLayer.ObjectiveData.ZonePlacementDatas[0].Count == 1)
             {
-                var zoneNumber = dataLayer.ObjectiveData.ZonePlacementDatas[0][0].LocalIndex;
+                // Capture the placement-data reference so the lambdas below read the current
+                // LocalIndex at serialization time (a captured int would be a stale snapshot
+                // if zone numbers get recalculated later).
+                var placement = dataLayer.ObjectiveData.ZonePlacementDatas[0][0];
 
                 GoToZone = new Text(() =>
-                    $"Navigate to {Intel.Zone(layout.ZoneAliasStart + zoneNumber)} and find [ALL_ITEMS]");
+                    $"Navigate to {Intel.Zone(layout.ZoneAliasStart + placement.LocalIndex)} and find [ALL_ITEMS]");
                 GoToZoneHelp = new Text(() =>
-                    $"Use information in the environment to find {Intel.Zone(layout.ZoneAliasStart + zoneNumber)}");
+                    $"Use information in the environment to find {Intel.Zone(layout.ZoneAliasStart + placement.LocalIndex)}");
                 InZoneFindItem = new Text(() =>
-                    $"Find [ALL_ITEMS] somewhere inside {Intel.Zone(layout.ZoneAliasStart + zoneNumber)}");
+                    $"Find [ALL_ITEMS] somewhere inside {Intel.Zone(layout.ZoneAliasStart + placement.LocalIndex)}");
             }
             else
             {
@@ -579,15 +582,18 @@ public partial record WardenObjective
 
             case WardenObjectiveItem.MatterWaveProjector:
             {
-                var zoneIndex = dataLayer.ObjectiveData.ZonePlacementDatas[0][0].LocalIndex;
+                // Capture the placement-data reference (not the int LocalIndex value), so
+                // lambdas below read the current LocalIndex at serialization time — if
+                // zone numbers get recalculated after this point, the strings stay correct.
+                var placement = dataLayer.ObjectiveData.ZonePlacementDatas[0][0];
 
                 WavesOnGotoWin.Add(GenericWave.Exit_Objective_Easy);
 
                 // Manually set the zones as the inbuilt ITEM_ZONE doesn't seem to
                 // work correctly for MWP
-                GoToZone = new Text(() => $"Navigate to {Intel.Zone(layout.ZoneAliasStart + zoneIndex)} and find [ALL_ITEMS]");
-                GoToZoneHelp = new Text($"Use information in the environment to find [ZONE_{zoneIndex}]");
-                InZoneFindItem = new Text($"Find [ALL_ITEMS] somewhere inside [ZONE_{zoneIndex}]");
+                GoToZone = new Text(() => $"Navigate to {Intel.Zone(layout.ZoneAliasStart + placement.LocalIndex)} and find [ALL_ITEMS]");
+                GoToZoneHelp = new Text(() => $"Use information in the environment to find [ZONE_{placement.LocalIndex}]");
+                InZoneFindItem = new Text(() => $"Find [ALL_ITEMS] somewhere inside [ZONE_{placement.LocalIndex}]");
 
                 SolveItem = new Text("WARNING - Matter Wave Projector misplaced - ENGAGING SECURITY PROTOCOLS");
 

@@ -140,7 +140,7 @@ public static class EventCollectionExtensions
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = delay,
-                WardenIntel = message
+                WardenIntel = new Text(message)
             });
 
         return events;
@@ -194,6 +194,20 @@ public class EventBuilder
         string? message = null,
         WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
         double delay = 0.0)
+        => AddOpenDoor(events, bulkhead, zoneIndex, message != null ? new Text(message) : null, trigger, delay);
+
+    /// <summary>
+    /// Text-typed overload of <see cref="AddOpenDoor(ICollection&lt;WardenObjectiveEvent&gt;,Bulkhead,int,string,WardenObjectiveEventTrigger,double)"/>
+    /// for callers that need the description to be lazily evaluated at JSON serialization time
+    /// (e.g. when the embedded zone number may be recalculated after this method is called).
+    /// </summary>
+    public static void AddOpenDoor(
+        ICollection<WardenObjectiveEvent> events,
+        Bulkhead bulkhead,
+        int zoneIndex,
+        Text? message,
+        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
+        double delay = 0.0)
     {
         events.Add(
             new WardenObjectiveEvent
@@ -231,6 +245,20 @@ public class EventBuilder
         Bulkhead bulkhead,
         int zoneIndex,
         string? message = null,
+        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
+        double delay = 0.0,
+        DimensionIndex dimension = DimensionIndex.Reality)
+        => AddUnlockDoor(events, bulkhead, zoneIndex, message != null ? new Text(message) : null, trigger, delay, dimension);
+
+    /// <summary>
+    /// Text-typed overload of <see cref="AddUnlockDoor(ICollection&lt;WardenObjectiveEvent&gt;,Bulkhead,int,string,WardenObjectiveEventTrigger,double,DimensionIndex)"/>
+    /// for callers that need the description to be lazily evaluated at JSON serialization time.
+    /// </summary>
+    public static void AddUnlockDoor(
+        ICollection<WardenObjectiveEvent> events,
+        Bulkhead bulkhead,
+        int zoneIndex,
+        Text? message,
         WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
         double delay = 0.0,
         DimensionIndex dimension = DimensionIndex.Reality)
@@ -285,7 +313,7 @@ public class EventBuilder
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = delay,
-                WardenIntel = message
+                WardenIntel = new Text(message)
             });
 
         return events;
@@ -360,7 +388,7 @@ public class EventBuilder
                 Type = WardenObjectiveEventType.None,
                 Trigger = WardenObjectiveEventTrigger.OnStart,
                 Delay = delay + 4.0,
-                WardenIntel = message
+                WardenIntel = new Text(message)
             });
     }
 
@@ -405,7 +433,7 @@ public class EventBuilder
                 Type = WardenObjectiveEventType.None,
                 Trigger = WardenObjectiveEventTrigger.OnStart,
                 Delay = delay + 4.0,
-                WardenIntel = message
+                WardenIntel = new Text(message)
             });
     }
 
@@ -445,7 +473,7 @@ public class EventBuilder
                 Type = WardenObjectiveEventType.None,
                 Trigger = WardenObjectiveEventTrigger.OnStart,
                 Delay = delay + 4.0,
-                WardenIntel = message
+                WardenIntel = new Text(message)
             });
     }
     #endregion
@@ -475,7 +503,7 @@ public class EventBuilder
                 Type = WardenObjectiveEventType.PlaySound,
                 Trigger = WardenObjectiveEventTrigger.OnStart,
                 SoundId = Sound.LightsOff,
-                WardenIntel = message,
+                WardenIntel = new Text(message),
                 Delay = delay
             });
     }
@@ -504,7 +532,7 @@ public class EventBuilder
                 Type = WardenObjectiveEventType.PlaySound,
                 Trigger = WardenObjectiveEventTrigger.OnStart,
                 SoundId = Sound.LightsOff,
-                WardenIntel = message,
+                WardenIntel = new Text(message),
                 Delay = delay
             });
     }
@@ -521,6 +549,16 @@ public class EventBuilder
     public static void AddMessage(
         ICollection<WardenObjectiveEvent> events,
         string message,
+        double delay = 0.0,
+        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart)
+        => AddMessage(events, new Text(message), delay, trigger);
+
+    /// <summary>
+    /// Text-typed overload for callers that need lazy evaluation at JSON serialization time.
+    /// </summary>
+    public static void AddMessage(
+        ICollection<WardenObjectiveEvent> events,
+        Text message,
         double delay = 0.0,
         WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart)
     {
@@ -549,7 +587,7 @@ public class EventBuilder
                 Duration = duration,
                 Delay = delay,
                 Trigger = WardenObjectiveEventTrigger.None,
-                WardenIntel = message
+                WardenIntel = new Text(message)
             });
     }
     #endregion
@@ -573,7 +611,7 @@ public class EventBuilder
                 Type = WardenObjectiveEventType.PlaySound,
                 Trigger = WardenObjectiveEventTrigger.OnStart,
                 SoundId = Sound.LightsOff,
-                WardenIntel = message,
+                WardenIntel = new Text(message),
                 Delay = delay
             });
     }*/

@@ -147,7 +147,11 @@ public record WardenObjectiveEvent
 
     public bool ClearDimension { get; set; } = false;
 
-    public string WardenIntel { get; set; } = "";
+    [JsonIgnore]
+    public Text WardenIntel { get; set; } = Text.None;
+
+    [JsonProperty("WardenIntel")]
+    public uint WardenIntelTextId => WardenIntel.PersistentId;
 
     #region Objective
 

@@ -670,7 +670,7 @@ public partial record LevelLayout
                     Type = WardenObjectiveEventType.PlaySound,
                     Delay = 5.5,
                     SoundId = Sound.LightsOff,
-                    WardenIntel = ":://WARNING - Electrical systems disrupted"
+                    WardenIntel = new Text(":://WARNING - Electrical systems disrupted")
                 });
                 break;
 

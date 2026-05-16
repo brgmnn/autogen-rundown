@@ -99,7 +99,7 @@ public static class WardenObjectiveEventCollections
                 Enabled = true,
                 Delay = delay,
                 Trigger = trigger,
-                WardenIntel = alertMessage ?? string.Empty
+                WardenIntel = new DataBlocks.Text(alertMessage ?? string.Empty)
             });
 
         return events;
@@ -244,7 +244,7 @@ public static class WardenObjectiveEventCollections
                 Type = WardenObjectiveEventType.None,
                 Trigger = WardenObjectiveEventTrigger.OnStart,
                 Delay = delay + 4.0,
-                WardenIntel = message
+                WardenIntel = new DataBlocks.Text(message)
             });
 
         return events;
@@ -566,7 +566,7 @@ public static class WardenObjectiveEventCollections
                 Type = WardenObjectiveEventType.UpdateCustomSubObjective,
                 SubObjective = description ?? DataBlocks.Text.None,
                 SubObjectiveHeader = header ?? DataBlocks.Text.None,
-                WardenIntel = intel ?? "",
+                WardenIntel = new DataBlocks.Text(intel ?? ""),
                 Delay = delay
             });
 

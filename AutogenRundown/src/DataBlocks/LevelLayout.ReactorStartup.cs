@@ -131,12 +131,11 @@ public partial record LevelLayout
             // Add an event to open/unlock the door when the wave defense is over (OnMid trigger)
             if (Generator.Flip(openChance))
             {
-                // TODO: The Zone number appears to not work now (E-level)
                 EventBuilder.AddOpenDoor(
                     wave.Events,
                     director.Bulkhead,
                     firstZone.LocalIndex,
-                    $"Door to [ZONE_{firstZone.LocalIndex}] opened by startup sequence",
+                    new Text(() => $"Door to {Intel.Zone(firstZone)} opened by startup sequence"),
                     WardenObjectiveEventTrigger.OnMid,
                     8.0);
 
@@ -148,7 +147,7 @@ public partial record LevelLayout
                     wave.Events,
                     director.Bulkhead,
                     firstZone.LocalIndex,
-                    $"Door to [ZONE_{firstZone.LocalIndex}] unlocked by startup sequence",
+                    new Text(() => $"Door to {Intel.Zone(firstZone)} unlocked by startup sequence"),
                     WardenObjectiveEventTrigger.OnMid,
                     8.0);
         }
