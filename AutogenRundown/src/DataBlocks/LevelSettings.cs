@@ -185,6 +185,9 @@ public class LevelSettings
     public bool HasFog() =>
         Modifiers.Contains(LevelModifiers.Fog) || Modifiers.Contains(LevelModifiers.HeavyFog);
 
+    public bool HasInfection =>
+        Modifiers.Contains(LevelModifiers.Infection) || Modifiers.Contains(LevelModifiers.HeavyInfection);
+
     public bool HasChargers() =>
         Modifiers.Contains(LevelModifiers.Chargers) || Modifiers.Contains(LevelModifiers.ManyChargers);
 
@@ -371,8 +374,11 @@ public class LevelSettings
                 Modifiers.Add(LevelModifiers.NoNightmares);
                 Modifiers.Add(LevelModifiers.NoShadows);
 
-                // Fog modifiers
                 if (Generator.Flip(0.1))
+                    Modifiers.Add(LevelModifiers.Infection);
+
+                // Fog modifiers
+                if (HasInfection && Generator.Flip())
                     Modifiers.Add(LevelModifiers.FogIsInfectious);
 
                 Modifiers.Add(
@@ -406,6 +412,11 @@ public class LevelSettings
                     }));
 
                 if (Generator.Flip(0.3))
+                    Modifiers.Add(Generator.Flip(0.2) ?
+                        LevelModifiers.HeavyInfection :
+                        LevelModifiers.Infection);
+
+                if (HasInfection && Generator.Flip(0.6))
                     Modifiers.Add(LevelModifiers.FogIsInfectious);
 
                 Modifiers.Add(
@@ -450,11 +461,16 @@ public class LevelSettings
                         (0.1, LevelModifiers.ManyFlyers),
                     }));
 
-                if (Generator.Flip(0.5))
+                if (Generator.Flip())
+                    Modifiers.Add(Generator.Flip(0.333) ?
+                        LevelModifiers.HeavyInfection :
+                        LevelModifiers.Infection);
+
+                if (HasInfection && Generator.Flip(0.85))
                     Modifiers.Add(LevelModifiers.FogIsInfectious);
 
                 // Roll infection hybrids
-                if (Modifiers.Contains(LevelModifiers.FogIsInfectious) && Generator.Flip(0.3))
+                if (HasInfection && Generator.Flip(0.3))
                     Modifiers.Add(LevelModifiers.InfectionHybrids);
 
                 // Roll regular hybrids
@@ -504,15 +520,18 @@ public class LevelSettings
                         (0.1, LevelModifiers.ManyFlyers),
                     }));
 
-                if (Generator.Flip(0.9))
+                if (Generator.Flip(0.85))
+                    Modifiers.Add(Generator.Flip(0.6) ?
+                        LevelModifiers.HeavyInfection :
+                        LevelModifiers.Infection);
+
+                if (HasInfection)
                     Modifiers.Add(LevelModifiers.FogIsInfectious);
 
-                // Roll infection hybrids
-                if (Modifiers.Contains(LevelModifiers.FogIsInfectious) && Generator.Flip(0.65))
+                // Roll infection / regular hybrids
+                if (Modifiers.Contains(LevelModifiers.HeavyInfection) || HasInfection && Generator.Flip(0.65))
                     Modifiers.Add(LevelModifiers.InfectionHybrids);
-
-                // Roll regular hybrids
-                if (Generator.Flip(0.7))
+                else if (Generator.Flip(0.7))
                     Modifiers.Add(LevelModifiers.Hybrids);
 
                 Modifiers.Add(
