@@ -507,8 +507,8 @@ public static class RundownFactory
                     new() { 1, 2, 1, 1 },       // done
                     new() { 1, 1, 1, 2, 1, 1 }, // done
                     new() { 1, 2, 1, 1, 2, 2 }, // done
-                    new() { 1, 1, 1, 1, 1, 1 }, //
-                    new() { 1, 1, 1, 1, 1 }     //
+                    new() { 3, 1, 1, 1, 3, 1 }, // done
+                    new() { 3, 2, 1, 1, 5 }     // done
                 }
             },
         };
