@@ -166,7 +166,7 @@ public sealed class ZoneSensorManager
             LocalIndex = (eLocalZoneIndex)evt.LocalIndex,
             Delay = (float)evt.Delay,
             Duration = (float)evt.Duration,
-            WardenIntel = ToLocalizedText(evt.WardenIntel),
+            WardenIntel = ToLocalizedText(evt.WardenIntel.English),
             SoundID = (uint)evt.SoundId,
             DialogueID = evt.DialogueId,
             FogSetting = evt.FogSetting,

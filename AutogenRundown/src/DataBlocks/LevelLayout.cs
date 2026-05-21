@@ -21,12 +21,26 @@ public enum SizeFactor
 
 public partial record LevelLayout : DataBlock<LevelLayout>
 {
-    #region hidden data
+    public static readonly LevelLayout None = new(
+        new Level("A"),
+        new BuildDirector(),
+        new WardenObjective(),
+        new LevelSettings("A"),
+        new LayoutPlanner())
+    {
+        PersistentId = 0
+    };
+
+    #region Internal hidden data
+
     [JsonIgnore]
     private readonly Level level;
 
     [JsonIgnore]
     internal readonly BuildDirector director;
+
+    [JsonIgnore]
+    internal Complex Complex { get; init; }
 
     [JsonIgnore]
     private readonly WardenObjective objective;
@@ -36,6 +50,9 @@ public partial record LevelLayout : DataBlock<LevelLayout>
 
     [JsonIgnore]
     private readonly LayoutPlanner planner;
+
+    [JsonIgnore]
+    public DimensionIndex Dimension { get; init; } = DimensionIndex.Reality;
 
     [JsonIgnore]
     private readonly LevelSettings settings;
@@ -48,6 +65,21 @@ public partial record LevelLayout : DataBlock<LevelLayout>
 
     [JsonIgnore]
     public List<(double chance, int count, WaveSettings)> WaveSettingsPack { get; set; } = new();
+
+    [JsonIgnore]
+    public Dimension? LinkedDimension { get; set; }
+
+    /// <summary>
+    /// When set, replaces the standard modifier-derived hibernating enemy roll with the
+    /// supplied weighted choices. Each entry is `(chance, spawns)` where `Generator.Select`
+    /// picks one option per zone; the spawns list is then emitted for that zone, with each
+    /// spawn's `Points` field treated as a relative weight against the zone's adjusted
+    /// budget. A spawn whose `Difficulty` is an `AutogenDifficulty` group flag (Base /
+    /// Chargers / Hybrids = 0, or has bits in the 0xC0 mask) gets ORed with the current
+    /// tier bits; specific enemy IDs (0x01-0x3F) are written through unchanged.
+    /// </summary>
+    [JsonIgnore]
+    public List<(double chance, List<EnemySpawningData> spawns)>? EnemyChoicesOverride { get; set; }
 
     #endregion
 
@@ -71,6 +103,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
 
         this.director = director;
         this.level = level;
+        this.Complex = level.Complex;
         this.objective = objective;
         this.planner = planner;
         this.settings = settings;
@@ -299,7 +332,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 //         (1.5, 1, EnemyGroup.BloodDoor_FlyerBig)
                 //     });
 
-                if (level.Settings.HasFog() && level.FogSettings.IsInfectious)
+                if (level.Settings.HasInfection)
                     doorPack.AddRange(new List<(double, int, EnemyGroup)>
                     {
                         (2.0, 1, EnemyGroup.BloodDoor_HybridInfected_Normal),
@@ -348,7 +381,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 //         (2.0, 2, EnemyGroup.BloodDoor_FlyerBig)
                 //     });
 
-                if (level.Settings.HasFog() && level.FogSettings.IsInfectious)
+                if (level.Settings.HasInfection)
                     doorPack.AddRange(new List<(double, int, EnemyGroup)>
                     {
                         (3.0, 2, EnemyGroup.BloodDoor_HybridInfected_Hard)
@@ -364,7 +397,8 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         // Do not add blood doors to Zone 0, these are always either the elevator or bulkhead doors.
         // Do not add blood doors to Apex security doors
         foreach (var zone in zones)
-            if (!planner.GetZoneNode(zone.LocalIndex).Tags.Contains("no_blood_door") &&
+            if (!planner.GetZoneNode(zone.LocalIndex, Dimension).Tags.Contains("no_blood_door") &&
+                !planner.GetZoneNode(zone.LocalIndex, Dimension).Tags.Contains("no_access") &&
                 zone is { LocalIndex: > 0, SecurityGateToEnter: SecurityGate.Security } &&
                 Generator.Flip(chance) &&
                 (count++ < max || max == -1))
@@ -505,7 +539,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         // We want to shuffle this list for the same reason as when we roll blood doors and door
         // alarms. It stops pack draws being weighted differently at the start and end of the
         // layout zones.
-        var zoneNodes = planner.GetZones(director.Bulkhead, null).Shuffle();
+        var zoneNodes = planner.GetZones(director.Bulkhead, null, Dimension).Shuffle();
 
         foreach (var node in zoneNodes)
         {
@@ -519,7 +553,9 @@ public partial record LevelLayout : DataBlock<LevelLayout>
 
             // Skip adding any enemies to the reactor area
             // TODO: we may want to add a chance for some enemies here
-            if (node.Tags.Contains("reactor") || node.Tags.Contains("no_enemies"))
+            if (node.Tags.Contains("reactor") ||
+                node.Tags.Contains("no_enemies") ||
+                node.Tags.Contains("no_access"))
                 continue;
 
             var points = director.GetPoints(zone);
@@ -556,47 +592,9 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             if (zone.BloodDoor.Enabled)
                 points = (int)(points * 0.66);
 
-            #region Charger roll check
-            var chargerChance = 0.0;
-
-            if (settings.Modifiers.Contains(LevelModifiers.Chargers))
-                chargerChance = 0.2;
-
-            if (settings.Modifiers.Contains(LevelModifiers.ManyChargers))
-                chargerChance = 0.5;
-            #endregion
-
-            #region Shadows roll check
-            var shadowChance = 0.0;
-
-            if (settings.Modifiers.Contains(LevelModifiers.Shadows))
-                shadowChance = 0.15;
-
-            if (settings.Modifiers.Contains(LevelModifiers.ManyShadows))
-                shadowChance = 0.5;
-            #endregion
-
-            #region Hybrid roll check
-            var hybridChance = 0.0;
-
-            if (settings.Modifiers.Contains(LevelModifiers.Hybrids))
-                hybridChance = 0.3;
-
             var infectionHybridChance = 0.0;
-
             if (settings.Modifiers.Contains(LevelModifiers.InfectionHybrids))
                 infectionHybridChance = zone.InFog ? 0.4 : 0.15;
-            #endregion
-
-            #region Nightmares roll check
-            var nightmaresChance = 0.0;
-
-            if (settings.Modifiers.Contains(LevelModifiers.Nightmares))
-                nightmaresChance = 0.2;
-
-            if (settings.Modifiers.Contains(LevelModifiers.ManyNightmares))
-                nightmaresChance = 0.5;
-            #endregion
 
             // Boss settings
             // TODO: don't have totally independent of zone points
@@ -611,120 +609,8 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 }
             }
 
-            var groupChoices = new List<(double chance, List<AutogenDifficulty> groups)>
-            {
-                (1.0, new List<AutogenDifficulty> { AutogenDifficulty.Base }),
-
-                // Chargers
-                (chargerChance, new List<AutogenDifficulty> { AutogenDifficulty.Chargers }),
-                (chargerChance, new List<AutogenDifficulty>
-                {
-                    AutogenDifficulty.Base,
-                    AutogenDifficulty.Chargers
-                }),
-
-                // Shadows
-                (shadowChance, new List<AutogenDifficulty> { AutogenDifficulty.Shadows }),
-                (shadowChance, new List<AutogenDifficulty>
-                {
-                    AutogenDifficulty.Base,
-                    AutogenDifficulty.Shadows
-                }),
-
-                // Hybrid is always mixed
-                (hybridChance, new List<AutogenDifficulty>
-                {
-                    AutogenDifficulty.Base,
-                    AutogenDifficulty.Hybrids
-                }),
-
-                // Nightmares
-                (nightmaresChance, new List<AutogenDifficulty> { AutogenDifficulty.Nightmares }),
-                (nightmaresChance, new List<AutogenDifficulty>
-                {
-                    AutogenDifficulty.Base,
-                    AutogenDifficulty.Nightmares
-                }),
-            };
-
-            if (chargerChance > 0 && hybridChance > 0)
-                groupChoices.Add(
-                    (0.1, new List<AutogenDifficulty>
-                    {
-                        AutogenDifficulty.Base,
-                        AutogenDifficulty.Chargers,
-                        AutogenDifficulty.Hybrids
-                    }));
-
-            // if (chargerChance > 0 && shadowChance > 0)
-            //     groupChoices.Add(
-            //         (0.2, new List<AutogenDifficulty>
-            //             {
-            //                 AutogenDifficulty.Base,
-            //                 AutogenDifficulty.Chargers,
-            //                 AutogenDifficulty.Shadows
-            //             }));
-
-            // if (chargerChance > 0 && nightmaresChance > 0)
-            //     groupChoices.Add(
-            //         (0.2, new List<AutogenDifficulty>
-            //         {
-            //             AutogenDifficulty.Base,
-            //             AutogenDifficulty.Chargers,
-            //             AutogenDifficulty.Nightmares
-            //         }));
-
-            // if (shadowChance > 0 && nightmaresChance > 0)
-            //     groupChoices.Add(
-            //         (0.2, new List<AutogenDifficulty>
-            //         {
-            //             AutogenDifficulty.Base,
-            //             AutogenDifficulty.Shadows,
-            //             AutogenDifficulty.Nightmares
-            //         }));
-
-            // if (chargerChance > 0 && shadowChance > 0 && hybridChance > 0)
-            //     groupChoices.Add(
-            //         (0.1, new List<AutogenDifficulty>
-            //             {
-            //                 AutogenDifficulty.Chargers,
-            //                 AutogenDifficulty.Shadows,
-            //                 AutogenDifficulty.Hybrids
-            //             }));
-
-            // if (chargerChance > 0 && nightmaresChance > 0 && hybridChance > 0)
-            //     groupChoices.Add(
-            //         (0.1, new List<AutogenDifficulty>
-            //         {
-            //             AutogenDifficulty.Chargers,
-            //             AutogenDifficulty.Nightmares,
-            //             AutogenDifficulty.Hybrids
-            //         }));
-
-            // if (shadowChance > 0 && nightmaresChance > 0 && hybridChance > 0)
-            //     groupChoices.Add(
-            //         (0.1, new List<AutogenDifficulty>
-            //         {
-            //             AutogenDifficulty.Shadows,
-            //             AutogenDifficulty.Nightmares,
-            //             AutogenDifficulty.Hybrids
-            //         }));
-
-            // // TODO: TBD if we like having a room with literally everything in it
-            // // We don't
-            // if (chargerChance > 0 && shadowChance > 0 && nightmaresChance > 0 && hybridChance > 0)
-            //     groupChoices.Add(
-            //         (0.1, new List<AutogenDifficulty>
-            //         {
-            //             AutogenDifficulty.Chargers,
-            //             AutogenDifficulty.Shadows,
-            //             AutogenDifficulty.Nightmares,
-            //             AutogenDifficulty.Hybrids
-            //         }));
-
-
-            var groups = Generator.Select(groupChoices);
-            var displayGroups = groups.Select(difficulty => difficulty.ToString()).ToList();
+            var choices = EnemyChoicesOverride ?? BuildStandardChoices(director);
+            var spawns = Generator.Select(choices);
 
             if (Generator.Flip(infectionHybridChance))
             {
@@ -751,42 +637,143 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                             _ => 8
                         },
                     });
-                displayGroups.Add("HybridInfected");
             }
 
-            Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} has {points}pts for enemies. Groups: {string.Join(", ", displayGroups)}");
+            // Each spawn's Points field is treated as a relative weight against the zone's
+            // adjusted point budget. Caller-supplied AutogenDifficulty group flags (Base /
+            // Chargers / Hybrids = 0, or any of Shadows / Nightmares / Flyers in the 0xC0
+            // mask) get ORed with the current tier bits; specific enemy IDs (0x01-0x3F) are
+            // written through unchanged. This unifies the standard modifier-driven roll
+            // with theme-specific overrides (e.g. Cryptomnesia) under one emit path.
+            var totalWeight = spawns.Sum(s => s.Points > 0 ? (double)s.Points : 1.0);
+            var displaySpawns = new List<string>();
 
-            // TODO: reduce number of groups
+            foreach (var spawn in spawns)
+            {
+                var weight = spawn.Points > 0 ? (double)spawn.Points : 1.0;
+                var groupFlag = TryAsGroupFlag(spawn.Difficulty);
 
-            // By default we will just let the spawning data allocate out groups. If there
-            // are multiple groups we just spawn equal numbers of them and let the game
-            // divide that up into portions.
-            foreach (var group in groups)
-                zone.EnemySpawningInZone.Add(
-                    new EnemySpawningData
-                    {
-                        GroupType = EnemyGroupType.Hibernate,
-                        Difficulty = director.Tier switch
-                        {
-                            "A" => (uint)(AutogenDifficulty.TierA | group),
-                            "B" => (uint)(AutogenDifficulty.TierB | group),
-                            "C" => (uint)(AutogenDifficulty.TierC | group),
-                            "D" => (uint)(AutogenDifficulty.TierD | group),
-                            "E" => (uint)(AutogenDifficulty.TierE | group),
-                            _ => (uint)(AutogenDifficulty.TierC | group)
-                        },
-                        // We manually do some point adjustment, as some enemy spawns
-                        // (nightmares) are far harder than others. And others are easier
-                        Points = (int)((group, level.Tier) switch
-                        {
-                            (AutogenDifficulty.Nightmares, "C") => points / 1.2,
-                            (AutogenDifficulty.Shadows, "E") => points * 1.2,
+                var adjusted = (groupFlag, level.Tier) switch
+                {
+                    (AutogenDifficulty.Nightmares, "C") => points / 1.2,
+                    (AutogenDifficulty.Shadows, "E") => points * 1.2,
+                    _ => (double)points
+                };
 
-                            _ => points
-                        } / groups.Count)
-                    });
+                var finalDifficulty = groupFlag is { } g
+                    ? TierBits(director.Tier) | (uint)g
+                    : spawn.Difficulty;
+
+                zone.EnemySpawningInZone.Add(spawn with
+                {
+                    Difficulty = finalDifficulty,
+                    Points = (int)(adjusted * weight / totalWeight)
+                });
+
+                displaySpawns.Add(groupFlag?.ToString() ?? $"0x{spawn.Difficulty:X2}");
+            }
+
+            Plugin.Logger.LogDebug($"{Name} -- Zone {zone.LocalIndex} has {points}pts for enemies. Spawns: {string.Join(", ", displaySpawns)}");
         }
     }
+
+    /// <summary>
+    /// Builds the standard modifier-derived weighted-choice list for hibernating enemy
+    /// rolls — the per-zone selection between Base / Chargers / Shadows / Hybrids /
+    /// Nightmares group combinations driven by `settings.Modifiers`. Used as the default
+    /// when `EnemyChoicesOverride` is null.
+    /// </summary>
+    private List<(double chance, List<EnemySpawningData> spawns)> BuildStandardChoices(BuildDirector director)
+    {
+        var chargerChance = 0.0;
+        if (settings.Modifiers.Contains(LevelModifiers.Chargers))
+            chargerChance = 0.2;
+        if (settings.Modifiers.Contains(LevelModifiers.ManyChargers))
+            chargerChance = 0.5;
+
+        var shadowChance = 0.0;
+        if (settings.Modifiers.Contains(LevelModifiers.Shadows))
+            shadowChance = 0.15;
+        if (settings.Modifiers.Contains(LevelModifiers.ManyShadows))
+            shadowChance = 0.5;
+
+        var hybridChance = 0.0;
+        if (settings.Modifiers.Contains(LevelModifiers.Hybrids))
+            hybridChance = 0.3;
+
+        var nightmaresChance = 0.0;
+        if (settings.Modifiers.Contains(LevelModifiers.Nightmares))
+            nightmaresChance = 0.2;
+        if (settings.Modifiers.Contains(LevelModifiers.ManyNightmares))
+            nightmaresChance = 0.5;
+
+        static EnemySpawningData Group(AutogenDifficulty g) => new()
+        {
+            GroupType = EnemyGroupType.Hibernate,
+            Difficulty = (uint)g,
+            Points = 0
+        };
+
+        var choices = new List<(double chance, List<EnemySpawningData> spawns)>
+        {
+            (1.0, new() { Group(AutogenDifficulty.Base) }),
+
+            // Chargers
+            (chargerChance, new() { Group(AutogenDifficulty.Chargers) }),
+            (chargerChance, new() { Group(AutogenDifficulty.Base), Group(AutogenDifficulty.Chargers) }),
+
+            // Shadows
+            (shadowChance, new() { Group(AutogenDifficulty.Shadows) }),
+            (shadowChance, new() { Group(AutogenDifficulty.Base), Group(AutogenDifficulty.Shadows) }),
+
+            // Hybrid is always mixed
+            (hybridChance, new() { Group(AutogenDifficulty.Base), Group(AutogenDifficulty.Hybrids) }),
+
+            // Nightmares
+            (nightmaresChance, new() { Group(AutogenDifficulty.Nightmares) }),
+            (nightmaresChance, new() { Group(AutogenDifficulty.Base), Group(AutogenDifficulty.Nightmares) }),
+        };
+
+        if (chargerChance > 0 && hybridChance > 0)
+            choices.Add((0.1, new()
+            {
+                Group(AutogenDifficulty.Base),
+                Group(AutogenDifficulty.Chargers),
+                Group(AutogenDifficulty.Hybrids)
+            }));
+
+        return choices;
+    }
+
+    /// <summary>
+    /// Maps a tier letter to its `AutogenDifficulty.TierX` bit value. Falls back to TierC
+    /// for unknown tiers, matching the legacy switch in <see cref="RollEnemies"/>.
+    /// </summary>
+    private static uint TierBits(string tier) => tier switch
+    {
+        "A" => (uint)AutogenDifficulty.TierA,
+        "B" => (uint)AutogenDifficulty.TierB,
+        "C" => (uint)AutogenDifficulty.TierC,
+        "D" => (uint)AutogenDifficulty.TierD,
+        "E" => (uint)AutogenDifficulty.TierE,
+        _ => (uint)AutogenDifficulty.TierC,
+    };
+
+    /// <summary>
+    /// Returns the <see cref="AutogenDifficulty"/> group flag a Difficulty value represents,
+    /// or null if the value is a specific enemy ID (and should pass through unchanged).
+    /// Only the exact group-flag values are recognised; everything else — including
+    /// dynamically-allocated specific enemy PersistentIds that happen to occupy the 0xC0
+    /// bits (e.g. `NightmareGiant = 76 = 0x4C`) — is treated as a specific enemy ID.
+    /// </summary>
+    private static AutogenDifficulty? TryAsGroupFlag(uint difficulty) => difficulty switch
+    {
+        0x00 => AutogenDifficulty.Base, // Base / Chargers / Hybrids all share value 0
+        0x40 => AutogenDifficulty.Shadows,
+        0x80 => AutogenDifficulty.Nightmares,
+        0xC0 => AutogenDifficulty.Flyers,
+        _ => null,
+    };
 
     /// <summary>
     /// Rolls for whether we should add an error alarm to this level layout.
@@ -885,7 +872,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 return;
             }
 
-            var node = planner.GetZoneNode(zone.LocalIndex);
+            var node = planner.GetZoneNode(zone.LocalIndex, Dimension);
             var terminal = (ZoneNode?)null;
             // zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
 
@@ -894,11 +881,11 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             // Give a flat chance of being able to turn off the alarm.
             if (Generator.Flip(0.7))
             {
-                var branchOpenZones = planner.GetOpenZones(director.Bulkhead, node.Branch);
+                var branchOpenZones = planner.GetOpenZones(director.Bulkhead, node.Branch, Dimension);
 
                 // Fallback if there's no open zones in this branch. This will be _hard_.
                 if (branchOpenZones.Count < 1)
-                    branchOpenZones = planner.GetOpenZones(director.Bulkhead);
+                    branchOpenZones = planner.GetOpenZones(director.Bulkhead, dimension: Dimension);
 
                 // There's no open zones anywhere on this bulkhead. So bad luck this alarm can't be turned off.
                 // TODO: we could fall back to setting the turnoff in an existing forward zone?
@@ -906,7 +893,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                     continue;
 
                 var baseNode = Generator.Pick(branchOpenZones);
-                var turnOff = new ZoneNode(director.Bulkhead, planner.NextIndex(director.Bulkhead), $"error_off_{i}");
+                var turnOff = new ZoneNode(director.Bulkhead, planner.NextIndex(director.Bulkhead, Dimension), $"error_off_{i}", Dimension: Dimension);
 
                 planner.Connect(baseNode, turnOff);
                 planner.AddZone(
@@ -1035,163 +1022,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         };
         #endregion
 
-        switch (director.Objective)
-        {
-            /**
-             * Reactor startup has quite a complicated layout construction for the fetch codes version
-             * */
-            case WardenObjectiveType.ReactorStartup:
-                {
-                    if (objective.ReactorStartupGetCodes)
-                        layout.BuildLayout_ReactorStartup_FetchCodes(director, objective, start);
-                    else
-                        layout.BuildLayout_ReactorStartup_Simple(director, objective, start);
-
-                    break;
-                }
-
-            /**
-             * In some ways similar to the ReactorStartup mission but much shorter/simpler
-             * */
-            case WardenObjectiveType.ReactorShutdown:
-            {
-                layout.BuildLayout_ReactorShutdown(director, objective, start);
-                break;
-            }
-
-            /**
-             * Clear Path expeditions should generally be a lot of fun and tough to clear through
-             * */
-            case WardenObjectiveType.ClearPath:
-            {
-                layout.BuildLayout_ClearPath(director, objective, start);
-                break;
-            }
-
-            /**
-             * These all involve entering a command on a terminal, though this includes things
-             * like King of the Hill
-             */
-            case WardenObjectiveType.SpecialTerminalCommand:
-            {
-                layout.BuildLayout_SpecialTerminalCommand(director, objective, start);
-                break;
-            }
-
-            /**
-             * Big items are often single, but we can spawn multiple big items (up to 4 for
-             * E levels). Custom logic for interesting geo's should be added here.
-             * */
-            case WardenObjectiveType.RetrieveBigItems:
-                {
-                    layout.BuildLayout_RetrieveBigItems(director, objective, start);
-                    break;
-                }
-
-            /**
-             * When building the power cell distribution layout, here we are modelling a hub with offshoot zones.
-             * */
-            case WardenObjectiveType.PowerCellDistribution:
-                {
-                    layout.BuildLayout_PowerCellDistribution(director, objective, start);
-                    break;
-                }
-
-            /**
-             * Central cluster of generators with cell fetching
-             * */
-            case WardenObjectiveType.CentralGeneratorCluster:
-            {
-                layout.BuildLayout_CentralGeneratorCluster(director, objective, start);
-                break;
-            }
-
-            /**
-             * Survival is a very custom objective
-             */
-            case WardenObjectiveType.Survival:
-            {
-                layout.BuildLayout_Survival(director, objective, start);
-                break;
-            }
-
-            /*
-             *
-             */
-            case WardenObjectiveType.HsuActivateSmall:
-            {
-                layout.BuildLayout_HsuActivateSmall(director, objective, start);
-                break;
-            }
-
-            /**
-             * Terminal Uplink
-             */
-            case WardenObjectiveType.TerminalUplink:
-            {
-                layout.BuildLayout_TerminalUplink(director, objective, start);
-                break;
-            }
-
-            case WardenObjectiveType.GatherTerminal:
-            {
-                layout.BuildLayout_GatherTerminal(director, objective, start);
-                break;
-            }
-
-            case WardenObjectiveType.CorruptedTerminalUplink:
-            {
-                layout.BuildLayout_CorruptedTerminalUplink(director, objective, start);
-                break;
-            }
-
-            /**
-             * Survival is a very custom objective
-             */
-            case WardenObjectiveType.TimedTerminalSequence:
-            {
-                layout.BuildLayout_TimedTerminalSequence(director, objective, (ZoneNode)start);
-                break;
-            }
-
-            /**
-             * This is finding the HSU
-             */
-            case WardenObjectiveType.HsuFindSample:
-            {
-                layout.BuildLayout_HsuFindSample(director, objective, (ZoneNode)start);
-                break;
-            }
-
-            /**
-             * Gather small items such as GLPs or plant samples
-             */
-            case WardenObjectiveType.GatherSmallItems:
-            {
-                layout.BuildLayout_GatherSmallItems(director, objective, (ZoneNode)start);
-                break;
-            }
-
-            #region Autogen Custom Objectives
-
-            /*
-             * Modeled after R8E1 / R8E2 / R5E1
-             */
-            case WardenObjectiveType.ReachKdsDeep:
-            {
-                layout.BuildLayout_ReachKdsDeep(director, objective, start);
-                break;
-            }
-
-            #endregion
-
-            // Something has gone wrong if we are reaching this
-            default:
-            {
-                layout.BuildBranch((ZoneNode)start, director.ZoneCount, "find_items");
-                break;
-            }
-        }
+        layout.BuildZonesForObjective(director, objective, start);
 
         if (director.Bulkhead == Bulkhead.Main)
             layout.BuildLayout_ForwardExtract(objective);
@@ -1199,10 +1030,10 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         layout.TryAddMedicalBay();
 
         // Attempt to reduce the chance of generation locking where zones cannot be placed
-        level.Planner.PlanBulkheadPlacements(director.Bulkhead, direction);
+        level.Planner.PlanBulkheadPlacements(director.Bulkhead, direction, layout.Dimension);
 
         var numberOfFogZones = level.Planner
-            .GetZones(director.Bulkhead, null)
+            .GetZones(director.Bulkhead, null, layout.Dimension)
             .Select(node => level.Planner.GetZone(node))
             .Count(zone => zone is { InFog: true });
 
@@ -1216,10 +1047,10 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         };
 
         // Add disinfect packs
-        if (level.Settings.HasFog() && level.FogSettings.IsInfectious)
+        if (level.Settings.HasInfection)
         {
             foreach (var zone in level.Planner
-                         .GetZones(director.Bulkhead, null)
+                         .GetZones(director.Bulkhead, null, layout.Dimension)
                          .Select(zone => level.Planner.GetZone(zone))
                          .Where(zone => zone is { InFog: true })
                          .Cast<Zone>())
@@ -1249,53 +1080,281 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         if (director.Bulkhead == Bulkhead.Main && numberOfFogZones > 0)
         {
             // Add the fog turbine to the last starting area
-            var lastNode = level.Planner.GetZones(Bulkhead.StartingArea, null).Last();
+            var lastNode = level.Planner.GetZones(Bulkhead.StartingArea, null, layout.Dimension).Last();
             var lastZone = level.Planner.GetZone(lastNode)!;
             lastZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
 
             // TODO: move this somewhere else? Currently it will only apply in main
-            if (level.FogSettings.IsInfectious && Generator.Flip(disinfectChance))
+            if (level.Settings.HasInfection && Generator.Flip(disinfectChance))
             {
-                var open = level.Planner.GetOpenZones(Bulkhead.All, null).Take(4);
+                var open = level.Planner.GetOpenZones(Bulkhead.All, null, layout.Dimension).Take(4);
                 var from = Generator.Pick(open);
 
                 layout.AddDisinfectionZone(from);
             }
         }
 
-        // Write the zones
-        foreach (var node in level.Planner.GetZones(director.Bulkhead, null))
+        layout.FinalizeLayout();
+
+        return layout;
+    }
+
+    /// <summary>
+    /// If the level has the Infection or HeavyInfection modifier, seeds spitter static
+    /// spawns into a random subset of this layout's zones (skipping the elevator and any
+    /// zone that already has Spitter spawns). The Spitters / ManySpitters / NoSpitters
+    /// modifiers act as a density multiplier on top.
+    ///
+    /// Independent of fog: does not influence FogSettings.IsInfectious — pair with
+    /// LevelModifiers.FogIsInfectious if infectious fog is also wanted.
+    /// </summary>
+    private void ApplyInfectionLevelModifier()
+    {
+        var modifiers = level.Settings.Modifiers;
+
+        var isHeavy = modifiers.Contains(LevelModifiers.HeavyInfection);
+        var isLight = modifiers.Contains(LevelModifiers.Infection);
+
+        if (!isHeavy && !isLight)
+            return;
+
+        if (modifiers.Contains(LevelModifiers.NoSpitters))
+            return;
+
+        var density = modifiers.Contains(LevelModifiers.ManySpitters) ? 2.0 : 1.0;
+
+        var nodes = level.Planner.GetZones(director.Bulkhead, null, Dimension).ToList();
+        if (nodes.Count <= 1)
+            return;
+
+        var candidates = nodes
+            .Skip(1)
+            .Select(node => level.Planner.GetZone(node))
+            .Where(zone => zone != null)
+            .Cast<Zone>()
+            .Where(zone => !zone.StaticSpawnDataContainers.Any(c => c.Unit == StaticSpawnUnit.Spitter))
+            .ToList();
+
+        if (candidates.Count == 0)
+            return;
+
+        var targetCount = isHeavy ? Generator.Between(4, 6) : Generator.Between(2, 4);
+        if (targetCount > candidates.Count)
+            targetCount = candidates.Count;
+
+        var picked = Generator.Shuffle(candidates).Take(targetCount).ToList();
+        var perZoneCounts = new List<int>();
+
+        foreach (var zone in picked)
+        {
+            var baseCount = isHeavy
+                ? Generator.Select(new List<(double, int)>
+                {
+                    (0.20, 100),
+                    (0.50, 150),
+                    (0.30, 250),
+                })
+                : Generator.Select(new List<(double, int)>
+                {
+                    (0.30, 50),
+                    (0.50, 100),
+                    (0.20, 150),
+                });
+
+            var finalCount = (int)(baseCount * density);
+            if (finalCount <= 0)
+                continue;
+
+            SetInfectionVibe(
+                zone,
+                spitters: finalCount,
+                setLights: Generator.Flip(isHeavy ? 0.4 : 0.7));
+
+            perZoneCounts.Add(finalCount);
+        }
+
+        Plugin.Logger.LogDebug(
+            $"{Name} -- Infection modifier applied: " +
+            $"intensity={(isHeavy ? "HeavyInfection" : "Infection")} " +
+            $"density={density}x zones={perZoneCounts.Count} " +
+            $"counts=[{string.Join(", ", perZoneCounts)}]");
+    }
+
+    /// <summary>
+    /// Writes zones from the planner to this layout, then rolls alarms, blood doors, and
+    /// enemies. Finally persists the layout to the data block bin. Called by both Build()
+    /// and BuildDimension() after zone structure has been planned.
+    /// </summary>
+    public void FinalizeLayout()
+    {
+        foreach (var node in level.Planner.GetZones(director.Bulkhead, null, Dimension))
         {
             var zone = level.Planner.GetZone(node);
 
             if (zone != null)
             {
-                // Crude way to force the direction of zones for now
-                // TODO: This should live in the zone node building process. We should be able to set the direction
-                //       of these more dynamically
-                // TODO: we probably want to remove this
                 if (node.Branch == "primary")
                     zone.ZoneExpansion = direction.Forward;
 
-                layout.Zones.Add(zone);
+                Zones.Add(zone);
 
                 Plugin.Logger.LogDebug(
-                    $"{layout.Name} -- Zone_{zone.LocalIndex} " +
-                    $"number={layout.ZoneAliasStart + zone.LocalIndex} " +
+                    $"{Name} -- Zone_{zone.LocalIndex} " +
+                    $"number={ZoneAliasStart + zone.LocalIndex} " +
                     $"pid={zone.PersistentId} -- " +
                     $"branch={node.Branch} -- " +
                     $"Lights={zone.LightSettings}, InFog={zone.InFog}, Tags={node.Tags}");
             }
         }
 
-        // TODO: most or all of these need to be moved
-        // layout.RollErrorAlarm(); // Deprecated
-        layout.RollAlarms();
-        layout.RollBloodDoors();
-        layout.RollEnemies(director);
+        RollAlarms();
+        RollBloodDoors();
+        ApplyInfectionLevelModifier();
+        RollEnemies(director);
 
-        Bins.LevelLayouts.AddBlock(layout);
+        Bins.LevelLayouts.AddBlock(this);
+    }
 
-        return layout;
+    /// <summary>
+    /// Dispatches to the appropriate objective layout builder based on the director's objective type.
+    /// Shared by Build() and BuildDimension() to avoid duplicating the objective switch.
+    /// </summary>
+    private void BuildZonesForObjective(BuildDirector director, WardenObjective objective, ZoneNode start)
+    {
+        switch (director.Objective)
+        {
+            case WardenObjectiveType.ReactorStartup:
+            {
+                if (objective.ReactorStartupGetCodes)
+                    BuildLayout_ReactorStartup_FetchCodes(director, objective, start);
+                else
+                    BuildLayout_ReactorStartup_Simple(director, objective, start);
+                break;
+            }
+
+            case WardenObjectiveType.ReactorShutdown:
+                BuildLayout_ReactorShutdown(director, objective, start);
+                break;
+
+            case WardenObjectiveType.ClearPath:
+                BuildLayout_ClearPath(director, objective, start);
+                break;
+
+            case WardenObjectiveType.SpecialTerminalCommand:
+                BuildLayout_SpecialTerminalCommand(director, objective, start);
+                break;
+
+            case WardenObjectiveType.RetrieveBigItems:
+                BuildLayout_RetrieveBigItems(director, objective, start);
+                break;
+
+            case WardenObjectiveType.PowerCellDistribution:
+                BuildLayout_PowerCellDistribution(director, objective, start);
+                break;
+
+            case WardenObjectiveType.CentralGeneratorCluster:
+                BuildLayout_CentralGeneratorCluster(director, objective, start);
+                break;
+
+            case WardenObjectiveType.Survival:
+                BuildLayout_Survival(director, objective, start);
+                break;
+
+            case WardenObjectiveType.HsuActivateSmall:
+                BuildLayout_HsuActivateSmall(director, objective, start);
+                break;
+
+            case WardenObjectiveType.TerminalUplink:
+                BuildLayout_TerminalUplink(director, objective, start);
+                break;
+
+            case WardenObjectiveType.GatherTerminal:
+                BuildLayout_GatherTerminal(director, objective, start);
+                break;
+
+            case WardenObjectiveType.CorruptedTerminalUplink:
+                BuildLayout_CorruptedTerminalUplink(director, objective, start);
+                break;
+
+            case WardenObjectiveType.TimedTerminalSequence:
+                BuildLayout_TimedTerminalSequence(director, objective, (ZoneNode)start);
+                break;
+
+            case WardenObjectiveType.HsuFindSample:
+                BuildLayout_HsuFindSample(director, objective, (ZoneNode)start);
+                break;
+
+            case WardenObjectiveType.GatherSmallItems:
+                BuildLayout_GatherSmallItems(director, objective, (ZoneNode)start);
+                break;
+
+            case WardenObjectiveType.Cryptomnesia:
+                BuildLayout_Cryptomnesia(director, objective, start);
+                break;
+
+            case WardenObjectiveType.ReachKdsDeep:
+                BuildLayout_ReachKdsDeep(director, objective, start);
+                break;
+
+            case WardenObjectiveType.AlphaTerminalCommand:
+                BuildLayout_AlphaTerminalCommand(director, objective, start);
+                break;
+
+            default:
+                BuildBranch((ZoneNode)start, director.ZoneCount, "find_items");
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Creates and initializes a dimension layout with a starting zone (zone 0).
+    /// Does NOT build objective zones, roll alarms, or finalize -- the caller is
+    /// responsible for building zones on the returned layout and calling
+    /// FinalizeLayout() when done.
+    /// </summary>
+    /// <returns>A tuple of the layout and its starting zone node.</returns>
+    public static (LevelLayout layout, ZoneNode start) BuildDimension(
+        Level level,
+        BuildDirector director,
+        WardenObjective objective,
+        DimensionIndex dimension,
+        Complex? complex = null)
+    {
+        var direction = level.Settings.GetDirections(director.Bulkhead);
+
+        var layout = new LevelLayout(level, director, objective, level.Settings, level.Planner)
+        {
+            Name = $"{level.Tier}{level.Index} {level.Name} {director.Bulkhead} -- Dimension {dimension}",
+            Complex = complex ?? level.Complex,
+            Dimension = dimension,
+            direction = direction,
+
+            PuzzlePack = ChainedPuzzle.BuildPack(level.Tier, director.Bulkhead, level.Settings),
+            WavePopulationPack = WavePopulation.BuildPack(level.Tier, level.Settings),
+            WaveSettingsPack = WaveSettings.BuildPack(level.Tier)
+        };
+
+        Plugin.Logger.LogDebug($"Building dimension layout ({layout.Name})");
+
+        // Create the dimension's starting zone (zone 0)
+        var startNode = new ZoneNode(
+            Bulkhead.Main | Bulkhead.StartingArea,
+            level.Planner.NextIndex(Bulkhead.Main, dimension),
+            "primary", 2, dimension);
+
+        var startZone = new Zone(level, layout)
+        {
+            Coverage = CoverageMinMax.Medium,
+            LightSettings = Lights.GenRandomLight(),
+        };
+        startZone.RollFog(level);
+
+        level.Planner.Connect(startNode);
+        level.Planner.AddZone(startNode, startZone);
+
+        // Track on level
+        level.SetDimensionLayout(dimension, director.Bulkhead, layout);
+
+        return (layout, startNode);
     }
 }

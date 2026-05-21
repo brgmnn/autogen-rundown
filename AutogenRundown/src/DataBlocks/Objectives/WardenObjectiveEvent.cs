@@ -29,11 +29,74 @@ public record WardenObjectiveEventCountdown
     public List<WardenObjectiveEvent> EventsOnDone { get; set; } = new();
 }
 
+public record WardenObjectiveEventCountup
+{
+    public double StartValue { get; set; } = 0.0;
+
+    public double Speed { get; set; } = 1.0;
+
+    public uint TitleText => Title.PersistentId;
+
+    [JsonIgnore]
+    public Text Title { get; set; } = Text.None;
+
+    public string BodyText { get; set; } = "[COUNTUP]";
+
+    public string TimerColor { get; set; } = "red";
+
+    public int DecimalPoints { get; set; } = 0;
+
+    public List<ProgressEvent> EventsOnProgress { get; set; } = new();
+
+    public List<WardenObjectiveEvent> EventsOnDone { get; set; } = new();
+}
+
 public record WardenObjectiveEventCustomHudText
 {
     public string Title { get; set; } = "";
 
     public string Body { get; set; } = "";
+}
+
+public enum SpecialHudTimerType : byte
+{
+    StartTimer = 0,
+    StartIndexTimer = 1,
+    StartPersistent = 2,
+    StopIndex = 3,
+    StopAll = 4
+}
+
+public enum PUIMessageStyle : byte
+{
+    Default = 0,
+    Message = 1,
+    Bioscan = 2,
+    Warning = 3,
+    BioscanAlarm = 4
+}
+
+public record WardenObjectiveEventSpecialHudTimer
+{
+    public double Duration { get; set; } = 0.0;
+
+    public SpecialHudTimerType Type { get; set; } = SpecialHudTimerType.StartTimer;
+
+    public int Index { get; set; } = 0;
+
+    public string Message { get; set; } = "";
+
+    public PUIMessageStyle Style { get; set; } = PUIMessageStyle.Default;
+
+    public int Priority { get; set; } = -2;
+
+    public bool ShowTimeInProgressBar { get; set; } = true;
+
+    public bool InvertProgress { get; set; } = false;
+
+    public List<ProgressEvent> EventsOnProgress { get; set; } = new();
+
+    public List<WardenObjectiveEvent> EventsOnDone { get; set; } = new();
 }
 
 public record WardenObjectiveEvent
@@ -84,7 +147,11 @@ public record WardenObjectiveEvent
 
     public bool ClearDimension { get; set; } = false;
 
-    public string WardenIntel { get; set; } = "";
+    [JsonIgnore]
+    public Text WardenIntel { get; set; } = Text.None;
+
+    [JsonProperty("WardenIntel")]
+    public uint WardenIntelTextId => WardenIntel.PersistentId;
 
     #region Objective
 
@@ -173,7 +240,7 @@ public record WardenObjectiveEvent
     ///
     /// </summary>
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-    public string? SpecialText { get; set; } = null;
+    public string? SpecialText { get; set; }
 
     /// <summary>
     /// Used in conjunction with EventType.SetLightDataInZone (10016) to update the lights in a
@@ -195,7 +262,7 @@ public record WardenObjectiveEvent
     /// ```
     /// </summary>
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-    public SetZoneLight SetZoneLight { get; set; } = new();
+    public SetZoneLight? SetZoneLight { get; set; }
 
     /// <summary>
     ///
@@ -213,13 +280,28 @@ public record WardenObjectiveEvent
     ///
     /// </summary>
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-    public WardenObjectiveEventCountdown Countdown { get; set; } = new();
+    public WardenObjectiveEventCountdown? Countdown { get; set; }
 
     /// <summary>
     ///
     /// </summary>
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-    public WardenObjectiveEventCustomHudText CustomHudText { get; set; }
+    public WardenObjectiveEventCountup? Countup { get; set; }
+
+    /// <summary>
+    ///
+    /// </summary>
+    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    public WardenObjectiveEventCustomHudText? CustomHudText { get; set; }
+
+    /// <summary>
+    /// Renders a horizontal progress fill bar via GuiManager.InteractionLayer.SetMessageTimer
+    /// — the same UI primitive used by bioscans and reactor startup waves. The Message string
+    /// supports [TIMER] (mm:ss) and [PERCENT] placeholders that AWO substitutes live as the
+    /// bar fills.
+    /// </summary>
+    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    public WardenObjectiveEventSpecialHudTimer? SpecialHudTimer { get; set; }
 
     #endregion
 }

@@ -10,8 +10,15 @@ public record CustomTerminalCommand
     [JsonIgnore]
     public Text CommandDesc { get; set; } = Text.None;
 
+    [JsonIgnore]
+    private uint _commandDescId;
+
     [JsonProperty("CommandDesc")]
-    public uint CommandDescId => CommandDesc.PersistentId;
+    public uint CommandDescId
+    {
+        get => CommandDesc.PersistentId != 0 ? CommandDesc.PersistentId : _commandDescId;
+        set => _commandDescId = value;
+    }
 
     public List<TerminalOutput> PostCommandOutputs { get; set; } = new();
 

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AutogenRundown.DataBlocks.Enums;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace AutogenRundown.DataBlocks;
@@ -31,12 +32,10 @@ public record Dimension : DataBlock<Dimension>
         Name = "Dimension_Pouncer_Arena",
         Data = new Dimensions.DimensionData
         {
-            LevelLayoutData = 0,
             DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/PouncerArena/Dimension_Pouncer_Arena_01.prefab",
             VerticalExtentsUp = 50.0,
             VerticalExtentsDown = 10.0,
-            DimensionResourceSetID = 47,
-            DimensionFogData = 93,
+            Fog = new Fog { PersistentId = 93 },
             EnvironmentWetness = 0.199,
             DustColor = new Color { Alpha = 1.0, Red = 0.65, Green = 0.6042968, Blue = 0.487499952 },
             DustAlphaBoost = 0.0,
@@ -107,10 +106,12 @@ public record Dimension : DataBlock<Dimension>
         return Data == other.Data;
     }
 
-    public void Persist(BlocksBin<Dimension>? bin = null)
+    public Dimension Persist(BlocksBin<Dimension>? bin = null)
     {
         bin ??= Bins.Dimensions;
         bin.AddBlock(this);
+
+        return this;
     }
 
     public static Dimension FindOrPersist(Dimension dimension)
@@ -125,11 +126,9 @@ public record Dimension : DataBlock<Dimension>
             return existing;
 
         if (dimension.PersistentId == 0)
-            dimension.PersistentId = Generator.GetPersistentId(PidOffsets.WaveSettings);
+            dimension.PersistentId = Generator.GetPersistentId(PidOffsets.WaveSettings); // TODO: why is this using wave settings?
 
-        dimension.Persist();
-
-        return dimension;
+        return dimension.Persist();
     }
 
     public new static void SaveStatic()
@@ -142,4 +141,39 @@ public record Dimension : DataBlock<Dimension>
     /// </summary>
     /// <returns></returns>
     public Dimension FindOrPersist() => FindOrPersist(this);
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="resourceSet"></param>
+    /// <param name="geomorph"></param>
+    /// <returns></returns>
+    public static Dimension Build(
+        Level level,
+        DimensionIndex index,
+        ComplexResourceSet resourceSet,
+        string geomorph)
+    {
+        var resource = resourceSet.Duplicate();
+
+        var dimension = new Dimension
+        {
+            Data = new Dimensions.DimensionData
+            {
+                DimensionGeomorph = geomorph,
+                ResourceSet = resource
+            }
+        };
+
+        dimension.FindOrPersist();
+
+        level.DimensionDatas.Add(new Levels.DimensionData
+        {
+            Dimension = index,
+            Data = dimension
+        });
+
+        return dimension;
+    }
 }

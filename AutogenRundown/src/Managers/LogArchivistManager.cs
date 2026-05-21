@@ -69,6 +69,11 @@ public static class LogArchivistManager
             }
         }
 
+        // Migrate progress when MainLevelLayout PIDs shift due to generator changes
+        MigrateProgress(WeeklyLogRecord, PluginRundown.Weekly);
+        MigrateProgress(MonthlyLogRecord, PluginRundown.Monthly);
+        MigrateProgress(SeasonalLogRecord, PluginRundown.Seasonal);
+
         foreach (var layoutId in WeeklyLogRecord.ReadLogs.Keys)
             readRecordsByLevel[layoutId] = WeeklyLogRecord.ReadLogs[layoutId];
 
@@ -295,6 +300,91 @@ public static class LogArchivistManager
         }
 
         return (read, total);
+    }
+
+    /// <summary>
+    /// Extracts the tier+index prefix from an archive name (e.g. "A1_SomeLevelName" -> "A1").
+    /// This is stable across regenerations even when level names change.
+    /// </summary>
+    private static string GetTierIndex(string archiveName)
+    {
+        var underscoreIndex = archiveName.IndexOf('_');
+        return underscoreIndex >= 0 ? archiveName[..underscoreIndex] : archiveName;
+    }
+
+    /// <summary>
+    /// Migrates log progress when MainLevelLayout PIDs shift due to generator call order
+    /// changes. Uses the LevelKeys mapping (PID -> tier+index) stored in the record from
+    /// the previous generation to find old PIDs, then matches to current PIDs via archives.
+    /// Also updates LevelKeys with current PIDs for future migrations.
+    /// </summary>
+    private static void MigrateProgress(RundownLogRecord record, PluginRundown rundown)
+    {
+        if (!rundownMainIds.TryGetValue(rundown, out var currentIds))
+            return;
+
+        // Build tierIndex -> current PID mapping from this rundown's archives
+        var tierIndexToCurrentId = new Dictionary<string, uint>();
+        foreach (var id in currentIds)
+            if (archivesByLevel.TryGetValue(id, out var archive))
+                tierIndexToCurrentId[GetTierIndex(archive.Name)] = id;
+
+        var changed = false;
+
+        // Migrate ReadLogs entries from old PIDs to new PIDs
+        foreach (var oldId in record.ReadLogs.Keys.ToList())
+        {
+            if (currentIds.Contains(oldId))
+                continue;
+
+            // Use stored LevelKeys to find tier+index for old PID
+            if (!record.LevelKeys.TryGetValue(oldId, out var tierIndex))
+                continue;
+
+            if (!tierIndexToCurrentId.TryGetValue(tierIndex, out var newId))
+                continue;
+
+            var oldReads = record.ReadLogs[oldId];
+
+            if (!record.ReadLogs.ContainsKey(newId))
+                record.ReadLogs[newId] = new List<ReadLogRecord>();
+
+            // Merge old reads into new PID entry, dedup by FileName
+            var merged = record.ReadLogs[newId]
+                .Concat(oldReads)
+                .Distinct()
+                .ToList();
+
+            record.ReadLogs[newId] = merged;
+            changed = true;
+
+            Plugin.Logger.LogDebug($"[LogArchivist] Migrated {oldReads.Count} log reads: {tierIndex} ({oldId} -> {newId})");
+        }
+
+        // Migrate ReadAllLogsLevels (permanent completion flags)
+        foreach (var oldId in record.ReadAllLogsLevels.ToList())
+        {
+            if (currentIds.Contains(oldId))
+                continue;
+
+            if (!record.LevelKeys.TryGetValue(oldId, out var tierIndex))
+                continue;
+
+            if (!tierIndexToCurrentId.TryGetValue(tierIndex, out var newId))
+                continue;
+
+            record.ReadAllLogsLevels.Add(newId);
+            changed = true;
+
+            Plugin.Logger.LogDebug($"[LogArchivist] Migrated completion flag: {tierIndex} ({oldId} -> {newId})");
+        }
+
+        // Update LevelKeys with current PIDs for future migrations
+        foreach (var (tierIndex, id) in tierIndexToCurrentId)
+            record.LevelKeys[id] = tierIndex;
+
+        // Always save to persist updated LevelKeys
+        Save(record.Name, record);
     }
 
     /// <summary>

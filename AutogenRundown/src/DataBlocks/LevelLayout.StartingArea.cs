@@ -20,7 +20,10 @@ public partial record LevelLayout
         ZoneNode from,
         Zone? zone = null)
     {
-        var bulkheadNode = new ZoneNode(bulkhead, level.Planner.NextIndex(bulkhead));
+        var bulkheadNode = new ZoneNode(
+            bulkhead,
+            level.Planner.NextIndex(bulkhead, from.Dimension),
+            Dimension: from.Dimension);
         level.Planner.Connect(from, bulkheadNode);
 
         level.Planner.AddZone(
@@ -123,8 +126,8 @@ public partial record LevelLayout
     private (ZoneNode, Zone) StartingArea_GetBuildStart(Bulkhead bulkhead)
     {
         var existing = director is { Bulkhead: Bulkhead.Main, DisableStartingArea: true }
-            ? level.Planner.GetZoneNode(0)
-            : level.Planner.GetLastZoneExact(director.Bulkhead);
+            ? level.Planner.GetZoneNode(0, Dimension)
+            : level.Planner.GetLastZoneExact(director.Bulkhead, dimension: Dimension);
 
         if (existing is not null)
             return ((ZoneNode)existing, level.Planner.GetZone((ZoneNode)existing)!);
@@ -134,14 +137,14 @@ public partial record LevelLayout
         {
             case BukheadStrategy.MainOnly_NoBulkhead:
             {
-                var lastNode = (ZoneNode)level.Planner.GetLastZone(Bulkhead.Main)!;
+                var lastNode = (ZoneNode)level.Planner.GetLastZone(Bulkhead.Main, dimension: Dimension)!;
 
                 return (lastNode, level.Planner.GetZone(lastNode)!);
             }
 
             case BukheadStrategy.Default_NoMainBulkhead:
             {
-                var lastNode = (ZoneNode)level.Planner.GetLastZone(Bulkhead.Main)!;
+                var lastNode = (ZoneNode)level.Planner.GetLastZone(Bulkhead.Main, dimension: Dimension)!;
 
                 if (bulkhead == Bulkhead.Main)
                     return (lastNode, level.Planner.GetZone(lastNode)!);
@@ -159,13 +162,15 @@ public partial record LevelLayout
                     Bulkhead.Overload => Bulkhead.Extreme
                 };
 
-                var candidates = level.Planner.GetOpenZones(sourceBulkhead, null);
+                var candidates = level.Planner.GetOpenZones(sourceBulkhead, null, dimension: Dimension);
 
                 // Fall back to adding the area in main
                 if (!candidates.Any())
                 {
-                    Plugin.Logger.LogDebug($"No open zones for bulkhead {bulkhead}, planner = {level.Planner}");
-                    candidates = level.Planner.GetOpenZones(Bulkhead.Main, null);
+                    Plugin.Logger.LogDebug(
+                        $"No open zones for bulkhead {bulkhead}, planner = {level.Planner}\n" +
+                        $"==========\n{level.Planner.ToMermaidChart()}==========");
+                    candidates = level.Planner.GetOpenZones(Bulkhead.Main, null, dimension: Dimension);
                 }
 
                 var from = Generator.Pick(candidates);
@@ -178,7 +183,7 @@ public partial record LevelLayout
             {
                 // By default, we will just try to place this in the main starting area
                 var from = Generator.Pick(
-                    level.Planner.GetOpenZones(Bulkhead.Main | Bulkhead.StartingArea, null));
+                    level.Planner.GetOpenZones(Bulkhead.Main | Bulkhead.StartingArea, null, dimension: Dimension));
 
                 InitializeBulkheadArea(level, bulkhead, from);
                 break;
@@ -186,7 +191,7 @@ public partial record LevelLayout
         }
 
         // We know this isn't null now
-        var node = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead)!;
+        var node = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, dimension: Dimension)!;
         var zone = level.Planner.GetZone(node)!;
 
         return (node, zone);
@@ -248,8 +253,8 @@ public partial record LevelLayout
 
         for (var i = 0; i < minimumZones; i++)
         {
-            var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
-            var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
+            var zoneIndex = level.Planner.NextIndex(Bulkhead.Main, Dimension);
+            var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex, Dimension: Dimension);
             nextZone = new Zone(level, this)
             {
                 Coverage = CoverageMinMax.GenNormalSize(),
@@ -280,7 +285,8 @@ public partial record LevelLayout
         // Add the first zone.
         var elevatorDrop = new ZoneNode(
             Bulkhead.Main | Bulkhead.StartingArea,
-            level.Planner.NextIndex(Bulkhead.Main));
+            level.Planner.NextIndex(Bulkhead.Main, Dimension),
+            Dimension: Dimension);
         var elevatorDropZone = new Zone(level, this)
         {
             Coverage = new CoverageMinMax { Min = 25, Max = 35 },
@@ -288,17 +294,17 @@ public partial record LevelLayout
             EnemyPointsMultiplier = 0.6
         };
 
-        switch (level.Complex)
+        level.Planner.Connect(elevatorDrop);
+        level.Planner.AddZone(elevatorDrop, elevatorDropZone);
+
+        switch (Complex)
         {
             case Complex.Mining:
             case Complex.Tech:
             case Complex.Service:
-                elevatorDropZone.GenHubGeomorph(level.Complex);
+                elevatorDrop = level.GenHubGeomorph(elevatorDrop);
                 break;
         }
-
-        level.Planner.Connect(elevatorDrop);
-        level.Planner.AddZone(elevatorDrop, elevatorDropZone);
 
         var secondBulkhead = level.Settings.Bulkheads.HasFlag(Bulkhead.Extreme) ?
             Bulkhead.Extreme : Bulkhead.Overload;
@@ -330,8 +336,9 @@ public partial record LevelLayout
         var elevatorDrop = new ZoneNode
         {
             Bulkhead = Bulkhead.Main | Bulkhead.StartingArea,
-            ZoneNumber = level.Planner.NextIndex(Bulkhead.Main),
-            MaxConnections = 3
+            ZoneNumber = level.Planner.NextIndex(Bulkhead.Main, Dimension),
+            MaxConnections = 3,
+            Dimension = Dimension
         };
         var elevatorDropZone = new Zone(level, this)
         {
@@ -340,7 +347,10 @@ public partial record LevelLayout
             EnemyPointsMultiplier = 0.5
         };
 
-        switch (level.Complex)
+        level.Planner.Connect(elevatorDrop);
+        level.Planner.AddZone(elevatorDrop, elevatorDropZone);
+
+        switch (Complex)
         {
             case Complex.Mining:
             {
@@ -354,7 +364,7 @@ public partial record LevelLayout
                 }
                 else
                 {
-                    elevatorDropZone.GenHubGeomorph(level.Complex);
+                    elevatorDrop = level.GenHubGeomorph(elevatorDrop);
                 }
 
                 break;
@@ -362,12 +372,9 @@ public partial record LevelLayout
 
             case Complex.Tech:
             case Complex.Service:
-                elevatorDropZone.GenHubGeomorph(level.Complex);
+                elevatorDrop = level.GenHubGeomorph(elevatorDrop);
                 break;
         }
-
-        level.Planner.Connect(elevatorDrop);
-        level.Planner.AddZone(elevatorDrop, elevatorDropZone);
 
         var sensorChance = this.level.Tier switch
         {
@@ -443,8 +450,8 @@ public partial record LevelLayout
         // Only place areas for the selected bulkheads
         for (var i = 0; i < minimumZones; i++)
         {
-            var zoneIndex = level.Planner.NextIndex(Bulkhead.Main);
-            var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex);
+            var zoneIndex = level.Planner.NextIndex(Bulkhead.Main, Dimension);
+            var next = new ZoneNode(Bulkhead.Main | Bulkhead.StartingArea, zoneIndex, Dimension: Dimension);
             nextZone = new Zone(level, this)
             {
                 Coverage = CoverageMinMax.GenNormalSize(),
@@ -467,7 +474,7 @@ public partial record LevelLayout
         if (level is { HasExtreme: false, HasOverload: false })
             return;
 
-        var main = new ZoneNode(Bulkhead.Main, level.Planner.NextIndex(Bulkhead.Main));
+        var main = new ZoneNode(Bulkhead.Main, level.Planner.NextIndex(Bulkhead.Main, Dimension), Dimension: Dimension);
         level.Planner.Connect(prev, main);
 
         level.Planner.AddZone(

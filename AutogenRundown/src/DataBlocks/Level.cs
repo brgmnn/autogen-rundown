@@ -1,6 +1,7 @@
 ﻿using System.Resources;
 using System.Text.RegularExpressions;
 using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.Patches.CustomTerminals;
 using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
@@ -28,7 +29,7 @@ public class BuildFrom
     public int Zone { get; set; } = 0;
 }
 
-public class Level
+public partial class Level
 {
     #region Filler settings that won't change
     public bool Enabled = true;
@@ -119,6 +120,9 @@ public class Level
 
     [JsonIgnore]
     public LayoutPlanner Planner { get; set; } = new();
+
+    [JsonIgnore]
+    public Dictionary<DimensionIndex, Dictionary<Bulkhead, LevelLayout>> DimensionLayouts { get; } = new();
 
     [JsonIgnore]
     public LevelSettings Settings { get; set; }
@@ -293,6 +297,14 @@ public class Level
     /// </summary>
     [JsonIgnore]
     public LevelTerminalPlacements TerminalPlacements { get; private set; } = new();
+
+    /// <summary>
+    /// Per-zone minimum tile (area) counts. Zones registered here will have their
+    /// LG tile-expansion loop kept running until m_areas.Count reaches the recorded
+    /// Count, regardless of coverage. Opt-in via Level.GenMultiRoomSpawnGeomorph().
+    /// </summary>
+    [JsonIgnore]
+    public LevelAreaCounts AreaCounts { get; private set; } = new();
 
     #endregion
 
@@ -933,7 +945,7 @@ public class Level
 
     private List<ZoneNode> GetKeyPlacementCandidates(Bulkhead keyFor)
     {
-        return keyFor switch
+        var candidates = keyFor switch
         {
             Bulkhead.Main when HasMainBulkheadDoor
                 => Planner.GetZones(Bulkhead.StartingArea, null),
@@ -947,6 +959,10 @@ public class Level
                 => Planner.GetZones(Bulkhead.Main, null),
             _ => Planner.GetZones(Bulkhead.Main, null)
         };
+
+        return candidates
+            .Where(n => !n.Tags.Contains("no_access"))
+            .ToList();
     }
 
     private List<ZonePlacementData> BuildKeyAlternatives(List<ZoneNode> candidates)
@@ -954,12 +970,13 @@ public class Level
         if (candidates.Count == 0)
             return new List<ZonePlacementData>
             {
-                new() { LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
+                new() { Dimension = DimensionIndex.Reality, LocalIndex = 0, Weights = ZonePlacementWeights.NotAtStart }
             };
 
         if (candidates.Count <= 3)
             return candidates.Select(c => new ZonePlacementData
             {
+                Dimension = c.Dimension,
                 LocalIndex = c.ZoneNumber,
                 Weights = ZonePlacementWeights.EvenlyDistributed
             }).ToList();
@@ -969,30 +986,33 @@ public class Level
         var mid = candidates.Skip(third).Take(third).ToList();
         var deep = candidates.Skip(third * 2).ToList();
 
+        ZonePlacementData FromNode(ZoneNode n, ZonePlacementWeights w) =>
+            new() { Dimension = n.Dimension, LocalIndex = n.ZoneNumber, Weights = w };
+
         var alternatives = Tier switch
         {
             "A" or "B" => new List<ZonePlacementData>
             {
-                new() { LocalIndex = Generator.Pick(early)!.ZoneNumber, Weights = ZonePlacementWeights.EvenlyDistributed },
-                new() { LocalIndex = Generator.Pick(early.Concat(mid).ToList())!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart }
+                FromNode(Generator.Pick(early)!, ZonePlacementWeights.EvenlyDistributed),
+                FromNode(Generator.Pick(early.Concat(mid).ToList())!, ZonePlacementWeights.NotAtStart)
             },
             "C" => new List<ZonePlacementData>
             {
-                new() { LocalIndex = Generator.Pick(early)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart },
-                new() { LocalIndex = Generator.Pick(mid)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart },
-                new() { LocalIndex = Generator.Pick(deep)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart }
+                FromNode(Generator.Pick(early)!, ZonePlacementWeights.NotAtStart),
+                FromNode(Generator.Pick(mid)!, ZonePlacementWeights.NotAtStart),
+                FromNode(Generator.Pick(deep)!, ZonePlacementWeights.NotAtStart)
             },
             "D" => new List<ZonePlacementData>
             {
-                new() { LocalIndex = Generator.Pick(mid)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart },
-                new() { LocalIndex = Generator.Pick(deep)!.ZoneNumber, Weights = ZonePlacementWeights.AtEnd },
-                new() { LocalIndex = Generator.Pick(mid.Concat(deep).ToList())!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart }
+                FromNode(Generator.Pick(mid)!, ZonePlacementWeights.NotAtStart),
+                FromNode(Generator.Pick(deep)!, ZonePlacementWeights.AtEnd),
+                FromNode(Generator.Pick(mid.Concat(deep).ToList())!, ZonePlacementWeights.NotAtStart)
             },
             _ => new List<ZonePlacementData>
             {
-                new() { LocalIndex = Generator.Pick(deep)!.ZoneNumber, Weights = ZonePlacementWeights.NotAtStart },
-                new() { LocalIndex = Generator.Pick(mid.Concat(deep).ToList())!.ZoneNumber, Weights = ZonePlacementWeights.AtEnd },
-                new() { LocalIndex = Generator.Pick(deep)!.ZoneNumber, Weights = ZonePlacementWeights.AtEnd }
+                FromNode(Generator.Pick(deep)!, ZonePlacementWeights.NotAtStart),
+                FromNode(Generator.Pick(mid.Concat(deep).ToList())!, ZonePlacementWeights.AtEnd),
+                FromNode(Generator.Pick(deep)!, ZonePlacementWeights.AtEnd)
             }
         };
 
@@ -1014,6 +1034,7 @@ public class Level
             {
                 new()
                 {
+                    Dimension = node.Dimension,
                     LocalIndex = node.ZoneNumber,
                     Weights = weights ?? ZonePlacementWeights.NotAtStart
                 }
@@ -1037,6 +1058,37 @@ public class Level
 
             _ => Bins.LevelLayouts.Find(LevelLayoutData)
         };
+
+    public void SetDimensionLayout(DimensionIndex dimension, Bulkhead bulkhead, LevelLayout layout)
+    {
+        if (!DimensionLayouts.TryGetValue(dimension, out var layouts))
+        {
+            layouts = new Dictionary<Bulkhead, LevelLayout>();
+            DimensionLayouts[dimension] = layouts;
+        }
+        layouts[bulkhead] = layout;
+    }
+
+    public LevelLayout? GetDimensionLayout(DimensionIndex dimension, Bulkhead bulkhead)
+    {
+        if (dimension == DimensionIndex.Reality)
+            return GetLevelLayout(bulkhead);
+        return DimensionLayouts.TryGetValue(dimension, out var layouts)
+            && layouts.TryGetValue(bulkhead, out var layout) ? layout : null;
+    }
+
+    /// <summary>
+    /// Returns all layouts (Reality + all dimensions) for iteration
+    /// </summary>
+    public IEnumerable<(Bulkhead Bulkhead, LevelLayout Layout)> GetAllLayouts()
+    {
+        foreach (var kvp in Layouts)
+            yield return (kvp.Key, kvp.Value);
+
+        foreach (var dimEntry in DimensionLayouts)
+            foreach (var layoutEntry in dimEntry.Value)
+                yield return (layoutEntry.Key, layoutEntry.Value);
+    }
 
     /// <summary>
     /// Prebuild one of the layouts, this is needed for setting up the objectives which is then used for level
@@ -1197,23 +1249,36 @@ public class Level
     /// </summary>
     private void FinalizeComplexResourceSet()
     {
-        ResourceSet = Complex switch
-        {
-            Complex.Mining => ComplexResourceSet.Mining,
-            Complex.Tech => ComplexResourceSet.Tech,
-            Complex.Service => ComplexResourceSet.Service,
-        };
+        // If the resource set was already customized (e.g. by Cryptomnesia to pin the
+        // elevator geo), keep it. Otherwise clone from the base complex resource set.
+        var isCustom = ResourceSet.PersistentId != ComplexResourceSet.Mining.PersistentId
+                    && ResourceSet.PersistentId != ComplexResourceSet.Tech.PersistentId
+                    && ResourceSet.PersistentId != ComplexResourceSet.Service.PersistentId;
 
-        ResourceSet = ResourceSet.Duplicate();
+        if (!isCustom)
+        {
+            ResourceSet = Complex switch
+            {
+                Complex.Mining => ComplexResourceSet.Mining,
+                Complex.Tech => ComplexResourceSet.Tech,
+                Complex.Service => ComplexResourceSet.Service,
+            };
+
+            ResourceSet = ResourceSet.Duplicate();
+        }
 
         ResourceSet.BlockName = $"{ResourceSet.BlockName}_{Tier}{Index}_{Filesystem.Filename(Name)}";
 
         var usedCustomGeos = new HashSet<string>();
 
-        foreach (var layout in Layouts.Values)
+        foreach (var (_, layout) in GetAllLayouts())
             foreach (var zone in layout.Zones)
                 if (zone.CustomGeomorph is not null)
                     usedCustomGeos.Add(zone.CustomGeomorph);
+
+        // Keep any custom geos used as dimension origin tiles
+        foreach (var dimData in DimensionDatas)
+            usedCustomGeos.Add(dimData.Data.Data.DimensionGeomorph);
 
         ResourceSet.CustomGeomorphs.RemoveAll(prefab => !usedCustomGeos.Contains(prefab.Asset));
     }
@@ -1244,6 +1309,9 @@ public class Level
         TerminalPlacements.Name = $"{Tier}{Index}_{fsName}";
         TerminalPlacements.MainLevelLayout = LevelLayoutData;
 
+        AreaCounts.Name = $"{Tier}{Index}_{fsName}";
+        AreaCounts.MainLevelLayout = LevelLayoutData;
+
         EOS_EventsOnBossDeath.Name = $"{Tier}{Index}_{fsName}";
         EOS_EventsOnBossDeath.MainLevelLayout = LevelLayoutData;
 
@@ -1261,6 +1329,7 @@ public class Level
 
         SecurityDoors.Save();
         TerminalPlacements.Save();
+        AreaCounts.Save();
 
         if (EOS_EventsOnBossDeath.Definitions.Any())
             EOS_EventsOnBossDeath.Save();
@@ -1287,6 +1356,19 @@ public class Level
                 Definitions = ZoneSensors
             };
             levelZoneSensors.Save();
+        }
+
+        // Save custom terminal spawn requests to JSON for runtime loading
+        var customTerminalRequests = CustomTerminalSpawnManager.GetRequests(LevelLayoutData);
+        if (customTerminalRequests.Any())
+        {
+            var levelCustomTerminals = new LevelCustomTerminals
+            {
+                Name = $"{Tier}{Index}_{fsName}",
+                MainLevelLayout = LevelLayoutData,
+                Requests = customTerminalRequests
+            };
+            levelCustomTerminals.Save();
         }
     }
 
@@ -1432,9 +1514,13 @@ public class Level
     /// <returns></returns>
     public static Level Build(Level level)
     {
-        // TODO: remove this in the future after we are done testing it
-        if (level.MainDirector.Objective == WardenObjectiveType.ReachKdsDeep)
-            level.Name = "Valiant";
+        level.Name = level.MainDirector.Objective switch
+        {
+            WardenObjectiveType.AlphaTerminalCommand => "Alpha One",
+            WardenObjectiveType.Cryptomnesia => "Cryptomnesia",
+            WardenObjectiveType.ReachKdsDeep => "Valiant",
+            _ => level.Name
+        };
 
         if (level.Name == "")
             level.Name = Generator.Pick(Words.NounsLevel) ?? "";
@@ -1456,69 +1542,7 @@ public class Level
         // Randomize no fog to add variety
         if (level.Settings.Modifiers.Contains(LevelModifiers.NoFog))
         {
-            var density = Generator.Select(new List<(double chance, double density)>
-            {
-                // Low density
-                (0.2, 0.00010),
-                (0.9, 0.00016),
-                (1.0, 0.00024),
-
-                // Medium density
-                (1.0, 0.00033),
-                (0.9, 0.00045),
-
-                // High density
-                (0.3, 0.00070),
-                (0.1, 0.00100), // This is about as dense as you want to go
-            });
-
-            // We create a new combination of fog settings for fun randomness
-            level.FogSettings = Fog.FindOrPersist(new Fog
-            {
-                FogColor = Generator.Select(new List<(double chance, Color color)>
-                {
-                    // Light white
-                    (1.0, new Color { Alpha = 0.0, Red = 0.91, Green = 0.97, Blue = 1.0 }),
-
-                    // Light blue
-                    (1.0, new Color { Alpha = 0.0, Red = 0.72, Green = 0.91, Blue = 1.0 }),
-
-                    // light yellow
-                    (1.0, new Color { Alpha = 0.0, Red = 1.00, Green = 0.96, Blue = 0.85 })
-                }),
-                FogDensity = density,
-                DensityNoiseSpeed = Generator.Select(new List<(double chance, double speed)>
-                {
-                    (0.7, 0.022),
-                    (0.9, 0.038),
-                    (1.0, 0.055),
-                    (1.0, 0.067),
-                    (1.0, 0.074),
-                    (0.2, 0.100),
-                }),
-                DensityNoiseScale = Generator.Select(new List<(double chance, double scale)>
-                {
-                    (1.0, 0.025),
-                    (1.0, 0.045),
-                    (1.0, 0.073),
-                    (1.0, 0.073),
-                    (1.0, 0.131),
-                    (1.0, 0.300),
-                    (1.0, 0.500)
-                }),
-                DensityNoiseDirection = Generator.Select(new List<(double chance, Vector3 direction)>
-                {
-                    (1.0, new Vector3 { Y =  1.0 }), // Down
-                    (1.0, new Vector3 { Y = -1.0 }), // Up
-                    (0.5, new Vector3 { X =  1.0 }),
-                    (0.5, new Vector3 { X = -1.0 }),
-                    (0.5, new Vector3 { Z =  1.0 }),
-                    (0.5, new Vector3 { Z = -1.0 }),
-                }),
-                DensityHeightMaxBoost = density * 5.0,
-                DensityHeightAltitude = -5.2
-            });
-
+            level.FogSettings = Fog.Randomized();
             Plugin.Logger.LogWarning($"Settings for fog: density = {level.FogSettings.FogDensity}");
         }
 
@@ -1602,7 +1626,9 @@ public class Level
         level.FinalizeComplexResourceSet();
         #endregion
 
-        Plugin.Logger.LogDebug($"Level={level.Tier}{level.Index} level plan: {level.Planner}");
+        Plugin.Logger.LogDebug(
+            $"Level={level.Tier}{level.Index} level plan: {level.Planner}\n" +
+            $"==========\n{level.Planner.ToMermaidChart()}==========");
 
         return level;
     }
@@ -1665,25 +1691,78 @@ public class Level
 
             // level.GlobalWaveSettings = GlobalWaveSettings.HighCap_40pts;
 
-            // var dimension = new Dimension
-            // {
-            //     Data = new Dimensions.DimensionData
-            //     {
-            //         // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Static_01.prefab",
-            //         DimensionGeomorph = "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab",
-            //         DimensionResourceSetID = 47,
-            //         IsStaticDimension = true
-            //     },
-            //     PersistentId = 2,
-            // };
-            // // dimension.FindOrPersist();
-            // dimension.Persist();
-            //
-            // level.DimensionDatas.Add(new Levels.DimensionData
-            // {
-            //     Dimension = DimensionIndex.Dimension1,
-            //     Data = dimension
-            // });
+
+
+
+
+
+            var dim1ResourceSet = ComplexResourceSet.Mining.Duplicate();
+
+            dim1ResourceSet.CustomGeomorphs.Add(new Prefab
+            {
+                Asset = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_mining_01.prefab",
+                SubComplex = SubComplex.Storage,
+                Shard = 17
+            });
+            dim1ResourceSet.CustomGeomorphs.Add(new Prefab
+            {
+                Asset = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_HA_02.prefab",
+                SubComplex = SubComplex.DigSite,
+                Shard = 17
+            });
+
+
+            var dimensionIndex = DimensionIndex.Dimension1;
+            var (dimensionLayout, dimStart) = LevelLayout.BuildDimension(level, director, objective, dimensionIndex, Complex.Mining);
+
+            dimensionLayout.Zones.Add(
+                new Zone(level, dimensionLayout)
+                {
+                    LightSettings = Lights.Light.HeavyRedToCyan_1
+                });
+
+            var dimension = new Dimension
+            {
+                // Data = new Dimensions.DimensionData
+                // {
+                //     Layout = dimensionLayout,
+                //
+                //     DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_HA_02.prefab",
+                //     // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_01.prefab",
+                //     // DimensionGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_mining_01.prefab",
+                //
+                //     Fog = Fog.HeavyFullFog_Infectious,
+                //     ResourceSet = dim1ResourceSet
+                // },
+
+                Data = Dimensions.DimensionData.AlphaOne,
+
+                PersistentId = 3,
+            };
+            // dimension.FindOrPersist();
+            dimension.Persist();
+
+            level.DimensionDatas.Add(new Levels.DimensionData
+            {
+                Dimension = dimensionIndex,
+                Data = dimension
+            });
+
+            var (position, rotation) = LevelCustomTerminals.GetCandidates(dimension.Data.DimensionGeomorph).First();
+
+            CustomTerminalSpawnManager.AddSpawnRequest(
+                level.LevelLayoutData,
+                new CustomTerminalSpawnRequest
+                {
+                    Bulkhead = director.Bulkhead,
+                    DimensionIndex = DimensionIndex.Dimension1,
+                    LocalIndex = 0,
+                    GeomorphName = dimension.Data.DimensionGeomorph,
+                    LocalPosition = position,
+                    LocalRotation = rotation
+                });
+
+
 
             // The zones
             var elevatorDrop = new ZoneNode(Bulkhead.Main, level.Planner.NextIndex(Bulkhead.Main));
@@ -1765,14 +1844,14 @@ public class Level
 
                 layout.Zones.Add(zone);
 
-                var puzzle = ChainedPuzzle.TravelAlarm_Team with
-                {
-                    PublicAlarmName = "Class S T Alarm",
-                    Puzzle = new List<PuzzleComponent>
-                    {
-                        PuzzleComponent.SustainedTravel
-                    }
-                };
+                // var puzzle = ChainedPuzzle.TravelAlarm_Team with
+                // {
+                //     PublicAlarmName = "Class S T Alarm",
+                //     Puzzle = new List<PuzzleComponent>
+                //     {
+                //         PuzzleComponent.SustainedTravel
+                //     }
+                // };
 
                 // if (z == 0)
                 //     puzzle = ChainedPuzzle.TravelAlarm_Team;
@@ -1781,7 +1860,7 @@ public class Level
                 // else if (z == 2)
                 //     puzzle = ChainedPuzzle.None;
 
-                zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
+                // zone.Alarm = ChainedPuzzle.FindOrPersist(puzzle);
 
                 // zone.ChainedPuzzleToEnter =
 
@@ -1814,44 +1893,44 @@ public class Level
                 // }
             }
 
-            var sensorEvents2 = new List<WardenObjectiveEvent>();
-
-            sensorEvents2
-                .AddZoneSound(Sound.LightsOff, Bulkhead.Main, 0)
-                .AddSpawnWave(new GenericWave
-                {
-                    Population = WavePopulation.Baseline,
-                    Settings = WaveSettings.SingleMiniBoss
-                }, 1.0);
-
-            level.ZoneSensors.Add(new ZoneSensorDefinition
-            {
-                Id = 123,
-                ZoneNumber = 0,
-                Bulkhead = Bulkhead.Main,
-                SensorGroups = new List<ZoneSensorGroupDefinition>
-                {
-                    new ZoneSensorGroupDefinition
-                    {
-                        TriggerEach = false,
-                        // Count = 128,
-                        Density = SensorDensity.High,
-                        Moving = 3,
-                        Speed = 0.5,
-                        // Radius = 2.0,
-                        EdgeDistance = 0.7,
-                        AreaIndex = 1,
-                        EncryptedText = true,
-                    }
-                },
-
-                EventsOnTrigger = sensorEvents2
-            });
-
-            var resetTime = 5;
-            sensorEvents2
-                .EnableZoneSensorsWithReset(123, resetTime)
-                .AddZoneSound(Sound.LightsOn_Vol4, Bulkhead.Main, 0, resetTime - 0.4);
+            // var sensorEvents2 = new List<WardenObjectiveEvent>();
+            //
+            // sensorEvents2
+            //     .AddSound(Sound.LightsOff)
+            //     .AddSpawnWave(new GenericWave
+            //     {
+            //         Population = WavePopulation.Baseline,
+            //         Settings = WaveSettings.SingleMiniBoss
+            //     }, 1.0);
+            //
+            // level.ZoneSensors.Add(new ZoneSensorDefinition
+            // {
+            //     Id = 123,
+            //     ZoneNumber = 0,
+            //     Bulkhead = Bulkhead.Main,
+            //     SensorGroups = new List<ZoneSensorGroupDefinition>
+            //     {
+            //         new ZoneSensorGroupDefinition
+            //         {
+            //             TriggerEach = false,
+            //             // Count = 128,
+            //             Density = SensorDensity.High,
+            //             Moving = 3,
+            //             Speed = 0.5,
+            //             // Radius = 2.0,
+            //             EdgeDistance = 0.7,
+            //             AreaIndex = 1,
+            //             EncryptedText = true,
+            //         }
+            //     },
+            //
+            //     EventsOnTrigger = sensorEvents2
+            // });
+            //
+            // var resetTime = 5;
+            // sensorEvents2
+            //     .EnableZoneSensorsWithReset(123, resetTime)
+            //     .AddSound(Sound.LightsOn_Vol4, resetTime - 0.4);
 
             // var (med, medZone) = layout.BuildOptional_MedicalBay(elevatorDrop);
             // layout.Zones.Add(medZone);
@@ -1861,83 +1940,83 @@ public class Level
 
             // medZone.EventsOnOpenDoor.AddCyclingFog(level);
 
-            elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
-                new CustomTerminalCommand
-                {
-                    Command = "DEACTIVATE_SENSORS",
-                    CommandDesc = new Text($"Deactivate security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
-                    CommandEvents = new List<WardenObjectiveEvent>()
-                        // .AddStopLoop(263, 0.4)
-                        .DisableZoneSensors(123, 1.4)
-                        .ToList(),
-                    PostCommandOutputs = new List<TerminalOutput>
-                    {
-                        new()
-                        {
-                            Output = "Authenticating with BIOCOM...",
-                            Type = LineType.SpinningWaitNoDone,
-                            Time = 1.0
-                        },
-                        new()
-                        {
-                            Output = "Done.",
-                            Type = LineType.Normal,
-                            Time = 1.0
-                        },
-                    }
-                });
-
-            elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
-                new CustomTerminalCommand
-                {
-                    Command = "ACTIVATE_SENSORS",
-                    CommandDesc = new Text($"Activate security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
-                    CommandEvents = new List<WardenObjectiveEvent>()
-                        // .AddStopLoop(263, 0.4)
-                        .EnableZoneSensors(123, 1.4)
-                        .ToList(),
-                    PostCommandOutputs = new List<TerminalOutput>
-                    {
-                        new()
-                        {
-                            Output = "Authenticating with BIOCOM...",
-                            Type = LineType.SpinningWaitNoDone,
-                            Time = 1.0
-                        },
-                        new()
-                        {
-                            Output = "Done.",
-                            Type = LineType.Normal,
-                            Time = 1.0
-                        },
-                    }
-                });
-
-            elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
-                new CustomTerminalCommand
-                {
-                    Command = "RESET_SENSORS",
-                    CommandDesc = new Text($"Fully reset security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
-                    CommandEvents = new List<WardenObjectiveEvent>()
-                        // .AddStopLoop(263, 0.4)
-                        .EnableZoneSensorsWithReset(123, 1.4)
-                        .ToList(),
-                    PostCommandOutputs = new List<TerminalOutput>
-                    {
-                        new()
-                        {
-                            Output = "Authenticating with BIOCOM...",
-                            Type = LineType.SpinningWaitNoDone,
-                            Time = 1.0
-                        },
-                        new()
-                        {
-                            Output = "Done.",
-                            Type = LineType.Normal,
-                            Time = 1.0
-                        },
-                    }
-                });
+            // elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
+            //     new CustomTerminalCommand
+            //     {
+            //         Command = "DEACTIVATE_SENSORS",
+            //         CommandDesc = new Text($"Deactivate security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
+            //         CommandEvents = new List<WardenObjectiveEvent>()
+            //             // .AddStopLoop(263, 0.4)
+            //             .DisableZoneSensors(123, 1.4)
+            //             .ToList(),
+            //         PostCommandOutputs = new List<TerminalOutput>
+            //         {
+            //             new()
+            //             {
+            //                 Output = "Authenticating with BIOCOM...",
+            //                 Type = LineType.SpinningWaitNoDone,
+            //                 Time = 1.0
+            //             },
+            //             new()
+            //             {
+            //                 Output = "Done.",
+            //                 Type = LineType.Normal,
+            //                 Time = 1.0
+            //             },
+            //         }
+            //     });
+            //
+            // elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
+            //     new CustomTerminalCommand
+            //     {
+            //         Command = "ACTIVATE_SENSORS",
+            //         CommandDesc = new Text($"Activate security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
+            //         CommandEvents = new List<WardenObjectiveEvent>()
+            //             // .AddStopLoop(263, 0.4)
+            //             .EnableZoneSensors(123, 1.4)
+            //             .ToList(),
+            //         PostCommandOutputs = new List<TerminalOutput>
+            //         {
+            //             new()
+            //             {
+            //                 Output = "Authenticating with BIOCOM...",
+            //                 Type = LineType.SpinningWaitNoDone,
+            //                 Time = 1.0
+            //             },
+            //             new()
+            //             {
+            //                 Output = "Done.",
+            //                 Type = LineType.Normal,
+            //                 Time = 1.0
+            //             },
+            //         }
+            //     });
+            //
+            // elevatorDropZone.TerminalPlacements.First().UniqueCommands.Add(
+            //     new CustomTerminalCommand
+            //     {
+            //         Command = "RESET_SENSORS",
+            //         CommandDesc = new Text($"Fully reset security sensors in {Intel.ZoneRaw(elevatorDropZone)}"),
+            //         CommandEvents = new List<WardenObjectiveEvent>()
+            //             // .AddStopLoop(263, 0.4)
+            //             .EnableZoneSensorsWithReset(123, 1.4)
+            //             .ToList(),
+            //         PostCommandOutputs = new List<TerminalOutput>
+            //         {
+            //             new()
+            //             {
+            //                 Output = "Authenticating with BIOCOM...",
+            //                 Type = LineType.SpinningWaitNoDone,
+            //                 Time = 1.0
+            //             },
+            //             new()
+            //             {
+            //                 Output = "Done.",
+            //                 Type = LineType.Normal,
+            //                 Time = 1.0
+            //             },
+            //         }
+            //     });
 
             // layout.AddSecuritySensors_SinglePouncerShadow((0, 1));
 

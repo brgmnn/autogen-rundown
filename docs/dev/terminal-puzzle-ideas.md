@@ -26,6 +26,7 @@ got the shift roster — who was assigned to Sector 7G on November 14th?" Red he
 candidates make it non-trivial.
 
 **Mechanics**:
+
 - Password-protected terminal controlling a locked door
 - Password hint describes the criteria: `"ENTER EMPLOYEE ID FOR SECTOR-7G SUPERVISOR ON SHIFT 2023-11-14"`
 - Log files across 2-4 terminals contain overlapping personnel data
@@ -34,6 +35,7 @@ candidates make it non-trivial.
   `TerminalZoneSelectionDatas`
 
 **Difficulty scaling**:
+
 - A: 2 terminals, 2 logs, one obvious answer, no red herrings
 - B: 3 terminals, 3-4 logs, one red herring employee
 - C: 3-4 terminals across 2 zones, multiple red herrings, partial data corruption
@@ -63,6 +65,7 @@ possibilities. "My log says Dr. Chen was transferred to Sector 7A at 0200, so th
 0300 entry can't be her."
 
 **Mechanics**:
+
 - Password-protected terminal with multi-part password
 - Password hint shows format: `"ENTER INCIDENT SEQUENCE: [SECTOR]-[TIME]-[SUBJECT]"`
 - 4-8 log files across 3-5 terminals describe multiple plausible incidents
@@ -70,6 +73,7 @@ possibilities. "My log says Dr. Chen was transferred to Sector 7A at 0200, so th
 - `PasswordPartCount` controls complexity
 
 **Difficulty scaling**:
+
 - A: 2 terminals, 2 logs, single clear incident, 1-part password
 - B: 3 terminals, 3-4 logs, two plausible incidents
 - C: 3-4 terminals, multiple red herrings, 2-part password
@@ -99,6 +103,7 @@ but unlocks Terminal C. Terminal C's command finally opens the forward door. Eac
 step makes the environment worse.
 
 **Mechanics**:
+
 - 3-4 terminals in separate branch zones from a hub
 - Each has one `UniqueCommand` with `SpecialCommandRule = OnlyOnce`
 - Each command's `CommandEvents` fire `UnlockSecurityDoor` for next zone + hazard
@@ -107,6 +112,7 @@ step makes the environment worse.
 - Terminal logs describe the relay protocol and which node comes next
 
 **Difficulty scaling**:
+
 - A: 2 relays, mild effects (lights dim)
 - B: 3 relays, lights off on step 2
 - C: 3 relays, lights off + fog, small enemy wave on step 2
@@ -114,6 +120,7 @@ step makes the environment worse.
 - E: 4 relays, fog + darkness + enemy waves, countdown on first activation
 
 **Zone layout**: Hub with 3-4 branches, each 1-2 zones deep. Locked forward door.
+
 ```
 hub(locked_forward) -> end
 hub -> branch_a(terminal_a)
@@ -142,6 +149,7 @@ spawns enemies in C. Players read the containment matrix logs and strategize: "I
 we release A first, B gets fog. But the keycard is in B. So we release B first..."
 
 **Mechanics**:
+
 - Single terminal with 3-4 `UniqueCommand` entries (`RELEASE_SECTOR_A`, etc.),
   each `OnlyOnceDelete`
 - Each command fires `UnlockSecurityDoor` for one zone AND hazard events in others
@@ -150,6 +158,7 @@ we release A first, B gets fog. But the keycard is in B. So we release B first..
 - Only one release order creates a manageable path
 
 **Difficulty scaling**:
+
 - A: 2 sectors, obvious optimal order, mild consequences
 - B: 3 sectors, one clear optimal order, moderate consequences
 - C: 3-4 sectors, multiple viable but one optimal, fog + enemies
@@ -157,6 +166,7 @@ we release A first, B gets fog. But the keycard is in B. So we release B first..
 - E: 4-5 sectors, corrupted/missing logs, bosses and error alarms as consequences
 
 **Zone layout**: Central control zone with locked branches.
+
 ```
 control(terminal) -> sector_a(locked)
 control -> sector_b(locked) -> objective_zone
@@ -186,6 +196,7 @@ ACTIVATION FROM 3 REMOTE NODES WITHIN 15 SECONDS."` Players spread to their
 assigned terminals. "Everyone ready? 3, 2, 1, GO!" Voice coordination is essential.
 
 **Mechanics**:
+
 - Master terminal has `START_PURGE_SEQUENCE` (OnlyOnce) that starts a `Countdown`
   (AWO 10010)
 - Each node terminal has `INITIATE_PURGE` (OnlyOnce) that fires
@@ -195,6 +206,7 @@ assigned terminals. "Everyone ready? 3, 2, 1, GO!" Voice coordination is essenti
 - Alternatively adapt existing `TimedTerminalSequence` infrastructure
 
 **Difficulty scaling**:
+
 - A: 2 terminals, 30-second window, adjacent zones
 - B: 3 terminals, 20-second window, one zone behind alarm
 - C: 3 terminals, 15-second window, mixed zone challenges
@@ -202,6 +214,7 @@ assigned terminals. "Everyone ready? 3, 2, 1, GO!" Voice coordination is essenti
 - E: 4 terminals, 10-second window, fog/darkness/enemies, failure spawns big wave
 
 **Zone layout**: Hub with branches to each node terminal.
+
 ```
 start -> hub(master_terminal, locked_forward) -> end
          hub -> branch_a -> node_a(terminal)
@@ -230,6 +243,7 @@ resets while hearing distant combat. The team pushes through a branch to find a
 keycard/generator/terminal that disables the switch. Reunion is satisfying.
 
 **Mechanics**:
+
 - `ACTIVATE_CONTAINMENT` (OnlyOnce) starts `Countdown` + `EventLoop` for enemy
   spawns near the terminal
 - `RESET_CONTAINMENT` (Normal rule) fires `AdjustAwoTimer` (AWO 20007) to reset
@@ -239,6 +253,7 @@ keycard/generator/terminal that disables the switch. Reunion is satisfying.
   countdown
 
 **Difficulty scaling**:
+
 - A: 90-second countdown, no enemies at terminal, simple keycard fetch
 - B: 75-second countdown, occasional enemies near terminal
 - C: 60-second countdown, regular enemies, remote task has alarm door
@@ -246,6 +261,7 @@ keycard/generator/terminal that disables the switch. Reunion is satisfying.
 - E: 30-second countdown, heavy enemies, multi-step remote task, fog
 
 **Zone layout**:
+
 ```
 hub -> terminal_zone (dead man's switch)
 hub -> branch_1 -> branch_2 -> objective_zone
@@ -274,6 +290,7 @@ lights went red. Try Gamma... yes, fog is clearing!" Once correct configuration 
 found, `COMMIT_CONFIGURATION` locks it in.
 
 **Mechanics**:
+
 - Terminal with 4-5 `UniqueCommand` entries (Normal rule, reusable)
 - Each fires `LightsInZone`/`SetFogSettings` in a remote zone
 - Correct choice sets `SetWorldEventCondition`
@@ -282,6 +299,7 @@ found, `COMMIT_CONFIGURATION` locks it in.
 - Terminal `PostCommandOutputs` are deliberately ambiguous
 
 **Difficulty scaling**:
+
 - A: 3 options, Zone B visible from Zone A, obvious correct answer
 - B: 4 options, zones separated, clearer environmental signals
 - C: 4 options, incorrect choices spawn small enemy waves in Zone B
@@ -289,6 +307,7 @@ found, `COMMIT_CONFIGURATION` locks it in.
 - E: 5 options, escalating enemies, limited attempts before hard-lock
 
 **Zone layout**:
+
 ```
 start -> terminal_zone -> corridor -> observation_zone
                        -> locked_door -> end
@@ -316,6 +335,7 @@ seconds the terminal beeps: `"CONFIRM DATA INTEGRITY?"` — operator must type
 confirm!"
 
 **Mechanics**:
+
 - `EMERGENCY_BROADCAST` (OnlyOnce) starts a failure countdown + enemy `EventLoop`
 - `CONFIRM_INTEGRITY` (Normal) fires `AdjustAwoTimer` to reset failure timer
 - Separate progress countdown ticks toward completion
@@ -323,6 +343,7 @@ confirm!"
 - Completion unlocks door
 
 **Difficulty scaling**:
+
 - A: 90-second broadcast, confirmation every 30 seconds, light waves
 - B: 120-second, every 25 seconds, medium waves
 - C: 150-second, every 20 seconds, heavy waves with specials
@@ -354,6 +375,7 @@ Players triangulate: "It's near Terminal B — search that area." Finding the ta
 terminal reveals the unlock command.
 
 **Mechanics**:
+
 - 4-6 terminals with `PING_SIGNAL` unique command
 - Each command's `PostCommandOutputs` display procedurally generated signal
   strength based on zone graph distance to target
@@ -361,6 +383,7 @@ terminal reveals the unlock command.
 - Signal strengths generated at build time from zone topology
 
 **Difficulty scaling**:
+
 - A: 3 terminals, very clear readings (10%/50%/90%), obvious target
 - B: 4 terminals, closer signal strengths, 2 plausible zones
 - C: 5 terminals, readings have "noise" (+/- random variation), target in side zone
@@ -368,6 +391,7 @@ terminal reveals the unlock command.
 - E: 6 terminals, heavy noise, some give false readings, enemies in target zone
 
 **Zone layout**: Distributed zones with terminals at various distances from target.
+
 ```
 start -> zone_a(terminal) -> zone_b(terminal) -> hub
                                                   hub -> side_c(terminal)
@@ -397,12 +421,14 @@ another terminal's `INFO` output or in a log file, and relay it back. "The sign
 says SUBLEVEL MAINTENANCE BAY 3B."
 
 **Mechanics**:
+
 - Password system where password parts are zone aliases or terminal serial numbers
 - `Zone.AliasPrefix` and `Lore.TerminalSerial` provide procedural vocabulary
 - Password hint describes what to find: format, location hint, type of info
 - Multiple queries for higher difficulty via `PasswordPartCount`
 
 **Difficulty scaling**:
+
 - A: 1 query, answer in same zone
 - B: 2 queries, answers in adjacent zones
 - C: 3 queries, some requiring cross-reference
@@ -410,6 +436,7 @@ says SUBLEVEL MAINTENANCE BAY 3B."
 - E: 4 queries, tight timer, wrong answers spawn enemies, answers behind alarms
 
 **Zone layout**: Central terminal with branching exploration zones.
+
 ```
 start -> terminal_zone -> locked_door -> end
          terminal_zone -> explore_a (logs/signs)
@@ -455,6 +482,7 @@ patches needed, but the query generator needs access to actual zone layout data.
 ### AWO Events Needing Verification
 
 Before Phase 4, test these Advanced Warden Objective events:
+
 - `AdjustAwoTimer` (AWO 20007): Can it reset a countdown? Does it add/set time?
 - `SetWorldEventCondition` (event 19): Can multiple conditions be checked simultaneously?
 - `ConditionIndex` on event entries: Does conditional branching on command events work?

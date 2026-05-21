@@ -80,7 +80,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        var (end, _) = AddTravelScanAlarm(nodes.Last());
+                        var (end, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         AddUplinkTerminalZones(end, objective);
                     }),
                 });
@@ -208,7 +208,14 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
-                        var (end, _) = AddTravelScanAlarm(nodes.Last());
+                        var (end, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Cross-reference dossier - information puzzle
+                    (0.10, () =>
+                    {
+                        var (end, _) = BuildChallenge_CrossReferenceDossier(start);
                         AddUplinkTerminalZones(end, objective);
                     }),
                 });
@@ -257,7 +264,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        var (end, _) = AddTravelScanAlarm(nodes.Last());
+                        var (end, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         AddUplinkTerminalZones(end, objective);
                     }),
                 });
@@ -376,7 +383,7 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
                         var hub = nodes.Last();
                         hub = planner.UpdateNode(hub with { MaxConnections = objective.Uplink_NumberOfTerminals + 1 });
-                        planner.GetZone(hub)!.GenHubGeomorph(level.Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         // Add each terminal in its own end zone
                         for (var i = 0; i < objective.Uplink_NumberOfTerminals; i++)
@@ -393,6 +400,34 @@ public partial record LevelLayout
                     AddSecuritySensors(nodes.Last());
                     var (end, _) = BuildChallenge_KeycardInSide(nodes.Last());
                     AddSecuritySensors(end);
+                    AddUplinkTerminalZones(end, objective);
+                }));
+
+                // Cascading relay - sequential terminal chain with hazards
+                options.Add((0.12, () =>
+                {
+                    var (end, _) = BuildChallenge_CascadingRelay(start);
+                    AddUplinkTerminalZones(end, objective);
+                }));
+
+                // Quarantine cascade - strategic sector release puzzle
+                options.Add((0.10, () =>
+                {
+                    var (end, _) = BuildChallenge_QuarantineCascade(start);
+                    AddUplinkTerminalZones(end, objective);
+                }));
+
+                // Cross-reference dossier - personnel deduction puzzle
+                options.Add((0.10, () =>
+                {
+                    var (end, _) = BuildChallenge_CrossReferenceDossier(start);
+                    AddUplinkTerminalZones(end, objective);
+                }));
+
+                // Forensic reconstruction - incident sequence puzzle
+                options.Add((0.08, () =>
+                {
+                    var (end, _) = BuildChallenge_ForensicReconstruction(start);
                     AddUplinkTerminalZones(end, objective);
                 }));
 
@@ -513,6 +548,13 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_KeycardInSide(nodes.Last());
                     }));
 
+                // Cascading relay challenge
+                options.Add((0.12, () =>
+                {
+                    var (end, _) = BuildChallenge_CascadingRelay(start);
+                    AddUplinkTerminalZones(end, objective);
+                }));
+
                 Generator.SelectRun(options);
                 break;
             }
@@ -595,6 +637,36 @@ public partial record LevelLayout
                     {
                         var (mid, _) = AddTravelScanAlarm(start);
                         var (end, _) = BuildChallenge_BossFight(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Cascading relay - sequential terminal chain with escalating hazards
+                    (0.10, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (end, _) = BuildChallenge_CascadingRelay(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Quarantine cascade - strategic sector release puzzle
+                    (0.10, () =>
+                    {
+                        var (end, _) = BuildChallenge_QuarantineCascade(start);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Cross-reference dossier - personnel deduction puzzle
+                    (0.08, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (end, _) = BuildChallenge_CrossReferenceDossier(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Forensic reconstruction - incident sequence puzzle
+                    (0.08, () =>
+                    {
+                        var (end, _) = BuildChallenge_ForensicReconstruction(start);
                         AddUplinkTerminalZones(end, objective);
                     }),
                 });
@@ -809,7 +881,7 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(mid, Generator.Between(1, 2));
                         var hub = nodes.Last();
                         hub = planner.UpdateNode(hub with { MaxConnections = objective.Uplink_NumberOfTerminals + 1 });
-                        planner.GetZone(hub)!.GenHubGeomorph(level.Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         for (var i = 0; i < objective.Uplink_NumberOfTerminals; i++)
                         {
@@ -829,6 +901,22 @@ public partial record LevelLayout
                     foreach (var node in nodes)
                         AddSecuritySensors(node);
                     var (end, _) = BuildChallenge_KeycardInZone(nodes.Last());
+                    AddUplinkTerminalZones(end, objective);
+                }));
+
+                // Cascading relay with boss approach
+                options.Add((0.10, () =>
+                {
+                    var (mid, _) = BuildChallenge_BossFight(start);
+                    var (end, _) = BuildChallenge_CascadingRelay(mid);
+                    AddUplinkTerminalZones(end, objective);
+                }));
+
+                // Quarantine cascade - strategic sector release
+                options.Add((0.10, () =>
+                {
+                    var nodes = AddBranch_Forward(start, 1);
+                    var (end, _) = BuildChallenge_QuarantineCascade(nodes.Last());
                     AddUplinkTerminalZones(end, objective);
                 }));
 

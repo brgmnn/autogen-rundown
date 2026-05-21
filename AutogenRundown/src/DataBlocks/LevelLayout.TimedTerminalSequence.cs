@@ -18,18 +18,14 @@ public partial record LevelLayout
 
         // Set entrance zone to corridor
         var entranceZone = level.Planner.GetZone(start)!;
-        entranceZone.GenCorridorGeomorph(director.Complex);
+        start = level.GenCorridorGeomorph(start);
         entranceZone.RollFog(level);
-        start.MaxConnections = 1;
-        level.Planner.UpdateNode(start);
 
         // Create hub zone
-        var hubIndex = level.Planner.NextIndex(director.Bulkhead);
-        var hub = new ZoneNode(director.Bulkhead, hubIndex, "timed_terminal_hub");
-        hub.MaxConnections = 3;
+        var hubIndex = level.Planner.NextIndex(director.Bulkhead, Dimension);
+        var hub = new ZoneNode(director.Bulkhead, hubIndex, "timed_terminal_hub", Dimension: Dimension);
 
         var zone = new Zone(level, this) { LightSettings = Lights.GenRandomLight() };
-        zone.GenHubGeomorph(director.Complex);
         zone.SetOutOfFog(level);
 
         // Place first terminal in the hub
@@ -38,6 +34,7 @@ public partial record LevelLayout
             {
                 new()
                 {
+                    Dimension = hub.Dimension,
                     LocalIndex = hubIndex,
                     Weights = ZonePlacementWeights.EvenlyDistributed
                 }
@@ -45,6 +42,8 @@ public partial record LevelLayout
 
         level.Planner.Connect(start, hub);
         level.Planner.AddZone(hub, zone);
+
+        hub = level.GenHubGeomorph(hub);
 
         var hasAllErrorAlarms = level.Tier switch
         {
@@ -96,25 +95,26 @@ public partial record LevelLayout
                 {
                     new()
                     {
+                        Dimension = end.Dimension,
                         LocalIndex = end.ZoneNumber,
                         Weights = ZonePlacementWeights.NotAtStart
                     }
                 });
 
             // Lock the first door to the first zone
-            var first = planner.GetZones(director.Bulkhead, $"timed_terminal_{i}").First();
+            var first = planner.GetZones(director.Bulkhead, $"timed_terminal_{i}", dimension: Dimension).First();
             var firstZone = planner.GetZone(first!);
 
             firstZone!.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
         }
 
         var selectedIndex = Generator.Between(0, objective.TimedTerminalSequence_NumberOfTerminals - 1);
-        var selected = planner.GetZones(director.Bulkhead, $"timed_terminal_{selectedIndex}").First();
+        var selected = planner.GetZones(director.Bulkhead, $"timed_terminal_{selectedIndex}", dimension: Dimension).First();
 
         if (hasAllErrorAlarms)
         {
             // Add turnoff zone
-            var turnOff = new ZoneNode(director.Bulkhead, planner.NextIndex(director.Bulkhead), $"timed_terminal_error_off");
+            var turnOff = new ZoneNode(director.Bulkhead, planner.NextIndex(director.Bulkhead, Dimension), $"timed_terminal_error_off", Dimension: Dimension);
             var turnOffZone = new Zone(level, this)
             {
                 Coverage = new() { Min = 3.0, Max = 3.0 },

@@ -1,4 +1,5 @@
 using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.Patches.CustomTerminals;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
@@ -36,10 +37,11 @@ public partial record LevelLayout
 
         var start = (ZoneNode)startish;
 
-        // Fast path for Survival/ReachKdsDeep secondary objectives
+        // Fast path for Survival/ReachKdsDeep/Cryptomnesia secondary objectives
         if (level.MainDirector.Objective
             is WardenObjectiveType.Survival
-            or WardenObjectiveType.ReachKdsDeep)
+            or WardenObjectiveType.ReachKdsDeep
+            or WardenObjectiveType.Cryptomnesia)
         {
             BuildLayout_SpecialTerminalCommand_Fast(start);
             return;
@@ -1071,7 +1073,22 @@ public partial record LevelLayout
 
         AddForwardExtractStart(hillNodes.First());
 
-        hillZone.GenKingOfTheHillGeomorph(level, director);
+        var (terminalPos, terminalRot) = hillZone.GenKingOfTheHillGeomorph();
+
+        // Create a custom terminal spawn in the center of the geo as the warden objective terminal
+        if (hillZone.CustomGeomorph is not null)
+            CustomTerminalSpawnManager.AddSpawnRequest(
+                director.Bulkhead == Bulkhead.Main ? PersistentId : level.LevelLayoutData,
+                new CustomTerminalSpawnRequest
+            {
+                Bulkhead = director.Bulkhead,
+                LocalIndex = hillZone.LocalIndex,
+                GeomorphName = hillZone.CustomGeomorph,
+                LocalPosition = terminalPos,
+                LocalRotation = terminalRot,
+                IsWardenObjective = true
+            });
+
         hillZone.TerminalPlacements = new List<TerminalPlacement>
         {
             new() { PlacementWeights = ZonePlacementWeights.AtEnd }
@@ -1090,8 +1107,8 @@ public partial record LevelLayout
         for (var num = 0; num < spawnZoneCount; num++)
         {
             const string branch = "hill_spawn";
-            var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-            var node = new ZoneNode(director.Bulkhead, zoneIndex, branch, 0);
+            var zoneIndex = level.Planner.NextIndex(director.Bulkhead, Dimension);
+            var node = new ZoneNode(director.Bulkhead, zoneIndex, branch, 0, Dimension);
             node.Tags.Add("no_enemies");
 
             var zone = new Zone(level, this)
@@ -1099,7 +1116,6 @@ public partial record LevelLayout
                 LightSettings = Lights.GenRandomLight(),
             };
             zone.RollFog(level);
-            zone.GenDeadEndGeomorph(director.Complex);
 
             // No terminals needed in the spawn zones
             zone.TerminalPlacements = new List<TerminalPlacement>();
@@ -1113,6 +1129,8 @@ public partial record LevelLayout
 
             level.Planner.Connect(hill, node);
             level.Planner.AddZone(node, zone);
+
+            node = level.GenMultiRoomSpawnGeomorph(node);
         }
     }
 

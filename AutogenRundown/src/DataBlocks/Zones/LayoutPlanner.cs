@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Objectives;
+﻿using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.Utils;
 
 namespace AutogenRundown.DataBlocks.Zones;
@@ -7,28 +8,32 @@ public record struct ZoneNode(
     Bulkhead Bulkhead,
     int ZoneNumber,
     string Branch = "primary",
-    int MaxConnections = 2)
+    int MaxConnections = 2,
+    DimensionIndex Dimension = DimensionIndex.Reality)
 {
     /// <summary>
     /// Freeform tags field
     /// </summary>
     public Tags Tags { get; set; } = new();
 
-    public ZoneNode() : this(Bulkhead.Main, 0, "primary", 2) { }
+    public ZoneNode() : this(Bulkhead.Main, 0, "primary", 2, DimensionIndex.Reality) { }
 
     /// <summary>
-    /// Two zones are equal if they are in the same bulkhead and have the same zone number.
-    /// All other properties are extra and we want to consider them equal with them.
+    /// Two zones are equal if they are in the same bulkhead, have the same zone number,
+    /// and are in the same dimension. All other properties are extra and we want to
+    /// consider them equal with them.
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
     public readonly bool Equals(ZoneNode other)
     {
-        return Bulkhead == other.Bulkhead && ZoneNumber == other.ZoneNumber;
+        return Bulkhead == other.Bulkhead
+            && ZoneNumber == other.ZoneNumber
+            && Dimension == other.Dimension;
     }
 
     public override int GetHashCode()
-        => Bulkhead.GetHashCode() ^ ZoneNumber.GetHashCode();
+        => Bulkhead.GetHashCode() ^ ZoneNumber.GetHashCode() ^ Dimension.GetHashCode();
 
     public static string ListToString(IEnumerable<ZoneNode> nodes, string separator = ", ")
         => string.Join(separator, nodes.Select(node => node.ToString()));
@@ -85,9 +90,7 @@ public enum Direction
 /// </summary>
 public class LayoutPlanner
 {
-    private int indexMain = 0;
-    private int indexExtreme = 0;
-    private int indexOverload = 0;
+    private readonly Dictionary<(DimensionIndex, Bulkhead), int> indices = new();
 
     private readonly Dictionary<ZoneNode, List<ZoneNode>> graph = new();
 
@@ -95,8 +98,12 @@ public class LayoutPlanner
 
     private IEnumerable<KeyValuePair<ZoneNode, List<ZoneNode>>> GetSubgraph(
         Bulkhead bulkhead = Bulkhead.All,
-        string? branch = "primary")
-        => graph.Where(node => (node.Key.Bulkhead & bulkhead) != 0 && (branch == null || node.Key.Branch == branch));
+        string? branch = "primary",
+        DimensionIndex? dimension = DimensionIndex.Reality)
+        => graph.Where(node =>
+            (node.Key.Bulkhead & bulkhead) != 0
+            && (branch == null || node.Key.Branch == branch)
+            && (dimension == null || node.Key.Dimension == dimension));
 
     public override string ToString()
     {
@@ -110,10 +117,103 @@ public class LayoutPlanner
             };
 
             var zone = GetZone(n.Key);
+            var dimLabel = n.Key.Dimension != DimensionIndex.Reality ? $" dim={n.Key.Dimension}" : "";
 
-            return $"  {n.Key} (door={zone?.StartExpansion}, expand={zone?.ZoneExpansion}) => {children}";
+            return $"  {n.Key}{dimLabel} (door={zone?.StartExpansion}, expand={zone?.ZoneExpansion}) => {children}";
         }));
         return $"Graph:\n{debug}";
+    }
+
+    /// <summary>
+    /// Renders the zone graph as a Mermaid `flowchart LR` diagram. Each dimension is grouped
+    /// into its own subgraph so cross-dimension portals show up as edges that cross subgraph
+    /// boundaries. Bulkheads are color-coded via classDef styling, each node label includes
+    /// branch / tags / max-connections, and edges are labeled with the child's requested
+    /// StartExpansion direction. Cross-bulkhead edges are flagged with a `bulkhead` prefix
+    /// and cross-dimension edges with a `dimension` prefix.
+    /// </summary>
+    public string ToMermaidChart()
+    {
+        static string Prefix(Bulkhead b) => b switch
+        {
+            Bulkhead.Main => "M",
+            Bulkhead.Extreme => "E",
+            Bulkhead.Overload => "O",
+            Bulkhead.StartingArea => "S",
+            _ => "X",
+        };
+        static string CssClass(Bulkhead b) => b switch
+        {
+            Bulkhead.Main => "main",
+            Bulkhead.Extreme => "extreme",
+            Bulkhead.Overload => "overload",
+            Bulkhead.StartingArea => "startingArea",
+            _ => "main",
+        };
+        static string NodeId(ZoneNode n) => $"D{(int)n.Dimension}_{Prefix(n.Bulkhead)}_{n.ZoneNumber}";
+
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine("flowchart LR");
+
+        // Group nodes by dimension and render each dimension as its own subgraph so the
+        // viewer can tell at a glance which zones belong to which dimension.
+        var byDimension = graph.Keys
+            .GroupBy(n => n.Dimension)
+            .OrderBy(g => (int)g.Key);
+
+        foreach (var dimGroup in byDimension)
+        {
+            sb.AppendLine($"    subgraph dim_{(int)dimGroup.Key}[\"Dimension: {dimGroup.Key}\"]");
+
+            foreach (var node in dimGroup)
+            {
+                var label = new System.Text.StringBuilder();
+                label.Append($"{node.Bulkhead} {node.ZoneNumber}");
+                label.Append($"<br/>branch: {node.Branch}");
+
+                var tagsStr = node.Tags.ToString();
+                if (tagsStr != "{}")
+                    label.Append($"<br/>tags: {tagsStr}");
+
+                label.Append($"<br/>max: {node.MaxConnections}");
+
+                sb.AppendLine($"        {NodeId(node)}[\"{label}\"]:::{CssClass(node.Bulkhead)}");
+
+                if (graph[node].Count >= node.MaxConnections)
+                    sb.AppendLine($"        class {NodeId(node)} closed");
+            }
+
+            sb.AppendLine("    end");
+        }
+
+        foreach (var (parent, children) in graph)
+        {
+            foreach (var child in children)
+            {
+                var dir = GetZone(child)?.StartExpansion ?? ZoneBuildExpansion.Random;
+                var crossBulkhead = parent.Bulkhead != child.Bulkhead;
+                var crossDimension = parent.Dimension != child.Dimension;
+
+                var prefixes = new List<string>();
+                if (crossDimension) prefixes.Add("dimension");
+                if (crossBulkhead) prefixes.Add("bulkhead");
+                if (dir != ZoneBuildExpansion.Random) prefixes.Add(dir.ToString());
+
+                var edge = prefixes.Count == 0
+                    ? "-->"
+                    : $"-->|\"{string.Join(", ", prefixes)}\"|";
+
+                sb.AppendLine($"    {NodeId(parent)} {edge} {NodeId(child)}");
+            }
+        }
+
+        sb.AppendLine("    classDef main fill:#cfe8ff,stroke:#1f6feb");
+        sb.AppendLine("    classDef extreme fill:#e3c8ff,stroke:#6f42c1");
+        sb.AppendLine("    classDef overload fill:#ffd8a8,stroke:#cc6600");
+        sb.AppendLine("    classDef startingArea fill:#c8e6c9,stroke:#2e7d32");
+        sb.AppendLine("    classDef closed stroke:#888888,stroke-width:2px");
+
+        return sb.ToString();
     }
 
     /// <summary>
@@ -179,6 +279,20 @@ public class LayoutPlanner
 
     public ZoneNode AddTags(ZoneNode node, params string[] tags)
         => UpdateNode(node with { Tags = node.Tags.Extend(tags) });
+
+    /// <summary>
+    /// Removes a node from the planner entirely: drops its zone, its outgoing edges,
+    /// and any inbound edges pointing at it. Used by post-generation prune passes
+    /// (e.g. Cryptomnesia) that need to cut unreachable branches.
+    /// </summary>
+    public void Remove(ZoneNode node)
+    {
+        blocks.Remove(node);
+        graph.Remove(node);
+
+        foreach (var key in graph.Keys.ToList())
+            graph[key].RemoveAll(child => child == node);
+    }
 
     /// <summary>
     /// Handles assigning the right local index and build from index.
@@ -260,8 +374,9 @@ public class LayoutPlanner
     /// </summary>
     /// <param name="index"></param>
     /// <returns></returns>
-    public ZoneNode GetZoneNode(int index)
-        => graph.Keys.First(node => node.ZoneNumber == index);
+    public ZoneNode GetZoneNode(int index, DimensionIndex? dimension = DimensionIndex.Reality)
+        => graph.Keys.First(node => node.ZoneNumber == index
+            && (dimension == null || node.Dimension == dimension));
 
     /// <summary>
     /// Gets the ZoneNode for a given Zone
@@ -277,33 +392,35 @@ public class LayoutPlanner
     /// <param name="bulkhead"></param>
     /// <param name="branch"></param>
     /// <returns></returns>
-    public ZoneNode GetLastNode(Bulkhead bulkhead, string? branch) => GetSubgraph(bulkhead, branch).Last().Key;
+    public ZoneNode GetLastNode(Bulkhead bulkhead, string? branch, DimensionIndex? dimension = DimensionIndex.Reality)
+        => GetSubgraph(bulkhead, branch, dimension).Last().Key;
 
     /// <summary>
-    ///
+    /// Returns the next zone index for the given bulkhead and dimension. Zone indices are
+    /// tracked independently per (dimension, bulkhead) pair.
     /// </summary>
-    /// <param name="bulkhead"></param>
-    /// <returns></returns>
-    public int NextIndex(Bulkhead bulkhead) => bulkhead switch
+    public int NextIndex(Bulkhead bulkhead, DimensionIndex dimension = DimensionIndex.Reality)
     {
-        Bulkhead.Main => indexMain++,
-        Bulkhead.Extreme => indexExtreme++,
-        Bulkhead.Overload => indexOverload++,
+        var effectiveBulkhead = bulkhead switch
+        {
+            Bulkhead.StartingArea => Bulkhead.Main,
+            Bulkhead.StartingArea | Bulkhead.Main => Bulkhead.Main,
+            _ => bulkhead
+        };
 
-        // Starting area is part of main.
-        Bulkhead.StartingArea => indexMain++,
-        Bulkhead.StartingArea | Bulkhead.Main => indexMain++,
-
-        _ => throw new ArgumentOutOfRangeException(nameof(bulkhead), bulkhead, null)
-    };
+        var key = (dimension, effectiveBulkhead);
+        indices.TryGetValue(key, out var index);
+        indices[key] = index + 1;
+        return index;
+    }
 
     /// <summary>
     /// Gets all zones associated with the given bulkhead
     /// </summary>
     /// <param name="bulkhead"></param>
     /// <returns></returns>
-    public List<ZoneNode> GetZones(Bulkhead bulkhead = Bulkhead.All, string? branch = "primary")
-        => GetSubgraph(bulkhead, branch)
+    public List<ZoneNode> GetZones(Bulkhead bulkhead = Bulkhead.All, string? branch = "primary", DimensionIndex? dimension = DimensionIndex.Reality)
+        => GetSubgraph(bulkhead, branch, dimension)
             .Select(node => node.Key)
             .OrderBy(zone => zone.ZoneNumber)
             .ToList();
@@ -312,10 +429,8 @@ public class LayoutPlanner
     /// Gets all zones associated with the given bulkhead. Exlusively only return nodes
     /// exactly matching the given bulkhead.
     /// </summary>
-    /// <param name="bulkhead"></param>
-    /// <returns></returns>
-    public List<ZoneNode> GetExactZones(Bulkhead bulkhead, string? branch = "primary")
-        => GetSubgraph(bulkhead, branch)
+    public List<ZoneNode> GetExactZones(Bulkhead bulkhead, string? branch = "primary", DimensionIndex? dimension = DimensionIndex.Reality)
+        => GetSubgraph(bulkhead, branch, dimension)
             .Select(node => node.Key)
             .Where(node => node.Bulkhead == bulkhead)
             .OrderBy(zone => zone.ZoneNumber)
@@ -351,14 +466,19 @@ public class LayoutPlanner
     }
 
     /// <summary>
-    /// Find all zones that are leaf nodes, or dead ends. I.e. they only have one connection
-    /// from their previous zone.
+    /// Find all leaf zones that can still accept another child — i.e. they have no outgoing
+    /// connections AND their MaxConnections is greater than zero. Leaves-by-design
+    /// (MaxConnections == 0) like dead-end objective rooms are intentionally excluded so
+    /// callers using this as an anchor for new branches don't try to attach children to a
+    /// node that has no remaining tile-expander capacity.
     /// </summary>
     /// <returns></returns>
-    public List<ZoneNode> GetLeafZones(Bulkhead bulkhead = Bulkhead.All, string? branch = "primary")
+    public List<ZoneNode> GetLeafZones(Bulkhead bulkhead = Bulkhead.All, string? branch = "primary", DimensionIndex? dimension = DimensionIndex.Reality)
         => graph.Where(node => node.Value.Count == 0)
+            .Where(node => node.Key.MaxConnections > 0)
             .Where(node => (node.Key.Bulkhead & bulkhead) != 0)
             .Where(node => branch == null || node.Key.Branch == branch)
+            .Where(node => dimension == null || node.Key.Dimension == dimension)
             .Select(node => node.Key)
             .ToList();
 
@@ -366,11 +486,12 @@ public class LayoutPlanner
     /// Find all zones that could have another zone attached to them
     /// </summary>
     /// <returns></returns>
-    public List<ZoneNode> GetOpenZones(Bulkhead bulkhead = Bulkhead.All, string? branch = "primary")
+    public List<ZoneNode> GetOpenZones(Bulkhead bulkhead = Bulkhead.All, string? branch = "primary", DimensionIndex? dimension = DimensionIndex.Reality)
         => graph
             .Where(node => (node.Key.Bulkhead & bulkhead) != 0)
             .Where(node => node.Value.Count < node.Key.MaxConnections)
             .Where(node => branch == null || node.Key.Branch == branch)
+            .Where(node => dimension == null || node.Key.Dimension == dimension)
             .Select(node => node.Key)
             .OrderBy(zone => zone.ZoneNumber)
             .ToList();
@@ -378,14 +499,12 @@ public class LayoutPlanner
     /// <summary>
     /// Gets all the zones that have the max number of connections made
     /// </summary>
-    /// <param name="bulkhead"></param>
-    /// <param name="branch"></param>
-    /// <returns></returns>
-    public List<ZoneNode> GetClosedZones(Bulkhead bulkhead = Bulkhead.All, string? branch = "primary")
+    public List<ZoneNode> GetClosedZones(Bulkhead bulkhead = Bulkhead.All, string? branch = "primary", DimensionIndex? dimension = DimensionIndex.Reality)
         => graph
             .Where(node => (node.Key.Bulkhead & bulkhead) != 0)
             .Where(node => node.Value.Count >= node.Key.MaxConnections)
             .Where(node => branch == null || node.Key.Branch == branch)
+            .Where(node => dimension == null || node.Key.Dimension == dimension)
             .Select(node => node.Key)
             .OrderBy(zone => zone.ZoneNumber)
             .ToList();
@@ -401,18 +520,20 @@ public class LayoutPlanner
     /// <param name="bulkhead"></param>
     /// <param name="branchId"></param>
     /// <returns></returns>
-    public ZoneNode? GetLastZone(Bulkhead bulkhead = Bulkhead.Main, string? branch = "primary")
+    public ZoneNode? GetLastZone(Bulkhead bulkhead = Bulkhead.Main, string? branch = "primary", DimensionIndex? dimension = DimensionIndex.Reality)
     {
-        var zones = GetZones(bulkhead, branch);
+        var zones = GetZones(bulkhead, branch, dimension);
 
         return zones.Count == 0 ? null : zones.Last();
     }
 
-    public ZoneNode? GetLastZoneExact(Bulkhead bulkhead = Bulkhead.Main, string? branch = "primary")
+    public ZoneNode? GetLastZoneExact(Bulkhead bulkhead = Bulkhead.Main, string? branch = "primary", DimensionIndex? dimension = DimensionIndex.Reality)
     {
         var zones = graph
             .Where(node =>
-                node.Key.Bulkhead == bulkhead && (branch == null || node.Key.Branch == branch))
+                node.Key.Bulkhead == bulkhead
+                && (branch == null || node.Key.Branch == branch)
+                && (dimension == null || node.Key.Dimension == dimension))
             .Select(node => node.Key)
             .OrderBy(zone => zone.ZoneNumber)
             .ToList();
@@ -425,12 +546,9 @@ public class LayoutPlanner
     /// GetLastZone() except this will return earlier zones if the final zone in that branch
     /// is not open.
     /// </summary>
-    /// <param name="bulkhead"></param>
-    /// <param name="branchId"></param>
-    /// <returns></returns>
-    public ZoneNode? GetLastOpenZone(Bulkhead bulkhead = Bulkhead.Main, string? branch = "primary")
+    public ZoneNode? GetLastOpenZone(Bulkhead bulkhead = Bulkhead.Main, string? branch = "primary", DimensionIndex? dimension = DimensionIndex.Reality)
     {
-        var openZones = GetOpenZones(bulkhead, branch);
+        var openZones = GetOpenZones(bulkhead, branch, dimension);
 
         if (openZones.Count == 0)
             return null;
@@ -452,9 +570,10 @@ public class LayoutPlanner
         int fromIndex,
         int totalOpenSlots,
         Bulkhead bulkhead = Bulkhead.Main,
-        string? branch = "primary")
+        string? branch = "primary",
+        DimensionIndex? dimension = DimensionIndex.Reality)
     {
-        var openZones = GetOpenZones(bulkhead, branch);
+        var openZones = GetOpenZones(bulkhead, branch, dimension);
 
         var index = fromIndex;
         while (CountOpenSlots(openZones.Take(index)) < totalOpenSlots)
@@ -468,15 +587,12 @@ public class LayoutPlanner
     /// <summary>
     /// Get all zones that have a specified tag
     /// </summary>
-    /// <param name="bulkhead"></param>
-    /// <param name="tag"></param>
-    /// <param name="branch"></param>
-    /// <returns></returns>
-    public List<ZoneNode> GetZonesByTag(Bulkhead bulkhead, string tag, string? branch = null)
+    public List<ZoneNode> GetZonesByTag(Bulkhead bulkhead, string tag, string? branch = null, DimensionIndex? dimension = DimensionIndex.Reality)
         => graph
             .Where(node => (node.Key.Bulkhead & bulkhead) != 0)
             .Where(node => node.Key.Tags.Contains(tag))
             .Where(node => branch == null || node.Key.Branch == branch)
+            .Where(node => dimension == null || node.Key.Dimension == dimension)
             .Select(node => node.Key)
             .OrderBy(zone => zone.ZoneNumber)
             .ToList();
@@ -484,9 +600,9 @@ public class LayoutPlanner
     /// <summary>
     /// Returns all ZoneNodes which have connections to other bulkhead zones.
     /// </summary>
-    /// <returns></returns>
-    public List<ZoneNode> GetBulkheadEntranceZones()
+    public List<ZoneNode> GetBulkheadEntranceZones(DimensionIndex? dimension = DimensionIndex.Reality)
         => graph.Where(node => node.Value.Any(to => !to.Bulkhead.HasFlag(node.Key.Bulkhead)))
+            .Where(node => dimension == null || node.Key.Dimension == dimension)
             .Select(node => node.Key)
             .OrderBy(zone => zone.ZoneNumber)
             .ToList();
@@ -494,11 +610,10 @@ public class LayoutPlanner
     /// <summary>
     /// Get's the first zone in a bulkhead
     /// </summary>
-    /// <param name="bulkhead"></param>
-    /// <returns></returns>
-    public ZoneNode? GetBulkheadFirstZone(Bulkhead bulkhead)
+    public ZoneNode? GetBulkheadFirstZone(Bulkhead bulkhead, DimensionIndex? dimension = DimensionIndex.Reality)
     {
         var nodes = graph.Where(node => node.Key.Bulkhead.HasFlag(bulkhead))
+            .Where(node => dimension == null || node.Key.Dimension == dimension)
             .Select(node => node.Key)
             .OrderBy(zone => zone.ZoneNumber);
 
@@ -556,10 +671,10 @@ public class LayoutPlanner
     /// Specific placement planning on a per bulkhead level
     /// </summary>
     /// <param name="bulkhead"></param>
-    public void PlanBulkheadPlacements(Bulkhead bulkhead, RelativeDirection direction)
+    public void PlanBulkheadPlacements(Bulkhead bulkhead, RelativeDirection direction, DimensionIndex? dimension = DimensionIndex.Reality)
     {
         // Adjust zone sizes to help reduce locked generation
-        var fullZones = GetClosedZones(bulkhead);
+        var fullZones = GetClosedZones(bulkhead, dimension: dimension);
 
         foreach (var node in fullZones)
         {

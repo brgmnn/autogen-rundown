@@ -28,7 +28,7 @@ public partial record WardenObjective
     public void PreBuild_PowerCellDistribution(BuildDirector director, Level level)
     {
         // Fast version of this objective
-        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep)
+        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep or WardenObjectiveType.Cryptomnesia)
         {
             PowerCellsToDistribute = director.Tier switch
             {
@@ -46,6 +46,8 @@ public partial record WardenObjective
             return;
         }
 
+        var isMainOnly = level.Settings.Bulkheads == Bulkhead.Main;
+
         PowerCellsToDistribute = (director.Tier, director.Bulkhead, level.HasPrisonerEfficiency) switch
         {
             ("A", Bulkhead.Main, _) => 2,
@@ -55,7 +57,7 @@ public partial record WardenObjective
             ("B",             _, false) => 2,
             ("B",             _,     _) => 1,
 
-            ("C", Bulkhead.Main,        _) => Generator.Between(2, 3),
+            ("C", Bulkhead.Main,        _) => isMainOnly ? Generator.Between(3, 4) : Generator.Between(2, 3),
             ("C", Bulkhead.Extreme,     _) => 2,
             ("C", Bulkhead.Overload, true) => 1,
             ("C", Bulkhead.Overload,    _) => 2,
@@ -91,7 +93,7 @@ public partial record WardenObjective
         if (!director.Bulkhead.HasFlag(Bulkhead.Main))
         {
             // Place the cells in the first zone of the bulkhead if we are not in Main
-            var node = level.Planner.GetZones(director.Bulkhead).First();
+            var node = level.Planner.GetZones(director.Bulkhead, dimension: null).First();
             var zone = level.Planner.GetZone(node)!;
 
             MainObjective = new Text(() => Smart.Format(

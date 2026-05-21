@@ -16,7 +16,7 @@ public partial record WardenObjective
         var (dataLayer, layout) = GetObjectiveLayerAndLayout(director, level);
 
         // Find the exit zone
-        var exit = level.Planner.GetZonesByTag(director.Bulkhead, "exit_elevator").First();
+        var exit = level.Planner.GetZonesByTag(director.Bulkhead, "exit_elevator", dimension: null).First();
 
         MainObjective = new Text(() => $"Clear a path to the exit point in {Intel.Zone(exit, level.Planner)}");
         GoToWinCondition_CustomGeo = new Text(() => $"Go to the forward exit point in {Intel.Zone(exit, level.Planner)}");

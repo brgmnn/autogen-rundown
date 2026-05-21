@@ -84,7 +84,7 @@ public partial record LevelLayout
         for (var b = 0; b < fetchCount; b++)
         {
             var branch = $"reactor_code_{b}";
-            var baseNode = b < 3 ? reactor : (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, $"reactor_code_{b - 3}")!;
+            var baseNode = b < 3 ? reactor : (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, $"reactor_code_{b - 3}", dimension: Dimension)!;
 
             var branchNodes = AddBranch(
                 baseNode,
@@ -107,7 +107,7 @@ public partial record LevelLayout
 
             // Set the last zone potentially to a garden tile
             if (fetchCount - b - 1 < 3 && Generator.Flip(0.33))
-                lastZone.GenGardenGeomorph(level.Complex);
+                last = level.GenGardenGeomorph(last);
 
             // Add some extra terminals for confusion. All at the back.
             lastZone.TerminalPlacements = new List<TerminalPlacement>();
@@ -131,12 +131,11 @@ public partial record LevelLayout
             // Add an event to open/unlock the door when the wave defense is over (OnMid trigger)
             if (Generator.Flip(openChance))
             {
-                // TODO: The Zone number appears to not work now (E-level)
                 EventBuilder.AddOpenDoor(
                     wave.Events,
                     director.Bulkhead,
                     firstZone.LocalIndex,
-                    $"Door to [ZONE_{firstZone.LocalIndex}] opened by startup sequence",
+                    new Text(() => $"Door to {Intel.Zone(firstZone)} opened by startup sequence"),
                     WardenObjectiveEventTrigger.OnMid,
                     8.0);
 
@@ -148,7 +147,7 @@ public partial record LevelLayout
                     wave.Events,
                     director.Bulkhead,
                     firstZone.LocalIndex,
-                    $"Door to [ZONE_{firstZone.LocalIndex}] unlocked by startup sequence",
+                    new Text(() => $"Door to {Intel.Zone(firstZone)} unlocked by startup sequence"),
                     WardenObjectiveEventTrigger.OnMid,
                     8.0);
         }

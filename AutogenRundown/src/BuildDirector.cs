@@ -16,8 +16,10 @@ public enum Complexity
 /// </summary>
 public class BuildDirector
 {
+    [Obsolete("Not really used")]
     public int Points { get; set; } = 0;
 
+    [Obsolete("Not really used")]
     public Complexity Complexity { get; set; } = Complexity.Low;
 
     public string Tier { get; set; } = "A";
@@ -62,6 +64,7 @@ public class BuildDirector
     {
         var objectives = new List<(double weight, WardenObjectiveType objective)>
         {
+            // Base game objectives
             (1.0, WardenObjectiveType.HsuFindSample),
             (1.0, WardenObjectiveType.ReactorStartup),
             (1.0, WardenObjectiveType.ReactorShutdown),
@@ -79,11 +82,17 @@ public class BuildDirector
             (1.0, WardenObjectiveType.TimedTerminalSequence),
         };
 
+        if (Tier is "C" or "D" or "E" && Complex is Complex.Mining or Complex.Tech)
+            objectives.Add((1.0, WardenObjectiveType.AlphaTerminalCommand));
+
+        if (Tier is "C" or "D" or "E")
+            objectives.Add((1.0, WardenObjectiveType.Cryptomnesia));
+
         if (Tier is "C" or "D" or "E" && Complex == Complex.Mining)
             objectives.Add(Tier switch
             {
-                "C" => (0.45, WardenObjectiveType.ReachKdsDeep),
-                "D" => (0.70, WardenObjectiveType.ReachKdsDeep),
+                "C" => (0.65, WardenObjectiveType.ReachKdsDeep),
+                "D" => (0.87, WardenObjectiveType.ReachKdsDeep),
                 "E" => (1.00, WardenObjectiveType.ReachKdsDeep),
 
                 _ => (0.0, WardenObjectiveType.ReachKdsDeep)
@@ -96,6 +105,8 @@ public class BuildDirector
             objectives.RemoveAll(t => t.objective == WardenObjectiveType.ClearPath);
             objectives.RemoveAll(t => t.objective == WardenObjectiveType.Survival);
             objectives.RemoveAll(t => t.objective == WardenObjectiveType.ReachKdsDeep);
+            objectives.RemoveAll(t => t.objective == WardenObjectiveType.AlphaTerminalCommand);
+            objectives.RemoveAll(t => t.objective == WardenObjectiveType.Cryptomnesia);
         }
 
         // These objectives are really intended as side quests.
@@ -104,11 +115,12 @@ public class BuildDirector
 
         // --- Specific main objectives ---
 
-        // Reach KDS Deep
-        if (exclude.Contains(WardenObjectiveType.ReachKdsDeep))
+        // Reach KDS Deep / Cryptomnesia
+        if (exclude.Contains(WardenObjectiveType.ReachKdsDeep)
+            || exclude.Contains(WardenObjectiveType.Cryptomnesia))
         {
-            // These objectives will have special logic for when they're part of KDS deep to be
-            // very short objectives that can possibly fit within the run time
+            // These objectives will have special logic for when they're part of KDS deep or
+            // Cryptomnesia to be very short objectives that can fit within the run time
             objectives = new List<(double weight, WardenObjectiveType objective)>
             {
                 (1.0, WardenObjectiveType.SpecialTerminalCommand),
@@ -135,6 +147,7 @@ public class BuildDirector
         Objective = Generator.Select(objectives);
     }
 
+    [Obsolete("Not really used")]
     public void GenPoints()
     {
         Points = (Tier, Bulkhead) switch

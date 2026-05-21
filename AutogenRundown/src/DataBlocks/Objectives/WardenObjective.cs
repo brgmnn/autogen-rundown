@@ -521,7 +521,11 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     /// </summary>
     public void AddCompletedObjectiveChallenge(Level level, BuildDirector director)
     {
-        var entranceZone = level.Planner.GetZone((ZoneNode)level.Planner.GetBulkheadFirstZone(director.Bulkhead)!);
+        var firstZone = level.Planner.GetBulkheadFirstZone(director.Bulkhead, dimension: null);
+        if (firstZone == null)
+            return;
+
+        var entranceZone = level.Planner.GetZone((ZoneNode)firstZone);
 
         // Extraction waves. These are progressively harder
         // Overload is balanced to get harder error waves when getting the sample
@@ -714,6 +718,10 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 objective.PreBuild_GatherSmallItems(director, level);
                 break;
 
+            case WardenObjectiveType.Cryptomnesia:
+                objective.PreBuild_Cryptomnesia(director, level);
+                break;
+
             case WardenObjectiveType.SpecialTerminalCommand:
                 objective.PreBuild_SpecialTerminalCommand(director, level);
                 break;
@@ -758,6 +766,10 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 objective.PreBuild_ReachKdsDeep(director, level);
                 break;
 
+            case WardenObjectiveType.AlphaTerminalCommand:
+                objective.PreBuild_AlphaTerminalCommand(director, level);
+                break;
+
             #endregion
 
             default:
@@ -774,6 +786,7 @@ public partial record WardenObjective : DataBlock<WardenObjective>
             case WardenObjectiveType.TerminalUplink:
             case WardenObjectiveType.CorruptedTerminalUplink:
             case WardenObjectiveType.GatherSmallItems:
+            case WardenObjectiveType.Cryptomnesia:
                 objective.PreReserveObjectiveFog(level, director);
                 break;
         }
@@ -877,6 +890,12 @@ public partial record WardenObjective : DataBlock<WardenObjective>
             case WardenObjectiveType.GatherSmallItems:
             {
                 Build_GatherSmallItems(director, level);
+                break;
+            }
+
+            case WardenObjectiveType.Cryptomnesia:
+            {
+                Build_Cryptomnesia(director, level);
                 break;
             }
 
@@ -987,6 +1006,10 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 Build_ReachKdsDeep(director, level);
                 break;
 
+            case WardenObjectiveType.AlphaTerminalCommand:
+                Build_AlphaTerminalCommand(director, level);
+                break;
+
             #endregion
         }
 
@@ -1030,6 +1053,10 @@ public partial record WardenObjective : DataBlock<WardenObjective>
 
             case WardenObjectiveType.GatherSmallItems:
                 PostBuildIntel_GatherSmallItems(level);
+                break;
+
+            case WardenObjectiveType.Cryptomnesia:
+                PostBuildIntel_Cryptomnesia(level);
                 break;
 
             case WardenObjectiveType.ClearPath:
@@ -1078,6 +1105,10 @@ public partial record WardenObjective : DataBlock<WardenObjective>
 
             case WardenObjectiveType.ReachKdsDeep:
                 PostBuildIntel_ReachKdsDeep(level);
+                break;
+
+            case WardenObjectiveType.AlphaTerminalCommand:
+                PostBuildIntel_AlphaTerminalCommand(level);
                 break;
         }
     }
@@ -1128,6 +1159,11 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     /// </summary>
     [JsonIgnore]
     public WardenObjectiveSubType SubType { get; set; } = WardenObjectiveSubType.Default;
+
+    /// <summary>
+    /// Big pickup items to send in the elevator
+    /// </summary>
+    public Items.Item GenericItemFromStart = Items.Item.None;
 
     #region Information and display strings
     [JsonTextId]
@@ -1491,6 +1527,49 @@ public partial record WardenObjective : DataBlock<WardenObjective>
 
     #endregion
 
+    #region Type=21: -CUSTOM- Cryptomnesia
+
+    [JsonIgnore]
+    public Dictionary<DimensionIndex, List<WardenObjectiveEvent>> Cryptomnesia_EnterEvents { get; set; } = new();
+
+    [JsonIgnore]
+    public Dictionary<DimensionIndex, List<WardenObjectiveEvent>> Cryptomnesia_ExitEvents { get; set; } = new();
+
+    [JsonIgnore]
+    public List<string> Cryptomnesia_CubeBranches { get; set; } = new();
+
+    /// <summary>
+    /// Themes selected for the level: index 0 = Reality, index 1+ = each dimension.
+    /// Populated in BuildLayout_Cryptomnesia after SelectCryptomnesiaThemes runs.
+    /// Used by PostBuildIntel_Cryptomnesia to bias intel toward the Reality theme.
+    /// </summary>
+    [JsonIgnore]
+    public List<Enums.CryptomnesiaTheme> Cryptomnesia_SelectedThemes { get; set; } = new();
+
+    #endregion
+
+    #region Type=23: -CUSTOM- AlphaTerminalCommand
+
+    [JsonIgnore]
+    public Dimensions.DimensionData? AlphaTerminal_Dimension { get; set; } = null;
+
+    [JsonIgnore]
+    public string AlphaTerminal_DimensionName { get; set; } = "";
+
+    /// <summary>
+    /// The Special terminal command players have to enter
+    /// </summary>
+    [JsonIgnore]
+    public string AlphaTerminalCommand { get; set; } = "";
+
+    /// <summary>
+    /// Description displayed in the terminal COMMANDs listing
+    /// </summary>
+    [JsonIgnore]
+    public Text AlphaTerminalCommandDesc { get; set; } = Text.None;
+
+    #endregion
+
     #region Expedition exit
     /// <summary>
     /// What exit scan to use at the exit
@@ -1507,7 +1586,6 @@ public partial record WardenObjective : DataBlock<WardenObjective>
     #region Fields not yet implemented
 
     public int WardenObjectiveSpecialUpdateType = 0;
-    public int GenericItemFromStart = 0;
     public bool DoNotMarkPickupItemsAsWardenObjectives = false;
     public bool OverrideNoRequiredItemsForExit = false;
     public int FogTransitionDataOnElevatorLand = 0;

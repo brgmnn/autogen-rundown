@@ -14,30 +14,16 @@ Check Alarm Persistent IDs for levellayout
 
 
 TODO:
-  * Use https://thunderstore.io/c/gtfo/p/randomguy0753/ZoneScan/ for full room scanning
-  * Make extract scan short if there's no extract alarm (Don't do it just based on level tier)
   * Add a way to automatically install deps?
-  * GIGA Infection Hybrid blood door might be _too_ much, it's like 12 hybrids
   * Objective: Distribute Power Cells
     * Needs something to happen when completing all the cells ideally
     * Would be good if the fog could rise or lower when inserting the cells
   * Add more disinfection options for infection levels and hybrids
-  * Special Terminal Command:
-    * REROUTE_POWER - Should probably have more severe consequences then just turning the lights off?
-    * REROUTE_POWER - Main - Is too many sequential zones. 6 zones in a row to go through
-  * Matter Wave Projector - Needs slightly less zones to go through. Very linear
-  * Bring big pickup for scan
   * Add more variety on fog for vibes
-  * Rework the special command layout
-  * King of the Hill terminal spawns are... dodgy
-    * They often spawn inside things.
   * Uplink objectives stop ALL WAVES after completing them. Got to figure out a way to not do that.
   * Retrieve big item:
     * A-tier main only rolled no exit alarm.
   * Add "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_AW_01.prefab", the giant HSU pit. Technically an I-tile
-  * Weekly #40 A1 failed to generate objective room
-  * Error thrown from EventManager.UpdateRundown. I suspect it might be from the daily.
-  * Check out Seasonal D4. End room that does nothing?
   * Add support for text data block mergers. It should be relatively safe to do this even with overwrites
   * Make E-tier shorter but harder. E4 Seasonal extreme has too many extra zones
   * Shorter (or longer?) warden protocol startup times?
@@ -47,29 +33,32 @@ TODO:
     * Needs extract or finish objective modifier
   * Might consider if we even need an error alarm turnoff for levels in main where it goes all the way to the end?
   * VERY SLIGHT increase in Apex alarm wave pops
-  * No sound playing for clients
-  * Investigate some kind of grace period for scans coming back on
-  * Check if I broke something with uplinks where host and client get desynced for where an uplink is. We had it where host didn't get the verify coming through
   * Increase exclusion zone around elevator for security scans
   * E-tier had gather 3 samples
   * E-tier valiant way too easy
-    * enemies get bugged
   * Have a challenge like halfway through the fog starts rising and you can turn off the fog in a zone
-  * Make generator distribution objective MAIN always have 2 or more generator cells
-  * `GatherSmallItems` should probably not have error alarm on picking up the "last" objective item. Instead we should have it be done by the zones they have to open
   * Generator Cluster needs cells to be tightened up in their spawns
   * Big security scans that move are too hard
-  * Seems that Valiant objectives fail a lot
 
+  * See if we can fix enemies not navigating through the final door in D3
 
-  * Fix the cycling of security scans having global sound! Really annoying right now
   * Tone down higher density of scans, especially for moving ones
 
-  * Add a version of travel scan where lights go out but only lights by the scan are lit up
-  * Add a version of the scan wanted distance that takes a negative number which then finds a point thats a proportion of the total area away from the previous scan
+  * Check SC1: Seemed like no enemies after doing secondary?
+
+TODO for 1.0
+  New Objectives!
+    [x] Alpha / static dimension objective with portal / matter wave projector / something big in the dimension
+    [x] Cryptomnesia objective main, recreate R6D4
+  [ ] Distribute power cells is _really_ short on main only missions now
+  [ ] Fix the cycling of security scans having global sound! Really annoying right now
+
+TODO post 1.0
+  * See about adding terminal decorations to terminal spawn manager
 
 NOTE
-  * Make sure we match the complex for `Reality` with the dimension geo we want. This is for the terminals to spawn correctly
+  * Cryptomnesia - GatherSmallItems only 1 objective in 42 uses the dimensions for cryptomensia for it
+
 
 Idea:
   * Secondary survival that procs on door open
@@ -80,6 +69,8 @@ Idea:
     * Keep putting in command to keep surge error at bay
   * Clear path to a warp portal that jumps you to the success screen
   * Add bonus terminals in reactor zones
+  * Add a version of travel scan where lights go out but only lights by the scan are lit up
+  * Add a version of the scan wanted distance that takes a negative number which then finds a point thats a proportion of the total area away from the previous scan
 
 # Datasphere color pack
 https://thunderstore.io/c/gtfo/p/ProjectZaero/Data_Sphere_Flavor_Pack/
@@ -87,13 +78,6 @@ https://thunderstore.io/c/gtfo/p/ProjectZaero/Data_Sphere_Flavor_Pack/
 # Geo pack ideas
 https://thunderstore.io/c/gtfo/p/TheDoggyDoge/DogsTilePack/
 https://thunderstore.io/c/gtfo/p/xiaoyao/XAOYAO_developer_package/
-
-
-Weekly missing geo seed B1:
-    2025_11_05
-
-Monthly missing nav mesh A1:
-    2025_10
 
 
 E-tier analysis
@@ -106,11 +90,7 @@ E-tier analysis
 * R8E2 - Release
 
 
-
 Requests:
-  * Add support for VanillaReloaded mod
-    * https://discord.com/channels/782438773690597389/1342735255009755227/1373594263019061281
-
 Check: https://discord.com/channels/782438773690597389/783918553626836992/1407457297889890530
 
 
@@ -124,30 +104,6 @@ Problems:
 2025_08_31
   * Seasonal Fall_2025 - A4 Decaying Banishment: Pretty much perfect short A level. 26 mins, 5 zones, straight forward clear path
     * Maybe too high scan levels? 2 class 5 and 2 class 3
-
-2025_08_27
-  * Generator cluster needs a little less zones
-
-2025_08_17
-  * Reduce number of gather so we have to do all objectives
-  * Why does D2 only have onion shooters on first alarm door in extreme
-
-2025_04_29
-  * D1: Error alarm with no turn off is quite a bit harder
-    * Probably we need a few less alarms
-    * Might want to have fewer enemies on reactor fetch code tiles
-    * D1 had A LOT of zones to run through, may want to not have multiple zones of fetch codes and do single zone fetch codes
-    * For fetch codes that have zones not starting at reactor, need to factor traverse time to get there and back
-  * D1 (or D2?)
-    * Need to fix the zone count for layout for reactors
-      * Maybe consider using a different layout for it?
-    * Consider if we reduce number of fetch codes from 6 to 5
-    * May need to BUFF the reactor waves a little
-
-Weekly 9-A1 bug:
-  * Doesn't seem to be the chained puzzles.. Unclear for now
-  * Disappears if I disable EITHER overload or secondary
-  * It appears to be the map layout. I suspect it's the door not having a place to place though
 
 Exit Geo failures to spawn:
   * Assets/Bundles/RLC_Mining/geo_64x64_mining_storage_exit_hub_RLC_01.prefab
@@ -168,17 +124,8 @@ Monthly April
   [ ] D1 - Activate small HSU doesn't require the objective to exit
       - Can we exclude double mother / double tank from first zone
 
-Monthly Feb
-  * Double cargo B1 -- Not sure why?
-  * Reactor D2
-    [ ] Mother wave had good amount of time. DONT CHANGE
-
 Missing tiles to add
   * Add R8A1 garden hub tile to hubs
-
-Remove intel in elevator drop that shows:
-  "Artifact Heat at"
-Maybe replace with number of logs?
 
 Enemies:
   A:
@@ -233,24 +180,25 @@ To check if the installation is successful, after the game launches you should s
 ## Base game features
 
 - Levels
-  - [x] A Tier
-  - [x] B Tier
-  - [x] C Tier
-  - [x] D Tier
-  - [x] E Tier
+  - Difficulty tiers
+    - [x] A Tier
+    - [x] B Tier
+    - [x] C Tier
+    - [x] D Tier
+    - [x] E Tier
   - Additional objectives
     - [x] Secondary
     - [x] Overload
   - Lights
     - [x] Random lights selection
     - [x] Reactor specific lights
-    - [ ] Fog specific lights
+    - [x] Fog specific lights
     - [x] Custom lights(?)
   - Zones
     - Custom Geomorphs
       - [x] Hubs
       - [x] I's (corridors)
-      - [ ] Warp portals
+      - [x] Warp portals
       - [x] Rundown 8 Geomorphs
     - Curated event layouts
       - [x] Class 10+ alarm room
@@ -264,7 +212,15 @@ To check if the installation is successful, after the game launches you should s
     - [x] Fog
     - [x] Infectious fog
     - [x] Security Sensors
-  - [ ] Dimensions
+  - [x] Dimensions
+    - [x] Alpha One - R6D1
+    - [ ] Alpha Two - R6B1
+    - [x] Alpha Three (Top) - R6AX
+    - [ ] Alpha Three (Turbine Shaft) - R6CX
+    - [ ] Alpha Six - R7C2
+    - [ ] Unknown One - R6C1
+    - [ ] Unknown Two - R6A1
+    - [ ] Unknown Three - R7B3
 - Objectives
   - [x] Clear Path — _Navigate through the zones to a separate extraction elevator_
   - [x] Gather Small Items — _IDs, GLPs etc._
@@ -292,6 +248,8 @@ To check if the installation is successful, after the game launches you should s
     - [x] Shadows
     - [x] Beserkers
     - [x] Hybrids
+    - [x] Flyers
+      - [x] Big Flyers
     - [x] Scouts
       - [x] Regular
       - [x] Zoomer
@@ -304,7 +262,7 @@ To check if the installation is successful, after the game launches you should s
       - [x] Nightmare Mother
     - [x] Tanks
       - [x] Tank
-      - [ ] Immortal Tank
+      - [x] Immortal Tank
       - [x] Potato Tank
     - [x] Pouncers (Snatchers)
   - Custom enemy spawning
@@ -339,16 +297,10 @@ To check if the installation is successful, after the game launches you should s
     - [x] Christmas (red)
     - [x] Player colored glowsticks (client side)
   - Inserting generator cells turns on emergency lights
+- Enemies
+  - New custom enemies that fit with the existing enemies
 - Lore
   - Custom Warden intel messages
-    - [x] General
-    - [ ] Objectives
-      - [x] HSU Find Sample
-      - [ ] Clear Path
-      - [ ] Reactor Startup
-      - [ ] Reactor Shutdown
-      - [ ] Distribute Power Cells
-      - [ ] Central Generator Cluster
 
 ## 3rd Party Mod Support
 

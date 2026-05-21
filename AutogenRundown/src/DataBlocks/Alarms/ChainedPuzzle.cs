@@ -93,7 +93,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     public bool UseRandomPositions { get; init; } = true;
 
     /// <summary>
-    ///
+    /// Default = 0.0
     /// </summary>
     public double WantedDistanceFromStartPos { get; init; } = 0.0;
 
@@ -229,7 +229,6 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     public static ChainedPuzzle FindOrPersist(ChainedPuzzle puzzle)
     {
         // We specifically don't want to persist none, as we want to set the PersistentID to 0
-        // if (puzzle == None || puzzle.Puzzle.Count == 0)
         if (puzzle == None)
             return None;
 
@@ -444,7 +443,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     {
         PersistentId = 0,
         PublicAlarmName = "None",
-        TriggerAlarmOnActivate = true, // TODO: set to false
+        TriggerAlarmOnActivate = false,
         FixedAlarm = true
     };
 
@@ -455,6 +454,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
     {
         PersistentId = 0,
         PublicAlarmName = "Skip",
+        TriggerAlarmOnActivate = false,
         FixedAlarm = true
     };
 
@@ -679,6 +679,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class VIII Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
+        WantedDistanceBetweenPuzzleComponents = 23.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -702,8 +703,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class IX Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
-        WantedDistanceFromStartPos = 20,
-        WantedDistanceBetweenPuzzleComponents = 35.0,
+        WantedDistanceBetweenPuzzleComponents = 23.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -731,8 +731,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class X Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
-        WantedDistanceFromStartPos = 20,
-        WantedDistanceBetweenPuzzleComponents = 35.0,
+        WantedDistanceBetweenPuzzleComponents = 23.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -761,8 +760,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class XI Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceFromStartPos = 20,
-        WantedDistanceBetweenPuzzleComponents = 35.0,
+        WantedDistanceBetweenPuzzleComponents = 23.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -789,8 +787,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         PublicAlarmName = "Class XII Alarm",
         Settings = WaveSettings.Baseline_VeryHard,
         Population = WavePopulation.Baseline,
-        WantedDistanceFromStartPos = 20,
-        WantedDistanceBetweenPuzzleComponents = 35.0,
+        WantedDistanceBetweenPuzzleComponents = 23.0,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AllBig,
@@ -1255,7 +1252,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = 32.0,
-                WardenIntel = ":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr..."
+                WardenIntel = new Text(":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr...")
             },
         }
     };
@@ -1295,7 +1292,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = 20.0,
-                WardenIntel = ":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr..."
+                WardenIntel = new Text(":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr...")
             },
         }
     };
@@ -1332,7 +1329,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = 7.0,
-                WardenIntel = ":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr..."
+                WardenIntel = new Text(":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr...")
             },
         }
     };
@@ -1369,7 +1366,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = 7.0,
-                WardenIntel = ":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr..."
+                WardenIntel = new Text(":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr...")
             },
         }
     };
@@ -1404,7 +1401,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = 20.0,
-                WardenIntel = ":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr..."
+                WardenIntel = new Text(":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr...")
             },
         }
     };

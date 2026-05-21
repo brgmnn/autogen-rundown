@@ -168,6 +168,7 @@ public record WavePopulation : DataBlock<WavePopulation>
         Bins.WavePopulations.AddBlock(OnlyGiantShooters);
         Bins.WavePopulations.AddBlock(OnlyChargers);
         Bins.WavePopulations.AddBlock(OnlyFlyers);
+        Bins.WavePopulations.AddBlock(AlphaSwarm);
         Bins.WavePopulations.AddBlock(OnlyHybrids);
         Bins.WavePopulations.AddBlock(OnlyInfectedHybrids);
         Bins.WavePopulations.AddBlock(OnlyShadows);
@@ -182,6 +183,7 @@ public record WavePopulation : DataBlock<WavePopulation>
         Bins.WavePopulations.AddBlock(SingleEnemy_PMother);
         Bins.WavePopulations.AddBlock(SingleEnemy_Tank);
         Bins.WavePopulations.AddBlock(SingleEnemy_TankPotato);
+        Bins.WavePopulations.AddBlock(SingleEnemy_Immortal);
         Bins.WavePopulations.AddBlock(SingleEnemy_Pouncer);
         Bins.WavePopulations.AddBlock(SingleEnemy_PouncerShadow);
     }
@@ -210,7 +212,7 @@ public record WavePopulation : DataBlock<WavePopulation>
         WaveRoleSpecial = Enemy.Shooter_Wave,
         WaveRoleMiniBoss = Enemy.ShooterGiant,
         WaveRoleBoss = Enemy.ShooterGiant,
-        Name = "Baseline"
+        Name = "Baseline_Shooters"
     };
 
     public static WavePopulation Baseline_Infested = new()
@@ -356,6 +358,20 @@ public record WavePopulation : DataBlock<WavePopulation>
         Name = "OnlyFlyers"
     };
 
+    /// <summary>
+    /// Used by the AlphaTerminalCommand objective: standard flyers with strikers
+    /// as the special pressure and big flyers as the mini-boss.
+    /// </summary>
+    public static WavePopulation AlphaSwarm = new()
+    {
+        WaveRoleWeakling = Enemy.Flyer,
+        WaveRoleStandard = Enemy.Flyer,
+        WaveRoleSpecial = Enemy.Striker_Wave,
+        WaveRoleMiniBoss = Enemy.FlyerBig,
+        WaveRoleBoss = Enemy.FlyerBig,
+        Name = "AlphaSwarm"
+    };
+
     public static WavePopulation OnlyHybrids = new()
     {
         WaveRoleWeakling = Enemy.Shooter_Wave,
@@ -431,6 +447,7 @@ public record WavePopulation : DataBlock<WavePopulation>
 
     public static WavePopulation SingleEnemy_Tank =       new() { WaveRoleMiniBoss = Enemy.Tank,       Name = "SingleEnemy_Tank" };
     public static WavePopulation SingleEnemy_TankPotato = new() { WaveRoleMiniBoss = Enemy.TankPotato, Name = "SingleEnemy_TankPotato" };
+    public static WavePopulation SingleEnemy_Immortal =   new() { WaveRoleMiniBoss = Enemy.TankBoss,   Name = "SingleEnemy_TankImmortal" };
 
     public static WavePopulation SingleEnemy_Pouncer =       new() { WaveRoleMiniBoss = Enemy.Pouncer, Name = "SingleEnemy_Pouncer" };
     public static WavePopulation SingleEnemy_PouncerShadow = new()

@@ -2,6 +2,7 @@
 using AutogenRundown.Managers;
 using AutogenRundown.Patches;
 using AutogenRundown.Patches.TravelScan;
+using AutogenRundown.Patches.CustomTerminals;
 using AutogenRundown.Patches.ZoneSensors;
 using BepInEx;
 using BepInEx.Configuration;
@@ -30,7 +31,7 @@ namespace AutogenRundown;
 [BepInDependency("Amor.AmorLib")]
 public class Plugin : BasePlugin
 {
-    public const string Version = "0.83.7";
+    public const string Version = "1.0.0";
 
     public const string Name = "the_tavern-AutogenRundown";
 
@@ -141,6 +142,8 @@ public class Plugin : BasePlugin
         GameDataAPI.OnGameDataInitialized += LogArchivistManager.Setup;
         GameDataAPI.OnGameDataInitialized += ZoneSensorManager.Setup;
         GameDataAPI.OnGameDataInitialized += TravelScanRegistry.Setup;
+        GameDataAPI.OnGameDataInitialized += CustomTerminalSpawnManager.Setup;
+        GameDataAPI.OnGameDataInitialized += Patch_ForceMinAreaCount.Setup;
 
         // LevelAPI.OnLevelCleanup += SignBorderManager.Clear;
         // LevelAPI.OnEnterLevel += () =>

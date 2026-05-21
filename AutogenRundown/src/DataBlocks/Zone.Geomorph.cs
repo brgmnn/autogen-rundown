@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Custom.AutogenRundown.TerminalPlacements;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Patches.CustomTerminals;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -101,12 +102,13 @@ public partial record Zone
 
                     // --- MOD Geomorphs ---
                     // DakGeos
-                    (SubComplex.DigSite, "Assets/geo_64x64_mining_dig_site_t_dak_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+                    // (SubComplex.DigSite, "Assets/geo_64x64_mining_dig_site_t_dak_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
 
                     // Red_Leicester_Cheese
                     (SubComplex.Refinery, "Assets/Bundles/RLC_Mining/geo_64x64_mining_refinery_X_RLC_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
 
                     // SamDB v1
+                    (SubComplex.DigSite, "Assets/Custom Geo's/Digsite/digsite_x_tile_1/digsite_x_tile_1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.DigSite, "Assets/Custom Geo's/Digsite/digsite_x_tile_1_V3/digsite_x_tile_1_V3.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.DigSite, "Assets/Custom Geo's/Digsite/Disite generator/Digsite_X_Tile_Generator.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
 
@@ -173,7 +175,9 @@ public partial record Zone
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_1/floodways_x_tile_1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_2/floodways_x_tile_2.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_3/floodways_x_tile_3.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_4/floodway_x_tile_4.prefab",  new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_x_tile_5/Floodways_x_tile_5.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.Floodways, "Assets/Custom Geo's/Floodways_HUB/Floodways_hub.prefab",           new CoverageMinMax { Min = 30, Max = 40 }),
 
                     // SamDB v2
                     (SubComplex.Floodways, "Assets/SamdownGeos/Floodways Scaffolding HUB/Floodways_Scaffolding_HUB.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
@@ -545,9 +549,9 @@ public partial record Zone
     /// Creates a Geomorph used as a primary objective point
     /// </summary>
     /// <param name="complex"></param>
-    public void GenKingOfTheHillGeomorph(Level level, BuildDirector director)
+    public (Vector3 Position, Vector3 Rotation) GenKingOfTheHillGeomorph()
     {
-        switch (director.Complex)
+        switch (layout.Complex)
         {
             case Complex.Mining:
                 (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
@@ -626,15 +630,7 @@ public partial record Zone
             _ => (new Vector3(), new Vector3())
         };
 
-        if (CustomGeomorph is not null)
-            level.TerminalPlacements.Placements.Add(new TerminalPosition
-            {
-                Bulkhead = director.Bulkhead,
-                LocalIndex = LocalIndex,
-                Geomorph = CustomGeomorph ?? "",
-                Position = position,
-                Rotation = rotation
-            });
+        return (position, rotation);
     }
 
     /// <summary>
@@ -705,6 +701,60 @@ public partial record Zone
                 });
                 break;
         }
+    }
+
+    /// <summary>
+    /// Multi-room enemy spawn behind a door. Returns a curated starter prefab
+    /// path which the caller stores in the AreaCountZone JSON; this is then
+    /// injected as the first tile at build time by Patch_ForceMinAreaCount
+    /// (via a ComplexResourceSetDataBlock.GetGeomorphTile postfix).
+    ///
+    /// Deliberately does NOT assign Zone.CustomGeomorph — setting that triggers
+    /// the game's atomic-prefab path (LG_ZoneJob_CreateExpandFromData.cs:340,
+    /// 848) which short-circuits the expansion loop and dumps the prefab's
+    /// entire internal m_areas array into the zone in one shot, defeating any
+    /// area-count enforcement.
+    ///
+    /// Coverage is kept small ({Min:5, Max:10}) so the patch's m_minCoverage
+    /// bump can drive expansion to a 2nd tile from the regular SubComplex pool.
+    /// </summary>
+    /// <param name="complex"></param>
+    /// <returns>Asset path of the picked starter prefab.</returns>
+    public string GenMultiRoomSpawnGeomorph(Complex complex)
+    {
+        string prefab = string.Empty;
+        SubComplex pickedSub = SubComplex.All;
+
+        switch (complex)
+        {
+            case Complex.Mining:
+                (pickedSub, prefab) = Generator.Pick(new List<(SubComplex, string)>
+                {
+                    (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_02.prefab"),
+                    (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_06.prefab"),
+                    (SubComplex.Storage, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Storage/geo_64x64_mining_storage_hub_HA_04.prefab"),
+                });
+                break;
+
+            case Complex.Tech:
+                (pickedSub, prefab) = Generator.Pick(new List<(SubComplex, string)>
+                {
+                    (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_02.prefab"),
+                    (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_02.prefab"),
+                });
+                break;
+
+            case Complex.Service:
+                (pickedSub, prefab) = Generator.Pick(new List<(SubComplex, string)>
+                {
+                    (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03.prefab"),
+                });
+                break;
+        }
+
+        SubComplex = pickedSub;
+        Coverage = new CoverageMinMax { Min = 5, Max = 10 };
+        return prefab;
     }
 
     /// <summary>
@@ -787,7 +837,9 @@ public partial record Zone
     /// </summary>
     public void GenPortalGeomorph()
     {
-        switch (level.Complex)
+        Coverage = new CoverageMinMax { Min = 25, Max = 35 };
+
+        switch (layout.Complex)
         {
             // This tile contains a possible path forward.
             case Complex.Mining:

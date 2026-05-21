@@ -421,8 +421,6 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         //
         // V3: Alternate version with one big cave... The smaller cave has been removed...
         // Still a large tile but with less verticality...
-        //
-        // TODO: This would be quite a hard tile to get for a hub
         Mining.CustomGeomorphs.Insert(0, new Prefab()
         {
             Asset = "Assets/Custom Geo's/Digsite/digsite_x_tile_1/digsite_x_tile_1.prefab",
@@ -604,6 +602,7 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         // failed map generations because it has a side door that leads to the under side of it
         // with no way to connect to other tiles. This often manifests with odd tiny rooms and
         // then the rest of the level spawning not off the correct tile
+        // TODO: look into enabling
         Tech.GeomorphTiles_1x1.RemoveAll(prefab =>
             prefab.Asset == "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_HA_05.prefab");
 
@@ -756,13 +755,14 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
             SubComplex = SubComplex.Lab
         });
 
-        // A completely remade elevator tile, multiple levels for verticality. Made to look
-        // abandoned yet still maintained.
-        Tech.ElevatorShafts_1x1.Insert(0, new Prefab()
-        {
-            Asset = "Assets/Custom Geo's/Labs/Labs Elevator V2/Labs_elevator_V2.prefab",
-            SubComplex = SubComplex.Lab
-        });
+        // TODO: disabled for now as it extends well beyond the 64x64 dimensions and causes problems
+        // // A completely remade elevator tile, multiple levels for verticality. Made to look
+        // // abandoned yet still maintained.
+        // Tech.ElevatorShafts_1x1.Insert(0, new Prefab()
+        // {
+        //     Asset = "Assets/Custom Geo's/Labs/Labs Elevator V2/Labs_elevator_V2.prefab",
+        //     SubComplex = SubComplex.Lab
+        // });
 
         // A big tile with three depressurizer's that are randomized every time. It is an open
         // tile with multiple pathways and three floors.
@@ -1281,8 +1281,7 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         // spawn at the bottom as well as resource boxes. This tile also has spawn-points for flyers.
         // Note: This is the biggest tile in the game and can sometimes cause some FPS drops.
         //
-        // This is a HUGE tile. Probably it can't be placed in any hub as balancing may be a problem?
-        // TODO: figure out a way to use it
+        // This is a HUGE tile.
         Service.CustomGeomorphs.Insert(0, new Prefab()
         {
             Asset = "Assets/Custom Geo's/Floodways_x_tile_4/floodway_x_tile_4.prefab",
@@ -1300,8 +1299,6 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         });
 
         // The big HUB room with three extra levels doing down into the depths below.
-        //
-        // TODO: figure out how to use this, same as x_tile_4
         Service.CustomGeomorphs.Insert(0, new Prefab()
         {
             Asset = "Assets/Custom Geo's/Floodways_HUB/Floodways_hub.prefab",

@@ -282,8 +282,10 @@ public partial record Zone : DataBlock<Zone>
             .AddZoneSound(Sound.LightsOn_Vol4, sensorDef, sensorStart)
             .AddMessage(":://WARNING - SECURITY SCAN SYSTEM CORRUPTED", sensorStart - 1);
 
-        // Disable sensors when alarm scan completes
-        EventsOnDoorScanDone.DisableZoneSensors(sensorDef.Id);
+        // Disable sensors when alarm scan completes. cancelPendingEnable defeats any
+        // in-flight cycle re-enable from a sensor trigger that's still pending — without
+        // it, sensors get stuck on if the alarm finishes before resetTime elapses.
+        EventsOnDoorScanDone.DisableZoneSensors(sensorDef.Id, cancelPendingEnable: true);
 
         Plugin.Logger.LogDebug($"{Name} -- Alarm Security Sensors: zone={LocalIndex}, density={density}, " +
                                $"moving={false}, triggerEach={resetTime < 1.0}, id={sensorDef.Id}");
@@ -317,11 +319,7 @@ public partial record Zone : DataBlock<Zone>
         // Grab a random puzzle from the puzzle pack
         var puzzle = Generator.DrawSelect(layout.PuzzlePack);
 
-        // TODO: remove once we are happy for re-rolls to happen
-        var puzzleIsNone = puzzle == ChainedPuzzle.None;
-
-        // if (puzzle == null || puzzle == ChainedPuzzle.None)
-        if (puzzle == null)
+        if (puzzle == null || puzzle == ChainedPuzzle.None)
             return;
 
         // TODO: Randomize things like travel distance here
@@ -357,7 +355,7 @@ public partial record Zone : DataBlock<Zone>
         EventsOnDoorScanDone.AddRange(puzzle.EventsOnDoorScanDone);
 
         var parent = level.Planner.GetBuildFrom(new ZoneNode { Bulkhead = Bulkhead.Extreme, ZoneNumber = LocalIndex });
-        var isInfection = level.FogSettings.IsInfectious;
+        var isInfection = level.Settings.HasInfection;
 
         // Scale distances per tier for all alarms (including surge/fixed alarms).
         // Uses `with` expressions to create new instances rather than mutating in place.
@@ -617,9 +615,6 @@ public partial record Zone : DataBlock<Zone>
             Plugin.Logger.LogInfo($"Zone {LocalIndex} alarm reassigned: {puzzle}");
 
         Alarm = ChainedPuzzle.FindOrPersist(puzzle);
-
-        if (puzzleIsNone)
-            Alarm = ChainedPuzzle.None;
     }
 
     /// <summary>
@@ -629,7 +624,7 @@ public partial record Zone : DataBlock<Zone>
     /// </summary>
     internal void RollTravelAlarmModifiers(ChainedPuzzle puzzle)
     {
-        var isInfection = level.FogSettings.IsInfectious;
+        var isInfection = level.Settings.HasInfection;
 
         switch (level.Tier)
         {
@@ -1327,7 +1322,7 @@ public partial record Zone : DataBlock<Zone>
         LightsSubSeed = Generator.Between(10, 999);
 
         // 70% chance to add more syringes in tech complex zones
-        if (level.Complex == Complex.Tech && Generator.Flip(0.7))
+        if ((layout?.Complex ?? level.Complex) == Complex.Tech && Generator.Flip(0.7))
             ConsumableDistributionInZone = ConsumableDistribution.Baseline_TechComplex.PersistentId;
 
         // Always ensure a terminal is placed in the zone

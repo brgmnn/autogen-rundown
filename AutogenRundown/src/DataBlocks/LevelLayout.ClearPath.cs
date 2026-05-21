@@ -91,12 +91,6 @@ public partial record LevelLayout
                         exit = nodes.Last();
                         exitZone = planner.GetZone(exit)!;
 
-                        var hub = nodes.ElementAt(nodes.Count - 2);
-                        var hubZone = planner.GetZone(hub)!;
-
-                        hubZone.AmmoPacks += 3.0;
-                        hubZone.ToolPacks += 2.0;
-
                         var population = WavePopulation.Baseline;
                         var settings = WaveSettings.Baseline_Normal;
 
@@ -150,7 +144,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        (exit, exitZone) = AddTravelScanAlarm(nodes.Last());
+                        (exit, exitZone) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                     })
                 });
                 break;
@@ -166,7 +160,7 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, 1);
                         var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last());
 
-                        midZone.GenCorridorGeomorph(level.Complex);
+                        mid = level.GenCorridorGeomorph(mid);
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -223,7 +217,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        var (mid, _) = AddTravelScanAlarm(nodes.Last());
+                        var (mid, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         (exit, exitZone) = BuildChallenge_KeycardInSide(mid);
                     })
                 });
@@ -240,7 +234,7 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, 1);
                         var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last(), Generator.Between(1, 2));
 
-                        midZone.GenCorridorGeomorph(level.Complex);
+                        mid = level.GenCorridorGeomorph(mid);
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -258,7 +252,7 @@ public partial record LevelLayout
 
                         var (mid, midZone) = BuildChallenge_BossFight(nodes.Last());
 
-                        midZone.GenCorridorGeomorph(level.Complex);
+                        mid = level.GenCorridorGeomorph(mid);
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -355,7 +349,7 @@ public partial record LevelLayout
                         var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last(), Generator.Between(1, 2));
                         AddSecuritySensors(mid);
 
-                        midZone.GenCorridorGeomorph(level.Complex);
+                        mid = level.GenCorridorGeomorph(mid);
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -370,7 +364,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        var (mid, _) = AddTravelScanAlarm(nodes.Last());
+                        var (mid, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         (exit, exitZone) = BuildChallenge_BossFight(mid);
                     })
                 });
@@ -387,7 +381,7 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, 1);
                         var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last(), Generator.Between(1, 2));
 
-                        midZone.GenCorridorGeomorph(level.Complex);
+                        mid = level.GenCorridorGeomorph(mid);
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -408,7 +402,7 @@ public partial record LevelLayout
 
                         var (mid, midZone) = BuildChallenge_BossFight(nodes.Last());
 
-                        midZone.GenCorridorGeomorph(level.Complex);
+                        mid = level.GenCorridorGeomorph(mid);
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -449,7 +443,7 @@ public partial record LevelLayout
                         AddSecuritySensors(nodes.First());
 
                         var (mid, midZone) = BuildChallenge_BossFight(nodes.Last());
-                        midZone.GenCorridorGeomorph(level.Complex);
+                        mid = level.GenCorridorGeomorph(mid);
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -520,7 +514,7 @@ public partial record LevelLayout
                     (0.10, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
-                        var (mid, _) = AddTravelScanAlarm(nodes.Last());
+                        var (mid, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         (exit, exitZone) = BuildChallenge_ApexAlarm(
                             mid,
                             WavePopulation.Baseline_Hybrids,
@@ -535,10 +529,9 @@ public partial record LevelLayout
         exit = planner.UpdateNode(exit with
         {
             Branch = "exit",
-            MaxConnections = 0,
             Tags = exit.Tags.Extend("exit_elevator")
         });
-        exitZone.GenExitGeomorph(level.Complex);
+        exit = level.GenExitGeomorph(exit);
         exitZone.Coverage = new() { Min = 64, Max = 64 };
 
         // Ensure there's a nice spicy hoard at the end

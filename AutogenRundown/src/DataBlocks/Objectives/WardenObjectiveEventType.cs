@@ -73,6 +73,13 @@ public enum WardenObjectiveEventType : uint
     /// posted directly via SoundPlayer using the zone's CenterPosition as the 3D emitter.
     /// </summary>
     PlayZoneSound = 405,
+
+    /// <summary>
+    /// Disable a security sensor group and drop any queued Enable toggles for the same id.
+    /// Used when a Disable should override an in-flight cycle re-enable (e.g. alarm-end
+    /// hooks that need to defeat a pending sensor cycle-back-on).
+    /// </summary>
+    DisableSecuritySensorCancelPending = 406,
     #endregion
 
     #region MOD: AdvancedWardenObjective
@@ -86,6 +93,7 @@ public enum WardenObjectiveEventType : uint
     LockSecurityDoor = 10001,
     ForceCompleteLevel = 10008,
     Countdown = 10010,
+    Countup = 20008,
     SetLightDataInZone = 10016,
     AlertEnemiesInZone = 10017,
 
@@ -104,6 +112,7 @@ public enum WardenObjectiveEventType : uint
     ShakeScreen = 20011,
 
     CustomHudText = 20017,
+    SpecialHudTimer = 20018,
     #endregion
     #endregion
 }

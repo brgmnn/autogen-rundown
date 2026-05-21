@@ -25,8 +25,8 @@ public partial record LevelLayout
         // Generate some zones leading to the objective
         for (int i = 0; i < branchZoneCount; i++)
         {
-            var zoneIndex = level.Planner.NextIndex(director.Bulkhead);
-            var next = new ZoneNode(director.Bulkhead, zoneIndex);
+            var zoneIndex = level.Planner.NextIndex(director.Bulkhead, Dimension);
+            var next = new ZoneNode(director.Bulkhead, zoneIndex, Dimension: Dimension);
             var nextZone = new Zone(level, this)
             {
                 Coverage = CoverageMinMax.GenNormalSize(),
@@ -41,28 +41,29 @@ public partial record LevelLayout
         }
 
         // Penultimate zone is an I-corridor
-        var corridorIndex = level.Planner.NextIndex(director.Bulkhead);
-        var corridor = new ZoneNode(director.Bulkhead, corridorIndex);
-        corridor.MaxConnections = 1;
+        var corridorIndex = level.Planner.NextIndex(director.Bulkhead, Dimension);
+        var corridor = new ZoneNode(director.Bulkhead, corridorIndex, Dimension: Dimension);
 
         var corridorZone = new Zone(level, this) { LightSettings = Lights.GenRandomLight() };
-        corridorZone.GenCorridorGeomorph(director.Complex);
         corridorZone.RollFog(level);
 
         level.Planner.Connect(prev, corridor);
         level.Planner.AddZone(corridor, corridorZone);
 
-        // Final zone is the matter wave projector
-        var mwpIndex = level.Planner.NextIndex(director.Bulkhead);
-        var mwp = new ZoneNode(director.Bulkhead, mwpIndex);
-        mwp.MaxConnections = 3;
+        corridor = level.GenCorridorGeomorph(corridor);
+
+        // Final zone is the matter wave projector. The Tech variant of the MWP geomorph is a
+        // dead-end room — no children must attach. The wrapper enforces MaxConnections = 0.
+        var mwpIndex = level.Planner.NextIndex(director.Bulkhead, Dimension);
+        var mwp = new ZoneNode(director.Bulkhead, mwpIndex, Dimension: Dimension);
 
         var mwpZone = new Zone(level, this) { LightSettings = Lights.GenRandomLight() };
-        mwpZone.GenMatterWaveProjectorGeomorph(director.Complex);
         mwpZone.RollFog(level);
 
         level.Planner.Connect(corridor, mwp);
         level.Planner.AddZone(mwp, mwpZone);
+
+        mwp = level.GenMatterWaveProjectorGeomorph(mwp);
 
         // Assign the zone placement data for the objective text
         objectiveLayerData.ObjectiveData.ZonePlacementDatas.Add(
@@ -70,6 +71,7 @@ public partial record LevelLayout
             {
                 new ZonePlacementData
                 {
+                    Dimension = mwp.Dimension,
                     LocalIndex = mwp.ZoneNumber,
                     Weights = ZonePlacementWeights.NotAtStart
                 }
@@ -138,7 +140,7 @@ public partial record LevelLayout
 
         if (Generator.Flip())
         {
-            entranceZone.GenHubGeomorph(director.Complex);
+            entrance = level.GenHubGeomorph(entrance);
             entrance.MaxConnections = 3;
         }
         else
@@ -154,7 +156,7 @@ public partial record LevelLayout
         // corridor.MaxConnections = 1;
         //
         // var corridorZone = new Zone { LightSettings = Lights.GenRandomLight() };
-        // //corridorZone.GenCorridorGeomorph(director.Complex);
+        // //corridor = level.GenCorridorGeomorph(corridor);
         // corridorZone.RollFog(level);
         //
         // level.Planner.Connect(entrance, corridor);
@@ -166,7 +168,7 @@ public partial record LevelLayout
         // hub.MaxConnections = 3;
         //
         // var zone = new Zone { LightSettings = Lights.GenRandomLight() };
-        // zone.GenHubGeomorph(director.Complex);
+        // zone.GenHubGeomorph(Complex);
         // zone.RollFog(level);
         //
         // level.Planner.Connect(corridor, hub);
@@ -181,6 +183,8 @@ public partial record LevelLayout
         // Optional travel scan prelude
         if (Generator.Flip(0.15))
         {
+            entrance = level.GenHubGeomorph(entrance);
+
             var (travelEnd, _) = AddTravelScanAlarm(entrance);
             entrance = travelEnd;
             entrance = planner.UpdateNode(entrance with { MaxConnections = 3 });
@@ -205,6 +209,7 @@ public partial record LevelLayout
                 {
                     new()
                     {
+                        Dimension = zoneNode.Dimension,
                         LocalIndex = zoneNode.ZoneNumber,
                         Weights = ZonePlacementWeights.NotAtStart
                     }
@@ -215,18 +220,18 @@ public partial record LevelLayout
             return;
 
         // We have more than 3 items and so need to place more zones
-        var secondHubBase = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "bigitem_2")!;
+        var secondHubBase = (ZoneNode)level.Planner.GetLastZone(director.Bulkhead, "bigitem_2", dimension: Dimension)!;
 
         // Case where we want two more zones. Add a hub with two more cells
-        var hub2 = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead));
-        hub2.MaxConnections = 3;
+        var hub2 = new ZoneNode(director.Bulkhead, level.Planner.NextIndex(director.Bulkhead, Dimension), Dimension: Dimension);
 
         var zoneHub2 = new Zone(level, this) { LightSettings = Lights.GenRandomLight() };
-        zoneHub2.GenHubGeomorph(director.Complex);
         zoneHub2.RollFog(level);
 
         level.Planner.Connect(secondHubBase, hub2);
         level.Planner.AddZone(hub2, zoneHub2);
+
+        hub2 = level.GenHubGeomorph(hub2);
 
         for (var g = 3; g < objective.RetrieveItems.Count; g++)
         {
@@ -237,6 +242,7 @@ public partial record LevelLayout
                 {
                     new()
                     {
+                        Dimension = zoneNode.Dimension,
                         LocalIndex = zoneNode.ZoneNumber,
                         Weights = ZonePlacementWeights.NotAtStart
                     }

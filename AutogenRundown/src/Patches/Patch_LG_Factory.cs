@@ -37,6 +37,13 @@ public class Patch_LG_Factory
         {
             FactoryJobManager.NewBuild();
         }
+
+        // Always release the fatal-threshold gate at the start of any build. NewBuild
+        // already covers fresh builds; this catches the rebuild path too so the new
+        // attempt's cascade can run normally.
+        Fix_FailedToFindStartArea.fatalReached = false;
+        Fix_DistributionOnBrokenZones.ResetDiagnostics();
+        Fix_FactoryJobExceptionCatchAll.ResetDiagnostics();
     }
 
     /// <summary>

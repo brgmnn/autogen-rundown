@@ -1,6 +1,7 @@
 ﻿using System;
 using AIGraph;
 using AutogenRundown.Patches;
+using AutogenRundown.Patches.CustomTerminals;
 using CellMenu;
 using Enemies;
 using AmorLib.API;
@@ -59,9 +60,11 @@ public static class FactoryJobManager
         RebuildCount = 0;
 
         ZoneSeedManager.SubSeeds.Clear();
+        ZoneSeedManager.StartExpansionOverrides.Clear();
         Fix_NavMeshMarkerSubSeed.TargetsDetected.Clear();
         Fix_NavMeshMarkerSubSeed.MarkerSubSeeds.Clear();
         Fix_NavMeshMarkerSubSeed.ZoneAttempts.Clear();
+        Fix_FailedToFindStartArea.ResetDiagnostics();
         Fix_FailedToFindStartArea.zoneFailures.Clear();
     }
 
@@ -121,6 +124,16 @@ public static class FactoryJobManager
         MapDetails.OnLevelCleanup();
         MapDataManager.Current.OnLevelCleanup();
         CM_PageMap.Current.OnLevelCleanup();
+
+        // --- DimensionMaps compatibility ---
+        // Reset stale batch tracking to prevent NavMeshBuildDone firing prematurely on rebuild.
+        // DimensionMaps' NextBatch postfix tracks _lastBatch but never resets it between builds.
+        var dmPatchType = Type.GetType("DimensionMaps.Patches.LG_Factory__NextBatch__Patch, GTFO_DimensionMaps");
+        if (dmPatchType != null)
+        {
+            var lastBatchField = AccessTools.Field(dmPatchType, "_lastBatch");
+            lastBatchField?.SetValue(null, default(LG_Factory.BatchName));
+        }
 
         // --- Terminals ---
         // Remove terminals/uplinks from previous attempts
@@ -202,9 +215,11 @@ public static class FactoryJobManager
 
             // TODO: move this logic to the respective managers
             ZoneSeedManager.SubSeeds.Clear();
+            ZoneSeedManager.StartExpansionOverrides.Clear();
             Fix_NavMeshMarkerSubSeed.TargetsDetected.Clear();
             Fix_NavMeshMarkerSubSeed.MarkerSubSeeds.Clear();
             Fix_NavMeshMarkerSubSeed.ZoneAttempts.Clear();
+            Fix_FailedToFindStartArea.ResetDiagnostics();
             Fix_FailedToFindStartArea.zoneFailures.Clear();
         }
     }

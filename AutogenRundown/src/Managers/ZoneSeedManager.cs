@@ -1,4 +1,5 @@
-﻿using AutogenRundown.Utils;
+﻿using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Utils;
 using GameData;
 using LevelGeneration;
 
@@ -24,6 +25,13 @@ public static class ZoneSeedManager
 
     public static readonly Dictionary<(eDimensionIndex dimension, LG_LayerType layer, eLocalZoneIndex index), uint> MarkerSubSeeds = new();
 
+    /// <summary>
+    /// Per-zone overrides for ExpeditionZoneData.StartExpansion. Applied at LG_Layer.CreateZone
+    /// so they survive rebuilds, same as SubSeeds. Used by Fix_FailedToFindStartArea once
+    /// subseed rerolls alone aren't escaping a topology dead-end.
+    /// </summary>
+    public static readonly Dictionary<(eDimensionIndex dimension, LG_LayerType layer, eLocalZoneIndex index), ZoneBuildExpansion> StartExpansionOverrides = new();
+
 
     #region Public methods
 
@@ -43,6 +51,19 @@ public static class ZoneSeedManager
         FactoryJobManager.MarkForRebuild();
 
         FailedSubSeeds.Add((dimension, layer, localIndex));
+    }
+
+    public static void Override_StartExpansion(LG_Zone zone, ZoneBuildExpansion expansion)
+        => Override_StartExpansion(zone.LocalIndex, zone.DimensionIndex, zone.Layer.m_type, expansion);
+
+    public static void Override_StartExpansion(
+        eLocalZoneIndex localIndex,
+        eDimensionIndex dimension,
+        LG_LayerType layer,
+        ZoneBuildExpansion expansion)
+    {
+        StartExpansionOverrides[(dimension, layer, localIndex)] = expansion;
+        FactoryJobManager.MarkForRebuild();
     }
 
     #endregion

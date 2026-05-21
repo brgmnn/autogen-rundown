@@ -22,7 +22,7 @@ public partial record WardenObjective
 {
     public double Survival_CalculateTime(BuildDirector director, Level level)
     {
-        var nodes = level.Planner.GetZones(director.Bulkhead, null);
+        var nodes = level.Planner.GetZones(director.Bulkhead, null, dimension: null);
         var total = level.Tier switch
         {
             "A" => 80.0,
@@ -54,13 +54,13 @@ public partial record WardenObjective
     /// <returns></returns>
     public double Survival_CalculateSkipTime(BuildDirector director, Level level)
     {
-        var nodes = level.Planner.GetZones(director.Bulkhead, "survival_arena");
+        var nodes = level.Planner.GetZones(director.Bulkhead, "survival_arena", dimension: null);
 
         // remove the first zone, as they will (should) have cleared it already
         nodes.RemoveAt(0);
 
         // Add the exit zone which we want to include
-        var exit = level.Planner.GetZones(director.Bulkhead, "exit").First();
+        var exit = level.Planner.GetZones(director.Bulkhead, "exit", dimension: null).First();
         nodes.Add(exit);
 
         // Give a fixed buffer for getting together and extracting
@@ -86,7 +86,7 @@ public partial record WardenObjective
 
     public void Build_Survival(BuildDirector director, Level level)
     {
-        var exitZone = level.Planner.GetZones(director.Bulkhead, "exit").First();
+        var exitZone = level.Planner.GetZones(director.Bulkhead, "exit", dimension: null).First();
 
         MainObjective = new Text(() => $"Find a way to stay alive during Warden Protocol DECOY, and make your way to {Intel.Zone(exitZone, level.Planner)} for extraction");
         Survival_TimerTitle = new Text("Time until allowed extraction:");
@@ -219,7 +219,7 @@ public partial record WardenObjective
         {
             var extremeClearTime = Survival_CalculateTime(level.SecondaryDirector, level);
 
-            var node = level.Planner.GetZones(Bulkhead.Extreme, null).First();
+            var node = level.Planner.GetZones(Bulkhead.Extreme, null, dimension: null).First();
             var zone = level.Planner.GetZone(node)!;
 
             zone.EventsOnApproachDoor
@@ -235,7 +235,7 @@ public partial record WardenObjective
         {
             var overloadClearTime = Survival_CalculateTime(level.OverloadDirector, level);
 
-            var node = level.Planner.GetZones(Bulkhead.Overload, null).First();
+            var node = level.Planner.GetZones(Bulkhead.Overload, null, dimension: null).First();
             var zone = level.Planner.GetZone(node)!;
 
             zone.EventsOnApproachDoor

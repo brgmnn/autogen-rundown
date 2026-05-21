@@ -50,17 +50,18 @@ public partial record LevelLayout
             });
     }
 
-    private static void SetInfectionVibe(Zone zone, int spitters = 100)
+    private static void SetInfectionVibe(Zone zone, int spitters = 100, bool setLights = true)
     {
-        // Pick some mother like lights
-        zone.LightSettings = Generator.Pick(new List<Lights.Light>
-        {
-            Lights.Light.Monochrome_Green,
-            Lights.Light.Monochrome_YellowToGreen,
-            Lights.Light.DarkGreenToRed_1,
-            Lights.Light.camo_green_R4E1,
-            Lights.Light.BlueToGreen_1
-        });
+        // Pick some infection lights
+        if (setLights)
+            zone.LightSettings = Generator.Pick(new List<Lights.Light>
+            {
+                Lights.Light.Monochrome_Green,
+                Lights.Light.Monochrome_YellowToGreen,
+                Lights.Light.DarkGreenToRed_1,
+                Lights.Light.camo_green_R4E1,
+                Lights.Light.BlueToGreen_1
+            });
 
         // Add mother egg sacks to the zone
         zone.StaticSpawnDataContainers.Add(
@@ -134,7 +135,7 @@ public partial record LevelLayout
     {
         start = planner.UpdateNode(start with { MaxConnections = 3 });
         var startZone = planner.GetZone(start)!;
-        startZone.GenHubGeomorph(level.Complex);
+        start = level.GenHubGeomorph(start);
 
         var (end, endZone) = AddZone(start, new ZoneNode());
 
@@ -208,9 +209,15 @@ public partial record LevelLayout
     #region Travel Scan Alarms
 
     /// <summary>
-    /// Adds a travel scan
+    /// Adds a travel scan from <paramref name="start"/> into a new forward zone.
+    ///
+    /// The caller owns <paramref name="start"/>'s geomorph and MaxConnections — this method does
+    /// not modify them. The caller must ensure <paramref name="start"/> has a free outbound
+    /// connection slot so the new forward zone can be attached. Hub-shaped helpers
+    /// (<see cref="Level.GenHubGeomorph"/>, <see cref="Level.GenGeneratorClusterGeomorph"/>,
+    /// <see cref="Level.GenReactorGeomorph"/>, etc.) already set MaxConnections to 3.
     /// </summary>
-    /// <param name="start">Node to start in. Note this may convert the node to a hub</param>
+    /// <param name="start">Node to start the scan from. Not modified.</param>
     /// <param name="population">
     ///     Wave population to use, if null will be determined automatically
     /// </param>
@@ -222,9 +229,7 @@ public partial record LevelLayout
         WavePopulation? population = null,
         WaveSettings? settings = null)
     {
-        start = planner.UpdateNode(start with { MaxConnections = 3 });
         var startZone = planner.GetZone(start)!;
-        startZone.GenHubGeomorph(level.Complex);
 
         var (end, endZone) = AddZone(start, new ZoneNode());
 
@@ -786,7 +791,7 @@ public partial record LevelLayout
         }
 
         setupNode = planner.UpdateNode(setupNode with { MaxConnections = 3 });
-        setupZone.GenKingOfTheHillGeomorph(level, level.GetDirector(setupNode.Bulkhead));
+        setupZone.GenKingOfTheHillGeomorph();
 
         // We want a side spawn room to make it basically impossible to C-foam hold this alarm
         // NOTE: the side spawn room CAN have blood doors roll on it!
@@ -799,26 +804,12 @@ public partial record LevelLayout
                 Tags = new Tags("no_enemies")
             });
 
-        sideSpawnZone.GenDeadEndGeomorph(level.Complex);
+        sideSpawn = level.GenMultiRoomSpawnGeomorph(sideSpawn);
         sideSpawnZone.ProgressionPuzzleToEnter = ProgressionPuzzle.Locked;
 
-        var puzzle = director.Tier switch
-        {
-            "A" => ChainedPuzzle.AlarmClass8,
-            "B" => ChainedPuzzle.AlarmClass9,
-            "C" => ChainedPuzzle.AlarmClass10,
-            "D" => ChainedPuzzle.AlarmClass11,
-            "E" => ChainedPuzzle.AlarmClass12,
+        Plugin.Logger.LogDebug($"Created multiroom spawn: {sideSpawn}");
 
-            _ => ChainedPuzzle.AlarmClass10,
-        };
-
-        lockedZone.SecurityGateToEnter = SecurityGate.Apex;
-        lockedZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle with
-        {
-            Population = population ?? puzzle.Population,
-            Settings = settings ?? puzzle.Settings
-        });
+        ConfigureApexAlarm(setupZone, lockedZone, population, settings);
 
         // Force open the side room
         lockedZone.EventsOnDoorScanStart.AddOpenDoor(director.Bulkhead, sideSpawn.ZoneNumber);
@@ -827,8 +818,6 @@ public partial record LevelLayout
     /// <summary>
     /// Adds an Apex Alarm to a door, this does not modify the source zone at all. Good for
     /// certain objectives where we already have the start zone setup for something else.
-    ///
-    /// TODO: replace other ApexAlarm builders with this
     /// </summary>
     /// <param name="start"></param>
     /// <param name="population"></param>
@@ -849,8 +838,15 @@ public partial record LevelLayout
 
         var (end, endZone) = AddZone(start, new ZoneNode());
 
-        startZone.AmmoPacks += 3.0;
-        startZone.ToolPacks += 2.0;
+        ConfigureApexAlarm(startZone, endZone, population, settings);
+
+        return (end, endZone);
+    }
+
+    private void ConfigureApexAlarm(Zone source, Zone target, WavePopulation? population, WaveSettings? settings)
+    {
+        source.AmmoPacks += 3.0;
+        source.ToolPacks += 2.0;
 
         var puzzle = director.Tier switch
         {
@@ -863,14 +859,12 @@ public partial record LevelLayout
             _ => ChainedPuzzle.AlarmClass10,
         };
 
-        endZone.SecurityGateToEnter = SecurityGate.Apex;
-        endZone.Alarm = ChainedPuzzle.FindOrPersist(puzzle with
+        target.SecurityGateToEnter = SecurityGate.Apex;
+        target.Alarm = ChainedPuzzle.FindOrPersist(puzzle with
         {
             Population = population ?? puzzle.Population,
             Settings = settings ?? puzzle.Settings
         });
-
-        return (end, endZone);
     }
 
     /// <summary>
@@ -900,8 +894,7 @@ public partial record LevelLayout
             return;
         }
 
-        setupNode = planner.UpdateNode(setupNode with { MaxConnections = 3 });
-        setupZone.GenHubGeomorph(level.Complex);
+        setupNode = level.GenHubGeomorph(setupNode);
 
         var puzzle = director.Tier switch
         {
@@ -974,9 +967,7 @@ public partial record LevelLayout
         var nodes = AddBranch_Forward(start, 1 + preludeZones);
 
         var exit = nodes.Last();
-        var exitZone = planner.GetZone(exit)!;
-
-        exitZone.GenExitGeomorph(level.Complex);
+        exit = level.GenExitGeomorph(exit);
 
         return exit;
     }
@@ -1000,7 +991,7 @@ public partial record LevelLayout
             return bossNode;
         }
 
-        zone.GenBossGeomorph(level.Complex);
+        bossNode = level.GenBossGeomorph(bossNode);
 
         // Disable any scouts on anything except E-tier
         if (level.Tier != "E")
@@ -1216,7 +1207,7 @@ public partial record LevelLayout
         }
 
         // We pick the specific tiles we want ourselves
-        (zone.SubComplex, zone.CustomGeomorph, zone.Coverage) = level.Complex switch
+        (zone.SubComplex, zone.CustomGeomorph, zone.Coverage) = Complex switch
         {
             Complex.Mining => (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_06.prefab", new CoverageMinMax { Min = 30, Max = 70 }),
             Complex.Tech => (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_01_R3D1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
@@ -1403,7 +1394,7 @@ public partial record LevelLayout
         node = planner.UpdateNode(node with { Tags = node.Tags.Extend("no_enemies", "no_scouts") });
 
         // Set a big open geomorph
-        zone.GenHubGeomorph(level.Complex);
+        node = level.GenHubGeomorph(node);
 
         zone.EnemySpawningInZone.Add(EnemySpawningData.Scout with
         {
@@ -1562,7 +1553,7 @@ public partial record LevelLayout
             });
 
         // TODO: support other dimensions
-        var terminalSerial = Lore.TerminalSerial("Reality", terminalNode.Bulkhead, terminalNode.ZoneNumber);
+        var terminalSerial = Lore.TerminalSerial(DimensionIndex.Reality, terminalNode.Bulkhead, terminalNode.ZoneNumber);
 
         customDoor.InteractionMessage += $"<color=red> DEACTIVATE ALARM ON {terminalSerial}</color>";
         lockedZone.EventsOnDoorScanStart.AddCustomHudText($"<color=red>Deactivate alarm on {terminalSerial}</color>");
@@ -1695,7 +1686,7 @@ public partial record LevelLayout
             });
 
         // TODO: support other dimensions
-        var terminalSerial = Lore.TerminalSerial("Reality", terminalNode.Bulkhead, terminalNode.ZoneNumber);
+        var terminalSerial = Lore.TerminalSerial(DimensionIndex.Reality, terminalNode.Bulkhead, terminalNode.ZoneNumber);
 
         customDoor.InteractionMessage += $"<color=red> DEACTIVATE ALARM ON {terminalSerial}</color>";
         lockedZone.EventsOnDoorScanStart.AddCustomHudText($"<color=red>Deactivate alarm on {terminalSerial}</color>");
@@ -1808,7 +1799,7 @@ public partial record LevelLayout
             PuzzleType = ProgressionPuzzleType.Keycard,
             ZonePlacementData = new List<ZonePlacementData>
             {
-                new() { LocalIndex = keycardZone.LocalIndex }
+                new() { Dimension = Dimension, LocalIndex = keycardZone.LocalIndex }
             }
         };
     }
@@ -1864,13 +1855,13 @@ public partial record LevelLayout
             var branchIndex = 1;
 
             // Find a valid branch name
-            while (level.Planner.GetZones(Bulkhead.All, $"key_{branchIndex}").Any())
+            while (level.Planner.GetZones(Bulkhead.All, $"key_{branchIndex}", dimension: Dimension).Any())
                 branchIndex++;
 
             var branch = $"key_{branchIndex}";
             var last = BuildBranch(branchBase, branchLength, branch);
 
-            var branchFirstNode = level.Planner.GetZones(director.Bulkhead, branch).First();
+            var branchFirstNode = level.Planner.GetZones(director.Bulkhead, branch, dimension: Dimension).First();
             var firstZone = level.Planner.GetZone(branchFirstNode)!;
             var branchBaseZone = level.Planner.GetZone(branchBase)!;
 
@@ -1898,7 +1889,7 @@ public partial record LevelLayout
             PuzzleType = ProgressionPuzzleType.Keycard,
             ZonePlacementData = new List<ZonePlacementData>
             {
-                new() { LocalIndex = keyZoneNumber }
+                new() { Dimension = Dimension, LocalIndex = keyZoneNumber }
             }
         };
     }
@@ -1913,7 +1904,7 @@ public partial record LevelLayout
     {
         var (node, zone) = AddZone(start, new ZoneNode { MaxConnections = 0 });
 
-        switch (level.Complex)
+        switch (Complex)
         {
             case Complex.Mining:
                 break;
@@ -1938,9 +1929,13 @@ public partial record LevelLayout
     /// <param name="start">ZoneNode to build the side disinfection station from</param>
     public void AddDisinfectionZone(ZoneNode start)
     {
-        var (_, zone) = AddZone(start, new ZoneNode { MaxConnections = 0 });
+        var (_, zone) = AddZone(start, new ZoneNode
+        {
+            MaxConnections = 0,
+            Tags = new Tags("no_scouts")
+        });
 
-        switch (level.Complex)
+        switch (Complex)
         {
             case Complex.Mining:
                 zone.SubComplex = SubComplex.Storage;
@@ -2009,7 +2004,8 @@ public partial record LevelLayout
                             lockedNode.ZoneNumber,
                             null,
                             WardenObjectiveEventTrigger.OnStart,
-                            10)
+                            10,
+                            lockedNode.Dimension)
                         .ToList(),
                     PostCommandOutputs = new List<TerminalOutput>
                     {
@@ -2044,7 +2040,7 @@ public partial record LevelLayout
         });
 
         var terminalSerial = Lore.TerminalSerial(
-            "Reality",
+            terminalNode.Dimension,
             terminalNode.Bulkhead,
             terminalNode.ZoneNumber,
             terminalZone.TerminalPlacements.Count - 1);

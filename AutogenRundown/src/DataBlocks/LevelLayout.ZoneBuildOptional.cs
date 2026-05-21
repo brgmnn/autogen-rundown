@@ -33,7 +33,7 @@ public partial record LevelLayout
         medZone.AliasPrefix = "MedBay, ZONE";
 
         // Select tile
-        switch (level.Complex)
+        switch (Complex)
         {
             case Complex.Mining:
                 medZone.SubComplex = SubComplex.Refinery;
@@ -133,7 +133,7 @@ public partial record LevelLayout
             return;
 
         // Keep chances relatively small for levels
-        if (!Generator.Flip(chance ?? (level.Tier, level.Complex) switch
+        if (!Generator.Flip(chance ?? (level.Tier, Complex) switch
             {
                 ("A", Complex.Tech) => 0.120,
                 ("A", _           ) => 0.095,

@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks;
+using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Enemies;
@@ -98,7 +99,7 @@ public static class WardenObjectiveEventCollections
                 Enabled = true,
                 Delay = delay,
                 Trigger = trigger,
-                WardenIntel = alertMessage ?? string.Empty
+                WardenIntel = new DataBlocks.Text(alertMessage ?? string.Empty)
             });
 
         return events;
@@ -243,7 +244,7 @@ public static class WardenObjectiveEventCollections
                 Type = WardenObjectiveEventType.None,
                 Trigger = WardenObjectiveEventTrigger.OnStart,
                 Delay = delay + 4.0,
-                WardenIntel = message
+                WardenIntel = new DataBlocks.Text(message)
             });
 
         return events;
@@ -345,18 +346,21 @@ public static class WardenObjectiveEventCollections
     /// <param name="events"></param>
     /// <param name="delay"></param>
     /// <param name="trigger"></param>
+    /// <param name="dimension"></param>
     /// <returns></returns>
     public static ICollection<WardenObjectiveEvent> AddAllLightsOff(
         this ICollection<WardenObjectiveEvent> events,
         double delay = 0.0,
-        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart)
+        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart,
+        DimensionIndex dimension = DimensionIndex.Reality)
     {
         events.Add(
             new WardenObjectiveEvent
             {
                 Type = WardenObjectiveEventType.AllLightsOff,
                 Trigger = trigger,
-                Delay = delay
+                Delay = delay,
+                Dimension = dimension,
             });
 
         return events;
@@ -562,7 +566,7 @@ public static class WardenObjectiveEventCollections
                 Type = WardenObjectiveEventType.UpdateCustomSubObjective,
                 SubObjective = description ?? DataBlocks.Text.None,
                 SubObjectiveHeader = header ?? DataBlocks.Text.None,
-                WardenIntel = intel ?? "",
+                WardenIntel = new DataBlocks.Text(intel ?? ""),
                 Delay = delay
             });
 
@@ -655,15 +659,23 @@ public static class WardenObjectiveEventCollections
     /// <summary>
     /// Disable a sensor by ID.
     /// </summary>
+    /// <param name="cancelPendingEnable">
+    /// When true, any queued Enable toggle for the same sensor id is dropped before this
+    /// Disable runs. Use for alarm-end / out-of-band hooks that must defeat an in-flight
+    /// cycle re-enable. Default false preserves existing scheduler behavior.
+    /// </param>
     public static ICollection<WardenObjectiveEvent> DisableZoneSensors(
         this ICollection<WardenObjectiveEvent> events,
         int sensorId,
-        double delay = 0.0)
+        double delay = 0.0,
+        bool cancelPendingEnable = false)
     {
         events.Add(
             new WardenObjectiveEvent
             {
-                Type = WardenObjectiveEventType.DisableSecuritySensor,
+                Type = cancelPendingEnable
+                    ? WardenObjectiveEventType.DisableSecuritySensorCancelPending
+                    : WardenObjectiveEventType.DisableSecuritySensor,
                 Count = sensorId,
                 Delay = delay
             });
@@ -974,6 +986,34 @@ public static class WardenObjectiveEventCollections
 
     #endregion
 
+    #region Terminals
+
+    /// <summary>
+    /// When used with a terminal it will spawn the scan on the terminals static bioscan point
+    /// and block the rest of the events until the scan is done
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="puzzle"></param>
+    /// <param name="delay"></param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddScan(
+        this ICollection<WardenObjectiveEvent> events,
+        ChainedPuzzle puzzle,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.None,
+                ChainPuzzle = puzzle.PersistentId,
+                Delay = delay,
+            });
+
+        return events;
+    }
+
+    #endregion
+
     #region Timers
     /// <summary>
     /// Adjusts the current AWO timer time. Can accept both positive and negative duration
@@ -1015,6 +1055,106 @@ public static class WardenObjectiveEventCollections
                 Delay = delay,
                 Duration = duration,
                 Countdown = countdown
+            });
+
+        return events;
+    }
+
+    public static ICollection<WardenObjectiveEvent> AddCountup(
+        this ICollection<WardenObjectiveEvent> events,
+        double duration,
+        WardenObjectiveEventCountup countup,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.Countup,
+                Delay = delay,
+                Duration = duration,
+                Countup = countup
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Renders a horizontal progress fill bar at the top of the HUD — the same primitive used
+    /// by bioscans and reactor startup waves (GuiManager.InteractionLayer.SetMessageTimer).
+    /// The Message string can embed [TIMER] (mm:ss) and [PERCENT] placeholders.
+    /// </summary>
+    public static ICollection<WardenObjectiveEvent> AddSpecialHudTimer(
+        this ICollection<WardenObjectiveEvent> events,
+        double duration,
+        WardenObjectiveEventSpecialHudTimer hud,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SpecialHudTimer,
+                Delay = delay,
+                Duration = duration,
+                SpecialHudTimer = hud
+            });
+
+        return events;
+    }
+
+    #endregion
+
+    #region Dimensions
+    public static ICollection<WardenObjectiveEvent> AddDimensionWarp(
+        this ICollection<WardenObjectiveEvent> events,
+        DimensionIndex dimension,
+        double delay = 0.0,
+        WardenObjectiveEventTrigger trigger = WardenObjectiveEventTrigger.OnStart)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.DimensionWarpTeam,
+                Trigger = trigger,
+                Dimension = dimension,
+                Delay = delay
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// An event to kill all enemies brutally in a dimension.
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="dimension"></param>
+    /// <param name="delay"></param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddClearDimension(
+        this ICollection<WardenObjectiveEvent> events,
+        DimensionIndex dimension,
+        double delay = 0.0)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.ClearDimension,
+                Dimension = dimension,
+                Delay = delay
+            });
+
+        return events;
+    }
+    #endregion
+
+    #region Utilities
+
+    public static ICollection<WardenObjectiveEvent> AddEventBreak(
+        this ICollection<WardenObjectiveEvent> events)
+    {
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.EventBreak
             });
 
         return events;

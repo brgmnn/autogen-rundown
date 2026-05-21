@@ -39,13 +39,14 @@ public partial record LevelLayout
         corridor.StartPosition = ZoneEntranceBuildFrom.Furthest;
         corridor.ZoneExpansion = zoneExpansion;
 
-        corridor.GenReactorCorridorGeomorph(director.Complex);
+        corridorNode = level.GenReactorCorridorGeomorph(corridorNode);
 
         // Create the reactor zone
         var reactorNode = new ZoneNode(
             director.Bulkhead,
-            level.Planner.NextIndex(director.Bulkhead),
-            "reactor");
+            level.Planner.NextIndex(director.Bulkhead, Dimension),
+            "reactor",
+            Dimension: Dimension);
         reactorNode.Tags.Add("reactor");
 
         var reactor = new Zone(level, this)
@@ -57,7 +58,6 @@ public partial record LevelLayout
             ForbidTerminalsInZone = true,
             AliasPrefix = "Reactor, ZONE"
         };
-        reactor.GenReactorGeomorph(director.Complex);
         reactor.TerminalPlacements = new List<TerminalPlacement>();
 
         // Add fog repellers in case of fog
@@ -65,6 +65,10 @@ public partial record LevelLayout
 
         level.Planner.Connect(corridorNode, reactorNode);
         level.Planner.AddZone(reactorNode, reactor);
+
+        // Apply the reactor geomorph + MaxConnections through the wrapper now that the zone
+        // is registered with the planner.
+        reactorNode = level.GenReactorGeomorph(reactorNode);
 
         return reactorNode;
     }

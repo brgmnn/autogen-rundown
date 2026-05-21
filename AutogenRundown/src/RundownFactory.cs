@@ -191,17 +191,12 @@ public static class RundownFactory
             var settings = new LevelSettings("A");
 
             var testLevel = Level.Debug_BuildGeoTest(
-                // "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab",
-                // "Assets/Custom Geo's/Digsite/digsite_x_tile_1/digsite_x_tile_1.prefab",
-                "Assets/CustomPrefabs/CollisionGeos/geo_lab_FA_hub_01.prefab",
-                // "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_01.prefab",
-                // "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_01.prefab",
-
+                "Assets/Custom Geo's/Floodways_HUB/Floodways_hub.prefab",
                 new Level("A")
                 {
                     Tier = "A",
                     Name = "Debug Test",
-                    Complex = Complex.Tech,
+                    Complex = Complex.Service,
                     Settings = settings,
                     Index = rundown.TierA_Count + 1,
                     // Accessibility = Accessibility.BlockedAndScrambled,
@@ -214,6 +209,8 @@ public static class RundownFactory
         #endif
         #endregion
         #endregion
+
+        mainObjectivesPool.Add((2.0, 1, WardenObjectiveType.AlphaTerminalCommand));
 
         #region B-Tier Levels
         for (int i = 0; i < rundown.TierB_Count; i++)
@@ -252,6 +249,9 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
         #endregion
+
+        mainObjectivesPool.Add((1.0, 1, WardenObjectiveType.AlphaTerminalCommand));
+        mainObjectivesPool.Add((2.0, 1, WardenObjectiveType.Cryptomnesia));
 
         #region C-Tier Levels
         for (int i = 0; i < rundown.TierC_Count; i++)
@@ -353,6 +353,8 @@ public static class RundownFactory
         #endif
         #endregion
         #endregion
+
+        mainObjectivesPool.Add((1.2, 1, WardenObjectiveType.ReachKdsDeep));
 
         #region D-Tier Levels
         // D levels
@@ -498,7 +500,17 @@ public static class RundownFactory
                     new() { 2,  1, 7, 3, 3, 4 },
                     new() { 4, 10, 3, 1, 5 }
                 }
-            }
+            },
+            {
+                "SUMMER_2026", new List<List<int>>
+                {
+                    new() { 1, 2, 1, 1 },       // done
+                    new() { 1, 1, 1, 2, 1, 1 }, // done
+                    new() { 1, 2, 1, 1, 2, 2 }, // done
+                    new() { 3, 1, 1, 1, 3, 1 }, // done
+                    new() { 3, 2, 1, 1, 5 }     // done
+                }
+            },
         };
 
         #region Cross-level specific setup
@@ -590,6 +602,8 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.AlphaTerminalCommand));
+
         // --- B-Tier Levels ---
         for (var i = 0; i < rundown.TierB_Count; i++)
         {
@@ -620,6 +634,9 @@ public static class RundownFactory
 
             rundown.AddLevel(level);
         }
+
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.Cryptomnesia));
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.AlphaTerminalCommand));
 
         // --- C-Tier Levels ---
         for (var i = 0; i < rundown.TierC_Count; i++)
@@ -652,7 +669,9 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
-        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.ReachKdsDeep));
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.AlphaTerminalCommand));
+        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.Cryptomnesia));
+        mainObjectivesPool.Add((1.2, 1, WardenObjectiveType.ReachKdsDeep));
 
         // --- D-Tier Levels ---
         for (var i = 0; i < rundown.TierD_Count; i++)
@@ -862,6 +881,16 @@ public static class RundownFactory
                     new() { 1, 2, 6, 2 },
                     new() { 1, 3, 3 }
                 }
+            },
+            {
+                "2026_06", new List<List<int>>
+                {
+                    new() { 1, 1 },       // done
+                    new() { 1, 1, 1, 1 }, // done
+                    new() { 1, 1, 1, 1 }, // done
+                    new() { 1, 5, 1 },    // done
+                    new() { 1, 6, 1 }     // done
+                }
             }
         };
 
@@ -946,6 +975,8 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
+        mainObjectivesPool.Add((1.0, 1, WardenObjectiveType.AlphaTerminalCommand));
+
         // --- B-Tier Levels ---
         for (var i = 0; i < rundown.TierB_Count; i++)
         {
@@ -976,7 +1007,9 @@ public static class RundownFactory
             rundown.AddLevel(level);
         }
 
-        mainObjectivesPool.Add((4.0, 1, WardenObjectiveType.ReachKdsDeep));
+        mainObjectivesPool.Add((2.0, 1, WardenObjectiveType.Cryptomnesia));
+        mainObjectivesPool.Add((2.0, 1, WardenObjectiveType.AlphaTerminalCommand));
+        mainObjectivesPool.Add((1.0, 1, WardenObjectiveType.ReachKdsDeep));
 
         // --- C-Tier Levels ---
         for (var i = 0; i < rundown.TierC_Count; i++)

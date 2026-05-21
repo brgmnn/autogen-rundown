@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Objectives;
+﻿using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Terminals;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
@@ -52,7 +53,7 @@ public partial record LevelLayout
         var startZone = planner.GetZone(start)!;
 
         // --- Fast version ---
-        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep)
+        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep or WardenObjectiveType.Cryptomnesia)
         {
             BuildLayout_GatherTerminal_Fast(start);
 
@@ -86,25 +87,25 @@ public partial record LevelLayout
                     // start -> Hub -> end1,end2
                     (0.75, () =>
                     {
-                        startZone.GenCorridorGeomorph(level.Complex);
+                        start = level.GenCorridorGeomorph(start);
 
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
 
                         AddForwardExtractStart(hub);
 
                         if (Generator.Flip(0.4))
-                            hubZone.GenTGeomorph(level.Complex);
+                            hub = level.GenTGeomorph(hub);
                         else
-                            hubZone.GenHubGeomorph(level.Complex);
+                            hub = level.GenHubGeomorph(hub);
 
                         SetGatherTerminal(hub.ZoneNumber);
                         objective.PlacementNodes.Add(hub);
 
                         var (end1, end1Zone) = AddZone(hub);
-                        end1Zone.GenDeadEndGeomorph(level.Complex);
+                        end1 = level.GenDeadEndGeomorph(end1);
 
                         var (end2, end2Zone) = AddZone(hub);
-                        end2Zone.GenDeadEndGeomorph(level.Complex);
+                        end2 = level.GenDeadEndGeomorph(end2);
 
                         SetGatherTerminal(end1.ZoneNumber);
                         SetGatherTerminal(end2.ZoneNumber);
@@ -155,25 +156,25 @@ public partial record LevelLayout
                     // start -> Hub -> end1,end2
                     (0.30, () =>
                     {
-                        startZone.GenCorridorGeomorph(level.Complex);
+                        start = level.GenCorridorGeomorph(start);
 
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
 
                         AddForwardExtractStart(hub);
 
                         if (Generator.Flip(0.4))
-                            hubZone.GenTGeomorph(level.Complex);
+                            hub = level.GenTGeomorph(hub);
                         else
-                            hubZone.GenHubGeomorph(level.Complex);
+                            hub = level.GenHubGeomorph(hub);
 
                         SetGatherTerminal(hub.ZoneNumber);
                         objective.PlacementNodes.Add(hub);
 
                         var (end1, end1Zone) = AddZone(hub);
-                        end1Zone.GenDeadEndGeomorph(level.Complex);
+                        end1 = level.GenDeadEndGeomorph(end1);
 
                         var (end2, end2Zone) = AddZone(hub);
-                        end2Zone.GenDeadEndGeomorph(level.Complex);
+                        end2 = level.GenDeadEndGeomorph(end2);
 
                         SetGatherTerminal(end1.ZoneNumber);
                         SetGatherTerminal(end2.ZoneNumber);
@@ -184,7 +185,7 @@ public partial record LevelLayout
                     // Sensor fortress hub - sensors on all zones
                     (0.35, () =>
                     {
-                        startZone.GenCorridorGeomorph(level.Complex);
+                        start = level.GenCorridorGeomorph(start);
                         AddSecuritySensors(start);
 
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
@@ -192,20 +193,20 @@ public partial record LevelLayout
                         AddForwardExtractStart(hub);
 
                         if (Generator.Flip(0.4))
-                            hubZone.GenTGeomorph(level.Complex);
+                            hub = level.GenTGeomorph(hub);
                         else
-                            hubZone.GenHubGeomorph(level.Complex);
+                            hub = level.GenHubGeomorph(hub);
 
                         AddSecuritySensors(hub);
                         SetGatherTerminal(hub.ZoneNumber);
                         objective.PlacementNodes.Add(hub);
 
                         var (end1, end1Zone) = AddZone(hub);
-                        end1Zone.GenDeadEndGeomorph(level.Complex);
+                        end1 = level.GenDeadEndGeomorph(end1);
                         AddSecuritySensors(end1);
 
                         var (end2, end2Zone) = AddZone(hub);
-                        end2Zone.GenDeadEndGeomorph(level.Complex);
+                        end2 = level.GenDeadEndGeomorph(end2);
                         AddSecuritySensors(end2);
 
                         SetGatherTerminal(end1.ZoneNumber);
@@ -260,21 +261,21 @@ public partial record LevelLayout
                     // start -> Hub -> end1,end2,end3
                     (1.0, () =>
                     {
-                        startZone.GenCorridorGeomorph(level.Complex);
+                        start = level.GenCorridorGeomorph(start);
 
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(level.Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         SetGatherTerminal(hub.ZoneNumber);
                         objective.PlacementNodes.Add(hub);
 
                         var (end1, end1Zone) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_1" });
-                        end1Zone.GenDeadEndGeomorph(level.Complex);
+                        end1 = level.GenDeadEndGeomorph(end1);
 
                         var (end2, end2Zone) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_2" });
-                        end2Zone.GenDeadEndGeomorph(level.Complex);
+                        end2 = level.GenDeadEndGeomorph(end2);
 
                         var (end3, _) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_3" });
@@ -317,21 +318,21 @@ public partial record LevelLayout
                     // start -> Hub -> end1,end2,end3
                     (0.35, () =>
                     {
-                        startZone.GenCorridorGeomorph(level.Complex);
+                        start = level.GenCorridorGeomorph(start);
 
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(level.Complex);
+                        hub = level.GenHubGeomorph(hub);
 
                         SetGatherTerminal(hub.ZoneNumber);
                         objective.PlacementNodes.Add(hub);
 
                         var (end1, end1Zone) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_1" });
-                        end1Zone.GenDeadEndGeomorph(level.Complex);
+                        end1 = level.GenDeadEndGeomorph(end1);
 
                         var (end2, end2Zone) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_2" });
-                        end2Zone.GenDeadEndGeomorph(level.Complex);
+                        end2 = level.GenDeadEndGeomorph(end2);
 
                         var (end3, _) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_3" });
@@ -349,11 +350,11 @@ public partial record LevelLayout
                     // Sensor fortress hub - sensors on all zones (4 spawn)
                     (0.40, () =>
                     {
-                        startZone.GenCorridorGeomorph(level.Complex);
+                        start = level.GenCorridorGeomorph(start);
                         AddSecuritySensors(start);
 
                         var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        hubZone.GenHubGeomorph(level.Complex);
+                        hub = level.GenHubGeomorph(hub);
                         AddSecuritySensors(hub);
 
                         SetGatherTerminal(hub.ZoneNumber);
@@ -361,12 +362,12 @@ public partial record LevelLayout
 
                         var (end1, end1Zone) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_1" });
-                        end1Zone.GenDeadEndGeomorph(level.Complex);
+                        end1 = level.GenDeadEndGeomorph(end1);
                         AddSecuritySensors(end1);
 
                         var (end2, end2Zone) =
                             AddZone(hub, new ZoneNode { MaxConnections = 0, Branch = "find_terminal_2" });
-                        end2Zone.GenDeadEndGeomorph(level.Complex);
+                        end2 = level.GenDeadEndGeomorph(end2);
                         AddSecuritySensors(end2);
 
                         var (end3, _) =
@@ -485,10 +486,12 @@ public partial record LevelLayout
             FileContent = new Text(() =>
             {
                 var zones = string.Join(
-                    ", ",
-                    objective.PlacementNodes.Select(node => Intel.Zone(node, planner, underscore: true)));
+                    ",\n  ",
+                    objective.PlacementNodes
+                        .Select(node => Intel.Zone(node, planner, underscore: true))
+                        .Chunk(4)
+                        .Select(group => string.Join(", ", group)));
 
-                // TODO: deal with how we would gather 5. It will be longer than 43 chars
                 return $"-------------------------------------------\n" +
                        $"          Data redundancy system          \n\n" +
                        $"Backup decryption keys stored in mirror\n" +
@@ -506,7 +509,8 @@ public partial record LevelLayout
     /// <param name="distribution"></param>
     private void SetGatherTerminal(
         int zoneNumber,
-        ZonePlacementWeights? distribution = null)
+        ZonePlacementWeights? distribution = null,
+        DimensionIndex dimension = DimensionIndex.Reality)
     {
         var dataLayer = level.GetObjectiveLayerData(director.Bulkhead);
 
@@ -514,6 +518,7 @@ public partial record LevelLayout
         {
             new()
             {
+                Dimension = dimension,
                 LocalIndex = zoneNumber,
                 Weights = distribution ?? ZonePlacementWeights.EvenlyDistributed
             }

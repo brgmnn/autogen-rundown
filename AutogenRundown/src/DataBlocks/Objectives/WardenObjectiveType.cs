@@ -26,9 +26,30 @@ public enum WardenObjectiveType
 
     #region Autogen Custom objectives
 
+    /// <summary>
+    /// Modeled after R8E1 (and R8E2 in the future)
+    /// </summary>
     ReachKdsDeep = 20,            // K
 
-    EscapeToPortal = 21,          // E
+    /// <summary>
+    /// Modeled after R6D4
+    ///
+    /// Effectively a gather small items objective across dimensions
+    /// </summary>
+    Cryptomnesia = 21,            // C
+
+    EscapeToPortal = 22,          // E
+
+    /// <summary>
+    /// Carry the Matter Wave Projector to a portal in Reality, warp to a static
+    /// alpha dimension, find a custom alpha terminal, execute a backdoor command
+    /// to start a data transfer (error wave + countdown), then warp back to
+    /// Reality to extract.
+    ///
+    /// Internally serialized as SpecialTerminalCommand so the game handles the
+    /// terminal command input natively.
+    /// </summary>
+    AlphaTerminalCommand = 23,    // A
 
     #endregion
 }

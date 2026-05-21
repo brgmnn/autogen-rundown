@@ -96,6 +96,7 @@ Extreme is the **easier** secondary objective, typically done before Overload.
 - Lower difficulty scaling than same-tier Main
 - Players are often already depleted from Main when attempting
 - Should provide resources to help with Overload
+- **Must branch from a Reality zone** (game engine limitation — `BuildLayerFromData` has no dimension field, see [dimensions-setup-guide.md](dimensions-setup-guide.md#game-engine-limitations))
 
 **Zone Budget:** 4-8 zones
 
@@ -120,6 +121,7 @@ Overload is the **hardest** secondary objective, meant for experienced players.
 - Higher difficulty than same-tier Main
 - Often features apex alarms, bosses, or error alarms
 - Players are typically at lowest resources
+- **Must branch from a Reality zone** (same engine limitation as Extreme)
 
 **Zone Budget:** 3-6 zones
 

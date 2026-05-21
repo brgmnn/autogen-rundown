@@ -34,11 +34,11 @@ public partial record LevelLayout
 
         // portalZone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_portal_HA_01.prefab";
         // portalZone.CustomGeomorph = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_portal_HA_01.prefab";
-        portalZone.GenPortalGeomorph();
+        portal = level.GenPortalGeomorph(portal);
 
         var (mwp, mwpZone) = BuildChallenge_Small(portal);
 
-        mwpZone.GenMatterWaveProjectorGeomorph(level.Complex);
+        mwp = level.GenMatterWaveProjectorGeomorph(mwp);
         mwpZone.BigPickupDistributionInZone = BigPickupDistribution.MatterWaveProjector.PersistentId;
 
         mwpZone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer);
@@ -124,7 +124,7 @@ public partial record LevelLayout
         var startZone = planner.GetZone(start)!;
 
         // --- Fast version ---
-        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep)
+        if (level.MainDirector.Objective is WardenObjectiveType.ReachKdsDeep or WardenObjectiveType.Cryptomnesia)
         {
             BuildLayout_GatherSmallItems_Fast(start);
 
@@ -146,13 +146,13 @@ public partial record LevelLayout
                     // Double dead end
                     (0.12, () =>
                     {
-                        startZone.GenHubGeomorph(level.Complex);
+                        start = level.GenHubGeomorph(start);
 
                         var (end1, end1Zone) = AddZone(start);
-                        end1Zone.GenDeadEndGeomorph(level.Complex);
+                        end1 = level.GenDeadEndGeomorph(end1);
 
                         var (end2, end2Zone) = AddZone(start);
-                        end2Zone.GenDeadEndGeomorph(level.Complex);
+                        end2 = level.GenDeadEndGeomorph(end2);
 
                         objective.Gather_PlacementNodes.Add(end1);
                         objective.Gather_PlacementNodes.Add(end2);
@@ -223,7 +223,7 @@ public partial record LevelLayout
                     (0.2, () =>
                     {
                         (last, lastZone) = AddZone(start);
-                        lastZone.GenDeadEndGeomorph(level.Complex);
+                        last = level.GenDeadEndGeomorph(last);
                         objective.Gather_PlacementNodes.Add(last);
                     }),
 
@@ -247,7 +247,7 @@ public partial record LevelLayout
                     (0.3, () =>
                     {
                         (last, lastZone) = AddZone(start);
-                        lastZone.GenDeadEndGeomorph(level.Complex);
+                        last = level.GenDeadEndGeomorph(last);
                         objective.Gather_PlacementNodes.Add(last);
                     }),
 
@@ -290,32 +290,32 @@ public partial record LevelLayout
                     {
                         if (objective.GatherRequiredCount <= 7)
                         {
-                            startZone.GenHubGeomorph(level.Complex);
+                            start = level.GenHubGeomorph(start);
 
                             var (end1, end1Zone) = AddZone(start);
-                            end1Zone.GenDeadEndGeomorph(level.Complex);
+                            end1 = level.GenDeadEndGeomorph(end1);
 
                             var (end2, end2Zone) = AddZone(start);
-                            end2Zone.GenDeadEndGeomorph(level.Complex);
+                            end2 = level.GenDeadEndGeomorph(end2);
 
                             objective.Gather_PlacementNodes.Add(end1);
                             objective.Gather_PlacementNodes.Add(end2);
                         }
                         else
                         {
-                            startZone.GenCorridorGeomorph(level.Complex);
+                            start = level.GenCorridorGeomorph(start);
 
                             var (hub, hubZone) = AddZone(start);
-                            hubZone.GenHubGeomorph(level.Complex);
+                            hub = level.GenHubGeomorph(hub);
 
                             var (end1, end1Zone) = AddZone(hub);
-                            end1Zone.GenDeadEndGeomorph(level.Complex);
+                            end1 = level.GenDeadEndGeomorph(end1);
 
                             var (end2, end2Zone) = AddZone(hub);
-                            end2Zone.GenDeadEndGeomorph(level.Complex);
+                            end2 = level.GenDeadEndGeomorph(end2);
 
                             var (end3, end3Zone) = AddZone(hub);
-                            end3Zone.GenDeadEndGeomorph(level.Complex);
+                            end3 = level.GenDeadEndGeomorph(end3);
 
                             objective.Gather_PlacementNodes.Add(end1);
                             objective.Gather_PlacementNodes.Add(end2);
@@ -348,7 +348,7 @@ public partial record LevelLayout
                     {
                         (last, lastZone) = BuildChallenge_KeycardInSide(start);
 
-                        var keycard = planner.GetLastNode(director.Bulkhead, "keycard");
+                        var keycard = planner.GetLastNode(director.Bulkhead, "keycard", dimension: Dimension);
                         var (second, _) = AddZone(keycard);
 
                         objective.Gather_PlacementNodes.Add(last);
@@ -371,7 +371,7 @@ public partial record LevelLayout
                         objective.Gather_PlacementNodes.Add(last);
 
                         if (Generator.Flip(0.4))
-                            lastZone.GenDeadEndGeomorph(level.Complex);
+                            last = level.GenDeadEndGeomorph(last);
                     }),
 
                     // Single boss fight
@@ -416,14 +416,14 @@ public partial record LevelLayout
                         objective.Gather_PlacementNodes.Add(last);
 
                         if (Generator.Flip(0.4))
-                            lastZone.GenDeadEndGeomorph(level.Complex);
+                            last = level.GenDeadEndGeomorph(last);
                     }),
 
                     // Fetch from the second room, but it's a dead end
                     (0.2, () =>
                     {
                         (last, lastZone) = AddZone(start);
-                        lastZone.GenDeadEndGeomorph(level.Complex);
+                        last = level.GenDeadEndGeomorph(last);
 
                         objective.Gather_PlacementNodes.Add(last);
                     }),
@@ -457,7 +457,7 @@ public partial record LevelLayout
                     // stealth big hub full of infected enemies
                     (0.20, () =>
                     {
-                        startZone.GenHubGeomorph(level.Complex);
+                        start = level.GenHubGeomorph(start);
                         start = AddStealth_Infested(start);
 
                         objective.Gather_PlacementNodes.Add(start);
@@ -517,32 +517,32 @@ public partial record LevelLayout
                     {
                         if (objective.GatherRequiredCount < 10)
                         {
-                            startZone.GenHubGeomorph(level.Complex);
+                            start = level.GenHubGeomorph(start);
 
                             var (end1, end1Zone) = AddZone(start);
-                            end1Zone.GenDeadEndGeomorph(level.Complex);
+                            end1 = level.GenDeadEndGeomorph(end1);
 
                             var (end2, end2Zone) = AddZone(start);
-                            end2Zone.GenDeadEndGeomorph(level.Complex);
+                            end2 = level.GenDeadEndGeomorph(end2);
 
                             objective.Gather_PlacementNodes.Add(end1);
                             objective.Gather_PlacementNodes.Add(end2);
                         }
                         else
                         {
-                            startZone.GenCorridorGeomorph(level.Complex);
+                            start = level.GenCorridorGeomorph(start);
 
                             var (hub, hubZone) = AddZone(start);
-                            hubZone.GenHubGeomorph(level.Complex);
+                            hub = level.GenHubGeomorph(hub);
 
                             var (end1, end1Zone) = AddZone(hub);
-                            end1Zone.GenDeadEndGeomorph(level.Complex);
+                            end1 = level.GenDeadEndGeomorph(end1);
 
                             var (end2, end2Zone) = AddZone(hub);
-                            end2Zone.GenDeadEndGeomorph(level.Complex);
+                            end2 = level.GenDeadEndGeomorph(end2);
 
                             var (end3, end3Zone) = AddZone(hub);
-                            end3Zone.GenDeadEndGeomorph(level.Complex);
+                            end3 = level.GenDeadEndGeomorph(end3);
 
                             objective.Gather_PlacementNodes.Add(end1);
                             objective.Gather_PlacementNodes.Add(end2);
@@ -601,7 +601,7 @@ public partial record LevelLayout
                     {
                         (last, lastZone) = BuildChallenge_KeycardInSide(start, 3);
 
-                        var keycard = planner.GetLastNode(director.Bulkhead, "keycard");
+                        var keycard = planner.GetLastNode(director.Bulkhead, "keycard", dimension: Dimension);
                         var (second, _) = AddZone(keycard);
 
                         objective.Gather_PlacementNodes.Add(last);
@@ -723,7 +723,7 @@ public partial record LevelLayout
                     // stealth big hub full of infected enemies
                     (0.30, () =>
                     {
-                        startZone.GenHubGeomorph(level.Complex);
+                        start = level.GenHubGeomorph(start);
                         start = AddStealth_Infested(start);
 
                         objective.Gather_PlacementNodes.Add(start);
@@ -767,7 +767,7 @@ public partial record LevelLayout
 
                         objective.Gather_PlacementNodes.Add(nodes.Last());
 
-                        midZone.GenCorridorGeomorph(level.Complex);
+                        mid = level.GenCorridorGeomorph(mid);
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -790,8 +790,7 @@ public partial record LevelLayout
                             (passwordStart) =>
                             {
                                 var midNodes = AddBranch_Forward(passwordStart, 2);
-                                var corridor = planner.GetZone(midNodes.First())!;
-                                corridor.GenCorridorGeomorph(level.Complex);
+                                var corridorNode = level.GenCorridorGeomorph(midNodes.First());
 
                                 var (password, passwordZone) = BuildChallenge_KeycardInSide(midNodes.Last());
                                 objective.Gather_PlacementNodes.Add(password);
@@ -800,7 +799,7 @@ public partial record LevelLayout
                             });
 
                         objective.Gather_PlacementNodes.Add(last);
-                        lastZone.GenDeadEndGeomorph(level.Complex);
+                        last = level.GenDeadEndGeomorph(last);
                     }),
 
                     // Keycard to Apex alarm
@@ -811,7 +810,7 @@ public partial record LevelLayout
 
                         objective.Gather_PlacementNodes.Add(nodes.Last());
 
-                        midZone.GenCorridorGeomorph(level.Complex);
+                        mid = level.GenCorridorGeomorph(mid);
 
                         var (mid2, mid2Zone) = AddZone(mid, new ZoneNode { Branch = "primary" });
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
@@ -935,7 +934,7 @@ public partial record LevelLayout
                     // stealth big hub full of infected enemies
                     (0.30, () =>
                     {
-                        startZone.GenHubGeomorph(level.Complex);
+                        start = level.GenHubGeomorph(start);
                         start = AddStealth_Infested(start);
 
                         objective.Gather_PlacementNodes.Add(start);
@@ -985,7 +984,7 @@ public partial record LevelLayout
 
                         objective.Gather_PlacementNodes.Add(mid);
                         objective.Gather_PlacementNodes.Add(
-                            planner.GetZones(director.Bulkhead, null)
+                            planner.GetZones(director.Bulkhead, null, dimension: Dimension)
                                 .Where(node => node != mid)
                                 .PickRandom());
                     }),
@@ -1003,7 +1002,7 @@ public partial record LevelLayout
 
                         objective.Gather_PlacementNodes.Add(mid);
                         objective.Gather_PlacementNodes.Add(
-                            planner.GetZones(director.Bulkhead, null)
+                            planner.GetZones(director.Bulkhead, null, dimension: Dimension)
                                 .Where(node => node != mid)
                                 .PickRandom());
                     }),
@@ -1016,7 +1015,7 @@ public partial record LevelLayout
                             Branch = "primary",
                             MaxConnections = 3
                         });
-                        preludeZone.GenTGeomorph(level.Complex);
+                        prelude = level.GenTGeomorph(prelude);
 
                         var (locked, _) = AddZone(prelude);
                         var cellZones = AddBranch_Side(prelude, 3, "power_cell");
@@ -1033,11 +1032,11 @@ public partial record LevelLayout
                     {
                         // Update number of connections for hub zone
                         planner.UpdateNode(start with { MaxConnections = 3 });
-                        startZone.GenHubGeomorph(level.Complex);
+                        start = level.GenHubGeomorph(start);
 
                         // Second area, with also a locked zone
                         var (items1, items1Zone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
-                        items1Zone.GenHubGeomorph(level.Complex);
+                        items1 = level.GenHubGeomorph(items1);
 
                         var keycard1 = AddBranch(start, 1, "keycard_1").Last();
 

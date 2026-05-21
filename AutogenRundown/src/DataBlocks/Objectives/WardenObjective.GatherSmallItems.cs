@@ -113,6 +113,7 @@ public partial record WardenObjective
         var placements = Gather_PlacementNodes
             .Select(node => new ZonePlacementData()
             {
+                Dimension = node.Dimension,
                 LocalIndex = node.ZoneNumber,
                 Weights = ZonePlacementWeights.EvenlyDistributed
             }).ToList();

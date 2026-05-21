@@ -1,4 +1,6 @@
-﻿namespace AutogenRundown.DataBlocks.Objectives;
+﻿using AutogenRundown.DataBlocks.Enums;
+
+namespace AutogenRundown.DataBlocks.Objectives;
 
 // Find strings with: \[\w+_\w+\]
 public class Lore
@@ -35,12 +37,8 @@ public class Lore
     /// <param name="zoneNumber"></param>
     /// <param name="itemIndex"></param>
     /// <returns></returns>
-    public static string TerminalSerial(string dimension, Bulkhead bulkhead, int zoneNumber, int itemIndex = 0)
+    public static string TerminalSerial(DimensionIndex dimension, Bulkhead bulkhead, int zoneNumber, int itemIndex = 0)
     {
-        var dimensionIndex = dimension switch
-        {
-            _ => 0
-        };
         var layer = bulkhead switch
         {
             Bulkhead.Main => 0,
@@ -49,7 +47,7 @@ public class Lore
             _ => 0
         };
 
-        return $"[TERMINAL_{dimensionIndex}_{layer}_{zoneNumber}_{itemIndex}]";
+        return $"[TERMINAL_{(int)dimension}_{layer}_{zoneNumber}_{itemIndex}]";
     }
 
     /// <summary>
