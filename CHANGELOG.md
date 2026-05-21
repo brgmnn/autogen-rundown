@@ -3,6 +3,68 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v1.0.0 – Dimensions & Pablo](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.0) — May 20, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+This release is a big milestone for AutogenRundown as it is now fully released. The major elements from the base game are represented in the mod with a diverse set of generation to meet the original goal of the mod: a replayable vanilla+ GTFO experience. Development will continue, there's still many things to improve and fix, but the main mod is complete. See the README for the list of base game features present in Autogen. Thank you all!
+
+### New
+
+* 🌟 Added Dimensions! 🖼️ 
+* 🌟 New Custom Objective added: "AlphaTerminalObjective"
+  * A recreation of several levels such as R6B1 "Hexahedrons"
+  * This is a `SpecialTerminalCommand` objective where the terminal is in one of the Alpha static dimensions, and players must get to the portal room with the Matter Wave Projector to teleport there
+  * Once in one of the Alpha dimensions, players must find a terminal and execute a command before successfully getting back to extract
+* 🌟 New Custom Objective added: "Cryptomnesia"
+  * Recreation of R6D4 level of the same name
+  * This a `GatherSmallItems` objective for Tampered Data Cubes with each data cube distributed across a different dimension
+* 🌟 Added Immortal Tank (Pablo) enemy
+  * The Immortal only spawns in a limited number of specific situations, in the new objectives
+  * Level design is done to avoid having any players need to babysit the Immortal
+* 🌟 Added Big Flyer (Meatball) enemy
+  * Currently only appears in the alpha (desert) dimension where it can path normally without issues
+* Enable several previously unused custom geomorphs now that scan distance is based on nav distance rather than geometric distance
+  * Mining hub: `Assets/Custom Geo's/Digsite/digsite_x_tile_1/digsite_x_tile_1.prefab`
+  * Service hub: `Assets/Custom Geo's/Floodways_x_tile_4/floodway_x_tile_4.prefab`
+  * Service hub: `Assets/Custom Geo's/Floodways_HUB/Floodways_hub.prefab` 
+* Spitters added to many levels 💀
+  * Chance for Spitters to be spawned on levels flagged as infectious, with each zone rolled for Spitter spawns.
+
+### Changes
+
+* Balance: Disinfection zones no longer spawn scouts
+  * Previously they could be quite punishing if spawning with scouts and blood door in a single zone
+* Balance: Adjusted Class VIII (8) through Class XII (12) alarms distance between components:
+  * Distance from start to first scan reduced from `20` to `0`. Very first scan now always starts at the door.
+  * Distance between scans reduced by 33% from `35` to `23`
+  * These scans were not adjusted after the scan placement rework in <b>[v0.83.0 – Travel Scans
+](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.83.0)</b>
+* Change: Adjust `PowerCellDistribution` level layouts on Main only missions where levels were too short
+* Change: D-Lock Block Decipherer logs can now spawn on fixed spawn terminals
+* Change: Added cross layer seed re-rolling to level rebuilds
+  * Should allow better generation for secondary/overload failures
+* Change: Filtered out many questionable words from the code list for Terminal Uplinks / Reactor Codes / Passwords etc.
+* Change: Reworked Dead-end zones for Apex Alarms / King of the Hill scans to force them to always have two rooms to allow enemies to spawn in them
+  * These alarms should now be harder to defend with enemies able to spawn from multiple directions
+* Change: Removed sound played when cycling in room security sensors
+  * The on/off sound played globally, causing players to hear this throughout the level even if they are nowhere near the room with the cycling sensors. The sound has been removed for now until appropriate local sounds can be replaced
+* Fix: Added more D-Lock Block Decipherer logs migrations for when levels are re-rolled
+* Fix: Some king of the hill terminals would collide with other scenery
+* Fix: King of the hill terminals would sometimes be just a screen and keyboard on the floor instead of a full terminal
+* Fix: `GatherTerminal` log file listing zones formatting issue when more than 4 zones are present
+* Fix: `UplinkTerminal` intel adjusted for single terminal objective missions
+* Fix: Issue with forward extracts sometimes being placed in dead end zones that would fail level generation
+* Fix: Security sensors getting stuck on if cycling while an alarm is completed
+* Fix: Travel Scans overwriting parent zone tiles causing levels to fail to build
+* Fix: Numerous other small level generation issues
+* Fix: Removed T-Junction geo from the hub geo list
+  * This was causing some level generation to always fail when attempting to build more forward zones than the T-Junction can handle 
+* Fix: Zone intel message in `RetrieveBigItems` objective
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.83.7...v1.0.0
+
+
 ## [v0.83.7](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.83.7) — April 27, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
