@@ -474,6 +474,8 @@ public partial class BuildDirector_Tests
     {
         var allValid = new HashSet<WardenObjectiveType>(BaseObjectives);
         allValid.Add(WardenObjectiveType.ReachKdsDeep);
+        allValid.Add(WardenObjectiveType.Cryptomnesia);
+        allValid.Add(WardenObjectiveType.AlphaTerminalCommand);
 
         // Test across different configurations
         var configs = new[]
