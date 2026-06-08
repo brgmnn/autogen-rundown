@@ -1139,6 +1139,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             return;
 
         var targetCount = isHeavy ? Generator.Between(4, 6) : Generator.Between(2, 4);
+
         if (targetCount > candidates.Count)
             targetCount = candidates.Count;
 
@@ -1150,15 +1151,15 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             var baseCount = isHeavy
                 ? Generator.Select(new List<(double, int)>
                 {
-                    (0.20, 100),
-                    (0.50, 150),
-                    (0.30, 250),
+                    (0.20, 66),
+                    (0.50, 100),
+                    (0.30, 167),
                 })
                 : Generator.Select(new List<(double, int)>
                 {
-                    (0.30, 50),
-                    (0.50, 100),
-                    (0.20, 150),
+                    (0.30, 33),
+                    (0.50, 66),
+                    (0.20, 100),
                 });
 
             var finalCount = (int)(baseCount * density);
