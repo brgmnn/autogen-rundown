@@ -1121,7 +1121,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         if (modifiers.Contains(LevelModifiers.NoSpitters))
             return;
 
-        var density = modifiers.Contains(LevelModifiers.ManySpitters) ? 2.0 : 1.0;
+        var density = modifiers.Contains(LevelModifiers.ManySpitters) ? 1.5 : 1.0;
 
         var nodes = level.Planner.GetZones(director.Bulkhead, null, Dimension).ToList();
         if (nodes.Count <= 1)
