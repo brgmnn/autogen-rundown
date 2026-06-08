@@ -3,6 +3,18 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v1.0.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.1) — June 07, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Reduced base spitter counts by 33%
+* Reduced `ManySpitters` modifier from 2x spitters to 1.5x spitters
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v1.0.0...v1.0.1
+
+
 ## [v1.0.0 – Dimensions & Pablo](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.0) — May 20, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
