@@ -215,8 +215,12 @@ public partial class Level
     {
         var maxConnections = Complex == Complex.Mining ? 1 : 0;
 
+        var parent = (ZoneNode)Planner.GetParent(node)!;
+        var parentZone = Planner.GetZone(parent)!;
+
         var zone = Planner.GetZone(node)!;
         zone.GenPortalGeomorph();
+        zone.Altitude = parentZone.Altitude;
 
         node = node with { MaxConnections = maxConnections };
         Planner.UpdateNode(node);
