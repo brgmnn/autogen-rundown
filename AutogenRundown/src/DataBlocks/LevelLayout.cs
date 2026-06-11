@@ -1192,20 +1192,35 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         {
             var zone = level.Planner.GetZone(node);
 
-            if (zone != null)
+            if (zone == null)
+                continue;
+
+            var parent = level.Planner.GetParent(node);
+
+            if (parent != null)
             {
-                if (node.Branch == "primary")
-                    zone.ZoneExpansion = direction.Forward;
+                var parentZone = level.Planner.GetZone((ZoneNode)parent)!;
 
-                Zones.Add(zone);
-
-                Plugin.Logger.LogDebug(
-                    $"{Name} -- Zone_{zone.LocalIndex} " +
-                    $"number={ZoneAliasStart + zone.LocalIndex} " +
-                    $"pid={zone.PersistentId} -- " +
-                    $"branch={node.Branch} -- " +
-                    $"Lights={zone.LightSettings}, InFog={zone.InFog}, Tags={node.Tags}");
+                if (parentZone.CustomGeomorph is
+                    "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_portal_HA_01.prefab" or
+                    "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_portal_HA_01.prefab")
+                {
+                    Plugin.Logger.LogDebug($"Fixed forward zone altitude for parent portal zone: {node}");
+                    zone.Altitude = parentZone.Altitude;
+                }
             }
+
+            if (node.Branch == "primary")
+                zone.ZoneExpansion = direction.Forward;
+
+            Zones.Add(zone);
+
+            Plugin.Logger.LogDebug(
+                $"{Name} -- Zone_{zone.LocalIndex} " +
+                $"number={ZoneAliasStart + zone.LocalIndex} " +
+                $"pid={zone.PersistentId} -- " +
+                $"branch={node.Branch} -- " +
+                $"Lights={zone.LightSettings}, InFog={zone.InFog}, Tags={node.Tags}");
         }
 
         RollAlarms();
