@@ -63,15 +63,15 @@ public partial record LevelLayout
                 Lights.Light.BlueToGreen_1
             });
 
-        // Add mother egg sacks to the zone
+        // TODO: randomize the distribution blends etc.
         zone.StaticSpawnDataContainers.Add(
             new StaticSpawnDataContainer
             {
                 Count = spitters,
                 DistributionWeightType = 0,
-                DistributionWeight = 1.0,
-                DistributionRandomBlend = 0.0,
-                DistributionResultPow = 2.0,
+                DistributionWeight = 0.5,
+                DistributionRandomBlend = 1.0,
+                DistributionResultPow = 0.0,
                 Unit = StaticSpawnUnit.Spitter,
                 FixedSeed = Generator.Between(10, 150)
             });
