@@ -42,9 +42,9 @@ public partial record LevelLayout
             {
                 Count = eggSacks,
                 DistributionWeightType = 0,
-                DistributionWeight = 1.0,
-                DistributionRandomBlend = 0.0,
-                DistributionResultPow = 2.0,
+                DistributionWeight = 0.5,
+                DistributionRandomBlend = 1.0,
+                DistributionResultPow = 0.0,
                 Unit = StaticSpawnUnit.EggSack,
                 FixedSeed = 121
             });
