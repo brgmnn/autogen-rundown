@@ -87,13 +87,10 @@ internal static class Fix_SpitterBotAggro
         var num2 = 8.5f;
         var num3 = 0.0f;
 
-        var agents = PlayerManager.PlayerAgentsInLevel;
         var coverage = courseNode.m_playerCoverage.m_coverageDatas;
 
-        for (var index = 0; index < agents.Count; ++index)
+        foreach (var playerAgent in PlayerManager.PlayerAgentsInLevel)
         {
-            var playerAgent = agents[index];
-
             // Bots are invisible to spitters
             if (playerAgent?.Owner == null || playerAgent.Owner.IsBot)
                 continue;
