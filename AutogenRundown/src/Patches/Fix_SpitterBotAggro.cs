@@ -99,6 +99,7 @@ internal static class Fix_SpitterBotAggro
             // bounds check replaces vanilla's hard cap of 4 and covers >4-slot
             // lobbies where the coverage arrays were not expanded.
             var slot = playerAgent.PlayerSlotIndex;
+
             if (slot < 0 || slot >= coverage.Length)
                 continue;
 
@@ -110,12 +111,15 @@ internal static class Fix_SpitterBotAggro
                 vector3.Normalize();
                 var num5 = 0.0f;
                 var flag4 = false;
+
                 if (playerAgent.HasDetectionMod(out var distance) && magnitude < distance)
                 {
                     num5 = playerAgent.GetDetectionMod(vector3, magnitude);
                     flag4 = num5 > 1f / 1000f;
                 }
+
                 var flag5 = !flag2 && magnitude < num2;
+
                 // Precedence matches vanilla IL: flag5 | (flag4 && dot && !linecast)
                 if (flag5 | flag4
                     && Vector3.Dot(s.m_fwd, vector3) >= -0.5f
@@ -148,6 +152,7 @@ internal static class Fix_SpitterBotAggro
             s.m_timeToExplode = 3f;
             s.StopPurring();
             s.m_stayInTimer -= localDelta;
+
             if (s.m_stayInTimer < 0f)
             {
                 s.m_stayInTimer = 0f;
@@ -169,6 +174,7 @@ internal static class Fix_SpitterBotAggro
                 var num7 = num3 > 5f ? 3f : 1f;
                 s.m_timeToExplode -= localDelta * (num6 * num6 * 6.5f) * num7;
                 s.UpdateTargetingRetraction();
+
                 if (!s.m_purrLoopPlaying)
                 {
                     s.TryPlaySound(EVENTS.INFECTION_SPITTER_PURR_LOOP, false, 1f);
@@ -200,12 +206,14 @@ internal static class Fix_SpitterBotAggro
                         s.m_isSoundOut = false;
                         s.TryPlaySound(EVENTS.INFECTION_SPITTER_IN, true, 1f);
                     }
+
                     s.SetRetractTarget(0.5f, s.m_retractSpeed);
                 }
             }
         }
 
         s.m_lightMeasure = Mathf.Clamp01(s.m_lightMeasure - localDelta * 0.25f);
+
         return flag1;
     }
 }
