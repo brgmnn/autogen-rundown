@@ -14,12 +14,26 @@ namespace AutogenRundown.Patches;
 /// spitter wake it, run down its trigger timer, and (on the host) explode it —
 /// causing infection damage and a noise event that wakes sleepers.
 ///
-/// IL2CPP forbids transpilers, so this prefix skips the original and faithfully
-/// reimplements the method body (decompile reference:
-/// gtfo-decompile/Modules-ASM/InfectionSpitter.cs:183-301) with a single added
-/// Owner.IsBot skip in the player loop. Explosions are master-only (SNet.IsMaster
-/// gate before SendExplode), so the patch is only load-bearing on the host; on
-/// clients it just keeps the cosmetic wake/purr state consistent.
+/// IL2CPP forbids transpilers, so this prefix skips the original and reimplements
+/// the method body (decompile reference:
+/// gtfo-decompile/Modules-ASM/InfectionSpitter.cs:183-301). Intentional
+/// divergences from vanilla, all in the player loop:
+///
+/// 1. Bots (Owner.IsBot) are skipped entirely.
+/// 2. Vanilla caps the loop at the first 4 entries of PlayerAgentsInLevel
+///    (m_coverageDatas is sized [4]). The cap is lifted so spitters also react
+///    to humans in slots 5+ when LobbyExpansion is installed (it expands the
+///    coverage arrays to MaxPlayers but does not patch this method).
+/// 3. Coverage is read per PlayerSlotIndex instead of per list position.
+///    PlayerCoverageSystem.GamestateUpdate writes coverage at the slot index
+///    (propagator.m_playerID = Owner.PlayerSlotIndex()), so the vanilla
+///    list-position read is only correct while list order matches slot order.
+///    The slot is bounds-checked against the coverage array, which also keeps
+///    us safe if LobbyExpansion's native array-expansion patch fails to apply.
+///
+/// Explosions are master-only (SNet.IsMaster gate before SendExplode), so the
+/// patch is only load-bearing on the host; on clients it just keeps the cosmetic
+/// wake/purr state consistent.
 ///
 /// The damage (OnIncomingDamage) and glue (OnIncomingGlue) explode paths are
 /// untouched.
@@ -73,19 +87,25 @@ internal static class Fix_SpitterBotAggro
         var num2 = 8.5f;
         var num3 = 0.0f;
 
-        var num4 = PlayerManager.PlayerAgentsInLevel.Count;
-        if (num4 > 4)
-            num4 = 4;
+        var agents = PlayerManager.PlayerAgentsInLevel;
+        var coverage = courseNode.m_playerCoverage.m_coverageDatas;
 
-        for (var index = 0; index < num4; ++index)
+        for (var index = 0; index < agents.Count; ++index)
         {
-            var playerAgent = PlayerManager.PlayerAgentsInLevel[index];
+            var playerAgent = agents[index];
 
-            // The only change from vanilla: bots are invisible to spitters
+            // Bots are invisible to spitters
             if (playerAgent?.Owner == null || playerAgent.Owner.IsBot)
                 continue;
 
-            if (courseNode.m_playerCoverage.m_coverageDatas[index].m_nodeDistanceUnblocked < 2 && playerAgent.Alive)
+            // Coverage is written per slot index, not per list position. The
+            // bounds check replaces vanilla's hard cap of 4 and covers >4-slot
+            // lobbies where the coverage arrays were not expanded.
+            var slot = playerAgent.PlayerSlotIndex;
+            if (slot < 0 || slot >= coverage.Length)
+                continue;
+
+            if (coverage[slot].m_nodeDistanceUnblocked < 2 && playerAgent.Alive)
             {
                 flag1 = true;
                 var vector3 = playerAgent.EyePosition - s.m_position;
