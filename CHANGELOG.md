@@ -3,6 +3,20 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v1.0.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.2) — June 11, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Change: Bots now no longer trigger spitters
+* Fix: Incorrect spitter distribution values would cause all spitters to cluster in the final zone. Spitters are now more evenly distributed across zones that contain them
+  * Also applied the same distribution values fix to mother egg sacks spawns in mother zones
+* Fix: Portal zones now always have the same altitude as their parent zone and forward zone, stopping them from becoming soft locked by their geometry being incompatible with altitude transition gates 
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v1.0.1...v1.0.2
+
+
 ## [v1.0.1](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.1) — June 07, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
