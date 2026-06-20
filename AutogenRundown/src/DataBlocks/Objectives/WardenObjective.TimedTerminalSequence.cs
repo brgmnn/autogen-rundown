@@ -138,11 +138,14 @@ public partial record WardenObjective
 
         // Add event to unlock error alarm disable (if we have the timed terminal error off zone)
         if (turnOff.Any())
-            EventsOnGotoWin.Add(new WardenObjectiveEvent
-                {
-                    Type = WardenObjectiveEventType.UnlockSecurityDoor,
-                    LocalIndex = turnOff.First().ZoneNumber
-                });
+        {
+            var locked = turnOff.First();
+
+            EventsOnGotoWin.AddUnlockDoor(
+                bulkhead: locked.Bulkhead,
+                zoneIndex: locked.ZoneNumber,
+                delay: 1.0);
+        }
     }
 
     private void PostBuildIntel_TimedTerminalSequence(Level level)
