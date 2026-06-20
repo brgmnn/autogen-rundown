@@ -183,10 +183,10 @@ public partial record LevelLayout
     /// <param name="start"></param>
     /// <param name="sideZones"></param>
     /// <returns></returns>
-    public (ZoneNode, Zone) BuildChallenge_LockedTerminalDoor(ZoneNode start, int sideZones = 0)
+    public (ZoneNode, Zone) BuildChallenge_LockedTerminalDoor(ZoneNode start, int sideZones = 0, ZoneNode? terminal = null)
     {
         var (end, endZone) = AddZone(start, new ZoneNode());
-        var terminal = start;
+        terminal ??= start;
 
         if (sideZones > 0)
         {
@@ -196,7 +196,7 @@ public partial record LevelLayout
             terminal = AddBranch(start, sideZones, "terminal_door_unlock").Last();
         }
 
-        AddTerminalUnlockPuzzle(end, terminal);
+        AddTerminalUnlockPuzzle(end, (ZoneNode)terminal);
 
         return (end, endZone);
     }

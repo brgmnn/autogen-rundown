@@ -189,6 +189,8 @@ public partial record LevelLayout
                 reactorNode = reactor;
                 reactorDefinition.ZoneNumber = reactor.ZoneNumber;
 
+                var reactorParent = planner.GetParent(reactor)!;
+
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Direct password: Reactor → 1 zone → PasswordTerminal
@@ -209,7 +211,7 @@ public partial record LevelLayout
                     // Locked terminal: Reactor → LockedTerminalDoor(0) → PasswordTerminal
                     (0.25, () =>
                     {
-                        var (end, _) = BuildChallenge_LockedTerminalDoor(reactor, 0);
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(reactor, terminal: reactorParent);
                         var nodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
                     }),
@@ -232,6 +234,8 @@ public partial record LevelLayout
                 reactorNode = reactor;
                 reactorDefinition.ZoneNumber = reactor.ZoneNumber;
 
+                var reactorParent = planner.GetParent(reactor)!;
+
                 Generator.SelectRun(new List<(double, Action)>
                 {
                     // Generator-in-zone: Reactor → transition → GeneratorCellInZone → PasswordTerminal
@@ -246,7 +250,7 @@ public partial record LevelLayout
                     // Locked terminal: Reactor → LockedTerminalDoor(0) → PasswordTerminal
                     (0.50, () =>
                     {
-                        var (end, _) = BuildChallenge_LockedTerminalDoor(reactor, 0);
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(reactor, terminal: reactorParent);
                         var nodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, nodes.Last());
                     }),

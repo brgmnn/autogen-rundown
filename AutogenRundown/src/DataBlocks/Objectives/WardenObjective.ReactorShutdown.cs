@@ -134,7 +134,7 @@ public partial record WardenObjective
     private void PreBuild_ReactorShutdown(BuildDirector director, Level level)
     {
         // We have to set the persistent ID later
-        LayoutDefinitions = new LayoutDefinitions()
+        LayoutDefinitions = new LayoutDefinitions
         {
             Name = $"{level.Tier}{level.Index}_{director.Bulkhead}",
             Type = ExtraObjectiveSetupType.ReactorShutdown,
