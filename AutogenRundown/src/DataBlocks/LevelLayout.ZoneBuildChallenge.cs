@@ -182,8 +182,12 @@ public partial record LevelLayout
     /// </summary>
     /// <param name="start"></param>
     /// <param name="sideZones"></param>
+    /// <param name="terminal">If side zones is 0, this sets which zone to place the terminal</param>
     /// <returns></returns>
-    public (ZoneNode, Zone) BuildChallenge_LockedTerminalDoor(ZoneNode start, int sideZones = 0, ZoneNode? terminal = null)
+    public (ZoneNode, Zone) BuildChallenge_LockedTerminalDoor(
+        ZoneNode start,
+        int sideZones = 0,
+        ZoneNode? terminal = null)
     {
         var (end, endZone) = AddZone(start, new ZoneNode());
         terminal ??= start;
