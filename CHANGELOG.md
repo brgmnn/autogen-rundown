@@ -3,6 +3,18 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v1.0.3](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.3) — June 20, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fix: Some terminals that unlock doors in reactor missions were not spawning
+* Fix: `TimedTerminalSequence` alarm control zone not unlocking in Secondary / Overload objectives
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v1.0.2...v1.0.3
+
+
 ## [v1.0.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.2) — June 11, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
