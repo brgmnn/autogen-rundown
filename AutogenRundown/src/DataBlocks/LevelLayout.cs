@@ -1151,15 +1151,15 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             var baseCount = isHeavy
                 ? Generator.Select(new List<(double, int)>
                 {
-                    (0.20, 15),
-                    (0.50, 25),
-                    (0.30, 60),
+                    (0.20,  0),
+                    (0.50,  8),
+                    (0.30, 30),
                 })
                 : Generator.Select(new List<(double, int)>
                 {
-                    (0.30, 8),
-                    (0.50, 20),
-                    (0.20, 66),
+                    (0.30, 0),
+                    (0.50, 5),
+                    (0.20, 20),
                 });
 
             var finalCount = (int)(baseCount * density);
@@ -1174,8 +1174,11 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 spitters: finalCount,
                 setLights: Generator.Flip(isHeavy ? 0.4 : 0.7));
 
-            if (finalCount < 100)
+            if (finalCount < 10)
                 zone.LightSettings = originalLights;
+
+            if (finalCount > 20)
+                zone.DisinfectPacks += 1.0;
 
             perZoneCounts.Add(finalCount);
         }

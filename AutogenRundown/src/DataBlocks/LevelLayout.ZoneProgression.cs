@@ -63,18 +63,21 @@ public partial record LevelLayout
                 Lights.Light.BlueToGreen_1
             });
 
+        var fixedSeed = Generator.Between(10, 150);
+
         // TODO: randomize the distribution blends etc.
-        zone.StaticSpawnDataContainers.Add(
-            new StaticSpawnDataContainer
-            {
-                Count = spitters,
-                DistributionWeightType = 0,
-                DistributionWeight = 0.5,
-                DistributionRandomBlend = 1.0,
-                DistributionResultPow = 0.0,
-                Unit = StaticSpawnUnit.Spitter,
-                FixedSeed = Generator.Between(10, 150)
-            });
+        if (spitters > 0)
+            zone.StaticSpawnDataContainers.Add(
+                new StaticSpawnDataContainer
+                {
+                    Count = spitters,
+                    DistributionWeightType = 0,
+                    DistributionWeight = 0.5,
+                    DistributionRandomBlend = 1.0,
+                    DistributionResultPow = 0.0,
+                    Unit = StaticSpawnUnit.Spitter,
+                    FixedSeed = fixedSeed
+                });
     }
 
     private static void SetInfestedVibe(Zone zone)
