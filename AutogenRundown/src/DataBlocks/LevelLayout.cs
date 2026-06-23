@@ -1151,14 +1151,14 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             var baseCount = isHeavy
                 ? Generator.Select(new List<(double, int)>
                 {
-                    (0.20,  0),
-                    (0.50,  0),
+                    (0.20,  1),
+                    (0.50,  1),
                     (0.30, 20),
                 })
                 : Generator.Select(new List<(double, int)>
                 {
-                    (0.30, 0),
-                    (0.50, 0),
+                    (0.30, 1),
+                    (0.50, 1),
                     (0.20, 15),
                 });
 
