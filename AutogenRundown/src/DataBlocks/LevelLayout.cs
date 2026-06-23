@@ -1152,19 +1152,19 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 ? Generator.Select(new List<(double, int)>
                 {
                     (0.20,  0),
-                    (0.50,  8),
-                    (0.30, 30),
+                    (0.50,  0),
+                    (0.30, 20),
                 })
                 : Generator.Select(new List<(double, int)>
                 {
                     (0.30, 0),
-                    (0.50, 5),
-                    (0.20, 20),
+                    (0.50, 0),
+                    (0.20, 15),
                 });
 
             var finalCount = (int)(baseCount * density);
-            if (finalCount <= 0)
-                continue;
+            // if (finalCount <= 0)
+            //     continue;
 
             // TODO: remove when we allow levels to be flipped
             var originalLights = zone.LightSettings;
