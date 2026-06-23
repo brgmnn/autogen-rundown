@@ -1151,25 +1151,31 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             var baseCount = isHeavy
                 ? Generator.Select(new List<(double, int)>
                 {
-                    (0.20, 66),
-                    (0.50, 100),
-                    (0.30, 167),
+                    (0.20, 15),
+                    (0.50, 25),
+                    (0.30, 60),
                 })
                 : Generator.Select(new List<(double, int)>
                 {
-                    (0.30, 33),
-                    (0.50, 66),
-                    (0.20, 100),
+                    (0.30, 8),
+                    (0.50, 20),
+                    (0.20, 66),
                 });
 
             var finalCount = (int)(baseCount * density);
             if (finalCount <= 0)
                 continue;
 
+            // TODO: remove when we allow levels to be flipped
+            var originalLights = zone.LightSettings;
+
             SetInfectionVibe(
                 zone,
                 spitters: finalCount,
                 setLights: Generator.Flip(isHeavy ? 0.4 : 0.7));
+
+            if (finalCount < 100)
+                zone.LightSettings = originalLights;
 
             perZoneCounts.Add(finalCount);
         }
