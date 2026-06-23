@@ -3,6 +3,19 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v1.0.4](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.4) — June 23, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Balance: Heavily reduce random spitter rolls on zones
+  * ~70% of zones which previously had spitters have been removed
+  * There should be significantly fewer spitters in levels now
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v1.0.3...v1.0.4
+
+
 ## [v1.0.3](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.3) — June 20, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
