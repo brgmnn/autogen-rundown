@@ -110,6 +110,19 @@ public static class FactoryJobManager
         // cleared before rebuild or enemies will spawn twice.
         Mastermind.Current.OnLevelCleanup();
 
+        // --- Static Spawns ---
+        // Static spawns (InfectionSpitter) are instantiated by the game's
+        // LG_PlaceStaticEnemyInNode parented to the geomorph dimension root
+        // (Root_<dim>), not under the floor/zone GameObjects destroyed by
+        // Builder.OnLevelCleanup() below. InfectionSpitter.OnLevelCleanup() (fired via
+        // Mastermind.OnLevelCleanup above) only clears the static s_allSpitters list;
+        // it never destroys the GameObjects, so they survive and accumulate in zones on
+        // every rebuild. Destroy them explicitly here, mirroring the terminal cleanup.
+        // They stay active in hierarchy (only the MonoBehaviour is disabled), so
+        // FindObjectsOfType finds them. Local Unity Destroy, no SNet side effects.
+        foreach (var spitter in UnityEngine.Object.FindObjectsOfType<InfectionSpitter>())
+            UnityEngine.Object.Destroy(spitter.gameObject);
+
         // --- Level ---
         LG_BuildNodeCluster.LevelCleanup();
         LG_FunctionMarkerBuilder.LevelCleanup();
