@@ -3,6 +3,18 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v1.0.5](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.5) — June 30, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Roll July monthly levels
+* Fix: Clean up some spitters not being reset in level rebuilds
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v1.0.4...v1.0.5
+
+
 ## [v1.0.4](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.4) — June 23, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
