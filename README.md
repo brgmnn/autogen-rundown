@@ -114,13 +114,9 @@ Working exit geos
   Note: It may well be a space issue. The two failed tiles are quite large, so when they don't spawn it might just be that there isn't space for them.
 
 Monthly April
-  * Find HSU seems like it needs re-rolling occasionally. May be some of the levels can't place well
   * Need to take another look at balance for reactor shutdown. D/E looks to either be way too hard or way too easy.
   [ ] Check if we can use a mod like https://thunderstore.io/c/gtfo/p/W33B/Arsenality/
     * Seems like it adds datablock files directly
-  * Try using fixed bioscan points for room wide scans?
-  [ ] C4 - Security sensors spawn LOADS of snatchers
-  [ ] E1 - Maybe a bit too easy?
   [ ] D1 - Activate small HSU doesn't require the objective to exit
       - Can we exclude double mother / double tank from first zone
 
@@ -224,7 +220,7 @@ To check if the installation is successful, after the game launches you should s
 - Objectives
   - [x] Clear Path — _Navigate through the zones to a separate extraction elevator_
   - [x] Gather Small Items — _IDs, GLPs etc._
-  - [x] HSU Find Sample
+  - [x] HSU Find Sample — _Retrieve DNA from HSU_
   - [x] Reactor Startup
     - [x] Fetch codes from terminals
   - [x] Reactor Shutdown
@@ -233,10 +229,10 @@ To check if the installation is successful, after the game launches you should s
   - [x] Power Cell Distribution — _Distributing cells to individual generators_
   - [x] Terminal Uplink
   - [x] Central Generator Cluster — _Fetching cells for a central generator cluster_
-  - [x] HSU Activate Small - _Bring Neonate to depressurizer_
-  - [x] Survival - _Timed survival_
+  - [x] HSU Activate Small — _Bring Neonate to depressurizer_
+  - [x] Survival — _Timed survival_
   - [x] Gather Terminal
-  - [x] Corrupted Terminal Uplink
+  - [x] Corrupted Terminal Uplink — _Terminal Uplink with codes in logs_
   - [x] Timed Terminal Sequence
 - Enemies
   - [x] Basic hybernation
@@ -265,6 +261,7 @@ To check if the installation is successful, after the game launches you should s
       - [x] Immortal Tank
       - [x] Potato Tank
     - [x] Pouncers (Snatchers)
+    - [x] Spitters
   - Custom enemy spawning
     - [x] Balanced default spawns (in progress)
     - [x] Charger only zones
