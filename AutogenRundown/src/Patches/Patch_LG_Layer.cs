@@ -24,7 +24,6 @@ internal static class Patch_LG_Layer
         int zoneAliasStart)
     {
         // TODO: we probably want to extract this to it's own manager/patcher so we can override seeds from other places too
-        // TODO: also patch MarkerSubSeeds in this file
 
         var zoneKey = (__instance.m_dimension.DimensionIndex, __instance.m_type, zoneData.LocalIndex);
 
@@ -33,6 +32,13 @@ internal static class Patch_LG_Layer
             zoneData.SubSeed = (int)overrideSubSeed;
 
             Plugin.Logger.LogDebug($"Applied override m_subSeed={overrideSubSeed} to Zone_{zoneData.LocalIndex}");
+        }
+
+        if (ZoneSeedManager.MarkerSubSeeds.TryGetValue(zoneKey, out var overrideMarkerSubSeed))
+        {
+            zoneData.MarkerSubSeed = (int)overrideMarkerSubSeed;
+
+            Plugin.Logger.LogDebug($"Applied override m_markerSubSeed={overrideMarkerSubSeed} to Zone_{zoneData.LocalIndex}");
         }
 
         if (ZoneSeedManager.StartExpansionOverrides.TryGetValue(zoneKey, out var overrideExpansion))
