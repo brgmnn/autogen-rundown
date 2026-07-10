@@ -2,6 +2,7 @@
 using AIGraph;
 using AutogenRundown.Patches;
 using AutogenRundown.Patches.CustomTerminals;
+using AutogenRundown.Patches.Spitters;
 using CellMenu;
 using Enemies;
 using AmorLib.API;
@@ -124,6 +125,11 @@ public static class FactoryJobManager
         // FindObjectsOfType finds them. Local Unity Destroy, no SNet side effects.
         foreach (var spitter in UnityEngine.Object.FindObjectsOfType<InfectionSpitter>())
             UnityEngine.Object.Destroy(spitter.gameObject);
+
+        // Per-level spitter health/death state must reset alongside the
+        // destroyed GameObjects (rebuilds happen pre-gameplay, so this is
+        // clearing empty collections in practice).
+        SpitterKillManager.OnLevelRebuild();
 
         // --- Level ---
         LG_BuildNodeCluster.LevelCleanup();
