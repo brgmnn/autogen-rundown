@@ -1121,7 +1121,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         if (modifiers.Contains(LevelModifiers.NoSpitters))
             return;
 
-        var density = modifiers.Contains(LevelModifiers.ManySpitters) ? 1.5 : 1.0;
+        var density = modifiers.Contains(LevelModifiers.ManySpitters) ? 1.3 : 1.0;
 
         var nodes = level.Planner.GetZones(director.Bulkhead, null, Dimension).ToList();
         if (nodes.Count <= 1)
@@ -1138,7 +1138,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         if (candidates.Count == 0)
             return;
 
-        var targetCount = isHeavy ? Generator.Between(4, 6) : Generator.Between(2, 4);
+        var targetCount = isHeavy ? Generator.Between(2, 3) : Generator.Between(1, 2);
 
         if (targetCount > candidates.Count)
             targetCount = candidates.Count;
@@ -1151,31 +1151,26 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             var baseCount = isHeavy
                 ? Generator.Select(new List<(double, int)>
                 {
-                    (0.20,  1),
-                    (0.50,  1),
-                    (0.30, 20),
+                    (0.20, 10),
+                    (0.50, 15),
+                    (0.30, 25),
                 })
                 : Generator.Select(new List<(double, int)>
                 {
-                    (0.30, 1),
-                    (0.50, 1),
-                    (0.20, 15),
+                    (0.30, 10),
+                    (0.50, 15),
+                    (0.20, 20),
                 });
 
             var finalCount = (int)(baseCount * density);
-            // if (finalCount <= 0)
-            //     continue;
 
-            // TODO: remove when we allow levels to be flipped
-            var originalLights = zone.LightSettings;
+            if (finalCount <= 0)
+                continue;
 
             SetInfectionVibe(
                 zone,
                 spitters: finalCount,
-                setLights: Generator.Flip(isHeavy ? 0.4 : 0.7));
-
-            if (finalCount < 10)
-                zone.LightSettings = originalLights;
+                setLights: Generator.Flip(isHeavy ? 0.6 : 0.9));
 
             if (finalCount > 20)
                 zone.DisinfectPacks += 1.0;
