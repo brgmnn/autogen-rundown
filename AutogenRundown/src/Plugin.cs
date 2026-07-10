@@ -3,6 +3,7 @@ using AutogenRundown.Managers;
 using AutogenRundown.Patches;
 using AutogenRundown.Patches.TravelScan;
 using AutogenRundown.Patches.CustomTerminals;
+using AutogenRundown.Patches.Spitters;
 using AutogenRundown.Patches.ZoneSensors;
 using BepInEx;
 using BepInEx.Configuration;
@@ -42,6 +43,17 @@ public class Plugin : BasePlugin
     public static ManualLogSource Logger { get; private set; } = new("AutogenRundown");
 
     public static bool Config_UsePlayerColoredGlowsticks { get; set; }
+
+    /// <summary>
+    /// Host-authoritative: in multiplayer only the lobby host's value matters
+    /// (see SpitterKillManager).
+    /// </summary>
+    public static bool Config_KillableSpitters { get; set; }
+
+    /// <summary>
+    /// Bullet health pool for killable spitters. Host-authoritative.
+    /// </summary>
+    public static float Config_SpitterHealth { get; set; }
 
     public override void Load()
     {
@@ -95,7 +107,22 @@ public class Plugin : BasePlugin
             false,
             new ConfigDescription("Use per player color glow sticks. Client side only."));
 
+        var killableSpitters = Config.Bind(
+            new ConfigDefinition("AutogenRundown", "KillableSpitters"),
+            true,
+            new ConfigDescription("Allow infection spitters to be shot and killed with bullets. " +
+                                  "In multiplayer the lobby HOST's setting decides; clients always " +
+                                  "mirror the host's spitter deaths."));
+
+        var spitterHealth = Config.Bind(
+            new ConfigDefinition("AutogenRundown", "SpitterHealth"),
+            30.0f,
+            new ConfigDescription("Bullet health pool for killable spitters. Only the lobby " +
+                                  "host's value applies."));
+
         Config_UsePlayerColoredGlowsticks = usePlayerColorGlowsticks.Value;
+        Config_KillableSpitters = killableSpitters.Value;
+        Config_SpitterHealth = spitterHealth.Value;
 
         Config.Save();
 
@@ -144,6 +171,7 @@ public class Plugin : BasePlugin
         GameDataAPI.OnGameDataInitialized += TravelScanRegistry.Setup;
         GameDataAPI.OnGameDataInitialized += CustomTerminalSpawnManager.Setup;
         GameDataAPI.OnGameDataInitialized += Patch_ForceMinAreaCount.Setup;
+        GameDataAPI.OnGameDataInitialized += SpitterKillManager.Setup;
 
         // LevelAPI.OnLevelCleanup += SignBorderManager.Clear;
         // LevelAPI.OnEnterLevel += () =>

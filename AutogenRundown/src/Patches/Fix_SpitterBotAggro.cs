@@ -37,6 +37,15 @@ namespace AutogenRundown.Patches;
 ///
 /// The damage (OnIncomingDamage) and glue (OnIncomingGlue) explode paths are
 /// untouched.
+///
+/// Interplay with killable spitters (Patches/Spitters): dead/dying spitters
+/// are gated out at the very top of the prefix via
+/// SpitterKillManager.ShouldBlockManagerUpdate — StaticUpdateManager invokes
+/// ManagerUpdate through the node's m_staticUpdateOwners list regardless of
+/// GameObject active state, and mutating that IL2CPP interface list is not
+/// safe, so blocking the tick here is the removal mechanism. The gate sits
+/// before the _broken check so dead spitters stay inert even when this
+/// reimplementation has fallen back to vanilla.
 /// </summary>
 [HarmonyPatch]
 internal static class Fix_SpitterBotAggro
@@ -54,6 +63,15 @@ internal static class Fix_SpitterBotAggro
         AIG_CourseNode courseNode,
         ref bool __result)
     {
+        // Dead/dying spitters must not tick or proximity-explode (exception-
+        // safe: returns false on any internal error). Also drives the
+        // fallback finalize deadline for dying spitters.
+        if (Spitters.SpitterKillManager.ShouldBlockManagerUpdate(__instance))
+        {
+            __result = false;
+            return false;
+        }
+
         if (_broken)
             return true;
 
