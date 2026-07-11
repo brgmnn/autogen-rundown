@@ -1,3 +1,4 @@
+using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using UnityEngine;
 
@@ -43,6 +44,19 @@ namespace AutogenRundown.Patches.Spitters;
 /// on) instead of SpitterKillManager.Break; restore paths keep running even
 /// when broken so a half-applied tint still gets cleaned up.
 ///
+/// IL2CPP GC-race hardening: interop's MinMaxGradient and MainModule are
+/// boxed IL2CPP classes, and IL2CPP's Boehm GC does not scan the .NET stack —
+/// a freshly allocated boxed object can be collected before Il2CppInterop
+/// attaches its GCHandle (ObjectCollectedException), most likely exactly at
+/// pop frames (peak GC pressure). Therefore: startColor writes go through ONE
+/// long-lived shared MinMaxGradient (mutated per use; set_startColor copies
+/// by value into the native module), originals are captured BY VALUE (never
+/// as a boxed wrapper reference), the boxed MainModule is cached per system,
+/// and the operations that still allocate IL2CPP-side (first capture,
+/// GetComponentsInChildren, the particle array) retry on
+/// ObjectCollectedException and skip — never trip _visualsBroken — if the
+/// race persists.
+///
 /// Out of scope: the on-visor splatter (ScreenLiquid "spitterJizz") is a
 /// global ScriptableObject shared with infectious projectiles — it stays
 /// vanilla green.
@@ -87,10 +101,52 @@ public static class SpitterVisuals
 
     #region FX tint registry
 
+    /// <summary>Attempts for operations that can hit the transient IL2CPP
+    /// GC race (ObjectCollectedException) before skipping.</summary>
+    private const int GcRaceAttempts = 3;
+
+    /// <summary>
+    /// Original startColor of a tinted ParticleSystem, captured BY VALUE — a
+    /// stored boxed MinMaxGradient wrapper could itself be a collected object
+    /// that throws at restore time. The Gradient references are natively
+    /// rooted by the particle system's own configuration. The boxed
+    /// MainModule is cached because every ps.main call allocates IL2CPP-side;
+    /// it stays valid as long as the ParticleSystem lives (it only wraps the
+    /// system pointer).
+    /// </summary>
+    private readonly struct OriginalStartColor
+    {
+        public readonly ParticleSystem Ps;
+        public readonly ParticleSystem.MainModule Main;
+        public readonly ParticleSystemGradientMode Mode;
+        public readonly Color ColorMin;
+        public readonly Color ColorMax;
+        public readonly Gradient? GradientMin;
+        public readonly Gradient? GradientMax;
+
+        public OriginalStartColor(
+            ParticleSystem ps, ParticleSystem.MainModule main, ParticleSystem.MinMaxGradient captured)
+        {
+            Ps = ps;
+            Main = main;
+            Mode = captured.m_Mode;
+            ColorMin = captured.m_ColorMin;
+            ColorMax = captured.m_ColorMax;
+            GradientMin = captured.m_GradientMin;
+            GradientMax = captured.m_GradientMax;
+        }
+    }
+
+    /// <summary>The single long-lived boxed gradient every startColor write
+    /// goes through (created once, then rooted by this static — immune to the
+    /// allocation race). set_startColor copies it by value into the native
+    /// module, so mutation + reuse is safe.</summary>
+    private static ParticleSystem.MinMaxGradient? _sharedGradient;
+
     /// <summary>Original startColor per tinted ParticleSystem, keyed by
     /// GetInstanceID. Captured only when absent so a re-tint can never record
     /// our own color as the "original".</summary>
-    private static readonly Dictionary<int, (ParticleSystem ps, ParticleSystem.MinMaxGradient original)> _tintedSystems = new();
+    private static readonly Dictionary<int, OriginalStartColor> _tintedSystems = new();
 
     /// <summary>Restore time per tinted system. float.MaxValue = anchored to a
     /// spitter's finalization (death pops) rather than a timer.</summary>
@@ -149,6 +205,11 @@ public static class SpitterVisuals
             spitter.m_propBlock.SetColor(InfectionSpitter.s_glowColorID, color);
             spitter.m_renderer.SetPropertyBlock(spitter.m_propBlock, 0);
         }
+        catch (ObjectCollectedException)
+        {
+            // Transient IL2CPP GC race — skip this write (the next glow
+            // application self-corrects); never a reason to disable visuals.
+        }
         catch (Exception ex)
         {
             BreakVisuals(ex);
@@ -201,53 +262,103 @@ public static class SpitterVisuals
         if (_visualsBroken)
             return;
 
-        try
+        for (var attempt = 1; attempt <= GcRaceAttempts; attempt++)
         {
-            var fx = spitter?.m_fx;
-
-            // In-pool means the instance was already returned (deactivation
-            // cleared its particles) — nothing visible to tint.
-            if (fx == null || fx.m_inPool)
-                return;
-
-            var systems = fx.GetComponentsInChildren<ParticleSystem>(true);
-            if (systems == null)
-                return;
-
-            foreach (var ps in systems)
+            try
             {
-                if (ps == null)
-                    continue;
-
-                var id = ps.GetInstanceID();
-                var main = ps.main;
-
-                if (!_tintedSystems.ContainsKey(id))
-                    _tintedSystems[id] = (ps, main.startColor);
-
-                main.startColor = new ParticleSystem.MinMaxGradient((Color)color);
-
-                if (recolorLiveParticles)
-                    RecolorLiveParticles(ps, color);
-
-                if (untilFinalize)
-                {
-                    _pendingRestores[id] = float.MaxValue;
-
-                    if (!_tintedBySpitter.TryGetValue(index, out var ids))
-                        _tintedBySpitter[index] = ids = new List<int>();
-                    ids.Add(id);
-                }
-                else
-                {
-                    _pendingRestores[id] = Clock.Time + FxRestoreSeconds;
-                }
+                TintPopCore(index, spitter, color, recolorLiveParticles, untilFinalize);
+                return;
+            }
+            catch (ObjectCollectedException)
+            {
+                // Transient IL2CPP GC race — retry. Partial re-runs are safe:
+                // captures are if-absent and the registry adds are guarded.
+            }
+            catch (Exception ex)
+            {
+                BreakVisuals(ex);
+                return;
             }
         }
-        catch (Exception ex)
+
+        Plugin.Logger.LogDebug("[SpitterKill] FX tint skipped (IL2CPP GC race persisted)");
+    }
+
+    private static void TintPopCore(
+        ushort index, InfectionSpitter spitter, Color32 color,
+        bool recolorLiveParticles, bool untilFinalize)
+    {
+        var fx = spitter?.m_fx;
+
+        // In-pool means the instance was already returned (deactivation
+        // cleared its particles) — nothing visible to tint.
+        if (fx == null || fx.m_inPool)
+            return;
+
+        var systems = fx.GetComponentsInChildren<ParticleSystem>(true);
+        if (systems == null)
+            return;
+
+        foreach (var ps in systems)
         {
-            BreakVisuals(ex);
+            if (ps == null)
+                continue;
+
+            var id = ps.GetInstanceID();
+
+            if (!_tintedSystems.TryGetValue(id, out var entry))
+            {
+                // First sighting: one ps.main + one startColor read; the
+                // boxed wrapper is copied out by value and never stored.
+                var main = ps.main;
+                entry = new OriginalStartColor(ps, main, main.startColor);
+                _tintedSystems[id] = entry;
+            }
+
+            WriteStartColor(entry.Main, (Color)color);
+
+            if (recolorLiveParticles)
+                RecolorLiveParticles(ps, color);
+
+            if (untilFinalize)
+            {
+                _pendingRestores[id] = float.MaxValue;
+
+                if (!_tintedBySpitter.TryGetValue(index, out var ids))
+                    _tintedBySpitter[index] = ids = new List<int>();
+                if (!ids.Contains(id))
+                    ids.Add(id);
+            }
+            else
+            {
+                _pendingRestores[id] = Clock.Time + FxRestoreSeconds;
+            }
         }
+    }
+
+    /// <summary>Flat-color startColor write through the shared gradient.</summary>
+    private static void WriteStartColor(ParticleSystem.MainModule main, Color color)
+        => WriteStartColor(main, ParticleSystemGradientMode.Color, color, color, null, null);
+
+    /// <summary>
+    /// Writes a startColor by mutating the single shared MinMaxGradient and
+    /// assigning it (copied by value into the native module) — no IL2CPP
+    /// allocation except the one-time shared-instance creation, which the
+    /// callers' retry loops cover.
+    /// </summary>
+    private static void WriteStartColor(
+        ParticleSystem.MainModule main, ParticleSystemGradientMode mode,
+        Color colorMin, Color colorMax, Gradient? gradientMin, Gradient? gradientMax)
+    {
+        var g = _sharedGradient ??= new ParticleSystem.MinMaxGradient(Color.white);
+
+        g.m_Mode = mode;
+        g.m_GradientMin = gradientMin;
+        g.m_GradientMax = gradientMax;
+        g.m_ColorMin = colorMin;
+        g.m_ColorMax = colorMax;
+
+        main.startColor = g;
     }
 
     /// <summary>Overwrites already-emitted particles' startColor. Per-particle
@@ -329,18 +440,30 @@ public static class SpitterVisuals
     {
         if (_tintedSystems.TryGetValue(id, out var entry))
         {
-            try
+            for (var attempt = 1; attempt <= GcRaceAttempts; attempt++)
             {
-                // Unity-alive check: destroyed systems compare equal to null.
-                if (entry.ps != null)
+                try
                 {
-                    var main = entry.ps.main;
-                    main.startColor = entry.original;
+                    // Unity-alive check: destroyed systems compare equal to null.
+                    if (entry.Ps != null)
+                    {
+                        WriteStartColor(entry.Main, entry.Mode,
+                            entry.ColorMin, entry.ColorMax, entry.GradientMin, entry.GradientMax);
+                    }
+
+                    break;
                 }
-            }
-            catch (Exception ex)
-            {
-                Plugin.Logger.LogWarning($"[SpitterKill] Failed to restore FX tint: {ex.Message}");
+                catch (ObjectCollectedException)
+                {
+                    // Transient IL2CPP GC race — retry.
+                    if (attempt == GcRaceAttempts)
+                        Plugin.Logger.LogDebug("[SpitterKill] FX tint restore skipped (IL2CPP GC race persisted)");
+                }
+                catch (Exception ex)
+                {
+                    Plugin.Logger.LogWarning($"[SpitterKill] Failed to restore FX tint: {ex.Message}");
+                    break;
+                }
             }
         }
 
