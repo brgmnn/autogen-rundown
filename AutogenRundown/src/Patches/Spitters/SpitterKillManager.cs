@@ -8,8 +8,11 @@ namespace AutogenRundown.Patches.Spitters;
 
 /// <summary>
 /// Makes InfectionSpitters killable with bullets. Owns all killable-spitter
-/// state; the Harmony taps/guards live in Patch_SpitterDamage and the
-/// dead-spitter ManagerUpdate gate lives in Fix_SpitterBotAggro.
+/// state; the Harmony taps/guards live in Patch_SpitterDamage, the
+/// dead-spitter ManagerUpdate gate lives in Fix_SpitterBotAggro, and the
+/// damage-state visuals (glow ramp, tinted pops, red death pop) live in
+/// SpitterVisuals, driven from this manager's kill flow plus a host→all
+/// health-fraction broadcast (HealthEventName).
 ///
 /// Vanilla spitters have no health: InfectionSpitterDamage.BulletDamage funnels
 /// into InfectionSpitter.OnIncomingDamage which just pops the spitter (5s
@@ -62,6 +65,10 @@ public static class SpitterKillManager
 {
     private const string DamageEventName = "autogen_spitter_damage";
 
+    /// <summary>Host→all broadcast of a spitter's health fraction, driving the
+    /// damage-state glow on every peer (see SpitterVisuals).</summary>
+    private const string HealthEventName = "autogen_spitter_health";
+
     /// <summary>Replicator IDs: BASE + shard (0..SHARD_COUNT-1). "SPIT".</summary>
     private const uint REPLICATOR_BASE_ID = 0x53504954;
 
@@ -102,6 +109,10 @@ public static class SpitterKillManager
     /// <summary>HOST only: remaining health per damaged spitter. Absent entry
     /// means full health (lazy-init from config on first hit).</summary>
     private static readonly Dictionary<ushort, float> _healthByIndex = new();
+
+    /// <summary>ALL peers: cosmetic health-fraction mirror fed by the host's
+    /// health broadcasts; drives the damage-state glow and pop tints.</summary>
+    private static readonly Dictionary<ushort, float> _healthRel = new();
 
     /// <summary>Dead spitter indices on this peer (includes ones still playing
     /// their death pop). Mirrors the replicated bitmask; source of truth for
@@ -154,6 +165,7 @@ public static class SpitterKillManager
         _setupDone = true;
 
         NetworkAPI.RegisterEvent<SpitterDamageEvent>(DamageEventName, OnDamageEventReceived);
+        NetworkAPI.RegisterEvent<SpitterHealthEvent>(HealthEventName, OnHealthEventReceived);
 
         LevelAPI.OnBuildDone += OnBuildDone;
         LevelAPI.OnLevelCleanup += OnLevelCleanup;
@@ -270,14 +282,51 @@ public static class SpitterKillManager
         {
             var index = spitter.m_spitterIndex;
 
+            // Restore any timer-based FX tints that are past due (the spitter
+            // that popped keeps Updating ≥30s, so a driver is guaranteed
+            // while restores are pending).
+            SpitterVisuals.TickRestores();
+
             // Track pop completions for every spitter (KillSpitter case (b)).
             // Update only runs while the component is enabled, and both
             // DoExplode and the pop completion keep enabled = true, so the
             // m_isExploding false-transition is always observed here.
             if (spitter.m_isExploding)
+            {
                 _explodingNow.Add(index);
+
+                // Override vanilla's green wind-up ramp (its per-frame
+                // s_glowColor * progression write runs just before this
+                // postfix): red for the death pop, damage-tinted otherwise.
+                if (_dyingFinalizeAt.ContainsKey(index))
+                    SpitterVisuals.ApplyDeathRamp(spitter);
+                else if (_healthRel.TryGetValue(index, out var rel))
+                    SpitterVisuals.ApplyDamageRamp(spitter, rel);
+            }
             else if (_explodingNow.Remove(index))
+            {
                 _lastPopCompletedAt[index] = Clock.Time;
+
+                if (_dyingFinalizeAt.ContainsKey(index))
+                {
+                    // The death pop fired earlier in this same vanilla Update
+                    // call (m_fx acquired + played, not yet simulated or
+                    // rendered) — tint the burst red, and restore the body
+                    // glow that vanilla's completion write just reset.
+                    SpitterVisuals.TintPop(index, spitter, SpitterVisuals.DeathPopColor,
+                        recolorLiveParticles: false, untilFinalize: true);
+                    SpitterVisuals.ApplyBodyGlow(spitter, SpitterVisuals.DeathSteadyGlow);
+                }
+                else if (_healthRel.TryGetValue(index, out var rel))
+                {
+                    // Normal pop of a damaged spitter: tint the burst by its
+                    // missing health (timer-based restore) and re-apply the
+                    // steady damage tint vanilla just wiped.
+                    SpitterVisuals.TintPop(index, spitter, SpitterVisuals.GetPopColor(rel),
+                        recolorLiveParticles: false, untilFinalize: false);
+                    SpitterVisuals.ApplyDamageTint(spitter, rel);
+                }
+            }
 
             if (_dyingFinalizeAt.Count == 0)
                 return;
@@ -322,6 +371,17 @@ public static class SpitterKillManager
 
         _broken = true;
         Plugin.Logger.LogError($"[SpitterKill] Unexpected error, disabling killable spitters locally: {ex}");
+
+        // Never strand a tinted FX pool instance (session lifetime) behind a
+        // permanent feature kill.
+        try
+        {
+            SpitterVisuals.RestoreAll();
+        }
+        catch (Exception restoreEx)
+        {
+            Plugin.Logger.LogWarning($"[SpitterKill] FX restore during Break failed: {restoreEx.Message}");
+        }
     }
 
     #endregion
@@ -375,6 +435,7 @@ public static class SpitterKillManager
         if (health > 0f)
         {
             _healthByIndex[index] = health;
+            BroadcastHealth(index, health);
             return;
         }
 
@@ -399,6 +460,64 @@ public static class SpitterKillManager
 
         Plugin.Logger.LogDebug($"[SpitterKill] Spitter {index} killed (host)");
         KillSpitter(index, silent: false);
+    }
+
+    /// <summary>
+    /// HOST only: broadcasts a damaged spitter's health fraction so every peer
+    /// can tint its glow. No broadcast on the killing blow — the replicated
+    /// death state drives the death visuals. The broadcast does not loop back
+    /// to the sender, so the host applies locally via a direct handler call
+    /// (LogArchivistManager precedent).
+    /// </summary>
+    private static void BroadcastHealth(ushort index, float health)
+    {
+        var data = new SpitterHealthEvent
+        {
+            SpitterIndex = index,
+            HealthRel = Math.Clamp(health / Math.Max(1f, Plugin.Config_SpitterHealth), 0f, 1f),
+        };
+
+        NetworkAPI.InvokeEvent(HealthEventName, data);
+        OnHealthEventReceived(0uL, data);
+    }
+
+    /// <summary>
+    /// NetworkAPI handler for health broadcasts (all peers): mirrors the
+    /// fraction and applies the steady damage tint. Direct propBlock writes
+    /// work on disabled/Frozen spitters too; if the spitter is mid-windup,
+    /// vanilla overwrites next frame and the pop-completion re-apply in
+    /// OnSpitterUpdatePostfix fixes it.
+    /// </summary>
+    private static void OnHealthEventReceived(ulong senderPlayer, SpitterHealthEvent data)
+    {
+        if (_broken)
+            return;
+
+        try
+        {
+            if (float.IsNaN(data.HealthRel))
+                return;
+
+            if (data.SpitterIndex >= SpitterCapacity)
+            {
+                WarnCapacityOnce(data.SpitterIndex);
+                return;
+            }
+
+            if (IsDeadOrDying(data.SpitterIndex))
+                return;
+
+            var healthRel = Math.Clamp(data.HealthRel, 0f, 1f);
+            _healthRel[data.SpitterIndex] = healthRel;
+
+            var spitter = TryGetSpitter(data.SpitterIndex);
+            if (spitter != null)
+                SpitterVisuals.ApplyDamageTint(spitter, healthRel);
+        }
+        catch (Exception ex)
+        {
+            Break(ex);
+        }
     }
 
     #endregion
@@ -499,6 +618,12 @@ public static class SpitterKillManager
             // so this holds for glued spitters and stays bounded on nodes
             // where ManagerUpdate isn't ticking.
             _dyingFinalizeAt[index] = Clock.Time + FinalizeGraceSeconds;
+
+            // The adopted burst already played (green / damage-tinted) and is
+            // likely still airborne — switch its live particles to death red.
+            SpitterVisuals.TintPop(index, spitter, SpitterVisuals.DeathPopColor,
+                recolorLiveParticles: true, untilFinalize: true);
+            SpitterVisuals.ApplyBodyGlow(spitter, SpitterVisuals.DeathSteadyGlow);
         }
         else
         {
@@ -530,6 +655,11 @@ public static class SpitterKillManager
         _dyingDeadline.Remove(index);
         _explodingNow.Remove(index);
         _lastPopCompletedAt.Remove(index);
+        _healthRel.Remove(index);
+
+        // Single convergence point of every death path — restore the death
+        // pop's FX tint here (the pool instance outlives the level).
+        SpitterVisuals.RestoreForSpitter(index);
 
         spitter.CleanupSound();
 
@@ -561,6 +691,8 @@ public static class SpitterKillManager
         _explodingNow.Remove(index);
         _lastPopCompletedAt.Remove(index);
         _healthByIndex.Remove(index);
+        _healthRel.Remove(index);
+        SpitterVisuals.RestoreForSpitter(index);
 
         var spitter = TryGetSpitter(index);
         if (spitter == null)
@@ -570,6 +702,9 @@ public static class SpitterKillManager
 
         if (spitter.m_damage != null && spitter.m_damage.gameObject != spitter.gameObject)
             spitter.m_damage.gameObject.SetActive(true);
+
+        // The propBlock still holds the death/damage tint otherwise.
+        SpitterVisuals.ResetBodyGlow(spitter);
 
         Plugin.Logger.LogDebug($"[SpitterKill] Spitter {index} revived (checkpoint recall)");
     }
@@ -722,6 +857,7 @@ public static class SpitterKillManager
     private static void ClearRuntimeState()
     {
         _healthByIndex.Clear();
+        _healthRel.Clear();
         _dead.Clear();
         _dyingFinalizeAt.Clear();
         _dyingDeadline.Clear();
@@ -729,6 +865,9 @@ public static class SpitterKillManager
         _explodingNow.Clear();
         _lastPopCompletedAt.Clear();
         _warnedCapacity = false;
+
+        // Pool instances outlive the level — never leave a tint behind.
+        SpitterVisuals.RestoreAll();
 
         for (var i = 0; i < SHARD_COUNT; i++)
             _currentStates[i] = new SpitterDeathState { ShardIndex = (byte)i };
