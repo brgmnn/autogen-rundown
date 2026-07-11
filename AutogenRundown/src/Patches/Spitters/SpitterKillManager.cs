@@ -82,6 +82,12 @@ public static class SpitterKillManager
     /// kill even if its pop never completes.</summary>
     private const float FinalizeDeadlineSeconds = 5f;
 
+    /// <summary>A death arriving within this window after a completed pop
+    /// adopts that pop as the death explosion instead of triggering a second
+    /// one (covers the killing hit's own pop finishing just before the death
+    /// state arrives).</summary>
+    private const float PopAdoptWindowSeconds = 1.5f;
+
     /// <summary>Host-side clamp on a single reported hit (anti-grief / garbage
     /// data guard; the strongest sane bullet hits are well below this).</summary>
     private const float MaxReportedDamagePerHit = 100f;
@@ -111,6 +117,19 @@ public static class SpitterKillManager
 
     /// <summary>Spitters already deactivated (idempotency guard).</summary>
     private static readonly HashSet<ushort> _finalized = new();
+
+    /// <summary>Spitters currently observed mid-explosion by the Update
+    /// postfix; used to detect the pop-completion transition.</summary>
+    private static readonly HashSet<ushort> _explodingNow = new();
+
+    /// <summary>Clock.Time at which each spitter's most recent pop completed.
+    /// Tracked locally per peer (pops play per-peer); consulted by KillSpitter
+    /// case (b) so a death arriving just after a pop adopts it. A real
+    /// timestamp is used instead of inferring "just popped" from
+    /// m_stayInTimer/m_isGlued signatures — those false-negative on glued
+    /// spitters (double pop) and false-positive on unticked nodes where
+    /// m_stayInTimer freezes at 32 (no death pop at all).</summary>
+    private static readonly Dictionary<ushort, float> _lastPopCompletedAt = new();
 
     private static readonly StateReplicator<SpitterDeathState>?[] _replicators =
         new StateReplicator<SpitterDeathState>?[SHARD_COUNT];
@@ -244,12 +263,24 @@ public static class SpitterKillManager
     /// </summary>
     public static void OnSpitterUpdatePostfix(InfectionSpitter spitter)
     {
-        if (_broken || _dyingFinalizeAt.Count == 0 || spitter == null)
+        if (_broken || spitter == null)
             return;
 
         try
         {
             var index = spitter.m_spitterIndex;
+
+            // Track pop completions for every spitter (KillSpitter case (b)).
+            // Update only runs while the component is enabled, and both
+            // DoExplode and the pop completion keep enabled = true, so the
+            // m_isExploding false-transition is always observed here.
+            if (spitter.m_isExploding)
+                _explodingNow.Add(index);
+            else if (_explodingNow.Remove(index))
+                _lastPopCompletedAt[index] = Clock.Time;
+
+            if (_dyingFinalizeAt.Count == 0)
+                return;
 
             if (!_dyingFinalizeAt.TryGetValue(index, out var finalizeAt))
                 return;
@@ -459,15 +490,14 @@ public static class SpitterKillManager
             // packet) is still winding up — adopt it as the death pop.
             _dyingFinalizeAt[index] = float.MaxValue;
         }
-        else if (spitter.m_currentState == InfectionSpitter.eSpitterState.Retracted
-                 && !spitter.m_isGlued
-                 && spitter.m_stayInTimer > 30.5f
-                 && spitter.m_stayInTimer <= 32f)
+        else if (_lastPopCompletedAt.TryGetValue(index, out var poppedAt)
+                 && Clock.Time - poppedAt <= PopAdoptWindowSeconds)
         {
-            // (b) Pop-just-finished signature: only a completed pop sets
-            // m_stayInTimer to 32 (glue sets 240, light-scare caps at 30).
-            // The death state arrived moments after the killing hit's pop —
-            // adopt it instead of double-popping.
+            // (b) A pop completed moments ago (the killing hit's own
+            // explosion finished before the death state arrived) — adopt it
+            // instead of double-popping. Timestamped by the Update postfix,
+            // so this holds for glued spitters and stays bounded on nodes
+            // where ManagerUpdate isn't ticking.
             _dyingFinalizeAt[index] = Clock.Time + FinalizeGraceSeconds;
         }
         else
@@ -498,6 +528,8 @@ public static class SpitterKillManager
 
         _dyingFinalizeAt.Remove(index);
         _dyingDeadline.Remove(index);
+        _explodingNow.Remove(index);
+        _lastPopCompletedAt.Remove(index);
 
         spitter.CleanupSound();
 
@@ -526,6 +558,8 @@ public static class SpitterKillManager
         _finalized.Remove(index);
         _dyingFinalizeAt.Remove(index);
         _dyingDeadline.Remove(index);
+        _explodingNow.Remove(index);
+        _lastPopCompletedAt.Remove(index);
         _healthByIndex.Remove(index);
 
         var spitter = TryGetSpitter(index);
@@ -692,6 +726,8 @@ public static class SpitterKillManager
         _dyingFinalizeAt.Clear();
         _dyingDeadline.Clear();
         _finalized.Clear();
+        _explodingNow.Clear();
+        _lastPopCompletedAt.Clear();
         _warnedCapacity = false;
 
         for (var i = 0; i < SHARD_COUNT; i++)
