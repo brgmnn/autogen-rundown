@@ -55,7 +55,8 @@ namespace AutogenRundown.Patches.Spitters;
 /// Finalization (deactivate + sound cleanup)
 /// happens once the pop completes plus a grace period, driven by the
 /// InfectionSpitter.Update postfix, with a hard deadline fallback driven from
-/// the ManagerUpdate gate.
+/// the ManagerUpdate gate; the deactivation itself is masked by the flyer's
+/// death burst + sound (SpitterDeathFx), played locally on every peer.
 ///
 /// Failure mode: any unexpected exception permanently flips _broken and the
 /// feature degrades to pure vanilla behavior locally (guards return "run
@@ -143,6 +144,10 @@ public static class SpitterKillManager
     /// spitters (double pop) and false-positive on unticked nodes where
     /// m_stayInTimer freezes at 32 (no death pop at all).</summary>
     private static readonly Dictionary<ushort, float> _lastPopCompletedAt = new();
+
+    /// <summary>Live (non-silent) deaths whose removal plays the destruction
+    /// burst (SpitterDeathFx) when FinalizeSpitter deactivates the object.</summary>
+    private static readonly HashSet<ushort> _playDeathFxOnFinalize = new();
 
     private static readonly StateReplicator<SpitterDeathState>?[] _replicators =
         new StateReplicator<SpitterDeathState>?[SHARD_COUNT];
@@ -605,6 +610,10 @@ public static class SpitterKillManager
             return;
         }
 
+        // Live death — the removal itself gets a destruction burst when
+        // FinalizeSpitter deactivates the object (see SpitterDeathFx).
+        _playDeathFxOnFinalize.Add(index);
+
         if (spitter.m_isExploding)
         {
             // (a) The killing hit's own pop (or a racing vanilla explode
@@ -671,6 +680,11 @@ public static class SpitterKillManager
         // current game build — no light to release here; the pooled spit FX
         // in m_fx self-manages and is returned by OnDestroy at level teardown.)
 
+        // Mask the deactivation with the flyer-death gib burst + squelch
+        // (live deaths only — recall/reconcile removals never mark the set).
+        if (_playDeathFxOnFinalize.Remove(index))
+            SpitterDeathFx.PlayAt(spitter.m_position);
+
         spitter.enabled = false;
         spitter.gameObject.SetActive(false);
 
@@ -694,6 +708,7 @@ public static class SpitterKillManager
         _dyingDeadline.Remove(index);
         _explodingNow.Remove(index);
         _lastPopCompletedAt.Remove(index);
+        _playDeathFxOnFinalize.Remove(index);
         _healthByIndex.Remove(index);
         _healthRel.Remove(index);
         SpitterVisuals.RestoreForSpitter(index);
@@ -868,6 +883,7 @@ public static class SpitterKillManager
         _finalized.Clear();
         _explodingNow.Clear();
         _lastPopCompletedAt.Clear();
+        _playDeathFxOnFinalize.Clear();
         _warnedCapacity = false;
 
         // Pool instances outlive the level — never leave a tint behind.
