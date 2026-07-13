@@ -52,11 +52,12 @@ namespace AutogenRundown.Patches.Spitters;
 /// always produces exactly one final explosion. KillSpitter adopts an
 /// in-flight or just-finished pop where one exists, otherwise triggers
 /// DoExplode directly (DoExplode only guards on m_isExploding).
-/// Finalization (deactivate + sound cleanup)
-/// happens once the pop completes plus a grace period, driven by the
+/// The flyer's death burst + sound (SpitterDeathFx) land together with the
+/// death pop, locally on every peer. Finalization (deactivate + sound
+/// cleanup) happens once the pop completes plus a grace period — quiet by
+/// then, the spitter sits fully retracted — driven by the
 /// InfectionSpitter.Update postfix, with a hard deadline fallback driven from
-/// the ManagerUpdate gate; the deactivation itself is masked by the flyer's
-/// death burst + sound (SpitterDeathFx), played locally on every peer.
+/// the ManagerUpdate gate.
 ///
 /// Failure mode: any unexpected exception permanently flips _broken and the
 /// feature degrades to pure vanilla behavior locally (guards return "run
@@ -145,9 +146,11 @@ public static class SpitterKillManager
     /// m_stayInTimer freezes at 32 (no death pop at all).</summary>
     private static readonly Dictionary<ushort, float> _lastPopCompletedAt = new();
 
-    /// <summary>Live (non-silent) deaths whose removal plays the destruction
-    /// burst (SpitterDeathFx) when FinalizeSpitter deactivates the object.</summary>
-    private static readonly HashSet<ushort> _playDeathFxOnFinalize = new();
+    /// <summary>Live (non-silent) deaths whose destruction burst
+    /// (SpitterDeathFx) hasn't played yet. Normally consumed the frame the
+    /// death pop completes; FinalizeSpitter consumes any leftover at the
+    /// deadline fallback so the burst is never lost.</summary>
+    private static readonly HashSet<ushort> _pendingDeathFx = new();
 
     private static readonly StateReplicator<SpitterDeathState>?[] _replicators =
         new StateReplicator<SpitterDeathState>?[SHARD_COUNT];
@@ -318,11 +321,15 @@ public static class SpitterKillManager
                 {
                     // The death pop fired earlier in this same vanilla Update
                     // call (m_fx acquired + played, not yet simulated or
-                    // rendered) — tint the burst red, and restore the body
-                    // glow that vanilla's completion write just reset.
+                    // rendered) — tint the burst red, restore the body glow
+                    // that vanilla's completion write just reset, and land
+                    // the destruction burst together with the pop.
                     SpitterVisuals.TintPop(index, spitter, SpitterVisuals.DeathPopColor,
                         recolorLiveParticles: false, untilFinalize: true);
                     SpitterVisuals.ApplyBodyGlow(spitter, SpitterVisuals.DeathSteadyGlow);
+
+                    if (_pendingDeathFx.Remove(index))
+                        SpitterDeathFx.PlayAt(spitter.m_position);
                 }
                 else if (_healthRel.TryGetValue(index, out var rel))
                 {
@@ -610,15 +617,13 @@ public static class SpitterKillManager
             return;
         }
 
-        // Live death — the removal itself gets a destruction burst when
-        // FinalizeSpitter deactivates the object (see SpitterDeathFx).
-        _playDeathFxOnFinalize.Add(index);
-
         if (spitter.m_isExploding)
         {
             // (a) The killing hit's own pop (or a racing vanilla explode
-            // packet) is still winding up — adopt it as the death pop.
+            // packet) is still winding up — adopt it as the death pop; the
+            // destruction burst plays the frame it completes.
             _dyingFinalizeAt[index] = float.MaxValue;
+            _pendingDeathFx.Add(index);
         }
         else if (_lastPopCompletedAt.TryGetValue(index, out var poppedAt)
                  && Clock.Time - poppedAt <= PopAdoptWindowSeconds)
@@ -631,10 +636,12 @@ public static class SpitterKillManager
             _dyingFinalizeAt[index] = Clock.Time + FinalizeGraceSeconds;
 
             // The adopted burst already played (green / damage-tinted) and is
-            // likely still airborne — switch its live particles to death red.
+            // likely still airborne — switch its live particles to death red,
+            // and the pop being over means the destruction burst plays now.
             SpitterVisuals.TintPop(index, spitter, SpitterVisuals.DeathPopColor,
                 recolorLiveParticles: true, untilFinalize: true);
             SpitterVisuals.ApplyBodyGlow(spitter, SpitterVisuals.DeathSteadyGlow);
+            SpitterDeathFx.PlayAt(spitter.m_position);
         }
         else
         {
@@ -646,6 +653,7 @@ public static class SpitterKillManager
             spitter.DoExplode(
                 spitter.m_currentState == InfectionSpitter.eSpitterState.Retracted ? 0.5f : 1f);
             _dyingFinalizeAt[index] = float.MaxValue;
+            _pendingDeathFx.Add(index);
         }
 
         _dyingDeadline[index] = Clock.Time + FinalizeDeadlineSeconds;
@@ -680,9 +688,10 @@ public static class SpitterKillManager
         // current game build — no light to release here; the pooled spit FX
         // in m_fx self-manages and is returned by OnDestroy at level teardown.)
 
-        // Mask the deactivation with the flyer-death gib burst + squelch
-        // (live deaths only — recall/reconcile removals never mark the set).
-        if (_playDeathFxOnFinalize.Remove(index))
+        // Deadline fallback: the burst normally plays at pop completion, but
+        // if the pop never completed the death must still read as an
+        // explosion (live deaths only — recall/reconcile never mark the set).
+        if (_pendingDeathFx.Remove(index))
             SpitterDeathFx.PlayAt(spitter.m_position);
 
         spitter.enabled = false;
@@ -708,7 +717,7 @@ public static class SpitterKillManager
         _dyingDeadline.Remove(index);
         _explodingNow.Remove(index);
         _lastPopCompletedAt.Remove(index);
-        _playDeathFxOnFinalize.Remove(index);
+        _pendingDeathFx.Remove(index);
         _healthByIndex.Remove(index);
         _healthRel.Remove(index);
         SpitterVisuals.RestoreForSpitter(index);
@@ -883,7 +892,7 @@ public static class SpitterKillManager
         _finalized.Clear();
         _explodingNow.Clear();
         _lastPopCompletedAt.Clear();
-        _playDeathFxOnFinalize.Clear();
+        _pendingDeathFx.Clear();
         _warnedCapacity = false;
 
         // Pool instances outlive the level — never leave a tint behind.
