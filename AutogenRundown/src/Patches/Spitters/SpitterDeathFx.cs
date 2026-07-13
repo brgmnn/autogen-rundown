@@ -9,10 +9,12 @@ namespace AutogenRundown.Patches.Spitters;
 
 /// <summary>
 /// Plays the Flyer's death effect — the FXC_FlyerDeath gib burst plus the
-/// FLYER_DIE squelch — at a spitter's position when it is removed, so the
-/// deactivation reads as the spitter being destroyed. Called once per live
-/// death from SpitterKillManager.FinalizeSpitter; silent recall/reconcile
-/// removals never reach here.
+/// FLYER_DIE squelch — at a spitter's position when it dies, so the death
+/// reads as the spitter being destroyed. Called once per live death from
+/// SpitterKillManager, landing together with the death pop (at pop
+/// completion, or immediately when a just-finished pop is adopted), with
+/// FinalizeSpitter's deadline path as the never-lost fallback; silent
+/// recall/reconcile removals never reach here.
 ///
 /// The Flyer's death visual is a standalone pooled FX prefab played at a
 /// world position (old decompile ES_HitreactFlyer.cs:38,122); it has no
