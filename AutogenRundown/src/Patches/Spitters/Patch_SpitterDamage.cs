@@ -31,8 +31,9 @@ internal static class Patch_SpitterDamage
 {
     /// <summary>
     /// Bullet damage tap + dead-guard. Dead/dying spitters take no hits at
-    /// all; live ones report toward the health pool and then run the original,
-    /// preserving the vanilla explode-on-hit (with its 5s cooldown).
+    /// all; live ones report toward the health pool and then run the
+    /// original, which funnels into OnIncomingDamage — where the prefix below
+    /// pops the spitter on every hit (vanilla 5s cooldown removed).
     /// </summary>
     [HarmonyPatch(typeof(global::InfectionSpitterDamage), nameof(global::InfectionSpitterDamage.BulletDamage))]
     [HarmonyPrefix]
@@ -58,9 +59,17 @@ internal static class Patch_SpitterDamage
     }
 
     /// <summary>
-    /// Dead-guard for every pop source (bullets, melee, explosion, fire all
-    /// funnel here — decompile InfectionSpitterDamage.cs:25-77): a dead or
-    /// dying spitter must not trigger further explosions.
+    /// Pop-per-hit + dead-guard for every pop source (bullets, melee,
+    /// explosion, fire all funnel here — decompile
+    /// InfectionSpitterDamage.cs:25-77). Vanilla gates damage pops behind a
+    /// 5s cooldown (m_damageExplodeTimer, InfectionSpitter.cs:337-347); this
+    /// replaces the body without it, so sustained fire keeps popping the
+    /// spitter until it dies. DoExplode's own m_isExploding re-entry guard
+    /// paces the pops to one per wind-up cycle, and the m_isExploding skip
+    /// below also avoids re-broadcasting the vanilla explode packet for every
+    /// bullet landing mid-wind-up. Pops are triggered on the shooter's client
+    /// (vanilla design), so the LOCAL feature toggle gates the cooldown
+    /// bypass; disabled peers keep vanilla behavior.
     /// </summary>
     [HarmonyPatch(typeof(InfectionSpitter), nameof(InfectionSpitter.OnIncomingDamage))]
     [HarmonyPrefix]
@@ -68,7 +77,24 @@ internal static class Patch_SpitterDamage
     {
         try
         {
-            return !SpitterKillManager.IsDeadOrDying(__instance.m_spitterIndex);
+            // Dead/dying spitters must not trigger further explosions.
+            if (SpitterKillManager.IsDeadOrDying(__instance.m_spitterIndex))
+                return false;
+
+            if (!Plugin.Config_KillableSpitters)
+                return true;
+
+            // Pop already winding up — nothing to add, don't resend.
+            if (__instance.m_isExploding)
+                return false;
+
+            // Vanilla body minus the 5s m_damageExplodeTimer gate.
+            if (__instance.m_currentState == InfectionSpitter.eSpitterState.Retracted)
+                __instance.SendSlowExplode();
+            else
+                __instance.SendExplode();
+
+            return false;
         }
         catch (Exception ex)
         {

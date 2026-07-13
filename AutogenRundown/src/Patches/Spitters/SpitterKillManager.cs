@@ -46,11 +46,13 @@ namespace AutogenRundown.Patches.Spitters;
 /// replicated death states regardless of their local toggle, and the
 /// dead-guards always apply so dead spitters stay dead everywhere.
 ///
-/// Death sequence ("vanilla pops + death pop"): the killing blow always
-/// produces exactly one final explosion. KillSpitter adopts an in-flight or
-/// just-finished pop where one exists, otherwise triggers DoExplode directly
-/// (bypassing the 5s OnIncomingDamage cooldown by design — DoExplode itself
-/// only guards on m_isExploding). Finalization (deactivate + sound cleanup)
+/// Death sequence ("pops on every hit + death pop"): Patch_SpitterDamage
+/// removes the vanilla 5s damage-pop cooldown, so sustained fire pops the
+/// spitter each wind-up cycle until the pool empties, and the killing blow
+/// always produces exactly one final explosion. KillSpitter adopts an
+/// in-flight or just-finished pop where one exists, otherwise triggers
+/// DoExplode directly (DoExplode only guards on m_isExploding).
+/// Finalization (deactivate + sound cleanup)
 /// happens once the pop completes plus a grace period, driven by the
 /// InfectionSpitter.Update postfix, with a hard deadline fallback driven from
 /// the ManagerUpdate gate.
@@ -627,9 +629,11 @@ public static class SpitterKillManager
         }
         else
         {
-            // (c) No pop available (e.g. killing blow landed inside the 5s
-            // OnIncomingDamage cooldown) — trigger the death pop directly.
-            // Matches vanilla SendSlowExplode semantics for hidden spitters.
+            // (c) No pop available — rare fallback now that every hit pops
+            // (e.g. a client with the feature toggled off landed the killing
+            // blow under the vanilla cooldown). Trigger the death pop
+            // directly; matches vanilla SendSlowExplode semantics for hidden
+            // spitters.
             spitter.DoExplode(
                 spitter.m_currentState == InfectionSpitter.eSpitterState.Retracted ? 0.5f : 1f);
             _dyingFinalizeAt[index] = float.MaxValue;
