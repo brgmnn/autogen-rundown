@@ -108,14 +108,14 @@ public class Plugin : BasePlugin
             new ConfigDescription("Use per player color glow sticks. Client side only."));
 
         var killableSpitters = Config.Bind(
-            new ConfigDefinition("AutogenRundown", "KillableSpitters"),
+            new ConfigDefinition("Enemies", "KillableSpitters"),
             true,
             new ConfigDescription("Allow infection spitters to be shot and killed with bullets. " +
                                   "In multiplayer the lobby HOST's setting decides; clients always " +
                                   "mirror the host's spitter deaths."));
 
         var spitterHealth = Config.Bind(
-            new ConfigDefinition("AutogenRundown", "SpitterHealth"),
+            new ConfigDefinition("Enemies", "SpitterHealth"),
             30.0f,
             new ConfigDescription("Bullet health pool for killable spitters. Only the lobby " +
                                   "host's value applies."));
