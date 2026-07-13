@@ -53,9 +53,10 @@ namespace AutogenRundown.Patches.Spitters;
 /// in-flight or just-finished pop where one exists, otherwise triggers
 /// DoExplode directly (DoExplode only guards on m_isExploding).
 /// The flyer's death burst + sound (SpitterDeathFx) land together with the
-/// death pop, locally on every peer. Finalization (deactivate + sound
-/// cleanup) happens once the pop completes plus a grace period — quiet by
-/// then, the spitter sits fully retracted — driven by the
+/// death pop, locally on every peer, and the model is hidden on that same
+/// frame so the explosion and the disappearance coincide. Finalization
+/// (deactivate + sound cleanup + FX tint restore) follows a grace period
+/// later on the already-invisible object, driven by the
 /// InfectionSpitter.Update postfix, with a hard deadline fallback driven from
 /// the ManagerUpdate gate.
 ///
@@ -151,6 +152,12 @@ public static class SpitterKillManager
     /// death pop completes; FinalizeSpitter consumes any leftover at the
     /// deadline fallback so the burst is never lost.</summary>
     private static readonly HashSet<ushort> _pendingDeathFx = new();
+
+    /// <summary>Dying spitters whose model was hidden at the death burst so
+    /// the explosion and the disappearance land on the same frame — the
+    /// finalize grace only protects the sound cleanup and FX tint restore,
+    /// which run 1.5s later on the already-invisible object.</summary>
+    private static readonly HashSet<ushort> _modelHidden = new();
 
     private static readonly StateReplicator<SpitterDeathState>?[] _replicators =
         new StateReplicator<SpitterDeathState>?[SHARD_COUNT];
@@ -321,15 +328,17 @@ public static class SpitterKillManager
                 {
                     // The death pop fired earlier in this same vanilla Update
                     // call (m_fx acquired + played, not yet simulated or
-                    // rendered) — tint the burst red, restore the body glow
-                    // that vanilla's completion write just reset, and land
-                    // the destruction burst together with the pop.
+                    // rendered) — tint the burst red, and land the
+                    // destruction burst + the model's disappearance together
+                    // with the pop.
                     SpitterVisuals.TintPop(index, spitter, SpitterVisuals.DeathPopColor,
                         recolorLiveParticles: false, untilFinalize: true);
-                    SpitterVisuals.ApplyBodyGlow(spitter, SpitterVisuals.DeathSteadyGlow);
 
                     if (_pendingDeathFx.Remove(index))
+                    {
                         SpitterDeathFx.PlayAt(spitter.m_position);
+                        HideSpitterModel(index, spitter);
+                    }
                 }
                 else if (_healthRel.TryGetValue(index, out var rel))
                 {
@@ -395,6 +404,23 @@ public static class SpitterKillManager
         catch (Exception restoreEx)
         {
             Plugin.Logger.LogWarning($"[SpitterKill] FX restore during Break failed: {restoreEx.Message}");
+        }
+
+        // Nor an invisible-but-alive spitter: models hidden at a death burst
+        // that never finalized go back to vanilla visible.
+        try
+        {
+            foreach (var index in _modelHidden.ToList())
+            {
+                var spitter = TryGetSpitter(index);
+                if (spitter != null)
+                    ShowSpitterModel(index, spitter);
+            }
+            _modelHidden.Clear();
+        }
+        catch (Exception showEx)
+        {
+            Plugin.Logger.LogWarning($"[SpitterKill] Model restore during Break failed: {showEx.Message}");
         }
     }
 
@@ -637,11 +663,11 @@ public static class SpitterKillManager
 
             // The adopted burst already played (green / damage-tinted) and is
             // likely still airborne — switch its live particles to death red,
-            // and the pop being over means the destruction burst plays now.
+            // and the pop being over means the destruction lands now.
             SpitterVisuals.TintPop(index, spitter, SpitterVisuals.DeathPopColor,
                 recolorLiveParticles: true, untilFinalize: true);
-            SpitterVisuals.ApplyBodyGlow(spitter, SpitterVisuals.DeathSteadyGlow);
             SpitterDeathFx.PlayAt(spitter.m_position);
+            HideSpitterModel(index, spitter);
         }
         else
         {
@@ -657,6 +683,42 @@ public static class SpitterKillManager
         }
 
         _dyingDeadline[index] = Clock.Time + FinalizeDeadlineSeconds;
+    }
+
+    /// <summary>
+    /// Visually removes a dying spitter the moment its death burst plays:
+    /// renderer and glow light off, damage proxy deactivated (no invisible
+    /// shot-blocker). The spitter's own GameObject stays active — its Update
+    /// drives finalization — so the sound cleanup and FX tint restore keep
+    /// their full grace period behind an already-invisible model.
+    /// </summary>
+    private static void HideSpitterModel(ushort index, InfectionSpitter spitter)
+    {
+        _modelHidden.Add(index);
+
+        if (spitter.m_renderer != null)
+            spitter.m_renderer.enabled = false;
+
+        if (spitter.m_light != null)
+            spitter.m_light.enabled = false;
+
+        if (spitter.m_damage != null && spitter.m_damage.gameObject != spitter.gameObject)
+            spitter.m_damage.gameObject.SetActive(false);
+    }
+
+    /// <summary>Reverses HideSpitterModel (checkpoint revive, Break).</summary>
+    private static void ShowSpitterModel(ushort index, InfectionSpitter spitter)
+    {
+        _modelHidden.Remove(index);
+
+        if (spitter.m_renderer != null)
+            spitter.m_renderer.enabled = true;
+
+        if (spitter.m_light != null)
+            spitter.m_light.enabled = true;
+
+        if (spitter.m_damage != null && spitter.m_damage.gameObject != spitter.gameObject)
+            spitter.m_damage.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -676,6 +738,7 @@ public static class SpitterKillManager
         _dyingDeadline.Remove(index);
         _explodingNow.Remove(index);
         _lastPopCompletedAt.Remove(index);
+        _modelHidden.Remove(index);
         _healthRel.Remove(index);
 
         // Single convergence point of every death path — restore the death
@@ -728,8 +791,10 @@ public static class SpitterKillManager
 
         spitter.gameObject.SetActive(true);
 
-        if (spitter.m_damage != null && spitter.m_damage.gameObject != spitter.gameObject)
-            spitter.m_damage.gameObject.SetActive(true);
+        // Unconditional: SetActive(true) alone would leave the renderer/light
+        // disabled if the model was hidden at the death burst (idempotent for
+        // never-hidden spitters; also re-activates the damage proxy).
+        ShowSpitterModel(index, spitter);
 
         // The propBlock still holds the death/damage tint otherwise.
         SpitterVisuals.ResetBodyGlow(spitter);
@@ -893,6 +958,7 @@ public static class SpitterKillManager
         _explodingNow.Clear();
         _lastPopCompletedAt.Clear();
         _pendingDeathFx.Clear();
+        _modelHidden.Clear();
         _warnedCapacity = false;
 
         // Pool instances outlive the level — never leave a tint behind.
