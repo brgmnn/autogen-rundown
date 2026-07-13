@@ -54,7 +54,8 @@ namespace AutogenRundown.Patches.Spitters;
 /// DoExplode directly (DoExplode only guards on m_isExploding). C-foam is
 /// also lethal: instead of only the vanilla 4-minute freeze, the host kills
 /// a foamed spitter after Config_SpitterGlueKillSeconds (replicated exactly
-/// like a bullet kill — it bursts out of the foam with the full death pop).
+/// like a bullet kill) — and a foamed spitter dies in place with only the
+/// destruction burst, skipping the final infection pop entirely.
 /// The flyer's death burst + sound (SpitterDeathFx) land together with the
 /// death pop, locally on every peer, and the model is hidden on that same
 /// frame so the explosion and the disappearance coincide. Finalization
@@ -704,10 +705,11 @@ public static class SpitterKillManager
     }
 
     /// <summary>
-    /// Applies a spitter death locally. Non-silent deaths guarantee exactly one
-    /// final explosion by adopting a pop that is already in flight (a) or just
-    /// finished (b), else triggering one (c). Silent deaths (recall) deactivate
-    /// immediately with no pop or sound.
+    /// Applies a spitter death locally. Non-silent deaths guarantee exactly
+    /// one destruction burst: adopting a pop already in flight (a) or just
+    /// finished (b), skipping the infection pop entirely for a C-foamed
+    /// spitter (c), else triggering a pop (d). Silent deaths (recall)
+    /// deactivate immediately with no pop or sound.
     /// </summary>
     private static void KillSpitter(ushort index, bool silent)
     {
@@ -760,13 +762,23 @@ public static class SpitterKillManager
             SpitterDeathFx.PlayAt(spitter.m_position);
             HideSpitterModel(index, spitter);
         }
+        else if (spitter.m_isGlued)
+        {
+            // (c) Frozen in C-foam — no final infection pop (no spit spray,
+            // splatter, infection damage or noise event); the death is just
+            // the destruction burst, landing immediately. m_isGlued is set on
+            // every peer by the vanilla glue broadcast, so all peers take
+            // this branch. Finalize follows after the usual grace on the
+            // hidden model, via the same dual drivers as the glue clock.
+            SpitterDeathFx.PlayAt(spitter.m_position);
+            HideSpitterModel(index, spitter);
+            _dyingFinalizeAt[index] = Clock.Time + FinalizeGraceSeconds;
+        }
         else
         {
-            // (c) No pop available — trigger the death pop directly. The
-            // normal path for C-foam kills (the foamed spitter sits retracted,
-            // not popping, and slowly bursts out of the foam); otherwise a
-            // rare fallback (e.g. a client with the feature toggled off landed
-            // the killing blow under the vanilla cooldown). Matches vanilla
+            // (d) No pop available — rare fallback (e.g. a client with the
+            // feature toggled off landed the killing blow under the vanilla
+            // cooldown): trigger the death pop directly. Matches vanilla
             // SendSlowExplode semantics for hidden spitters.
             spitter.DoExplode(
                 spitter.m_currentState == InfectionSpitter.eSpitterState.Retracted ? 0.5f : 1f);
