@@ -55,6 +55,12 @@ public class Plugin : BasePlugin
     /// </summary>
     public static float Config_SpitterHealth { get; set; }
 
+    /// <summary>
+    /// Seconds after being C-foamed before a spitter dies (0 or less keeps
+    /// the vanilla freeze-only behavior). Host-authoritative.
+    /// </summary>
+    public static float Config_SpitterGlueKillSeconds { get; set; }
+
     public override void Load()
     {
         Logger = Log;
@@ -120,9 +126,19 @@ public class Plugin : BasePlugin
             new ConfigDescription("Bullet health pool for killable spitters. Only the lobby " +
                                   "host's value applies."));
 
+        var spitterGlueKillSeconds = Config.Bind(
+            new ConfigDefinition("Enemies", "SpitterGlueKillSeconds"),
+            5.0f,
+            new ConfigDescription("Seconds after being C-foamed before a spitter dies (with the " +
+                                  "full death explosion). 0 or less keeps the vanilla freeze-only " +
+                                  "behavior. Values beyond the vanilla 240s freeze fire after the " +
+                                  "foam has worn off. Only the lobby host's value applies; " +
+                                  "requires KillableSpitters."));
+
         Config_UsePlayerColoredGlowsticks = usePlayerColorGlowsticks.Value;
         Config_KillableSpitters = killableSpitters.Value;
         Config_SpitterHealth = spitterHealth.Value;
+        Config_SpitterGlueKillSeconds = spitterGlueKillSeconds.Value;
 
         Config.Save();
 

@@ -104,6 +104,19 @@ internal static class Patch_SpitterDamage
     }
 
     /// <summary>
+    /// C-foam kill tap: DoGetGlued runs on every peer for any foaming (local
+    /// trigger via SendGlued, or the vanilla packet via ReceiveDamage —
+    /// decompile InfectionSpitter.cs:349-404), giving the host a clean
+    /// "became glued" edge for the foam-kill clock.
+    /// </summary>
+    [HarmonyPatch(typeof(InfectionSpitter), nameof(InfectionSpitter.DoGetGlued))]
+    [HarmonyPostfix]
+    public static void Post_DoGetGlued(InfectionSpitter __instance)
+    {
+        SpitterKillManager.OnSpitterGlued(__instance);
+    }
+
+    /// <summary>
     /// Dead-guard for glue: DoGetGlued's long timed retract would fight the
     /// death pop's state on a dying spitter.
     /// </summary>

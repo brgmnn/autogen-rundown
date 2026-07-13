@@ -51,7 +51,10 @@ namespace AutogenRundown.Patches.Spitters;
 /// spitter each wind-up cycle until the pool empties, and the killing blow
 /// always produces exactly one final explosion. KillSpitter adopts an
 /// in-flight or just-finished pop where one exists, otherwise triggers
-/// DoExplode directly (DoExplode only guards on m_isExploding).
+/// DoExplode directly (DoExplode only guards on m_isExploding). C-foam is
+/// also lethal: instead of only the vanilla 4-minute freeze, the host kills
+/// a foamed spitter after Config_SpitterGlueKillSeconds (replicated exactly
+/// like a bullet kill — it bursts out of the foam with the full death pop).
 /// The flyer's death burst + sound (SpitterDeathFx) land together with the
 /// death pop, locally on every peer, and the model is hidden on that same
 /// frame so the explosion and the disappearance coincide. Finalization
@@ -159,6 +162,11 @@ public static class SpitterKillManager
     /// which run 1.5s later on the already-invisible object.</summary>
     private static readonly HashSet<ushort> _modelHidden = new();
 
+    /// <summary>HOST only: Clock.Time each live spitter was first C-foamed;
+    /// TickGlueKill kills it Config_SpitterGlueKillSeconds later (the first
+    /// foam wins, re-foams don't reset the clock).</summary>
+    private static readonly Dictionary<ushort, float> _gluedAt = new();
+
     private static readonly StateReplicator<SpitterDeathState>?[] _replicators =
         new StateReplicator<SpitterDeathState>?[SHARD_COUNT];
 
@@ -255,12 +263,18 @@ public static class SpitterKillManager
 
         try
         {
-            if (_dead.Count == 0 || spitter == null)
+            if (spitter == null)
                 return false;
 
             var index = spitter.m_spitterIndex;
 
-            if (!_dead.Contains(index))
+            // The C-foam kill clock also ticks here: a spitter foamed while
+            // already fully frozen may have its Update disabled (vanilla
+            // SetRetractTarget only re-enables when the retraction actually
+            // changes — decompile InfectionSpitter.cs:324-335).
+            TickGlueKill(index);
+
+            if (_dead.Count == 0 || !_dead.Contains(index))
                 return false;
 
             if (_dyingFinalizeAt.TryGetValue(index, out var finalizeAt))
@@ -351,6 +365,8 @@ public static class SpitterKillManager
                 }
             }
 
+            TickGlueKill(index);
+
             if (_dyingFinalizeAt.Count == 0)
                 return;
 
@@ -381,6 +397,70 @@ public static class SpitterKillManager
         {
             Break(ex);
         }
+    }
+
+    /// <summary>
+    /// Called from the InfectionSpitter.DoGetGlued postfix, which fires on
+    /// every peer for any foaming (local trigger or vanilla packet). HOST
+    /// only: starts the C-foam kill clock.
+    /// </summary>
+    public static void OnSpitterGlued(InfectionSpitter spitter)
+    {
+        if (_broken || spitter == null)
+            return;
+
+        try
+        {
+            if (!SNet.IsMaster || !Plugin.Config_KillableSpitters
+                || Plugin.Config_SpitterGlueKillSeconds <= 0f)
+                return;
+
+            var index = spitter.m_spitterIndex;
+
+            if (index >= SpitterCapacity)
+            {
+                WarnCapacityOnce(index);
+                return;
+            }
+
+            if (IsDeadOrDying(index))
+                return;
+
+            _gluedAt.TryAdd(index, Clock.Time);
+        }
+        catch (Exception ex)
+        {
+            Break(ex);
+        }
+    }
+
+    /// <summary>
+    /// HOST: kills a foamed spitter once it has been frozen for the
+    /// configured time; the death is replicated exactly like a bullet kill.
+    /// Driven from both the Update postfix (glued spitters normally keep
+    /// Updating) and the ManagerUpdate gate (covers the frozen-foamed edge
+    /// where Update stays disabled). Callers hold the try/catch.
+    /// </summary>
+    private static void TickGlueKill(ushort index)
+    {
+        if (_gluedAt.Count == 0 || !SNet.IsMaster)
+            return;
+
+        if (!_gluedAt.TryGetValue(index, out var gluedAt))
+            return;
+
+        if (IsDeadOrDying(index))
+        {
+            _gluedAt.Remove(index);
+            return;
+        }
+
+        if (Clock.Time - gluedAt < Plugin.Config_SpitterGlueKillSeconds)
+            return;
+
+        _gluedAt.Remove(index);
+        Plugin.Logger.LogDebug($"[SpitterKill] Spitter {index} killed by C-foam (host)");
+        HostMarkDead(index);
     }
 
     /// <summary>
@@ -479,7 +559,18 @@ public static class SpitterKillManager
             return;
         }
 
+        HostMarkDead(index);
+    }
+
+    /// <summary>
+    /// HOST only: the death decision point shared by every kill source
+    /// (bullet pool depletion, C-foam clock) — marks the spitter dead in the
+    /// replicated bitmask and kills it locally.
+    /// </summary>
+    private static void HostMarkDead(ushort index)
+    {
         _healthByIndex.Remove(index);
+        _gluedAt.Remove(index);
         _dead.Add(index);
 
         var (shard, local) = SpitterDeathState.MapIndex(index);
@@ -671,11 +762,12 @@ public static class SpitterKillManager
         }
         else
         {
-            // (c) No pop available — rare fallback now that every hit pops
-            // (e.g. a client with the feature toggled off landed the killing
-            // blow under the vanilla cooldown). Trigger the death pop
-            // directly; matches vanilla SendSlowExplode semantics for hidden
-            // spitters.
+            // (c) No pop available — trigger the death pop directly. The
+            // normal path for C-foam kills (the foamed spitter sits retracted,
+            // not popping, and slowly bursts out of the foam); otherwise a
+            // rare fallback (e.g. a client with the feature toggled off landed
+            // the killing blow under the vanilla cooldown). Matches vanilla
+            // SendSlowExplode semantics for hidden spitters.
             spitter.DoExplode(
                 spitter.m_currentState == InfectionSpitter.eSpitterState.Retracted ? 0.5f : 1f);
             _dyingFinalizeAt[index] = float.MaxValue;
@@ -783,6 +875,7 @@ public static class SpitterKillManager
         _pendingDeathFx.Remove(index);
         _healthByIndex.Remove(index);
         _healthRel.Remove(index);
+        _gluedAt.Remove(index);
         SpitterVisuals.RestoreForSpitter(index);
 
         var spitter = TryGetSpitter(index);
@@ -959,6 +1052,7 @@ public static class SpitterKillManager
         _lastPopCompletedAt.Clear();
         _pendingDeathFx.Clear();
         _modelHidden.Clear();
+        _gluedAt.Clear();
         _warnedCapacity = false;
 
         // Pool instances outlive the level — never leave a tint behind.
