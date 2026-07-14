@@ -114,26 +114,26 @@ public class Plugin : BasePlugin
             new ConfigDescription("Use per player color glow sticks. Client side only."));
 
         var killableSpitters = Config.Bind(
-            new ConfigDefinition("Enemies", "KillableSpitters"),
+            new ConfigDefinition("Spitters", "KillableSpitters"),
             true,
             new ConfigDescription("Allow infection spitters to be shot and killed with bullets. " +
                                   "In multiplayer the lobby HOST's setting decides; clients always " +
                                   "mirror the host's spitter deaths."));
 
         var spitterHealth = Config.Bind(
-            new ConfigDefinition("Enemies", "SpitterHealth"),
+            new ConfigDefinition("Spitters", "SpitterHealth"),
             30.0f,
             new ConfigDescription("Bullet health pool for killable spitters. Only the lobby " +
                                   "host's value applies."));
 
         var spitterGlueKillSeconds = Config.Bind(
-            new ConfigDefinition("Enemies", "SpitterGlueKillSeconds"),
-            5.0f,
+            new ConfigDefinition("Spitters", "SpitterGlueKillSeconds"),
+            0.7f,
             new ConfigDescription("Seconds after being C-foamed before a spitter dies (with the " +
                                   "full death explosion). 0 or less keeps the vanilla freeze-only " +
                                   "behavior. Values beyond the vanilla 240s freeze fire after the " +
-                                  "foam has worn off. Only the lobby host's value applies; " +
-                                  "requires KillableSpitters."));
+                                  "foam has worn off. Only the lobby host's value applies. " +
+                                  "Requires KillableSpitters to be enabled."));
 
         Config_UsePlayerColoredGlowsticks = usePlayerColorGlowsticks.Value;
         Config_KillableSpitters = killableSpitters.Value;
