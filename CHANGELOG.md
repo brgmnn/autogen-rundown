@@ -3,6 +3,21 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v1.0.6 – Goodbye Spitters](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.6) — July 13, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* 🌟 Spitters can now be killed
+  * Gun's and mines, but not melee damage, will damage and kill spitters when shooting at them
+  * Spitters have 30 health
+  * C-Foam kills spitters with one blob after a 0.7s delay
+  * Can be disabled or adjusted via Autogen config settings
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v1.0.5...v1.0.6
+
+
 ## [v1.0.5](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.5) — June 30, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
