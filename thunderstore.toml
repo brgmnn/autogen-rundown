@@ -4,7 +4,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "the_tavern"
 name = "AutogenRundown"
-versionNumber = "1.0.6"
+versionNumber = "1.0.7"
 description = "Rundown generation mod for GTFO. New rundowns generated daily, weekly, monthly, and each season."
 websiteUrl = "https://github.com/brgmnn/autogen-rundown"
 containsNsfwContent = false
@@ -30,6 +30,7 @@ hirnukuono-EEC_H = "1.8.24"
 hirnukuono-LGTuner = "1.2.7"
 Inas07-ExtraSurvivalWaveSettings = "1.1.4"
 Inas07-LocalProgression = "1.3.7"
+the_tavern-KillableSpitters = "0.5.0"
 
 [publish]
 repository = "https://thunderstore.io"
