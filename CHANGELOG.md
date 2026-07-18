@@ -3,6 +3,17 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v1.0.7](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.7) — July 18, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Change: Replace killable spitters code with standalone mod dependency
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v1.0.6...v1.0.7
+
+
 ## [v1.0.6 – Goodbye Spitters](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.6) — July 13, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
