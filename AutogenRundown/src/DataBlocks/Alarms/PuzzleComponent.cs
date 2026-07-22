@@ -203,6 +203,9 @@ public class PuzzleComponent
     /// <summary>
     /// ~100 seconds duration
     /// Green color when active, slightly slower than others
+    ///
+    /// TODO: wrong details?
+    /// Seems to actually be 200s and not green on active
     /// </summary>
     public static readonly PuzzleComponent TravelTeam_MediumGreen = new()
     {
