@@ -8,8 +8,8 @@ using HarmonyLib;
 namespace AutogenRundown.Patches;
 
 /// <summary>
-/// Forces specific long team/sustained scans to always progress at the 4-player
-/// (full-team) speed, regardless of how many players are in the scan circle.
+/// Forces whole-team (PlayerRequirement.All) scans to always progress at the
+/// 4-player (full-team) speed, regardless of how many players are in the circle.
 /// These scans require the whole team to progress anyway, so solo/small teams
 /// are not penalised with much longer durations. m_playerRequirement is left
 /// untouched, so the whole-team requirement is preserved.
@@ -23,14 +23,37 @@ internal static class ScanSpeedNormalize
 {
     /// <summary>
     /// ChainedPuzzle component PuzzleType pids that always scan at 4-player speed.
-    /// Extend this set to cover additional scan types.
+    /// These are the confirmed whole-team (PlayerRequirement.All) scans autogen
+    /// generates — verified against each pid's prefab in the game data dump
+    /// (the "RequireAll" prefabs). Solo-capable moving scans (42/52/60) and the
+    /// ambiguous 43 (CP_Bioscan_Big_Moving_R8B4_v2, not RequireAll) / 37 geo-scan
+    /// are deliberately excluded. Extend this set to cover additional scan types.
     /// </summary>
     internal static readonly HashSet<uint> FullSpeedScanTypes = new()
     {
-        (uint)PuzzleType.SustainedMegaHuge,      // 17  - Sustained Mega Huge room scan
-        (uint)PuzzleType.TravelTeam_MediumGreen, // 24  - Travel team short (Green)
-        (uint)PuzzleType.TravelTeam_Short,       // 31  - Travel team short
-        (uint)PuzzleType.SustainedTravel,        // 100 - Sustained team travel (custom)
+        // Full team scans (RequireAll)
+        (uint)PuzzleType.AllBig,                 // 6
+        (uint)PuzzleType.AllLarge,               // 8
+        (uint)PuzzleType.AllLarge_Slow,          // 20
+        (uint)PuzzleType.AllBig_BlueActive,      // 25
+        (uint)PuzzleType.AllBig_GreenActive,     // 29
+
+        // Sustained S-class scans (RequireAll)
+        (uint)PuzzleType.Sustained,              // 13
+        (uint)PuzzleType.SustainedSmall,         // 14
+        (uint)PuzzleType.SustainedBig_Cluster,   // 16
+        (uint)PuzzleType.SustainedMegaHuge,      // 17
+        (uint)PuzzleType.SustainedHuge,          // 18
+        (uint)PuzzleType.SustainedMedium,        // 32
+
+        // Travel team scans (RequireAll, moving)
+        (uint)PuzzleType.TravelTeam_LongGreen,   // 21
+        (uint)PuzzleType.TravelTeam_Long,        // 22
+        (uint)PuzzleType.TravelTeam_MediumGreen, // 24
+        (uint)PuzzleType.TravelTeam_Short,       // 31
+
+        // Sustained travel (RequireAll, custom runtime movable)
+        (uint)PuzzleType.SustainedTravel,        // 100
     };
 
     /// <summary>
