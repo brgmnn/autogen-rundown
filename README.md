@@ -94,6 +94,9 @@ Requests:
 Check: https://discord.com/channels/782438773690597389/783918553626836992/1407457297889890530
 
 
+- Reduce T-scan duration
+
+
 Problems:
   - Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_portal_HA_01.prefab
     - Has some innacessible spawn locations where boxes and big pickups can spawn.
