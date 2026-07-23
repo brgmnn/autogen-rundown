@@ -5,8 +5,6 @@ using Expedition;
 using GameData;
 using HarmonyLib;
 using UnityEngine;
-using LevelGeneration;
-using SNetwork;
 
 namespace AutogenRundown.Patches;
 

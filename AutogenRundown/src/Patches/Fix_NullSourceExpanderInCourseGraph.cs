@@ -1,9 +1,6 @@
 using AIGraph;
-using AutogenRundown.Managers;
 using Enemies;
 using HarmonyLib;
-using LevelGeneration;
-using UnityEngine;
 
 namespace AutogenRundown.Patches;
 

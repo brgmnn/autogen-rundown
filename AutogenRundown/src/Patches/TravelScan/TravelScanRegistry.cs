@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using GTFO.API;
 
 namespace AutogenRundown.Patches.TravelScan;
