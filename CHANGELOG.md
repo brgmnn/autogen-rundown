@@ -15,8 +15,8 @@ See more at https://github.com/brgmnn/autogen-rundown
 
 ### Changes
 
-Fix: Class 7 Cluster scans were incorrectly labeled "Class VI Cluster", they are now correctly labeled "Class VII Cluster"
-Performance: Spitters no longer spawn in unreachable zones in Cryptomnesia levels
+* Fix: Class 7 Cluster scans were incorrectly labeled "Class VI Cluster", they are now correctly labeled "Class VII Cluster"
+* Performance: Spitters no longer spawn in unreachable zones in Cryptomnesia levels
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v1.0.7...v1.0.8
 
