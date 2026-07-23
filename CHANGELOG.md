@@ -3,6 +3,24 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v1.0.8](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.8) — July 22, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* Added scan speed normalization for team scans and related scans
+  * Scans that require the whole team to progress but which have different scan speeds for 1, 2, 3, and 4 players are now normalized to always progress at the 4 player speed.
+  * This mostly affects Team scans and S-Class scans
+
+### Changes
+
+Fix: Class 7 Cluster scans were incorrectly labeled "Class VI Cluster", they are now correctly labeled "Class VII Cluster"
+Performance: Spitters no longer spawn in unreachable zones in Cryptomnesia levels
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v1.0.7...v1.0.8
+
+
 ## [v1.0.7](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.7) — July 18, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
