@@ -1,8 +1,43 @@
 using System.Text;
 using ChainedPuzzles;
+using GameData;
 using HarmonyLib;
+using LevelGeneration;
 
 namespace AutogenRundown.Patches;
+
+/// <summary>
+/// TEMPORARY debug logging (remove after the scan-duration investigation).
+///
+/// Logs, for every ChainedPuzzle the game actually builds, the owning datablock's
+/// persistentID + name, each component's PuzzleType, and the source area. This ties a
+/// runtime scan back to its datablock block so we can confirm whether the tested zone
+/// really uses PuzzleType 24 (and whether the [24] block is ever built at all).
+/// </summary>
+[HarmonyPatch(typeof(ChainedPuzzleInstance), nameof(ChainedPuzzleInstance.Setup))]
+public static class Patch_DebugChainedPuzzleBlock
+{
+    static void Prefix(ChainedPuzzleDataBlock data, LG_Area sourceArea)
+    {
+        if (data == null)
+            return;
+
+        var types = new StringBuilder();
+        if (data.ChainedPuzzle != null)
+        {
+            for (var i = 0; i < data.ChainedPuzzle.Count; i++)
+            {
+                if (i > 0)
+                    types.Append(", ");
+                types.Append(data.ChainedPuzzle[i].PuzzleType);
+            }
+        }
+
+        Plugin.Logger.LogInfo(
+            $"[ScanSpeedDebug] ChainedPuzzleInstance.Setup block persistentID={data.persistentID} " +
+            $"name={data.name} PuzzleTypes=[{types}] area={(sourceArea != null ? sourceArea.name : "<null>")}");
+    }
+}
 
 /// <summary>
 /// TEMPORARY debug logging (remove after the scan-duration investigation).
