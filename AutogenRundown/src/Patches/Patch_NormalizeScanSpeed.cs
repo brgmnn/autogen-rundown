@@ -11,7 +11,7 @@ namespace AutogenRundown.Patches;
 /// Forces whole-team (PlayerRequirement.All) scans to always progress at the
 /// 4-player (full-team) speed, regardless of how many players are in the circle.
 /// These scans require the whole team to progress anyway, so solo/small teams
-/// are not penalised with much longer durations. m_playerRequirement is left
+/// are not penalized with much longer durations. m_playerRequirement is left
 /// untouched, so the whole-team requirement is preserved.
 ///
 /// Mechanism: the game stores a per-player-count speed curve in
@@ -24,7 +24,7 @@ internal static class ScanSpeedNormalize
     /// <summary>
     /// ChainedPuzzle component PuzzleType pids that always scan at 4-player speed.
     /// These are the confirmed whole-team (PlayerRequirement.All) scans autogen
-    /// generates — verified against each pid's prefab in the game data dump
+    /// generates, verified against each pid's prefab in the game data dump
     /// (the "RequireAll" prefabs). Solo-capable moving scans (42/52/60) and the
     /// ambiguous 43 (CP_Bioscan_Big_Moving_R8B4_v2, not RequireAll) / 37 geo-scan
     /// are deliberately excluded. Extend this set to cover additional scan types.
