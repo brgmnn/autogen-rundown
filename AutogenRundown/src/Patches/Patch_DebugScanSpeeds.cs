@@ -33,9 +33,18 @@ public static class Patch_DebugChainedPuzzleBlock
             }
         }
 
+        // Resolve the in-game zone number ("Zone 21") the puzzle is attached to.
+        var zone = "<null zone>";
+        var lgZone = sourceArea?.m_zone;
+        if (lgZone != null)
+        {
+            try { zone = $"{lgZone.AliasName} (LocalIndex={lgZone.LocalIndex})"; }
+            catch { zone = "<zone unresolved>"; }
+        }
+
         Plugin.Logger.LogInfo(
             $"[ScanSpeedDebug] ChainedPuzzleInstance.Setup block persistentID={data.persistentID} " +
-            $"name={data.name} PuzzleTypes=[{types}] area={(sourceArea != null ? sourceArea.name : "<null>")}");
+            $"name={data.name} PuzzleTypes=[{types}] zone={zone} area={(sourceArea != null ? sourceArea.name : "<null>")}");
     }
 }
 
