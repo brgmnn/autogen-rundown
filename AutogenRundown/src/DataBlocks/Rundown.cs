@@ -257,7 +257,9 @@ public record Rundown : DataBlock<Rundown>
 
             foreach (var (bulkhead, zoneIndex, logFiles, startingState, source) in toPlace)
             {
-                var lorelog = Generator.Draw(logs);
+                // TODO: 1.1: change to draw so we don't have duplicate logs
+                // var lorelog = Generator.Draw(logs);
+                var lorelog = logs.PickRandom();
 
                 if (lorelog != null)
                 {
