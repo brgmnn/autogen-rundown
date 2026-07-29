@@ -278,14 +278,14 @@ public record Rundown : DataBlock<Rundown>
                     {
                         startingState.StartingState = TerminalState.AudioLoopError;
                         Plugin.Logger.LogDebug($" -> {bulkhead.ToString().PadLeft(8, ' ')}, " +
-                                               $"{dimensionIndex.ToString().PadRight(11, ' ')}, " +
+                                               $"{dimensionIndex.ToString().PadRight(11, ' ')}  " +
                                                $"ZONE_{zoneIndex}, " +
                                                $"file={lorelog.FileName}, with audio");
                     }
                     else
                     {
                         Plugin.Logger.LogDebug($" -> {bulkhead.ToString().PadLeft(8, ' ')}, " +
-                                               $"{dimensionIndex.ToString().PadRight(11, ' ')}, " +
+                                               $"{dimensionIndex.ToString().PadRight(11, ' ')}  " +
                                                $"ZONE_{zoneIndex}, " +
                                                $"file={lorelog.FileName}");
                     }
