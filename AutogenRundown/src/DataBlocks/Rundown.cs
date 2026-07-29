@@ -216,7 +216,7 @@ public record Rundown : DataBlock<Rundown>
 
         foreach (var level in levels)
         {
-            var terminals = new List<(Bulkhead Bulkhead, int ZoneIndex, List<LogFile> LogFiles, TerminalStartingState StartingState)>();
+            var terminals = new List<(Bulkhead Bulkhead, int ZoneIndex, List<LogFile> LogFiles, TerminalStartingState StartingState, string Source)>();
             var bulkheads =  new List<Bulkhead> { Bulkhead.Main, Bulkhead.Extreme, Bulkhead.Overload };
 
             // Logs are distributed as follows in levels across all rundowns. We weight number of
@@ -245,19 +245,19 @@ public record Rundown : DataBlock<Rundown>
             {
                 foreach (var zone in layout.Zones)
                     foreach (var terminal in zone.TerminalPlacements)
-                        terminals.Add((bulkhead, zone.LocalIndex, terminal.LogFiles, terminal.StartingStateData));
+                        terminals.Add((bulkhead, zone.LocalIndex, terminal.LogFiles, terminal.StartingStateData, "zone terminal"));
             }
 
             // Include custom terminal spawn requests in the log distribution pool
             var customRequests = CustomTerminalSpawnManager.GetRequests(level.LevelLayoutData);
             foreach (var request in customRequests)
-                terminals.Add((request.Bulkhead, request.LocalIndex, request.LogFiles, request.StartingStateData));
+                terminals.Add((request.Bulkhead, request.LocalIndex, request.LogFiles, request.StartingStateData, "custom terminal"));
 
             var toPlace = terminals.Shuffle().Take(totalLogs);
 
-            foreach (var (bulkhead, zoneIndex, logFiles, startingState) in toPlace)
+            foreach (var (bulkhead, zoneIndex, logFiles, startingState, source) in toPlace)
             {
-                var lorelog = logs.PickRandom();
+                var lorelog = Generator.Draw(logs);
 
                 if (lorelog != null)
                 {
@@ -274,16 +274,20 @@ public record Rundown : DataBlock<Rundown>
                         startingState.StartingState == TerminalState.Sleeping)
                     {
                         startingState.StartingState = TerminalState.AudioLoopError;
-                        Plugin.Logger.LogDebug($" -> {bulkhead}, ZONE_{zoneIndex}, with audio");
+                        Plugin.Logger.LogDebug($" -> {bulkhead}, ZONE_{zoneIndex} ({source}), file={lorelog.FileName}, with audio");
                     }
                     else
                     {
-                        Plugin.Logger.LogDebug($" -> {bulkhead}, ZONE_{zoneIndex}");
+                        Plugin.Logger.LogDebug($" -> {bulkhead}, ZONE_{zoneIndex} ({source}), file={lorelog.FileName}");
                     }
                 }
             }
 
             level.LogArchives.Save();
+
+            // Re-save custom terminals: the LogFiles added above (and any starting state
+            // changes) land after FinalizeCustomMods() already wrote the JSON
+            level.SaveCustomTerminals();
         }
     }
 

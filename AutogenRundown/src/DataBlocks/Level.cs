@@ -1359,6 +1359,22 @@ public partial class Level
         }
 
         // Save custom terminal spawn requests to JSON for runtime loading
+        SaveCustomTerminals();
+    }
+
+    /// <summary>
+    /// Saves custom terminal spawn requests to JSON for runtime loading. Called during
+    /// FinalizeCustomMods() and again after D-Lock log distribution, which mutates the
+    /// requests' LogFiles after the first save has already been written.
+    /// </summary>
+    public void SaveCustomTerminals()
+    {
+        var fsName = Regex.Replace(
+            Name,
+            @"<color(\s*=\s*[^>]+)?>|</color>|<s>|</s>|/|\?|!",
+            string.Empty,
+            RegexOptions.IgnoreCase);
+
         var customTerminalRequests = CustomTerminalSpawnManager.GetRequests(LevelLayoutData);
         if (customTerminalRequests.Any())
         {
