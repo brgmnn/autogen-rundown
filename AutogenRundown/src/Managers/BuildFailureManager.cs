@@ -5,6 +5,7 @@ using GTFO.API;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SNetwork;
+using UnityEngine;
 
 namespace AutogenRundown.Managers;
 
@@ -474,7 +475,7 @@ public static class BuildFailureManager
             Plugin.Logger.LogInfo(
                 $"[BuildFailure] Showing unreachable popup for {popup.Tier}{popup.Index}");
 
-            GlobalPopupMessageManager.ShowPopup(new PopupMessage
+            var panel = GlobalPopupMessageManager.ShowPopup(new PopupMessage
             {
                 Header = "EXPEDITION UNREACHABLE",
                 UpperText =
@@ -495,10 +496,64 @@ public static class BuildFailureManager
             });
 
             Plugin.Logger.LogInfo("[BuildFailure] Popup shown");
+
+            Resize(panel);
         }
         catch (Exception error)
         {
             Plugin.Logger.LogError($"[BuildFailure] Failed to show popup: {error.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Shrinks the popup panel. The stock CM_GlobalPopupBase prefab fills the screen.
+    ///
+    /// CM_GlobalPopup extends RectTransformComp, so SetSize writes the root's sizeDelta. The three
+    /// text rects are narrowed too: whether the prefab anchors them to stretch with the root is not
+    /// visible from the decompile, and if they are fixed width the body would overflow the smaller
+    /// panel.
+    ///
+    /// m_underlayCollider is deliberately untouched -- BoxCollider2D.size is set explicitly by
+    /// CM_GlobalPopup.SetUnderlayColliderSize and is not driven by the RectTransform, so the
+    /// full screen click blocker survives the resize.
+    /// </summary>
+    private static void Resize(CM_GlobalPopup? panel)
+    {
+        if (panel == null)
+            return;
+
+        // Tune here. Vanilla's CM_ExpeditionWindow is 420x515 for scale.
+        const float width = 800f;
+        const float height = 400f;
+        const float padding = 80f;
+
+        try
+        {
+            panel.SetSize(new Vector2(width, height));
+
+            foreach (var text in new[] { panel.m_headerText, panel.m_upperText, panel.m_lowerText })
+            {
+                if (text == null)
+                    continue;
+
+                var rect = text.rectTransform;
+                rect.sizeDelta = new Vector2(width - padding, rect.sizeDelta.y);
+            }
+
+            // If the panel still looks full screen, this names the child that actually owns the
+            // frame so it can be targeted directly.
+            var children = new List<string>();
+
+            for (var i = 0; i < panel.transform.childCount; i++)
+                children.Add(panel.transform.GetChild(i).name);
+
+            Plugin.Logger.LogDebug(
+                $"[BuildFailure] Popup resized to {panel.GetSize()}, children: {string.Join(", ", children)}");
+        }
+        catch (Exception error)
+        {
+            // Styling must never take down the popup itself
+            Plugin.Logger.LogWarning($"[BuildFailure] Could not resize popup: {error.Message}");
         }
     }
 

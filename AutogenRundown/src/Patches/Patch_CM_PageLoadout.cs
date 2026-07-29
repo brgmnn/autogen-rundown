@@ -30,8 +30,46 @@ public class Patch_CM_PageLoadout
     /// </summary>
     [HarmonyPatch(typeof(CM_PageLoadout), nameof(CM_PageLoadout.Update))]
     [HarmonyPostfix]
-    private static void Post_Update()
+    private static void Post_Update(CM_PageLoadout __instance)
     {
         BuildFailureManager.TryShowPopup();
+
+        GateDropButton(__instance);
+    }
+
+    /// <summary>
+    /// Stops the host dropping back into a level we already know cannot be generated.
+    ///
+    /// After an abort the lobby still has the failed expedition selected, so the DROP button would
+    /// happily send everyone straight back in. We gate the button rather than clearing the
+    /// selection: RundownManager.MasterSelectActiveExpedition is master only, and a null
+    /// ActiveExpedition is read in several places in the lobby UI.
+    ///
+    /// UpdateReadyState() sets the button state and is called from inside Update() on a 1 second
+    /// timer, so this postfix always runs after it and re-asserts the override.
+    /// </summary>
+    private static void GateDropButton(CM_PageLoadout page)
+    {
+        try
+        {
+            var expedition = RundownManager.ActiveExpedition;
+
+            if (expedition == null || !BuildFailureManager.IsLocked(expedition.LevelLayoutData))
+                return;
+
+            var drop = page.m_dropButton;
+
+            // Vanilla hides the drop button until everyone is ready -- don't resurrect it
+            if (drop == null || !drop.gameObject.activeSelf)
+                return;
+
+            drop.SetText("EXPEDITION UNREACHABLE");
+            drop.SetButtonEnabled(false);
+            drop.ShowBox = false;
+        }
+        catch (Exception error)
+        {
+            Plugin.Logger.LogWarning($"[BuildFailure] Could not gate drop button: {error.Message}");
+        }
     }
 }
