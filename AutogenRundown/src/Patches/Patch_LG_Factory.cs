@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.Managers;
+using AutogenRundown.Patches.CustomTerminals;
 using HarmonyLib;
 using LevelGeneration;
 
@@ -44,6 +45,11 @@ public class Patch_LG_Factory
         Fix_FailedToFindStartArea.fatalReached = false;
         Fix_DistributionOnBrokenZones.ResetDiagnostics();
         Fix_FactoryJobExceptionCatchAll.ResetDiagnostics();
+
+        // Must clear on rebuilds too: stale warden objective zone claims from a
+        // previous pass of the same level would block the custom terminal's own
+        // warden objective setup.
+        Patch_SpawnCustomTerminals.ResetBuildState();
     }
 
     /// <summary>

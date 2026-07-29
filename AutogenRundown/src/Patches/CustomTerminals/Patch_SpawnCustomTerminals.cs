@@ -20,7 +20,61 @@ internal static class Patch_SpawnCustomTerminals
     // in the same zone. Scoped to zone (not layer) to avoid blocking legitimate
     // multi-objective setups on different zones within the same layer.
     private static readonly HashSet<(eDimensionIndex, LG_LayerType, int)> CustomWardenObjectiveZones = new();
-    private static uint _lastBuildLayoutId;
+
+    // Warden objective terminals spawned this build pass, used to re-assert the
+    // objective text fragments once the build completes.
+    private static readonly List<(LG_LayerType Layer, LG_ComputerTerminal Terminal)> WardenObjectiveTerminals = new();
+
+    // Set while the mod itself calls SetupAsWardenObjectiveSpecialCommand so the
+    // duplicate-suppression prefix only ever blocks the game's own calls.
+    private static bool _selfSetupInProgress;
+
+    internal static void Setup()
+    {
+        LevelAPI.OnBuildDone += ReassertObjectiveTextFragments;
+    }
+
+    /// <summary>
+    /// Clears per-build-pass state. Called at the start of every Builder.Build(),
+    /// including rebuilds — stale zone claims from a previous pass of the same level
+    /// would otherwise make the duplicate-suppression prefix block the mod's own
+    /// warden objective setup, leaving ITEM_SERIAL/ITEM_ZONE/SPECIAL_COMMAND
+    /// unregistered and no terminal with the objective command.
+    /// </summary>
+    internal static void ResetBuildState()
+    {
+        CustomWardenObjectiveZones.Clear();
+        WardenObjectiveTerminals.Clear();
+    }
+
+    /// <summary>
+    /// Rewrites the objective text fragments for custom warden objective terminals after
+    /// the build completes. LG_Distribute_WardenObjective overwrites ITEM_ZONE in the
+    /// Distribution batch (after our DistributionSetup-batch spawn), and zone NavInfo may
+    /// not be formatted yet when the terminal is set up. Fragments are read lazily at GUI
+    /// time, so late writes win.
+    /// </summary>
+    private static void ReassertObjectiveTextFragments()
+    {
+        foreach (var (layer, terminal) in WardenObjectiveTerminals)
+        {
+            if (terminal == null)
+                continue;
+
+            WardenObjectiveManager.SetObjectiveTextFragment(
+                layer, 0, eWardenTextFragment.ITEM_SERIAL, terminal.ItemKey);
+            WardenObjectiveManager.SetObjectiveTextFragment(
+                layer, 0, eWardenTextFragment.ITEM_ZONE,
+                terminal.SpawnNode.m_zone.NavInfo.GetFormattedText(LG_NavInfoFormat.Full_And_Number_No_Formatting));
+
+            if (WardenObjectiveManager.TryGetWardenObjectiveDataForLayer(layer, 0, out var objectiveData))
+                WardenObjectiveManager.SetObjectiveTextFragment(
+                    layer, 0, eWardenTextFragment.SPECIAL_COMMAND, objectiveData.SpecialTerminalCommand);
+
+            Plugin.Logger.LogDebug(
+                $"[CustomTerminal] Re-asserted objective text fragments for {terminal.ItemKey} in {layer}");
+        }
+    }
 
     /// <summary>
     /// Postfix on LG_DistributionSetup.Build() which runs in the DistributionSetup batch (14).
@@ -36,13 +90,6 @@ internal static class Patch_SpawnCustomTerminals
         var mainLayoutId = RundownManager.ActiveExpedition?.LevelLayoutData ?? 0;
         if (mainLayoutId == 0)
             return;
-
-        // Clear once per level build, not per layer
-        if (mainLayoutId != _lastBuildLayoutId)
-        {
-            CustomWardenObjectiveZones.Clear();
-            _lastBuildLayoutId = mainLayoutId;
-        }
 
         var requests = CustomTerminalSpawnManager.GetRequests(mainLayoutId);
         if (requests.Count == 0)
@@ -74,6 +121,9 @@ internal static class Patch_SpawnCustomTerminals
     [HarmonyPatch(typeof(LG_ComputerTerminal), nameof(LG_ComputerTerminal.SetupAsWardenObjectiveSpecialCommand), new Type[] { typeof(int) })]
     private static bool Pre_SetupAsWardenObjectiveSpecialCommand(LG_ComputerTerminal __instance)
     {
+        if (_selfSetupInProgress)
+            return true;
+
         var dimIndex = __instance.SpawnNode.m_zone.DimensionIndex;
         var layerType = __instance.SpawnNode.LayerType;
         var zoneIndex = (int)__instance.SpawnNode.m_zone.LocalIndex;
@@ -188,9 +238,19 @@ internal static class Patch_SpawnCustomTerminals
         // Set up as warden objective terminal if flagged
         if (request.IsWardenObjective)
         {
-            terminal.SetupAsWardenObjectiveSpecialCommand(0);
+            _selfSetupInProgress = true;
+            try
+            {
+                terminal.SetupAsWardenObjectiveSpecialCommand(0);
+            }
+            finally
+            {
+                _selfSetupInProgress = false;
+            }
+
             var zoneIndex = (int)targetZone.LocalIndex;
             CustomWardenObjectiveZones.Add(((eDimensionIndex)request.DimensionIndex, request.LayerType, zoneIndex));
+            WardenObjectiveTerminals.Add((request.LayerType, terminal));
         }
 
         targetZone.TerminalsSpawnedInZone.Add(terminal);
