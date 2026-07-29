@@ -45,6 +45,17 @@ public class Fix_FactoryJobExceptionCatchAll
         var jobName = job?.GetName() ?? "<no name>";
         var exType = __exception.GetType().FullName ?? "<unknown>";
 
+        // On the give-up frame GetNewJob() already nulled m_currentJob and we suppressed the
+        // rebuild, so Update() throws on the null job. That is expected, and we are not
+        // "advancing past" anything -- the factory is about to be frozen. Swallow it silently.
+        if (FactoryJobManager.GaveUp)
+        {
+            __instance.m_currentJob = null;
+            __exception = null;
+
+            return;
+        }
+
         if (s_loggedFailures.Add((jobType, exType)))
         {
             Plugin.Logger.LogError(

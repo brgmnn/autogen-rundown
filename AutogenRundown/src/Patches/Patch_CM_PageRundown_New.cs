@@ -29,6 +29,8 @@ public class Patch_CM_PageRundown_New
         CenterSingleIcon(__instance.m_expIconsTier3, visuals.TierCVisuals);
         CenterSingleIcon(__instance.m_expIconsTier4, visuals.TierDVisuals);
         CenterSingleIcon(__instance.m_expIconsTier5, visuals.TierEVisuals);
+
+        ScrambleFailedIcons(__instance);
     }
 
     [HarmonyPatch(typeof(CM_PageRundown_New), nameof(CM_PageRundown_New.OnEnable))]
@@ -36,6 +38,50 @@ public class Patch_CM_PageRundown_New
     private static void Post_OnEnable(CM_PageRundown_New __instance)
     {
         EventManager.UpdateRundown();
+
+        ScrambleFailedIcons(__instance);
+    }
+
+    /// <summary>
+    /// Re-applies the scrambled state to icons for levels that failed to generate.
+    ///
+    /// The data block mutation done at startup is picked up by PlaceTier, but a level that fails
+    /// during this session is locked after its icon was already placed. The game's private
+    /// UpdateExpeditionIconProgression() has run by the time we get here, so we set the status
+    /// ourselves rather than waiting for the next refresh.
+    /// </summary>
+    private static void ScrambleFailedIcons(CM_PageRundown_New page)
+    {
+        // m_expIconsAll is allocated but never filled by PlaceTier, only the per tier lists are
+        ScrambleTier(page.m_expIconsTier1);
+        ScrambleTier(page.m_expIconsTier2);
+        ScrambleTier(page.m_expIconsTier3);
+        ScrambleTier(page.m_expIconsTier4);
+        ScrambleTier(page.m_expIconsTier5);
+    }
+
+    private static void ScrambleTier(Il2CppSystem.Collections.Generic.List<CM_ExpeditionIcon_New> icons)
+    {
+        if (icons == null)
+            return;
+
+        foreach (var icon in icons)
+        {
+            if (icon?.DataBlock == null)
+                continue;
+
+            if (icon.Accessibility == eExpeditionAccessibility.BlockedAndScrambled)
+                continue;
+
+            if (!BuildFailureManager.IsLocked(icon.DataBlock.LevelLayoutData))
+                continue;
+
+            // Blocks the expedition window click callback
+            icon.Accessibility = eExpeditionAccessibility.BlockedAndScrambled;
+
+            // Randomised hex name + DECRYPT ERROR text
+            icon.SetStatus(eExpeditionIconStatus.LockedAndScrambled);
+        }
     }
 
     /// <summary>

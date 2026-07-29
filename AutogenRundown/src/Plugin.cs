@@ -84,6 +84,13 @@ public class Plugin : BasePlugin
             false,
             new ConfigDescription("Disables all tier unlock requirements on rundowns, unlocking all levels"));
 
+        var maxRebuilds = Config.Bind(
+            new ConfigDefinition("AutogenRundown.Levels", "MaxLevelRebuilds"),
+            10,
+            new ConfigDescription("Rebuild attempts the host allows before aborting the drop and " +
+                                  "permanently locking the expedition out of the rundown. " +
+                                  "0 disables the limit."));
+
         var regenerateOnStartup = Config.Bind(
             new ConfigDefinition("AutogenRundown", "RegenerateOnStartup"),
             true,
@@ -96,6 +103,7 @@ public class Plugin : BasePlugin
             new ConfigDescription("Use per player color glow sticks. Client side only."));
 
         Config_UsePlayerColoredGlowsticks = usePlayerColorGlowsticks.Value;
+        Managers.FactoryJobManager.MaxRebuilds = maxRebuilds.Value;
 
         Config.Save();
 
@@ -140,6 +148,7 @@ public class Plugin : BasePlugin
 
         GameDataAPI.OnGameDataInitialized += Patch_CentralGeneratorCluster.Setup;
         GameDataAPI.OnGameDataInitialized += LogArchivistManager.Setup;
+        GameDataAPI.OnGameDataInitialized += BuildFailureManager.Setup;
         GameDataAPI.OnGameDataInitialized += ZoneSensorManager.Setup;
         GameDataAPI.OnGameDataInitialized += TravelScanRegistry.Setup;
         GameDataAPI.OnGameDataInitialized += CustomTerminalSpawnManager.Setup;
