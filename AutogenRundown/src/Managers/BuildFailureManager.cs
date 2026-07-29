@@ -1,13 +1,10 @@
 using AutogenRundown.Events;
 using AutogenRundown.Serialization;
-using CellMenu;
 using GameData;
 using GTFO.API;
-using Il2CppInterop.Runtime.Injection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SNetwork;
-using UnityEngine;
 
 namespace AutogenRundown.Managers;
 
@@ -71,7 +68,13 @@ public static class BuildFailureManager
 
     private static PopupData? pendingPopup;
 
-    private static PopupWatcher? watcher;
+    /// <summary>
+    /// Clock.Time at which the lobby was first seen settled. The popup waits a moment so the
+    /// loadout page's own booster / vanity popups get to go first.
+    /// </summary>
+    private static float settledAt = -1f;
+
+    private const float SettleDelay = 2f;
 
     private readonly record struct PopupData(string Tier, int Index, string Name, int Rebuilds);
 
@@ -98,8 +101,6 @@ public static class BuildFailureManager
             // miss the lock and the popup.
             Plugin.Logger.LogError($"[BuildFailure] Could not register network event: {error.Message}");
         }
-
-        EnsureWatcherExists();
     }
 
     /// <summary>
@@ -420,41 +421,59 @@ public static class BuildFailureManager
 
     #region Popup
 
-    private static void EnsureWatcherExists()
-    {
-        if (watcher != null)
-            return;
-
-        var go = new GameObject("AutogenBuildFailurePopupWatcher");
-        UnityEngine.Object.DontDestroyOnLoad(go);
-        watcher = go.AddComponent<PopupWatcher>();
-    }
-
     /// <summary>
-    /// Shows the popup once we are settled back in the lobby.
+    /// Shows the popup once we are settled back in the lobby. Driven from a postfix on
+    /// CM_PageLoadout.Update (see Patch_CM_PageLoadout) -- deliberately NOT from an injected
+    /// MonoBehaviour, which crashed the game with an AccessViolationException in the
+    /// il2cpp -> managed Update bridge.
     ///
-    /// We poll rather than hooking a game state transition because ShowPopup internally does
+    /// We wait rather than firing on a game state transition because ShowPopup internally does
     /// FocusStateManager.ChangeState(GlobalPopupMessage) and remembers the state it replaced.
     /// Firing while GS_AfterLevel / GS_Lobby are still settling focus would restore the wrong
-    /// state when the player dismisses it.
+    /// state when the player dismisses it. The delay also lets the loadout page's own booster and
+    /// vanity popups run first, so ours does not queue behind them.
     /// </summary>
-    internal static void TryShowPopup()
+    public static void TryShowPopup()
     {
         if (pendingPopup == null)
             return;
 
         if (GameStateManager.CurrentStateName != eGameStateName.Lobby &&
             GameStateManager.CurrentStateName != eGameStateName.NoLobby)
-            return;
+        {
+            settledAt = -1f;
 
+            return;
+        }
+
+        // Any open popup forces eFocusState.GlobalPopupMessage, so this also means no other popup
+        // is currently up
         if (FocusStateManager.CurrentState != eFocusState.MainMenu)
+        {
+            settledAt = -1f;
+
+            return;
+        }
+
+        if (settledAt < 0f)
+        {
+            settledAt = Clock.Time;
+
+            return;
+        }
+
+        if (Clock.Time - settledAt < SettleDelay)
             return;
 
         var popup = pendingPopup.Value;
         pendingPopup = null;
+        settledAt = -1f;
 
         try
         {
+            Plugin.Logger.LogInfo(
+                $"[BuildFailure] Showing unreachable popup for {popup.Tier}{popup.Index}");
+
             GlobalPopupMessageManager.ShowPopup(new PopupMessage
             {
                 Header = "EXPEDITION UNREACHABLE",
@@ -462,10 +481,20 @@ public static class BuildFailureManager
                     $"<color=orange>{popup.Tier}{popup.Index} :: \"{popup.Name}\"</color>\n\n" +
                     $"The Complex could not resolve a stable layout after {popup.Rebuilds} attempts.\n" +
                     "Expedition data is corrupted and has been locked out.",
-                PopupType = PopupType.RundownInfo,
-                BlinkInContent = true,
-                BlinkTimeInterval = 0.5f
+
+                // Never left null -- CM_GlobalPopup.ShowMessage assigns it straight into a
+                // TextMeshPro
+                LowerText = "",
+
+                // CM_GlobalPopupBase: bare header / body / close button, no decoration
+                PopupType = PopupType.Confirmation,
+
+                // Skips the m_contentHolder child walk entirely, so nothing is force-activated and
+                // no blink / sound coroutines are left pending on a panel the player can close
+                BlinkInContent = false
             });
+
+            Plugin.Logger.LogInfo("[BuildFailure] Popup shown");
         }
         catch (Exception error)
         {
@@ -589,20 +618,4 @@ public static class BuildFailureManager
     }
 
     #endregion
-}
-
-/// <summary>
-/// MonoBehaviour helper that polls for the right moment to show the build failure popup.
-/// </summary>
-public class PopupWatcher : MonoBehaviour
-{
-    void Update()
-    {
-        BuildFailureManager.TryShowPopup();
-    }
-
-    static PopupWatcher()
-    {
-        ClassInjector.RegisterTypeInIl2Cpp<PopupWatcher>();
-    }
 }

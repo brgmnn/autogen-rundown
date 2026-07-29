@@ -67,20 +67,42 @@ public class Patch_CM_PageRundown_New
 
         foreach (var icon in icons)
         {
-            if (icon?.DataBlock == null)
-                continue;
+            // Per icon so one bad entry cannot escape into the game's OnEnable chain
+            try
+            {
+                if (icon == null)
+                    continue;
 
-            if (icon.Accessibility == eExpeditionAccessibility.BlockedAndScrambled)
-                continue;
+                // A C# ?. tests the managed wrapper, not Unity's fake-null, so a destroyed icon
+                // would throw rather than short-circuit. Probe it the way LogArchivistManager does.
+                try
+                {
+                    _ = icon.gameObject;
+                }
+                catch
+                {
+                    continue;
+                }
 
-            if (!BuildFailureManager.IsLocked(icon.DataBlock.LevelLayoutData))
-                continue;
+                if (icon.DataBlock == null)
+                    continue;
 
-            // Blocks the expedition window click callback
-            icon.Accessibility = eExpeditionAccessibility.BlockedAndScrambled;
+                if (icon.Accessibility == eExpeditionAccessibility.BlockedAndScrambled)
+                    continue;
 
-            // Randomised hex name + DECRYPT ERROR text
-            icon.SetStatus(eExpeditionIconStatus.LockedAndScrambled);
+                if (!BuildFailureManager.IsLocked(icon.DataBlock.LevelLayoutData))
+                    continue;
+
+                // Blocks the expedition window click callback
+                icon.Accessibility = eExpeditionAccessibility.BlockedAndScrambled;
+
+                // Randomised hex name + DECRYPT ERROR text
+                icon.SetStatus(eExpeditionIconStatus.LockedAndScrambled);
+            }
+            catch (Exception error)
+            {
+                Plugin.Logger.LogWarning($"[BuildFailure] Could not scramble icon: {error.Message}");
+            }
         }
     }
 
