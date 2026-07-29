@@ -63,7 +63,7 @@ public class Patch_CM_PageLoadout
             if (drop == null || !drop.gameObject.activeSelf)
                 return;
 
-            drop.SetText("EXPEDITION UNREACHABLE");
+            drop.SetText("EXPEDITION UNREACHABLE\n<size=12px><align=center>Select a different expedition</align></size>");
             drop.SetButtonEnabled(false);
             drop.ShowBox = false;
         }
