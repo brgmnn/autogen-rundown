@@ -53,6 +53,9 @@ TODO for 1.0
   [ ] Distribute power cells is _really_ short on main only missions now
   [ ] Fix the cycling of security scans having global sound! Really annoying right now
 
+TODO: for 1.1.0
+  [ ] Weekly E1 (2027_07_27) not loading - Probably because Extreme is built from a Max=0 side zone and can never find a place to start
+
 TODO post 1.0
   * See about adding terminal decorations to terminal spawn manager
 
