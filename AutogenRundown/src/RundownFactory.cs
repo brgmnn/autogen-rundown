@@ -185,7 +185,7 @@ public static class RundownFactory
 
         #region Geomorph Debugging test level
         #if DEBUG
-        #if false
+        #if true
         if (withFixed)
         {
             var settings = new LevelSettings("A");
@@ -201,7 +201,7 @@ public static class RundownFactory
                     Index = rundown.TierA_Count + 1,
                     // Accessibility = Accessibility.BlockedAndScrambled,
                     IsTest = true
-                }, 1);
+                }, 4);
 
             rundown.AddLevel(testLevel);
         }
@@ -895,11 +895,21 @@ public static class RundownFactory
             {
                 "2026_07", new List<List<int>>
                 {
-                    new() { 2, 1 },       // done
-                    new() { 1, 1, 1 },    // done
-                    new() { 1, 2, 1, 1 }, // done
-                    new() { 1, 1, 1, 1 }, // done
-                    new() { 1, 1, 1 }     // done
+                    new() { 2, 1 },
+                    new() { 1, 1, 1 },
+                    new() { 1, 2, 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 1 }
+                }
+            },
+            {
+                "2026_08", new List<List<int>>
+                {
+                    new() { 1, 1 },
+                    new() { 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 1 }
                 }
             }
         };
