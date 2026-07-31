@@ -1,9 +1,7 @@
-using System;
 using ChainedPuzzles;
 using GameData;
 using HarmonyLib;
 using Il2CppInterop.Runtime;
-using UnityEngine;
 
 namespace AutogenRundown.Patches.TravelScan;
 

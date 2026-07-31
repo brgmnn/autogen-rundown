@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using ChainedPuzzles;
 using HarmonyLib;
 using Il2CppInterop.Runtime;

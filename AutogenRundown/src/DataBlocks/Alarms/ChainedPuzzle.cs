@@ -945,7 +945,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
 
     public static readonly ChainedPuzzle AlarmClass7_Cluster = new()
     {
-        PublicAlarmName = "Class VI Cluster Alarm",
+        PublicAlarmName = "Class VII Cluster Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
         Puzzle = new List<PuzzleComponent>

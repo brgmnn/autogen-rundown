@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Custom.AutogenRundown.LogArchives;
+using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Logs;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Terminals;
@@ -216,7 +217,7 @@ public record Rundown : DataBlock<Rundown>
 
         foreach (var level in levels)
         {
-            var terminals = new List<(Bulkhead Bulkhead, int ZoneIndex, List<LogFile> LogFiles, TerminalStartingState StartingState)>();
+            var terminals = new List<(Bulkhead Bulkhead, DimensionIndex dim, int ZoneIndex, List<LogFile> LogFiles, TerminalStartingState StartingState, string Source)>();
             var bulkheads =  new List<Bulkhead> { Bulkhead.Main, Bulkhead.Extreme, Bulkhead.Overload };
 
             // Logs are distributed as follows in levels across all rundowns. We weight number of
@@ -245,18 +246,20 @@ public record Rundown : DataBlock<Rundown>
             {
                 foreach (var zone in layout.Zones)
                     foreach (var terminal in zone.TerminalPlacements)
-                        terminals.Add((bulkhead, zone.LocalIndex, terminal.LogFiles, terminal.StartingStateData));
+                        terminals.Add((bulkhead, layout.Dimension, zone.LocalIndex, terminal.LogFiles, terminal.StartingStateData, "zone terminal"));
             }
 
             // Include custom terminal spawn requests in the log distribution pool
             var customRequests = CustomTerminalSpawnManager.GetRequests(level.LevelLayoutData);
             foreach (var request in customRequests)
-                terminals.Add((request.Bulkhead, request.LocalIndex, request.LogFiles, request.StartingStateData));
+                terminals.Add((request.Bulkhead, request.DimensionIndex, request.LocalIndex, request.LogFiles, request.StartingStateData, "custom terminal"));
 
             var toPlace = terminals.Shuffle().Take(totalLogs);
 
-            foreach (var (bulkhead, zoneIndex, logFiles, startingState) in toPlace)
+            foreach (var (bulkhead, dimensionIndex, zoneIndex, logFiles, startingState, source) in toPlace)
             {
+                // TODO: 1.1: change to draw so we don't have duplicate logs
+                // var lorelog = Generator.Draw(logs);
                 var lorelog = logs.PickRandom();
 
                 if (lorelog != null)
@@ -274,16 +277,26 @@ public record Rundown : DataBlock<Rundown>
                         startingState.StartingState == TerminalState.Sleeping)
                     {
                         startingState.StartingState = TerminalState.AudioLoopError;
-                        Plugin.Logger.LogDebug($" -> {bulkhead}, ZONE_{zoneIndex}, with audio");
+                        Plugin.Logger.LogDebug($" -> {bulkhead.ToString().PadLeft(8, ' ')}, " +
+                                               $"{dimensionIndex.ToString().PadRight(11, ' ')}  " +
+                                               $"ZONE_{zoneIndex}, " +
+                                               $"file={lorelog.FileName}, with audio");
                     }
                     else
                     {
-                        Plugin.Logger.LogDebug($" -> {bulkhead}, ZONE_{zoneIndex}");
+                        Plugin.Logger.LogDebug($" -> {bulkhead.ToString().PadLeft(8, ' ')}, " +
+                                               $"{dimensionIndex.ToString().PadRight(11, ' ')}  " +
+                                               $"ZONE_{zoneIndex}, " +
+                                               $"file={lorelog.FileName}");
                     }
                 }
             }
 
             level.LogArchives.Save();
+
+            // Re-save custom terminals: the LogFiles added above (and any starting state
+            // changes) land after FinalizeCustomMods() already wrote the JSON
+            level.SaveCustomTerminals();
         }
     }
 

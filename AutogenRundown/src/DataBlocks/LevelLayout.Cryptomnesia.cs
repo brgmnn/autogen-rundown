@@ -325,6 +325,9 @@ public partial record LevelLayout
                 zone.EnemySpawningInZone.Clear();
                 zone.BloodDoor = BloodDoor.None;
 
+                // Remove spitters etc.
+                zone.StaticSpawnDataContainers.Clear();
+
                 // Most of these rooms read better as dead/unpowered space behind the
                 // sealed door; leave a third with their inherited lights so it's not
                 // uniformly black across the level.

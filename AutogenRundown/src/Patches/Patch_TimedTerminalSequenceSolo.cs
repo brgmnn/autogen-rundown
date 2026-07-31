@@ -1,6 +1,5 @@
 using HarmonyLib;
 using Player;
-using SNetwork;
 
 namespace AutogenRundown.Patches;
 
