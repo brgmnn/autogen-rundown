@@ -3,6 +3,20 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v1.0.9](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.9) — July 31, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Rolled August monthly rundown seeds
+* Fix: Lore logs sometimes failing to spawn on terminals
+* Fix: Custom terminals failing to register as objectives and in warden intel after rebuilds
+  * This would cause levels to become hard locked if their terminals failed to spawn as objectives
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v1.0.8...v1.0.9
+
+
 ## [v1.0.8](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.8) — July 22, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
