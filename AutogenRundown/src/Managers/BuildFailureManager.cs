@@ -497,11 +497,118 @@ public static class BuildFailureManager
 
             Plugin.Logger.LogInfo("[BuildFailure] Popup shown");
 
+            // Before Resize, so the dump shows the prefab's natural structure rather than one our
+            // own SetSize has already mutated
+            DumpHierarchy(panel);
+
             Resize(panel);
         }
         catch (Exception error)
         {
             Plugin.Logger.LogError($"[BuildFailure] Failed to show popup: {error.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Logs the popup's full transform hierarchy.
+    ///
+    /// The CM_GlobalPopupBase prefab is loaded from the game's asset bundles via Resources.Load, so
+    /// its structure cannot be read from the decompile. SetSize on the root resizes the outer rect
+    /// but the background frame and the text sit on children that don't follow it, and the fields
+    /// exposed on CM_GlobalPopup are not enough to find them. This dump is how we locate the right
+    /// children so the panel can be resized without touching the font sizes.
+    /// </summary>
+    private static void DumpHierarchy(CM_GlobalPopup? panel)
+    {
+        if (panel == null)
+            return;
+
+        const int maxDepth = 6;
+        const int maxNodes = 200;
+
+        try
+        {
+            Plugin.Logger.LogInfo(
+                $"[BuildFailure] === popup hierarchy === screen {Screen.width}x{Screen.height}");
+
+            var nodes = 0;
+
+            DumpNode(panel.transform, 0, maxDepth, ref nodes, maxNodes);
+
+            if (nodes >= maxNodes)
+                Plugin.Logger.LogInfo($"[BuildFailure] ... node cap ({maxNodes}) reached, truncated");
+
+            Plugin.Logger.LogInfo("[BuildFailure] === end popup hierarchy ===");
+        }
+        catch (Exception error)
+        {
+            Plugin.Logger.LogWarning($"[BuildFailure] Could not dump popup hierarchy: {error.Message}");
+        }
+    }
+
+    private static void DumpNode(Transform node, int depth, int maxDepth, ref int nodes, int maxNodes)
+    {
+        if (node == null || depth > maxDepth || nodes >= maxNodes)
+            return;
+
+        nodes++;
+
+        var indent = new string(' ', depth * 2);
+        var line = $"[BuildFailure] {indent}{node.name} active={node.gameObject.activeSelf}";
+
+        var rect = node.TryCast<RectTransform>();
+
+        if (rect != null)
+        {
+            // rect.width/height is the RESOLVED size -- sizeDelta alone is misleading under stretch
+            // anchoring, and the resolved size is what identifies the oversized background
+            line +=
+                $" resolved=({rect.rect.width:F0}x{rect.rect.height:F0})" +
+                $" sizeDelta={rect.sizeDelta}" +
+                $" anchors={rect.anchorMin}-{rect.anchorMax}" +
+                $" pivot={rect.pivot}" +
+                $" pos={rect.anchoredPosition}" +
+                $" scale={node.localScale}";
+        }
+
+        var components = new List<string>();
+
+        foreach (var component in node.GetComponents<Component>())
+        {
+            if (component == null)
+                continue;
+
+            components.Add(TypeName(component));
+
+            var text = component.TryCast<TMPro.TMP_Text>();
+
+            if (text != null)
+            {
+                var preview = text.text ?? "";
+                preview = preview.Length > 30 ? preview.Substring(0, 30) : preview;
+                line += $" text=\"{preview.Replace("\n", "\\n")}\"";
+            }
+        }
+
+        Plugin.Logger.LogInfo($"{line} [{string.Join(", ", components)}]");
+
+        for (var i = 0; i < node.childCount; i++)
+            DumpNode(node.GetChild(i), depth + 1, maxDepth, ref nodes, maxNodes);
+    }
+
+    /// <summary>
+    /// Il2CppInterop's GetComponents&lt;Component&gt; returns wrappers whose managed type is not
+    /// always the most derived one, so prefer the il2cpp type name.
+    /// </summary>
+    private static string TypeName(Component component)
+    {
+        try
+        {
+            return component.GetIl2CppType().Name;
+        }
+        catch
+        {
+            return component.GetType().Name;
         }
     }
 
