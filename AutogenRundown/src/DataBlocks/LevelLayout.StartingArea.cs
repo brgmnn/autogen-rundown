@@ -20,6 +20,17 @@ public partial record LevelLayout
         ZoneNode from,
         Zone? zone = null)
     {
+        // Generator.Pick() on an empty candidate list returns default(ZoneNode), which
+        // would silently connect the bulkhead to a phantom node.
+        if (from.Bulkhead == Bulkhead.None)
+        {
+            Plugin.Logger.LogError(
+                $"InitializeBulkheadArea() got an empty from node for bulkhead {bulkhead}, " +
+                $"planner = {level.Planner}\n" +
+                $"==========\n{level.Planner.ToMermaidChart()}==========");
+            throw new Exception($"No valid entrance zone to attach bulkhead {bulkhead} to");
+        }
+
         var bulkheadNode = new ZoneNode(
             bulkhead,
             level.Planner.NextIndex(bulkhead, from.Dimension),
