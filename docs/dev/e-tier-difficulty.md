@@ -106,15 +106,14 @@ be playtested as one unit.
 Mechanisms that already exist in the codebase but are dormant or never combined. Each is
 E-scoped, length-neutral, and lists its completability guardrail.
 
-**B1. Implement `AddScriptedErrorAlarm` (`EventBuilder.cs:340`).**
-The stub is empty but its doc comment already describes the design: an R7D1-style
-pseudo-error — periodic small waves via `EventLoop`/event lists, no combat music, no
-`DEACTIVATE_ALARMS`, stamina regen between pulses. The `EventLoop` machinery is proven
-(Survival, SecuritySensors). This is the R2E1/R4E1 signature: persistent upkeep pressure
-over the level's *existing* footprint.
+**B1. Implement `AddScriptedErrorAlarm`. ✅ Done** (now in
+`Extensions/WardenObjectiveEventCollections.cs`; the empty `EventBuilder` stub is removed).
+An R7D1-style pseudo-error — periodic small waves via a finite `EventLoop`, no combat
+music, no `DEACTIVATE_ALARMS`, stamina regen between pulses. This is the R2E1/R4E1
+signature: persistent upkeep pressure over the level's *existing* footprint.
 *Guardrail:* finite wave count (R7D1 uses 19), interval ≥ 3-4 min, payloads ≤ 4 pts or a
-single enemy. Rolled at E only (~0.15-0.20), mutually exclusive with a real error alarm
-(respect `MaxErrorAlarms` accounting).
+single enemy. When a signature mechanic is active, `AddErrorAlarm` steps `Error_VeryHard`
+down to `Error_Hard` so the two pressure sources don't stack.
 
 **B2. Starting-state handicaps (`Level.cs:678-690`).**
 `StartingInfection` / `StartingHealth` / `StartingMainAmmo` / `StartingSpecialAmmo` /
@@ -187,11 +186,14 @@ loop until the next override is entered. Pressure, never a fail state.
 *Primitives:* all exist (`WardenObjectiveEventCollections.cs`, `CustomTerminalCommand.cs`).
 *Effort:* medium. *Guardrail:* command on every terminal; first deadline generous.
 
-**C2. Recurring stalker** *(R7E1-lite)*
+**C2. Recurring stalker** *(R7E1-lite)* **✅ Done** (first `LevelSignature`; rolled at 0.15
+in the E branch of `LevelSettings.Generate()`, applied in `LevelLayout.ApplyLevelSignature()`)
 B1's pseudo-error with a `GenericWave.SinglePouncerShadow` payload every 4-6 minutes plus
-an `AddZoneSound` heartbeat — something hunts you all level. Explicitly **not** invincible
+a `Sound.EnemyHeartbeat` tell — something hunts you all level. Explicitly **not** invincible
 (see What NOT to do): pouncers down players rather than kill, and they die.
-*Effort:* low once B1 lands. *Guardrail:* finite spawn count; payload never escalates.
+*Effort:* low once B1 lands. *Guardrail:* finite spawn count (12); payload never escalates;
+skipped on Survival / ReachKdsDeep / Cryptomnesia mains. **Needs Windows playtest:** finite
+`EventLoop.LoopCount` is otherwise unexercised.
 
 **C3. Lights-out travel scan** *(maintainer's own idea, `README.md:75`)*
 A sustained travel scan (reverse-on-exit already implemented in
@@ -269,7 +271,7 @@ a warden-intel tell after triggering so it's learnable, not arbitrary.
   expedition balance selection (B2, B3, B4)
 - `AutogenRundown/src/DataBlocks/LevelSettings.cs` — E modifier rolls, `LevelSignature`
   home (B2, Group C)
-- `AutogenRundown/src/DataBlocks/Objectives/EventBuilder.cs` — `AddScriptedErrorAlarm`
+- `AutogenRundown/src/Extensions/WardenObjectiveEventCollections.cs` — `AddScriptedErrorAlarm`
   stub (B1, C2)
 - `AutogenRundown/src/Extensions/WardenObjectiveEventCollections.cs` — event helpers
   (C1, C3, C5)

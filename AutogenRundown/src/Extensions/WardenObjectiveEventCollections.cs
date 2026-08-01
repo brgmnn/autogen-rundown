@@ -156,6 +156,82 @@ public static class WardenObjectiveEventCollections
         return events;
     }
 
+    /// <summary>
+    /// Adds a scripted error alarm: not a real alarm but a finite event loop that periodically
+    /// fires a warden intel message, a sound cue, and an enemy wave. R7D1's snatcher alarm does
+    /// this with 1 snatcher every 4 minutes; it runs out after 19 waves (~1hr 16min).
+    ///
+    /// Results of this are:
+    ///     - No combat music (TriggerAlarm is forced off on the wave)
+    ///     - Players get out of combat stamina between waves
+    ///     - "Alarm" _cannot_ be deactivated by DEACTIVATE_ALARMS
+    ///
+    /// See link for more details:
+    /// https://gtfo.fandom.com/wiki/R7D1#Trivia
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="wave">Wave to spawn each pulse. TriggerAlarm is forced to false.</param>
+    /// <param name="waveCount">Total number of pulses; the loop is finite (R7D1 uses 19).</param>
+    /// <param name="interval">Seconds between pulses.</param>
+    /// <param name="delay">Grace period before the loop starts.</param>
+    /// <param name="message">Warden intel shown each pulse. Empty string for no intel.</param>
+    /// <param name="sound">Sound cue played each pulse.</param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddScriptedErrorAlarm(
+        this ICollection<WardenObjectiveEvent> events,
+        GenericWave wave,
+        int waveCount = 19,
+        double interval = 240.0,
+        double delay = 2.0,
+        string message = ":://WARNING - BIOMASS SIGNATURE",
+        Sound sound = Sound.Enemies_DistantLowRoar)
+    {
+        if (wave == GenericWave.None)
+            return events;
+
+        var eventLoop = new EventLoop
+        {
+            LoopIndex = (int)Generator.GetPersistentId(),
+            LoopDelay = interval,
+            LoopCount = waveCount
+        };
+
+        // Inner events must keep the default Trigger = None: Start-triggered events inside an
+        // EventLoop never fire (see EventLoop doc comment).
+        if (message.Length > 0)
+            eventLoop.EventsToActivate.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.None,
+                    Delay = 0.0,
+                    WardenIntel = new DataBlocks.Text(message)
+                });
+        eventLoop.EventsToActivate.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.PlaySound,
+                SoundId = sound,
+                Delay = 0.5
+            });
+        eventLoop.EventsToActivate.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SpawnEnemyWave,
+                Delay = 4.0,
+                EnemyWaveData = wave with { TriggerAlarm = false }
+            });
+
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.StartEventLoop,
+                Delay = delay,
+                EventLoop = eventLoop
+            });
+
+        return events;
+    }
+
     #endregion
 
     #region Event Loops
