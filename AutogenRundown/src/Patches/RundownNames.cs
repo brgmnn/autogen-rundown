@@ -12,8 +12,8 @@ public class RundownNames
     ///
     ///     0 -> Rundown 1
     ///     1 -> Rundown 7
-    ///     2 -> Rundown 3
-    ///     3 -> Rundown 2
+    ///     2 -> Rundown 2
+    ///     3 -> Rundown 3
     ///     4 -> Rundown 4
     ///     5 -> Rundown 5
     ///     6 -> Rundown 6
@@ -49,34 +49,32 @@ public class RundownNames
                 UnityEngine.Object.Destroy(((Component)(object)rundown.m_altText).gameObject);
             }
 
-            // Rundown 7
-            ///
-            /// Daily
-            /// -> R1
-            ///
+            //
+            // Daily
+            // -> R1
+            //
             if (num == 0)
             {
                 var rundownData = Bins.Rundowns.Find(Rundown.R_Daily);
 
                 rundown.m_rundownText.text = $"<size=70%><color=orange>DAILY</color><color=#444444>:</color> {rundownData?.Title}</size>";
             }
-            ///
-            /// Weekly
-            /// -> R3
-            ///
+
+            //
+            // Weekly
+            // -> R2
+            //
             else if (num == 2)
             {
                 var rundownData = Bins.Rundowns.Find(Rundown.R_Weekly);
 
                 rundown.m_rundownText.text = $"<size=70%><color=green>WEEK #{Generator.WeekNumber}</color><color=#444444>:</color> {rundownData?.Title}</size>";
-                //
-                // rundown.m_rundownText.text = $"<size=70%><color=#ff3311>Autogen</color> Rundown</size>";
             }
-            // Rundown 4
-            ///
-            /// Monthly
-            /// -> R7
-            ///
+
+            //
+            // Monthly
+            // -> R7
+            //
             else if (num == 1)
             {
                 var rundownData = Bins.Rundowns.Find(Rundown.R_Monthly);
@@ -84,13 +82,27 @@ public class RundownNames
                 rundown.m_rundownText.text = $"<size=70%><color=#58fcee>MONTHLY</color><color=#444444>:</color> {rundownData?.Title}</size>";
             }
 
+            //
             // Seasonal
+            // -> R8
+            //
             else if (num == 7)
             {
                 var rundownData = Bins.Rundowns.Find(Rundown.R_Seasonal);
 
                 rundown.m_rundownText.text = $"<size=70%><color=#ff3311>SEASONAL</color><color=#444444>:</color> {rundownData?.Title}</size>";
             }
+
+            // //
+            // // Solo
+            // // -> R3
+            // //
+            // else if (num == 3)
+            // {
+            //     var rundownData = Bins.Rundowns.Find(Rundown.R_Solo);
+            //
+            //     rundown.m_rundownText.text = $"<size=70%><color=#0080ff>SOLO</color><color=#444444>:</color> {rundownData?.Title}</size>";
+            // }
 
             num++;
         }

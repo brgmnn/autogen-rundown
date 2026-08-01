@@ -17,6 +17,8 @@ public static class RundownFactory
     private static string weeklyPrefix = $"<color=green>W</color><space=0.3em>";
     private static string dailyPrefix = $"<color=orange>D</color><space=0.3em>";
 
+    private static string soloPrefix = $"<color=#0080ff>1</color><space=0.3em>";
+
     private static string DescriptionHeader(WardenObjectiveType objectiveType)
     {
         const string prefix = "<color=#444444>Objective Dispatch:</color> ";
@@ -1221,6 +1223,35 @@ public static class RundownFactory
         #endregion
 
         //
+        // Solo Rundown -- Rundown 2 replacement
+        //
+        #region Solo Rundown
+        {
+            // Set the weekly seed
+            Generator.SetWeeklySeed(weeklySeed);
+            Generator.Reload();
+
+            var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
+
+            var solo = BuildRundown(
+                new Rundown
+                {
+                    PersistentId = Rundown.R_Solo,
+                    Title = $"{name.ToUpper()}",
+                    StoryTitle = $"SOLO {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
+                },
+                withFixed: false,
+                withUnlocks: !unlockAll,
+                withLogs: true,
+                prefix: soloPrefix);
+
+            solo.VisualsETier = Color.MenuVisuals_SoloE;
+
+            Bins.Rundowns.AddBlock(solo);
+        }
+        #endregion
+
+        //
         // Weekly Rundown -- Rundown 5 replacement
         //
         #region Weekly Rundown
@@ -1283,12 +1314,12 @@ public static class RundownFactory
         // Only load the rundowns we want
         gameSetup.RundownIdsToLoad = new List<uint>
         {
-            Rundown.R_Daily, // Rundown.R7,
+            Rundown.R_Daily,    // Rundown.R7,
             Rundown.R_Monthly, // Rundown.R4,
-            Rundown.R_Weekly, // Rundown.R5,
+            Rundown.R_Weekly,  // Rundown.R5,
+            Rundown.R_Solo,    // Rundown.R3
 
             // These are no-ops and will be disabled
-            Rundown.R_Daily,
             Rundown.R_Daily,
             Rundown.R_Daily,
             Rundown.R_Daily,

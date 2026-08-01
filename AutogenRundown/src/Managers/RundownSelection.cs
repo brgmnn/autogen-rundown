@@ -12,6 +12,8 @@ public class RundownSelection
 
     public static RundownTimerData? SeasonalTimer { get; set; }
 
+    public static RundownTimerData? SoloTimer { get; set; }
+
 
     // Daily
     public static readonly RundownSelection R1 = new()
@@ -29,6 +31,7 @@ public class RundownSelection
         RadarColor = new Color { r = 0.158823538f, g = 0.8509804f, b = 0.4190196f, a = 1.0f }
     };
 
+    // Solo
     public static readonly RundownSelection R3 = new()
     {
         Enabled = false,

@@ -18,6 +18,8 @@ public record Rundown : DataBlock<Rundown>
     public static readonly uint R_Monthly = 3;
     public static readonly uint R_Seasonal = 4;
 
+    public static readonly uint R_Solo = 5;
+
     public List<Level> TierA { get; set; } = new();
     public List<Level> TierB { get; set; } = new();
     public List<Level> TierC { get; set; } = new();
@@ -173,7 +175,7 @@ public record Rundown : DataBlock<Rundown>
     {
         // Rundown.Name is used by LocalProgression for storing the progression data. Ensure
         // this is unique to guarantee we store progression between runs.
-        rundown.Name = $"RndRundownSeed{Generator.Seed.Replace("_", "")}";
+        rundown.Name = $"RndRundown_Id{rundown.PersistentId}_Seed{Generator.Seed.Replace("_", "")}";
         rundown.DisplaySeed = Generator.DisplaySeed;
 
         return rundown;

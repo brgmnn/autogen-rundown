@@ -45,6 +45,8 @@ public class WatermarkManager
             PluginRundown.Weekly   => $"<color=#6fff70>{level}</color> Weekly <color=orange>{Generator.InputWeeklySeed}</color>",
             PluginRundown.Monthly  => $"<color=#6fff70>{level}</color> Monthly <color=orange>{Generator.InputMonthlySeed}</color>",
             PluginRundown.Seasonal => $"<color=#6fff70>{level}</color> Season <color=orange>{Generator.SeasonalSeason} {Generator.SeasonalYear}</color>",
+
+            PluginRundown.Solo => $"<color=#6fff70>{level}</color> Solo <color=orange>{Generator.InputWeeklySeed}</color>",
             _ => EmptySeed
         });
     }

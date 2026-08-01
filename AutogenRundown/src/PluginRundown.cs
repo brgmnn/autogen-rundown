@@ -8,4 +8,6 @@ public enum PluginRundown
     Weekly,
     Monthly,
     Seasonal,
+
+    Solo,
 }
