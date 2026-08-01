@@ -29,8 +29,8 @@ public static class BuildFailureManager
     private const string eventName = "autogen_level_build_failed";
 
     // Tune here. Vanilla's CM_ExpeditionWindow is 420x515 for scale.
-    private const float PopupWidth = 640f;
-    private const float PopupHeight = 300f;
+    private const float PopupWidth = 600f;
+    private const float PopupHeight = 240f;
 
     private static readonly string dir = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -82,7 +82,7 @@ public static class BuildFailureManager
     /// </summary>
     private static float settledAt = -1f;
 
-    private const float SettleDelay = 2f;
+    private const float SettleDelay = 1f;
 
     private readonly record struct PopupData(string Tier, int Index, string Name, int Rebuilds);
 
@@ -507,8 +507,9 @@ public static class BuildFailureManager
                 Header = "EXPEDITION UNREACHABLE",
                 UpperText =
                     $"<color=orange>{popup.Tier}{popup.Index} : {popup.Name}</color>\n\n" +
-                    $"The Complex could not resolve a stable layout after <color=red>REBUILD #{popup.Rebuilds}</color>." +
-                    "Expedition data is corrupted and has been locked out.",
+                    $"<size=20>No stable path to target expedition could be found. " +
+                    "Expedition is unreachable.</size>\n\n" +
+                    "<size=12><color=#444444>Max rebuild limit hit</color></size>",
 
                 // Never left null -- CM_GlobalPopup.ShowMessage assigns it straight into a
                 // TextMeshPro

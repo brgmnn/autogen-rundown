@@ -318,8 +318,8 @@ public partial record LevelLayout
                 zone.ToolPacks = 0;
                 zone.ConsumableDistributionInZone = 0;
 
-                // Remove terminals // TODO: breaks an objective?
-                // zone.TerminalPlacements.Clear();
+                // Remove terminals
+                zone.TerminalPlacements.Clear();
 
                 // Remove enemies
                 zone.EnemySpawningInZone.Clear();
