@@ -28,6 +28,7 @@ public partial record LevelLayout
                 $"InitializeBulkheadArea() got an empty from node for bulkhead {bulkhead}, " +
                 $"planner = {level.Planner}\n" +
                 $"==========\n{level.Planner.ToMermaidChart()}==========");
+
             throw new Exception($"No valid entrance zone to attach bulkhead {bulkhead} to");
         }
 
@@ -170,8 +171,8 @@ public partial record LevelLayout
                 // Fall back to any open main zone
                 if (from is null)
                 {
-                    Plugin.Logger.LogDebug(
-                        $"No open primary zones for bulkhead {bulkhead}, planner = {level.Planner}\n" +
+                    Plugin.Logger.LogWarning(
+                        $"No open primary zones for bulkhead {bulkhead} ({level.Settings.BulkheadStrategy}), planner = {level.Planner}\n" +
                         $"==========\n{level.Planner.ToMermaidChart()}==========");
                     from = Generator.Pick(level.Planner.GetOpenZones(Bulkhead.Main, null, dimension: Dimension));
                 }
@@ -194,8 +195,8 @@ public partial record LevelLayout
                 // Fall back to adding the area in main
                 if (!candidates.Any())
                 {
-                    Plugin.Logger.LogDebug(
-                        $"No open zones for bulkhead {bulkhead}, planner = {level.Planner}\n" +
+                    Plugin.Logger.LogWarning(
+                        $"No open zones for bulkhead {bulkhead} ({level.Settings.BulkheadStrategy}), planner = {level.Planner}\n" +
                         $"==========\n{level.Planner.ToMermaidChart()}==========");
                     candidates = level.Planner.GetOpenZones(Bulkhead.Main, null, dimension: Dimension);
                 }
