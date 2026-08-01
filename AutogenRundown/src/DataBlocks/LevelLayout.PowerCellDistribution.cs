@@ -783,7 +783,7 @@ public partial record LevelLayout
                     {
                         var corridor = AddBranch(start, 1, "corridor");
 
-                        var (hub, hubZone) = AddZone(corridor.Last(), new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(corridor.Last(), new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Branch 1: KeycardInSide
@@ -835,7 +835,7 @@ public partial record LevelLayout
                     // 2 more gen branches with KeycardInZone, sensors
                     (0.15, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Error branch
@@ -934,7 +934,7 @@ public partial record LevelLayout
                     // Hub + generator puzzle — hub → one branch with extra cell from side, gen behind gen-locked door
                     (0.10, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Generator puzzle branch
@@ -983,7 +983,7 @@ public partial record LevelLayout
                     // Hub + KeycardInSide — hub → 3 gen branches, KeycardInSide on one
                     (0.25, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // First branch gated by KeycardInSide
@@ -999,7 +999,7 @@ public partial record LevelLayout
                     // Hub + boss — hub → gen branches, one behind BossFight
                     (0.20, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Boss branch
@@ -1025,7 +1025,7 @@ public partial record LevelLayout
                     // Hub + mixed — hub → gen branches, one with sensors, one with LockedTerminalDoor(0)
                     (0.20, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Sensors branch
@@ -1046,7 +1046,7 @@ public partial record LevelLayout
                     // Error + keycard — hub → ErrorWithOff_KeycardInSide(1,1,1) → gen zone, other branches
                     (0.15, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         var (errEnd, _) = BuildChallenge_ErrorWithOff_KeycardInSide(
@@ -1095,7 +1095,7 @@ public partial record LevelLayout
                     // BossFight branch (gen), keycard branch (gen)
                     (0.20, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Error branch
@@ -1125,7 +1125,7 @@ public partial record LevelLayout
                     // Apex + boss + sensors — hub → ApexAlarm(Hard) + gen, BossFight + gen, sensors + gen
                     (0.20, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Apex branch
@@ -1170,7 +1170,7 @@ public partial record LevelLayout
                     // ApexAlarm(Hard) branch (gen), other branches
                     (0.20, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Locked terminal password branch
@@ -1214,7 +1214,7 @@ public partial record LevelLayout
                     // BossFight + gen, ApexAlarm(VeryHard) + gen, [+more if needed]
                     (0.15, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Error branch
@@ -1315,7 +1315,7 @@ public partial record LevelLayout
                     // other branches with BossFight, ApexAlarm(VeryHard). Rare.
                     (0.15, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Generator puzzle branch
@@ -1369,7 +1369,7 @@ public partial record LevelLayout
                     // boss branches (gen), sensors branches (gen)
                     (0.15, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Error carry branch
@@ -1402,7 +1402,7 @@ public partial record LevelLayout
                     // ApexAlarm(VeryHard) → gen, LockedTerminalDoor(1)+sensors → gen
                     (0.10, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Keycard + boss chain
@@ -1462,7 +1462,7 @@ public partial record LevelLayout
                     // Hub + mixed — hub → gen branches: KeycardInSide, BossFight, LockedTerminalDoor(1)
                     (0.25, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // KeycardInSide branch
@@ -1499,7 +1499,7 @@ public partial record LevelLayout
                     // sensors branch (gen), normal branch (gen)
                     (0.20, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Error branch
@@ -1526,7 +1526,7 @@ public partial record LevelLayout
                     // KeycardInSide branch (gen), LockedTerminalDoor(0) branch (gen)
                     (0.20, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Apex branch
@@ -1603,7 +1603,7 @@ public partial record LevelLayout
                     // ApexAlarm(VeryHard) branch (gen), BossFight branch (gen)
                     (0.20, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Error branch
@@ -1637,7 +1637,7 @@ public partial record LevelLayout
                     // ErrorWithOff_GeneratorCellCarry(2,1) branch (gen), ApexAlarm(VeryHard) branch (gen)
                     (0.20, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Boss + sensors chain
@@ -1693,7 +1693,7 @@ public partial record LevelLayout
                     // + BossFight chain, other branches with ApexAlarm(VeryHard)
                     (0.20, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 4 });
+                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // Generator puzzle + boss chain
