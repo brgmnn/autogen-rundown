@@ -38,6 +38,7 @@ public static class EventManager
             "Local_2" => PluginRundown.Weekly,
             "Local_3" => PluginRundown.Monthly,
             "Local_4" => PluginRundown.Seasonal,
+            "Local_5" => PluginRundown.Solo,
 
             _ => PluginRundown.None
         };

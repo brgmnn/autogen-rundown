@@ -113,6 +113,15 @@ public record Text : DataBlock<Text>
         PersistentId = 1616762565
     };
 
+    private static Text RundownEncryptedLevel = new()
+    {
+        English = "://err: UNREACHABLE; QP_%: 66,1",
+        ExportVersion = 1,
+        ImportVersion = 0,
+        Name = "MainMenu.RundownPage.ExpeditionIconDecrypt",
+        PersistentId = 16
+    };
+
     public static Text None = new Text { PersistentId = 0 };
 
     public new static void SaveStatic()
@@ -120,6 +129,7 @@ public record Text : DataBlock<Text>
         Bins.Texts.AddBlock(LocalProgression);
 
         Bins.Texts.ReplaceBlock(RundownSelectionTitle);
+        Bins.Texts.ReplaceBlock(RundownEncryptedLevel);
     }
 
     /// <summary>

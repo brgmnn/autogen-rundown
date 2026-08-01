@@ -1,11 +1,14 @@
+using AutogenRundown.DataBlocks;
 using AutogenRundown.Events;
 using AutogenRundown.Serialization;
 using GameData;
 using GTFO.API;
+using LocalProgression;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SNetwork;
 using UnityEngine;
+using Vector2 = UnityEngine.Vector2;
 
 namespace AutogenRundown.Managers;
 
@@ -24,6 +27,10 @@ namespace AutogenRundown.Managers;
 public static class BuildFailureManager
 {
     private const string eventName = "autogen_level_build_failed";
+
+    // Tune here. Vanilla's CM_ExpeditionWindow is 420x515 for scale.
+    private const float PopupWidth = 640f;
+    private const float PopupHeight = 300f;
 
     private static readonly string dir = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -397,6 +404,26 @@ public static class BuildFailureManager
         }
 
         var existing = record.Levels.Find(l => l.Tier == tierLetter && l.Index == data.Index);
+        var tier = tierLetter switch
+        {
+            "A" => eRundownTier.TierA,
+            "B" => eRundownTier.TierB,
+            "C" => eRundownTier.TierC,
+            "D" => eRundownTier.TierD,
+            "E" => eRundownTier.TierE,
+            _ => eRundownTier.Surface
+        };
+        var expeditionKey = LocalProgressionManager.Current.ExpeditionKey(tier, data.Index);
+
+        if (RundownManager.TryGetExpedition(tier, data.Index, out var expedition))
+        {
+            LocalProgressionManager.Current.RecordExpeditionSuccessForCurrentRundown(
+                expeditionKey,
+                true,
+                expedition.SecondaryLayerEnabled,
+                expedition.ThirdLayerEnabled,
+                true);
+        }
 
         if (existing != null)
         {
@@ -479,8 +506,8 @@ public static class BuildFailureManager
             {
                 Header = "EXPEDITION UNREACHABLE",
                 UpperText =
-                    $"<color=orange>{popup.Tier}{popup.Index} :: \"{popup.Name}\"</color>\n\n" +
-                    $"The Complex could not resolve a stable layout after {popup.Rebuilds} attempts.\n" +
+                    $"<color=orange>{popup.Tier}{popup.Index} : {popup.Name}</color>\n\n" +
+                    $"The Complex could not resolve a stable layout after <color=red>REBUILD #{popup.Rebuilds}</color>." +
                     "Expedition data is corrupted and has been locked out.",
 
                 // Never left null -- CM_GlobalPopup.ShowMessage assigns it straight into a
@@ -635,13 +662,9 @@ public static class BuildFailureManager
         if (panel == null)
             return;
 
-        // Tune here. Vanilla's CM_ExpeditionWindow is 420x515 for scale.
-        const float width = 800f;
-        const float height = 400f;
-
         try
         {
-            panel.SetSize(new Vector2(width, height));
+            panel.SetSize(new Vector2(PopupWidth, PopupHeight));
 
             var upperRect = panel.m_upperText != null ? panel.m_upperText.rectTransform : null;
 
@@ -677,6 +700,7 @@ public static class BuildFailureManager
             "Local_2" => (uint)PluginRundown.Weekly,
             "Local_3" => (uint)PluginRundown.Monthly,
             "Local_4" => (uint)PluginRundown.Seasonal,
+            "Local_5" => (uint)PluginRundown.Solo,
 
             _ => 0u
         };
