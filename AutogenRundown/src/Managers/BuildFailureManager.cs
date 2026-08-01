@@ -615,14 +615,20 @@ public static class BuildFailureManager
     /// <summary>
     /// Shrinks the popup panel. The stock CM_GlobalPopupBase prefab fills the screen.
     ///
-    /// CM_GlobalPopup extends RectTransformComp, so SetSize writes the root's sizeDelta. The three
-    /// text rects are narrowed too: whether the prefab anchors them to stretch with the root is not
-    /// visible from the decompile, and if they are fixed width the body would overflow the smaller
-    /// panel.
+    /// CM_GlobalPopup extends RectTransformComp, so SetSize writes the root's sizeDelta and the
+    /// stretch-anchored children (ContentGroup, Background, the body text rects) follow. The frame
+    /// itself is drawn by SpriteRenderers, and UI_SpriteResizer only copies the rect size into
+    /// SpriteRenderer.size when its Resize() is called -- nothing re-runs it after the prefab is
+    /// instantiated, so the resizers are re-run here or the frame keeps rendering at prefab size.
     ///
-    /// m_underlayCollider is deliberately untouched -- BoxCollider2D.size is set explicitly by
-    /// CM_GlobalPopup.SetUnderlayColliderSize and is not driven by the RectTransform, so the
-    /// full screen click blocker survives the resize.
+    /// UpperText is stretch-anchored, so its sizeDelta is an offset, not a size; it is placed via
+    /// offsetMin/offsetMax instead, keeping the prefab's 20px side / 50px top insets and pulling
+    /// the bottom inset in to fit the shorter panel. HeaderText is fixed-anchored and left-aligned
+    /// and LowerText is always empty here, so both are left alone.
+    ///
+    /// The full-screen "Huge Background" dim underlay and m_underlayCollider are deliberately
+    /// untouched -- their rects don't follow the root, so the click blocker and the modal dim
+    /// behind the panel survive the resize.
     /// </summary>
     private static void Resize(CM_GlobalPopup? panel)
     {
@@ -632,30 +638,23 @@ public static class BuildFailureManager
         // Tune here. Vanilla's CM_ExpeditionWindow is 420x515 for scale.
         const float width = 800f;
         const float height = 400f;
-        const float padding = 80f;
 
         try
         {
             panel.SetSize(new Vector2(width, height));
 
-            foreach (var text in new[] { panel.m_headerText, panel.m_upperText, panel.m_lowerText })
-            {
-                if (text == null)
-                    continue;
+            var upperRect = panel.m_upperText != null ? panel.m_upperText.rectTransform : null;
 
-                var rect = text.rectTransform;
-                rect.sizeDelta = new Vector2(width - padding, rect.sizeDelta.y);
+            if (upperRect != null)
+            {
+                upperRect.offsetMin = new Vector2(20f, 60f);
+                upperRect.offsetMax = new Vector2(-20f, -50f);
             }
 
-            // If the panel still looks full screen, this names the child that actually owns the
-            // frame so it can be targeted directly.
-            var children = new List<string>();
+            foreach (var resizer in panel.GetComponentsInChildren<UI_SpriteResizer>())
+                resizer.Resize();
 
-            for (var i = 0; i < panel.transform.childCount; i++)
-                children.Add(panel.transform.GetChild(i).name);
-
-            Plugin.Logger.LogDebug(
-                $"[BuildFailure] Popup resized to {panel.GetSize()}, children: {string.Join(", ", children)}");
+            Plugin.Logger.LogDebug($"[BuildFailure] Popup resized to {panel.GetSize()}");
         }
         catch (Exception error)
         {
