@@ -74,16 +74,6 @@ public record Text : DataBlock<Text>
         });
 
         Plugin.Logger.LogWarning($"How many text data blocks from base game 111? {GameDataText.Blocks.Count}");
-
-        // var dupes = GameDataText.BlocksLookup
-        //     .Where(pair => pair.Value.Count > 1)
-        //     .OrderBy(pair => pair.Value.Count)
-        //     .Select(pair => $"--> {pair.Key}: [{string.Join(", ", pair.Value)}]");
-        //
-        // Plugin.Logger.LogDebug("Duplicate TextIDs");
-        //
-        // foreach (var dupe in dupes)
-        //     Plugin.Logger.LogDebug(dupe);
     }
 
     /// <summary>
@@ -122,7 +112,7 @@ public record Text : DataBlock<Text>
         PersistentId = 16
     };
 
-    public static Text None = new Text { PersistentId = 0 };
+    public static readonly Text None = new Text { PersistentId = 0 };
 
     public new static void SaveStatic()
     {
