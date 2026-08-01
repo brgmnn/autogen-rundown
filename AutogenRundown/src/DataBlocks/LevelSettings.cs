@@ -173,6 +173,11 @@ public class LevelSettings
 
     #endregion
 
+    /// <summary>
+    /// The level's signature mechanic, at most one per level. Only rolled for E-tier.
+    /// </summary>
+    public LevelSignature Signature { get; set; } = LevelSignature.None;
+
     public LevelSettings(string? tier = null)
     {
         if (tier != null)
@@ -541,6 +546,14 @@ public class LevelSettings
                         (0.5, LevelModifiers.Fog),
                         (0.2, LevelModifiers.HeavyFog),
                     }));
+
+                // Level signature: at most one defining mechanic per level.
+                // See docs/dev/e-tier-difficulty.md, Group C.
+                Signature = Generator.Select(new List<(double, LevelSignature)>
+                {
+                    (0.85, LevelSignature.None),
+                    (0.15, LevelSignature.Stalker),
+                });
                 break;
             }
         }

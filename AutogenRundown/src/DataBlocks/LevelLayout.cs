@@ -1231,8 +1231,63 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         RollBloodDoors();
         ApplyInfectionLevelModifier();
         RollEnemies(director);
+        ApplyLevelSignature();
 
         Bins.LevelLayouts.AddBlock(this);
+    }
+
+    /// <summary>
+    /// Applies the level's rolled signature mechanic (LevelSettings.Signature). Runs once per
+    /// level: only for the Main bulkhead's Reality layout.
+    ///
+    /// Stalker: a finite scripted pseudo-error alarm on the Main objective's
+    /// EventsOnElevatorLand. A single shadow pouncer every 4-6 minutes with a heartbeat tell.
+    /// No combat music, cannot be deactivated, runs out on its own.
+    /// See docs/dev/e-tier-difficulty.md, Group C.
+    /// </summary>
+    private void ApplyLevelSignature()
+    {
+        // FinalizeLayout also runs for Extreme/Overload and for Cryptomnesia dimension
+        // layouts; only the Main Reality layout applies the signature.
+        if (director.Bulkhead != Bulkhead.Main || Dimension != DimensionIndex.Reality)
+            return;
+
+        if (level.Settings.Signature == LevelSignature.None)
+            return;
+
+        // Survival wires countdown machinery to EventsOnElevatorLand, ReachKdsDeep already
+        // scripts timed elevator waves (including a shadow pouncer), and Cryptomnesia plays
+        // out in other dimensions. None of them mix with signatures.
+        if (director.Objective is WardenObjectiveType.Survival
+            or WardenObjectiveType.ReachKdsDeep
+            or WardenObjectiveType.Cryptomnesia)
+        {
+            Plugin.Logger.LogDebug(
+                $"{Name} -- Skipping level signature {level.Settings.Signature} for {director.Objective}");
+            return;
+        }
+
+        switch (level.Settings.Signature)
+        {
+            case LevelSignature.Stalker:
+            {
+                var interval = Generator.Between(240, 360);
+                var grace = Generator.Between(180, 300);
+
+                level.GetObjective(Bulkhead.Main).EventsOnElevatorLand
+                    .AddScriptedErrorAlarm(
+                        GenericWave.SinglePouncerShadow,
+                        waveCount: 12,
+                        interval: interval,
+                        delay: grace,
+                        message: ":://WARNING - UNKNOWN BIOMASS SIGNATURE",
+                        sound: Sound.EnemyHeartbeat);
+
+                Plugin.Logger.LogDebug(
+                    $"{Name} -- Level signature: Stalker, interval={interval}s, grace={grace}s, waves=12");
+                break;
+            }
+        }
     }
 
     /// <summary>
