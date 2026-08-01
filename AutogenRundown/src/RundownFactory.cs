@@ -3,7 +3,6 @@ using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Custom.ItemSpawnFix;
 using AutogenRundown.DataBlocks.Enums;
-using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.GeneratorData;
 using BepInEx;
@@ -12,12 +11,13 @@ namespace AutogenRundown;
 
 public static class RundownFactory
 {
-    private static string seasonalPrefix = $"<color=#ff3311>S</color><space=0.3em>";
-    private static string monthlyPrefix = $"<color=#58fcee>M</color><space=0.3em>";
-    private static string weeklyPrefix = $"<color=green>W</color><space=0.3em>";
-    private static string dailyPrefix = $"<color=orange>D</color><space=0.3em>";
+    private static string seasonalPrefix = "<color=#ff3311>S</color><space=0.3em>";
+    private static string monthlyPrefix = "<color=#58fcee>M</color><space=0.3em>";
+    private static string weeklyPrefix = "<color=green>W</color><space=0.3em>";
+    private static string dailyPrefix = "<color=orange>D</color><space=0.3em>";
 
-    private static string soloPrefix = $"<color=#0080ff>1</color><space=0.3em>";
+    private static string soloPrefix = "<color=#0080ff>O</color><space=0.3em>";
+    private static string duoPrefix = "<color=#ff007f>T</color><space=0.3em>";
 
     private static string DescriptionHeader(WardenObjectiveType objectiveType)
     {
@@ -1252,6 +1252,35 @@ public static class RundownFactory
         #endregion
 
         //
+        // Duo Rundown -- Rundown 2 replacement
+        //
+        #region Duo Rundown
+        {
+            // Set the weekly seed
+            Generator.SetWeeklySeed(weeklySeed);
+            Generator.Reload();
+
+            var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
+
+            var duo = BuildRundown(
+                new Rundown
+                {
+                    PersistentId = Rundown.R_Duo,
+                    Title = $"{name.ToUpper()}",
+                    StoryTitle = $"DUO {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
+                },
+                withFixed: false,
+                withUnlocks: !unlockAll,
+                withLogs: true,
+                prefix: duoPrefix);
+
+            duo.VisualsETier = Color.MenuVisuals_DuoE;
+
+            Bins.Rundowns.AddBlock(duo);
+        }
+        #endregion
+
+        //
         // Weekly Rundown -- Rundown 5 replacement
         //
         #region Weekly Rundown
@@ -1314,13 +1343,13 @@ public static class RundownFactory
         // Only load the rundowns we want
         gameSetup.RundownIdsToLoad = new List<uint>
         {
-            Rundown.R_Daily,    // Rundown.R7,
-            Rundown.R_Monthly, // Rundown.R4,
+            Rundown.R_Daily,   // Rundown.R7,
+            Rundown.R_Monthly, // Rundown.R6?,
             Rundown.R_Weekly,  // Rundown.R5,
             Rundown.R_Solo,    // Rundown.R3
+            Rundown.R_Duo,     // Rundown.R4
 
             // These are no-ops and will be disabled
-            Rundown.R_Daily,
             Rundown.R_Daily,
             Rundown.R_Daily,
 

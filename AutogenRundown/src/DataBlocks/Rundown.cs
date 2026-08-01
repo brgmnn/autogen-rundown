@@ -19,6 +19,7 @@ public record Rundown : DataBlock<Rundown>
     public static readonly uint R_Seasonal = 4;
 
     public static readonly uint R_Solo = 5;
+    public static readonly uint R_Duo = 6;
 
     public List<Level> TierA { get; set; } = new();
     public List<Level> TierB { get; set; } = new();

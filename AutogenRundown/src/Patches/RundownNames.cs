@@ -93,16 +93,27 @@ public class RundownNames
                 rundown.m_rundownText.text = $"<size=70%><color=#ff3311>SEASONAL</color><color=#444444>:</color> {rundownData?.Title}</size>";
             }
 
-            // //
-            // // Solo
-            // // -> R3
-            // //
-            // else if (num == 3)
-            // {
-            //     var rundownData = Bins.Rundowns.Find(Rundown.R_Solo);
             //
-            //     rundown.m_rundownText.text = $"<size=70%><color=#0080ff>SOLO</color><color=#444444>:</color> {rundownData?.Title}</size>";
-            // }
+            // Solo
+            // -> R3
+            //
+            else if (num == 3)
+            {
+                var rundownData = Bins.Rundowns.Find(Rundown.R_Solo);
+
+                rundown.m_rundownText.text = $"<size=70%><color=#0080ff>SOLO</color><color=#444444>:</color> {rundownData?.Title}</size>";
+            }
+
+            //
+            // Duo
+            // -> R4
+            //
+            else if (num == 4)
+            {
+                var rundownData = Bins.Rundowns.Find(Rundown.R_Duo);
+
+                rundown.m_rundownText.text = $"<size=70%><color=#ff007f>DUO</color><color=#444444>:</color> {rundownData?.Title}</size>";
+            }
 
             num++;
         }

@@ -48,6 +48,17 @@ public record Color
     };
 
     /// <summary>
+    /// Color = #0080ff
+    /// </summary>
+    public static readonly Color MenuVisuals_DuoE = new()
+    {
+        Alpha = 1.0,
+        Red = 1.0, // #00
+        Green = 0.0, // #80
+        Blue = 0.5,  // #ff
+    };
+
+    /// <summary>
     /// Color = #29d96b
     /// </summary>
     public static readonly Color MenuVisuals_WeeklyE = new()
