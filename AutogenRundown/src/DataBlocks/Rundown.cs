@@ -243,14 +243,13 @@ public record Rundown : DataBlock<Rundown>
             Plugin.Logger.LogDebug($"Placing {totalLogs} logs in \"{level.Tier}{level.Index} {level.Name}\", logs located at:");
 
             foreach (var (bulkhead, layout) in level.GetAllLayouts())
-            {
                 foreach (var zone in layout.Zones)
                     foreach (var terminal in zone.TerminalPlacements)
                         terminals.Add((bulkhead, layout.Dimension, zone.LocalIndex, terminal.LogFiles, terminal.StartingStateData, "zone terminal"));
-            }
 
             // Include custom terminal spawn requests in the log distribution pool
             var customRequests = CustomTerminalSpawnManager.GetRequests(level.LevelLayoutData);
+
             foreach (var request in customRequests)
                 terminals.Add((request.Bulkhead, request.DimensionIndex, request.LocalIndex, request.LogFiles, request.StartingStateData, "custom terminal"));
 
@@ -258,38 +257,34 @@ public record Rundown : DataBlock<Rundown>
 
             foreach (var (bulkhead, dimensionIndex, zoneIndex, logFiles, startingState, source) in toPlace)
             {
-                // TODO: 1.1: change to draw so we don't have duplicate logs
-                // var lorelog = Generator.Draw(logs);
-                var lorelog = logs.PickRandom();
+                var lorelog = logs.DrawRandom();
 
-                if (lorelog != null)
+                if (lorelog == null)
+                    continue;
+
+                logFiles.Add(lorelog);
+
+                level.LogArchives.Logs.Add(new Log
                 {
-                    logFiles.Add(lorelog);
+                    Bulkhead = bulkhead,
+                    ZoneNumber = zoneIndex,
+                    FileName = lorelog.FileName
+                });
 
-                    level.LogArchives.Logs.Add(new Log
-                    {
-                        Bulkhead = bulkhead,
-                        ZoneNumber = zoneIndex,
-                        FileName = lorelog.FileName
-                    });
-
-                    if (lorelog.AttachedAudioFile != Sound.None &&
-                        startingState.StartingState == TerminalState.Sleeping)
-                    {
-                        startingState.StartingState = TerminalState.AudioLoopError;
-                        Plugin.Logger.LogDebug($" -> {bulkhead.ToString().PadLeft(8, ' ')}, " +
-                                               $"{dimensionIndex.ToString().PadRight(11, ' ')}  " +
-                                               $"ZONE_{zoneIndex}, " +
-                                               $"file={lorelog.FileName}, with audio");
-                    }
-                    else
-                    {
-                        Plugin.Logger.LogDebug($" -> {bulkhead.ToString().PadLeft(8, ' ')}, " +
-                                               $"{dimensionIndex.ToString().PadRight(11, ' ')}  " +
-                                               $"ZONE_{zoneIndex}, " +
-                                               $"file={lorelog.FileName}");
-                    }
+                if (lorelog.AttachedAudioFile != Sound.None &&
+                    startingState.StartingState == TerminalState.Sleeping)
+                {
+                    startingState.StartingState = TerminalState.AudioLoopError;
+                    Plugin.Logger.LogDebug($" -> {bulkhead.ToString().PadLeft(8, ' ')}, " +
+                                           $"{dimensionIndex.ToString().PadRight(11, ' ')}  " +
+                                           $"ZONE_{zoneIndex}, " +
+                                           $"file={lorelog.FileName}, with audio");
                 }
+                else
+                    Plugin.Logger.LogDebug($" -> {bulkhead.ToString().PadLeft(8, ' ')}, " +
+                                           $"{dimensionIndex.ToString().PadRight(11, ' ')}  " +
+                                           $"ZONE_{zoneIndex}, " +
+                                           $"file={lorelog.FileName}");
             }
 
             level.LogArchives.Save();
