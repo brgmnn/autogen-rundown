@@ -1,0 +1,276 @@
+# E-Tier Difficulty — Investigation & Proposals
+
+## Problem statement
+
+Players consistently report that E-tier levels feel like D-tier levels. The README already
+records this (`README.md:28` "Make E-tier shorter but harder", `README.md:38` "E-tier valiant
+way too easy").
+
+Hard constraints on any fix:
+
+1. **Never make levels longer.** More zones, more objectives, and higher-class alarms all add
+   *time*, not challenge. Length is explicitly not a difficulty lever.
+2. **Always completable.** GTFO is brutal but fair — every level must be beatable.
+3. **Prefer novel interactions and level design** over raw stat inflation.
+4. **Resources: parity only.** E must not be better-supplied than D (it currently is), but we
+   never push below the D baseline. Difficulty comes from composition and mechanics, not
+   starvation.
+
+## Diagnosis: why E feels like D
+
+The systems that dominate moment-to-moment feel — *which enemies are in the level* and
+*how many* — are nearly identical between D and E:
+
+| System | D | E | Verdict |
+|---|---|---|---|
+| Hibernation roster (`EnemyPopulation.cs:301-392` vs `:394-489`) | full list | **byte-for-byte identical** | zero delta |
+| Hibernation group shapes (`EnemyGroup.cs:1133` vs `:1199`) | Shadows MaxScore 8 | Shadows MaxScore **4** | **E is easier** |
+| Scout pack (`LevelLayout.cs:457` vs `:492`) | chance 0.3, uncapped, 23 entries | identical | zero delta |
+| Enemy points per zone (`BuildDirector.cs:291-292`) | `Between(30,35)` | `Between(35,40)` | +15% |
+| Ammo packs per zone (`Zone.cs:1332-1337`) | 5 | **6** | **E is easier** |
+| Group-mix selection weights (`LevelLayout.cs:686`, `BuildStandardChoices`) | modifier-driven, tier-blind | tier-blind (only shadows ×1.2, `LevelLayout.cs:656-660`) | ~zero |
+| Level modifier rolls (`LevelSettings.cs:490`) | — | ~+10pp per "has X" roll | small |
+| Objective pool (`RundownFactory.cs:381-435`) | shared pool | same shared pool; D and E loops are copy-paste | zero delta |
+
+The one clear D→E step-up is **wave settings composition** (`WaveSettings.BuildPack()`):
+D draws 54% `Baseline_Hard` / 36% `Baseline_VeryHard` / 10% `MiniBoss_Hard`; E draws
+18% / 72% / 10%. (`Baseline_VeryHard` = 25→30 pts with a 45s ramp vs Hard's 18→28 pts /
+100s ramp.) Alarm waves at E genuinely hit harder — but everything *between* alarms plays
+like D.
+
+### Genuine but marginal E edges (for fairness)
+
+These exist, but are whiskers, not a tier:
+
+- Boss roll per zone 0.25 vs 0.20; boss pack cap 4 vs 2 (`LevelLayout.cs:529-534`,
+  `LevelSettings.cs:337-343`). On ~6 zones that's ~1.5 expected boss rolls.
+- Aligned-boss options: D has one (PMother); E has three, including Tank+TankPotato in the
+  dark with 50 corpses (`LevelLayout.ZoneProgression.cs:995-1153`).
+- Blood doors: chance 0.15→0.20, cap 3→uncapped (never binds), composition step-ups
+  (PMother 0.20, Tank_x2 0.15) (`LevelLayout.cs:148-158`, `:201-226`).
+- Error alarms: E rolls `{0.15→0, 0.50→1, 0.35→2}` at `Hard|VeryHard` vs D's `Flip(0.3)` at
+  `Normal|Hard`; `MaxErrorAlarms` 5 vs 3 (`LevelLayout.cs:782-830`, `LevelSettings.cs`).
+- Alarm class pack shifts ~+9pp toward Class VI/VII, and scan geometry stretches
+  (components ×1.10-1.6, start-distance bumps) (`ChainedPuzzle.cs:268-436`,
+  `Zone.cs:361-437`).
+- Alarm modifier chances roughly double (LightsOff 0.12→0.25 etc., `Zone.cs:440-611`) —
+  but they roll *independently*, so most E alarms still have no twist.
+- Global live-enemy soft cap 30→35 (`Level.cs:748-749`); scout waves use `Scout_VeryHard`
+  payloads.
+
+**Summary:** E = D + hotter alarm waves + a minority of spicier rolls. The baseline zone
+experience — the roster you sneak past, the packs you clear, the ammo you find — is D.
+Two knobs are actually *inverted* (shadow group size, ammo).
+
+## What official E-levels do
+
+All six official E-tiers are documented in `docs/game/rundowns/`. One-line signatures:
+
+- **R2E1 Crib** — infectious fog + Shadows/Big Shadows + surge alarms + rolling blackouts +
+  a permanent error alarm that scales for the rest of the expedition.
+- **R4E1 Downwards** — error alarm spawns a Tank every ~4 minutes (uncapped); fog turns
+  infectious after objective progress; one disinfection pack in the whole sector.
+- **R5E1 KDS Deep** — players *start* at 100% infection (health capped ~15%); scouts spawn
+  exclusively Giants/Hybrids; door ambushes; `DEACTIVATE_ALARMS` terminal counterplay.
+- **R7E1 Chaos** — The Immortal (invincible Tank) stalks the team all level; flesh walls that
+  enemies pass through but players can't.
+- **R8E1 Valiant** — fixed countdown timeline that unlocks doors and spawns waves on a
+  schedule; opting into the secondary adds enemy types level-wide.
+- **R8E2 Release** — a surge error held at bay only by repeatedly running
+  `ADMIN_TEMP_OVERRIDE` at terminals; pure-Nightmare and pure-Shadow Class VI alarms;
+  corrupt scans with lights toggling; 22 of 28 enemy types in one level.
+
+**The thesis: official E-levels are hard through *stacked, interacting pressures* and
+*composition*, never through length.** Fog × infection × darkness × a persistent threat ×
+an upkeep mechanic — each individually manageable, together defining. Several E-levels are
+*shorter* than the D-levels in the same rundown.
+
+## Proposals
+
+### Group A — Parity fixes (cheap, immediate, length-neutral)
+
+Ship these together as one unit — they interact (heavier roster ↔ ammo ↔ points) and must
+be playtested as one unit.
+
+| # | Fix | Site | Change | Risk |
+|---|---|---|---|---|
+| A1 | Un-invert shadow clumping. E shadow packs are *half* the size of D's. | `EnemyGroup.cs:1199` | E Shadows `MaxScore = 4` → 8-10 | Near zero — bug fix |
+| A2 | Differentiate the E roster. Same enemies, heavier mix; makes the Tier-E comment ("All enemies are available") true in practice. | `EnemyPopulation.cs:398-476` | ShooterGiant 0.3→0.5, ChargerGiant 0.4→0.6, ShadowGiant 0.4→0.6, NightmareGiant 0.2→0.35 | Low — giants drain ammo; pairs with A4 |
+| A3 | E scout *composition*, not count. More scouts = slower, not harder; nastier scouts = harder. R5E1 precedent. | `LevelLayout.cs:492-525` | Keep chance 0.3; swap ~3 plain `Scout` entries for `ScoutShadow`/`ScoutNightmare` at 10-15 pts | Low — scout points already substitute for hibernation points |
+| A4 | Ammo parity. E is currently the best-supplied tier in the mod. | `Zone.cs:1332-1337` | `"E" => 6` → `5` (= D). Never below D (decision above). Health (5) / Tool (3.5) stay tier-blind. | Medium *only* in combination with A2 — playtest together |
+| A5 | Widen the points gap. +15% over D is imperceptible behind zone-size variance. | `BuildDirector.cs:292` | `Between(35,40)` → `Between(38,45)` (~+25-30% over D) | Low — but verify `StaticEnemiesMaxPerZone` doesn't clip it (see B4) |
+| A6 | Tier-scale the group-mix table. The charger/shadow/hybrid/nightmare mixing chances are tier-blind today. | `LevelLayout.cs:686` (`BuildStandardChoices` — `director` already in scope) | At E: mixed-list chances ×1.5, plus two E-only entries: `(0.15, Base+Shadows+Nightmares)` and `(0.10, pure Shadows- or Nightmares-only zone at full points)` — R8E2's pure-population flavor with zero new machinery. Weighted `(double, T)` tuples per existing pattern. | Low |
+
+### Group B — Turn the existing machinery on
+
+Mechanisms that already exist in the codebase but are dormant or never combined. Each is
+E-scoped, length-neutral, and lists its completability guardrail.
+
+**B1. Implement `AddScriptedErrorAlarm` (`EventBuilder.cs:340`).**
+The stub is empty but its doc comment already describes the design: an R7D1-style
+pseudo-error — periodic small waves via `EventLoop`/event lists, no combat music, no
+`DEACTIVATE_ALARMS`, stamina regen between pulses. The `EventLoop` machinery is proven
+(Survival, SecuritySensors). This is the R2E1/R4E1 signature: persistent upkeep pressure
+over the level's *existing* footprint.
+*Guardrail:* finite wave count (R7D1 uses 19), interval ≥ 3-4 min, payloads ≤ 4 pts or a
+single enemy. Rolled at E only (~0.15-0.20), mutually exclusive with a real error alarm
+(respect `MaxErrorAlarms` accounting).
+
+**B2. Starting-state handicaps (`Level.cs:678-690`).**
+`StartingInfection` / `StartingHealth` / `StartingMainAmmo` / `StartingSpecialAmmo` /
+`StartingTool` are fully plumbed into `SpecialOverrideData` and never set. Roll a mild
+handicap from the E branch of `LevelSettings.Generate()` (`LevelSettings.cs:490`):
+`StartingInfection` 0.3-0.5 (R5E1's 1.0 is too much for generated levels — see Dropped).
+*Guardrail:* when infection rolls, force `DisinfectPacks > 0` in the first two zones (the
+default is **0**, `Zone.cs:1297`) or place a `DisinfectionStationPlacements` entry; cap
+infection ≤ 0.6 so the health floor stays ~40%.
+
+**B3. An E-specific `GlobalWaveSettings` preset (`Level.cs:748-749`).**
+Today only the soft cost cap varies (D 30 / E 35). Add a fourth preset (PersistentId 4):
+MaxCost 35 + specials `BaseWeights` 0.5→0.65 + `WaveEnemyTypeLimits` specials 1→2. Same
+wave cost and duration — but E waves *feel* different mid-wave (more specials mixed in).
+*Guardrail:* leave boss weights (indices 3-4) alone; those change wave lethality
+nonlinearly.
+
+**B4. Tier-varied `ExpeditionBalance` (`Level.cs:546`).**
+One global preset exists today. Add an E preset with exactly two deltas:
+`StaticEnemiesMaxPerZone` 10→14 (+1 on the per-area-size caps) so A5's density actually
+lands, and `WeakDoor4x4Health` 7→5 so weak doors fail faster under B1-style pressure — no
+free fortresses, without touching alarms.
+*Guardrail:* do **not** touch resource fractions here (double-dips with A4).
+
+**B5. Guaranteed alarm-modifier stacking at E (`Zone.cs:557-610`).**
+The modifiers (LightsOff 0.25, CyclingLights 0.12, FogFlood 0.11, SecuritySensors 0.10,
+mid-scan hybrid wave) roll independently — most E alarms still roll clean. Change: for E
+alarms above a class threshold, draw **one guaranteed modifier** from a weighted tuple
+list, then keep the existing independent rolls for a possible second. Every serious E
+alarm has a twist; ~30% have two.
+*Guardrail:* encode exclusions — never FogFlood + LightsOff together (zero-visibility scan
+is the known over-tuning failure mode).
+
+**B6. Respawn zones as backtrack pressure (`SetRespawnVibe`, `ZoneProgression.cs:94`).**
+Per-zone `EnemyRespawning` knobs (`Zone.cs:1205-1243`) are used exactly once in the whole
+generator. Add a finalize-time pass (in the main `LevelLayout.cs` partial, per convention)
+that at E marks 1-2 non-objective zones with respawn interval 45-60s and
+`EnemyRespawnCountMultiplier` ≤ 1.0. The same corridor is dangerous *twice* — punishes
+slow play without adding geometry. This is the official-game cocoon pattern (R5D2, R8D1,
+R8E2).
+*Guardrail:* never the elevator zone or the extraction zone; keep the scout exclude list;
+the long interval means a competent team simply outruns it.
+
+**B7. Blood-door chance actually using the uncapped max (`LevelLayout.cs:148-158`).**
+E is `(-1, 0.20, 0.80)` — uncapped but at 0.20/zone the cap never binds. Raise E chance to
+0.30. The E door/area packs already step up (PMother, Tank_x2, Pouncer_x3); this makes
+them appear.
+*Guardrail:* self-balancing — blood-door zones already get ×0.66 hibernation points and
+halved scout chance. Length-neutral: blood doors gate doors that already exist.
+
+**Deferred (good, but each deserves its own pass):**
+- Scout-scream rescripting via `EventsOnScoutScream` + `SuppressVanillaScoutWave`
+  (R5E1's "scouts spawn only Giants" is one config away) — interacts with alarm placement.
+- `SecurityGate.FreePassage` ambush zones (doorless boundaries: no chokepoint, no c-foam
+  anchor) — can only replace doors that carry no alarm/chained puzzle, which constrains
+  placement.
+
+### Group C — Signature mechanics (max one per E level)
+
+Official E-levels each have an *identity* — one defining mechanic you remember. Gate these
+behind a generic `LevelSignature` enum on `LevelSettings`, rolled only in the E branch of
+`Generate()` (`None` stays common). Straight into E rolls with low initial weights
+(decision above); at most one signature per level.
+
+**C1. Upkeep protocol** *(R8E2; the maintainer's own idea, `README.md:71-72`)*
+Level starts a countdown (`AddCountdown` / `AddSpecialHudTimer`). Every zone terminal
+carries a `CustomTerminalCommand` whose `CommandEvents` call `AddAdjustTimer` to buy
++3-8 minutes. Timer expiry does **not** fail the level — it starts a surge `GenericWave`
+loop until the next override is entered. Pressure, never a fail state.
+*Primitives:* all exist (`WardenObjectiveEventCollections.cs`, `CustomTerminalCommand.cs`).
+*Effort:* medium. *Guardrail:* command on every terminal; first deadline generous.
+
+**C2. Recurring stalker** *(R7E1-lite)*
+B1's pseudo-error with a `GenericWave.SinglePouncerShadow` payload every 4-6 minutes plus
+an `AddZoneSound` heartbeat — something hunts you all level. Explicitly **not** invincible
+(see What NOT to do): pouncers down players rather than kill, and they die.
+*Effort:* low once B1 lands. *Guardrail:* finite spawn count; payload never escalates.
+
+**C3. Lights-out travel scan** *(maintainer's own idea, `README.md:75`)*
+A sustained travel scan (reverse-on-exit already implemented in
+`Patch_SustainedTravelReverse.cs`) that fires `AddAllLightsOff` on scan start, restoring
+light near completion via `AddSetZoneLights` / `AddRevertZoneLights`.
+*Effort:* medium (event wiring on the scan's existing event surface).
+*Guardrail:* **static scans only** (`README.md:41`: big moving scans are already too hard);
+no wave attached — the darkness *is* the difficulty; guarantee glowsticks via
+`ConsumableDistributionInZone` in the preceding zone.
+
+**C4. Pure-population alarms** *(R8E2's pure-Shadow / pure-Nightmare Class VIs)*
+`WavePopulation.OnlyShadows` / `OnlyNightmares` on **normal-class** E alarms, following the
+proven `OnlyInfectedHybrids` pattern. Same class, same scan duration, same wave cost —
+composition alone is the difficulty. This is the purest expression of "harder, not longer."
+*Effort:* low. *Guardrail:* same wave settings the alarm would otherwise roll; never
+combine pure-Shadows with the LightsOff modifier.
+
+**C5. Trapped doors** *(R5E1 ambushes + the README "bait" idea, `README.md:29-30`)*
+Expand the existing E open-door pouncer roll (`Zone.cs:593-596`, currently 0.02) into a
+real trap table: door opens → `AddAlertEnemies` (AWO 10017) wakes the next zone's sleepers,
+or a 30s lights-cut, or a delayed spawn behind the team. Doors stop being unconditionally
+safe transitions.
+*Effort:* low — every primitive is on the existing per-door event surfaces.
+*Guardrail:* only on zones with ordinary hibernation loads; cap 2 trapped doors per level;
+a warden-intel tell after triggering so it's learnable, not arbitrary.
+
+**Dropped (and why):**
+- *100% starting infection (full R5E1)* — needs hand-placed disinfection relief the
+  generator can't guarantee. B2 delivers the mild version.
+- *The Immortal / flesh walls* — invincible persistent enemies risk soft-locks, and the
+  required patching sits in known il2cpp ICF-fold trap territory.
+
+## What NOT to do
+
+1. **No length levers.** No extra zones, no extra bulkheads (do not "fix" the tier-blind
+   `bulkheadChances` table at `RundownFactory.cs:560-566` — a short E Main is a *feature*),
+   no added objectives, no higher alarm classes as a primary lever, no longer scans
+   (`README.md:100`: "Reduce T-scan duration" is a standing community request).
+2. **No scan-density or moving-scan escalation.** `README.md:41,45` are our own
+   post-mortems ("Big security scans that move are too hard"; "Tone down higher density of
+   scans"), and the CHANGELOG shows repeated alarm walk-backs.
+3. **No raw HP/damage inflation** on `EnemyBalancing`. Composition, not spreadsheets.
+4. **No resources below the D baseline.** Parity (A4), not austerity.
+5. **No invincible persistent enemies.** Completability hazard + il2cpp ICF patch risk.
+6. **No blind stacking.** The two known unplayable combos — FogFlood+LightsOff and
+   pure-Shadows+LightsOff — must be encoded as exclusions, not left to low probability.
+
+## Rollout & tuning strategy
+
+- **Phase 1 — Parity:** A1-A6 in one release, playtested as one unit. Expected outcome:
+  E measurably above D with zero new mechanics.
+- **Phase 2 — Machinery:** B1, B3, B4, B5 first (data-only or stub-fill, low risk), then
+  B2, B6, B7 (guardrails need exercising). Each behind its own E-only roll.
+- **Phase 3 — Signatures:** `LevelSignature` pool with C2/C4/C5 first (low effort, proven
+  primitives), then C1/C3. One signature max per level, low weights.
+- **Playtest gates between phases**, on fixed seeds pre/post:
+  1. still completable;
+  2. ammo economy intact (the A2+A4 interaction);
+  3. no zone unwinnable on entry (B6 respawn + B7 blood door + alarm-stack coincidences);
+  4. **time-to-complete did not materially increase** — the constraint is the metric. If a
+     change makes E *longer*, it fails the gate even if it makes E harder.
+- **When E overshoots, back off in order:** Group C roll weights → B5 stacking rate → A5
+  points. Never re-add ammo above D parity as the fix.
+
+## Key files
+
+- `AutogenRundown/src/DataBlocks/Enemies/EnemyPopulation.cs` — tier rosters (A2)
+- `AutogenRundown/src/DataBlocks/Enemies/EnemyGroup.cs` — hibernation group shapes (A1)
+- `AutogenRundown/src/BuildDirector.cs` — points per zone (A5)
+- `AutogenRundown/src/DataBlocks/LevelLayout.cs` — scouts, blood doors, group mixing,
+  error alarms (A3, A6, B7)
+- `AutogenRundown/src/DataBlocks/Zone.cs` — ammo, alarm modifiers, respawn knobs, door
+  events (A4, B5, B6, C5)
+- `AutogenRundown/src/DataBlocks/Level.cs` — starting-state overrides, wave settings,
+  expedition balance selection (B2, B3, B4)
+- `AutogenRundown/src/DataBlocks/LevelSettings.cs` — E modifier rolls, `LevelSignature`
+  home (B2, Group C)
+- `AutogenRundown/src/DataBlocks/Objectives/EventBuilder.cs` — `AddScriptedErrorAlarm`
+  stub (B1, C2)
+- `AutogenRundown/src/Extensions/WardenObjectiveEventCollections.cs` — event helpers
+  (C1, C3, C5)
+- `docs/game/rundowns/` — official E-level references (R2E1, R4E1, R5E1, R7E1, R8E1, R8E2)
