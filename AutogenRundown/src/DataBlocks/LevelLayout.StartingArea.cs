@@ -144,12 +144,28 @@ public partial record LevelLayout
 
             case BukheadStrategy.Default_NoMainBulkhead:
             {
-                var lastNode = (ZoneNode)level.Planner.GetLastZone(Bulkhead.Main, dimension: Dimension)!;
-
                 if (bulkhead == Bulkhead.Main)
-                    return (lastNode, level.Planner.GetZone(lastNode)!);
+                {
+                    var lastNode = (ZoneNode)level.Planner.GetLastZone(Bulkhead.Main, dimension: Dimension)!;
 
-                InitializeBulkheadArea(level, bulkhead, lastNode);
+                    return (lastNode, level.Planner.GetZone(lastNode)!);
+                }
+
+                // The entrance zone must be open: GetLastZone() can return dead end zones
+                // (MaxConnections = 0) such as the disinfection side room, which have no
+                // spare gates to build the bulkhead area from.
+                var from = level.Planner.GetLastOpenZone(Bulkhead.Main, dimension: Dimension);
+
+                // Fall back to any open main zone
+                if (from is null)
+                {
+                    Plugin.Logger.LogDebug(
+                        $"No open primary zones for bulkhead {bulkhead}, planner = {level.Planner}\n" +
+                        $"==========\n{level.Planner.ToMermaidChart()}==========");
+                    from = Generator.Pick(level.Planner.GetOpenZones(Bulkhead.Main, null, dimension: Dimension));
+                }
+
+                InitializeBulkheadArea(level, bulkhead, (ZoneNode)from!);
                 break;
             }
 

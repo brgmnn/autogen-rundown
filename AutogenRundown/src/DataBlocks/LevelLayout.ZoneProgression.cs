@@ -1934,6 +1934,7 @@ public partial record LevelLayout
     {
         var (_, zone) = AddZone(start, new ZoneNode
         {
+            Branch = "disinfection",
             MaxConnections = 0,
             Tags = new Tags("no_scouts")
         });

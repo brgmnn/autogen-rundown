@@ -1087,7 +1087,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             // TODO: move this somewhere else? Currently it will only apply in main
             if (level.Settings.HasInfection && Generator.Flip(disinfectChance))
             {
-                var open = level.Planner.GetOpenZones(Bulkhead.All, null, layout.Dimension).Take(4);
+                var open = level.Planner.GetOpenZones(Bulkhead.Main, null, layout.Dimension).Take(4);
                 var from = Generator.Pick(open);
 
                 layout.AddDisinfectionZone(from);
