@@ -1513,18 +1513,11 @@ public partial record LevelLayout
         if (terminalZone.TerminalPlacements.Any())
             terminalPlacement = terminalZone.TerminalPlacements.First();
 
-        var commandEvents = new List<WardenObjectiveEvent>();
-        commandEvents
+        var commandEvents = new List<WardenObjectiveEvent>()
             .AddTurnOffAlarms(9.5, "error_alarms")
             .AddSound(Sound.Alarms_Error_AmbientStop, 10)
-            .RemoveCustomHudText(10);
-
-        // The stop is global and would also kill the BossAlarm signature's boss stream;
-        // re-arm it and restore the level-wide alarm ambience.
-        if (level.Settings.Signature == LevelSignature.BossAlarm)
-            commandEvents
-                .AddSpawnWave(level.Settings.SignatureBossWave!, 12.0)
-                .AddSound(Sound.Alarms_Error_AmbientLoop, 12.5);
+            .RemoveCustomHudText(10)
+            .ToList();
 
         terminalPlacement.UniqueCommands.Add(
             new CustomTerminalCommand
@@ -1660,19 +1653,12 @@ public partial record LevelLayout
         if (terminalZone.TerminalPlacements.Any())
             terminalPlacement = terminalZone.TerminalPlacements.First();
 
-        var commandEvents = new List<WardenObjectiveEvent>();
-        commandEvents
+        var commandEvents = new List<WardenObjectiveEvent>()
             .AddTurnOffAlarms(9.5, "apex_error_alarms")
             .AddTurnOffAlarms(9.5, "error_alarms")
             .AddSound(Sound.Alarms_Error_AmbientStop, 10)
-            .RemoveCustomHudText(10);
-
-        // The stop is global and would also kill the BossAlarm signature's boss stream;
-        // re-arm it and restore the level-wide alarm ambience.
-        if (level.Settings.Signature == LevelSignature.BossAlarm)
-            commandEvents
-                .AddSpawnWave(level.Settings.SignatureBossWave!, 12.0)
-                .AddSound(Sound.Alarms_Error_AmbientLoop, 12.5);
+            .RemoveCustomHudText(10)
+            .ToList();
 
         terminalPlacement.UniqueCommands.Add(
             new CustomTerminalCommand

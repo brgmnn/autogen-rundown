@@ -106,7 +106,13 @@ public static class WardenObjectiveEventCollections
     }
 
     /// <summary>
-    /// Turn's off alarms. Optionally with a given identifier
+    /// Turn's off alarms. Optionally with a given identifier.
+    ///
+    /// With an identifier, AWO scopes the stop to waves spawned with that same identifier.
+    /// Vanilla alone would ignore it and stop everything
+    /// (Modules-ASM/WardenObjectiveManager.cs:2305 -> StopAllWardenObjectiveEnemyWaves).
+    /// Without an identifier the stop is global — including untagged waves such as
+    /// WavesOnElevatorLand entries (e.g. the BossAlarm signature's boss stream).
     /// </summary>
     /// <param name="events"></param>
     /// <param name="delay"></param>

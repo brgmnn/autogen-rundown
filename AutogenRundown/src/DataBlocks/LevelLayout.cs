@@ -1303,7 +1303,12 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 }
 
                 var mainObjective = level.GetObjective(Bulkhead.Main);
-                var wave = level.Settings.SignatureBossWave ?? GenericWave.ErrorAlarm_Boss_Hard_Tank;
+                var wave = Generator.Select(new List<(double, GenericWave)>
+                {
+                    (0.5, GenericWave.ErrorAlarm_Boss_Hard_Tank),
+                    (0.3, GenericWave.ErrorAlarm_Boss_VeryHard_TankPotato),
+                    (0.2, GenericWave.ErrorAlarm_Boss_Hard_Mother),
+                });
 
                 // A TriggerAlarm wave on elevator land makes the game start the alarm
                 // ambience loop at drop and show WaveOnElevatorWardenIntel. The waves stop

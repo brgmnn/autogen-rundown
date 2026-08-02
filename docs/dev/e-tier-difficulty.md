@@ -201,10 +201,11 @@ A real `TriggerAlarm` boss error wave (Tank @240s / TankPotato @180s / Mother @2
 weighted) in `WavesOnElevatorLand` — the game starts the alarm ambience at drop — running
 until the Main objective completes, where `StopAllWavesBeforeGotoWin` cancels all waves
 and the ambience before exit waves spawn. Rolled error alarms keep the one-notch damp;
-their `DEACTIVATE_ALARMS` global stop re-arms the boss stream; the apex-alarm boss default
-and ClearPath's own level tank alarm are suppressed while the signature is active.
-Skipped on AlphaTerminalCommand / TimedTerminalSequence (their command events fire global
-wave stops mid-level).
+their `DEACTIVATE_ALARMS` stops are identifier-scoped (honored by AWO) and the boss stream
+carries no identifier, so it survives them. The apex-alarm boss default and ClearPath's
+own level tank alarm are suppressed while the signature is active. Skipped on
+AlphaTerminalCommand / TimedTerminalSequence — their command events fire identifier-less
+(global) wave stops mid-level, which would kill the untagged boss stream.
 
 **C3. Lights-out travel scan** *(maintainer's own idea, `README.md:75`)*
 A sustained travel scan (reverse-on-exit already implemented in
