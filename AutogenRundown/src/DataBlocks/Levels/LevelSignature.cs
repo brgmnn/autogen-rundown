@@ -11,6 +11,11 @@ public enum LevelSignature
     None,
 
     /// <summary>
+    /// Start with (usually) max infection
+    /// </summary>
+    StartWithInfection,
+
+    /// <summary>
     /// Recurring stalker: a scripted pseudo-error alarm sends a single shadow pouncer every
     /// 4-6 minutes with a heartbeat tell. Finite, never escalates, no combat music.
     /// </summary>

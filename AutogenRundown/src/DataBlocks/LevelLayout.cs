@@ -1320,10 +1320,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                     "://ERROR - MASSIVE BIOMASS SIGNATURE APPROACHING");
                 level.MarkAsBossErrorAlarm();
 
-                mainObjective.EventsOnElevatorLand
-                    .AddCustomHudText("<color=red>://ERROR - Massive biomass signature active</color>");
                 mainObjective.EventsOnGotoWin
-                    .RemoveCustomHudText()
                     .AddMessage("://SECTOR ALARM TERMINATED - BIOMASS SIGNATURE LOST", 2.0);
 
                 Plugin.Logger.LogDebug(
