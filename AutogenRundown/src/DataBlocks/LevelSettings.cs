@@ -178,6 +178,12 @@ public class LevelSettings
     /// </summary>
     public LevelSignature Signature { get; set; } = LevelSignature.None;
 
+    /// <summary>
+    /// The boss wave for the BossAlarm signature. Rolled with the signature (layout builders
+    /// need it before ApplyLevelSignature runs, to re-arm it after DEACTIVATE_ALARMS).
+    /// </summary>
+    public GenericWave? SignatureBossWave { get; set; }
+
     public LevelSettings(string? tier = null)
     {
         if (tier != null)
@@ -551,9 +557,18 @@ public class LevelSettings
                 // See docs/dev/e-tier-difficulty.md, Group C.
                 Signature = Generator.Select(new List<(double, LevelSignature)>
                 {
-                    (0.85, LevelSignature.None),
-                    (0.15, LevelSignature.Stalker),
+                    (0.80, LevelSignature.None),
+                    (0.10, LevelSignature.Stalker),
+                    (0.10, LevelSignature.BossAlarm),
                 });
+
+                if (Signature == LevelSignature.BossAlarm)
+                    SignatureBossWave = Generator.Select(new List<(double, GenericWave)>
+                    {
+                        (0.5, GenericWave.ErrorAlarm_Boss_Hard_Tank),
+                        (0.3, GenericWave.ErrorAlarm_Boss_VeryHard_TankPotato),
+                        (0.2, GenericWave.ErrorAlarm_Boss_Hard_Mother),
+                    });
                 break;
             }
         }

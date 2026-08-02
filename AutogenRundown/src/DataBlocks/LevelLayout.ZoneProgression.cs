@@ -1513,11 +1513,18 @@ public partial record LevelLayout
         if (terminalZone.TerminalPlacements.Any())
             terminalPlacement = terminalZone.TerminalPlacements.First();
 
-        var commandEvents = new List<WardenObjectiveEvent>()
+        var commandEvents = new List<WardenObjectiveEvent>();
+        commandEvents
             .AddTurnOffAlarms(9.5, "error_alarms")
             .AddSound(Sound.Alarms_Error_AmbientStop, 10)
-            .RemoveCustomHudText(10)
-            .ToList();
+            .RemoveCustomHudText(10);
+
+        // The stop is global and would also kill the BossAlarm signature's boss stream;
+        // re-arm it and restore the level-wide alarm ambience.
+        if (level.Settings.Signature == LevelSignature.BossAlarm)
+            commandEvents
+                .AddSpawnWave(level.Settings.SignatureBossWave!, 12.0)
+                .AddSound(Sound.Alarms_Error_AmbientLoop, 12.5);
 
         terminalPlacement.UniqueCommands.Add(
             new CustomTerminalCommand
@@ -1609,6 +1616,14 @@ public partial record LevelLayout
         lockedZone.SecurityGateToEnter = SecurityGate.Apex;
         level.Settings.ErrorAlarmZones.Add(lockedNode);
 
+        // The BossAlarm signature already streams a level-wide boss error; don't default the
+        // apex alarm to a second boss stream.
+        if (level.Settings.Signature == LevelSignature.BossAlarm)
+        {
+            settings ??= WaveSettings.Error_Hard;
+            population ??= WavePopulation.Baseline;
+        }
+
         lockedZone.EventsOnDoorScanStart
             .AddSound(Sound.Alarms_Error_AmbientLoop, 1.0)
             .AddSpawnWave(new GenericWave
@@ -1645,12 +1660,19 @@ public partial record LevelLayout
         if (terminalZone.TerminalPlacements.Any())
             terminalPlacement = terminalZone.TerminalPlacements.First();
 
-        var commandEvents = new List<WardenObjectiveEvent>()
+        var commandEvents = new List<WardenObjectiveEvent>();
+        commandEvents
             .AddTurnOffAlarms(9.5, "apex_error_alarms")
             .AddTurnOffAlarms(9.5, "error_alarms")
             .AddSound(Sound.Alarms_Error_AmbientStop, 10)
-            .RemoveCustomHudText(10)
-            .ToList();
+            .RemoveCustomHudText(10);
+
+        // The stop is global and would also kill the BossAlarm signature's boss stream;
+        // re-arm it and restore the level-wide alarm ambience.
+        if (level.Settings.Signature == LevelSignature.BossAlarm)
+            commandEvents
+                .AddSpawnWave(level.Settings.SignatureBossWave!, 12.0)
+                .AddSound(Sound.Alarms_Error_AmbientLoop, 12.5);
 
         terminalPlacement.UniqueCommands.Add(
             new CustomTerminalCommand

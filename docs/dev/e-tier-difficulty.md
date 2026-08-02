@@ -195,6 +195,17 @@ a `Sound.EnemyHeartbeat` tell — something hunts you all level. Explicitly **no
 skipped on Survival / ReachKdsDeep / Cryptomnesia mains. **Needs Windows playtest:** finite
 `EventLoop.LoopCount` is otherwise unexercised.
 
+**C2b. Boss alarm** *(R4E1's Tank error)* **✅ Done** (`LevelSignature.BossAlarm`, rolled at
+0.10 in the E branch alongside Stalker)
+A real `TriggerAlarm` boss error wave (Tank @240s / TankPotato @180s / Mother @240s,
+weighted) in `WavesOnElevatorLand` — the game starts the alarm ambience at drop — running
+until the Main objective completes, where `StopAllWavesBeforeGotoWin` cancels all waves
+and the ambience before exit waves spawn. Rolled error alarms keep the one-notch damp;
+their `DEACTIVATE_ALARMS` global stop re-arms the boss stream; the apex-alarm boss default
+and ClearPath's own level tank alarm are suppressed while the signature is active.
+Skipped on AlphaTerminalCommand / TimedTerminalSequence (their command events fire global
+wave stops mid-level).
+
 **C3. Lights-out travel scan** *(maintainer's own idea, `README.md:75`)*
 A sustained travel scan (reverse-on-exit already implemented in
 `Patch_SustainedTravelReverse.cs`) that fires `AddAllLightsOff` on scan start, restoring

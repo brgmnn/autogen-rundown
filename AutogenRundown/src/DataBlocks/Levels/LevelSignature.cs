@@ -15,4 +15,11 @@ public enum LevelSignature
     /// 4-6 minutes with a heartbeat tell. Finite, never escalates, no combat music.
     /// </summary>
     Stalker,
+
+    /// <summary>
+    /// R4E1-style boss error alarm: a real TriggerAlarm error wave streams a boss
+    /// (Tank/TankPotato/Mother) from level start until the Main objective completes, then
+    /// all waves stop (StopAllWavesBeforeGotoWin).
+    /// </summary>
+    BossAlarm,
 }

@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Utils;
@@ -386,8 +387,13 @@ public partial record LevelLayout
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
 
-                        objective.WavesOnElevatorLand.Add(GenericWave.ErrorAlarm_Boss_Hard_Tank);
-                        level.MarkAsBossErrorAlarm();
+                        // Skip the level error alarm when a signature is active: the
+                        // BossAlarm signature already streams its own level-wide boss error.
+                        if (level.Settings.Signature == LevelSignature.None)
+                        {
+                            objective.WavesOnElevatorLand.Add(GenericWave.ErrorAlarm_Boss_Hard_Tank);
+                            level.MarkAsBossErrorAlarm();
+                        }
 
                         (exit, exitZone) = BuildChallenge_ApexAlarm(
                             mid2,

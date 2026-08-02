@@ -90,6 +90,22 @@ public record GenericWave
         SpawnDelay = 0.0,
         TriggerAlarm = true
     };
+
+    public static readonly GenericWave ErrorAlarm_Boss_VeryHard_TankPotato = new()
+    {
+        Settings = WaveSettings.Error_Boss_VeryHard,
+        Population = WavePopulation.SingleEnemy_TankPotato,
+        SpawnDelay = 0.0,
+        TriggerAlarm = true
+    };
+
+    public static readonly GenericWave ErrorAlarm_Boss_Hard_Mother = new()
+    {
+        Settings = WaveSettings.Error_Boss_Hard,
+        Population = WavePopulation.SingleEnemy_Mother,
+        SpawnDelay = 0.0,
+        TriggerAlarm = true
+    };
     #endregion
 
     #region Chargers

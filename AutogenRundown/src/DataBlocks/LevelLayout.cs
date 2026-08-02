@@ -1288,6 +1288,43 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                     $"{Name} -- Level signature: Stalker, interval={interval}s, grace={grace}s");
                 break;
             }
+
+            case LevelSignature.BossAlarm:
+            {
+                // These objectives fire a global StopEnemyWaves mid-level via terminal
+                // command events, which would kill the boss alarm early.
+                if (director.Objective is WardenObjectiveType.AlphaTerminalCommand
+                    or WardenObjectiveType.TimedTerminalSequence)
+                {
+                    Plugin.Logger.LogDebug(
+                        $"{Name} -- Skipping BossAlarm signature for {director.Objective}");
+
+                    return;
+                }
+
+                var mainObjective = level.GetObjective(Bulkhead.Main);
+                var wave = level.Settings.SignatureBossWave ?? GenericWave.ErrorAlarm_Boss_Hard_Tank;
+
+                // A TriggerAlarm wave on elevator land makes the game start the alarm
+                // ambience loop at drop and show WaveOnElevatorWardenIntel. The waves stop
+                // (along with the ambience) the moment the Main objective completes, before
+                // any exit waves spawn.
+                mainObjective.WavesOnElevatorLand.Add(wave);
+                mainObjective.StopAllWavesBeforeGotoWin = true;
+                mainObjective.WaveOnElevatorWardenIntel = new Text(
+                    "://ERROR - MASSIVE BIOMASS SIGNATURE APPROACHING");
+                level.MarkAsBossErrorAlarm();
+
+                mainObjective.EventsOnElevatorLand
+                    .AddCustomHudText("<color=red>://ERROR - Massive biomass signature active</color>");
+                mainObjective.EventsOnGotoWin
+                    .RemoveCustomHudText()
+                    .AddMessage("://SECTOR ALARM TERMINATED - BIOMASS SIGNATURE LOST", 2.0);
+
+                Plugin.Logger.LogDebug(
+                    $"{Name} -- Level signature: BossAlarm, wave={wave.Population.Name}");
+                break;
+            }
         }
     }
 
