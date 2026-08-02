@@ -496,6 +496,17 @@ public class LevelSettings
             {
                 MaxErrorAlarms = 5;
 
+                // Level signature: at most one defining mechanic per level. Rolled first so
+                // signatures can bias the modifier rolls below.
+                // See docs/dev/e-tier-difficulty.md, Group C.
+                Signature = Generator.Select(new List<(double, LevelSignature)>
+                {
+                    (0.70, LevelSignature.None),
+                    (0.10, LevelSignature.Stalker),
+                    (0.10, LevelSignature.BossAlarm),
+                    (0.10, LevelSignature.StartWithInfection),
+                });
+
                 Modifiers.Add(
                     Generator.Select(new List<(double, LevelModifiers)>
                     {
@@ -525,7 +536,8 @@ public class LevelSettings
                         (0.1, LevelModifiers.ManyFlyers),
                     }));
 
-                if (Generator.Flip(0.85))
+                // Levels starting the players infected always have at least light infection
+                if (Signature == LevelSignature.StartWithInfection || Generator.Flip(0.85))
                     Modifiers.Add(Generator.Flip(0.6) ?
                         LevelModifiers.HeavyInfection :
                         LevelModifiers.Infection);
@@ -546,15 +558,6 @@ public class LevelSettings
                         (0.5, LevelModifiers.Fog),
                         (0.2, LevelModifiers.HeavyFog),
                     }));
-
-                // Level signature: at most one defining mechanic per level.
-                // See docs/dev/e-tier-difficulty.md, Group C.
-                Signature = Generator.Select(new List<(double, LevelSignature)>
-                {
-                    (0.80, LevelSignature.None),
-                    (0.10, LevelSignature.Stalker),
-                    (0.10, LevelSignature.BossAlarm),
-                });
                 break;
             }
         }

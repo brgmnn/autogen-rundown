@@ -115,14 +115,11 @@ signature: persistent upkeep pressure over the level's *existing* footprint.
 single enemy. When a signature mechanic is active, `AddErrorAlarm` steps `Error_VeryHard`
 down to `Error_Hard` so the two pressure sources don't stack.
 
-**B2. Starting-state handicaps (`Level.cs:678-690`).**
-`StartingInfection` / `StartingHealth` / `StartingMainAmmo` / `StartingSpecialAmmo` /
-`StartingTool` are fully plumbed into `SpecialOverrideData` and never set. Roll a mild
-handicap from the E branch of `LevelSettings.Generate()` (`LevelSettings.cs:490`):
-`StartingInfection` 0.3-0.5 (R5E1's 1.0 is too much for generated levels — see Dropped).
-*Guardrail:* when infection rolls, force `DisinfectPacks > 0` in the first two zones (the
-default is **0**, `Zone.cs:1297`) or place a `DisinfectionStationPlacements` entry; cap
-infection ≤ 0.6 so the health floor stays ~40%.
+**B2. Starting-state handicaps (`Level.cs:678-690`). ✅ Done** — shipped as the
+`LevelSignature.StartWithInfection` signature (see C2c) rather than a standalone roll,
+and harder than proposed here: usually max infection, no added relief. The remaining
+starting-state levers (`StartingHealth` / `StartingMainAmmo` / `StartingSpecialAmmo` /
+`StartingTool`) are still plumbed and unused.
 
 **B3. An E-specific `GlobalWaveSettings` preset (`Level.cs:748-749`).**
 Today only the soft cost cap varies (D 30 / E 35). Add a fourth preset (PersistentId 4):
@@ -207,6 +204,16 @@ own level tank alarm are suppressed while the signature is active. Skipped on
 AlphaTerminalCommand / TimedTerminalSequence — their command events fire identifier-less
 (global) wave stops mid-level, which would kill the untagged boss stream.
 
+**C2c. Infected start** *(R5E1)* **✅ Done** (`LevelSignature.StartWithInfection`, rolled
+at 0.10 in the E branch)
+Players spawn at (usually) max infection via `SpecialOverrideData.InfectionLevelAtExpeditionStart`
+(rolled 1.0 / 0.75 / 0.5, weighted toward max). The engine soft-caps infection at 0.85 —
+a max start settles there in ~15s, leaving a 15% health floor exactly like R5E1 — and
+applies the value only at the initial elevator spawn (checkpoint recall keeps captured
+infection). The signature forces at least `LevelModifiers.Infection` so the level reads
+as infected and the standing relief rolls (fog-zone disinfect packs, the 0.4-chance
+disinfection side zone) can fire; deliberately **no guaranteed relief** beyond those.
+
 **C3. Lights-out travel scan** *(maintainer's own idea, `README.md:75`)*
 A sustained travel scan (reverse-on-exit already implemented in
 `Patch_SustainedTravelReverse.cs`) that fires `AddAllLightsOff` on scan start, restoring
@@ -233,10 +240,11 @@ safe transitions.
 a warden-intel tell after triggering so it's learnable, not arbitrary.
 
 **Dropped (and why):**
-- *100% starting infection (full R5E1)* — needs hand-placed disinfection relief the
-  generator can't guarantee. B2 delivers the mild version.
 - *The Immortal / flesh walls* — invincible persistent enemies risk soft-locks, and the
   required patching sits in known il2cpp ICF-fold trap territory.
+
+(100% starting infection was originally dropped here over relief concerns, but was later
+shipped as C2c — the maintainer chose to rely on the standing relief rolls only.)
 
 ## What NOT to do
 

@@ -865,6 +865,24 @@ public partial class Level
     }
 
     /// <summary>
+    /// Marks the level as starting the players at (usually) max infection
+    /// </summary>
+    public void MarkAsStartingInfected()
+    {
+        ElevatorDropWardenIntel.Add((Generator.Between(8, 14), Generator.Draw(new List<string>
+        {
+            ">... [violent coughing]\r\n>... The elevator air was wrong.\r\n>... <size=200%><color=red>We're already infected!</color></size>",
+            ">... My veins are burning.\r\n>... [labored breathing]\r\n>... <size=200%><color=red>The infection is inside us!</color></size>",
+            ">... <size=200%><color=red>Everyone's showing symptoms!</color></size>\r\n>... The Warden sent us down sick.\r\n>... Find disinfection, fast.",
+            ">... [heartbeat pounding]\r\n>... My vision keeps blurring.\r\n>... <size=200%><color=red>We won't last long like this!</color></size>",
+            ">... The cage was flooded on the way down.\r\n>... [wet coughing]\r\n>... <size=200%><color=red>It's already in our lungs!</color></size>",
+            ">... <size=200%><color=red>Quarantine failure!</color></size>\r\n>... They dropped us anyway.\r\n>... Every step costs us now.",
+            ">... I can barely stand.\r\n>... [ragged wheezing]\r\n>... <size=200%><color=red>We work sick or we don't work at all.</color></size>",
+            ">... The others look grey.\r\n>... It's eating at all of us.\r\n>... <size=200%><color=red>No margin for mistakes down here!</color></size>"
+        }))!);
+    }
+
+    /// <summary>
     /// Gets the right layer data given the objective being asked for
     /// </summary>
     /// <param name="variant"></param>
