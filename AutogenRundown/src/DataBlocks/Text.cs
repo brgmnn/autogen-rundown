@@ -105,7 +105,7 @@ public record Text : DataBlock<Text>
 
     private static Text RundownEncryptedLevel = new()
     {
-        English = "://err: UNREACHABLE; QP_%: 66,1",
+        English = "://err: UNREACHABLE",
         ExportVersion = 1,
         ImportVersion = 0,
         Name = "MainMenu.RundownPage.ExpeditionIconDecrypt",
