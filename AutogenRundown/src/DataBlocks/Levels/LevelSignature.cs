@@ -16,7 +16,10 @@ public enum LevelSignature
     StartWithInfection,
 
     /// <summary>
-    ///
+    /// Whole-level cycling fog: the ventilation fails on a cycle, fog rises to heavy,
+    /// holds, then recedes to clear, repeating for the entire level. Infectious when the
+    /// level rolls FogIsInfectious. A fog turbine and repellers are guaranteed in the
+    /// elevator zone.
     /// </summary>
     CyclingFog,
 

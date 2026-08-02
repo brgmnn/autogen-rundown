@@ -501,10 +501,11 @@ public class LevelSettings
                 // See docs/dev/e-tier-difficulty.md, Group C.
                 Signature = Generator.Select(new List<(double, LevelSignature)>
                 {
-                    (0.70, LevelSignature.None),
+                    (0.60, LevelSignature.None),
                     (0.10, LevelSignature.Stalker),
                     (0.10, LevelSignature.BossAlarm),
                     (0.10, LevelSignature.StartWithInfection),
+                    (0.10, LevelSignature.CyclingFog),
                 });
 
                 Modifiers.Add(
@@ -551,13 +552,17 @@ public class LevelSettings
                 else if (Generator.Flip(0.7))
                     Modifiers.Add(LevelModifiers.Hybrids);
 
-                Modifiers.Add(
-                    Generator.Select(new List<(double, LevelModifiers)>
-                    {
-                        (0.3, LevelModifiers.NoFog),
-                        (0.5, LevelModifiers.Fog),
-                        (0.2, LevelModifiers.HeavyFog),
-                    }));
+                // CyclingFog drives fog via a whole-level event loop; skip the fog modifier
+                // roll. The default NoFog modifier stays in the set (keeps Zone.RollFog inert
+                // and HasFog() false) while FogIsInfectious, added above, survives.
+                if (Signature != LevelSignature.CyclingFog)
+                    Modifiers.Add(
+                        Generator.Select(new List<(double, LevelModifiers)>
+                        {
+                            (0.3, LevelModifiers.NoFog),
+                            (0.5, LevelModifiers.Fog),
+                            (0.2, LevelModifiers.HeavyFog),
+                        }));
 
                 break;
             }

@@ -883,6 +883,24 @@ public partial class Level
     }
 
     /// <summary>
+    /// Marks the level as having whole-level cycling fog (failing ventilation)
+    /// </summary>
+    public void MarkAsCyclingFog()
+    {
+        ElevatorDropWardenIntel.Add((Generator.Between(5, 12), Generator.Draw(new List<string>
+        {
+            ">... Listen. The vents just died again.\r\n>... [deep mechanical groan]\r\n>... <size=200%><color=red>The fog keeps coming back!</color></size>",
+            ">... It clears, then it rises.\r\n>... Like the sector is breathing.\r\n>... <size=200%><color=red>Move while it's low!</color></size>",
+            ">... [fans winding down]\r\n>... Ventilation is on its last legs.\r\n>... <size=200%><color=red>Count the cycles or drown in it!</color></size>",
+            ">... <size=200%><color=red>Here it comes again!</color></size>\r\n>... The whole floor fills up.\r\n>... Then it drains, like clockwork.",
+            ">... The turbine by the elevator still works.\r\n>... Drag it with us.\r\n>... <size=200%><color=red>It's the only clear air we'll get!</color></size>",
+            ">... [distant rush of air]\r\n>... The purge cycle keeps failing.\r\n>... <size=200%><color=red>We work in the gaps between!</color></size>",
+            ">... Watch the low ground.\r\n>... It pools there first.\r\n>... <size=200%><color=red>When it rises, climb!</color></size>",
+            ">... The system fights itself.\r\n>... Vents open, then choke shut.\r\n>... <size=200%><color=red>Time your push to the cycle!</color></size>"
+        }))!);
+    }
+
+    /// <summary>
     /// Gets the right layer data given the objective being asked for
     /// </summary>
     /// <param name="variant"></param>
@@ -1566,6 +1584,30 @@ public partial class Level
         level.BuildBulkheads();
 
         #region Fog settings
+        // CyclingFog owns whole-level fog. Demote it for mains that run their own fog or
+        // elevator machinery: CentralGeneratorCluster installs generator fog steps that
+        // would fight the loop; the other three match ApplyLevelSignature's skip list.
+        // Re-roll the standard E-tier fog modifier so demoted levels rejoin the normal
+        // fog distribution.
+        if (level.Settings.Signature == LevelSignature.CyclingFog
+            && level.MainDirector.Objective is WardenObjectiveType.CentralGeneratorCluster
+                or WardenObjectiveType.Survival
+                or WardenObjectiveType.ReachKdsDeep
+                or WardenObjectiveType.Cryptomnesia)
+        {
+            level.Settings.Signature = LevelSignature.None;
+            level.Settings.Modifiers.Add(
+                Generator.Select(new List<(double, LevelModifiers)>
+                {
+                    (0.3, LevelModifiers.NoFog),
+                    (0.5, LevelModifiers.Fog),
+                    (0.2, LevelModifiers.HeavyFog),
+                }));
+
+            Plugin.Logger.LogDebug(
+                $"{logLevelId} -- Demoted CyclingFog signature for main objective {level.MainDirector.Objective}");
+        }
+
         var lowFog = level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)
             ? Fog.LowFog_Infectious
             : Fog.LowFog;
@@ -1573,20 +1615,35 @@ public partial class Level
             ? Fog.LowMidFog_Infectious
             : Fog.LowMidFog;
 
-        // Randomize no fog to add variety
-        if (level.Settings.Modifiers.Contains(LevelModifiers.NoFog))
+        if (level.Settings.Signature == LevelSignature.CyclingFog)
         {
-            level.FogSettings = Fog.Randomized();
-            Plugin.Logger.LogWarning($"Settings for fog: density = {level.FogSettings.FogDensity}");
+            // Drop state is the clear trough of the cycle; ApplyLevelSignature adds the
+            // event loop that raises the first heavy phase after a grace period.
+            level.FogSettings = level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)
+                ? Fog.CyclingFog_Clear_Infectious
+                : Fog.CyclingFog_Clear;
+
+            // Reserve fog for the whole level: blocks fog-flood alarm rolls, objective
+            // fog challenges, and CentralGeneratorCluster selection for side objectives.
+            level.TrySetFogUsage(FogUsage.LongDuration);
         }
+        else
+        {
+            // Randomize no fog to add variety
+            if (level.Settings.Modifiers.Contains(LevelModifiers.NoFog))
+            {
+                level.FogSettings = Fog.Randomized();
+                Plugin.Logger.LogWarning($"Settings for fog: density = {level.FogSettings.FogDensity}");
+            }
 
-        // Set low fog if we have fog
-        if (level.Settings.Modifiers.Contains(LevelModifiers.Fog))
-            level.FogSettings = lowFog;
+            // Set low fog if we have fog
+            if (level.Settings.Modifiers.Contains(LevelModifiers.Fog))
+                level.FogSettings = lowFog;
 
-        // For heavy fog we can also roll low mid fog
-        if (level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
-            level.FogSettings = Generator.Flip(0.75) ? lowFog : lowMidFog;
+            // For heavy fog we can also roll low mid fog
+            if (level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
+                level.FogSettings = Generator.Flip(0.75) ? lowFog : lowMidFog;
+        }
         #endregion
 
         Plugin.Logger.LogDebug($"{logLevelId} ({level.Complex}) - Modifiers: {level.Settings.Modifiers}, Fog: {level.FogSettings.Name}");

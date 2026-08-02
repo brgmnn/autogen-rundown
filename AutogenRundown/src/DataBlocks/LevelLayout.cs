@@ -1270,6 +1270,31 @@ public partial record LevelLayout : DataBlock<LevelLayout>
 
         switch (level.Settings.Signature)
         {
+            case LevelSignature.CyclingFog:
+            {
+                var grace = Generator.Between(45, 90);
+
+                level.GetObjective(Bulkhead.Main).EventsOnElevatorLand
+                    .AddCyclingFog(level, startDelay: grace);
+
+                // Guarantee a turbine + fog repellers in the elevator zone: the usual fog
+                // auto-placements key off Fog/HeavyFog modifiers and InFog zones, none of
+                // which exist on a cycling level.
+                var elevatorNode = level.Planner.GetZones(Bulkhead.StartingArea, null, Dimension).First();
+                var elevatorZone = level.Planner.GetZone(elevatorNode)!;
+
+                if (elevatorZone.BigPickupDistributionInZone == 0)
+                    elevatorZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
+                elevatorZone.ConsumableDistributionInZone = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
+
+                level.MarkAsCyclingFog();
+
+                Plugin.Logger.LogDebug(
+                    $"{Name} -- Level signature: CyclingFog, grace={grace}s, " +
+                    $"infectious={level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)}");
+                break;
+            }
+
             case LevelSignature.Stalker:
             {
                 var interval = Generator.Between(230, 270);

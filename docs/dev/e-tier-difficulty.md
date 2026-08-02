@@ -214,6 +214,23 @@ infection). The signature forces at least `LevelModifiers.Infection` so the leve
 as infected and the standing relief rolls (fog-zone disinfect packs, the 0.4-chance
 disinfection side zone) can fire; deliberately **no guaranteed relief** beyond those.
 
+**C2d. Cycling fog** **✅ Done** (`LevelSignature.CyclingFog`, rolled at 0.10 in the E
+branch; None down to 0.60)
+Whole-level cycling fog: the ventilation fails on a cycle — fog rises to heavy, holds,
+recedes, repeats for the entire level via the existing `AddCyclingFog(level)` EventLoop
+helper on `EventsOnElevatorLand` (E cadence: infectious ≈177s cycle with a 90s heavy
+hold, non-infectious ≈140s; new `startDelay` gives a 45-90s clear grace at drop).
+Infectious iff the level rolls `FogIsInfectious`. The signature owns fog end to end: the
+E fog modifier roll is skipped (keeping `Zone.RollFog` inert), `Level.Build` sets the
+base `FogSettings` to the cycle's clear trough and reserves `FogUsage.LongDuration` so
+fog-flood alarms and objective fog challenges can't stack on top. Demoted (with a normal
+fog re-roll) when the Main is CentralGeneratorCluster / Survival / ReachKdsDeep /
+Cryptomnesia — CGC drives its own generator fog steps. Guardrails: a fog turbine +
+repellers guaranteed in the elevator zone; the B1 one-notch error damp applies; **no
+added disinfect relief** (first tuning lever if infectious cycling proves too harsh).
+Needs Windows playtest: AWO loop first-iteration timing (drop should be clear until the
+grace elapses).
+
 **C3. Lights-out travel scan** *(maintainer's own idea, `README.md:75`)*
 A sustained travel scan (reverse-on-exit already implemented in
 `Patch_SustainedTravelReverse.cs`) that fires `AddAllLightsOff` on scan start, restoring
