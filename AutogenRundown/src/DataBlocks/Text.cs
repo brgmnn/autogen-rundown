@@ -4,9 +4,11 @@ namespace AutogenRundown.DataBlocks;
 
 public record LanguageData
 {
+    [JsonProperty]
     public string Translation { get; set; } = "";
 
     // TODO: do we need to set this to false?
+    [JsonProperty]
     public bool ShouldTranslate => true;
 }
 
@@ -49,18 +51,6 @@ public record Text : DataBlock<Text>
         : base(Generator.GetPersistentId(offsets))
     { }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="path"></param>
-    /// <returns></returns>
-    public static Text FromFile(string path)
-    {
-        var text = new Text();
-
-        return text;
-    }
-
     public static void Setup()
     {
         Setup<GameDataText>(Bins.Texts, "Text", text =>
@@ -95,7 +85,6 @@ public record Text : DataBlock<Text>
     /// </summary>
     private static Text RundownSelectionTitle = new()
     {
-        // CLCTR\u00A0multithread processor activated\r\n\r\n",
         English = "RAND-GEN AUTOMATIC PROCESSOR ACTIVATED",
         ExportVersion = 2,
         ImportVersion = 2,
@@ -112,7 +101,7 @@ public record Text : DataBlock<Text>
         PersistentId = 16
     };
 
-    public static readonly Text None = new Text { PersistentId = 0 };
+    public static readonly Text None = new() { PersistentId = 0 };
 
     public new static void SaveStatic()
     {
@@ -147,26 +136,35 @@ public record Text : DataBlock<Text>
 
     #region Fixed properties
 
+    [JsonProperty]
     public string Description { get; set; } = "";
     public int CharacterMetaData  { get; set; } = 2;
 
+    [JsonProperty]
     public readonly LanguageData French = new();
 
+    [JsonProperty]
     public readonly LanguageData Italian = new();
 
+    [JsonProperty]
     public readonly LanguageData German = new();
 
+    [JsonProperty]
     public readonly LanguageData Spanish = new();
 
+    [JsonProperty]
     public readonly LanguageData Russian = new();
 
     [JsonProperty("Portuguese_Brazil")]
     public readonly LanguageData PortugueseBrazil = new();
 
+    [JsonProperty]
     public readonly LanguageData Polish = new();
 
+    [JsonProperty]
     public readonly LanguageData Japanese = new();
 
+    [JsonProperty]
     public readonly LanguageData Korean = new();
 
     [JsonProperty("Chinese_Traditional")]
@@ -175,8 +173,10 @@ public record Text : DataBlock<Text>
     [JsonProperty("Chinese_Simplified")]
     public readonly LanguageData ChineseSimplified = new();
 
+    [JsonProperty]
     public bool SkipLocalization { get; set; } = true;
 
+    [JsonProperty]
     public bool MachineTranslation { get; set; } = false;
 
     public int ExportVersion { get; set; } = 2;

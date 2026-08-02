@@ -180,7 +180,7 @@ public static class WardenObjectiveEventCollections
     public static ICollection<WardenObjectiveEvent> AddScriptedErrorAlarm(
         this ICollection<WardenObjectiveEvent> events,
         GenericWave wave,
-        int waveCount = 19,
+        int waveCount = -1,
         double interval = 240.0,
         double delay = 2.0,
         string message = ":://WARNING - BIOMASS SIGNATURE",

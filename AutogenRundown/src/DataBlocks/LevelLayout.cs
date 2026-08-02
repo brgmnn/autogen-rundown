@@ -1264,6 +1264,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         {
             Plugin.Logger.LogDebug(
                 $"{Name} -- Skipping level signature {level.Settings.Signature} for {director.Objective}");
+
             return;
         }
 
@@ -1271,20 +1272,20 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         {
             case LevelSignature.Stalker:
             {
-                var interval = Generator.Between(240, 360);
-                var grace = Generator.Between(180, 300);
+                var interval = Generator.Between(230, 270);
+                var grace = Generator.Between(35, 70);
 
                 level.GetObjective(Bulkhead.Main).EventsOnElevatorLand
                     .AddScriptedErrorAlarm(
                         GenericWave.SinglePouncerShadow,
-                        waveCount: 12,
+                        waveCount: -1,
                         interval: interval,
                         delay: grace,
-                        message: ":://WARNING - UNKNOWN BIOMASS SIGNATURE",
+                        message: ":://WARNING - PREDATOR SECTOR",
                         sound: Sound.EnemyHeartbeat);
 
                 Plugin.Logger.LogDebug(
-                    $"{Name} -- Level signature: Stalker, interval={interval}s, grace={grace}s, waves=12");
+                    $"{Name} -- Level signature: Stalker, interval={interval}s, grace={grace}s");
                 break;
             }
         }
