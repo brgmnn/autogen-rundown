@@ -1335,5 +1335,8 @@ public partial record Zone : DataBlock<Zone>
             "E" => 6,
             _ => 4
         };
+
+        if (level.Settings.Signature == LevelSignature.BossAlarm)
+            AmmoPacks += 1;
     }
 }

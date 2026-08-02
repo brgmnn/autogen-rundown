@@ -558,6 +558,7 @@ public class LevelSettings
                         (0.5, LevelModifiers.Fog),
                         (0.2, LevelModifiers.HeavyFog),
                     }));
+
                 break;
             }
         }

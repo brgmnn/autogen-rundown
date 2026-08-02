@@ -1,4 +1,7 @@
-﻿using AutogenRundown.Components;
+﻿#define ENABLE_SOLO_RUNDOWN
+#define ENABLE_DUO_RUNDOWN
+
+using AutogenRundown.Components;
 using AutogenRundown.Managers;
 using AutogenRundown.Patches;
 using AutogenRundown.Patches.TravelScan;
