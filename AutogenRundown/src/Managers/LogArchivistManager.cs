@@ -23,11 +23,11 @@ public static class LogArchivistManager
 
     private static Dictionary<uint, CM_ExpeditionIcon_New> icons = new();
 
-    private static RundownLogRecord WeeklyLogRecord { get; set; } = new();
-
-    private static RundownLogRecord MonthlyLogRecord { get; set; } = new();
-
-    private static RundownLogRecord SeasonalLogRecord { get; set; } = new();
+    /// <summary>
+    /// Read state per rundown, for the rundowns in PluginRundowns.WithLogs. Each record is
+    /// persisted to its own file keyed by the rundown's datablock name.
+    /// </summary>
+    private static Dictionary<PluginRundown, RundownLogRecord> logRecords { get; set; } = new();
 
     private const string eventName = "autogen_archivist_read_log";
 
@@ -50,43 +50,27 @@ public static class LogArchivistManager
 
         foreach (var rundown in blocks)
         {
-            if (rundown.persistentID == (uint)PluginRundown.Weekly)
-            {
-                AddRundownMainIds(PluginRundown.Weekly, rundown);
-                WeeklyLogRecord = Load(rundown.name) ?? new RundownLogRecord { Name = rundown.name };
-            }
+            var pluginRundown = (PluginRundown)rundown.persistentID;
 
-            if (rundown.persistentID == (uint)PluginRundown.Monthly)
-            {
-                AddRundownMainIds(PluginRundown.Monthly, rundown);
-                MonthlyLogRecord = Load(rundown.name) ?? new RundownLogRecord { Name = rundown.name };
-            }
+            if (!PluginRundowns.WithLogs.Contains(pluginRundown))
+                continue;
 
-            if (rundown.persistentID == (uint)PluginRundown.Seasonal)
-            {
-                AddRundownMainIds(PluginRundown.Seasonal, rundown);
-                SeasonalLogRecord = Load(rundown.name) ?? new RundownLogRecord { Name = rundown.name };
-            }
+            AddRundownMainIds(pluginRundown, rundown);
+
+            logRecords[pluginRundown] = Load(rundown.name) ?? new RundownLogRecord { Name = rundown.name };
         }
 
         // Migrate progress when MainLevelLayout PIDs shift due to generator changes
-        MigrateProgress(WeeklyLogRecord, PluginRundown.Weekly);
-        MigrateProgress(MonthlyLogRecord, PluginRundown.Monthly);
-        MigrateProgress(SeasonalLogRecord, PluginRundown.Seasonal);
+        foreach (var (rundown, record) in logRecords)
+            MigrateProgress(record, rundown);
 
-        foreach (var layoutId in WeeklyLogRecord.ReadLogs.Keys)
-            readRecordsByLevel[layoutId] = WeeklyLogRecord.ReadLogs[layoutId];
-
-        foreach (var layoutId in MonthlyLogRecord.ReadLogs.Keys)
-            readRecordsByLevel[layoutId] = MonthlyLogRecord.ReadLogs[layoutId];
-
-        foreach (var layoutId in SeasonalLogRecord.ReadLogs.Keys)
-            readRecordsByLevel[layoutId] = SeasonalLogRecord.ReadLogs[layoutId];
+        foreach (var record in logRecords.Values)
+            foreach (var layoutId in record.ReadLogs.Keys)
+                readRecordsByLevel[layoutId] = record.ReadLogs[layoutId];
 
         // Reconcile ReadAllLogsLevels for levels where preserved count >= new archive count
-        ReconcileReadState(WeeklyLogRecord);
-        ReconcileReadState(MonthlyLogRecord);
-        ReconcileReadState(SeasonalLogRecord);
+        foreach (var record in logRecords.Values)
+            ReconcileReadState(record);
 
         // Ensure we update the icons when finishing a level
         LevelAPI.OnLevelCleanup += OnLevelCleanup;
@@ -159,14 +143,19 @@ public static class LogArchivistManager
         else if (completed < logs.Logs.Count)
             completedString = $"<color=orange>{completedString}</color>";
 
-        if (WeeklyLogRecord.ReadAllLogsLevels.Contains(mainId) ||
-            MonthlyLogRecord.ReadAllLogsLevels.Contains(mainId) ||
-            SeasonalLogRecord.ReadAllLogsLevels.Contains(mainId))
+        if (HasReadAllLogs(mainId))
             completedString = $"{logs.Logs.Count}";
 
         return $"{completedString}/{logs.Logs.Count}";
 
     }
+
+    /// <summary>
+    /// Whether the level has been fully read in any tracked rundown. Completion is permanent
+    /// once set, so a level only needs to match in one record.
+    /// </summary>
+    private static bool HasReadAllLogs(uint mainId)
+        => logRecords.Values.Any(record => record.ReadAllLogsLevels.Contains(mainId));
 
     private static void UpdateIcon(uint mainId)
     {
@@ -201,9 +190,7 @@ public static class LogArchivistManager
             else if (completed < logs.Logs.Count)
                 completedString = $"<color=orange>{completedString}</color>";
 
-            if (WeeklyLogRecord.ReadAllLogsLevels.Contains(mainId) ||
-                MonthlyLogRecord.ReadAllLogsLevels.Contains(mainId) ||
-                SeasonalLogRecord.ReadAllLogsLevels.Contains(mainId))
+            if (HasReadAllLogs(mainId))
                 completedString = $"{logs.Logs.Count}";
 
             icon.m_artifactHeatText.SetText($"Logs: {completedString}/{logs.Logs.Count}");
@@ -243,27 +230,8 @@ public static class LogArchivistManager
     /// <returns></returns>
     public static (int, int) GetLogsRead(PluginRundown rundown)
     {
-        RundownLogRecord record;
-
-        switch (rundown)
-        {
-            case PluginRundown.Weekly:
-                record = WeeklyLogRecord;
-                break;
-
-            case PluginRundown.Monthly:
-                record = MonthlyLogRecord;
-                break;
-
-            case PluginRundown.Seasonal:
-                record = SeasonalLogRecord;
-                break;
-
-            case PluginRundown.None:
-            case PluginRundown.Daily:
-            default:
-                return (0, 0);
-        }
+        if (!logRecords.TryGetValue(rundown, out var record))
+            return (0, 0);
 
         var total = 0;
         var read = 0;
@@ -427,29 +395,12 @@ public static class LogArchivistManager
             return;
 
         logName = logName.ToUpper();
-        PluginRundown rundown;
 
-        switch (rundownKey)
-        {
-            // Weekly
-            case "Local_2":
-                rundown = PluginRundown.Weekly;
-                break;
+        var rundown = PluginRundowns.FromRundownKey(rundownKey);
 
-            // Monthly
-            case "Local_3":
-                rundown = PluginRundown.Monthly;
-                break;
-
-            // Seasonal
-            case "Local_4":
-                rundown = PluginRundown.Seasonal;
-                break;
-
-            // Daily -> "Local_1"
-            default:
-                return;
-        }
+        // Daily has no log archives, so nothing to record against
+        if (!logRecords.ContainsKey(rundown))
+            return;
 
         if (!archivesByLevel.TryGetValue(mainLayout, out var levelLogs))
             return;
@@ -479,28 +430,10 @@ public static class LogArchivistManager
     /// <param name="data"></param>
     private static void OnReadLog(ulong snetPlayer, ReadLogEvent data)
     {
-        RundownLogRecord record;
         var logName = data.LogFileName.ToUpper();
 
-        switch (data.Rundown)
-        {
-            case PluginRundown.Weekly:
-                record = WeeklyLogRecord;
-                break;
-
-            case PluginRundown.Monthly:
-                record = MonthlyLogRecord;
-                break;
-
-            case PluginRundown.Seasonal:
-                record = SeasonalLogRecord;
-                break;
-
-            case PluginRundown.None:
-            case PluginRundown.Daily:
-            default:
-                return;
-        }
+        if (!logRecords.TryGetValue(data.Rundown, out var record))
+            return;
 
         if (!archivesByLevel.TryGetValue(data.MainId, out var levelLogs))
             return;

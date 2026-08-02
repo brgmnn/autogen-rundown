@@ -588,16 +588,7 @@ public static class BuildFailureManager
     /// Persistent id of the rundown the players are currently in.
     /// </summary>
     private static uint ActiveRundownId()
-        => RundownManager.ActiveRundownKey switch
-        {
-            "Local_1" => (uint)PluginRundown.Daily,
-            "Local_2" => (uint)PluginRundown.Weekly,
-            "Local_3" => (uint)PluginRundown.Monthly,
-            "Local_4" => (uint)PluginRundown.Seasonal,
-            "Local_5" => (uint)PluginRundown.Solo,
-
-            _ => 0u
-        };
+        => (uint)PluginRundowns.FromRundownKey(RundownManager.ActiveRundownKey);
 
     private static string TierLetter(int tier)
         => tier switch
