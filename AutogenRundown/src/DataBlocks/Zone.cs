@@ -1238,10 +1238,12 @@ public partial record Zone : DataBlock<Zone>
     #endregion
 
     #region Static Spawns (Spitters, Mother Sacks etc)
+
     /// <summary>
     ///
     /// </summary>
     public List<StaticSpawnDataContainer> StaticSpawnDataContainers { get; set; } = new();
+
     #endregion
 
     public int CorpseClustersInZone { get; set; } = 0;

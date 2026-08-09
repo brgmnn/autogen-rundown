@@ -2,6 +2,7 @@
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -501,10 +502,9 @@ public class LevelSettings
                 // See docs/dev/e-tier-difficulty.md, Group C.
                 Signature = Generator.Select(new List<(double, LevelSignature)>
                 {
-                    (0.70, LevelSignature.None),
-                    (0.10, LevelSignature.Stalker),
-                    (0.10, LevelSignature.BossAlarm),
-                    (0.10, LevelSignature.StartWithInfection),
+                    (1.0, LevelSignature.StartWithInfection),
+                    (1.0, LevelSignature.Stalker),
+                    (0.6, LevelSignature.BossAlarm),
                 });
 
                 Modifiers.Add(

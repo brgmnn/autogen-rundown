@@ -1317,7 +1317,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 mainObjective.WavesOnElevatorLand.Add(wave);
                 mainObjective.StopAllWavesBeforeGotoWin = true;
                 mainObjective.WaveOnElevatorWardenIntel = new Text(
-                    "://ERROR - MASSIVE BIOMASS SIGNATURE APPROACHING");
+                    "://ERROR - LARGE BIOMASS SIGNATURE");
                 level.MarkAsBossErrorAlarm();
 
                 mainObjective.EventsOnGotoWin
@@ -1333,12 +1333,17 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 // Applied once per player at the initial elevator spawn; checkpoint recall
                 // restores captured infection instead. 1.0 settles at the game's 0.85 soft
                 // cap within ~15s, leaving a 15% health floor (R5E1).
-                var infection = Generator.Select(new List<(double, double)>
+                var infection = level.Tier switch
                 {
-                    (0.65, 1.0),
-                    (0.20, 0.75),
-                    (0.15, 0.5),
-                });
+                    "E" => 1.0,
+
+                    _ => Generator.Select(new List<(double, double)>
+                    {
+                        (0.65, 1.0),
+                        (0.20, 0.75),
+                        (0.15, 0.5),
+                    })
+                };
 
                 level.StartingInfection = infection;
                 level.MarkAsStartingInfected();
