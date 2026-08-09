@@ -553,6 +553,55 @@ public partial class Generator_Tests
         CollectionAssert.AreEqual(drawn1, drawn2);
     }
 
+    [TestMethod]
+    public void Test_DrawSelect_ExcludedItemIsNeverDrawn()
+    {
+        Seed("drawselect_excluded");
+        var items = new List<(double, int, string)>
+        {
+            (1.0, 2, "a"),
+            (1.0, 1, "b")
+        };
+
+        var drawn = new List<string>();
+        for (int i = 0; i < 2; i++)
+            drawn.Add(Generator.DrawSelect(items, o => o == "b"));
+
+        CollectionAssert.AreEqual(new List<string> { "a", "a" }, drawn);
+
+        // The excluded entry stays in the pool untouched for future draws
+        Assert.AreEqual(1, items.Count);
+        Assert.AreEqual((1.0, 1, "b"), items[0]);
+    }
+
+    [TestMethod]
+    public void Test_DrawSelect_ExcludeNothingBehavesLikeUnfiltered()
+    {
+        Seed("drawselect_exclude_parity");
+        var items1 = new List<(double, int, string)>
+        {
+            (1.0, 3, "x"),
+            (2.0, 2, "y"),
+            (0.5, 4, "z")
+        };
+        var drawn1 = new List<string>();
+        for (int i = 0; i < 9; i++)
+            drawn1.Add(Generator.DrawSelect(items1));
+
+        Seed("drawselect_exclude_parity");
+        var items2 = new List<(double, int, string)>
+        {
+            (1.0, 3, "x"),
+            (2.0, 2, "y"),
+            (0.5, 4, "z")
+        };
+        var drawn2 = new List<string>();
+        for (int i = 0; i < 9; i++)
+            drawn2.Add(Generator.DrawSelect(items2, _ => false));
+
+        CollectionAssert.AreEqual(drawn1, drawn2);
+    }
+
     #endregion
 
     #region DrawSelectFrequency

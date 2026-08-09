@@ -223,9 +223,12 @@ hold, non-infectious ≈140s; new `startDelay` gives a 45-90s clear grace at dro
 Infectious iff the level rolls `FogIsInfectious`. The signature owns fog end to end: the
 E fog modifier roll is skipped (keeping `Zone.RollFog` inert), `Level.Build` sets the
 base `FogSettings` to the cycle's clear trough and reserves `FogUsage.LongDuration` so
-fog-flood alarms and objective fog challenges can't stack on top. Demoted (with a normal
-fog re-roll) when the Main is CentralGeneratorCluster / Survival / ReachKdsDeep /
-Cryptomnesia — CGC drives its own generator fog steps. Guardrails: a fog turbine +
+fog-flood alarms and objective fog challenges can't stack on top. CyclingFog levels
+exclude CentralGeneratorCluster from the Main-objective draw entirely (RundownFactory
+constructs the Level before drawing the objective and uses the excluded-predicate
+`DrawSelect` overload — CGC's generator fog steps would fight the loop); Survival /
+ReachKdsDeep / Cryptomnesia demote to None with a normal fog re-roll (they skip all
+signatures anyway). Guardrails: a fog turbine +
 repellers guaranteed in the elevator zone; the B1 one-notch error damp applies; **no
 added disinfect relief** (first tuning lever if infectious cycling proves too harsh).
 Needs Windows playtest: AWO loop first-iteration timing (drop should be clear until the

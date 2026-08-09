@@ -3,6 +3,7 @@ using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Custom.ItemSpawnFix;
 using AutogenRundown.DataBlocks.Enums;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.GeneratorData;
 using BepInEx;
@@ -412,8 +413,26 @@ public static class RundownFactory
             }
 
             var complex = Generator.DrawSelect(complexPool);
-            var objective = Generator.DrawSelect(mainObjectivesPool);
-            var director = new BuildDirector
+
+            // The level is constructed before the objective draw so the rolled signature
+            // can filter the objective pool.
+            var level = new Level("E")
+            {
+                Prefix = $"{prefix}E",
+                Name = Generator.Draw(levelNames)!,
+                Index = i + 1,
+                Complex = complex,
+                BuildSeed = buildSeed
+            };
+
+            // CyclingFog owns whole-level fog; CentralGeneratorCluster's generator fog
+            // steps would fight it, so keep it out of the draw for cycling fog levels.
+            var objective = Generator.DrawSelect(
+                mainObjectivesPool,
+                o => level.Settings.Signature == LevelSignature.CyclingFog
+                     && o == WardenObjectiveType.CentralGeneratorCluster);
+
+            level.MainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = complex,
@@ -421,18 +440,7 @@ public static class RundownFactory
                 Objective = objective,
             };
 
-            var level = Level.Build(
-                new Level("E")
-                {
-                    Prefix = $"{prefix}E",
-                    Name = Generator.Draw(levelNames)!,
-                    Index = i + 1,
-                    Complex = complex,
-                    MainDirector = director,
-                    BuildSeed = buildSeed
-                });
-
-            rundown.AddLevel(level);
+            rundown.AddLevel(Level.Build(level));
         }
         #endregion
 
@@ -718,12 +726,33 @@ public static class RundownFactory
             Generator.AdvanceSequence(buildSeed);
 
             var complex = Generator.DrawSelect(complexPool);
-            var objective = Generator.DrawSelect(mainObjectivesPool);
+
+            // The level is constructed before the objective draw so the rolled signature
+            // can filter the objective pool.
+            var level = new Level("E")
+            {
+                Prefix = $"{prefix}E",
+                Name = Generator.Draw(levelNames)!,
+                Index = i + 1,
+                Complex = complex,
+                BuildSeed = buildSeed,
+                BulkheadChanceTable = bulkheadChances
+            };
+
+            // CyclingFog owns whole-level fog; CentralGeneratorCluster's generator fog
+            // steps would fight it, so keep it out of the draw for cycling fog levels.
+            var objective = Generator.DrawSelect(
+                mainObjectivesPool,
+                o => level.Settings.Signature == LevelSignature.CyclingFog
+                     && o == WardenObjectiveType.CentralGeneratorCluster);
 
             if (objective == WardenObjectiveType.ReachKdsDeep)
+            {
                 complex = Complex.Mining;
+                level.Complex = complex;
+            }
 
-            var director = new BuildDirector
+            level.MainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = complex,
@@ -731,19 +760,7 @@ public static class RundownFactory
                 Objective = objective,
             };
 
-            var level = Level.Build(
-                new Level("E")
-                {
-                    Prefix = $"{prefix}E",
-                    Name = Generator.Draw(levelNames)!,
-                    Index = i + 1,
-                    Complex = complex,
-                    MainDirector = director,
-                    BuildSeed = buildSeed,
-                    BulkheadChanceTable = bulkheadChances
-                });
-
-            rundown.AddLevel(level);
+            rundown.AddLevel(Level.Build(level));
         }
 
         if (withUnlocks)
@@ -1108,12 +1125,32 @@ public static class RundownFactory
             Generator.AdvanceSequence(buildSeed);
 
             var complex = Generator.DrawSelect(complexPool);
-            var objective = Generator.DrawSelect(mainObjectivesPool);
+
+            // The level is constructed before the objective draw so the rolled signature
+            // can filter the objective pool.
+            var level = new Level("E")
+            {
+                Prefix = $"{prefix}E",
+                Name = Generator.Draw(levelNames)!,
+                Index = i + 1,
+                Complex = complex,
+                BuildSeed = buildSeed
+            };
+
+            // CyclingFog owns whole-level fog; CentralGeneratorCluster's generator fog
+            // steps would fight it, so keep it out of the draw for cycling fog levels.
+            var objective = Generator.DrawSelect(
+                mainObjectivesPool,
+                o => level.Settings.Signature == LevelSignature.CyclingFog
+                     && o == WardenObjectiveType.CentralGeneratorCluster);
 
             if (objective == WardenObjectiveType.ReachKdsDeep)
+            {
                 complex = Complex.Mining;
+                level.Complex = complex;
+            }
 
-            var director = new BuildDirector
+            level.MainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = complex,
@@ -1121,18 +1158,7 @@ public static class RundownFactory
                 Objective = objective,
             };
 
-            var level = Level.Build(
-                new Level("E")
-                {
-                    Prefix = $"{prefix}E",
-                    Name = Generator.Draw(levelNames)!,
-                    Index = i + 1,
-                    Complex = complex,
-                    MainDirector = director,
-                    BuildSeed = buildSeed
-                });
-
-            rundown.AddLevel(level);
+            rundown.AddLevel(Level.Build(level));
         }
 
         if (withUnlocks)

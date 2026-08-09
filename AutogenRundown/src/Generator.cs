@@ -360,6 +360,61 @@ static public class Generator
     }
 
     /// <summary>
+    /// DrawSelect variant that skips entries matching <paramref name="excluded"/> for
+    /// this draw only. The selected entry's count is still decremented in the original
+    /// collection; excluded entries stay in the pool untouched for future draws.
+    /// </summary>
+    /// <typeparam name="T">The element type that our collection consists of</typeparam>
+    /// <param name="collection">The collection</param>
+    /// <param name="excluded">Entries whose item matches are not drawable this draw</param>
+    /// <param name="fixedWeights">
+    ///     Whether elements total weights is the fixed frequency value passed in or if
+    ///     the total weight is the frequency multiplied by elements in the pool
+    /// </param>
+    /// <returns></returns>
+    public static T DrawSelect<T>(
+        ICollection<(double, int, T)> collection,
+        Func<T, bool> excluded,
+        bool fixedWeights = false)
+    {
+        var eligible = collection.Where(x => !excluded(x.Item3)).ToList();
+
+        var totalWeight = eligible.Sum((x) => !fixedWeights ? x.Item1 * x.Item2 : x.Item1);
+        var rand = Random.NextDouble();
+        var randomWeight = rand * totalWeight;
+
+        double weightSum = 0;
+
+        for (var i = 0; i < eligible.Count; i++)
+        {
+            var entry = eligible.ElementAt(i);
+            var (weight, count, item) = entry;
+            weightSum += weight * count;
+
+            if (randomWeight <= weightSum)
+            {
+                collection.Remove(entry);
+                entry.Item2--;
+
+                if (entry.Item2 > 0)
+                    collection.Add(entry);
+
+                return item;
+            }
+        }
+
+        var eligibleLast = eligible.Last();
+
+        collection.Remove(eligibleLast);
+        eligibleLast.Item2--;
+
+        if (eligibleLast.Item2 > 0)
+            collection.Add(eligibleLast);
+
+        return eligibleLast.Item3;
+    }
+
+    /// <summary>
     /// Draws an element from a collection. The collection is a list of:
     ///
     ///     (relative weighting, item count, item)

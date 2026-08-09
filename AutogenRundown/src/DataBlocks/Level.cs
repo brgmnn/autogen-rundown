@@ -1584,14 +1584,12 @@ public partial class Level
         level.BuildBulkheads();
 
         #region Fog settings
-        // CyclingFog owns whole-level fog. Demote it for mains that run their own fog or
-        // elevator machinery: CentralGeneratorCluster installs generator fog steps that
-        // would fight the loop; the other three match ApplyLevelSignature's skip list.
-        // Re-roll the standard E-tier fog modifier so demoted levels rejoin the normal
-        // fog distribution.
+        // CyclingFog owns whole-level fog. CentralGeneratorCluster is excluded from the
+        // Main-objective draw for cycling fog levels in RundownFactory; the objectives
+        // here match ApplyLevelSignature's skip list, so demote to None and re-roll the
+        // standard E-tier fog modifier so the level rejoins the normal fog distribution.
         if (level.Settings.Signature == LevelSignature.CyclingFog
-            && level.MainDirector.Objective is WardenObjectiveType.CentralGeneratorCluster
-                or WardenObjectiveType.Survival
+            && level.MainDirector.Objective is WardenObjectiveType.Survival
                 or WardenObjectiveType.ReachKdsDeep
                 or WardenObjectiveType.Cryptomnesia)
         {
