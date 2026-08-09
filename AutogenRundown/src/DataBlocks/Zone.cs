@@ -887,8 +887,11 @@ public partial record Zone : DataBlock<Zone>
     public double ClearTime_Bosses()
         => EnemySpawningInZone
                .Where(spawn => spawn.Tags.Contains("boss"))
+               // BossEnemy, not Difficulty: the aligned spawns mask their difficulty and the
+               // OR is lossy, so casting it back to an Enemy never matched and every aligned
+               // boss silently scored zero.
                .Sum(spawn =>
-                   (Enemy)spawn.Difficulty switch
+                   spawn.BossEnemy switch
                    {
                        Enemy.Mother => 60.0 * (spawn.Points / 10.0),
                        Enemy.PMother => 75.0 * (spawn.Points / 10.0),

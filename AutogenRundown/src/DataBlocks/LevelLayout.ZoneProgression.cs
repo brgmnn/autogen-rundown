@@ -1027,7 +1027,7 @@ public partial record LevelLayout
                     (0.6, () =>
                     {
                         zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer_AlignedSpawn with { Points = 4 });
-                        zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
+                        zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer_AlignedSpawn1 with { Points = 4 });
                     }),
                 });
                 break;
@@ -1049,8 +1049,9 @@ public partial record LevelLayout
                     // Triple pouncer
                     (0.4, () =>
                     {
+                        // Only two align markers to go around, the third roams
                         zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer_AlignedSpawn with { Points = 4 });
-                        zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
+                        zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer_AlignedSpawn1 with { Points = 4 });
                         zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
                     }),
                 });
@@ -1116,7 +1117,7 @@ public partial record LevelLayout
                     (0.35, () =>
                     {
                         zone.EnemySpawningInZone.Add(EnemySpawningData.Tank_AlignedSpawn with { Points = 10 });
-                        zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
+                        zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer_AlignedSpawn1 with { Points = 4 });
 
                         SetInfectionVibe(zone, 200);
                     }),
@@ -1126,6 +1127,9 @@ public partial record LevelLayout
                     (0.25, () =>
                     {
                         zone.EnemySpawningInZone.Add(EnemySpawningData.Tank_AlignedSpawn with { Points = 10 });
+                        // Deliberately not aligned. 30 points of potato is three separate
+                        // groups of one, so aligning would stack all three on one marker --
+                        // and placements cap spawn count, so two would silently never spawn.
                         zone.EnemySpawningInZone.Add(EnemySpawningData.TankPotato with { Points = 30 });
 
                         zone.LightSettings = Lights.Light.Pitch_black_1;
@@ -1139,9 +1143,9 @@ public partial record LevelLayout
                     // Tank & PMother
                     (0.25, () =>
                     {
-                        // Spawn align the mother, and default spawn the tank
+                        // Mother on the first align marker, tank on the second
                         zone.EnemySpawningInZone.Add(EnemySpawningData.PMother_AlignedSpawn with { Points = 10 });
-                        zone.EnemySpawningInZone.Add(EnemySpawningData.Tank with { Points = 10 });
+                        zone.EnemySpawningInZone.Add(EnemySpawningData.Tank_AlignedSpawn1 with { Points = 10 });
 
                         SetMotherVibe(zone, 250);
 

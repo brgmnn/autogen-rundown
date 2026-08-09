@@ -59,7 +59,13 @@ public enum AutogenDifficulty : uint
     // Types of specific spawns
     // Fully mask blood door across all base enemies to ensure it doesn't collide
     BloodDoors       = 0x3f, // 0011_1111
-    BossAlignedSpawn = 0xa0, // 1010_0000 -> Pure sneak TODO: can we remove?
+    // One mask per spawn align marker index. The game looks groups up by
+    // (GroupType, Difficulty), so two groups that should sit on different markers need
+    // different difficulties -- sharing one would make the marker a random pick between
+    // the two and let paired bosses stack. 0xe0 is clear of every other mask:
+    // 0xe0 | enemy lands in 0xe0..0xff, and only BloodDoors | Flyers (0xff) is in there.
+    BossAlignedSpawn  = 0xa0, // 1010_0000 -> Pure sneak, spawn align marker 0
+    BossAlignedSpawn1 = 0xe0, // 1110_0000 -> Pure sneak, spawn align marker 1
     MegaMotherSpawn  = 0x90, // 1001_0000
 
     // Tiers of difficulty
