@@ -1,0 +1,63 @@
+# Weekly check for new Thunderstore releases of our mod dependencies. Any that are out of
+# date get bumped to the latest published version in manifest.json and thunderstore.toml,
+# and opened as a single PR.
+
+name: Update Dependencies
+
+on:
+  schedule:
+    # Tuesdays at 16:00 UTC (9am PDT / 8am PST)
+    - cron: "0 16 * * 2"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    name: Update Thunderstore dependencies
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      # Bump manifest.json and thunderstore.toml to the latest versions.
+      - id: update
+        name: Check for dependency updates
+        run: |
+          ./update-dependencies.py --summary-file "${{ runner.temp }}/pr-body.md"
+
+      # Opened with the admin token so the PR triggers the Build .NET workflow.
+      - name: Ensure dependencies label
+        if: steps.update.outputs.has_updates == 'true'
+        run: |
+          gh label create dependencies \
+            --color 0366D6 \
+            --description "Updates to mod dependencies" \
+            --force
+      - name: Open pull request
+        if: steps.update.outputs.has_updates == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.REPO_ADMIN_TOKEN }}
+          base: main
+          branch: deps/thunderstore-updates
+          delete-branch: true
+          title: ${{ steps.update.outputs.title }}
+          body-path: ${{ runner.temp }}/pr-body.md
+          labels: dependencies
+          commit-message: ${{ steps.update.outputs.title }}
+          author: Daniel Bergmann <brgmnn@users.noreply.github.com>
+          committer: Daniel Bergmann <brgmnn@users.noreply.github.com>
+          add-paths: |
+            manifest.json
+            thunderstore.toml
