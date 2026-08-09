@@ -198,7 +198,7 @@ def build_title(updates):
 
 def build_summary(updates, failures):
     lines = [
-        "Weekly Thunderstore dependency check. "
+        "Daily Thunderstore dependency check. "
         "Each mod is bumped to its latest published version.",
         "",
         "| Package | From | To |",
