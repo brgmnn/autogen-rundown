@@ -936,7 +936,11 @@ public record EnemyGroup : DataBlock<EnemyGroup>
                     Type = EnemyGroupType.PureSneak,
                     Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)boss.Enemy,
                     MaxScore = boss.Points,
-                    SpawnPlacementType = SpawnPlacementType.CycleAllAligns,
+                    // Align_0 not CycleAllAligns: the game only null checks the align transform
+                    // on Align_0..Align_5. CycleAllAligns dereferences it blind, so a group that
+                    // lands in an area without spawn aligns NREs and hangs LG_Factory. These
+                    // groups are all single enemy anyway, so there is nothing to cycle.
+                    SpawnPlacementType = SpawnPlacementType.Align_0,
                     Roles = new List<EnemyGroupRole>
                     {
                         new() { Role = boss.Role, Distribution = EnemyRoleDistribution.Rel100 }
@@ -950,7 +954,7 @@ public record EnemyGroup : DataBlock<EnemyGroup>
                 Type = EnemyGroupType.PureSneak,
                 Difficulty = Enemy_New.MegaMother.PersistentId,
                 MaxScore = EnemyInfo.MegaMother.Points,
-                SpawnPlacementType = SpawnPlacementType.CycleAllAligns,
+                SpawnPlacementType = SpawnPlacementType.Align_0,
                 Roles = new List<EnemyGroupRole>
                 {
                     new() { Role = EnemyRole.PureSneak, Distribution = EnemyRoleDistribution.Rel100 }

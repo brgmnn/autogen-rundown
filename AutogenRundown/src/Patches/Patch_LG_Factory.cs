@@ -67,6 +67,7 @@ public class Patch_LG_Factory
         Fix_FailedToFindStartArea.fatalReached = false;
         Fix_DistributionOnBrokenZones.ResetDiagnostics();
         Fix_FactoryJobExceptionCatchAll.ResetDiagnostics();
+        Fix_CycleAllAlignsNullSpawn.ResetDiagnostics();
 
         // Must clear on rebuilds too: stale warden objective zone claims from a
         // previous pass of the same level would block the custom terminal's own
