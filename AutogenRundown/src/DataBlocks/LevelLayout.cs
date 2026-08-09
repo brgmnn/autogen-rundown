@@ -1341,12 +1341,8 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 // any exit waves spawn.
                 mainObjective.WavesOnElevatorLand.Add(wave);
                 mainObjective.StopAllWavesBeforeGotoWin = true;
-                mainObjective.WaveOnElevatorWardenIntel = new Text(
-                    "://ERROR - LARGE BIOMASS SIGNATURE");
-                level.MarkAsBossErrorAlarm();
 
-                mainObjective.EventsOnGotoWin
-                    .AddMessage("://SECTOR ALARM TERMINATED - BIOMASS SIGNATURE LOST", 2.0);
+                level.MarkAsBossErrorAlarm();
 
                 Plugin.Logger.LogDebug(
                     $"{Name} -- Level signature: BossAlarm, wave={wave.Population.Name}");
