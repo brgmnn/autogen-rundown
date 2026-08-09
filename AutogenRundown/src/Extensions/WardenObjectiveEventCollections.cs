@@ -343,6 +343,7 @@ public static class WardenObjectiveEventCollections
     /// <param name="duration1">How long fog 1 transition lasts</param>
     /// <param name="delay2">How long fog 2 stays active after transitioning</param>
     /// <param name="duration2">How long fog 2 transition lasts</param>
+    /// <param name="startDelay">Grace period before the first cycle begins</param>
     /// <returns></returns>
     public static ICollection<WardenObjectiveEvent> AddCyclingFog(
         this ICollection<WardenObjectiveEvent> events,
@@ -352,7 +353,8 @@ public static class WardenObjectiveEventCollections
         double delay1 = 30.0,
         double duration1 = 45.0,
         double delay2 = 30.0,
-        double duration2 = 45.0)
+        double duration2 = 45.0,
+        double startDelay = 0.0)
     {
         var eventLoop = new EventLoop
         {
@@ -386,6 +388,7 @@ public static class WardenObjectiveEventCollections
             new WardenObjectiveEvent
             {
                 Type = WardenObjectiveEventType.StartEventLoop,
+                Delay = startDelay,
                 EventLoop = eventLoop
             });
 
@@ -394,7 +397,8 @@ public static class WardenObjectiveEventCollections
 
     public static ICollection<WardenObjectiveEvent> AddCyclingFog(
         this ICollection<WardenObjectiveEvent> events,
-        Level level)
+        Level level,
+        double startDelay = 0.0)
     {
         var (delay1, duration1, delay2, duration2) = (level.Tier, level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)) switch
         {
@@ -416,7 +420,7 @@ public static class WardenObjectiveEventCollections
 
         Plugin.Logger.LogDebug($"AddCyclingFog()");
 
-        return events.AddCyclingFog(fog1, fog2, (int)Generator.GetPersistentId(), delay1, duration1, delay2, duration2);
+        return events.AddCyclingFog(fog1, fog2, (int)Generator.GetPersistentId(), delay1, duration1, delay2, duration2, startDelay);
     }
 
     #endregion

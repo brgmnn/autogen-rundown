@@ -504,7 +504,8 @@ public class LevelSettings
                 {
                     (1.0, LevelSignature.StartWithInfection),
                     (1.0, LevelSignature.Stalker),
-                    (0.6, LevelSignature.BossAlarm),
+                    (0.7, LevelSignature.CyclingFog),
+                    (0.6, LevelSignature.BossAlarm)
                 });
 
                 Modifiers.Add(
@@ -551,13 +552,17 @@ public class LevelSettings
                 else if (Generator.Flip(0.7))
                     Modifiers.Add(LevelModifiers.Hybrids);
 
-                Modifiers.Add(
-                    Generator.Select(new List<(double, LevelModifiers)>
-                    {
-                        (0.3, LevelModifiers.NoFog),
-                        (0.5, LevelModifiers.Fog),
-                        (0.2, LevelModifiers.HeavyFog),
-                    }));
+                // CyclingFog drives fog via a whole-level event loop; skip the fog modifier
+                // roll. The default NoFog modifier stays in the set (keeps Zone.RollFog inert
+                // and HasFog() false) while FogIsInfectious, added above, survives.
+                if (Signature != LevelSignature.CyclingFog)
+                    Modifiers.Add(
+                        Generator.Select(new List<(double, LevelModifiers)>
+                        {
+                            (0.3, LevelModifiers.NoFog),
+                            (0.5, LevelModifiers.Fog),
+                            (0.2, LevelModifiers.HeavyFog),
+                        }));
 
                 break;
             }
