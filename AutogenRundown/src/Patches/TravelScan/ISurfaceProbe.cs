@@ -80,6 +80,33 @@ public static class SurfaceGeometry
         return Mathf.Abs(delta.y)
                <= horizontal * TravelScanRegistry.MaxSlopeRatio + TravelScanRegistry.MaxStepUp;
     }
+
+    /// <summary>
+    /// How far the chord between two waypoints may pass below the walkable surface, tightened by
+    /// how steep that segment is.
+    ///
+    /// A flat chord dipping 0.25m is invisible against a scan several metres across. The same
+    /// 0.25m on a staircase is a step nose punched through the floor — and stepped geometry sags
+    /// by about half a step height, which sits right under a flat 0.25m threshold and slips
+    /// through unnoticed.
+    ///
+    /// Both the generator and the debug overlay call this, so what gets subdivided and what gets
+    /// drawn as over-tolerance cannot drift apart.
+    /// </summary>
+    public static float MaxSagFor(Vector3 a, Vector3 b)
+    {
+        var delta = b - a;
+        var horizontal = new Vector2(delta.x, delta.z).magnitude;
+
+        // A purely vertical segment has no meaningful slope ratio; treat it as the steepest the
+        // terrain can be rather than dividing by ~zero.
+        var slope = horizontal < 0.001f
+            ? TravelScanRegistry.MaxSlopeRatio
+            : Mathf.Abs(delta.y) / horizontal;
+
+        return TravelScanRegistry.MaxChordSag
+               / (1f + TravelScanRegistry.SagSlopeFactor * slope);
+    }
 }
 
 /// <summary>

@@ -105,23 +105,38 @@ public static class TravelPathGenerator
             $"[TravelPath] Surface walk produced {positions.Count} waypoints " +
             $"at {stepDistance}m intervals");
 
-        // Insert extra waypoints wherever the straight chord between two of them would pass
-        // below the floor. The scan is lerped in a straight line between consecutive positions,
-        // so without this it cuts through the crest of staircases and ramps.
-        var beforeSubdivision = positions.Count;
-        positions = SubdivideSaggingSegments(positions, sourcePos, probe);
+        // Refine until it settles.
+        //
+        // Repair re-walks segments the scan could not lerp along, or that are far longer than a
+        // step — and the waypoints it inserts may themselves sag. Subdivision splits sagging
+        // segments — and the waypoints it inserts must still be walkable. Each creates work for
+        // the other, so a single pass of each leaves whichever ran first stale.
+        //
+        // Repair goes first within a pass so subdivision always sees the final waypoint set. Both
+        // only ever add points, and both are bounded (MinSegmentLength below, MaxSegmentLength
+        // above), so this converges well inside the pass limit.
+        var beforeRefinement = positions.Count;
+        var passes = 0;
+
+        for (; passes < TravelScanRegistry.MaxRefinementPasses; passes++)
+        {
+            var before = positions.Count;
+
+            positions = RepairUnwalkableSegments(positions, sourcePos, probe);
+            positions = SubdivideSaggingSegments(positions, sourcePos, probe);
+
+            if (positions.Count == before)
+                break;
+        }
 
         Plugin.Logger.LogDebug(
-            $"[TravelPath] Sag subdivision: {beforeSubdivision} → {positions.Count} waypoints");
+            $"[TravelPath] Refinement: {beforeRefinement} → {positions.Count} waypoints " +
+            $"in {passes + 1} pass(es)");
 
-        // Final gate: every segment the scan will lerp along must stay on walkable ground.
-        // Sag subdivision cannot catch a vertical drop between floors — a vertical chord has no
-        // sag at all — so this is the pass that actually enforces the invariant.
-        var beforeRepair = positions.Count;
-        positions = RepairUnwalkableSegments(positions, sourcePos, probe);
-
-        Plugin.Logger.LogDebug(
-            $"[TravelPath] Walkability repair: {beforeRepair} → {positions.Count} waypoints");
+        if (positions.Count > 300)
+            Plugin.Logger.LogWarning(
+                $"[TravelPath] Path has {positions.Count} waypoints, unusually many — " +
+                "check for geometry fighting the sag tolerance");
 
         LogUnwalkableSegments(positions, sourcePos, probe);
 
@@ -603,14 +618,23 @@ public static class TravelPathGenerator
         {
             var chordMid = (a + b) * 0.5f;
 
-            // Reference off a, the segment start — a point the walk already established is on
-            // the surface. The chord's own height is not trustworthy: on a staircase it runs
-            // through the middle of the flight.
-            var surfaceMid = probe.Snap(chordMid, a.y, chordMid.y);
+            // Reference off the *higher* endpoint, not the segment start.
+            //
+            // Snap rejects a result further than MaxSurfaceSnapRise from its reference, because
+            // that normally means a different floor. Anchored to `a`, that guard swallows the
+            // crest of a staircase whenever the walk is climbing: the crest sits more than a
+            // metre above the low end, the probe result is thrown away as a floor jump, and sag
+            // reads as zero. Descending the same stairs it worked, because `a` was then the upper
+            // landing — the bug was direction-dependent, and steeper stairs made it worse.
+            //
+            // Both endpoints are known-good surface points joined by a walkable segment, so the
+            // accept band should span their heights. Floor safety is unaffected: another floor is
+            // at least agentHeight (2m) away and these two points are metres apart at most.
+            var surfaceMid = probe.Snap(chordMid, Mathf.Max(a.y, b.y), chordMid.y);
 
             // Only sag matters. A chord passing above the surface — the concave break at the
             // foot of a staircase — just floats the scan slightly and is harmless.
-            if (surfaceMid.y - chordMid.y > TravelScanRegistry.MaxChordSag)
+            if (surfaceMid.y - chordMid.y > SurfaceGeometry.MaxSagFor(a, b))
             {
                 AppendSubdivided(output, a, surfaceMid, depth + 1, probe);
                 AppendSubdivided(output, surfaceMid, b, depth + 1, probe);
@@ -744,7 +768,7 @@ public static class TravelPathGenerator
             failures++;
             Plugin.Logger.LogWarning(
                 $"[TravelPath] Segment {i - 1}→{i} is still not walkable: " +
-                $"{points[i - 1]} → {points[i]}");
+                $"{points[i - 1]} → {points[i]} {DescribeObstruction(points[i - 1], points[i])}");
         }
 
         if (points.Count > 0 && !probe.IsWalkable(points[points.Count - 1], closingPoint))
@@ -752,11 +776,45 @@ public static class TravelPathGenerator
             failures++;
             Plugin.Logger.LogWarning(
                 $"[TravelPath] Closing segment is still not walkable: " +
-                $"{points[points.Count - 1]} → {closingPoint}");
+                $"{points[points.Count - 1]} → {closingPoint} " +
+                DescribeObstruction(points[points.Count - 1], closingPoint));
         }
 
         if (failures == 0)
             Plugin.Logger.LogDebug("[TravelPath] All segments walkable");
+    }
+
+    /// <summary>
+    /// Narrows down why a segment is blocked, so a log line is enough to tell the cases apart
+    /// without another round of guessing.
+    ///
+    /// Unity reserves area 1 for "Not Walkable", and geometry rasterized into it is *removed* from
+    /// the mesh rather than kept as area-1 polygons. So a hole blocks every area mask equally,
+    /// while an area exclusion (a Jump or Ladder off-mesh link) only blocks our walkable-only one.
+    /// Testing with -1 separates them.
+    ///
+    /// Holes come from carving NavMeshObstacles — LG_InternalGate/LG_PlugDoorAlign enable one
+    /// while the gate is shut, spanning the whole doorway — or from anything with less than
+    /// agentHeight (2m) of clearance above it, which strips the mesh beneath a low pipe or
+    /// catwalk on otherwise flat floor.
+    /// </summary>
+    private static string DescribeObstruction(Vector3 a, Vector3 b)
+    {
+        if (!SurfaceGeometry.IsSlopeWalkable(a, b))
+            return "(too steep — a floor change, not an obstruction)";
+
+        // -1 admits every area, including the Jump and Ladder off-mesh links our mask excludes
+        var blockedForAnyArea = NavMesh.Raycast(a, b, out _, -1);
+
+        if (!blockedForAnyArea)
+            return "(passable on some other area — an off-mesh link, not a hole)";
+
+        var endpointsOnMesh =
+            NavMesh.SamplePosition(a, out _, 0.5f, -1) && NavMesh.SamplePosition(b, out _, 0.5f, -1);
+
+        return endpointsOnMesh
+            ? "(hole in the mesh between two on-mesh endpoints — carving obstacle or low ceiling)"
+            : "(an endpoint is off-mesh)";
     }
 
     private static float GetNavMeshDistance(Vector3 from, Vector3 to)

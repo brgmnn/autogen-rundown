@@ -49,6 +49,32 @@ public sealed class FakeSurfaceProbe : ISurfaceProbe
         => p => p.x >= minX && p.x <= maxX ? y : null;
 
     /// <summary>
+    /// A ramp of the given slope climbing toward x=0, meeting a flat landing at y=0 there.
+    ///
+    /// This is the shape that defeats sag subdivision: the crest at x=0 is a convex break, so a
+    /// chord straddling it dips below the surface by an amount that grows with the slope.
+    /// </summary>
+    public static Func<Vector3, float?> Crest(float slope)
+        => p => p.x >= 0f ? 0f : p.x * slope;
+
+    /// <summary>
+    /// A real staircase: discrete treads of depth <paramref name="tread"/> separated by risers of
+    /// height <paramref name="rise"/>, climbing from x=0.
+    ///
+    /// This is what a steep modded stair actually looks like to the navmesh — a run of small
+    /// convex breaks rather than one smooth ramp. Each nose sags a chord that spans it, and the
+    /// breaks come far more often than a single crest does.
+    /// </summary>
+    public static Func<Vector3, float?> Steps(float tread, float rise, int count)
+        => p =>
+        {
+            if (p.x <= 0f) return 0f;
+
+            var index = Mathf.Min(Mathf.FloorToInt(p.x / tread), count);
+            return index * rise;
+        };
+
+    /// <summary>
     /// A 45 degree stair rising from y=0 at x=riseStart to y=height at x=riseEnd, flat either side.
     /// </summary>
     public static Func<Vector3, float?> Stair(float riseStart, float riseEnd, float height)

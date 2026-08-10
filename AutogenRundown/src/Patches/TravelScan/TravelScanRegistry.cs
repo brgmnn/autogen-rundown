@@ -140,11 +140,41 @@ public static class TravelScanRegistry
     public const float MaxChordSag = 0.25f;
 
     /// <summary>
+    /// How much the sag tolerance tightens with slope: limit = MaxChordSag / (1 + factor * slope).
+    /// At 1.0 that is 0.25m on the flat, ~0.17m on a 27° ramp and ~0.15m across a 55° crest.
+    /// </summary>
+    public const float SagSlopeFactor = 1.0f;
+
+    /// <summary>
     /// Never emit a segment shorter than this. DoMoveScanner divides by segment length, and
     /// Patch_SustainedTravelReverse.ReverseMovement bails out below 0.001m — degenerate
     /// segments either teleport the scan or stall reverse movement permanently.
+    ///
+    /// It also bounds sag subdivision, which refuses to split below 2x this value — so in principle
+    /// it has to be small enough that the tightest adaptive sag tolerance stays reachable, or
+    /// segments would sit permanently over tolerance and the debug overlay would stop being
+    /// trustworthy.
+    ///
+    /// In practice 0.35 is comfortable, and the reason is worth recording because the naive
+    /// estimate says otherwise. Subdivision does not place waypoints at fixed spacing — it splits
+    /// at the *surface* point above the chord midpoint, which lands on or near the break itself.
+    /// One split at a staircase crest therefore removes almost all of the sag, rather than only
+    /// halving it. Modelling it as evenly spaced waypoints straddling the crest badly overestimates
+    /// how fine the floor needs to be.
+    ///
+    /// CrestSubdivision_Tests pins this empirically across slopes 0.5–2.0 and on a stepped
+    /// staircase, so if the tolerances are ever retuned the invariant fails loudly instead of
+    /// silently going unreachable.
     /// </summary>
     public const float MinSegmentLength = 0.35f;
+
+    /// <summary>
+    /// Repair and sag subdivision each create work for the other: repair inserts waypoints that
+    /// may sag, subdivision splits segments that must stay walkable. They run as a loop that
+    /// settles; this bounds it. Both only ever add points, and both are bounded by
+    /// MinSegmentLength below and MaxSegmentLength above, so it converges well inside this.
+    /// </summary>
+    public const int MaxRefinementPasses = 3;
 
     /// <summary>
     /// Bounds subdivision to at most 2^4 - 1 = 15 inserted points per original segment.

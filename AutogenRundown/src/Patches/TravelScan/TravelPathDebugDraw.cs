@@ -127,7 +127,8 @@ internal static class TravelPathDebugDraw
     /// Red   — the straight line between the two waypoints leaves the walkable surface. The scan
     ///         will clip through geometry here. This is the signal that matters: a vertical drop
     ///         between floors registers here and nowhere else.
-    /// Yellow — walkable, but the chord still dips more than MaxChordSag below the surface.
+    /// Yellow — walkable, but the chord dips further below the surface than this segment's slope
+    ///          allows. After sag subdivision runs there should be none of these.
     /// Green  — good.
     /// </summary>
     private static Color SegmentColour(Vector3 from, Vector3 to)
@@ -136,9 +137,13 @@ internal static class TravelPathDebugDraw
             return Color.red;
 
         var chordMid = (from + to) * 0.5f;
-        var surfaceMid = NavMeshSurfaceProbe.Instance.Snap(chordMid, from.y, chordMid.y);
 
-        return surfaceMid.y - chordMid.y > TravelScanRegistry.MaxChordSag
+        // Same reference and tolerance the generator uses, so what is drawn over-tolerance is
+        // exactly what subdivision would have tried to fix.
+        var surfaceMid = NavMeshSurfaceProbe.Instance.Snap(
+            chordMid, Mathf.Max(from.y, to.y), chordMid.y);
+
+        return surfaceMid.y - chordMid.y > SurfaceGeometry.MaxSagFor(from, to)
             ? Color.yellow
             : Color.green;
     }
