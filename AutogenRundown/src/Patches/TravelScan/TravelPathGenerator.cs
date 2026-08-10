@@ -11,11 +11,14 @@ namespace AutogenRundown.Patches.TravelScan;
 /// Approach:
 ///   1. Pick 3 destination nodes far from source and each other (by NavMesh distance)
 ///   2. Pathfind 4 legs on the NavMesh: start → dest1 → dest2 → dest3 → start
-///   3. Resample the combined path at fixed step intervals
-///   4. Project each waypoint onto the NavMesh surface, then pull it away from NavMesh edges
+///   3. Walk the surface between the resulting corners, emitting a waypoint every step distance
+///   4. Pull each waypoint away from NavMesh edges
 ///   5. Subdivide any segment whose straight chord would sag below the walkable surface
+///   6. Re-path any segment the scan could not lerp along without leaving the surface
 ///
-/// This guarantees a valid walkable cycle with no off-mesh shortcuts.
+/// The invariant this maintains: consecutive waypoints are always joined by a straight line that
+/// stays on walkable ground. CP_BasicMovable.DoMoveScanner lerps between them with no smoothing,
+/// so any segment that violates it is one the scan visibly travels through geometry.
 /// </summary>
 public static class TravelPathGenerator
 {
@@ -23,8 +26,9 @@ public static class TravelPathGenerator
     private const int CandidatePoolSize = 20;
 
     /// <summary>
-    /// Generates a looping path of waypoints through the source area.
-    /// Returns waypoints resampled at stepDistance intervals along the NavMesh.
+    /// Generates a looping path of waypoints through the source area, spaced at roughly
+    /// stepDistance along the walkable surface. Returns an empty list when no usable circuit
+    /// exists, which makes the caller fall back to base game behaviour.
     /// </summary>
     public static List<Vector3> GenerateLoop(
         LG_Area sourceArea,
@@ -57,12 +61,30 @@ public static class TravelPathGenerator
         Plugin.Logger.LogDebug(
             $"[TravelPath] Destinations: dest1={dest1}, dest2={dest2}, dest3={dest3}");
 
-        // Pathfind 4 legs: start → dest1 → dest2 → dest3 → start
+        // Pathfind the legs: start → dest1 → dest2 → dest3 → start.
+        //
+        // A leg that cannot be pathed on walkable ground is skipped rather than joined with a
+        // straight line — a direct line between two nodes runs through whatever geometry is in
+        // the way, and once the scan is lerping along it there is nothing downstream that can
+        // recover. Dropping the destination just makes the circuit smaller.
         var rawPath = new List<Vector3>();
-        AppendNavMeshLeg(rawPath, sourcePos, dest1);
-        AppendNavMeshLeg(rawPath, dest1, dest2);
-        AppendNavMeshLeg(rawPath, dest2, dest3);
-        AppendNavMeshLeg(rawPath, dest3, sourcePos);
+        var cursor = sourcePos;
+
+        foreach (var dest in new[] { dest1, dest2, dest3 })
+        {
+            if (AppendNavMeshLeg(rawPath, cursor, dest))
+                cursor = dest;
+            else
+                Plugin.Logger.LogWarning(
+                    $"[TravelPath] No walkable route from {cursor} to {dest}, skipping destination");
+        }
+
+        if (!AppendNavMeshLeg(rawPath, cursor, sourcePos))
+        {
+            Plugin.Logger.LogWarning(
+                "[TravelPath] Cannot close the loop back to source, falling back to base game");
+            return new List<Vector3>();
+        }
 
         if (rawPath.Count < 2)
         {
@@ -73,20 +95,34 @@ public static class TravelPathGenerator
         Plugin.Logger.LogDebug(
             $"[TravelPath] Raw NavMesh path: {rawPath.Count} corners");
 
-        // Resample at fixed step intervals, snap to the surface and pull away from edges
-        positions = ResamplePath(rawPath, stepDistance);
+        var probe = NavMeshSurfaceProbe.Instance;
+
+        // Walk the surface between corners rather than sampling along the straight chords
+        positions = WalkSurface(rawPath, stepDistance, probe);
 
         Plugin.Logger.LogDebug(
-            $"[TravelPath] Resampled to {positions.Count} waypoints at {stepDistance}m intervals");
+            $"[TravelPath] Surface walk produced {positions.Count} waypoints " +
+            $"at {stepDistance}m intervals");
 
         // Insert extra waypoints wherever the straight chord between two of them would pass
         // below the floor. The scan is lerped in a straight line between consecutive positions,
         // so without this it cuts through the crest of staircases and ramps.
         var beforeSubdivision = positions.Count;
-        positions = SubdivideSaggingSegments(positions, sourcePos, SnapToSurface);
+        positions = SubdivideSaggingSegments(positions, sourcePos, probe);
 
         Plugin.Logger.LogDebug(
             $"[TravelPath] Sag subdivision: {beforeSubdivision} → {positions.Count} waypoints");
+
+        // Final gate: every segment the scan will lerp along must stay on walkable ground.
+        // Sag subdivision cannot catch a vertical drop between floors — a vertical chord has no
+        // sag at all — so this is the pass that actually enforces the invariant.
+        var beforeRepair = positions.Count;
+        positions = RepairUnwalkableSegments(positions, sourcePos, probe);
+
+        Plugin.Logger.LogDebug(
+            $"[TravelPath] Walkability repair: {beforeRepair} → {positions.Count} waypoints");
+
+        LogUnwalkableSegments(positions, sourcePos, probe);
 
         if (positions.Count > 0)
         {
@@ -236,7 +272,9 @@ public static class TravelPathGenerator
 
             if (linksFrom == sourceArea || linksTo == sourceArea)
             {
-                if (TrySnapToNavMesh(sourceGate.GetPosition(), out var snapped))
+                var sourceGatePos = sourceGate.GetPosition();
+
+                if (TrySnapToNavMesh(sourceGatePos, sourceGatePos.y, out var snapped))
                 {
                     snapped = OffsetFromGate(snapped, sourceArea.Position);
 
@@ -268,7 +306,9 @@ public static class TravelPathGenerator
             if (gate == null)
                 continue;
 
-            if (!TrySnapToNavMesh(gate.GetPosition(), out var snapped))
+            var gatePosition = gate.GetPosition();
+
+            if (!TrySnapToNavMesh(gatePosition, gatePosition.y, out var snapped))
                 continue;
 
             snapped = OffsetFromGate(snapped, sourceArea.Position);
@@ -309,9 +349,17 @@ public static class TravelPathGenerator
         return false;
     }
 
-    private static bool TrySnapToNavMesh(Vector3 position, out Vector3 snapped)
+    /// <summary>
+    /// Snaps a position onto the walkable surface using a wide search radius, for positions that
+    /// may start well off the mesh (gate transforms sit in the door frame, not on the floor).
+    ///
+    /// The wide radius is why the reference height matters here: without it a stairwell door
+    /// resolves just as happily onto the floor below as onto its own.
+    /// </summary>
+    private static bool TrySnapToNavMesh(Vector3 position, float referenceY, out Vector3 snapped)
     {
-        if (NavMesh.SamplePosition(position, out var hit, 3f, -1))
+        if (NavMesh.SamplePosition(position, out var hit, 3f, TravelScanRegistry.WalkableAreaMask)
+            && Mathf.Abs(hit.position.y - referenceY) <= TravelScanRegistry.MaxSurfaceSnapRise)
         {
             snapped = hit.position;
             return true;
@@ -326,7 +374,7 @@ public static class TravelPathGenerator
         var direction = (areaCenter - gateSnapped).normalized;
         var offset = gateSnapped + direction * distance;
 
-        if (TrySnapToNavMesh(offset, out var snapped))
+        if (TrySnapToNavMesh(offset, gateSnapped.y, out var snapped))
             return snapped;
 
         return gateSnapped;
@@ -335,110 +383,131 @@ public static class TravelPathGenerator
     private static bool IsReachable(Vector3 from, Vector3 to)
     {
         var path = new NavMeshPath();
-        return NavMesh.CalculatePath(from, to, -1, path)
+        return NavMesh.CalculatePath(from, to, TravelScanRegistry.WalkableAreaMask, path)
                && path.status == NavMeshPathStatus.PathComplete;
     }
 
     /// <summary>
     /// Appends NavMesh path corners from 'from' to 'to' onto the path list.
     /// Skips the first corner of subsequent legs to avoid duplicates.
+    ///
+    /// Returns false when there is no complete walkable route. There is deliberately no
+    /// straight-line fallback: a direct line between two nodes runs through whatever geometry
+    /// separates them, and every downstream stage would then be resampling a chord that was
+    /// never walkable to begin with.
     /// </summary>
-    private static void AppendNavMeshLeg(List<Vector3> path, Vector3 from, Vector3 to)
+    private static bool AppendNavMeshLeg(List<Vector3> path, Vector3 from, Vector3 to)
     {
         var navPath = new NavMeshPath();
-        if (NavMesh.CalculatePath(from, to, -1, navPath)
-            && navPath.status == NavMeshPathStatus.PathComplete
-            && navPath.corners.Length >= 2)
-        {
-            var startIdx = path.Count == 0 ? 0 : 1; // skip first corner on subsequent legs
-            for (var i = startIdx; i < navPath.corners.Length; i++)
-                path.Add(navPath.corners[i]);
-        }
-        else
-        {
-            // Fallback: direct line (shouldn't happen for in-area nodes)
-            if (path.Count == 0)
-                path.Add(from);
-            path.Add(to);
-        }
+
+        if (!NavMesh.CalculatePath(from, to, TravelScanRegistry.WalkableAreaMask, navPath)
+            || navPath.status != NavMeshPathStatus.PathComplete
+            || navPath.corners.Length < 2)
+            return false;
+
+        var startIdx = path.Count == 0 ? 0 : 1; // skip first corner on subsequent legs
+        for (var i = startIdx; i < navPath.corners.Length; i++)
+            path.Add(navPath.corners[i]);
+
+        return true;
     }
 
     /// <summary>
-    /// Resamples a path of corners at fixed distance intervals.
-    /// Each resampled point is projected onto the NavMesh surface, then pulled away from edges.
+    /// Walks the walkable surface along a path of NavMesh corners, emitting a waypoint every
+    /// stepDistance of travel.
+    ///
+    /// This replaces sampling points along the straight chords between corners. Unity's funnel
+    /// algorithm only emits a corner where the path turns *horizontally*, so those chords cut
+    /// through staircase crests and across stairwell voids. Snapping the sampled points
+    /// afterwards does not fix it: each point is probed independently, so two neighbours can
+    /// resolve onto different floors and the scan drops vertically between them.
+    ///
+    /// Instead the cursor advances in small SurfaceStepDistance increments, carrying the surface
+    /// height forward as the reference for the next probe, and every increment is checked for
+    /// walkability. The probe is therefore never more than one sub-step from ground already known
+    /// to be good, and the cursor cannot appear on another floor.
+    ///
+    /// This is the technique the game uses in PlayerBotActionBase.SnapSegmentToNav, which marches
+    /// a segment in fifths feeding each hit's Y into the next probe.
     /// </summary>
-    private static List<Vector3> ResamplePath(List<Vector3> corners, float stepDistance)
+    internal static List<Vector3> WalkSurface(
+        List<Vector3> corners, float stepDistance, ISurfaceProbe probe)
     {
-        var resampled = new List<Vector3>();
+        var emitted = new List<Vector3>();
         if (corners.Count < 2)
-            return resampled;
+            return emitted;
 
-        var remaining = 0f;
-        var prev = corners[0];
+        var cursor = probe.Snap(corners[0], corners[0].y, corners[0].y);
+        emitted.Add(probe.PullFromEdge(cursor, TravelScanRegistry.EdgeDistance));
 
-        // Add the starting point
-        resampled.Add(AdjustForEdges(SnapToSurface(prev), TravelScanRegistry.EdgeDistance));
+        var accumulated = 0f;
 
         for (var i = 1; i < corners.Count; i++)
         {
-            var next = corners[i];
-            var segDir = next - prev;
-            var segLen = segDir.magnitude;
+            var corner = corners[i];
+            var guard = 0;
 
-            if (segLen < 0.001f)
+            while (true)
             {
-                prev = next;
-                continue;
+                // Direction and remaining distance are measured in the horizontal plane: the
+                // surface supplies the height, we only decide where to step in XZ.
+                var toCorner = corner - cursor;
+                toCorner.y = 0f;
+
+                var remaining = toCorner.magnitude;
+                if (remaining < 0.01f)
+                    break;
+
+                // Bounded in case a sub-step makes no forward progress on degenerate geometry
+                if (++guard > 4096)
+                {
+                    Plugin.Logger.LogWarning(
+                        "[TravelPath] Surface walk hit its step guard, abandoning corner");
+                    break;
+                }
+
+                var advance = Mathf.Min(TravelScanRegistry.SurfaceStepDistance, remaining);
+                var target = cursor + toCorner / remaining * advance;
+
+                // The corner's height is the routing hint: it is where the pathfinder says this
+                // leg ends up, so it tells the probe which way to look when more than one surface
+                // is in range. Without it the walk stays on whatever floor it started on and
+                // simply tracks the corner's XZ — it would stroll along the lower floor beneath a
+                // mezzanine instead of taking the stairs.
+                var next = probe.Snap(target, cursor.y, corner.y);
+
+                if (!probe.IsWalkable(cursor, next))
+                {
+                    // The sub-step left the surface. Give up on this corner rather than stepping
+                    // across the gap — the next corner may approach from a walkable direction.
+                    break;
+                }
+
+                accumulated += (next - cursor).magnitude;
+                cursor = next;
+
+                if (accumulated >= stepDistance)
+                {
+                    emitted.Add(probe.PullFromEdge(cursor, TravelScanRegistry.EdgeDistance));
+                    accumulated = 0f;
+                }
             }
-
-            segDir /= segLen; // normalize
-            var walked = remaining;
-
-            // The walk cursor stays on the raw corners — snapping it would let arc length drift.
-            // Only the emitted points get projected onto the surface.
-            while (walked + stepDistance <= segLen)
-            {
-                walked += stepDistance;
-                var point = prev + segDir * walked;
-                resampled.Add(AdjustForEdges(SnapToSurface(point), TravelScanRegistry.EdgeDistance));
-            }
-
-            remaining = segLen - walked;
-            prev = next;
         }
 
-        // Don't add the final corner — it's sourcePos (the scan's start position)
-        // which is already position[0] in the caller. This keeps the loop tight:
-        // the last resampled point will be within stepDistance of sourcePos.
+        // Don't emit the final corner — it's sourcePos (the scan's start position), which the
+        // caller re-inserts as position 0. Circular movement wraps back to it.
 
         // Runs here, before subdivision. Re-running it afterwards at this spacing would delete
         // exactly the crest waypoints subdivision just inserted.
-        resampled = RemoveBunchedPoints(resampled, stepDistance * 0.5f);
-        return resampled;
+        emitted = RemoveBunchedPoints(emitted, stepDistance * 0.5f);
+        return emitted;
     }
 
     /// <summary>
-    /// Projects a point onto the NavMesh surface, rejecting snaps that cross to another floor.
-    ///
-    /// Resampled points sit on straight chords between NavMesh corners, and Unity's funnel
-    /// algorithm only emits a corner where the path turns horizontally — a straight run up a
-    /// staircase emits none at the crest. Without this projection those points end up buried
-    /// in the stair geometry.
+    /// True when the scan can lerp straight from a to b without leaving walkable ground.
     /// </summary>
-    internal static Vector3 SnapToSurface(Vector3 point)
-    {
-        var probe = point + Vector3.up * TravelScanRegistry.SurfaceSampleLift;
-
-        if (!NavMesh.SamplePosition(probe, out var hit, TravelScanRegistry.SurfaceSampleRadius, -1))
-            return point;
-
-        // A large vertical correction means we found a different floor, not the surface under
-        // this point. Stacked geometry (two staircases close together) makes that a real risk.
-        if (Mathf.Abs(hit.position.y - point.y) > TravelScanRegistry.MaxSurfaceSnapRise)
-            return point;
-
-        return hit.position;
-    }
+    internal static bool IsWalkableSegment(Vector3 a, Vector3 b)
+        => NavMeshSurfaceProbe.Instance.IsWalkable(a, b);
 
     /// <summary>
     /// Inserts extra waypoints wherever the straight chord between two waypoints passes below
@@ -452,10 +521,10 @@ public static class TravelPathGenerator
     /// <paramref name="points"/> (the caller re-inserts it at index 0), but movement is
     /// Circular so the last → source segment is real and needs subdividing too.
     ///
-    /// The surface sampler is injected so the recursion can be unit tested without NavMesh.
+    /// The surface probe is injected so the recursion can be unit tested without NavMesh.
     /// </summary>
     internal static List<Vector3> SubdivideSaggingSegments(
-        List<Vector3> points, Vector3 closingPoint, Func<Vector3, Vector3> sampler)
+        List<Vector3> points, Vector3 closingPoint, ISurfaceProbe probe)
     {
         if (points.Count < 1)
             return points;
@@ -463,11 +532,11 @@ public static class TravelPathGenerator
         var refined = new List<Vector3>(points.Count) { points[0] };
 
         for (var i = 1; i < points.Count; i++)
-            AppendSubdivided(refined, refined[refined.Count - 1], points[i], 0, sampler);
+            AppendSubdivided(refined, refined[refined.Count - 1], points[i], 0, probe);
 
         // Subdivide the wrap-around segment, then drop closingPoint itself.
         var closing = new List<Vector3>();
-        AppendSubdivided(closing, refined[refined.Count - 1], closingPoint, 0, sampler);
+        AppendSubdivided(closing, refined[refined.Count - 1], closingPoint, 0, probe);
 
         if (closing.Count > 0)
             closing.RemoveAt(closing.Count - 1);
@@ -478,20 +547,24 @@ public static class TravelPathGenerator
     }
 
     private static void AppendSubdivided(
-        List<Vector3> output, Vector3 a, Vector3 b, int depth, Func<Vector3, Vector3> sampler)
+        List<Vector3> output, Vector3 a, Vector3 b, int depth, ISurfaceProbe probe)
     {
         if (depth < TravelScanRegistry.MaxSubdivisionDepth
             && (b - a).magnitude >= TravelScanRegistry.MinSegmentLength * 2f)
         {
             var chordMid = (a + b) * 0.5f;
-            var surfaceMid = sampler(chordMid);
+
+            // Reference off a, the segment start — a point the walk already established is on
+            // the surface. The chord's own height is not trustworthy: on a staircase it runs
+            // through the middle of the flight.
+            var surfaceMid = probe.Snap(chordMid, a.y, chordMid.y);
 
             // Only sag matters. A chord passing above the surface — the concave break at the
             // foot of a staircase — just floats the scan slightly and is harmless.
             if (surfaceMid.y - chordMid.y > TravelScanRegistry.MaxChordSag)
             {
-                AppendSubdivided(output, a, surfaceMid, depth + 1, sampler);
-                AppendSubdivided(output, surfaceMid, b, depth + 1, sampler);
+                AppendSubdivided(output, a, surfaceMid, depth + 1, probe);
+                AppendSubdivided(output, surfaceMid, b, depth + 1, probe);
                 return;
             }
         }
@@ -499,10 +572,129 @@ public static class TravelPathGenerator
         output.Add(b);
     }
 
+    /// <summary>
+    /// Replaces any segment the scan could not lerp along with a re-pathed detour.
+    ///
+    /// This is the pass that enforces the invariant: every consecutive pair of waypoints —
+    /// including the Circular wrap back to <paramref name="closingPoint"/> — must be joined by a
+    /// straight line that stays on walkable ground. Sag subdivision cannot do it, because a
+    /// vertical drop between two floors has no sag to measure.
+    ///
+    /// The game applies the same test when it builds the AI graph: NodeLinksJob only links two
+    /// nodes when a navmesh raycast between them comes back clear.
+    /// </summary>
+    internal static List<Vector3> RepairUnwalkableSegments(
+        List<Vector3> points, Vector3 closingPoint, ISurfaceProbe probe)
+    {
+        if (points.Count < 1)
+            return points;
+
+        var repaired = new List<Vector3>(points.Count) { points[0] };
+
+        for (var i = 1; i < points.Count; i++)
+            AppendRepaired(repaired, repaired[repaired.Count - 1], points[i], probe);
+
+        // The wrap-around segment is real too. Repair it, then drop closingPoint itself — the
+        // caller re-inserts it at index 0.
+        var closing = new List<Vector3>();
+        AppendRepaired(closing, repaired[repaired.Count - 1], closingPoint, probe);
+
+        if (closing.Count > 0)
+            closing.RemoveAt(closing.Count - 1);
+
+        repaired.AddRange(closing);
+
+        return repaired;
+    }
+
+    private static void AppendRepaired(
+        List<Vector3> output, Vector3 a, Vector3 b, ISurfaceProbe probe)
+    {
+        if (probe.IsWalkable(a, b))
+        {
+            output.Add(b);
+            return;
+        }
+
+        foreach (var corner in DetourCorners(a, b, probe))
+            output.Add(corner);
+
+        output.Add(b);
+    }
+
+    /// <summary>
+    /// Interior corners of a walkable route from a to b, snapped to the surface and spaced at
+    /// least MinSegmentLength apart. Empty when no route exists — the segment then stays as it
+    /// was and is reported by <see cref="LogUnwalkableSegments"/>.
+    /// </summary>
+    private static List<Vector3> DetourCorners(Vector3 a, Vector3 b, ISurfaceProbe probe)
+    {
+        var detour = new List<Vector3>();
+        var path = new NavMeshPath();
+
+        if (!NavMesh.CalculatePath(a, b, TravelScanRegistry.WalkableAreaMask, path)
+            || path.status != NavMeshPathStatus.PathComplete)
+            return detour;
+
+        var corners = path.corners;
+        var previous = a;
+
+        // Skip corners[0] (== a) and the last corner (== b); the caller supplies both.
+        for (var i = 1; i < corners.Length - 1; i++)
+        {
+            var corner = probe.Snap(corners[i], previous.y, corners[i].y);
+
+            if ((corner - previous).magnitude < TravelScanRegistry.MinSegmentLength)
+                continue;
+
+            detour.Add(corner);
+            previous = corner;
+        }
+
+        // A detour whose final hop back to b is degenerate would stall reverse movement.
+        if (detour.Count > 0
+            && (b - detour[detour.Count - 1]).magnitude < TravelScanRegistry.MinSegmentLength)
+            detour.RemoveAt(detour.Count - 1);
+
+        return detour;
+    }
+
+    /// <summary>
+    /// Warns about any segment still not walkable after repair, so it can be found in-game.
+    /// The debug overlay draws these red.
+    /// </summary>
+    private static void LogUnwalkableSegments(
+        List<Vector3> points, Vector3 closingPoint, ISurfaceProbe probe)
+    {
+        var failures = 0;
+
+        for (var i = 1; i < points.Count; i++)
+        {
+            if (probe.IsWalkable(points[i - 1], points[i]))
+                continue;
+
+            failures++;
+            Plugin.Logger.LogWarning(
+                $"[TravelPath] Segment {i - 1}→{i} is still not walkable: " +
+                $"{points[i - 1]} → {points[i]}");
+        }
+
+        if (points.Count > 0 && !probe.IsWalkable(points[points.Count - 1], closingPoint))
+        {
+            failures++;
+            Plugin.Logger.LogWarning(
+                $"[TravelPath] Closing segment is still not walkable: " +
+                $"{points[points.Count - 1]} → {closingPoint}");
+        }
+
+        if (failures == 0)
+            Plugin.Logger.LogDebug("[TravelPath] All segments walkable");
+    }
+
     private static float GetNavMeshDistance(Vector3 from, Vector3 to)
     {
         var path = new NavMeshPath();
-        if (NavMesh.CalculatePath(from, to, -1, path)
+        if (NavMesh.CalculatePath(from, to, TravelScanRegistry.WalkableAreaMask, path)
             && path.status == NavMeshPathStatus.PathComplete
             && path.corners.Length > 1)
         {
@@ -516,46 +708,6 @@ public static class TravelPathGenerator
         return (from - to).magnitude;
     }
 
-    private static Vector3 AdjustForEdges(Vector3 position, float minDistance)
-    {
-        if (!NavMesh.FindClosestEdge(position, out var hitNear, -1))
-            return position;
-
-        if (hitNear.distance >= minDistance)
-            return position;
-
-        // Measure distance to opposite wall via raycast in pull direction
-        var maxProbe = minDistance * 3f;
-        var rayTarget = position + hitNear.normal * maxProbe;
-        float distToFar;
-
-        if (NavMesh.Raycast(position, rayTarget, out var rayHit, -1))
-            distToFar = rayHit.distance;
-        else
-            distToFar = maxProbe; // No opposite wall — wide open
-
-        var corridorWidth = hitNear.distance + distToFar;
-
-        if (corridorWidth >= minDistance * 2f)
-        {
-            // Wide enough for full pull
-            var pullAmount = minDistance - hitNear.distance;
-            var pulled = position + hitNear.normal * pullAmount;
-            if (NavMesh.SamplePosition(pulled, out var sample, 0.5f, -1))
-                return sample.position;
-            return position;
-        }
-
-        // Narrow corridor: center between the two walls
-        var targetDist = corridorWidth / 2f;
-        var shift = targetDist - hitNear.distance;
-        var centered = position + hitNear.normal * shift;
-
-        if (NavMesh.SamplePosition(centered, out var snap, 1f, -1))
-            return snap.position;
-
-        return position;
-    }
 
     private static List<Vector3> RemoveBunchedPoints(List<Vector3> points, float minSpacing)
     {

@@ -56,6 +56,17 @@ public static class TravelScanRegistry
     public const float EdgeDistance = 2f;
 
     /// <summary>
+    /// Walkable (area 0) only, for every NavMesh query the path generator makes.
+    ///
+    /// An areaMask of -1 admits Jump (area 2) and Ladder (area 3) off-mesh links.
+    /// LG_Ladder.BuildOffmeshLink spawns ten of them per ladder, and a path routed through one
+    /// yields a vertical pair of corners with nothing walkable in between — the scan drops
+    /// straight through the floor. The game uses a mask for the same reason: PlayerBotActionTravel
+    /// passes 17 (Walkable | PlayerBot).
+    /// </summary>
+    public const int WalkableAreaMask = 1;
+
+    /// <summary>
     /// Vertical bias applied before sampling the NavMesh. Matches the game's own convention in
     /// CP_Holopath_Spline.TryGetPosOnNavMesh, which samples at pos + Vector3.up * 0.15f.
     /// </summary>
@@ -63,15 +74,39 @@ public static class TravelScanRegistry
 
     /// <summary>
     /// Max distance NavMesh.SamplePosition may travel when snapping a waypoint to the surface.
+    /// Matches CP_Holopath_Spline.TryGetPosOnNavMesh — the only place the game samples a point it
+    /// intends to keep on a specific floor. Anything wider starts reaching the floor below.
     /// </summary>
-    public const float SurfaceSampleRadius = 1.5f;
+    public const float SurfaceSampleRadius = 1.0f;
 
     /// <summary>
-    /// Reject a snap that moves a point further than this vertically — it means we found a
-    /// different floor. CP_PlayerScanner tests scan membership with a full 3D sphere, so a
-    /// waypoint on the wrong floor produces a bubble players cannot stand in.
+    /// Horizontal increment for the surface walk. The bake uses agentSlope 55°, so a 0.5m step
+    /// rises at most 0.71m — comfortably inside SurfaceSampleRadius, which is what stops a probe
+    /// from ever reaching a different floor (floors are at least agentHeight, 2m, apart).
     /// </summary>
-    public const float MaxSurfaceSnapRise = 1.5f;
+    public const float SurfaceStepDistance = 0.5f;
+
+    /// <summary>
+    /// Reject a snap that moves a point further than this from its reference height — it means we
+    /// found a different floor. CP_PlayerScanner tests scan membership with a full 3D sphere, so a
+    /// waypoint on the wrong floor produces a bubble players cannot stand in.
+    ///
+    /// 1.0m covers the 0.71m worst-case sub-step rise with slack, while staying well under the 2m
+    /// minimum floor separation.
+    /// </summary>
+    public const float MaxSurfaceSnapRise = 1.0f;
+
+    /// <summary>
+    /// tan(agentSlope). The NavMesh bake uses agentSlope 55°, so no walkable surface can climb
+    /// faster than this — a steeper rise between two waypoints is a drop between floors.
+    /// </summary>
+    public const float MaxSlopeRatio = 1.43f;
+
+    /// <summary>
+    /// agentClimb from the bake. Allows for step-ups that are vertical over zero horizontal
+    /// distance, so short stair segments aren't rejected as floor changes.
+    /// </summary>
+    public const float MaxStepUp = 0.5f;
 
     /// <summary>
     /// How far the straight chord between two waypoints may pass below the walkable surface

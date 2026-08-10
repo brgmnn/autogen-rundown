@@ -124,16 +124,22 @@ internal static class TravelPathDebugDraw
     }
 
     /// <summary>
-    /// Red when the chord between two waypoints still passes below the walkable surface —
-    /// the same test the path generator uses to decide whether to subdivide.
+    /// Red   — the straight line between the two waypoints leaves the walkable surface. The scan
+    ///         will clip through geometry here. This is the signal that matters: a vertical drop
+    ///         between floors registers here and nowhere else.
+    /// Yellow — walkable, but the chord still dips more than MaxChordSag below the surface.
+    /// Green  — good.
     /// </summary>
     private static Color SegmentColour(Vector3 from, Vector3 to)
     {
+        if (!TravelPathGenerator.IsWalkableSegment(from, to))
+            return Color.red;
+
         var chordMid = (from + to) * 0.5f;
-        var surfaceMid = TravelPathGenerator.SnapToSurface(chordMid);
+        var surfaceMid = NavMeshSurfaceProbe.Instance.Snap(chordMid, from.y, chordMid.y);
 
         return surfaceMid.y - chordMid.y > TravelScanRegistry.MaxChordSag
-            ? Color.red
+            ? Color.yellow
             : Color.green;
     }
 }
