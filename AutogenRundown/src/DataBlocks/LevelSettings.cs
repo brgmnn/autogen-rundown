@@ -504,7 +504,7 @@ public class LevelSettings
                 {
                     (1.0, LevelSignature.StartWithInfection),
                     (1.0, LevelSignature.Stalker),
-                    (0.7, LevelSignature.CyclingFog),
+                    (1.0, LevelSignature.CyclingFog),
                     (0.6, LevelSignature.BossAlarm)
                 });
 
