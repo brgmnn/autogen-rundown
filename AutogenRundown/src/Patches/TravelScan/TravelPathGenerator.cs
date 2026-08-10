@@ -12,7 +12,8 @@ namespace AutogenRundown.Patches.TravelScan;
 ///   1. Pick 3 destination nodes far from source and each other (by NavMesh distance)
 ///   2. Pathfind 4 legs on the NavMesh: start → dest1 → dest2 → dest3 → start
 ///   3. Resample the combined path at fixed step intervals
-///   4. Pull each waypoint away from NavMesh edges
+///   4. Project each waypoint onto the NavMesh surface, then pull it away from NavMesh edges
+///   5. Subdivide any segment whose straight chord would sag below the walkable surface
 ///
 /// This guarantees a valid walkable cycle with no off-mesh shortcuts.
 /// </summary>
@@ -72,11 +73,20 @@ public static class TravelPathGenerator
         Plugin.Logger.LogDebug(
             $"[TravelPath] Raw NavMesh path: {rawPath.Count} corners");
 
-        // Resample at fixed step intervals and pull away from edges
+        // Resample at fixed step intervals, snap to the surface and pull away from edges
         positions = ResamplePath(rawPath, stepDistance);
 
         Plugin.Logger.LogDebug(
             $"[TravelPath] Resampled to {positions.Count} waypoints at {stepDistance}m intervals");
+
+        // Insert extra waypoints wherever the straight chord between two of them would pass
+        // below the floor. The scan is lerped in a straight line between consecutive positions,
+        // so without this it cuts through the crest of staircases and ramps.
+        var beforeSubdivision = positions.Count;
+        positions = SubdivideSaggingSegments(positions, sourcePos, SnapToSurface);
+
+        Plugin.Logger.LogDebug(
+            $"[TravelPath] Sag subdivision: {beforeSubdivision} → {positions.Count} waypoints");
 
         if (positions.Count > 0)
         {
@@ -355,7 +365,7 @@ public static class TravelPathGenerator
 
     /// <summary>
     /// Resamples a path of corners at fixed distance intervals.
-    /// Each resampled point is pulled away from NavMesh edges.
+    /// Each resampled point is projected onto the NavMesh surface, then pulled away from edges.
     /// </summary>
     private static List<Vector3> ResamplePath(List<Vector3> corners, float stepDistance)
     {
@@ -367,7 +377,7 @@ public static class TravelPathGenerator
         var prev = corners[0];
 
         // Add the starting point
-        resampled.Add(AdjustForEdges(prev, TravelScanRegistry.EdgeDistance));
+        resampled.Add(AdjustForEdges(SnapToSurface(prev), TravelScanRegistry.EdgeDistance));
 
         for (var i = 1; i < corners.Count; i++)
         {
@@ -384,11 +394,13 @@ public static class TravelPathGenerator
             segDir /= segLen; // normalize
             var walked = remaining;
 
+            // The walk cursor stays on the raw corners — snapping it would let arc length drift.
+            // Only the emitted points get projected onto the surface.
             while (walked + stepDistance <= segLen)
             {
                 walked += stepDistance;
                 var point = prev + segDir * walked;
-                resampled.Add(AdjustForEdges(point, TravelScanRegistry.EdgeDistance));
+                resampled.Add(AdjustForEdges(SnapToSurface(point), TravelScanRegistry.EdgeDistance));
             }
 
             remaining = segLen - walked;
@@ -399,8 +411,92 @@ public static class TravelPathGenerator
         // which is already position[0] in the caller. This keeps the loop tight:
         // the last resampled point will be within stepDistance of sourcePos.
 
+        // Runs here, before subdivision. Re-running it afterwards at this spacing would delete
+        // exactly the crest waypoints subdivision just inserted.
         resampled = RemoveBunchedPoints(resampled, stepDistance * 0.5f);
         return resampled;
+    }
+
+    /// <summary>
+    /// Projects a point onto the NavMesh surface, rejecting snaps that cross to another floor.
+    ///
+    /// Resampled points sit on straight chords between NavMesh corners, and Unity's funnel
+    /// algorithm only emits a corner where the path turns horizontally — a straight run up a
+    /// staircase emits none at the crest. Without this projection those points end up buried
+    /// in the stair geometry.
+    /// </summary>
+    internal static Vector3 SnapToSurface(Vector3 point)
+    {
+        var probe = point + Vector3.up * TravelScanRegistry.SurfaceSampleLift;
+
+        if (!NavMesh.SamplePosition(probe, out var hit, TravelScanRegistry.SurfaceSampleRadius, -1))
+            return point;
+
+        // A large vertical correction means we found a different floor, not the surface under
+        // this point. Stacked geometry (two staircases close together) makes that a real risk.
+        if (Mathf.Abs(hit.position.y - point.y) > TravelScanRegistry.MaxSurfaceSnapRise)
+            return point;
+
+        return hit.position;
+    }
+
+    /// <summary>
+    /// Inserts extra waypoints wherever the straight chord between two waypoints passes below
+    /// the walkable surface.
+    ///
+    /// CP_BasicMovable.DoMoveScanner moves the scan with a plain Vector3.Lerp between
+    /// consecutive ScanPositions, so a chord spanning the crest of a staircase drags the scan
+    /// sphere through the floor no matter how accurate the endpoints are.
+    ///
+    /// <paramref name="closingPoint"/> is the scan's source position. It is not part of
+    /// <paramref name="points"/> (the caller re-inserts it at index 0), but movement is
+    /// Circular so the last → source segment is real and needs subdividing too.
+    ///
+    /// The surface sampler is injected so the recursion can be unit tested without NavMesh.
+    /// </summary>
+    internal static List<Vector3> SubdivideSaggingSegments(
+        List<Vector3> points, Vector3 closingPoint, Func<Vector3, Vector3> sampler)
+    {
+        if (points.Count < 1)
+            return points;
+
+        var refined = new List<Vector3>(points.Count) { points[0] };
+
+        for (var i = 1; i < points.Count; i++)
+            AppendSubdivided(refined, refined[refined.Count - 1], points[i], 0, sampler);
+
+        // Subdivide the wrap-around segment, then drop closingPoint itself.
+        var closing = new List<Vector3>();
+        AppendSubdivided(closing, refined[refined.Count - 1], closingPoint, 0, sampler);
+
+        if (closing.Count > 0)
+            closing.RemoveAt(closing.Count - 1);
+
+        refined.AddRange(closing);
+
+        return refined;
+    }
+
+    private static void AppendSubdivided(
+        List<Vector3> output, Vector3 a, Vector3 b, int depth, Func<Vector3, Vector3> sampler)
+    {
+        if (depth < TravelScanRegistry.MaxSubdivisionDepth
+            && (b - a).magnitude >= TravelScanRegistry.MinSegmentLength * 2f)
+        {
+            var chordMid = (a + b) * 0.5f;
+            var surfaceMid = sampler(chordMid);
+
+            // Only sag matters. A chord passing above the surface — the concave break at the
+            // foot of a staircase — just floats the scan slightly and is harmless.
+            if (surfaceMid.y - chordMid.y > TravelScanRegistry.MaxChordSag)
+            {
+                AppendSubdivided(output, a, surfaceMid, depth + 1, sampler);
+                AppendSubdivided(output, surfaceMid, b, depth + 1, sampler);
+                return;
+            }
+        }
+
+        output.Add(b);
     }
 
     private static float GetNavMeshDistance(Vector3 from, Vector3 to)

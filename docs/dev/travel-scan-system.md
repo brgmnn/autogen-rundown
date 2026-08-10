@@ -34,12 +34,19 @@ ChainedPuzzleInstance.Setup(data)
 │       ├── TravelPathGenerator.GenerateLoop()
 │       │   ├── GatherCandidates()         ← AI graph nodes with ≥4 links
 │       │   ├── PickDestinations()         ← Euclidean pre-filter → NavMesh ranking
-│       │   ├── AppendNavMeshLeg() ×3      ← source→dest1→dest2→source
-│       │   └── ResamplePath()             ← Fixed 3m steps, edge-pulled
+│       │   ├── AppendNavMeshLeg() ×4      ← source→dest1→dest2→dest3→source
+│       │   ├── ResamplePath()             ← Fixed 2m steps, snapped + edge-pulled
+│       │   └── SubdivideSaggingSegments() ← Splits chords that cut through floors
 │       │
 │       ├── Sets ScanPositions via interface
 │       ├── Writes m_amountOfPositions, m_typeOfMovement via IL2CPP
+│       ├── [DEBUG] records path into TravelScanRegistry.GeneratedPaths
 │       └── return false (skip base game)
+
+LevelAPI.OnBuildDone
+│
+└── [DEBUG] TravelPathDebugDraw.DrawAll()  ← Spheres per waypoint, cones per segment
+                                              Red cone = chord still sags below floor
 
 Gameplay Phase
 ==============
@@ -130,6 +137,7 @@ Reverse movement runs **master-only** (`SNet.IsMaster`). The master writes `m_le
 | `Patch_SetupMovement.cs`          | Replaces radial positions with NavMesh loops (all movable types) |
 | `Patch_SustainedTravelReverse.cs` | Reverse movement when players leave scan (type 100 only)         |
 | `TravelPathGenerator.cs`          | NavMesh pathfinding, destination selection, resampling           |
+| `TravelPathDebugDraw.cs`          | `#if DEBUG` in-game path overlay via the game's `DebugDraw3D`    |
 
 ## Key Constants
 
@@ -137,6 +145,12 @@ Reverse movement runs **master-only** (`SNet.IsMaster`). The master writes `m_le
 | ----------------------------- | ------- | --------------------- |
 | `SustainedTravelSpeed`        | 2.0 m/s | `TravelScanRegistry`  |
 | `SustainedTravelReverseSpeed` | 1.0 m/s | `TravelScanRegistry`  |
-| `StepDistance`                | 3.0 m   | `TravelScanRegistry`  |
+| `StepDistance`                | 2.0 m   | `TravelScanRegistry`  |
 | `EdgeDistance`                | 2.0 m   | `TravelScanRegistry`  |
+| `SurfaceSampleLift`           | 0.15 m  | `TravelScanRegistry`  |
+| `SurfaceSampleRadius`         | 1.5 m   | `TravelScanRegistry`  |
+| `MaxSurfaceSnapRise`          | 1.5 m   | `TravelScanRegistry`  |
+| `MaxChordSag`                 | 0.25 m  | `TravelScanRegistry`  |
+| `MinSegmentLength`            | 0.35 m  | `TravelScanRegistry`  |
+| `MaxSubdivisionDepth`         | 4       | `TravelScanRegistry`  |
 | `CandidatePoolSize`           | 20      | `TravelPathGenerator` |

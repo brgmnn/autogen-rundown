@@ -55,6 +55,12 @@ public static class Patch_SetupMovement
         // Insert current position as the first waypoint (same as base game)
         pathPositions.Insert(0, gameObject.transform.position);
 
+#if DEBUG
+        // Recorded after the insert so the overlay shows exactly the ScanPositions the game
+        // will lerp through. Drawn on OnBuildDone by TravelPathDebugDraw.
+        TravelScanRegistry.GeneratedPaths.Add(new List<Vector3>(pathPositions));
+#endif
+
         // Set the scan positions via the interface property
         var il2cppPositions = new Il2CppSystem.Collections.Generic.List<Vector3>();
         for (var i = 0; i < pathPositions.Count; i++)
