@@ -44,7 +44,8 @@ jobs:
           git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
           git config user.email brgmnn@users.noreply.github.com
           git config user.name "Daniel Bergmann"
-      - name: Push dependency branch
+      - id: push
+        name: Push dependency branch
         if: steps.update.outputs.has_updates == 'true'
         env:
           TITLE: ${{ steps.update.outputs.title }}
@@ -52,25 +53,34 @@ jobs:
           git checkout -B "$BRANCH"
           git add manifest.json thunderstore.toml
           git commit -m "$TITLE"
+
+          # Nothing to do if the branch already pins these exact versions. Pushing anyway
+          # would rewrite the commit, re-run the build and add noise to the open PR.
+          if git fetch --depth 1 origin "$BRANCH" 2> /dev/null \
+            && git diff --quiet FETCH_HEAD HEAD -- manifest.json thunderstore.toml; then
+            echo ":: origin/$BRANCH already pins these versions, skipping push";
+            echo "changed=false" >> "$GITHUB_OUTPUT";
+            exit 0;
+          fi
+
           git push --force origin "$BRANCH"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
 
       # Opened with the admin token so the PR triggers the Build .NET workflow.
       - name: Open pull request
         if: steps.update.outputs.has_updates == 'true'
         env:
           TITLE: ${{ steps.update.outputs.title }}
+          CHANGED: ${{ steps.push.outputs.changed }}
         run: |
           gh label create dependencies \
             --color 0366D6 \
             --description "Updates to mod dependencies" \
             --force
 
-          if [ -n "$(gh pr list --head "$BRANCH" --base main --state open --json number --jq '.[].number')" ]; then
-            echo ":: Updating existing pull request";
-            gh pr edit "$BRANCH" \
-              --title "$TITLE" \
-              --body-file "${{ runner.temp }}/pr-body.md";
-          else
+          number="$(gh pr list --head "$BRANCH" --base main --state open --json number --jq '.[].number')"
+
+          if [ -z "$number" ]; then
             echo ":: Opening new pull request";
             gh pr create \
               --base main \
@@ -78,4 +88,11 @@ jobs:
               --title "$TITLE" \
               --body-file "${{ runner.temp }}/pr-body.md" \
               --label dependencies;
+          elif [ "$CHANGED" = "true" ]; then
+            echo ":: Updating pull request #$number";
+            gh pr edit "$number" \
+              --title "$TITLE" \
+              --body-file "${{ runner.temp }}/pr-body.md";
+          else
+            echo ":: Pull request #$number is already up to date";
           fi
