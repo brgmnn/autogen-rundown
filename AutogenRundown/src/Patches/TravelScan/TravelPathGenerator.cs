@@ -11,10 +11,11 @@ namespace AutogenRundown.Patches.TravelScan;
 /// Approach:
 ///   1. Pick 3 destination nodes far from source and each other (by NavMesh distance)
 ///   2. Pathfind 4 legs on the NavMesh: start → dest1 → dest2 → dest3 → start
-///   3. Walk the surface between the resulting corners, emitting a waypoint every step distance
+///   3. Walk the surface between the resulting corners, emitting a waypoint every step distance,
+///      re-routing around anything that blocks a sub-step
 ///   4. Pull each waypoint away from NavMesh edges
 ///   5. Subdivide any segment whose straight chord would sag below the walkable surface
-///   6. Re-path any segment the scan could not lerp along without leaving the surface
+///   6. Re-walk any segment the scan could not lerp along, or that is far longer than a step
 ///
 /// The invariant this maintains: consecutive waypoints are always joined by a straight line that
 /// stays on walkable ground. CP_BasicMovable.DoMoveScanner lerps between them with no smoothing,
@@ -437,15 +438,23 @@ public static class TravelPathGenerator
         if (corners.Count < 2)
             return emitted;
 
-        var cursor = probe.Snap(corners[0], corners[0].y, corners[0].y);
+        // Copied so detour corners can be spliced in ahead of the current target
+        var route = new List<Vector3>(corners);
+
+        var cursor = probe.Snap(route[0], route[0].y, route[0].y);
         emitted.Add(probe.PullFromEdge(cursor, TravelScanRegistry.EdgeDistance));
 
         var accumulated = 0f;
+        var detours = 0;
 
-        for (var i = 1; i < corners.Count; i++)
+        for (var i = 1; i < route.Count; i++)
         {
-            var corner = corners[i];
-            var guard = 0;
+            var corner = route[i];
+
+            // Sized from the work actually required rather than a flat cap, so a genuine stall
+            // shows up as the progress check below and not as a long spin.
+            var guard = Mathf.CeilToInt(
+                HorizontalDistance(cursor, corner) / TravelScanRegistry.SurfaceStepDistance) * 2 + 16;
 
             while (true)
             {
@@ -458,11 +467,12 @@ public static class TravelPathGenerator
                 if (remaining < 0.01f)
                     break;
 
-                // Bounded in case a sub-step makes no forward progress on degenerate geometry
-                if (++guard > 4096)
+                if (--guard < 0)
                 {
                     Plugin.Logger.LogWarning(
-                        "[TravelPath] Surface walk hit its step guard, abandoning corner");
+                        "[TravelPath] Surface walk exceeded its step budget, skipping to corner");
+                    cursor = probe.Snap(corner, corner.y, corner.y);
+                    accumulated = 0f;
                     break;
                 }
 
@@ -476,10 +486,35 @@ public static class TravelPathGenerator
                 // mezzanine instead of taking the stairs.
                 var next = probe.Snap(target, cursor.y, corner.y);
 
-                if (!probe.IsWalkable(cursor, next))
+                // Two ways a sub-step is unusable, and both must be caught here. The straight line
+                // may leave the surface — or the probe may have pulled the target back off the
+                // line, in which case the cursor makes no headway and the walk would spin. The
+                // walkability check cannot see the second case: cursor and next are nearly
+                // identical, so it passes trivially.
+                var blocked = !probe.IsWalkable(cursor, next)
+                              || remaining - HorizontalDistance(next, corner)
+                                 < advance * TravelScanRegistry.MinWalkProgressFraction;
+
+                if (blocked)
                 {
-                    // The sub-step left the surface. Give up on this corner rather than stepping
-                    // across the gap — the next corner may approach from a walkable direction.
+                    if (detours < TravelScanRegistry.MaxWalkDetours
+                        && probe.TryFindRoute(cursor, corner, out var via))
+                    {
+                        // Walk the detour first, then carry on to this corner. InsertRange pushes
+                        // the current corner further down the route, so it is still visited.
+                        detours++;
+                        route.InsertRange(i, via);
+                        corner = route[i];
+                        guard = Mathf.CeilToInt(
+                            HorizontalDistance(cursor, corner)
+                            / TravelScanRegistry.SurfaceStepDistance) * 2 + 16;
+                        continue;
+                    }
+
+                    // Out of detours, or genuinely unreachable. Skip to the corner so the circuit
+                    // still completes — RepairUnwalkableSegments re-walks the seam.
+                    cursor = probe.Snap(corner, corner.y, corner.y);
+                    accumulated = 0f;
                     break;
                 }
 
@@ -493,6 +528,9 @@ public static class TravelPathGenerator
                 }
             }
         }
+
+        if (detours > 0)
+            Plugin.Logger.LogDebug($"[TravelPath] Surface walk took {detours} detour(s)");
 
         // Don't emit the final corner — it's sourcePos (the scan's start position), which the
         // caller re-inserts as position 0. Circular movement wraps back to it.
@@ -508,6 +546,17 @@ public static class TravelPathGenerator
     /// </summary>
     internal static bool IsWalkableSegment(Vector3 a, Vector3 b)
         => NavMeshSurfaceProbe.Instance.IsWalkable(a, b);
+
+    /// <summary>
+    /// Distance in the horizontal plane. The walk steps in XZ and lets the surface supply the
+    /// height, so progress has to be measured the same way.
+    /// </summary>
+    private static float HorizontalDistance(Vector3 a, Vector3 b)
+    {
+        var delta = b - a;
+        return new Vector2(delta.x, delta.z).magnitude;
+    }
+
 
     /// <summary>
     /// Inserts extra waypoints wherever the straight chord between two waypoints passes below
@@ -573,7 +622,7 @@ public static class TravelPathGenerator
     }
 
     /// <summary>
-    /// Replaces any segment the scan could not lerp along with a re-pathed detour.
+    /// Re-walks any segment the scan could not lerp along, or that is far longer than a step.
     ///
     /// This is the pass that enforces the invariant: every consecutive pair of waypoints —
     /// including the Circular wrap back to <paramref name="closingPoint"/> — must be joined by a
@@ -582,6 +631,10 @@ public static class TravelPathGenerator
     ///
     /// The game applies the same test when it builds the AI graph: NodeLinksJob only links two
     /// nodes when a navmesh raycast between them comes back clear.
+    ///
+    /// Over-long segments are repaired for a different reason. A long chord across an open room is
+    /// perfectly walkable, so nothing else objects to it — but it means the walk skipped a stretch
+    /// of route, and the scan slides straight across bypassing everything it should have covered.
     /// </summary>
     internal static List<Vector3> RepairUnwalkableSegments(
         List<Vector3> points, Vector3 closingPoint, ISurfaceProbe probe)
@@ -610,53 +663,68 @@ public static class TravelPathGenerator
     private static void AppendRepaired(
         List<Vector3> output, Vector3 a, Vector3 b, ISurfaceProbe probe)
     {
-        if (probe.IsWalkable(a, b))
+        var length = (b - a).magnitude;
+
+        // Drop a waypoint that sits on top of its predecessor rather than passing it through.
+        // DoMoveScanner divides by segment length and ReverseMovement bails out below 0.001m, so
+        // the output invariant has to hold whatever the input looked like.
+        if (length < TravelScanRegistry.MinSegmentLength)
+            return;
+
+        if (probe.IsWalkable(a, b) && length <= TravelScanRegistry.MaxSegmentLength)
         {
             output.Add(b);
             return;
         }
 
-        foreach (var corner in DetourCorners(a, b, probe))
-            output.Add(corner);
+        foreach (var point in RewalkBetween(a, b, probe))
+            output.Add(point);
 
         output.Add(b);
     }
 
     /// <summary>
-    /// Interior corners of a walkable route from a to b, snapped to the surface and spaced at
-    /// least MinSegmentLength apart. Empty when no route exists — the segment then stays as it
-    /// was and is reported by <see cref="LogUnwalkableSegments"/>.
+    /// Interior waypoints of a walked route from a to b.
+    ///
+    /// Splicing raw CalculatePath corners here is not enough: the funnel algorithm emits corners
+    /// only where the route turns, so a 40m detour would gain two waypoints and remain a chain of
+    /// long chords — the very thing being repaired. Running the corners back through
+    /// <see cref="WalkSurface"/> gives the same StepDistance spacing as the rest of the path.
+    ///
+    /// Both endpoints are snapped first. PullFromEdge moves emitted waypoints after the walk, so
+    /// a repair endpoint can sit slightly off-mesh, and CalculatePath from an off-mesh point
+    /// fails. Returns empty when no route exists — the segment then stays as it was and is
+    /// reported by <see cref="LogUnwalkableSegments"/>.
     /// </summary>
-    private static List<Vector3> DetourCorners(Vector3 a, Vector3 b, ISurfaceProbe probe)
+    private static List<Vector3> RewalkBetween(Vector3 a, Vector3 b, ISurfaceProbe probe)
     {
-        var detour = new List<Vector3>();
-        var path = new NavMeshPath();
+        var from = probe.Snap(a, a.y, a.y);
+        var to = probe.Snap(b, b.y, b.y);
 
-        if (!NavMesh.CalculatePath(a, b, TravelScanRegistry.WalkableAreaMask, path)
-            || path.status != NavMeshPathStatus.PathComplete)
-            return detour;
+        if (!probe.TryFindRoute(from, to, out var via))
+            via = new List<Vector3>();
 
-        var corners = path.corners;
-        var previous = a;
+        var route = new List<Vector3>(via.Count + 2) { from };
+        route.AddRange(via);
+        route.Add(to);
 
-        // Skip corners[0] (== a) and the last corner (== b); the caller supplies both.
-        for (var i = 1; i < corners.Length - 1; i++)
-        {
-            var corner = probe.Snap(corners[i], previous.y, corners[i].y);
+        var walked = WalkSurface(route, TravelScanRegistry.StepDistance, probe);
 
-            if ((corner - previous).magnitude < TravelScanRegistry.MinSegmentLength)
-                continue;
+        // WalkSurface emits its first corner, which duplicates a
+        if (walked.Count > 0)
+            walked.RemoveAt(0);
 
-            detour.Add(corner);
-            previous = corner;
-        }
+        // Drop anything that would leave a degenerate hop at either end — DoMoveScanner divides
+        // by segment length and ReverseMovement bails out below 0.001m.
+        while (walked.Count > 0
+               && (walked[0] - a).magnitude < TravelScanRegistry.MinSegmentLength)
+            walked.RemoveAt(0);
 
-        // A detour whose final hop back to b is degenerate would stall reverse movement.
-        if (detour.Count > 0
-            && (b - detour[detour.Count - 1]).magnitude < TravelScanRegistry.MinSegmentLength)
-            detour.RemoveAt(detour.Count - 1);
+        while (walked.Count > 0
+               && (b - walked[walked.Count - 1]).magnitude < TravelScanRegistry.MinSegmentLength)
+            walked.RemoveAt(walked.Count - 1);
 
-        return detour;
+        return walked;
     }
 
     /// <summary>

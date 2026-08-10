@@ -19,8 +19,30 @@ public sealed class FakeSurfaceProbe : ISurfaceProbe
         _surfaces = surfaces.ToList();
     }
 
+    /// <summary>
+    /// How many times Snap has been called. The walk is supposed to notice a blocked sub-step
+    /// immediately rather than spinning against it, and a call count is how that gets asserted.
+    /// </summary>
+    public int SnapCalls { get; private set; }
+
+    /// <summary>
+    /// Interior waypoints handed back by <see cref="TryFindRoute"/>. Empty means "no way around",
+    /// which is the honest default — the synthetic world has no pathfinder.
+    /// </summary>
+    public List<Vector3> Route { get; set; } = new();
+
     /// <summary>A single flat surface at the given height, covering everything.</summary>
     public static Func<Vector3, float?> Flat(float y) => _ => y;
+
+    /// <summary>
+    /// Flat at <paramref name="y"/> everywhere except a rectangular hole, which is unsupported.
+    /// A probe aimed into the hole returns the nearest supported point — which is *behind* the
+    /// target, back toward the cursor. That is exactly how the real NavMesh behaves at a wall,
+    /// and it is what makes the walk stall.
+    /// </summary>
+    public static Func<Vector3, float?> FlatWithHole(
+        float y, float minX, float maxX, float minZ, float maxZ)
+        => p => p.x >= minX && p.x <= maxX && p.z >= minZ && p.z <= maxZ ? null : y;
 
     /// <summary>Flat at <paramref name="y"/>, but only within an XZ rectangle.</summary>
     public static Func<Vector3, float?> Slab(float y, float minX, float maxX)
@@ -38,17 +60,63 @@ public sealed class FakeSurfaceProbe : ISurfaceProbe
         };
 
     /// <summary>
-    /// Mirrors NavMeshSurfaceProbe.Snap: probe from the reference height, take the nearest surface
-    /// within the sample radius, and reject it if it is too far from the reference to be the same
-    /// floor.
+    /// Mirrors NavMeshSurfaceProbe.Snap: probe from the reference height biased toward the
+    /// preferred one, take the nearest surface within the sample radius, and reject it if it is
+    /// too far from the reference to be the same floor.
+    ///
+    /// Like NavMesh.SamplePosition, the search is in 3D — if nothing is supported directly at the
+    /// point's XZ, the nearest supported point *around* it is returned. That is what pulls a
+    /// cursor backwards when it steps toward a wall.
     /// </summary>
     public Vector3 Snap(Vector3 point, float referenceY, float preferredY)
     {
+        SnapCalls++;
+
         var probeY = Mathf.Clamp(
                          preferredY,
                          referenceY - TravelScanRegistry.MaxSurfaceSnapRise,
                          referenceY + TravelScanRegistry.MaxSurfaceSnapRise)
                      + TravelScanRegistry.SurfaceSampleLift;
+
+        if (TrySampleAt(point, probeY, referenceY, out var direct))
+            return direct;
+
+        // Nothing under the point itself — search outward for the nearest supported spot, the way
+        // SamplePosition does.
+        var best = point;
+        var bestDistance = float.MaxValue;
+
+        for (var ring = 1; ring <= 4; ring++)
+        {
+            var radius = TravelScanRegistry.SurfaceSampleRadius * ring / 4f;
+
+            for (var step = 0; step < 8; step++)
+            {
+                var angle = step * Mathf.PI * 2f / 8f;
+                var candidate = point + new Vector3(
+                    Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius);
+
+                if (!TrySampleAt(candidate, probeY, referenceY, out var sampled))
+                    continue;
+
+                var distance = (sampled - point).magnitude;
+                if (distance >= bestDistance)
+                    continue;
+
+                bestDistance = distance;
+                best = sampled;
+            }
+
+            if (bestDistance < float.MaxValue)
+                break;
+        }
+
+        return best;
+    }
+
+    private bool TrySampleAt(Vector3 point, float probeY, float referenceY, out Vector3 sampled)
+    {
+        sampled = point;
 
         float? best = null;
         var bestDistance = float.MaxValue;
@@ -68,12 +136,13 @@ public sealed class FakeSurfaceProbe : ISurfaceProbe
         }
 
         if (best == null)
-            return point;
+            return false;
 
         if (Mathf.Abs(best.Value - referenceY) > TravelScanRegistry.MaxSurfaceSnapRise)
-            return point;
+            return false;
 
-        return new Vector3(point.x, best.Value, point.z);
+        sampled = new Vector3(point.x, best.Value, point.z);
+        return true;
     }
 
     /// <summary>
@@ -115,4 +184,14 @@ public sealed class FakeSurfaceProbe : ISurfaceProbe
     /// this a no-op also isolates the walk tests from edge-adjustment behaviour.
     /// </summary>
     public Vector3 PullFromEdge(Vector3 position, float minDistance) => position;
+
+    /// <summary>
+    /// Returns whatever <see cref="Route"/> was set to. Empty by default — the synthetic world has
+    /// no pathfinder, so "no way around" is the honest answer unless a test says otherwise.
+    /// </summary>
+    public bool TryFindRoute(Vector3 from, Vector3 to, out List<Vector3> via)
+    {
+        via = new List<Vector3>(Route);
+        return via.Count > 0;
+    }
 }

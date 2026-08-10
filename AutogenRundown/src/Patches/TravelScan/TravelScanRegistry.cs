@@ -87,6 +87,29 @@ public static class TravelScanRegistry
     public const float SurfaceStepDistance = 0.5f;
 
     /// <summary>
+    /// A sub-step must close at least this fraction of its intended advance toward the corner.
+    ///
+    /// NavMesh.SamplePosition returns the nearest point on the mesh, and for a target that lands
+    /// off-mesh — into a wall, past a ledge — that point is *behind* the target, back toward where
+    /// we came from. The cursor then barely moves and the walk spins in place. A walkability check
+    /// cannot catch this: the two points are nearly identical, so it passes trivially.
+    /// </summary>
+    public const float MinWalkProgressFraction = 0.25f;
+
+    /// <summary>
+    /// How many times a single path may re-route around an obstruction before the walk gives up
+    /// and skips to the corner. Stops a pathological tile from looping.
+    /// </summary>
+    public const int MaxWalkDetours = 8;
+
+    /// <summary>
+    /// A segment much longer than StepDistance means the walk skipped a stretch of route. The scan
+    /// slides along it in a straight line, bypassing everything it was supposed to cover — and
+    /// because such a chord is usually perfectly walkable, nothing else in the pipeline objects.
+    /// </summary>
+    public const float MaxSegmentLength = StepDistance * 3f;
+
+    /// <summary>
     /// Reject a snap that moves a point further than this from its reference height — it means we
     /// found a different floor. CP_PlayerScanner tests scan membership with a full 3D sphere, so a
     /// waypoint on the wrong floor produces a bubble players cannot stand in.

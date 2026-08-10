@@ -45,6 +45,17 @@ public interface ISurfaceProbe
     /// safely.
     /// </summary>
     Vector3 PullFromEdge(Vector3 position, float minDistance);
+
+    /// <summary>
+    /// Interior turning points of a walkable route from <paramref name="from"/> to
+    /// <paramref name="to"/> — the way around an obstruction.
+    ///
+    /// Returns false when no route exists, and also when the route is a straight line with
+    /// nothing in between. That second case matters to callers that splice the result into a
+    /// route they are walking: an empty splice would leave them facing the same blocked target
+    /// with nothing changed, and they would loop.
+    /// </summary>
+    bool TryFindRoute(Vector3 from, Vector3 to, out List<Vector3> via);
 }
 
 /// <summary>
@@ -176,5 +187,24 @@ public sealed class NavMeshSurfaceProbe : ISurfaceProbe
             return original;
 
         return IsWalkable(original, shifted) ? shifted : original;
+    }
+
+    public bool TryFindRoute(Vector3 from, Vector3 to, out List<Vector3> via)
+    {
+        via = new List<Vector3>();
+
+        var path = new NavMeshPath();
+
+        if (!NavMesh.CalculatePath(from, to, TravelScanRegistry.WalkableAreaMask, path)
+            || path.status != NavMeshPathStatus.PathComplete)
+            return false;
+
+        var corners = path.corners;
+
+        // Skip corners[0] (== from) and the last (== to); the caller already has both.
+        for (var i = 1; i < corners.Length - 1; i++)
+            via.Add(corners[i]);
+
+        return via.Count > 0;
     }
 }
