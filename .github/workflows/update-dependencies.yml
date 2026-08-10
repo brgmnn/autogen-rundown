@@ -11,15 +11,15 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   update:
     name: Update Thunderstore dependencies
     runs-on: ubuntu-latest
     env:
-      GH_TOKEN: ${{ github.token }}
+      GH_TOKEN: ${{ secrets.REPO_ADMIN_TOKEN }}
+      BRANCH: deps/thunderstore-updates
 
     steps:
       - uses: actions/checkout@v6
@@ -36,28 +36,46 @@ jobs:
         run: |
           ./update-dependencies.py --summary-file "${{ runner.temp }}/pr-body.md"
 
-      # Opened with the admin token so the PR triggers the Build .NET workflow.
-      - name: Ensure dependencies label
+      # The branch is rebuilt from main and force pushed on every run, so a second run
+      # replaces stale bumps rather than stacking commits on top of them.
+      - name: Set Git Authors
         if: steps.update.outputs.has_updates == 'true'
+        run: |
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
+          git config user.email brgmnn@users.noreply.github.com
+          git config user.name "Daniel Bergmann"
+      - name: Push dependency branch
+        if: steps.update.outputs.has_updates == 'true'
+        env:
+          TITLE: ${{ steps.update.outputs.title }}
+        run: |
+          git checkout -B "$BRANCH"
+          git add manifest.json thunderstore.toml
+          git commit -m "$TITLE"
+          git push --force origin "$BRANCH"
+
+      # Opened with the admin token so the PR triggers the Build .NET workflow.
+      - name: Open pull request
+        if: steps.update.outputs.has_updates == 'true'
+        env:
+          TITLE: ${{ steps.update.outputs.title }}
         run: |
           gh label create dependencies \
             --color 0366D6 \
             --description "Updates to mod dependencies" \
             --force
-      - name: Open pull request
-        if: steps.update.outputs.has_updates == 'true'
-        uses: peter-evans/create-pull-request@v8
-        with:
-          token: ${{ secrets.REPO_ADMIN_TOKEN }}
-          base: main
-          branch: deps/thunderstore-updates
-          delete-branch: true
-          title: ${{ steps.update.outputs.title }}
-          body-path: ${{ runner.temp }}/pr-body.md
-          labels: dependencies
-          commit-message: ${{ steps.update.outputs.title }}
-          author: Daniel Bergmann <brgmnn@users.noreply.github.com>
-          committer: Daniel Bergmann <brgmnn@users.noreply.github.com>
-          add-paths: |
-            manifest.json
-            thunderstore.toml
+
+          if [ -n "$(gh pr list --head "$BRANCH" --base main --state open --json number --jq '.[].number')" ]; then
+            echo ":: Updating existing pull request";
+            gh pr edit "$BRANCH" \
+              --title "$TITLE" \
+              --body-file "${{ runner.temp }}/pr-body.md";
+          else
+            echo ":: Opening new pull request";
+            gh pr create \
+              --base main \
+              --head "$BRANCH" \
+              --title "$TITLE" \
+              --body-file "${{ runner.temp }}/pr-body.md" \
+              --label dependencies;
+          fi
