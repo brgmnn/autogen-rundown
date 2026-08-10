@@ -1341,7 +1341,7 @@ public partial record Zone : DataBlock<Zone>
             _ => 4
         };
 
-        if (level.Settings.Signature == LevelSignature.BossAlarm)
+        if (level.Settings.Signature is LevelSignature.BossAlarm or LevelSignature.Stalker)
             AmmoPacks += 1;
     }
 }
