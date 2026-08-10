@@ -1316,7 +1316,37 @@ public partial class Level
         foreach (var dimData in DimensionDatas)
             usedCustomGeos.Add(dimData.Data.Data.DimensionGeomorph);
 
+        ValidateForcedGeomorphs(usedCustomGeos);
+
         ResourceSet.CustomGeomorphs.RemoveAll(prefab => !usedCustomGeos.Contains(prefab.Asset));
+    }
+
+    /// <summary>
+    /// A forced tile (Zone.CustomGeomorph) is resolved by path through
+    /// ComplexResourceSetDataBlock.GetCustomGeomorph, which only searches the three
+    /// CustomGeomorphs_{Exit,Objective,Challenge}_1x1 lists -- never GeomorphTiles_1x1. So a
+    /// perfectly ordinary base game tile that only lives in the random pool resolves to null
+    /// when forced.
+    ///
+    /// The failure mode is brutal and six steps removed from the cause: null tile prefab ->
+    /// LG_Floor.FindExternalArea NRE -> zone completes with 0 areas -> reroll -> the rebuilt
+    /// factory drains every remaining batch empty -> no zones and no AI graph. Catch it here,
+    /// where we already have every forced path in hand.
+    /// </summary>
+    private void ValidateForcedGeomorphs(HashSet<string> usedCustomGeos)
+    {
+        var registered = ResourceSet.CustomGeomorphs
+            .Concat(ResourceSet.CustomGeomorphs_Exit_1x1)
+            .Concat(ResourceSet.CustomGeomorphs_Challenge_1x1)
+            .Select(prefab => prefab.Asset)
+            .ToHashSet();
+
+        foreach (var geo in usedCustomGeos.Where(geo => !string.IsNullOrEmpty(geo) && !registered.Contains(geo)))
+            Plugin.Logger.LogError(
+                $"{Tier}{Index} \"{Name}\" ({Complex}) forces geomorph \"{geo}\" but it is not " +
+                $"registered as a custom geomorph in ComplexResourceSet.SaveStatic(). The game " +
+                $"resolves forced tiles by path against the CustomGeomorphs_* lists only, so " +
+                $"this will fail level generation. Add it to {Complex}.CustomGeomorphs.");
     }
 
     /// <summary>

@@ -623,6 +623,17 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
             Shard = 18
         });
 
+        // GenGeneratorClusterGeomorph forces this tile, and a forced tile is resolved by path
+        // through GetCustomGeomorph, which only ever searches the CustomGeomorphs_* lists.
+        // Vanilla ships it in GeomorphTiles_1x1 only, so without this it resolves to null and
+        // takes the whole level build down with it. SubComplex/Shard match the vanilla entry.
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_HA_03.prefab",
+            SubComplex = SubComplex.Lab,
+            Shard = 7
+        });
+
         // Rundown 7 tiles
 
         // Rundown 8 tiles
@@ -894,6 +905,37 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         });
 
         #region Garden GeomorphTiles_1x1 -> CustomGeomorphs_Objectives_1x1
+        // These four are forced by Zone.Geomorph.cs (GenExitGeomorph, GenHubGeomorph,
+        // GenCorridorGeomorph) and LevelLayout.HsuActivateSmall, but were never registered.
+        // Complex_Service carries no garden tiles at all -- they only ship in
+        // Complex_Service_with_gardens -- so rolling one of these forced a tile the game could
+        // not resolve by path, which kills the whole level build. Shards match the vanilla
+        // Complex_Service_with_gardens entries.
+        Service.CustomGeomorphs_Exit_1x1.Insert(0, new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_elevator_Gardens_exit_01.prefab",
+            Shard = 4,
+            SubComplex = SubComplex.Gardens
+        });
+        Service.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_X_01.prefab",
+            Shard = 9,
+            SubComplex = SubComplex.Gardens
+        });
+        Service.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_hub_SF_01.prefab",
+            Shard = 9,
+            SubComplex = SubComplex.Gardens
+        });
+        Service.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_I_01.prefab",
+            Shard = 8,
+            SubComplex = SubComplex.Gardens
+        });
+
         Service.CustomGeomorphs.Insert(0, new Prefab
         {
             Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_HA_01.prefab",
