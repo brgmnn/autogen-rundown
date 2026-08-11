@@ -139,48 +139,60 @@ internal static class TravelPathDebugDraw
     }
 
     /// <summary>
-    /// Red   — the straight line between the two waypoints leaves the walkable surface. The scan
-    ///         will clip through geometry here. This is the signal that matters: a vertical drop
-    ///         between floors registers here and nowhere else.
-    /// Orange — an endpoint is off the walkable surface, so sag cannot be judged at all.
-    /// Yellow — walkable, but the chord dips further below the surface than this segment's slope
-    ///          allows. After sag subdivision runs there should be none of these.
+    /// Red    — the chord between the two waypoints passes below the floor by more than the trace
+    ///          tolerance. The scan visibly clips through geometry here.
+    /// Orange — an endpoint is not on the walkable surface at all, so nothing about the segment
+    ///          can be judged.
     /// Green  — good.
+    ///
+    /// Both failure colours now mean a real bug rather than a tolerance being grazed: tracing puts
+    /// every waypoint on a triangle and every segment inside one, so anything else is the surface
+    /// and the path having genuinely diverged.
     /// </summary>
     private static Color SegmentColour(Vector3 from, Vector3 to)
     {
-        if (!TravelPathGenerator.IsWalkableSegment(from, to))
-            return Color.red;
+        var surface = TravelScanRegistry.GetSurface();
 
-        // Never let "cannot tell" render as "fine". An off-mesh waypoint used to come back from
-        // the probe unchanged, which read as zero sag and painted green — a run of waypoints
-        // under the floor looked flawless.
+        if (surface == null)
+            return Color.cyan;
+
+        // Never let "cannot tell" render as "fine". An off-surface waypoint used to come back from
+        // the probe unchanged, which read as zero sag and painted green — a run of waypoints under
+        // the floor looked flawless.
         if (IsOffMesh(from) || IsOffMesh(to))
             return Orange;
 
-        var chordMid = (from + to) * 0.5f;
+        // Sample across the chord rather than only at its midpoint: a segment can straddle a fold
+        // with both ends and the middle on the floor while the quarter points are underneath it.
+        for (var sample = 1; sample < 4; sample++)
+        {
+            var chord = Vector3.Lerp(from, to, sample / 4f);
 
-        // Same reference and tolerance the generator uses, so what is drawn over-tolerance is
-        // exactly what subdivision would have tried to fix.
-        if (!NavMeshSurfaceProbe.Instance.TrySnap(
-                chordMid, Mathf.Max(from.y, to.y), chordMid.y, out var surfaceMid))
-            return Orange;
+            if (!surface.TryLocate(chord, chord.y, out var onSurface))
+                return Orange;
 
-        return surfaceMid.y - chordMid.y > SurfaceGeometry.MaxSagFor(from, to)
-            ? Color.yellow
-            : Color.green;
+            if (onSurface.y - chord.y > TravelScanRegistry.MaxTraceDeviation)
+                return Color.red;
+        }
+
+        return Color.green;
     }
 
     /// <summary>
-    /// True when the probe cannot place this waypoint on the walkable surface, or has to move it
-    /// to do so — either way the scan will not be where the geometry is.
+    /// True when the waypoint cannot be placed on the walkable surface, or sits noticeably off it —
+    /// either way the scan will not be where the geometry is.
     /// </summary>
     private static bool IsOffMesh(Vector3 point)
     {
-        if (!NavMeshSurfaceProbe.Instance.TrySnap(point, point.y, point.y, out var snapped))
+        var surface = TravelScanRegistry.GetSurface();
+
+        if (surface == null)
+            return false;
+
+        if (!surface.TryLocate(point, point.y, out var located))
             return true;
 
-        return (snapped - point).sqrMagnitude > OnMeshTolerance * OnMeshTolerance;
+        return Mathf.Abs(located.y - point.y) > OnMeshTolerance;
     }
 }
 #endif

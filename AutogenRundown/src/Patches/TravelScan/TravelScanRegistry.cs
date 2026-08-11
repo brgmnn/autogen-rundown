@@ -52,8 +52,11 @@ public static class TravelScanRegistry
     public const float SustainedTravelSpeed = 2.0f;
     public const float SustainedTravelReverseSpeed = 1.0f;
 
+    /// <summary>
+    /// Longest gap allowed between consecutive waypoints. Decimation splits anything wider using
+    /// points from the trace, so this is a spacing target rather than a repair threshold.
+    /// </summary>
     public const float StepDistance = 2f;
-    public const float EdgeDistance = 2f;
 
     /// <summary>
     /// Walkable (area 0) only, for every NavMesh query the path generator makes.
@@ -67,119 +70,90 @@ public static class TravelScanRegistry
     public const int WalkableAreaMask = 1;
 
     /// <summary>
-    /// Vertical bias applied before sampling the NavMesh. Matches the game's own convention in
-    /// CP_Holopath_Spline.TryGetPosOnNavMesh, which samples at pos + Vector3.up * 0.15f.
-    /// </summary>
-    public const float SurfaceSampleLift = 0.15f;
-
-    /// <summary>
-    /// Max distance NavMesh.SamplePosition may travel when snapping a waypoint to the surface.
-    /// Matches CP_Holopath_Spline.TryGetPosOnNavMesh — the only place the game samples a point it
-    /// intends to keep on a specific floor. Anything wider starts reaching the floor below.
-    /// </summary>
-    public const float SurfaceSampleRadius = 1.0f;
-
-    /// <summary>
-    /// Horizontal increment for the surface walk. The bake uses agentSlope 55°, so a 0.5m step
-    /// rises at most 0.71m — comfortably inside SurfaceSampleRadius, which is what stops a probe
-    /// from ever reaching a different floor (floors are at least agentHeight, 2m, apart).
-    /// </summary>
-    public const float SurfaceStepDistance = 0.5f;
-
-    /// <summary>
-    /// A sub-step must close at least this fraction of its intended advance toward the corner.
-    ///
-    /// NavMesh.SamplePosition returns the nearest point on the mesh, and for a target that lands
-    /// off-mesh — into a wall, past a ledge — that point is *behind* the target, back toward where
-    /// we came from. The cursor then barely moves and the walk spins in place. A walkability check
-    /// cannot catch this: the two points are nearly identical, so it passes trivially.
-    /// </summary>
-    public const float MinWalkProgressFraction = 0.25f;
-
-    /// <summary>
-    /// How many times a single path may re-route around an obstruction before the walk gives up
-    /// and skips to the corner. Stops a pathological tile from looping.
-    /// </summary>
-    public const int MaxWalkDetours = 8;
-
-    /// <summary>
-    /// A segment much longer than StepDistance means the walk skipped a stretch of route. The scan
-    /// slides along it in a straight line, bypassing everything it was supposed to cover — and
-    /// because such a chord is usually perfectly walkable, nothing else in the pipeline objects.
-    /// </summary>
-    public const float MaxSegmentLength = StepDistance * 3f;
-
-    /// <summary>
     /// Reject a snap that moves a point further than this from its reference height — it means we
     /// found a different floor. CP_PlayerScanner tests scan membership with a full 3D sphere, so a
-    /// waypoint on the wrong floor produces a bubble players cannot stand in.
+    /// destination on the wrong floor produces a bubble players cannot stand in.
     ///
-    /// 1.0m covers the 0.71m worst-case sub-step rise with slack, while staying well under the 2m
-    /// minimum floor separation.
+    /// Used only when placing destinations, which start from AI graph nodes and gates rather than
+    /// from the surface itself.
     /// </summary>
     public const float MaxSurfaceSnapRise = 1.0f;
 
     /// <summary>
-    /// tan(agentSlope). The NavMesh bake uses agentSlope 55°, so no walkable surface can climb
-    /// faster than this — a steeper rise between two waypoints is a drop between floors.
+    /// Edge length of the XZ buckets NavSurface indexes triangles into. Triangles are far smaller
+    /// than this, so nearly all land in one or two cells.
     /// </summary>
-    public const float MaxSlopeRatio = 1.43f;
+    public const float TriangleCellSize = 4f;
 
     /// <summary>
-    /// agentClimb from the bake. Allows for step-ups that are vertical over zero horizontal
-    /// distance, so short stair segments aren't rejected as floor changes.
+    /// How far past a triangle edge the trace steps before asking which triangle it is now in.
+    /// Also the guaranteed minimum advance per crossing, which is what bounds the march.
     /// </summary>
-    public const float MaxStepUp = 0.5f;
+    public const float EdgeNudge = 0.01f;
 
     /// <summary>
-    /// How far the straight chord between two waypoints may pass below the walkable surface
-    /// before another waypoint is inserted. CP_BasicMovable.DoMoveScanner lerps in a straight
-    /// line between consecutive positions, so an unsplit chord across the crest of a staircase
-    /// drags the scan through the floor.
+    /// How far a point may sit from the surface before the trace gives up on it. Covers a
+    /// pathfinder corner placed exactly on a mesh boundary, and a crossing that lands in the sliver
+    /// of a gap where two 64m bake tiles meet without welded vertices.
     /// </summary>
-    public const float MaxChordSag = 0.25f;
+    public const float LocateRadius = 0.5f;
 
     /// <summary>
-    /// How much the sag tolerance tightens with slope: limit = MaxChordSag / (1 + factor * slope).
-    /// At 1.0 that is 0.25m on the flat, ~0.17m on a 27° ramp and ~0.15m across a 55° crest.
+    /// Largest height change accepted between one triangle and the next.
+    ///
+    /// This is agentClimb from the bake (LG_BuildUnityGraphJob), the most two adjacent walkable
+    /// polygons can legitimately differ by at their shared edge. Anything larger is a different
+    /// floor — which is exactly the ledge the scan used to chord straight across.
     /// </summary>
-    public const float SagSlopeFactor = 1.0f;
+    public const float MaxTraceStep = 0.5f;
+
+    /// <summary>
+    /// How far a waypoint-to-waypoint chord may deviate from the traced surface. Decimation keeps
+    /// any point whose removal would exceed this, so every fold — each stair nose, each crest —
+    /// survives while flat runs thin out.
+    ///
+    /// Measured against the actual traced polyline rather than a re-sampled guess, so unlike the
+    /// sag tolerance it replaces, it means what it says.
+    /// </summary>
+    public const float MaxTraceDeviation = 0.05f;
 
     /// <summary>
     /// Never emit a segment shorter than this. DoMoveScanner divides by segment length, and
-    /// Patch_SustainedTravelReverse.ReverseMovement bails out below 0.001m — degenerate
-    /// segments either teleport the scan or stall reverse movement permanently.
+    /// Patch_SustainedTravelReverse.ReverseMovement bails out below 0.001m — degenerate segments
+    /// either teleport the scan or stall reverse movement permanently.
     ///
-    /// It also bounds sag subdivision, which refuses to split below 2x this value — so in principle
-    /// it has to be small enough that the tightest adaptive sag tolerance stays reachable, or
-    /// segments would sit permanently over tolerance and the debug overlay would stop being
-    /// trustworthy.
-    ///
-    /// In practice 0.35 is comfortable, and the reason is worth recording because the naive
-    /// estimate says otherwise. Subdivision does not place waypoints at fixed spacing — it splits
-    /// at the *surface* point above the chord midpoint, which lands on or near the break itself.
-    /// One split at a staircase crest therefore removes almost all of the sag, rather than only
-    /// halving it. Modelling it as evenly spaced waypoints straddling the crest badly overestimates
-    /// how fine the floor needs to be.
-    ///
-    /// CrestSubdivision_Tests pins this empirically across slopes 0.5–2.0 and on a stepped
-    /// staircase, so if the tolerances are ever retuned the invariant fails loudly instead of
-    /// silently going unreachable.
+    /// Purely a division guard. It is deliberately far below the spacing of real geometry: at the
+    /// bake's 8.3cm voxel size consecutive folds on a fine staircase can be a few centimetres
+    /// apart, and thinning those away is what put chords through the floor in the first place.
     /// </summary>
-    public const float MinSegmentLength = 0.35f;
+    public const float MinSegmentLength = 0.05f;
 
     /// <summary>
-    /// Repair and sag subdivision each create work for the other: repair inserts waypoints that
-    /// may sag, subdivision splits segments that must stay walkable. They run as a loop that
-    /// settles; this bounds it. Both only ever add points, and both are bounded by
-    /// MinSegmentLength below and MaxSegmentLength above, so it converges well inside this.
+    /// The baked walkable surface for the current level, extracted once and shared by every scan
+    /// on it. Null until first use; null again after cleanup.
     /// </summary>
-    public const int MaxRefinementPasses = 3;
+    private static NavSurface? surface;
+
+    private static bool surfaceAttempted;
 
     /// <summary>
-    /// Bounds subdivision to at most 2^4 - 1 = 15 inserted points per original segment.
+    /// The current level's surface, extracting it on first use.
+    ///
+    /// Built lazily rather than from a level-build hook because path generation runs during
+    /// ChainedPuzzleInstance.SetupMovement, by which point the navmesh is demonstrably live —
+    /// NavMesh.CalculatePath already succeeds there. Returns null if extraction failed, and does
+    /// not retry within a level.
     /// </summary>
-    public const int MaxSubdivisionDepth = 4;
+    public static NavSurface? GetSurface()
+    {
+        if (surfaceAttempted)
+            return surface;
+
+        surfaceAttempted = true;
+        surface = NavSurface.Build();
+
+        return surface;
+    }
 
 #if DEBUG
     /// <summary>
@@ -204,6 +178,11 @@ public static class TravelScanRegistry
         SustainedTravelMovables.Clear();
         PendingSustainedTravel = false;
         Patch_SustainedTravelReverse.Clear();
+
+        // The triangulation is a snapshot of one level's bake, and it is large. Dropping it here
+        // both frees the memory and stops the next level tracing against the previous one's floors.
+        surface = null;
+        surfaceAttempted = false;
 
 #if DEBUG
         GeneratedPaths.Clear();

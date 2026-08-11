@@ -11,15 +11,20 @@ namespace AutogenRundown.Patches.TravelScan;
 /// Approach:
 ///   1. Pick 3 destination nodes far from source and each other (by NavMesh distance)
 ///   2. Pathfind 4 legs on the NavMesh: start → dest1 → dest2 → dest3 → start
-///   3. Walk the surface between the resulting corners, emitting a waypoint every step distance,
-///      re-routing around anything that blocks a sub-step
-///   4. Pull each waypoint away from NavMesh edges
-///   5. Subdivide any segment whose straight chord would sag below the walkable surface
-///   6. Re-walk any segment the scan could not lerp along, or that is far longer than a step
+///   3. Trace the walkable surface between the resulting corners, following the navmesh triangles
+///      and emitting a point at every edge crossing
+///   4. Thin the trace down to waypoints, keeping every fold
 ///
 /// The invariant this maintains: consecutive waypoints are always joined by a straight line that
 /// stays on walkable ground. CP_BasicMovable.DoMoveScanner lerps between them with no smoothing,
 /// so any segment that violates it is one the scan visibly travels through geometry.
+///
+/// Step 3 is what makes that true rather than merely intended. Every point in a trace lies on a
+/// triangle and every segment between two of them lies inside one triangle, so the line the scan
+/// lerps along is a line across a flat surface — it cannot pass through the floor. Earlier versions
+/// sampled points and snapped them to the mesh instead, which cannot express which polygon a point
+/// is on and so could not tell a ramp from a ledge; the detour, edge-pull, repair and subdivision
+/// passes that used to live here all existed to patch up the resulting damage.
 /// </summary>
 public static class TravelPathGenerator
 {
@@ -96,56 +101,43 @@ public static class TravelPathGenerator
         Plugin.Logger.LogDebug(
             $"[TravelPath] Raw NavMesh path: {rawPath.Count} corners");
 
-        var probe = NavMeshSurfaceProbe.Instance;
+        var surface = TravelScanRegistry.GetSurface();
 
-        // Walk the surface between corners rather than sampling along the straight chords
-        positions = WalkSurface(rawPath, stepDistance, probe);
-
-        Plugin.Logger.LogDebug(
-            $"[TravelPath] Surface walk produced {positions.Count} waypoints " +
-            $"at {stepDistance}m intervals");
-
-        // Nudge waypoints clear of edges, but only where it doesn't break the chain
-        positions = PullFromEdges(positions, sourcePos, probe, out var rejectedPulls);
-
-        if (rejectedPulls > 0)
-            Plugin.Logger.LogDebug(
-                $"[TravelPath] Edge pull: {rejectedPulls} shift(s) rejected to keep the chain intact");
-
-        // Refine until it settles.
-        //
-        // Repair re-walks segments the scan could not lerp along, or that are far longer than a
-        // step — and the waypoints it inserts may themselves sag. Subdivision splits sagging
-        // segments — and the waypoints it inserts must still be walkable. Each creates work for
-        // the other, so a single pass of each leaves whichever ran first stale.
-        //
-        // Repair goes first within a pass so subdivision always sees the final waypoint set. Both
-        // only ever add points, and both are bounded (MinSegmentLength below, MaxSegmentLength
-        // above), so this converges well inside the pass limit.
-        var beforeRefinement = positions.Count;
-        var passes = 0;
-
-        for (; passes < TravelScanRegistry.MaxRefinementPasses; passes++)
+        if (surface == null)
         {
-            var before = positions.Count;
+            // Nothing to trace against. Unrefined corners cut across folds the way vanilla's own
+            // holopath does, but every one of them is on the mesh — which beats guessing heights.
+            Plugin.Logger.LogWarning(
+                "[TravelPath] No navmesh surface available, falling back to raw pathfinder corners");
+            return rawPath;
+        }
 
-            positions = RepairUnwalkableSegments(positions, sourcePos, probe);
-            positions = SubdivideSaggingSegments(positions, sourcePos, probe);
+        // Follow the triangles between corners. Every point this produces sits on the surface, and
+        // every segment between two of them lies inside one flat triangle.
+        var traced = TraceSurface(rawPath, surface, Reroute);
 
-            if (positions.Count == before)
-                break;
+        if (traced.Count < 2)
+        {
+            Plugin.Logger.LogWarning(
+                "[TravelPath] Surface trace produced nothing usable, falling back to raw corners");
+            return rawPath;
         }
 
         Plugin.Logger.LogDebug(
-            $"[TravelPath] Refinement: {beforeRefinement} → {positions.Count} waypoints " +
-            $"in {passes + 1} pass(es)");
+            $"[TravelPath] Surface trace: {rawPath.Count} corners → {traced.Count} points");
+
+        positions = Decimate(traced, TravelScanRegistry.MaxTraceDeviation, stepDistance);
+
+        Plugin.Logger.LogDebug(
+            $"[TravelPath] Decimated to {positions.Count} waypoints " +
+            $"({stepDistance}m max spacing, {TravelScanRegistry.MaxTraceDeviation}m max deviation)");
 
         if (positions.Count > 300)
             Plugin.Logger.LogWarning(
                 $"[TravelPath] Path has {positions.Count} waypoints, unusually many — " +
-                "check for geometry fighting the sag tolerance");
+                "check for geometry folding far more finely than the bake should allow");
 
-        LogUnwalkableSegments(positions, sourcePos, probe);
+        LogOffSurfaceSegments(positions, sourcePos, surface);
 
         if (positions.Count > 0)
         {
@@ -435,501 +427,349 @@ public static class TravelPathGenerator
         return true;
     }
 
+
+
     /// <summary>
-    /// Walks the walkable surface along a path of NavMesh corners, emitting a waypoint every
-    /// stepDistance of travel.
+    /// Follows the walkable surface along a path of pathfinder corners, emitting a waypoint
+    /// wherever the route crosses a triangle edge.
     ///
-    /// This replaces sampling points along the straight chords between corners. Unity's funnel
-    /// algorithm only emits a corner where the path turns *horizontally*, so those chords cut
-    /// through staircase crests and across stairwell voids. Snapping the sampled points
-    /// afterwards does not fix it: each point is probed independently, so two neighbours can
-    /// resolve onto different floors and the scan drops vertically between them.
+    /// This is what replaces sampling points along the straight chords between corners. Unity's
+    /// funnel algorithm only emits a corner where the path turns *horizontally*, so those chords
+    /// cut through staircase crests and across stairwell voids no matter how accurate the corners
+    /// themselves are. Tracing the triangles puts a waypoint at every fold in the floor, because a
+    /// fold is by definition where one triangle ends and the next begins.
     ///
-    /// Instead the cursor advances in small SurfaceStepDistance increments, carrying the surface
-    /// height forward as the reference for the next probe, and every increment is checked for
-    /// walkability. The probe is therefore never more than one sub-step from ground already known
-    /// to be good, and the cursor cannot appear on another floor.
-    ///
-    /// This is the technique the game uses in PlayerBotActionBase.SnapSegmentToNav, which marches
-    /// a segment in fifths feeding each hit's Y into the next probe.
+    /// <paramref name="reroute"/> supplies an alternative route between two corners the surface
+    /// says are not directly connected. Production passes the pathfinder; tests pass null.
     /// </summary>
-    internal static List<Vector3> WalkSurface(
-        List<Vector3> corners, float stepDistance, ISurfaceProbe probe)
+    internal static List<Vector3> TraceSurface(
+        List<Vector3> corners,
+        INavSurface surface,
+        Func<Vector3, Vector3, List<Vector3>>? reroute = null)
     {
-        var emitted = new List<Vector3>();
-        if (corners.Count < 2)
-            return emitted;
+        var traced = new List<Vector3>();
 
-        // Copied so detour corners can be spliced in ahead of the current target
-        var route = new List<Vector3>(corners);
+        if (corners.Count == 0)
+            return traced;
 
-        // route[0] came from CalculatePath, so it is already on the mesh — keep it either way.
-        probe.TrySnap(route[0], route[0].y, route[0].y, out var cursor);
-        emitted.Add(cursor);
-
-        var accumulated = 0f;
-        var detours = 0;
-
-        for (var i = 1; i < route.Count; i++)
+        if (!surface.TryLocate(corners[0], corners[0].y, out var start))
         {
-            var corner = route[i];
-
-            // Sized from the work actually required rather than a flat cap, so a genuine stall
-            // shows up as the progress check below and not as a long spin.
-            var guard = Mathf.CeilToInt(
-                HorizontalDistance(cursor, corner) / TravelScanRegistry.SurfaceStepDistance) * 2 + 16;
-
-            while (true)
-            {
-                // Direction and remaining distance are measured in the horizontal plane: the
-                // surface supplies the height, we only decide where to step in XZ.
-                var toCorner = corner - cursor;
-                toCorner.y = 0f;
-
-                var remaining = toCorner.magnitude;
-                if (remaining < 0.01f)
-                    break;
-
-                if (--guard < 0)
-                {
-                    Plugin.Logger.LogWarning(
-                        "[TravelPath] Surface walk exceeded its step budget, skipping to corner");
-                    probe.TrySnap(corner, corner.y, corner.y, out cursor);
-                    accumulated = 0f;
-                    break;
-                }
-
-                var advance = Mathf.Min(TravelScanRegistry.SurfaceStepDistance, remaining);
-                var target = cursor + toCorner / remaining * advance;
-
-                // The corner's height is the routing hint: it is where the pathfinder says this
-                // leg ends up, so it tells the probe which way to look when more than one surface
-                // is in range. Without it the walk stays on whatever floor it started on and
-                // simply tracks the corner's XZ — it would stroll along the lower floor beneath a
-                // mezzanine instead of taking the stairs.
-                var onSurface = probe.TrySnap(target, cursor.y, corner.y, out var next);
-
-                // Three ways a sub-step is unusable, and all of them have to be caught here.
-                //
-                // The probe may find no surface at all — in which case `next` is still the raw
-                // target, hanging in the air. Advancing to it used to be silent, and because the
-                // next probe then referenced that drifted height, the walk kept going off-mesh:
-                // this is what put a run of waypoints under the floor.
-                //
-                // Or the straight line may leave the surface. Or the probe may have pulled the
-                // target back off the line, in which case the cursor makes no headway and the walk
-                // would spin — the walkability check cannot see that one, since cursor and next
-                // are then nearly identical and it passes trivially.
-                var blocked = !onSurface
-                              || !probe.IsWalkable(cursor, next)
-                              || remaining - HorizontalDistance(next, corner)
-                                 < advance * TravelScanRegistry.MinWalkProgressFraction;
-
-                if (blocked)
-                {
-                    if (detours < TravelScanRegistry.MaxWalkDetours
-                        && probe.TryFindRoute(cursor, corner, out var via))
-                    {
-                        // Walk the detour first, then carry on to this corner. InsertRange pushes
-                        // the current corner further down the route, so it is still visited.
-                        detours++;
-                        route.InsertRange(i, via);
-                        corner = route[i];
-                        guard = Mathf.CeilToInt(
-                            HorizontalDistance(cursor, corner)
-                            / TravelScanRegistry.SurfaceStepDistance) * 2 + 16;
-                        continue;
-                    }
-
-                    // Out of detours, or genuinely unreachable. Skip to the corner so the circuit
-                    // still completes — RepairUnwalkableSegments re-walks the seam.
-                    probe.TrySnap(corner, corner.y, corner.y, out cursor);
-                    accumulated = 0f;
-                    break;
-                }
-
-                accumulated += (next - cursor).magnitude;
-                cursor = next;
-
-                if (accumulated >= stepDistance)
-                {
-                    // Emitted raw. Edge-pulling happens in a separate pass once both neighbours
-                    // are known — see PullFromEdges.
-                    emitted.Add(cursor);
-                    accumulated = 0f;
-                }
-            }
+            Plugin.Logger.LogWarning(
+                $"[TravelPath] Path start {corners[0]} is not on the walkable surface");
+            return traced;
         }
 
-        if (detours > 0)
-            Plugin.Logger.LogDebug($"[TravelPath] Surface walk took {detours} detour(s)");
+        traced.Add(start);
 
-        // Don't emit the final corner — it's sourcePos (the scan's start position), which the
-        // caller re-inserts as position 0. Circular movement wraps back to it.
+        for (var i = 1; i < corners.Count; i++)
+        {
+            var from = traced[traced.Count - 1];
+            var to = corners[i];
+            var mark = traced.Count;
 
-        // Runs here, before subdivision. Re-running it afterwards at this spacing would delete
-        // exactly the crest waypoints subdivision just inserted.
-        emitted = RemoveBunchedPoints(emitted, stepDistance * 0.5f);
-        return emitted;
+            if (surface.TryTrace(from, to, traced))
+                continue;
+
+            // A partial trace is not usable — it ends wherever the surface ran out.
+            traced.RemoveRange(mark, traced.Count - mark);
+
+            // The funnel and the triangles disagree. CalculatePath already said these two corners
+            // were connected, so ask it how, and trace that instead. This is exactly the
+            // information the old detour walk asked for and then threw away once its budget ran
+            // out, which is how a whole stretch of route became one chord.
+            var via = reroute?.Invoke(from, to);
+
+            if (via != null && via.Count > 0 && TryTraceVia(from, via, to, surface, traced))
+                continue;
+
+            Plugin.Logger.LogWarning(
+                $"[TravelPath] Could not trace the surface from {from} to {to}; " +
+                $"the scan will cut straight across. {DescribeRoute(from, to)}");
+
+            traced.Add(to);
+        }
+
+        return traced;
     }
 
     /// <summary>
-    /// True when the scan can lerp straight from a to b without leaving walkable ground.
+    /// Traces from → via… → to, all or nothing. A half-traced detour is worse than none: it ends
+    /// mid-route and leaves the gap somewhere less obvious.
     /// </summary>
-    internal static bool IsWalkableSegment(Vector3 a, Vector3 b)
-        => NavMeshSurfaceProbe.Instance.IsWalkable(a, b);
-
-    /// <summary>
-    /// Nudges waypoints clear of NavMesh edges, but only where doing so keeps the chain intact.
-    ///
-    /// Pulling each waypoint independently at emit time is not safe. The pull direction is the
-    /// nearest edge's normal, so two neighbours either side of a gap get pushed *apart* — and a
-    /// waypoint may move up to EdgeDistance, which means a 2m walk step can stretch to
-    /// 2 + 2 x EdgeDistance = 6m with the gap now squarely in the middle of it. That is exactly
-    /// how two segments ended up straddling a hole in the mesh and could not be repaired.
-    ///
-    /// So a shift is accepted only if the segments to both neighbours survive it. Candidates are
-    /// tested against already-accepted neighbours, one waypoint at a time, so a run of waypoints
-    /// can never collectively drift apart.
-    /// </summary>
-    internal static List<Vector3> PullFromEdges(
-        List<Vector3> points, Vector3 closingPoint, ISurfaceProbe probe, out int rejected)
+    private static bool TryTraceVia(
+        Vector3 from, List<Vector3> via, Vector3 to, INavSurface surface, List<Vector3> output)
     {
-        rejected = 0;
+        var mark = output.Count;
+        var cursor = from;
 
-        var result = new List<Vector3>(points);
-
-        for (var i = 0; i < result.Count; i++)
+        foreach (var point in via)
         {
-            var original = result[i];
-            var pulled = probe.PullFromEdge(original, TravelScanRegistry.EdgeDistance);
-
-            if (pulled == original)
-                continue;
-
-            // Movement is Circular, so waypoint 0's predecessor is the closing point and the last
-            // waypoint's successor is too.
-            var previous = i > 0 ? result[i - 1] : closingPoint;
-            var next = i < result.Count - 1 ? result[i + 1] : closingPoint;
-
-            if (!KeepsChain(previous, pulled, probe) || !KeepsChain(pulled, next, probe))
+            if (!surface.TryTrace(cursor, point, output))
             {
-                rejected++;
-                continue;
+                output.RemoveRange(mark, output.Count - mark);
+                return false;
             }
 
-            result[i] = pulled;
+            cursor = output[output.Count - 1];
+        }
+
+        if (surface.TryTrace(cursor, to, output))
+            return true;
+
+        output.RemoveRange(mark, output.Count - mark);
+
+        return false;
+    }
+
+    /// <summary>
+    /// Interior corners of the walkable route between two points, or empty if there is none.
+    /// </summary>
+    private static List<Vector3> Reroute(Vector3 from, Vector3 to)
+    {
+        var via = new List<Vector3>();
+        var path = new NavMeshPath();
+
+        if (!NavMesh.CalculatePath(from, to, TravelScanRegistry.WalkableAreaMask, path)
+            || path.status != NavMeshPathStatus.PathComplete)
+            return via;
+
+        var corners = path.corners;
+
+        // Skip corners[0] (== from) and the last (== to); the caller has both already.
+        for (var i = 1; i < corners.Length - 1; i++)
+            via.Add(corners[i]);
+
+        return via;
+    }
+
+    /// <summary>
+    /// Thins the traced polyline down to a waypoint list, keeping every point whose removal would
+    /// let the path deviate more than <paramref name="tolerance"/> from the surface it traced, and
+    /// splitting anything longer than <paramref name="maxSpacing"/>.
+    ///
+    /// Both halves matter. Douglas-Peucker on its own keeps folds and drops flat runs, which is
+    /// what stops a stair nose being thinned away; the spacing pass then stops a long flat run
+    /// becoming a single chord the scan crosses in one lerp. Every point it emits came from the
+    /// trace, so the output cannot leave the surface — the tolerance bounds deviation from real
+    /// geometry rather than from a re-sampled guess at it.
+    /// </summary>
+    internal static List<Vector3> Decimate(List<Vector3> traced, float tolerance, float maxSpacing)
+    {
+        var points = RemoveDegenerate(traced);
+
+        if (points.Count <= 2)
+            return points;
+
+        var keep = new bool[points.Count];
+        keep[0] = true;
+        keep[points.Count - 1] = true;
+
+        // Iterative rather than recursive: the trace can be thousands of points on fine geometry,
+        // and the recursion depth is O(n) in the worst case.
+        var pending = new Stack<(int First, int Last)>();
+        pending.Push((0, points.Count - 1));
+
+        while (pending.Count > 0)
+        {
+            var (first, last) = pending.Pop();
+
+            if (last <= first + 1)
+                continue;
+
+            var worst = 0f;
+            var worstIndex = -1;
+
+            for (var i = first + 1; i < last; i++)
+            {
+                var deviation = DistanceToSegment(points[i], points[first], points[last]);
+
+                if (deviation <= worst)
+                    continue;
+
+                worst = deviation;
+                worstIndex = i;
+            }
+
+            if (worstIndex < 0 || worst <= tolerance)
+                continue;
+
+            keep[worstIndex] = true;
+            pending.Push((first, worstIndex));
+            pending.Push((worstIndex, last));
+        }
+
+        var result = new List<Vector3> { points[0] };
+        var previous = 0;
+
+        for (var i = 1; i < points.Count; i++)
+        {
+            if (!keep[i])
+                continue;
+
+            AppendSpaced(result, points, previous, i, maxSpacing);
+            previous = i;
         }
 
         return result;
     }
 
     /// <summary>
-    /// The one definition of a sound segment: walkable, and bounded at *both* ends.
+    /// Drops points that sit on top of their predecessor. DoMoveScanner divides by segment length
+    /// and Patch_SustainedTravelReverse bails out below 0.001m, so a degenerate segment either
+    /// teleports the scan or stalls reverse movement permanently.
     ///
-    /// The lower bound is not cosmetic. Bounding only the upper end let a pull drag a waypoint to
-    /// within centimetres of its neighbour; the next pass then deleted one of them as degenerate,
-    /// and because deletions accumulated the gap grew until it spanned a hole in the mesh. That is
-    /// how a 2m step became a 7.3m chord.
+    /// Done up front so everything after it can add points unconditionally and the spacing bound
+    /// comes out exact.
     /// </summary>
-    private static bool KeepsChain(Vector3 a, Vector3 b, ISurfaceProbe probe)
+    private static List<Vector3> RemoveDegenerate(List<Vector3> points)
     {
-        var length = (b - a).magnitude;
+        var result = new List<Vector3>(points.Count);
+        var minimum = TravelScanRegistry.MinSegmentLength * TravelScanRegistry.MinSegmentLength;
 
-        return length >= TravelScanRegistry.MinSegmentLength
-               && length <= TravelScanRegistry.MaxSegmentLength
-               && probe.IsWalkable(a, b);
-    }
-
-    /// <summary>
-    /// Distance in the horizontal plane. The walk steps in XZ and lets the surface supply the
-    /// height, so progress has to be measured the same way.
-    /// </summary>
-    private static float HorizontalDistance(Vector3 a, Vector3 b)
-    {
-        var delta = b - a;
-        return new Vector2(delta.x, delta.z).magnitude;
-    }
-
-
-    /// <summary>
-    /// Inserts extra waypoints wherever the straight chord between two waypoints passes below
-    /// the walkable surface.
-    ///
-    /// CP_BasicMovable.DoMoveScanner moves the scan with a plain Vector3.Lerp between
-    /// consecutive ScanPositions, so a chord spanning the crest of a staircase drags the scan
-    /// sphere through the floor no matter how accurate the endpoints are.
-    ///
-    /// <paramref name="closingPoint"/> is the scan's source position. It is not part of
-    /// <paramref name="points"/> (the caller re-inserts it at index 0), but movement is
-    /// Circular so the last → source segment is real and needs subdividing too.
-    ///
-    /// The surface probe is injected so the recursion can be unit tested without NavMesh.
-    /// </summary>
-    internal static List<Vector3> SubdivideSaggingSegments(
-        List<Vector3> points, Vector3 closingPoint, ISurfaceProbe probe)
-    {
-        if (points.Count < 1)
-            return points;
-
-        var refined = new List<Vector3>(points.Count) { points[0] };
-
-        for (var i = 1; i < points.Count; i++)
-            AppendSubdivided(refined, refined[refined.Count - 1], points[i], 0, probe);
-
-        // Subdivide the wrap-around segment, then drop closingPoint itself.
-        var closing = new List<Vector3>();
-        AppendSubdivided(closing, refined[refined.Count - 1], closingPoint, 0, probe);
-
-        if (closing.Count > 0)
-            closing.RemoveAt(closing.Count - 1);
-
-        refined.AddRange(closing);
-
-        return refined;
-    }
-
-    private static void AppendSubdivided(
-        List<Vector3> output, Vector3 a, Vector3 b, int depth, ISurfaceProbe probe)
-    {
-        if (depth < TravelScanRegistry.MaxSubdivisionDepth
-            && (b - a).magnitude >= TravelScanRegistry.MinSegmentLength * 2f)
+        foreach (var point in points)
         {
-            var chordMid = (a + b) * 0.5f;
+            if (result.Count > 0 && (point - result[result.Count - 1]).sqrMagnitude < minimum)
+                continue;
 
-            // Reference off the *higher* endpoint, not the segment start.
-            //
-            // Snap rejects a result further than MaxSurfaceSnapRise from its reference, because
-            // that normally means a different floor. Anchored to `a`, that guard swallows the
-            // crest of a staircase whenever the walk is climbing: the crest sits more than a
-            // metre above the low end, the probe result is thrown away as a floor jump, and sag
-            // reads as zero. Descending the same stairs it worked, because `a` was then the upper
-            // landing — the bug was direction-dependent, and steeper stairs made it worse.
-            //
-            // Both endpoints are known-good surface points joined by a walkable segment, so the
-            // accept band should span their heights. Floor safety is unaffected: another floor is
-            // at least agentHeight (2m) away and these two points are metres apart at most.
-            // A failed snap means we cannot measure the sag here at all. Splitting on an unknown
-            // would insert a waypoint that is not on the surface, so leave the segment alone —
-            // the debug overlay marks it instead of the whole thing passing for good.
-            if (!probe.TrySnap(chordMid, Mathf.Max(a.y, b.y), chordMid.y, out var surfaceMid))
-            {
-                output.Add(b);
-                return;
-            }
-
-            // Only sag matters. A chord passing above the surface — the concave break at the
-            // foot of a staircase — just floats the scan slightly and is harmless.
-            if (surfaceMid.y - chordMid.y > SurfaceGeometry.MaxSagFor(a, b))
-            {
-                AppendSubdivided(output, a, surfaceMid, depth + 1, probe);
-                AppendSubdivided(output, surfaceMid, b, depth + 1, probe);
-                return;
-            }
+            result.Add(point);
         }
 
-        output.Add(b);
+        return result;
     }
 
     /// <summary>
-    /// Re-walks any segment the scan could not lerp along, or that is far longer than a step.
-    ///
-    /// This is the pass that enforces the invariant: every consecutive pair of waypoints —
-    /// including the Circular wrap back to <paramref name="closingPoint"/> — must be joined by a
-    /// straight line that stays on walkable ground. Sag subdivision cannot do it, because a
-    /// vertical drop between two floors has no sag to measure.
-    ///
-    /// The game applies the same test when it builds the AI graph: NodeLinksJob only links two
-    /// nodes when a navmesh raycast between them comes back clear.
-    ///
-    /// Over-long segments are repaired for a different reason. A long chord across an open room is
-    /// perfectly walkable, so nothing else objects to it — but it means the walk skipped a stretch
-    /// of route, and the scan slides straight across bypassing everything it should have covered.
+    /// Appends points[to], first breaking the run from points[from] up if it would exceed
+    /// maxSpacing. Splits are taken at even arclength along the trace, so inserted points follow
+    /// the floor rather than the chord being broken up.
     /// </summary>
-    internal static List<Vector3> RepairUnwalkableSegments(
-        List<Vector3> points, Vector3 closingPoint, ISurfaceProbe probe)
+    private static void AppendSpaced(
+        List<Vector3> result, List<Vector3> points, int from, int to, float maxSpacing)
     {
-        if (points.Count < 1)
-            return points;
-
-        var repaired = new List<Vector3>(points.Count) { points[0] };
-
-        for (var i = 1; i < points.Count; i++)
-            AppendRepaired(repaired, repaired[repaired.Count - 1], points[i], probe);
-
-        // The wrap-around segment is real too. Repair it, then drop closingPoint itself — the
-        // caller re-inserts it at index 0.
-        var closing = new List<Vector3>();
-        AppendRepaired(closing, repaired[repaired.Count - 1], closingPoint, probe);
-
-        if (closing.Count > 0)
-            closing.RemoveAt(closing.Count - 1);
-
-        repaired.AddRange(closing);
-
-        // Enforce the lower spacing bound here rather than while appending. Dropping inline meant
-        // the comparison point never advanced, so deletions accumulated into a single long chord;
-        // this pass keeps any waypoint whose removal would open a gap past MaxSegmentLength.
-        return RemoveBunchedPoints(repaired, TravelScanRegistry.MinSegmentLength);
-    }
-
-    private static void AppendRepaired(
-        List<Vector3> output, Vector3 a, Vector3 b, ISurfaceProbe probe)
-    {
-        // Deliberately no "drop b if it is too close to a" rule here. Deletions accumulate,
-        // because `a` does not advance when one is dropped — that is how a chain of short
-        // segments collapsed into a single 7.3m chord across a hole. Spacing is bounded upstream:
-        // PullFromEdges refuses shifts that bunch neighbours, and RemoveBunchedPoints only thins
-        // where doing so keeps the gap inside MaxSegmentLength.
-        if (KeepsChain(a, b, probe))
+        if ((points[to] - points[from]).magnitude <= maxSpacing)
         {
-            output.Add(b);
+            result.Add(points[to]);
             return;
         }
 
-        var rewalked = RewalkBetween(a, b, probe);
+        var lengths = new float[to - from + 1];
 
-        // A re-walk that gave up partway contains the very jump it gave up on. Splicing that in
-        // trades one bad segment for several, so take it only if every pair it produces is sound.
-        // Rejecting it leaves the original segment untouched, which is no worse than we started.
-        if (rewalked.Count > 0 && FormsSoundChain(a, rewalked, b, probe))
-            output.AddRange(rewalked);
+        for (var i = from + 1; i <= to; i++)
+            lengths[i - from] = lengths[i - from - 1] + (points[i] - points[i - 1]).magnitude;
 
-        output.Add(b);
+        var total = lengths[to - from];
+
+        // Split on arclength rather than on the chord. Straight-line distance is never more than
+        // distance along the polyline, so dividing the arclength evenly bounds the spacing whatever
+        // shape the run is.
+        var splits = Mathf.CeilToInt(total / maxSpacing) - 1;
+
+        for (var split = 1; split <= splits; split++)
+            result.Add(PointAlong(points, from, to, lengths, total * split / (splits + 1f)));
+
+        result.Add(points[to]);
     }
 
     /// <summary>
-    /// True when a → interior… → b is sound end to end, by the same rule
-    /// <see cref="KeepsChain"/> applies to a single pair.
-    /// </summary>
-    private static bool FormsSoundChain(
-        Vector3 a, List<Vector3> interior, Vector3 b, ISurfaceProbe probe)
-    {
-        var previous = a;
-
-        foreach (var point in interior)
-        {
-            if (!KeepsChain(previous, point, probe))
-                return false;
-
-            previous = point;
-        }
-
-        return KeepsChain(previous, b, probe);
-    }
-
-    /// <summary>
-    /// Interior waypoints of a walked route from a to b.
+    /// The point a given distance along a stretch of the trace.
     ///
-    /// Splicing raw CalculatePath corners here is not enough: the funnel algorithm emits corners
-    /// only where the route turns, so a 40m detour would gain two waypoints and remain a chain of
-    /// long chords — the very thing being repaired. Running the corners back through
-    /// <see cref="WalkSurface"/> gives the same StepDistance spacing as the rest of the path.
-    ///
-    /// Both endpoints are snapped first. PullFromEdge moves emitted waypoints after the walk, so
-    /// a repair endpoint can sit slightly off-mesh, and CalculatePath from an off-mesh point
-    /// fails. Returns empty when no route exists — the segment then stays as it was and is
-    /// reported by <see cref="LogUnwalkableSegments"/>.
+    /// Interpolating between two consecutive traced points is exact rather than approximate: the
+    /// trace emits a point at every triangle edge it crosses, so the segment between two of them
+    /// lies inside one triangle and the surface across it is flat.
     /// </summary>
-    private static List<Vector3> RewalkBetween(Vector3 a, Vector3 b, ISurfaceProbe probe)
+    private static Vector3 PointAlong(
+        List<Vector3> points, int from, int to, float[] lengths, float target)
     {
-        // If either endpoint cannot be placed on the surface, keep it as-is and let TryFindRoute
-        // decide — CalculatePath does its own mapping and may still find a route.
-        probe.TrySnap(a, a.y, a.y, out var from);
-        probe.TrySnap(b, b.y, b.y, out var to);
+        var index = from;
 
-        if (!probe.TryFindRoute(from, to, out var via))
-            via = new List<Vector3>();
+        while (index < to - 1 && lengths[index - from + 1] < target)
+            index++;
 
-        var route = new List<Vector3>(via.Count + 2) { from };
-        route.AddRange(via);
-        route.Add(to);
+        var span = lengths[index - from + 1] - lengths[index - from];
 
-        var walked = WalkSurface(route, TravelScanRegistry.StepDistance, probe);
+        if (span < 1e-6f)
+            return points[index];
 
-        // WalkSurface emits its first corner, which duplicates a
-        if (walked.Count > 0)
-            walked.RemoveAt(0);
+        return Vector3.Lerp(
+            points[index], points[index + 1], Mathf.Clamp01((target - lengths[index - from]) / span));
+    }
 
-        // Drop anything that would leave a degenerate hop at either end — DoMoveScanner divides
-        // by segment length and ReverseMovement bails out below 0.001m.
-        while (walked.Count > 0
-               && (walked[0] - a).magnitude < TravelScanRegistry.MinSegmentLength)
-            walked.RemoveAt(0);
+    private static float DistanceToSegment(Vector3 point, Vector3 a, Vector3 b)
+    {
+        var ab = b - a;
+        var lengthSqr = ab.sqrMagnitude;
 
-        while (walked.Count > 0
-               && (b - walked[walked.Count - 1]).magnitude < TravelScanRegistry.MinSegmentLength)
-            walked.RemoveAt(walked.Count - 1);
+        if (lengthSqr < 1e-8f)
+            return (point - a).magnitude;
 
-        return walked;
+        var t = Mathf.Clamp01(Vector3.Dot(point - a, ab) / lengthSqr);
+
+        return (point - (a + ab * t)).magnitude;
     }
 
     /// <summary>
-    /// Warns about any segment still not walkable after repair, so it can be found in-game.
-    /// The debug overlay draws these red.
+    /// Checks the finished waypoint list against the surface it was traced from, so a failure
+    /// shows up in the log rather than only in-game. The debug overlay draws the same failures red.
+    ///
+    /// Segment midpoints are sampled as well as the waypoints themselves: both ends of a chord can
+    /// sit perfectly on the floor with the chord between them passing underneath it, and that is
+    /// precisely what dragged the scan through staircases.
     /// </summary>
-    private static void LogUnwalkableSegments(
-        List<Vector3> points, Vector3 closingPoint, ISurfaceProbe probe)
+    private static void LogOffSurfaceSegments(
+        List<Vector3> points, Vector3 closingPoint, INavSurface surface)
     {
         var failures = 0;
 
-        for (var i = 1; i < points.Count; i++)
+        for (var i = 0; i < points.Count; i++)
         {
-            if (probe.IsWalkable(points[i - 1], points[i]))
+            if (surface.TryLocate(points[i], points[i].y, out var onSurface)
+                && Mathf.Abs(onSurface.y - points[i].y) <= TravelScanRegistry.MaxTraceDeviation)
                 continue;
 
             failures++;
             Plugin.Logger.LogWarning(
-                $"[TravelPath] Segment {i - 1}→{i} is still not walkable: " +
-                $"{points[i - 1]} → {points[i]} {DescribeObstruction(points[i - 1], points[i])}");
+                $"[TravelPath] Waypoint {i} is off the walkable surface: {points[i]}");
         }
 
-        if (points.Count > 0 && !probe.IsWalkable(points[points.Count - 1], closingPoint))
-        {
-            failures++;
-            Plugin.Logger.LogWarning(
-                $"[TravelPath] Closing segment is still not walkable: " +
-                $"{points[points.Count - 1]} → {closingPoint} " +
-                DescribeObstruction(points[points.Count - 1], closingPoint));
-        }
+        for (var i = 1; i < points.Count; i++)
+            failures += ReportSag(i - 1, i, points[i - 1], points[i], surface);
+
+        // Movement is Circular, so the last waypoint joins back to the scan's start position.
+        if (points.Count > 0)
+            failures += ReportSag(
+                points.Count - 1, 0, points[points.Count - 1], closingPoint, surface);
 
         if (failures == 0)
-            Plugin.Logger.LogDebug("[TravelPath] All segments walkable");
+            Plugin.Logger.LogDebug(
+                "[TravelPath] Every waypoint and segment lies on the walkable surface");
     }
 
     /// <summary>
-    /// Narrows down why a segment is blocked, so a log line is enough to tell the cases apart
-    /// without another round of guessing.
-    ///
-    /// Unity reserves area 1 for "Not Walkable", and geometry rasterized into it is *removed* from
-    /// the mesh rather than kept as area-1 polygons. So a hole blocks every area mask equally,
-    /// while an area exclusion (a Jump or Ladder off-mesh link) only blocks our walkable-only one.
-    /// Testing with -1 separates them.
-    ///
-    /// Holes come from carving NavMeshObstacles — LG_InternalGate/LG_PlugDoorAlign enable one
-    /// while the gate is shut, spanning the whole doorway — or from anything with less than
-    /// agentHeight (2m) of clearance above it, which strips the mesh beneath a low pipe or
-    /// catwalk on otherwise flat floor.
+    /// Reports a segment whose chord passes below the floor, and by how much.
     /// </summary>
-    private static string DescribeObstruction(Vector3 a, Vector3 b)
+    private static int ReportSag(int from, int to, Vector3 a, Vector3 b, INavSurface surface)
     {
-        if (!SurfaceGeometry.IsSlopeWalkable(a, b))
-            return "(too steep — a floor change, not an obstruction)";
+        const int samples = 4;
 
-        // -1 admits every area, including the Jump and Ladder off-mesh links our mask excludes
-        var blockedForAnyArea = NavMesh.Raycast(a, b, out _, -1);
+        var worst = 0f;
 
-        if (!blockedForAnyArea)
-            return "(passable on some other area — an off-mesh link, not a hole)";
+        for (var sample = 1; sample < samples; sample++)
+        {
+            var chord = Vector3.Lerp(a, b, sample / (float)samples);
 
-        var endpointsOnMesh =
-            NavMesh.SamplePosition(a, out _, 0.5f, -1) && NavMesh.SamplePosition(b, out _, 0.5f, -1);
+            if (!surface.TryLocate(chord, chord.y, out var onSurface))
+                continue;
 
-        var cause = endpointsOnMesh
-            ? "hole in the mesh between two on-mesh endpoints — carving obstacle or low ceiling"
-            : "an endpoint is off-mesh";
+            worst = Mathf.Max(worst, onSurface.y - chord.y);
+        }
 
-        return $"({cause}; {DescribeRoute(a, b)})";
+        if (worst <= TravelScanRegistry.MaxTraceDeviation)
+            return 0;
+
+        Plugin.Logger.LogWarning(
+            $"[TravelPath] Segment {from}→{to} passes {worst:F2}m below the surface: " +
+            $"{a} → {b} {DescribeRoute(a, b)}");
+
+        return 1;
     }
 
     /// <summary>
@@ -968,49 +808,5 @@ public static class TravelPathGenerator
         }
 
         return (from - to).magnitude;
-    }
-
-
-    /// <summary>
-    /// Thins out waypoints that sit too close together — but never at the cost of opening a gap
-    /// wider than MaxSegmentLength.
-    ///
-    /// The bound matters because drops accumulate: the comparison point does not advance when a
-    /// candidate is skipped, so a run of close waypoints can be deleted wholesale and leave one
-    /// long chord where there were several short segments. Keeping a candidate that would
-    /// otherwise stretch the gap costs one slightly-short segment and saves a chord the scan
-    /// would slide straight across.
-    /// </summary>
-    internal static List<Vector3> RemoveBunchedPoints(List<Vector3> points, float minSpacing)
-    {
-        if (points.Count < 3)
-            return points;
-
-        var minSpacingSqr = minSpacing * minSpacing;
-        var maxGapSqr = TravelScanRegistry.MaxSegmentLength * TravelScanRegistry.MaxSegmentLength;
-
-        var result = new List<Vector3>(points.Count) { points[0] };
-
-        for (var i = 1; i < points.Count; i++)
-        {
-            var prev = result[result.Count - 1];
-            var candidate = points[i];
-
-            if ((candidate - prev).sqrMagnitude >= minSpacingSqr)
-            {
-                result.Add(candidate);
-                continue;
-            }
-
-            // Too close to keep on spacing grounds — but only drop it if whatever comes next is
-            // still within reach of `prev`. The last point has nothing after it, so dropping it
-            // can never open a gap.
-            var next = i + 1 < points.Count ? points[i + 1] : (Vector3?)null;
-
-            if (next != null && (next.Value - prev).sqrMagnitude > maxGapSqr)
-                result.Add(candidate);
-        }
-
-        return result;
     }
 }
