@@ -624,8 +624,22 @@ public static class TravelPathGenerator
         return result;
     }
 
+    /// <summary>
+    /// The one definition of a sound segment: walkable, and bounded at *both* ends.
+    ///
+    /// The lower bound is not cosmetic. Bounding only the upper end let a pull drag a waypoint to
+    /// within centimetres of its neighbour; the next pass then deleted one of them as degenerate,
+    /// and because deletions accumulated the gap grew until it spanned a hole in the mesh. That is
+    /// how a 2m step became a 7.3m chord.
+    /// </summary>
     private static bool KeepsChain(Vector3 a, Vector3 b, ISurfaceProbe probe)
-        => (b - a).magnitude <= TravelScanRegistry.MaxSegmentLength && probe.IsWalkable(a, b);
+    {
+        var length = (b - a).magnitude;
+
+        return length >= TravelScanRegistry.MinSegmentLength
+               && length <= TravelScanRegistry.MaxSegmentLength
+               && probe.IsWalkable(a, b);
+    }
 
     /// <summary>
     /// Distance in the horizontal plane. The walk steps in XZ and lets the surface supply the
@@ -753,30 +767,55 @@ public static class TravelPathGenerator
 
         repaired.AddRange(closing);
 
-        return repaired;
+        // Enforce the lower spacing bound here rather than while appending. Dropping inline meant
+        // the comparison point never advanced, so deletions accumulated into a single long chord;
+        // this pass keeps any waypoint whose removal would open a gap past MaxSegmentLength.
+        return RemoveBunchedPoints(repaired, TravelScanRegistry.MinSegmentLength);
     }
 
     private static void AppendRepaired(
         List<Vector3> output, Vector3 a, Vector3 b, ISurfaceProbe probe)
     {
-        var length = (b - a).magnitude;
-
-        // Drop a waypoint that sits on top of its predecessor rather than passing it through.
-        // DoMoveScanner divides by segment length and ReverseMovement bails out below 0.001m, so
-        // the output invariant has to hold whatever the input looked like.
-        if (length < TravelScanRegistry.MinSegmentLength)
-            return;
-
-        if (probe.IsWalkable(a, b) && length <= TravelScanRegistry.MaxSegmentLength)
+        // Deliberately no "drop b if it is too close to a" rule here. Deletions accumulate,
+        // because `a` does not advance when one is dropped — that is how a chain of short
+        // segments collapsed into a single 7.3m chord across a hole. Spacing is bounded upstream:
+        // PullFromEdges refuses shifts that bunch neighbours, and RemoveBunchedPoints only thins
+        // where doing so keeps the gap inside MaxSegmentLength.
+        if (KeepsChain(a, b, probe))
         {
             output.Add(b);
             return;
         }
 
-        foreach (var point in RewalkBetween(a, b, probe))
-            output.Add(point);
+        var rewalked = RewalkBetween(a, b, probe);
+
+        // A re-walk that gave up partway contains the very jump it gave up on. Splicing that in
+        // trades one bad segment for several, so take it only if every pair it produces is sound.
+        // Rejecting it leaves the original segment untouched, which is no worse than we started.
+        if (rewalked.Count > 0 && FormsSoundChain(a, rewalked, b, probe))
+            output.AddRange(rewalked);
 
         output.Add(b);
+    }
+
+    /// <summary>
+    /// True when a → interior… → b is sound end to end, by the same rule
+    /// <see cref="KeepsChain"/> applies to a single pair.
+    /// </summary>
+    private static bool FormsSoundChain(
+        Vector3 a, List<Vector3> interior, Vector3 b, ISurfaceProbe probe)
+    {
+        var previous = a;
+
+        foreach (var point in interior)
+        {
+            if (!KeepsChain(previous, point, probe))
+                return false;
+
+            previous = point;
+        }
+
+        return KeepsChain(previous, b, probe);
     }
 
     /// <summary>
@@ -886,9 +925,32 @@ public static class TravelPathGenerator
         var endpointsOnMesh =
             NavMesh.SamplePosition(a, out _, 0.5f, -1) && NavMesh.SamplePosition(b, out _, 0.5f, -1);
 
-        return endpointsOnMesh
-            ? "(hole in the mesh between two on-mesh endpoints — carving obstacle or low ceiling)"
-            : "(an endpoint is off-mesh)";
+        var cause = endpointsOnMesh
+            ? "hole in the mesh between two on-mesh endpoints — carving obstacle or low ceiling"
+            : "an endpoint is off-mesh";
+
+        return $"({cause}; {DescribeRoute(a, b)})";
+    }
+
+    /// <summary>
+    /// What the pathfinder makes of a segment the raycast rejected. These are different
+    /// algorithms and they can disagree, so which one is wrong decides what to do about it:
+    ///
+    ///   complete, 2 corners  — the pathfinder says a straight walk works. The raycast is the one
+    ///                          in error, most likely at a 64m bake-tile seam, and the segment is
+    ///                          probably fine as it stands.
+    ///   complete, >2 corners — a route around exists, so a failed repair is our bug, not the
+    ///                          geometry's.
+    ///   partial / invalid    — genuinely severed under the walkable-only mask. Nothing can cross.
+    /// </summary>
+    private static string DescribeRoute(Vector3 a, Vector3 b)
+    {
+        var path = new NavMeshPath();
+
+        if (!NavMesh.CalculatePath(a, b, TravelScanRegistry.WalkableAreaMask, path))
+            return "CalculatePath refused the request";
+
+        return $"CalculatePath {path.status} with {path.corners.Length} corner(s)";
     }
 
     private static float GetNavMeshDistance(Vector3 from, Vector3 to)
@@ -909,12 +971,24 @@ public static class TravelPathGenerator
     }
 
 
-    private static List<Vector3> RemoveBunchedPoints(List<Vector3> points, float minSpacing)
+    /// <summary>
+    /// Thins out waypoints that sit too close together — but never at the cost of opening a gap
+    /// wider than MaxSegmentLength.
+    ///
+    /// The bound matters because drops accumulate: the comparison point does not advance when a
+    /// candidate is skipped, so a run of close waypoints can be deleted wholesale and leave one
+    /// long chord where there were several short segments. Keeping a candidate that would
+    /// otherwise stretch the gap costs one slightly-short segment and saves a chord the scan
+    /// would slide straight across.
+    /// </summary>
+    internal static List<Vector3> RemoveBunchedPoints(List<Vector3> points, float minSpacing)
     {
         if (points.Count < 3)
             return points;
 
         var minSpacingSqr = minSpacing * minSpacing;
+        var maxGapSqr = TravelScanRegistry.MaxSegmentLength * TravelScanRegistry.MaxSegmentLength;
+
         var result = new List<Vector3>(points.Count) { points[0] };
 
         for (var i = 1; i < points.Count; i++)
@@ -922,10 +996,19 @@ public static class TravelPathGenerator
             var prev = result[result.Count - 1];
             var candidate = points[i];
 
-            if ((candidate - prev).sqrMagnitude < minSpacingSqr)
+            if ((candidate - prev).sqrMagnitude >= minSpacingSqr)
+            {
+                result.Add(candidate);
                 continue;
+            }
 
-            result.Add(candidate);
+            // Too close to keep on spacing grounds — but only drop it if whatever comes next is
+            // still within reach of `prev`. The last point has nothing after it, so dropping it
+            // can never open a gap.
+            var next = i + 1 < points.Count ? points[i + 1] : (Vector3?)null;
+
+            if (next != null && (next.Value - prev).sqrMagnitude > maxGapSqr)
+                result.Add(candidate);
         }
 
         return result;
