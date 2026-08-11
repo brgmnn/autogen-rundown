@@ -23,6 +23,12 @@ public class PathSubdivision_Tests
     private static FakeSurfaceProbe Flat(float y = 0f)
         => new(FakeSurfaceProbe.Flat(y));
 
+    private static float SurfaceYAt(ISurfaceProbe probe, Vector3 point, float referenceY)
+    {
+        probe.TrySnap(point, referenceY, point.y, out var snapped);
+        return snapped.y;
+    }
+
     private static float MaxSag(IReadOnlyList<Vector3> points, ISurfaceProbe probe)
     {
         var worst = 0f;
@@ -30,7 +36,7 @@ public class PathSubdivision_Tests
         for (var i = 1; i < points.Count; i++)
         {
             var mid = (points[i - 1] + points[i]) * 0.5f;
-            worst = Mathf.Max(worst, probe.Snap(mid, points[i - 1].y, mid.y).y - mid.y);
+            worst = Mathf.Max(worst, SurfaceYAt(probe, mid, points[i - 1].y) - mid.y);
         }
 
         return worst;

@@ -94,18 +94,39 @@ public sealed class FakeSurfaceProbe : ISurfaceProbe
     /// point's XZ, the nearest supported point *around* it is returned. That is what pulls a
     /// cursor backwards when it steps toward a wall.
     /// </summary>
-    public Vector3 Snap(Vector3 point, float referenceY, float preferredY)
+    public bool TrySnap(Vector3 point, float referenceY, float preferredY, out Vector3 snapped)
     {
         SnapCalls++;
 
-        var probeY = Mathf.Clamp(
-                         preferredY,
-                         referenceY - TravelScanRegistry.MaxSurfaceSnapRise,
-                         referenceY + TravelScanRegistry.MaxSurfaceSnapRise)
-                     + TravelScanRegistry.SurfaceSampleLift;
+        var biasedY = Mathf.Clamp(
+            preferredY,
+            referenceY - TravelScanRegistry.MaxSurfaceSnapRise,
+            referenceY + TravelScanRegistry.MaxSurfaceSnapRise);
+
+        if (TrySnapFrom(point, biasedY, referenceY, out snapped))
+            return true;
+
+        // Mirrors the real probe: the bias can aim out of range of the surface underfoot, so fall
+        // back to probing from the reference height.
+        if (!Mathf.Approximately(biasedY, referenceY)
+            && TrySnapFrom(point, referenceY, referenceY, out snapped))
+            return true;
+
+        snapped = point;
+        return false;
+    }
+
+    private bool TrySnapFrom(Vector3 point, float probeHeight, float referenceY, out Vector3 snapped)
+    {
+        snapped = point;
+
+        var probeY = probeHeight + TravelScanRegistry.SurfaceSampleLift;
 
         if (TrySampleAt(point, probeY, referenceY, out var direct))
-            return direct;
+        {
+            snapped = direct;
+            return true;
+        }
 
         // Nothing under the point itself — search outward for the nearest supported spot, the way
         // SamplePosition does.
@@ -137,7 +158,11 @@ public sealed class FakeSurfaceProbe : ISurfaceProbe
                 break;
         }
 
-        return best;
+        if (bestDistance == float.MaxValue)
+            return false;
+
+        snapped = best;
+        return true;
     }
 
     private bool TrySampleAt(Vector3 point, float probeY, float referenceY, out Vector3 sampled)
@@ -206,10 +231,14 @@ public sealed class FakeSurfaceProbe : ISurfaceProbe
     }
 
     /// <summary>
-    /// The synthetic world is unbounded in XZ, so there are no edges to pull away from. Keeping
-    /// this a no-op also isolates the walk tests from edge-adjustment behaviour.
+    /// Where each waypoint would be nudged to get clear of an edge. Null (the default) means no
+    /// edges anywhere, which keeps the walk tests isolated from edge-adjustment behaviour; set it
+    /// to reproduce a specific pull.
     /// </summary>
-    public Vector3 PullFromEdge(Vector3 position, float minDistance) => position;
+    public Func<Vector3, Vector3>? Pull { get; set; }
+
+    public Vector3 PullFromEdge(Vector3 position, float minDistance)
+        => Pull?.Invoke(position) ?? position;
 
     /// <summary>
     /// Returns whatever <see cref="Route"/> was set to. Empty by default — the synthetic world has

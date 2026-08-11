@@ -105,6 +105,13 @@ public static class TravelPathGenerator
             $"[TravelPath] Surface walk produced {positions.Count} waypoints " +
             $"at {stepDistance}m intervals");
 
+        // Nudge waypoints clear of edges, but only where it doesn't break the chain
+        positions = PullFromEdges(positions, sourcePos, probe, out var rejectedPulls);
+
+        if (rejectedPulls > 0)
+            Plugin.Logger.LogDebug(
+                $"[TravelPath] Edge pull: {rejectedPulls} shift(s) rejected to keep the chain intact");
+
         // Refine until it settles.
         //
         // Repair re-walks segments the scan could not lerp along, or that are far longer than a
@@ -456,8 +463,9 @@ public static class TravelPathGenerator
         // Copied so detour corners can be spliced in ahead of the current target
         var route = new List<Vector3>(corners);
 
-        var cursor = probe.Snap(route[0], route[0].y, route[0].y);
-        emitted.Add(probe.PullFromEdge(cursor, TravelScanRegistry.EdgeDistance));
+        // route[0] came from CalculatePath, so it is already on the mesh — keep it either way.
+        probe.TrySnap(route[0], route[0].y, route[0].y, out var cursor);
+        emitted.Add(cursor);
 
         var accumulated = 0f;
         var detours = 0;
@@ -486,7 +494,7 @@ public static class TravelPathGenerator
                 {
                     Plugin.Logger.LogWarning(
                         "[TravelPath] Surface walk exceeded its step budget, skipping to corner");
-                    cursor = probe.Snap(corner, corner.y, corner.y);
+                    probe.TrySnap(corner, corner.y, corner.y, out cursor);
                     accumulated = 0f;
                     break;
                 }
@@ -499,14 +507,21 @@ public static class TravelPathGenerator
                 // is in range. Without it the walk stays on whatever floor it started on and
                 // simply tracks the corner's XZ — it would stroll along the lower floor beneath a
                 // mezzanine instead of taking the stairs.
-                var next = probe.Snap(target, cursor.y, corner.y);
+                var onSurface = probe.TrySnap(target, cursor.y, corner.y, out var next);
 
-                // Two ways a sub-step is unusable, and both must be caught here. The straight line
-                // may leave the surface — or the probe may have pulled the target back off the
-                // line, in which case the cursor makes no headway and the walk would spin. The
-                // walkability check cannot see the second case: cursor and next are nearly
-                // identical, so it passes trivially.
-                var blocked = !probe.IsWalkable(cursor, next)
+                // Three ways a sub-step is unusable, and all of them have to be caught here.
+                //
+                // The probe may find no surface at all — in which case `next` is still the raw
+                // target, hanging in the air. Advancing to it used to be silent, and because the
+                // next probe then referenced that drifted height, the walk kept going off-mesh:
+                // this is what put a run of waypoints under the floor.
+                //
+                // Or the straight line may leave the surface. Or the probe may have pulled the
+                // target back off the line, in which case the cursor makes no headway and the walk
+                // would spin — the walkability check cannot see that one, since cursor and next
+                // are then nearly identical and it passes trivially.
+                var blocked = !onSurface
+                              || !probe.IsWalkable(cursor, next)
                               || remaining - HorizontalDistance(next, corner)
                                  < advance * TravelScanRegistry.MinWalkProgressFraction;
 
@@ -528,7 +543,7 @@ public static class TravelPathGenerator
 
                     // Out of detours, or genuinely unreachable. Skip to the corner so the circuit
                     // still completes — RepairUnwalkableSegments re-walks the seam.
-                    cursor = probe.Snap(corner, corner.y, corner.y);
+                    probe.TrySnap(corner, corner.y, corner.y, out cursor);
                     accumulated = 0f;
                     break;
                 }
@@ -538,7 +553,9 @@ public static class TravelPathGenerator
 
                 if (accumulated >= stepDistance)
                 {
-                    emitted.Add(probe.PullFromEdge(cursor, TravelScanRegistry.EdgeDistance));
+                    // Emitted raw. Edge-pulling happens in a separate pass once both neighbours
+                    // are known — see PullFromEdges.
+                    emitted.Add(cursor);
                     accumulated = 0f;
                 }
             }
@@ -561,6 +578,54 @@ public static class TravelPathGenerator
     /// </summary>
     internal static bool IsWalkableSegment(Vector3 a, Vector3 b)
         => NavMeshSurfaceProbe.Instance.IsWalkable(a, b);
+
+    /// <summary>
+    /// Nudges waypoints clear of NavMesh edges, but only where doing so keeps the chain intact.
+    ///
+    /// Pulling each waypoint independently at emit time is not safe. The pull direction is the
+    /// nearest edge's normal, so two neighbours either side of a gap get pushed *apart* — and a
+    /// waypoint may move up to EdgeDistance, which means a 2m walk step can stretch to
+    /// 2 + 2 x EdgeDistance = 6m with the gap now squarely in the middle of it. That is exactly
+    /// how two segments ended up straddling a hole in the mesh and could not be repaired.
+    ///
+    /// So a shift is accepted only if the segments to both neighbours survive it. Candidates are
+    /// tested against already-accepted neighbours, one waypoint at a time, so a run of waypoints
+    /// can never collectively drift apart.
+    /// </summary>
+    internal static List<Vector3> PullFromEdges(
+        List<Vector3> points, Vector3 closingPoint, ISurfaceProbe probe, out int rejected)
+    {
+        rejected = 0;
+
+        var result = new List<Vector3>(points);
+
+        for (var i = 0; i < result.Count; i++)
+        {
+            var original = result[i];
+            var pulled = probe.PullFromEdge(original, TravelScanRegistry.EdgeDistance);
+
+            if (pulled == original)
+                continue;
+
+            // Movement is Circular, so waypoint 0's predecessor is the closing point and the last
+            // waypoint's successor is too.
+            var previous = i > 0 ? result[i - 1] : closingPoint;
+            var next = i < result.Count - 1 ? result[i + 1] : closingPoint;
+
+            if (!KeepsChain(previous, pulled, probe) || !KeepsChain(pulled, next, probe))
+            {
+                rejected++;
+                continue;
+            }
+
+            result[i] = pulled;
+        }
+
+        return result;
+    }
+
+    private static bool KeepsChain(Vector3 a, Vector3 b, ISurfaceProbe probe)
+        => (b - a).magnitude <= TravelScanRegistry.MaxSegmentLength && probe.IsWalkable(a, b);
 
     /// <summary>
     /// Distance in the horizontal plane. The walk steps in XZ and lets the surface supply the
@@ -630,7 +695,14 @@ public static class TravelPathGenerator
             // Both endpoints are known-good surface points joined by a walkable segment, so the
             // accept band should span their heights. Floor safety is unaffected: another floor is
             // at least agentHeight (2m) away and these two points are metres apart at most.
-            var surfaceMid = probe.Snap(chordMid, Mathf.Max(a.y, b.y), chordMid.y);
+            // A failed snap means we cannot measure the sag here at all. Splitting on an unknown
+            // would insert a waypoint that is not on the surface, so leave the segment alone —
+            // the debug overlay marks it instead of the whole thing passing for good.
+            if (!probe.TrySnap(chordMid, Mathf.Max(a.y, b.y), chordMid.y, out var surfaceMid))
+            {
+                output.Add(b);
+                return;
+            }
 
             // Only sag matters. A chord passing above the surface — the concave break at the
             // foot of a staircase — just floats the scan slightly and is harmless.
@@ -722,8 +794,10 @@ public static class TravelPathGenerator
     /// </summary>
     private static List<Vector3> RewalkBetween(Vector3 a, Vector3 b, ISurfaceProbe probe)
     {
-        var from = probe.Snap(a, a.y, a.y);
-        var to = probe.Snap(b, b.y, b.y);
+        // If either endpoint cannot be placed on the surface, keep it as-is and let TryFindRoute
+        // decide — CalculatePath does its own mapping and may still find a route.
+        probe.TrySnap(a, a.y, a.y, out var from);
+        probe.TrySnap(b, b.y, b.y, out var to);
 
         if (!probe.TryFindRoute(from, to, out var via))
             via = new List<Vector3>();

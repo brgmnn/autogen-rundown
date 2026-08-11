@@ -24,9 +24,13 @@ public interface ISurfaceProbe
     /// height, so at the foot of a staircase it keeps picking the floor — the stair tread is
     /// always slightly further away — and the walk never starts climbing.
     ///
-    /// Returns the point unchanged when no acceptable surface is found.
+    /// Returns false when no acceptable surface is found, leaving <paramref name="snapped"/> as
+    /// the input point. Reporting that is not optional: an earlier version returned the input
+    /// silently, so a waypoint floating under the floor was indistinguishable from one sitting
+    /// perfectly on it — the walk drifted off-mesh, subdivision measured zero sag, and the debug
+    /// overlay painted it green.
     /// </summary>
-    Vector3 Snap(Vector3 point, float referenceY, float preferredY);
+    bool TrySnap(Vector3 point, float referenceY, float preferredY, out Vector3 snapped);
 
     /// <summary>
     /// True when you can walk in a straight line from <paramref name="a"/> to <paramref name="b"/>
@@ -116,15 +120,35 @@ public sealed class NavMeshSurfaceProbe : ISurfaceProbe
 {
     public static readonly NavMeshSurfaceProbe Instance = new();
 
-    public Vector3 Snap(Vector3 point, float referenceY, float preferredY)
+    public bool TrySnap(Vector3 point, float referenceY, float preferredY, out Vector3 snapped)
     {
         // SamplePosition only ever returns the single nearest surface, so the bias has to be
         // applied by moving the probe rather than by choosing between candidates. Clamping to
         // the accept band keeps the probe from reaching a floor the result would be rejected for.
-        var probeY = Mathf.Clamp(
+        var biasedY = Mathf.Clamp(
             preferredY,
             referenceY - TravelScanRegistry.MaxSurfaceSnapRise,
             referenceY + TravelScanRegistry.MaxSurfaceSnapRise);
+
+        if (TrySampleFrom(point, biasedY, referenceY, out snapped))
+            return true;
+
+        // The bias can aim the probe clean out of range of the surface we are standing on. Walking
+        // flat ground toward a corner high above, it ends up a full MaxSurfaceSnapRise up, and
+        // SurfaceSampleRadius no longer reaches the floor underfoot. Fall back to probing from the
+        // reference height, which is the surface we already know about.
+        if (!Mathf.Approximately(biasedY, referenceY)
+            && TrySampleFrom(point, referenceY, referenceY, out snapped))
+            return true;
+
+        snapped = point;
+        return false;
+    }
+
+    private static bool TrySampleFrom(
+        Vector3 point, float probeY, float referenceY, out Vector3 snapped)
+    {
+        snapped = point;
 
         var probe = new Vector3(
             point.x,
@@ -136,16 +160,17 @@ public sealed class NavMeshSurfaceProbe : ISurfaceProbe
                 out var hit,
                 TravelScanRegistry.SurfaceSampleRadius,
                 TravelScanRegistry.WalkableAreaMask))
-            return point;
+            return false;
 
         // A large correction relative to the reference means we found a different floor, not the
         // surface under this point. Stacked geometry makes that a real risk: the whole level is
         // baked into a single NavMeshData, so both floors of a stairwell are polygons at the
         // same XZ.
         if (Mathf.Abs(hit.position.y - referenceY) > TravelScanRegistry.MaxSurfaceSnapRise)
-            return point;
+            return false;
 
-        return hit.position;
+        snapped = hit.position;
+        return true;
     }
 
     public bool IsWalkable(Vector3 a, Vector3 b)

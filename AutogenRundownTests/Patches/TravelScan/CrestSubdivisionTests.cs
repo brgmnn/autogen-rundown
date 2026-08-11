@@ -45,7 +45,7 @@ public class CrestSubdivision_Tests
     private static float SagOf(Vector3 a, Vector3 b, ISurfaceProbe probe)
     {
         var chordMid = (a + b) * 0.5f;
-        var surfaceMid = probe.Snap(chordMid, Mathf.Max(a.y, b.y), chordMid.y);
+        probe.TrySnap(chordMid, Mathf.Max(a.y, b.y), chordMid.y, out var surfaceMid);
 
         return surfaceMid.y - chordMid.y;
     }

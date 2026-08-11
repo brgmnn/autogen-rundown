@@ -34,6 +34,15 @@ internal static class TravelPathDebugDraw
     private const float OriginRadius = 0.30f;
     private const float SegmentRadius = 0.05f;
 
+    /// <summary>
+    /// How far a waypoint may sit from the surface before it counts as off-mesh. Small enough to
+    /// catch the drift that put a run of waypoints under the floor, loose enough to ignore the
+    /// sub-centimetre wobble of repeated sampling.
+    /// </summary>
+    private const float OnMeshTolerance = 0.1f;
+
+    private static readonly Color Orange = new(1f, 0.55f, 0f);
+
     private static bool _warnedUnavailable;
 
     public static void DrawAll()
@@ -81,10 +90,16 @@ internal static class TravelPathDebugDraw
             {
                 var isOrigin = i == 0;
 
+                // Orange calls out a waypoint the probe cannot place on the surface — the scan
+                // will pass through geometry there regardless of what the segments look like.
+                var colour = isOrigin
+                    ? Color.magenta
+                    : IsOffMesh(path[i]) ? Orange : Color.cyan;
+
                 DebugDraw3D.DrawSphere(
                     path[i],
                     isOrigin ? OriginRadius : WaypointRadius,
-                    isOrigin ? Color.magenta : Color.cyan,
+                    colour,
                     Persist,
                     $"agTravelPath_{pathIndex}_p{drawn}");
 
@@ -127,6 +142,7 @@ internal static class TravelPathDebugDraw
     /// Red   — the straight line between the two waypoints leaves the walkable surface. The scan
     ///         will clip through geometry here. This is the signal that matters: a vertical drop
     ///         between floors registers here and nowhere else.
+    /// Orange — an endpoint is off the walkable surface, so sag cannot be judged at all.
     /// Yellow — walkable, but the chord dips further below the surface than this segment's slope
     ///          allows. After sag subdivision runs there should be none of these.
     /// Green  — good.
@@ -136,16 +152,35 @@ internal static class TravelPathDebugDraw
         if (!TravelPathGenerator.IsWalkableSegment(from, to))
             return Color.red;
 
+        // Never let "cannot tell" render as "fine". An off-mesh waypoint used to come back from
+        // the probe unchanged, which read as zero sag and painted green — a run of waypoints
+        // under the floor looked flawless.
+        if (IsOffMesh(from) || IsOffMesh(to))
+            return Orange;
+
         var chordMid = (from + to) * 0.5f;
 
         // Same reference and tolerance the generator uses, so what is drawn over-tolerance is
         // exactly what subdivision would have tried to fix.
-        var surfaceMid = NavMeshSurfaceProbe.Instance.Snap(
-            chordMid, Mathf.Max(from.y, to.y), chordMid.y);
+        if (!NavMeshSurfaceProbe.Instance.TrySnap(
+                chordMid, Mathf.Max(from.y, to.y), chordMid.y, out var surfaceMid))
+            return Orange;
 
         return surfaceMid.y - chordMid.y > SurfaceGeometry.MaxSagFor(from, to)
             ? Color.yellow
             : Color.green;
+    }
+
+    /// <summary>
+    /// True when the probe cannot place this waypoint on the walkable surface, or has to move it
+    /// to do so — either way the scan will not be where the geometry is.
+    /// </summary>
+    private static bool IsOffMesh(Vector3 point)
+    {
+        if (!NavMeshSurfaceProbe.Instance.TrySnap(point, point.y, point.y, out var snapped))
+            return true;
+
+        return (snapped - point).sqrMagnitude > OnMeshTolerance * OnMeshTolerance;
     }
 }
 #endif

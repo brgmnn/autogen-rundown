@@ -211,8 +211,10 @@ public class SurfaceWalk_Tests
         // Standing on the upper floor over the mezzanine, both floors are candidates at this XZ.
         var onMezzanine = new Vector3(16f, UpperY, 0f);
 
-        Assert.AreEqual(UpperY, probe.Snap(onMezzanine, UpperY, UpperY).y, 0.01f);
-        Assert.AreEqual(0f, probe.Snap(onMezzanine, 0f, 0f).y, 0.01f);
+        Assert.IsTrue(probe.TrySnap(onMezzanine, UpperY, UpperY, out var high));
+        Assert.AreEqual(UpperY, high.y, 0.01f);
+        Assert.IsTrue(probe.TrySnap(onMezzanine, 0f, 0f, out var low));
+        Assert.AreEqual(0f, low.y, 0.01f);
     }
 
     [TestMethod]
@@ -223,7 +225,7 @@ public class SurfaceWalk_Tests
         // A point on the upper floor probed with the upper floor as reference must never come
         // back on the lower one, even though the lower one exists directly beneath it.
         var onMezzanine = new Vector3(16f, UpperY, 0f);
-        var snapped = probe.Snap(onMezzanine, UpperY, UpperY);
+        probe.TrySnap(onMezzanine, UpperY, UpperY, out var snapped);
 
         Assert.IsFalse(OnLowerFloor(snapped), $"Snapped onto the wrong floor: {Show(snapped)}");
     }
