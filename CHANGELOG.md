@@ -3,6 +3,20 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v1.0.10](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.10) — August 11, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Change: Reworked travel scan pathing to improve issues with scan clipping through the floor
+  * Includes a new mod dependency: [BorkenCellGeoFix](https://thunderstore.io/c/gtfo/p/hirnukuono/BorkenCellGeoFix/)
+  * BorkenCellGeoFix ensures the navmesh is correct which the reworked travel scan pathing makes more use of
+  * This new dependency fixes a lot of other issues in the game and should be an overall quality improvement
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v1.0.9...v1.0.10
+
+
 ## [v1.0.9](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.9) — July 31, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
