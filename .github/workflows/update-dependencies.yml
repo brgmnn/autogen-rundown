@@ -6,8 +6,15 @@ name: Update Dependencies
 
 on:
   schedule:
-    # Daily at 16:00 UTC (9am PDT / 8am PST)
-    - cron: "0 16 * * *"
+    # Sunday at 16:00 UTC (7am PDT / 6am PST)
+    - cron: "0 14 * * 0"
+    #        *  * * * *
+    #        |  | | | |
+    #        |  | | | +-- Day of week (0-6, Sunday=0)
+    #        |  | | +---- Month (1-12)
+    #        |  | +------ Day of month (1-31)
+    #        |  +-------- Hour (0-23, UTC)
+    #        +----------- Minute (0-59)
   workflow_dispatch:
 
 permissions:
