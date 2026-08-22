@@ -13,6 +13,8 @@ public record ExpeditionBalance : DataBlock<ExpeditionBalance>
 
         // We will set these to 0.2 so the multi value for a zone corresponds to the number of
         // uses dropped in the zone.
+        // TODO: try with 0.1996. Tip from GTFO modding for getting it to be exactly right
+        //       this would then mean the bug listed below goes away
         HealthPerZone = 0.2,
         DisinfectionPerZone = 0.2,
         WeaponAmmoPerZone = 0.2,
