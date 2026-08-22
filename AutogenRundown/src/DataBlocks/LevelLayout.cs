@@ -1,4 +1,4 @@
-﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
@@ -1087,10 +1087,17 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             // TODO: move this somewhere else? Currently it will only apply in main
             if (level.Settings.HasInfection && Generator.Flip(disinfectChance))
             {
-                var open = level.Planner.GetOpenZones(Bulkhead.All, null, layout.Dimension).Take(4);
-                var from = Generator.Pick(open);
+                // Note that Generator.Pick() returns default(ZoneNode) for an empty collection
+                // rather than null (ZoneNode is a struct). Building off that default node would
+                // wire the new zone to a parent that has no zone in the planner, so we have to
+                // check for open zones ourselves.
+                var open = level.Planner.GetOpenZones(Bulkhead.All, null, layout.Dimension).Take(4).ToList();
 
-                layout.AddDisinfectionZone(from);
+                if (open.Any())
+                    layout.AddDisinfectionZone(Generator.Pick(open));
+                else
+                    Plugin.Logger.LogDebug(
+                        $"{layout.Name} -- No open zones to attach a disinfection zone to, skipping");
             }
         }
 
@@ -1208,9 +1215,18 @@ public partial record LevelLayout : DataBlock<LevelLayout>
 
             if (parent != null)
             {
-                var parentZone = level.Planner.GetZone((ZoneNode)parent)!;
+                var parentZone = level.Planner.GetZone((ZoneNode)parent);
 
-                if (parentZone.CustomGeomorph is
+                // A parent node in the planner graph with no zone in the blocks dictionary means
+                // the graph and blocks have desynced. Don't take the whole rundown build down
+                // over a cosmetic altitude fixup.
+                if (parentZone == null)
+                {
+                    Plugin.Logger.LogWarning(
+                        $"{Name} -- Zone_{zone.LocalIndex}: parent node has no zone in the planner, " +
+                        $"skipping portal altitude fix: node={node}, parent={parent}");
+                }
+                else if (parentZone.CustomGeomorph is
                     "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_portal_HA_01.prefab" or
                     "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_portal_HA_01.prefab")
                 {
