@@ -59,6 +59,7 @@ TODO: for 1.1.0
 TODO post 1.0
   * See about adding terminal decorations to terminal spawn manager
   * Bug: Check ST scan in monthly C3 for it's bad pathing in the dogs junction tile in secondary
+  * Main D-tier GatherTerminal has extremely short main level.
 
 NOTE
   * Cryptomnesia - GatherSmallItems only 1 objective in 42 uses the dimensions for cryptomensia for it
