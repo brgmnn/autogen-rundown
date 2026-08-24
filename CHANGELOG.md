@@ -3,6 +3,19 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v1.0.11](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.11) — August 23, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fix: Rare mod crash when building disinfection zone
+* Bumped several dependencies
+
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v1.0.10...v1.0.11
+
+
 ## [v1.0.10](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.10) — August 11, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
