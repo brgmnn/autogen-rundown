@@ -26,10 +26,12 @@ public record LevelCustomTerminals
     #region Terminal positions
 
     /// <summary>
-    ///
     /// We want to have at least 4 candidates per geomorph
     ///
     /// This will let us have some kind of interesting multi-terminal challenge
+    ///
+    /// Note here that X/Z positions are always absolute and you can find by noclipping to the location.
+    /// Y value is offset by the dimension position, but only affects vertical height so remove 200 per dimension you're in.
     /// </summary>
     /// <param name="geomorph"></param>
     /// <returns></returns>
@@ -73,6 +75,23 @@ public record LevelCustomTerminals
 
                 // Up on the roof by the two ladders
                 (new Vector3 { X = -9.4, Y = 749.3, Z = -5.8 }, new Vector3 { Y = 90 }),
+            },
+
+            // AlphaSix
+            "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Dune_camp_03.prefab" => new List<(Vector3, Vector3)>
+            {
+                // Inside the main hut, directly under the radio tower
+                (new Vector3 { X = 144.35, Y = 13.20, Z = 265.13 }, new Vector3 { Y = -94 }),
+
+                // Second main hut location, to the right of the radio tower and the first location
+                (new Vector3 { X = 144.70, Y = 13.20, Z = 261.77 }, new Vector3 { Y = -94 }),
+
+                // Third main hut location, to the left of the radio tower first location
+                // 180 is too much to the left
+                (new Vector3 { X = 142, Y = 13.20, Z = 266.85 }, new Vector3 { Y = 175 }),
+
+                // Fourth spot out by one of the solar panels
+                (new Vector3 { X = 121.4, Y = 10.0855, Z = 261 }, new Vector3 { Y = 85 }),
             },
 
             _ => new List<(Vector3, Vector3)> { (Vector3.Zero(), Vector3.Zero()) }

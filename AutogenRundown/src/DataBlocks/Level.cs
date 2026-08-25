@@ -1821,10 +1821,6 @@ public partial class Level
             // level.GlobalWaveSettings = GlobalWaveSettings.HighCap_40pts;
 
 
-
-
-
-
             var dim1ResourceSet = ComplexResourceSet.Mining.Duplicate();
 
             dim1ResourceSet.CustomGeomorphs.Add(new Prefab
@@ -1864,7 +1860,7 @@ public partial class Level
                 //     ResourceSet = dim1ResourceSet
                 // },
 
-                Data = Dimensions.DimensionData.AlphaOne,
+                Data = Dimensions.DimensionData.AlphaSix,
 
                 PersistentId = 3,
             };

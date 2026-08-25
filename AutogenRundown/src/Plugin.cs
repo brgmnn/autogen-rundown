@@ -1,5 +1,5 @@
-﻿#define ENABLE_SOLO_RUNDOWN
-#define ENABLE_DUO_RUNDOWN
+﻿// #define ENABLE_SOLO_RUNDOWN
+// #define ENABLE_DUO_RUNDOWN
 
 using AutogenRundown.Components;
 using AutogenRundown.Managers;
