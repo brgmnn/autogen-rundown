@@ -102,13 +102,15 @@ public static class RundownFactory
     /// <param name="withUnlocks"></param>
     /// <param name="withLogs"></param>
     /// <param name="prefix"></param>
+    /// <param name="overrides"></param>
     /// <returns></returns>
     public static Rundown BuildRundown(
         Rundown newRundown,
         bool withFixed = true,
         bool withUnlocks = true,
         bool withLogs = true,
-        string? prefix = null)
+        string? prefix = null,
+        RundownGenerationOverrides? overrides = null)
     {
         var rundown = Rundown.Build(newRundown);
         var levelNames = Words.NewLevelNamesPack();
@@ -147,6 +149,11 @@ public static class RundownFactory
             (1.0, 6, Complex.Service)
         };
 
+        var forcedComplex = overrides?.ForcedComplexValue;
+        var preferredSubComplex = overrides is { PreferGardens: true }
+            ? (SubComplex?)SubComplex.Gardens
+            : null;
+
         #endregion
 
         #region A-Tier Levels
@@ -162,7 +169,7 @@ public static class RundownFactory
                 Generator.AdvanceSequence(buildSeed);
             }
 
-            var complex = Generator.DrawSelect(complexPool);
+            var complex = forcedComplex ?? Generator.DrawSelect(complexPool);
             var objective = Generator.DrawSelect(mainObjectivesPool);
             var director = new BuildDirector
             {
@@ -180,7 +187,8 @@ public static class RundownFactory
                     Index = i + 1,
                     Complex = complex,
                     MainDirector = director,
-                    BuildSeed = buildSeed
+                    BuildSeed = buildSeed,
+                    PreferredSubComplex = preferredSubComplex
                 });
 
             rundown.AddLevel(level);
@@ -213,7 +221,10 @@ public static class RundownFactory
         #endregion
         #endregion
 
-        mainObjectivesPool.Add((2.0, 1, WardenObjectiveType.AlphaTerminalCommand));
+        // AlphaTerminalCommand's PreBuild swaps Service levels to Mining/Tech (no Service
+        // portal geo), which would break a forced-Service rundown.
+        if (forcedComplex is not Complex.Service)
+            mainObjectivesPool.Add((2.0, 1, WardenObjectiveType.AlphaTerminalCommand));
 
         #region B-Tier Levels
         for (int i = 0; i < rundown.TierB_Count; i++)
@@ -228,7 +239,7 @@ public static class RundownFactory
                 Generator.AdvanceSequence(buildSeed);
             }
 
-            var complex = Generator.DrawSelect(complexPool);
+            var complex = forcedComplex ?? Generator.DrawSelect(complexPool);
             var objective = Generator.DrawSelect(mainObjectivesPool);
             var director = new BuildDirector
             {
@@ -246,14 +257,16 @@ public static class RundownFactory
                     Index = i + 1,
                     Complex = complex,
                     MainDirector = director,
-                    BuildSeed = buildSeed
+                    BuildSeed = buildSeed,
+                    PreferredSubComplex = preferredSubComplex
                 });
 
             rundown.AddLevel(level);
         }
         #endregion
 
-        mainObjectivesPool.Add((1.0, 1, WardenObjectiveType.AlphaTerminalCommand));
+        if (forcedComplex is not Complex.Service)
+            mainObjectivesPool.Add((1.0, 1, WardenObjectiveType.AlphaTerminalCommand));
         mainObjectivesPool.Add((2.0, 1, WardenObjectiveType.Cryptomnesia));
 
         #region C-Tier Levels
@@ -269,7 +282,7 @@ public static class RundownFactory
                 Generator.AdvanceSequence(buildSeed);
             }
 
-            var complex = Generator.DrawSelect(complexPool);
+            var complex = forcedComplex ?? Generator.DrawSelect(complexPool);
             var objective = Generator.DrawSelect(mainObjectivesPool);
             var director = new BuildDirector
             {
@@ -287,7 +300,8 @@ public static class RundownFactory
                     Index = i + 1,
                     Complex = complex,
                     MainDirector = director,
-                    BuildSeed = buildSeed
+                    BuildSeed = buildSeed,
+                    PreferredSubComplex = preferredSubComplex
                 });
 
             rundown.AddLevel(level);
@@ -357,7 +371,10 @@ public static class RundownFactory
         #endregion
         #endregion
 
-        mainObjectivesPool.Add((1.2, 1, WardenObjectiveType.ReachKdsDeep));
+        // ReachKdsDeep hard-forces Mining geomorphs, so keep it out of any non-Mining
+        // forced-complex rundown.
+        if (forcedComplex is null or Complex.Mining)
+            mainObjectivesPool.Add((1.2, 1, WardenObjectiveType.ReachKdsDeep));
 
         #region D-Tier Levels
         // D levels
@@ -373,7 +390,7 @@ public static class RundownFactory
                 Generator.AdvanceSequence(buildSeed);
             }
 
-            var complex = Generator.DrawSelect(complexPool);
+            var complex = forcedComplex ?? Generator.DrawSelect(complexPool);
             var objective = Generator.DrawSelect(mainObjectivesPool);
             var director = new BuildDirector
             {
@@ -391,7 +408,8 @@ public static class RundownFactory
                     Index = i + 1,
                     Complex = complex,
                     MainDirector = director,
-                    BuildSeed = buildSeed
+                    BuildSeed = buildSeed,
+                    PreferredSubComplex = preferredSubComplex
                 });
 
             rundown.AddLevel(level);
@@ -412,7 +430,7 @@ public static class RundownFactory
                 Generator.AdvanceSequence(buildSeed);
             }
 
-            var complex = Generator.DrawSelect(complexPool);
+            var complex = forcedComplex ?? Generator.DrawSelect(complexPool);
 
             // The level is constructed before the objective draw so the rolled signature
             // can filter the objective pool.
@@ -422,7 +440,8 @@ public static class RundownFactory
                 Name = Generator.Draw(levelNames)!,
                 Index = i + 1,
                 Complex = complex,
-                BuildSeed = buildSeed
+                BuildSeed = buildSeed,
+                PreferredSubComplex = preferredSubComplex
             };
 
             // CyclingFog owns whole-level fog; CentralGeneratorCluster's generator fog
@@ -1358,7 +1377,8 @@ public static class RundownFactory
                 withFixed: true,
                 withUnlocks: false,
                 withLogs: false,
-                prefix: dailyPrefix);
+                prefix: dailyPrefix,
+                overrides: GenerationOverrides.Current.Daily);
 
             daily.VisualsETier = Color.MenuVisuals_DailyE;
 

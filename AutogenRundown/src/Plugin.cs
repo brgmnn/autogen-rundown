@@ -110,6 +110,10 @@ public class Plugin : BasePlugin
 
         Config.Save();
 
+        // Hidden generation overrides: no Config.Bind, only a hand-created JSON file in
+        // BepInEx/config enables these.
+        GenerationOverrides.Load();
+
         #endregion
 
         if (regenerateOnStartup.Value)

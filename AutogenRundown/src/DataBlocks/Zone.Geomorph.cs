@@ -8,6 +8,29 @@ namespace AutogenRundown.DataBlocks;
 public partial record Zone
 {
     /// <summary>
+    /// Narrows a geomorph pick list to the level's preferred SubComplex when at least one
+    /// entry matches; otherwise returns the list unchanged. No-op when no preference is set.
+    /// </summary>
+    private List<(SubComplex, string)> PreferSubComplex(List<(SubComplex, string)> picks)
+    {
+        if (level?.PreferredSubComplex is not { } preferred)
+            return picks;
+
+        var filtered = picks.Where(pick => pick.Item1 == preferred).ToList();
+        return filtered.Count > 0 ? filtered : picks;
+    }
+
+    private List<(SubComplex, string, CoverageMinMax)> PreferSubComplex(
+        List<(SubComplex, string, CoverageMinMax)> picks)
+    {
+        if (level?.PreferredSubComplex is not { } preferred)
+            return picks;
+
+        var filtered = picks.Where(pick => pick.Item1 == preferred).ToList();
+        return filtered.Count > 0 ? filtered : picks;
+    }
+
+    /// <summary>
     /// Generate an exit tile
     /// </summary>
     /// <param name="complex"></param>
@@ -16,7 +39,7 @@ public partial record Zone
         switch (complex)
         {
             case Complex.Mining:
-                (SubComplex, CustomGeomorph) = Generator.Pick(new List<(SubComplex, string)>
+                (SubComplex, CustomGeomorph) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string)>
                 {
                     (SubComplex.All,     "Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_64x64_mining_exit_01.prefab"),
 
@@ -29,11 +52,11 @@ public partial record Zone
 
                     // SamDB
                     (SubComplex.Refinery, "Assets/Custom Geo's/Mining exit/Mining_exit_V1.prefab")
-                });
+                }));
                 break;
 
             case Complex.Tech:
-                (SubComplex, CustomGeomorph) = Generator.Pick(new List<(SubComplex, string)>
+                (SubComplex, CustomGeomorph) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string)>
                 {
                     (SubComplex.All,        "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_32x32_lab_exit_01.prefab"),
                     (SubComplex.DataCenter, "Assets/Prefabs/Geomorph/Tech/geo_datacenter_FA_exit_01.prefab"),
@@ -41,11 +64,11 @@ public partial record Zone
                     // --- MOD Geomorphs ---
                     // SamDB
                     (SubComplex.Floodways, "Assets/Custom Geo's/Labs/lab_exit_V1/lab_exit_V1.prefab")
-                });
+                }));
                 break;
 
             case Complex.Service:
-                (SubComplex, CustomGeomorph) = Generator.Pick(new List<(SubComplex, string)>
+                (SubComplex, CustomGeomorph) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string)>
                 {
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_floodways_exit_01.prefab"),
                     (SubComplex.Gardens,   "Assets/AssetPrefabs/Complex/Service/Geomorphs/geo_32x32_elevator_Gardens_exit_01.prefab"),
@@ -59,7 +82,7 @@ public partial record Zone
 
                     // The Doggy Doge
                     (SubComplex.Floodways, "Assets/DogCustomGeos/Tilepack/DogGeos_Service_Exit.prefab")
-                });
+                }));
                 break;
         };
 
@@ -77,7 +100,7 @@ public partial record Zone
         switch (complex)
         {
             case Complex.Mining:
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     // -- the problem
                     // Assets/AssetPrefabs/Complex/Mining/Geomorphs/geo_32x32_elevator_shaft_dig_site_04.prefab
@@ -120,11 +143,11 @@ public partial record Zone
                     (SubComplex.DigSite, "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_02_X.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.DigSite, "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_03.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.DigSite, "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_04.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
-                });
+                }));
                 break;
 
             case Complex.Tech:
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 60 }),
                     (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_02.prefab", new CoverageMinMax { Min = 15, Max = 30 }),
@@ -152,11 +175,11 @@ public partial record Zone
 
                     // The Doggy Doge
                     (SubComplex.DataCenter, "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Junction.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
-                });
+                }));
                 break;
 
             case Complex.Service:
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_01.prefab", new CoverageMinMax { Min = 50, Max = 75 }),
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_02.prefab", new CoverageMinMax { Min = 40, Max = 45 }),
@@ -184,7 +207,7 @@ public partial record Zone
 
                     // The Doggy Doge
                     (SubComplex.Floodways, "Assets/DogCustomGeos/Tilepack/Releases/Floodways/DogGeos_Floodways_X_HA_06.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
-                });
+                }));
                 break;
         }
     }
@@ -198,30 +221,30 @@ public partial record Zone
         switch (complex)
         {
             case Complex.Mining:
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     // --- MOD Geomorphs ---
                     // DakGeos
                     (SubComplex.DigSite, "Assets/geo_64x64_mining_dig_site_t_dak_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
-                });
+                }));
                 break;
 
             case Complex.Tech:
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     // --- MOD Geomorphs ---
                     // donan3967
                     (SubComplex.DataCenter, "Assets/geo_64x64_tech_data_center_hub_DS_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
-                });
+                }));
                 break;
 
             case Complex.Service:
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     // --- MOD Geomorphs ---
                     // donan3967
                     (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_hub_DS_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
-                });
+                }));
                 break;
         }
     }
@@ -241,7 +264,7 @@ public partial record Zone
         switch (complex)
         {
             case Complex.Mining:
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_I_HA_01.prefab", new CoverageMinMax { Min = 10, Max = 30 }),
                     (SubComplex.DigSite, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_reactor_tunnel_I_HA_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
@@ -271,11 +294,11 @@ public partial record Zone
                     (SubComplex.Refinery, "Assets/Custom Geo's/refinery/HA_1_i_tile/I_tile_V2.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                     (SubComplex.Refinery, "Assets/Custom Geo's/refinery bridge/refinery_i_tile_bridge.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                     (SubComplex.Storage, "Assets/Custom Geo's/Storage_neonate_room/neonate_storage.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
-                });
+                }));
                 break;
 
             case Complex.Tech:
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_node_transition_02_JG.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_node_transition_03_JG.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
@@ -306,11 +329,11 @@ public partial record Zone
 
                     // The Doggy Doge
                     (SubComplex.DataCenter, "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Overpass.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
-                });
+                }));
                 break;
 
             case Complex.Service:
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_I_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_I_HA_02.prefab", new CoverageMinMax { Min = 25, Max = 40 }),
@@ -327,7 +350,7 @@ public partial record Zone
 
                     // SamDB v2
                     (SubComplex.Floodways, "Assets/SamdownGeos/Floodways I Tile F1/Floodways_i_Tile_F1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
-                });
+                }));
                 break;
         }
     }
@@ -392,7 +415,7 @@ public partial record Zone
 
             case Complex.Tech:
             {
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_01.prefab", new CoverageMinMax { Min = 40, Max = 40 }),
                     (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_reactor_HA_02.prefab", new CoverageMinMax { Min = 40, Max = 40 }),
@@ -400,7 +423,7 @@ public partial record Zone
                     // --- MOD Geomorphs ---
                     // donan3967
                     (SubComplex.DataCenter, "Assets/geo_64x64_data_center_reactor_DS_01.prefab", new CoverageMinMax { Min = 40, Max = 40 })
-                });
+                }));
 
                 IgnoreRandomGeomorphRotation = true;
                 break;
@@ -408,7 +431,7 @@ public partial record Zone
 
             case Complex.Service:
             {
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     // --- MOD Geomorphs ---
                     // floweria
@@ -416,7 +439,7 @@ public partial record Zone
 
                     // donan3967
                     (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_reactor_ds_02.prefab", new CoverageMinMax { Min = 40, Max = 40 })
-                });
+                }));
 
                 IgnoreRandomGeomorphRotation = true;
                 break;
@@ -436,7 +459,7 @@ public partial record Zone
         {
             case Complex.Mining:
             {
-                var (subcomplex, geomorph) = Generator.Pick(Geomorphs.Mining_I_Tile);
+                var (subcomplex, geomorph) = Generator.Pick(PreferSubComplex(Geomorphs.Mining_I_Tile));
                 CustomGeomorph = geomorph;
                 SubComplex = subcomplex;
 
@@ -446,14 +469,14 @@ public partial record Zone
 
             case Complex.Tech:
             {
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_I_HA_03_v2.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
 
                     // --- MOD Geomorphs ---
                     // SamDB
                     (SubComplex.Lab, "Assets/Custom Geo's/Labs/lab_i_tile/lab_i_tile_V1.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
-                });
+                }));
                 break;
             }
 
@@ -475,7 +498,7 @@ public partial record Zone
         {
             case Complex.Mining:
             {
-                var (sub, geo) = Generator.Pick(new List<(SubComplex, string)>
+                var (sub, geo) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string)>
                 {
                     (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_07.prefab"),
                     (SubComplex.DigSite,  "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Digsite/geo_64x64_mining_dig_site_hub_HA_01.prefab"),
@@ -484,7 +507,7 @@ public partial record Zone
                     // --- MOD Geomorphs ---
                     // SamDB
                     (SubComplex.DigSite, "Assets/Custom Geo's/Digsite/Disite generator/Digsite_X_Tile_Generator.prefab"),
-                });
+                }));
 
                 CustomGeomorph = geo;
                 SubComplex = sub;
@@ -496,7 +519,7 @@ public partial record Zone
 
             case Complex.Tech:
             {
-                var (sub, geo) = Generator.Pick(new List<(SubComplex, string)>
+                var (sub, geo) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string)>
                 {
                     (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_02.prefab"),
                     (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_HA_03.prefab"),
@@ -508,7 +531,7 @@ public partial record Zone
                     // SamDB
                     (SubComplex.DataCenter, "Assets/DogCustomGeos/Tilepack/Releases/Datacenter/DogGeos_Datacenter_X_HA_07.prefab"),
 
-                });
+                }));
 
                 CustomGeomorph = geo;
                 SubComplex = sub;
@@ -520,7 +543,7 @@ public partial record Zone
 
             case Complex.Service:
             {
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     // Confirmed working
                     (SubComplex.Floodways, "Assets/geo_64x64_service_floodways_hub_ds_02_gen.prefab", CoverageMinMax.Medium_40),
@@ -535,7 +558,7 @@ public partial record Zone
                     // (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_HA_02.prefab", CoverageMinMax.Medium_40)
                     // (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_SF_01.prefab", CoverageMinMax.Medium_40)
                     // (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_HA_04.prefab", CoverageMinMax.Medium_40),
-                });
+                }));
 
                 GeneratorClustersInZone = 1;
 
@@ -643,7 +666,7 @@ public partial record Zone
         switch (complex)
         {
             case Complex.Mining:
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     // (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_dead_end_HA_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
                     // (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_dead_end_HA_01_R8B3.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
@@ -660,11 +683,11 @@ public partial record Zone
 
                     // ZaeroGeos
                     (SubComplex.DigSite, "Assets/CustomAssets/Geomorphs/Content/geo_64x64_mining_cave_PZ_Dead_End_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
-                });
+                }));
                 break;
 
             case Complex.Tech:
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     // Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_lab_dead_end_HA_03_R7E1_03.prefab
                     (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_data_center_dead_end_HA_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
@@ -679,11 +702,11 @@ public partial record Zone
 
                     // SamDB v2
                     (SubComplex.DataCenter, "Assets/SamdownGeos/C2 Mainframe room/C2_Mainframe.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
-                });
+                }));
                 break;
 
             case Complex.Service:
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_dead_end_HA_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_dead_end_HA_02.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
@@ -697,7 +720,7 @@ public partial record Zone
 
                     // SamDB v2
                     (SubComplex.Floodways, "Assets/GameObject/Floodways_Reactor_Cooling_Spawns.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
-                });
+                }));
                 break;
         }
     }
@@ -765,28 +788,28 @@ public partial record Zone
         switch (complex)
         {
             case Complex.Mining:
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     // (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_04.prefab", new CoverageMinMax { Min = 30, Max = 70 }),
                     (SubComplex.Refinery, "Assets/AssetPrefabs/Complex/Mining/Geomorphs/Refinery/geo_64x64_mining_refinery_X_HA_06.prefab", new CoverageMinMax { Min = 30, Max = 70 }),
 
                     // --- MOD Geomorphs ---
-                });
+                }));
                 break;
 
             case Complex.Tech:
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     // (SubComplex.DataCenter, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_destroyed_HA_01.prefab", new CoverageMinMax { Min = 30, Max = 60 }),
                     // (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_04.prefab", new CoverageMinMax { Min = 30, Max = 60 }),
                     (SubComplex.Lab, "Assets/AssetPrefabs/Complex/Tech/Geomorphs/geo_64x64_tech_lab_hub_HA_01_R3D1.prefab", new CoverageMinMax { Min = 30, Max = 60 }),
 
                     // --- MOD Geomorphs ---
-                });
+                }));
                 break;
 
             case Complex.Service:
-                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(new List<(SubComplex, string, CoverageMinMax)>
+                (SubComplex, CustomGeomorph, Coverage) = Generator.Pick(PreferSubComplex(new List<(SubComplex, string, CoverageMinMax)>
                 {
                     // (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_01.prefab", new CoverageMinMax { Min = 50, Max = 75 }),
                     (SubComplex.Floodways, "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_hub_HA_03_V2.prefab", new CoverageMinMax { Min = 50, Max = 75 }),
@@ -797,7 +820,7 @@ public partial record Zone
 
                     // The Doggy Doge
                     (SubComplex.Floodways, "Assets/DogCustomGeos/Tilepack/Releases/Floodways/DogGeos_Floodways_X_HA_06.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
-                });
+                }));
                 break;
         }
     }

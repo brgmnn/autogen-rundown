@@ -107,6 +107,14 @@ public partial class Level
     public ComplexResourceSet ResourceSet { get; set; } = ComplexResourceSet.Mining;
 
     /// <summary>
+    /// When set, geomorph pick lists prefer entries of this SubComplex and (for
+    /// Service+Gardens) the gardens-heavy resource set replaces the floodways-only one.
+    /// Set only by generation overrides; null = default behavior.
+    /// </summary>
+    [JsonIgnore]
+    public SubComplex? PreferredSubComplex { get; set; }
+
+    /// <summary>
     /// Chances of a level selecting each combination of bulkheads
     /// </summary>
     [JsonIgnore]
@@ -1297,6 +1305,8 @@ public partial class Level
             {
                 Complex.Mining => ComplexResourceSet.Mining,
                 Complex.Tech => ComplexResourceSet.Tech,
+                Complex.Service when PreferredSubComplex == SubComplex.Gardens
+                    => ComplexResourceSet.ServiceGardens,
                 Complex.Service => ComplexResourceSet.Service,
             };
 

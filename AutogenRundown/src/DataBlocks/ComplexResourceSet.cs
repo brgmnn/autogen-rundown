@@ -174,6 +174,95 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         PersistentId = 47u
     };
 
+    private static ComplexResourceSet? serviceGardens;
+
+    /// <summary>
+    /// Gardens-heavy variant of the Service set, selected per-level by generation overrides.
+    /// Built lazily (only when a level first selects it) by cloning the fully-mutated Service
+    /// static, so it inherits every registered custom geomorph, cap, and plug. Only the
+    /// random-roll GeomorphTiles_1x1 and the elevator shafts differ.
+    /// </summary>
+    public static ComplexResourceSet ServiceGardens => serviceGardens ??= BuildServiceGardens();
+
+    private static ComplexResourceSet BuildServiceGardens()
+    {
+        var set = Service.Duplicate();
+        set.BlockName = "Complex_Service_GardensHeavy";
+
+        // Composition controls the roll: the game dedupes GeomorphTiles_1x1 by prefab path per
+        // SubComplex bucket and aggregates every tile into the All bucket, so duplicating
+        // entries does not weight the pick. 7 gardens + 2 floodways ~= 78% gardens per
+        // unforced zone (Zone.SubComplex defaults to All).
+        set.GeomorphTiles_1x1 = new List<Prefab>
+        {
+            // Keep two floodways tiles: visual variety, and a non-empty Floodways bucket for
+            // zones that request SubComplex.Floodways from the random pool.
+            new()
+            {
+                Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_HA_01.prefab",
+                SubComplex = SubComplex.Floodways,
+                Shard = 1
+            },
+            new()
+            {
+                Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Maintenance/geo_64x64_service_floodways_HA_02.prefab",
+                SubComplex = SubComplex.Floodways,
+                Shard = 2
+            },
+
+            // The seven random-roll garden tiles from vanilla Complex_Service_with_gardens
+            // (pid 53); shard numbers match that block.
+            new()
+            {
+                Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_HA_01.prefab",
+                SubComplex = SubComplex.Gardens,
+                Shard = 7
+            },
+            new()
+            {
+                Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_HA_02.prefab",
+                SubComplex = SubComplex.Gardens,
+                Shard = 8
+            },
+            new()
+            {
+                Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_SF_01.prefab",
+                SubComplex = SubComplex.Gardens,
+                Shard = 7
+            },
+            new()
+            {
+                Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_AW_01.prefab",
+                SubComplex = SubComplex.Gardens,
+                Shard = 9
+            },
+            new()
+            {
+                Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_JG_01.prefab",
+                SubComplex = SubComplex.Gardens,
+                Shard = 10
+            },
+            new()
+            {
+                Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_JG_02.prefab",
+                SubComplex = SubComplex.Gardens,
+                Shard = 11
+            },
+            new()
+            {
+                Asset = "Assets/AssetPrefabs/Complex/Service/Geomorphs/Gardens/geo_64x64_service_gardens_HA_03.prefab",
+                SubComplex = SubComplex.Gardens,
+                Shard = 8
+            },
+        };
+
+        // Drop-in on a gardens tile: keep only the gardens elevator shaft (added to Service in
+        // SaveStatic). Cryptomnesia already ships single-elevator sets, so the shape is proven.
+        set.ElevatorShafts_1x1.RemoveAll(prefab => prefab.SubComplex != SubComplex.Gardens);
+
+        return set;
+    }
+
     public ComplexResourceSet(PidOffsets offsets = PidOffsets.Normal)
         : base(Generator.GetPersistentId(offsets))
     { }

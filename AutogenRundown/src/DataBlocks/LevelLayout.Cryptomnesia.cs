@@ -36,6 +36,8 @@ public partial record LevelLayout
         {
             Complex.Mining => ComplexResourceSet.Mining,
             Complex.Tech => ComplexResourceSet.Tech,
+            Complex.Service when level.PreferredSubComplex == SubComplex.Gardens
+                => ComplexResourceSet.ServiceGardens,
             Complex.Service => ComplexResourceSet.Service,
             _ => ComplexResourceSet.Mining
         }).Duplicate();
