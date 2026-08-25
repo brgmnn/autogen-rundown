@@ -6,5 +6,7 @@ changelog:
       labels: [bug]
     - title: Balanced
       labels: [balance]
+    - title: Dependencies
+      labels: [dependencies]
     - title: Other
       labels: ["*"]

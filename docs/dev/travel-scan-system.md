@@ -2,6 +2,8 @@
 
 Travel scans replace the base game's stationary moving-scan behavior with walking circuits that force players to move through entire zones. Instead of shuffling between positions in a tight radius, the scan traces a NavMesh loop through the zone.
 
+Waypoints are produced by **tracing the navmesh triangles**, which is what guarantees the scan cannot clip through a floor: every segment between two waypoints lies inside a single flat triangle. Confirmed in play on `DogGeos_Tech_Junction` ZONE_606. See [travel-path-generation.md](travel-path-generation.md) for the algorithm, the baseline figures, and the history of the sampling-based approaches it replaced.
+
 ## The Problem
 
 Base game moving scans use `LG_NodeTools.TryGetPositionsOnRadiusDistancedFromEachother` to scatter waypoints in a radius around the spawn point. Players stand in roughly the same spot. Travel scans create a looping circuit through the zone using NavMesh pathfinding, turning a stationary encounter into a walking one.
@@ -34,12 +36,27 @@ ChainedPuzzleInstance.Setup(data)
 │       ├── TravelPathGenerator.GenerateLoop()
 │       │   ├── GatherCandidates()         ← AI graph nodes with ≥4 links
 │       │   ├── PickDestinations()         ← Euclidean pre-filter → NavMesh ranking
-│       │   ├── AppendNavMeshLeg() ×3      ← source→dest1→dest2→source
-│       │   └── ResamplePath()             ← Fixed 3m steps, edge-pulled
+│       │   ├── AppendNavMeshLeg() ×4      ← source→dest1→dest2→dest3→source
+│       │   │                                walkable-only mask, no straight-line fallback
+│       │   ├── TravelScanRegistry.GetSurface() ← NavMesh.CalculateTriangulation, once
+│       │   │                                     per level, filtered to area 0
+│       │   ├── TraceSurface()            ← Marches each corner pair across the
+│       │   │                                triangles, emitting a point at every edge
+│       │   │                                crossing. Reroutes via CalculatePath if a
+│       │   │                                stretch will not trace
+│       │   └── Decimate()                ← Douglas-Peucker bounded by MaxTraceDeviation,
+│       │                                    plus a 2m max spacing split along the trace
 │       │
 │       ├── Sets ScanPositions via interface
 │       ├── Writes m_amountOfPositions, m_typeOfMovement via IL2CPP
+│       ├── [DEBUG] records path into TravelScanRegistry.GeneratedPaths
 │       └── return false (skip base game)
+
+LevelAPI.OnBuildDone
+│
+└── [DEBUG] TravelPathDebugDraw.DrawAll()  ← Spheres per waypoint, cones per segment
+                                              Red    = chord passes below the floor
+                                              Orange = off the walkable surface
 
 Gameplay Phase
 ==============
@@ -129,14 +146,25 @@ Reverse movement runs **master-only** (`SNet.IsMaster`). The master writes `m_le
 | `Patch_SustainedTravel.cs`        | Runtime CP_BasicMovable injection for type 100                   |
 | `Patch_SetupMovement.cs`          | Replaces radial positions with NavMesh loops (all movable types) |
 | `Patch_SustainedTravelReverse.cs` | Reverse movement when players leave scan (type 100 only)         |
-| `TravelPathGenerator.cs`          | NavMesh pathfinding, destination selection, resampling           |
+| `TravelPathGenerator.cs`          | NavMesh pathfinding, destination selection, tracing, decimation   |
+| `NavSurface.cs`                   | The baked navmesh as triangles: locate / trace. `INavSurface` seam |
+| `TravelPathDebugDraw.cs`          | `#if DEBUG` in-game path overlay via the game's `DebugDraw3D`    |
 
 ## Key Constants
 
-| Constant                      | Value   | Location              |
-| ----------------------------- | ------- | --------------------- |
-| `SustainedTravelSpeed`        | 2.0 m/s | `TravelScanRegistry`  |
-| `SustainedTravelReverseSpeed` | 1.0 m/s | `TravelScanRegistry`  |
-| `StepDistance`                | 3.0 m   | `TravelScanRegistry`  |
-| `EdgeDistance`                | 2.0 m   | `TravelScanRegistry`  |
-| `CandidatePoolSize`           | 20      | `TravelPathGenerator` |
+| Constant                      | Value   | Purpose                                                    |
+| ----------------------------- | ------- | ---------------------------------------------------------- |
+| `SustainedTravelSpeed`        | 2.0 m/s | Forward scan travel speed                                  |
+| `SustainedTravelReverseSpeed` | 1.0 m/s | Reverse speed when players leave the scan                  |
+| `StepDistance`                | 2.0 m   | Max waypoint spacing after decimation                      |
+| `WalkableAreaMask`            | 1       | Area 0 only — excludes Jump/Ladder off-mesh links          |
+| `TriangleCellSize`            | 4.0 m   | XZ bucket size for the triangle spatial index              |
+| `EdgeNudge`                   | 0.01 m  | Step past a triangle edge before re-locating               |
+| `LocateRadius`                | 0.5 m   | How far off the mesh a point may sit and still resolve     |
+| `MaxTraceStep`                | 0.5 m   | `agentClimb` — larger height change is a different floor   |
+| `MaxTraceDeviation`           | 0.05 m  | How far a chord may stray from the trace it thinned        |
+| `MinSegmentLength`            | 0.05 m  | Division guard for `DoMoveScanner`                         |
+| `MaxSurfaceSnapRise`          | 1.0 m   | Destination placement only (`TrySnapToNavMesh`)            |
+| `CandidatePoolSize`           | 20      | `TravelPathGenerator` — finalists ranked by NavMesh distance |
+
+All in `TravelScanRegistry` except where noted.

@@ -1,4 +1,6 @@
 using AutogenRundown;
+using AutogenRundown.DataBlocks.Objectives;
+using AutogenRundown.DataBlocks.Zones;
 
 namespace AutogenRundownTests;
 
@@ -205,6 +207,27 @@ public partial class Generator_Tests
         Seed("pick_empty");
         var result = Generator.Pick(new List<string>());
         Assert.IsNull(result);
+    }
+
+    /// <summary>
+    /// The `T?` on Pick() is inert for a struct, so an empty collection yields a fully formed
+    /// default(T) rather than null -- and the caller gets no compiler warning. Callers picking
+    /// value types must check for emptiness themselves. Leaking one of these ZoneNodes into the
+    /// LayoutPlanner is what crashed LevelLayout.FinalizeLayout().
+    /// </summary>
+    [TestMethod]
+    public void Test_Pick_EmptyCollectionOfStructsReturnsDefaultNotNull()
+    {
+        Seed("pick_empty_struct");
+        var result = Generator.Pick(new List<ZoneNode>());
+
+        Assert.AreEqual(default(ZoneNode), result);
+
+        // default(ZoneNode) skips every constructor and property initializer, so it carries
+        // neither the "primary" branch default nor a Tags instance.
+        Assert.AreEqual(Bulkhead.None, result.Bulkhead);
+        Assert.IsNull(result.Branch);
+        Assert.IsNull(result.Tags);
     }
 
     [TestMethod]

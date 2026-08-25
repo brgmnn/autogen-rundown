@@ -224,6 +224,23 @@ public class LayoutPlanner
     /// <param name="to"></param>
     public void Connect(ZoneNode from, ZoneNode? to = null)
     {
+        // No real node ever has Bulkhead.None, so this is a default(ZoneNode) that has leaked in
+        // from a Generator.Pick() over an empty collection. Adding it would insert a graph key
+        // that has no matching zone in `blocks`, which later blows up anything resolving a
+        // node's parent zone.
+        if (from.Bulkhead == Bulkhead.None)
+        {
+            Plugin.Logger.LogError(
+                $"Planner.Connect() refused a default ZoneNode as the source node, to = {to}");
+
+            // Still register `to` so its zone doesn't get orphaned out of the graph entirely. It
+            // just ends up parentless rather than parented to a node with no zone.
+            if (to != null && !graph.ContainsKey((ZoneNode)to))
+                graph.Add((ZoneNode)to, new List<ZoneNode>());
+
+            return;
+        }
+
         if (to != null && from != to)
         {
             var connected = graph.TryGetValue(from, out var children) ? children.Count : 0;

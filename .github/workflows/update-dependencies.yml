@@ -1,0 +1,105 @@
+# Daily check for new Thunderstore releases of our mod dependencies. Any that are out of
+# date get bumped to the latest published version in manifest.json and thunderstore.toml,
+# and opened as a single PR.
+
+name: Update Dependencies
+
+on:
+  schedule:
+    # Sunday at 16:00 UTC (7am PDT / 6am PST)
+    - cron: "0 14 * * 0"
+    #        *  * * * *
+    #        |  | | | |
+    #        |  | | | +-- Day of week (0-6, Sunday=0)
+    #        |  | | +---- Month (1-12)
+    #        |  | +------ Day of month (1-31)
+    #        |  +-------- Hour (0-23, UTC)
+    #        +----------- Minute (0-59)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    name: Update Thunderstore dependencies
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.REPO_ADMIN_TOKEN }}
+      BRANCH: deps/thunderstore-updates
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      # Bump manifest.json and thunderstore.toml to the latest versions.
+      - id: update
+        name: Check for dependency updates
+        run: |
+          ./update-dependencies.py --summary-file "${{ runner.temp }}/pr-body.md"
+
+      # The branch is rebuilt from main and force pushed on every run, so a second run
+      # replaces stale bumps rather than stacking commits on top of them.
+      - name: Set Git Authors
+        if: steps.update.outputs.has_updates == 'true'
+        run: |
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
+          git config user.email brgmnn@users.noreply.github.com
+          git config user.name "Daniel Bergmann"
+      - id: push
+        name: Push dependency branch
+        if: steps.update.outputs.has_updates == 'true'
+        env:
+          TITLE: ${{ steps.update.outputs.title }}
+        run: |
+          git checkout -B "$BRANCH"
+          git add manifest.json thunderstore.toml
+          git commit -m "$TITLE"
+
+          # Nothing to do if the branch already pins these exact versions. Pushing anyway
+          # would rewrite the commit, re-run the build and add noise to the open PR.
+          if git fetch --depth 1 origin "$BRANCH" 2> /dev/null \
+            && git diff --quiet FETCH_HEAD HEAD -- manifest.json thunderstore.toml; then
+            echo ":: origin/$BRANCH already pins these versions, skipping push";
+            echo "changed=false" >> "$GITHUB_OUTPUT";
+            exit 0;
+          fi
+
+          git push --force origin "$BRANCH"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Opened with the admin token so the PR triggers the Build .NET workflow.
+      - name: Open pull request
+        if: steps.update.outputs.has_updates == 'true'
+        env:
+          TITLE: ${{ steps.update.outputs.title }}
+          CHANGED: ${{ steps.push.outputs.changed }}
+        run: |
+          gh label create dependencies \
+            --color 0366D6 \
+            --description "Updates to mod dependencies" \
+            --force
+
+          number="$(gh pr list --head "$BRANCH" --base main --state open --json number --jq '.[].number')"
+
+          if [ -z "$number" ]; then
+            echo ":: Opening new pull request";
+            gh pr create \
+              --base main \
+              --head "$BRANCH" \
+              --title "$TITLE" \
+              --body-file "${{ runner.temp }}/pr-body.md" \
+              --label dependencies;
+          elif [ "$CHANGED" = "true" ]; then
+            echo ":: Updating pull request #$number";
+            gh pr edit "$number" \
+              --title "$TITLE" \
+              --body-file "${{ runner.temp }}/pr-body.md";
+          else
+            echo ":: Pull request #$number is already up to date";
+          fi

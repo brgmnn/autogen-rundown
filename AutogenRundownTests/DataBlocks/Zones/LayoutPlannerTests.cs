@@ -324,4 +324,78 @@ public class LayoutPlanner_Tests
         Assert.AreEqual(0, openSlots);
     }
     #endregion
+
+    #region Connect() - default(ZoneNode) rejection
+    /// <summary>
+    /// Generator.Pick() returns default(ZoneNode) rather than null for an empty collection,
+    /// because ZoneNode is a struct. If that default node is allowed in as a source it becomes a
+    /// graph key with no matching entry in `blocks`, and GetParent() will then hand it back as a
+    /// parent whose GetZone() is null -- which is what crashed LevelLayout.FinalizeLayout().
+    /// </summary>
+    [TestMethod]
+    public void Test_Connect_DefaultZoneNodeDoesNotBecomeAParent()
+    {
+        var planner = new LayoutPlanner();
+        var child = new ZoneNode(Bulkhead.Main, 1);
+
+        planner.Connect(default, child);
+
+        Assert.IsNull(planner.GetParent(child));
+        Assert.IsNull(planner.GetBuildFrom(child));
+    }
+
+    [TestMethod]
+    public void Test_Connect_DefaultZoneNodeStillRegistersTheChild()
+    {
+        var planner = new LayoutPlanner();
+        var child = new ZoneNode(Bulkhead.Main, 1);
+
+        planner.Connect(default, child);
+
+        CollectionAssert.Contains(planner.GetZones(Bulkhead.Main, null), child);
+    }
+
+    /// <summary>
+    /// GetZoneNode() matches on ZoneNumber + Dimension and ignores Bulkhead, so a leaked default
+    /// node (ZoneNumber 0, Dimension Reality) can shadow the real zone 0 and hand back a node
+    /// with null Tags. RollBloodDoors() dereferences those Tags directly.
+    /// </summary>
+    [TestMethod]
+    public void Test_GetZoneNode_IsNotShadowedByADefaultZoneNode()
+    {
+        var planner = new LayoutPlanner();
+        var zone0 = new ZoneNode(Bulkhead.Main, 0);
+
+        planner.Connect(default);
+        planner.Connect(zone0);
+
+        var found = planner.GetZoneNode(0);
+
+        Assert.AreEqual(Bulkhead.Main, found.Bulkhead);
+        Assert.IsNotNull(found.Tags);
+    }
+
+    /// <summary>
+    /// The invariant FinalizeLayout() relies on: any parent the planner reports for a node must
+    /// itself be resolvable. A leaked default node used to break this silently.
+    /// </summary>
+    [TestMethod]
+    public void Test_Connect_EveryReportedParentIsAKnownNode()
+    {
+        var planner = new LayoutPlanner();
+        var zone0 = new ZoneNode(Bulkhead.Main, 0);
+        var zone1 = new ZoneNode(Bulkhead.Main, 1);
+
+        planner.Connect(zone0, zone1);
+        planner.Connect(default, new ZoneNode(Bulkhead.Main, 2));
+
+        foreach (var node in planner.GetZones(Bulkhead.All, null))
+        {
+            var parent = planner.GetParent(node);
+
+            if (parent != null)
+                Assert.AreNotEqual(Bulkhead.None, ((ZoneNode)parent).Bulkhead);
+        }
+    }
+    #endregion
 }
