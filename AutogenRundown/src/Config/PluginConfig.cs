@@ -162,7 +162,36 @@ public static class PluginConfig
         config.Save();
         config.SaveOnConfigSet = saveOnConfigSet;
 
+        // SaveOnConfigSet stays off for the advanced file: nothing sets its values at
+        // runtime, and any BepInEx-triggered save would drop the disclaimer header below.
         advanced.Save();
-        advanced.SaveOnConfigSet = true;
+        WriteAdvancedHeader(advanced.ConfigFilePath);
+    }
+
+    private const string AdvancedHeader =
+        "## =========================================================================\n" +
+        "## ADVANCED SETTINGS -- read before editing\n" +
+        "##\n" +
+        "## These settings change how levels generate and are intended for testing.\n" +
+        "## Leave everything at its default unless you know exactly what you are\n" +
+        "## doing. All players in a lobby must use identical values in this file,\n" +
+        "## otherwise level generation will desync.\n" +
+        "## =========================================================================\n" +
+        "\n";
+
+    /// <summary>
+    /// ConfigFile.Save() regenerates the file from scratch, so the disclaimer is re-prepended
+    /// after every save rather than hand-maintained in the file.
+    /// </summary>
+    private static void WriteAdvancedHeader(string path)
+    {
+        try
+        {
+            File.WriteAllText(path, AdvancedHeader + File.ReadAllText(path));
+        }
+        catch (Exception ex)
+        {
+            Plugin.Logger.LogWarning($"Failed to write advanced config header: {ex.Message}");
+        }
     }
 }
