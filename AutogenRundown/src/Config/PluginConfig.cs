@@ -28,6 +28,11 @@ public static class PluginConfig
 
     public static void Setup(ConfigFile config)
     {
+        // Bind everything first, save once at the end (each Bind would otherwise trigger a
+        // full file rewrite).
+        var saveOnConfigSet = config.SaveOnConfigSet;
+        config.SaveOnConfigSet = false;
+
         #region AutogenRundown.Seeds
 
         dailySeed = config.Bind(
@@ -95,15 +100,23 @@ public static class PluginConfig
 
         #region Advanced
 
-        var forcedComplex = config.Bind(
-            new ConfigDefinition("Advanced.Daily", "ForcedComplex"),
+        // The advanced settings live in their own config file next to the main one, so they
+        // stay grouped together at the end of the config folder listing instead of being
+        // alphabetically interleaved by ConfigFile.Save()'s hard-coded section sort.
+        var advanced = new ConfigFile(
+            Path.ChangeExtension(config.ConfigFilePath, ".Advanced.cfg"),
+            saveOnInit: false);
+        advanced.SaveOnConfigSet = false;
+
+        var forcedComplex = advanced.Bind(
+            new ConfigDefinition("Daily", "ForcedComplex"),
             "",
             new ConfigDescription("Force every level in the Daily rundown to use this complex: " +
                                   "Mining, Tech, or Service. Empty disables forcing. " +
                                   "Must match across all players in a lobby."));
 
-        var preferGardens = config.Bind(
-            new ConfigDefinition("Advanced.Daily", "PreferGardens"),
+        var preferGardens = advanced.Bind(
+            new ConfigDefinition("Daily", "PreferGardens"),
             false,
             new ConfigDescription("Prefer Gardens tiles on Service levels in the Daily rundown: " +
                                   "forced tiles take Gardens variants where available and the " +
@@ -135,8 +148,8 @@ public static class PluginConfig
         var rebuildChecks = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var (name, description) in rebuildCheckDescriptions)
-            rebuildChecks[name] = config.Bind(
-                new ConfigDefinition("Advanced.RebuildChecks", name),
+            rebuildChecks[name] = advanced.Bind(
+                new ConfigDefinition("RebuildChecks", name),
                 true,
                 new ConfigDescription(description + " Must match across all players in a lobby.")).Value;
 
@@ -147,5 +160,9 @@ public static class PluginConfig
         GenerationOverrides.Setup(forcedComplex.Value, preferGardens.Value, rebuildChecks);
 
         config.Save();
+        config.SaveOnConfigSet = saveOnConfigSet;
+
+        advanced.Save();
+        advanced.SaveOnConfigSet = true;
     }
 }

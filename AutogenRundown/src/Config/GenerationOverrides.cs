@@ -5,7 +5,7 @@ namespace AutogenRundown.Config;
 
 /// <summary>
 /// Canonical names for the level rebuild validations that can be toggled via the
-/// [Advanced.RebuildChecks] config section.
+/// [RebuildChecks] section of the advanced config file.
 /// </summary>
 public static class RebuildCheck
 {
@@ -53,10 +53,10 @@ public record RundownGenerationOverrides
 }
 
 /// <summary>
-/// Advanced generation overrides, populated from the [Advanced.*] sections of the main
-/// BepInEx config by PluginConfig.Setup. Everything defaults to vanilla behavior; rebuild
-/// checks are all enabled unless explicitly set to false. These settings must match across
-/// all players in a lobby.
+/// Advanced generation overrides, populated by PluginConfig.Setup from the plugin's advanced
+/// config file (000-the_tavern-AutogenRundown.Advanced.cfg). Everything defaults to vanilla
+/// behavior; rebuild checks are all enabled unless explicitly set to false. These settings
+/// must match across all players in a lobby.
 /// </summary>
 public record GenerationOverrides
 {
@@ -94,8 +94,7 @@ public record GenerationOverrides
         if (File.Exists(legacyPath))
             Plugin.Logger.LogWarning(
                 "AutogenRundown.GenerationOverrides.json is no longer read; these settings " +
-                "moved to the [Advanced.Daily] and [Advanced.RebuildChecks] sections of " +
-                "000-the_tavern-AutogenRundown.cfg");
+                "moved to 000-the_tavern-AutogenRundown.Advanced.cfg");
 
         var disabled = RebuildCheck.All.Where(check => !RebuildCheckEnabled(check)).ToList();
 
