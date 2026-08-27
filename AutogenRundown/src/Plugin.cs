@@ -2,13 +2,13 @@
 // #define ENABLE_DUO_RUNDOWN
 
 using AutogenRundown.Components;
+using AutogenRundown.Config;
 using AutogenRundown.Managers;
 using AutogenRundown.Patches;
 using AutogenRundown.Patches.TravelScan;
 using AutogenRundown.Patches.CustomTerminals;
 using AutogenRundown.Patches.ZoneSensors;
 using BepInEx;
-using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using GTFO.API;
@@ -44,87 +44,21 @@ public class Plugin : BasePlugin
 
     public static ManualLogSource Logger { get; private set; } = new("AutogenRundown");
 
-    public static bool Config_UsePlayerColoredGlowsticks { get; set; }
-
     public override void Load()
     {
         Logger = Log;
 
-        #region Configuration
+        PluginConfig.Setup(Config);
 
-        var seedDailyConfig = Config.Bind(
-            new ConfigDefinition("AutogenRundown.Seeds", "DailySeed"),
-            "",
-            new ConfigDescription("Specify a seed for the Daily Rundown generation. Any string " +
-                                  "can be used here, this defaults to today's date. " +
-                                  "E.g. 2025_08_15 for August 15th 2025."));
-
-        var seedWeeklyConfig = Config.Bind(
-            new ConfigDefinition("AutogenRundown.Seeds", "WeeklySeed"),
-            "",
-            new ConfigDescription("Specify a seed for the Weekly Rundown.\nExpected format is " +
-                                  "\"YYYY_MM_DD\" where YYYY is the year, MM is the month, and " +
-                                  "DD is the day.\ne.g 2025_08_03 for August 3rd 2025.\n" +
-                                  "Week number is automatically calculated from the date."));
-
-        var seedMonthlyConfig = Config.Bind(
-            new ConfigDefinition("AutogenRundown.Seeds", "MonthlySeed"),
-            "",
-            new ConfigDescription("Specify a seed for the Monthly Rundown.\nExpected format is " +
-                                  "\"YYYY_MM\" where YYYY is the year (e.g 2025) and MM is the " +
-                                  "month (e.g 03 for March)"));
-
-        var seedSeasonalConfig = Config.Bind(
-            new ConfigDefinition("AutogenRundown.Seeds", "SeasonalSeed"),
-            "",
-            new ConfigDescription("Specify a seed for the Seasonal Rundown.\nExpected format is " +
-                                  "\"SEASON_YYYY\" where YYYY is the year (e.g 2025) and SEASON " +
-                                  "is one of the four seasons (Winter, Spring, Summer, Fall)." +
-                                  "e.g SPRING_2025"));
-
-        var useUnlocks = Config.Bind(
-            new ConfigDefinition("AutogenRundown.Levels", "UnlockAllLevels"),
-            false,
-            new ConfigDescription("Disables all tier unlock requirements on rundowns, unlocking all levels"));
-
-        var maxRebuilds = Config.Bind(
-            new ConfigDefinition("AutogenRundown.Levels", "MaxLevelRebuilds"),
-            10,
-            new ConfigDescription("Rebuild attempts the host allows before aborting the drop and " +
-                                  "permanently locking the expedition out of the rundown. " +
-                                  "0 disables the limit."));
-
-        var regenerateOnStartup = Config.Bind(
-            new ConfigDefinition("AutogenRundown", "RegenerateOnStartup"),
-            true,
-            new ConfigDescription("Should datablocks be regenerated on game startup. " +
-                                  "Applies to all rundowns."));
-
-        var usePlayerColorGlowsticks = Config.Bind(
-            new ConfigDefinition("AutogenRundown", "UsePlayerColorGlowsticks"),
-            false,
-            new ConfigDescription("Use per player color glow sticks. Client side only."));
-
-        Config_UsePlayerColoredGlowsticks = usePlayerColorGlowsticks.Value;
-        Managers.FactoryJobManager.MaxRebuilds = maxRebuilds.Value;
-
-        Config.Save();
-
-        // Hidden generation overrides: no Config.Bind, only a hand-created JSON file in
-        // BepInEx/config enables these.
-        GenerationOverrides.Load();
-
-        #endregion
-
-        if (regenerateOnStartup.Value)
+        if (PluginConfig.RegenerateOnStartup)
         {
             Peers.Init();
             RundownFactory.Build(
-                dailySeed: seedDailyConfig.Value,
-                weeklySeed: seedWeeklyConfig.Value,
-                monthlySeed: seedMonthlyConfig.Value,
-                seasonalSeed: seedSeasonalConfig.Value,
-                unlockAll: useUnlocks.Value);
+                dailySeed: PluginConfig.DailySeed,
+                weeklySeed: PluginConfig.WeeklySeed,
+                monthlySeed: PluginConfig.MonthlySeed,
+                seasonalSeed: PluginConfig.SeasonalSeed,
+                unlockAll: PluginConfig.UnlockAllLevels);
         }
         else
         {

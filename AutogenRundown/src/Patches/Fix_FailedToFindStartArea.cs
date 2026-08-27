@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks.Zones;
+﻿using AutogenRundown.Config;
+using AutogenRundown.DataBlocks.Zones;
 using AutogenRundown.Managers;
 using AutogenRundown.Utils;
 using GameData;

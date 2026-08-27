@@ -1,4 +1,5 @@
-﻿using AutogenRundown.Managers;
+﻿using AutogenRundown.Config;
+using AutogenRundown.Managers;
 using GameData;
 using HarmonyLib;
 using LevelGeneration;

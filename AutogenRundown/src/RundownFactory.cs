@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks;
+﻿using AutogenRundown.Config;
+using AutogenRundown.DataBlocks;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Custom.ItemSpawnFix;
