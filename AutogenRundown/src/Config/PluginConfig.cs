@@ -108,8 +108,8 @@ public static class PluginConfig
             saveOnInit: false);
         advanced.SaveOnConfigSet = false;
 
-        var forcedComplex = advanced.Bind(
-            new ConfigDefinition("Daily", "ForcedComplex"),
+        var forceComplex = advanced.Bind(
+            new ConfigDefinition("Daily", "ForceComplex"),
             "",
             new ConfigDescription("Force every level in the Daily rundown to use this complex: " +
                                   "Mining, Tech, or Service. Empty disables forcing. " +
@@ -157,7 +157,7 @@ public static class PluginConfig
 
         FactoryJobManager.MaxRebuilds = maxLevelRebuilds.Value;
 
-        GenerationOverrides.Setup(forcedComplex.Value, preferGardens.Value, rebuildChecks);
+        GenerationOverrides.Setup(forceComplex.Value, preferGardens.Value, rebuildChecks);
 
         config.Save();
         config.SaveOnConfigSet = saveOnConfigSet;

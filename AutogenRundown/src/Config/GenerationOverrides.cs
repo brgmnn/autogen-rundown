@@ -36,7 +36,7 @@ public record RundownGenerationOverrides
     /// Force every level in this rundown to use the given complex. One of "Mining", "Tech", or
     /// "Service" (case-insensitive). Empty or unrecognized values disable forcing.
     /// </summary>
-    public string ForcedComplex { get; set; } = "";
+    public string ForceComplex { get; set; } = "";
 
     /// <summary>
     /// Prefer Gardens tiles on Service levels: geomorph pick lists take a Gardens variant when
@@ -45,8 +45,8 @@ public record RundownGenerationOverrides
     /// </summary>
     public bool PreferGardens { get; set; } = false;
 
-    public Complex? ForcedComplexValue =>
-        Enum.TryParse<Complex>(ForcedComplex, true, out var complex) &&
+    public Complex? ForceComplexValue =>
+        Enum.TryParse<Complex>(ForceComplex, true, out var complex) &&
         Enum.IsDefined(typeof(Complex), complex)
             ? complex
             : null;
@@ -73,13 +73,13 @@ public record GenerationOverrides
     public static bool RebuildCheckEnabled(string name)
         => !Current.RebuildChecks.TryGetValue(name, out var enabled) || enabled;
 
-    public static void Setup(string forcedComplex, bool preferGardens, Dictionary<string, bool> rebuildChecks)
+    public static void Setup(string forceComplex, bool preferGardens, Dictionary<string, bool> rebuildChecks)
     {
         Current = new GenerationOverrides
         {
             Daily = new RundownGenerationOverrides
             {
-                ForcedComplex = forcedComplex,
+                ForceComplex = forceComplex,
                 PreferGardens = preferGardens,
             },
             RebuildChecks = new Dictionary<string, bool>(rebuildChecks, StringComparer.OrdinalIgnoreCase),
@@ -98,10 +98,10 @@ public record GenerationOverrides
 
         var disabled = RebuildCheck.All.Where(check => !RebuildCheckEnabled(check)).ToList();
 
-        if (Current.Daily.ForcedComplex != "" || Current.Daily.PreferGardens || disabled.Any())
+        if (Current.Daily.ForceComplex != "" || Current.Daily.PreferGardens || disabled.Any())
             Plugin.Logger.LogWarning(
                 "Generation overrides active: " +
-                $"Daily.ForcedComplex='{Current.Daily.ForcedComplex}', " +
+                $"Daily.ForceComplex='{Current.Daily.ForceComplex}', " +
                 $"Daily.PreferGardens={Current.Daily.PreferGardens}, " +
                 $"RebuildChecks disabled=[{string.Join(", ", disabled)}]");
     }
