@@ -5,6 +5,30 @@ using Newtonsoft.Json;
 namespace AutogenRundown;
 
 /// <summary>
+/// Canonical names for the level rebuild validations that can be toggled via
+/// GenerationOverrides.RebuildChecks.
+/// </summary>
+public static class RebuildCheck
+{
+    public const string NavMeshReachability = "NavMeshReachability";
+    public const string MissingCustomGeomorph = "MissingCustomGeomorph";
+    public const string NullSourceExpander = "NullSourceExpander";
+    public const string ZoneZeroAreas = "ZoneZeroAreas";
+    public const string FailedToFindStartArea = "FailedToFindStartArea";
+    public const string MissingGeneratorCluster = "MissingGeneratorCluster";
+
+    public static readonly string[] All =
+    {
+        NavMeshReachability,
+        MissingCustomGeomorph,
+        NullSourceExpander,
+        ZoneZeroAreas,
+        FailedToFindStartArea,
+        MissingGeneratorCluster,
+    };
+}
+
+/// <summary>
 /// Per-rundown generation overrides.
 /// </summary>
 public record RundownGenerationOverrides
@@ -36,7 +60,15 @@ public record RundownGenerationOverrides
 /// overrides can only be enabled by hand-creating the file:
 ///
 ///     BepInEx/config/AutogenRundown.GenerationOverrides.json
-///     { "Daily": { "ForcedComplex": "Service", "PreferGardens": true } }
+///     {
+///         "Daily": { "ForcedComplex": "Service", "PreferGardens": true },
+///         "RebuildChecks": { "NullSourceExpander": false }
+///     }
+///
+/// RebuildChecks toggles the level rebuild validations (see RebuildCheck for the valid keys);
+/// a check set to false logs what it would have done instead of triggering a rebuild. All
+/// checks default to enabled. The file must match across all players in a lobby — the checks
+/// run in lockstep on host and clients.
 ///
 /// A missing file, missing fields, or malformed JSON all leave generation at vanilla behavior.
 /// </summary>
@@ -44,29 +76,55 @@ public record GenerationOverrides
 {
     public RundownGenerationOverrides Daily { get; set; } = new();
 
+    /// <summary>
+    /// Rebuild-validation toggles keyed by RebuildCheck name; false disables that validation.
+    /// Keys absent from the settings file are backfilled to true by Load().
+    /// </summary>
+    public Dictionary<string, bool> RebuildChecks { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
     public static GenerationOverrides Current { get; private set; } = new();
+
+    public static bool RebuildCheckEnabled(string name)
+        => !Current.RebuildChecks.TryGetValue(name, out var enabled) || enabled;
 
     private static string SettingsPath =>
         Path.Combine(Paths.BepInExRootPath, "config", "AutogenRundown.GenerationOverrides.json");
 
     public static void Load()
     {
-        if (!File.Exists(SettingsPath))
-            return;
-
-        try
+        if (File.Exists(SettingsPath))
         {
-            var json = File.ReadAllText(SettingsPath);
-            Current = JsonConvert.DeserializeObject<GenerationOverrides>(json) ?? new();
+            try
+            {
+                var json = File.ReadAllText(SettingsPath);
+                Current = JsonConvert.DeserializeObject<GenerationOverrides>(json) ?? new();
 
-            Plugin.Logger.LogWarning(
-                "Generation overrides active: " +
-                $"Daily.ForcedComplex='{Current.Daily.ForcedComplex}', " +
-                $"Daily.PreferGardens={Current.Daily.PreferGardens}");
+                var unknown = Current.RebuildChecks.Keys
+                    .Where(key => !RebuildCheck.All.Contains(key, StringComparer.OrdinalIgnoreCase))
+                    .ToList();
+
+                if (unknown.Any())
+                    Plugin.Logger.LogWarning(
+                        $"Unknown RebuildChecks keys: {string.Join(", ", unknown)}. " +
+                        $"Valid keys: {string.Join(", ", RebuildCheck.All)}");
+
+                var disabled = RebuildCheck.All.Where(check => !RebuildCheckEnabled(check));
+
+                Plugin.Logger.LogWarning(
+                    "Generation overrides active: " +
+                    $"Daily.ForcedComplex='{Current.Daily.ForcedComplex}', " +
+                    $"Daily.PreferGardens={Current.Daily.PreferGardens}, " +
+                    $"RebuildChecks disabled=[{string.Join(", ", disabled)}]");
+            }
+            catch (Exception ex)
+            {
+                Plugin.Logger.LogWarning($"Failed to load generation overrides: {ex.Message}");
+            }
         }
-        catch (Exception ex)
-        {
-            Plugin.Logger.LogWarning($"Failed to load generation overrides: {ex.Message}");
-        }
+
+        // All rebuild checks are enabled by default; only an explicit false in the file
+        // disables one.
+        foreach (var check in RebuildCheck.All)
+            Current.RebuildChecks.TryAdd(check, true);
     }
 }

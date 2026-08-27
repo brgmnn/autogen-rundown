@@ -28,6 +28,9 @@ public class Fix_NavMeshMarkerSubSeed
 
     private static bool Validate()
     {
+        if (!GenerationOverrides.RebuildCheckEnabled(RebuildCheck.NavMeshReachability))
+            return true;
+
         try
         {
             // Find first unhealthy detected target
@@ -188,6 +191,14 @@ public class Fix_NavMeshMarkerSubSeed
             {
                 TargetsDetected.Add(key);
 
+                if (!GenerationOverrides.RebuildCheckEnabled(RebuildCheck.NavMeshReachability))
+                {
+                    Plugin.Logger.LogWarning(
+                        $"[RebuildChecks] {RebuildCheck.NavMeshReachability} disabled — " +
+                        $"would have triggered a rebuild ({key})");
+                    return;
+                }
+
                 FactoryJobManager.MarkForRebuild();
 
                 // Initialize override baseline if not present
@@ -241,6 +252,14 @@ public class Fix_NavMeshMarkerSubSeed
 
         if (data?.CustomGeomorph != null && !settings.HasCustomGeomorphInstance)
         {
+            if (!GenerationOverrides.RebuildCheckEnabled(RebuildCheck.MissingCustomGeomorph))
+            {
+                Plugin.Logger.LogWarning(
+                    $"[RebuildChecks] {RebuildCheck.MissingCustomGeomorph} disabled — would have " +
+                    $"triggered a rebuild (Zone {zone.LocalIndex} in {zone.Layer.m_type})");
+                return;
+            }
+
             ZoneSeedManager.Reroll_SubSeed(zone);
 
             if (zone.LocalIndex == eLocalZoneIndex.Zone_0)

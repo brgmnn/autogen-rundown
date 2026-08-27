@@ -81,6 +81,14 @@ public class Fix_FailedToFindStartArea
             var doneZone = __instance.m_zone;
             if (doneZone != null && (doneZone.m_areas?.Count ?? 0) == 0)
             {
+                if (!GenerationOverrides.RebuildCheckEnabled(RebuildCheck.ZoneZeroAreas))
+                {
+                    Plugin.Logger.LogWarning(
+                        $"[RebuildChecks] {RebuildCheck.ZoneZeroAreas} disabled — would have " +
+                        $"triggered a rebuild (Zone {doneZone.LocalIndex} in {doneZone.m_layer?.m_type})");
+                    return;
+                }
+
                 Plugin.Logger.LogWarning(
                     $"Zone {doneZone.LocalIndex} in {doneZone.m_layer?.m_type} fake-completed " +
                     $"with 0 areas — marking for reroll");
@@ -109,6 +117,16 @@ public class Fix_FailedToFindStartArea
 
         var rollCount = zoneFailures.GetValueOrDefault(zoneKey, 0u);
         zoneFailures[zoneKey] = rollCount + 1;
+
+        if (!GenerationOverrides.RebuildCheckEnabled(RebuildCheck.FailedToFindStartArea))
+        {
+            if (rollCount == 0)
+                Plugin.Logger.LogWarning(
+                    $"[RebuildChecks] {RebuildCheck.FailedToFindStartArea} disabled — would have " +
+                    $"triggered rerolls (Zone {zone.LocalIndex} in {zone.m_layer.m_type}); the " +
+                    $"build may hang on this seed");
+            return;
+        }
 
         Plugin.Logger.LogWarning($"Zone {zone.LocalIndex} failed to find start area (attempt {rollCount}). Triggering subseed reroll.");
 
