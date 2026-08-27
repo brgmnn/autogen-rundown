@@ -169,15 +169,18 @@ public static class PluginConfig
     }
 
     private const string AdvancedHeader =
-        "## =========================================================================\n" +
-        "## ADVANCED SETTINGS -- read before editing\n" +
-        "##\n" +
-        "## These settings change how levels generate and are intended for testing.\n" +
-        "## Leave everything at its default unless you know exactly what you are\n" +
-        "## doing. All players in a lobby must use identical values in this file,\n" +
-        "## otherwise level generation will desync.\n" +
-        "## =========================================================================\n" +
-        "\n";
+        """
+        ## =========================================================================
+        ## ADVANCED SETTINGS -- read before editing
+        ##
+        ## These settings change how levels generate and are intended for testing.
+        ## Leave everything at its default unless you know exactly what you are
+        ## doing. All players in a lobby must use identical values in this file,
+        ## otherwise level generation will desync.
+        ## =========================================================================
+
+
+        """;
 
     /// <summary>
     /// ConfigFile.Save() regenerates the file from scratch, so the disclaimer is re-prepended
