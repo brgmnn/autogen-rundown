@@ -1272,6 +1272,7 @@ public static class RundownFactory
         // Solo Rundown -- Rundown 2 replacement
         //
         #region Solo Rundown
+        #if ENABLE_SOLO_RUNDOWN
         {
             // Set the weekly seed
             Generator.SetWeeklySeed(weeklySeed);
@@ -1295,12 +1296,14 @@ public static class RundownFactory
 
             Bins.Rundowns.AddBlock(solo);
         }
+        #endif
         #endregion
 
         //
         // Duo Rundown -- Rundown 2 replacement
         //
         #region Duo Rundown
+        #if ENABLE_DUO_RUNDOWN
         {
             // Set the weekly seed
             Generator.SetWeeklySeed(weeklySeed);
@@ -1324,6 +1327,7 @@ public static class RundownFactory
 
             Bins.Rundowns.AddBlock(duo);
         }
+        #endif
         #endregion
 
         //
@@ -1393,8 +1397,18 @@ public static class RundownFactory
             Rundown.R_Daily,   // Rundown.R7,
             Rundown.R_Monthly, // Rundown.R6?,
             Rundown.R_Weekly,  // Rundown.R5,
+
+            #if ENABLE_SOLO_RUNDOWN
             Rundown.R_Solo,    // Rundown.R3
+            #else
+            Rundown.R_Daily,
+            #endif
+
+            #if ENABLE_DUO_RUNDOWN
             Rundown.R_Duo,     // Rundown.R4
+            #else
+            Rundown.R_Daily,
+            #endif
 
             // These are no-ops and will be disabled
             Rundown.R_Daily,

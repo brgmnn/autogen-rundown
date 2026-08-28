@@ -34,14 +34,24 @@ public class RundownSelection
     // Solo
     public static readonly RundownSelection R3 = new()
     {
+        #if ENABLE_SOLO_RUNDOWN
         Enabled = true,
+        #else
+        Enabled = false,
+        #endif
+
         UnityName = "Rundown_Surface_SelectionALT_R3"
     };
 
     // Duo
     public static readonly RundownSelection R4 = new()
     {
+        #if ENABLE_DUO_RUNDOWN
         Enabled = true,
+        #else
+        Enabled = false,
+        #endif
+
         UnityName = "Rundown_Surface_SelectionALT_R4"
     };
 
