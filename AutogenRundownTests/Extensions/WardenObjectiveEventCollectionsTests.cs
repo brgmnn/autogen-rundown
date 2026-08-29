@@ -178,4 +178,190 @@ public class WardenObjectiveEventCollections_Tests
     }
 
     #endregion
+
+    #region AddCountdownWithExpiryChain
+
+    private static List<WardenObjectiveEvent> BuildChain(
+        int fallbackCount = 3,
+        double fallbackDuration = 240.0,
+        string identifier = "test_surge")
+    {
+        var events = new List<WardenObjectiveEvent>();
+
+        events.AddCountdownWithExpiryChain(
+            duration: 300.0,
+            wave: GenericWave.ErrorAlarm_Easy,
+            identifier: identifier,
+            fallbackCount: fallbackCount,
+            fallbackDuration: fallbackDuration,
+            titleText: "INITIAL",
+            fallbackTitleText: "FALLBACK",
+            delay: 5.0);
+
+        return events;
+    }
+
+    /// <summary>
+    /// Walks the expiry chain: element 0 is the initial countdown's EventsOnDone, each
+    /// following element is the next fallback countdown's EventsOnDone.
+    /// </summary>
+    private static List<List<WardenObjectiveEvent>> WalkExpiryLevels(WardenObjectiveEvent outer)
+    {
+        var levels = new List<List<WardenObjectiveEvent>>();
+        var current = outer;
+
+        while (current != null)
+        {
+            var expiry = current.Countdown!.EventsOnDone;
+            levels.Add(expiry);
+            current = expiry.FirstOrDefault(e => e.Type == WardenObjectiveEventType.Countdown);
+        }
+
+        return levels;
+    }
+
+    [TestMethod]
+    public void Test_AddCountdownWithExpiryChain_EmitsSingleCountdown()
+    {
+        var events = BuildChain();
+
+        Assert.AreEqual(1, events.Count);
+
+        var outer = events[0];
+        Assert.AreEqual(WardenObjectiveEventType.Countdown, outer.Type);
+        Assert.AreEqual(300.0, outer.Duration);
+        Assert.AreEqual(5.0, outer.Delay);
+        Assert.IsNotNull(outer.Countdown);
+        Assert.AreEqual("INITIAL", outer.Countdown!.TitleText);
+    }
+
+    [TestMethod]
+    public void Test_AddCountdownWithExpiryChain_ChainDepth()
+    {
+        var events = BuildChain(fallbackCount: 4, fallbackDuration: 180.0);
+        var levels = WalkExpiryLevels(events[0]);
+
+        // fallbackCount fallback countdowns -> fallbackCount + 1 expiry levels, the
+        // innermost of which has no further countdown.
+        Assert.AreEqual(5, levels.Count);
+
+        foreach (var level in levels.Take(4))
+        {
+            var fallback = level.Single(e => e.Type == WardenObjectiveEventType.Countdown);
+            Assert.AreEqual(180.0, fallback.Duration);
+            Assert.AreEqual("FALLBACK", fallback.Countdown!.TitleText);
+        }
+
+        Assert.IsFalse(levels[4].Any(e => e.Type == WardenObjectiveEventType.Countdown));
+    }
+
+    [TestMethod]
+    public void Test_AddCountdownWithExpiryChain_StopPrecedesSpawnAtEveryLevel()
+    {
+        var events = BuildChain(identifier: "surge_id");
+        var levels = WalkExpiryLevels(events[0]);
+
+        foreach (var level in levels)
+        {
+            var stop = level.Single(e => e.Type == WardenObjectiveEventType.StopEnemyWaves);
+            var spawn = level.Single(e => e.Type == WardenObjectiveEventType.SpawnEnemyWave);
+
+            Assert.AreEqual("surge_id", stop.Identifier);
+            Assert.AreEqual("surge_id", spawn.Identifier);
+            Assert.IsTrue(stop.Delay < spawn.Delay);
+        }
+    }
+
+    [TestMethod]
+    public void Test_AddCountdownWithExpiryChain_ExactlyOneSpawnPerExpiryLevel()
+    {
+        var events = BuildChain(fallbackCount: 6);
+        var levels = WalkExpiryLevels(events[0]);
+
+        // Guards the one-live-stream invariant: each expiry stops the previous stream
+        // and spawns exactly one new one.
+        foreach (var level in levels)
+            Assert.AreEqual(1, level.Count(e => e.Type == WardenObjectiveEventType.SpawnEnemyWave));
+    }
+
+    [TestMethod]
+    public void Test_AddCountdownWithExpiryChain_WarningsOnEveryCountdown()
+    {
+        var events = BuildChain(fallbackCount: 3);
+
+        var countdowns = new List<WardenObjectiveEvent> { events[0] };
+        countdowns.AddRange(WalkExpiryLevels(events[0])
+            .SelectMany(level => level.Where(e => e.Type == WardenObjectiveEventType.Countdown)));
+
+        Assert.AreEqual(4, countdowns.Count);
+
+        var progressLists = new HashSet<object>();
+
+        foreach (var countdown in countdowns)
+        {
+            var progress = countdown.Countdown!.EventsOnProgress;
+
+            Assert.AreEqual(2, progress.Count);
+            Assert.AreEqual(0.75, progress[0].Progress);
+            Assert.AreEqual(0.90, progress[1].Progress);
+
+            // Fresh list instances per countdown: shared instances would alias when the
+            // chain serializes.
+            progressLists.Add(progress);
+            progressLists.Add(progress[0].Events);
+            progressLists.Add(progress[1].Events);
+        }
+
+        Assert.AreEqual(countdowns.Count * 3, progressLists.Count);
+    }
+
+    [TestMethod]
+    public void Test_AddCountdownWithExpiryChain_WavePresetNotMutated()
+    {
+        var events = BuildChain();
+        var spawn = WalkExpiryLevels(events[0])[0]
+            .Single(e => e.Type == WardenObjectiveEventType.SpawnEnemyWave);
+
+        // The stream keeps the preset's real alarm state (ambience) — and the preset
+        // itself is untouched.
+        Assert.IsTrue(spawn.EnemyWaveData.TriggerAlarm);
+        Assert.IsTrue(GenericWave.ErrorAlarm_Easy.TriggerAlarm);
+    }
+
+    [TestMethod]
+    public void Test_AddCountdownWithExpiryChain_Serializes()
+    {
+        var events = BuildChain();
+
+        var json = JsonConvert.SerializeObject(events[0]);
+        StringAssert.Contains(json, "\"Countdown\"");
+        StringAssert.Contains(json, "\"EventsOnDone\"");
+        StringAssert.Contains(json, "\"EventsOnProgress\"");
+    }
+
+    #endregion
+
+    #region CustomHudText delay
+
+    [TestMethod]
+    public void Test_AddCustomHudText_AssignsDelay()
+    {
+        var events = new List<WardenObjectiveEvent>();
+
+        events.AddCustomHudText("banner", 10.0);
+
+        Assert.AreEqual(10.0, events[0].Delay);
+    }
+
+    [TestMethod]
+    public void Test_RemoveCustomHudText_AssignsDelay()
+    {
+        var events = new List<WardenObjectiveEvent>();
+
+        events.RemoveCustomHudText(10.0);
+
+        Assert.AreEqual(10.0, events[0].Delay);
+    }
+
+    #endregion
 }

@@ -505,7 +505,8 @@ public class LevelSettings
                     (1.0, LevelSignature.StartWithInfection),
                     (1.0, LevelSignature.Stalker),
                     (1.0, LevelSignature.CyclingFog),
-                    (0.6, LevelSignature.BossAlarm)
+                    (0.6, LevelSignature.BossAlarm),
+                    (1.0, LevelSignature.UpkeepProtocol)
                 });
 
                 Modifiers.Add(

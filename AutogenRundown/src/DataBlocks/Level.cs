@@ -909,6 +909,24 @@ public partial class Level
     }
 
     /// <summary>
+    /// Marks the level as running the upkeep protocol (countdown fed by terminal overrides)
+    /// </summary>
+    public void MarkAsUpkeepProtocol()
+    {
+        ElevatorDropWardenIntel.Add((Generator.Between(5, 12), Generator.Draw(new List<string>
+        {
+            ">... The sector systems are failing.\r\n>... Some kind of maintenance countdown.\r\n>... <size=200%><color=red>Keep feeding it overrides!</color></size>",
+            ">... [klaxon chirp]\r\n>... Admin access still works at the terminals.\r\n>... <size=200%><color=red>Buy time at every one we pass!</color></size>",
+            ">... The credentials burn out after one use.\r\n>... Every terminal is a stay of execution.\r\n>... <size=200%><color=red>Don't walk past a single one!</color></size>",
+            ">... <size=200%><color=red>The timer is already running!</color></size>\r\n>... When it lapses, they come in waves.\r\n>... Another override shuts them out.",
+            ">... Upkeep protocol. Warden's own systems.\r\n>... [keys clattering]\r\n>... <size=200%><color=red>Type fast or fight!</color></size>",
+            ">... It doesn't kill you when it runs out.\r\n>... It just opens the doors to them.\r\n>... <size=200%><color=red>Stay ahead of the countdown!</color></size>",
+            ">... Maintenance windows, they called them.\r\n>... Miss one and the sector purges.\r\n>... <size=200%><color=red>ADMIN_TEMP_OVERRIDE. Remember it!</color></size>",
+            ">... [alarm winding up]\r\n>... The ledger runs dry near the end.\r\n>... <size=200%><color=red>The last stretch is a sprint!</color></size>"
+        }))!);
+    }
+
+    /// <summary>
     /// Gets the right layer data given the objective being asked for
     /// </summary>
     /// <param name="variant"></param>
@@ -1740,6 +1758,35 @@ public partial class Level
                 $"{logLevelId} -- Re-rolled BossAlarm signature to {level.Settings.Signature} " +
                 "due to an objective with a global wave stop");
         }
+
+        // Reactors have no terminal in the reactor zone plus ~10 minute stationary
+        // phases, and TimedTerminalSequence has long stationary rounds — on any bulkhead
+        // they starve the upkeep-override time economy. Re-roll (never demote: E-tier
+        // keeps 100% signature incidence). The tagged surge stream survives global wave
+        // stops, so Alpha/uplink objectives need no exclusion here.
+        if (level.Settings.Signature == LevelSignature.UpkeepProtocol
+            && level.Director.Values.Any(d => d.Objective
+                is WardenObjectiveType.ReactorStartup
+                or WardenObjectiveType.ReactorShutdown
+                or WardenObjectiveType.TimedTerminalSequence))
+        {
+            level.Settings.Signature = Generator.Select(new List<(double, LevelSignature)>
+            {
+                (1.0, LevelSignature.Stalker),
+                (1.0, LevelSignature.StartWithInfection)
+            });
+
+            // Mirror the E-tier StartWithInfection infection-modifier bias, as above.
+            if (level.Settings.Signature == LevelSignature.StartWithInfection
+                && !level.Settings.HasInfection)
+                level.Settings.Modifiers.Add(Generator.Flip(0.6)
+                    ? LevelModifiers.HeavyInfection
+                    : LevelModifiers.Infection);
+
+            Plugin.Logger.LogDebug(
+                $"{logLevelId} -- Re-rolled UpkeepProtocol signature to {level.Settings.Signature} " +
+                "due to an objective with long stationary phases");
+        }
         #endregion
 
         #region Scout Waves
@@ -1779,7 +1826,11 @@ public partial class Level
         #endregion
 
         #region Finalize -- Level.PostBuild()
-
+        // Runs after every bulkhead's FinalizeLayout (alarms/enemies rolled, so
+        // clear-time estimates are valid for all zones) and after objective PostBuild
+        // (which can add terminal placements). Zones serialize at bin save, so late
+        // mutation here is safe.
+        level.ApplyUpkeepProtocol();
         #endregion
 
         #region Finalize -- ExtraObjectiveSetup

@@ -106,6 +106,23 @@ public record GenericWave
         SpawnDelay = 0.0,
         TriggerAlarm = true
     };
+
+    /// <summary>
+    /// UpkeepProtocol expiry stream: a true surge of nightmares (R8E2's surge error) —
+    /// striker/shooter groups every ~3s with the occasional nightmare giant, flooding
+    /// until the next override is entered. Real alarm state for ambience. Spawned with
+    /// the "upkeep_surge" identifier so the terminal overrides' scoped stops silence it
+    /// while global untagged stops (Alpha/TTS/uplink) never touch it. The flood is
+    /// survivable because it is player-terminated — the override is the answer, not
+    /// clearing it. Tune down to WaveSettings.Surge_Easy if playtest overshoots.
+    /// </summary>
+    public static readonly GenericWave UpkeepSurge = new()
+    {
+        Settings = WaveSettings.Surge,
+        Population = WavePopulation.OnlyNightmares,
+        SpawnDelay = 2.0,
+        TriggerAlarm = true
+    };
     #endregion
 
     #region Chargers

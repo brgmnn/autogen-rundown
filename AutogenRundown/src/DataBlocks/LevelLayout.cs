@@ -1450,6 +1450,17 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                     $"{Name} -- Level signature: StartWithInfection, infection={infection}");
                 break;
             }
+
+            case LevelSignature.UpkeepProtocol:
+            {
+                // Applied in Level.ApplyUpkeepProtocol() during the Level.Build finalize
+                // phase instead: the per-zone override grants need clear-time estimates
+                // for Extreme/Overload zones too, which are only valid after every
+                // bulkhead's FinalizeLayout has rolled alarms and enemies.
+                Plugin.Logger.LogDebug(
+                    $"{Name} -- Level signature: UpkeepProtocol (deferred to Level.ApplyUpkeepProtocol)");
+                break;
+            }
         }
     }
 

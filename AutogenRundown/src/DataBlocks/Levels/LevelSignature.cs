@@ -36,4 +36,14 @@ public enum LevelSignature
     /// all waves stop (StopAllWavesBeforeGotoWin).
     /// </summary>
     BossAlarm,
+
+    /// <summary>
+    /// R8E2-style upkeep protocol (ADMIN_TEMP_OVERRIDE): the level starts a countdown and
+    /// every terminal carries a one-use override command that buys back roughly its own
+    /// zone's clear time. Expiry never fails the level — it starts a scoped surge wave
+    /// stream that runs until the next override is entered. Once every terminal is spent
+    /// (typically extraction) the surge runs to the end of the level.
+    /// Applied in Level.ApplyUpkeepProtocol().
+    /// </summary>
+    UpkeepProtocol,
 }

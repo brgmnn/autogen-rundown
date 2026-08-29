@@ -1469,7 +1469,7 @@ public partial record LevelLayout
         // StartWithInfection is a static handicap and keeps the full-strength error.
         // See docs/dev/e-tier-difficulty.md, B1 guardrail.
         if (level.Settings.Signature is LevelSignature.Stalker or LevelSignature.BossAlarm
-                or LevelSignature.CyclingFog
+                or LevelSignature.CyclingFog or LevelSignature.UpkeepProtocol
             && settings == WaveSettings.Error_VeryHard)
             settings = WaveSettings.Error_Hard;
 
@@ -1524,8 +1524,13 @@ public partial record LevelLayout
         var commandEvents = new List<WardenObjectiveEvent>()
             .AddTurnOffAlarms(9.5, "error_alarms")
             .AddSound(Sound.Alarms_Error_AmbientStop, 10)
-            .RemoveCustomHudText(10)
             .ToList();
+
+        // UpkeepProtocol owns the CustomHudText widget's slot: showing (or hiding) the
+        // banner would silently kill the upkeep countdown, so those levels get a one-shot
+        // fly-in message instead of a persistent banner and skip the removal.
+        if (level.Settings.Signature != LevelSignature.UpkeepProtocol)
+            commandEvents.RemoveCustomHudText(10);
 
         terminalPlacement.UniqueCommands.Add(
             new CustomTerminalCommand
@@ -1572,7 +1577,11 @@ public partial record LevelLayout
         var terminalSerial = Lore.TerminalSerial(DimensionIndex.Reality, terminalNode.Bulkhead, terminalNode.ZoneNumber);
 
         customDoor.InteractionMessage += $"<color=red> DEACTIVATE ALARM ON {terminalSerial}</color>";
-        lockedZone.EventsOnDoorScanStart.AddCustomHudText($"<color=red>Deactivate alarm on {terminalSerial}</color>");
+
+        if (level.Settings.Signature == LevelSignature.UpkeepProtocol)
+            lockedZone.EventsOnDoorScanStart.AddMessage($"<color=red>Deactivate alarm on {terminalSerial}</color>");
+        else
+            lockedZone.EventsOnDoorScanStart.AddCustomHudText($"<color=red>Deactivate alarm on {terminalSerial}</color>");
 
         level.SecurityDoors.Doors.Add(customDoor);
 
@@ -1665,8 +1674,13 @@ public partial record LevelLayout
             .AddTurnOffAlarms(9.5, "apex_error_alarms")
             .AddTurnOffAlarms(9.5, "error_alarms")
             .AddSound(Sound.Alarms_Error_AmbientStop, 10)
-            .RemoveCustomHudText(10)
             .ToList();
+
+        // UpkeepProtocol owns the CustomHudText widget's slot: showing (or hiding) the
+        // banner would silently kill the upkeep countdown, so those levels get a one-shot
+        // fly-in message instead of a persistent banner and skip the removal.
+        if (level.Settings.Signature != LevelSignature.UpkeepProtocol)
+            commandEvents.RemoveCustomHudText(10);
 
         terminalPlacement.UniqueCommands.Add(
             new CustomTerminalCommand
@@ -1713,7 +1727,11 @@ public partial record LevelLayout
         var terminalSerial = Lore.TerminalSerial(DimensionIndex.Reality, terminalNode.Bulkhead, terminalNode.ZoneNumber);
 
         customDoor.InteractionMessage += $"<color=red> DEACTIVATE ALARM ON {terminalSerial}</color>";
-        lockedZone.EventsOnDoorScanStart.AddCustomHudText($"<color=red>Deactivate alarm on {terminalSerial}</color>");
+
+        if (level.Settings.Signature == LevelSignature.UpkeepProtocol)
+            lockedZone.EventsOnDoorScanStart.AddMessage($"<color=red>Deactivate alarm on {terminalSerial}</color>");
+        else
+            lockedZone.EventsOnDoorScanStart.AddCustomHudText($"<color=red>Deactivate alarm on {terminalSerial}</color>");
 
         level.SecurityDoors.Doors.Add(customDoor);
 

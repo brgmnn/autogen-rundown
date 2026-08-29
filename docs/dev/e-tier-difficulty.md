@@ -114,9 +114,9 @@ signature: persistent upkeep pressure over the level's *existing* footprint.
 *Guardrail:* interval ≥ 3-4 min, payloads ≤ 4 pts or a single enemy. R7D1 uses a finite
 count (19); the helper's default is now `-1` (infinite), which is the Stalker's design.
 When a signature that adds its own wave or environment pressure is active (Stalker,
-BossAlarm, CyclingFog — *not* StartWithInfection, which is a static handicap),
-`AddErrorAlarm` steps `Error_VeryHard` down to `Error_Hard` so the two pressure sources
-don't stack.
+BossAlarm, CyclingFog, UpkeepProtocol — *not* StartWithInfection, which is a static
+handicap), `AddErrorAlarm` steps `Error_VeryHard` down to `Error_Hard` so the two
+pressure sources don't stack.
 
 **B2. Starting-state handicaps (`Level.cs:678-690`). ✅ Done** — shipped as the
 `LevelSignature.StartWithInfection` signature (see C2c) rather than a standalone roll,
@@ -179,24 +179,55 @@ behind a generic `LevelSignature` enum on `LevelSettings`, rolled only in the E 
 
 **Status (2026-08): every E level gets a signature.** `None` was removed from the roll
 (`533fa70`); current weights are StartWithInfection 1.0 / Stalker 1.0 / CyclingFog 1.0 /
-BossAlarm 0.6 (~28/28/28/17%). Levels whose Main objective is Survival / ReachKdsDeep /
-Cryptomnesia are demoted back to `None` in `Level.Build` (with a fog-modifier re-roll for
-CyclingFog) so the level-wide signature consumers — the B1 error damp, the apex/ClearPath
-boss suppression, the per-zone ammo bump — don't fire on a level with no signature
-content. BossAlarm is additionally **re-rolled** (to Stalker or StartWithInfection) when
-*any* bulkhead carries AlphaTerminalCommand, TimedTerminalSequence, TerminalUplink, or
-CorruptedTerminalUplink — all of them can fire an identifier-less global wave stop
-mid-level (TTS's `DEACTIVATE_ALARMS` turn-off zone exists on secondaries too, and the
-uplink-completion stop can fall through `Patch_UplinkWaveIsolation` to the vanilla global
-call), which would silently kill the untagged boss stream.
+BossAlarm 0.6 / UpkeepProtocol 1.0 (~21.7% each for the 1.0 entries, ~13% BossAlarm).
+Levels whose Main objective is Survival / ReachKdsDeep / Cryptomnesia are demoted back to
+`None` in `Level.Build` (with a fog-modifier re-roll for CyclingFog) so the level-wide
+signature consumers — the B1 error damp, the apex/ClearPath boss suppression, the
+per-zone ammo bump — don't fire on a level with no signature content. Two **re-roll**
+rules (both to Stalker or StartWithInfection, preserving 100% incidence) run after the
+objective prebuild: BossAlarm re-rolls when *any* bulkhead carries AlphaTerminalCommand,
+TimedTerminalSequence, TerminalUplink, or CorruptedTerminalUplink — all of them can fire
+an identifier-less global wave stop mid-level (TTS's `DEACTIVATE_ALARMS` turn-off zone
+exists on secondaries too, and the uplink-completion stop can fall through
+`Patch_UplinkWaveIsolation` to the vanilla global call), which would silently kill the
+untagged boss stream; UpkeepProtocol re-rolls when *any* bulkhead carries ReactorStartup,
+ReactorShutdown, or TimedTerminalSequence — long stationary phases (and a terminal-less
+reactor zone) starve its override economy. Note the reactors and TTS use the
+interaction-layer progress bar, *not* the countdown widget — the exclusion is economic,
+not a HUD conflict.
 
-**C1. Upkeep protocol** *(R8E2; the maintainer's own idea, `README.md:71-72`)*
-Level starts a countdown (`AddCountdown` / `AddSpecialHudTimer`). Every zone terminal
-carries a `CustomTerminalCommand` whose `CommandEvents` call `AddAdjustTimer` to buy
-+3-8 minutes. Timer expiry does **not** fail the level — it starts a surge `GenericWave`
-loop until the next override is entered. Pressure, never a fail state.
-*Primitives:* all exist (`WardenObjectiveEventCollections.cs`, `CustomTerminalCommand.cs`).
-*Effort:* medium. *Guardrail:* command on every terminal; first deadline generous.
+**C1. Upkeep protocol** *(R8E2; the maintainer's own idea, `README.md:71-72`)* **✅ Done**
+(`LevelSignature.UpkeepProtocol`, weight 1.0; applied in `Level.ApplyUpkeepProtocol()`,
+`Level.UpkeepProtocol.cs`)
+The level starts an AWO countdown at drop (initial = first Main zone's
+`GetClearTimeEstimate()` + 60s grace, 5s after landing) and **every terminal in every
+Reality zone** (all bulkheads) carries a one-use `ADMIN_TEMP_OVERRIDE` command
+(`CommandRule.OnlyOnceDelete`) whose `CommandEvents` fire `AddAdjustTimer` for its own
+zone's clear estimate ×1.2 — the margin funds objective dwell (uplinks, HSU extract,
+Alpha transfer). The whole budget ≈ the level's expected clear time: the ritual is the
+pressure, not added length. Expiry does **not** fail the level — the
+`AddCountdownWithExpiryChain` helper pre-builds 8 fallback windows of 240s: each expiry
+scope-stops any prior stream, spawns a fresh `GenericWave.UpkeepSurge` — a true surge of
+nightmares (`WaveSettings.Surge` + `OnlyNightmares`, R8E2's surge error; tagged
+`"upkeep_surge"`), survivable because it is player-terminated, not cleared — and re-arms
+the next window; the override's scoped stop silences the surge. The chain is pre-built
+because AWO runs one global countdown and starting a new one drops the old
+`EventsOnDone`. Once every terminal is spent (typically extraction) the surge runs to
+level end — R8E2's sprint finish, by choice. Warnings fire at 75%/90% elapsed.
+Applied in the `Level.Build` finalize phase (clear estimates need every bulkhead's
+`FinalizeLayout`). Interactions: joins the B1 damp; auto-excluded from the HSU/GSI
+drop-time alarms (allow-list); no ammo bump (conditional pressure, CyclingFog precedent);
+error alarms with turn-off terminals stay rollable but their persistent `CustomHudText`
+banner becomes a one-shot fly-in message — `CustomHudText` writes the countdown's HUD
+widget and silently kills a running countdown. Tagged surge waves survive
+Alpha/TTS/uplink global stops (identifier-less stops only kill untagged waves), so only
+the economy re-roll above is needed. Known limits (accepted): checkpoint restore aborts
+the countdown (AWO, Survival parity); same-frame double overrides lose one grant;
+warnings are one-shot per countdown. Zones with deliberately stripped terminals (reactor,
+hill closets) get no command. Tuning order if it overshoots: roll weight → `UpkeepSurge`
+settings (`Surge`→`Surge_Easy`) → fallback window → grant factor.
+Needs Windows playtest — including a KingOfTheHill secondary seed (300s holdout vs the
+economy).
 
 **C2. Recurring stalker** *(R7E1-lite)* **✅ Done** (first `LevelSignature`; weight 1.0,
 applied in `LevelLayout.ApplyLevelSignature()`)
@@ -221,8 +252,8 @@ survives them. The apex-alarm boss default is suppressed while the signature is 
 (ClearPath's own level tank alarm branch was removed outright — dead code once every E
 level rolls a signature). Re-rolled in `Level.Build` (to Stalker or StartWithInfection)
 when any bulkhead carries a global-wave-stop objective — see the Status note above; the
-HSU/GSI E-Main drop-time error alarms are also skipped under Stalker/BossAlarm/CyclingFog
-so drop pressure never double-stacks.
+HSU/GSI E-Main drop-time error alarms are an allow-list (`None` or `StartWithInfection`
+only) so drop pressure never double-stacks with any wave-pressure signature.
 
 **C2c. Infected start** *(R5E1)* **✅ Done** (`LevelSignature.StartWithInfection`, weight
 1.0)
@@ -318,8 +349,8 @@ shipped as C2c — the maintainer chose to rely on the standing relief rolls onl
   E measurably above D with zero new mechanics.
 - **Phase 2 — Machinery:** B1, B3, B4, B5 first (data-only or stub-fill, low risk), then
   B2, B6, B7 (guardrails need exercising). Each behind its own E-only roll.
-- **Phase 3 — Signatures:** `LevelSignature` pool with C2/C4/C5 first (low effort, proven
-  primitives), then C1/C3. One signature max per level, low weights.
+- **Phase 3 — Signatures:** `LevelSignature` pool — C2/C2b/C2c/C2d and C1 shipped; C4/C5
+  next (low effort, proven primitives), then C3. One signature max per level.
 - **Playtest gates between phases**, on fixed seeds pre/post:
   1. still completable;
   2. ammo economy intact (the A2+A4 interaction);

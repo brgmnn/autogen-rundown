@@ -560,6 +560,7 @@ public static class WardenObjectiveEventCollections
             {
                 Type = WardenObjectiveEventType.CustomHudText,
                 Enabled = true,
+                Delay = delay,
                 CustomHudText = new WardenObjectiveEventCustomHudText
                 {
                     Title = text
@@ -578,6 +579,7 @@ public static class WardenObjectiveEventCollections
             {
                 Type = WardenObjectiveEventType.CustomHudText,
                 Enabled = false,
+                Delay = delay,
             });
 
         return events;
@@ -1144,6 +1146,126 @@ public static class WardenObjectiveEventCollections
                 Delay = delay,
                 Duration = duration,
                 Countdown = countdown
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Starts a countdown that self-rearms on expiry: each expiry stops any prior
+    /// identifier-tagged wave stream, spawns a fresh tagged stream, and starts the next
+    /// fallback countdown, to a finite depth. AdjustAwoTimer events extend whichever
+    /// countdown in the chain is currently running; a scoped StopEnemyWaves with the same
+    /// identifier silences the stream without touching the chain. The innermost expiry
+    /// leaves the final stream running with no further countdown.
+    ///
+    /// AWO only ever runs one countdown, and starting a new one silently drops the old
+    /// one's EventsOnDone — which is why the chain must be pre-built here rather than one
+    /// countdown restarting itself: each fallback is only started by the previous one's
+    /// expiry, when nothing is running. The stop event fires before the spawn at every
+    /// level, so at most one tagged stream is ever live.
+    /// </summary>
+    /// <param name="events">The events to add the countdown to</param>
+    /// <param name="duration">Duration of the initial countdown, in seconds</param>
+    /// <param name="wave">Wave spawned on each expiry; streams until stopped</param>
+    /// <param name="identifier">AWO wave identifier scoping the stream's stop events</param>
+    /// <param name="fallbackCount">Number of self-rearming fallback countdowns</param>
+    /// <param name="fallbackDuration">Duration of each fallback countdown, in seconds</param>
+    /// <param name="titleText">HUD title of the initial countdown</param>
+    /// <param name="fallbackTitleText">HUD title of the fallback countdowns</param>
+    /// <param name="expiryMessage">Warden intel shown on expiry. Empty string for none.</param>
+    /// <param name="warningMessage">
+    /// Warden intel shown at 75%/90% elapsed (90% repeats it in red). Empty string for none;
+    /// the warning sound still plays.
+    /// </param>
+    /// <param name="expirySound">Sound played on each expiry</param>
+    /// <param name="warningSound">Sound played at the 75%/90% warnings</param>
+    /// <param name="delay">Delay before the initial countdown starts</param>
+    public static ICollection<WardenObjectiveEvent> AddCountdownWithExpiryChain(
+        this ICollection<WardenObjectiveEvent> events,
+        double duration,
+        GenericWave wave,
+        string identifier,
+        int fallbackCount = 8,
+        double fallbackDuration = 240.0,
+        string titleText = "",
+        string fallbackTitleText = "",
+        string expiryMessage = "",
+        string warningMessage = "",
+        Sound expirySound = Sound.Alarms_Error_AmbientLoop,
+        Sound warningSound = Sound.Alarms_MissingItem,
+        double delay = 0.0)
+    {
+        // Every list and event instance is built fresh per chain level — countdown data
+        // serializes per-level and shared instances would alias across levels.
+        List<ProgressEvent> BuildWarnings()
+        {
+            var closing = new List<WardenObjectiveEvent>().AddSound(warningSound).ToList();
+            var critical = new List<WardenObjectiveEvent>().AddSound(warningSound).ToList();
+
+            if (warningMessage.Length > 0)
+            {
+                closing.AddMessage(warningMessage, 0.5);
+                critical.AddMessage($"<color=red>{warningMessage}</color>", 0.5);
+            }
+
+            return new List<ProgressEvent>
+            {
+                new() { Progress = 0.75, Events = closing },
+                new() { Progress = 0.90, Events = critical }
+            };
+        }
+
+        List<WardenObjectiveEvent> BuildExpiry(WardenObjectiveEvent? nextCountdown)
+        {
+            // Stop (0.0s) strictly before spawn (2.0s): kills any still-live prior stream
+            // so lapsing several chain levels never stacks streams.
+            var expiry = new List<WardenObjectiveEvent>()
+                .AddTurnOffAlarms(0.0, identifier)
+                .AddSpawnWave(wave, 2.0, identifier)
+                .AddSound(expirySound, 2.0)
+                .ToList();
+
+            if (expiryMessage.Length > 0)
+                expiry.AddMessage(expiryMessage, 0.5);
+
+            if (nextCountdown != null)
+                expiry.Add(nextCountdown);
+
+            return expiry;
+        }
+
+        // Innermost level: surge with no re-arm — the stream runs out the level.
+        var chain = BuildExpiry(null);
+
+        for (var i = 0; i < fallbackCount; i++)
+            chain = BuildExpiry(new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.Countdown,
+                Delay = 1.0,
+                Duration = fallbackDuration,
+                Countdown = new WardenObjectiveEventCountdown
+                {
+                    TitleText = fallbackTitleText,
+                    TimerColor = "#ffaa00",
+                    EventsOnProgress = BuildWarnings(),
+                    EventsOnDone = chain
+                }
+            });
+
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.Countdown,
+                Delay = delay,
+                Duration = duration,
+                Countdown = new WardenObjectiveEventCountdown
+                {
+                    TitleText = titleText,
+                    TimerColor = "red",
+                    EventsOnProgress = BuildWarnings(),
+                    EventsOnDone = chain
+                }
             });
 
         return events;
