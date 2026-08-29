@@ -506,13 +506,15 @@ public record Fog : DataBlock<Fog>
         DensityHeightMaxBoost = 0.0175,
     };
 
+    // INFECTION_SLOW keeps these above the IsInfectious threshold (> 0.01) and in line
+    // with the other slow infectious fogs.
     public static Fog CyclingFog_Clear_Infectious = CyclingFog_Clear with
     {
         Name = "CyclingFog_Clear_Infectious",
         PersistentId = Generator.GetPersistentId(),
 
         FogColor = Color.InfectiousFog_R8D1,
-        Infection = 0.01
+        Infection = INFECTION_SLOW
     };
 
     public static Fog CyclingFog_Heavy_Infectious = CyclingFog_Heavy with
@@ -521,7 +523,7 @@ public record Fog : DataBlock<Fog>
         PersistentId = Generator.GetPersistentId(),
 
         FogColor = Color.InfectiousFog_R8D1,
-        Infection = 0.01
+        Infection = INFECTION_SLOW
     };
 
     #endregion

@@ -25,7 +25,8 @@ public enum LevelSignature
 
     /// <summary>
     /// Recurring stalker: a scripted pseudo-error alarm sends a single shadow pouncer every
-    /// 4-6 minutes with a heartbeat tell. Finite, never escalates, no combat music.
+    /// ~4 minutes with a heartbeat tell. Never escalates, no combat music. Deliberately
+    /// infinite — it hunts the team through extraction and cannot be stopped.
     /// </summary>
     Stalker,
 

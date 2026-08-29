@@ -133,6 +133,13 @@ public partial record LevelLayout
                             {
                                 Command = "DEACTIVATE_ALARMS",
                                 CommandDesc = new Text("Turn off all active alarms"),
+                                // Deliberately identifier-less (global): the error alarms
+                                // this turns off are vanilla chained-puzzle door alarms
+                                // (see hasAllErrorAlarms above), which carry no AWO
+                                // identifier — a scoped stop could never reach them. The
+                                // global stop also kills any untagged wave stream, which
+                                // is why Level.Build re-rolls the BossAlarm signature away
+                                // from levels carrying this objective on any bulkhead.
                                 CommandEvents = new List<WardenObjectiveEvent>().AddTurnOffAlarms().ToList(),
                             }
                         }

@@ -376,7 +376,9 @@ public partial record LevelLayout
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // Keycard to Apex alarm, with Level Error alarm (Boss Tank)
+                    // Keycard to Apex alarm. This branch used to carry its own level boss
+                    // error alarm (Tank) when no signature was active; every E level now
+                    // rolls a signature, so the BossAlarm signature supersedes it.
                     (0.10, () =>
                     {
                         var nodes = AddBranch_Forward(start, 1);
@@ -386,14 +388,6 @@ public partial record LevelLayout
 
                         var (mid2, mid2Zone) = AddZone(mid);
                         mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
-
-                        // Skip the level error alarm when a signature is active: the
-                        // BossAlarm signature already streams its own level-wide boss error.
-                        if (level.Settings.Signature == LevelSignature.None)
-                        {
-                            objective.WavesOnElevatorLand.Add(GenericWave.ErrorAlarm_Boss_Hard_Tank);
-                            level.MarkAsBossErrorAlarm();
-                        }
 
                         (exit, exitZone) = BuildChallenge_ApexAlarm(
                             mid2,

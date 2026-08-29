@@ -1101,6 +1101,62 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             }
         }
 
+        // Signature relief: StartWithInfection and infectious CyclingFog levels have no
+        // InFog zones (CyclingFog forces NoFog; StartWithInfection can roll it), so the
+        // fog-gated relief above can never fire for them. Roll a low chance of a
+        // disinfection zone, restricted to the SECOND HALF of the main progression —
+        // players are meant to play through the infection before any relief appears.
+        if (director.Bulkhead == Bulkhead.Main
+            && layout.Dimension == DimensionIndex.Reality
+            && (level.Settings.Signature == LevelSignature.StartWithInfection
+                || (level.Settings.Signature == LevelSignature.CyclingFog
+                    && level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)))
+            && Generator.Flip(0.35))
+        {
+            var mainNodes = level.Planner.GetZones(Bulkhead.Main, null, layout.Dimension);
+            var medianZoneNumber = mainNodes[mainNodes.Count / 2].ZoneNumber;
+            var open = level.Planner.GetOpenZones(Bulkhead.Main, null, layout.Dimension)
+                .Where(node => node.ZoneNumber >= medianZoneNumber)
+                .ToList();
+
+            if (open.Any())
+                layout.AddDisinfectionZone(Generator.Pick(open));
+            else
+                Plugin.Logger.LogDebug(
+                    $"{layout.Name} -- No open second-half zones for signature disinfection, skipping");
+        }
+
+        // CyclingFog fights blind: beyond the guaranteed elevator turbine + repellers
+        // (ApplyLevelSignature), roll extra fog gear into the second half of the level.
+        if (director.Bulkhead == Bulkhead.Main
+            && layout.Dimension == DimensionIndex.Reality
+            && level.Settings.Signature == LevelSignature.CyclingFog)
+        {
+            var mainNodes = level.Planner.GetZones(Bulkhead.Main, null, layout.Dimension);
+            var medianZoneNumber = mainNodes[mainNodes.Count / 2].ZoneNumber;
+            var secondHalf = mainNodes
+                .Where(node => node.ZoneNumber >= medianZoneNumber)
+                .Select(node => level.Planner.GetZone(node))
+                .Where(zone => zone is not null)
+                .Cast<Zone>()
+                .ToList();
+
+            if (Generator.Flip(0.5))
+            {
+                var turbineZone = Generator.Pick(
+                    secondHalf.Where(zone => zone.BigPickupDistributionInZone == 0).ToList());
+
+                if (turbineZone != null)
+                    turbineZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
+            }
+
+            if (Generator.Flip(0.5))
+                foreach (var zone in Generator
+                             .Shuffle(secondHalf.Where(zone => zone.ConsumableDistributionInZone == 0).ToList())
+                             .Take(Generator.Between(1, 2)))
+                    zone.ConsumableDistributionInZone = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
+        }
+
         layout.FinalizeLayout();
 
         return layout;
@@ -1256,9 +1312,10 @@ public partial record LevelLayout : DataBlock<LevelLayout>
     /// Applies the level's rolled signature mechanic (LevelSettings.Signature). Runs once per
     /// level: only for the Main bulkhead's Reality layout.
     ///
-    /// Stalker: a finite scripted pseudo-error alarm on the Main objective's
-    /// EventsOnElevatorLand. A single shadow pouncer every 4-6 minutes with a heartbeat tell.
-    /// No combat music, cannot be deactivated, runs out on its own.
+    /// Stalker: a scripted pseudo-error alarm on the Main objective's
+    /// EventsOnElevatorLand. A single shadow pouncer every ~4 minutes with a heartbeat
+    /// tell. No combat music, cannot be deactivated, and deliberately infinite — it keeps
+    /// hunting through extraction.
     /// See docs/dev/e-tier-difficulty.md, Group C.
     /// </summary>
     private void ApplyLevelSignature()
@@ -1273,13 +1330,15 @@ public partial record LevelLayout : DataBlock<LevelLayout>
 
         // Survival wires countdown machinery to EventsOnElevatorLand, ReachKdsDeep already
         // scripts timed elevator waves (including a shadow pouncer), and Cryptomnesia plays
-        // out in other dimensions. None of them mix with signatures.
+        // out in other dimensions. None of them mix with signatures. Level.Build demotes
+        // the signature to None for these objectives, so this is a defensive check that
+        // should never trigger.
         if (director.Objective is WardenObjectiveType.Survival
             or WardenObjectiveType.ReachKdsDeep
             or WardenObjectiveType.Cryptomnesia)
         {
-            Plugin.Logger.LogDebug(
-                $"{Name} -- Skipping level signature {level.Settings.Signature} for {director.Objective}");
+            Plugin.Logger.LogWarning(
+                $"{Name} -- Signature {level.Settings.Signature} was not demoted for {director.Objective}; skipping");
 
             return;
         }
@@ -1333,12 +1392,14 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             case LevelSignature.BossAlarm:
             {
                 // These objectives fire a global StopEnemyWaves mid-level via terminal
-                // command events, which would kill the boss alarm early.
+                // command events, which would kill the boss alarm early. Level.Build
+                // re-rolls BossAlarm away from them (on any bulkhead), so this is a
+                // defensive check that should never trigger.
                 if (director.Objective is WardenObjectiveType.AlphaTerminalCommand
                     or WardenObjectiveType.TimedTerminalSequence)
                 {
-                    Plugin.Logger.LogDebug(
-                        $"{Name} -- Skipping BossAlarm signature for {director.Objective}");
+                    Plugin.Logger.LogWarning(
+                        $"{Name} -- BossAlarm signature was not re-rolled for {director.Objective}; skipping");
 
                     return;
                 }

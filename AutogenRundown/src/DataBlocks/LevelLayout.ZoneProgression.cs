@@ -1464,9 +1464,13 @@ public partial record LevelLayout
             return;
         }
 
-        // Levels with an active signature step the top-end error wave down one notch so the
-        // two pressure sources don't stack. See docs/dev/e-tier-difficulty.md, B1 guardrail.
-        if (level.Settings.Signature != LevelSignature.None && settings == WaveSettings.Error_VeryHard)
+        // Signatures that add their own wave or environment pressure step the top-end
+        // error wave down one notch so the two pressure sources don't stack.
+        // StartWithInfection is a static handicap and keeps the full-strength error.
+        // See docs/dev/e-tier-difficulty.md, B1 guardrail.
+        if (level.Settings.Signature is LevelSignature.Stalker or LevelSignature.BossAlarm
+                or LevelSignature.CyclingFog
+            && settings == WaveSettings.Error_VeryHard)
             settings = WaveSettings.Error_Hard;
 
         // We use a template error alarm to provide the correct scan, but it doesn't trigger any waves

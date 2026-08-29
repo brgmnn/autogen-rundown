@@ -163,21 +163,24 @@ public static class WardenObjectiveEventCollections
     }
 
     /// <summary>
-    /// Adds a scripted error alarm: not a real alarm but a finite event loop that periodically
-    /// fires a warden intel message, a sound cue, and an enemy wave. R7D1's snatcher alarm does
-    /// this with 1 snatcher every 4 minutes; it runs out after 19 waves (~1hr 16min).
+    /// Adds a scripted error alarm: not a real alarm but an event loop that periodically
+    /// fires a warden intel message, a sound cue, and an enemy wave. R7D1's snatcher alarm
+    /// does this with 1 snatcher every 4 minutes (finite there: 19 waves, ~1hr 16min); the
+    /// default here is infinite, which is what the Stalker signature uses.
     ///
     /// Results of this are:
     ///     - No combat music (TriggerAlarm is forced off on the wave)
     ///     - Players get out of combat stamina between waves
     ///     - "Alarm" _cannot_ be deactivated by DEACTIVATE_ALARMS
+    ///     - An infinite loop also survives StopAllWavesBeforeGotoWin and runs through
+    ///       extraction (it is an EventLoop, not a warden wave)
     ///
     /// See link for more details:
     /// https://gtfo.fandom.com/wiki/R7D1#Trivia
     /// </summary>
     /// <param name="events"></param>
     /// <param name="wave">Wave to spawn each pulse. TriggerAlarm is forced to false.</param>
-    /// <param name="waveCount">Total number of pulses; the loop is finite (R7D1 uses 19).</param>
+    /// <param name="waveCount">Total number of pulses; -1 (default) loops forever.</param>
     /// <param name="interval">Seconds between pulses.</param>
     /// <param name="delay">Grace period before the loop starts.</param>
     /// <param name="message">Warden intel shown each pulse. Empty string for no intel.</param>

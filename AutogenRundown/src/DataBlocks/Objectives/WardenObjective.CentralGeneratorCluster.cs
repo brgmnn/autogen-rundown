@@ -37,7 +37,11 @@ public partial record WardenObjective
         };
         CentralGeneratorCluster_NumberOfPowerCells = CentralGeneratorCluster_NumberOfGenerators;
 
-        level.TrySetFogUsage(FogUsage.ShortDuration);
+        // Record whether we actually own the fog lane: when another feature holds it
+        // (e.g. the CyclingFog signature's LongDuration reservation), the layout skips
+        // the generator fog steps instead of clobbering that feature's fog.
+        if (level.TrySetFogUsage(FogUsage.ShortDuration))
+            FogUsage = FogUsage.ShortDuration;
     }
 
     private void Build_CentralGeneratorCluster(BuildDirector director, Level level)

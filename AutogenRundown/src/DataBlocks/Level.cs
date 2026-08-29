@@ -1624,26 +1624,31 @@ public partial class Level
         level.BuildBulkheads();
 
         #region Fog settings
-        // CyclingFog owns whole-level fog. CentralGeneratorCluster is excluded from the
-        // Main-objective draw for cycling fog levels in RundownFactory; the objectives
-        // here match ApplyLevelSignature's skip list, so demote to None and re-roll the
-        // standard E-tier fog modifier so the level rejoins the normal fog distribution.
-        if (level.Settings.Signature == LevelSignature.CyclingFog
+        // The objectives here match ApplyLevelSignature's skip list. Demote the signature
+        // to None so the level-wide consumers (error-alarm damp, apex/ClearPath boss
+        // suppression, per-zone ammo bump) don't fire on a level with no signature
+        // content. CyclingFog additionally re-rolls the standard E-tier fog modifier so
+        // the level rejoins the normal fog distribution (its roll was skipped in
+        // LevelSettings.Generate); CentralGeneratorCluster is excluded from the
+        // Main-objective draw for cycling fog levels in RundownFactory.
+        if (level.Settings.Signature != LevelSignature.None
             && level.MainDirector.Objective is WardenObjectiveType.Survival
                 or WardenObjectiveType.ReachKdsDeep
                 or WardenObjectiveType.Cryptomnesia)
         {
-            level.Settings.Signature = LevelSignature.None;
-            level.Settings.Modifiers.Add(
-                Generator.Select(new List<(double, LevelModifiers)>
-                {
-                    (0.3, LevelModifiers.NoFog),
-                    (0.5, LevelModifiers.Fog),
-                    (0.2, LevelModifiers.HeavyFog),
-                }));
+            if (level.Settings.Signature == LevelSignature.CyclingFog)
+                level.Settings.Modifiers.Add(
+                    Generator.Select(new List<(double, LevelModifiers)>
+                    {
+                        (0.3, LevelModifiers.NoFog),
+                        (0.5, LevelModifiers.Fog),
+                        (0.2, LevelModifiers.HeavyFog),
+                    }));
 
             Plugin.Logger.LogDebug(
-                $"{logLevelId} -- Demoted CyclingFog signature for main objective {level.MainDirector.Objective}");
+                $"{logLevelId} -- Demoted {level.Settings.Signature} signature for main objective {level.MainDirector.Objective}");
+
+            level.Settings.Signature = LevelSignature.None;
         }
 
         var lowFog = level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)
@@ -1698,6 +1703,43 @@ public partial class Level
 
         if (level.HasOverload)
             level.PreBuildObjective(Bulkhead.Overload);
+        #endregion
+
+        #region Signature vs. objective wave-stop conflicts
+        // These objectives fire identifier-less (global) StopEnemyWaves events mid-level
+        // — terminal command events, portal warps, or the vanilla uplink-completion stop
+        // that Patch_UplinkWaveIsolation can fall back to — which would silently kill the
+        // BossAlarm signature's untagged boss stream. Secondary/overload objectives are
+        // only drawn during the prebuild above, so this check has to run here rather than
+        // with the Main-objective demotion. Re-roll to a signature that survives a global
+        // stop; CyclingFog is not a candidate because its fog-roll skip and
+        // CentralGeneratorCluster draw exclusion have already happened.
+        if (level.Settings.Signature == LevelSignature.BossAlarm
+            && level.Director.Values.Any(d => d.Objective
+                is WardenObjectiveType.AlphaTerminalCommand
+                or WardenObjectiveType.TimedTerminalSequence
+                or WardenObjectiveType.TerminalUplink
+                or WardenObjectiveType.CorruptedTerminalUplink))
+        {
+            level.Settings.Signature = Generator.Select(new List<(double, LevelSignature)>
+            {
+                (1.0, LevelSignature.Stalker),
+                (1.0, LevelSignature.StartWithInfection)
+            });
+
+            // StartWithInfection normally forces an infection modifier during the E-tier
+            // roll in LevelSettings.Generate; mirror that for a late re-roll. FogSettings
+            // are already assigned above, so FogIsInfectious is deliberately not added.
+            if (level.Settings.Signature == LevelSignature.StartWithInfection
+                && !level.Settings.HasInfection)
+                level.Settings.Modifiers.Add(Generator.Flip(0.6)
+                    ? LevelModifiers.HeavyInfection
+                    : LevelModifiers.Infection);
+
+            Plugin.Logger.LogDebug(
+                $"{logLevelId} -- Re-rolled BossAlarm signature to {level.Settings.Signature} " +
+                "due to an objective with a global wave stop");
+        }
         #endregion
 
         #region Scout Waves

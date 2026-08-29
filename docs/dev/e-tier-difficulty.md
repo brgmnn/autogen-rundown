@@ -108,12 +108,15 @@ E-scoped, length-neutral, and lists its completability guardrail.
 
 **B1. Implement `AddScriptedErrorAlarm`. ✅ Done** (now in
 `Extensions/WardenObjectiveEventCollections.cs`; the empty `EventBuilder` stub is removed).
-An R7D1-style pseudo-error — periodic small waves via a finite `EventLoop`, no combat
+An R7D1-style pseudo-error — periodic small waves via an `EventLoop`, no combat
 music, no `DEACTIVATE_ALARMS`, stamina regen between pulses. This is the R2E1/R4E1
 signature: persistent upkeep pressure over the level's *existing* footprint.
-*Guardrail:* finite wave count (R7D1 uses 19), interval ≥ 3-4 min, payloads ≤ 4 pts or a
-single enemy. When a signature mechanic is active, `AddErrorAlarm` steps `Error_VeryHard`
-down to `Error_Hard` so the two pressure sources don't stack.
+*Guardrail:* interval ≥ 3-4 min, payloads ≤ 4 pts or a single enemy. R7D1 uses a finite
+count (19); the helper's default is now `-1` (infinite), which is the Stalker's design.
+When a signature that adds its own wave or environment pressure is active (Stalker,
+BossAlarm, CyclingFog — *not* StartWithInfection, which is a static handicap),
+`AddErrorAlarm` steps `Error_VeryHard` down to `Error_Hard` so the two pressure sources
+don't stack.
 
 **B2. Starting-state handicaps (`Level.cs:678-690`). ✅ Done** — shipped as the
 `LevelSignature.StartWithInfection` signature (see C2c) rather than a standalone roll,
@@ -172,8 +175,20 @@ halved scout chance. Length-neutral: blood doors gate doors that already exist.
 
 Official E-levels each have an *identity* — one defining mechanic you remember. Gate these
 behind a generic `LevelSignature` enum on `LevelSettings`, rolled only in the E branch of
-`Generate()` (`None` stays common). Straight into E rolls with low initial weights
-(decision above); at most one signature per level.
+`Generate()`; at most one signature per level.
+
+**Status (2026-08): every E level gets a signature.** `None` was removed from the roll
+(`533fa70`); current weights are StartWithInfection 1.0 / Stalker 1.0 / CyclingFog 1.0 /
+BossAlarm 0.6 (~28/28/28/17%). Levels whose Main objective is Survival / ReachKdsDeep /
+Cryptomnesia are demoted back to `None` in `Level.Build` (with a fog-modifier re-roll for
+CyclingFog) so the level-wide signature consumers — the B1 error damp, the apex/ClearPath
+boss suppression, the per-zone ammo bump — don't fire on a level with no signature
+content. BossAlarm is additionally **re-rolled** (to Stalker or StartWithInfection) when
+*any* bulkhead carries AlphaTerminalCommand, TimedTerminalSequence, TerminalUplink, or
+CorruptedTerminalUplink — all of them can fire an identifier-less global wave stop
+mid-level (TTS's `DEACTIVATE_ALARMS` turn-off zone exists on secondaries too, and the
+uplink-completion stop can fall through `Patch_UplinkWaveIsolation` to the vanilla global
+call), which would silently kill the untagged boss stream.
 
 **C1. Upkeep protocol** *(R8E2; the maintainer's own idea, `README.md:71-72`)*
 Level starts a countdown (`AddCountdown` / `AddSpecialHudTimer`). Every zone terminal
@@ -183,54 +198,70 @@ loop until the next override is entered. Pressure, never a fail state.
 *Primitives:* all exist (`WardenObjectiveEventCollections.cs`, `CustomTerminalCommand.cs`).
 *Effort:* medium. *Guardrail:* command on every terminal; first deadline generous.
 
-**C2. Recurring stalker** *(R7E1-lite)* **✅ Done** (first `LevelSignature`; rolled at 0.15
-in the E branch of `LevelSettings.Generate()`, applied in `LevelLayout.ApplyLevelSignature()`)
-B1's pseudo-error with a `GenericWave.SinglePouncerShadow` payload every 4-6 minutes plus
-a `Sound.EnemyHeartbeat` tell — something hunts you all level. Explicitly **not** invincible
-(see What NOT to do): pouncers down players rather than kill, and they die.
-*Effort:* low once B1 lands. *Guardrail:* finite spawn count (12); payload never escalates;
-skipped on Survival / ReachKdsDeep / Cryptomnesia mains. **Needs Windows playtest:** finite
-`EventLoop.LoopCount` is otherwise unexercised.
+**C2. Recurring stalker** *(R7E1-lite)* **✅ Done** (first `LevelSignature`; weight 1.0,
+applied in `LevelLayout.ApplyLevelSignature()`)
+B1's pseudo-error with a `GenericWave.SinglePouncerShadow` payload every 230-270 s (grace
+35-70 s) plus a `Sound.EnemyHeartbeat` tell — something hunts you all level. Explicitly
+**not** invincible (see What NOT to do): pouncers down players rather than kill, and they
+die. *Guardrail:* payload never escalates; single-enemy pulses only. **Deliberately
+infinite** (`waveCount: -1`, tightened in `df2ef09`): the loop is immune to
+`StopAllWavesBeforeGotoWin` and keeps hunting through the exit scan — that extraction
+pressure is the design. Demoted on Survival / ReachKdsDeep / Cryptomnesia mains.
 
-**C2b. Boss alarm** *(R4E1's Tank error)* **✅ Done** (`LevelSignature.BossAlarm`, rolled at
-0.10 in the E branch alongside Stalker)
+**C2b. Boss alarm** *(R4E1's Tank error)* **✅ Done** (`LevelSignature.BossAlarm`, weight
+0.6)
 A real `TriggerAlarm` boss error wave (Tank @240s / TankPotato @180s / Mother @240s,
 weighted) in `WavesOnElevatorLand` — the game starts the alarm ambience at drop — running
 until the Main objective completes, where `StopAllWavesBeforeGotoWin` cancels all waves
-and the ambience before exit waves spawn. Rolled error alarms keep the one-notch damp;
-their `DEACTIVATE_ALARMS` stops are identifier-scoped (honored by AWO) and the boss stream
-carries no identifier, so it survives them. The apex-alarm boss default and ClearPath's
-own level tank alarm are suppressed while the signature is active. Skipped on
-AlphaTerminalCommand / TimedTerminalSequence — their command events fire identifier-less
-(global) wave stops mid-level, which would kill the untagged boss stream.
+and the ambience before exit waves spawn. The elevator warden intel was later removed as
+too noisy (`a56f466`); only the drop-screen `MarkAsBossErrorAlarm` intel remains. Rolled
+error alarms keep the one-notch damp; their `DEACTIVATE_ALARMS` stops are
+identifier-scoped (honored by AWO) and the boss stream carries no identifier, so it
+survives them. The apex-alarm boss default is suppressed while the signature is active
+(ClearPath's own level tank alarm branch was removed outright — dead code once every E
+level rolls a signature). Re-rolled in `Level.Build` (to Stalker or StartWithInfection)
+when any bulkhead carries a global-wave-stop objective — see the Status note above; the
+HSU/GSI E-Main drop-time error alarms are also skipped under Stalker/BossAlarm/CyclingFog
+so drop pressure never double-stacks.
 
-**C2c. Infected start** *(R5E1)* **✅ Done** (`LevelSignature.StartWithInfection`, rolled
-at 0.10 in the E branch)
-Players spawn at (usually) max infection via `SpecialOverrideData.InfectionLevelAtExpeditionStart`
-(rolled 1.0 / 0.75 / 0.5, weighted toward max). The engine soft-caps infection at 0.85 —
-a max start settles there in ~15s, leaving a 15% health floor exactly like R5E1 — and
-applies the value only at the initial elevator spawn (checkpoint recall keeps captured
-infection). The signature forces at least `LevelModifiers.Infection` so the level reads
-as infected and the standing relief rolls (fog-zone disinfect packs, the 0.4-chance
-disinfection side zone) can fire; deliberately **no guaranteed relief** beyond those.
+**C2c. Infected start** *(R5E1)* **✅ Done** (`LevelSignature.StartWithInfection`, weight
+1.0)
+Players spawn at max infection (hard-coded 1.0 at E; the 1.0/0.75/0.5 weighted draw
+survives only as the non-E fallback) via
+`SpecialOverrideData.InfectionLevelAtExpeditionStart`. The engine soft-caps infection at
+0.85 — a max start settles there in ~15s, leaving a 15% health floor exactly like R5E1 —
+and applies the value only at the initial elevator spawn (checkpoint recall keeps captured
+infection). The signature forces at least `LevelModifiers.Infection` so the level reads as
+infected. The standing relief rolls are fog-gated and **cannot fire on a NoFog roll**
+(~30% of these levels), so relief is a dedicated low roll instead: a 0.35 chance of a
+disinfection side zone restricted to the **second half** of the Main progression — players
+play through the infection before any relief appears. No relief in the first half, ever.
+Keeps the full-strength `Error_VeryHard` error alarms (the B1 damp only applies to
+wave/environment-pressure signatures) and is the one signature that still allows the
+HSU/GSI drop-time error alarms.
 
-**C2d. Cycling fog** **✅ Done** (`LevelSignature.CyclingFog`, rolled at 0.10 in the E
-branch; None down to 0.60)
+**C2d. Cycling fog** **✅ Done** (`LevelSignature.CyclingFog`, weight 1.0)
 Whole-level cycling fog: the ventilation fails on a cycle — fog rises to heavy, holds,
 recedes, repeats for the entire level via the existing `AddCyclingFog(level)` EventLoop
 helper on `EventsOnElevatorLand` (E cadence: infectious ≈177s cycle with a 90s heavy
-hold, non-infectious ≈140s; new `startDelay` gives a 45-90s clear grace at drop).
-Infectious iff the level rolls `FogIsInfectious`. The signature owns fog end to end: the
+hold, non-infectious ≈140s; `startDelay` gives a 45-90s clear grace at drop).
+Infectious iff the level rolls `FogIsInfectious` (the infectious cycle fogs use
+`INFECTION_SLOW` = 0.015 — an earlier 0.01 sat exactly on the `IsInfectious` threshold
+and classified as non-infectious). The signature owns fog end to end: the
 E fog modifier roll is skipped (keeping `Zone.RollFog` inert), `Level.Build` sets the
 base `FogSettings` to the cycle's clear trough and reserves `FogUsage.LongDuration` so
 fog-flood alarms and objective fog challenges can't stack on top. CyclingFog levels
 exclude CentralGeneratorCluster from the Main-objective draw entirely (RundownFactory
 constructs the Level before drawing the objective and uses the excluded-predicate
-`DrawSelect` overload — CGC's generator fog steps would fight the loop); Survival /
-ReachKdsDeep / Cryptomnesia demote to None with a normal fog re-roll (they skip all
-signatures anyway). Guardrails: a fog turbine +
-repellers guaranteed in the elevator zone; the B1 one-notch error damp applies; **no
-added disinfect relief** (first tuning lever if infectious cycling proves too harsh).
+`DrawSelect` overload — CGC's generator fog steps would fight the loop; CGC's layout now
+also self-defends by skipping its fog steps when its `TrySetFogUsage` reservation fails);
+Survival / ReachKdsDeep / Cryptomnesia demote to None with a normal fog re-roll.
+Guardrails: a fog turbine + repellers guaranteed in the elevator zone, plus 0.5-chance
+rolls for an extra turbine and 1-2 repeller drops in the **second half** of the level
+(blind heavy fog is the pain point); the B1 one-notch error damp applies. Because the
+forced NoFog modifier means the fog-gated relief can never fire, infectious cycling levels
+share StartWithInfection's dedicated relief roll: a 0.35 chance of a disinfection side
+zone, second half only — never earlier.
 Needs Windows playtest: AWO loop first-iteration timing (drop should be clear until the
 grace elapses).
 
