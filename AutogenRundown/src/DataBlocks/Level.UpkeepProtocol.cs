@@ -52,10 +52,6 @@ public partial class Level
     /// <summary>Override command name, verbatim from R8E2.</summary>
     private const string UpkeepCommand = "ADMIN_TEMP_OVERRIDE";
 
-    private const string UpkeepTitle = ":://UPKEEP PROTOCOL - NEXT MAINTENANCE DUE";
-
-    private const string UpkeepFallbackTitle = "<color=red>UPKEEP FAILURE</color> - SURGE UNTIL NEXT OVERRIDE";
-
     /// <summary>
     /// Applies the UpkeepProtocol signature: wires the override command onto every
     /// terminal in every Reality zone (all bulkheads) and starts the countdown chain on
@@ -103,8 +99,8 @@ public partial class Level
             UpkeepWaveIdentifier,
             UpkeepFallbackCount,
             UpkeepFallbackWindowSeconds,
-            UpkeepTitle,
-            UpkeepFallbackTitle,
+            timerColor: "yellow",
+            fallbackTimerColor: "yellow",
             expiryMessage: ":://UPKEEP FAILURE - SURGE PROTOCOL ACTIVE",
             warningMessage: ":://WARNING - MAINTENANCE WINDOW CLOSING",
             delay: 5.0);

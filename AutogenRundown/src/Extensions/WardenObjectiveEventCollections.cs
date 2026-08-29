@@ -1173,6 +1173,8 @@ public static class WardenObjectiveEventCollections
     /// <param name="fallbackDuration">Duration of each fallback countdown, in seconds</param>
     /// <param name="titleText">HUD title of the initial countdown</param>
     /// <param name="fallbackTitleText">HUD title of the fallback countdowns</param>
+    /// <param name="timerColor">Timer color of the initial countdown</param>
+    /// <param name="fallbackTimerColor">Timer color of the fallback countdowns</param>
     /// <param name="expiryMessage">Warden intel shown on expiry. Empty string for none.</param>
     /// <param name="warningMessage">
     /// Warden intel shown at 75%/90% elapsed (90% repeats it in red). Empty string for none;
@@ -1190,6 +1192,8 @@ public static class WardenObjectiveEventCollections
         double fallbackDuration = 240.0,
         string titleText = "",
         string fallbackTitleText = "",
+        string timerColor = "red",
+        string fallbackTimerColor = "#ffaa00",
         string expiryMessage = "",
         string warningMessage = "",
         Sound expirySound = Sound.Alarms_Error_AmbientLoop,
@@ -1247,7 +1251,7 @@ public static class WardenObjectiveEventCollections
                 Countdown = new WardenObjectiveEventCountdown
                 {
                     TitleText = fallbackTitleText,
-                    TimerColor = "#ffaa00",
+                    TimerColor = fallbackTimerColor,
                     EventsOnProgress = BuildWarnings(),
                     EventsOnDone = chain
                 }
@@ -1262,7 +1266,7 @@ public static class WardenObjectiveEventCollections
                 Countdown = new WardenObjectiveEventCountdown
                 {
                     TitleText = titleText,
-                    TimerColor = "red",
+                    TimerColor = timerColor,
                     EventsOnProgress = BuildWarnings(),
                     EventsOnDone = chain
                 }
