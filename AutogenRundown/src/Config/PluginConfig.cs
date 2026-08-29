@@ -127,22 +127,22 @@ public static class PluginConfig
         {
             (RebuildCheck.NavMeshReachability,
              "Rebuild the level when a zone's navmesh fails to connect (unreachable course " +
-             "nodes). Disable only for testing; broken zones will load as-is."),
+             "nodes). Broken zones will load as-is."),
             (RebuildCheck.MissingCustomGeomorph,
              "Rebuild the level when a zone that requires a custom geomorph doesn't get it " +
-             "placed. Disable only for testing; affected objectives may be missing."),
+             "placed. Affected objectives may be missing."),
             (RebuildCheck.NullSourceExpander,
-             "Rebuild the level when a zone completes without a source expander. Disable only " +
-             "for testing; the vanilla build code will throw on the missing expander."),
+             "Rebuild the level when a zone completes without a source expander. The vanilla " +
+             "build code will throw on the missing expander."),
             (RebuildCheck.ZoneZeroAreas,
-             "Rebuild the level when a zone fake-completes with zero areas. Disable only for " +
-             "testing; downstream zones will fail to build from it."),
+             "Rebuild the level when a zone fake-completes with zero areas. Downstream zones " +
+             "will fail to build from it."),
             (RebuildCheck.FailedToFindStartArea,
              "Reroll zone seeds and rebuild when a zone can't find a start area in its parent. " +
-             "Disable only for testing; the build may hang forever on affected seeds."),
+             "The build may hang forever on affected seeds."),
             (RebuildCheck.MissingGeneratorCluster,
              "Rebuild the level when a zone that requires a power generator cluster doesn't " +
-             "spawn it. Disable only for testing; the objective will be uncompletable."),
+             "spawn it. The objective will be uncompletable."),
         };
 
         var rebuildChecks = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
@@ -171,12 +171,12 @@ public static class PluginConfig
     private const string AdvancedHeader =
         """
         ## =========================================================================
-        ## ADVANCED SETTINGS -- read before editing
+        ##  --- ADVANCED SETTINGS ---
         ##
-        ## These settings change how levels generate and are intended for testing.
-        ## Leave everything at its default unless you know exactly what you are
-        ## doing. All players in a lobby must use identical values in this file,
-        ## otherwise level generation will desync.
+        ## These settings change how levels generate and are intended for testing
+        ## and debugging. Leave everything at its default unless you know exactly
+        ## what you are doing. All players in a lobby must use identical values in
+        ## this file, otherwise level generation will desync.
         ## =========================================================================
 
 

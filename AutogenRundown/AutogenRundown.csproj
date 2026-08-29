@@ -27,6 +27,7 @@
     <GalePlugin_Debug>$(Gale_Debug)\plugins\the_tavern-$(SolutionName)</GalePlugin_Debug>
 
     <DefineConstants>DEBUG</DefineConstants>
+<!--    <DefineConstants>DEBUG;ENABLE_SOLO_RUNDOWN;ENABLE_DUO_RUNDOWN</DefineConstants>-->
   </PropertyGroup>
 
   <ItemGroup>

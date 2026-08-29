@@ -97,23 +97,27 @@ public class RundownNames
             // Solo
             // -> R3
             //
+            #if ENABLE_SOLO_RUNDOWN
             else if (num == 3)
             {
                 var rundownData = Bins.Rundowns.Find(Rundown.R_Solo);
 
                 rundown.m_rundownText.text = $"<size=70%><color=#0080ff>SOLO</color><color=#444444>:</color> {rundownData?.Title}</size>";
             }
+            #endif
 
             //
             // Duo
             // -> R4
             //
+            #if ENABLE_DUO_RUNDOWN
             else if (num == 4)
             {
                 var rundownData = Bins.Rundowns.Find(Rundown.R_Duo);
 
                 rundown.m_rundownText.text = $"<size=70%><color=#ff007f>DUO</color><color=#444444>:</color> {rundownData?.Title}</size>";
             }
+            #endif
 
             num++;
         }
