@@ -44,6 +44,10 @@ TODO:
 
   * See if we can fix enemies not navigating through the final door in D3
 
+      * `ADMIN_TEMP_OVERRIDE` upkeep command (R8E2)
+        * Continuous time pressure to get to the next zone to add time to a decreasing timer
+        * Nightmare surge on failure, same as R8E2.
+
   * Tone down higher density of scans, especially for moving ones
 
   * Check SC1: Seemed like no enemies after doing secondary?
