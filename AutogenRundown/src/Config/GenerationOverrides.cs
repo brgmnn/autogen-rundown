@@ -15,6 +15,8 @@ public static class RebuildCheck
     public const string ZoneZeroAreas = "ZoneZeroAreas";
     public const string FailedToFindStartArea = "FailedToFindStartArea";
     public const string MissingGeneratorCluster = "MissingGeneratorCluster";
+    public const string UnmatchedNodeCluster = "UnmatchedNodeCluster";
+    public const string StuckFactoryJob = "StuckFactoryJob";
 
     public static readonly string[] All =
     {
@@ -24,6 +26,8 @@ public static class RebuildCheck
         ZoneZeroAreas,
         FailedToFindStartArea,
         MissingGeneratorCluster,
+        UnmatchedNodeCluster,
+        StuckFactoryJob,
     };
 }
 

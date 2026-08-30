@@ -143,6 +143,12 @@ public static class PluginConfig
             (RebuildCheck.MissingGeneratorCluster,
              "Rebuild the level when a zone that requires a power generator cluster doesn't " +
              "spawn it. The objective will be uncompletable."),
+            (RebuildCheck.UnmatchedNodeCluster,
+             "Rebuild the level when a zone's AI node cluster never gets matched to its area. " +
+             "The vanilla HSU scanner job throws on such zones and hangs the build forever."),
+            (RebuildCheck.StuckFactoryJob,
+             "Rebuild the level when a factory job throws the same exception several frames " +
+             "in a row. The build would otherwise hang on the loading screen forever."),
         };
 
         var rebuildChecks = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
