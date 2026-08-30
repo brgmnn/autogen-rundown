@@ -34,7 +34,24 @@ public partial record WardenObjective : DataBlock<WardenObjective>
             "Survival chances minimal.",
             "Significant human cost projected.",
             "Substantial prisoner depletion likely.",
-            "High prisoner attrition rate expected."
+            "High prisoner attrition rate expected.",
+            "Replacement units already requisitioned.",
+            "Return of assets not expected.",
+            "Mortality projections exceed acceptable margins.",
+            "Attrition budgeted. Proceed.",
+            "Losses considered acceptable overhead.",
+            "Survivor count projected at zero.",
+            "Casualty forecast: total.",
+            "Expend prisoners freely.",
+            "No extraction guarantee issued.",
+            "Prisoner viability window narrow.",
+            "Body recovery not scheduled.",
+            "Loss ratio within tolerance.",
+            "Full asset write-off anticipated.",
+            "Termination probability elevated.",
+            "Attrition models unreliable at this depth.",
+            "Expect losses. Continue regardless.",
+            "Deployment considered non-recoverable."
         })!;
 
     public static string GenLevelDescription(WardenObjectiveType type, WardenObjectiveItem item = WardenObjectiveItem.PersonnelId)
@@ -67,9 +84,14 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 "Power grid manager reports system errors in primary reactor. Prisoners dispatched to execute quadrant generator reboot.",
                 "Essential systems offline. Prisoners to perform system reboot in central quadrant.",
                 "Protocol requiring additional power. Prisoners dispatched to sector.",
-                "Insufficient power supply for PGD decryption. Prisoners sent to activate quadrant reactor."
+                "Insufficient power supply for PGD decryption. Prisoners sent to activate quadrant reactor.",
 
                 // Autogen
+                "Sector draw exceeds available capacity. Prisoners dispatched to bring the dormant reactor up to operational load.",
+                "Reactor cold since lockdown. Startup sequence requires manual verification at every phase. Prisoners assigned to hold the terminal.",
+                "Grid brownout propagating through the lower quadrant. Prisoners to execute startup and confirm codes under sustained contact.",
+                "Auxiliary power failing. Primary reactor must be cycled online before atmospheric systems drop below threshold. Losses irrelevant.",
+                "Startup interlocks demand continuous prisoner presence at the reactor terminal. Defense of the sequence is the objective. Power is the priority.",
             })!,
 
             WardenObjectiveType.ReactorShutdown => Generator.Pick(new List<string>
@@ -405,11 +427,102 @@ public partial record WardenObjective : DataBlock<WardenObjective>
                 "Terminal sync required. Prisoners ordered to perform chained input across network before countdown expires.",
             })!,
 
-            // WardenObjectiveType.RetrieveBigItems => expr,
-            // WardenObjectiveType.CentralGeneratorCluster => expr,
-            // WardenObjectiveType.HsuActivateSmall => expr,
-            // WardenObjectiveType.GatherTerminal => expr,
-            // WardenObjectiveType.CorruptedTerminalUplink => expr,
+            WardenObjectiveType.RetrieveBigItems => Generator.Pick(new List<string>
+            {
+                "High-mass asset located. Prisoners to carry it to extraction. The carrier will be defenseless. The team will compensate.",
+                "Cargo flagged for recovery. Weapons cannot be held while the unit is carried. Prisoners to plan accordingly.",
+                "Item exceeds manual transport tolerance. Prisoners will move it regardless. Structural integrity of the cargo is mandatory.",
+                "Retrieval order issued. The asset leaves the Complex. Prisoners are not required to.",
+                "Warden priority cargo identified deep in the sector. Prisoners dispatched to lift and haul it to the extraction point.",
+                "Recovered hardware must reach the surface intact. Damage to the unit voids the expedition. Damage to prisoners does not.",
+                "Transport speed will be reduced to walking pace. Hostile density will not be. Prisoners deployed.",
+                "Asset abandoned during evacuation. Prisoners ordered to locate, lift, and return it under escort.",
+                "Extraction scan will not complete without the cargo inside the perimeter. Carrier to remain with the unit.",
+                "<color=orange>WARNING</color>: pickup will register on local security systems. Prisoners to carry through the response.",
+                "Heavy salvage authorized. Prisoners will bear the load in rotation. Dropped cargo is to be recovered immediately.",
+                "The unit is irreplaceable. The carriers are not. Proceed to extraction.",
+            })!,
+
+            WardenObjectiveType.CentralGeneratorCluster => Generator.Pick(new List<string>
+            {
+                "Cluster inert. Power cells dispersed across the sector during evacuation. Prisoners to gather and seat each one.",
+                "Central distribution node unpowered. Prisoners will locate the scattered cells and carry them inward.",
+                "Grid dead. Fog holding at saturation. Each cell seated in the cluster thins it. Prisoners to proceed cell by cell.",
+                "Power cells logged across multiple holdings. Retrieval and insertion assigned to prisoners. Order is irrelevant. Completion is not.",
+                "Generator cluster requires the full complement before it will hold load. Prisoners dispatched to complete the set.",
+                "Sector dark since the reactor failed. Prisoners instructed to feed the central cluster until systems answer.",
+                "Cell inventory incomplete. Prisoners to sweep adjacent holdings and haul recovered units to the cluster.",
+                "Final insertion will draw attention. Prisoners advised to seat it only when prepared. Advisory is not a delay authorization.",
+                "Power restoration deferred to field assets. Prisoners will serve as couriers until the cluster answers.",
+                "Cluster diagnostics report empty sockets. Prisoners tasked with filling them. Carriers move at walking pace.",
+                "Light returns only with load. Prisoners to seat every cell in the central cluster.",
+                "Warden requires this sector energized. The cells are scattered. The prisoners are available.",
+            })!,
+
+            WardenObjectiveType.HsuActivateSmall => Generator.Pick(new List<string>
+            {
+                "Sealed unit located. Prisoners to carry it to the insertion machinery, complete processing, and return with it.",
+                "Processing cycle cannot begin without physical delivery. Prisoners assigned as couriers. The unit must not be damaged.",
+                "Machinery idle. Unit stored elsewhere. Prisoners to bridge the distance and initiate the cycle.",
+                "Insertion, activation, retrieval. Prisoners to complete all three stages. Partial completion is failure.",
+                "Unit requires processing at designated machinery before it holds value. Prisoners to deliver, activate, and recover the asset.",
+                "Activation cycle will run to completion or not at all. Prisoners to hold the machinery until the process confirms.",
+                "Warden directive: transport cargo to the processing station. Remain through the cycle. Return with the unit intact.",
+                "Contents of the unit are <color=red>-REDACTED-</color>. Prisoners to deliver it, run the cycle, and carry it back.",
+                "Processing station powered and waiting. The unit is not there. Prisoners dispatched to correct this.",
+                "Asset must undergo activation before extraction. Carrier defenseless in transit. Escort mandatory.",
+                "Do not open the unit. Do not abandon the unit. Deliver it, activate it, bring it back.",
+                "Cycle interruption will void the asset. Prisoners to defend the machinery for the full duration and withdraw with the cargo.",
+            })!,
+
+            WardenObjectiveType.GatherTerminal => Generator.Pick(new List<string>
+            {
+                "Decryption keys fragmented across local terminals. Prisoners dispatched to collect every fragment.",
+                "Archive access denied pending key assembly. Prisoners to work terminal by terminal until the set is complete.",
+                "Data isolated on standalone nodes. No network path exists. Prisoners will retrieve it by hand.",
+                "Key material was distributed for security. Security has failed. Prisoners to gather what remains.",
+                "Terminal records flagged for Warden acquisition. Prisoners to read, extract, and confirm at each node.",
+                "Partial key set held in Warden memory. Remainder buried in the sector. Prisoners deployed to close the gap.",
+                "Prisoners assigned to terminal sweep. Each node yields one fragment. All fragments required.",
+                "Legacy systems never reported upward. Prisoners to interrogate each terminal directly and transmit findings.",
+                "Information retrieval authorized across multiple holdings. Reading takes time. Time is contested.",
+                "Warden requires the contents of these terminals. Prisoners will stand at each one until the data is extracted.",
+                "Decryption chain incomplete. Missing segments logged to terminals in hostile holdings. Recovery mandated.",
+                "These nodes were sealed for a reason. That reason is no longer operative. Prisoners to harvest all stored data.",
+            })!,
+
+            WardenObjectiveType.CorruptedTerminalUplink => Generator.Pick(new List<string>
+            {
+                "Uplink handshake degraded. Verification codes are not returning to display. Prisoners to recover them from local log files.",
+                "Relay corruption confirmed. Codes written to terminals elsewhere in the sector. Prisoners will divide and relay.",
+                "Network integrity failing. Verification strings dumped to log storage on unrelated nodes. Manual recovery required.",
+                "Uplink cannot self-verify. Prisoners to read codes at one terminal and enter them at another. Errors reset the stage.",
+                "Connection established through failing infrastructure. Each verification must be retrieved by hand. Prisoners deployed accordingly.",
+                "Code channel compromised. Prisoners to locate log files, extract strings, and confirm at the uplink terminal under contact.",
+                "Warden upload blocked by a corrupted verification path. Prisoners to reconstruct the sequence manually. Team separation unavoidable.",
+                "Terminal reports checksum failure on every verification packet. Prisoners to source codes from log storage until the link holds.",
+                "Uplink initiated. Codes lost to corruption. Prisoners to retrieve them from scattered nodes before the connection times out.",
+                "Half the network is dead. The remainder is unreliable. Prisoners to establish the link regardless.",
+                "Verification data misrouted to archived logs. Prisoners assigned as runners between terminals. Alarm response is continuous.",
+                "Final confirmation must be entered at a separate node. Prisoners to complete every stage before the relay collapses.",
+            })!,
+
+            WardenObjectiveType.ReachKdsDeep => Generator.Pick(new List<string>
+            {
+                "KDS Deep has stopped reporting. Prisoners dispatched to descend and reach its heart.",
+                "Kovac Defense Services sealed the lower installation and never reopened it. Prisoners ordered down to establish why.",
+                "Contact with KDS Deep lost. Defense grid still active. Prisoners to descend through it.",
+                "Clearance for the deep sector was never issued to prisoners. It is being issued now. Descend.",
+                "Whatever KDS was guarding at that depth is no longer contained. Prisoners to reach the installation core.",
+                "Descent authorized. Extraction arrangements pending. Prisoners to proceed to KDS Deep and hold.",
+                "Prisoners deployed without staging. The objective lies at the bottom. Nothing above it is relevant.",
+                "KDS Deep reactor status <color=red>-REDACTED-</color>. Prisoners to advance to the installation heart and await further instruction.",
+                "A second team preceded this deployment. Their status is not available to prisoners. Descend and reach KDS Deep.",
+                "Contractor installation dark on all channels. Prisoners to force entry and reach the crater floor.",
+                "Prisoners assigned to the deepest accessible sector. Resource expenditure at this depth is expected to be total.",
+                "The way down is long. The way back has not been prepared. Prisoners to reach KDS Deep.",
+            })!,
+
             // WardenObjectiveType.Empty => expr,
 
             _ => "<color=red>-INTEL REDACTED-</color>"

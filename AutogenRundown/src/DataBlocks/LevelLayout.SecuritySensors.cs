@@ -10,41 +10,6 @@ namespace AutogenRundown.DataBlocks;
 
 public partial record LevelLayout
 {
-    // #region Warden Intel Messages
-    // level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
-    // {
-    //     ">... [distorted static]\r\n>... There's that broken scan again.\r\n<size=200%><color=red>>... Step away from it!</color></size>",
-    //     ">... <size=200%><color=red>Careful!</color></size>\r\n>... The corrupted scan just re-initialized.\r\n>... No telling what it summons.",
-    //     ">... <size=200%><color=red>Don't stand on that scanner!</color></size>\r\n>... Last time, we barely escaped.\r\n>... It calls forth... something.",
-    //     ">... <size=200%><color=red>The scan just reset!</color></size>\r\n>... It's only a matter of time.\r\n>... Brace yourselves."
-    // }))!);
-    // #endregion
-    //
-    // #region Warden Intel Messages
-    // level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
-    // {
-    //     ">... [sensor flicker]\r\n>... There's movement, then nothing.\r\n>... <size=200%><color=red>Something's slipping past the scan!</color></size>",
-    //     ">... [low static]\r\n>... The console blinked... then cleared.\r\n>... <size=200%><color=red>It's hiding right under our noses!</color></size>",
-    //     ">... [short beep]\r\n>... We lost a blip on the radar.\r\n>... <size=200%><color=red>Keep your backs covered!</color></size>",
-    //     ">... The scan shows a distortion.\r\n>... Then it vanishes instantly.\r\n>... <size=200%><color=red>Something doesn't want to be found!</color></size>",
-    //     ">... [electrical buzz]\r\n>... The reading just dropped to zero.\r\n>... <size=200%><color=red>But we know it's still out there!</color></size>",
-    //     ">... [whispered curses]\r\n>... The sensor's glitching again.\r\n>... <size=200%><color=red>Something's tampering with our detection!</color></size>",
-    //     ">... [panicked breath]\r\n>... <size=200%><color=red>Who just disappeared?!</color></size>\r\n>... We didn't even see it happen!",
-    //     ">... That faint silhouette is back.\r\n>... The scan can't lock on.\r\n>... <size=200%><color=red>It slips away in the dark!</color></size>",
-    //     ">... [quiet step]\r\n>... <size=200%><color=red>Did anyone hear that?</color></size>\r\n>... Nothing shows on the scanner!",
-    //     ">... The device beeped once.\r\n>... Then total silence.\r\n>... <size=200%><color=red>Something is watching, unseen!</color></size>",
-    //     ">... [frantic re-calibration]\r\n>... The reading remains hidden.\r\n>... <size=200%><color=red>It knows how to avoid detection!</color></size>",
-    //     ">... The sensor froze for a second.\r\n>... Felt like something brushed by.\r\n>... <size=200%><color=red>Keep your eyes open!</color></size>",
-    //     ">... [sudden static burst]\r\n>... The console lit up, then died.\r\n>... <size=200%><color=red>It's messing with our gear!</color></size>",
-    //     ">... He's missing?\r\n>... No trace, no struggle.\r\n>... <size=200%><color=red>This can't be natural!</color></size>",
-    //     ">... [low beep]\r\n>... The sensor caught a shape, briefly.\r\n>... <size=200%><color=red>It vanished like a ghost!</color></size>",
-    //     ">... [soft rustling]\r\n>... Something dragged them away...\r\n>... <size=200%><color=red>We saw no attacker!</color></size>",
-    //     // ">... The readout spikes erratically.\r\n>... Then it drops to zero.\r\n>... <size=200%><color=red>It's in our blind spots!</color></size>",
-    //     ">... [faint moan]\r\n>... We heard them cry out.\r\n>... <size=200%><color=red>But there's no one there now!</color></size>",
-    //     ">... The logs show anomalies.\r\n>... One moment they're here...\r\n>... <size=200%><color=red>Next moment they're gone!</color></size>",
-    // }))!);
-    // #endregion
-
     /// <summary>
     /// Adds difficulty-scaled security sensors to a zone.
     /// Parameters are randomized based on level tier if not specified.
@@ -55,6 +20,52 @@ public partial record LevelLayout
     public void AddSecuritySensors(ZoneNode node, GenericWave? wave = null, bool? moving = null)
     {
         planner.UpdateNode(node with { Tags = node.Tags.Extend("security_sensors") });
+
+        // Only the first sensor group placed on the level contributes an intel candidate
+        if (level.ZoneSensors.Count == 0)
+        {
+            #region Warden Intel Messages
+            level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
+            {
+                ">... [distorted static]\r\n>... There's that broken scan again.\r\n<size=200%><color=red>>... Step away from it!</color></size>",
+                ">... <size=200%><color=red>Careful!</color></size>\r\n>... The corrupted scan just re-initialized.\r\n>... No telling what it summons.",
+                ">... <size=200%><color=red>Don't stand on that scanner!</color></size>\r\n>... Last time, we barely escaped.\r\n>... It calls forth... something.",
+                ">... <size=200%><color=red>The scan just reset!</color></size>\r\n>... It's only a matter of time.\r\n>... Brace yourselves.",
+                ">... [sensor flicker]\r\n>... There's movement, then nothing.\r\n>... <size=200%><color=red>Something's slipping past the scan!</color></size>",
+                ">... [low static]\r\n>... The console blinked... then cleared.\r\n>... <size=200%><color=red>It's hiding right under our noses!</color></size>",
+                ">... [short beep]\r\n>... We lost a blip on the radar.\r\n>... <size=200%><color=red>Keep your backs covered!</color></size>",
+                ">... The scan shows a distortion.\r\n>... Then it vanishes instantly.\r\n>... <size=200%><color=red>Something doesn't want to be found!</color></size>",
+                ">... [electrical buzz]\r\n>... The reading just dropped to zero.\r\n>... <size=200%><color=red>But we know it's still out there!</color></size>",
+                ">... [whispered curses]\r\n>... The sensor's glitching again.\r\n>... <size=200%><color=red>Something's tampering with our detection!</color></size>",
+                ">... [panicked breath]\r\n>... <size=200%><color=red>Who just disappeared?!</color></size>\r\n>... We didn't even see it happen!",
+                ">... That faint silhouette is back.\r\n>... The scan can't lock on.\r\n>... <size=200%><color=red>It slips away in the dark!</color></size>",
+                ">... [quiet step]\r\n>... <size=200%><color=red>Did anyone hear that?</color></size>\r\n>... Nothing shows on the scanner!",
+                ">... The device beeped once.\r\n>... Then total silence.\r\n>... <size=200%><color=red>Something is watching, unseen!</color></size>",
+                ">... [frantic re-calibration]\r\n>... The reading remains hidden.\r\n>... <size=200%><color=red>It knows how to avoid detection!</color></size>",
+                ">... The sensor froze for a second.\r\n>... Felt like something brushed by.\r\n>... <size=200%><color=red>Keep your eyes open!</color></size>",
+                ">... [sudden static burst]\r\n>... The console lit up, then died.\r\n>... <size=200%><color=red>It's messing with our gear!</color></size>",
+                ">... He's missing?\r\n>... No trace, no struggle.\r\n>... <size=200%><color=red>This can't be natural!</color></size>",
+                ">... [low beep]\r\n>... The sensor caught a shape, briefly.\r\n>... <size=200%><color=red>It vanished like a ghost!</color></size>",
+                ">... [soft rustling]\r\n>... Something dragged them away...\r\n>... <size=200%><color=red>We saw no attacker!</color></size>",
+                ">... [faint moan]\r\n>... We heard them cry out.\r\n>... <size=200%><color=red>But there's no one there now!</color></size>",
+                ">... The logs show anomalies.\r\n>... One moment they're here...\r\n>... <size=200%><color=red>Next moment they're gone!</color></size>",
+                ">... [low humming]\r\n>... <size=200%><color=red>Freeze! There's a circle right by your boot!</color></size>\r\n>... Back up. Slow. Slower.",
+                ">... The light on the floor, see it?\r\n>... I see three of them. Maybe four.\r\n>... <size=200%><color=red>There is no way through!</color></size>",
+                ">... <size=200%><color=red>He walked straight into it!</color></size>\r\n>... The whole ring lit up red.\r\n>... [alarm blaring]",
+                ">... It's moving. The circle is moving.\r\n>... <size=200%><color=red>It's crawling along the walkway toward us!</color></size>\r\n>... Move! Find the gap before it closes!",
+                ">... Don't move. Don't even breathe.\r\n>... It's drifting past me... it's on my boots...\r\n>... <size=200%><color=red>It went through him. IT WENT THROUGH HIM.</color></size>",
+                ">... <size=200%><color=red>It blinked out! Go, go, go!</color></size>\r\n>... How long do we have?\r\n>... Nobody knows. Nobody ever knows.",
+                ">... The floor's dark. It's been dark a while now.\r\n>... <size=200%><color=red>That doesn't mean safe. That means it's due.</color></size>\r\n>... Count with me.",
+                ">... It's herding him into the corner.\r\n>... There's nowhere left to stand!\r\n>... <size=200%><color=red>Jump it! Just jump it!</color></size>",
+                ">... Somebody tripped one.\r\n>... [distant roaring]\r\n>... <size=200%><color=red>They heard it. All of them heard it.</color></size>",
+                ">... <size=200%><color=red>Never trust an empty room down here.</color></size>\r\n>... The clean floors are always the worst ones.\r\n>... Something is watching the ground.",
+                ">... Wait, was that a glow behind us?\r\n>... <size=200%><color=red>We already walked through it.</color></size>\r\n>... [rising screeching]",
+                ">... Step where I step. Exactly where I step.\r\n>... I can't see past your light!\r\n>... <size=200%><color=red>Then stop. Stop right now.</color></size>",
+                ">... <size=200%><color=red>Two of them just crossed paths!</color></size>\r\n>... The gap is gone.\r\n>... We wait. We just... wait.",
+                ">... [scanner pulsing]\r\n>... <size=200%><color=red>It caught his leg. Only his leg.</color></size>\r\n>... Doesn't matter. It counted him.",
+            }))!);
+            #endregion
+        }
 
         // 1. Determine sensor density by tier (count calculated at runtime from zone area)
         //    And radius

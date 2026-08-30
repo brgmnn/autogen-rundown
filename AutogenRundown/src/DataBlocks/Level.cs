@@ -886,7 +886,19 @@ public partial class Level
             ">... The cage was flooded on the way down.\r\n>... [wet coughing]\r\n>... <size=200%><color=red>It's already in our lungs!</color></size>",
             ">... <size=200%><color=red>Quarantine failure!</color></size>\r\n>... They dropped us anyway.\r\n>... Every step costs us now.",
             ">... I can barely stand.\r\n>... [ragged wheezing]\r\n>... <size=200%><color=red>We work sick or we don't work at all.</color></size>",
-            ">... The others look grey.\r\n>... It's eating at all of us.\r\n>... <size=200%><color=red>No margin for mistakes down here!</color></size>"
+            ">... The others look grey.\r\n>... It's eating at all of us.\r\n>... <size=200%><color=red>No margin for mistakes down here!</color></size>",
+            ">... [retching]\r\n>... Whatever was in that cage, we breathed it the whole way down.\r\n>... <size=200%><color=red>We start this one already dying!</color></size>",
+            ">... Look at your hands. Look at them.\r\n>... <size=200%><color=red>The skin's gone the color of ash!</color></size>\r\n>... Mine too. All of us.",
+            ">... The elevator seal never took, the whole way down.\r\n>... [filters hissing]\r\n>... <size=200%><color=red>Ten minutes of bad air, straight into us!</color></size>",
+            ">... <size=200%><color=red>Find a disinfection station. Now.</color></size>\r\n>... Before we open a single door.\r\n>... I can hear myself rattling.",
+            ">... <size=200%><color=red>My sight keeps swimming!</color></size>\r\n>... Shapes and shadows, I can't tell them apart.\r\n>... Don't stand in front of me.",
+            ">... [teeth chattering]\r\n>... Fever's climbing. All of us.\r\n>... <size=200%><color=red>Every one of them hits twice as hard now!</color></size>",
+            ">... Check your readout.\r\n>... <size=200%><color=red>We're in the red before we've even moved!</color></size>\r\n>... And it only goes one way from here.",
+            ">... <size=200%><color=red>Spend the packs early!</color></size>\r\n>... Save them and you won't be standing to use them.\r\n>... Nothing gets better from here.",
+            ">... [wheezing]\r\n>... Give me a second-\r\n>... <size=200%><color=red>There are no seconds. Move!</color></size>",
+            ">... They dropped us in like this on purpose.\r\n>... <size=200%><color=red>It wanted us weak before the first door!</color></size>\r\n>... Then it gets exactly what it wanted.",
+            ">... <size=200%><color=red>Nobody takes a hit. Nobody!</color></size>\r\n>... One clean strike and any of us drops.\r\n>... There's no cushion left in us.",
+            ">... [gagging]\r\n>... <size=200%><color=red>Something's crawling under my ribs!</color></size>\r\n>... It's already working on us."
         }))!);
     }
 
@@ -904,7 +916,19 @@ public partial class Level
             ">... The turbine by the elevator still works.\r\n>... Drag it with us.\r\n>... <size=200%><color=red>It's the only clear air we'll get!</color></size>",
             ">... [distant rush of air]\r\n>... The purge cycle keeps failing.\r\n>... <size=200%><color=red>We work in the gaps between!</color></size>",
             ">... Watch the low ground.\r\n>... It pools there first.\r\n>... <size=200%><color=red>When it rises, climb!</color></size>",
-            ">... The system fights itself.\r\n>... Vents open, then choke shut.\r\n>... <size=200%><color=red>Time your push to the cycle!</color></size>"
+            ">... The system fights itself.\r\n>... Vents open, then choke shut.\r\n>... <size=200%><color=red>Time your push to the cycle!</color></size>",
+            ">... [ducts rattling]\r\n>... The scrubbers cut out again.\r\n>... <size=200%><color=red>Get off the floor, now!</color></size>",
+            ">... <size=200%><color=red>Count it! Learn the rhythm!</color></size>\r\n>... Up, then down, always the same length.\r\n>... Get it wrong and you're blind in the open.",
+            ">... Grab every repeller we find.\r\n>... <size=200%><color=red>They only buy us one lungful each!</color></size>\r\n>... Better than nothing when the grey climbs.",
+            ">... Don't cross the open floor when it's high.\r\n>... You'll lose sight of us in three steps.\r\n>... <size=200%><color=red>Wait for the drain!</color></size>",
+            ">... <size=200%><color=red>Hold your breath and climb!</color></size>\r\n>... [gasping]\r\n>... The window gets shorter every time it comes back.",
+            ">... Something's out there in the murk.\r\n>... <size=200%><color=red>It only moves when we can't see it!</color></size>\r\n>... And it's never where it was.",
+            ">... The grey's over the railings now.\r\n>... Up the stairs, all of you.\r\n>... <size=200%><color=red>It fills from the bottom up!</color></size>",
+            ">... <size=200%><color=red>Nobody splits up in the thick!</color></size>\r\n>... You lose a man in that and you don't find him.\r\n>... Stay close enough to grab an arm.",
+            ">... [turbines coughing]\r\n>... <size=200%><color=red>That's the last of the airflow!</color></size>\r\n>... Whatever's in here with us stays in here.",
+            ">... Feel that? The pressure drops just before it comes.\r\n>... That's your warning. Your only one.\r\n>... <size=200%><color=red>Watch the air, not the doors!</color></size>",
+            ">... <size=200%><color=red>Don't reload in the middle of it!</color></size>\r\n>... You won't see what's on you until it's on you.\r\n>... Back out to clear air first.",
+            ">... It burns going down, every cycle.\r\n>... <size=200%><color=red>We come out of this sicker than we went in!</color></size>\r\n>... Every rise takes another piece of us."
         }))!);
     }
 
@@ -922,7 +946,19 @@ public partial class Level
             ">... Upkeep protocol. Warden's own systems.\r\n>... [keys clattering]\r\n>... <size=200%><color=red>Type fast or fight!</color></size>",
             ">... It doesn't kill you when it runs out.\r\n>... It just opens the doors to them.\r\n>... <size=200%><color=red>Stay ahead of the countdown!</color></size>",
             ">... Maintenance windows, they called them.\r\n>... Miss one and the sector purges.\r\n>... <size=200%><color=red>ADMIN_TEMP_OVERRIDE. Remember it!</color></size>",
-            ">... [alarm winding up]\r\n>... The ledger runs dry near the end.\r\n>... <size=200%><color=red>The last stretch is a sprint!</color></size>"
+            ">... [alarm winding up]\r\n>... The ledger runs dry near the end.\r\n>... <size=200%><color=red>The last stretch is a sprint!</color></size>",
+            ">... [console chirping]\r\n>... Every terminal we walk past is time we never get back.\r\n>... <size=200%><color=red>Sign in at every single one!</color></size>",
+            ">... <size=200%><color=red>The count doesn't stop for us!</color></size>\r\n>... Not for reloads, not for the wounded.\r\n>... It just falls, and falls.",
+            ">... [ticking]\r\n>... <size=200%><color=red>I can't stop watching that number!</color></size>\r\n>... It's the only thing down here still moving on schedule.",
+            ">... ADMIN_TEMP_OVERRIDE takes once. Once.\r\n>... Then that terminal is dead to us forever.\r\n>... <size=200%><color=red>Don't burn one on a full clock!</color></size>",
+            ">... <size=200%><color=red>Find the terminals before we push!</color></size>\r\n>... Know where the next one is before you need it.\r\n>... Running blind at zero is how this ends.",
+            ">... [keys clacking]\r\n>... <size=200%><color=red>That was the last credential on this floor!</color></size>\r\n>... After this we're just running.",
+            ">... What happens when it reaches zero?\r\n>... The sector cleans itself. We're what's dirty.\r\n>... <size=200%><color=red>The purge doesn't care that we're in here!</color></size>",
+            ">... <size=200%><color=red>It lapsed! They're already coming!</color></size>\r\n>... I told you not to stop for the boxes.\r\n>... Now we pay for it.",
+            ">... The deeper we went, the fewer terminals there were.\r\n>... <size=200%><color=red>At the end there's nothing left to feed it!</color></size>\r\n>... You just run and take what comes.",
+            ">... Type it exactly. No mistakes.\r\n>... A fumbled line costs us a whole window.\r\n>... <size=200%><color=red>Slow hands get us killed!</color></size>",
+            ">... The lights dipped for a second.\r\n>... <size=200%><color=red>That's the last warning we get!</color></size>\r\n>... Find the next terminal. Fast.",
+            ">... <size=200%><color=red>We're on borrowed minutes down here!</color></size>\r\n>... Someone booked this sector for maintenance long before us.\r\n>... Nobody ever came to close it out."
         }))!);
     }
 

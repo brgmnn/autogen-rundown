@@ -1252,7 +1252,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = 32.0,
-                WardenIntel = new Text(":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr...")
+                WardenIntel = new Text(Lore.UnknownError_Any)
             },
         }
     };
@@ -1292,7 +1292,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = 20.0,
-                WardenIntel = new Text(":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr...")
+                WardenIntel = new Text(Lore.UnknownError_Any)
             },
         }
     };
@@ -1329,7 +1329,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = 7.0,
-                WardenIntel = new Text(":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr...")
+                WardenIntel = new Text(Lore.UnknownError_Any)
             },
         }
     };
@@ -1366,7 +1366,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = 7.0,
-                WardenIntel = new Text(":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr...")
+                WardenIntel = new Text(Lore.UnknownError_Any)
             },
         }
     };
@@ -1401,7 +1401,7 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
             {
                 Type = WardenObjectiveEventType.None,
                 Delay = 20.0,
-                WardenIntel = new Text(":://WARNING - UNKN0wИ .3rr0R: Err0r оcçurr...")
+                WardenIntel = new Text(Lore.UnknownError_Any)
             },
         }
     };

@@ -1278,7 +1278,26 @@ public partial record LevelLayout
         #region Warden Intel Messages
         level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
         {
-            ">... A nest?\r\n>... We have no choice. <color=red><size=200%>She's waiting.</size></color>\n>... Why... why?"
+            ">... A nest?\r\n>... We have no choice. <color=red><size=200%>She's waiting.</size></color>\n>... Why... why?",
+            ">... [wet breathing]\r\n>... That's not the fog. That's her.\r\n>... <size=200%><color=red>She's right through that wall!</color></size>",
+            ">... <size=200%><color=red>Do you hear that dripping?</color></size>\r\n>... The whole floor is soft. It's all sacs.\r\n>... Don't step on them. Please don't step on them.",
+            ">... The walls are moving.\r\n>... <size=200%><color=red>No. The walls are her.</color></size>\r\n>... Oh god, how big is she...",
+            ">... [shrieking]\r\n>... <size=200%><color=red>She's birthing again!</color></size>\r\n>... They're crawling out of her, they just keep coming!",
+            ">... How many is that now?\r\n>... I stopped counting after twenty.\r\n>... <size=200%><color=red>She doesn't stop. She never stops.</color></size>",
+            ">... <size=200%><color=red>Get out of the nest!</color></size>\r\n>... I can't, they're between me and the door!\r\n>... [screaming]",
+            ">... The last squad came through here.\r\n>... <size=200%><color=red>Their gear is in the eggs.</color></size>\r\n>... So are they.",
+            ">... [low moaning]\r\n>... She knows we're here. She's been listening this whole time.\r\n>... <size=200%><color=red>Kill the lights. KILL THEM.</color></size>",
+            ">... Focus her, forget the little ones!\r\n>... There are too many little ones!\r\n>... <size=200%><color=red>Then we die in here!</color></size>",
+            ">... <size=200%><color=red>She's screaming again!</color></size>\r\n>... My ears, I can't, I can't think-\r\n>... [ringing]",
+            ">... Something crunched under my boot.\r\n>... <size=200%><color=red>Don't look down.</color></size>\r\n>... I looked down.",
+            ">... The room is warm. Why is it warm?\r\n>... Everything in here is breathing.\r\n>... <size=200%><color=red>We're standing inside her.</color></size>",
+            ">... These ones are smaller than the last.\r\n>... <size=200%><color=red>That means fresh. That means she just made them.</color></size>\r\n>... [scrabbling]",
+            ">... <size=200%><color=red>Cut the sacs off the walls first!</color></size>\r\n>... There are hundreds of them.\r\n>... Then we better start now.",
+            ">... I've got her in the light.\r\n>... She fills the whole pit. All of it.\r\n>... <size=200%><color=red>Turn it off. Turn it off!</color></size>",
+            ">... [dragging]\r\n>... She has him. She's pulling him in-\r\n>... <size=200%><color=red>Shoot the arms! SHOOT THE ARMS!</color></size>",
+            ">... Ammo check.\r\n>... <size=200%><color=red>Between all of us? Not enough for her.</color></size>\r\n>... Not even close.",
+            ">... She stopped screaming.\r\n>... That's worse. That is so much worse.\r\n>... <size=200%><color=red>Where did she go?!</color></size>",
+            ">... <size=200%><color=red>Everything in this room came out of her.</color></size>\r\n>... The floor, the mounds, all of it.\r\n>... [retching]",
         }))!);
         #endregion
     }
