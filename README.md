@@ -56,7 +56,6 @@ TODO for 1.0
   New Objectives!
     [x] Alpha / static dimension objective with portal / matter wave projector / something big in the dimension
     [x] Cryptomnesia objective main, recreate R6D4
-  [ ] Distribute power cells is _really_ short on main only missions now
   [ ] Fix the cycling of security scans having global sound! Really annoying right now
 
 TODO: for 1.1.0
@@ -65,7 +64,6 @@ TODO: for 1.1.0
 TODO post 1.0
   * See about adding terminal decorations to terminal spawn manager
   * Bug: Check ST scan in monthly C3 for it's bad pathing in the dogs junction tile in secondary
-  * Main D-tier GatherTerminal has extremely short main level.
 
 NOTE
   * Cryptomnesia - GatherSmallItems only 1 objective in 42 uses the dimensions for cryptomensia for it

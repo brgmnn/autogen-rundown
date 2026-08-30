@@ -108,6 +108,10 @@ public partial record LevelLayout
 
         var numGens = objective.PowerCellsToDistribute;
 
+        // Main-only levels have no starting area zones (build starts at the elevator
+        // drop), so Main layouts lengthen their routes for parity with bulkhead levels.
+        var isMainOnly = level.Settings.Bulkheads == Bulkhead.Main;
+
         switch (level.Tier, director.Bulkhead)
         {
             #region A-tier
@@ -117,10 +121,13 @@ public partial record LevelLayout
             {
                 Generator.SelectRun(new List<(double, Action)>
                 {
-                    // Linear direct — start → 1-2 zones → gen zone (cluster if 2)
+                    // Linear direct — start → 1-2 zones (2-3 main-only) → gen zone (cluster if 2)
                     (0.25, () =>
                     {
-                        var nodes = AddBranch(start, Generator.Between(1, 2), "generator");
+                        var nodes = AddBranch(
+                            start,
+                            isMainOnly ? Generator.Between(2, 3) : Generator.Between(1, 2),
+                            "generator");
                         PlaceGeneratorsInZone(nodes.Last(), numGens);
                         AddForwardExtractStart(nodes.Last());
                     }),
@@ -128,7 +135,9 @@ public partial record LevelLayout
                     // Hub + branches — start → hub → 1 branch per gen
                     (0.25, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
+                        var approach = AddBranch(start, isMainOnly ? 1 : 0, "approach");
+
+                        var (hub, hubZone) = AddZone(approach.Last(), new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         for (var g = 0; g < numGens; g++)
@@ -141,7 +150,8 @@ public partial record LevelLayout
                     // Linear + keycard — start → KeycardInZone → gen zone(s)
                     (0.20, () =>
                     {
-                        var (end, _) = BuildChallenge_KeycardInZone(start);
+                        var approach = AddBranch(start, isMainOnly ? 1 : 0, "approach");
+                        var (end, _) = BuildChallenge_KeycardInZone(approach.Last());
                         var nodes = AddBranch(end, 1, "generator");
                         PlaceGeneratorsInZone(nodes.Last(), numGens);
                         AddForwardExtractStart(nodes.Last());
@@ -150,7 +160,7 @@ public partial record LevelLayout
                     // Linear + locked terminal — start → LockedTerminalDoor(0) → gen zone(s)
                     (0.15, () =>
                     {
-                        var (end, _) = BuildChallenge_LockedTerminalDoor(start, 0);
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(start, isMainOnly ? 1 : 0);
                         var nodes = AddBranch(end, 1, "generator");
                         PlaceGeneratorsInZone(nodes.Last(), numGens);
                         AddForwardExtractStart(nodes.Last());
@@ -180,7 +190,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
-                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        var genNodes = AddBranch(travelEnd, isMainOnly ? 2 : 1, "generator");
                         PlaceGeneratorsInZone(genNodes.Last(), numGens);
                         AddForwardExtractStart(genNodes.Last());
                     }),
@@ -285,7 +295,9 @@ public partial record LevelLayout
                     // Hub + keycard branch — hub → gen branches, one gated by KeycardInZone
                     (0.20, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
+                        var approach = AddBranch(start, isMainOnly ? 1 : 0, "approach");
+
+                        var (hub, hubZone) = AddZone(approach.Last(), new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // First branch gated by keycard
@@ -330,8 +342,8 @@ public partial record LevelLayout
                     // Linear + locked terminal — start → LockedTerminalDoor(0) → 1 zone → gen zone(s)
                     (0.20, () =>
                     {
-                        var (end, _) = BuildChallenge_LockedTerminalDoor(start, 0);
-                        var nodes = AddBranch(end, 1, "generator");
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(start, isMainOnly ? 1 : 0);
+                        var nodes = AddBranch(end, isMainOnly ? 2 : 1, "generator");
                         PlaceGeneratorsInZone(nodes.Last(), numGens);
                         AddForwardExtractStart(nodes.Last());
                     }),
@@ -339,7 +351,9 @@ public partial record LevelLayout
                     // Hub + keycard on one branch — hub → branch1(gen), branch2(KeycardInZone + gen)
                     (0.20, () =>
                     {
-                        var (hub, hubZone) = AddZone(start, new ZoneNode { MaxConnections = 3 });
+                        var approach = AddBranch(start, isMainOnly ? 1 : 0, "approach");
+
+                        var (hub, hubZone) = AddZone(approach.Last(), new ZoneNode { MaxConnections = 3 });
                         hub = level.GenHubGeomorph(hub);
 
                         // First branch: plain generator
@@ -363,7 +377,7 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
-                        var genNodes = AddBranch(travelEnd, 1, "generator");
+                        var genNodes = AddBranch(travelEnd, isMainOnly ? 2 : 1, "generator");
                         PlaceGeneratorsInZone(genNodes.Last(), numGens);
                         AddForwardExtractStart(genNodes.Last());
                     }),
@@ -528,13 +542,21 @@ public partial record LevelLayout
                         }
                     }),
 
-                    // Clustered + sensors — start → 1-2 zones [sensors] → large zone (2-3 gens clustered)
+                    // Clustered + sensors — start → 1-2 zones [sensors] (main-only: 2-3 zones
+                    // + keycard gate) → large zone (gens clustered)
                     (0.20, () =>
                     {
-                        var approach = AddBranch(start, Generator.Between(1, 2), "approach");
+                        var approach = AddBranch(
+                            start,
+                            isMainOnly ? Generator.Between(2, 3) : Generator.Between(1, 2),
+                            "approach");
                         AddSecuritySensors(approach.Last());
 
-                        var (genZone, genZoneData) = AddZone(approach.Last(), new ZoneNode { Branch = "generator" });
+                        var genBase = approach.Last();
+                        if (isMainOnly)
+                            (genBase, _) = BuildChallenge_KeycardInZone(genBase);
+
+                        var (genZone, genZoneData) = AddZone(genBase, new ZoneNode { Branch = "generator" });
                         genZoneData.Coverage = CoverageMinMax.Large;
                         PlaceGeneratorsInZone(genZone, numGens);
                         AddForwardExtractStart(genZone);
@@ -597,7 +619,10 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
-                        var approach = AddBranch(travelEnd, Generator.Between(1, 2), "approach");
+                        var approach = AddBranch(
+                            travelEnd,
+                            isMainOnly ? Generator.Between(2, 3) : Generator.Between(1, 2),
+                            "approach");
 
                         var firstCount = numGens / 2;
                         var secondCount = numGens - firstCount;
@@ -809,10 +834,11 @@ public partial record LevelLayout
                         AddForwardExtractStart(hub, chance: 0.3);
                     }),
 
-                    // Cluster + boss — 1 zone → large zone (2-3 gens clustered) + side branch (1 gen behind BossFight)
+                    // Cluster + boss — 1 zone (2 main-only) → large zone (2-3 gens clustered)
+                    // + side branch (1 gen behind BossFight)
                     (0.15, () =>
                     {
-                        var approach = AddBranch(start, 1, "approach");
+                        var approach = AddBranch(start, isMainOnly ? 2 : 1, "approach");
 
                         // Clustered gens
                         var clusteredCount = Math.Min(numGens - 1, 3);
@@ -889,13 +915,18 @@ public partial record LevelLayout
                         AddForwardExtractStart(hub, chance: 0.3);
                     }),
 
-                    // Apex + cluster — corridor → ApexAlarm(Hard) → large zone (3-4 gens all clustered)
+                    // Apex + cluster — corridor (x2 main-only, + locked terminal door)
+                    // → ApexAlarm(Hard) → large zone (3-4 gens all clustered)
                     (0.15, () =>
                     {
-                        var corridor = AddBranch(start, 1, "corridor");
+                        var corridor = AddBranch(start, isMainOnly ? 2 : 1, "corridor");
+
+                        var apexBase = corridor.Last();
+                        if (isMainOnly)
+                            (apexBase, _) = BuildChallenge_LockedTerminalDoor(apexBase, 0);
 
                         var (apexEnd, _) = BuildChallenge_ApexAlarm(
-                            corridor.Last(),
+                            apexBase,
                             WavePopulation.Baseline_Hybrids,
                             WaveSettings.Baseline_Hard);
 
@@ -958,7 +989,10 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
-                        var approach = AddBranch(travelEnd, Generator.Between(1, 2), "approach");
+                        var approach = AddBranch(
+                            travelEnd,
+                            isMainOnly ? Generator.Between(2, 3) : Generator.Between(1, 2),
+                            "approach");
 
                         var firstCount = numGens / 2;
                         var secondCount = numGens - firstCount;
@@ -1345,11 +1379,14 @@ public partial record LevelLayout
                     }),
 
                     // Boss + sensors + apex + cluster — BossFight → 1 zone [sensors]
+                    // (main-only: approach zone first, 2 sensor zones)
                     // → ApexAlarm(VeryHard) → large zone (all gens clustered)
                     (0.15, () =>
                     {
-                        var (bossEnd, _) = BuildChallenge_BossFight(start);
-                        var sensorNodes = AddBranch(bossEnd, 1, "sensor_approach");
+                        var approach = AddBranch(start, isMainOnly ? 1 : 0, "approach");
+
+                        var (bossEnd, _) = BuildChallenge_BossFight(approach.Last());
+                        var sensorNodes = AddBranch(bossEnd, isMainOnly ? 2 : 1, "sensor_approach");
                         AddSecuritySensors(sensorNodes.Last());
 
                         var (apexEnd, _) = BuildChallenge_ApexAlarm(
@@ -1437,7 +1474,10 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
-                        var approach = AddBranch(travelEnd, Generator.Between(1, 2), "approach");
+                        var approach = AddBranch(
+                            travelEnd,
+                            isMainOnly ? Generator.Between(2, 3) : Generator.Between(1, 2),
+                            "approach");
 
                         var firstCount = numGens / 2;
                         var secondCount = numGens - firstCount;
