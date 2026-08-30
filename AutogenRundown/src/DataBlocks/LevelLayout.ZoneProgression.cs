@@ -1529,6 +1529,7 @@ public partial record LevelLayout
         // UpkeepProtocol owns the CustomHudText widget's slot: showing (or hiding) the
         // banner would silently kill the upkeep countdown, so those levels get a one-shot
         // fly-in message instead of a persistent banner and skip the removal.
+        // TODO: check this, I'm not sure it's right
         if (level.Settings.Signature != LevelSignature.UpkeepProtocol)
             commandEvents.RemoveCustomHudText(10);
 

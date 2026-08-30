@@ -175,7 +175,10 @@ public static class PluginConfig
     }
 
     private const string AdvancedHeader =
-        """
+        $"""
+        ## Settings file was created by plugin AutogenRundown v{Plugin.Version}
+        ## Plugin GUID: 000-the_tavern-AutogenRundown
+
         ## =========================================================================
         ##  --- ADVANCED SETTINGS ---
         ##
@@ -183,6 +186,9 @@ public static class PluginConfig
         ## and debugging. Leave everything at its default unless you know exactly
         ## what you are doing. All players in a lobby must use identical values in
         ## this file, otherwise level generation will desync.
+        ##
+        ## If you're unsure about changes made here, delete this file and it will
+        ## be regenerated with the default values the next time the game starts.
         ## =========================================================================
 
 

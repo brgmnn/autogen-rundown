@@ -506,7 +506,9 @@ public class LevelSettings
                     (1.0, LevelSignature.Stalker),
                     (1.0, LevelSignature.CyclingFog),
                     (0.6, LevelSignature.BossAlarm),
-                    (1.0, LevelSignature.UpkeepProtocol)
+
+                    // TODO: Work on for 1.2.0
+                    // (1.0, LevelSignature.UpkeepProtocol)
                 });
 
                 Modifiers.Add(
