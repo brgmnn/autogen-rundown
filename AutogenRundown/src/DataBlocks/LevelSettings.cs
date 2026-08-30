@@ -502,10 +502,13 @@ public class LevelSettings
                 // See docs/dev/e-tier-difficulty.md, Group C.
                 Signature = Generator.Select(new List<(double, LevelSignature)>
                 {
+                    // For now, we give a small chance of an easier E-tier with no signature
+                    (0.7, LevelSignature.None),
+
                     (1.0, LevelSignature.StartWithInfection),
                     (1.0, LevelSignature.Stalker),
                     (1.0, LevelSignature.CyclingFog),
-                    (0.6, LevelSignature.BossAlarm),
+                    (1.0, LevelSignature.BossAlarm),
 
                     // TODO: Work on for 1.2.0
                     // (1.0, LevelSignature.UpkeepProtocol)
