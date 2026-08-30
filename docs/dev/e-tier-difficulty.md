@@ -89,17 +89,18 @@ an upkeep mechanic — each individually manageable, together defining. Several 
 
 ### Group A — Parity fixes (cheap, immediate, length-neutral)
 
-Ship these together as one unit — they interact (heavier roster ↔ ammo ↔ points) and must
-be playtested as one unit.
+**Status (2026-08): A1-A4 shipped for 1.1.0** as one unit (playtest pending). **A5 and A6
+rejected** — maintainer decision: both are raw enemy-count ramps, which is not the desired
+difficulty lever, especially alongside A4's ammo reduction. Composition over density.
 
 | # | Fix | Site | Change | Risk |
 |---|---|---|---|---|
-| A1 | Un-invert shadow clumping. E shadow packs are *half* the size of D's. | `EnemyGroup.cs:1199` | E Shadows `MaxScore = 4` → 8-10 | Near zero — bug fix |
-| A2 | Differentiate the E roster. Same enemies, heavier mix; makes the Tier-E comment ("All enemies are available") true in practice. | `EnemyPopulation.cs:398-476` | ShooterGiant 0.3→0.5, ChargerGiant 0.4→0.6, ShadowGiant 0.4→0.6, NightmareGiant 0.2→0.35 | Low — giants drain ammo; pairs with A4 |
-| A3 | E scout *composition*, not count. More scouts = slower, not harder; nastier scouts = harder. R5E1 precedent. | `LevelLayout.cs:492-525` | Keep chance 0.3; swap ~3 plain `Scout` entries for `ScoutShadow`/`ScoutNightmare` at 10-15 pts | Low — scout points already substitute for hibernation points |
-| A4 | Ammo parity. E is currently the best-supplied tier in the mod. | `Zone.cs:1332-1337` | `"E" => 6` → `5` (= D). Never below D (decision above). Health (5) / Tool (3.5) stay tier-blind. | Medium *only* in combination with A2 — playtest together |
-| A5 | Widen the points gap. +15% over D is imperceptible behind zone-size variance. | `BuildDirector.cs:292` | `Between(35,40)` → `Between(38,45)` (~+25-30% over D) | Low — but verify `StaticEnemiesMaxPerZone` doesn't clip it (see B4) |
-| A6 | Tier-scale the group-mix table. The charger/shadow/hybrid/nightmare mixing chances are tier-blind today. | `LevelLayout.cs:686` (`BuildStandardChoices` — `director` already in scope) | At E: mixed-list chances ×1.5, plus two E-only entries: `(0.15, Base+Shadows+Nightmares)` and `(0.10, pure Shadows- or Nightmares-only zone at full points)` — R8E2's pure-population flavor with zero new machinery. Weighted `(double, T)` tuples per existing pattern. | Low |
+| A1 ✅ | Un-invert shadow clumping. E shadow packs were *half* the size of D's. | `EnemyGroup.cs:1199` | E Shadows `MaxScore = 4` → **8** (D parity; 10 remains as tuning headroom) | Near zero — bug fix |
+| A2 ✅ | Differentiate the E roster. Same enemies, heavier mix; makes the Tier-E comment ("All enemies are available") true in practice. | `EnemyPopulation.cs:398-476` | ShooterGiant 0.3→0.5, ChargerGiant 0.4→0.6, ShadowGiant 0.4→0.6, NightmareGiant 0.2→0.35 | Low — giants drain ammo; pairs with A4 |
+| A3 ✅ | E scout *composition*, not count. More scouts = slower, not harder; nastier scouts = harder. R5E1 precedent. | `LevelLayout.cs:492-525` | Chance stays 0.3, uncapped, 23 entries; three plain `Scout` entries (5/5/10) swapped for `ScoutShadow` @10+@15 and `ScoutNightmare` @10 | Low — scout points already substitute for hibernation points |
+| A4 ✅ | Ammo parity. E was the best-supplied tier in the mod. | `Zone.cs:1332-1337` | `"E" => 6` → `5` (= D). Never below D (decision above). The BossAlarm/Stalker `+1` signature bump is untouched. Health (5) / Tool (3.5) stay tier-blind. | Medium *only* in combination with A2 — playtest together |
+| A5 ❌ | ~~Widen the points gap~~ **Rejected** — pure density ramp. | `BuildDirector.cs:292` | not doing | — |
+| A6 ❌ | ~~Tier-scale the group-mix table~~ **Rejected** — pure density ramp. | `LevelLayout.cs:686` | not doing | — |
 
 ### Group B — Turn the existing machinery on
 
@@ -177,9 +178,11 @@ Official E-levels each have an *identity* — one defining mechanic you remember
 behind a generic `LevelSignature` enum on `LevelSettings`, rolled only in the E branch of
 `Generate()`; at most one signature per level.
 
-**Status (2026-08): every E level gets a signature.** `None` was removed from the roll
-(`533fa70`); current weights are StartWithInfection 1.0 / Stalker 1.0 / CyclingFog 1.0 /
-BossAlarm 0.6 / UpkeepProtocol 1.0 (~21.7% each for the 1.0 entries, ~13% BossAlarm).
+**Status (2026-08, updated for 1.1.0):** `None` is back in the roll at weight 0.7
+(`b847a65` — a small chance of a signature-less E level); current weights are None 0.7 /
+StartWithInfection 1.0 / Stalker 1.0 / CyclingFog 1.0 / BossAlarm 1.0 (raised from 0.6).
+UpkeepProtocol is **disabled** — implemented but commented out of the roll
+(`LevelSettings.cs:514`, `a39cb0b`) pending its Windows playtest.
 Levels whose Main objective is Survival / ReachKdsDeep / Cryptomnesia are demoted back to
 `None` in `Level.Build` (with a fog-modifier re-roll for CyclingFog) so the level-wide
 signature consumers — the B1 error damp, the apex/ClearPath boss suppression, the
@@ -196,8 +199,9 @@ reactor zone) starve its override economy. Note the reactors and TTS use the
 interaction-layer progress bar, *not* the countdown widget — the exclusion is economic,
 not a HUD conflict.
 
-**C1. Upkeep protocol** *(R8E2; the maintainer's own idea, `README.md:71-72`)* **✅ Done**
-(`LevelSignature.UpkeepProtocol`, weight 1.0; applied in `Level.ApplyUpkeepProtocol()`,
+**C1. Upkeep protocol** *(R8E2; the maintainer's own idea, `README.md:71-72`)* **✅ Done,
+currently disabled** (`LevelSignature.UpkeepProtocol`, commented out of the roll in
+`a39cb0b` pending Windows playtest; applied in `Level.ApplyUpkeepProtocol()`,
 `Level.UpkeepProtocol.cs`)
 The level starts an AWO countdown at drop (initial = first Main zone's
 `GetClearTimeEstimate()` + 60s grace, 5s after landing) and **every terminal in every
@@ -240,7 +244,7 @@ infinite** (`waveCount: -1`, tightened in `df2ef09`): the loop is immune to
 pressure is the design. Demoted on Survival / ReachKdsDeep / Cryptomnesia mains.
 
 **C2b. Boss alarm** *(R4E1's Tank error)* **✅ Done** (`LevelSignature.BossAlarm`, weight
-0.6)
+1.0 — raised from 0.6 in `b847a65`)
 A real `TriggerAlarm` boss error wave (Tank @240s / TankPotato @180s / Mother @240s,
 weighted) in `WavesOnElevatorLand` — the game starts the alarm ambience at drop — running
 until the Main objective completes, where `StopAllWavesBeforeGotoWin` cancels all waves
@@ -345,8 +349,9 @@ shipped as C2c — the maintainer chose to rely on the standing relief rolls onl
 
 ## Rollout & tuning strategy
 
-- **Phase 1 — Parity:** A1-A6 in one release, playtested as one unit. Expected outcome:
-  E measurably above D with zero new mechanics.
+- **Phase 1 — Parity:** ✅ A1-A4 shipped for 1.1.0 as one unit (A5/A6 rejected — no raw
+  density ramps). Expected outcome: E measurably above D with zero new mechanics.
+  Playtest gate below still applies before further tuning.
 - **Phase 2 — Machinery:** B1, B3, B4, B5 first (data-only or stub-fill, low risk), then
   B2, B6, B7 (guardrails need exercising). Each behind its own E-only roll.
 - **Phase 3 — Signatures:** `LevelSignature` pool — C2/C2b/C2c/C2d and C1 shipped; C4/C5

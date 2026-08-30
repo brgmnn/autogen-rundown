@@ -492,9 +492,6 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             "E" => (0.3, -1, new List<EnemySpawningData>
                 {
                     EnemySpawningData.Scout with { Points = 5 },
-                    EnemySpawningData.Scout with { Points = 5 },
-                    EnemySpawningData.Scout with { Points = 5 },
-                    EnemySpawningData.Scout with { Points = 10 },
                     EnemySpawningData.Scout with { Points = 10 },
                     EnemySpawningData.Scout with { Points = 15 },
 
@@ -516,11 +513,14 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                     EnemySpawningData.ScoutShadow with { Points = 5 },
                     EnemySpawningData.ScoutShadow with { Points = 5 },
                     EnemySpawningData.ScoutShadow with { Points = 10 },
+                    EnemySpawningData.ScoutShadow with { Points = 10 },
+                    EnemySpawningData.ScoutShadow with { Points = 15 },
 
                     // Nightmare
                     EnemySpawningData.ScoutNightmare with { Points = 5 },
                     EnemySpawningData.ScoutNightmare with { Points = 5 },
                     EnemySpawningData.ScoutNightmare with { Points = 5 },
+                    EnemySpawningData.ScoutNightmare with { Points = 10 },
                     EnemySpawningData.ScoutNightmare with { Points = 10 },
                 }),
 

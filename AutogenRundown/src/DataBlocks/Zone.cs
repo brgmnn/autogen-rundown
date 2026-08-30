@@ -1337,7 +1337,7 @@ public partial record Zone : DataBlock<Zone>
         AmmoPacks = level.Tier switch
         {
             "D" => 5,
-            "E" => 6,
+            "E" => 5,
             _ => 4
         };
 

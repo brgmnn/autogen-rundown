@@ -405,7 +405,7 @@ public record EnemyPopulation : DataBlock<EnemyPopulation>
             (EnemyInfo.Striker, 1.0),
             (EnemyInfo.Shooter, 1.0),
             (EnemyInfo.StrikerGiant, 1.0),
-            (EnemyInfo.ShooterGiant, 0.3),
+            (EnemyInfo.ShooterGiant, 0.5),
         };
 
         foreach (var (info, weight) in enemiesTierE)
@@ -423,7 +423,7 @@ public record EnemyPopulation : DataBlock<EnemyPopulation>
         var chargersTierE = new List<(EnemyInfo, double)>
         {
             (EnemyInfo.Charger, 1.0),
-            (EnemyInfo.ChargerGiant, 0.4),
+            (EnemyInfo.ChargerGiant, 0.6),
         };
 
         foreach (var (info, weight) in chargersTierE)
@@ -441,7 +441,7 @@ public record EnemyPopulation : DataBlock<EnemyPopulation>
         var shadowsTierE = new List<(EnemyInfo, double)>
         {
             (EnemyInfo.Shadow, 1.0),
-            (EnemyInfo.ShadowGiant, 0.4)
+            (EnemyInfo.ShadowGiant, 0.6)
         };
 
         foreach (var (info, weight) in shadowsTierE)
@@ -477,7 +477,7 @@ public record EnemyPopulation : DataBlock<EnemyPopulation>
         {
             (EnemyInfo.NightmareStriker, 1.0),
             (EnemyInfo.NightmareShooter, 1.0),
-            (EnemyInfo.NightmareGiant, 0.2)
+            (EnemyInfo.NightmareGiant, 0.35)
         };
 
         foreach (var (info, weight) in nightmaresTierE)

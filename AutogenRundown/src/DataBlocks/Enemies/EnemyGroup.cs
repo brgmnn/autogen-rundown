@@ -1207,7 +1207,7 @@ public record EnemyGroup : DataBlock<EnemyGroup>
             {
                 Type = EnemyGroupType.Hibernate,
                 Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Shadows),
-                MaxScore = 4,
+                MaxScore = 8,
                 Roles = new List<EnemyGroupRole>
                 {
                     new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }
