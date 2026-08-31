@@ -160,7 +160,8 @@ public partial record LevelLayout
                     // Linear + locked terminal — start → LockedTerminalDoor(0) → gen zone(s)
                     (0.15, () =>
                     {
-                        var (end, _) = BuildChallenge_LockedTerminalDoor(start, isMainOnly ? 1 : 0);
+                        var approach = AddBranch(start, isMainOnly ? 1 : 0, "approach");
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(approach.Last(), 0);
                         var nodes = AddBranch(end, 1, "generator");
                         PlaceGeneratorsInZone(nodes.Last(), numGens);
                         AddForwardExtractStart(nodes.Last());
@@ -342,7 +343,8 @@ public partial record LevelLayout
                     // Linear + locked terminal — start → LockedTerminalDoor(0) → 1 zone → gen zone(s)
                     (0.20, () =>
                     {
-                        var (end, _) = BuildChallenge_LockedTerminalDoor(start, isMainOnly ? 1 : 0);
+                        var approach = AddBranch(start, isMainOnly ? 1 : 0, "approach");
+                        var (end, _) = BuildChallenge_LockedTerminalDoor(approach.Last(), 0);
                         var nodes = AddBranch(end, isMainOnly ? 2 : 1, "generator");
                         PlaceGeneratorsInZone(nodes.Last(), numGens);
                         AddForwardExtractStart(nodes.Last());
