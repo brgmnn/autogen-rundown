@@ -2,6 +2,11 @@ name: Generate CHANGELOG.md
 
 on:
   workflow_dispatch:
+    inputs:
+      max_entries:
+        description: Number of most recent releases to include
+        type: number
+        default: 80
 
 jobs:
   changelog:
@@ -19,6 +24,7 @@ jobs:
           ./generate-changelog.sh
         env:
           TZ: America/Los_Angeles
+          CHANGELOG_MAX_ENTRIES: ${{ inputs.max_entries }}
       - name: Set Git Authors
         run: |
           git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
