@@ -1341,6 +1341,52 @@ public partial class Level
     }
 
     /// <summary>
+    /// Whether the given layer can give up `count` open connection slots without starving
+    /// a bulkhead entrance that hasn't been placed yet and has no other layer to attach to.
+    /// Only the strategies that defer entrance placement (SingleChain, Default_NoMainBulkhead)
+    /// ever return false. Used to stop optional zone consumers (med bay, disinfection side
+    /// rooms) from taking the last slot a pending bulkhead door needs.
+    /// </summary>
+    public bool CanConsumeOpenSlots(Bulkhead layer, DimensionIndex dimension, int count = 1)
+    {
+        int OpenSlots(Bulkhead bulkhead) =>
+            Planner.CountOpenSlots(Planner.GetOpenZones(bulkhead, null, dimension));
+
+        bool Unplaced(Bulkhead bulkhead) =>
+            Planner.GetLastZoneExact(bulkhead, branch: null) is null;
+
+        switch (Settings.BulkheadStrategy)
+        {
+            case BukheadStrategy.SingleChain:
+                // Extreme attaches only to Main (its fallback is the same query)
+                if (layer.HasFlag(Bulkhead.Main) && HasExtreme && Unplaced(Bulkhead.Extreme))
+                    return OpenSlots(Bulkhead.Main) - count >= 1;
+
+                // Overload attaches to Extreme, falling back to Main
+                if (layer.HasFlag(Bulkhead.Extreme) && HasOverload && Unplaced(Bulkhead.Overload))
+                    return OpenSlots(Bulkhead.Extreme) - count >= 1 || OpenSlots(Bulkhead.Main) >= 1;
+
+                return true;
+
+            case BukheadStrategy.Default_NoMainBulkhead:
+                // Both secondaries attach to Main
+                if (layer.HasFlag(Bulkhead.Main))
+                {
+                    var pending = (HasExtreme && Unplaced(Bulkhead.Extreme) ? 1 : 0)
+                                + (HasOverload && Unplaced(Bulkhead.Overload) ? 1 : 0);
+
+                    return pending == 0 || OpenSlots(Bulkhead.Main) - count >= pending;
+                }
+
+                return true;
+
+            default:
+                // Other strategies pre-place all entrances in the starting area
+                return true;
+        }
+    }
+
+    /// <summary>
     /// Purely RAM/memory optimization step. This prunes any unneeded custom geos from the custom
     /// geo list so they are not loaded by the game for this level. This saves around 1-2gb of
     /// ram for people.

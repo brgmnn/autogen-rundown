@@ -1093,7 +1093,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 // check for open zones ourselves.
                 var open = level.Planner.GetOpenZones(Bulkhead.Main, null, layout.Dimension).Take(4).ToList();
 
-                if (open.Any())
+                if (open.Any() && level.CanConsumeOpenSlots(Bulkhead.Main, layout.Dimension))
                     layout.AddDisinfectionZone(Generator.Pick(open));
                 else
                     Plugin.Logger.LogDebug(
@@ -1119,7 +1119,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 .Where(node => node.ZoneNumber >= medianZoneNumber)
                 .ToList();
 
-            if (open.Any())
+            if (open.Any() && level.CanConsumeOpenSlots(Bulkhead.Main, layout.Dimension))
                 layout.AddDisinfectionZone(Generator.Pick(open));
             else
                 Plugin.Logger.LogDebug(

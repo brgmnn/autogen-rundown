@@ -154,6 +154,11 @@ public partial record LevelLayout
             }))
             return;
 
+        // The med bay is a dead-end (net -1 open slot); don't take a slot a pending
+        // bulkhead entrance still needs.
+        if (!level.CanConsumeOpenSlots(director.Bulkhead, Dimension))
+            return;
+
         var candidates = planner.GetOpenZones(director.Bulkhead, null)
             .Where(z => !z.Tags.Contains("exit_elevator"))
             .Where(z => z.Branch != "medical_bay")
