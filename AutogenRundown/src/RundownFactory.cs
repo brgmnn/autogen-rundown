@@ -541,6 +541,16 @@ public static class RundownFactory
                     new() { 3, 2, 1, 1, 5 }     // done
                 }
             },
+            {
+                "FALL_2026", new List<List<int>>
+                {
+                    new() { 1, 1, 1, 1, 1 },        // done
+                    new() { 1, 1, 1, 1, 1 },        // done
+                    new() { 1, 1, 1, 1, 1, 1 },     // done
+                    new() { 2, 1, 1, 1, 2, 4, 3 },  // done
+                    new() { 1, 1, 2, 2, 1 }         // done
+                }
+            },
         };
 
         #region Cross-level specific setup
@@ -949,6 +959,16 @@ public static class RundownFactory
                     new() { 1, 1, 1, 3 }, // done
                     new() { 1, 3, 1, 1 }, // done
                     new() { 1, 1, 3 }     // done
+                }
+            },
+            {
+                "2026_09", new List<List<int>>
+                {
+                    new() { 1, 1, 1 },
+                    new() { 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1 }
                 }
             }
         };
