@@ -1,3 +1,4 @@
+using AutogenRundown.Config;
 using AutogenRundown.Managers;
 using GameData;
 using HarmonyLib;
@@ -30,6 +31,15 @@ public class Fix_SourceExpanderNull
         // Check if sourceExpander is null - this would cause a crash in Done handler
         if (zone.m_sourceExpander == null)
         {
+            if (!GenerationOverrides.RebuildCheckEnabled(RebuildCheck.NullSourceExpander))
+            {
+                Plugin.Logger.LogWarning(
+                    $"[RebuildChecks] {RebuildCheck.NullSourceExpander} disabled — would have " +
+                    $"triggered a rebuild (Zone {zone.LocalIndex}); vanilla code will NRE on " +
+                    $"the null sourceExpander");
+                return true;
+            }
+
             Plugin.Logger.LogWarning(
                 $"Zone {zone.LocalIndex} reached Done without sourceExpander. " +
                 $"Triggering immediate rebuild...");

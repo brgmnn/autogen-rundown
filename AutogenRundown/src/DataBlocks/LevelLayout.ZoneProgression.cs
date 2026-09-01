@@ -1027,7 +1027,7 @@ public partial record LevelLayout
                     (0.6, () =>
                     {
                         zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer_AlignedSpawn with { Points = 4 });
-                        zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
+                        zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer_AlignedSpawn1 with { Points = 4 });
                     }),
                 });
                 break;
@@ -1049,8 +1049,9 @@ public partial record LevelLayout
                     // Triple pouncer
                     (0.4, () =>
                     {
+                        // Only two align markers to go around, the third roams
                         zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer_AlignedSpawn with { Points = 4 });
-                        zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
+                        zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer_AlignedSpawn1 with { Points = 4 });
                         zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
                     }),
                 });
@@ -1116,7 +1117,7 @@ public partial record LevelLayout
                     (0.35, () =>
                     {
                         zone.EnemySpawningInZone.Add(EnemySpawningData.Tank_AlignedSpawn with { Points = 10 });
-                        zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer with { Points = 4 });
+                        zone.EnemySpawningInZone.Add(EnemySpawningData.Pouncer_AlignedSpawn1 with { Points = 4 });
 
                         SetInfectionVibe(zone, 200);
                     }),
@@ -1126,6 +1127,9 @@ public partial record LevelLayout
                     (0.25, () =>
                     {
                         zone.EnemySpawningInZone.Add(EnemySpawningData.Tank_AlignedSpawn with { Points = 10 });
+                        // Deliberately not aligned. 30 points of potato is three separate
+                        // groups of one, so aligning would stack all three on one marker --
+                        // and placements cap spawn count, so two would silently never spawn.
                         zone.EnemySpawningInZone.Add(EnemySpawningData.TankPotato with { Points = 30 });
 
                         zone.LightSettings = Lights.Light.Pitch_black_1;
@@ -1139,9 +1143,9 @@ public partial record LevelLayout
                     // Tank & PMother
                     (0.25, () =>
                     {
-                        // Spawn align the mother, and default spawn the tank
+                        // Mother on the first align marker, tank on the second
                         zone.EnemySpawningInZone.Add(EnemySpawningData.PMother_AlignedSpawn with { Points = 10 });
-                        zone.EnemySpawningInZone.Add(EnemySpawningData.Tank with { Points = 10 });
+                        zone.EnemySpawningInZone.Add(EnemySpawningData.Tank_AlignedSpawn1 with { Points = 10 });
 
                         SetMotherVibe(zone, 250);
 
@@ -1274,7 +1278,26 @@ public partial record LevelLayout
         #region Warden Intel Messages
         level.ElevatorDropWardenIntel.Add((Generator.Between(1, 5), Generator.Draw(new List<string>
         {
-            ">... A nest?\r\n>... We have no choice. <color=red><size=200%>She's waiting.</size></color>\n>... Why... why?"
+            ">... A nest?\r\n>... We have no choice. <color=red><size=200%>She's waiting.</size></color>\n>... Why... why?",
+            ">... [wet breathing]\r\n>... That's not the fog. That's her.\r\n>... <size=200%><color=red>She's right through that wall!</color></size>",
+            ">... <size=200%><color=red>Do you hear that dripping?</color></size>\r\n>... The whole floor is soft. It's all sacs.\r\n>... Don't step on them. Please don't step on them.",
+            ">... The walls are moving.\r\n>... <size=200%><color=red>No. The walls are her.</color></size>\r\n>... Oh god, how big is she...",
+            ">... [shrieking]\r\n>... <size=200%><color=red>She's birthing again!</color></size>\r\n>... They're crawling out of her, they just keep coming!",
+            ">... How many is that now?\r\n>... I stopped counting after twenty.\r\n>... <size=200%><color=red>She doesn't stop. She never stops.</color></size>",
+            ">... <size=200%><color=red>Get out of the nest!</color></size>\r\n>... I can't, they're between me and the door!\r\n>... [screaming]",
+            ">... The last squad came through here.\r\n>... <size=200%><color=red>Their gear is in the eggs.</color></size>\r\n>... So are they.",
+            ">... [low moaning]\r\n>... She knows we're here. She's been listening this whole time.\r\n>... <size=200%><color=red>Kill the lights. KILL THEM.</color></size>",
+            ">... Focus her, forget the little ones!\r\n>... There are too many little ones!\r\n>... <size=200%><color=red>Then we die in here!</color></size>",
+            ">... <size=200%><color=red>She's screaming again!</color></size>\r\n>... My ears, I can't, I can't think-\r\n>... [ringing]",
+            ">... Something crunched under my boot.\r\n>... <size=200%><color=red>Don't look down.</color></size>\r\n>... I looked down.",
+            ">... The room is warm. Why is it warm?\r\n>... Everything in here is breathing.\r\n>... <size=200%><color=red>We're standing inside her.</color></size>",
+            ">... These ones are smaller than the last.\r\n>... <size=200%><color=red>That means fresh. That means she just made them.</color></size>\r\n>... [scrabbling]",
+            ">... <size=200%><color=red>Cut the sacs off the walls first!</color></size>\r\n>... There are hundreds of them.\r\n>... Then we better start now.",
+            ">... I've got her in the light.\r\n>... She fills the whole pit. All of it.\r\n>... <size=200%><color=red>Turn it off. Turn it off!</color></size>",
+            ">... [dragging]\r\n>... She has him. She's pulling him in-\r\n>... <size=200%><color=red>Shoot the arms! SHOOT THE ARMS!</color></size>",
+            ">... Ammo check.\r\n>... <size=200%><color=red>Between all of us? Not enough for her.</color></size>\r\n>... Not even close.",
+            ">... She stopped screaming.\r\n>... That's worse. That is so much worse.\r\n>... <size=200%><color=red>Where did she go?!</color></size>",
+            ">... <size=200%><color=red>Everything in this room came out of her.</color></size>\r\n>... The floor, the mounds, all of it.\r\n>... [retching]",
         }))!);
         #endregion
     }
@@ -1460,6 +1483,15 @@ public partial record LevelLayout
             return;
         }
 
+        // Signatures that add their own wave or environment pressure step the top-end
+        // error wave down one notch so the two pressure sources don't stack.
+        // StartWithInfection is a static handicap and keeps the full-strength error.
+        // See docs/dev/e-tier-difficulty.md, B1 guardrail.
+        if (level.Settings.Signature is LevelSignature.Stalker or LevelSignature.BossAlarm
+                or LevelSignature.CyclingFog or LevelSignature.UpkeepProtocol
+            && settings == WaveSettings.Error_VeryHard)
+            settings = WaveSettings.Error_Hard;
+
         // We use a template error alarm to provide the correct scan, but it doesn't trigger any waves
         lockedZone.Alarm = ChainedPuzzle.AlarmError_Template;
         lockedZone.SecurityGateToEnter = SecurityGate.Security;
@@ -1511,8 +1543,14 @@ public partial record LevelLayout
         var commandEvents = new List<WardenObjectiveEvent>()
             .AddTurnOffAlarms(9.5, "error_alarms")
             .AddSound(Sound.Alarms_Error_AmbientStop, 10)
-            .RemoveCustomHudText(10)
             .ToList();
+
+        // UpkeepProtocol owns the CustomHudText widget's slot: showing (or hiding) the
+        // banner would silently kill the upkeep countdown, so those levels get a one-shot
+        // fly-in message instead of a persistent banner and skip the removal.
+        // TODO: check this, I'm not sure it's right
+        if (level.Settings.Signature != LevelSignature.UpkeepProtocol)
+            commandEvents.RemoveCustomHudText(10);
 
         terminalPlacement.UniqueCommands.Add(
             new CustomTerminalCommand
@@ -1559,7 +1597,11 @@ public partial record LevelLayout
         var terminalSerial = Lore.TerminalSerial(DimensionIndex.Reality, terminalNode.Bulkhead, terminalNode.ZoneNumber);
 
         customDoor.InteractionMessage += $"<color=red> DEACTIVATE ALARM ON {terminalSerial}</color>";
-        lockedZone.EventsOnDoorScanStart.AddCustomHudText($"<color=red>Deactivate alarm on {terminalSerial}</color>");
+
+        if (level.Settings.Signature == LevelSignature.UpkeepProtocol)
+            lockedZone.EventsOnDoorScanStart.AddMessage($"<color=red>Deactivate alarm on {terminalSerial}</color>");
+        else
+            lockedZone.EventsOnDoorScanStart.AddCustomHudText($"<color=red>Deactivate alarm on {terminalSerial}</color>");
 
         level.SecurityDoors.Doors.Add(customDoor);
 
@@ -1604,6 +1646,14 @@ public partial record LevelLayout
         lockedZone.SecurityGateToEnter = SecurityGate.Apex;
         level.Settings.ErrorAlarmZones.Add(lockedNode);
 
+        // The BossAlarm signature already streams a level-wide boss error; don't default the
+        // apex alarm to a second boss stream.
+        if (level.Settings.Signature == LevelSignature.BossAlarm)
+        {
+            settings ??= WaveSettings.Error_Hard;
+            population ??= WavePopulation.Baseline;
+        }
+
         lockedZone.EventsOnDoorScanStart
             .AddSound(Sound.Alarms_Error_AmbientLoop, 1.0)
             .AddSpawnWave(new GenericWave
@@ -1644,8 +1694,13 @@ public partial record LevelLayout
             .AddTurnOffAlarms(9.5, "apex_error_alarms")
             .AddTurnOffAlarms(9.5, "error_alarms")
             .AddSound(Sound.Alarms_Error_AmbientStop, 10)
-            .RemoveCustomHudText(10)
             .ToList();
+
+        // UpkeepProtocol owns the CustomHudText widget's slot: showing (or hiding) the
+        // banner would silently kill the upkeep countdown, so those levels get a one-shot
+        // fly-in message instead of a persistent banner and skip the removal.
+        if (level.Settings.Signature != LevelSignature.UpkeepProtocol)
+            commandEvents.RemoveCustomHudText(10);
 
         terminalPlacement.UniqueCommands.Add(
             new CustomTerminalCommand
@@ -1692,7 +1747,11 @@ public partial record LevelLayout
         var terminalSerial = Lore.TerminalSerial(DimensionIndex.Reality, terminalNode.Bulkhead, terminalNode.ZoneNumber);
 
         customDoor.InteractionMessage += $"<color=red> DEACTIVATE ALARM ON {terminalSerial}</color>";
-        lockedZone.EventsOnDoorScanStart.AddCustomHudText($"<color=red>Deactivate alarm on {terminalSerial}</color>");
+
+        if (level.Settings.Signature == LevelSignature.UpkeepProtocol)
+            lockedZone.EventsOnDoorScanStart.AddMessage($"<color=red>Deactivate alarm on {terminalSerial}</color>");
+        else
+            lockedZone.EventsOnDoorScanStart.AddCustomHudText($"<color=red>Deactivate alarm on {terminalSerial}</color>");
 
         level.SecurityDoors.Doors.Add(customDoor);
 
@@ -1934,6 +1993,7 @@ public partial record LevelLayout
     {
         var (_, zone) = AddZone(start, new ZoneNode
         {
+            Branch = "disinfection",
             MaxConnections = 0,
             Tags = new Tags("no_scouts")
         });

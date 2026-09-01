@@ -1,5 +1,6 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Enemies;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
 
@@ -1107,11 +1108,19 @@ public partial record LevelLayout
                         else if (level.Settings.HasNightmares())
                             population = WavePopulation.Baseline_Nightmare;
 
-                        objective.WavesOnElevatorLand.Add(GenericWave.ErrorAlarm_Hard with
+                        // Skip the drop-time error alarm when the signature already owns
+                        // the level's ambient pressure (Stalker/BossAlarm stack waves on
+                        // the same list; CyclingFog owns the environment).
+                        // StartWithInfection is a static handicap and keeps it.
+                        if (level.Settings.Signature is LevelSignature.None
+                            or LevelSignature.StartWithInfection)
                         {
-                            Population = population
-                        });
-                        level.MarkAsErrorAlarm();
+                            objective.WavesOnElevatorLand.Add(GenericWave.ErrorAlarm_Hard with
+                            {
+                                Population = population
+                            });
+                            level.MarkAsErrorAlarm();
+                        }
 
                         var last = BuildBranch(start, Generator.Between(2, 3));
                         planner.UpdateNode(last with { Branch = "hsu_sample" });

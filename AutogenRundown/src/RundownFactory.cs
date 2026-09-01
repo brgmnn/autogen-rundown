@@ -1,4 +1,5 @@
-﻿using AutogenRundown.DataBlocks;
+﻿using AutogenRundown.Config;
+using AutogenRundown.DataBlocks;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Custom.ItemSpawnFix;
@@ -12,10 +13,13 @@ namespace AutogenRundown;
 
 public static class RundownFactory
 {
-    private static string seasonalPrefix = $"<color=#ff3311>S</color><space=0.3em>";
-    private static string monthlyPrefix = $"<color=#58fcee>M</color><space=0.3em>";
-    private static string weeklyPrefix = $"<color=green>W</color><space=0.3em>";
-    private static string dailyPrefix = $"<color=orange>D</color><space=0.3em>";
+    private static string seasonalPrefix = "<color=#ff3311>S</color><space=0.3em>";
+    private static string monthlyPrefix = "<color=#58fcee>M</color><space=0.3em>";
+    private static string weeklyPrefix = "<color=green>W</color><space=0.3em>";
+    private static string dailyPrefix = "<color=orange>D</color><space=0.3em>";
+
+    private static string soloPrefix = "<color=#0080ff>O</color><space=0.3em>";
+    private static string duoPrefix = "<color=#ff007f>T</color><space=0.3em>";
 
     private static string DescriptionHeader(WardenObjectiveType objectiveType)
     {
@@ -99,13 +103,15 @@ public static class RundownFactory
     /// <param name="withUnlocks"></param>
     /// <param name="withLogs"></param>
     /// <param name="prefix"></param>
+    /// <param name="overrides"></param>
     /// <returns></returns>
     public static Rundown BuildRundown(
         Rundown newRundown,
         bool withFixed = true,
         bool withUnlocks = true,
         bool withLogs = true,
-        string? prefix = null)
+        string? prefix = null,
+        RundownGenerationOverrides? overrides = null)
     {
         var rundown = Rundown.Build(newRundown);
         var levelNames = Words.NewLevelNamesPack();
@@ -144,6 +150,11 @@ public static class RundownFactory
             (1.0, 6, Complex.Service)
         };
 
+        var forceComplex = overrides?.ForceComplexValue;
+        var preferredSubComplex = overrides is { PreferGardens: true }
+            ? (SubComplex?)SubComplex.Gardens
+            : null;
+
         #endregion
 
         #region A-Tier Levels
@@ -159,7 +170,7 @@ public static class RundownFactory
                 Generator.AdvanceSequence(buildSeed);
             }
 
-            var complex = Generator.DrawSelect(complexPool);
+            var complex = forceComplex ?? Generator.DrawSelect(complexPool);
             var objective = Generator.DrawSelect(mainObjectivesPool);
             var director = new BuildDirector
             {
@@ -177,7 +188,8 @@ public static class RundownFactory
                     Index = i + 1,
                     Complex = complex,
                     MainDirector = director,
-                    BuildSeed = buildSeed
+                    BuildSeed = buildSeed,
+                    PreferredSubComplex = preferredSubComplex
                 });
 
             rundown.AddLevel(level);
@@ -185,7 +197,7 @@ public static class RundownFactory
 
         #region Geomorph Debugging test level
         #if DEBUG
-        #if false
+        #if true
         if (withFixed)
         {
             var settings = new LevelSettings("A");
@@ -210,7 +222,10 @@ public static class RundownFactory
         #endregion
         #endregion
 
-        mainObjectivesPool.Add((2.0, 1, WardenObjectiveType.AlphaTerminalCommand));
+        // AlphaTerminalCommand's PreBuild swaps Service levels to Mining/Tech (no Service
+        // portal geo), which would break a forced-Service rundown.
+        if (forceComplex is not Complex.Service)
+            mainObjectivesPool.Add((2.0, 1, WardenObjectiveType.AlphaTerminalCommand));
 
         #region B-Tier Levels
         for (int i = 0; i < rundown.TierB_Count; i++)
@@ -225,7 +240,7 @@ public static class RundownFactory
                 Generator.AdvanceSequence(buildSeed);
             }
 
-            var complex = Generator.DrawSelect(complexPool);
+            var complex = forceComplex ?? Generator.DrawSelect(complexPool);
             var objective = Generator.DrawSelect(mainObjectivesPool);
             var director = new BuildDirector
             {
@@ -243,14 +258,16 @@ public static class RundownFactory
                     Index = i + 1,
                     Complex = complex,
                     MainDirector = director,
-                    BuildSeed = buildSeed
+                    BuildSeed = buildSeed,
+                    PreferredSubComplex = preferredSubComplex
                 });
 
             rundown.AddLevel(level);
         }
         #endregion
 
-        mainObjectivesPool.Add((1.0, 1, WardenObjectiveType.AlphaTerminalCommand));
+        if (forceComplex is not Complex.Service)
+            mainObjectivesPool.Add((1.0, 1, WardenObjectiveType.AlphaTerminalCommand));
         mainObjectivesPool.Add((2.0, 1, WardenObjectiveType.Cryptomnesia));
 
         #region C-Tier Levels
@@ -266,7 +283,7 @@ public static class RundownFactory
                 Generator.AdvanceSequence(buildSeed);
             }
 
-            var complex = Generator.DrawSelect(complexPool);
+            var complex = forceComplex ?? Generator.DrawSelect(complexPool);
             var objective = Generator.DrawSelect(mainObjectivesPool);
             var director = new BuildDirector
             {
@@ -284,7 +301,8 @@ public static class RundownFactory
                     Index = i + 1,
                     Complex = complex,
                     MainDirector = director,
-                    BuildSeed = buildSeed
+                    BuildSeed = buildSeed,
+                    PreferredSubComplex = preferredSubComplex
                 });
 
             rundown.AddLevel(level);
@@ -354,7 +372,10 @@ public static class RundownFactory
         #endregion
         #endregion
 
-        mainObjectivesPool.Add((1.2, 1, WardenObjectiveType.ReachKdsDeep));
+        // ReachKdsDeep hard-forces Mining geomorphs, so keep it out of any non-Mining
+        // forced-complex rundown.
+        if (forceComplex is null or Complex.Mining)
+            mainObjectivesPool.Add((1.2, 1, WardenObjectiveType.ReachKdsDeep));
 
         #region D-Tier Levels
         // D levels
@@ -370,7 +391,7 @@ public static class RundownFactory
                 Generator.AdvanceSequence(buildSeed);
             }
 
-            var complex = Generator.DrawSelect(complexPool);
+            var complex = forceComplex ?? Generator.DrawSelect(complexPool);
             var objective = Generator.DrawSelect(mainObjectivesPool);
             var director = new BuildDirector
             {
@@ -388,7 +409,8 @@ public static class RundownFactory
                     Index = i + 1,
                     Complex = complex,
                     MainDirector = director,
-                    BuildSeed = buildSeed
+                    BuildSeed = buildSeed,
+                    PreferredSubComplex = preferredSubComplex
                 });
 
             rundown.AddLevel(level);
@@ -409,9 +431,28 @@ public static class RundownFactory
                 Generator.AdvanceSequence(buildSeed);
             }
 
-            var complex = Generator.DrawSelect(complexPool);
-            var objective = Generator.DrawSelect(mainObjectivesPool);
-            var director = new BuildDirector
+            var complex = forceComplex ?? Generator.DrawSelect(complexPool);
+
+            // The level is constructed before the objective draw so the rolled signature
+            // can filter the objective pool.
+            var level = new Level("E")
+            {
+                Prefix = $"{prefix}E",
+                Name = Generator.Draw(levelNames)!,
+                Index = i + 1,
+                Complex = complex,
+                BuildSeed = buildSeed,
+                PreferredSubComplex = preferredSubComplex
+            };
+
+            // CyclingFog owns whole-level fog; CentralGeneratorCluster's generator fog
+            // steps would fight it, so keep it out of the draw for cycling fog levels.
+            var objective = Generator.DrawSelect(
+                mainObjectivesPool,
+                o => level.Settings.Signature == LevelSignature.CyclingFog
+                     && o == WardenObjectiveType.CentralGeneratorCluster);
+
+            level.MainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = complex,
@@ -419,18 +460,7 @@ public static class RundownFactory
                 Objective = objective,
             };
 
-            var level = Level.Build(
-                new Level("E")
-                {
-                    Prefix = $"{prefix}E",
-                    Name = Generator.Draw(levelNames)!,
-                    Index = i + 1,
-                    Complex = complex,
-                    MainDirector = director,
-                    BuildSeed = buildSeed
-                });
-
-            rundown.AddLevel(level);
+            rundown.AddLevel(Level.Build(level));
         }
         #endregion
 
@@ -509,6 +539,16 @@ public static class RundownFactory
                     new() { 1, 2, 1, 1, 2, 2 }, // done
                     new() { 3, 1, 1, 1, 3, 1 }, // done
                     new() { 3, 2, 1, 1, 5 }     // done
+                }
+            },
+            {
+                "FALL_2026", new List<List<int>>
+                {
+                    new() { 1, 1, 1, 1, 1 },        // done
+                    new() { 1, 1, 1, 1, 1 },        // done
+                    new() { 1, 1, 1, 1, 1, 1 },     // done
+                    new() { 2, 1, 1, 1, 2, 4, 3 },  // done
+                    new() { 1, 1, 2, 2, 1 }         // done
                 }
             },
         };
@@ -716,12 +756,33 @@ public static class RundownFactory
             Generator.AdvanceSequence(buildSeed);
 
             var complex = Generator.DrawSelect(complexPool);
-            var objective = Generator.DrawSelect(mainObjectivesPool);
+
+            // The level is constructed before the objective draw so the rolled signature
+            // can filter the objective pool.
+            var level = new Level("E")
+            {
+                Prefix = $"{prefix}E",
+                Name = Generator.Draw(levelNames)!,
+                Index = i + 1,
+                Complex = complex,
+                BuildSeed = buildSeed,
+                BulkheadChanceTable = bulkheadChances
+            };
+
+            // CyclingFog owns whole-level fog; CentralGeneratorCluster's generator fog
+            // steps would fight it, so keep it out of the draw for cycling fog levels.
+            var objective = Generator.DrawSelect(
+                mainObjectivesPool,
+                o => level.Settings.Signature == LevelSignature.CyclingFog
+                     && o == WardenObjectiveType.CentralGeneratorCluster);
 
             if (objective == WardenObjectiveType.ReachKdsDeep)
+            {
                 complex = Complex.Mining;
+                level.Complex = complex;
+            }
 
-            var director = new BuildDirector
+            level.MainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = complex,
@@ -729,19 +790,7 @@ public static class RundownFactory
                 Objective = objective,
             };
 
-            var level = Level.Build(
-                new Level("E")
-                {
-                    Prefix = $"{prefix}E",
-                    Name = Generator.Draw(levelNames)!,
-                    Index = i + 1,
-                    Complex = complex,
-                    MainDirector = director,
-                    BuildSeed = buildSeed,
-                    BulkheadChanceTable = bulkheadChances
-                });
-
-            rundown.AddLevel(level);
+            rundown.AddLevel(Level.Build(level));
         }
 
         if (withUnlocks)
@@ -910,6 +959,16 @@ public static class RundownFactory
                     new() { 1, 1, 1, 3 }, // done
                     new() { 1, 3, 1, 1 }, // done
                     new() { 1, 1, 3 }     // done
+                }
+            },
+            {
+                "2026_09", new List<List<int>>
+                {
+                    new() { 1, 1, 1 },    // done
+                    new() { 1, 1 },       // done
+                    new() { 1, 2, 1, 2 }, // done
+                    new() { 1, 1, 1, 1 }, // done
+                    new() { 1, 1 }        // done
                 }
             }
         };
@@ -1106,12 +1165,32 @@ public static class RundownFactory
             Generator.AdvanceSequence(buildSeed);
 
             var complex = Generator.DrawSelect(complexPool);
-            var objective = Generator.DrawSelect(mainObjectivesPool);
+
+            // The level is constructed before the objective draw so the rolled signature
+            // can filter the objective pool.
+            var level = new Level("E")
+            {
+                Prefix = $"{prefix}E",
+                Name = Generator.Draw(levelNames)!,
+                Index = i + 1,
+                Complex = complex,
+                BuildSeed = buildSeed
+            };
+
+            // CyclingFog owns whole-level fog; CentralGeneratorCluster's generator fog
+            // steps would fight it, so keep it out of the draw for cycling fog levels.
+            var objective = Generator.DrawSelect(
+                mainObjectivesPool,
+                o => level.Settings.Signature == LevelSignature.CyclingFog
+                     && o == WardenObjectiveType.CentralGeneratorCluster);
 
             if (objective == WardenObjectiveType.ReachKdsDeep)
+            {
                 complex = Complex.Mining;
+                level.Complex = complex;
+            }
 
-            var director = new BuildDirector
+            level.MainDirector = new BuildDirector
             {
                 Bulkhead = Bulkhead.Main,
                 Complex = complex,
@@ -1119,18 +1198,7 @@ public static class RundownFactory
                 Objective = objective,
             };
 
-            var level = Level.Build(
-                new Level("E")
-                {
-                    Prefix = $"{prefix}E",
-                    Name = Generator.Draw(levelNames)!,
-                    Index = i + 1,
-                    Complex = complex,
-                    MainDirector = director,
-                    BuildSeed = buildSeed
-                });
-
-            rundown.AddLevel(level);
+            rundown.AddLevel(Level.Build(level));
         }
 
         if (withUnlocks)
@@ -1221,6 +1289,68 @@ public static class RundownFactory
         #endregion
 
         //
+        // Solo Rundown -- Rundown 2 replacement
+        //
+        #region Solo Rundown
+        #if ENABLE_SOLO_RUNDOWN
+        {
+            // Set the weekly seed
+            Generator.SetWeeklySeed(weeklySeed);
+            Generator.Reload();
+
+            var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
+
+            var solo = BuildRundown(
+                new Rundown
+                {
+                    PersistentId = Rundown.R_Solo,
+                    Title = $"{name.ToUpper()}",
+                    StoryTitle = $"SOLO {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
+                },
+                withFixed: false,
+                withUnlocks: !unlockAll,
+                withLogs: true,
+                prefix: soloPrefix);
+
+            solo.VisualsETier = Color.MenuVisuals_SoloE;
+
+            Bins.Rundowns.AddBlock(solo);
+        }
+        #endif
+        #endregion
+
+        //
+        // Duo Rundown -- Rundown 2 replacement
+        //
+        #region Duo Rundown
+        #if ENABLE_DUO_RUNDOWN
+        {
+            // Set the weekly seed
+            Generator.SetWeeklySeed(weeklySeed);
+            Generator.Reload();
+
+            var name = $"{Generator.Pick(Words.Adjectives)} {Generator.Pick(Words.NounsRundown)}";
+
+            var duo = BuildRundown(
+                new Rundown
+                {
+                    PersistentId = Rundown.R_Duo,
+                    Title = $"{name.ToUpper()}",
+                    StoryTitle = $"DUO {Generator.DisplaySeed}\r\nTITLE: {name.ToUpper()}",
+                },
+                withFixed: false,
+                withUnlocks: !unlockAll,
+                withLogs: true,
+                prefix: duoPrefix);
+
+            duo.VisualsETier = Color.MenuVisuals_DuoE;
+
+            Bins.Rundowns.AddBlock(duo);
+        }
+        #endif
+        #endregion
+
+        //
         // Weekly Rundown -- Rundown 5 replacement
         //
         #region Weekly Rundown
@@ -1272,7 +1402,8 @@ public static class RundownFactory
                 withFixed: true,
                 withUnlocks: false,
                 withLogs: false,
-                prefix: dailyPrefix);
+                prefix: dailyPrefix,
+                overrides: GenerationOverrides.Current.Daily);
 
             daily.VisualsETier = Color.MenuVisuals_DailyE;
 
@@ -1283,13 +1414,23 @@ public static class RundownFactory
         // Only load the rundowns we want
         gameSetup.RundownIdsToLoad = new List<uint>
         {
-            Rundown.R_Daily, // Rundown.R7,
-            Rundown.R_Monthly, // Rundown.R4,
-            Rundown.R_Weekly, // Rundown.R5,
+            Rundown.R_Daily,   // Rundown.R7,
+            Rundown.R_Monthly, // Rundown.R6?,
+            Rundown.R_Weekly,  // Rundown.R5,
+
+            #if ENABLE_SOLO_RUNDOWN
+            Rundown.R_Solo,    // Rundown.R3
+            #else
+            Rundown.R_Daily,
+            #endif
+
+            #if ENABLE_DUO_RUNDOWN
+            Rundown.R_Duo,     // Rundown.R4
+            #else
+            Rundown.R_Daily,
+            #endif
 
             // These are no-ops and will be disabled
-            Rundown.R_Daily,
-            Rundown.R_Daily,
             Rundown.R_Daily,
             Rundown.R_Daily,
 

@@ -18,6 +18,9 @@ public record Rundown : DataBlock<Rundown>
     public static readonly uint R_Monthly = 3;
     public static readonly uint R_Seasonal = 4;
 
+    public static readonly uint R_Solo = 5;
+    public static readonly uint R_Duo = 6;
+
     public List<Level> TierA { get; set; } = new();
     public List<Level> TierB { get; set; } = new();
     public List<Level> TierC { get; set; } = new();
@@ -173,7 +176,7 @@ public record Rundown : DataBlock<Rundown>
     {
         // Rundown.Name is used by LocalProgression for storing the progression data. Ensure
         // this is unique to guarantee we store progression between runs.
-        rundown.Name = $"RndRundownSeed{Generator.Seed.Replace("_", "")}";
+        rundown.Name = $"RndRundown_Id{rundown.PersistentId}_Seed{Generator.Seed.Replace("_", "")}";
         rundown.DisplaySeed = Generator.DisplaySeed;
 
         return rundown;
@@ -243,14 +246,13 @@ public record Rundown : DataBlock<Rundown>
             Plugin.Logger.LogDebug($"Placing {totalLogs} logs in \"{level.Tier}{level.Index} {level.Name}\", logs located at:");
 
             foreach (var (bulkhead, layout) in level.GetAllLayouts())
-            {
                 foreach (var zone in layout.Zones)
                     foreach (var terminal in zone.TerminalPlacements)
                         terminals.Add((bulkhead, layout.Dimension, zone.LocalIndex, terminal.LogFiles, terminal.StartingStateData, "zone terminal"));
-            }
 
             // Include custom terminal spawn requests in the log distribution pool
             var customRequests = CustomTerminalSpawnManager.GetRequests(level.LevelLayoutData);
+
             foreach (var request in customRequests)
                 terminals.Add((request.Bulkhead, request.DimensionIndex, request.LocalIndex, request.LogFiles, request.StartingStateData, "custom terminal"));
 
@@ -258,38 +260,34 @@ public record Rundown : DataBlock<Rundown>
 
             foreach (var (bulkhead, dimensionIndex, zoneIndex, logFiles, startingState, source) in toPlace)
             {
-                // TODO: 1.1: change to draw so we don't have duplicate logs
-                // var lorelog = Generator.Draw(logs);
-                var lorelog = logs.PickRandom();
+                var lorelog = logs.DrawRandom();
 
-                if (lorelog != null)
+                if (lorelog == null)
+                    continue;
+
+                logFiles.Add(lorelog);
+
+                level.LogArchives.Logs.Add(new Log
                 {
-                    logFiles.Add(lorelog);
+                    Bulkhead = bulkhead,
+                    ZoneNumber = zoneIndex,
+                    FileName = lorelog.FileName
+                });
 
-                    level.LogArchives.Logs.Add(new Log
-                    {
-                        Bulkhead = bulkhead,
-                        ZoneNumber = zoneIndex,
-                        FileName = lorelog.FileName
-                    });
-
-                    if (lorelog.AttachedAudioFile != Sound.None &&
-                        startingState.StartingState == TerminalState.Sleeping)
-                    {
-                        startingState.StartingState = TerminalState.AudioLoopError;
-                        Plugin.Logger.LogDebug($" -> {bulkhead.ToString().PadLeft(8, ' ')}, " +
-                                               $"{dimensionIndex.ToString().PadRight(11, ' ')}  " +
-                                               $"ZONE_{zoneIndex}, " +
-                                               $"file={lorelog.FileName}, with audio");
-                    }
-                    else
-                    {
-                        Plugin.Logger.LogDebug($" -> {bulkhead.ToString().PadLeft(8, ' ')}, " +
-                                               $"{dimensionIndex.ToString().PadRight(11, ' ')}  " +
-                                               $"ZONE_{zoneIndex}, " +
-                                               $"file={lorelog.FileName}");
-                    }
+                if (lorelog.AttachedAudioFile != Sound.None &&
+                    startingState.StartingState == TerminalState.Sleeping)
+                {
+                    startingState.StartingState = TerminalState.AudioLoopError;
+                    Plugin.Logger.LogDebug($" -> {bulkhead.ToString().PadLeft(8, ' ')}, " +
+                                           $"{dimensionIndex.ToString().PadRight(11, ' ')}  " +
+                                           $"ZONE_{zoneIndex}, " +
+                                           $"file={lorelog.FileName}, with audio");
                 }
+                else
+                    Plugin.Logger.LogDebug($" -> {bulkhead.ToString().PadLeft(8, ' ')}, " +
+                                           $"{dimensionIndex.ToString().PadRight(11, ' ')}  " +
+                                           $"ZONE_{zoneIndex}, " +
+                                           $"file={lorelog.FileName}");
             }
 
             level.LogArchives.Save();

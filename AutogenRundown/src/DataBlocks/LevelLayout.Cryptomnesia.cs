@@ -36,6 +36,8 @@ public partial record LevelLayout
         {
             Complex.Mining => ComplexResourceSet.Mining,
             Complex.Tech => ComplexResourceSet.Tech,
+            Complex.Service when level.PreferredSubComplex == SubComplex.Gardens
+                => ComplexResourceSet.ServiceGardens,
             Complex.Service => ComplexResourceSet.Service,
             _ => ComplexResourceSet.Mining
         }).Duplicate();
@@ -318,8 +320,8 @@ public partial record LevelLayout
                 zone.ToolPacks = 0;
                 zone.ConsumableDistributionInZone = 0;
 
-                // Remove terminals // TODO: breaks an objective?
-                // zone.TerminalPlacements.Clear();
+                // Remove terminals
+                zone.TerminalPlacements.Clear();
 
                 // Remove enemies
                 zone.EnemySpawningInZone.Clear();

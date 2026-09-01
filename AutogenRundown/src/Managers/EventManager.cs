@@ -32,18 +32,24 @@ public static class EventManager
 
     public static void UpdateRundown()
     {
-        var rundown = RundownManager.ActiveRundownKey switch
-        {
-            "Local_1" => PluginRundown.Daily,
-            "Local_2" => PluginRundown.Weekly,
-            "Local_3" => PluginRundown.Monthly,
-            "Local_4" => PluginRundown.Seasonal,
-
-            _ => PluginRundown.None
-        };
+        var rundown = PluginRundowns.FromRundownKey(RundownManager.ActiveRundownKey);
 
         Plugin.Logger.LogDebug($"Active rundown = {rundown}");
 
-        OnRundownUpdate?.Invoke(rundown);
+        // Invoked one handler at a time. A raw multicast invoke would let a single throwing
+        // subscriber abort every later one and escape into the game method we were called
+        // from -- UpdateRundown() runs inside CM_PageRundown_New.PlaceRundown/OnEnable
+        // postfixes, so an escaping exception skips the rest of those postfixes.
+        foreach (var handler in OnRundownUpdate.GetInvocationList())
+        {
+            try
+            {
+                ((Action<PluginRundown>)handler).Invoke(rundown);
+            }
+            catch (Exception error)
+            {
+                Plugin.Logger.LogWarning($"OnRundownUpdate handler failed: {error}");
+            }
+        }
     }
 }

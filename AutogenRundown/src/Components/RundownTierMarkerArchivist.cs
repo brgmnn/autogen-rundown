@@ -12,16 +12,16 @@ internal class RundownTierMarkerArchivist : MonoBehaviour
 {
     internal CM_RundownTierMarker m_tierMarker;
 
-    private CM_ExpeditionSectorIcon m_completeWithNoBoosterIcon = null;
+    private CM_ExpeditionSectorIcon? m_completeWithNoBoosterIcon = null;
     private SpriteRenderer m_icon;
     private SpriteRenderer m_bg;
-    private TextMeshPro m_title;
-    private TextMeshPro m_rightSideText;
+    private TextMeshPro? m_title;
+    private TextMeshPro? m_rightSideText;
 
     private static int totalRead = 0;
     private static int totalLogs = 0;
 
-    private ArchivistIconWrapper Wrapper;
+    private ArchivistIconWrapper? Wrapper;
 
     private static byte[] spriteData;
     private static Texture2D texture;
@@ -31,11 +31,41 @@ internal class RundownTierMarkerArchivist : MonoBehaviour
 
     private static List<RundownTierMarkerArchivist> instances = new();
 
+    private Action? pendingAssetLoad;
+
     internal static void PluginSetup()
     {
+        // A single subscriber drives every marker, rather than one subscription per instance.
+        // CM_PageRundown_New re-places the whole rundown on every rundown switch, so markers
+        // are torn down and rebuilt repeatedly; driving them from a list we can prune keeps a
+        // marker whose icon has already been destroyed from throwing on every later update.
         EventManager.OnRundownUpdate += (rundown) =>
         {
             (totalRead, totalLogs) = LogArchivistManager.GetLogsRead(rundown);
+
+            for (var i = instances.Count - 1; i >= 0; i--)
+            {
+                var marker = instances[i];
+
+                // Unity's == is fake-null aware, so this catches destroyed components
+                if (marker == null)
+                {
+                    instances.RemoveAt(i);
+                    continue;
+                }
+
+                try
+                {
+                    marker.OnRundownUpdate(rundown);
+                }
+                catch (Exception error)
+                {
+                    instances.RemoveAt(i);
+
+                    Plugin.Logger.LogWarning(
+                        $"Archivist tier marker dropped, its icon is gone: {error.Message}");
+                }
+            }
         };
     }
 
@@ -77,26 +107,52 @@ internal class RundownTierMarkerArchivist : MonoBehaviour
 
         if (Icon == null)
         {
-            AssetAPI.OnAssetBundlesLoaded += () => {
+            // Held in a field so it can actually be unsubscribed. Assigning the lambda first
+            // and removing it by reference is the only way to do that -- the old code removed
+            // a LoadAsset method group that was never added, leaving the lambda live.
+            pendingAssetLoad = () =>
+            {
+                AssetAPI.OnAssetBundlesLoaded -= pendingAssetLoad;
+                pendingAssetLoad = null;
+
                 LoadAsset();
-                AssetAPI.OnAssetBundlesLoaded -= LoadAsset;
             };
+
+            AssetAPI.OnAssetBundlesLoaded += pendingAssetLoad;
         }
         else
         {
             LoadAsset();
         }
-
-        EventManager.OnRundownUpdate += OnRundownUpdate;
-
-        instances.Add(this);
     }
 
     public void OnDestroy()
     {
-        EventManager.OnRundownUpdate -= OnRundownUpdate;
+        if (pendingAssetLoad != null)
+        {
+            AssetAPI.OnAssetBundlesLoaded -= pendingAssetLoad;
+            pendingAssetLoad = null;
+        }
 
         instances.Remove(this);
+
+        // Normally redundant -- the icon is a child of the tier marker being destroyed -- but
+        // needed if only the component is removed. Guarded because a throw out of OnDestroy on
+        // an injected il2cpp MonoBehaviour surfaces as a trampoline error.
+        try
+        {
+            Wrapper?.Destroy();
+        }
+        catch (Exception error)
+        {
+            Plugin.Logger.LogDebug($"Archivist icon already gone: {error.Message}");
+        }
+
+        Wrapper = null;
+
+        m_completeWithNoBoosterIcon = null;
+        m_title = null;
+        m_rightSideText = null;
     }
 
     private void LoadAsset()
@@ -107,7 +163,7 @@ internal class RundownTierMarkerArchivist : MonoBehaviour
             return;
         }
 
-        Plugin.Logger.LogError("RundownTierMarkerArchivist.Setup: setting it up");
+        Plugin.Logger.LogDebug("RundownTierMarkerArchivist.Setup: setting it up");
 
         m_completeWithNoBoosterIcon = GOUtil.SpawnChildAndGetComp<CM_ExpeditionSectorIcon>(
             Icon, m_tierMarker.m_sectorIconAlign_main);
@@ -133,13 +189,22 @@ internal class RundownTierMarkerArchivist : MonoBehaviour
         m_completeWithNoBoosterIcon.transform.localScale = localScale;
 
         m_completeWithNoBoosterIcon.SetPosition(new Vector2 { x = 0f, y = 155f });
+
+        // Only joins the update list once the icon it draws actually exists
+        instances.Add(this);
     }
 
-    internal void SetVisible(bool visible) => m_completeWithNoBoosterIcon.SetVisible(visible);
+    internal void SetVisible(bool visible)
+    {
+        if (m_completeWithNoBoosterIcon == null)
+            return;
+
+        m_completeWithNoBoosterIcon.SetVisible(visible);
+    }
 
     private void OnRundownUpdate(PluginRundown rundown)
     {
-        if (rundown is not (PluginRundown.Weekly or PluginRundown.Monthly or PluginRundown.Seasonal))
+        if (!PluginRundowns.WithLogs.Contains(rundown))
         {
             SetVisible(false);
             return;
@@ -206,6 +271,9 @@ internal class RundownTierMarkerArchivist : MonoBehaviour
 
     private void UpdateText()
     {
+        if (m_rightSideText == null)
+            return;
+
         var readString = $"{totalRead}";
 
         if (totalRead == 0)

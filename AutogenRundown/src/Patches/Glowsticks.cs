@@ -1,4 +1,5 @@
-﻿using AutogenRundown.Extensions;
+﻿using AutogenRundown.Config;
+using AutogenRundown.Extensions;
 using HarmonyLib;
 
 namespace AutogenRundown.Patches;
@@ -47,7 +48,7 @@ public class Glowsticks
     [HarmonyPostfix]
     internal static void Post_GlowstickInstance_Update(GlowstickInstance __instance)
     {
-        if (!Plugin.Config_UsePlayerColoredGlowsticks)
+        if (!PluginConfig.UsePlayerColorGlowsticks)
             return;
 
         __instance.m_light.Color = __instance.Owner.Owner.PlayerColor;

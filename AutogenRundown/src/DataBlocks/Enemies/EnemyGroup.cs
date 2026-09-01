@@ -927,21 +927,32 @@ public record EnemyGroup : DataBlock<EnemyGroup>
         #endregion
 
         #region Boss aligned spawn bosses
-        // These bosses are set up to spawn in boss aligned spawn points
+        // These bosses are set up to spawn in boss aligned spawn points. One group per boss
+        // per marker index, so a room placing two bosses can put the second on marker 1
+        // instead of stacking it on the first -- placement state is per enemy group, so two
+        // groups on the same marker both spawn on the same spot.
+        //
+        // Align_N not CycleAllAligns: the game only null checks the align transform on
+        // Align_0..Align_5. CycleAllAligns dereferences it blind, so a group that lands in an
+        // area without spawn aligns NREs and hangs LG_Factory. These groups are all single
+        // enemy anyway, so there is nothing to cycle.
         foreach (var boss in EnemyInfo.SpawnAlignedBosses)
         {
-            Bins.EnemyGroups.AddBlock(
-                new EnemyGroup
-                {
-                    Type = EnemyGroupType.PureSneak,
-                    Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)boss.Enemy,
-                    MaxScore = boss.Points,
-                    SpawnPlacementType = SpawnPlacementType.CycleAllAligns,
-                    Roles = new List<EnemyGroupRole>
+            foreach (var (mask, placement) in EnemyInfo.BossAlignSlots)
+            {
+                Bins.EnemyGroups.AddBlock(
+                    new EnemyGroup
                     {
-                        new() { Role = boss.Role, Distribution = EnemyRoleDistribution.Rel100 }
-                    }
-                });
+                        Type = EnemyGroupType.PureSneak,
+                        Difficulty = (uint)mask | (uint)boss.Enemy,
+                        MaxScore = boss.Points,
+                        SpawnPlacementType = placement,
+                        Roles = new List<EnemyGroupRole>
+                        {
+                            new() { Role = boss.Role, Distribution = EnemyRoleDistribution.Rel100 }
+                        }
+                    });
+            }
         }
 
         Bins.EnemyGroups.AddBlock(
@@ -950,7 +961,7 @@ public record EnemyGroup : DataBlock<EnemyGroup>
                 Type = EnemyGroupType.PureSneak,
                 Difficulty = Enemy_New.MegaMother.PersistentId,
                 MaxScore = EnemyInfo.MegaMother.Points,
-                SpawnPlacementType = SpawnPlacementType.CycleAllAligns,
+                SpawnPlacementType = SpawnPlacementType.Align_0,
                 Roles = new List<EnemyGroupRole>
                 {
                     new() { Role = EnemyRole.PureSneak, Distribution = EnemyRoleDistribution.Rel100 }
@@ -1196,7 +1207,7 @@ public record EnemyGroup : DataBlock<EnemyGroup>
             {
                 Type = EnemyGroupType.Hibernate,
                 Difficulty = (uint)(AutogenDifficulty.TierE | AutogenDifficulty.Shadows),
-                MaxScore = 4,
+                MaxScore = 8,
                 Roles = new List<EnemyGroupRole>
                 {
                     new() { Role = EnemyRole.Melee,  Distribution = EnemyRoleDistribution.Rel100 }

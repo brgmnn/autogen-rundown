@@ -483,7 +483,17 @@ patches needed, but the query generator needs access to actual zone layout data.
 
 Before Phase 4, test these Advanced Warden Objective events:
 
-- `AdjustAwoTimer` (AWO 20007): Can it reset a countdown? Does it add/set time?
+- `AdjustAwoTimer` (AWO 20007): **✅ Verified against AWO source (2026-08), and now
+  exercised in production by `LevelSignature.UpkeepProtocol`.** It *adds* a signed delta
+  to the running countdown via a one-shot global `TimeModifier` consumed per-frame — it
+  never sets or resets. Two adjustments landing in the same frame collapse to one (the
+  second overwrites the first); a modifier set while no countdown runs is discarded when
+  the next countdown starts; it cannot restart an expired countdown. To "reset", fire a
+  new `Countdown` (10010) — but that *replaces* a running one and silently drops the old
+  `EventsOnDone`/`EventsOnProgress` (which is why UpkeepProtocol pre-builds its expiry
+  chain in `AddCountdownWithExpiryChain`). Related: `CustomHudText` (20017) writes the
+  same HUD widget and also kills a running countdown; countdowns abort on checkpoint
+  restore.
 - `SetWorldEventCondition` (event 19): Can multiple conditions be checked simultaneously?
 - `ConditionIndex` on event entries: Does conditional branching on command events work?
 - `StartEventLoop`/`StopEventLoop` (AWO 20001/20002): Can they be cancelled from remote terminal commands?

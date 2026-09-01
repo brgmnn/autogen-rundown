@@ -1,3 +1,4 @@
+using AutogenRundown.Config;
 using AutogenRundown.Managers;
 using GameData;
 using LevelGeneration;
@@ -93,6 +94,14 @@ public static class Fix_MissingGeneratorCluster
 
                 if (spawned.GetValueOrDefault(key, 0) >= zone.m_settings.m_zoneData.GeneratorClustersInZone)
                     continue;
+
+                if (!GenerationOverrides.RebuildCheckEnabled(RebuildCheck.MissingGeneratorCluster))
+                {
+                    Plugin.Logger.LogWarning(
+                        $"[RebuildChecks] {RebuildCheck.MissingGeneratorCluster} disabled — " +
+                        $"would have triggered a rebuild ({key})");
+                    continue;
+                }
 
                 if (Attempts.GetValueOrDefault(key, 0) >= MaxAttemptsPerZone)
                 {

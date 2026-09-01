@@ -8,6 +8,7 @@ using AmorLib.API;
 using GTFO.API;
 using HarmonyLib;
 using LevelGeneration;
+using SNetwork;
 namespace AutogenRundown.Managers;
 
 /// <summary>
@@ -30,6 +31,25 @@ public static class FactoryJobManager
     public static bool Rebuilding { get; private set; }
 
     public static int RebuildCount { get; private set; }
+
+    /// <summary>
+    /// Rebuild attempts the host allows before aborting the drop entirely. 0 disables the limit.
+    /// Only the host counts -- clients rebuild without a bound and are released by the host's
+    /// abort broadcast.
+    /// </summary>
+    public static int MaxRebuilds { get; set; } = 10;
+
+    /// <summary>
+    /// Set when the rebuild budget is exhausted. Freezes LG_Factory (see Patch_LG_Factory) so the
+    /// half-built level cannot advance while the expedition is being aborted.
+    /// </summary>
+    public static bool GaveUp { get; private set; }
+
+    /// <summary>
+    /// Freezes this peer's factory. Called locally when the budget runs out, and on every peer
+    /// when the host broadcasts the abort.
+    /// </summary>
+    public static void MarkGaveUp() => GaveUp = true;
 
     public static void FlashMessage()
     {
@@ -58,6 +78,9 @@ public static class FactoryJobManager
         ShowMessage = false;
         ShouldRebuild = false;
         RebuildCount = 0;
+        GaveUp = false;
+
+        BuildFailureManager.OnNewBuild();
 
         ZoneSeedManager.SubSeeds.Clear();
         ZoneSeedManager.MarkerSubSeeds.Clear();
@@ -214,6 +237,20 @@ public static class FactoryJobManager
 
         if (results.Any(r => !r))
         {
+            // Out of budget: give up rather than looping on the drop screen forever. ShouldRebuild
+            // stays true so SupressEventHandlers keeps the half-built level from being announced
+            // as ready, and GaveUp freezes the factory from Patch_LG_Factory.Prefix_Update.
+            if (SNet.IsMaster && MaxRebuilds > 0 && RebuildCount >= MaxRebuilds)
+            {
+                Plugin.Logger.LogError(
+                    $"[FactoryJobManager] Giving up after {RebuildCount} rebuilds, aborting expedition");
+
+                GaveUp = true;
+                BuildFailureManager.OnHostGaveUp(RebuildCount);
+
+                return;
+            }
+
             Rebuilding = true;
 
             LevelCleanup();

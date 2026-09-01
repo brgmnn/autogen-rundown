@@ -440,8 +440,6 @@ public record DimensionData
     /// <summary>
     /// R6B1
     ///
-    ///
-    ///
     /// Takes about 2 mins to run from spawn to the base
     /// </summary>
     public static readonly DimensionData AlphaTwo = new()

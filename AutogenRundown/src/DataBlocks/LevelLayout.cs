@@ -492,9 +492,6 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             "E" => (0.3, -1, new List<EnemySpawningData>
                 {
                     EnemySpawningData.Scout with { Points = 5 },
-                    EnemySpawningData.Scout with { Points = 5 },
-                    EnemySpawningData.Scout with { Points = 5 },
-                    EnemySpawningData.Scout with { Points = 10 },
                     EnemySpawningData.Scout with { Points = 10 },
                     EnemySpawningData.Scout with { Points = 15 },
 
@@ -516,11 +513,14 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                     EnemySpawningData.ScoutShadow with { Points = 5 },
                     EnemySpawningData.ScoutShadow with { Points = 5 },
                     EnemySpawningData.ScoutShadow with { Points = 10 },
+                    EnemySpawningData.ScoutShadow with { Points = 10 },
+                    EnemySpawningData.ScoutShadow with { Points = 15 },
 
                     // Nightmare
                     EnemySpawningData.ScoutNightmare with { Points = 5 },
                     EnemySpawningData.ScoutNightmare with { Points = 5 },
                     EnemySpawningData.ScoutNightmare with { Points = 5 },
+                    EnemySpawningData.ScoutNightmare with { Points = 10 },
                     EnemySpawningData.ScoutNightmare with { Points = 10 },
                 }),
 
@@ -1091,7 +1091,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                 // rather than null (ZoneNode is a struct). Building off that default node would
                 // wire the new zone to a parent that has no zone in the planner, so we have to
                 // check for open zones ourselves.
-                var open = level.Planner.GetOpenZones(Bulkhead.All, null, layout.Dimension).Take(4).ToList();
+                var open = level.Planner.GetOpenZones(Bulkhead.Main, null, layout.Dimension).Take(4).ToList();
 
                 if (open.Any())
                     layout.AddDisinfectionZone(Generator.Pick(open));
@@ -1099,6 +1099,62 @@ public partial record LevelLayout : DataBlock<LevelLayout>
                     Plugin.Logger.LogDebug(
                         $"{layout.Name} -- No open zones to attach a disinfection zone to, skipping");
             }
+        }
+
+        // Signature relief: StartWithInfection and infectious CyclingFog levels have no
+        // InFog zones (CyclingFog forces NoFog; StartWithInfection can roll it), so the
+        // fog-gated relief above can never fire for them. Roll a low chance of a
+        // disinfection zone, restricted to the SECOND HALF of the main progression —
+        // players are meant to play through the infection before any relief appears.
+        if (director.Bulkhead == Bulkhead.Main
+            && layout.Dimension == DimensionIndex.Reality
+            && (level.Settings.Signature == LevelSignature.StartWithInfection
+                || (level.Settings.Signature == LevelSignature.CyclingFog
+                    && level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)))
+            && Generator.Flip(0.35))
+        {
+            var mainNodes = level.Planner.GetZones(Bulkhead.Main, null, layout.Dimension);
+            var medianZoneNumber = mainNodes[mainNodes.Count / 2].ZoneNumber;
+            var open = level.Planner.GetOpenZones(Bulkhead.Main, null, layout.Dimension)
+                .Where(node => node.ZoneNumber >= medianZoneNumber)
+                .ToList();
+
+            if (open.Any())
+                layout.AddDisinfectionZone(Generator.Pick(open));
+            else
+                Plugin.Logger.LogDebug(
+                    $"{layout.Name} -- No open second-half zones for signature disinfection, skipping");
+        }
+
+        // CyclingFog fights blind: beyond the guaranteed elevator turbine + repellers
+        // (ApplyLevelSignature), roll extra fog gear into the second half of the level.
+        if (director.Bulkhead == Bulkhead.Main
+            && layout.Dimension == DimensionIndex.Reality
+            && level.Settings.Signature == LevelSignature.CyclingFog)
+        {
+            var mainNodes = level.Planner.GetZones(Bulkhead.Main, null, layout.Dimension);
+            var medianZoneNumber = mainNodes[mainNodes.Count / 2].ZoneNumber;
+            var secondHalf = mainNodes
+                .Where(node => node.ZoneNumber >= medianZoneNumber)
+                .Select(node => level.Planner.GetZone(node))
+                .Where(zone => zone is not null)
+                .Cast<Zone>()
+                .ToList();
+
+            if (Generator.Flip(0.5))
+            {
+                var turbineZone = Generator.Pick(
+                    secondHalf.Where(zone => zone.BigPickupDistributionInZone == 0).ToList());
+
+                if (turbineZone != null)
+                    turbineZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
+            }
+
+            if (Generator.Flip(0.5))
+                foreach (var zone in Generator
+                             .Shuffle(secondHalf.Where(zone => zone.ConsumableDistributionInZone == 0).ToList())
+                             .Take(Generator.Between(1, 2)))
+                    zone.ConsumableDistributionInZone = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
         }
 
         layout.FinalizeLayout();
@@ -1128,7 +1184,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         if (modifiers.Contains(LevelModifiers.NoSpitters))
             return;
 
-        var density = modifiers.Contains(LevelModifiers.ManySpitters) ? 1.5 : 1.0;
+        var density = modifiers.Contains(LevelModifiers.ManySpitters) ? 1.3 : 1.0;
 
         var nodes = level.Planner.GetZones(director.Bulkhead, null, Dimension).ToList();
         if (nodes.Count <= 1)
@@ -1145,7 +1201,7 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         if (candidates.Count == 0)
             return;
 
-        var targetCount = isHeavy ? Generator.Between(4, 6) : Generator.Between(2, 4);
+        var targetCount = isHeavy ? Generator.Between(2, 3) : Generator.Between(1, 2);
 
         if (targetCount > candidates.Count)
             targetCount = candidates.Count;
@@ -1158,31 +1214,26 @@ public partial record LevelLayout : DataBlock<LevelLayout>
             var baseCount = isHeavy
                 ? Generator.Select(new List<(double, int)>
                 {
-                    (0.20,  1),
-                    (0.50,  1),
-                    (0.30, 20),
+                    (0.20, 10),
+                    (0.50, 15),
+                    (0.30, 25),
                 })
                 : Generator.Select(new List<(double, int)>
                 {
-                    (0.30, 1),
-                    (0.50, 1),
-                    (0.20, 15),
+                    (0.30, 10),
+                    (0.50, 15),
+                    (0.20, 20),
                 });
 
             var finalCount = (int)(baseCount * density);
-            // if (finalCount <= 0)
-            //     continue;
 
-            // TODO: remove when we allow levels to be flipped
-            var originalLights = zone.LightSettings;
+            if (finalCount <= 0)
+                continue;
 
             SetInfectionVibe(
                 zone,
                 spitters: finalCount,
-                setLights: Generator.Flip(isHeavy ? 0.4 : 0.7));
-
-            if (finalCount < 10)
-                zone.LightSettings = originalLights;
+                setLights: Generator.Flip(isHeavy ? 0.6 : 0.9));
 
             if (finalCount > 20)
                 zone.DisinfectPacks += 1.0;
@@ -1252,8 +1303,165 @@ public partial record LevelLayout : DataBlock<LevelLayout>
         RollBloodDoors();
         ApplyInfectionLevelModifier();
         RollEnemies(director);
+        ApplyLevelSignature();
 
         Bins.LevelLayouts.AddBlock(this);
+    }
+
+    /// <summary>
+    /// Applies the level's rolled signature mechanic (LevelSettings.Signature). Runs once per
+    /// level: only for the Main bulkhead's Reality layout.
+    ///
+    /// Stalker: a scripted pseudo-error alarm on the Main objective's
+    /// EventsOnElevatorLand. A single shadow pouncer every ~4 minutes with a heartbeat
+    /// tell. No combat music, cannot be deactivated, and deliberately infinite — it keeps
+    /// hunting through extraction.
+    /// See docs/dev/e-tier-difficulty.md, Group C.
+    /// </summary>
+    private void ApplyLevelSignature()
+    {
+        // FinalizeLayout also runs for Extreme/Overload and for Cryptomnesia dimension
+        // layouts; only the Main Reality layout applies the signature.
+        if (director.Bulkhead != Bulkhead.Main || Dimension != DimensionIndex.Reality)
+            return;
+
+        if (level.Settings.Signature == LevelSignature.None)
+            return;
+
+        // Survival wires countdown machinery to EventsOnElevatorLand, ReachKdsDeep already
+        // scripts timed elevator waves (including a shadow pouncer), and Cryptomnesia plays
+        // out in other dimensions. None of them mix with signatures. Level.Build demotes
+        // the signature to None for these objectives, so this is a defensive check that
+        // should never trigger.
+        if (director.Objective is WardenObjectiveType.Survival
+            or WardenObjectiveType.ReachKdsDeep
+            or WardenObjectiveType.Cryptomnesia)
+        {
+            Plugin.Logger.LogWarning(
+                $"{Name} -- Signature {level.Settings.Signature} was not demoted for {director.Objective}; skipping");
+
+            return;
+        }
+
+        switch (level.Settings.Signature)
+        {
+            case LevelSignature.CyclingFog:
+            {
+                var grace = Generator.Between(45, 90);
+
+                level.GetObjective(Bulkhead.Main).EventsOnElevatorLand
+                    .AddCyclingFog(level, startDelay: grace);
+
+                // Guarantee a turbine + fog repellers in the elevator zone: the usual fog
+                // auto-placements key off Fog/HeavyFog modifiers and InFog zones, none of
+                // which exist on a cycling level.
+                var elevatorNode = level.Planner.GetZones(Bulkhead.StartingArea, null, Dimension).First();
+                var elevatorZone = level.Planner.GetZone(elevatorNode)!;
+
+                if (elevatorZone.BigPickupDistributionInZone == 0)
+                    elevatorZone.BigPickupDistributionInZone = BigPickupDistribution.FogTurbine.PersistentId;
+                elevatorZone.ConsumableDistributionInZone = ConsumableDistribution.Baseline_FogRepellers.PersistentId;
+
+                level.MarkAsCyclingFog();
+
+                Plugin.Logger.LogDebug(
+                    $"{Name} -- Level signature: CyclingFog, grace={grace}s, " +
+                    $"infectious={level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)}");
+                break;
+            }
+
+            case LevelSignature.Stalker:
+            {
+                var interval = Generator.Between(230, 270);
+                var grace = Generator.Between(35, 70);
+
+                level.GetObjective(Bulkhead.Main).EventsOnElevatorLand
+                    .AddScriptedErrorAlarm(
+                        GenericWave.SinglePouncerShadow,
+                        waveCount: -1,
+                        interval: interval,
+                        delay: grace,
+                        message: ":://WARNING - PREDATOR SECTOR",
+                        sound: Sound.EnemyHeartbeat);
+
+                Plugin.Logger.LogDebug(
+                    $"{Name} -- Level signature: Stalker, interval={interval}s, grace={grace}s");
+                break;
+            }
+
+            case LevelSignature.BossAlarm:
+            {
+                // These objectives fire a global StopEnemyWaves mid-level via terminal
+                // command events, which would kill the boss alarm early. Level.Build
+                // re-rolls BossAlarm away from them (on any bulkhead), so this is a
+                // defensive check that should never trigger.
+                if (director.Objective is WardenObjectiveType.AlphaTerminalCommand
+                    or WardenObjectiveType.TimedTerminalSequence)
+                {
+                    Plugin.Logger.LogWarning(
+                        $"{Name} -- BossAlarm signature was not re-rolled for {director.Objective}; skipping");
+
+                    return;
+                }
+
+                var mainObjective = level.GetObjective(Bulkhead.Main);
+                var wave = Generator.Select(new List<(double, GenericWave)>
+                {
+                    (0.5, GenericWave.ErrorAlarm_Boss_Hard_Tank),
+                    (0.3, GenericWave.ErrorAlarm_Boss_VeryHard_TankPotato),
+                    (0.2, GenericWave.ErrorAlarm_Boss_Hard_Mother),
+                });
+
+                // A TriggerAlarm wave on elevator land makes the game start the alarm
+                // ambience loop at drop and show WaveOnElevatorWardenIntel. The waves stop
+                // (along with the ambience) the moment the Main objective completes, before
+                // any exit waves spawn.
+                mainObjective.WavesOnElevatorLand.Add(wave);
+                mainObjective.StopAllWavesBeforeGotoWin = true;
+
+                level.MarkAsBossErrorAlarm();
+
+                Plugin.Logger.LogDebug(
+                    $"{Name} -- Level signature: BossAlarm, wave={wave.Population.Name}");
+                break;
+            }
+
+            case LevelSignature.StartWithInfection:
+            {
+                // Applied once per player at the initial elevator spawn; checkpoint recall
+                // restores captured infection instead. 1.0 settles at the game's 0.85 soft
+                // cap within ~15s, leaving a 15% health floor (R5E1).
+                var infection = level.Tier switch
+                {
+                    "E" => 1.0,
+
+                    _ => Generator.Select(new List<(double, double)>
+                    {
+                        (0.65, 1.0),
+                        (0.20, 0.75),
+                        (0.15, 0.5),
+                    })
+                };
+
+                level.StartingInfection = infection;
+                level.MarkAsStartingInfected();
+
+                Plugin.Logger.LogDebug(
+                    $"{Name} -- Level signature: StartWithInfection, infection={infection}");
+                break;
+            }
+
+            case LevelSignature.UpkeepProtocol:
+            {
+                // Applied in Level.ApplyUpkeepProtocol() during the Level.Build finalize
+                // phase instead: the per-zone override grants need clear-time estimates
+                // for Extreme/Overload zones too, which are only valid after every
+                // bulkhead's FinalizeLayout has rolled alarms and enemies.
+                Plugin.Logger.LogDebug(
+                    $"{Name} -- Level signature: UpkeepProtocol (deferred to Level.ApplyUpkeepProtocol)");
+                break;
+            }
+        }
     }
 
     /// <summary>

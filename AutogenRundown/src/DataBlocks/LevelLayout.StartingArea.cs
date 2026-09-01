@@ -20,6 +20,18 @@ public partial record LevelLayout
         ZoneNode from,
         Zone? zone = null)
     {
+        // Generator.Pick() on an empty candidate list returns default(ZoneNode), which
+        // would silently connect the bulkhead to a phantom node.
+        if (from.Bulkhead == Bulkhead.None)
+        {
+            Plugin.Logger.LogError(
+                $"InitializeBulkheadArea() got an empty from node for bulkhead {bulkhead}, " +
+                $"planner = {level.Planner}\n" +
+                $"==========\n{level.Planner.ToMermaidChart()}==========");
+
+            throw new Exception($"No valid entrance zone to attach bulkhead {bulkhead} to");
+        }
+
         var bulkheadNode = new ZoneNode(
             bulkhead,
             level.Planner.NextIndex(bulkhead, from.Dimension),
@@ -144,12 +156,28 @@ public partial record LevelLayout
 
             case BukheadStrategy.Default_NoMainBulkhead:
             {
-                var lastNode = (ZoneNode)level.Planner.GetLastZone(Bulkhead.Main, dimension: Dimension)!;
-
                 if (bulkhead == Bulkhead.Main)
-                    return (lastNode, level.Planner.GetZone(lastNode)!);
+                {
+                    var lastNode = (ZoneNode)level.Planner.GetLastZone(Bulkhead.Main, dimension: Dimension)!;
 
-                InitializeBulkheadArea(level, bulkhead, lastNode);
+                    return (lastNode, level.Planner.GetZone(lastNode)!);
+                }
+
+                // The entrance zone must be open: GetLastZone() can return dead end zones
+                // (MaxConnections = 0) such as the disinfection side room, which have no
+                // spare gates to build the bulkhead area from.
+                var from = level.Planner.GetLastOpenZone(Bulkhead.Main, dimension: Dimension);
+
+                // Fall back to any open main zone
+                if (from is null)
+                {
+                    Plugin.Logger.LogWarning(
+                        $"No open primary zones for bulkhead {bulkhead} ({level.Settings.BulkheadStrategy}), planner = {level.Planner}\n" +
+                        $"==========\n{level.Planner.ToMermaidChart()}==========");
+                    from = Generator.Pick(level.Planner.GetOpenZones(Bulkhead.Main, null, dimension: Dimension));
+                }
+
+                InitializeBulkheadArea(level, bulkhead, (ZoneNode)from!);
                 break;
             }
 
@@ -167,8 +195,8 @@ public partial record LevelLayout
                 // Fall back to adding the area in main
                 if (!candidates.Any())
                 {
-                    Plugin.Logger.LogDebug(
-                        $"No open zones for bulkhead {bulkhead}, planner = {level.Planner}\n" +
+                    Plugin.Logger.LogWarning(
+                        $"No open zones for bulkhead {bulkhead} ({level.Settings.BulkheadStrategy}), planner = {level.Planner}\n" +
                         $"==========\n{level.Planner.ToMermaidChart()}==========");
                     candidates = level.Planner.GetOpenZones(Bulkhead.Main, null, dimension: Dimension);
                 }

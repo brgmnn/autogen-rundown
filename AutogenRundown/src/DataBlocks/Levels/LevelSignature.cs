@@ -1,0 +1,49 @@
+namespace AutogenRundown.DataBlocks.Levels;
+
+/// <summary>
+/// A level signature is a single defining mechanic for a level, at most one per level.
+/// Currently only rolled in the E-tier branch of LevelSettings.Generate().
+///
+/// See docs/dev/e-tier-difficulty.md, Group C.
+/// </summary>
+public enum LevelSignature
+{
+    None,
+
+    /// <summary>
+    /// Start with (usually) max infection
+    /// </summary>
+    StartWithInfection,
+
+    /// <summary>
+    /// Whole-level cycling fog: the ventilation fails on a cycle, fog rises to heavy,
+    /// holds, then recedes to clear, repeating for the entire level. Infectious when the
+    /// level rolls FogIsInfectious. A fog turbine and repellers are guaranteed in the
+    /// elevator zone.
+    /// </summary>
+    CyclingFog,
+
+    /// <summary>
+    /// Recurring stalker: a scripted pseudo-error alarm sends a single shadow pouncer every
+    /// ~4 minutes with a heartbeat tell. Never escalates, no combat music. Deliberately
+    /// infinite — it hunts the team through extraction and cannot be stopped.
+    /// </summary>
+    Stalker,
+
+    /// <summary>
+    /// R4E1-style boss error alarm: a real TriggerAlarm error wave streams a boss
+    /// (Tank/TankPotato/Mother) from level start until the Main objective completes, then
+    /// all waves stop (StopAllWavesBeforeGotoWin).
+    /// </summary>
+    BossAlarm,
+
+    /// <summary>
+    /// R8E2-style upkeep protocol (ADMIN_TEMP_OVERRIDE): the level starts a countdown and
+    /// every terminal carries a one-use override command that buys back roughly its own
+    /// zone's clear time. Expiry never fails the level — it starts a scoped surge wave
+    /// stream that runs until the next override is entered. Once every terminal is spent
+    /// (typically extraction) the surge runs to the end of the level.
+    /// Applied in Level.ApplyUpkeepProtocol().
+    /// </summary>
+    UpkeepProtocol,
+}

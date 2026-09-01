@@ -14,27 +14,11 @@ public class Patch_RundownManager
     [HarmonyPatch(typeof(RundownManager), nameof(RundownManager.SetActiveExpedition))]
     private static void Post_Setup(RundownManager __instance, pActiveExpedition expPackage)
     {
-        switch (expPackage.rundownKey.data)
-        {
-            case "Local_1":
-                Managers.WatermarkManager.SetRundown(PluginRundown.Daily, expPackage);
-                break;
+        var rundown = PluginRundowns.FromRundownKey(expPackage.rundownKey.data);
 
-            case "Local_2":
-                Managers.WatermarkManager.SetRundown(PluginRundown.Weekly, expPackage);
-                break;
-
-            case "Local_3":
-                Managers.WatermarkManager.SetRundown(PluginRundown.Monthly, expPackage);
-                break;
-
-            case "Local_4":
-                Managers.WatermarkManager.SetRundown(PluginRundown.Seasonal, expPackage);
-                break;
-
-            default:
-                Managers.WatermarkManager.ClearRundown();
-                break;
-        }
+        if (rundown == PluginRundown.None)
+            Managers.WatermarkManager.ClearRundown();
+        else
+            Managers.WatermarkManager.SetRundown(rundown, expPackage);
     }
 }

@@ -11,6 +11,7 @@ public static class PatchManager
         Fix_NavMeshMarkerSubSeed.Setup();
         ZoneSeedManager.Setup();
         Fix_MissingGeneratorCluster.Setup();
+        Fix_FactoryJobExceptionCatchAll.Setup();
 
         Patch_LG_ComputerTerminal_Setup.Setup();
         Patch_LG_SecurityDoor.Setup();

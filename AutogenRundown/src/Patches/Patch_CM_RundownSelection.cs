@@ -44,6 +44,9 @@ public class Patch_CM_RundownSelection
         if (RundownSelection.R2.Enabled && id == "R2")
             __instance.m_rundownText.transform.localPosition += new Vector3 { x = 0.0f, y = -10.0f, z = 0.0f };
 
+        if (RundownSelection.R3.Enabled && id == "R3")
+            __instance.m_rundownText.transform.localPosition += new Vector3 { x = -20.0f, y = 0.0f, z = 0.0f };
+
         if (RundownSelection.R8.Enabled && id == "R8")
             __instance.m_rundownText.transform.localPosition += new Vector3 { x = -10.0f, y = -60.0f, z = 0.0f };
     }

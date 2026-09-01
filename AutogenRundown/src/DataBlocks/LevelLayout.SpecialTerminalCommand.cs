@@ -1068,7 +1068,8 @@ public partial record LevelLayout
         // Build the hill zone — shorter for secondary bulkheads
         var hillForwardCount = director.Bulkhead == Bulkhead.Main ? 2 : 1;
         var hillNodes = AddBranch_Forward(hillStart, hillForwardCount, "special_terminal");
-        var hill = hillNodes.Last();
+        // Up to 3 spawn zones connect to the hill (Main and D/E tiers)
+        var hill = planner.UpdateNode(hillNodes.Last() with { MaxConnections = 3 });
         var hillZone = planner.GetZone(hill)!;
 
         AddForwardExtractStart(hillNodes.First());

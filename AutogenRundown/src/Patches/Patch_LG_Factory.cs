@@ -28,6 +28,28 @@ public class Patch_LG_Factory
     }
 
     /// <summary>
+    /// Freezes the factory once the rebuild budget is exhausted, and drives the abort.
+    ///
+    /// This is necessary because LG_Factory.GetNewJob() sets m_currentJob = null and then calls
+    /// FactoryDone(). With no rebuild queued, Update() would dereference the null job every
+    /// frame. Skipping Update entirely stops that cleanly.
+    ///
+    /// It doubles as the deferral point for the abort: this runs at the top of Update, one frame
+    /// after FactoryDone, so the session command is issued from outside the factory job loop.
+    /// </summary>
+    [HarmonyPatch(typeof(LG_Factory), nameof(LG_Factory.Update))]
+    [HarmonyPrefix]
+    public static bool Prefix_Update()
+    {
+        if (!FactoryJobManager.GaveUp)
+            return true;
+
+        BuildFailureManager.TickAbort();
+
+        return false;
+    }
+
+    /// <summary>
     /// Resets rebuild tracking state when a fresh build starts (not a rebuild).
     /// </summary>
     [HarmonyPatch(typeof(Builder), nameof(Builder.Build))]
@@ -45,6 +67,7 @@ public class Patch_LG_Factory
         Fix_FailedToFindStartArea.fatalReached = false;
         Fix_DistributionOnBrokenZones.ResetDiagnostics();
         Fix_FactoryJobExceptionCatchAll.ResetDiagnostics();
+        Fix_MissingSpawnAligns.ResetDiagnostics();
 
         // Must clear on rebuilds too: stale warden objective zone claims from a
         // previous pass of the same level would block the custom terminal's own

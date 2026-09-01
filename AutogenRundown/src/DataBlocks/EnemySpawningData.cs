@@ -130,6 +130,17 @@ public record EnemySpawningData
     /// </summary>
     [JsonIgnore] public Tags Tags { get; set; } = new();
 
+    /// <summary>
+    /// Which enemy a single enemy spawn places. Null for the tier/group spawns that place a
+    /// mix.
+    ///
+    /// Difficulty cannot be decoded back into an enemy: the category masks overlap the enemy
+    /// id bits, so the OR is lossy. BossAlignedSpawn (0xa0) | Mother (36) is 0xa4, and
+    /// clearing the mask bits off that gives 4, not 36. Record the enemy instead of trying to
+    /// recover it.
+    /// </summary>
+    [JsonIgnore] public Enemy? BossEnemy { get; set; }
+
     #region Datablock settings
     /// <summary>
     /// What state the enemies are in
@@ -285,6 +296,7 @@ public record EnemySpawningData
     {
         GroupType = EnemyGroupType.Hibernate,
         Difficulty = (uint)Enemy.Mother,
+        BossEnemy = Enemy.Mother,
         Tags = new Tags("boss")
     };
 
@@ -292,6 +304,7 @@ public record EnemySpawningData
     {
         GroupType = EnemyGroupType.Hibernate,
         Difficulty = (uint)Enemy.PMother,
+        BossEnemy = Enemy.PMother,
         Tags = new Tags("boss")
     };
 
@@ -306,6 +319,7 @@ public record EnemySpawningData
     {
         GroupType = EnemyGroupType.Hibernate,
         Difficulty = (uint)Enemy.Tank,
+        BossEnemy = Enemy.Tank,
         Tags = new Tags("boss")
     };
 
@@ -313,6 +327,7 @@ public record EnemySpawningData
     {
         GroupType = EnemyGroupType.Hibernate,
         Difficulty = (uint)Enemy.TankPotato,
+        BossEnemy = Enemy.TankPotato,
         Points = 10,
         Tags = new Tags("boss")
     };
@@ -321,6 +336,7 @@ public record EnemySpawningData
     {
         GroupType = EnemyGroupType.Hibernate,
         Difficulty = (uint)Enemy.Pouncer,
+        BossEnemy = Enemy.Pouncer,
         Points = 4,
         Tags = new Tags("boss")
     };
@@ -329,12 +345,21 @@ public record EnemySpawningData
     {
         GroupType = EnemyGroupType.Hibernate,
         Difficulty = Enemy_New.PouncerShadow.PersistentId,
+        BossEnemy = (Enemy)Enemy_New.PouncerShadow.PersistentId,
         Points = 4,
         Tags = new Tags("boss")
     };
     #endregion
 
     #region Bosses (Spawn Aligned)
+    // Two variants of each boss, one per spawn align marker. A boss room that places two
+    // bosses must put the second on marker 1: placement state is per enemy group, so two
+    // groups on marker 0 both spawn on the same spot. Matches how vanilla ships marker 0 and
+    // marker 1 variants of Birther (pid 40 / 41) and Tank (pid 44 / 79).
+    //
+    // Safe on geos that only author one marker -- the game null checks Align_N and falls back
+    // to a random spawn in the area, which is what an un-aligned boss does anyway.
+
     /**
      * Mothers
      */
@@ -342,6 +367,16 @@ public record EnemySpawningData
     {
         GroupType = EnemyGroupType.PureSneak,
         Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)Enemy.Mother,
+        BossEnemy = Enemy.Mother,
+        Points = 10,
+        Tags = new Tags("boss")
+    };
+
+    public static readonly EnemySpawningData Mother_AlignedSpawn1 = new()
+    {
+        GroupType = EnemyGroupType.PureSneak,
+        Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn1 | (uint)Enemy.Mother,
+        BossEnemy = Enemy.Mother,
         Points = 10,
         Tags = new Tags("boss")
     };
@@ -350,6 +385,16 @@ public record EnemySpawningData
     {
         GroupType = EnemyGroupType.PureSneak,
         Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)Enemy.PMother,
+        BossEnemy = Enemy.PMother,
+        Points = 10,
+        Tags = new Tags("boss")
+    };
+
+    public static readonly EnemySpawningData PMother_AlignedSpawn1 = new()
+    {
+        GroupType = EnemyGroupType.PureSneak,
+        Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn1 | (uint)Enemy.PMother,
+        BossEnemy = Enemy.PMother,
         Points = 10,
         Tags = new Tags("boss")
     };
@@ -371,6 +416,16 @@ public record EnemySpawningData
     {
         GroupType = EnemyGroupType.PureSneak,
         Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)Enemy.Tank,
+        BossEnemy = Enemy.Tank,
+        Points = 10,
+        Tags = new Tags("boss")
+    };
+
+    public static readonly EnemySpawningData Tank_AlignedSpawn1 = new()
+    {
+        GroupType = EnemyGroupType.PureSneak,
+        Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn1 | (uint)Enemy.Tank,
+        BossEnemy = Enemy.Tank,
         Points = 10,
         Tags = new Tags("boss")
     };
@@ -379,6 +434,16 @@ public record EnemySpawningData
     {
         GroupType = EnemyGroupType.PureSneak,
         Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)Enemy.TankPotato,
+        BossEnemy = Enemy.TankPotato,
+        Points = 10,
+        Tags = new Tags("boss")
+    };
+
+    public static readonly EnemySpawningData TankPotato_AlignedSpawn1 = new()
+    {
+        GroupType = EnemyGroupType.PureSneak,
+        Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn1 | (uint)Enemy.TankPotato,
+        BossEnemy = Enemy.TankPotato,
         Points = 10,
         Tags = new Tags("boss")
     };
@@ -390,6 +455,16 @@ public record EnemySpawningData
     {
         GroupType = EnemyGroupType.PureSneak,
         Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)Enemy.Pouncer,
+        BossEnemy = Enemy.Pouncer,
+        Points = 4,
+        Tags = new Tags("boss")
+    };
+
+    public static readonly EnemySpawningData Pouncer_AlignedSpawn1 = new()
+    {
+        GroupType = EnemyGroupType.PureSneak,
+        Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn1 | (uint)Enemy.Pouncer,
+        BossEnemy = Enemy.Pouncer,
         Points = 4,
         Tags = new Tags("boss")
     };

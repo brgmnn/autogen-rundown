@@ -81,4 +81,23 @@ public record EnemyInfo
         // MegaMother,
         Pouncer_Sneak,
     };
+
+    /// <summary>
+    /// The spawn align marker slots we emit a group for, one entry per marker index.
+    ///
+    /// Each slot needs its own difficulty mask because the game resolves groups by
+    /// (GroupType, Difficulty). Two groups sharing a key go into a randomizer and the marker
+    /// becomes a coin flip, which would let two bosses in the same room land on top of each
+    /// other. Vanilla does the same thing, shipping marker 0 and marker 1 variants of Birther
+    /// (pid 40 / 41) and Tank (pid 44 / 79).
+    ///
+    /// Both EnemyGroup and EnemyPopulation read this so the groups and their population roles
+    /// can't drift apart -- a group whose (Role, Difficulty) has no population row throws
+    /// during level build.
+    /// </summary>
+    public static readonly List<(AutogenDifficulty Mask, SpawnPlacementType Placement)> BossAlignSlots = new()
+    {
+        (AutogenDifficulty.BossAlignedSpawn, SpawnPlacementType.Align_0),
+        (AutogenDifficulty.BossAlignedSpawn1, SpawnPlacementType.Align_1),
+    };
 }

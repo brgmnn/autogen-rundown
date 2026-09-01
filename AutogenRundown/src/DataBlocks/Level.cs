@@ -107,6 +107,14 @@ public partial class Level
     public ComplexResourceSet ResourceSet { get; set; } = ComplexResourceSet.Mining;
 
     /// <summary>
+    /// When set, geomorph pick lists prefer entries of this SubComplex and (for
+    /// Service+Gardens) the gardens-heavy resource set replaces the floodways-only one.
+    /// Set only by generation overrides; null = default behavior.
+    /// </summary>
+    [JsonIgnore]
+    public SubComplex? PreferredSubComplex { get; set; }
+
+    /// <summary>
     /// Chances of a level selecting each combination of bulkheads
     /// </summary>
     [JsonIgnore]
@@ -865,6 +873,96 @@ public partial class Level
     }
 
     /// <summary>
+    /// Marks the level as starting the players at (usually) max infection
+    /// </summary>
+    public void MarkAsStartingInfected()
+    {
+        ElevatorDropWardenIntel.Add((Generator.Between(8, 14), Generator.Draw(new List<string>
+        {
+            ">... [violent coughing]\r\n>... The elevator air was wrong.\r\n>... <size=200%><color=red>We're already infected!</color></size>",
+            ">... My veins are burning.\r\n>... [labored breathing]\r\n>... <size=200%><color=red>The infection is inside us!</color></size>",
+            ">... <size=200%><color=red>Everyone's showing symptoms!</color></size>\r\n>... The Warden sent us down sick.\r\n>... Find disinfection, fast.",
+            ">... [heartbeat pounding]\r\n>... My vision keeps blurring.\r\n>... <size=200%><color=red>We won't last long like this!</color></size>",
+            ">... The cage was flooded on the way down.\r\n>... [wet coughing]\r\n>... <size=200%><color=red>It's already in our lungs!</color></size>",
+            ">... <size=200%><color=red>Quarantine failure!</color></size>\r\n>... They dropped us anyway.\r\n>... Every step costs us now.",
+            ">... I can barely stand.\r\n>... [ragged wheezing]\r\n>... <size=200%><color=red>We work sick or we don't work at all.</color></size>",
+            ">... The others look grey.\r\n>... It's eating at all of us.\r\n>... <size=200%><color=red>No margin for mistakes down here!</color></size>",
+            ">... [retching]\r\n>... Whatever was in that cage, we breathed it the whole way down.\r\n>... <size=200%><color=red>We start this one already dying!</color></size>",
+            ">... Look at your hands. Look at them.\r\n>... <size=200%><color=red>The skin's gone the color of ash!</color></size>\r\n>... Mine too. All of us.",
+            ">... The elevator seal never took, the whole way down.\r\n>... [filters hissing]\r\n>... <size=200%><color=red>Ten minutes of bad air, straight into us!</color></size>",
+            ">... <size=200%><color=red>Find a disinfection station. Now.</color></size>\r\n>... Before we open a single door.\r\n>... I can hear myself rattling.",
+            ">... <size=200%><color=red>My sight keeps swimming!</color></size>\r\n>... Shapes and shadows, I can't tell them apart.\r\n>... Don't stand in front of me.",
+            ">... [teeth chattering]\r\n>... Fever's climbing. All of us.\r\n>... <size=200%><color=red>Every one of them hits twice as hard now!</color></size>",
+            ">... Check your readout.\r\n>... <size=200%><color=red>We're in the red before we've even moved!</color></size>\r\n>... And it only goes one way from here.",
+            ">... <size=200%><color=red>Spend the packs early!</color></size>\r\n>... Save them and you won't be standing to use them.\r\n>... Nothing gets better from here.",
+            ">... [wheezing]\r\n>... Give me a second-\r\n>... <size=200%><color=red>There are no seconds. Move!</color></size>",
+            ">... They dropped us in like this on purpose.\r\n>... <size=200%><color=red>It wanted us weak before the first door!</color></size>\r\n>... Then it gets exactly what it wanted.",
+            ">... <size=200%><color=red>Nobody takes a hit. Nobody!</color></size>\r\n>... One clean strike and any of us drops.\r\n>... There's no cushion left in us.",
+            ">... [gagging]\r\n>... <size=200%><color=red>Something's crawling under my ribs!</color></size>\r\n>... It's already working on us."
+        }))!);
+    }
+
+    /// <summary>
+    /// Marks the level as having whole-level cycling fog (failing ventilation)
+    /// </summary>
+    public void MarkAsCyclingFog()
+    {
+        ElevatorDropWardenIntel.Add((Generator.Between(5, 12), Generator.Draw(new List<string>
+        {
+            ">... Listen. The vents just died again.\r\n>... [deep mechanical groan]\r\n>... <size=200%><color=red>The fog keeps coming back!</color></size>",
+            ">... It clears, then it rises.\r\n>... Like the sector is breathing.\r\n>... <size=200%><color=red>Move while it's low!</color></size>",
+            ">... [fans winding down]\r\n>... Ventilation is on its last legs.\r\n>... <size=200%><color=red>Count the cycles or drown in it!</color></size>",
+            ">... <size=200%><color=red>Here it comes again!</color></size>\r\n>... The whole floor fills up.\r\n>... Then it drains, like clockwork.",
+            ">... The turbine by the elevator still works.\r\n>... Drag it with us.\r\n>... <size=200%><color=red>It's the only clear air we'll get!</color></size>",
+            ">... [distant rush of air]\r\n>... The purge cycle keeps failing.\r\n>... <size=200%><color=red>We work in the gaps between!</color></size>",
+            ">... Watch the low ground.\r\n>... It pools there first.\r\n>... <size=200%><color=red>When it rises, climb!</color></size>",
+            ">... The system fights itself.\r\n>... Vents open, then choke shut.\r\n>... <size=200%><color=red>Time your push to the cycle!</color></size>",
+            ">... [ducts rattling]\r\n>... The scrubbers cut out again.\r\n>... <size=200%><color=red>Get off the floor, now!</color></size>",
+            ">... <size=200%><color=red>Count it! Learn the rhythm!</color></size>\r\n>... Up, then down, always the same length.\r\n>... Get it wrong and you're blind in the open.",
+            ">... Grab every repeller we find.\r\n>... <size=200%><color=red>They only buy us one lungful each!</color></size>\r\n>... Better than nothing when the grey climbs.",
+            ">... Don't cross the open floor when it's high.\r\n>... You'll lose sight of us in three steps.\r\n>... <size=200%><color=red>Wait for the drain!</color></size>",
+            ">... <size=200%><color=red>Hold your breath and climb!</color></size>\r\n>... [gasping]\r\n>... The window gets shorter every time it comes back.",
+            ">... Something's out there in the murk.\r\n>... <size=200%><color=red>It only moves when we can't see it!</color></size>\r\n>... And it's never where it was.",
+            ">... The grey's over the railings now.\r\n>... Up the stairs, all of you.\r\n>... <size=200%><color=red>It fills from the bottom up!</color></size>",
+            ">... <size=200%><color=red>Nobody splits up in the thick!</color></size>\r\n>... You lose a man in that and you don't find him.\r\n>... Stay close enough to grab an arm.",
+            ">... [turbines coughing]\r\n>... <size=200%><color=red>That's the last of the airflow!</color></size>\r\n>... Whatever's in here with us stays in here.",
+            ">... Feel that? The pressure drops just before it comes.\r\n>... That's your warning. Your only one.\r\n>... <size=200%><color=red>Watch the air, not the doors!</color></size>",
+            ">... <size=200%><color=red>Don't reload in the middle of it!</color></size>\r\n>... You won't see what's on you until it's on you.\r\n>... Back out to clear air first.",
+            ">... It burns going down, every cycle.\r\n>... <size=200%><color=red>We come out of this sicker than we went in!</color></size>\r\n>... Every rise takes another piece of us."
+        }))!);
+    }
+
+    /// <summary>
+    /// Marks the level as running the upkeep protocol (countdown fed by terminal overrides)
+    /// </summary>
+    public void MarkAsUpkeepProtocol()
+    {
+        ElevatorDropWardenIntel.Add((Generator.Between(5, 12), Generator.Draw(new List<string>
+        {
+            ">... The sector systems are failing.\r\n>... Some kind of maintenance countdown.\r\n>... <size=200%><color=red>Keep feeding it overrides!</color></size>",
+            ">... [klaxon chirp]\r\n>... Admin access still works at the terminals.\r\n>... <size=200%><color=red>Buy time at every one we pass!</color></size>",
+            ">... The credentials burn out after one use.\r\n>... Every terminal is a stay of execution.\r\n>... <size=200%><color=red>Don't walk past a single one!</color></size>",
+            ">... <size=200%><color=red>The timer is already running!</color></size>\r\n>... When it lapses, they come in waves.\r\n>... Another override shuts them out.",
+            ">... Upkeep protocol. Warden's own systems.\r\n>... [keys clattering]\r\n>... <size=200%><color=red>Type fast or fight!</color></size>",
+            ">... It doesn't kill you when it runs out.\r\n>... It just opens the doors to them.\r\n>... <size=200%><color=red>Stay ahead of the countdown!</color></size>",
+            ">... Maintenance windows, they called them.\r\n>... Miss one and the sector purges.\r\n>... <size=200%><color=red>ADMIN_TEMP_OVERRIDE. Remember it!</color></size>",
+            ">... [alarm winding up]\r\n>... The ledger runs dry near the end.\r\n>... <size=200%><color=red>The last stretch is a sprint!</color></size>",
+            ">... [console chirping]\r\n>... Every terminal we walk past is time we never get back.\r\n>... <size=200%><color=red>Sign in at every single one!</color></size>",
+            ">... <size=200%><color=red>The count doesn't stop for us!</color></size>\r\n>... Not for reloads, not for the wounded.\r\n>... It just falls, and falls.",
+            ">... [ticking]\r\n>... <size=200%><color=red>I can't stop watching that number!</color></size>\r\n>... It's the only thing down here still moving on schedule.",
+            ">... ADMIN_TEMP_OVERRIDE takes once. Once.\r\n>... Then that terminal is dead to us forever.\r\n>... <size=200%><color=red>Don't burn one on a full clock!</color></size>",
+            ">... <size=200%><color=red>Find the terminals before we push!</color></size>\r\n>... Know where the next one is before you need it.\r\n>... Running blind at zero is how this ends.",
+            ">... [keys clacking]\r\n>... <size=200%><color=red>That was the last credential on this floor!</color></size>\r\n>... After this we're just running.",
+            ">... What happens when it reaches zero?\r\n>... The sector cleans itself. We're what's dirty.\r\n>... <size=200%><color=red>The purge doesn't care that we're in here!</color></size>",
+            ">... <size=200%><color=red>It lapsed! They're already coming!</color></size>\r\n>... I told you not to stop for the boxes.\r\n>... Now we pay for it.",
+            ">... The deeper we went, the fewer terminals there were.\r\n>... <size=200%><color=red>At the end there's nothing left to feed it!</color></size>\r\n>... You just run and take what comes.",
+            ">... Type it exactly. No mistakes.\r\n>... A fumbled line costs us a whole window.\r\n>... <size=200%><color=red>Slow hands get us killed!</color></size>",
+            ">... The lights dipped for a second.\r\n>... <size=200%><color=red>That's the last warning we get!</color></size>\r\n>... Find the next terminal. Fast.",
+            ">... <size=200%><color=red>We're on borrowed minutes down here!</color></size>\r\n>... Someone booked this sector for maintenance long before us.\r\n>... Nobody ever came to close it out."
+        }))!);
+    }
+
+    /// <summary>
     /// Gets the right layer data given the objective being asked for
     /// </summary>
     /// <param name="variant"></param>
@@ -1261,6 +1359,8 @@ public partial class Level
             {
                 Complex.Mining => ComplexResourceSet.Mining,
                 Complex.Tech => ComplexResourceSet.Tech,
+                Complex.Service when PreferredSubComplex == SubComplex.Gardens
+                    => ComplexResourceSet.ServiceGardens,
                 Complex.Service => ComplexResourceSet.Service,
             };
 
@@ -1280,7 +1380,37 @@ public partial class Level
         foreach (var dimData in DimensionDatas)
             usedCustomGeos.Add(dimData.Data.Data.DimensionGeomorph);
 
+        ValidateForcedGeomorphs(usedCustomGeos);
+
         ResourceSet.CustomGeomorphs.RemoveAll(prefab => !usedCustomGeos.Contains(prefab.Asset));
+    }
+
+    /// <summary>
+    /// A forced tile (Zone.CustomGeomorph) is resolved by path through
+    /// ComplexResourceSetDataBlock.GetCustomGeomorph, which only searches the three
+    /// CustomGeomorphs_{Exit,Objective,Challenge}_1x1 lists -- never GeomorphTiles_1x1. So a
+    /// perfectly ordinary base game tile that only lives in the random pool resolves to null
+    /// when forced.
+    ///
+    /// The failure mode is brutal and six steps removed from the cause: null tile prefab ->
+    /// LG_Floor.FindExternalArea NRE -> zone completes with 0 areas -> reroll -> the rebuilt
+    /// factory drains every remaining batch empty -> no zones and no AI graph. Catch it here,
+    /// where we already have every forced path in hand.
+    /// </summary>
+    private void ValidateForcedGeomorphs(HashSet<string> usedCustomGeos)
+    {
+        var registered = ResourceSet.CustomGeomorphs
+            .Concat(ResourceSet.CustomGeomorphs_Exit_1x1)
+            .Concat(ResourceSet.CustomGeomorphs_Challenge_1x1)
+            .Select(prefab => prefab.Asset)
+            .ToHashSet();
+
+        foreach (var geo in usedCustomGeos.Where(geo => !string.IsNullOrEmpty(geo) && !registered.Contains(geo)))
+            Plugin.Logger.LogError(
+                $"{Tier}{Index} \"{Name}\" ({Complex}) forces geomorph \"{geo}\" but it is not " +
+                $"registered as a custom geomorph in ComplexResourceSet.SaveStatic(). The game " +
+                $"resolves forced tiles by path against the CustomGeomorphs_* lists only, so " +
+                $"this will fail level generation. Add it to {Complex}.CustomGeomorphs.");
     }
 
     /// <summary>
@@ -1548,6 +1678,33 @@ public partial class Level
         level.BuildBulkheads();
 
         #region Fog settings
+        // The objectives here match ApplyLevelSignature's skip list. Demote the signature
+        // to None so the level-wide consumers (error-alarm damp, apex/ClearPath boss
+        // suppression, per-zone ammo bump) don't fire on a level with no signature
+        // content. CyclingFog additionally re-rolls the standard E-tier fog modifier so
+        // the level rejoins the normal fog distribution (its roll was skipped in
+        // LevelSettings.Generate); CentralGeneratorCluster is excluded from the
+        // Main-objective draw for cycling fog levels in RundownFactory.
+        if (level.Settings.Signature != LevelSignature.None
+            && level.MainDirector.Objective is WardenObjectiveType.Survival
+                or WardenObjectiveType.ReachKdsDeep
+                or WardenObjectiveType.Cryptomnesia)
+        {
+            if (level.Settings.Signature == LevelSignature.CyclingFog)
+                level.Settings.Modifiers.Add(
+                    Generator.Select(new List<(double, LevelModifiers)>
+                    {
+                        (0.3, LevelModifiers.NoFog),
+                        (0.5, LevelModifiers.Fog),
+                        (0.2, LevelModifiers.HeavyFog),
+                    }));
+
+            Plugin.Logger.LogDebug(
+                $"{logLevelId} -- Demoted {level.Settings.Signature} signature for main objective {level.MainDirector.Objective}");
+
+            level.Settings.Signature = LevelSignature.None;
+        }
+
         var lowFog = level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)
             ? Fog.LowFog_Infectious
             : Fog.LowFog;
@@ -1555,20 +1712,35 @@ public partial class Level
             ? Fog.LowMidFog_Infectious
             : Fog.LowMidFog;
 
-        // Randomize no fog to add variety
-        if (level.Settings.Modifiers.Contains(LevelModifiers.NoFog))
+        if (level.Settings.Signature == LevelSignature.CyclingFog)
         {
-            level.FogSettings = Fog.Randomized();
-            Plugin.Logger.LogWarning($"Settings for fog: density = {level.FogSettings.FogDensity}");
+            // Drop state is the clear trough of the cycle; ApplyLevelSignature adds the
+            // event loop that raises the first heavy phase after a grace period.
+            level.FogSettings = level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)
+                ? Fog.CyclingFog_Clear_Infectious
+                : Fog.CyclingFog_Clear;
+
+            // Reserve fog for the whole level: blocks fog-flood alarm rolls, objective
+            // fog challenges, and CentralGeneratorCluster selection for side objectives.
+            level.TrySetFogUsage(FogUsage.LongDuration);
         }
+        else
+        {
+            // Randomize no fog to add variety
+            if (level.Settings.Modifiers.Contains(LevelModifiers.NoFog))
+            {
+                level.FogSettings = Fog.Randomized();
+                Plugin.Logger.LogWarning($"Settings for fog: density = {level.FogSettings.FogDensity}");
+            }
 
-        // Set low fog if we have fog
-        if (level.Settings.Modifiers.Contains(LevelModifiers.Fog))
-            level.FogSettings = lowFog;
+            // Set low fog if we have fog
+            if (level.Settings.Modifiers.Contains(LevelModifiers.Fog))
+                level.FogSettings = lowFog;
 
-        // For heavy fog we can also roll low mid fog
-        if (level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
-            level.FogSettings = Generator.Flip(0.75) ? lowFog : lowMidFog;
+            // For heavy fog we can also roll low mid fog
+            if (level.Settings.Modifiers.Contains(LevelModifiers.HeavyFog))
+                level.FogSettings = Generator.Flip(0.75) ? lowFog : lowMidFog;
+        }
         #endregion
 
         Plugin.Logger.LogDebug($"{logLevelId} ({level.Complex}) - Modifiers: {level.Settings.Modifiers}, Fog: {level.FogSettings.Name}");
@@ -1585,6 +1757,72 @@ public partial class Level
 
         if (level.HasOverload)
             level.PreBuildObjective(Bulkhead.Overload);
+        #endregion
+
+        #region Signature vs. objective wave-stop conflicts
+        // These objectives fire identifier-less (global) StopEnemyWaves events mid-level
+        // — terminal command events, portal warps, or the vanilla uplink-completion stop
+        // that Patch_UplinkWaveIsolation can fall back to — which would silently kill the
+        // BossAlarm signature's untagged boss stream. Secondary/overload objectives are
+        // only drawn during the prebuild above, so this check has to run here rather than
+        // with the Main-objective demotion. Re-roll to a signature that survives a global
+        // stop; CyclingFog is not a candidate because its fog-roll skip and
+        // CentralGeneratorCluster draw exclusion have already happened.
+        if (level.Settings.Signature == LevelSignature.BossAlarm
+            && level.Director.Values.Any(d => d.Objective
+                is WardenObjectiveType.AlphaTerminalCommand
+                or WardenObjectiveType.TimedTerminalSequence
+                or WardenObjectiveType.TerminalUplink
+                or WardenObjectiveType.CorruptedTerminalUplink))
+        {
+            level.Settings.Signature = Generator.Select(new List<(double, LevelSignature)>
+            {
+                (1.0, LevelSignature.Stalker),
+                (1.0, LevelSignature.StartWithInfection)
+            });
+
+            // StartWithInfection normally forces an infection modifier during the E-tier
+            // roll in LevelSettings.Generate; mirror that for a late re-roll. FogSettings
+            // are already assigned above, so FogIsInfectious is deliberately not added.
+            if (level.Settings.Signature == LevelSignature.StartWithInfection
+                && !level.Settings.HasInfection)
+                level.Settings.Modifiers.Add(Generator.Flip(0.6)
+                    ? LevelModifiers.HeavyInfection
+                    : LevelModifiers.Infection);
+
+            Plugin.Logger.LogDebug(
+                $"{logLevelId} -- Re-rolled BossAlarm signature to {level.Settings.Signature} " +
+                "due to an objective with a global wave stop");
+        }
+
+        // Reactors have no terminal in the reactor zone plus ~10 minute stationary
+        // phases, and TimedTerminalSequence has long stationary rounds — on any bulkhead
+        // they starve the upkeep-override time economy. Re-roll (never demote: E-tier
+        // keeps 100% signature incidence). The tagged surge stream survives global wave
+        // stops, so Alpha/uplink objectives need no exclusion here.
+        if (level.Settings.Signature == LevelSignature.UpkeepProtocol
+            && level.Director.Values.Any(d => d.Objective
+                is WardenObjectiveType.ReactorStartup
+                or WardenObjectiveType.ReactorShutdown
+                or WardenObjectiveType.TimedTerminalSequence))
+        {
+            level.Settings.Signature = Generator.Select(new List<(double, LevelSignature)>
+            {
+                (1.0, LevelSignature.Stalker),
+                (1.0, LevelSignature.StartWithInfection)
+            });
+
+            // Mirror the E-tier StartWithInfection infection-modifier bias, as above.
+            if (level.Settings.Signature == LevelSignature.StartWithInfection
+                && !level.Settings.HasInfection)
+                level.Settings.Modifiers.Add(Generator.Flip(0.6)
+                    ? LevelModifiers.HeavyInfection
+                    : LevelModifiers.Infection);
+
+            Plugin.Logger.LogDebug(
+                $"{logLevelId} -- Re-rolled UpkeepProtocol signature to {level.Settings.Signature} " +
+                "due to an objective with long stationary phases");
+        }
         #endregion
 
         #region Scout Waves
@@ -1624,7 +1862,11 @@ public partial class Level
         #endregion
 
         #region Finalize -- Level.PostBuild()
-
+        // Runs after every bulkhead's FinalizeLayout (alarms/enemies rolled, so
+        // clear-time estimates are valid for all zones) and after objective PostBuild
+        // (which can add terminal placements). Zones serialize at bin save, so late
+        // mutation here is safe.
+        level.ApplyUpkeepProtocol();
         #endregion
 
         #region Finalize -- ExtraObjectiveSetup
@@ -1708,10 +1950,6 @@ public partial class Level
             // level.GlobalWaveSettings = GlobalWaveSettings.HighCap_40pts;
 
 
-
-
-
-
             var dim1ResourceSet = ComplexResourceSet.Mining.Duplicate();
 
             dim1ResourceSet.CustomGeomorphs.Add(new Prefab
@@ -1751,7 +1989,7 @@ public partial class Level
                 //     ResourceSet = dim1ResourceSet
                 // },
 
-                Data = Dimensions.DimensionData.AlphaOne,
+                Data = Dimensions.DimensionData.AlphaSix,
 
                 PersistentId = 3,
             };

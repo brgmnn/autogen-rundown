@@ -106,7 +106,13 @@ public static class WardenObjectiveEventCollections
     }
 
     /// <summary>
-    /// Turn's off alarms. Optionally with a given identifier
+    /// Turn's off alarms. Optionally with a given identifier.
+    ///
+    /// With an identifier, AWO scopes the stop to waves spawned with that same identifier.
+    /// Vanilla alone would ignore it and stop everything
+    /// (Modules-ASM/WardenObjectiveManager.cs:2305 -> StopAllWardenObjectiveEnemyWaves).
+    /// Without an identifier the stop is global — including untagged waves such as
+    /// WavesOnElevatorLand entries (e.g. the BossAlarm signature's boss stream).
     /// </summary>
     /// <param name="events"></param>
     /// <param name="delay"></param>
@@ -151,6 +157,85 @@ public static class WardenObjectiveEventCollections
                 Delay = delay,
                 Identifier = identifier,
                 EnemyWaveData = wave
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Adds a scripted error alarm: not a real alarm but an event loop that periodically
+    /// fires a warden intel message, a sound cue, and an enemy wave. R7D1's snatcher alarm
+    /// does this with 1 snatcher every 4 minutes (finite there: 19 waves, ~1hr 16min); the
+    /// default here is infinite, which is what the Stalker signature uses.
+    ///
+    /// Results of this are:
+    ///     - No combat music (TriggerAlarm is forced off on the wave)
+    ///     - Players get out of combat stamina between waves
+    ///     - "Alarm" _cannot_ be deactivated by DEACTIVATE_ALARMS
+    ///     - An infinite loop also survives StopAllWavesBeforeGotoWin and runs through
+    ///       extraction (it is an EventLoop, not a warden wave)
+    ///
+    /// See link for more details:
+    /// https://gtfo.fandom.com/wiki/R7D1#Trivia
+    /// </summary>
+    /// <param name="events"></param>
+    /// <param name="wave">Wave to spawn each pulse. TriggerAlarm is forced to false.</param>
+    /// <param name="waveCount">Total number of pulses; -1 (default) loops forever.</param>
+    /// <param name="interval">Seconds between pulses.</param>
+    /// <param name="delay">Grace period before the loop starts.</param>
+    /// <param name="message">Warden intel shown each pulse. Empty string for no intel.</param>
+    /// <param name="sound">Sound cue played each pulse.</param>
+    /// <returns></returns>
+    public static ICollection<WardenObjectiveEvent> AddScriptedErrorAlarm(
+        this ICollection<WardenObjectiveEvent> events,
+        GenericWave wave,
+        int waveCount = -1,
+        double interval = 240.0,
+        double delay = 2.0,
+        string message = ":://WARNING - BIOMASS SIGNATURE",
+        Sound sound = Sound.Enemies_DistantLowRoar)
+    {
+        if (wave == GenericWave.None)
+            return events;
+
+        var eventLoop = new EventLoop
+        {
+            LoopIndex = (int)Generator.GetPersistentId(),
+            LoopDelay = interval,
+            LoopCount = waveCount
+        };
+
+        // Inner events must keep the default Trigger = None: Start-triggered events inside an
+        // EventLoop never fire (see EventLoop doc comment).
+        if (message.Length > 0)
+            eventLoop.EventsToActivate.Add(
+                new WardenObjectiveEvent
+                {
+                    Type = WardenObjectiveEventType.None,
+                    Delay = 0.0,
+                    WardenIntel = new DataBlocks.Text(message)
+                });
+        eventLoop.EventsToActivate.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.PlaySound,
+                SoundId = sound,
+                Delay = 0.5
+            });
+        eventLoop.EventsToActivate.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.SpawnEnemyWave,
+                Delay = 4.0,
+                EnemyWaveData = wave with { TriggerAlarm = false }
+            });
+
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.StartEventLoop,
+                Delay = delay,
+                EventLoop = eventLoop
             });
 
         return events;
@@ -261,6 +346,7 @@ public static class WardenObjectiveEventCollections
     /// <param name="duration1">How long fog 1 transition lasts</param>
     /// <param name="delay2">How long fog 2 stays active after transitioning</param>
     /// <param name="duration2">How long fog 2 transition lasts</param>
+    /// <param name="startDelay">Grace period before the first cycle begins</param>
     /// <returns></returns>
     public static ICollection<WardenObjectiveEvent> AddCyclingFog(
         this ICollection<WardenObjectiveEvent> events,
@@ -270,7 +356,8 @@ public static class WardenObjectiveEventCollections
         double delay1 = 30.0,
         double duration1 = 45.0,
         double delay2 = 30.0,
-        double duration2 = 45.0)
+        double duration2 = 45.0,
+        double startDelay = 0.0)
     {
         var eventLoop = new EventLoop
         {
@@ -304,6 +391,7 @@ public static class WardenObjectiveEventCollections
             new WardenObjectiveEvent
             {
                 Type = WardenObjectiveEventType.StartEventLoop,
+                Delay = startDelay,
                 EventLoop = eventLoop
             });
 
@@ -312,7 +400,8 @@ public static class WardenObjectiveEventCollections
 
     public static ICollection<WardenObjectiveEvent> AddCyclingFog(
         this ICollection<WardenObjectiveEvent> events,
-        Level level)
+        Level level,
+        double startDelay = 0.0)
     {
         var (delay1, duration1, delay2, duration2) = (level.Tier, level.Settings.Modifiers.Contains(LevelModifiers.FogIsInfectious)) switch
         {
@@ -334,7 +423,7 @@ public static class WardenObjectiveEventCollections
 
         Plugin.Logger.LogDebug($"AddCyclingFog()");
 
-        return events.AddCyclingFog(fog1, fog2, (int)Generator.GetPersistentId(), delay1, duration1, delay2, duration2);
+        return events.AddCyclingFog(fog1, fog2, (int)Generator.GetPersistentId(), delay1, duration1, delay2, duration2, startDelay);
     }
 
     #endregion
@@ -471,6 +560,7 @@ public static class WardenObjectiveEventCollections
             {
                 Type = WardenObjectiveEventType.CustomHudText,
                 Enabled = true,
+                Delay = delay,
                 CustomHudText = new WardenObjectiveEventCustomHudText
                 {
                     Title = text
@@ -489,6 +579,7 @@ public static class WardenObjectiveEventCollections
             {
                 Type = WardenObjectiveEventType.CustomHudText,
                 Enabled = false,
+                Delay = delay,
             });
 
         return events;
@@ -1055,6 +1146,130 @@ public static class WardenObjectiveEventCollections
                 Delay = delay,
                 Duration = duration,
                 Countdown = countdown
+            });
+
+        return events;
+    }
+
+    /// <summary>
+    /// Starts a countdown that self-rearms on expiry: each expiry stops any prior
+    /// identifier-tagged wave stream, spawns a fresh tagged stream, and starts the next
+    /// fallback countdown, to a finite depth. AdjustAwoTimer events extend whichever
+    /// countdown in the chain is currently running; a scoped StopEnemyWaves with the same
+    /// identifier silences the stream without touching the chain. The innermost expiry
+    /// leaves the final stream running with no further countdown.
+    ///
+    /// AWO only ever runs one countdown, and starting a new one silently drops the old
+    /// one's EventsOnDone — which is why the chain must be pre-built here rather than one
+    /// countdown restarting itself: each fallback is only started by the previous one's
+    /// expiry, when nothing is running. The stop event fires before the spawn at every
+    /// level, so at most one tagged stream is ever live.
+    /// </summary>
+    /// <param name="events">The events to add the countdown to</param>
+    /// <param name="duration">Duration of the initial countdown, in seconds</param>
+    /// <param name="wave">Wave spawned on each expiry; streams until stopped</param>
+    /// <param name="identifier">AWO wave identifier scoping the stream's stop events</param>
+    /// <param name="fallbackCount">Number of self-rearming fallback countdowns</param>
+    /// <param name="fallbackDuration">Duration of each fallback countdown, in seconds</param>
+    /// <param name="titleText">HUD title of the initial countdown</param>
+    /// <param name="fallbackTitleText">HUD title of the fallback countdowns</param>
+    /// <param name="timerColor">Timer color of the initial countdown</param>
+    /// <param name="fallbackTimerColor">Timer color of the fallback countdowns</param>
+    /// <param name="expiryMessage">Warden intel shown on expiry. Empty string for none.</param>
+    /// <param name="warningMessage">
+    /// Warden intel shown at 75%/90% elapsed (90% repeats it in red). Empty string for none;
+    /// the warning sound still plays.
+    /// </param>
+    /// <param name="expirySound">Sound played on each expiry</param>
+    /// <param name="warningSound">Sound played at the 75%/90% warnings</param>
+    /// <param name="delay">Delay before the initial countdown starts</param>
+    public static ICollection<WardenObjectiveEvent> AddCountdownWithExpiryChain(
+        this ICollection<WardenObjectiveEvent> events,
+        double duration,
+        GenericWave wave,
+        string identifier,
+        int fallbackCount = 8,
+        double fallbackDuration = 240.0,
+        string titleText = "",
+        string fallbackTitleText = "",
+        string timerColor = "red",
+        string fallbackTimerColor = "#ffaa00",
+        string expiryMessage = "",
+        string warningMessage = "",
+        Sound expirySound = Sound.Alarms_Error_AmbientLoop,
+        Sound warningSound = Sound.Alarms_MissingItem,
+        double delay = 0.0)
+    {
+        // Every list and event instance is built fresh per chain level — countdown data
+        // serializes per-level and shared instances would alias across levels.
+        List<ProgressEvent> BuildWarnings()
+        {
+            var closing = new List<WardenObjectiveEvent>().AddSound(warningSound).ToList();
+            var critical = new List<WardenObjectiveEvent>().AddSound(warningSound).ToList();
+
+            if (warningMessage.Length > 0)
+            {
+                closing.AddMessage(warningMessage, 0.5);
+                critical.AddMessage($"<color=red>{warningMessage}</color>", 0.5);
+            }
+
+            return new List<ProgressEvent>
+            {
+                new() { Progress = 0.75, Events = closing },
+                new() { Progress = 0.90, Events = critical }
+            };
+        }
+
+        List<WardenObjectiveEvent> BuildExpiry(WardenObjectiveEvent? nextCountdown)
+        {
+            // Stop (0.0s) strictly before spawn (2.0s): kills any still-live prior stream
+            // so lapsing several chain levels never stacks streams.
+            var expiry = new List<WardenObjectiveEvent>()
+                .AddTurnOffAlarms(0.0, identifier)
+                .AddSpawnWave(wave, 2.0, identifier)
+                .AddSound(expirySound, 2.0)
+                .ToList();
+
+            if (expiryMessage.Length > 0)
+                expiry.AddMessage(expiryMessage, 0.5);
+
+            if (nextCountdown != null)
+                expiry.Add(nextCountdown);
+
+            return expiry;
+        }
+
+        // Innermost level: surge with no re-arm — the stream runs out the level.
+        var chain = BuildExpiry(null);
+
+        for (var i = 0; i < fallbackCount; i++)
+            chain = BuildExpiry(new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.Countdown,
+                Delay = 1.0,
+                Duration = fallbackDuration,
+                Countdown = new WardenObjectiveEventCountdown
+                {
+                    TitleText = fallbackTitleText,
+                    TimerColor = fallbackTimerColor,
+                    EventsOnProgress = BuildWarnings(),
+                    EventsOnDone = chain
+                }
+            });
+
+        events.Add(
+            new WardenObjectiveEvent
+            {
+                Type = WardenObjectiveEventType.Countdown,
+                Delay = delay,
+                Duration = duration,
+                Countdown = new WardenObjectiveEventCountdown
+                {
+                    TitleText = titleText,
+                    TimerColor = timerColor,
+                    EventsOnProgress = BuildWarnings(),
+                    EventsOnDone = chain
+                }
             });
 
         return events;

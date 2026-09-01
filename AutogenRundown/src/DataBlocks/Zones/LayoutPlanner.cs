@@ -243,6 +243,13 @@ public class LayoutPlanner
 
         if (to != null && from != to)
         {
+            var connected = graph.TryGetValue(from, out var children) ? children.Count : 0;
+
+            if (connected >= from.MaxConnections)
+                Plugin.Logger.LogWarning(
+                    $"Planner.Connect() exceeded MaxConnections: from = {from} already has " +
+                    $"{connected} connections, to = {to}");
+
             if (graph.ContainsKey(from))
                 graph[from].Add((ZoneNode)to);
             else

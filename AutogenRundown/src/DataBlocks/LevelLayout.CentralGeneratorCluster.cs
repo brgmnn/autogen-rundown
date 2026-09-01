@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Objectives.CentralGeneratorCluster;
 using AutogenRundown.DataBlocks.Zones;
@@ -1380,27 +1381,38 @@ public partial record LevelLayout
         // limit the number of generator missions to just 1 in the level.
         // TODO: this will also affect any flood-the-map with fog objectives
 
-        var invertedFog = Generator.Flip();
-        var isInfectious = level.FogSettings.IsInfectious;
-        level.FogSettings = (isInfectious, invertedFog) switch
+        // Only take over the level's fog when the prebuild actually reserved the lane.
+        // Draw-time exclusions should keep this objective off e.g. CyclingFog levels;
+        // this is self-defence so a new call path can't silently clobber a whole-level
+        // fog owner. Without the reservation the generators run with no fog steps.
+        if (objective.FogUsage == FogUsage.ShortDuration)
         {
-            (false, false) => Fog.Normal_Altitude_minus4,
-            (false, true) => Fog.Inverted_Altitude_8,
-            (true, false) => Fog.NormalInfectious_Altitude_minus4,
-            (true, true) => Fog.InvertedInfectious_Altitude_8,
-        };
-        objective.FogOnGotoWin = (isInfectious, invertedFog) switch
-        {
-            (false, false) => Fog.Inverted_Altitude_6,
-            (false, true) => Fog.Normal_Altitude_minus6,
-            (true, false) => Fog.NormalInfectious_Altitude_6,
-            (true, true) => Fog.InvertedInfectious_Altitude_minus6,
-        };
-        objective.FogTransitionDurationOnGotoWin = 6.0;
-        objective.CentralGeneratorCluster_FogDataSteps = CentralGeneratorCluster_BuildFogSteps(
-            objective,
-            invertedFog ? GeneratorFogShape.Descending : GeneratorFogShape.Ascending,
-            objective.CentralGeneratorCluster_NumberOfGenerators);
+            var invertedFog = Generator.Flip();
+            var isInfectious = level.FogSettings.IsInfectious;
+            level.FogSettings = (isInfectious, invertedFog) switch
+            {
+                (false, false) => Fog.Normal_Altitude_minus4,
+                (false, true) => Fog.Inverted_Altitude_8,
+                (true, false) => Fog.NormalInfectious_Altitude_minus4,
+                (true, true) => Fog.InvertedInfectious_Altitude_8,
+            };
+            objective.FogOnGotoWin = (isInfectious, invertedFog) switch
+            {
+                (false, false) => Fog.Inverted_Altitude_6,
+                (false, true) => Fog.Normal_Altitude_minus6,
+                (true, false) => Fog.NormalInfectious_Altitude_6,
+                (true, true) => Fog.InvertedInfectious_Altitude_minus6,
+            };
+            objective.FogTransitionDurationOnGotoWin = 6.0;
+            objective.CentralGeneratorCluster_FogDataSteps = CentralGeneratorCluster_BuildFogSteps(
+                objective,
+                invertedFog ? GeneratorFogShape.Descending : GeneratorFogShape.Ascending,
+                objective.CentralGeneratorCluster_NumberOfGenerators);
+        }
+        else
+            Plugin.Logger.LogWarning(
+                $"{Name} -- CentralGeneratorCluster built without the fog lane " +
+                $"(FogUsage={level.FogUsage}); skipping generator fog steps");
 
         #endregion
 

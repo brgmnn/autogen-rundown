@@ -145,18 +145,23 @@ public record EnemyPopulation : DataBlock<EnemyPopulation>
         #endregion
 
         #region Boss Aligned spawns
-        // We add the bosses again but including the boss aligned spawn difficulty mask.
+        // We add the bosses again but including the boss aligned spawn difficulty masks.
         // These are then set up again in EnemyGroup.cs to spawn with boss alignment on
-        // geos that support it.
+        // geos that support it. One row per marker slot: the group's difficulty is what
+        // AddEnemyData resolves against, so each slot's mask needs its own row or the group
+        // has nothing to spawn.
         foreach (var bossInfo in EnemyInfo.SpawnAlignedBosses)
         {
-            Roles.Add(new EnemyPopulationRole
+            foreach (var (mask, _) in EnemyInfo.BossAlignSlots)
             {
-                Role = (uint)bossInfo.Role,
-                Difficulty = (uint)AutogenDifficulty.BossAlignedSpawn | (uint)bossInfo.Enemy,
-                Enemy = bossInfo.Enemy,
-                Cost = bossInfo.Points,
-            });
+                Roles.Add(new EnemyPopulationRole
+                {
+                    Role = (uint)bossInfo.Role,
+                    Difficulty = (uint)mask | (uint)bossInfo.Enemy,
+                    Enemy = bossInfo.Enemy,
+                    Cost = bossInfo.Points,
+                });
+            }
         }
         #endregion
 
@@ -400,7 +405,7 @@ public record EnemyPopulation : DataBlock<EnemyPopulation>
             (EnemyInfo.Striker, 1.0),
             (EnemyInfo.Shooter, 1.0),
             (EnemyInfo.StrikerGiant, 1.0),
-            (EnemyInfo.ShooterGiant, 0.3),
+            (EnemyInfo.ShooterGiant, 0.5),
         };
 
         foreach (var (info, weight) in enemiesTierE)
@@ -418,7 +423,7 @@ public record EnemyPopulation : DataBlock<EnemyPopulation>
         var chargersTierE = new List<(EnemyInfo, double)>
         {
             (EnemyInfo.Charger, 1.0),
-            (EnemyInfo.ChargerGiant, 0.4),
+            (EnemyInfo.ChargerGiant, 0.6),
         };
 
         foreach (var (info, weight) in chargersTierE)
@@ -436,7 +441,7 @@ public record EnemyPopulation : DataBlock<EnemyPopulation>
         var shadowsTierE = new List<(EnemyInfo, double)>
         {
             (EnemyInfo.Shadow, 1.0),
-            (EnemyInfo.ShadowGiant, 0.4)
+            (EnemyInfo.ShadowGiant, 0.6)
         };
 
         foreach (var (info, weight) in shadowsTierE)
@@ -472,7 +477,7 @@ public record EnemyPopulation : DataBlock<EnemyPopulation>
         {
             (EnemyInfo.NightmareStriker, 1.0),
             (EnemyInfo.NightmareShooter, 1.0),
-            (EnemyInfo.NightmareGiant, 0.2)
+            (EnemyInfo.NightmareGiant, 0.35)
         };
 
         foreach (var (info, weight) in nightmaresTierE)

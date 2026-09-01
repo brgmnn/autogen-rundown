@@ -30,6 +30,16 @@ public static class Integers
             18 => "eighteen",
             19 => "nineteen",
             20 => "twenty",
+            21 => "twenty-one",
+            22 => "twenty-two",
+            23 => "twenty-three",
+            24 => "twenty-four",
+            25 => "twenty-five",
+            26 => "twenty-six",
+            27 => "twenty-seven",
+            28 => "twenty-eight",
+            29 => "twenty-nine",
+            30 => "thirty",
 
             _ => "many"
         };
@@ -62,6 +72,16 @@ public static class Integers
             18 => "eighteenth",
             19 => "nineteenth",
             20 => "twentieth",
+            21 => "twenty-first",
+            22 => "twenty-second",
+            23 => "twenty-third",
+            24 => "twenty-fourth",
+            25 => "twenty-fifth",
+            26 => "twenty-sixth",
+            27 => "twenty-seventh",
+            28 => "twenty-eighth",
+            29 => "twenty-ninth",
+            30 => "thirtieth",
 
             _ => "many"
         };

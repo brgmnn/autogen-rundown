@@ -55,6 +55,7 @@ public partial record WardenObjective
         {
             Dimensions.DimensionData.AlphaOne,
             Dimensions.DimensionData.AlphaThree_Top,
+            Dimensions.DimensionData.AlphaSix,
         })!;
 
         // Pick the backdoor command name + description.
@@ -68,8 +69,9 @@ public partial record WardenObjective
 
         AlphaTerminal_DimensionName = AlphaTerminal_Dimension.DimensionGeomorph switch
         {
-            "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Boss_Arena.prefab" => "Alpha One",
-            "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab" => "Alpha Three",
+            "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Boss_Arena.prefab"   => "Alpha One",
+            "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_R6A2.prefab"         => "Alpha Three",
+            "Assets/AssetPrefabs/Complex/Dimensions/Desert/Dimension_Desert_Dune_camp_03.prefab" => "Alpha Six",
             _ => ""
         };
 

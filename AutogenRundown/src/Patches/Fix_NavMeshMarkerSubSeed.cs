@@ -1,4 +1,5 @@
-﻿using AutogenRundown.Managers;
+﻿using AutogenRundown.Config;
+using AutogenRundown.Managers;
 using GameData;
 using HarmonyLib;
 using LevelGeneration;
@@ -28,6 +29,10 @@ public class Fix_NavMeshMarkerSubSeed
 
     private static bool Validate()
     {
+        if (!GenerationOverrides.RebuildCheckEnabled(RebuildCheck.NavMeshReachability) &&
+            !GenerationOverrides.RebuildCheckEnabled(RebuildCheck.UnmatchedNodeCluster))
+            return true;
+
         try
         {
             // Find first unhealthy detected target
@@ -97,11 +102,20 @@ public class Fix_NavMeshMarkerSubSeed
 
     private static bool IsZoneHealthy(LG_Zone zone)
     {
+        var checkReachability = GenerationOverrides.RebuildCheckEnabled(RebuildCheck.NavMeshReachability);
+        var checkNodeVolume = GenerationOverrides.RebuildCheckEnabled(RebuildCheck.UnmatchedNodeCluster);
+
         foreach (var cn in zone.m_courseNodes)
         {
             var cl = cn?.m_nodeCluster;
 
-            if (cl == null || cl.m_reachableNodes == null || cl.m_reachableNodes.Count <= 1)
+            if (cl == null)
+                return false;
+
+            if (checkReachability && (cl.m_reachableNodes == null || cl.m_reachableNodes.Count <= 1))
+                return false;
+
+            if (checkNodeVolume && cl.m_nodeVolume == null)
                 return false;
         }
         return true;
@@ -179,7 +193,19 @@ public class Fix_NavMeshMarkerSubSeed
             if (Builder.CurrentFloor.GetDimension(zone.DimensionIndex, out var dim) && dim.IsArenaDimension)
                 return;
 
-            if (cluster == null || cluster.m_reachableNodes.Count > 1)
+            if (cluster == null)
+                return;
+
+            // A cluster whose flood-fill hit a portal set different from its area's is published
+            // onto the course node but never AssignMatch'd, leaving m_nodeVolume null — reachable
+            // node counts look healthy, but the first m_nodeVolume consumer (LG_HSUScannerJob)
+            // throws every frame and hangs the build.
+            var failedCheck =
+                cluster.m_nodeVolume == null ? RebuildCheck.UnmatchedNodeCluster
+                : cluster.m_reachableNodes.Count <= 1 ? RebuildCheck.NavMeshReachability
+                : null;
+
+            if (failedCheck == null)
                 return;
 
             var key = (zone.DimensionIndex, zone.LocalIndex);
@@ -187,6 +213,14 @@ public class Fix_NavMeshMarkerSubSeed
             if (!TargetsDetected.Contains(key))
             {
                 TargetsDetected.Add(key);
+
+                if (!GenerationOverrides.RebuildCheckEnabled(failedCheck))
+                {
+                    Plugin.Logger.LogWarning(
+                        $"[RebuildChecks] {failedCheck} disabled — " +
+                        $"would have triggered a rebuild ({key})");
+                    return;
+                }
 
                 FactoryJobManager.MarkForRebuild();
 
@@ -197,7 +231,7 @@ public class Fix_NavMeshMarkerSubSeed
                 if (!ZoneAttempts.ContainsKey(key))
                     ZoneAttempts[key] = 0;
 
-                Plugin.Logger.LogDebug($"[Reroll] Detected unhealthy zone {key}. Will reroll after factory completion.");
+                Plugin.Logger.LogDebug($"[Reroll] Detected unhealthy zone {key} ({failedCheck}). Will reroll after factory completion.");
             }
         }
         catch (Exception ex)
@@ -241,6 +275,14 @@ public class Fix_NavMeshMarkerSubSeed
 
         if (data?.CustomGeomorph != null && !settings.HasCustomGeomorphInstance)
         {
+            if (!GenerationOverrides.RebuildCheckEnabled(RebuildCheck.MissingCustomGeomorph))
+            {
+                Plugin.Logger.LogWarning(
+                    $"[RebuildChecks] {RebuildCheck.MissingCustomGeomorph} disabled — would have " +
+                    $"triggered a rebuild (Zone {zone.LocalIndex} in {zone.Layer.m_type})");
+                return;
+            }
+
             ZoneSeedManager.Reroll_SubSeed(zone);
 
             if (zone.LocalIndex == eLocalZoneIndex.Zone_0)

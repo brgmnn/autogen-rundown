@@ -2,6 +2,7 @@
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.Zones;
+using AutogenRundown.Extensions;
 
 namespace AutogenRundown.DataBlocks;
 
@@ -172,6 +173,11 @@ public class LevelSettings
     public int MaxErrorAlarms { get; set; } = -1;
 
     #endregion
+
+    /// <summary>
+    /// The level's signature mechanic, at most one per level. Only rolled for E-tier.
+    /// </summary>
+    public LevelSignature Signature { get; set; } = LevelSignature.None;
 
     public LevelSettings(string? tier = null)
     {
@@ -491,6 +497,23 @@ public class LevelSettings
             {
                 MaxErrorAlarms = 5;
 
+                // Level signature: at most one defining mechanic per level. Rolled first so
+                // signatures can bias the modifier rolls below.
+                // See docs/dev/e-tier-difficulty.md, Group C.
+                Signature = Generator.Select(new List<(double, LevelSignature)>
+                {
+                    // For now, we give a small chance of an easier E-tier with no signature
+                    (0.7, LevelSignature.None),
+
+                    (1.0, LevelSignature.StartWithInfection),
+                    (1.0, LevelSignature.Stalker),
+                    (1.0, LevelSignature.CyclingFog),
+                    (1.0, LevelSignature.BossAlarm),
+
+                    // TODO: Work on for 1.2.0
+                    // (1.0, LevelSignature.UpkeepProtocol)
+                });
+
                 Modifiers.Add(
                     Generator.Select(new List<(double, LevelModifiers)>
                     {
@@ -520,7 +543,8 @@ public class LevelSettings
                         (0.1, LevelModifiers.ManyFlyers),
                     }));
 
-                if (Generator.Flip(0.85))
+                // Levels starting the players infected always have at least light infection
+                if (Signature == LevelSignature.StartWithInfection || Generator.Flip(0.85))
                     Modifiers.Add(Generator.Flip(0.6) ?
                         LevelModifiers.HeavyInfection :
                         LevelModifiers.Infection);
@@ -534,13 +558,18 @@ public class LevelSettings
                 else if (Generator.Flip(0.7))
                     Modifiers.Add(LevelModifiers.Hybrids);
 
-                Modifiers.Add(
-                    Generator.Select(new List<(double, LevelModifiers)>
-                    {
-                        (0.3, LevelModifiers.NoFog),
-                        (0.5, LevelModifiers.Fog),
-                        (0.2, LevelModifiers.HeavyFog),
-                    }));
+                // CyclingFog drives fog via a whole-level event loop; skip the fog modifier
+                // roll. The default NoFog modifier stays in the set (keeps Zone.RollFog inert
+                // and HasFog() false) while FogIsInfectious, added above, survives.
+                if (Signature != LevelSignature.CyclingFog)
+                    Modifiers.Add(
+                        Generator.Select(new List<(double, LevelModifiers)>
+                        {
+                            (0.3, LevelModifiers.NoFog),
+                            (0.5, LevelModifiers.Fog),
+                            (0.2, LevelModifiers.HeavyFog),
+                        }));
+
                 break;
             }
         }
