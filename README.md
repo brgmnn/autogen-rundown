@@ -41,7 +41,7 @@ TODO:
   * Generator Cluster needs cells to be tightened up in their spawns
   * Big security scans that move are too hard
 
-  * 🌟 Add [Listing Geos](https://thunderstore.io/c/gtfo/p/Listing/LISTING_GEOS/)
+  * 🌟 Add [Listing Geos](https://thunderstore.io/c/gtfo/p/Listing/LISTING_GEOS/) - maybe
 
   * See if we can fix enemies not navigating through the final door in D3
 
