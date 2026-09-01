@@ -3,6 +3,51 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v1.1.0 – Unreachable Depths](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.1.0) — August 31, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### New
+
+* 🌟 Increased E-tier difficulty
+  * Reduced default ammo per zone from `6` uses to `5` (matches D-tier now)
+  * Increase Shadows group size from `4` to `8`-`10`
+  * Increase Giant's weighting across all enemy types
+  * Reduce normal scouts chance and increase Shadow/Nightmare scout chance
+  * Add signature level modifiers that can roll on E-tier levels
+    * Boss error alarm on land, cleared on completing main (R4E1)
+      * Default per zone ammo uses increased by 1 for this modifier
+    * Continuous snatcher spawns on interval, no alarm (R7D1 Overload)
+      * Stamina is unaffected between snatcher waves
+      * Default per zone ammo uses increased by 1 for this modifier
+    * Start with max infection (R5E1)
+      * No disinfection packs or station are guaranteed
+    * Cycling fog for the entire level (R8C1 Overload)
+      * Fog cycles between clear and fully flooded across the whole level
+* 🌟 Add rebuild cap with graceful exit
+  * When hitting the rebuild cap on a level, clears will be granted for it and the level marked as locked for that seed + version of Autogen
+  * Locked levels are "Unreachable"
+* 🌟 Add Alpha Six desert camp dimension to `AlphaTerminalObjective`
+* Add more variety to `PowerCellDistribution` objective
+* Add more variety to `GatherTerminal` objective
+* Add Tech `geo_64x64_tech_lab_HA_03` to Generator Cluster tile list
+* Add advanced configuration settings for modders/developers
+* Add more warden intel drop messages to various objectives / challenges
+
+### Changes
+
+* Balance: Adjusted spitter rolls, there should be a few more zones but fewer spitters overall in those zones now. 
+  * 1-2 zones per layer are picked for normal infection
+  * 2-3 zones per layer are picked for heavy infection 
+* Fix: Extreme/Overload bulkhead doors could be placed in deadend zones causing infinite level rebuilds. This path now correctly filters by open zones first.
+* Fix: D-Lock Block Decipherer logs spawning in inaccessible zones on Cryptomnesia levels
+* Fix: Levels no longer fail to load with `CycleAllAligns` spawn placements for bosses in some specific geo tiles
+* Fix: Clear time estimates (survival timers, reactor code fetch timers) not granting additional time for hibernating bosses
+* Fix: Several custom geos were not added to the custom geos tile list causing levels to fail to build, they're now correctly loaded
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v1.0.5...v1.1.0
+
+
 ## [v1.0.11](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.0.11) — August 23, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
