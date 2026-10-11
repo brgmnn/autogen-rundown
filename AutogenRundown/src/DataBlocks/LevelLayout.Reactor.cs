@@ -1,4 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
+using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
@@ -62,6 +63,16 @@ public partial record LevelLayout
 
         // Add fog repellers in case of fog
         reactor.ConsumableDistributionInZone = ConsumableDistribution.Reactor_FogRepellers.PersistentId;
+
+        // Add a disinfection station if this is a cycling fog mission
+        if (objective.Type == WardenObjectiveType.ReactorStartup && level.Settings is
+                { Signature: LevelSignature.CyclingFog, HasInfection: true })
+        {
+            reactor.DisinfectionStationPlacements.Add(new FunctionPlacementData
+            {
+                PlacementWeights = ZonePlacementWeights.EvenlyDistributed
+            });
+        }
 
         level.Planner.Connect(corridorNode, reactorNode);
         level.Planner.AddZone(reactorNode, reactor);

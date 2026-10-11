@@ -1,6 +1,5 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Objectives;
-using AutogenRundown.DataBlocks.Objectives.Reactor;
 using AutogenRundown.DataBlocks.ZoneData;
 using AutogenRundown.DataBlocks.Zones;
 
