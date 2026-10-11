@@ -3,6 +3,22 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v1.1.3](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.1.3) — October 11, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Balance: Add disinfection station to reactor zones in `ReactorStartup` missions with cycling infectious fog
+  * This only affects some E-tier missions 
+* Fix: Resolve missing fog settings in Alpha Dimensions
+  * Fixes some missions having infectious fog in the Alpha dimension
+* Bumped dependency mods
+
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v1.1.2...v1.1.3
+
+
 ## [v1.1.2](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.1.2) — September 23, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
@@ -1472,19 +1488,6 @@ _No user facing changes in this release_
 * Changed "ZONE_123" intel messages to "ZONE 123"
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.51.0...v0.52.0
-
-
-## [v0.51.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.51.0) — February 25, 2025
-
-<!-- Release notes generated using configuration in .github/release.yml at main -->
-
-### Changes
-
-* Weekly / Monthly now require at least 1 A-tier clear to proceed. Previously rundowns with only 1 A level could be skipped.
-* Fixed glitched text in one lore message
-* Checked and rolled March monthly seeds
-
-**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.50.0...v0.51.0
 
 
 ---
