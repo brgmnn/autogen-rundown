@@ -50,9 +50,44 @@ public record Fog : DataBlock<Fog>
 
     #region Dimensions
 
+    public static readonly Fog AlphaOne = new()
+    {
+        PersistentId = 88,
+        Name = "AlphaOne",
+
+        FogColor = new Color { Red = 0.735849, Green = 0.583935559, Blue = 0.385279447, Alpha = 0.0 },
+        FogDensity = 0.0008,
+        FogAmbience = 0.0,
+        DensityNoiseDirection = new Vector3 { X = 0.0, Y = 0.0, Z = 1.0 },
+        DensityNoiseSpeed = 0.5,
+        DensityNoiseScale = 0.02,
+        DensityHeightAltitude = 20.0,
+        DensityHeightRange = 10.0,
+        DensityHeightMaxBoost = 0.008,
+        Infection = 0.0
+    };
+
+    public static readonly Fog AlphaThree_Top = new()
+    {
+        PersistentId = 109,
+        Name = "AlphaThree_Top",
+
+        FogColor = new Color { Red = 0.34117648, Green = 0.294117659, Blue = 0.243137255, Alpha = 0.0 },
+        FogDensity = 0.0005,
+        FogAmbience = 0.001,
+        DensityNoiseDirection = new Vector3 { X = 0.5, Y = 0.5, Z = 0.5 },
+        DensityNoiseSpeed = 0.0372,
+        DensityNoiseScale = 0.01,
+        DensityHeightAltitude = -10.0,
+        DensityHeightRange = 0.15,
+        DensityHeightMaxBoost = 0.004,
+        Infection = 0.0,
+    };
+
     public static readonly Fog AlphaSix = new()
     {
         PersistentId = 92,
+        Name = "AlphaSix",
 
         FogColor = new Color { Red = 0.735849, Green = 0.583935559, Blue = 0.385279447, Alpha = 0.0 },
         FogDensity = 0.0001,
@@ -679,6 +714,8 @@ public record Fog : DataBlock<Fog>
         CyclingFog_Clear_Infectious.Persist();
         CyclingFog_Heavy_Infectious.Persist();
 
+        AlphaOne.Persist();
+        AlphaThree_Top.Persist();
         AlphaSix.Persist();
 
         Normal_Altitude_minus8.Persist();
