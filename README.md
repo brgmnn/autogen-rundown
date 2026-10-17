@@ -43,6 +43,8 @@ TODO:
 
   * 🌟 Add [Listing Geos](https://thunderstore.io/c/gtfo/p/Listing/LISTING_GEOS/) - maybe
 
+  * Add https://thunderstore.io/c/gtfo/p/xiaoyao/XAOYAO_developer_package/ it may be good
+
   * See if we can fix enemies not navigating through the final door in D3
 
       * `ADMIN_TEMP_OVERRIDE` upkeep command (R8E2)
