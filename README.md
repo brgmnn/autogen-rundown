@@ -45,6 +45,9 @@ TODO:
 
   * Add https://thunderstore.io/c/gtfo/p/xiaoyao/XAOYAO_developer_package/ it may be good
 
+  * Also check out https://thunderstore.io/c/gtfo/p/xiaoyao/XAOYAO_developer_enemy/
+    * it may be a good fun new enemy variant
+
   * See if we can fix enemies not navigating through the final door in D3
 
       * `ADMIN_TEMP_OVERRIDE` upkeep command (R8E2)
