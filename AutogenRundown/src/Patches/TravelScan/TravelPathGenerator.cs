@@ -452,7 +452,10 @@ public static class TravelPathGenerator
         if (corners.Count == 0)
             return traced;
 
-        if (!surface.TryLocate(corners[0], corners[0].y, out var start))
+        // Not just "is there a floor here": the nearest floor at any height always answers, and
+        // starting on one the corner is not on lifts the whole route with it.
+        if (!surface.TryLocate(corners[0], corners[0].y, out var start)
+            || Mathf.Abs(start.y - corners[0].y) > TravelScanRegistry.MaxTraceStep)
         {
             Plugin.Logger.LogWarning(
                 $"[TravelPath] Path start {corners[0]} is not on the walkable surface");

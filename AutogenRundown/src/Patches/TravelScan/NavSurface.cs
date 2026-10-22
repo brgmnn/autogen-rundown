@@ -20,7 +20,7 @@ public interface INavSurface
     /// <paramref name="to"/> placed on the surface.
     ///
     /// Returns false — leaving whatever it managed to append in place — if the route runs off the
-    /// mesh or changes floor.
+    /// mesh or changes floor, or if either endpoint is not on this surface at its own height.
     /// </summary>
     bool TryTrace(Vector3 from, Vector3 to, List<Vector3> output);
 }
@@ -310,12 +310,18 @@ public sealed class NavSurface : INavSurface
         if (!TryLocate(from, from.y, out _, out var start))
             return false;
 
+        // TryLocate takes the nearest floor at any height, so a point with no floor of its own
+        // still resolves onto whatever is above or below it. Tracing on from there walks a floor
+        // the route was never on — with a stale triangulation, ten metres up into the ceiling.
+        if (!IsSameFloor(start.y, from.y))
+            return false;
+
         var direction = new Vector2(to.x - from.x, to.z - from.z);
         var total = direction.magnitude;
 
         if (total <= TravelScanRegistry.EdgeNudge)
         {
-            if (!TryLocate(to, start.y, out var destination))
+            if (!TryLocate(to, start.y, out var destination) || !IsSameFloor(destination.y, to.y))
                 return false;
 
             output.Add(destination);
@@ -351,6 +357,10 @@ public sealed class NavSurface : INavSurface
             // Destination reached once it falls inside the triangle we are standing in.
             if (TryHeightAt(triangle, to.x, to.z, out var destinationY))
             {
+                // Reaching the destination's XZ on a different floor from it is not arriving.
+                if (!IsSameFloor(destinationY, to.y))
+                    return false;
+
                 output.Add(new Vector3(to.x, destinationY, to.z));
                 return true;
             }
@@ -362,7 +372,8 @@ public sealed class NavSurface : INavSurface
             // it on the surface directly rather than marching past it.
             if (travelled + advance >= total)
             {
-                if (!TryLocate(new Vector3(to.x, height, to.z), height, out var destination))
+                if (!TryLocate(new Vector3(to.x, height, to.z), height, out var destination)
+                    || !IsSameFloor(destination.y, to.y))
                     return false;
 
                 output.Add(destination);
@@ -397,6 +408,13 @@ public sealed class NavSurface : INavSurface
 
         return false;
     }
+
+    /// <summary>
+    /// Whether two heights at the same XZ are on one floor. Anything the bake could not join with
+    /// a single agentClimb step is a different floor.
+    /// </summary>
+    private static bool IsSameFloor(float a, float b)
+        => Mathf.Abs(a - b) <= TravelScanRegistry.MaxTraceStep;
 
     /// <summary>
     /// Where a ray leaves a triangle, in XZ. Returns the nearest edge crossing strictly ahead of

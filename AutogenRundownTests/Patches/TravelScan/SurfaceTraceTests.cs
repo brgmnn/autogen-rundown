@@ -226,6 +226,50 @@ public class SurfaceTrace_Tests
     }
 
     [TestMethod]
+    public void Test_Trace_RefusesEndpointsThatAreNotOnTheSurface()
+    {
+        // A point with no floor at its own height still locates onto the nearest floor at any
+        // height. Tracing from or to one must fail rather than walk that other floor.
+        var surface = SurfaceFixtures.Flat();
+
+        Assert.IsFalse(
+            surface.TryTrace(new Vector3(0f, -10f, 0f), new Vector3(20f, -10f, 0f), new List<Vector3>()),
+            "Both endpoints are 10m below the only floor");
+
+        Assert.IsFalse(
+            surface.TryTrace(new Vector3(0f, 0f, 0f), new Vector3(20f, 5f, 0f), new List<Vector3>()),
+            "The destination is 5m above the floor the trace arrives on");
+
+        Assert.IsFalse(
+            surface.TryTrace(new Vector3(5.1f, 0f, 0.1f), new Vector3(5.3f, 5f, 0.3f), new List<Vector3>()),
+            "A short hop to a point 5m up is not on this floor either");
+    }
+
+    [TestMethod]
+    public void Test_TraceSurface_NeverLiftsTheRouteOntoAFloorItsCornersAreNotOn()
+    {
+        // C4 Gruesome Juncture, rebuilt after a missing generator cluster: the triangulation was
+        // still the discarded build's. A corner that failed to trace was emitted at its own height,
+        // the next leg located it onto a floor 10m overhead, and the scan climbed straight up into
+        // the ceiling before dropping back to its start.
+        var surface = SurfaceFixtures.Cliff(10f);
+
+        var corners = new List<Vector3>
+        {
+            new(2f, 0f, 0f),
+            new(14f, 0f, 0f),
+            new(20f, 0f, 0f)
+        };
+
+        var traced = TravelPathGenerator.TraceSurface(corners, surface);
+
+        foreach (var point in traced)
+            Assert.IsTrue(
+                Mathf.Abs(point.y) <= TravelScanRegistry.MaxTraceStep,
+                $"Lifted onto the upper floor at {SurfaceFixtures.Show(point)}: {SurfaceFixtures.Show(traced)}");
+    }
+
+    [TestMethod]
     public void Test_TraceSurface_ChainsCornersWithoutDuplicating()
     {
         var surface = SurfaceFixtures.Flat();

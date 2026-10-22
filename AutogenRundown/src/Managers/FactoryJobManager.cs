@@ -2,6 +2,7 @@
 using AIGraph;
 using AutogenRundown.Patches;
 using AutogenRundown.Patches.CustomTerminals;
+using AutogenRundown.Patches.TravelScan;
 using CellMenu;
 using Enemies;
 using AmorLib.API;
@@ -172,6 +173,12 @@ public static class FactoryJobManager
             var lastBatchField = AccessTools.Field(dmPatchType, "_lastBatch");
             lastBatchField?.SetValue(null, default(LG_Factory.BatchName));
         }
+
+        // --- Travel scans ---
+        // The cached navmesh triangulation is a snapshot of the discarded build. Rebuilds skip
+        // LevelAPI.OnLevelCleanup, so without this the rebuilt level's travel paths are traced
+        // against the previous layout's floors.
+        TravelScanRegistry.Clear();
 
         // --- Terminals ---
         // Remove terminals/uplinks from previous attempts
