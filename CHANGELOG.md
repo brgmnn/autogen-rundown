@@ -3,6 +3,18 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v1.1.5](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.1.5) — October 21, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Fix: Reset T-scan paths between level rebuilds
+  * Stops T-scans from having paths floating up into the air
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v1.1.4...v1.1.5
+
+
 ## [v1.1.4](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.1.4) — October 19, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
@@ -1464,18 +1476,6 @@ _No user facing changes in this release_
 * Fixed a bug where Terminal Uplink objectives would sometimes happen in a single giant zone - https://github.com/brgmnn/autogen-rundown/commit/3025ec09671f43162274a138129a35b386dfd78d
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.53.0...v0.54.0
-
-
-## [v0.53.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.53.0) — March 20, 2025
-
-<!-- Release notes generated using configuration in .github/release.yml at main -->
-
-### Changes
-
-* Balance: Reduce points of most nightmare alarms to account for their difficulty
-* Fixed survival skip zones timer being hard coded at 60s
-
-**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.52.0...v0.53.0
 
 
 ---
