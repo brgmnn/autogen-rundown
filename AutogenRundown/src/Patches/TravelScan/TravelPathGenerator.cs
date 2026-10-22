@@ -32,9 +32,10 @@ public static class TravelPathGenerator
     private const int CandidatePoolSize = 20;
 
     /// <summary>
-    /// Generates a looping path of waypoints through the source area, spaced at roughly
-    /// stepDistance along the walkable surface. Returns an empty list when no usable circuit
-    /// exists, which makes the caller fall back to base game behaviour.
+    /// Generates the looping path the scan walks, spaced at roughly stepDistance along the walkable
+    /// surface: the CP_BasicMovable.ScanPositions list, starting at sourcePos with the last waypoint
+    /// joining back to it. Returns an empty list when no usable circuit exists, which makes the
+    /// caller fall back to base game behaviour.
     /// </summary>
     public static List<Vector3> GenerateLoop(
         LG_Area sourceArea,
@@ -109,7 +110,7 @@ public static class TravelPathGenerator
             // holopath does, but every one of them is on the mesh — which beats guessing heights.
             Plugin.Logger.LogWarning(
                 "[TravelPath] No navmesh surface available, falling back to raw pathfinder corners");
-            return rawPath;
+            return CloseLoop(rawPath, sourcePos);
         }
 
         // Follow the triangles between corners. Every point this produces sits on the surface, and
@@ -120,7 +121,7 @@ public static class TravelPathGenerator
         {
             Plugin.Logger.LogWarning(
                 "[TravelPath] Surface trace produced nothing usable, falling back to raw corners");
-            return rawPath;
+            return CloseLoop(rawPath, sourcePos);
         }
 
         Plugin.Logger.LogDebug(
@@ -137,16 +138,50 @@ public static class TravelPathGenerator
                 $"[TravelPath] Path has {positions.Count} waypoints, unusually many — " +
                 "check for geometry folding far more finely than the bake should allow");
 
-        LogOffSurfaceSegments(positions, sourcePos, surface);
+        // Measured on the route as traced, before CloseLoop drops its arrival point: a large gap
+        // here means the trace finished on a different floor from the scan.
+        var closingDist = (positions[positions.Count - 1] - sourcePos).magnitude;
+        Plugin.Logger.LogDebug($"[TravelPath] Loop closing distance: {closingDist:F2}m");
 
-        if (positions.Count > 0)
+        var loop = CloseLoop(positions, sourcePos);
+
+        LogOffSurfaceSegments(loop, surface);
+
+        return loop;
+    }
+
+    /// <summary>
+    /// Turns a route that leaves the scan and comes back to it into the waypoint loop
+    /// CP_BasicMovable walks, starting at the scan itself.
+    ///
+    /// Both ends of the route are the scan's position as the pathfinder placed it on the floor, a
+    /// few centimetres from where the scan actually sits. Keeping them and adding the scan's own
+    /// position bracketed the wrap with two near-zero segments, and at the wrap the game cannot
+    /// survive a segment shorter than one frame of travel (see Patch_BasicMovable_CircularWrap).
+    /// So the start stands in for the route's first point, the route's arrival point is dropped, and
+    /// the closing segment runs from the last real waypoint straight back to the start.
+    ///
+    /// Every segment, the closing one included, is kept at least MinSegmentLength long: the game
+    /// divides by segment length, and a zero-length one sends the lerp to infinity.
+    /// </summary>
+    internal static List<Vector3> CloseLoop(List<Vector3> route, Vector3 start)
+    {
+        var loop = new List<Vector3> { start };
+        var minimum = TravelScanRegistry.MinSegmentLength * TravelScanRegistry.MinSegmentLength;
+
+        // route[0] and route[^1] are the scan's own position; the loop already has it.
+        for (var i = 1; i < route.Count - 1; i++)
         {
-            var closingDist = (positions[positions.Count - 1] - sourcePos).magnitude;
-            Plugin.Logger.LogDebug(
-                $"[TravelPath] Loop closing distance: {closingDist:F2}m");
+            if ((route[i] - loop[loop.Count - 1]).sqrMagnitude < minimum)
+                continue;
+
+            loop.Add(route[i]);
         }
 
-        return positions;
+        while (loop.Count > 1 && (loop[loop.Count - 1] - start).sqrMagnitude < minimum)
+            loop.RemoveAt(loop.Count - 1);
+
+        return loop;
     }
 
     /// <summary>
@@ -717,12 +752,13 @@ public static class TravelPathGenerator
     /// sit perfectly on the floor with the chord between them passing underneath it, and that is
     /// precisely what dragged the scan through staircases.
     /// </summary>
-    private static void LogOffSurfaceSegments(
-        List<Vector3> points, Vector3 closingPoint, INavSurface surface)
+    private static void LogOffSurfaceSegments(List<Vector3> points, INavSurface surface)
     {
         var failures = 0;
 
-        for (var i = 0; i < points.Count; i++)
+        // Waypoint 0 is the scan's own position, which sits wherever the game placed it rather
+        // than on the surface. The segments either side of it are still checked below.
+        for (var i = 1; i < points.Count; i++)
         {
             if (surface.TryLocate(points[i], points[i].y, out var onSurface)
                 && Mathf.Abs(onSurface.y - points[i].y) <= TravelScanRegistry.MaxTraceDeviation)
@@ -736,10 +772,9 @@ public static class TravelPathGenerator
         for (var i = 1; i < points.Count; i++)
             failures += ReportSag(i - 1, i, points[i - 1], points[i], surface);
 
-        // Movement is Circular, so the last waypoint joins back to the scan's start position.
-        if (points.Count > 0)
-            failures += ReportSag(
-                points.Count - 1, 0, points[points.Count - 1], closingPoint, surface);
+        // Movement is Circular, so the last waypoint joins back to waypoint 0.
+        if (points.Count > 1)
+            failures += ReportSag(points.Count - 1, 0, points[points.Count - 1], points[0], surface);
 
         if (failures == 0)
             Plugin.Logger.LogDebug(

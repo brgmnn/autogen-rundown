@@ -39,7 +39,8 @@ public static class Patch_SetupMovement
         Plugin.Logger.LogDebug(
             $"[TravelScan] Generating travel path for movable in area {sourceArea.name}");
 
-        // Generate the looping path
+        // Generate the looping path. It already starts at the scan's position, as the base game's
+        // ScanPositions do.
         var pathPositions = TravelPathGenerator.GenerateLoop(
             sourceArea,
             gameObject.transform.position);
@@ -52,12 +53,9 @@ public static class Patch_SetupMovement
             return true;
         }
 
-        // Insert current position as the first waypoint (same as base game)
-        pathPositions.Insert(0, gameObject.transform.position);
-
 #if DEBUG
-        // Recorded after the insert so the overlay shows exactly the ScanPositions the game
-        // will lerp through. Drawn on OnBuildDone by TravelPathDebugDraw.
+        // The overlay shows exactly the ScanPositions the game will lerp through. Drawn on
+        // OnBuildDone by TravelPathDebugDraw.
         TravelScanRegistry.GeneratedPaths.Add(new List<Vector3>(pathPositions));
 #endif
 
