@@ -3,6 +3,18 @@
 See more at https://github.com/brgmnn/autogen-rundown
 
 
+## [v1.1.7](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.1.7) — October 26, 2026
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+
+### Changes
+
+* Roll November monthly seeds
+* Bumped dependency mods
+
+**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v1.1.6...v1.1.7
+
+
 ## [v1.1.6](https://github.com/brgmnn/autogen-rundown/releases/tag/v1.1.6) — October 22, 2026
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
@@ -1446,27 +1458,6 @@ _No user facing changes in this release_
 * Disable `geo_64x64_mining_reactor_open_HA_01.prefab` from reactor tile list
 
 **Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.55.0...v0.56.0
-
-
-## [v0.55.0](https://github.com/brgmnn/autogen-rundown/releases/tag/v0.55.0) — April 03, 2025
-
-<!-- Release notes generated using configuration in .github/release.yml at main -->
-
-### New
-
-* Added donan3967's [geo_pack_2](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_2/) geomorphs.
-  * Enabled the floodways hub and I-tile
-* Enabled `TimedTerminalSequence` into the main objectives pool
-* Added warden mission description for multiple levels
-
-### Changes
-
-* Changed monthly rundown to use more controlled random distribution for both main objectives and complex selection.
-  * Main objectives and complexes are now selected from a weighted pool of options, to ensure a more even selection for rundowns. This should reduce cases where many levels are the same objective and complex.
-* Balance: Made skip doors "Security Controls" zone in Survival missions harder, error alarm is increased upon forcing open doors
-* Balance: `ReactorShutdown` now has exit trickles for enemies when on main
-
-**Full Changelog**: https://github.com/brgmnn/autogen-rundown/compare/v0.54.0...v0.55.0
 
 
 ---
