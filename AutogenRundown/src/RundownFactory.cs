@@ -954,31 +954,41 @@ public static class RundownFactory
             {
                 "2026_08", new List<List<int>>
                 {
-                    new() { 1, 1 },       // done
-                    new() { 1, 1 },       // done
-                    new() { 1, 1, 1, 3 }, // done
-                    new() { 1, 3, 1, 1 }, // done
-                    new() { 1, 1, 3 }     // done
+                    new() { 1, 1 },
+                    new() { 1, 1 },
+                    new() { 1, 1, 1, 3 },
+                    new() { 1, 3, 1, 1 },
+                    new() { 1, 1, 3 }
                 }
             },
             {
                 "2026_09", new List<List<int>>
                 {
-                    new() { 1, 1, 1 },    // done
-                    new() { 1, 1 },       // done
-                    new() { 1, 2, 1, 2 }, // done
-                    new() { 1, 1, 1, 1 }, // done
-                    new() { 1, 1 }        // done
+                    new() { 1, 1, 1 },
+                    new() { 1, 1 },
+                    new() { 1, 2, 1, 2 },
+                    new() { 1, 1, 1, 1 },
+                    new() { 1, 1 }
                 }
             },
             {
                 "2026_10", new List<List<int>>
                 {
-                    new() { 1, 1 },       // done
-                    new() { 1, 2, 1 },    // done
-                    new() { 3, 1, 1, 1 }, // done
+                    new() { 1, 1 },
+                    new() { 1, 2, 1 },
+                    new() { 3, 1, 1, 1 },
+                    new() { 1, 1, 1 },
+                    new() { 2, 5 }
+                }
+            },
+            {
+                "2026_11", new List<List<int>> // First one with no re-rolls
+                {
                     new() { 1, 1, 1 },    // done
-                    new() { 2, 5 }        //
+                    new() { 1, 1 },       // done
+                    new() { 1, 1, 1, 1 }, // done
+                    new() { 1, 1, 1 },    // done
+                    new() { 1, 1, 1 }     // done
                 }
             }
         };
