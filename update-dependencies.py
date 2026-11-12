@@ -7,10 +7,12 @@ Always moves to the latest published version -- Thunderstore authors don't relia
 follow semver, so there is no version range logic here.
 
 Usage:
-    ./update-dependencies.py [--check] [--summary-file PATH]
+    ./update-dependencies.py [--check] [--summary-file PATH] [--community SLUG]
 
     --check           Report available updates without writing any files.
     --summary-file    Write a markdown summary (used as the PR body in CI).
+    --community       Thunderstore community slug for package links in the
+                      summary (default: gtfo).
 
 When $GITHUB_OUTPUT is set, `has_updates`, `count` and `title` are written to it.
 
@@ -29,7 +31,8 @@ import urllib.error
 import urllib.request
 
 API_URL = "https://thunderstore.io/api/experimental/package/{namespace}/{name}/"
-PACKAGE_URL = "https://thunderstore.io/package/{namespace}/{name}/"
+PACKAGE_URL = "https://thunderstore.io/c/{community}/p/{namespace}/{name}/"
+DEFAULT_COMMUNITY = "gtfo"
 
 # Thunderstore rejects the default urllib user agent with a 403.
 USER_AGENT = "autogen-rundown-dep-updater"
@@ -196,7 +199,7 @@ def build_title(updates):
     return f"Bump {len(updates)} Thunderstore dependencies"
 
 
-def build_summary(updates, failures):
+def build_summary(updates, failures, community):
     lines = [
         "Daily Thunderstore dependency check. "
         "Each mod is bumped to its latest published version.",
@@ -206,7 +209,9 @@ def build_summary(updates, failures):
     ]
 
     for update in updates:
-        url = PACKAGE_URL.format(namespace=update["namespace"], name=update["name"])
+        url = PACKAGE_URL.format(
+            community=community, namespace=update["namespace"], name=update["name"]
+        )
         lines.append(
             f"| [{update['full_name']}]({url}) | `{update['from']}` | `{update['to']}` |"
         )
@@ -239,6 +244,11 @@ def main():
         "--check", action="store_true", help="report updates without writing files"
     )
     parser.add_argument("--summary-file", help="write a markdown summary to this path")
+    parser.add_argument(
+        "--community",
+        default=DEFAULT_COMMUNITY,
+        help="Thunderstore community slug for package links (default: %(default)s)",
+    )
     args = parser.parse_args()
 
     with open(TOML, encoding="utf-8") as file:
@@ -270,7 +280,7 @@ def main():
 
     if args.summary_file:
         with open(args.summary_file, "w", encoding="utf-8") as file:
-            file.write(build_summary(updates, failures))
+            file.write(build_summary(updates, failures, args.community))
 
     write_outputs(has_updates="true", count=len(updates), title=title)
 
