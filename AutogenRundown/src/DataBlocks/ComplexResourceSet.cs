@@ -443,7 +443,7 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         // Simple dead end tile
         Mining.CustomGeomorphs.Insert(0, new Prefab()
         {
-            Asset = "Assets/Bundles/RLC_Mining/geo_64x64_mining_digsite_dead_end_RLC_01.prefab",
+            Asset = "Assets/Bundles/RLC_Mining/DigSite_DeadEnd_01/geo_64x64_mining_digsite_dead_end_RLC_01.prefab",
             SubComplex = SubComplex.DigSite
         });
 
@@ -451,28 +451,28 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         // TODO: not totally convinced on keeping this one
         Mining.CustomGeomorphs_Exit_1x1.Insert(0, new Prefab()
         {
-            Asset = "Assets/Bundles/RLC_Mining/geo_64x64_mining_storage_exit_hub_RLC_01.prefab",
+            Asset = "Assets/Bundles/RLC_Mining/Storage_Exit_Hub_01/geo_64x64_mining_storage_exit_hub_RLC_01.prefab",
             SubComplex = SubComplex.Storage
         });
 
         // Corridor / I tile
         Mining.CustomGeomorphs.Insert(0, new Prefab()
         {
-            Asset = "Assets/Bundles/RLC_Mining/geo_64x64_mining_storage_I_RLC_01.prefab",
+            Asset = "Assets/Bundles/RLC_Mining/Storage_I_01/geo_64x64_mining_storage_I_RLC_01.prefab",
             SubComplex = SubComplex.Storage
         });
 
         // Hub tile
         Mining.CustomGeomorphs.Insert(0, new Prefab()
         {
-            Asset = "Assets/Bundles/RLC_Mining/geo_64x64_mining_refinery_X_RLC_01.prefab",
+            Asset = "Assets/Bundles/RLC_Mining/Refinery_X_01/geo_64x64_mining_refinery_X_RLC_01.prefab",
             SubComplex = SubComplex.Refinery
         });
 
         // Basic Corridor I-tile
         Mining.CustomGeomorphs.Insert(0, new Prefab()
         {
-            Asset = "Assets/Bundles/RLC_Mining/geo_64x64_mining_refinery_I_RLC_01.prefab",
+            Asset = "Assets/Bundles/RLC_Mining/Refinery_I_01/geo_64x64_mining_refinery_I_RLC_01.prefab",
             SubComplex = SubComplex.Refinery
         });
 
@@ -482,7 +482,7 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         // TODO: Decide if we add this to the corridor list
         Mining.CustomGeomorphs.Insert(0, new Prefab()
         {
-            Asset = "Assets/Bundles/RLC_Mining/geo_64x64_mining_refinery_portal_I_RLC_01.prefab",
+            Asset = "Assets/Bundles/RLC_Mining/Refinery_I_Portal_01/geo_64x64_mining_refinery_portal_I_RLC_01.prefab",
             SubComplex = SubComplex.Refinery
         });
 
@@ -491,7 +491,7 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         // to wait on working on the custom LightSettings.
         Mining.CustomGeomorphs.Insert(0, new Prefab()
         {
-            Asset = "Assets/Bundles/RLC_Mining/geo_64x64_mining_reactor_RLC_01.prefab",
+            Asset = "Assets/Bundles/RLC_Mining/Mining_Reactor_01/geo_64x64_mining_reactor_RLC_01.prefab",
             SubComplex = SubComplex.All
         });
         #endregion
@@ -819,7 +819,7 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         // TODO: Saw a big empty hole in the ground for this. Probably disable it.
         Tech.CustomGeomorphs.Insert(0, new Prefab()
         {
-            Asset = "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_I_RLC_01.prefab",
+            Asset = "Assets/Bundles/RLC_Tech/Lab_I_01/geo_64x64_tech_lab_I_RLC_01.prefab",
             SubComplex = SubComplex.Lab
         });
 
@@ -827,21 +827,21 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         // // Disabled as there's a NCR machine that breaks ActivateSmallHSU objectives
         // Tech.CustomGeomorphs.Insert(0, new Prefab()
         // {
-        //     Asset = "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_Hub_RLC_01.prefab",
+        //     Asset = "Assets/Bundles/RLC_Tech/Lab_Hub_01/geo_64x64_tech_lab_Hub_RLC_01.prefab",
         //     SubComplex = SubComplex.Lab
         // });
 
         // Hub tile
         Tech.CustomGeomorphs.Insert(0, new Prefab()
         {
-            Asset = "Assets/Bundles/RLC_Tech/geo_64x64_tech_data_center_hub_JG_RLC_02_v3.prefab",
+            Asset = "Assets/Bundles/RLC_Tech/DC_Hub_Mod_01/geo_64x64_tech_data_center_hub_JG_RLC_02_v3.prefab",
             SubComplex = SubComplex.DataCenter
         });
 
         // Corridor I-tile
         Tech.CustomGeomorphs.Insert(0, new Prefab()
         {
-            Asset = "Assets/Bundles/RLC_Tech/geo_64x64_tech_datacenter_I_RLC_01.prefab",
+            Asset = "Assets/Bundles/RLC_Tech/DC_I_01/geo_64x64_tech_datacenter_I_RLC_01.prefab",
             SubComplex = SubComplex.DataCenter
         });
         #endregion

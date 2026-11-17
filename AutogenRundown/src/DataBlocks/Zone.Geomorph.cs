@@ -48,7 +48,7 @@ public partial record Zone
                     (SubComplex.DigSite, "Assets/geo_64x64_dig_site_exit_dak_01.prefab"),
 
                     // Red_Leicester_Cheese
-                    (SubComplex.Storage, "Assets/Bundles/RLC_Mining/geo_64x64_mining_storage_exit_hub_RLC_01.prefab"),
+                    (SubComplex.Storage, "Assets/Bundles/RLC_Mining/Storage_Exit_Hub_01/geo_64x64_mining_storage_exit_hub_RLC_01.prefab"),
 
                     // SamDB
                     (SubComplex.Refinery, "Assets/Custom Geo's/Mining exit/Mining_exit_V1.prefab")
@@ -128,7 +128,7 @@ public partial record Zone
                     // (SubComplex.DigSite, "Assets/geo_64x64_mining_dig_site_t_dak_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
 
                     // Red_Leicester_Cheese
-                    (SubComplex.Refinery, "Assets/Bundles/RLC_Mining/geo_64x64_mining_refinery_X_RLC_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.Refinery, "Assets/Bundles/RLC_Mining/Refinery_X_01/geo_64x64_mining_refinery_X_RLC_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
 
                     // SamDB v1
                     (SubComplex.DigSite, "Assets/Custom Geo's/Digsite/digsite_x_tile_1/digsite_x_tile_1.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
@@ -170,8 +170,8 @@ public partial record Zone
                     (SubComplex.Lab, "Assets/CustomPrefabs/CollisionGeos/geo_lab_FA_hub_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
 
                     // Red_Leicester_Cheese
-                    // (SubComplex.Lab, "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_Hub_RLC_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }), // Disabled due to functioning NCR machine
-                    (SubComplex.DataCenter, "Assets/Bundles/RLC_Tech/geo_64x64_tech_data_center_hub_JG_RLC_02_v3.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    // (SubComplex.Lab, "Assets/Bundles/RLC_Tech/Lab_Hub_01/geo_64x64_tech_lab_Hub_RLC_01.prefab", new CoverageMinMax { Min = 30, Max = 40 }), // Disabled due to functioning NCR machine
+                    (SubComplex.DataCenter, "Assets/Bundles/RLC_Tech/DC_Hub_Mod_01/geo_64x64_tech_data_center_hub_JG_RLC_02_v3.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
 
                     // The Doggy Doge
                     (SubComplex.DataCenter, "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Junction.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
@@ -286,8 +286,8 @@ public partial record Zone
                     (SubComplex.DigSite, "Assets/geo_64x64_dig_site_i_dak_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
 
                     // Red_Leicester_Cheese
-                    (SubComplex.Storage, "Assets/Bundles/RLC_Mining/geo_64x64_mining_storage_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
-                    (SubComplex.Refinery, "Assets/Bundles/RLC_Mining/geo_64x64_mining_refinery_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
+                    (SubComplex.Storage, "Assets/Bundles/RLC_Mining/Storage_I_01/geo_64x64_mining_storage_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
+                    (SubComplex.Refinery, "Assets/Bundles/RLC_Mining/Refinery_I_01/geo_64x64_mining_refinery_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
 
                     // SamDB
                     (SubComplex.DigSite, "Assets/Custom Geo's/Digsite/disite_i_tile_1_optimized/digsite_i_tile_1_V2.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
@@ -320,9 +320,9 @@ public partial record Zone
 
                     // Red_Leicester_Cheese
                     // TODO: Probably disable this
-                    // (SubComplex.Lab, "Assets/Bundles/RLC_Tech/geo_64x64_tech_lab_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
+                    // (SubComplex.Lab, "Assets/Bundles/RLC_Tech/Lab_I_01/geo_64x64_tech_lab_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
                     // TODO: This tile seems to not have enough room to spawn items like cells and bulkhead keys
-                    // (SubComplex.DataCenter, "Assets/Bundles/RLC_Tech/geo_64x64_tech_datacenter_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
+                    // (SubComplex.DataCenter, "Assets/Bundles/RLC_Tech/DC_I_01/geo_64x64_tech_datacenter_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
 
                     // SamDB
                     (SubComplex.Lab, "Assets/Custom Geo's/Labs/lab_i_tile/lab_i_tile_V1.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
@@ -676,7 +676,7 @@ public partial record Zone
                     (SubComplex.Storage, "Assets/Prefabs/Geomorph/Mining/geo_storage_FA_dead_end_01.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
 
                     // Red_Leicester_Cheese
-                    (SubComplex.DigSite, "Assets/Bundles/RLC_Mining/geo_64x64_mining_digsite_dead_end_RLC_01.prefab", new CoverageMinMax { Min = 10, Max = 15 }),
+                    (SubComplex.DigSite, "Assets/Bundles/RLC_Mining/DigSite_DeadEnd_01/geo_64x64_mining_digsite_dead_end_RLC_01.prefab", new CoverageMinMax { Min = 10, Max = 15 }),
 
                     // SamDB v2
                     (SubComplex.Storage, "Assets/SamdownGeos/Storage dead end spawn/DeadEnd_Storage.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
