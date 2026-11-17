@@ -136,6 +136,9 @@ Generated datablocks are output to `build/{GameRevision}/GameData_*_bin.json`
 ### Build Commands
 
 ```bash
+# Download Thunderstore dependencies into deps/ (after cloning or bumping a pin)
+pwsh ./download-dependencies.ps1
+
 # Build the solution
 dotnet build AutogenRundown.sln
 

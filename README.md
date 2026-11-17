@@ -15,7 +15,6 @@ Check Alarm Persistent IDs for levellayout
 
 
 TODO:
-  * Add a way to automatically install deps?
   * Objective: Distribute Power Cells
     * Needs something to happen when completing all the cells ideally
     * Would be good if the fog could rise or lower when inserting the cells

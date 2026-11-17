@@ -6,11 +6,12 @@
 - `AutogenRundownTests`: MSTest unit tests.
 - `GameData`: JSON assets copied into build output.
 - `build/`: Post-build output (DLL + manifest/assets).
-- `deps/`, `AutogenRundown/interop`, `AutogenRundown/plugins`: local DLL references (BepInEx, interop, Thunderstore plugins).
+- `deps/`, `AutogenRundown/interop`: local DLL references (BepInEx and Thunderstore plugins in `deps/`, game interop in `interop`).
 - Solution: `AutogenRundown.sln`.
 
 ## Build, Test & Local Run
 
+- Fetch dependencies (after cloning or bumping a pin in `manifest.json`): `.\download-dependencies.ps1`
 - Build: `dotnet build AutogenRundown.sln`
   - Copies assets to `build/`. When `Debug` MSBuild property is not set to `false` on Windows, the build also deploys to r2modman’s BepInEx profile: `%AppData%\r2modmanPlus-local\GTFO\profiles\modding\BepInEx\plugins\the_tavern-AutogenRundown`.
 - Disable debug deploy: `dotnet build /p:Debug=false`
@@ -40,5 +41,5 @@
 ## Packaging & Tips
 
 - Thunderstore metadata: `manifest.json`, `thunderstore.toml`; post-build copies README/CHANGELOG into `build/`.
-- Ensure `deps/` contains BepInEx pack; do not commit game files.
+- `deps/` is gitignored; populate it with `download-dependencies.ps1`. Do not commit game files.
 - For local in-game testing, use the default build (debug deploy enabled) and launch GTFO via your mod manager profile.
