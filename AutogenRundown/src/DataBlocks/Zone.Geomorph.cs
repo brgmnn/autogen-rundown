@@ -175,6 +175,8 @@ public partial record Zone
 
                     // The Doggy Doge
                     (SubComplex.DataCenter, "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Junction.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.DataCenter, "Assets/DogCustomGeos/Tilepack/Releases/ALTRX1/DogGeos_ALT_RX1_DestroyedJunction.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
+                    (SubComplex.Lab, "Assets/DogCustomGeos/Tilepack/Releases/ALTRX1/DogGeos_ALT_RX1_LabTransit.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                 }));
                 break;
 
@@ -229,6 +231,10 @@ public partial record Zone
 
                     // Red_Leicester_Cheese
                     (SubComplex.Storage, "Assets/Bundles/RLC_Mining/Storage_T_01/geo_64x64_mining_storage_hub_T_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+
+                    // The Doggy Doge
+                    (SubComplex.Storage, "Assets/DogCustomGeos/Tilepack/Releases/LegacyRX2/LegacyRX2_StoragePassage.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+                    (SubComplex.Storage, "Assets/DogCustomGeos/Tilepack/Releases/LegacyRX2/LegacyRX2_InfestedStorage.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                 }));
                 break;
 
@@ -297,6 +303,13 @@ public partial record Zone
                     (SubComplex.Refinery, "Assets/Custom Geo's/refinery/HA_1_i_tile/I_tile_V2.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                     (SubComplex.Refinery, "Assets/Custom Geo's/refinery bridge/refinery_i_tile_bridge.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                     (SubComplex.Storage, "Assets/Custom Geo's/Storage_neonate_room/neonate_storage.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+
+                    // The Doggy Doge
+                    // L tile: the onward gate is on the side rather than straight ahead
+                    (SubComplex.Storage, "Assets/DogCustomGeos/Tilepack/Releases/LegacyRX2/LegacyRX2_StorageCryo.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+                    // T tiles: the corridor's single onward zone takes one of the two side gates
+                    (SubComplex.Storage, "Assets/DogCustomGeos/Tilepack/Releases/LegacyRX2/LegacyRX2_StoragePassage.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+                    (SubComplex.Storage, "Assets/DogCustomGeos/Tilepack/Releases/LegacyRX2/LegacyRX2_InfestedStorage.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                 }));
                 break;
 
@@ -333,6 +346,8 @@ public partial record Zone
 
                     // The Doggy Doge
                     (SubComplex.DataCenter, "Assets/DogCustomGeos/Tilepack/DogGeos_Tech_Overpass.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+                    (SubComplex.DataCenter, "Assets/DogCustomGeos/Tilepack/Releases/ALTRX1/DogGeos_ALT_RX1_Passage.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+                    (SubComplex.DataCenter, "Assets/DogCustomGeos/Tilepack/Releases/ALTRX1/DogGeos_ALT_RX1_DestroyedOverpass.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                 }));
                 break;
 
@@ -706,6 +721,9 @@ public partial record Zone
 
                     // SamDB v2
                     (SubComplex.DataCenter, "Assets/SamdownGeos/C2 Mainframe room/C2_Mainframe.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
+
+                    // The Doggy Doge
+                    (SubComplex.DataCenter, "Assets/DogCustomGeos/Tilepack/Releases/ALTRX1/DogGeos_ALT_RX1_NframeNest.prefab", new CoverageMinMax { Min = 5, Max = 10 }),
                 }));
                 break;
 

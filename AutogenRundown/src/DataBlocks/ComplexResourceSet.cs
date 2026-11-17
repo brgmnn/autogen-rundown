@@ -685,6 +685,38 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         });
 
         #endregion
+
+        #region MODDER: The Doggy Doge
+        // Legacy RX-2 Storage Passage. T tile, 3 areas.
+        Mining.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/LegacyRX2/LegacyRX2_StoragePassage.prefab",
+            SubComplex = SubComplex.Storage,
+            Shard = 2
+        });
+
+        // Legacy RX-2 Infested Storage. T tile, 2 areas. Has two world event enemy spawns:
+        // WE_InfestedStorage_EnemySpawnA (main infested room) and _EnemySpawnB (side room).
+        Mining.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/LegacyRX2/LegacyRX2_InfestedStorage.prefab",
+            SubComplex = SubComplex.Storage,
+            Shard = 2
+        });
+
+        // Legacy RX-2 Storage Cryo. L tile (single exit to the side), 2 areas.
+        Mining.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/LegacyRX2/LegacyRX2_StorageCryo.prefab",
+            SubComplex = SubComplex.Storage,
+            Shard = 2
+        });
+
+        // Not registered:
+        //  - LegacyRX2_Bridge: a 64x128 (2x1) T tile, which can't be forced into a 1x1 zone slot.
+        //  - LegacyRX2_Duneramp/_Cliffside/_Canyons/_CliffClimb/_Outpost and
+        //    Desert/DV-1_DesertPathway: static dimension geomorphs, not zone tiles.
+        #endregion
         #endregion
 
         #region Tech
@@ -982,6 +1014,54 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         {
             Asset = "Assets/DogCustomGeos/Tilepack/Releases/ALTRX1/ALT_RX1_Tech_NFrame.prefab",
             SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        // RX-1 Elevator (Bridge Variant). An elevator tile that continues forward as an I tile.
+        Tech.ElevatorShafts_1x1.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/ALTRX1/DogGeos_ALT_RX1_ElevatorBridge.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        // RX-1 Elevator (Repaired Variant). The elevator rebuilt as an I tile.
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/ALTRX1/DogGeos_ALT_RX1_Passage.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        // RX-1 Overpass (Destroyed Variant). I tile.
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/ALTRX1/DogGeos_ALT_RX1_DestroyedOverpass.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        // RX-1 Junction (Destroyed Variant). Hub tile.
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/ALTRX1/DogGeos_ALT_RX1_DestroyedJunction.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        // Data Transfer Unit (Nest Variant). Dead end tile.
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/ALTRX1/DogGeos_ALT_RX1_NframeNest.prefab",
+            SubComplex = SubComplex.DataCenter,
+            Shard = 2
+        });
+
+        // Lab Transit. X tile, 3 areas.
+        Tech.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/ALTRX1/DogGeos_ALT_RX1_LabTransit.prefab",
+            SubComplex = SubComplex.Lab,
             Shard = 2
         });
 
