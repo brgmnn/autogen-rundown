@@ -5,6 +5,8 @@
   "description": "Rundown generation mod for GTFO. New rundowns generated daily, weekly, monthly, and each season.",
   "dependencies": [
     "BepInEx-BepInExPack_GTFO-3.2.4",
+    "GTFOModding-GTFO_API-0.6.1",
+    "GTFOModding-InjectLib-1.1.0",
     "dakkhuza-MTFO-4.6.3",
     "dakkhuza-DakGeos-0.3.8",
     "Amorously-AmorLib-1.4.0",

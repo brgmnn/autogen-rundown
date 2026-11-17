@@ -10,7 +10,6 @@
 
     <Deps>$(SolutionDir)\deps</Deps>
     <Interop>$(SolutionDir)\AutogenRundown\interop</Interop>
-    <Plugins>$(SolutionDir)\AutogenRundown\plugins</Plugins>
     <BepInEx>$(Deps)\BepInEx-BepInExPack_GTFO\BepInExPack_GTFO\BepInEx</BepInEx>
     <OutputPath>$(SolutionDir)\build</OutputPath>
 
@@ -51,10 +50,10 @@
     <Reference Remove="$(Interop)\Newtonsoft.Json.dll" />
 
     <!-- Thunderstore Plugins -->
-    <Reference Include="$(Plugins)\GTFO-API.dll" />
-    <Reference Include="$(Plugins)\AmorLib.dll" />
-    <Reference Include="$(Plugins)\Inas07.LocalProgression.dll" />
-    <Reference Include="$(Plugins)\InjectLib.dll" />
+    <Reference Include="$(Deps)\GTFOModding-GTFO_API\plugins\GTFO-API.dll" Private="false" />
+    <Reference Include="$(Deps)\Amorously-AmorLib\AmorLib.dll" Private="false" />
+    <Reference Include="$(Deps)\Inas07-LocalProgression\plugins\Inas07.LocalProgression.dll" Private="false" />
+    <Reference Include="$(Deps)\GTFOModding-InjectLib\plugins\InjectLib.dll" Private="false" />
 
     <Compile Remove="Blocks\**" />
     <EmbeddedResource Remove="Blocks\**" />

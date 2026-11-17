@@ -11,7 +11,6 @@
 
     <Deps>$(SolutionDir)\deps</Deps>
     <Interop>$(SolutionDir)\AutogenRundown\interop</Interop>
-    <Plugins>$(SolutionDir)\AutogenRundown\plugins</Plugins>
     <BepInEx>$(Deps)\BepInEx-BepInExPack_GTFO\BepInExPack_GTFO\BepInEx</BepInEx>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
