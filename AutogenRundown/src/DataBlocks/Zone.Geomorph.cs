@@ -323,6 +323,7 @@ public partial record Zone
                     // (SubComplex.Lab, "Assets/Bundles/RLC_Tech/Lab_I_01/geo_64x64_tech_lab_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
                     // TODO: This tile seems to not have enough room to spawn items like cells and bulkhead keys
                     // (SubComplex.DataCenter, "Assets/Bundles/RLC_Tech/DC_I_01/geo_64x64_tech_datacenter_I_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
+                    (SubComplex.Lab, "Assets/Bundles/RLC_Tech/Lab_I_02/geo_64x64_lab_I_RLC_02.prefab", new CoverageMinMax { Min = 20, Max = 25 }),
 
                     // SamDB
                     (SubComplex.Lab, "Assets/Custom Geo's/Labs/lab_i_tile/lab_i_tile_V1.prefab", new CoverageMinMax { Min = 20, Max = 30 }),

@@ -844,6 +844,13 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
             Asset = "Assets/Bundles/RLC_Tech/DC_I_01/geo_64x64_tech_datacenter_I_RLC_01.prefab",
             SubComplex = SubComplex.DataCenter
         });
+
+        // Corridor I-tile
+        Tech.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Bundles/RLC_Tech/Lab_I_02/geo_64x64_lab_I_RLC_02.prefab",
+            SubComplex = SubComplex.DataCenter
+        });
         #endregion
 
         #region MODDER: SamDB
