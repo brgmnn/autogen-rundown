@@ -462,6 +462,14 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
             SubComplex = SubComplex.Storage
         });
 
+        // T tile. Built in the standard rotation (source gate south), only the west and
+        // east gates can be built from.
+        Mining.CustomGeomorphs.Insert(0, new Prefab()
+        {
+            Asset = "Assets/Bundles/RLC_Mining/Storage_T_01/geo_64x64_mining_storage_hub_T_RLC_01.prefab",
+            SubComplex = SubComplex.Storage
+        });
+
         // Hub tile
         Mining.CustomGeomorphs.Insert(0, new Prefab()
         {
@@ -845,11 +853,14 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
             SubComplex = SubComplex.DataCenter
         });
 
-        // Corridor I-tile
+        // Security checkpoint style Lab corridor I-tile. 47 of its marker producers are mining
+        // markers (vanilla ones plus the custom MiningMarker_Digsite_BossTile1BoxCluster), so the
+        // Mining shards have to be loaded too for their prefabs to spawn.
         Tech.CustomGeomorphs.Insert(0, new Prefab()
         {
             Asset = "Assets/Bundles/RLC_Tech/Lab_I_02/geo_64x64_lab_I_RLC_02.prefab",
-            SubComplex = SubComplex.DataCenter
+            SubComplex = SubComplex.Lab,
+            ExtraComplexes = { Complex.Mining }
         });
         #endregion
 

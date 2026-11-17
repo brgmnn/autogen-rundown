@@ -226,6 +226,9 @@ public partial record Zone
                     // --- MOD Geomorphs ---
                     // DakGeos
                     (SubComplex.DigSite, "Assets/geo_64x64_mining_dig_site_t_dak_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+
+                    // Red_Leicester_Cheese
+                    (SubComplex.Storage, "Assets/Bundles/RLC_Mining/Storage_T_01/geo_64x64_mining_storage_hub_T_RLC_01.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                 }));
                 break;
 

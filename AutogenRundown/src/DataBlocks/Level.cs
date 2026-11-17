@@ -5,6 +5,7 @@ using AutogenRundown.Patches.CustomTerminals;
 using AutogenRundown.DataBlocks.Custom.AdvancedWardenObjective;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
+using AutogenRundown.DataBlocks.Custom.LGTuner;
 using AutogenRundown.DataBlocks.Custom.ZoneSensors;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
@@ -1429,6 +1430,45 @@ public partial class Level
         ValidateForcedGeomorphs(usedCustomGeos);
 
         ResourceSet.CustomGeomorphs.RemoveAll(prefab => !usedCustomGeos.Contains(prefab.Asset));
+
+        SaveLGTunerConfigs();
+    }
+
+    /// <summary>
+    /// Some custom tiles need another complex's asset shards loaded (see
+    /// Prefab.ExtraComplexes). LGTuner loads extra complexes per layout, so write a config for
+    /// every layout with a zone forced onto such a tile.
+    /// </summary>
+    private void SaveLGTunerConfigs()
+    {
+        var tiles = ResourceSet.CustomGeomorphs
+            .Concat(ResourceSet.CustomGeomorphs_Exit_1x1)
+            .Concat(ResourceSet.CustomGeomorphs_Challenge_1x1)
+            .Where(prefab => prefab.ExtraComplexes.Any())
+            .ToList();
+
+        if (!tiles.Any())
+            return;
+
+        foreach (var (_, layout) in GetAllLayouts())
+        {
+            var complexes = layout.Zones
+                .SelectMany(zone => tiles.Where(tile => tile.Asset == zone.CustomGeomorph))
+                .SelectMany(tile => tile.ExtraComplexes)
+                .Where(complex => complex != Complex)
+                .Distinct()
+                .ToList();
+
+            if (!complexes.Any())
+                continue;
+
+            new LayoutConfig
+            {
+                Name = $"{Tier}{Index}_{Filesystem.Filename(Name)}",
+                LevelLayoutID = layout.PersistentId,
+                ExtraComplexResourceToLoad = complexes
+            }.Save();
+        }
     }
 
     /// <summary>
