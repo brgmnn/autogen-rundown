@@ -235,6 +235,8 @@ public partial record Zone
                     // The Doggy Doge
                     (SubComplex.Storage, "Assets/DogCustomGeos/Tilepack/Releases/LegacyRX2/LegacyRX2_StoragePassage.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
                     (SubComplex.Storage, "Assets/DogCustomGeos/Tilepack/Releases/LegacyRX2/LegacyRX2_InfestedStorage.prefab", new CoverageMinMax { Min = 20, Max = 30 }),
+                    // 64x128, see Patch_MultiCellCustomGeomorphs
+                    (SubComplex.DigSite, "Assets/DogCustomGeos/Tilepack/Releases/LegacyRX2/LegacyRX2_Bridge.prefab", new CoverageMinMax { Min = 30, Max = 40 }),
                 }));
                 break;
 

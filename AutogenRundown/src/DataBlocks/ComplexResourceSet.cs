@@ -712,10 +712,19 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
             Shard = 2
         });
 
-        // Not registered:
-        //  - LegacyRX2_Bridge: a 64x128 (2x1) T tile, which can't be forced into a 1x1 zone slot.
-        //  - LegacyRX2_Duneramp/_Cliffside/_Canyons/_CliffClimb/_Outpost and
-        //    Desert/DV-1_DesertPathway: static dimension geomorphs, not zone tiles.
+        // Legacy RX-2 Bridge. 64x128 T tile, 2 areas. The prefab origin is the centre of its
+        // first cell (entry plug at the back, one side exit) and the bridge carries on a second
+        // cell straight ahead to the far exit. Patch_MultiCellCustomGeomorphs reserves that
+        // second cell, otherwise other zones build into it.
+        Mining.CustomGeomorphs.Insert(0, new Prefab
+        {
+            Asset = "Assets/DogCustomGeos/Tilepack/Releases/LegacyRX2/LegacyRX2_Bridge.prefab",
+            SubComplex = SubComplex.DigSite,
+            Shard = 2
+        });
+
+        // Not registered: LegacyRX2_Duneramp/_Cliffside/_Canyons/_CliffClimb/_Outpost and
+        // Desert/DV-1_DesertPathway are static dimension geomorphs, not zone tiles.
         #endregion
         #endregion
 
