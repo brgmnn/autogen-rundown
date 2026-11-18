@@ -1,3 +1,4 @@
+using AutogenRundown.Managers;
 using GameData;
 using GTFO.API;
 using HarmonyLib;
@@ -87,6 +88,13 @@ internal static class Patch_SpawnCustomTerminals
     [HarmonyPatch(typeof(LG_DistributionSetup), nameof(LG_DistributionSetup.Build))]
     private static void Post_LG_DistributionSetup_Build(LG_DistributionSetup __instance)
     {
+        // A pending rebuild means this pass is being drained and thrown away, and earlier jobs
+        // may have failed (e.g. LG_BuildFloorJob), leaving areas unbuilt. An exception here is
+        // not seen by Fix_FactoryJobExceptionCatchAll: it surfaces in the il2cpp trampoline,
+        // Build() reports not done and reruns every frame, so the drain never finishes.
+        if (FactoryJobManager.ShouldRebuild)
+            return;
+
         var mainLayoutId = RundownManager.ActiveExpedition?.LevelLayoutData ?? 0;
         if (mainLayoutId == 0)
             return;
@@ -159,15 +167,25 @@ internal static class Patch_SpawnCustomTerminals
             return;
         }
 
-        // Find the area matching the geomorph
+        // Find the area matching the geomorph. Skip areas that were never built: their marker
+        // spawner groups only exist once LG_BuildAreaJob has run, and GetAllMarkerSpawners NREs
+        // on them, which escapes this postfix and makes LG_DistributionSetup.Build rerun forever.
         LG_Area? targetArea = null;
         foreach (var area in targetZone.m_areas)
         {
-            if (request.HasGeomorphName(area.m_geomorph.name))
+            if (!request.HasGeomorphName(area.m_geomorph.name))
+                continue;
+
+            if (area.m_markerSpawnerGroups == null)
             {
-                targetArea = area;
-                break;
+                Plugin.Logger.LogWarning(
+                    $"[CustomTerminal] Skipping unbuilt area {area.name} (geo: {area.m_geomorph.name}) " +
+                    $"in zone {request.LocalIndex}, layer {layer.m_type}");
+                continue;
             }
+
+            targetArea = area;
+            break;
         }
 
         if (targetArea == null)
