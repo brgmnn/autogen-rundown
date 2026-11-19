@@ -145,6 +145,37 @@ public class PuzzleComponent
         Duration = 120
     };
 
+    #region ZoneScan (area/zone) components
+
+    /// <summary>
+    /// Full team must be inside the area (room) the scan is in.
+    /// </summary>
+    public static readonly PuzzleComponent AreaScan = new()
+    {
+        PuzzleType = PuzzleType.AreaScan,
+        Duration = 15
+    };
+
+    /// <summary>
+    /// Sustained: full team must hold the area (room) the scan is in.
+    /// </summary>
+    public static readonly PuzzleComponent AreaScan_Sustained = new()
+    {
+        PuzzleType = PuzzleType.AreaScan_Sustained,
+        Duration = 60
+    };
+
+    /// <summary>
+    /// Sustained: full team must hold the zone the scan is in.
+    /// </summary>
+    public static readonly PuzzleComponent ZoneScan_Sustained = new()
+    {
+        PuzzleType = PuzzleType.ZoneScan_Sustained,
+        Duration = 120
+    };
+
+    #endregion
+
     #region Travel components
 
     #region Solo travel

@@ -3,6 +3,7 @@ using AutogenRundown.DataBlocks;
 using AutogenRundown.DataBlocks.Custom.ExtraEnemyCustomization;
 using AutogenRundown.DataBlocks.Custom.ExtraObjectiveSetup;
 using AutogenRundown.DataBlocks.Custom.ItemSpawnFix;
+using AutogenRundown.DataBlocks.Custom.ZoneScan;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
 using AutogenRundown.DataBlocks.Objectives;
@@ -1486,6 +1487,7 @@ public static class RundownFactory
         EnemyCustomization.Property.Save();
         GlobalConfig.Save();
         ItemSpawns.Save();
+        ZoneScans.Save();
 
         // Apply any user custom GameData overrides (loaded last, after everything else)
         CustomGameData.Apply();

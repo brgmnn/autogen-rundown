@@ -1,7 +1,7 @@
-# Downloads the Thunderstore packages the project compiles against into deps/,
-# at the versions pinned in manifest.json. deps/ is gitignored and CI fetches it
-# itself, so run this after cloning or whenever one of these pins is bumped.
-# Packages already extracted at the pinned version are skipped.
+# Downloads the Thunderstore packages the project compiles against, or whose config
+# formats it generates, into deps/ at the versions pinned in manifest.json. deps/ is
+# gitignored and CI fetches it itself, so run this after cloning or whenever one of
+# these pins is bumped. Packages already extracted at the pinned version are skipped.
 #
 #   .\download-dependencies.ps1
 
@@ -14,7 +14,8 @@ $packages = @(
   'GTFOModding-GTFO_API',
   'Amorously-AmorLib',
   'Inas07-LocalProgression',
-  'GTFOModding-InjectLib'
+  'GTFOModding-InjectLib',
+  'randomguy0753-ZoneScan'
 )
 
 $dependencies = (Get-Content (Join-Path $PSScriptRoot 'manifest.json') -Raw | ConvertFrom-Json).dependencies

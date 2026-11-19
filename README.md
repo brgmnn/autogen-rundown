@@ -458,3 +458,4 @@ Many thanks to the modding community for making GTFO modding possible, and a spe
 - donan3967's [Geomorph Pack 1](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_1/) and [Geomorph Pack 2](https://thunderstore.io/c/gtfo/p/donan3967/donan3967_geo_pack_2/)
 - Red_Leicester_Cheese's [Geomorph Pack](https://thunderstore.io/c/gtfo/p/Red_Leicester_Cheese/CheeseGeos/)
 - SamDB's [SamGeos](https://thunderstore.io/c/gtfo/p/Sam_D_B/SamGeos/) and [SamGeosV2](https://thunderstore.io/c/gtfo/p/Sam_D_B/SamGeosV2/)
+- randomguy0753's [ZoneScan](https://thunderstore.io/c/gtfo/p/randomguy0753/ZoneScan/), which powers the area and zone scan alarms

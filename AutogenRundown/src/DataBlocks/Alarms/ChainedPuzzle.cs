@@ -431,6 +431,8 @@ public record ChainedPuzzle : DataBlock<ChainedPuzzle>
         if (settings.HasNightmares() && tier is "D" or "E")
             pack.Add((tier == "E" ? 1.0 : 0.7, 1, AlarmClass3_Surge_Overload));
 
+        pack.AddRange(ZoneScanAlarms.BuildPack(tier));
+
         return pack;
     }
     #endregion

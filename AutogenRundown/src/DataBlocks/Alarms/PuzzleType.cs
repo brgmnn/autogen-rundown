@@ -94,6 +94,31 @@ public enum PuzzleType : uint
 
     #endregion
 
+    #region ZoneScan (area/zone) scans
+
+    // MTFO custom puzzle types written to Custom/PuzzleTypes.json, see ZoneScans. They clone a
+    // vanilla scan with a zero radius circle; the ZoneScan plugin then scans the whole area or
+    // zone the scan sits in and draws the scan boundary on its doors and dividers.
+    //
+    // IDs must not collide with any ChainedPuzzleType block (vanilla <= 62, ours: 100).
+
+    /// <summary>
+    /// Full team must be inside the area (room) the scan is in. ~15 seconds.
+    /// </summary>
+    AreaScan = 200,
+
+    /// <summary>
+    /// Sustained: full team must hold the area the scan is in. ~60 seconds.
+    /// </summary>
+    AreaScan_Sustained = 201,
+
+    /// <summary>
+    /// Sustained: full team must hold the zone the scan is in. ~120 seconds.
+    /// </summary>
+    ZoneScan_Sustained = 202,
+
+    #endregion
+
     #region Travel (Moving) scans
 
     // Travel scan inventory:
