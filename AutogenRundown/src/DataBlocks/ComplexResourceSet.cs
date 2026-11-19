@@ -716,12 +716,15 @@ public record ComplexResourceSet : DataBlock<ComplexResourceSet>
         // first cell (entry plug at the back, one side exit) and the bridge carries on a second
         // cell straight ahead to the far exit. Patch_MultiCellCustomGeomorphs reserves that
         // second cell, otherwise other zones build into it.
-        Mining.CustomGeomorphs.Insert(0, new Prefab
-        {
-            Asset = "Assets/DogCustomGeos/Tilepack/Releases/LegacyRX2/LegacyRX2_Bridge.prefab",
-            SubComplex = SubComplex.DigSite,
-            Shard = 2
-        });
+        // TODO: Disabled: the bridge areas end up with no AI graph nodes (BorkenCellGeoFix's
+        // out-of-bounds cleanup deletes the second cell's colliders), failing the zone health
+        // check and forcing rebuilds.
+        // Mining.CustomGeomorphs.Insert(0, new Prefab
+        // {
+        //     Asset = "Assets/DogCustomGeos/Tilepack/Releases/LegacyRX2/LegacyRX2_Bridge.prefab",
+        //     SubComplex = SubComplex.DigSite,
+        //     Shard = 2
+        // });
 
         // Not registered: LegacyRX2_Duneramp/_Cliffside/_Canyons/_CliffClimb/_Outpost and
         // Desert/DV-1_DesertPathway are static dimension geomorphs, not zone tiles.
