@@ -1,5 +1,6 @@
 using HarmonyLib;
 using LevelGeneration;
+using UnityEngine;
 
 namespace AutogenRundown.Patches;
 
@@ -17,6 +18,9 @@ namespace AutogenRundown.Patches;
 /// overhang cells are not free (the zone then tries another expander), and claims them for
 /// the new tile once it is placed. GetExternalCell already steps past cells owned by the
 /// source geomorph, so the far-end plugs then link to the correct neighbouring cell.
+///
+/// It also keeps BorkenCellGeoFix's out-of-bounds cleanup off these tiles, see
+/// <see cref="BcgfCleanupExemptName"/>.
 /// </summary>
 [HarmonyPatch]
 internal static class Patch_MultiCellCustomGeomorphs
@@ -30,6 +34,16 @@ internal static class Patch_MultiCellCustomGeomorphs
     };
 
     [ThreadStatic] private static List<LG_Cell>? _pendingCells;
+
+    /// <summary>
+    /// BorkenCellGeoFix deletes every collider (and its renderer) found 34-66m out from a
+    /// geomorph's origin, in a single pass on the first LG_LateGeomorphScanJob.Build. For a
+    /// multi-cell tile that is the whole second cell plus any floor spanning into it, which
+    /// leaves the tile with no navmesh and so no AI graph nodes. BCGF skips geomorphs whose
+    /// name contains one of a hardcoded list of tile names; this one is only used for that
+    /// exemption (BCGF 0.6.9), so it is borrowed for the duration of the job.
+    /// </summary>
+    private const string BcgfCleanupExemptName = "geo_64x64_mining_dig_site_t_dak";
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(LG_Floor), nameof(LG_Floor.FindExternalArea))]
@@ -117,5 +131,54 @@ internal static class Patch_MultiCellCustomGeomorphs
         Plugin.Logger.LogDebug(
             $"[MultiCellGeo] Zone {zone.Alias}: claimed {cells.Count} extra cell(s) for " +
             zone.m_settings.m_zoneData.CustomGeomorph);
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPriority(Priority.First)]
+    [HarmonyPatch(typeof(LG_LateGeomorphScanJob), nameof(LG_LateGeomorphScanJob.Build))]
+    public static void Pre_LateGeomorphScan(out List<(GameObject Go, string Name)>? __state)
+    {
+        __state = null;
+
+        var floor = Builder.CurrentFloor;
+
+        if (floor == null)
+            return;
+
+        foreach (var dimension in floor.m_dimensions)
+        {
+            foreach (var tile in dimension.Tiles)
+            {
+                var geo = tile.m_geoRoot;
+
+                if (geo == null || geo.m_zone == null)
+                    continue;
+
+                var zone = geo.m_zone;
+
+                var path = zone.m_settings.m_zoneData.CustomGeomorph;
+
+                if (string.IsNullOrEmpty(path)
+                    || !ForwardCells.ContainsKey(path)
+                    || zone.m_settings.CustomGeomorphInstance != geo.gameObject)
+                    continue;
+
+                __state ??= new List<(GameObject, string)>();
+                __state.Add((geo.gameObject, geo.gameObject.name));
+
+                geo.gameObject.name += $"_{BcgfCleanupExemptName}";
+            }
+        }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(LG_LateGeomorphScanJob), nameof(LG_LateGeomorphScanJob.Build))]
+    public static void Post_LateGeomorphScan(List<(GameObject Go, string Name)>? __state)
+    {
+        if (__state == null)
+            return;
+
+        foreach (var (go, name) in __state)
+            go.name = name;
     }
 }
