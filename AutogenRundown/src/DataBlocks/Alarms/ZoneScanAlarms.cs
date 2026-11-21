@@ -10,8 +10,9 @@ namespace AutogenRundown.DataBlocks.Alarms;
 ///
 /// They start at the door (no WantedDistanceFromStartPos, Zone.RollAlarms keeps it at 0) and
 /// always show the HUD: players can be inside a large area/zone and far from the scan itself.
-/// Multi-scan area alarms put each scan in a different area of the zone (see
-/// Patch_LG_NodeTools._distinctAreas); the short spacing makes that a neighbouring area.
+/// Multi-scan area alarms put each scan just inside the gate of a neighbouring area of the
+/// zone that has no scan yet (see Patch_LG_NodeTools.TryPlaceAreaScans). The spacing is only
+/// used if that placement fails.
 /// </summary>
 public static class ZoneScanAlarms
 {

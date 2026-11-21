@@ -106,9 +106,13 @@ public static class Patch_LG_NodeTools
     internal static bool _isClusterPlacement;
 
     // Set by Patch_ChainedPuzzleInstance_AreaScans for alarms of several area scans (ZoneScan).
-    // ZoneScan scans the area each scan sits in, so the scans are spread over the zone's areas,
-    // each in an area no earlier scan used.
+    // ZoneScan scans the area each scan sits in, so each scan goes in an area of the zone no
+    // earlier scan used, just inside the gate it is entered through. See TryPlaceAreaScans.
     internal static bool _distinctAreas;
+
+    // Area scans: preferred and minimum distance of the scan from the gate into its area
+    private const float GateScanDistance = 6f;
+    private const float MinGateScanDistance = 3f;
 
     private struct ScoredNode
     {
@@ -175,6 +179,18 @@ public static class Patch_LG_NodeTools
             return 0;
         }
 
+        if (_distinctAreas && atRadiusFromSourcePos <= 0.01f &&
+            TryPlaceAreaScans(area, sourcePos, wantedCount, out var areaPositions))
+        {
+            var areaPositionsList = new Il2CppSystem.Collections.Generic.List<Vector3>();
+
+            foreach (var position in areaPositions)
+                areaPositionsList.Add(position);
+
+            *positions = areaPositionsList.Pointer;
+            return 1;
+        }
+
         Plugin.Logger.LogDebug(
             $"[NodeTools] Flags: HardFilter={UseHardDistanceFilter} " +
             $"Relaxation={UseIterativeRelaxation} Pool={CandidatePoolSize} " +
@@ -190,14 +206,9 @@ public static class Patch_LG_NodeTools
             ? Builder.SessionSeedRandom.Range(0, int.MaxValue)
             : fixedSeed;
 
-        var candidates = _distinctAreas ? BuildZoneCandidates(area) : new List<ScoredNode>();
-        var distinctAreas = candidates.Count > 0;
+        var candidates = new List<ScoredNode>();
 
-        if (distinctAreas)
-        {
-            // Built above: a sample of nodes from every area of the zone
-        }
-        else if (nodes.Count <= poolSize)
+        if (nodes.Count <= poolSize)
         {
             // All nodes fit in pool
             for (var i = 0; i < nodes.Count; i++)
@@ -246,9 +257,6 @@ public static class Patch_LG_NodeTools
         var placedNodes = new List<AIG_INode>();
         var placed = 0;
 
-        // Clusters (= areas) already holding a scan, when placing area scans
-        HashSet<ushort>? usedClusters = distinctAreas ? new HashSet<ushort>() : null;
-
         // When radius=0, game places component 0 at sourcePos (the door).
         // Seed the anchor so separation is measured from the actual door position.
         if (atRadiusFromSourcePos <= 0.01f && wantedCount > 0)
@@ -269,8 +277,6 @@ public static class Patch_LG_NodeTools
 
             placedPositions.Add(sourcePos);
             placedNodes.Add(nearestNode);
-            usedClusters?.Add(area.m_courseNode.m_nodeCluster.ID);
-            usedClusters?.Add(nearestNode.ClusterID);
             placed = 1;
 
             Plugin.Logger.LogDebug("[NodeTools]   Component 1 (seeded at source): distToSource=0.00");
@@ -278,8 +284,7 @@ public static class Patch_LG_NodeTools
 
         placed += PlaceCandidates(
             candidates, placedPositions, placedNodes,
-            wantedCount - placed, currentMinDistance, sourcePos, atRadiusFromSourcePos,
-            usedClusters);
+            wantedCount - placed, currentMinDistance, sourcePos, atRadiusFromSourcePos);
 
         // Step 6: Iterative relaxation (#2)
         if (UseIterativeRelaxation && placed < wantedCount)
@@ -298,8 +303,7 @@ public static class Patch_LG_NodeTools
 
                 placed += PlaceCandidates(
                     remaining, placedPositions, placedNodes,
-                    wantedCount - placed, currentMinDistance, sourcePos, atRadiusFromSourcePos,
-                    usedClusters);
+                    wantedCount - placed, currentMinDistance, sourcePos, atRadiusFromSourcePos);
             }
         }
 
@@ -389,8 +393,7 @@ public static class Patch_LG_NodeTools
         int wantedCount,
         float minDistance,
         Vector3 sourcePos,
-        float atRadiusFromSourcePos,
-        HashSet<ushort>? usedClusters = null)
+        float atRadiusFromSourcePos)
     {
         var placed = 0;
 
@@ -410,7 +413,6 @@ public static class Patch_LG_NodeTools
 
                 placedPositions.Add(best.node.Position);
                 placedNodes.Add(best.node);
-                usedClusters?.Add(best.node.ClusterID);
                 placed++;
 
                 var distToSource = (best.node.Position - sourcePos).magnitude;
@@ -428,10 +430,6 @@ public static class Patch_LG_NodeTools
             for (var j = 0; j < working.Count; j++)
             {
                 var candidate = working[j];
-
-                // Area scans: each scan goes in an area no earlier scan used
-                if (usedClusters != null && usedClusters.Contains(candidate.node.ClusterID))
-                    continue;
 
                 // Hard filter: reject if too close to ANY placed scan (pairwise floor)
                 var minDistToPlaced = GetMinDistanceToPlaced(candidate.node, placedPositions, placedNodes);
@@ -504,29 +502,11 @@ public static class Patch_LG_NodeTools
             }
 
             if (bestNode == null)
-            {
-                // Every area has a scan: allow reusing any but the previous scan's area. If
-                // unused areas are only blocked by the distance filter, leave it to relaxation.
-                if (usedClusters != null && usedClusters.Count > 1 &&
-                    working.All(c => usedClusters.Contains(c.node.ClusterID)))
-                {
-                    var previous = placedNodes[placedNodes.Count - 1].ClusterID;
-
-                    usedClusters.Clear();
-                    usedClusters.Add(previous);
-                    i--;
-
-                    Plugin.Logger.LogDebug("[NodeTools]   All areas used, allowing reuse");
-                    continue;
-                }
-
                 break;
-            }
 
             working.RemoveAt(bestIdx);
             placedPositions.Add(bestNode.Position);
             placedNodes.Add(bestNode);
-            usedClusters?.Add(bestNode.ClusterID);
             placed++;
 
             var dSource = (bestNode.Position - sourcePos).magnitude;
@@ -736,39 +716,143 @@ public static class Patch_LG_NodeTools
     }
 
     /// <summary>
-    /// Candidate nodes for area scans: an even sample of the reachable nodes of every area of
-    /// the source area's zone, so that no area is left out of the pool.
+    /// Places area scans: the first at the door (sourcePos), every next one in the nearest area
+    /// (by gates, within the zone) that has no scan yet, a few metres in from the gate it is
+    /// entered through. Keeps the scans off the walls and the holopath going through the gate.
+    /// Once every area has a scan, areas are reused, except the previous scan's.
     /// </summary>
-    private static List<ScoredNode> BuildZoneCandidates(LG_Area sourceArea)
+    private static bool TryPlaceAreaScans(
+        LG_Area sourceArea,
+        Vector3 sourcePos,
+        int wantedCount,
+        out List<Vector3> positions)
     {
-        var candidates = new List<ScoredNode>();
+        positions = new List<Vector3> { sourcePos };
+
         var zone = sourceArea.m_zone;
 
-        if (zone == null || zone.m_areas == null || zone.m_areas.Count == 0)
-            return candidates;
+        if (zone == null)
+            return false;
 
-        var areas = zone.m_areas;
-        var perArea = Math.Max(5, CandidatePoolSize / areas.Count);
+        var used = new HashSet<IntPtr> { sourceArea.Pointer };
+        var previous = sourceArea;
 
-        for (var a = 0; a < areas.Count; a++)
+        while (positions.Count < wantedCount)
         {
-            var courseNode = areas[a] == null ? null : areas[a].m_courseNode;
+            if (!TryFindNextArea(previous, zone, used, out var next, out var gate))
+            {
+                used.Clear();
+                used.Add(previous.Pointer);
 
-            if (courseNode == null || !courseNode.IsValid || courseNode.m_nodeCluster == null)
-                continue;
+                if (!TryFindNextArea(previous, zone, used, out next, out gate))
+                    return false;
+            }
 
-            var cluster = courseNode.m_nodeCluster;
-            var nodes = cluster.m_reachableNodes.Count >= 2 ? cluster.m_reachableNodes : cluster.m_nodes;
-            var step = Math.Max(1f, (float)nodes.Count / perArea);
+            if (!TryGetPositionNearGate(next, gate, out var position))
+                return false;
 
-            for (var f = 0f; f < nodes.Count; f += step)
-                candidates.Add(new ScoredNode { node = nodes[(int)f], score = 0f });
+            positions.Add(position);
+            used.Add(next.Pointer);
+            previous = next;
+
+            Plugin.Logger.LogDebug(
+                $"[NodeTools] Area scan {positions.Count}: {next.name}, " +
+                $"{(position - gate.transform.position).magnitude:F1}m from its gate");
         }
 
-        Plugin.Logger.LogDebug(
-            $"[NodeTools] Area scans: {candidates.Count} candidates from {areas.Count} areas of {zone.Alias}");
+        return true;
+    }
 
-        return candidates;
+    /// <summary>
+    /// Breadth first search over the gates of the zone's areas for the nearest area not in
+    /// <paramref name="used"/>, and the gate it is entered through.
+    /// </summary>
+    private static bool TryFindNextArea(
+        LG_Area from,
+        LG_Zone zone,
+        HashSet<IntPtr> used,
+        out LG_Area next,
+        out LG_Gate gate)
+    {
+        var visited = new HashSet<IntPtr> { from.Pointer };
+        var queue = new Queue<LG_Area>();
+
+        queue.Enqueue(from);
+
+        while (queue.Count > 0)
+        {
+            var area = queue.Dequeue();
+            var gates = area.m_gates;
+
+            if (gates == null)
+                continue;
+
+            for (var i = 0; i < gates.Count; i++)
+            {
+                var candidateGate = gates[i];
+
+                if (candidateGate == null)
+                    continue;
+
+                var opposite = candidateGate.GetOppositeArea(area);
+
+                if (opposite == null ||
+                    opposite.m_zone == null ||
+                    opposite.m_zone.Pointer != zone.Pointer ||
+                    !visited.Add(opposite.Pointer))
+                    continue;
+
+                if (!used.Contains(opposite.Pointer))
+                {
+                    next = opposite;
+                    gate = candidateGate;
+                    return true;
+                }
+
+                queue.Enqueue(opposite);
+            }
+        }
+
+        next = null!;
+        gate = null!;
+        return false;
+    }
+
+    /// <summary>
+    /// The node of <paramref name="area"/> closest to <see cref="GateScanDistance"/> from the
+    /// gate, but no closer than <see cref="MinGateScanDistance"/>.
+    /// </summary>
+    private static bool TryGetPositionNearGate(LG_Area area, LG_Gate gate, out Vector3 position)
+    {
+        position = Vector3.zero;
+
+        var courseNode = area.m_courseNode;
+
+        if (courseNode == null || !courseNode.IsValid || courseNode.m_nodeCluster == null)
+            return false;
+
+        var cluster = courseNode.m_nodeCluster;
+        var nodes = cluster.m_reachableNodes.Count >= 2 ? cluster.m_reachableNodes : cluster.m_nodes;
+        var gatePosition = gate.transform.position;
+        var bestScore = float.MaxValue;
+
+        for (var i = 0; i < nodes.Count; i++)
+        {
+            var distance = (nodes[i].Position - gatePosition).magnitude;
+
+            if (distance < MinGateScanDistance)
+                continue;
+
+            var score = Mathf.Abs(distance - GateScanDistance);
+
+            if (score >= bestScore)
+                continue;
+
+            bestScore = score;
+            position = nodes[i].Position;
+        }
+
+        return bestScore < float.MaxValue;
     }
 }
 
