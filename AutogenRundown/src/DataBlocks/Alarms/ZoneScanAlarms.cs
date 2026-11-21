@@ -8,9 +8,10 @@ namespace AutogenRundown.DataBlocks.Alarms;
 /// Every component of these must be a zone scan component with the same area/zone mode:
 /// ZoneScan applies to all scans of a chained puzzle.
 ///
-/// They have no travel (no WantedDistanceFromStartPos or WantedDistanceBetweenPuzzleComponents,
-/// Zone.RollAlarms keeps both at 0) and always show the HUD: players can be inside a large
-/// area/zone and far from the scan itself.
+/// They start at the door (no WantedDistanceFromStartPos, Zone.RollAlarms keeps it at 0) and
+/// always show the HUD: players can be inside a large area/zone and far from the scan itself.
+/// Multi-scan area alarms put each scan in a different area of the zone (see
+/// Patch_LG_NodeTools._distinctAreas); the short spacing makes that a neighbouring area.
 /// </summary>
 public static class ZoneScanAlarms
 {
@@ -22,7 +23,7 @@ public static class ZoneScanAlarms
         PublicAlarmName = "Class II Area Alarm",
         Settings = WaveSettings.Baseline_Easy,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 0.0,
+        WantedDistanceBetweenPuzzleComponents = 15.0,
         OnlyShowHUDWhenPlayerIsClose = false,
         Puzzle = new List<PuzzleComponent>
         {
@@ -36,7 +37,7 @@ public static class ZoneScanAlarms
         PublicAlarmName = "Class III Area Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 0.0,
+        WantedDistanceBetweenPuzzleComponents = 15.0,
         OnlyShowHUDWhenPlayerIsClose = false,
         Puzzle = new List<PuzzleComponent>
         {
@@ -51,7 +52,7 @@ public static class ZoneScanAlarms
         PublicAlarmName = "Class IV Area Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 0.0,
+        WantedDistanceBetweenPuzzleComponents = 15.0,
         OnlyShowHUDWhenPlayerIsClose = false,
         Puzzle = new List<PuzzleComponent>
         {

@@ -1,7 +1,9 @@
 using System.Reflection;
 using AIGraph;
+using AutogenRundown.DataBlocks.Custom.ZoneScan;
 using BepInEx.Unity.IL2CPP.Hook;
 using ChainedPuzzles;
+using GameData;
 using HarmonyLib;
 using Il2CppInterop.Common;
 using Il2CppInterop.Runtime.Runtime;
@@ -103,6 +105,11 @@ public static class Patch_LG_NodeTools
     // Set by Patch_CP_Cluster_Core to switch scoring mode for cluster sub-scans
     internal static bool _isClusterPlacement;
 
+    // Set by Patch_ChainedPuzzleInstance_AreaScans for alarms of several area scans (ZoneScan).
+    // ZoneScan scans the area each scan sits in, so the scans are spread over the zone's areas,
+    // each in an area no earlier scan used.
+    internal static bool _distinctAreas;
+
     private struct ScoredNode
     {
         public AIG_INode node;
@@ -183,9 +190,14 @@ public static class Patch_LG_NodeTools
             ? Builder.SessionSeedRandom.Range(0, int.MaxValue)
             : fixedSeed;
 
-        var candidates = new List<ScoredNode>();
+        var candidates = _distinctAreas ? BuildZoneCandidates(area) : new List<ScoredNode>();
+        var distinctAreas = candidates.Count > 0;
 
-        if (nodes.Count <= poolSize)
+        if (distinctAreas)
+        {
+            // Built above: a sample of nodes from every area of the zone
+        }
+        else if (nodes.Count <= poolSize)
         {
             // All nodes fit in pool
             for (var i = 0; i < nodes.Count; i++)
@@ -234,6 +246,9 @@ public static class Patch_LG_NodeTools
         var placedNodes = new List<AIG_INode>();
         var placed = 0;
 
+        // Clusters (= areas) already holding a scan, when placing area scans
+        HashSet<ushort>? usedClusters = distinctAreas ? new HashSet<ushort>() : null;
+
         // When radius=0, game places component 0 at sourcePos (the door).
         // Seed the anchor so separation is measured from the actual door position.
         if (atRadiusFromSourcePos <= 0.01f && wantedCount > 0)
@@ -254,6 +269,8 @@ public static class Patch_LG_NodeTools
 
             placedPositions.Add(sourcePos);
             placedNodes.Add(nearestNode);
+            usedClusters?.Add(area.m_courseNode.m_nodeCluster.ID);
+            usedClusters?.Add(nearestNode.ClusterID);
             placed = 1;
 
             Plugin.Logger.LogDebug("[NodeTools]   Component 1 (seeded at source): distToSource=0.00");
@@ -261,7 +278,8 @@ public static class Patch_LG_NodeTools
 
         placed += PlaceCandidates(
             candidates, placedPositions, placedNodes,
-            wantedCount - placed, currentMinDistance, sourcePos, atRadiusFromSourcePos);
+            wantedCount - placed, currentMinDistance, sourcePos, atRadiusFromSourcePos,
+            usedClusters);
 
         // Step 6: Iterative relaxation (#2)
         if (UseIterativeRelaxation && placed < wantedCount)
@@ -280,7 +298,8 @@ public static class Patch_LG_NodeTools
 
                 placed += PlaceCandidates(
                     remaining, placedPositions, placedNodes,
-                    wantedCount - placed, currentMinDistance, sourcePos, atRadiusFromSourcePos);
+                    wantedCount - placed, currentMinDistance, sourcePos, atRadiusFromSourcePos,
+                    usedClusters);
             }
         }
 
@@ -370,7 +389,8 @@ public static class Patch_LG_NodeTools
         int wantedCount,
         float minDistance,
         Vector3 sourcePos,
-        float atRadiusFromSourcePos)
+        float atRadiusFromSourcePos,
+        HashSet<ushort>? usedClusters = null)
     {
         var placed = 0;
 
@@ -390,6 +410,7 @@ public static class Patch_LG_NodeTools
 
                 placedPositions.Add(best.node.Position);
                 placedNodes.Add(best.node);
+                usedClusters?.Add(best.node.ClusterID);
                 placed++;
 
                 var distToSource = (best.node.Position - sourcePos).magnitude;
@@ -407,6 +428,10 @@ public static class Patch_LG_NodeTools
             for (var j = 0; j < working.Count; j++)
             {
                 var candidate = working[j];
+
+                // Area scans: each scan goes in an area no earlier scan used
+                if (usedClusters != null && usedClusters.Contains(candidate.node.ClusterID))
+                    continue;
 
                 // Hard filter: reject if too close to ANY placed scan (pairwise floor)
                 var minDistToPlaced = GetMinDistanceToPlaced(candidate.node, placedPositions, placedNodes);
@@ -479,11 +504,29 @@ public static class Patch_LG_NodeTools
             }
 
             if (bestNode == null)
+            {
+                // Every area has a scan: allow reusing any but the previous scan's area. If
+                // unused areas are only blocked by the distance filter, leave it to relaxation.
+                if (usedClusters != null && usedClusters.Count > 1 &&
+                    working.All(c => usedClusters.Contains(c.node.ClusterID)))
+                {
+                    var previous = placedNodes[placedNodes.Count - 1].ClusterID;
+
+                    usedClusters.Clear();
+                    usedClusters.Add(previous);
+                    i--;
+
+                    Plugin.Logger.LogDebug("[NodeTools]   All areas used, allowing reuse");
+                    continue;
+                }
+
                 break;
+            }
 
             working.RemoveAt(bestIdx);
             placedPositions.Add(bestNode.Position);
             placedNodes.Add(bestNode);
+            usedClusters?.Add(bestNode.ClusterID);
             placed++;
 
             var dSource = (bestNode.Position - sourcePos).magnitude;
@@ -691,6 +734,42 @@ public static class Patch_LG_NodeTools
 
         return result;
     }
+
+    /// <summary>
+    /// Candidate nodes for area scans: an even sample of the reachable nodes of every area of
+    /// the source area's zone, so that no area is left out of the pool.
+    /// </summary>
+    private static List<ScoredNode> BuildZoneCandidates(LG_Area sourceArea)
+    {
+        var candidates = new List<ScoredNode>();
+        var zone = sourceArea.m_zone;
+
+        if (zone == null || zone.m_areas == null || zone.m_areas.Count == 0)
+            return candidates;
+
+        var areas = zone.m_areas;
+        var perArea = Math.Max(5, CandidatePoolSize / areas.Count);
+
+        for (var a = 0; a < areas.Count; a++)
+        {
+            var courseNode = areas[a] == null ? null : areas[a].m_courseNode;
+
+            if (courseNode == null || !courseNode.IsValid || courseNode.m_nodeCluster == null)
+                continue;
+
+            var cluster = courseNode.m_nodeCluster;
+            var nodes = cluster.m_reachableNodes.Count >= 2 ? cluster.m_reachableNodes : cluster.m_nodes;
+            var step = Math.Max(1f, (float)nodes.Count / perArea);
+
+            for (var f = 0f; f < nodes.Count; f += step)
+                candidates.Add(new ScoredNode { node = nodes[(int)f], score = 0f });
+        }
+
+        Plugin.Logger.LogDebug(
+            $"[NodeTools] Area scans: {candidates.Count} candidates from {areas.Count} areas of {zone.Alias}");
+
+        return candidates;
+    }
 }
 
 [HarmonyPatch(typeof(CP_Cluster_Core))]
@@ -703,4 +782,33 @@ internal static class Patch_CP_Cluster_Core
     [HarmonyPostfix]
     [HarmonyPatch(nameof(CP_Cluster_Core.Setup))]
     static void Postfix() => Patch_LG_NodeTools._isClusterPlacement = false;
+}
+
+/// <summary>
+/// Flags alarms made of several area scans (ZoneScan) so their scans are placed in different
+/// areas of the zone, see Patch_LG_NodeTools._distinctAreas.
+/// </summary>
+[HarmonyPatch(typeof(ChainedPuzzleInstance), nameof(ChainedPuzzleInstance.Setup))]
+internal static class Patch_ChainedPuzzleInstance_AreaScans
+{
+    static void Prefix(ChainedPuzzleDataBlock data)
+    {
+        Patch_LG_NodeTools._distinctAreas = false;
+
+        if (data?.ChainedPuzzle == null || data.ChainedPuzzle.Count < 2)
+            return;
+
+        for (var i = 0; i < data.ChainedPuzzle.Count; i++)
+        {
+            var type = ZoneScans.Types.Find(
+                t => (uint)t.Component.PuzzleType == data.ChainedPuzzle[i].PuzzleType);
+
+            if (type is null || type.UseZone)
+                return;
+        }
+
+        Patch_LG_NodeTools._distinctAreas = true;
+    }
+
+    static void Postfix() => Patch_LG_NodeTools._distinctAreas = false;
 }

@@ -441,11 +441,7 @@ public partial record Zone : DataBlock<Zone>
         // Zone scans cover the area/zone they're in, so there's nothing to travel to: start them
         // at the door
         if (ZoneScans.IsZoneScanAlarm(puzzle))
-            puzzle = puzzle with
-            {
-                WantedDistanceFromStartPos = 0.0,
-                WantedDistanceBetweenPuzzleComponents = 0.0
-            };
+            puzzle = puzzle with { WantedDistanceFromStartPos = 0.0 };
 
         // Add custom events on alarms
         if (!puzzle.FixedAlarm)
