@@ -21,7 +21,7 @@ public static class ZoneScanAlarms
     /// </summary>
     public static readonly ChainedPuzzle AlarmClass2_AreaScan = new()
     {
-        PublicAlarmName = "Class II Area Alarm",
+        PublicAlarmName = "Class A II Alarm",
         Settings = WaveSettings.Baseline_Easy,
         Population = WavePopulation.Baseline,
         WantedDistanceBetweenPuzzleComponents = 15.0,
@@ -35,7 +35,7 @@ public static class ZoneScanAlarms
 
     public static readonly ChainedPuzzle AlarmClass3_AreaScan = new()
     {
-        PublicAlarmName = "Class III Area Alarm",
+        PublicAlarmName = "Class A III Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
         WantedDistanceBetweenPuzzleComponents = 15.0,
@@ -50,7 +50,7 @@ public static class ZoneScanAlarms
 
     public static readonly ChainedPuzzle AlarmClass4_AreaScan = new()
     {
-        PublicAlarmName = "Class IV Area Alarm",
+        PublicAlarmName = "Class A IV Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
         WantedDistanceBetweenPuzzleComponents = 15.0,
@@ -69,7 +69,7 @@ public static class ZoneScanAlarms
     /// </summary>
     public static readonly ChainedPuzzle AlarmClass1_AreaScan_Sustained = new()
     {
-        PublicAlarmName = "Class S I Area Alarm",
+        PublicAlarmName = "Class S A I Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
         OnlyShowHUDWhenPlayerIsClose = false,
@@ -84,7 +84,7 @@ public static class ZoneScanAlarms
     /// </summary>
     public static readonly ChainedPuzzle AlarmClass1_ZoneScan_Sustained = new()
     {
-        PublicAlarmName = "Class S I Zone Alarm",
+        PublicAlarmName = "Class S Z Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
         OnlyShowHUDWhenPlayerIsClose = false,
