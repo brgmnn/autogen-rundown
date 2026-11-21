@@ -7,6 +7,10 @@ namespace AutogenRundown.DataBlocks.Alarms;
 ///
 /// Every component of these must be a zone scan component with the same area/zone mode:
 /// ZoneScan applies to all scans of a chained puzzle.
+///
+/// They have no travel (no WantedDistanceFromStartPos or WantedDistanceBetweenPuzzleComponents,
+/// Zone.RollAlarms keeps both at 0) and always show the HUD: players can be inside a large
+/// area/zone and far from the scan itself.
 /// </summary>
 public static class ZoneScanAlarms
 {
@@ -18,7 +22,8 @@ public static class ZoneScanAlarms
         PublicAlarmName = "Class II Area Alarm",
         Settings = WaveSettings.Baseline_Easy,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 35.0,
+        WantedDistanceBetweenPuzzleComponents = 0.0,
+        OnlyShowHUDWhenPlayerIsClose = false,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AreaScan,
@@ -31,7 +36,8 @@ public static class ZoneScanAlarms
         PublicAlarmName = "Class III Area Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 35.0,
+        WantedDistanceBetweenPuzzleComponents = 0.0,
+        OnlyShowHUDWhenPlayerIsClose = false,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AreaScan,
@@ -45,7 +51,8 @@ public static class ZoneScanAlarms
         PublicAlarmName = "Class IV Area Alarm",
         Settings = WaveSettings.Baseline_Normal,
         Population = WavePopulation.Baseline,
-        WantedDistanceBetweenPuzzleComponents = 35.0,
+        WantedDistanceBetweenPuzzleComponents = 0.0,
+        OnlyShowHUDWhenPlayerIsClose = false,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AreaScan,
@@ -63,7 +70,7 @@ public static class ZoneScanAlarms
         PublicAlarmName = "Class S I Area Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
-        WantedDistanceFromStartPos = 18.0,
+        OnlyShowHUDWhenPlayerIsClose = false,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.AreaScan_Sustained
@@ -78,6 +85,7 @@ public static class ZoneScanAlarms
         PublicAlarmName = "Class S I Zone Alarm",
         Settings = WaveSettings.Baseline_Hard,
         Population = WavePopulation.Baseline,
+        OnlyShowHUDWhenPlayerIsClose = false,
         Puzzle = new List<PuzzleComponent>
         {
             PuzzleComponent.ZoneScan_Sustained

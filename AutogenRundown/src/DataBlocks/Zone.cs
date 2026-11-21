@@ -1,6 +1,7 @@
 ﻿using AutogenRundown.DataBlocks.Alarms;
 using AutogenRundown.DataBlocks.Custom.AutogenRundown.TerminalPlacements;
 using AutogenRundown.DataBlocks.Custom.ZoneSensors;
+using AutogenRundown.DataBlocks.Custom.ZoneScan;
 using AutogenRundown.DataBlocks.Enemies;
 using AutogenRundown.DataBlocks.Enums;
 using AutogenRundown.DataBlocks.Levels;
@@ -436,6 +437,15 @@ public partial record Zone : DataBlock<Zone>
                 }
             }
         }
+
+        // Zone scans cover the area/zone they're in, so there's nothing to travel to: start them
+        // at the door
+        if (ZoneScans.IsZoneScanAlarm(puzzle))
+            puzzle = puzzle with
+            {
+                WantedDistanceFromStartPos = 0.0,
+                WantedDistanceBetweenPuzzleComponents = 0.0
+            };
 
         // Add custom events on alarms
         if (!puzzle.FixedAlarm)

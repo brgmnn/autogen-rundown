@@ -74,6 +74,12 @@ public static class ZoneScans
         => Types.Find(type => type.Component.Equals(component));
 
     /// <summary>
+    /// Whether every scan of the chained puzzle is a zone scan component
+    /// </summary>
+    public static bool IsZoneScanAlarm(ChainedPuzzle puzzle)
+        => puzzle.Puzzle.Count > 0 && puzzle.Puzzle.All(component => Find(component) is not null);
+
+    /// <summary>
     /// One entry per chained puzzle made of zone scan components.
     /// </summary>
     public static ZoneScanSettings BuildSettings(IEnumerable<ChainedPuzzle> puzzles)
@@ -82,10 +88,10 @@ public static class ZoneScans
 
         foreach (var puzzle in puzzles)
         {
-            var types = puzzle.Puzzle.Select(Find).ToList();
-
-            if (types.Count == 0 || types.Any(type => type is null))
+            if (!IsZoneScanAlarm(puzzle))
                 continue;
+
+            var types = puzzle.Puzzle.Select(Find).ToList();
 
             settings.AllowedPersistentIDs.Add(new ZoneScanEntry
             {
