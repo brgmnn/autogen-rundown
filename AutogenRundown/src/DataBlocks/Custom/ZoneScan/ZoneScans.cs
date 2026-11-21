@@ -27,6 +27,11 @@ public record ZoneScanType
     /// </summary>
     public bool UseZone { get; init; }
 
+    /// <summary>
+    /// True: keep the base scan's colours. False: use the zone scan colours.
+    /// </summary>
+    public bool BaseColors { get; init; }
+
     public string ScanText { get; init; } = "";
 }
 
@@ -51,6 +56,7 @@ public static class ZoneScans
         {
             Component = PuzzleComponent.AreaScan,
             BaseScan = PuzzleType.AllBig,
+            BaseColors = true,
             ScanText = "AREA SCAN - FULL TEAM"
         },
         new ZoneScanType

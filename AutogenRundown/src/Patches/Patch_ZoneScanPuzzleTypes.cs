@@ -19,8 +19,8 @@ namespace AutogenRundown.Patches;
 internal static class Patch_ZoneScanPuzzleTypes
 {
     /// <summary>
-    /// ZoneScan copies the scan's colour onto its boundary graphics, so these are also the
-    /// colours of the outlines.
+    /// Colours of the types that don't keep their base scan's colours. ZoneScan copies the
+    /// scan's colour onto its boundary graphics, so these are also the colours of the outlines.
     /// </summary>
     private static readonly (eChainedPuzzleGraphicsColorMode Mode, Color Color)[] Colors =
     {
@@ -100,8 +100,11 @@ internal static class Patch_ZoneScanPuzzleTypes
 
         var graphics = prefab.GetComponent<CP_Bioscan_Graphics>();
         graphics.m_radius = 0f;
-        graphics.m_colors = new Il2CppReferenceArray<ColorModeColor>(
-            Colors.Select(c => new ColorModeColor { mode = c.Mode, col = c.Color }).ToArray());
+
+        if (!type.BaseColors)
+            graphics.m_colors = new Il2CppReferenceArray<ColorModeColor>(
+                Colors.Select(c => new ColorModeColor { mode = c.Mode, col = c.Color }).ToArray());
+
         graphics.SetText(type.ScanText);
 
         return prefab;
