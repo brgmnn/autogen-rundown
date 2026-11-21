@@ -24,11 +24,17 @@ namespace AutogenRundown;
 ///
 /// For now we just solve this by padding 0's to the front of the guid name. It's not ideal but
 /// it works.
+///
+/// Hard dependencies are loaded before us, along with their own dependencies, so they must not
+/// read our generated files in their Load. AmorLib already pulls in MTFO this way (MTFO reads
+/// datablocks lazily, which is fine). ZoneScan declares no dependencies and only reads its
+/// config on managers setup, after we've generated it.
 /// </summary>
 [BepInPlugin("000-the_tavern-AutogenRundown", "AutogenRundown", Version)]
 [BepInProcess("GTFO.exe")]
 [BepInDependency("dev.gtfomodding.gtfo-api")]
 [BepInDependency("Amor.AmorLib")]
+[BepInDependency("randomguy0753.ZoneScan")]
 public class Plugin : BasePlugin
 {
     public const string Version = "1.2.0";
