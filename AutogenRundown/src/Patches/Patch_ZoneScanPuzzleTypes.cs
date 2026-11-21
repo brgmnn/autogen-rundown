@@ -32,60 +32,29 @@ internal static class Patch_ZoneScanPuzzleTypes
         (eChainedPuzzleGraphicsColorMode.Alarm_TimedOut, new Color(0.35f, 0.00f, 0.60f, 1f)),
     };
 
-    /// <summary>
-    /// Inactive parent of the prefab copies: keeps them out of the level (no Awake/Update) while
-    /// the copies spawned from them are active.
-    /// </summary>
-    private static GameObject? _holder;
-
-    private static readonly Dictionary<uint, GameObject> Prefabs = new();
-
     [HarmonyPostfix]
-    [HarmonyAfter("com.dak.MTFO")]
     [HarmonyPatch(typeof(ChainedPuzzleManager), nameof(ChainedPuzzleManager.OnAssetsLoaded))]
     public static void Post_OnAssetsLoaded(ChainedPuzzleManager __instance)
     {
         var prefabs = __instance.m_puzzleComponentPrefabs;
 
-        if (_holder == null)
-        {
-            _holder = new GameObject("AutogenRundown_ZoneScanPrefabs");
-            _holder.SetActive(false);
-            UnityEngine.Object.DontDestroyOnLoad(_holder);
-            Prefabs.Clear();
-        }
+        // Inactive parent of the prefab copies: keeps them out of the level (no Awake/Update)
+        // while the copies spawned from them are active.
+        var holder = new GameObject("AutogenRundown_ZoneScanPrefabs");
+        holder.SetActive(false);
+        UnityEngine.Object.DontDestroyOnLoad(holder);
 
         foreach (var type in ZoneScans.Types)
-        {
-            var id = (uint)type.Component.PuzzleType;
+            prefabs.Add(
+                (uint)type.Component.PuzzleType,
+                CreatePrefab(type, prefabs[(uint)type.BaseScan], holder.transform));
 
-            if (prefabs.ContainsKey(id))
-            {
-                Plugin.Logger.LogWarning($"[ZoneScan] Puzzle component type {id} is already registered, skipping");
-                continue;
-            }
-
-            if (!Prefabs.TryGetValue(id, out var prefab) || prefab == null)
-            {
-                if (!prefabs.ContainsKey((uint)type.BaseScan))
-                {
-                    Plugin.Logger.LogError($"[ZoneScan] Base scan {(uint)type.BaseScan} for type {id} is not loaded");
-                    continue;
-                }
-
-                prefab = CreatePrefab(type, prefabs[(uint)type.BaseScan]);
-                Prefabs[id] = prefab;
-            }
-
-            prefabs.Add(id, prefab);
-        }
-
-        Plugin.Logger.LogDebug($"[ZoneScan] Registered {Prefabs.Count} zone scan puzzle component types");
+        Plugin.Logger.LogDebug($"[ZoneScan] Registered {ZoneScans.Types.Count} zone scan puzzle component types");
     }
 
-    private static GameObject CreatePrefab(ZoneScanType type, GameObject basePrefab)
+    private static GameObject CreatePrefab(ZoneScanType type, GameObject basePrefab, Transform holder)
     {
-        var prefab = UnityEngine.Object.Instantiate(basePrefab, _holder!.transform);
+        var prefab = UnityEngine.Object.Instantiate(basePrefab, holder);
         prefab.name = $"{basePrefab.name}_ZoneScan_{(uint)type.Component.PuzzleType}";
 
         // Whole team required, so team size doesn't change the duration
