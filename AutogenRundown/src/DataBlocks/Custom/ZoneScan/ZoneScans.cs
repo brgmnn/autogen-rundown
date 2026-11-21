@@ -1,5 +1,4 @@
 using AutogenRundown.DataBlocks.Alarms;
-using AutogenRundown.DataBlocks.Custom.MTFO;
 using BepInEx;
 using Newtonsoft.Json;
 
@@ -14,7 +13,7 @@ public record ZoneScanType
     public PuzzleComponent Component { get; init; } = new();
 
     /// <summary>
-    /// Vanilla puzzle component the custom MTFO type is cloned from (prefab, sounds, HUD).
+    /// Vanilla puzzle component whose prefab is copied (sounds, HUD, sustained behaviour).
     /// </summary>
     public PuzzleType BaseScan { get; init; }
 
@@ -37,8 +36,8 @@ public record ZoneScanType
 /// ZoneScan replaces the radius check of every bioscan in the chained puzzles listed in
 /// Custom/ZoneScanConfig/ZoneScanSettings.jsonc (read on managers setup, after we generate) with
 /// "players in the scan's area" or "players in the scan's zone", and outlines that area on its
-/// doors and open dividers. The vanilla scan circle stays, so the scan components are MTFO custom
-/// puzzle types (Custom/PuzzleTypes.json) with a zero radius circle.
+/// doors and open dividers. The vanilla scan circle stays, so the components are our own puzzle
+/// component types with a zero radius circle, registered by Patch_ZoneScanPuzzleTypes.
 ///
 /// ZoneScan works per chained puzzle, not per component: every scan of a listed chained puzzle
 /// becomes an area/zone scan. Chained puzzles must therefore use only components from
@@ -71,45 +70,8 @@ public static class ZoneScans
         },
     };
 
-    /// <summary>
-    /// ZoneScan copies the scan's colour onto the boundary graphics, so these are also the
-    /// colours of the outlines.
-    /// </summary>
-    private static readonly List<ColorByMode> Colors = new()
-    {
-        new ColorByMode { Mode = ColorMode.Waiting,        R = 0.00, G = 0.60, B = 1.00 },
-        new ColorByMode { Mode = ColorMode.Active,         R = 0.20, G = 0.85, B = 1.00 },
-        new ColorByMode { Mode = ColorMode.TimedOut,       R = 0.40, G = 0.40, B = 0.40 },
-        new ColorByMode { Mode = ColorMode.Alarm_Waiting,  R = 0.60, G = 0.00, B = 1.00 },
-        new ColorByMode { Mode = ColorMode.Alarm_Active,   R = 0.85, G = 0.25, B = 1.00 },
-        new ColorByMode { Mode = ColorMode.Alarm_TimedOut, R = 0.35, G = 0.00, B = 0.60 },
-    };
-
     public static ZoneScanType? Find(PuzzleComponent component)
         => Types.Find(type => type.Component.Equals(component));
-
-    public static CustomBioScan ToCustomBioScan(ZoneScanType type)
-    {
-        // Flat speeds: the whole team is required, so team size shouldn't change the duration
-        var speed = 1.0 / type.Component.Duration;
-
-        return new CustomBioScan
-        {
-            PersistentID = (uint)type.Component.PuzzleType,
-            BaseScan = (uint)type.BaseScan,
-            PlayerRequirement = PlayerRequirement.All,
-            ScanRadius = 1.0,
-            PlayersInScanMulti = new List<double> { speed, speed, speed, speed },
-            ReduceWhenNoPlayer = type.Sustained,
-            ReduceSpeed = type.Sustained ? speed / 2 : 0.0,
-            BioScanGraphics = new BioScanGraphics
-            {
-                ScanText = type.ScanText,
-                Radius = 0.0,
-                ColorModeColor = Colors
-            }
-        };
-    }
 
     /// <summary>
     /// One entry per chained puzzle made of zone scan components.
@@ -136,13 +98,11 @@ public static class ZoneScans
     }
 
     /// <summary>
-    /// Writes both config files. Call after the chained puzzles are saved, they need their
+    /// Writes ZoneScan's config. Call after the chained puzzles are saved, they need their
     /// persistent IDs.
     /// </summary>
     public static void Save()
     {
-        new PuzzleTypes { Scans = Types.Select(ToCustomBioScan).ToList() }.Save();
-
         var settings = BuildSettings(Bins.ChainedPuzzles.Blocks);
 
         settings.Save();

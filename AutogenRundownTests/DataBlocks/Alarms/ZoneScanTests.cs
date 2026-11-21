@@ -1,9 +1,6 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using AutogenRundown;
 using AutogenRundown.DataBlocks;
 using AutogenRundown.DataBlocks.Alarms;
-using AutogenRundown.DataBlocks.Custom.MTFO;
 using AutogenRundown.DataBlocks.Custom.ZoneScan;
 using Newtonsoft.Json;
 
@@ -69,36 +66,6 @@ public class ZoneScan_Tests
         Assert.IsTrue(settings.AllowedPersistentIDs.All(entry => entry.AutoGenScanGraphic));
     }
 
-    [TestMethod]
-    public void Test_PuzzleTypesParseAsMtfoCustomScans()
-    {
-        var json = JsonConvert.SerializeObject(
-            new PuzzleTypes { Scans = ZoneScans.Types.Select(ZoneScans.ToCustomBioScan).ToList() });
-
-        // MTFO's options: case insensitive, string enums
-        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        options.Converters.Add(new JsonStringEnumConverter());
-
-        var holder = System.Text.Json.JsonSerializer.Deserialize<ScanHolderMirror>(json, options)!;
-
-        Assert.IsNotNull(holder.Clusters);
-        Assert.AreEqual(ZoneScans.Types.Count, holder.Scans.Count);
-
-        foreach (var scan in holder.Scans)
-        {
-            var type = ZoneScans.Types.Single(t => (uint)t.Component.PuzzleType == scan.PersistentID);
-
-            Assert.AreEqual(MirrorPlayerRequirement.All, scan.PlayerRequirement);
-            Assert.AreEqual(0f, scan.BioScanGraphics.Radius);
-            Assert.AreEqual(4, scan.PlayersInScanMulti.Length);
-            Assert.AreEqual(1.0 / type.Component.Duration, scan.PlayersInScanMulti[0], 1e-6);
-            Assert.AreEqual(type.Sustained, scan.ReduceWhenNoPlayer);
-            CollectionAssert.IsSubsetOf(
-                new[] { MirrorColorMode.Waiting, MirrorColorMode.Active, MirrorColorMode.Alarm_Waiting, MirrorColorMode.Alarm_Active },
-                scan.BioScanGraphics.ColorModeColor.Select(c => c.Mode).ToList());
-        }
-    }
-
     #region Consumer mirrors
     private class ZoneScanSettingsMirror
     {
@@ -110,40 +77,6 @@ public class ZoneScan_Tests
         public uint ID { get; set; }
         public bool UseZoneInsteadOfNode { get; set; }
         public bool AutoGenScanGraphic { get; set; }
-    }
-
-    private enum MirrorPlayerRequirement { None, All, Solo }
-
-    private enum MirrorColorMode { NotSet, Waiting, Active, TimedOut, Alarm_Waiting, Alarm_Active, Alarm_TimedOut }
-
-    private class ScanHolderMirror
-    {
-        public List<CustomBioScanMirror> Scans { get; set; } = new();
-        public List<object>? Clusters { get; set; }
-    }
-
-    private class CustomBioScanMirror
-    {
-        public uint BaseScan { get; set; }
-        public uint PersistentID { get; set; }
-        public MirrorPlayerRequirement PlayerRequirement { get; set; }
-        public float ScanRadius { get; set; }
-        public float[] PlayersInScanMulti { get; set; } = Array.Empty<float>();
-        public float ReduceSpeed { get; set; }
-        public bool ReduceWhenNoPlayer { get; set; }
-        public BioScanGxMirror BioScanGraphics { get; set; } = new();
-    }
-
-    private class BioScanGxMirror
-    {
-        public string ScanText { get; set; } = "";
-        public float Radius { get; set; }
-        public List<ColorMirror> ColorModeColor { get; set; } = new();
-    }
-
-    private class ColorMirror
-    {
-        public MirrorColorMode Mode { get; set; }
     }
     #endregion
 }

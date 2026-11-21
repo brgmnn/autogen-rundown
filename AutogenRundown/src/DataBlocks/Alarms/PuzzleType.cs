@@ -96,8 +96,8 @@ public enum PuzzleType : uint
 
     #region ZoneScan (area/zone) scans
 
-    // MTFO custom puzzle types written to Custom/PuzzleTypes.json, see ZoneScans. They clone a
-    // vanilla scan with a zero radius circle; the ZoneScan plugin then scans the whole area or
+    // Puzzle component types registered by Patch_ZoneScanPuzzleTypes, see ZoneScans. They copy
+    // a vanilla scan with a zero radius circle; the ZoneScan plugin then scans the whole area or
     // zone the scan sits in and draws the scan boundary on its doors and dividers.
     //
     // IDs must not collide with any ChainedPuzzleType block (vanilla <= 62, ours: 100).
