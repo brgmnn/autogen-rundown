@@ -218,6 +218,14 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_CrossReferenceDossier(start);
                         AddUplinkTerminalZones(end, objective);
                     }),
+
+                    // Tiny area alarm - room-to-room scan fight (3-4+N zones)
+                    (0.20, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                        var (end, _) = AddTinyAreaAlarmZone(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
                 });
                 break;
             }
@@ -267,6 +275,14 @@ public partial record LevelLayout
                         var (end, _) = AddTravelScanAlarm(level.GenHubGeomorph(nodes.Last()));
                         AddUplinkTerminalZones(end, objective);
                     }),
+
+                    // Tiny area alarm gate
+                    (0.15, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (end, _) = AddTinyAreaAlarmZone(nodes.Last());
+                        AddUplinkTerminalZones(end, objective);
+                    }),
                 });
                 break;
             }
@@ -306,6 +322,14 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (mid, _) = AddTravelScanAlarm(start);
+                        var (end, _) = BuildChallenge_KeycardInSide(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Tiny area alarm + keycard gate
+                    (0.15, () =>
+                    {
+                        var (mid, _) = AddTinyAreaAlarmZone(start);
                         var (end, _) = BuildChallenge_KeycardInSide(mid);
                         AddUplinkTerminalZones(end, objective);
                     }),
@@ -431,6 +455,15 @@ public partial record LevelLayout
                     AddUplinkTerminalZones(end, objective);
                 }));
 
+                // Tiny area alarm + keycard - room-to-room scan fight (5-6+N zones)
+                options.Add((0.15, () =>
+                {
+                    var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                    var (mid, _) = AddTinyAreaAlarmZone(nodes.Last());
+                    var (end, _) = BuildChallenge_KeycardInSide(mid);
+                    AddUplinkTerminalZones(end, objective);
+                }));
+
                 Generator.SelectRun(options);
                 break;
             }
@@ -489,6 +522,14 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
                         AddUplinkTerminalZones(end, objective);
                     }),
+
+                    // Tiny area alarm + generator gate
+                    (0.15, () =>
+                    {
+                        var (mid, _) = AddTinyAreaAlarmZone(start);
+                        var (end, _) = BuildChallenge_GeneratorCellInZone(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
                 });
                 break;
             }
@@ -532,6 +573,14 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (mid, _) = AddTravelScanAlarm(start);
+                        var (end, _) = BuildChallenge_KeycardInSide(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Tiny area alarm + keycard gate
+                    (0.15, () =>
+                    {
+                        var (mid, _) = AddTinyAreaAlarmZone(start);
                         var (end, _) = BuildChallenge_KeycardInSide(mid);
                         AddUplinkTerminalZones(end, objective);
                     }),
@@ -669,6 +718,14 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_ForensicReconstruction(start);
                         AddUplinkTerminalZones(end, objective);
                     }),
+
+                    // Tiny area alarm + boss gate
+                    (0.10, () =>
+                    {
+                        var (mid, _) = AddTinyAreaAlarmZone(start);
+                        var (end, _) = BuildChallenge_BossFight(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
                 });
                 break;
             }
@@ -733,6 +790,14 @@ public partial record LevelLayout
                         var (end, _) = BuildChallenge_BossFight(mid);
                         AddUplinkTerminalZones(end, objective);
                     }),
+
+                    // Tiny area alarm + boss gate
+                    (0.10, () =>
+                    {
+                        var (mid, _) = AddTinyAreaAlarmZone(start);
+                        var (end, _) = BuildChallenge_BossFight(mid);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
                 });
                 break;
             }
@@ -783,6 +848,14 @@ public partial record LevelLayout
                             mid,
                             WavePopulation.Baseline_Hybrids,
                             WaveSettings.Baseline_Hard);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Forward + tiny area alarm (3-4+N zones)
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(1, 2));
+                        var (end, _) = AddTinyAreaAlarmZone(nodes.Last());
                         AddUplinkTerminalZones(end, objective);
                     }),
                 };
@@ -920,6 +993,14 @@ public partial record LevelLayout
                     AddUplinkTerminalZones(end, objective);
                 }));
 
+                // Tiny area alarm + keycard - room-to-room scan fight (3+N zones)
+                options.Add((0.20, () =>
+                {
+                    var (mid, _) = AddTinyAreaAlarmZone(start);
+                    var (end, _) = BuildChallenge_KeycardInZone(mid);
+                    AddUplinkTerminalZones(end, objective);
+                }));
+
                 Generator.SelectRun(options);
                 break;
             }
@@ -970,6 +1051,14 @@ public partial record LevelLayout
                             mid,
                             WavePopulation.Baseline_Hybrids,
                             WaveSettings.Baseline_Hard);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Tiny area alarm + boss (3+N zones)
+                    (0.25, () =>
+                    {
+                        var (mid, _) = AddTinyAreaAlarmZone(start);
+                        var (end, _) = BuildChallenge_BossFight(mid);
                         AddUplinkTerminalZones(end, objective);
                     }),
                 };
@@ -1038,6 +1127,14 @@ public partial record LevelLayout
                             mid,
                             WavePopulation.Baseline_Hybrids,
                             WaveSettings.Baseline_VeryHard);
+                        AddUplinkTerminalZones(end, objective);
+                    }),
+
+                    // Boss + tiny area alarm (3+N zones)
+                    (0.20, () =>
+                    {
+                        var (mid, _) = BuildChallenge_BossFight(start);
+                        var (end, _) = AddTinyAreaAlarmZone(mid);
                         AddUplinkTerminalZones(end, objective);
                     }),
                 };

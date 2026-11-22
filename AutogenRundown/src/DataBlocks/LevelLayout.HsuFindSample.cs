@@ -276,6 +276,20 @@ public partial record LevelLayout
                         var keycard = BuildBranch(mid, 1, "keycard");
                         AddKeycardPuzzle(locked, keycard);
                     }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        // Configure the wave population
+                        var population = WavePopulation.Baseline;
+
+                        if (level.Settings.HasShadows())
+                            population = Generator.Flip(0.4) ? WavePopulation.OnlyShadows : WavePopulation
+                                .Baseline_Shadows;
+
+                        var (end, _) = AddTinyAreaAlarmZone(start, population);
+                        planner.UpdateNode(end with { Branch = "hsu_sample" });
+                    }),
                 });
                 break;
             }
@@ -530,6 +544,26 @@ public partial record LevelLayout
                         var keycard = BuildBranch(mid, 1, "keycard");
                         AddKeycardPuzzle(locked, keycard);
                     }),
+
+                    // Tiny area alarm
+                    (0.15, () =>
+                    {
+                        // Configure the wave population
+                        var population = WavePopulation.Baseline_Hybrids;
+
+                        if (level.Settings.HasShadows())
+                            population = Generator.Flip(0.4) ? WavePopulation.OnlyShadows : WavePopulation
+                                .Baseline_Shadows;
+
+                        // Chargers first, then flyers
+                        if (level.Settings.HasChargers())
+                            population = WavePopulation.Baseline_Chargers;
+                        else if (level.Settings.HasFlyers())
+                            population = WavePopulation.Baseline_Flyers;
+
+                        var (end, _) = AddTinyAreaAlarmZone(start, population);
+                        planner.UpdateNode(end with { Branch = "hsu_sample" });
+                    }),
                 });
                 break;
             }
@@ -697,6 +731,22 @@ public partial record LevelLayout
                         endZone.ToolPacks += 2;
                         endZone.AmmoPacks += 3;
                     }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        var population = WavePopulation.Baseline_Hybrids;
+
+                        if (level.Settings.HasShadows())
+                            population = Generator.Flip(0.4) ? WavePopulation.OnlyShadows : WavePopulation.Baseline_Shadows;
+                        if (level.Settings.HasChargers())
+                            population = WavePopulation.Baseline_Chargers;
+                        else if (level.Settings.HasFlyers())
+                            population = WavePopulation.Baseline_Flyers;
+
+                        var (end, _) = AddTinyAreaAlarmZone(start, population);
+                        planner.UpdateNode(end with { Branch = "hsu_sample" });
+                    }),
                 });
                 break;
             }
@@ -835,6 +885,15 @@ public partial record LevelLayout
                         var (locked, _) = AddZone(mid, new ZoneNode { Branch = "hsu_sample" });
                         var keycard = BuildBranch(mid, 1, "keycard");
                         AddKeycardPuzzle(locked, keycard);
+                    }),
+
+                    // Tiny area alarm
+                    (0.15, () =>
+                    {
+                        var (end, endZone) = AddTinyAreaAlarmZone(start);
+                        planner.UpdateNode(end with { Branch = "hsu_sample" });
+
+                        endZone.Coverage = CoverageMinMax.Medium;
                     }),
                 });
                 break;
@@ -1005,6 +1064,22 @@ public partial record LevelLayout
                             WaveSettings.Baseline_Hard);
                         planner.UpdateNode(end with { Branch = "hsu_sample" });
                     }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        var population = WavePopulation.Baseline_Hybrids;
+
+                        if (level.Settings.HasShadows())
+                            population = Generator.Flip(0.4) ? WavePopulation.OnlyShadows : WavePopulation.Baseline_Shadows;
+                        if (level.Settings.HasChargers())
+                            population = WavePopulation.Baseline_Chargers;
+                        else if (level.Settings.HasFlyers())
+                            population = WavePopulation.Baseline_Flyers;
+
+                        var (end, _) = AddTinyAreaAlarmZone(start, population);
+                        planner.UpdateNode(end with { Branch = "hsu_sample" });
+                    }),
                 });
                 break;
             }
@@ -1164,6 +1239,15 @@ public partial record LevelLayout
                         var (hsu, hsuZone) = AddZone(node2, new ZoneNode { Branch = "hsu_sample" });
                         hsuZone.Coverage = CoverageMinMax.Medium;
                         AddKeycardPuzzle(hsu, keycard2);
+                    }),
+
+                    // Tiny area alarm
+                    (0.15, () =>
+                    {
+                        var (end, endZone) = AddTinyAreaAlarmZone(start);
+                        planner.UpdateNode(end with { Branch = "hsu_sample" });
+
+                        endZone.Coverage = CoverageMinMax.Medium;
                     }),
                 });
                 break;
@@ -1335,6 +1419,22 @@ public partial record LevelLayout
                             mid,
                             WavePopulation.Baseline_Hybrids,
                             WaveSettings.Baseline_VeryHard);
+                        planner.UpdateNode(end with { Branch = "hsu_sample" });
+                    }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        var population = WavePopulation.Baseline_Hybrids;
+
+                        if (level.Settings.HasShadows())
+                            population = Generator.Flip(0.4) ? WavePopulation.OnlyShadows : WavePopulation.Baseline_Shadows;
+                        if (level.Settings.HasChargers())
+                            population = WavePopulation.Baseline_Chargers;
+                        else if (level.Settings.HasFlyers())
+                            population = WavePopulation.Baseline_Flyers;
+
+                        var (end, _) = AddTinyAreaAlarmZone(start, population);
                         planner.UpdateNode(end with { Branch = "hsu_sample" });
                     }),
                 });

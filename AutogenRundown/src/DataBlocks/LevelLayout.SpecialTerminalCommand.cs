@@ -152,6 +152,12 @@ public partial record LevelLayout
                     {
                         (end, endZone) = BuildChallenge_LockedTerminalDoor(start, 1);
                     }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        (end, endZone) = AddTinyAreaAlarmZone(start);
+                    }),
                 });
                 break;
             }
@@ -190,6 +196,12 @@ public partial record LevelLayout
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
                         (end, endZone) = BuildChallenge_KeycardInSide(travelEnd);
+                    }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        (end, endZone) = AddTinyAreaAlarmZone(start);
                     }),
                 });
                 break;
@@ -231,6 +243,12 @@ public partial record LevelLayout
                         (end, endZone) = BuildChallenge_ErrorWithOff_KeycardInSide(
                             start, Generator.Between(2, 3), 1, 1);
                     }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        (end, endZone) = AddTinyAreaAlarmZone(start);
+                    }),
                 });
                 break;
             }
@@ -269,6 +287,12 @@ public partial record LevelLayout
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
                         (end, endZone) = BuildChallenge_BossFight(travelEnd);
+                    }),
+
+                    // Tiny area alarm
+                    (0.25, () =>
+                    {
+                        (end, endZone) = AddTinyAreaAlarmZone(start);
                     }),
                 });
                 break;
@@ -439,6 +463,12 @@ public partial record LevelLayout
                         end = nodes.Last();
                         endZone = planner.GetZone(end)!;
                     }),
+
+                    // Tiny area alarm
+                    (0.15, () =>
+                    {
+                        (end, endZone) = AddTinyAreaAlarmZone(start);
+                    }),
                 });
                 break;
             }
@@ -481,6 +511,12 @@ public partial record LevelLayout
                         end = nodes.Last();
                         endZone = planner.GetZone(end)!;
                     }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        (end, endZone) = AddTinyAreaAlarmZone(start);
+                    }),
                 });
                 break;
             }
@@ -520,6 +556,12 @@ public partial record LevelLayout
                     {
                         var nodes = AddBranch_Forward(start, 2);
                         (end, endZone) = BuildChallenge_LockedTerminalDoor(nodes.Last(), 0);
+                    }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        (end, endZone) = AddTinyAreaAlarmZone(start);
                     }),
                 });
                 break;
@@ -563,6 +605,12 @@ public partial record LevelLayout
                         end = nodes.Last();
                         endZone = planner.GetZone(end)!;
                         AddKeyedPuzzle(end, "special_terminal", 2);
+                    }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        (end, endZone) = AddTinyAreaAlarmZone(start);
                     }),
                 });
                 break;
@@ -662,6 +710,12 @@ public partial record LevelLayout
                         end = nodes.Last();
                         endZone = planner.GetZone(end)!;
                     }),
+
+                    // Tiny area alarm
+                    (0.25, () =>
+                    {
+                        (end, endZone) = AddTinyAreaAlarmZone(start);
+                    }),
                 });
                 break;
             }
@@ -706,6 +760,12 @@ public partial record LevelLayout
                         end = nodes.Last();
                         endZone = planner.GetZone(end)!;
                     }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        (end, endZone) = AddTinyAreaAlarmZone(start);
+                    }),
                 });
                 break;
             }
@@ -742,6 +802,12 @@ public partial record LevelLayout
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
                         (end, endZone) = BuildChallenge_GeneratorCellInSide(travelEnd);
+                    }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        (end, endZone) = AddTinyAreaAlarmZone(start);
                     }),
                 });
                 break;
@@ -783,6 +849,12 @@ public partial record LevelLayout
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
                         (end, endZone) = BuildChallenge_BossFight(travelEnd);
+                    }),
+
+                    // Tiny area alarm
+                    (0.25, () =>
+                    {
+                        (end, endZone) = AddTinyAreaAlarmZone(start);
                     }),
                 });
                 break;
@@ -910,6 +982,12 @@ public partial record LevelLayout
                     {
                         (hillStart, _) = BuildChallenge_GeneratorCellInZone(start);
                     }),
+
+                    // Tiny area alarm
+                    (0.30, () =>
+                    {
+                        (hillStart, _) = AddTinyAreaAlarmZone(start);
+                    }),
                 });
                 break;
             }
@@ -943,6 +1021,12 @@ public partial record LevelLayout
                     (0.20, () =>
                     {
                         (hillStart, _) = AddTravelScanAlarm(start);
+                    }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        (hillStart, _) = AddTinyAreaAlarmZone(start);
                     }),
                 });
                 break;
@@ -978,6 +1062,12 @@ public partial record LevelLayout
                     (0.20, () =>
                     {
                         (hillStart, _) = BuildChallenge_ErrorWithOff_KeycardInSide(start, 1, 1, 1);
+                    }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        (hillStart, _) = AddTinyAreaAlarmZone(start);
                     }),
                 });
                 break;
@@ -1015,6 +1105,12 @@ public partial record LevelLayout
                         var nodes = AddBranch_Forward(start, 1);
                         AddSecuritySensors(nodes.Last());
                         (hillStart, _) = BuildChallenge_KeycardInSide(nodes.Last(), 2);
+                    }),
+
+                    // Tiny area alarm
+                    (0.25, () =>
+                    {
+                        (hillStart, _) = AddTinyAreaAlarmZone(start);
                     }),
                 });
                 break;

@@ -154,6 +154,13 @@ public partial record LevelLayout
                         end = endNodes.Last();
                         endZone = planner.GetZone(end)!;
                     }),
+
+                    // Tiny area alarm
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        (end, endZone) = AddTinyAreaAlarmZone(nodes.Last());
+                    }),
                 });
 
                 planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
@@ -260,6 +267,23 @@ public partial record LevelLayout
                         planner.UpdateNode(travelEnd with { Tags = travelEnd.Tags.Extend("uplink_terminal") });
                         planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
                     }),
+
+                    // Keycard to tiny area alarm
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last());
+
+                        mid = level.GenCorridorGeomorph(mid);
+
+                        var (mid2, mid2Zone) = AddZone(mid);
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+
+                        (end, endZone) = AddTinyAreaAlarmZone(mid2);
+
+                        planner.UpdateNode(mid2 with { Tags = mid2.Tags.Extend("uplink_terminal") });
+                        planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
+                    }),
                 });
                 break;
             }
@@ -338,6 +362,20 @@ public partial record LevelLayout
                         var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
                         end = endNodes.Last();
                         endZone = planner.GetZone(end)!;
+                    }),
+
+                    // Keycard to tiny area alarm
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last());
+
+                        mid = level.GenCorridorGeomorph(mid);
+
+                        var (mid2, mid2Zone) = AddZone(mid);
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+
+                        (end, endZone) = AddTinyAreaAlarmZone(mid2);
                     }),
                 });
 
@@ -443,6 +481,23 @@ public partial record LevelLayout
                         endZone = planner.GetZone(end)!;
 
                         planner.UpdateNode(travelEnd with { Tags = travelEnd.Tags.Extend("uplink_terminal") });
+                        planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
+                    }),
+
+                    // Keycard to tiny area alarm
+                    (0.20, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last(), Generator.Between(1, 2));
+
+                        mid = level.GenCorridorGeomorph(mid);
+
+                        var (mid2, mid2Zone) = AddZone(mid);
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+
+                        (end, endZone) = AddTinyAreaAlarmZone(mid2);
+
+                        planner.UpdateNode(mid2 with { Tags = mid2.Tags.Extend("uplink_terminal") });
                         planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
                     }),
                 });
@@ -592,6 +647,20 @@ public partial record LevelLayout
                         end = endNodes.Last();
                         endZone = planner.GetZone(end)!;
                     }),
+
+                    // Keycard to tiny area alarm
+                    (0.20, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last(), Generator.Between(1, 2));
+
+                        mid = level.GenCorridorGeomorph(mid);
+
+                        var (mid2, mid2Zone) = AddZone(mid);
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+
+                        (end, endZone) = AddTinyAreaAlarmZone(mid2);
+                    }),
                 });
 
                 planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
@@ -679,6 +748,19 @@ public partial record LevelLayout
 
                         planner.UpdateNode(start with { Tags = start.Tags.Extend("uplink_terminal") });
                         planner.UpdateNode(travelEnd with { Tags = travelEnd.Tags.Extend("uplink_terminal") });
+                        planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
+                    }),
+
+                    // Tiny area alarm gate
+                    (0.15, () =>
+                    {
+                        var (alarmEnd, _) = AddTinyAreaAlarmZone(start);
+                        var endNodes = AddBranch_Forward(alarmEnd, 1);
+                        end = endNodes.Last();
+                        endZone = planner.GetZone(end)!;
+
+                        planner.UpdateNode(start with { Tags = start.Tags.Extend("uplink_terminal") });
+                        planner.UpdateNode(alarmEnd with { Tags = alarmEnd.Tags.Extend("uplink_terminal") });
                         planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
                     }),
                 });
@@ -850,6 +932,24 @@ public partial record LevelLayout
                         endZone = planner.GetZone(end)!;
 
                         planner.UpdateNode(travelEnd with { Tags = travelEnd.Tags.Extend("uplink_terminal") });
+                        planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
+                    }),
+
+                    // Boss fight to tiny area alarm
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+
+                        var (mid, midZone) = BuildChallenge_BossFight(nodes.Last());
+
+                        mid = level.GenCorridorGeomorph(mid);
+
+                        var (mid2, mid2Zone) = AddZone(mid);
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+
+                        (end, endZone) = AddTinyAreaAlarmZone(mid2);
+
+                        planner.UpdateNode(mid2 with { Tags = mid2.Tags.Extend("uplink_terminal") });
                         planner.UpdateNode(end with { Tags = end.Tags.Extend("uplink_terminal") });
                     }),
                 });

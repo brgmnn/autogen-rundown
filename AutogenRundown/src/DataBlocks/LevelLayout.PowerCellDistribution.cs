@@ -383,6 +383,15 @@ public partial record LevelLayout
                         PlaceGeneratorsInZone(genNodes.Last(), numGens);
                         AddForwardExtractStart(genNodes.Last());
                     }),
+
+                    // Tiny area alarm gate
+                    (0.15, () =>
+                    {
+                        var (alarmEnd, _) = AddTinyAreaAlarmZone(start);
+                        var genNodes = AddBranch(alarmEnd, isMainOnly ? 2 : 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
+                        AddForwardExtractStart(genNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -423,6 +432,14 @@ public partial record LevelLayout
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
                         var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
+                    }),
+
+                    // Tiny area alarm gate
+                    (0.15, () =>
+                    {
+                        var (alarmEnd, _) = AddTinyAreaAlarmZone(start);
+                        var genNodes = AddBranch(alarmEnd, 1, "generator");
                         PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
@@ -491,6 +508,14 @@ public partial record LevelLayout
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
                         var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
+                    }),
+
+                    // Tiny area alarm gate
+                    (0.15, () =>
+                    {
+                        var (alarmEnd, _) = AddTinyAreaAlarmZone(start);
+                        var genNodes = AddBranch(alarmEnd, 1, "generator");
                         PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
@@ -637,6 +662,27 @@ public partial record LevelLayout
                         PlaceGeneratorsInZone(genZoneB.Last(), secondCount);
                         AddForwardExtractStart(genZoneB.Last());
                     }),
+
+                    // Tiny area alarm gate — alarm → 1-2 approach zones → 2 gen zones (gens split across both)
+                    (0.15, () =>
+                    {
+                        var (alarmEnd, _) = AddTinyAreaAlarmZone(start);
+                        var approach = AddBranch(
+                            alarmEnd,
+                            isMainOnly ? Generator.Between(2, 3) : Generator.Between(1, 2),
+                            "approach");
+
+                        var firstCount = numGens / 2;
+                        var secondCount = numGens - firstCount;
+
+                        var genZoneA = AddBranch(approach.Last(), 1, "generator_a");
+                        PlaceGeneratorsInZone(genZoneA.Last(), firstCount);
+                        AddForwardExtractStart(genZoneA.Last());
+
+                        var genZoneB = AddBranch(genZoneA.Last(), 1, "generator_b");
+                        PlaceGeneratorsInZone(genZoneB.Last(), secondCount);
+                        AddForwardExtractStart(genZoneB.Last());
+                    }),
                 });
                 break;
             }
@@ -701,6 +747,14 @@ public partial record LevelLayout
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
                         var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
+                    }),
+
+                    // Tiny area alarm gate
+                    (0.15, () =>
+                    {
+                        var (alarmEnd, _) = AddTinyAreaAlarmZone(start);
+                        var genNodes = AddBranch(alarmEnd, 1, "generator");
                         PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
@@ -791,6 +845,14 @@ public partial record LevelLayout
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
                         var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
+                    }),
+
+                    // Tiny area alarm gate
+                    (0.15, () =>
+                    {
+                        var (alarmEnd, _) = AddTinyAreaAlarmZone(start);
+                        var genNodes = AddBranch(alarmEnd, 1, "generator");
                         PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
@@ -1007,6 +1069,27 @@ public partial record LevelLayout
                         PlaceGeneratorsInZone(genZoneB.Last(), secondCount);
                         AddForwardExtractStart(genZoneB.Last());
                     }),
+
+                    // Tiny area alarm gate — alarm → 1-2 approach zones → 2 gen zones (gens split across both)
+                    (0.15, () =>
+                    {
+                        var (alarmEnd, _) = AddTinyAreaAlarmZone(start);
+                        var approach = AddBranch(
+                            alarmEnd,
+                            isMainOnly ? Generator.Between(2, 3) : Generator.Between(1, 2),
+                            "approach");
+
+                        var firstCount = numGens / 2;
+                        var secondCount = numGens - firstCount;
+
+                        var genZoneA = AddBranch(approach.Last(), 1, "generator_a");
+                        PlaceGeneratorsInZone(genZoneA.Last(), firstCount);
+                        AddForwardExtractStart(genZoneA.Last());
+
+                        var genZoneB = AddBranch(genZoneA.Last(), 1, "generator_b");
+                        PlaceGeneratorsInZone(genZoneB.Last(), secondCount);
+                        AddForwardExtractStart(genZoneB.Last());
+                    }),
                 });
                 break;
             }
@@ -1103,6 +1186,14 @@ public partial record LevelLayout
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
                         var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
+                    }),
+
+                    // Tiny area alarm gate
+                    (0.15, () =>
+                    {
+                        var (alarmEnd, _) = AddTinyAreaAlarmZone(start);
+                        var genNodes = AddBranch(alarmEnd, 1, "generator");
                         PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
@@ -1232,6 +1323,14 @@ public partial record LevelLayout
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
                         var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
+                    }),
+
+                    // Tiny area alarm gate
+                    (0.15, () =>
+                    {
+                        var (alarmEnd, _) = AddTinyAreaAlarmZone(start);
+                        var genNodes = AddBranch(alarmEnd, 1, "generator");
                         PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
@@ -1492,6 +1591,27 @@ public partial record LevelLayout
                         PlaceGeneratorsInZone(genZoneB.Last(), secondCount);
                         AddForwardExtractStart(genZoneB.Last());
                     }),
+
+                    // Tiny area alarm gate — alarm → 1-2 approach zones → 2 gen zones (gens split across both)
+                    (0.15, () =>
+                    {
+                        var (alarmEnd, _) = AddTinyAreaAlarmZone(start);
+                        var approach = AddBranch(
+                            alarmEnd,
+                            isMainOnly ? Generator.Between(2, 3) : Generator.Between(1, 2),
+                            "approach");
+
+                        var firstCount = numGens / 2;
+                        var secondCount = numGens - firstCount;
+
+                        var genZoneA = AddBranch(approach.Last(), 1, "generator_a");
+                        PlaceGeneratorsInZone(genZoneA.Last(), firstCount);
+                        AddForwardExtractStart(genZoneA.Last());
+
+                        var genZoneB = AddBranch(genZoneA.Last(), 1, "generator_b");
+                        PlaceGeneratorsInZone(genZoneB.Last(), secondCount);
+                        AddForwardExtractStart(genZoneB.Last());
+                    }),
                 });
                 break;
             }
@@ -1615,6 +1735,14 @@ public partial record LevelLayout
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
                         var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
+                    }),
+
+                    // Tiny area alarm gate
+                    (0.15, () =>
+                    {
+                        var (alarmEnd, _) = AddTinyAreaAlarmZone(start);
+                        var genNodes = AddBranch(alarmEnd, 1, "generator");
                         PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });
@@ -1762,6 +1890,14 @@ public partial record LevelLayout
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
                         var genNodes = AddBranch(travelEnd, 1, "generator");
+                        PlaceGeneratorsInZone(genNodes.Last(), numGens);
+                    }),
+
+                    // Tiny area alarm gate
+                    (0.15, () =>
+                    {
+                        var (alarmEnd, _) = AddTinyAreaAlarmZone(start);
+                        var genNodes = AddBranch(alarmEnd, 1, "generator");
                         PlaceGeneratorsInZone(genNodes.Last(), numGens);
                     }),
                 });

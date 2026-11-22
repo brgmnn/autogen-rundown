@@ -141,6 +141,16 @@ public partial record LevelLayout
                         end = endNodes.Last();
                         endZone = planner.GetZone(end)!;
                     }),
+
+                    // Tiny area alarm gate
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (alarmEnd, _) = AddTinyAreaAlarmZone(nodes.Last());
+                        var endNodes = AddBranch_Forward(alarmEnd, Generator.Between(1, 2));
+                        end = endNodes.Last();
+                        endZone = planner.GetZone(end)!;
+                    }),
                 });
                 break;
             }
@@ -220,6 +230,20 @@ public partial record LevelLayout
                         var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
                         end = endNodes.Last();
                         endZone = planner.GetZone(end)!;
+                    }),
+
+                    // Keycard to tiny area alarm
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last());
+
+                        mid = level.GenCorridorGeomorph(mid);
+
+                        var (mid2, mid2Zone) = AddZone(mid);
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+
+                        (end, endZone) = AddTinyAreaAlarmZone(mid2);
                     }),
                 });
                 break;
@@ -354,6 +378,20 @@ public partial record LevelLayout
                         end = endNodes.Last();
                         endZone = planner.GetZone(end)!;
                     }),
+
+                    // Keycard to tiny area alarm
+                    (0.20, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, 1);
+                        var (mid, midZone) = BuildChallenge_KeycardInSide(nodes.Last(), Generator.Between(1, 2));
+
+                        mid = level.GenCorridorGeomorph(mid);
+
+                        var (mid2, mid2Zone) = AddZone(mid);
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+
+                        (end, endZone) = AddTinyAreaAlarmZone(mid2);
+                    }),
                 });
                 break;
             }
@@ -486,6 +524,21 @@ public partial record LevelLayout
                         var endNodes = AddBranch_Forward(travelEnd, Generator.Between(1, 2));
                         end = endNodes.Last();
                         endZone = planner.GetZone(end)!;
+                    }),
+
+                    // Boss fight to tiny area alarm
+                    (0.25, () =>
+                    {
+                        var nodes = AddBranch_Forward(start, Generator.Between(2, 3));
+
+                        var (mid, midZone) = BuildChallenge_BossFight(nodes.Last());
+
+                        mid = level.GenCorridorGeomorph(mid);
+
+                        var (mid2, mid2Zone) = AddZone(mid);
+                        mid2Zone.ZoneExpansion = level.Settings.GetDirections(director.Bulkhead).Forward;
+
+                        (end, endZone) = AddTinyAreaAlarmZone(mid2);
                     }),
                 });
                 break;

@@ -209,6 +209,96 @@ public partial record LevelLayout
 
     #endregion
 
+    #region Tiny Area Alarm
+
+    /// <summary>
+    /// Adds a small zone with as many areas (rooms) as <paramref name="alarm"/> has scans, then
+    /// a zone behind it locked with the alarm. Each area scan goes in a different area of
+    /// the small zone (Patch_LG_NodeTools.TryPlaceAreaScans), so the team has to fight through
+    /// every room of it, one by one.
+    ///
+    ///   start -> arena (N areas, the scans) -> end (locked with the alarm)
+    ///
+    /// The area count is a minimum: a tile with several areas can take the zone past it, the
+    /// extra rooms then just have no scan.
+    /// </summary>
+    /// <param name="start">Node to build the arena from. Must have a free connection.</param>
+    /// <param name="alarm">Area alarm (from <see cref="ZoneScanAlarms"/>), one area per scan</param>
+    /// <param name="population">Wave population, defaults to the alarm's</param>
+    /// <param name="settings">Wave settings, defaults to the alarm's</param>
+    /// <returns>The locked zone</returns>
+    public (ZoneNode, Zone) AddTinyAreaAlarm(
+        ZoneNode start,
+        ChainedPuzzle alarm,
+        WavePopulation? population = null,
+        WaveSettings? settings = null)
+    {
+        var (arena, arenaZone) = AddZone(start, new ZoneNode());
+        arena = level.GenMultiRoomSpawnGeomorph(arena, alarm.Puzzle.Count, maxConnections: 1);
+
+        arenaZone.AmmoPacks += 2.0;
+        arenaZone.ToolPacks += 1.0;
+        if (arenaZone.InFog)
+            arenaZone.ConsumableDistributionInZone = ConsumableDistribution.Alarms_FogRepellers.PersistentId;
+
+        var (end, endZone) = AddZone(arena, new ZoneNode());
+
+        endZone.Alarm = ChainedPuzzle.FindOrPersist(alarm with
+        {
+            Population = population ?? alarm.Population,
+            Settings = settings ?? alarm.Settings
+        });
+
+        Plugin.Logger.LogDebug(
+            $"{Name} -- AddTinyAreaAlarm(): alarm=\"{alarm.PublicAlarmName}\", " +
+            $"arena=Zone_{arena.ZoneNumber} ({alarm.Puzzle.Count} areas), locked=Zone_{end.ZoneNumber}");
+
+        return (end, endZone);
+    }
+
+    /// <summary>
+    /// <see cref="AddTinyAreaAlarm"/> with the area alarm picked by tier. The surge alarms keep
+    /// their own population and settings.
+    /// </summary>
+    /// <param name="start">Node to build the arena from. Must have a free connection.</param>
+    /// <param name="population">
+    ///     Wave population to use, if null will be determined automatically
+    /// </param>
+    /// <param name="settings">Wave settings to use, if null the alarm's</param>
+    /// <returns>The locked zone</returns>
+    public (ZoneNode, Zone) AddTinyAreaAlarmZone(
+        ZoneNode start,
+        WavePopulation? population = null,
+        WaveSettings? settings = null)
+    {
+        var alarm = level.Tier switch
+        {
+            "A" or "B" => ZoneScanAlarms.AlarmClass2_AreaScan,
+            "C" => ZoneScanAlarms.AlarmClass3_AreaScan,
+            "D" => Generator.Flip(0.75) ? ZoneScanAlarms.AlarmClass4_AreaScan : ZoneScanAlarms.AlarmClass2_AreaScan_Surge,
+            "E" => Generator.Flip(0.75) ? ZoneScanAlarms.AlarmClass5_AreaScan : ZoneScanAlarms.AlarmClass3_AreaScan_Surge,
+            _ => ZoneScanAlarms.AlarmClass3_AreaScan
+        };
+
+        if (alarm.FixedAlarm)
+            return AddTinyAreaAlarm(start, alarm);
+
+        if (population is null)
+        {
+            population = WavePopulation.Baseline;
+            if (level.Settings.HasShadows())
+                population = WavePopulation.Baseline_Shadows;
+            else if (level.Settings.HasChargers())
+                population = WavePopulation.Baseline_Chargers;
+            else if (level.Settings.HasFlyers())
+                population = WavePopulation.Baseline_Flyers;
+        }
+
+        return AddTinyAreaAlarm(start, alarm, population, settings);
+    }
+
+    #endregion
+
     #region Travel Scan Alarms
 
     /// <summary>

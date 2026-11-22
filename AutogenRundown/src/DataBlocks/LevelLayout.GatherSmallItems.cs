@@ -393,6 +393,14 @@ public partial record LevelLayout
                         lastZone.Coverage = objective.GatherRequiredCount > 5 ? CoverageMinMax.Huge : CoverageMinMax.Large;
                         objective.Gather_PlacementNodes.Add(last);
                     }),
+
+                    // Tiny area alarm
+                    (0.15, () =>
+                    {
+                        (last, lastZone) = AddTinyAreaAlarmZone(start);
+                        lastZone.Coverage = objective.GatherRequiredCount > 5 ? CoverageMinMax.Huge : CoverageMinMax.Large;
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
                 });
                 break;
             }
@@ -500,6 +508,20 @@ public partial record LevelLayout
                         var (travelEnd, _) = AddTravelScanAlarm(start);
                         (last, lastZone) = AddZone(travelEnd);
                         lastZone.Coverage = objective.GatherRequiredCount > 5 ? CoverageMinMax.Huge : CoverageMinMax.Large;
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        // Configure the wave population
+                        var population = WavePopulation.Baseline_Hybrids;
+
+                        // Chargers first, then flyers
+                        if (level.Settings.HasChargers())
+                            population = WavePopulation.Baseline_Chargers;
+
+                        (last, lastZone) = AddTinyAreaAlarmZone(start, population);
                         objective.Gather_PlacementNodes.Add(last);
                     }),
                 });
@@ -636,6 +658,14 @@ public partial record LevelLayout
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
                         (last, lastZone) = AddZone(travelEnd);
+                        lastZone.Coverage = objective.GatherRequiredCount > 5 ? CoverageMinMax.Huge : CoverageMinMax.Large;
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
+
+                    // Tiny area alarm
+                    (0.15, () =>
+                    {
+                        (last, lastZone) = AddTinyAreaAlarmZone(start);
                         lastZone.Coverage = objective.GatherRequiredCount > 5 ? CoverageMinMax.Huge : CoverageMinMax.Large;
                         objective.Gather_PlacementNodes.Add(last);
                     }),
@@ -843,6 +873,14 @@ public partial record LevelLayout
                     {
                         var (travelEnd, _) = AddTravelScanAlarm(start);
                         (last, lastZone) = AddZone(travelEnd);
+                        lastZone.Coverage = objective.GatherRequiredCount > 5 ? CoverageMinMax.Huge : CoverageMinMax.Large;
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        (last, lastZone) = AddTinyAreaAlarmZone(start);
                         lastZone.Coverage = objective.GatherRequiredCount > 5 ? CoverageMinMax.Huge : CoverageMinMax.Large;
                         objective.Gather_PlacementNodes.Add(last);
                     }),
@@ -1103,6 +1141,14 @@ public partial record LevelLayout
                         lastZone.Coverage = objective.GatherRequiredCount > 5 ? CoverageMinMax.Huge : CoverageMinMax.Large;
                         objective.Gather_PlacementNodes.Add(last);
                     }),
+
+                    // Tiny area alarm
+                    (0.15, () =>
+                    {
+                        (last, lastZone) = AddTinyAreaAlarmZone(start);
+                        lastZone.Coverage = objective.GatherRequiredCount > 5 ? CoverageMinMax.Huge : CoverageMinMax.Large;
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
                 });
                 break;
             }
@@ -1234,6 +1280,13 @@ public partial record LevelLayout
                         var (travelEnd, _) = AddTravelScanAlarm(start);
                         (last, lastZone) = AddZone(travelEnd);
                         lastZone.Coverage = objective.GatherRequiredCount > 5 ? CoverageMinMax.Huge : CoverageMinMax.Large;
+                        objective.Gather_PlacementNodes.Add(last);
+                    }),
+
+                    // Tiny area alarm
+                    (0.20, () =>
+                    {
+                        (last, lastZone) = AddTinyAreaAlarmZone(start);
                         objective.Gather_PlacementNodes.Add(last);
                     }),
                 });

@@ -367,6 +367,19 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                         AddForwardExtractStart(pwNodes.Last());
                     }),
+
+                    // Tiny area alarm + password: Reactor → transition → TinyAreaAlarm → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = AddTinyAreaAlarmZone(deep.Last());
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                        AddForwardExtractStart(pwNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -424,6 +437,14 @@ public partial record LevelLayout
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
+
+                    // Tiny area alarm + password: Reactor → TinyAreaAlarm → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var (end, _) = AddTinyAreaAlarmZone(reactor);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -468,6 +489,14 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (end, _) = AddTravelScanAlarm(reactor);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
+
+                    // Tiny area alarm + password: Reactor → TinyAreaAlarm → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var (end, _) = AddTinyAreaAlarmZone(reactor);
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
@@ -594,6 +623,19 @@ public partial record LevelLayout
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                         AddForwardExtractStart(pwNodes.Last());
                     }),
+
+                    // Tiny area alarm + keycard side + password: Reactor → TinyAreaAlarm → KeycardInSide → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var (mid, _) = AddTinyAreaAlarmZone(reactor);
+                        var (end, _) = BuildChallenge_KeycardInSide(mid);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                        AddForwardExtractStart(pwNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -659,6 +701,18 @@ public partial record LevelLayout
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
+
+                    // Tiny area alarm + password: Reactor → transition → TinyAreaAlarm → PasswordTerminal
+                    (0.20, () =>
+                    {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = AddTinyAreaAlarmZone(deep.Last());
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -719,6 +773,15 @@ public partial record LevelLayout
                     (0.15, () =>
                     {
                         var (end, _) = AddTravelScanAlarm(reactor);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
+
+                    // Tiny area alarm gate: Reactor → transition → TinyAreaAlarm → PasswordTerminal
+                    (0.25, () =>
+                    {
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = AddTinyAreaAlarmZone(deep.Last());
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
@@ -857,6 +920,18 @@ public partial record LevelLayout
                         AddForwardExtractStart(pwNodes.Last());
                         AddForwardExtractStart(reactor, chance: 0.3);
                     }),
+
+                    // Tiny area alarm + boss: Reactor → transition → TinyAreaAlarm → BossFight → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid, _) = AddTinyAreaAlarmZone(deep.Last());
+                        var (end, _) = BuildChallenge_BossFight(mid);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                        AddForwardExtractStart(pwNodes.Last());
+                        AddForwardExtractStart(reactor, chance: 0.3);
+                    }),
                 });
                 break;
             }
@@ -927,6 +1002,15 @@ public partial record LevelLayout
                     (0.10, () =>
                     {
                         var (end, _) = AddTravelScanAlarm(reactor);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
+
+                    // Tiny area alarm + password: Reactor → transition → TinyAreaAlarm → PasswordTerminal
+                    (0.20, () =>
+                    {
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = AddTinyAreaAlarmZone(deep.Last());
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
@@ -1019,6 +1103,15 @@ public partial record LevelLayout
                     (0.10, () =>
                     {
                         var (end, _) = AddTravelScanAlarm(reactor);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
+
+                    // Tiny area alarm gate: Reactor → transition → TinyAreaAlarm → PasswordTerminal
+                    (0.20, () =>
+                    {
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (end, _) = AddTinyAreaAlarmZone(deep.Last());
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
@@ -1158,6 +1251,19 @@ public partial record LevelLayout
                         AddForwardExtractStart(pwNodes.Last());
                         AddForwardExtractStart(reactor, chance: 0.3);
                     }),
+
+                    // Tiny area alarm + boss + keycard: Reactor → transition → TinyAreaAlarm → BossFight → KeycardInZone → PasswordTerminal
+                    (0.15, () =>
+                    {
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid1, _) = AddTinyAreaAlarmZone(deep.Last());
+                        var (mid2, _) = BuildChallenge_BossFight(mid1);
+                        var (end, _) = BuildChallenge_KeycardInZone(mid2);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                        AddForwardExtractStart(pwNodes.Last());
+                        AddForwardExtractStart(reactor, chance: 0.3);
+                    }),
                 });
                 break;
             }
@@ -1254,6 +1360,16 @@ public partial record LevelLayout
                         var pwNodes = AddBranch(end, 1, "reactor_password");
                         SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
+
+                    // Tiny area alarm + boss: Reactor → transition → TinyAreaAlarm → BossFight → PasswordTerminal
+                    (0.20, () =>
+                    {
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid, _) = AddTinyAreaAlarmZone(deep.Last());
+                        var (end, _) = BuildChallenge_BossFight(mid);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
+                    }),
                 });
                 break;
             }
@@ -1347,6 +1463,19 @@ public partial record LevelLayout
                         var reactor = BuildReactor(end);
                         reactorNode = reactor;
                         reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                    }),
+
+                    // Boss + tiny area alarm: Reactor → transition → BossFight → TinyAreaAlarm → PasswordTerminal
+                    (0.20, () =>
+                    {
+                        var reactor = BuildReactor(start);
+                        reactorNode = reactor;
+                        reactorDefinition.ZoneNumber = reactor.ZoneNumber;
+                        var deep = AddBranch(reactor, 1, "reactor_deep");
+                        var (mid, _) = BuildChallenge_BossFight(deep.Last());
+                        var (end, _) = AddTinyAreaAlarmZone(mid);
+                        var pwNodes = AddBranch(end, 1, "reactor_password");
+                        SetupReactorPassword(reactorDefinition, reactor, pwNodes.Last());
                     }),
                 });
                 break;
