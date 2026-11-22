@@ -112,6 +112,24 @@ public static class ZoneScanAlarms
     };
 
     /// <summary>
+    /// King of the Hill: full team has to hold the hill zone around the objective terminal.
+    /// Not in the door alarm pack.
+    /// </summary>
+    public static readonly ChainedPuzzle AlarmClass1_ZoneScan_Sustained_Hill = new()
+    {
+        PublicAlarmName = "Class S Z Alarm",
+        Settings = WaveSettings.Baseline_Hard,
+        Population = WavePopulation.Baseline,
+        WantedDistanceFromStartPos = 0.0,
+        WantedDistanceBetweenPuzzleComponents = 0.0,
+        OnlyShowHUDWhenPlayerIsClose = false,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.ZoneScan_Sustained_Hill
+        }
+    };
+
+    /// <summary>
     /// Entries added to <see cref="ChainedPuzzle.BuildPack"/>. Same (chance, count, puzzle)
     /// weighting as the rest of the pack.
     ///

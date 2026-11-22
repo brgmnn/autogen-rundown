@@ -117,6 +117,11 @@ public enum PuzzleType : uint
     /// </summary>
     ZoneScan_Sustained = 202,
 
+    /// <summary>
+    /// Sustained: full team must hold the zone the scan is in. ~300 seconds, King of the Hill.
+    /// </summary>
+    ZoneScan_Sustained_Hill = 203,
+
     #endregion
 
     #region Travel (Moving) scans

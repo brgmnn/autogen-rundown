@@ -74,6 +74,14 @@ public static class ZoneScans
             UseZone = true,
             ScanText = "SUSTAINED ZONE SCAN - FULL TEAM"
         },
+        new ZoneScanType
+        {
+            Component = PuzzleComponent.ZoneScan_Sustained_Hill,
+            BaseScan = PuzzleType.Sustained,
+            Sustained = true,
+            UseZone = true,
+            ScanText = "SUSTAINED ZONE SCAN - FULL TEAM"
+        },
     };
 
     public static ZoneScanType? Find(PuzzleComponent component)

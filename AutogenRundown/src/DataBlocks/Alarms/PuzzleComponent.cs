@@ -174,6 +174,15 @@ public class PuzzleComponent
         Duration = 120
     };
 
+    /// <summary>
+    /// Sustained: full team must hold the zone the scan is in. King of the Hill length.
+    /// </summary>
+    public static readonly PuzzleComponent ZoneScan_Sustained_Hill = new()
+    {
+        PuzzleType = PuzzleType.ZoneScan_Sustained_Hill,
+        Duration = 300
+    };
+
     #endregion
 
     #region Travel components
