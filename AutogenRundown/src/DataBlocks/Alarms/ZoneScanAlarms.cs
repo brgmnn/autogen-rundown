@@ -82,6 +82,41 @@ public static class ZoneScanAlarms
     };
 
     /// <summary>
+    /// Surge alarm where the team has to move rooms between scans while the surge continues.
+    /// Like the other surge alarms: fixed strikers surge, no rolled waves or modifiers.
+    /// </summary>
+    public static readonly ChainedPuzzle AlarmClass2_AreaScan_Surge = new()
+    {
+        PublicAlarmName = "Class A II Surge Alarm",
+        Settings = WaveSettings.Surge,
+        Population = WavePopulation.OnlyStrikers,
+        WantedDistanceBetweenPuzzleComponents = 15.0,
+        OnlyShowHUDWhenPlayerIsClose = false,
+        FixedAlarm = true,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.AreaScan,
+            PuzzleComponent.AreaScan
+        }
+    };
+
+    public static readonly ChainedPuzzle AlarmClass3_AreaScan_Surge = new()
+    {
+        PublicAlarmName = "Class A III Surge Alarm",
+        Settings = WaveSettings.Surge,
+        Population = WavePopulation.OnlyStrikers,
+        WantedDistanceBetweenPuzzleComponents = 15.0,
+        OnlyShowHUDWhenPlayerIsClose = false,
+        FixedAlarm = true,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.AreaScan,
+            PuzzleComponent.AreaScan,
+            PuzzleComponent.AreaScan
+        }
+    };
+
+    /// <summary>
     /// Full team has to hold the area (room) of the scan, progress drains while anyone is out
     /// </summary>
     public static readonly ChainedPuzzle AlarmClass1_AreaScan_Sustained = new()
@@ -166,6 +201,7 @@ public static class ZoneScanAlarms
                 (0.3, 1, AlarmClass2_AreaScan),
                 (0.5, 1, AlarmClass3_AreaScan),
                 (0.5, 1, AlarmClass4_AreaScan),
+                (0.4, 1, AlarmClass2_AreaScan_Surge),
             },
 
             "E" => new()
@@ -176,6 +212,7 @@ public static class ZoneScanAlarms
                 (0.5, 1, AlarmClass3_AreaScan),
                 (0.5, 1, AlarmClass4_AreaScan),
                 (0.5, 1, AlarmClass5_AreaScan),
+                (0.4, 1, AlarmClass3_AreaScan_Surge),
             },
 
             _ => new()
