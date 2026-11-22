@@ -179,16 +179,33 @@ public static class Patch_LG_NodeTools
             return 0;
         }
 
-        if (_distinctAreas && atRadiusFromSourcePos <= 0.01f &&
-            TryPlaceAreaScans(area, sourcePos, wantedCount, out var areaPositions))
+        if (_distinctAreas && atRadiusFromSourcePos <= 0.01f)
         {
-            var areaPositionsList = new Il2CppSystem.Collections.Generic.List<Vector3>();
+            // An exception escaping a native detour crashes the game: fall back to the normal
+            // placement instead
+            List<Vector3>? areaPositions = null;
 
-            foreach (var position in areaPositions)
-                areaPositionsList.Add(position);
+            try
+            {
+                if (!TryPlaceAreaScans(area, sourcePos, wantedCount, out areaPositions))
+                    areaPositions = null;
+            }
+            catch (Exception ex)
+            {
+                Plugin.Logger.LogWarning($"[NodeTools] Area scan placement failed: {ex.Message}");
+                areaPositions = null;
+            }
 
-            *positions = areaPositionsList.Pointer;
-            return 1;
+            if (areaPositions != null)
+            {
+                var areaPositionsList = new Il2CppSystem.Collections.Generic.List<Vector3>();
+
+                foreach (var position in areaPositions)
+                    areaPositionsList.Add(position);
+
+                *positions = areaPositionsList.Pointer;
+                return 1;
+            }
         }
 
         Plugin.Logger.LogDebug(

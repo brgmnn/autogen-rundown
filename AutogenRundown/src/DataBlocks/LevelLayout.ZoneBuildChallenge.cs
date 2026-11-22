@@ -37,7 +37,7 @@ public partial record LevelLayout
             case "D":
             case "E":
             {
-                var options = new List<(double, Action)>
+                Generator.SelectRun(new List<(double, Action)>
                 {
                     // +1 zones, alarm door
                     (2.0, () => { (end, endZone) = AddZone(start); }),
@@ -83,13 +83,7 @@ public partial record LevelLayout
 
                         (end, endZone) = BuildChallenge_GeneratorCellInZone(mid);
                     }),
-                };
-
-                // +2 zones, area alarm with a scan in every room of a tiny zone
-                if (level.Tier != "A")
-                    options.Add((1.0, () => { (end, endZone) = AddTinyAreaAlarmZone(start); }));
-
-                Generator.SelectRun(options);
+                });
                 break;
             }
         }
