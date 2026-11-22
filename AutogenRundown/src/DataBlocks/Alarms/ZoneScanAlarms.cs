@@ -64,6 +64,23 @@ public static class ZoneScanAlarms
         }
     };
 
+    public static readonly ChainedPuzzle AlarmClass5_AreaScan = new()
+    {
+        PublicAlarmName = "Class A V Alarm",
+        Settings = WaveSettings.Baseline_Hard,
+        Population = WavePopulation.Baseline,
+        WantedDistanceBetweenPuzzleComponents = 15.0,
+        OnlyShowHUDWhenPlayerIsClose = false,
+        Puzzle = new List<PuzzleComponent>
+        {
+            PuzzleComponent.AreaScan,
+            PuzzleComponent.AreaScan,
+            PuzzleComponent.AreaScan,
+            PuzzleComponent.AreaScan,
+            PuzzleComponent.AreaScan
+        }
+    };
+
     /// <summary>
     /// Full team has to hold the area (room) of the scan, progress drains while anyone is out
     /// </summary>
@@ -97,40 +114,50 @@ public static class ZoneScanAlarms
     /// <summary>
     /// Entries added to <see cref="ChainedPuzzle.BuildPack"/>. Same (chance, count, puzzle)
     /// weighting as the rest of the pack.
+    ///
+    /// Holding one area/zone is the easiest of these, moving the whole team through several
+    /// areas the hardest: sustained scans come first and each extra area scan a tier later.
     /// </summary>
     public static List<(double chance, int count, ChainedPuzzle puzzle)> BuildPack(string tier)
         => tier switch
         {
             "A" => new()
             {
-                (0.5, 1, AlarmClass2_AreaScan),
+                (0.5, 1, AlarmClass1_ZoneScan_Sustained),
             },
 
             "B" => new()
             {
-                (0.5, 1, AlarmClass2_AreaScan),
-                (0.6, 1, AlarmClass3_AreaScan),
+                (0.4, 1, AlarmClass1_ZoneScan_Sustained),
+                (0.4, 1, AlarmClass1_AreaScan_Sustained),
+                (0.4, 1, AlarmClass2_AreaScan),
             },
 
             "C" => new()
             {
+                (0.4, 1, AlarmClass1_ZoneScan_Sustained),
+                (0.5, 1, AlarmClass1_AreaScan_Sustained),
+                (0.4, 1, AlarmClass2_AreaScan),
                 (0.5, 1, AlarmClass3_AreaScan),
-                (0.6, 1, AlarmClass4_AreaScan),
-                (0.6, 1, AlarmClass1_AreaScan_Sustained),
             },
 
             "D" => new()
             {
-                (0.6, 1, AlarmClass4_AreaScan),
-                (0.8, 1, AlarmClass1_AreaScan_Sustained),
-                (0.5, 1, AlarmClass1_ZoneScan_Sustained),
+                (0.4, 1, AlarmClass1_ZoneScan_Sustained),
+                (0.5, 1, AlarmClass1_AreaScan_Sustained),
+                (0.3, 1, AlarmClass2_AreaScan),
+                (0.5, 1, AlarmClass3_AreaScan),
+                (0.5, 1, AlarmClass4_AreaScan),
             },
 
             "E" => new()
             {
-                (0.7, 1, AlarmClass4_AreaScan),
-                (0.8, 1, AlarmClass1_AreaScan_Sustained),
-                (0.7, 1, AlarmClass1_ZoneScan_Sustained),
+                (0.4, 1, AlarmClass1_ZoneScan_Sustained),
+                (0.4, 1, AlarmClass1_AreaScan_Sustained),
+                (0.3, 1, AlarmClass2_AreaScan),
+                (0.5, 1, AlarmClass3_AreaScan),
+                (0.5, 1, AlarmClass4_AreaScan),
+                (0.5, 1, AlarmClass5_AreaScan),
             },
 
             _ => new()
