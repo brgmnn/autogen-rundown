@@ -733,6 +733,33 @@ public static class Patch_LG_NodeTools
     }
 
     /// <summary>
+    /// Areas passed through on the way to each area scan placed by the current
+    /// <see cref="TryPlaceAreaScans"/>: for every gate, the nearest node on each side of it.
+    /// Used by Patch_CP_Holopath_Spline_AreaScans to draw the holopath through the gates.
+    /// </summary>
+    private static readonly List<(Vector3 Target, List<Vector3> Waypoints)> _areaScanRoutes = new();
+
+    internal static void ClearAreaScanRoutes() => _areaScanRoutes.Clear();
+
+    /// <summary>
+    /// Takes the gate waypoints recorded for the area scan at <paramref name="target"/>
+    /// </summary>
+    internal static bool TryTakeAreaScanRoute(Vector3 target, out List<Vector3> waypoints)
+    {
+        var index = _areaScanRoutes.FindIndex(route => (route.Target - target).sqrMagnitude < 0.25f);
+
+        if (index < 0)
+        {
+            waypoints = null!;
+            return false;
+        }
+
+        waypoints = _areaScanRoutes[index].Waypoints;
+        _areaScanRoutes.RemoveAt(index);
+        return true;
+    }
+
+    /// <summary>
     /// Places area scans: the first at the door (sourcePos), every next one in the nearest area
     /// (by gates, within the zone) that has no scan yet, a few metres in from the gate it is
     /// entered through. Keeps the scans off the walls and the holopath going through the gate.
@@ -745,6 +772,7 @@ public static class Patch_LG_NodeTools
         out List<Vector3> positions)
     {
         positions = new List<Vector3> { sourcePos };
+        _areaScanRoutes.Clear();
 
         var zone = sourceArea.m_zone;
 
@@ -756,17 +784,31 @@ public static class Patch_LG_NodeTools
 
         while (positions.Count < wantedCount)
         {
-            if (!TryFindNextArea(previous, zone, used, out var next, out var gate))
+            if (!TryFindNextArea(previous, zone, used, out var route))
             {
                 used.Clear();
                 used.Add(previous.Pointer);
 
-                if (!TryFindNextArea(previous, zone, used, out next, out gate))
+                if (!TryFindNextArea(previous, zone, used, out route))
                     return false;
             }
 
+            var (_, gate, next) = route[^1];
+
             if (!TryGetPositionNearGate(next, gate, out var position))
                 return false;
+
+            var waypoints = new List<Vector3>();
+
+            foreach (var (from, routeGate, to) in route)
+            {
+                var gatePosition = routeGate.transform.position;
+
+                waypoints.Add(GetClosestNodePosition(from, gatePosition));
+                waypoints.Add(GetClosestNodePosition(to, gatePosition));
+            }
+
+            _areaScanRoutes.Add((position, waypoints));
 
             positions.Add(position);
             used.Add(next.Pointer);
@@ -774,7 +816,8 @@ public static class Patch_LG_NodeTools
 
             Plugin.Logger.LogDebug(
                 $"[NodeTools] Area scan {positions.Count}: {next.name}, " +
-                $"{(position - gate.transform.position).magnitude:F1}m from its gate");
+                $"{(position - gate.transform.position).magnitude:F1}m from its gate, " +
+                $"{route.Count} gate(s) from the previous scan");
         }
 
         return true;
@@ -782,15 +825,16 @@ public static class Patch_LG_NodeTools
 
     /// <summary>
     /// Breadth first search over the gates of the zone's areas for the nearest area not in
-    /// <paramref name="used"/>, and the gate it is entered through.
+    /// <paramref name="used"/>. <paramref name="route"/> is the gates passed through to reach
+    /// it, with the areas on either side, the last one entering the found area.
     /// </summary>
     private static bool TryFindNextArea(
         LG_Area from,
         LG_Zone zone,
         HashSet<IntPtr> used,
-        out LG_Area next,
-        out LG_Gate gate)
+        out List<(LG_Area From, LG_Gate Gate, LG_Area To)> route)
     {
+        var cameFrom = new Dictionary<IntPtr, (LG_Area From, LG_Gate Gate, LG_Area To)>();
         var visited = new HashSet<IntPtr> { from.Pointer };
         var queue = new Queue<LG_Area>();
 
@@ -819,10 +863,19 @@ public static class Patch_LG_NodeTools
                     !visited.Add(opposite.Pointer))
                     continue;
 
+                cameFrom[opposite.Pointer] = (area, candidateGate, opposite);
+
                 if (!used.Contains(opposite.Pointer))
                 {
-                    next = opposite;
-                    gate = candidateGate;
+                    route = new List<(LG_Area, LG_Gate, LG_Area)>();
+
+                    for (var step = opposite; step.Pointer != from.Pointer;)
+                    {
+                        var hop = cameFrom[step.Pointer];
+                        route.Insert(0, hop);
+                        step = hop.From;
+                    }
+
                     return true;
                 }
 
@@ -830,9 +883,47 @@ public static class Patch_LG_NodeTools
             }
         }
 
-        next = null!;
-        gate = null!;
+        route = null!;
         return false;
+    }
+
+    private static Il2CppSystem.Collections.Generic.List<AIG_INode>? GetAreaNodes(LG_Area area)
+    {
+        var courseNode = area.m_courseNode;
+
+        if (courseNode == null || !courseNode.IsValid || courseNode.m_nodeCluster == null)
+            return null;
+
+        var cluster = courseNode.m_nodeCluster;
+
+        return cluster.m_reachableNodes.Count >= 2 ? cluster.m_reachableNodes : cluster.m_nodes;
+    }
+
+    /// <summary>
+    /// Position of the node of <paramref name="area"/> closest to <paramref name="position"/>,
+    /// or <paramref name="position"/> itself if the area has no nodes.
+    /// </summary>
+    private static Vector3 GetClosestNodePosition(LG_Area area, Vector3 position)
+    {
+        var nodes = GetAreaNodes(area);
+        var closest = position;
+        var bestDistance = float.MaxValue;
+
+        if (nodes == null)
+            return closest;
+
+        for (var i = 0; i < nodes.Count; i++)
+        {
+            var distance = (nodes[i].Position - position).sqrMagnitude;
+
+            if (distance >= bestDistance)
+                continue;
+
+            bestDistance = distance;
+            closest = nodes[i].Position;
+        }
+
+        return closest;
     }
 
     /// <summary>
@@ -843,13 +934,11 @@ public static class Patch_LG_NodeTools
     {
         position = Vector3.zero;
 
-        var courseNode = area.m_courseNode;
+        var nodes = GetAreaNodes(area);
 
-        if (courseNode == null || !courseNode.IsValid || courseNode.m_nodeCluster == null)
+        if (nodes == null)
             return false;
 
-        var cluster = courseNode.m_nodeCluster;
-        var nodes = cluster.m_reachableNodes.Count >= 2 ? cluster.m_reachableNodes : cluster.m_nodes;
         var gatePosition = gate.transform.position;
         var bestScore = float.MaxValue;
 
@@ -895,6 +984,7 @@ internal static class Patch_ChainedPuzzleInstance_AreaScans
     static void Prefix(ChainedPuzzleDataBlock data)
     {
         Patch_LG_NodeTools._distinctAreas = false;
+        Patch_LG_NodeTools.ClearAreaScanRoutes();
 
         if (data?.ChainedPuzzle == null || data.ChainedPuzzle.Count < 2)
             return;
@@ -911,5 +1001,79 @@ internal static class Patch_ChainedPuzzleInstance_AreaScans
         Patch_LG_NodeTools._distinctAreas = true;
     }
 
-    static void Postfix() => Patch_LG_NodeTools._distinctAreas = false;
+    static void Postfix()
+    {
+        Patch_LG_NodeTools._distinctAreas = false;
+        Patch_LG_NodeTools.ClearAreaScanRoutes();
+    }
+}
+
+/// <summary>
+/// Holopath to an area scan in another area. The vanilla path is a single navmesh path, but
+/// closed doors between areas cut the navmesh (LG_InternalGate's NavMeshObstacle), so it stops
+/// at the first closed door. Vanilla never needs more: its scans are all in one area.
+///
+/// Instead walk the gates TryPlaceAreaScans went through: a navmesh path inside each area, and
+/// a straight line through each gate.
+/// </summary>
+[HarmonyPatch(typeof(CP_Holopath_Spline), nameof(CP_Holopath_Spline.GeneratePath))]
+internal static class Patch_CP_Holopath_Spline_AreaScans
+{
+    static bool Prefix(CP_Holopath_Spline __instance, Vector3 from, Vector3 to)
+    {
+        if (!__instance.m_isSetup || !Patch_LG_NodeTools.TryTakeAreaScanRoute(to, out var waypoints))
+            return true;
+
+        try
+        {
+            var start = from;
+            __instance.TryGetPosOnNavMesh(ref start);
+
+            var points = new List<Vector3> { start };
+
+            for (var i = 0; i + 1 < waypoints.Count; i += 2)
+            {
+                AddLeg(points, waypoints[i]);
+                points.Add(waypoints[i + 1]);
+            }
+
+            AddLeg(points, to);
+
+            var previous = points[0];
+
+            foreach (var point in points)
+            {
+                __instance.AddPositionOnSpline(point, (point - previous).magnitude);
+                previous = point;
+            }
+
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Plugin.Logger.LogWarning($"[NodeTools] Area scan holopath failed: {ex.Message}");
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// Navmesh path from the last point to <paramref name="to"/>, and a straight line for
+    /// whatever the navmesh doesn't reach.
+    /// </summary>
+    private static void AddLeg(List<Vector3> points, Vector3 to)
+    {
+        var path = new NavMeshPath();
+
+        // -1: all navmesh areas, as vanilla's GeneratePath
+        if (NavMesh.CalculatePath(points[^1], to, -1, path))
+        {
+            var corners = path.corners;
+
+            for (var i = 1; i < corners.Length; i++)
+                points.Add(corners[i]);
+        }
+
+        if ((points[^1] - to).sqrMagnitude > 0.01f)
+            points.Add(to);
+    }
 }
